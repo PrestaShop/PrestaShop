@@ -73,6 +73,7 @@ class AdminControllerCore extends Controller
 
 	public $tpl_form_vars = array();
 	public $tpl_list_vars = array();
+	public $tpl_view_vars = array();
 
 	public $fields_value = false;
 
@@ -288,6 +289,10 @@ class AdminControllerCore extends Controller
 			case 'add':
 				array_pop($tabs);
 				$tabs[] = array('name' => sprintf($this->l('Add %s'), $this->table));
+					break;
+			case 'view':
+				array_pop($tabs);
+				$tabs[] = array('name' => sprintf($this->l('View %s'), $this->table));
 					break;
 		}
 		// note : this should use a tpl file
@@ -1003,17 +1008,17 @@ class AdminControllerCore extends Controller
 
 		// Template override
 		$tpl = $this->tpl_folder.'content.tpl';
-		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
+		//$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 		// Check if action template has been override
 
 		// new smarty : template_dir is an array.
 		// @todo : add override path to the smarty config, and checking all array item
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action))
+		/*if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action))
 		{
 			if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
 				$this->{$this->display.Tools::toCamelCase($this->className)}();
 			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
-		}
+		}*/
 
 		// Check if content template has been override
 		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
@@ -1332,6 +1337,17 @@ class AdminControllerCore extends Controller
 	 */
 	public function initView()
 	{
+		if (empty($this->toolbar_title))
+			$this->initToolbarTitle();
+
+		$helper = new HelperView($this);
+		$helper->override_folder = $this->tpl_folder;
+		$helper->tpl_vars = $this->tpl_view_vars;
+		$this->setHelperDisplay($helper);
+		$view = $helper->generateView();
+		$this->toolbar_fix = false;
+
+		return $view;
 	}
 
 	/**
@@ -1672,7 +1688,10 @@ class AdminControllerCore extends Controller
 		if (isset($_GET['view'.$this->table]))
 		{
 			if ($this->tabAccess['view'] === '1')
+			{
 				$this->display = 'view';
+				$this->action = 'view';
+			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to view here.');
 		}

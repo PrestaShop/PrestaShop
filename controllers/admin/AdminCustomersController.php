@@ -34,15 +34,7 @@ class AdminCustomersControllerCore extends AdminController
 	 	$this->lang = false;
 		$this->deleted = true;
 
-		$this->addRowAction('edit');
-		$this->addRowAction('view');
-		$this->addRowAction('delete');
-
-		$this->requiredDatabase = true;
-
 		$this->context = Context::getContext();
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->default_form_language = $this->context->language->id;
 
@@ -152,6 +144,12 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function initList()
 	{
+		$this->addRowAction('edit');
+		$this->addRowAction('view');
+		$this->addRowAction('delete');
+
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		
 		$this->_select = '(YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5)) AS `age`, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
@@ -366,13 +364,6 @@ class AdminCustomersControllerCore extends AdminController
 		return parent::initForm();
 	}
 
-	public function initContent()
-	{
-		if ($this->display == 'view')
-			return $this->initView();
-		parent::initContent();
-	}
-
 	public function initView()
 	{
 		if (!($customer = $this->loadObject()))
@@ -492,11 +483,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_referrers; $i++)
 			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'], $this->default_form_language, true);
 
-		$this->context->smarty->assign(array(
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
-			'content' => $this->content,
+		$this->tpl_view_vars = array(
 			'customer' => $customer,
 			'gender_image' => $gender_image,
 
@@ -550,7 +537,10 @@ class AdminCustomersControllerCore extends AdminController
 
 			// Referrers
 			'referrers' => $referrers,
-		));
+			'show_toolbar' => true
+		);
+
+		return parent::initView();
 	}
 
 	public function postProcess()
