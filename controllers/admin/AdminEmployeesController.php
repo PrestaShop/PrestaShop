@@ -172,7 +172,7 @@ class AdminEmployeesControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'select',
+					'type' => 'select_theme',
 					'label' => $this->l('Theme:'),
 					'name' => 'bo_theme',
 					'options' => array('query' => $this->themes),
