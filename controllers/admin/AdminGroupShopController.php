@@ -144,14 +144,6 @@ class AdminGroupShopControllerCore extends AdminController
 		else
 			$disabled = false;
 
-		$this->context->smarty->assign(array(
-			'disabled' => $disabled,
-			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
-			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID()
-		));
-
-		$this->content .= parent::initForm();
-
 		$import_data = array(
 			'attribute_group' => $this->l('Attribute groups'),
 			'attribute' => $this->l('Attributes'),
@@ -187,23 +179,17 @@ class AdminGroupShopControllerCore extends AdminController
 				'type' => 'checkbox',
 				'values' => $import_data
 			),
-			'p' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop'),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			)
+			'p' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
 		);
 
-		$helper = new HelperForm();
-		// Check if form template has been overriden
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$this->tpl_folder.'form_import.tpl'))
-			$helper->tpl = $this->tpl_folder.'form_import.tpl';
-		$helper->currentIndex = self::$currentIndex;
-		$helper->token = $this->token;
-		$helper->table = $this->table;
-		$helper->id = $obj->id;
-		$helper->fields_value = $this->getFieldsValue($obj);
-		$this->content .= $helper->generateForm($this->fields_import_form);
+		$this->tpl_form_vars = array(
+			'disabled' => $disabled,
+			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
+			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID(),
+			'form_import' => $this->fields_import_form
+		);
+
+		return parent::initForm();
 	}
 
 	public function postProcess()

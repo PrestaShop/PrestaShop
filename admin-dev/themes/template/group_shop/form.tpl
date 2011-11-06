@@ -23,140 +23,81 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{extends file="helper/form/form.tpl"}
 
-{if $firstCall}
-	<script type="text/javascript">
-		var vat_number = {$vat_number};
-		var module_dir = '{$module_dir}';
+{block name=script}
 
-		$(document).ready(function() {ldelim}
-			var id_language = {$defaultFormLanguage};
-			var languages = new Array();
-			{foreach $languages as $k => $language}
-				languages[{$k}] = {ldelim}
-					id_lang: {$language.id_lang},
-					iso_code: '{$language.iso_code}',
-					name: '{$language.name}'
-				{rdelim};
-			{/foreach}
-			displayFlags(languages, id_language, {$allowEmployeeFormLang});
+	$(document).ready(function() {
+		$('input[name=share_order]').attr('disabled', true);
+		$('input[name=share_customer]').click(function()
+		{
+			var disabled = ($('input[name=share_customer]').attr('checked')) ? false : true;
+			$('input[name=share_order]').attr('disabled', disabled);
+			if (disabled)
+				$('#share_order_off').attr('checked', true);
+		});
 
-			$('input[name=share_order]').attr('disabled', true);
-			$('input[name=share_customer]').click(function()
-			{
-				var disabled = ($('input[name=share_customer]').attr('checked')) ? false : true;
-				$('input[name=share_order]').attr('disabled', disabled);
-				if (disabled)
-					$('#share_order_off').attr('checked', true);
-			});
+		$('#useImportData').click(function() {
+			$('#importList').slideToggle('slow');
+		});
+	});
 
-			$('#useImportData').click(function() {
-				$('#importList').slideToggle('slow');
-			});
-		{rdelim});
-	</script>
-	<script type="text/javascript" src="../js/form.js"></script>
-{/if}
+{/block}
 
-<form action="{$current}&submitAdd{$table}=1&token={$token}" method="post">
-	{if $form_id}
-		<input type="hidden" name="id_{$table}" value="{$form_id}" />
+{block name="label"}
+
+	{if $input.type == 'text' && $input.name == 'name'}
+		<div class="hint" name="help_box" style="display:block;">{l s ='You can\'t edit GroupShop when you have more than one Shop'}</div><br />
 	{/if}
-	<fieldset>
-		{foreach $fields as $key => $field}
-			{if $key == 'legend'}
-				<legend>
-					{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
-					{$field.title}
-				</legend>
-				<div class="hint" name="help_box" style="display:block;">{l s ='You can\'t edit GroupShop when you have more than one Shop'}</div><br />
-			{elseif $key == 'input'}
-				{foreach $field as $input}
-					{if $input.name == 'id_state'}
-						<div id="contains_states" {if $contains_states}style="display:none;"{/if}>
-					{/if}
-					<label>{$input.label} </label>
-					<div class="margin-form">
-						{if $input.type == 'text'}
-							<input type="text"
-									name="{$input.name}"
-									id="{$input.name}"
-									value="{$fields_value[$input.name]}"
-									{if isset($input.size)}size="{$input.size}"{/if}
-									{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
-									{if isset($input.class)}class="{$input.class}"{/if}
-									{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if} />
-						{elseif $input.type == 'select'}
-							<select name="{$input.name}" id="{$input.name}" {if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
-								{if isset($input.options.optiongroup)}
-									{foreach $input.options.optiongroup.query AS $optiongroup}
-										<optgroup label="{$optiongroup[$input.options.optiongroup.label]}">
-											{foreach $optiongroup[$input.options.options.query] as $option}
-												<option value="{$option[$input.options.options.id]}"
-														{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}>{$option[$input.options.options.name]}</option>
-											{/foreach}
-										</optgroup>
-									{/foreach}
-								{else}
-									{foreach $input.options.query AS $option}
-										<option value="{$option[$input.options.id]}"
-												{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}>{$option[$input.options.name]}</option>
-									{/foreach}
-								{/if}
-							</select>
-						{elseif $input.type == 'radio'}
-							{foreach $input.values as $value}
-								<input type="radio"
-										name="{$input.name}"
-										id="{$value.id}"
-										value="{$value.value}"
-										{if $disabled[$input.name]}disabled="disabled"{/if}
-										{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
-								<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
-								 {if isset($input.is_bool) && $input.is_bool == true}
-								 	{if $value.value == 1}
-								 		<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
-								 	{else}
-								 		<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
-								 	{/if}
-								 {else}
-								 	{$value.label}
-								 {/if}
-								</label>
-							{/foreach}
-						{elseif $input.type == 'textarea'}
-							<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]}</textarea>
-						{elseif $input.type == 'checkbox'}
 
-						{/if}
-						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
-						{if isset($input.p)}
-							<p class="clear">
-								{if is_array($input.p)}
-									{foreach $input.p as $p}
-										{if is_array($p)}
-											<span id="{$p.id}">{$p.text}</span><br />
-										{else}
-											{$p}<br />
-										{/if}
-									{/foreach}
-								{else}
-									{$input.p}
-								{/if}
-							</p>
-						{/if}
-					</div>
-					{if $input.name == 'id_state'}
+	{if isset($input.label)}
+		<label>{$input.label} </label>
+	{/if}
+
+{/block}
+
+{block name="other_fieldsets"}
+	{if isset($form_import)}
+		<br /><br />
+		<fieldset>
+			{foreach $form_import as $key => $field}
+				{if $key == 'legend'}
+					<legend>
+						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
+						{$field.title}
+					</legend>
+				{elseif $key == 'label'}
+					<label>{$field}</label>
+				{/if}
+				<div class="clear"></div>
+				{if $key == 'checkbox'}
+					<div class="margin-form">
+						<label><input type="{$field.type}" value="{$field.value}" name="{$field.name}" id="{$field.name}" {if $checked} checked="checked"{/if}/> {$field.label}</label>
+				{elseif $key == 'select'}
+						<select name="{$field.name}" id="{$field.name}">
+							{foreach $field.options.query AS $key => $option}
+								<option value="{$key}" {if $key == $defaultGroup}selected="selected"{/if}>
+									{$option.name}
+								</option>
+							{/foreach}
+						</select>
+				{elseif $key == 'allcheckbox'}
+						<div id="importList" {if !$checked}style="display:none"{/if}>
+							<ul>
+								{foreach $field.values as $key => $label}
+									<li><label><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</label></li>
+								{/foreach}
+							</ul>
 						</div>
-					{/if}
-				{/foreach}
-			{elseif $key == 'submit'}
-				<div class="margin-form">
-					<input type="submit" value="{$field.title}" name="submitAdd{$table}" {if isset($field.class)}class="{$field.class}"{/if} />
-				</div>
-			{/if}
-		{/foreach}
-		{if $required_fields}
-			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
-		{/if}
-	</fieldset>
+				{elseif $key == 'p'}
+						<p>{$field}</p>
+					</div>
+				{elseif $key == 'submit'}
+					<div class="margin-form">
+						<input type="submit" value="{$field.title}" name="submitAdd{$table}" {if isset($field.class)}class="{$field.class}"{/if} />
+					</div>
+				{/if}
+			{/foreach}
+		</fieldset>
+	{/if}
+{/block}
