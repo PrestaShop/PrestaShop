@@ -299,6 +299,8 @@ class AdminLanguagesControllerCore extends AdminController
 				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
 		}
 
+		$this->addJS(_PS_JS_DIR_.'checkLangPack.js');
+
 		return parent::initForm();
 	}
 
