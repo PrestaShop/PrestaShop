@@ -41,6 +41,7 @@ class HelperCore
 	public $show_toolbar = true;
 	public $no_back = false;
 	public $context;
+	public $toolbar_fix = false;
 
 	/** @var string Helper tpl folder */
 	public $base_folder;
