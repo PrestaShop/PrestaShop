@@ -35,10 +35,10 @@
 	<fieldset>
 		<legend>
 			<img alt="Supplier Order Management" src="../img/admin/edit.gif">
-			Add an manage products of the current supplier Order
+			{l s='Manage the products you want to order from your supplier'}
 		</legend>
 
-		<p class="clear">{l s='To add a product to the order, begin typing the first letters of the product name, then select the product from the drop-down list:'}</p>
+		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select the it from the drop-down list:'}</p>
 		<input type="text" size="75" id="cur_product_name" />
 		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supplier order'}" title="{l s='Add a product to the supplier order'}" /></span>
 
