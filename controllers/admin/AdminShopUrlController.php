@@ -33,17 +33,11 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->className = 'ShopUrl';
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
-		$this->addRowActionSkipList('delete', array(1));
-
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 
 		$this->context = Context::getContext();
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
 			'id_shop_url' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -60,6 +54,12 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function initList()
 	{
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->addRowActionSkipList('delete', array(1));
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
 	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 
@@ -140,7 +140,8 @@ class AdminShopUrlControllerCore extends AdminController
 						)
 					),
 					'p' => array(
-						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url (you can only have one main url per shop).'),
+						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url
+							(you can only have one main url per shop).'),
 						array(
 							'text' => $this->l('Since the selected shop has no main url, you have to set this url as main'),
 							'id' => 'mainUrlInfo'
@@ -186,7 +187,9 @@ class AdminShopUrlControllerCore extends AdminController
 		foreach (Shop::getShops(false, null, true) as $id)
 			$list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
 
-		$this->context->smarty->assign('jsShopUrl', Tools::jsonEncode($list_shop_with_url));
+		$this->tpl_form_vars = array(
+			'js_shop_url' => Tools::jsonEncode($list_shop_with_url)
+		);
 
 		$this->fields_value = array(
 			'domain' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain,
