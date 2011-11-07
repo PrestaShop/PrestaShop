@@ -1110,7 +1110,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			{
 				// checks if quantity is valid
 				// It's possible to receive more quantity than expected in case of a shipping error from the supplier
-				if (!Validate::isInt($quantity) || $quantity < 0)
+				if (!Validate::isInt($quantity) || $quantity <= 0)
 					$this->_errors[] = sprintf(Tools::displayError('Quantity (%d) for product #%d is not valid'), (int)$quantity, (int)$id_supplier_order_detail);
 				else // everything is valid :  updates
 				{
