@@ -34,6 +34,7 @@ class AdminStatusesControllerCore extends AdminController
 	 	$this->lang = true;
 	 	$this->deleted = false;
 		$this->colorOnBackground = false;
+		$this->context = Context::getContext();
 		$this->imageType = 'gif';
 
 		$this->fieldImageSettings = array(
@@ -43,7 +44,6 @@ class AdminStatusesControllerCore extends AdminController
 
 		$this->requiredDatabase = true;
 
-		$this->context = Context::getContext();
 		$this->fieldImageSettings = array(
 			'name' => 'icon',
 			'dir' => 'os'
@@ -351,6 +351,18 @@ class AdminStatusesControllerCore extends AdminController
 			)
 		);
 
+
+		$this->toolbar_btn = array(
+			'save' => array(
+				'href' => '#',
+				'desc' => $this->l('Save')
+			),
+			'cancel' => array(
+				'href' => self::$currentIndex.'&token='.$this->token,
+				'desc' => $this->l('Cancel')
+			)
+		);
+
 		$this->getlanguages();
 		$helper = new HelperForm();
 		$helper->currentIndex = self::$currentIndex;
@@ -358,6 +370,7 @@ class AdminStatusesControllerCore extends AdminController
 		$helper->table = 'order_return_state';
 		$helper->identifier = 'id_order_return_state';
 		$helper->id = $order_return_state->id;
+		$helper->toolbar_fix = false;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
@@ -426,7 +439,7 @@ class AdminStatusesControllerCore extends AdminController
             'action' => self::$cache_lang['editstatus'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/statuses/list_action_edit_status.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
 	}
 
 	public function postProcess()
