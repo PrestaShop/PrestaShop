@@ -125,7 +125,6 @@ class SupplierOrderDetailCore extends ObjectModel
 		'exchange_rate',
 		'unit_price_te',
 		'quantity_expected',
-		'quantity_received',
 		'price_te',
 		'discount_rate',
 		'discount_value_te',
