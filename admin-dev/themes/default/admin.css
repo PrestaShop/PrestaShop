@@ -165,6 +165,7 @@ a.module_toggle_all{color: #268CCD;}
 
 /*tab-pane*/
 form#product, form#access_form{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px; margin-left:140px;}
+/*form.defaultForm{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px;}*/
 .tab-row {}
 .tab-row .tab {background:#EFEFEF;width:100px;}
 .tab-row .tab-page.selected {}
@@ -178,5 +179,5 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 .product-tab-content h4.tab { display:none;}
 
 /*FOOTER*/
-#footer {height:40px;background:#ECEADE url(footer-bg.png) repeat-x scroll left bottom;border:1px solid #999999;font-size:12px;clear:both;font-size:0.9em;color:#666666}
-div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
+#footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
+#footer .footer_link, #footer .footer_link:hover {color:#D41958;}
