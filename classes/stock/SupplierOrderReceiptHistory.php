@@ -43,7 +43,7 @@ class SupplierOrderReceiptHistoryCore extends ObjectModel
 	/**
 	 * @var int State
 	 */
-	public $id_state;
+	public $id_supplier_order_state;
 
 	/**
 	 * @var int Quantity delivered
@@ -57,15 +57,14 @@ class SupplierOrderReceiptHistoryCore extends ObjectModel
 
 	protected $fieldsRequired = array(
 		'id_supplier_order_detail',
-		'id_state',
+		'id_supplier_order_state',
 		'id_employee',
-		'quantity',
-		'date_add'
+		'quantity'
 	);
 
 	protected $fieldsValidate = array(
 		'id_supplier_order_detail' => 'isUnsignedId',
-		'id_state' => 'isUnsignedId',
+		'id_supplier_order_state' => 'isUnsignedId',
 		'id_employee' => 'isUnsignedId',
 		'quantity' => 'isUnsignedInt',
 		'date_add' => 'isDate'
@@ -86,9 +85,10 @@ class SupplierOrderReceiptHistoryCore extends ObjectModel
 		$this->validateFields();
 
 		$fields['id_supplier_order_detail'] = (int)$this->id_supplier_order_detail;
-		$fields['id_state'] = (int)$this->id_state;
+		$fields['id_supplier_order_state'] = (int)$this->id_supplier_order_state;
 		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['quantity'] = (int)$this->quantity;
+
 		$fields['date_add'] = pSQL($this->date_add);
 
 		return $fields;

@@ -63,7 +63,12 @@ class SupplierOrderDetailCore extends ObjectModel
 	/**
 	 * @var int Quantity ordered
 	 */
-	public $quantity = 0;
+	public $quantity_expected = 0;
+
+	/**
+	 * @var int Quantity received
+	 */
+	public $quantity_received = 0;
 
 	/**
 	 * @var float This defines the price of the product, considering the number of units to buy.
@@ -119,7 +124,8 @@ class SupplierOrderDetailCore extends ObjectModel
 		'id_currency',
 		'exchange_rate',
 		'unit_price_te',
-		'quantity',
+		'quantity_expected',
+		'quantity_received',
 		'price_te',
 		'discount_rate',
 		'discount_value_te',
@@ -138,7 +144,8 @@ class SupplierOrderDetailCore extends ObjectModel
 		'id_currency' => 'isUnsignedId',
 		'exchange_rate' => 'isFloat',
 		'unit_price_te' => 'isPrice',
-		'quantity' => 'isUnsignedInt',
+		'quantity_expected' => 'isUnsignedInt',
+		'quantity_received' => 'isUnsignedInt',
 		'price_te' => 'isPrice',
 		'discount_rate' => 'isFloat',
 		'discount_value_te' => 'isPrice',
@@ -173,7 +180,8 @@ class SupplierOrderDetailCore extends ObjectModel
 		$fields['id_currency'] = (int)$this->id_currency;
 		$fields['exchange_rate'] = (float)$this->exchange_rate;
 		$fields['unit_price_te'] = (float)$this->unit_price_te;
-		$fields['quantity'] = (int)$this->quantity;
+		$fields['quantity_expected'] = (int)$this->quantity_expected;
+		$fields['quantity_received'] = (int)$this->quantity_received;
 		$fields['price_te'] = (float)$this->price_te;
 		$fields['discount_rate'] = (float)$this->discount_rate;
 		$fields['discount_value_te'] = (float)$this->discount_value_te;
@@ -217,7 +225,7 @@ class SupplierOrderDetailCore extends ObjectModel
 	protected function calculatePrices()
 	{
 		// calcul entry price
-		$htis->price_te = (float)$this->unit_price_te * (int)$this->quantity;
+		$htis->price_te = (float)$this->unit_price_te * (int)$this->quantity_expected;
 
 		// calcul entry discount value
 		if ($this->discount_rate != null && is_numeric($this->discount_rate) && $this->discount_rate > 0)
