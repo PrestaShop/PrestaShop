@@ -146,13 +146,25 @@ abstract class PaymentModuleCore extends Module
 			$order->total_paid_real = $amountPaid;
 			$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 			$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+
 			$order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+			$order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
+			$order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+
 			$order->total_shipping = (float)$cart->getOrderShippingCost();
+			$order->total_shipping_tax_excl = (float)$cart->getOrderShippingCost(NULL, false);
+			$order->total_shipping_tax_incl = (float)$cart->getOrderShippingCost();
 
 			if (Validate::isLoadedObject($carrier))
 				$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
 			$order->total_wrapping = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+			$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+			$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+
 			$order->total_paid = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
+			$order->total_paid_tax_excl = (float)Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
+			$order->total_paid_tax_incl = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
 
 			$order->invoice_date = '0000-00-00 00:00:00';
 			$order->delivery_date = '0000-00-00 00:00:00';
