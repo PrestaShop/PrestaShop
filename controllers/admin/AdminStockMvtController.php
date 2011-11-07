@@ -95,7 +95,7 @@ class AdminStockMvtControllerCore extends AdminController
 			)
 		);
 
-		$this->context->smarty->assign('list_warehouses', array());
+		$this->tpl_list_vars['list_warehouses'] = array();
 
 		parent::__construct();
 	}
@@ -106,6 +106,8 @@ class AdminStockMvtControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
+		$this->toolbar_title = $this->l('Stock : Add Stock movement reason');
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Stock Movement Reason'),
@@ -176,30 +178,27 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->addRowActionSkipList('edit', array(6, 7));
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 6, 7));
 
-		if (!isset($_GET['addstock_mvt_reason']) || (Tools::isSubmit('submitAddstock_mvt_reason') && Tools::getValue('id_stock_mvt_reason')))
-		{
-			$first_list = '<hr /><h2>'.$this->l('Stock movement reason').'</h2>';
-			$first_list .= parent::initList();
-		}
+		$this->toolbar_title = $this->l('Stock : Stock movements reasons');
+		$first_list = parent::initList();
 
 		/*
 		 * Manage second list
 		 */
 		$warehouses = Warehouse::getWarehouseList(true);
 		array_unshift($warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
-		$this->context->smarty->assign('list_warehouses', $warehouses);
-		$this->context->smarty->assign('current_warehouse', $this->getCurrentWarehouseId());
+		$this->tpl_list_vars['list_warehouses'] = $warehouses;
+		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouseId();
 
 		// reset actions, toolbar and query vars
 		$this->actions = array();
 		$this->toolbar_btn = array();
+		$this->toolbar_title = $this->l('Stock : Stock movements');
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		// override table, land, className and identifier for the current controller
 	 	$this->table = 'stock_mvt';
 	 	$this->className = 'StockMvt';
 	 	$this->identifier = 'id_stock_mvt';
-	 	$this->show_toolbar = false;
 	 	$this->lang = false;
 
 	 	// test if a filter is applied for this list

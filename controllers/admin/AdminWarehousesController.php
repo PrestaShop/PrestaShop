@@ -51,6 +51,8 @@ class AdminWarehousesControllerCore extends AdminController
 			'employee' => array(
 				'title' => $this->l('Manager'),
 				'width' => 200,
+				'filter_key' => 'employee',
+				'havingFilter' => true
 			),
 			'location' => array(
 				'title' => $this->l('Location'),
@@ -115,9 +117,11 @@ class AdminWarehousesControllerCore extends AdminController
 		$query->where('active = 1');
 		$employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
+		$this->toolbar_title = $this->l('Stock : Warehouse management');
+
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Warehouse'),
+				'title' => $this->l('Warehouse management'),
 				'image' => '../img/admin/tab.gif'
 			),
 			'input' => array(

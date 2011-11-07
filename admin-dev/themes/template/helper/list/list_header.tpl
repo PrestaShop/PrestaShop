@@ -59,6 +59,8 @@
 
 {/if}{* End if simple_header *}
 
+<a name="{$table}">&nbsp;</a>
+
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
 		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
@@ -74,7 +76,7 @@
 {/if}
 
 <div class="leadin">{block name="leadin"}{/block}</div>
-<a name="{$table}">&nbsp;</a>
+
 
 <form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
