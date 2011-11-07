@@ -458,13 +458,15 @@ select optgroup option {
 }
 
 #content .error  {
-	border: 1px solid #EC9B9B;
-	background-color: #FAE2E3;
+	border: 1px solid #CC0000;
+	background-color: #FFEBE8;
+	border-radius:3px;
 }
 
 #content .warn  {
-	border: 1px solid #D3C200;
-	background-color: #FFFAC6;
+	border: 1px solid #CC0000;
+	background-color: #FFEBE8;
+	border-radius:3px;
 }
 
 #content .error ol {
@@ -751,10 +753,11 @@ tr.deleted td {
 	position: absolute;
 	margin-top: 4px;
 	margin-bottom: 2px;
-	border: 1px solid #50B0EC;
+	border: 1px solid #ECE52F;
 	padding: 8px 6px 8px 34px;
 	color: #383838;
-	background: #DDE9F7 url(../img/admin/help2.png) no-repeat 6px 5px;
+	background: #FFFBE5 url(../img/admin/help2.png) no-repeat 6px 5px;
+	border-radius:3px;
 }
 
 div.hint {
