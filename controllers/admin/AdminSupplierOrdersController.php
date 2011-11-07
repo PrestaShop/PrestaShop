@@ -917,7 +917,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						$entry->id_product = substr($id, 0, $pos);
 						$entry->id_product_attribute = substr($id, $pos + 1);
 						$entry->unit_price_te = (float)Tools::getValue('input_unit_price_te_'.$id, 0);
-						$entry->quantity = (int)Tools::getValue('input_quantity_'.$id, 0);
+						$entry->quantity_expected = (int)Tools::getValue('input_quantity_expected_'.$id, 0);
 						$entry->discount_rate = (float)Tools::getValue('input_discount_rate_'.$id, 0);
 						$entry->tax_rate = (float)Tools::getValue('input_tax_rate_'.$id, 0);
 						$entry->reference = Tools::getValue('input_reference_'.$id, '');
@@ -937,7 +937,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 								'id_product' =>	$entry->id_product,
 								'id_product_attribute' => $entry->id_product_attribute,
 								'unit_price_te' =>	$entry->unit_price_te,
-								'quantity' => $entry->quantity,
+								'quantity_expected' => $entry->quantity_expected,
 								'discount_rate' =>	$entry->discount_rate,
 								'tax_rate' => $entry->tax_rate,
 								'name' => $entry->name,

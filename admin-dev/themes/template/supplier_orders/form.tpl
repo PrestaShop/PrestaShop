@@ -86,7 +86,7 @@
 										<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te|escape:'htmlall':'UTF-8'}" size="8" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_quantity_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity|escape:'htmlall':'UTF-8'}" size="5" />
+										<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected|escape:'htmlall':'UTF-8'}" size="5" />
 									</td>
 									<td class="center">
 										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{$product.discount_rate|escape:'htmlall':'UTF-8'}" size="5" />
@@ -133,7 +133,7 @@
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
 				'<td class="center"><input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" /></td>'+
-				'<td class="center"><input type="text" name="input_quantity_'+product_infos.id+'" value="0" size="5" /></td>'+
+				'<td class="center"><input type="text" name="input_quantity_expected'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink_'+product_infos.id+'">'+
@@ -218,7 +218,6 @@
 			});
 		});
 	</script>
-
 	{/if}
 	{if isset($show_change_state_form)}
 		{$state_content}
