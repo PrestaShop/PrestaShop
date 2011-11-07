@@ -48,6 +48,10 @@
 					<td>{l s='Delivery expected:'}</td>
 					<td>{$supplier_order_expected}</td>
 				</tr>
+				<tr>
+					<td>{l s='Warehouse:'}</td>
+					<td>{$supplier_order_warehouse}</td>
+				</tr>
 			</table>
 		</fieldset>
 	</div>
