@@ -96,8 +96,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 		//no link on list rows
 		$this->list_no_link = true;
 
-		$this->context->smarty->assign('list_warehouses', Warehouse::getWarehouseList(true));
-		$this->context->smarty->assign('current_warehouse', $this->getCurrentWarehouseId());
+		$this->tpl_list_vars['list_warehouses'] = Warehouse::getWarehouseList(true);
+		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouseId();
 
 		return parent::initList();
 	}

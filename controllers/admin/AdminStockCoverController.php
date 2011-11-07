@@ -147,10 +147,10 @@ class AdminStockCoverControllerCore extends AdminController
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
-		$this->context->smarty->assign('stock_cover_periods', $this->stock_cover_periods);
-		$this->context->smarty->assign('stock_cover_cur_period', $this->getCurrentCoveragePeriod());
-		$this->context->smarty->assign('stock_cover_warehouses', $this->stock_cover_warehouses);
-		$this->context->smarty->assign('stock_cover_cur_warehouse', $this->getCurrentCoverageWarehouse());
+		$this->tpl_list_vars['stock_cover_periods'] = $this->stock_cover_periods;
+		$this->tpl_list_vars['stock_cover_cur_period'] = $this->getCurrentCoveragePeriod();
+		$this->tpl_list_vars['stock_cover_warehouses'] = $this->stock_cover_warehouses;
+		$this->tpl_list_vars['stock_cover_cur_warehouse'] = $this->getCurrentCoverageWarehouse();
 
 		$this->displayInformation(
 			$this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,

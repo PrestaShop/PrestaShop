@@ -139,6 +139,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('addsupplier_order_state'))
 		{
+			$this->toolbar_title = $this->l('Stock : Add Supplier order state');
+
 			$this->fields_form = array(
 				'legend' => array(
 					'title' => $this->l('Supplier Order State'),
@@ -263,6 +265,13 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			Tools::isSubmit('submitAddsupplier_order') ||
 			Tools::isSubmit('submitUpdatesupplier_order'))
 		{
+
+			if (Tools::isSubmit('addsupplier_order') ||	Tools::isSubmit('submitAddsupplier_order'))
+				$this->toolbar_title = $this->l('Stock : Create new supplier order');
+
+			if (Tools::isSubmit('updatesupplier_order') || Tools::isSubmit('submitUpdatesupplier_order'))
+				$this->toolbar_title = $this->l('Stock : Manage supplier order');
+
 			$this->addJqueryUI('ui.datepicker');
 
 			//get warehouses list
@@ -405,8 +414,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->addRowActionSkipList('edit', array(1, 2, 3, 4, 5, 6));
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
 
-		$first_list = '<hr /><h2>'.$this->l('Suppliers Orders States').'</h2>';
-		$first_list .= parent::initList();
+		$this->toolbar_title = $this->l('Stock : Suppliers Orders States');
+		$first_list = parent::initList();
 
 		/*
 		 * Manage second list
@@ -415,6 +424,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->actions = array();
 		$this->list_skip_actions = array();
 		$this->toolbar_btn = array();
+		$this->toolbar_title = '';
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		// override table, land, className and identifier for the current controller
@@ -786,8 +796,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		a.id_supplier_order_detail as id,
 		a.quantity_received as quantity_received,
 		a.quantity_expected as quantity_expected,
-		(a.quantity_expected - a.quantity_received) as quantity_left,
-		(a.quantity_expected - a.quantity_received) as quantity_received_today,
+		IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_left,
+		IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today,
 		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
 		p.reference as p_reference,
 		p.ean13 as p_ean13';
@@ -1098,9 +1108,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			if (Validate::isLoadedObject($supplier_order_detail))
 			{
 				// checks if quantity is valid
-				if (!Validate::isInt($quantity) ||
-					$quantity < 0 ||
-					$supplier_order_detail->quantity_received + $quantity > $supplier_order_detail->quantity_expected)
+				// It's possible to receive more quantity than expected in case of a shipping error from the supplier
+				if (!Validate::isInt($quantity) || $quantity < 0)
 					$this->_errors[] = sprintf(Tools::displayError('Quantity (%d) for product #%d is not valid'), (int)$quantity, (int)$id_supplier_order_detail);
 				else // everything is valid :  updates
 				{
@@ -1117,7 +1126,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			}
 		}
 
-		if (!count($this_errors))
+		if (!count($this->_errors))
 		{
 			// display confirm message
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;

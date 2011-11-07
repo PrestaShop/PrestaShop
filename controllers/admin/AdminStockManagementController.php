@@ -86,6 +86,8 @@ class AdminStockManagementControllerCore extends AdminController
 		// no link on list rows
 		$this->list_no_link = true;
 
+		$this->toolbar_btn = array();
+
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)';
 
@@ -689,6 +691,19 @@ class AdminStockManagementControllerCore extends AdminController
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
+
+				// Default cancel button - like old back link
+				if (!isset($this->no_back) || $this->no_back == false)
+				{
+					$back = Tools::safeOutput(Tools::getValue('back', ''));
+					if (empty($back))
+						$back = self::$currentIndex.'&token='.$this->token;
+
+					$this->toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				}
 			break;
 
 			default:
@@ -705,13 +720,22 @@ class AdminStockManagementControllerCore extends AdminController
 		parent::init();
 
 		if (Tools::isSubmit('addstock'))
+		{
 			$this->display = 'addstock';
+			$this->toolbar_title = $this->l('Stock : Add product');
+		}
 
 		if (Tools::isSubmit('removestock'))
+		{
 			$this->display = 'removestock';
+			$this->toolbar_title = $this->l('Stock : Remove product');
+		}
 
 		if (Tools::isSubmit('transferstock'))
+		{
 			$this->display = 'transferstock';
+			$this->toolbar_title = $this->l('Stock : Transfer product');
+		}
 	}
 
 	/**
@@ -760,6 +784,8 @@ class AdminStockManagementControllerCore extends AdminController
 			// Render list
 			$helper = new HelperList();
 			$helper->bulk_actions = array();
+			$helper->toolbar_fix = $this->toolbar_fix;
+			$helper->show_toolbar = false;
 			$helper->actions = $this->actions;
 			$helper->list_skip_actions = $this->list_skip_actions;
 			$helper->no_link = true;
@@ -928,10 +954,8 @@ class AdminStockManagementControllerCore extends AdminController
 					if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
 						$helper->tpl = $this->tpl_folder.'form.tpl';
 
+					$this->setHelperDisplay($helper);
 					$helper->submit_action = $this->display;
-					$helper->toolbar_btn = $this->toolbar_btn;
-					$helper->currentIndex = self::$currentIndex;
-					$helper->token = $this->token;
 					$helper->id = null; // no display standard hidden field in the form
 					$helper->languages = $this->_languages;
 					$helper->default_form_language = $this->default_form_language;
