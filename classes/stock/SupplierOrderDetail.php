@@ -224,7 +224,7 @@ class SupplierOrderDetailCore extends ObjectModel
 	protected function calculatePrices()
 	{
 		// calcul entry price
-		$htis->price_te = (float)$this->unit_price_te * (int)$this->quantity_expected;
+		$this->price_te = (float)$this->unit_price_te * (int)$this->quantity_expected;
 
 		// calcul entry discount value
 		if ($this->discount_rate != null && is_numeric($this->discount_rate) && $this->discount_rate > 0)

@@ -332,7 +332,8 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (156, 'PS_ADMINREFRESH_NOTIFICATION', '1', NOW(), NOW()),
 (157, 'PS_STOCK_MVT_TRANSFER_TO', '6', NOW(), NOW()),
 (158, 'PS_STOCK_MVT_TRANSFER_FROM', '7', NOW(), NOW()),
-(159, 'PS_CARRIER_DEFAULT_ORDER', '0', NOW(), NOW());
+(159, 'PS_CARRIER_DEFAULT_ORDER', '0', NOW(), NOW()),
+(160, 'PS_STOCK_MVT_SUPPLIER_ORDER', '8', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -1401,7 +1402,7 @@ INSERT INTO `PREFIX_group_group_shop` (`id_group`, `id_group_shop`) (SELECT `id_
 INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) VALUES (1, 1);
 
 INSERT INTO `PREFIX_stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`) VALUES
-(1, 1, NOW(), NOW()), (2, -1, NOW(), NOW()), (3, -1, NOW(), NOW()), (4, -1, NOW(), NOW()), (5, 1, NOW(), NOW()), (6, 1, NOW(), NOW()), (7, -1, NOW(), NOW());
+(1, 1, NOW(), NOW()), (2, -1, NOW(), NOW()), (3, -1, NOW(), NOW()), (4, -1, NOW(), NOW()), (5, 1, NOW(), NOW()), (6, 1, NOW(), NOW()), (7, -1, NOW(), NOW()), (8, 1, NOW(), NOW());
 INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`) VALUES
 (1, 1, 'Increase'),
 (1, 2, 'Augmenter'),
@@ -1413,8 +1414,8 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 (2, 3, 'Disminuir'),
 (2, 4, 'Reduzieren'),
 (2, 5, 'Decrease'),
-(3, 1, 'Order'),
-(3, 2, 'Commande'),
+(3, 1, 'Client Order'),
+(3, 2, 'Commande client'),
 (3, 3, 'Pedido'),
 (3, 4, 'Bestellung'),
 (3, 5, 'Ordine'),
@@ -1437,7 +1438,12 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 (7, 2, 'Transferer (depuis)'),
 (7, 3, 'Transfer (from)'),
 (7, 4, 'Transfer (from)'),
-(7, 5, 'Transfer (from)');
+(7, 5, 'Transfer (from)'),
+(8, 1, 'Supplier Order'),
+(8, 2, 'Commande fournisseur)'),
+(8, 3, 'Supplier Order'),
+(8, 4, 'Supplier Order'),
+(8, 5, 'Supplier Order');
 
 INSERT INTO `PREFIX_warehouse` (`id_warehouse`, `id_currency`, `id_address`, `id_employee`, `reference`, `name`, `management_type`) VALUES
 (1, 1, 0, 1, 'default_warehouse', 'default warehouse', 'WA');

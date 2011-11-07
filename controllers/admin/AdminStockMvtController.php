@@ -175,8 +175,7 @@ class AdminStockMvtControllerCore extends AdminController
 		 */
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('edit', array(6, 7));
-		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 6, 7));
+		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 6, 7, 8));
 
 		$this->toolbar_title = $this->l('Stock : Stock movements reasons');
 		$first_list = parent::initList();

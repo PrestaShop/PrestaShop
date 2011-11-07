@@ -1134,22 +1134,45 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					$this->_errors[] = sprintf(Tools::displayError('Quantity (%d) for product #%d is not valid'), (int)$quantity, (int)$id_supplier_order_detail);
 				else // everything is valid :  updates
 				{
+					// creates the history
 					$supplier_receipt_history = new SupplierOrderReceiptHistory();
 					$supplier_receipt_history->id_supplier_order_detail = (int)$id_supplier_order_detail;
 					$supplier_receipt_history->id_employee = (int)$this->context->employee->id;
 					$supplier_receipt_history->id_supplier_order_state = (int)$supplier_order->id_supplier_order_state;
 					$supplier_receipt_history->quantity = (int)$quantity;
-					$supplier_receipt_history->add();
 
+					// updates quantity received
 					$supplier_order_detail->quantity_received += (int)$quantity;
-					$supplier_order_detail->save();
+
 
 					// if current state is "Pending receipt", then we sets it to "Order received in part"
 					if (3 == $supplier_order->id_supplier_order_state)
-					{
 						$supplier_order->id_supplier_order_state = 4;
+
+					// Adds to stock
+					$warehouse = new Warehouse($supplier_order->id_warehouse);
+					if (!Validate::isLoadedObject($warehouse))
+					{
+						$this->_errors[] = Tools::displayError('Warehouse could not be loaded');
+						return;
+					}
+					$manager = StockManagerFactory::getManager();
+					$res = $manager->addProduct($supplier_order_detail->id_product,
+										 		$supplier_order_detail->id_product_attribute,
+										 		$warehouse,
+										 		(int)$quantity,
+										 		Configuration::get('PS_STOCK_MVT_SUPPLIER_ORDER'),
+										 		$supplier_order_detail->price_te,
+										 		true,
+										 		$supplier_order->id);
+					if ($res) // if product has been added
+					{
+						$supplier_receipt_history->add();
+						$supplier_order_detail->save();
 						$supplier_order->save();
 					}
+					else
+						$this->_errors[] = Tools::displayError('Something went wrong when adding products in warehouse');
 				}
 			}
 		}
