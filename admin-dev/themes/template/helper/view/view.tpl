@@ -24,20 +24,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbar-placeholder">
-	<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
-		{if $show_toolbar}
-			{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-			<div class="pageTitle">
+{if $show_toolbar}
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+				<div class="pageTitle">
 				<h3>
 					{block name=pageTitle}
 						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
 					{/block}
 				</h3>
-			</div>
-		{/if}
-		<div class="leadin">{block name="leadin"}{/block}</div>
+				</div>
+			<div class="leadin">{block name="leadin"}{/block}</div>
+		</div>
 	</div>
-</div>
+{/if}
 
 {block name="override_tpl"}{/block}

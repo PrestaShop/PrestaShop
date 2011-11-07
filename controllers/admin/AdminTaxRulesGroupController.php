@@ -78,7 +78,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	 	$this->lang = false;
 		$this->simple_header = true;
 		$this->toolbar_btn = null;
-		$this->no_back = false;
 		$this->list_no_link = true;
 
 		$this->fieldsDisplay = array(
@@ -131,6 +130,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'tax` t
 				ON (a.`id_tax` = t.`id_tax`)';
 		$this->_where = 'AND `id_tax_rules_group` = '.(int)$id_group;
+
+		$this->show_toolbar = false;
 
 		return parent::initList();
 	}
@@ -194,10 +195,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'desc' => $this->l('Add new tax rule')
 			);
 			$content = parent::initForm();
+			$this->tpl_folder = 'tax_rules/';
 			$content .= $this->initRuleForm();
 
 			// We change the variable $ tpl_folder to avoid the overhead calling the file in list_action_edit.tpl in intList ();
-			$this->tpl_folder = 'tax_rules/';
 
 			$content .= $this->initRulesList((int)$obj->id);
 		}
@@ -332,12 +333,14 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->getlanguages();
 		$helper = new HelperForm();
-		$helper->override_tpl = $this->tpl_folder;
+		$helper->override_folder = $this->tpl_folder;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		$helper->table = 'tax_rule';
 		$helper->identifier = 'id_tax_rule';
 		$helper->id = $obj->id;
+		$helper->toolbar_fix = true;
+		$helper->show_toolbar = false;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
