@@ -1372,7 +1372,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	{
 		$this->displayInformation($this->l('This interface allows you to display detailed informations on your order.').'<br />');
 
-		$this->show_toolbar = false;
+		$this->show_toolbar = true;
 		$this->toolbar_fix = false;
 		$this->table = 'supplier_order_detail';
 		$this->identifier = 'id_supplier_order_detail';
@@ -1578,8 +1578,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'supplier_order_total_tax' => $supplier_order->total_tax,
 				'supplier_order_total_ti' => $supplier_order->total_ti,
 			);
+			// sets toolbar title with order reference
+			$this->toolbar_title = sprintf($this->l('View Supplier Order #%s'), $supplier_order->reference);
 		}
-
 		return parent::initView();
 	}
 
