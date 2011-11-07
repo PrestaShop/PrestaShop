@@ -35,16 +35,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->export = true;
 		$this->requiredDatabase = true;
 
-		$this->addRowAction('view');
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
-
 		$this->context = Context::getContext();
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-	 								'export' => array('text' => $this->l('Export selected')));
-
-		if (!Tools::getValue('realedit'))
-			$this->deleted = false;
 
 		$this->fieldsDisplay = array(
 			'id_request_sql' => array('title' => $this->l('ID'), 'width' => 25),
@@ -52,6 +43,41 @@ class AdminRequestSqlControllerCore extends AdminController
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
 
+		parent::__construct();
+	}
+
+	public function initList()
+	{
+		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
+		$this->displayInformation('
+			<strong>'.$this->l('How to create a new sql query?').'</strong>
+			<br />
+			<ul>
+				<li>'.$this->l('Click "Add new".').'<br /></li>
+				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
+				<li>'.$this->l('You can then view the query results by clicking on the tab: ').' <img src="../img/admin/details.gif"></li>
+				<li>'.$this->l('You can then export the query results as a file. Csv file by clicking on the tab: ').' <img src="../img/admin/export.gif"></li>
+			</ul>
+		');
+
+		$this->addRowAction('view');
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+	 	$this->bulk_actions = array(
+	 		'delete' => array(
+	 			'text' => $this->l('Delete selected'),
+	 			'confirm' => $this->l('Delete selected items?')
+	 		),
+	 		'export' => array(
+	 			'text' => $this->l('Export selected')
+	 		)
+	 	);
+
+	 	return parent::initList();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Request')
@@ -79,32 +105,35 @@ class AdminRequestSqlControllerCore extends AdminController
 			)
 		);
 
-		parent::__construct();
+		return parent::initForm();
 	}
 
-	public function viewRequestSql()
+	public function initView()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$content = array();
+		$view = array();
 
 		if ($results = Db::getInstance()->executeS($obj->sql))
 		{
 			foreach (array_keys($results[0]) as $key)
 				$tab_key[] = $key;
 
-			$content['name'] = $obj->name;
-			$content['key'] = $tab_key;
-			$content['results'] = $results;
+			$view['name'] = $obj->name;
+			$view['key'] = $tab_key;
+			$view['results'] = $results;
 
 			$request_sql = new RequestSql();
-			$content['attributes'] = $request_sql->attributes;
+			$view['attributes'] = $request_sql->attributes;
 		}
 		else
-			$content['error'] = true;
+			$view['error'] = true;
 
-		return $content;
+		$this->tpl_view_vars = array(
+			'view' => $view
+		);
+		return parent::initView();
 	}
 
 	public function _childValidation()
@@ -118,47 +147,6 @@ class AdminRequestSqlControllerCore extends AdminController
 			if (!$validate || !empty($request_sql->error_sql))
 				$this->displayError($request_sql->error_sql);
 		}
-	}
-
-	public function initContent()
-	{
-		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
-		$this->displayInformation('
-			<strong>'.$this->l('How to create a new sql query?').'</strong>
-			<br />
-			<ul>
-				<li>'.$this->l('Click "Add new".').'<br /></li>
-				<li>'.$this->l('Fill in the fields and click "Save".').'</li>
-				<li>'.$this->l('You can then view the query results by clicking on the tab: ').' <img src="../img/admin/details.gif"></li>
-				<li>'.$this->l('You can then export the query results as a file. Csv file by clicking on the tab: ').' <img src="../img/admin/export.gif"></li>
-			</ul>
-		');
-
-		$smarty = $this->context->smarty;
-
-		if ($this->display != 'edit' && $this->display != 'add' && $this->display != 'view')
-			$this->display = 'list';
-
-		switch ($this->display)
-		{
-			case 'edit':
-				$this->informations = false;
-			break;
-
-			case 'view':
-				$this->warnings = false;
-				$this->informations = false;
-
-				if (Tools::getValue('back'))
-					$smarty->assign('back', Tools::safeOutput(Tools::getValue('back')));
-				else
-					$smarty->assign('back', Tools::safeOutput(self::$currentIndex.'&token='.$this->token));
-
-				$smarty->assign('view', $this->viewRequestSql());
-			break;
-		}
-
-		parent::initContent();
 	}
 
 	public function bulkexport($boxes)
