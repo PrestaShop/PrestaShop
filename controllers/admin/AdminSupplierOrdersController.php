@@ -288,7 +288,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 			$this->fields_form = array(
 				'legend' => array(
-					'title' => $this->l('Supplier Order Management'),
+					'title' => $this->l('Order informations'),
 					'image' => '../img/admin/edit.gif'
 				),
 				'input' => array(
@@ -297,7 +297,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						'label' => $this->l('Reference:'),
 						'name' => 'reference',
 						'size' => 50,
-						'required' => true
+						'required' => true,
+						'p' => $this->l('This is the reference of your order.'),
 					),
 					array(
 						'type' => 'select',
@@ -309,8 +310,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 							'id' => 'id_supplier',
 							'name' => 'name'
 						),
-						'p' => $this->l('Select the supplier associated to this order'),
-						'hint' => $this->l('Be careful ! When changing this field, all products already associated with the order will be reseted.')
+						'p' => $this->l('Select the supplier you are buying product from'),
+						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
 						'type' => 'select',
@@ -322,7 +323,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 							'id' => 'id_warehouse',
 							'name' => 'name'
 						),
-						'p' => $this->l('Select the warehouse where you want to receive the products from this order'),
+						'p' => $this->l('Select the warehouse where you want the order to be sent to.'),
 					),
 					array(
 						'type' => 'select',
@@ -335,7 +336,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 							'name' => 'name'
 						),
 						'p' => $this->l('The currency of the order'),
-						'hint' => $this->l('Be careful ! When changing this field, all products already associated with the order will be reseted.')
+						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
 						'type' => 'date',
@@ -343,15 +344,15 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						'name' => 'date_delivery_expected',
 						'size' => 20,
 						'required' => true,
-						'p' => $this->l('You can specify an expected delivery date for this order'),
+						'p' => $this->l('This is the expected delivery date for this order'),
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Global discount rate on this order:'),
+						'label' => $this->l('Global discount rate:'),
 						'name' => 'discount_rate',
 						'size' => 5,
 						'required' => true,
-						'p' => $this->l('You can specify a global discount rate for the order'),
+						'p' => $this->l('This is the global discount rate for the order.'),
 					),
 				),
 				'submit' => array(
