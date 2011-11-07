@@ -355,7 +355,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					),
 				),
 				'submit' => array(
-					'title' => $this->l('   Save order modifications   '),
+					'title' => $this->l('   Save order   '),
 				)
 			);
 
@@ -881,6 +881,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		if ($id_supplier_order != null)
 		{
 			$supplier_order = new SupplierOrder($id_supplier_order);
+			$products_already_in_order = $supplier_order->getEntries();
 			$currency = new Currency($supplier_order->id_ref_currency);
 
 			if (Validate::isLoadedObject($supplier_order))
@@ -901,7 +902,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					$product_ids_str = Tools::getValue('product_ids', null);
 					$product_ids = explode('|', $product_ids_str);
 
-					// updates existing products ids
+					// manage each product
 					foreach ($product_ids as $id)
 					{
 						$errors = array();
@@ -968,6 +969,25 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						}
 						else
 							$entry->save();
+					}
+
+					//delete products that are not managed anymore
+					foreach ($products_already_in_order as $paio)
+					{
+						$product_ok = false;
+
+						foreach ($product_ids as $id)
+						{
+							$id_check = $paio['id_product'].'_'.$paio['id_product_attribute'];
+							if ($id_check == $id)
+								$product_ok = true;
+						}
+
+						if ($product_ok === false)
+						{
+							$entry = new SupplierOrderDetail($paio['id_supplier_order_detail']);
+							$entry->delete();
+						}
 					}
 				}
 			}

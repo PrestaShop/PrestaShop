@@ -35,7 +35,7 @@
 	<fieldset>
 		<legend>
 			<img alt="Supplier Order Management" src="../img/admin/edit.gif">
-			Ad an manage products of the current supplier Order
+			Add an manage products of the current supplier Order
 		</legend>
 
 		<p class="clear">{l s='To add a product to the order, begin typing the first letters of the product name, then select the product from the drop-down list:'}</p>
@@ -95,7 +95,7 @@
 										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{$product.tax_rate|escape:'htmlall':'UTF-8'}" size="5" />
 									</td>
 									<td class="center">
-										<a href="#" id="deletelink_{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplierOrderLink">
+										<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplierOrderLink">
 											<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order'}" title="{l s='Remove this product from the order'}" />
 										</a>
 									</td>
@@ -133,10 +133,10 @@
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
 				'<td class="center"><input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" /></td>'+
-				'<td class="center"><input type="text" name="input_quantity_expected'+product_infos.id+'" value="0" size="5" /></td>'+
+				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
-				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink_'+product_infos.id+'">'+
+				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink|'+product_infos.id+'">'+
 				'<img src="../img/admin/delete.gif" alt="{l s="Remove this product from the order"}" title="{l s="Remove this product from the order"}" />'+
 				'</a></td></tr>'
 			);
@@ -158,14 +158,18 @@
 		$(function() {
 			// add click event on just created delete item link
 			$('a.removeProductFromSupplierOrderLink').live('click', function() {
+
 				var id = $(this).attr('id');
 				var product_id = id.split('|')[1];
 
 				//find the position of the product id in product_id array
 				var position = product_ids.indexOf(product_id);
-
+				console.log(product_ids);
+				console.log(product_id);
+				console.log(position);
 				if (position != -1)
 				{
+					console.log('test3');
 					//remove the id from the array
 					product_ids.splice(position, 1);
 
