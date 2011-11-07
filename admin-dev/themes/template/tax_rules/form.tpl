@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="../helper/form/form.tpl"}
+
 {block name="label"}
 	{if $input.type == 'select' && $input.name == 'country[]'}
 		<div id="add_new_tax_rule" style="display:none">
@@ -64,10 +65,12 @@
 				populateStates($(this).val(), '');
 			});
 
-			$('.toolbar_btn').click(function() {
+			$('#desc-tax_rules_group-new').click(function() {
 				initForm();
-				$('#add_new_tax_rule').slideToggle();
+				$('#add_new_tax_rule').show();
 				return false;
+			}, function() {
+				$('#add_new_tax_rule').hide();
 			});
 		});
 	

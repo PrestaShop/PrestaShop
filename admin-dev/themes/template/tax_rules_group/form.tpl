@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="../helper/form/form.tpl"}
+
 {block name="label"}
 	{if $input.type == 'select' && $input.name == 'country[]'}
 		<div id="add_new_tax_rule" style="display:none">
@@ -52,10 +53,8 @@
 {block name="end_field_block"}
 	{if $input.type == 'submit'}
 			</div>
-		</div>
-	{else}
-		</div>
 	{/if}
+	</div>
 {/block}
 
 {block name="script"}

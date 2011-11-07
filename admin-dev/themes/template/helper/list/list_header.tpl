@@ -60,17 +60,19 @@
 {/if}{* End if simple_header *}
 
 {if $show_toolbar}
-<div class="toolbar-placeholder">
-<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
-	{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-	<div class="pageTitle">
-	<h3>{block name=pageTitle}
-		<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-		{/block}</h3>
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+			{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+			<div class="pageTitle">
+				<h3>{block name=pageTitle}
+					<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+					{/block}
+				</h3>
+			</div>
+		</div>
 	</div>
-</div>
-</div>
 {/if}
+
 <div class="leadin">{block name="leadin"}{/block}</div>
 <a name="{$table}">&nbsp;</a>
 
