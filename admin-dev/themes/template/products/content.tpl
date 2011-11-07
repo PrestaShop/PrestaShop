@@ -30,7 +30,6 @@
 <script src="../js/jquery/ui/jquery.ui.widget.min.js" type="text/javascript"></script>
 <script src="../js/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="../js/admin.js"></script>
-
 <div id="productBox">
 {if isset($product_tabs)}
 <div class="toolbarBox">
