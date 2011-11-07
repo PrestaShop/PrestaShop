@@ -23,13 +23,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div>
-	<h2>{l s='Supplier Order'} #{$supplier_order_reference}</h2>
-</div>
-
-<div style="margin-top: 20px;">
-	<fieldset>
-		<legend>{l s='Order'} #{$supplier_order_reference}</legend>
-		{$content}
-	</fieldset>
-</div>
+<script language="javascript">
+$(function() {
+	$('input.quantity_received_today').live('click', function() {
+		/* checks checkbox when the input is clicked */
+		$(this).parents('tr:eq(0)').find('input[type=checkbox]').attr('checked', true);
+	});
+});
+</script>
+<fieldset>
+	<legend>{l s='Order'} #{$supplier_order_reference}</legend>
+	{$content}
+</fieldset>

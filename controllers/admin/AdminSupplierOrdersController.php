@@ -835,7 +835,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 		// display these global order informations
 		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
-		$this->displayInformation($this->l('Be careful : once you add quantities, you cannot go back unless you add new stock movements.').'<br />');
+		$this->displayInformation($this->l('Be careful : once you update, you cannot go back unless you add new negative stock movements.').'<br />');
 
 		// generates content
 		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
@@ -1105,7 +1105,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		foreach ($to_update as $id_supplier_order_detail => $quantity)
 		{
 			$supplier_order_detail = new SupplierOrderDetail($id_supplier_order_detail);
-			if (Validate::isLoadedObject($supplier_order_detail))
+			$supplier_order = new SupplierOrder((int)Tools::getValue('id_supplier_order'));
+			if (Validate::isLoadedObject($supplier_order_detail) && Validate::isLoadedObject($supplier_order))
 			{
 				// checks if quantity is valid
 				// It's possible to receive more quantity than expected in case of a shipping error from the supplier
@@ -1116,12 +1117,19 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					$supplier_receipt_history = new SupplierOrderReceiptHistory();
 					$supplier_receipt_history->id_supplier_order_detail = (int)$id_supplier_order_detail;
 					$supplier_receipt_history->id_employee = (int)$this->context->employee->id;
-					$supplier_receipt_history->id_supplier_order_state = (int)4;
+					$supplier_receipt_history->id_supplier_order_state = (int)$supplier_order->id_supplier_order_state;
 					$supplier_receipt_history->quantity = (int)$quantity;
 					$supplier_receipt_history->add();
 
 					$supplier_order_detail->quantity_received += (int)$quantity;
 					$supplier_order_detail->save();
+
+					// if current state is "Pending receipt", then we sets it to "Order received in part"
+					if (3 == $supplier_order->id_supplier_order_state)
+					{
+						$supplier_order->id_supplier_order_state = 4;
+						$supplier_order->save();
+					}
 				}
 			}
 		}
