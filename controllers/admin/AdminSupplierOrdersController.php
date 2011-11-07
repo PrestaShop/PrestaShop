@@ -1560,11 +1560,15 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			// gets the employee in charge of the order
 			$employee = new Employee($supplier_order->id_employee);
 
+			// gets the warehouse where products will be received
+			$warehouse = new Warehouse($supplier_order->id_warehouse);
+
 			// display these global order informations
 			$this->tpl_view_vars = array(
 				'supplier_order_detail_content' => $content,
 				'supplier_order_currency_sign' => $currency ? $currency['sign'] : '',
 				'supplier_order_employee' => (Validate::isLoadedObject($employee) ? $employee->firstname.' '.$employee->lastname : ''),
+				'supplier_order_warehouse' => (Validate::isLoadedObject($warehouse) ? $warehouse->name : ''),
 				'supplier_order_reference' => $supplier_order->reference,
 				'supplier_order_last_update' => $supplier_order->date_upd,
 				'supplier_order_expected' => $supplier_order->date_delivery_expected,
