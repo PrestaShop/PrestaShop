@@ -32,16 +32,12 @@ class AdminStoresControllerCore extends AdminController
 	 	$this->table = 'store';
 		$this->className = 'Store';
 	 	$this->lang = false;
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 		$this->requiredDatabase = true;
 
 		$this->context = Context::getContext();
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldImageSettings = array(
 			'name' => 'image',
@@ -118,6 +114,11 @@ class AdminStoresControllerCore extends AdminController
 
 	public function initList()
 	{
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->_select = 'cl.`name` country, st.`name` state';
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
@@ -155,7 +156,7 @@ class AdminStoresControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:'),
+					'label' => $this->l('Address (2):'),
 					'name' => 'address2',
 					'size' => 33
 				),
@@ -195,7 +196,7 @@ class AdminStoresControllerCore extends AdminController
 					)
 				),
 				array(
-					'type' => 'text',
+					'type' => 'latitude',
 					'label' => $this->l('Latitude / Longitude:'),
 					'name' => 'latitude',
 					'required' => true,

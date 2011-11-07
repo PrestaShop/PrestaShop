@@ -319,6 +319,7 @@
 						{if isset($field.class)}class="{$field.class}"{/if} />
 				</div>
 			{/if}
+			{block name="other_input"}{/block}
 		{/foreach}
 		{if $required_fields}
 			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
