@@ -109,14 +109,11 @@ class AdminManufacturersControllerCore extends AdminController
 
 	 	$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
 
-		$this->initToolbar();
 		$this->content .= parent::initList();
 	}
 
 	public function initListManufacturerAddresses()
 	{
-
-
 		$this->toolbar_title = $this->l('Addresses');
 		// reset actions and query vars
 		$this->actions = array();
@@ -207,7 +204,6 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->initListManufacturerAddresses();
 	}
 
-
 	 /**
 	 * Display editaddresses action link
 	 * @param string $token the token to add to the link
@@ -226,7 +222,7 @@ class AdminManufacturersControllerCore extends AdminController
             'action' => self::$cache_lang['editaddresses'],
         ));
 
-        return $this->context->smarty->fetch('manufacturers/list_action_edit_adresses.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
 	}
 
 	public function initForm()
@@ -523,6 +519,16 @@ class AdminManufacturersControllerCore extends AdminController
 			'alias' => 'manufacturer'
 		);
 
+		$this->toolbar_btn = array(
+			'save' => array(
+				'href' => '#',
+				'desc' => $this->l('Save')
+			),
+			'cancel' => array(
+				'href' => self::$currentIndex.'&token='.$this->token,
+				'desc' => $this->l('Cancel')
+			)
+		);
 		$this->getlanguages();
 		$helper = new HelperForm();
 		$helper->currentIndex = self::$currentIndex;
@@ -530,12 +536,12 @@ class AdminManufacturersControllerCore extends AdminController
 		$helper->table = $this->table;
 		$helper->identifier = $this->identifier;
 		$helper->id = $address->id;
+		$helper->toolbar_fix = true;
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->fields_value = $this->getFieldsValue($address);
 		$helper->toolbar_btn = $this->toolbar_btn;
-		// $helper->tpl = 'manufacturers/form_addresses.tpl';
 		$this->content .= $helper->generateForm($this->fields_form);
 	}
 
@@ -580,11 +586,44 @@ class AdminManufacturersControllerCore extends AdminController
 			}
 		}
 
-		$this->context->smarty->assign(array(
+		$this->tpl_view_vars = array(
 			'manufacturer' => $manufacturer,
 			'addresses' => $addresses,
 			'products' => $products,
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
+		);
+
+		return parent::initView();
+	}
+
+	public function initContent()
+	{
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
+		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
+			$this->content .= $this->initFormAddress();
+		else if ($this->display == 'edit' || $this->display == 'add')
+		{
+			if (!$this->loadObject(true))
+				return;
+			$this->content .= $this->initForm();
+		}
+		else if ($this->display == 'view')
+		{
+			// Some controllers use the view action without an object
+			if ($this->className)
+				$this->loadObject(true);
+			$this->content .= $this->initView();
+		}
+		else if (!$this->ajax)
+		{
+			$this->content .= $this->initList();
+			$this->content .= $this->initOptions();
+		}
+
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
 	}
 
@@ -618,32 +657,6 @@ class AdminManufacturersControllerCore extends AdminController
 			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
 				$this->ajaxPreProcess();
 		}
-	}
-
-	public function initContent()
-	{
-		if ($this->display == 'edit' || $this->display == 'add')
-		{
-			if (!($this->object = $this->loadObject(true)))
-				return;
-			$this->content .= $this->initForm();
-		}
-		else if ($this->display == 'editaddresses' || $this->display == 'addaddress')
-			$this->content .= $this->initFormAddress();
-		else if ($this->display == 'view')
-			$this->content .= $this->initView();
-		else
-		{
-			$this->content .= $this->initList();
-			$this->content .= $this->initOptions();
-		}
-
-		$this->context->smarty->assign(array(
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
-			'content' => $this->content
-		));
 	}
 
 	public function postProcess()
