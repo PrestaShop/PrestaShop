@@ -801,6 +801,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
 		$this->_group = 'GROUP BY a.id_supplier_order_detail';
 
+		$this->addRowAction('details');
+
 		// gets the list ordered by price desc, without limit
 		$this->getList($lang_id, 'quantity_expected', 'DESC', 0, false, false);
 
@@ -808,7 +810,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$action = '&id_supplier_order='.$id_supplier_order.'&submitUpdateReceipt';
 		// renders list
 		$helper = new HelperList();
+		$helper->override_folder = 'supplier_orders_receipt_history/';
 		$helper->simple_header = true;
+		$helper->actions = $this->actions;
 		$helper->table = $this->table;
 		$helper->no_link = true;
 		$helper->show_toolbar = false;
@@ -1227,6 +1231,60 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
 			$this->_orderBy = 'a.`date_add`';
 			$this->_orderWay = 'DESC';
+
+			// gets list and forces no limit clause in the request
+			$this->getList($lang_id, 'date_add', 'DESC', 0, false, false);
+
+			// renders list
+			$helper = new HelperList();
+			$helper->no_link = true;
+			$helper->show_toolbar = false;
+			$helper->toolbar_fix = false;
+			$helper->shopLinkType = '';
+			$helper->identifier = $this->identifier;
+			$helper->colorOnBackground = true;
+			$helper->simple_header = true;
+			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+
+			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+		}
+		else if (Tools::isSubmit('id_supplier_order_detail'))
+		{
+			$this->identifier = 'id_supplier_order_receipt_history';
+			$this->table = 'supplier_order_receipt_history';
+			$this->display = 'list';
+			$this->lang = false;
+			$lang_id = (int)$this->context->language->id;
+			$id_supplier_order_detail = (int)Tools::getValue('id_supplier_order_detail');
+
+			unset($this->fieldsDisplay);
+			$this->fieldsDisplay = array(
+				'date_add' => array(
+					'title' => $this->l('Last update'),
+					'width' => 50,
+					'align' => 'left',
+					'type' => 'datetime',
+					'havingFilter' => true
+				),
+				'employee' => array(
+					'title' => $this->l('Employee'),
+					'width' => 100,
+					'align' => 'left',
+					'havingFilter' => true
+				),
+				'quantity' => array(
+					'title' => $this->l('Quantity received'),
+					'width' => 100,
+					'align' => 'left',
+					'havingFilter' => true
+				),
+			);
+
+			// loads history of the given order
+			unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
+			$this->_select = 'CONCAT(e.`lastname`, \' \', e.`firstname`) as employee';
+			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.`id_employee` = a.`id_employee`)';
+			$this->_where = 'AND a.`id_supplier_order_detail` = '.(int)$id_supplier_order_detail;
 
 			// gets list and forces no limit clause in the request
 			$this->getList($lang_id, 'date_add', 'DESC', 0, false, false);
