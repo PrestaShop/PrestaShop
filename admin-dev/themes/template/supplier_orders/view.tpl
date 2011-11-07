@@ -27,14 +27,9 @@
 {extends file="helper/view/view.tpl"}
 
 {block name="override_tpl"}
-
-	<div>
-		<h2>{l s='Supplier Order'} #{$supplier_order_reference}</h2>
-	</div>
-	
 	<div style="margin-top: 20px;">
 		<fieldset>
-			<legend>{l s='Order'} #{$supplier_order_reference}</legend>
+			<legend>{l s='General informations'}</legend>
 			<table style="width: 400px;" classe="table">
 				<tr>
 					<td>{l s='Employee:'}</td>
