@@ -258,4 +258,23 @@ class SupplierOrderDetailCore extends ObjectModel
 			$this->tax_value_with_order_discount = $this->price_with_order_dscount_te * ((float)$this->tax_rate / 100);
 		}
 	}
+
+	/**
+	 * @see ObjectModel::validateController()
+	 */
+	public function validateController($htmlentities = true)
+	{
+		$errors = parent::validateController($htmlentities);
+
+		if ($this->quantity_expected <= 0)
+			$errors[] = '<b>'.self::displayFieldName('quantity_expected', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+
+		if ($this->tax_rate <= 0 || $this->tax_rate > 100)
+			$errors[] = '<b>'.self::displayFieldName('tax_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+
+		if ($this->discount_rate <= 0 || $this->discount_rate > 100)
+			$errors[] = '<b>'.self::displayFieldName('discount_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+
+		return $errors;
+	}
 }
