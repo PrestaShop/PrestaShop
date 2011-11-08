@@ -1388,7 +1388,7 @@ class AdminControllerCore extends Controller
 		$helper->no_link = $this->list_no_link;
 		$helper->colorOnBackground = $this->colorOnBackground;
 		$helper->no_back = isset($this->no_back) ? $this->no_back : true;
-		$helper->ajax_params = $this->ajax_params;
+		$helper->ajax_params = (isset($this->ajax_params) ? $this->ajax_params : null);
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;
