@@ -55,8 +55,8 @@ class AdminStockMvtControllerCore extends AdminController
 					'-1' => $this->l('Decrement'),
 				),
 				'icon' => array(
-					-1 => 'arrow_down.png',
-					1 => 'arrow_up.png'
+					-1 => 'remove_stock.png',
+					1 => 'add_stock.png'
 				),
 				'orderby' => false
 			),
@@ -216,6 +216,21 @@ class AdminStockMvtControllerCore extends AdminController
 				'title' => $this->l('Product Name'),
 				'width' => 200,
 				'havingFilter' => true
+			),
+			'sign' => array(
+				'title' => $this->l('Sign'),
+				'width' => 100,
+				'align' => 'center',
+				'type' => 'select',
+				'filter_key' => 'a!sign',
+				'list' => array(
+					'1' => $this->l('Increment'),
+					'-1' => $this->l('Decrement'),
+				),
+				'icon' => array(
+					-1 => 'remove_stock.png',
+					1 => 'add_stock.png'
+				),
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Quantity'),
