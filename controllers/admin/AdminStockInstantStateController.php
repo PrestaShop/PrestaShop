@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0
+ */
 class AdminStockInstantStateControllerCore extends AdminController
 {
 	private $_default_order_by = 'id_product';
@@ -93,7 +96,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 		$this->addRowAction('details');
 
-		//no link on list rows
+		// disables link on list rows
 		$this->list_no_link = true;
 
 		$this->tpl_list_vars['list_warehouses'] = Warehouse::getWarehouseList(true);
@@ -103,15 +106,16 @@ class AdminStockInstantStateControllerCore extends AdminController
 	}
 
 	/**
-	 * method call when ajax request is made with the details row action
+	 * Method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
 	 */
 	public function ajaxProcess()
 	{
-		// get current lang id
+		// gets current lang id
 		$lang_id = (int)$this->context->language->id;
 
-		$query = 'SELECT physical_quantity, usable_quantity, s.price_te
+		$query = '
+			SELECT physical_quantity, usable_quantity, s.price_te
 			FROM '._DB_PREFIX_.'stock s
 			INNER JOIN '._DB_PREFIX_.'product p
 				ON (p.id_product = s.id_product)
@@ -151,7 +155,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$warehouse = 1;
 			if ((int)Tools::getValue('warehouse'))
 				$warehouse = (int)Tools::getValue('warehouse');
-			else if ((int)$this->context->cookie->warehouse)
+			else if ((int)$this->context->cookie->warehouse && (int)$this->context->cookie->warehouse != -1)
 				$warehouse = (int)$this->context->cookie->warehouse;
 			$this->context->cookie->warehouse = $warehouse;
 		}
