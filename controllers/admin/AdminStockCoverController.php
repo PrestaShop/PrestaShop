@@ -181,6 +181,8 @@ class AdminStockCoverControllerCore extends AdminController
 				// removes 'details' action on products without attributes
 				$this->addRowActionSkipList('details', array($item['id']));
 			}
+			else
+				$item['stock'] = 'See details';
 		}
 	}
 
