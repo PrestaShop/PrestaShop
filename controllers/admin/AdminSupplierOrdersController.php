@@ -1601,7 +1601,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($supplier_order_state))
 			return;
 
-		if ($supplier_order_state->editable == false && $supplier_order_state->delivery_note == true)
+		$content = '';
+		if ($supplier_order_state->editable == false) // @TODO Decide what states are allowed
 			$content .= '<a href="#"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
 		else
 			$content .= '-';
