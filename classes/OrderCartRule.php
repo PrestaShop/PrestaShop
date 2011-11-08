@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -25,26 +25,26 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class OrderDiscountCore extends ObjectModel
+class OrderCartRuleCore extends ObjectModel
 {
 	/** @var integer */
 	public $id_order_cart_rule;
-	
+
 	/** @var integer */
 	public $id_order;
 
 	/** @var integer */
 	public $id_cart_rule;
-	
-	/** @var string */	
+
+	/** @var string */
 	public $name;
 
-	/** @var integer */	
+	/** @var integer */
 	public $value;
 
 	protected $tables = array ('order_cart_rule');
 
-	protected	$fieldsRequired = array ('id_order', 'name', 'value');	
+	protected	$fieldsRequired = array ('id_order', 'name', 'value');
 	protected	$fieldsValidate = array ('id_order' => 'isUnsignedId', 'name' => 'isGenericName', 'value' => 'isInt');
 
 	/* MySQL does not allow 'order detail' for a table name */
@@ -56,7 +56,7 @@ class OrderDiscountCore extends ObjectModel
 			'id_order' => array('xlink_resource' => 'orders'),
 		),
 	);
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -64,8 +64,8 @@ class OrderDiscountCore extends ObjectModel
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['name'] = pSQL($this->name);
 		$fields['value'] = (int)($this->value);
-		
+
 		return $fields;
-	}	
+	}
 }
 
