@@ -24,4 +24,4 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a href="{$href}">
-<img src="../img/admin/arrow_down.png" alt="{$action}" title="{$action}" /></a>
+<img src="../img/admin/remove_stock.png" alt="{$action}" title="{$action}" /></a>
