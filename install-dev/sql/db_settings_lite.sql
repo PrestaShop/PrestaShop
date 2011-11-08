@@ -950,7 +950,10 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (98, 'AdminStockInstantState', 95, 4),
 (99, 'AdminStockCover', 95, 5),
 (100, 'AdminSupplierOrders', 95, 6),
-(101, 'AdminAttributeGenerator', -1, 0);
+(101, 'AdminAttributeGenerator', -1, 0),
+(102, 'AdminAccounting', 0, 16),
+(103, 'AdminAccountingManagement', 102, 1),
+(104, 'AdminAccountingExport', 102, 2);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -976,7 +979,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 98, 'Stock instant state'),
 (1, 99, 'Stock cover'),
 (1, 100, 'Supplier orders'),
-(1, 101, 'Combinations generator');
+(1, 101, 'Combinations generator'),
+(1, 102, 'Accounting'),
+(1, 103, 'Account Number Management'),
+(1, 104, 'Export');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -1000,7 +1006,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 98, 'Etat instantané du stock'),
 (2, 99, 'Couverture de stock'),
 (2, 100, 'Commandes fournisseurs'),
-(2, 101, 'Générateur de combinaisons');
+(2, 101, 'Générateur de combinaisons'),
+(2, 102, 'Comptabilité'),
+(2, 103, 'Gestion des numéros de comptes'),
+(2, 104, 'Export');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -1023,7 +1032,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 98, 'Stock instant state'),
 (3, 99, 'Stock cover'),
 (3, 100, 'Supplier orders'),
-(3, 101, 'Combinations generator');
+(3, 101, 'Combinations generator'),
+(3, 102, 'Accounting'),
+(3, 103, 'Account Number Management'),
+(3, 104, 'Export');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -1047,7 +1059,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 98, 'Stock instant state'),
 (4, 99, 'Stock cover'),
 (4, 100, 'Supplier orders'),
-(4, 101, 'Combinations generator');
+(4, 101, 'Combinations generator'),
+(4, 102, 'Accounting'),
+(4, 103, 'Account Number Management'),
+(4, 104, 'Export');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -1071,7 +1086,10 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 98, 'Stock instant state'),
 (5, 99, 'Stock cover'),
 (5, 100, 'Supplier orders'),
-(5, 101, 'Combinations generator');
+(5, 101, 'Combinations generator'),
+(5, 102, 'Accounting'),
+(5, 103, 'Account Number Management'),
+(5, 104, 'Export');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`

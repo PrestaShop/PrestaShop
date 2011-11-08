@@ -60,7 +60,7 @@ class AdminControllerCore extends Controller
 	public $id = -1;
 
 	/** @var array noTabLink array of admintab names witch have no content */
-	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock');
+	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
 
 	/** @var string Security token */
 	public $token;
@@ -360,8 +360,8 @@ class AdminControllerCore extends Controller
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
 			// Sub included tab postProcessing
-			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
-
+			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));	
+			
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 				$this->{'process'.Tools::toCamelCase($this->action)}($token);
 			else if (method_exists($this, $this->action))

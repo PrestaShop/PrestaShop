@@ -94,7 +94,8 @@ class AdminTabsControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'hidden',
-					'name' => 'position'
+					'name' => 'position',
+					'required' => false
 				),
 				array(
 					'type' => 'text',
@@ -221,7 +222,7 @@ class AdminTabsControllerCore extends AdminController
 			return;
 		}
 		/* PrestaShop demo mode*/
-
+		
 		if (($id_tab = (int)Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab)))
 		{
 			if ($tab->move($direction))
@@ -240,7 +241,11 @@ class AdminTabsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}
 		else
+		{
+			// Temporary add the position depend of the selection of the parent category
+			$_POST['position'] = Tab::getNbTabs(Tools::getValue('id_parent'));
 			parent::postProcess();
+		}
 	}
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
