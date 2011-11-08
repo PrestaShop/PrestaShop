@@ -29,20 +29,9 @@ class AdminAccountingExportControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->className = 'Accounting';
 	 	$this->context = Context::getContext();
+	 	
 		parent::__construct();
-	}
-	
-	/**
-	 * AdminController::init() override
-	 * @see AdminController::init()
-	 */
-	public function init()
-	{
-			
-	}
-	
-	public function initContent()
-	{
 	}
 }
