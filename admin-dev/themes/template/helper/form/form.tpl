@@ -287,6 +287,8 @@
 								{else}class="datepicker"{/if}
 								name="{$input.name}"
 								value="{$fields_value[$input.name]}" />
+						{elseif $input.type == 'free'}
+							{$fields_value[$input.name]}
 						{/if}
 						{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 						{if isset($input.p)}
