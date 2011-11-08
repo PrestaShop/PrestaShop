@@ -149,7 +149,6 @@ class HelperListCore extends Helper
 
 		$this->_list = $list;
 		$this->fieldsDisplay = $fields_display;
-
 		/* Display list header (filtering, pagination and column names) */
 		$tpl_vars['header'] = $this->displayListHeader();
 		/* Show the content of the table */
@@ -185,7 +184,6 @@ class HelperListCore extends Helper
 
 	public function displayListContent($token = null)
 	{
-
 		if ($this->is_dnd_identifier)
 			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', '1');
 		else
@@ -227,7 +225,6 @@ class HelperListCore extends Helper
 
 			// @todo skip action for bulk actions
 			// $this->_list[$index]['has_bulk_actions'] = true;
-
 			foreach ($this->fieldsDisplay as $key => $params)
 			{
 				$tmp = explode('!', $key);
@@ -281,18 +278,15 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'];
 				elseif (isset($params['float']))
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
-				elseif (isset($params['type']))
+				elseif (isset($params['type']) && $params['type'] == 'price')
 				{
-					if ($params['type'] == 'price')
-					{
-						$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
-						$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
-					}
-					elseif ($params['type'] == 'date')
-						$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id);
-					elseif ($params['type'] == 'datetime')
-						$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
+					$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
+					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
 				}
+				elseif (isset($params['type']) && $params['type'] == 'date')
+					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id);
+				elseif (isset($params['type']) && $params['type'] == 'datetime')
+					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
 				elseif (isset($tr[$key]))
 				{
 					if ($key == 'price')
@@ -555,12 +549,11 @@ class HelperListCore extends Helper
 				case 'text':
 					if (!Validate::isCleanHtml($value))
 						$value = '';
-
 			}
 			$params['value'] = $value;
 			$this->fieldsDisplay[$key] = $params;
 		}
-		
+
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
 			'table' => $this->table,
 			'currentIndex' => $this->currentIndex,
