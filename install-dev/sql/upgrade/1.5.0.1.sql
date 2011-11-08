@@ -471,3 +471,5 @@ UPDATE `PREFIX_hook` SET `name` = 'actionTaxManager' WHERE `name` = 'taxManager'
 ALTER TABLE `PREFIX_specific_price` ADD `id_product_attribute` INT UNSIGNED NOT NULL AFTER `id_product`;
 ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_product` (`id_product`, `id_product_attribute`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`);
+
+/* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de combinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, 1); */;
