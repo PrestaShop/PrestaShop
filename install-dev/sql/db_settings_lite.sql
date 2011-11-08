@@ -360,8 +360,8 @@ INSERT INTO `PREFIX_category_lang` (`id_category`, `id_lang`, `name`, `descripti
 (1, 1, 'Home', '', 'home', NULL, NULL, NULL),(1, 2, 'Accueil', '', 'home', NULL, NULL, NULL),(1, 3, 'Inicio', '', 'home', NULL, NULL, NULL),(1, 4, 'Start', '', 'home', NULL, NULL, NULL),(1, 5, 'Home page', '', 'home', NULL, NULL, NULL);
 
 INSERT INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`, `shipped`) VALUES
-(1, 0, 1, 'lightblue', 1, 0, 0, 0),(2, 1, 1, '#DDEEFF', 1, 1, 0, 0),(3, 1, 1, '#FFDD99', 1, 1, 1, 0),(4, 1, 1, '#EEDDFF', 1, 1, 1, 1),(5, 1, 0, '#DDFFAA', 1, 1, 1, 1),
-(6, 0, 1, '#DADADA', 1, 0, 0, 0),(7, 1, 1, '#FFFFBB', 1, 0, 0, 0),(8, 0, 1, '#FFDFDF', 1, 0, 0, 0),(9, 1, 1, '#FFD3D3', 1, 0, 0, 0),(10, 0, 1, 'lightblue', 1, 0, 0, 0),(11, 0, 0, 'lightblue', 1, 0, 0, 0),(12, 1, 0, '#DDEEFF', 1, 1, 0, 0);
+(1, 0, 1, 'RoyalBlue', 1, 0, 0, 0),(2, 1, 1, 'LimeGreen', 1, 1, 0, 0),(3, 1, 1, 'DarkOrange', 1, 1, 1, 0),(4, 1, 1, 'BlueViolet', 1, 1, 1, 1),(5, 1, 0, 'Crimson', 1, 1, 1, 1),
+(6, 0, 1, '#999999', 1, 0, 0, 0),(7, 1, 1, 'Orange', 1, 0, 0, 0),(8, 0, 1, 'DarkOrange', 1, 0, 0, 0),(9, 1, 1, 'HotPink', 1, 0, 0, 0),(10, 0, 1, 'RoyalBlue', 1, 0, 0, 0),(11, 0, 0, 'RoyalBlue', 1, 0, 0, 0),(12, 1, 0, 'LimeGreen', 1, 1, 0, 0);
 
 INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `template`) VALUES
 (1, 1, 'Awaiting cheque payment', 'cheque'),
@@ -949,7 +949,8 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (97, 'AdminStockManagement', 95, 2),
 (98, 'AdminStockInstantState', 95, 4),
 (99, 'AdminStockCover', 95, 5),
-(100, 'AdminSupplierOrders', 95, 6);
+(100, 'AdminSupplierOrders', 95, 6),
+(101, 'AdminAttributeGenerator', -1, 0);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -974,7 +975,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 97, 'Stock Management'),
 (1, 98, 'Stock instant state'),
 (1, 99, 'Stock cover'),
-(1, 100, 'Supplier orders');
+(1, 100, 'Supplier orders'),
+(1, 101, 'Combinations generator');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -997,7 +999,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 97, 'Gestion du stock'),
 (2, 98, 'Etat instantané du stock'),
 (2, 99, 'Couverture de stock'),
-(2, 100, 'Commandes fournisseurs');
+(2, 100, 'Commandes fournisseurs'),
+(2, 101, 'Générateur de combinaisons');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -1019,7 +1022,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 97, 'Stock Management'),
 (3, 98, 'Stock instant state'),
 (3, 99, 'Stock cover'),
-(3, 100, 'Supplier orders');
+(3, 100, 'Supplier orders'),
+(3, 101, 'Combinations generator');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -1042,7 +1046,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 97, 'Stock Management'),
 (4, 98, 'Stock instant state'),
 (4, 99, 'Stock cover'),
-(4, 100, 'Supplier orders');
+(4, 100, 'Supplier orders'),
+(4, 101, 'Combinations generator');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -1065,7 +1070,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 97, 'Stock Management'),
 (5, 98, 'Stock instant state'),
 (5, 99, 'Stock cover'),
-(5, 100, 'Supplier orders');
+(5, 100, 'Supplier orders'),
+(5, 101, 'Combinations generator');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`
@@ -1085,7 +1091,7 @@ INSERT INTO `PREFIX_quick_access_lang` (`id_quick_access`, `id_lang`, `name`) VA
 (4, 1, 'New product'),(4, 2, 'Nouveau produit'),(4, 3, 'Nuevo producto'),(4, 4, 'Neues Produkt'),(4, 5, 'Nuovo prodotto'),
 (5, 1, 'New voucher'),(5, 2, 'Nouveau bon de réduction'),(5, 3, 'Nuevo cupón'),(5, 4, 'Neuer Ermäßigungsgutschein'),(5, 5, 'Nuovo buono sconto');
 
-INSERT INTO `PREFIX_order_return_state` (`id_order_return_state`, `color`) VALUES (1, '#ADD8E6'),(2, '#EEDDFF'),(3, '#DDFFAA'),(4, '#FFD3D3'),(5, '#FFFFBB');
+INSERT INTO `PREFIX_order_return_state` (`id_order_return_state`, `color`) VALUES (1, '#ADD8E6'),(2, 'BlueViolet'),(3, 'Crimson'),(4, 'HotPink'),(5, 'Orange');
 
 INSERT INTO `PREFIX_order_return_state_lang` (`id_order_return_state`, `id_lang`, `name`) VALUES
 (1, 1, 'Waiting for confirmation'),(2, 1, 'Waiting for package'),(3, 1, 'Package received'),(4, 1, 'Return denied'),(5, 1, 'Return completed'),

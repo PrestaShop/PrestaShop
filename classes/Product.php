@@ -893,7 +893,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * addProductAttribute is deprecated
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL)
 	{

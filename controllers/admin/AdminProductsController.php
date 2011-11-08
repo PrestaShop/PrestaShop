@@ -1913,7 +1913,7 @@ switch ($this->action)
 			$countries = Country::getCountries($this->context->language->id);
 			$groups = Group::getGroups($this->context->language->id);
 			$currencies = Currency::getCurrencies();
-			$currency = 
+			$currency =
 			$attributes = $obj->getAttributesGroups((int)$this->context->language->id);
 			$combinations = array();
 			foreach($attributes as $attribute)
@@ -1922,7 +1922,7 @@ switch ($this->action)
 				if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
 					$combinations[$attribute['id_product_attribute']]['attributes'] = '';
 				$combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
-				
+
 				$combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(Tools::convertPrice(Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']), $this->context->currency), $this->context->currency);
 			}
 			foreach ($combinations as &$combination)
@@ -3481,9 +3481,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							<th>'.$this->l('Weight').'</th>
 							<th>'.$this->l('Reference').'</th>
 							<th>'.$this->l('EAN13').'</th>
-							<th>'.$this->l('UPC').'</th>
-							<th class="center">'.$this->l('Quantity').'</th>';
-
+							<th>'.$this->l('UPC').'</th>';
 
 							if ($id_product_download && !empty($productDownload->display_filename))
 							{
@@ -3517,7 +3515,6 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
 						$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
 						$combArray[$combinaison['id_product_attribute']]['location'] = $combinaison['location'];
-						$combArray[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
 						$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
 						$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
 						$combArray[$combinaison['id_product_attribute']]['ecotax'] = $combinaison['ecotax'];
@@ -3568,8 +3565,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							<td class="right">'.$product_attribute['weight'].Configuration::get('PS_WEIGHT_UNIT').'</td>
 							<td class="right">'.$product_attribute['reference'].'</td>
 							<td class="right">'.$product_attribute['ean13'].'</td>
-							<td class="right">'.$product_attribute['upc'].'</td>
-							<td class="center">'.$product_attribute['quantity'].'</td>';
+							<td class="right">'.$product_attribute['upc'].'</td>';
 
 							if ($id_product_download && !empty($product->productDownload->display_filename))
 							{
@@ -3590,7 +3586,7 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
-							\''.$product_attribute['quantity'].'\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
+							\''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
 							\''.$product->productDownload->display_filename.'\', \''.$filename.'\', \''.$product->productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$product->productDownload->nb_days_accessible.'\',  \''.$product->productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
@@ -3628,9 +3624,12 @@ $product->supplier_name = Supplier::getNameById($product->id_supplier);
 		$this->content .= $content;
 		// @todo
 		$smarty->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
-		$this->context->smarty->assign('content', $content);
-		$this->context->smarty->assign('product', $product);
-		$this->context->smarty->assign('id_category', $product->id_category_default);
+		$this->context->smarty->assign(array(
+			'content' => $content,
+			'product' => $product,
+			'id_category' => $product->id_category_default,
+			'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator')
+		));
 		$this->content = $this->context->smarty->fetch('products/combinations.tpl');
 	}
 
