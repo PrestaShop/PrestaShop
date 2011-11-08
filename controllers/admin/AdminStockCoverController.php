@@ -175,12 +175,19 @@ class AdminStockCoverControllerCore extends AdminController
 			if ((int)$item['variations'] <= 0)
 			{
 				if ($this->getCurrentCoverageWarehouse() == -1) // if all warehouses
-					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, $this->getCurrentCoveragePeriod());
+					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage(
+						$item['id'],
+						0,
+						$this->getCurrentCoveragePeriod()
+					);
 				else // else selected warehouse
-					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'],
-																							  0,
-																							  $this->getCurrentCoveragePeriod(),
-																							  $this->getCurrentCoverageWarehouse());
+					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage(
+						$item['id'],
+						0,
+						$this->getCurrentCoveragePeriod(),
+						$this->getCurrentCoverageWarehouse()
+					);
+
 				// removes 'details' action on products without attributes
 				$this->addRowActionSkipList('details', array($item['id']));
 			}

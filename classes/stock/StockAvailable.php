@@ -263,17 +263,17 @@ class StockAvailableCore extends ObjectModel
 				WHERE id_stock_available = '.(int)$id_stock_available);
 		}
 	}
-	
+
 	/**
 	 * For a given id_product and id_product_attribute update the quantity available
 	 */
 	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
 	{
 		$id_stock = self::getIdStockAvailable($id_product, $id_product_attribute, $id_shop);
-		
+
 		if (!$id_stock)
 			return false;
-		
+
 		// Update quantity of the pack products
 		if (Pack::isPack($id_product))
 		{
@@ -284,7 +284,7 @@ class StockAvailableCore extends ObjectModel
 				self::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
 			}
 		}
-		
+
 		$stock_available = new StockAvailable($id_stock);
 		$stock_available->quantity = $stock_available->quantity + $delta_quantity;
 		$stock_available->save();

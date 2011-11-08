@@ -365,4 +365,15 @@ class SupplierOrderCore extends ObjectModel
 
 		$history->save();
 	}
+
+	/**
+	 * Remove all products in the order
+	 */
+	public function resetProducts()
+	{
+		$products = $this->getEntriesCollection();
+
+		foreach ($products as $p)
+			$p->delete();
+	}
 }
