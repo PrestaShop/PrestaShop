@@ -333,7 +333,7 @@ class AddressCore extends ObjectModel
 			$address = new Address((int)$id_address);
 
 			if (!Validate::isLoadedObject($address))
-				throw new Exception('Invalid address');
+				throw new PrestashopException('Invalid address');
 		}
 
 		return $address;

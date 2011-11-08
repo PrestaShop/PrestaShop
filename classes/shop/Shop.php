@@ -260,6 +260,28 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
+	* @return Address the current shop address
+	*/
+	public function getAddress()
+	{
+		if (!isset($this->address))
+		{
+			$address = new Address();
+			$address->company = Configuration::get('PS_SHOP_NAME');
+			$address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
+			$address->id_state = Configuration::get('PS_SHOP_STATE_ID');
+			$address->address1 = Configuration::get('PS_SHOP_ADDR1');
+			$address->address2 = Configuration::get('PS_SHOP_ADDR2');
+			$address->postcode = Configuration::get('PS_SHOP_CODE');
+			$address->city = Configuration::get('PS_SHOP_CITY');
+
+			$this->address = $address;
+		}
+
+		return $this->address;
+	}
+
+	/**
 	 * Get shop theme name
 	 *
 	 * @return string
