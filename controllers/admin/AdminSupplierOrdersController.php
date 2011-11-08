@@ -1629,6 +1629,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				);
 			break;
 
+			case 'add':
 			case 'edit':
 				$this->toolbar_btn['save-and-stay'] = array(
 					'href' => '#',
