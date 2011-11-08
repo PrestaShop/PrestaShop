@@ -35,9 +35,10 @@
 					{/block}
 				</h3>
 				</div>
-			<div class="leadin">{block name="leadin"}{/block}</div>
 		</div>
 	</div>
 {/if}
+
+<div class="leadin">{block name="leadin"}{/block}</div>
 
 {block name="override_tpl"}{/block}

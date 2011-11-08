@@ -303,12 +303,28 @@ class SupplierOrderCore extends ObjectModel
 		return ObjectModel::hydrateCollection('SupplierOrderDetail', $results);
 	}
 
+
+	/**
+	 * Check if the order has entries
+	 *
+	 * @return bool
+	 */
+	public function hasEntries()
+	{
+		$query = new DbQuery();
+		$query->select('COUNT(*)');
+		$query->from('supplier_order_detail s');
+		$query->where('s.id_supplier_order = '.(int)$this->id);
+
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) > 0);
+	}
+
 	/**
 	 * Check if the current state allow to edit the current order
 	 *
 	 * @return bool
 	 */
-	protected function isEditable()
+	public function isEditable()
 	{
 		// build query
 		$query = new DbQuery();
@@ -324,7 +340,7 @@ class SupplierOrderCore extends ObjectModel
 	 *
 	 * @return bool
 	 */
-	protected function isDeliveryNoteAvailable()
+	public function isDeliveryNoteAvailable()
 	{
 		// build query
 		$query = new DbQuery();
@@ -340,7 +356,7 @@ class SupplierOrderCore extends ObjectModel
 	 *
 	 * @return bool
 	 */
-	protected function isInReceiptState()
+	public function isInReceiptState()
 	{
 		// build query
 		$query = new DbQuery();

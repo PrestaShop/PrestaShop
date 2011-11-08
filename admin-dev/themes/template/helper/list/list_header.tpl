@@ -75,8 +75,9 @@
 	</div>
 {/if}
 
-<div class="leadin">{block name="leadin"}{/block}</div>
-
+{if !$simple_header}
+	<div class="leadin">{block name="leadin"}{/block}</div>
+{/if}
 
 <form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
