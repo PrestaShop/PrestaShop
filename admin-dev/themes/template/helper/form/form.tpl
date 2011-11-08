@@ -75,10 +75,11 @@
 					{/block}
 				</h3>
 				</div>
-			<div class="leadin">{block name="leadin"}{/block}</div>
 		</div>
 	</div>
 {/if}
+
+<div class="leadin">{block name="leadin"}{/block}</div>
 
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 <form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">

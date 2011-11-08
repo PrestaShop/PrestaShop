@@ -350,7 +350,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						'type' => 'text',
 						'label' => $this->l('Global discount rate:'),
 						'name' => 'discount_rate',
-						'size' => 5,
+						'size' => 7,
 						'required' => true,
 						'p' => $this->l('This is the global discount rate for the order.'),
 					),
@@ -648,6 +648,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		if ($id_supplier_order != null)
 		{
 			$supplier_order = new SupplierOrder($id_supplier_order);
+			$currency = new Currency($supplier_order->id_currency);
 
 			if (Validate::isLoadedObject($supplier_order))
 			{
@@ -671,6 +672,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				{
 					// calculate md5 checksum on each product for use in tpl
 					$item['checksum'] = md5(_COOKIE_KEY_.$item['id_product'].'_'.$item['id_product_attribute']);
+					$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], (int)$currency->decimals + 1);
 
 					// add id to ids list
 					$product_ids[] = $item['id_product'].'_'.$item['id_product_attribute'];
@@ -679,6 +681,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				$this->tpl_form_vars['products_list'] = $products;
 				$this->tpl_form_vars['product_ids'] = implode($product_ids, '|');
 				$this->tpl_form_vars['supplier_id'] = $supplier_order->id_supplier;
+				$this->tpl_form_vars['currency'] = $currency;
 			}
 		}
 
@@ -932,10 +935,10 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						// get product informations
 						$entry->id_product = substr($id, 0, $pos);
 						$entry->id_product_attribute = substr($id, $pos + 1);
-						$entry->unit_price_te = (float)Tools::getValue('input_unit_price_te_'.$id, 0);
-						$entry->quantity_expected = (int)Tools::getValue('input_quantity_expected_'.$id, 0);
-						$entry->discount_rate = (float)Tools::getValue('input_discount_rate_'.$id, 0);
-						$entry->tax_rate = (float)Tools::getValue('input_tax_rate_'.$id, 0);
+						$entry->unit_price_te = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('input_unit_price_te_'.$id, 0));
+						$entry->quantity_expected = (int)str_replace(array(' ', ','), array('', '.'), Tools::getValue('input_quantity_expected_'.$id, 0));
+						$entry->discount_rate = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('input_discount_rate_'.$id, 0));
+						$entry->tax_rate = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('input_tax_rate_'.$id, 0));
 						$entry->reference = Tools::getValue('input_reference_'.$id, '');
 						$entry->ean13 = Tools::getValue('input_ean13_'.$id, '');
 						$entry->name = Tools::getValue('input_name_'.$id, '');
@@ -1144,7 +1147,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 					// updates quantity received
 					$supplier_order_detail->quantity_received += (int)$quantity;
-
 
 					// if current state is "Pending receipt", then we sets it to "Order received in part"
 					if (3 == $supplier_order->id_supplier_order_state)
@@ -1626,6 +1628,13 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'desc' => $this->l('Save')
 				);
 			break;
+
+			case 'edit':
+				$this->toolbar_btn['save-and-stay'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save and stay')
+				);
+
 			default:
 				parent::initToolbar();
 		}

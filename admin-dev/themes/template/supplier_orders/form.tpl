@@ -39,7 +39,7 @@
 		</legend>
 
 		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select the it from the drop-down list:'}</p>
-		<input type="text" size="75" id="cur_product_name" />
+		<input type="text" size="100" id="cur_product_name" />
 		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supplier order'}" title="{l s='Add a product to the supplier order'}" /></span>
 
 		<p>&nbsp;</p>
@@ -83,16 +83,16 @@
 										<input type="hidden" name="input_name_{$product.id_product}_{$product.id_product_attribute}" value="{$product.name}" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te|escape:'htmlall':'UTF-8'}" size="8" />
+										{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te}" size="8" />&nbsp;{$currency->suffix}
 									</td>
 									<td class="center">
-										<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected|escape:'htmlall':'UTF-8'}" size="5" />
+										<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected}" size="5" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{$product.discount_rate|escape:'htmlall':'UTF-8'}" size="5" />
+										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.discount_rate, 2)}" size="5" />%
 									</td>
 									<td class="center">
-										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{$product.tax_rate|escape:'htmlall':'UTF-8'}" size="5" />
+										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.tax_rate, 2)}" size="5" />%
 									</td>
 									<td class="center">
 										<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplierOrderLink">
@@ -132,10 +132,10 @@
 				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
-				'<td class="center"><input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" /></td>'+
+				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" />&nbsp;{$currency->suffix}</td>'+
 				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
-				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
-				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" /></td>'+
+				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
+				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink|'+product_infos.id+'">'+
 				'<img src="../img/admin/delete.gif" alt="{l s="Remove this product from the order"}" title="{l s="Remove this product from the order"}" />'+
 				'</a></td></tr>'
