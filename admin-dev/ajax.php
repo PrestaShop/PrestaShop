@@ -193,10 +193,8 @@ if ($step = (int)(Tools::getValue('ajaxProductTab')))
 
 if (Tools::isSubmit('getAvailableFields') AND Tools::isSubmit('entity'))
 {
-	AdminTab::$currentIndex = 'index.php?tab=AdminImport';
 	$jsonArray = array();
-	require_once(dirname(__FILE__).'/tabs/AdminImport.php');
-	$import = new AdminImport();
+	$import = new AdminImportController();
 
 	$languages = Language::getLanguages(false);
 	$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));

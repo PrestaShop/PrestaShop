@@ -86,7 +86,6 @@ class HelperFormCore extends Helper
 			'title' => $this->title,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,
-			'title' => $this->title,
 			'token' => $this->token,
 			'table' => $this->table,
 			'languages' => $this->languages,
