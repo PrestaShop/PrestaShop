@@ -64,7 +64,7 @@ class AdminStockCoverControllerCore extends AdminController
 				'search' => false
 			),
 			'stock' => array(
-				'title' => $this->l('Qty in stock'),
+				'title' => $this->l('Quantity'),
 				'width' => 80,
 				'orderby' => false,
 				'search' => false
@@ -121,7 +121,6 @@ class AdminStockCoverControllerCore extends AdminController
 				else
 					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod(), $this->getCurrentCoverageWarehouse());
 			}
-
 			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
 		}
 		die;
@@ -137,13 +136,13 @@ class AdminStockCoverControllerCore extends AdminController
 
 		$this->toolbar_btn = array();
 
-		//no link on list rows
+		// disables link
 		$this->list_no_link = true;
 
+		// query
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
-
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
@@ -152,11 +151,8 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->tpl_list_vars['stock_cover_warehouses'] = $this->stock_cover_warehouses;
 		$this->tpl_list_vars['stock_cover_cur_warehouse'] = $this->getCurrentCoverageWarehouse();
 
-		$this->displayInformation(
-			$this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
-					  this interface gives you an idea of when one product will run out of stock.'
-			)
-		);
+		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
+					  						this interface gives you an idea of when one product will run out of stock.'));
 
 		return parent::initList();
 	}
@@ -175,10 +171,14 @@ class AdminStockCoverControllerCore extends AdminController
 			$item = &$this->_list[$i];
 			if ((int)$item['variations'] <= 0)
 			{
-				if ($this->getCurrentCoverageWarehouse() == -1)
+				if ($this->getCurrentCoverageWarehouse() == -1) // if all warehouses
 					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, $this->getCurrentCoveragePeriod());
-				else
-					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'], 0, $this->getCurrentCoveragePeriod(), $this->getCurrentCoverageWarehouse());
+				else // else selected warehouse
+					$item['coverage'] = StockManagerFactory::getManager()->getProductCoverage($item['id'],
+																							  0,
+																							  $this->getCurrentCoveragePeriod(),
+																							  $this->getCurrentCoverageWarehouse());
+				// removes 'details' action on products without attributes
 				$this->addRowActionSkipList('details', array($item['id']));
 			}
 		}

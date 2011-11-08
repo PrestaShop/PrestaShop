@@ -515,28 +515,32 @@ class StockManagerCore implements StockManagerInterface
 
 		// gets all stock_mvt for the given coverage period
 		$query = '
-			SELECT SUM(sm.`physical_quantity`) as quantity_out
-			FROM `'._DB_PREFIX_.'stock_mvt` sm
-			LEFT JOIN `'._DB_PREFIX_.'stock` s ON (sm.`id_stock` = s.`id_stock`)
-			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
-			WHERE sm.`sign` = -1
-			AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'
-			AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
-			AND s.`id_product` = '.(int)$id_product.'
-			AND s.`id_product_attribute` = '.(int)$id_product_attribute.
-			($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'
-			ORDER BY sm.`date_add` DESC';
+			SELECT SUM(quantity) as quantity_out
+			FROM
+			(	SELECT sm.`physical_quantity` as quantity
+				FROM `'._DB_PREFIX_.'stock_mvt` sm
+				LEFT JOIN `'._DB_PREFIX_.'stock` s ON (sm.`id_stock` = s.`id_stock`)
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product`)
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
+				WHERE sm.`sign` = -1
+				AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'
+				AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
+				AND s.`id_product` = '.(int)$id_product.'
+				AND s.`id_product_attribute` = '.(int)$id_product_attribute.
+				($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'
+				GROUP BY sm.`id_stock_mvt`
+			) as sq';
+
 		$quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 		if (!$quantity_out)
-			return 0;
+			return '--';
 
 		$quantity_per_day = round($quantity_out / $coverage);
 		$physical_quantity = $this->getProductPhysicalQuantities($id_product,
 															     $id_product_attribute,
 															     ($id_warehouse ? array($id_warehouse) : null),
 															     true);
-		$time_left = ($quantity_per_day == 0) ? 365 : round($physical_quantity / $quantity_per_day);
+		$time_left = ($quantity_per_day == 0) ? '--' : round($physical_quantity / $quantity_per_day);
 
 		return $time_left;
 	}
