@@ -27,6 +27,8 @@
 
 class AdminZonesControllerCore extends AdminController
 {
+	public $asso_type = 'shop';
+
 	public function __construct()
 	{
 	 	$this->table = 'zone';
@@ -42,7 +44,12 @@ class AdminZonesControllerCore extends AdminController
 		'name' => array('title' => $this->l('Zone'), 'width' => 'auto'),
 		'active' => array('title' => $this->l('Enabled'), 'width' => '70', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
-
+		
+		parent::__construct();
+	}
+	
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Zones'),
@@ -80,17 +87,17 @@ class AdminZonesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'asso_shop',
-					'label' => 'Shop groups:',
+					'label' => 'Shop :',
 					'name' => ''
 				)
 			),
-			'asso_shop' => 'group',
+			'asso_shop' => $this->asso_type,
 			'submit' => array(
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			)
 		);
-		parent::__construct();
+		return parent::initForm();
 	}
 }
 

@@ -53,7 +53,7 @@ class GroupShopCore extends ObjectModel
 		'group' => 					array('type' => 'group_shop'),
 		'manufacturer' => 			array('type' => 'group_shop'),
 		'supplier' => 				array('type' => 'group_shop'),
-		'zone' => 					array('type' => 'group_shop'),
+		'zone' => 					array('type' => 'shop'),
 		'tax_rules_group' => 		array('type' => 'group_shop'),
 	);
 

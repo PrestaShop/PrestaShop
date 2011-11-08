@@ -2163,3 +2163,11 @@ CREATE TABLE `PREFIX_supplier_rates` (
   PRIMARY KEY (`id_product`, `id_product_attribute`, `id_supplier`, `quantity_min`, `quantity_max`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_accounting_zone_shop` (
+  `id_accounting_zone_shop` int(11) NOT NULL AUTO_INCREMENT,
+  `id_zone` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  `account_number` varchar(64) NOT NULL,
+  PRIMARY KEY (`id_accounting_zone_shop`),
+  UNIQUE KEY `id_zone` (`id_zone`,`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

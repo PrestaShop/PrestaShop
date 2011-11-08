@@ -1,0 +1,148 @@
+<?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 9841 $
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+class AdminAccountingManagementControllerCore extends AdminController
+{
+	public function __construct()
+	{
+	 	$this->context = Context::getContext();
+		parent::__construct();
+	}
+	
+	/**
+	 * AdminController::init() override
+	 * @see AdminController::init()
+	 */
+	public function init()
+	{
+		$shop = array();
+		$error = '';
+		
+		parent::init();
+		
+		if (count($this->context->shop->getListOfID()) > 1)
+			$error = $this->l('Please select the shop you want to configure');
+		else
+		{
+			$this->initToolbar();
+
+			$zones = Zone::getZones();
+			$id_shop = $this->context->shop->getID();
+
+			// Set default zone value to the shop	and sort it
+			foreach($zones as $zone)
+			{
+					$shop['zones'][$zone['id_zone']]['name'] = $zone['name'];
+					$shop['zones'][$zone['id_zone']]['account_number'] = '';
+					$shop['name'] = $this->context->shop->name;
+			}
+			
+			$shop['default_account_number'] = Configuration::get('default_account_number', 
+					NULL, NULL, $id_shop);
+			ksort($shop['zones']);
+			
+			$query = '
+				SELECT `id_shop`, `id_zone`, `account_number` 
+				FROM `'._DB_PREFIX_.'accounting_zone_shop`
+				WHERE `id_shop` = '.(int)$id_shop;
+		
+			$zoneShopList = Db::getInstance()->executeS($query);
+	
+			// Set Account number to the id_zone for an id_shop if exist
+			foreach($zoneShopList as $zoneShop)
+				$shop['zones'][$zoneShop['id_zone']]['account_number'] = $zoneShop['account_number'];
+		}
+		
+		$this->context->smarty->assign(array(
+			'shop' => $shop,
+			'error' => $error,
+			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->l('Accounting Management'),
+			'table' => 'accounting'
+		));
+	}
+	
+	/**
+	 * AdminController::init() override
+	 * @see AdminController::postProcess()
+	 */
+	public function postProcess()
+	{
+		if (Tools::isSubmit('UpdateNumbers'))
+			$this->updateAccountNumber();
+	}
+	
+	/**
+	 * assign default action in toolbar_btn smarty var, if they are not set.
+	 * uses override to specifically add, modify or remove items
+	 *
+	 */
+	public function initToolbar()
+	{
+		$this->initToolbarTitle();
+		$this->toolbar_btn['save'] = array(
+			'href' => '#',
+			'desc' => $this->l('Save')
+		);
+	}
+
+	/**
+	 * Update the account number for each shop liable to their zones
+	 */
+	private function updateAccountNumber()
+	{
+		$id_shop = $this->context->shop->getID();
+
+		// Update the current default shop account number
+		Configuration::updateValue(
+			'default_account_number',
+			Tools::getValue('default_account_number'),
+			false, NULL, 
+			$id_shop);
+		
+		// If zone still exist, then update the database with the new value
+		if (count($zones = Zone::getZones()))
+		{
+			$tab = array();
+			foreach($zones as $zone)
+				if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== NULL)
+					$tab[] = array(
+						'id_zone' => $zone['id_zone'],
+						'id_shop' => $id_shop,
+						'num' => $num);
+			
+			// Save to the database the account 
+			if (count($tab))
+			{
+				Accounting::setAccountNumberByZoneShop($tab);
+				$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+				Tools::redirectAdmin(self::$currentIndex.'&token='.$token);
+			}
+		}
+	}
+	
+}
