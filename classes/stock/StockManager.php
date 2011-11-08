@@ -420,7 +420,7 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
-		// Gets clients_orders_qty
+		// Gets client_orders_qty
 		$query = new DbQuery();
 		$query->select('SUM(od.product_quantity)');
 		$query->from('order_detail od');
@@ -428,14 +428,23 @@ class StockManagerCore implements StockManagerInterface
 		$query->where('od.product_id = '.(int)$id_product.' AND od.product_attribute_id = '.(int)$id_product_attribute);
 		$query->where('o.delivery_number = 0');
 		$query->where('o.valid = 1');
-		$clients_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$client_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+
+		// Gets supplier_orders_qty
+		$query = new DbQuery();
+		$query->select('SUM(sod.quantity_expected)');
+		$query->from('supplier_order so');
+		$query->leftjoin('supplier_order_detail sod ON (sod.id_supplier_order = so.id_supplier_order)');
+		$query->leftjoin('supplier_order_state sos ON (sos.id_supplier_order_state = so.id_supplier_order_state)');
+		$query->where('sos.pending_receipt = 1');
+		$query->where('sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute);
+		$supplier_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets {physical OR usable}_qty
 		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse, $usable);
 
-		// Returns real_qty = qty - clients_orders_qty
-		// @TODO include suplliers orders in the calcul when they will be implemented
-		return ($qty - $clients_orders_qty);
+		// real qty = actual qty in stock - current client orders + current supplier orders
+		return ($qty - $client_orders_qty + $supplier_orders_qty);
 	}
 
 	/**
