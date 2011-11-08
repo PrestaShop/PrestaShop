@@ -50,14 +50,14 @@
 			</table>
 		</fieldset>
 	</div>
-	
+
 	<div style="margin-top: 20px;">
 		<fieldset>
 			<legend>{l s='Products'}</legend>
 			{$supplier_order_detail_content}
 		</fieldset>
 	</div>
-	
+
 	<div style="margin-top: 20px;">
 		<fieldset>
 			<legend>{l s='Summary'}</legend>
@@ -104,12 +104,6 @@
 				</tr>
 			</table>
 		</fieldset>
-	</div>
-	
-	<div style="margin-top: 20px;">
-		<a href="{$current}&token={$token}">
-			<img src="../img/admin/arrow2.gif" />{l s='Back to supplier orders'}
-		</a>
 	</div>
 
 {/block}

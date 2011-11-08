@@ -35,12 +35,12 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->context = Context::getContext();
 	 	$this->table = 'supplier_order_state';
 	 	$this->className = 'SupplierOrderState';
-	 	$this->colorOnBackground = true;
 		$this->lang = true;
 
 		$this->fieldsDisplay = array(
 			'name' => array(
 				'title' => $this->l('Name'),
+				'color' => 'color',
 			),
 			'editable' => array(
 				'title' => $this->l('Editable?'),
@@ -127,7 +127,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				if ($this->tabAccess['edit'] === '1')
 					$this->display = 'edit';
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+					$this->_errors[] = Tools::displayError($this->l('You do not have permission to edit here.'));
 		}
 	}
 
@@ -137,9 +137,12 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
-		if (Tools::isSubmit('addsupplier_order_state'))
+		if (Tools::isSubmit('addsupplier_order_state') || Tools::isSubmit('updatesupplier_order_state'))
 		{
-			$this->toolbar_title = $this->l('Stock : Add Supplier order state');
+			if (Tools::isSubmit('updatesupplier_order_state'))
+				$this->toolbar_title = $this->l('Stock : Update Supplier order state');
+			else
+				$this->toolbar_title = $this->l('Stock : Add Supplier order state');
 
 			$this->fields_form = array(
 				'legend' => array(
@@ -434,11 +437,11 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 	$this->identifier = 'id_supplier_order';
 	 	$this->lang = false;
 
-		$this->addRowAction('edit');
-		$this->addRowAction('changestate');
-		$this->addRowAction('details');
-		$this->addRowAction('view');
 		$this->addRowAction('updatereceipt');
+		$this->addRowAction('changestate');
+		$this->addRowAction('edit');
+		$this->addRowAction('view');
+		$this->addRowAction('details');
 
 	 	// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
@@ -474,7 +477,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			'state' => array(
 				'title' => $this->l('State'),
 				'width' => 150,
-				'filter_key' => 'stl!name'
+				'filter_key' => 'stl!name',
+				'color' => 'color',
 			),
 			'date_add' => array(
 				'title' => $this->l('Creation date'),
@@ -555,14 +559,14 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 		if ($id_supplier_order <= 0)
 		{
-			$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
+			$this->_errors[] = Tools::displayError($this->l('The specified supplier order is not valid'));
 			return parent::initContent();
 		}
 
 		$supplier_order = new SupplierOrder($id_supplier_order);
 		if (!Validate::isLoadedObject($supplier_order))
 		{
-			$this->_errors[] = Tools::displayError('The specified supplier order is not valid');
+			$this->_errors[] = Tools::displayError($this->l('The specified supplier order is not valid'));
 			return parent::initContent();
 		}
 
@@ -1006,9 +1010,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	{
 		// Checks access
 		if (Tools::isSubmit('submitAddsupplier_order') && !($this->tabAccess['add'] === '1'))
-			$this->_errors[] = Tools::displayError('You do not have the required permission to add a supplier order.');
+			$this->_errors[] = Tools::displayError($this->l('You do not have the required permission to add a supplier order.'));
 		if (Tools::isSubmit('submitUpdateReceipt') && !($this->tabAccess['edit'] === '1'))
-			$this->_errors[] = Tools::displayError('You do not have the required permission to edit an order.');
+			$this->_errors[] = Tools::displayError($this->l('You do not have the required permission to edit an order.'));
 		// Global checks when add / update a supplier order
 		if (Tools::isSubmit('submitAddsupplier_order'))
 		{
@@ -1017,17 +1021,17 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			// get supplier ID
 			$id_supplier = (int)Tools::getValue('id_supplier', 0);
 			if ($id_supplier <= 0 || !Supplier::supplierExists($id_supplier))
-				$this->_errors[] = Tools::displayError('The selected supplier is not valid.');
+				$this->_errors[] = Tools::displayError($this->l('The selected supplier is not valid.'));
 
 			// get warehouse id
 			$id_warehouse = (int)Tools::getValue('id_warehouse', 0);
 			if ($id_warehouse <= 0 || !Warehouse::exists($id_warehouse))
-				$this->_errors[] = Tools::displayError('The selected warehouse is not valid.');
+				$this->_errors[] = Tools::displayError($this->l('The selected warehouse is not valid.'));
 
 			// get currency id
 			$id_currency = (int)Tools::getValue('id_currency', 0);
 			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
-				$this->_errors[] = Tools::displayError('The selected currency is not valid.');
+				$this->_errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
 			// specify employee
 			$_POST['id_employee'] = $this->context->employee->id;
@@ -1048,17 +1052,17 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			&& Tools::isSubmit('id_supplier_order_state'))
 		{
 			if ($this->tabAccess['edit'] != '1')
-				$this->_errors[] = Tools::displayError('You do not have permissions to change order state.');
+				$this->_errors[] = Tools::displayError($this->l('You do not have permissions to change order state.'));
 
 			// get state ID
 			$id_state = (int)Tools::getValue('id_supplier_order_state', 0);
 			if ($id_state <= 0)
-				$this->_errors[] = Tools::displayError('The selected supplier order state is not valid.');
+				$this->_errors[] = Tools::displayError($this->l('The selected supplier order state is not valid.'));
 
 			// get supplier order ID
 			$id_supplier_order = (int)Tools::getValue('id_supplier_order', 0);
 			if ($id_supplier_order <= 0)
-				$this->_errors[] = Tools::displayError('The supplier order id is not valid.');
+				$this->_errors[] = Tools::displayError($this->l('The supplier order id is not valid.'));
 
 			if (!count($this->_errors))
 			{
@@ -1074,18 +1078,27 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						// if state is valid, change it in the order
 						if ($id_state == $state['id_supplier_order_state'])
 						{
-							$supplier_order->id_supplier_order_state = $state['id_supplier_order_state'];
-							if ($supplier_order->save())
+							// special case of validate state - check if there are products in the order
+							if ($supplier_order->isEditable() && !$supplier_order->hasEntries())
+								$this->_errors[] = Tools::displayError(
+									$this->l('It is not possible to change the state of this order because of no product are present in it')
+								);
+
+							if (!count($this->_errors))
 							{
-								$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-								$redirect = self::$currentIndex.'&token='.$token;
-								Tools::redirectAdmin($redirect.'&conf=5');
+								$supplier_order->id_supplier_order_state = $state['id_supplier_order_state'];
+								if ($supplier_order->save())
+								{
+									$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+									$redirect = self::$currentIndex.'&token='.$token;
+									Tools::redirectAdmin($redirect.'&conf=5');
+								}
 							}
 						}
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('The selected supplier is not valid.');
+					$this->_errors[] = Tools::displayError($this->l('The selected supplier is not valid.'));
 			}
 		}
 
@@ -1106,7 +1119,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$rows = Tools::getValue('supplier_order_detailBox');
 		if (!$rows)
 		{
-			$this->_errors[] = Tools::displayError('You did not select any product to update');
+			$this->_errors[] = Tools::displayError($this->l('You did not select any product to update'));
 			return;
 		}
 
@@ -1122,7 +1135,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		// checks if there is something to update
 		if (!count($to_update))
 		{
-			$this->_errors[] = Tools::displayError('You did not select any product to update');
+			$this->_errors[] = Tools::displayError($this->l('You did not select any product to update'));
 			return;
 		}
 
@@ -1135,7 +1148,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				// checks if quantity is valid
 				// It's possible to receive more quantity than expected in case of a shipping error from the supplier
 				if (!Validate::isInt($quantity) || $quantity <= 0)
-					$this->_errors[] = sprintf(Tools::displayError('Quantity (%d) for product #%d is not valid'), (int)$quantity, (int)$id_supplier_order_detail);
+					$this->_errors[] = sprintf(Tools::displayError($this->l('Quantity (%d) for product #%d is not valid')), (int)$quantity, (int)$id_supplier_order_detail);
 				else // everything is valid :  updates
 				{
 					// creates the history
@@ -1156,7 +1169,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					$warehouse = new Warehouse($supplier_order->id_warehouse);
 					if (!Validate::isLoadedObject($warehouse))
 					{
-						$this->_errors[] = Tools::displayError('Warehouse could not be loaded');
+						$this->_errors[] = Tools::displayError($this->l('Warehouse could not be loaded'));
 						return;
 					}
 					$manager = StockManagerFactory::getManager();
@@ -1175,7 +1188,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 						$supplier_order->save();
 					}
 					else
-						$this->_errors[] = Tools::displayError('Something went wrong when adding products in warehouse');
+						$this->_errors[] = Tools::displayError($this->l('Something went wrong when adding products in warehouse'));
 				}
 			}
 		}
@@ -1605,7 +1618,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 
 		$content = '<span style="width:20px; margin-right:5px;">';
 		if ($supplier_order_state->editable == false) // @TODO Decide what states are allowed
-			$content .= '<a href="#"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
+			$content .= '<a href="#"><img src="../img/admin/pdf.gif" alt="invoice" /></a>';
 		else
 			$content .= '-';
 		$content .= '</span>';
@@ -1627,6 +1640,19 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
+
+				// Default cancel button - like old back link
+				if (!isset($this->no_back) || $this->no_back == false)
+				{
+					$back = Tools::safeOutput(Tools::getValue('back', ''));
+					if (empty($back))
+						$back = self::$currentIndex.'&token='.$this->token;
+
+					$this->toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				}
 			break;
 
 			case 'add':
