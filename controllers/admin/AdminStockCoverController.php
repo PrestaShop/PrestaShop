@@ -97,6 +97,8 @@ class AdminStockCoverControllerCore extends AdminController
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
 			$product_id = (int)Tools::getValue('id');
+			$period = (Tools::getValue('period') ? (int)Tools::getValue('period') : 7);
+			$warehouse = (Tools::getValue('warehouse') ? (int)Tools::getValue('warehouse') : -1);
 
 			$query = '
 			SELECT a.id_product_attribute as id, a.id_product, a.reference, a.ean13,
@@ -110,16 +112,16 @@ class AdminStockCoverControllerCore extends AdminController
 			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
 			INNER JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
 			WHERE a.id_product = '.$product_id.
-			($this->getCurrentCoverageWarehouse() != -1 ? ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse() : ' ').'
+			($warehouse != -1 ? ' AND s.id_warehouse = '.(int)$warehouse : ' ').'
 			GROUP BY a.id_product_attribute';
 
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			foreach ($datas as &$data)
 			{
 				if ($this->getCurrentCoverageWarehouse() == -1)
-					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod());
+					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $period);
 				else
-					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $this->getCurrentCoveragePeriod(), $this->getCurrentCoverageWarehouse());
+					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $period, $warehouse);
 			}
 			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
 		}
@@ -150,6 +152,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->tpl_list_vars['stock_cover_cur_period'] = $this->getCurrentCoveragePeriod();
 		$this->tpl_list_vars['stock_cover_warehouses'] = $this->stock_cover_warehouses;
 		$this->tpl_list_vars['stock_cover_cur_warehouse'] = $this->getCurrentCoverageWarehouse();
+		$this->ajax_params = array('period' => $this->getCurrentCoveragePeriod(), 'warehouse' => $this->getCurrentCoverageWarehouse());
 
 		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
 					  						this interface gives you an idea of when one product will run out of stock.'));
