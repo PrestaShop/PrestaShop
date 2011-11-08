@@ -125,13 +125,19 @@ class HelperCore
 	{
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
-
+		
+		$context = Context::getContext();
+		
+		$context->controller->addJs(array(
+			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
+			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
+			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js',
+			_PS_JS_DIR_.'admin-categories-tree.js'));
+		if ($use_search)
+			$context->controller->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
+			
+			
 		$html = '
-		<script src="'._PS_JS_DIR_.'/jquery/plugins/treeview/jquery.treeview.js" type="text/javascript"></script>
-		<script src="'._PS_JS_DIR_.'/jquery/plugins/treeview/jquery.treeview.async.js" type="text/javascript"></script>
-		<script src="'._PS_JS_DIR_.'/jquery/plugins/treeview/jquery.treeview.edit.js" type="text/javascript"></script>
-		<script src="'._PS_JS_DIR_.'/admin-categories-tree.js" type="text/javascript"></script>'.
-		($use_search ? '<script type="text/javascript" src="'._PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js"></script>' : '' ).'
 		<script type="text/javascript">
 			var inputName = "'.$input_name.'";
 			var use_radio = '.($use_radio ? '1' : '0').';
