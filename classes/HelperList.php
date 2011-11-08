@@ -115,6 +115,8 @@ class HelperListCore extends Helper
 	 */
 	public $no_back = true;
 
+	public $ajax_params = array();
+
 	public function __construct()
 	{
 		$this->base_folder = 'helper/list/';
@@ -393,6 +395,7 @@ class HelperListCore extends Helper
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
 			'token' => $this->token,
 			'action' => self::$cache_lang['Details'],
+			'params' => $this->ajax_params
 		));
 		return $tpl->fetch();
 	}
