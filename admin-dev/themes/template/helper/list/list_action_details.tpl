@@ -34,7 +34,10 @@ $(document).ready(function() {
 					controller: '{$controller}',
 					token: '{$token}',
 					action: '{$action}',
-					ajax: true
+					ajax: true,
+					{foreach $params as $key => $param}
+						{$key}: {$param},
+					{/foreach}
 				},
 				context: document.body,
 				dataType: 'json',
