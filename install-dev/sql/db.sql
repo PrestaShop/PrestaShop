@@ -783,6 +783,7 @@ CREATE TABLE `PREFIX_hook` (
   `description` text,
   `position` tinyint(1) NOT NULL default '1',
   `live_edit` tinyint(1) NOT NULL default '0',
+  `is_native` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_hook`),
   UNIQUE KEY `hook_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
