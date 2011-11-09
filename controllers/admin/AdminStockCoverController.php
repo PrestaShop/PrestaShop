@@ -71,6 +71,7 @@ class AdminStockCoverControllerCore extends AdminController
 			),
 		);
 
+		// pre-defines coverage periods
 		$this->stock_cover_periods = array(
 			$this->l('One week') => 7,
 			$this->l('Two weeks') => 14,
@@ -80,7 +81,9 @@ class AdminStockCoverControllerCore extends AdminController
 			$this->l('One year') => 365
 		);
 
+		// gets the list of warehouses available
 		$this->stock_cover_warehouses = Warehouse::getWarehouseList(true);
+		// gets the final list of warehouses
 		array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
@@ -92,7 +95,7 @@ class AdminStockCoverControllerCore extends AdminController
 	 */
 	public function ajaxProcess()
 	{
-		if (Tools::isSubmit('id'))
+		if (Tools::isSubmit('id')) // if a product id is submit
 		{
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
@@ -225,12 +228,9 @@ class AdminStockCoverControllerCore extends AdminController
 
 		if ($warehouse == 0)
 		{
-			$warehouse = -1;
+			$warehouse = -1; // all warehouses
 			if ((int)Tools::getValue('coverage_warehouse'))
 				$warehouse = (int)Tools::getValue('coverage_warehouse');
-			else if ((int)$this->context->cookie->warehouse)
-				$warehouse = (int)$this->context->cookie->warehouse;
-			$this->context->cookie->warehouse = $warehouse;
 		}
 		return $warehouse;
 	}
