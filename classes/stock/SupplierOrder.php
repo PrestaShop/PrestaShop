@@ -219,6 +219,7 @@ class SupplierOrderCore extends ObjectModel
 		$this->total_ti = 0;
 
 		$is_discount = false;
+
 		if (is_numeric($this->discount_rate) && (float)$this->discount_rate > 0)
 			$is_discount = true;
 
@@ -229,10 +230,7 @@ class SupplierOrderCore extends ObjectModel
 		{
 			// apply global discount rate on each product if possible
 			if ($is_discount)
-			{
 				$entry->applyGlobalDiscount((float)$this->discount_rate);
-				$entry->save();
-			}
 
 			// add new prices to the total
 			$this->total_te += $entry->price_with_discount_te;

@@ -36,6 +36,10 @@
 					<td>{$supplier_order_employee}</td>
 				</tr>
 				<tr>
+					<td>{l s='Creation date:'}</td>
+					<td>{$supplier_order_creation_date}</td>
+				</tr>
+				<tr>
 					<td>{l s='Last update:'}</td>
 					<td>{$supplier_order_last_update}</td>
 				</tr>
@@ -46,6 +50,14 @@
 				<tr>
 					<td>{l s='Warehouse:'}</td>
 					<td>{$supplier_order_warehouse}</td>
+				</tr>
+				<tr>
+					<td>{l s='Currency:'}</td>
+					<td>{$supplier_order_currency->name}</td>
+				</tr>
+				<tr>
+					<td>{l s='Global discount rate:'}</td>
+					<td>{$supplier_order_discount_rate} %</td>
 				</tr>
 			</table>
 		</fieldset>
@@ -64,7 +76,7 @@
 			<table style="width: 400px;" classe="table">
 				<tr>
 					<th>{l s='Designation'}</th>
-					<th width='60px'>{l s='Value'}</th>
+					<th width="100px">{l s='Value'}</th>
 				</tr>
 				<tr>
 					<td bgcolor="#000000"></td>
@@ -72,15 +84,15 @@
 				</tr>
 				<tr>
 					<td>{l s='Total TE'}</td>
-					<td>{$supplier_order_total_te}</td>
+					<td align="right">{$supplier_order_currency->prefix}&nbsp;{$supplier_order_total_te}&nbsp;{$supplier_order_currency->suffix}</td>
 				</tr>
 				<tr>
 					<td>{l s='Discount'}</td>
-					<td>{$supplier_order_discount_value_te}</td>
+					<td align="right">{$supplier_order_currency->prefix}&nbsp;{$supplier_order_discount_value_te}&nbsp;{$supplier_order_currency->suffix}</td>
 				</tr>
 				<tr>
 					<td>{l s='Total with discount TE'}</td>
-					<td>{$supplier_order_total_with_discount_te}</td>
+					<td align="right">{$supplier_order_currency->prefix}&nbsp;{$supplier_order_total_with_discount_te}&nbsp;{$supplier_order_currency->suffix}</td>
 				</tr>
 				<tr>
 					<td bgcolor="#000000"></td>
@@ -88,11 +100,11 @@
 				</tr>
 				<tr>
 					<td>{l s='Total Tax'}</td>
-					<td>{$supplier_order_total_tax}</td>
+					<td align="right">{$supplier_order_currency->prefix}&nbsp;{$supplier_order_total_tax}&nbsp;{$supplier_order_currency->suffix}</td>
 				</tr>
 				<tr>
 					<td>{l s='Total TI'}</td>
-					<td>{$supplier_order_total_ti}</td>
+					<td align="right">{$supplier_order_currency->prefix}&nbsp;{$supplier_order_total_ti}&nbsp;{$supplier_order_currency->suffix}</td>
 				</tr>
 				<tr>
 					<td bgcolor="#000000"></td>
@@ -100,7 +112,7 @@
 				</tr>
 				<tr>
 					<td>{l s='TOTAL TO PAY'}</td>
-					<td>{$supplier_order_total_ti}</td>
+					<td align="right">{$supplier_order_currency->prefix}&nbsp;{$supplier_order_total_ti}&nbsp;{$supplier_order_currency->suffix}</td>
 				</tr>
 			</table>
 		</fieldset>
