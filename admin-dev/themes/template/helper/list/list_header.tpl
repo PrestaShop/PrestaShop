@@ -139,7 +139,10 @@
 							</th>
 							{foreach $fields_display AS $key => $params}
 								<th {if isset($params.align)} class="{$params.align}"{/if}>
-									{$params.title}
+									{if isset($params.hint)}<span class="hint" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+									<span class="title_box">
+										{$params.title}
+									</span>
 									{if (!isset($params.orderby) || $params.orderby) && !$simple_header}
 										<br />
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}">
