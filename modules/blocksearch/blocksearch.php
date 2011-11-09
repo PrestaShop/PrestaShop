@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -39,17 +39,14 @@ class BlockSearch extends Module
 		$this->need_instance = 0;
 
 		parent::__construct();
-		
+
 		$this->displayName = $this->l('Quick Search block');
 		$this->description = $this->l('Adds a block with a quick search field.');
 	}
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('top') 
-				OR !$this->registerHook('leftColumn') 
-				OR !$this->registerHook('rightColumn')
-			)
+		if (!parent::install() || !$this->registerHook('top'))
 			return false;
 		return true;
 	}
@@ -62,36 +59,35 @@ class BlockSearch extends Module
 
 	public function hookRightColumn($params)
 	{
-		$this->_hookCommon($params);
+		$this->calculHookCommon($params);
 		return $this->display(__FILE__, 'blocksearch.tpl');
 	}
 
 	public function hookTop($params)
 	{
-		$this->_hookCommon($params);
+		$this->calculHookCommon($params);
 		return $this->display(__FILE__, 'blocksearch-top.tpl');
 	}
 
 	/**
 	 * _hookAll has to be called in each hookXXX methods. This is made to avoid code duplication.
-	 * 
-	 * @param mixed $params 
+	 *
+	 * @param mixed $params
 	 * @return void
 	 */
-	private function _hookCommon($params)
+	private function calculHookCommon($params)
 	{
 		$this->context->smarty->assign('ENT_QUOTES', ENT_QUOTES);
 		$this->context->smarty->assign('search_ssl', Tools::usingSecureMode());
-		
-		$ajaxSearch=(int)(Configuration::get('PS_SEARCH_AJAX'));
-		$this->context->smarty->assign('ajaxsearch', $ajaxSearch);
 
-		$instantSearch = (int)(Configuration::get('PS_INSTANT_SEARCH'));
-		$this->context->smarty->assign('instantsearch', $instantSearch);
-		if ($ajaxSearch)
+		$ajax_search = (int)Configuration::get('PS_SEARCH_AJAX');
+		$this->context->smarty->assign('ajaxsearch', $ajax_search);
+
+		$instant_search = (int)(Configuration::get('PS_INSTANT_SEARCH'));
+		$this->context->smarty->assign('instantsearch', $instant_search);
+		if ($ajax_search)
 			$this->context->controller->addJqueryPlugin('autocomplete');
 		$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
 		$this->context->controller->addCSS(($this->_path).'blocksearch.css', 'all');
-		return true;
 	}
 }
