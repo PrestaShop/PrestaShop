@@ -1143,7 +1143,7 @@ class AdminControllerCore extends Controller
 					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
 
 				// retrocompatibility
-				if(!file_exists($img))
+				if (!file_exists($img))
 					$img = str_replace('png', 'gif', $img);
 
 				// tab[class_name] does not contains the "Controller" suffix
@@ -1561,7 +1561,7 @@ class AdminControllerCore extends Controller
 			unset($parse_query['setShopContext']);
 			Tools::redirectAdmin($url['path'].'?'.http_build_query($parse_query));
 		}
-		elseif (!Shop::isFeatureActive())
+		else if (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-1';
 
 		$shop_id = '';
@@ -2423,7 +2423,7 @@ EOF;
 		<div id="languages_'.$id.'" class="language_flags">
 			'.$this->l('Choose language:').'<br /><br />';
 		foreach ($languages as $language)
-			if($use_vars_instead_of_ids)
+			if ($use_vars_instead_of_ids)
 				$output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
 			else
 			$output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', \''.$ids.'\', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';

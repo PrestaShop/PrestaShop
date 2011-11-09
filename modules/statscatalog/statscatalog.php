@@ -33,23 +33,23 @@ class StatsCatalog extends Module
 	private $_join = '';
 	private $_where = '';
 
-    function __construct()
-    {
-        $this->name = 'statscatalog';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statscatalog';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
-        parent::__construct();
-		
-        $this->displayName = $this->l('Catalog statistics');
-        $this->description = $this->l('General statistics about your catalog.');
-    }
+
+		parent::__construct();
+
+		$this->displayName = $this->l('Catalog statistics');
+		$this->description = $this->l('General statistics about your catalog.');
+	}
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	public function getQuery1()
@@ -119,14 +119,15 @@ class StatsCatalog extends Module
 
 		$precalc2 = array();
 		foreach ($precalc as $array)
-			$precalc2[] = (int)($array['id_product']);
+			$precalc2[] = (int)$array['id_product'];
 
 		$sql = 'SELECT p.id_product, pl.name, pl.link_rewrite
 				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.$this->context->shop->addSqlRestrictionOnLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+					ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.$this->context->shop->addSqlRestrictionOnLang('pl').')
 				'.$this->_join.'
 				WHERE p.`active` = 1
-					'.(sizeof($precalc2) ? 'AND p.`id_product` NOT IN ('.implode(',', $precalc2).')' : '').'
+					'.(count($precalc2) ? 'AND p.`id_product` NOT IN ('.implode(',', $precalc2).')' : '').'
 					'.$this->_where;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		return array('total' => Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows(), 'result' => $result);
@@ -134,11 +135,10 @@ class StatsCatalog extends Module
 
 	public function hookAdminStatsModules($params)
 	{
-
 		$categories = Category::getCategories($this->context->language->id, true, false);
 		$productToken = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id);
 		$irow = 0;
-		
+
 		if ($id_category = (int)(Tools::getValue('id_category')))
 		{
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)';
@@ -169,7 +169,7 @@ class StatsCatalog extends Module
 
 		$html = '
 		<script type="text/javascript" language="javascript">$(\'#calendar\').slideToggle();</script>
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<label>
 				'.$this->l('Choose a category').'
 			</label>
@@ -178,23 +178,25 @@ class StatsCatalog extends Module
 					<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
 						<option value="0">'.$this->l('All').'</option>';
 		foreach ($categories as $category)
-			$html .= '<option value="'.$category['id_category'].'"'.($id_category == $category['id_category'] ? ' selected="selected"' : '').'>'.$category['name'].'</option>';
+			$html .= '<option value="'.$category['id_category'].'"'.($id_category == $category['id_category'] ? ' selected="selected"' : '').'>'.
+				$category['name'].'
+			</option>';
 		$html .= '
 					</select>
 				</form>
 			</div>
 			<div class="clear space"></div>
 			<table>
-				'.$this->returnLine($this->l('Products available:'), (int)($total)).'
+				'.$this->returnLine($this->l('Products available:'), (int)$total).'
 				'.$this->returnLine($this->l('Average price (base price):'), Tools::displayPrice($averagePrice, $this->context->currency)).'
-				'.$this->returnLine($this->l('Product pages viewed:'), (int)($totalPageViewed)).'
-				'.$this->returnLine($this->l('Products bought:'), (int)($totalBought)).'
-				'.$this->returnLine($this->l('Average number of page visits:'), number_format((float)($averageViewed), 2, '.', '')).'
-				'.$this->returnLine($this->l('Average number of purchases:'), number_format((float)($averagePurchase), 2, '.', '')).'
-				'.$this->returnLine($this->l('Images available:'), (int)($totalPictures)).'
-				'.$this->returnLine($this->l('Average number of images:'), number_format((float)($averagePictures), 2, '.', '')).'
-				'.$this->returnLine($this->l('Products never viewed:'), (int)($totalNV).' / '.(int)($total)).'
-				'.$this->returnLine('<a style="cursor : pointer" onclick="$(\'#pnb\').slideToggle();">'.$this->l('Products never purchased:').'</a>', (int)($totalNB).' / '.(int)($total)).'
+				'.$this->returnLine($this->l('Product pages viewed:'), (int)$totalPageViewed).'
+				'.$this->returnLine($this->l('Products bought:'), (int)$totalBought).'
+				'.$this->returnLine($this->l('Average number of page visits:'), number_format((float)$averageViewed, 2, '.', '')).'
+				'.$this->returnLine($this->l('Average number of purchases:'), number_format((float)$averagePurchase, 2, '.', '')).'
+				'.$this->returnLine($this->l('Images available:'), (int)$totalPictures).'
+				'.$this->returnLine($this->l('Average number of images:'), number_format((float)$averagePictures, 2, '.', '')).'
+				'.$this->returnLine($this->l('Products never viewed:'), (int)$totalNV.' / '.(int)$total).'
+				'.$this->returnLine('<a style="cursor : pointer" onclick="$(\'#pnb\').slideToggle();">'.$this->l('Products never purchased:').'</a>', (int)$totalNB.' / '.(int)$total).'
 				'.$this->returnLine($this->l('Conversion rate*:'), $conversion).'
 			</table>
 			<div style="margin-top: 20px;">
@@ -203,10 +205,10 @@ class StatsCatalog extends Module
 			</div>
 		</fieldset>';
 
-		if (sizeof($productsNB) AND sizeof($productsNB) < 50)
+		if (count($productsNB) && count($productsNB) < 50)
 		{
-			$html .= '
-			<fieldset class="width3 space"><legend><img src="../modules/'.$this->name.'/basket_delete.png" /> '.$this->l('Products never purchased').'</legend>
+			$html .= '<br />
+			<fieldset><legend><img src="../modules/'.$this->name.'/basket_delete.png" /> '.$this->l('Products never purchased').'</legend>
 				<table cellpadding="0" cellspacing="0" class="table">
 					<tr><th>'.$this->l('ID').'</th><th>'.$this->l('Name').'</th><th>'.$this->l('Edit / View').'</th></tr>';
 			foreach ($productsNB as $product)

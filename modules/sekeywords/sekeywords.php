@@ -30,19 +30,19 @@ if (!defined('_PS_VERSION_'))
 
 class SEKeywords extends ModuleGraph
 {
-    private $_html = '';
+	private $html = '';
 	private $_query = '';
 	private $_query2 = '';
 
-    public function __construct()
-    {
-        $this->name = 'sekeywords';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'sekeywords';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-        parent::__construct();
+		parent::__construct();
 
 		$this->_query = 'SELECT `keyword`, COUNT(TRIM(`keyword`)) as occurences
 				FROM `'._DB_PREFIX_.'sekeyword`
@@ -54,13 +54,13 @@ class SEKeywords extends ModuleGraph
 				HAVING occurences > '.(int)Configuration::get('SEK_MIN_OCCURENCES').'
 				ORDER BY occurences DESC';
 
-        $this->displayName = $this->l('Search engine keywords');
-        $this->description = $this->l('Display which keywords have led visitors to your website.');
-    }
+		$this->displayName = $this->l('Search engine keywords');
+		$this->description = $this->l('Display which keywords have led visitors to your website.');
+	}
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('top') OR !$this->registerHook('AdminStatsModules'))
+		if (!parent::install() || !$this->registerHook('top') || !$this->registerHook('AdminStatsModules'))
 			return false;
 		Configuration::updateValue('SEK_MIN_OCCURENCES', 1);
 		Configuration::updateValue('SEK_FILTER_KW', '');
@@ -75,16 +75,16 @@ class SEKeywords extends ModuleGraph
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 	}
 
-    public function uninstall()
-    {
-        if (!parent::uninstall())
+	public function uninstall()
+	{
+		if (!parent::uninstall())
 			return false;
 		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'sekeyword`'));
-    }
+	}
 
 	public function hookTop($params)
 	{
-		if (!isset($_SERVER['HTTP_REFERER']) OR strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost(false, false)))
+		if (!isset($_SERVER['HTTP_REFERER']) || strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost(false, false)))
 			return;
 
 		if ($keywords = $this->getKeywords($_SERVER['HTTP_REFERER']))
@@ -105,9 +105,9 @@ class SEKeywords extends ModuleGraph
 			$this->csvExport(array('type' => 'pie'));
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$total = count($result);
-		$this->_html = '<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		$this->html = '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'<div class="clear">&nbsp;</div>';
-		if ($result AND $total)
+		if ($result && $total)
 		{
 			$table = '
 			<div style="overflow-y: scroll; height: 600px;">
@@ -123,27 +123,31 @@ class SEKeywords extends ModuleGraph
 				$table .= '<tr><td>'.$keyword.'</td><td style="text-align: right">'.$occurences.'</td></tr>';
 			}
 			$table .= '</tbody></table></div>';
-			$this->_html .= '<center>'.$this->engine(array('type' => 'pie')).'</center>
+			$this->html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
 			<br class="clear" />
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br class="clear" />
 			<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
 				'.$this->l('Filter by keyword').' <input type="text" name="SEK_FILTER_KW" value="'.Tools::htmlentitiesUTF8(Configuration::get('SEK_FILTER_KW')).'" />
-				'.$this->l('and min occurrences').' <input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)(Configuration::get('SEK_MIN_OCCURENCES')).'" />
+				'.$this->l('and min occurrences').' <input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)Configuration::get('SEK_MIN_OCCURENCES').'" />
 				<input type="submit" class="button" name="submitSEK" value="'.$this->l('   Apply   ').'" />
 			</form>
 			<br class="clear" />'.$table;
 		}
 		else
-			$this->_html .= '<p><strong>'.$this->l('No keywords').'</strong></p>';
+			$this->html .= '<p><strong>'.$this->l('No keywords').'</strong></p>';
 
-		$this->_html .= '</fieldset><br class="clear" />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		$this->html .= '</fieldset><br class="clear" />
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Identify external search engines\' keywords').'</h2>
-			<p>'.$this->l('One of the most common ways of finding a website through a search engine. Identifying the most popular keywords entered by your new visitors allows you to see which products you should put in front if you want to attract more visitors and potential customers.').'</p><br />
+			<p>'.$this->l('One of the most common ways of finding a website through a search engine.
+				Identifying the most popular keywords entered by your new visitors allows you to see which products you should put in front if you want to attract more visitors and potential customers.').'
+			</p><br />
 			<h3>'.$this->l('How does it work?').'</h2>
-			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it. Currently, it manages the following search engines:').'<b> Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b> '.$this->l('and').' <b>Altavista</b>. '.$this->l('Soon it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
+			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it. 
+				Currently, it manages the following search engines:').'<b> Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b> '.$this->l('and').' <b>Altavista</b>. '.
+				$this->l('Soon it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
 		</fieldset>';
-		return $this->_html;
+		return $this->html;
 	}
 
 	public function getKeywords($url)
@@ -166,9 +170,9 @@ class SEKeywords extends ModuleGraph
 			{
 				$kArray = array();
 				preg_match('/[^a-z]'.$varname.'=.+\&'.'/U', $parsedUrl['query'], $kArray);
-				if (!isset($kArray[0]) OR empty($kArray[0]))
+				if (!isset($kArray[0]) || empty($kArray[0]))
 					preg_match('/[^a-z]'.$varname.'=.+$'.'/', $parsedUrl['query'], $kArray);
-				if (!isset($kArray[0]) OR empty($kArray[0]))
+				if (!isset($kArray[0]) || empty($kArray[0]))
 					return false;
 				$kString = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($kArray[0], '&'), strlen($varname) + 1), '=')));
 				return $kString;

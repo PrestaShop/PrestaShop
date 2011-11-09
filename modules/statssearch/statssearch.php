@@ -30,15 +30,15 @@ if (!defined('_PS_VERSION_'))
 
 class StatsSearch extends ModuleGraph
 {
-    private $_html = '';
+	private $_html = '';
 	private $_query = '';
 	private $_query2 = '';
 
-    function __construct()
-    {
-        $this->name = 'statssearch';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statssearch';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -54,13 +54,13 @@ class StatsSearch extends ModuleGraph
 				HAVING occurences > 1
 				ORDER BY occurences DESC';
 
-        $this->displayName = $this->l('Shop search');
-        $this->description = $this->l('Display which keywords have been searched by your visitors.');
-    }
+		$this->displayName = $this->l('Shop search');
+		$this->description = $this->l('Display which keywords have been searched by your visitors.');
+	}
 
-	function install()
+	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('search') OR !$this->registerHook('AdminStatsModules'))
+		if (!parent::install() || !$this->registerHook('search') || !$this->registerHook('AdminStatsModules'))
 			return false;
 		return Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'statssearch` (
@@ -74,31 +74,31 @@ class StatsSearch extends ModuleGraph
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 	}
 
-    function uninstall()
-    {
-        if (!parent::uninstall())
+	public function uninstall()
+	{
+		if (!parent::uninstall())
 			return false;
 		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'statssearch`'));
-    }
+	}
 
-    /**
-     * Insert keywords in statssearch table when a search is launched on FO
-     */
-	function hookSearch($params)
+	/**
+	 * Insert keywords in statssearch table when a search is launched on FO
+	 */
+	public function hookSearch($params)
 	{
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'statssearch` (`id_shop`, `id_group_shop`, `keywords`, `results`, `date_add`)
 				VALUES ('.$this->context->shop->getID(true).', '.$this->context->shop->getGroupID().', \''.pSQL($params['expr']).'\', '.(int)$params['total'].', NOW())';
 		Db::getInstance()->execute($sql);
 	}
 
-	function hookAdminStatsModules()
+	public function hookAdminStatsModules()
 	{
 		if (Tools::getValue('export'))
 			$this->csvExport(array('type' => 'pie'));
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
 		$table = '<div style="overflow-y: scroll; height: 600px;">
 		<table class="table" border="0" cellspacing="0" cellspacing="0">
 		<thead>
@@ -120,8 +120,8 @@ class StatsSearch extends ModuleGraph
 		}
 		$table .= '</tbody></table></div>';
 
-		if (sizeof($result))
-			$this->_html .= '<center>'.$this->engine(array('type' => 'pie')).'</center>
+		if (count($result))
+			$this->_html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
 									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 									<br class="clear" />'.$table;
 		else

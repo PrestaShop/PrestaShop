@@ -30,71 +30,70 @@ if (!defined('_PS_VERSION_'))
 
 class StatsPersonalInfos extends ModuleGraph
 {
-    private $_html = '';
-    private $_query = '';
+	private $html = '';
+	private $_query = '';
 	private $_option;
 
-    function __construct()
-    {
-        $this->name = 'statspersonalinfos';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statspersonalinfos';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
-        $this->displayName = $this->l('Registered Customer Info');
-        $this->description = $this->l('Display characteristics such as gender and age.');
+		$this->displayName = $this->l('Registered Customer Info');
+		$this->description = $this->l('Display characteristics such as gender and age.');
 	}
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	public function hookAdminStatsModules($params)
 	{
-		$this->_html = '<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
-		if (sizeof(Customer::getCustomers()))
+		$this->html = '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
+		if (count(Customer::getCustomers()))
 		{
 			if (Tools::getValue('export'))
-				if (Tools::getValue('exportType') =='gender')
+				if (Tools::getValue('exportType') == 'gender')
 					$this->csvExport(array('type' => 'pie', 'option' => 'gender'));
-				elseif (Tools::getValue('exportType') =='age')
+				else if (Tools::getValue('exportType') == 'age')
 					$this->csvExport(array('type' => 'pie', 'option' => 'age'));
-				elseif (Tools::getValue('exportType') =='country')
+				else if (Tools::getValue('exportType') == 'country')
 					$this->csvExport(array('type' => 'pie', 'option' => 'country'));
-				elseif (Tools::getValue('exportType') =='currency')
+				else if (Tools::getValue('exportType') == 'currency')
 					$this->csvExport(array('type' => 'pie', 'option' => 'currency'));
-				elseif (Tools::getValue('exportType') =='language')
+				else if (Tools::getValue('exportType') == 'language')
 					$this->csvExport(array('type' => 'pie', 'option' => 'language'));
 
-			$this->_html .= '
-
-				<center><p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women among your customers.').'</p>
-				'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'<br /></center>
+			$this->html .= '
+				<p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women among your customers.').'</p>
+				<div>'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'</div><br />
 				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 				<br class="clear" /><br />
-				<center><p><img src="../img/admin/down.gif" />'.$this->l('Age ranges allows you to determine in which age range your customers are.').'</p>
-				'.$this->engine(array('type' => 'pie', 'option' => 'age')).'<br /></center>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Age ranges allows you to determine in which age range your customers are.').'</p>
+				<div>'.$this->engine(array('type' => 'pie', 'option' => 'age')).'</div><br />
 				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
-				<center><p><img src="../img/admin/down.gif" />'.$this->l('Country distribution allows you to determine in which part of the world your customers are shopping from.').'</p>
-				'.$this->engine(array('type' => 'pie', 'option' => 'country')).'<br /></center>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Country distribution allows you to determine in which part of the world your customers are shopping from.').'</p>
+				<div>'.$this->engine(array('type' => 'pie', 'option' => 'country')).'</div><br />
 				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
-				<center><p><img src="../img/admin/down.gif" />'.$this->l('Currency ranges allows you to determine which currencies your customers are using.').'</p>
-				'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'<br /></center>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Currency ranges allows you to determine which currencies your customers are using.').'</p>
+				<div>'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'</div><br />
 				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=currency"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
-				<center><p><img src="../img/admin/down.gif" />'.$this->l('Language distribution allows you to determine the general languages your customers are using on your shop.').'</p>
-				'.$this->engine(array('type' => 'pie', 'option' => 'language')).'<br /></center>
+				<p><img src="../img/admin/down.gif" />'.$this->l('Language distribution allows you to determine the general languages your customers are using on your shop.').'</p>
+				<div>'.$this->engine(array('type' => 'pie', 'option' => 'language')).'</div><br />
 				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 			</center>';
 		}
 		else
-			$this->_html .= '<p>'.$this->l('No customers registered yet.').'</p>';
-		$this->_html .= '
+			$this->html .= '<p>'.$this->l('No customers registered yet.').'</p>';
+		$this->html .= '
 		</fieldset><br />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Target your audience').'</h2>
 			<p>
 				'.$this->l('In order for each message to have an impact, you need to know to whom it should be addressed.').'
@@ -110,7 +109,7 @@ class StatsPersonalInfos extends ModuleGraph
 				</ul>
 			</p><br />
 		</fieldset>';
-		return $this->_html;
+		return $this->html;
 	}
 
 	public function setOption($option, $layers = 1)
@@ -164,7 +163,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('0-18 years old');
@@ -178,7 +177,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('18-24 years old');
@@ -192,7 +191,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
  				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('25-34 years old');
@@ -206,7 +205,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('35-49 years old');
@@ -220,7 +219,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('50-59 years old');
@@ -233,7 +232,7 @@ class StatsPersonalInfos extends ModuleGraph
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('60 years old and more');
@@ -245,7 +244,7 @@ class StatsPersonalInfos extends ModuleGraph
 						WHERE `birthday` IS NULL
 							'.$this->sqlShopRestriction(Shop::SHARE_CUSTOMER);
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-				if (isset($result['total']) AND $result['total'])
+				if (isset($result['total']) && $result['total'])
 				{
 					$this->_values[] = $result['total'];
 					$this->_legend[] = $this->l('Unknown');
@@ -265,8 +264,8 @@ class StatsPersonalInfos extends ModuleGraph
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
 				{
-				    $this->_values[] = $row['total'];
-				    $this->_legend[] = $row['name'];
+					$this->_values[] = $row['total'];
+					$this->_legend[] = $row['name'];
 				}
 			break;
 
@@ -281,8 +280,8 @@ class StatsPersonalInfos extends ModuleGraph
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
 				{
-				    $this->_values[] = $row['total'];
-				    $this->_legend[] = $row['name'];
+					$this->_values[] = $row['total'];
+					$this->_legend[] = $row['name'];
 				}
 			break;
 
@@ -297,8 +296,8 @@ class StatsPersonalInfos extends ModuleGraph
 				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 				foreach ($result as $row)
 				{
-				    $this->_values[] = $row['total'];
-				    $this->_legend[] = $row['name'];
+					$this->_values[] = $row['total'];
+					$this->_legend[] = $row['name'];
 				}
 			break;
 		}

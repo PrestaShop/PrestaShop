@@ -27,13 +27,13 @@
 
 abstract class ModuleGraphEngineCore extends Module
 {
-	protected	$_type;
+	protected $_type;
 
 	public function __construct($type)
 	{
 		$this->_type = $type;
 	}
-	
+
 	public function install()
 	{
 		if (!parent::install())
@@ -44,24 +44,25 @@ abstract class ModuleGraphEngineCore extends Module
 	public static function getGraphEngines()
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-    	SELECT m.`name`
-    	FROM `'._DB_PREFIX_.'module` m
-    	LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-    	LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-    	WHERE h.`name` = \'GraphEngine\'');
-		
-		$arrayEngines = array();
-		foreach ($result AS $module)
-    	{
+	    	SELECT m.`name`
+	    	FROM `'._DB_PREFIX_.'module` m
+	    	LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+	    	LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+	    	WHERE h.`name` = \'displayAdminStatsGraphEngine\'
+	    ');
+
+		$array_engines = array();
+		foreach ($result as $module)
+		{
 			$instance = Module::getInstanceByName($module['name']);
 			if (!$instance)
 				continue;
-			$arrayEngines[$module['name']] = array($instance->displayName, $instance->description);
+			$array_engines[$module['name']] = array($instance->displayName, $instance->description);
 		}
-		
-		return $arrayEngines;
+
+		return $array_engines;
 	}
-	
+
 	abstract public function createValues($values);
 	abstract public function setSize($width, $height);
 	abstract public function setLegend($legend);

@@ -30,26 +30,26 @@ if (!defined('_PS_VERSION_'))
 
 class StatsRegistrations extends ModuleGraph
 {
-    private $_html = '';
-    private $_query = '';
+	private $_html = '';
+	private $_query = '';
 
-    function __construct()
-    {
-        $this->name = 'statsregistrations';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	function __construct()
+	{
+		$this->name = 'statsregistrations';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 			
 		parent::__construct();
 		
-        $this->displayName = $this->l('Customer accounts');
-        $this->description = $this->l('Display the progress of customer registration.');
-    }
+		$this->displayName = $this->l('Customer accounts');
+		$this->description = $this->l('Display the progress of customer registration.');
+	}
 
-    /**
-     * Called during module installation
-     */
+	/**
+	 * Called during module installation
+	 */
 	public function install()
 	{
 		return (parent::install() AND $this->registerHook('AdminStatsModules'));
@@ -109,16 +109,16 @@ class StatsRegistrations extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 0, 'type' => 'line'));
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<p>
 				'.$this->l('Visitors who have stopped at the registering step:').' '.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'<br />
 				'.$this->l('Visitors who have placed an order directly after registration:').' '.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'
 			</p>
 			<p>'.$this->l('Total customer accounts:').' '.$totalRegistrations.'</p>
-			<center>'.$this->engine(array('type' => 'line')).'</center>
+			<div>'.$this->engine(array('type' => 'line')).'</div>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 		</fieldset><br />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Number of customer accounts created').'</h2>
 			<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.').'</p>
 			<br /><h3>'.$this->l('How to act on the registrations\' evolution?').'</h3>
@@ -152,7 +152,7 @@ class StatsRegistrations extends ModuleGraph
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		foreach ($result AS $row)
-		    $this->_values[(int)(substr($row['date_add'], 0, 4))]++;
+			$this->_values[(int)(substr($row['date_add'], 0, 4))]++;
 	}
 	
 	protected function setYearValues($layers)
@@ -178,7 +178,7 @@ class StatsRegistrations extends ModuleGraph
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		foreach ($result AS $row)
-		    $this->_values[(int)(substr($row['date_add'], 11, 2))]++;
+			$this->_values[(int)(substr($row['date_add'], 11, 2))]++;
 	}
 }
 

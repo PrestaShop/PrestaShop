@@ -30,25 +30,25 @@ if (!defined('_PS_VERSION_'))
 
 class StatsSales extends ModuleGraph
 {
-    private $_html = '';
-    private $_query = '';
-    private $_query2 = '';
-    private $_option = '';
-    private $id_country = '';
+	private $_html = '';
+	private $_query = '';
+	private $_query2 = '';
+	private $_option = '';
+	private $id_country = '';
 
-    function __construct()
-    {
-        $this->name = 'statssales';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	function __construct()
+	{
+		$this->name = 'statssales';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
 		parent::__construct();
 		
-        $this->displayName = $this->l('Sales and orders');
-        $this->description = $this->l('Display the sales evolution and orders by statuses');
-    }
+		$this->displayName = $this->l('Sales and orders');
+		$this->description = $this->l('Display the sales evolution and orders by statuses');
+	}
 	
 	public function install()
 	{
@@ -67,7 +67,7 @@ class StatsSales extends ModuleGraph
 			$this->csvExport(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country')));
 			
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right; margin-left: 10px;">
 				<select name="id_country">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
@@ -76,15 +76,15 @@ class StatsSales extends ModuleGraph
 		$this->_html .= '</select>
 				<input type="submit" name="submitCountry" value="'.$this->l('Filter').'" class="button" />
 			</form>
-			<p><center><img src="../img/admin/down.gif" />
+			<p><img src="../img/admin/down.gif" />
 				'.$this->l('These graphs represent the evolution of your orders and sales turnover for a given period. This tool allows for quick overview of the viability of your shop. You can also keep watch on the difference between time periods (like the holiday season). Only valid orders are included in these two graphs.').'
-			</center></p>
+			</p>
 			<p>'.$this->l('Orders placed:').' '.(int)($totals['orderCount']).'</p>
 			<p>'.$this->l('Products bought:').' '.(int)($totals['products']).'</p>
-			<center>'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'</center>
+			<div>'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'</div>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
 			<p>'.$this->l('Sales:').' '.Tools::displayPrice($totals['orderSum'], $currency).'</p>
-			<center>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</center></p>
+			<div>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</div>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
 			<p class="space"><img src="../img/admin/down.gif" />
 				'.$this->l('You can see the order state distribution below.').'
@@ -92,8 +92,8 @@ class StatsSales extends ModuleGraph
 			'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 		</fieldset>
-		<br class="clear" />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<br />
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Various order statuses').'</h2>
 			<p>
 				'.$this->l('In your back-office, you can find the following order statuses : Awaiting check payment, Payment accepted, Preparation in progress, Shipping, Delivered, Cancelled, Refund, Payment error, Out of stock, and Awaiting bank wire payment.').'<br />
@@ -248,8 +248,8 @@ class StatsSales extends ModuleGraph
 		GROUP BY oh.`id_order_state`');
 		foreach ($result as $row)
 		{
-		    $this->_values[] = $row['total'];
-		    $this->_legend[] = $row['name'];
+			$this->_values[] = $row['total'];
+			$this->_legend[] = $row['name'];
 		}
 	}
 }

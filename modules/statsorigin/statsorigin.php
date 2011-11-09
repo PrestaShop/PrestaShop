@@ -31,24 +31,24 @@ if (!defined('_PS_VERSION_'))
 class StatsOrigin extends ModuleGraph
 {
 	private $_html;
-	
-    function __construct()
-    {
-        $this->name = 'statsorigin';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+
+	public function __construct()
+	{
+		$this->name = 'statsorigin';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
-        parent::__construct();
-		
-        $this->displayName = $this->l('Visitors origin');
-        $this->description = $this->l('Display the websites your visitors come from.');
-    }
 
-	function install()
+		parent::__construct();
+
+		$this->displayName = $this->l('Visitors origin');
+		$this->description = $this->l('Display the websites your visitors come from.');
+	}
+
+	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	private function getOrigins($dateBetween)
@@ -63,7 +63,7 @@ class StatsOrigin extends ModuleGraph
 		$websites = array($directLink => 0);
 		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($result))
 		{
-			if (!isset($row['http_referer']) OR empty($row['http_referer']))
+			if (!isset($row['http_referer']) || empty($row['http_referer']))
 				++$websites[$directLink];
 			else
 			{
@@ -78,48 +78,50 @@ class StatsOrigin extends ModuleGraph
 		return $websites;
 	}
 
-	function hookAdminStatsModules()
+	public function hookAdminStatsModules()
 	{
 		$websites = $this->getOrigins(ModuleGraph::getDateBetween());
 		if (Tools::getValue('export'))
 			if (Tools::getValue('exportType') == 'top')
 				$this->csvExport(array('type' => 'pie'));
-		$this->_html = '<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Origin').'</legend>';
-		if (sizeof($websites))
+		$this->_html = '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Origin').'</legend>';
+		if (count($websites))
 		{
 			$this->_html .= '
-			<center><p><img src="../img/admin/down.gif" />'. $this->l('Here is the percentage of the 10 most popular referrer websites by which visitors went through to get to your shop.').'</p>
-			'.$this->engine(array('type' => 'pie')).'</center>
+			<p><img src="../img/admin/down.gif" />'.$this->l('Here is the percentage of the 10 most popular referrer websites by which visitors went through to get to your shop.').'</p>
+			<div>'.$this->engine(array('type' => 'pie')).'</div>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
 			<div style="overflow-y: scroll; height: 600px;">
-			<center>
+			
 			<table class="table " border="0" cellspacing="0" cellspacing="0">
 				<tr>
 					<th style="width:400px;">'.$this->l('Origin').'</th>
 					<th style="width:50px; text-align: right">'.$this->l('Total').'</th>
 				</tr>';
 			foreach ($websites as $website => $total)
-				$this->_html .= '<tr><td>'.(!strstr($website, ' ') ? '<a href="'.Tools::getProtocol().$website.'">' : '').$website.(!strstr($website, ' ') ? '</a>' : '').'</td><td style="text-align: right">'.$total.'</td></tr>';
-			$this->_html .= '</table></center></div>';
+				$this->_html .= '<tr>
+					<td>'.(!strstr($website, ' ') ? '<a href="'.Tools::getProtocol().$website.'">' : '').$website.(!strstr($website, ' ') ? '</a>' : '').'</td><td style="text-align: right">'.$total.'</td>
+				</tr>';
+			$this->_html .= '</table></div>';
 		}
 		else
 			$this->_html .= '<p><strong>'.$this->l('Direct links only').'</strong></p>';
 		$this->_html .= '</fieldset><br />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 		<h2>'.$this->l('What is a referrer website?').'</h2>
 			<p>
 				'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
 				'.$this->l('A referrer enables you to know which keywords are entered by visitors in search engines when getting to your shop and allows you to optimize web promotion.').'<br /><br />
-				'. $this->l('A referrer can be:').'
+				'.$this->l('A referrer can be:').'
 				<ul>
-					<li class="bullet">'. $this->l('Someone who put a link on their website for your shop').'</li>
-					<li class="bullet">'. $this->l('A partner with whom you made a link exchange in order to bring in sales or attract new customers').'</li>
+					<li class="bullet">'.$this->l('Someone who put a link on their website for your shop').'</li>
+					<li class="bullet">'.$this->l('A partner with whom you made a link exchange in order to bring in sales or attract new customers').'</li>
 				</ul>
 			</p>
 		</fieldset>';
 		return $this->_html;
 	}
-		
+
 	protected function getData($layers)
 	{
 		$this->_titles['main'] = $this->l('First 10 websites');

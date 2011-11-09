@@ -30,28 +30,28 @@ if (!defined('_PS_VERSION_'))
 
 class StatsCarrier extends ModuleGraph
 {
-    private $_html = '';
-    private $_query = '';
-    private $_query2 = '';
-    private $_option = '';
+	private $_html = '';
+	private $_query = '';
+	private $_query2 = '';
+	private $_option = '';
 
-    function __construct()
-    {
-        $this->name = 'statscarrier';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statscarrier';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
-        $this->displayName = $this->l('Carrier distribution');
-        $this->description = $this->l('Display the carriers distribution');
-    }
+		$this->displayName = $this->l('Carrier distribution');
+		$this->description = $this->l('Display the carriers distribution');
+	}
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	public function hookAdminStatsModules($params)
@@ -60,38 +60,42 @@ class StatsCarrier extends ModuleGraph
 				FROM `'._DB_PREFIX_.'orders` o
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
-					'.((int)(Tools::getValue('id_order_state')) ? 'AND (SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh WHERE o.id_order = oh.id_order ORDER BY oh.date_add DESC, oh.id_order_history DESC LIMIT 1) = '.(int)(Tools::getValue('id_order_state')) : '');
+					'.((int)Tools::getValue('id_order_state') ? 'AND (SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh WHERE o.id_order = oh.id_order ORDER BY oh.date_add DESC, oh.id_order_history DESC LIMIT 1) = '.(int)Tools::getValue('id_order_state') : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		$states = OrderState::getOrderStates($this->context->language->id);
 
 		if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right;">
 				<select name="id_order_state">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
-		foreach ($states AS $state)
+		foreach ($states as $state)
 			$this->_html .= '<option value="'.$state['id_order_state'].'"'.(($state['id_order_state'] == Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$state['name'].'</option>';
 		$this->_html .= '</select>
 				<input type="submit" name="submitState" value="'.$this->l('Filter').'" class="button" />
 			</form>
 			<p><img src="../img/admin/down.gif" />'.$this->l('This graph represents the carrier distribution for your orders. You can also limit it to orders in one state.').'</p>
-			'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'<br /><br />	<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>' : $this->l('No valid orders for this period.')).'
+			'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'<br /><br /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>' : $this->l('No valid orders for this period.')).'
 		</fieldset>';
 		return $this->_html;
 	}
 
 	public function setOption($option, $layers = 1)
 	{
-		$this->_option = (int)($option);
+		$this->_option = (int)$option;
 	}
 
 	protected function getData($layers)
 	{
 		$stateQuery = '';
-		if ((int)($this->_option))
-			$stateQuery = 'AND (SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh WHERE o.id_order = oh.id_order ORDER BY oh.date_add DESC, oh.id_order_history DESC LIMIT 1) = '.(int)($this->_option);
+		if ((int)$this->_option)
+			$stateQuery = 'AND (
+				SELECT oh.id_order_state FROM `'._DB_PREFIX_.'order_history` oh
+				WHERE o.id_order = oh.id_order
+				ORDER BY oh.date_add DESC, oh.id_order_history DESC
+				LIMIT 1) = '.(int)$this->_option;
 		$this->_titles['main'] = $this->l('Percentage of orders by carrier');
 
 		$sql = 'SELECT c.name, COUNT(DISTINCT o.`id_order`) as total
@@ -104,8 +108,8 @@ class StatsCarrier extends ModuleGraph
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		foreach ($result as $row)
 		{
-		    $this->_values[] = $row['total'];
-		    $this->_legend[] = $row['name'];
+			$this->_values[] = $row['total'];
+			$this->_legend[] = $row['name'];
 		}
 	}
 }

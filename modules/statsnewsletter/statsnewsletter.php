@@ -30,28 +30,28 @@ if (!defined('_PS_VERSION_'))
 
 class StatsNewsletter extends ModuleGraph
 {
-    private $_html = '';
-    private $_query = '';
-    private $_query2 = '';
-    private $_option = '';
+	private $_html = '';
+	private $_query = '';
+	private $_query2 = '';
+	private $_option = '';
 
-    function __construct()
-    {
-        $this->name = 'statsnewsletter';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statsnewsletter';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
-        $this->displayName = $this->l('Newsletter');
-        $this->description = $this->l('Display the newsletter registrations');
-    }
+		$this->displayName = $this->l('Newsletter');
+		$this->description = $this->l('Display the newsletter registrations');
+	}
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	public function hookAdminStatsModules($params)
@@ -62,11 +62,11 @@ class StatsNewsletter extends ModuleGraph
 			if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'line', 'layers' => 3));
 			$this->_html = '
-			<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-				<p>'.$this->l('Registrations from customers:').' '.(int)($totals['customers']).'</p>
-				<p>'.$this->l('Registrations from visitors:').' '.(int)($totals['visitors']).'</p>
-				<p>'.$this->l('Both:').' '.(int)($totals['both']).'</p>
-				<center>'.$this->engine(array('type' => 'line', 'layers' => 3)).'</center>
+			<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+				<p>'.$this->l('Registrations from customers:').' '.(int)$totals['customers'].'</p>
+				<p>'.$this->l('Registrations from visitors:').' '.(int)$totals['visitors'].'</p>
+				<p>'.$this->l('Both:').' '.(int)$totals['both'].'</p>
+				<div>'.$this->engine(array('type' => 'line', 'layers' => 3)).'</div>
 				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 			</fieldset>';
 		}
@@ -119,11 +119,11 @@ class StatsNewsletter extends ModuleGraph
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query2.$this->getDate());
-		foreach ($result1 AS $row)
-			$this->_values[0][(int)(substr($row['newsletter_date_add'], 0, 4))] += 1;
+		foreach ($result1 as $row)
+			$this->_values[0][(int)substr($row['newsletter_date_add'], 0, 4)] += 1;
 		if ($result2)
-			foreach ($result2 AS $row)
-				$this->_values[1][(int)(substr($row['newsletter_date_add'], 0, 4))] += 1;
+			foreach ($result2 as $row)
+				$this->_values[1][(int)substr($row['newsletter_date_add'], 0, 4)] += 1;
 		foreach ($this->_values[2] as $key => $zerofill)
 			$this->_values[2][$key] = $this->_values[0][$key] + $this->_values[1][$key];
 	}
@@ -132,11 +132,11 @@ class StatsNewsletter extends ModuleGraph
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query2.$this->getDate());
-		foreach ($result1 AS $row)
-			$this->_values[0][(int)(substr($row['newsletter_date_add'], 5, 2))] += 1;
+		foreach ($result1 as $row)
+			$this->_values[0][(int)substr($row['newsletter_date_add'], 5, 2)] += 1;
 		if ($result2)
-			foreach ($result2 AS $row)
-				$this->_values[1][(int)(substr($row['newsletter_date_add'], 5, 2))] += 1;
+			foreach ($result2 as $row)
+				$this->_values[1][(int)substr($row['newsletter_date_add'], 5, 2)] += 1;
 		foreach ($this->_values[2] as $key => $zerofill)
 			$this->_values[2][$key] = $this->_values[0][$key] + $this->_values[1][$key];
 	}
@@ -145,11 +145,11 @@ class StatsNewsletter extends ModuleGraph
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query2.$this->getDate());
-		foreach ($result1 AS $row)
-			$this->_values[0][(int)(substr($row['newsletter_date_add'], 8, 2))] += 1;
+		foreach ($result1 as $row)
+			$this->_values[0][(int)substr($row['newsletter_date_add'], 8, 2)] += 1;
 		if ($result2)
-			foreach ($result2 AS $row)
-				$this->_values[1][(int)(substr($row['newsletter_date_add'], 8, 2))] += 1;
+			foreach ($result2 as $row)
+				$this->_values[1][(int)substr($row['newsletter_date_add'], 8, 2)] += 1;
 		foreach ($this->_values[2] as $key => $zerofill)
 			$this->_values[2][$key] = $this->_values[0][$key] + $this->_values[1][$key];
 	}
@@ -158,11 +158,11 @@ class StatsNewsletter extends ModuleGraph
 	{
 		$result1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.$this->getDate());
 		$result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query2.$this->getDate());
-		foreach ($result1 AS $row)
-			$this->_values[0][(int)(substr($row['newsletter_date_add'], 11, 2))] += 1;
+		foreach ($result1 as $row)
+			$this->_values[0][(int)substr($row['newsletter_date_add'], 11, 2)] += 1;
 		if ($result2)
-			foreach ($result2 AS $row)
-				$this->_values[1][(int)(substr($row['newsletter_date_add'], 11, 2))] += 1;
+			foreach ($result2 as $row)
+				$this->_values[1][(int)substr($row['newsletter_date_add'], 11, 2)] += 1;
 		foreach ($this->_values[2] as $key => $zerofill)
 			$this->_values[2][$key] = $this->_values[0][$key] + $this->_values[1][$key];
 	}
