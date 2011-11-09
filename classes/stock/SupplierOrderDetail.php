@@ -227,8 +227,8 @@ class SupplierOrderDetailCore extends ObjectModel
 		$this->price_te = (float)$this->unit_price_te * (int)$this->quantity_expected;
 
 		// calcul entry discount value
-		if ($this->discount_rate != null && is_numeric($this->discount_rate) && $this->discount_rate > 0)
-			$htis->discount_value_te = (float)$this->price_te * ((float)$this->discount_rate / 100);
+		if ($this->discount_rate != null && is_float($this->discount_rate) && $this->discount_rate > 0)
+			$this->discount_value_te = (float)$this->price_te * ($this->discount_rate / 100);
 
 		// calcul entry price with discount
 		$this->price_with_discount_te = $this->price_te - $this->discount_value_te;
@@ -239,7 +239,7 @@ class SupplierOrderDetailCore extends ObjectModel
 
 		// define default values for order discount fields
 		$this->tax_value_with_order_discount = $this->tax_value;
-		$this->price_with_order_dscount_te = $this->price_with_discount_te;
+		$this->price_with_order_discount_te = $this->price_with_discount_te;
 	}
 
 	/**
@@ -252,10 +252,12 @@ class SupplierOrderDetailCore extends ObjectModel
 		if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0)
 		{
 			// calculate new price, with global order discount, tax ecluded
-			$this->price_with_order_dscount_te = $this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100));
+			$this->price_with_order_discount_te = $this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100));
 
 			// calculate new tax value, with global order discount
-			$this->tax_value_with_order_discount = $this->price_with_order_dscount_te * ((float)$this->tax_rate / 100);
+			$this->tax_value_with_order_discount = $this->price_with_order_discount_te * ((float)$this->tax_rate / 100);
+
+			parent::update();
 		}
 	}
 
@@ -264,15 +266,48 @@ class SupplierOrderDetailCore extends ObjectModel
 	 */
 	public function validateController($htmlentities = true)
 	{
-		$errors = parent::validateController($htmlentities);
+		$errors = array();
+
+		/* Checking for required fields */
+		$fields_required = $this->fieldsRequired;
+
+		if (isset(self::$fieldsRequiredDatabase[get_class($this)]))
+			$fields_required = array_merge(
+				$this->fieldsRequired,
+				self::$fieldsRequiredDatabase[get_class($this)]
+			);
+
+		foreach ($fields_required as $field)
+			if (($value = $this->{$field}) == false && (string)$value != '0')
+				if (!$this->id || $field != 'passwd')
+					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities)
+								.'</b> '.Tools::displayError('is required.');
+
+		/* Checking for maximum fields sizes */
+		foreach ($this->fieldsSize as $field => $max_length)
+			if ($value = $this->{$field} && Tools::strlen($value) > $max_length)
+				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities)
+							.'</b> '.Tools::displayError('is too long.').' ('.Tools::displayError('Maximum length:').' '.$max_length.')';
+
+		/* Checking for fields validity */
+		foreach ($this->fieldsValidate as $field => $function)
+			if ($value = $this->{$field})
+				if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
+					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
+				else
+					if ($field == 'passwd')
+						if ($value = Tools::getValue($field))
+							$this->{$field} = Tools::encrypt($value);
+					else
+						$this->{$field} = $value;
 
 		if ($this->quantity_expected <= 0)
 			$errors[] = '<b>'.self::displayFieldName('quantity_expected', get_class($this)).'</b> '.Tools::displayError('is invalid.');
 
-		if ($this->tax_rate <= 0 || $this->tax_rate > 100)
+		if ($this->tax_rate < 0 || $this->tax_rate > 100)
 			$errors[] = '<b>'.self::displayFieldName('tax_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
 
-		if ($this->discount_rate <= 0 || $this->discount_rate > 100)
+		if ($this->discount_rate < 0 || $this->discount_rate > 100)
 			$errors[] = '<b>'.self::displayFieldName('discount_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
 
 		return $errors;

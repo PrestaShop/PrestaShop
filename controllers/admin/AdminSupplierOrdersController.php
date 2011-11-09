@@ -351,11 +351,11 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Global discount rate:'),
+						'label' => $this->l('Global discount rate (%):'),
 						'name' => 'discount_rate',
 						'size' => 7,
 						'required' => true,
-						'p' => $this->l('This is the global discount rate for the order.'),
+						'p' => $this->l('This is the global discount rate in percents for the order.'),
 					),
 				),
 				'submit' => array(
@@ -1400,178 +1400,36 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		// gets the id supplier to view
 		$id_supplier_order = (int)Tools::getValue('id_supplier_order');
 
-		// re-defines fieldsDisplay
-		$this->fieldsDisplay = array(
-			'p_reference' => array(
-				'title' => $this->l('Reference'),
-				'align' => 'center',
-				'width' => 100,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'p_ean13' => array(
-				'title' => $this->l('EAN13'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'p_name' => array(
-				'title' => $this->l('Name'),
-				'width' => 350,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'unit_price_te' => array(
-				'title' => $this->l('Unit price (te)'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'quantity_expected' => array(
-				'title' => $this->l('Quantity'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'price_te' => array(
-				'title' => $this->l('Price (te)'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'discount_rate' => array(
-				'title' => $this->l('Discount rate'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'discount_value_te' => array(
-				'title' => $this->l('Discount value (te)'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'price_with_discount_te' => array(
-				'title' => $this->l('Price with product discount (te)'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'tax_rate' => array(
-				'title' => $this->l('Tax rate'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'tax_value' => array(
-				'title' => $this->l('Tax value'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'price_ti' => array(
-				'title' => $this->l('Price (ti)'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'tax_value_with_order_discount' => array(
-				'title' => $this->l('Tax value with global order discount'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'price_with_order_discount_te' => array(
-				'title' => $this->l('Price with global order discount (te)'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'exchange_rate' => array(
-				'title' => $this->l('Exchange rate'),
-				'align' => 'center',
-				'width' => 75,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-		);
-
 		// just in case..
 		unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
 
 		// gets all information on the products ordered
 		$this->_select = '
-		CONCAT(a.unit_price_te, \' \', c.sign) as unit_price_te,
-		CONCAT(a.price_te, \' \', c.sign) as price_te,
-		CONCAT(a.discount_value_te, \' \', c.sign) as discount_value_te,
-		CONCAT(a.price_with_discount_te, \' \', c.sign) as price_with_discount_te,
-		CONCAT(a.tax_value, \' \', c.sign) as tax_value,
-		CONCAT(a.price_ti, \' \', c.sign) as price_ti,
-		CONCAT(a.tax_value_with_order_discount, \' \', c.sign) as tax_value_with_order_discount,
-		CONCAT(a.price_with_order_discount_te, \' \', c.sign) as price_with_order_discount_te,
-		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
-		p.reference as p_reference,
-		p.ean13 as p_ean13';
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
+			p.reference as p_reference,
+			p.ean13 as p_ean13';
+
 		$this->_join = '
-		INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-		LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
-		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-		LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-		LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-		LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
-		LEFT JOIN '._DB_PREFIX_.'currency c ON (a.id_currency = c.id_currency)';
+			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
+			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
+			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
+			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
+			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
+			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
+
 		$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
 		$this->_group = 'GROUP BY a.id_product';
 
-		// gets the list ordered by price desc, without limit
-		$this->getList($lang_id, 'price_te', 'DESC', 0, false, false);
-
-		// renders list
-		$helper = new HelperList();
-		$helper->simple_header = true;
-		$helper->no_link = true;
-		$helper->show_toolbar = false;
-		$helper->toolbar_fix = false;
-		$helper->shopLinkType = '';
-		$helper->identifier = $this->identifier;
-
-		// generates content
-		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
-		// displays content
-
 		// gets global order information
 		$supplier_order = new SupplierOrder((int)$id_supplier_order);
+
 		if (Validate::isLoadedObject($supplier_order))
 		{
+			// gets the list ordered by price desc, without limit
+			$this->getList($lang_id, 'price_te', 'DESC', 0, false, false);
+
 			// gets the currency used in this order
-			$currency = Currency::getCurrency($supplier_order->id_currency);
+			$currency = new Currency($supplier_order->id_currency);
 
 			// gets the employee in charge of the order
 			$employee = new Employee($supplier_order->id_employee);
@@ -1579,24 +1437,167 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			// gets the warehouse where products will be received
 			$warehouse = new Warehouse($supplier_order->id_warehouse);
 
+			// sets toolbar title with order reference
+			$this->toolbar_title = sprintf($this->l('View Supplier Order #%s'), $supplier_order->reference);
+
+			// re-defines fieldsDisplay
+			$this->fieldsDisplay = array(
+				'p_reference' => array(
+					'title' => $this->l('Reference'),
+					'align' => 'center',
+					'width' => 120,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+				),
+				'p_ean13' => array(
+					'title' => $this->l('EAN13'),
+					'align' => 'center',
+					'width' => 100,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+				),
+				'p_name' => array(
+					'title' => $this->l('Name'),
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+				),
+				'unit_price_te' => array(
+					'title' => $this->l('Unit price (te)'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'prefix' => $currency->prefix,
+					'suffix' => $currency->suffix,
+				),
+				'quantity_expected' => array(
+					'title' => $this->l('Quantity'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+				),
+				'price_te' => array(
+					'title' => $this->l('Price (te)'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'prefix' => $currency->prefix,
+					'suffix' => $currency->suffix,
+				),
+				'discount_rate' => array(
+					'title' => $this->l('Discount rate'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'suffix' => '%',
+				),
+				'discount_value_te' => array(
+					'title' => $this->l('Discount value (te)'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'prefix' => $currency->prefix,
+					'suffix' => $currency->suffix,
+				),
+				'price_with_discount_te' => array(
+					'title' => $this->l('Price with product discount (te)'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'prefix' => $currency->prefix,
+					'suffix' => $currency->suffix,
+				),
+				'tax_rate' => array(
+					'title' => $this->l('Tax rate'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'suffix' => '%',
+				),
+				'tax_value' => array(
+					'title' => $this->l('Tax value'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'prefix' => $currency->prefix,
+					'suffix' => $currency->suffix,
+				),
+				'price_ti' => array(
+					'title' => $this->l('Price (ti)'),
+					'align' => 'right',
+					'width' => 80,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+					'prefix' => $currency->prefix,
+					'suffix' => $currency->suffix,
+				),
+			);
+
+			//some staff before render list
+			foreach ($this->_list as &$item)
+			{
+				$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], (int)$currency->decimals + 1);
+				$item['price_te'] = Tools::ps_round($item['price_te'], (int)$currency->decimals + 1);
+				$item['tax_value'] = Tools::ps_round($item['tax_value'], (int)$currency->decimals + 1);
+				$item['tax_value_with_order_discount'] = Tools::ps_round($item['tax_value_with_order_discount'], (int)$currency->decimals + 1);
+				$item['price_ti'] = Tools::ps_round($item['price_ti'], (int)$currency->decimals + 1);
+				$item['price_with_discount_te'] = Tools::ps_round($item['price_with_discount_te'], (int)$currency->decimals + 1);
+				$item['price_with_order_discount_te'] = Tools::ps_round($item['price_with_order_discount_te'], (int)$currency->decimals + 1);
+				$item['discount_value_te'] = Tools::ps_round($item['discount_value_te'], (int)$currency->decimals + 1);
+
+				$item['discount_rate'] = Tools::ps_round($item['discount_rate'], 2);
+				$item['tax_rate'] = Tools::ps_round($item['tax_rate'], 2);
+			}
+
+			// renders list
+			$helper = new HelperList();
+			$helper->simple_header = true;
+			$helper->no_link = true;
+			$helper->show_toolbar = false;
+			$helper->toolbar_fix = false;
+			$helper->shopLinkType = '';
+			$helper->identifier = $this->identifier;
+
+			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
+
 			// display these global order informations
 			$this->tpl_view_vars = array(
 				'supplier_order_detail_content' => $content,
-				'supplier_order_currency_sign' => $currency ? $currency['sign'] : '',
 				'supplier_order_employee' => (Validate::isLoadedObject($employee) ? $employee->firstname.' '.$employee->lastname : ''),
 				'supplier_order_warehouse' => (Validate::isLoadedObject($warehouse) ? $warehouse->name : ''),
 				'supplier_order_reference' => $supplier_order->reference,
-				'supplier_order_last_update' => $supplier_order->date_upd,
-				'supplier_order_expected' => $supplier_order->date_delivery_expected,
-				'supplier_order_total_te' => $supplier_order->total_te,
-				'supplier_order_discount_value_te' => $supplier_order->discount_value_te,
-				'supplier_order_total_with_discount_te' => $supplier_order->total_with_discount_te,
-				'supplier_order_total_tax' => $supplier_order->total_tax,
-				'supplier_order_total_ti' => $supplier_order->total_ti,
+				'supplier_order_creation_date' => Tools::displayDate($supplier_order->date_add, $lang_id, true),
+				'supplier_order_last_update' => Tools::displayDate($supplier_order->date_upd, $lang_id, true),
+				'supplier_order_expected' => Tools::displayDate($supplier_order->date_delivery_expected, $lang_id, true),
+				'supplier_order_discount_rate' => Tools::ps_round($supplier_order->discount_rate, 2),
+				'supplier_order_total_te' => Tools::ps_round($supplier_order->total_te, (int)$currency->decimals + 1),
+				'supplier_order_discount_value_te' => Tools::ps_round($supplier_order->discount_value_te, (int)$currency->decimals + 1),
+				'supplier_order_total_with_discount_te' => Tools::ps_round($supplier_order->total_with_discount_te, (int)$currency->decimals + 1),
+				'supplier_order_total_tax' => Tools::ps_round($supplier_order->total_tax, (int)$currency->decimals + 1),
+				'supplier_order_total_ti' => Tools::ps_round($supplier_order->total_ti, (int)$currency->decimals + 1),
+				'supplier_order_currency' => $currency,
 			);
-			// sets toolbar title with order reference
-			$this->toolbar_title = sprintf($this->l('View Supplier Order #%s'), $supplier_order->reference);
 		}
+
 		return parent::initView();
 	}
 
