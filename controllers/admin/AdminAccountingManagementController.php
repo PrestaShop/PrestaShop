@@ -67,14 +67,9 @@ class AdminAccountingManagementControllerCore extends AdminController
 					NULL, NULL, $id_shop);
 			ksort($shop['zones']);
 			
-			$query = '
-				SELECT `id_shop`, `id_zone`, `account_number` 
-				FROM `'._DB_PREFIX_.'accounting_zone_shop`
-				WHERE `id_shop` = '.(int)$id_shop;
-		
-			$zoneShopList = Db::getInstance()->executeS($query);
+			$zoneShopList = Accounting::getAccountNumberZoneShop($id_shop);
 	
-			// Set Account number to the id_zone for an id_shop if exist
+			// Set Account number to the id_zone for the id_shop if exist
 			foreach($zoneShopList as $zoneShop)
 				$shop['zones'][$zoneShop['id_zone']]['account_number'] = $zoneShop['account_number'];
 		}

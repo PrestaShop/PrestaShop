@@ -35,7 +35,16 @@ class AdminProductsController extends AdminController
 
 	private $_category;
 
-	protected $available_tabs = array('Informations', 'Images', 'Prices', 'Combinations', 'Features', 'Customization', 'Attachments', 'Quantities');
+	protected $available_tabs = array(
+		'Informations', 
+		'Images', 
+		'Prices', 
+		'Combinations', 
+		'Features', 
+		'Customization', 
+		'Attachments', 
+		'Quantities',
+		'Accounting');
 
 	public function __construct()
 	{
@@ -908,6 +917,8 @@ class AdminProductsController extends AdminController
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts'));
 		}
+		else if (Tools::isSubmit('submitAccountingDetails'))
+			$this->postProcessFormAccounting();
 		else
 			parent::postProcess(true);
 	}
@@ -1791,12 +1802,13 @@ if (false)
 			$i = 0;
 			foreach($this->available_tabs as $product_tab)
 			{
+				$endurl = '&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab;
 				$product_tabs[$product_tab] = array(
 					'id' => ++$i,
 					'selected' => (strtolower($product_tab) == strtolower($action)),
 					// @todo $this->l() instead of product_tab
 					'name' => $product_tab,
-					'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
+					'href' => $this->context->link->getAdminLink('AdminProducts').$endurl,
 					);
 			}
 				$smarty->assign('newproduct', 0);
@@ -1902,6 +1914,71 @@ switch ($this->action)
 			</a><br />';
 */
 		}
+	}
+	
+	/**
+	* Post traitment for accounting 
+	*/
+	public function postProcessFormAccounting()
+	{
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			$id_shop = $this->context->shop->getID();
+			
+			// If zone still exist, then update the database with the new value
+			if (count($zones = Zone::getZones()))
+			{
+				// Build tab with associated data
+				$tab = array();
+				foreach($zones as $zone)
+					if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== NULL)
+						$tab[] = array(
+							'id_zone' => $zone['id_zone'],
+							'id_product' => $product->id,
+							'id_shop' => $id_shop,
+							'num' => $num);
+				
+				if (count($tab))
+					Accounting::saveProductAccountingInformations($tab);
+			}
+		}
+	}
+	
+	/**
+	* Init data for accounting
+	*/
+	public function initFormAccounting($product, $t)
+	{
+		$error = '';
+		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+		
+		if (count($this->context->shop->getListOfID()) > 1)
+			$error = $this->l('Please select the shop you want to configure');
+		else
+		{
+			$zones = Zone::getZones();
+			$id_shop = $this->context->shop->getID();
+			$detail = array();
+		
+			// Set default zone value to the shop	and sort it
+			foreach($zones as $zone)
+			{
+				$detail['zones'][$zone['id_zone']]['name'] = $zone['name'];
+				$detail['zones'][$zone['id_zone']]['account_number'] = '';
+			}
+			$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($product->id, $id_shop);
+			
+			// Set Account number to the id_zone for an id_shop if exist
+			foreach($zoneAccountNumberList as $zone)
+				$detail['zones'][$zone['id_zone']]['account_number'] = $zone['account_number'];
+		}
+		
+		$this->context->smarty->assign(array(
+			'productAccountNumberList' => $detail,
+			'shopName' => $this->context->shop->name,
+			'error' => $error,
+		));
+		$this->content = $this->context->smarty->fetch('products/accounting.tpl');
 	}
 
 	public function initFormPrices($obj, $languages, $defaultLanguage)

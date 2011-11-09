@@ -27,34 +27,20 @@
 {if !empty($error)}
 	<div class="hint" style="display:block">{$error}</div>
 {else}
-	<div class="toolbarBox">
-		{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
-		<div class="pageTitle">
-			<h3>
-				<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
-			</h3>
-		</div>
-	</div>
 	<fieldset>
 		<legend>{l s='Account number'}</legend>
 		<div class="hint" style="display:block">
-			{l s='Configure the account number by zone for:'} <b>{$shop['name']}</b>.
-			{l s='If a zone field is empty it will use the default number set.'}
+			{l s='Configure the account number of the product for each zone, if a field is empty, it will use the default one of the shop set in the Accounting Management tab :'}
 		</div>
 		<br />
-		<form id="{$table}_form" method="POST" action="{$smarty.server.REQUEST_URI}">
-			<label>{l s='Default number for this shop'}</label>
-				<div class="margin-form">
-				<input type="text" name="default_account_number" value="{$shop['default_account_number']}" />
-			</div>
-			{foreach from=$shop['zones'] key=id_zone item=currentZone}
+			{foreach from=$productAccountNumberList['zones'] key=id_zone item=currentZone}
 				<label>{$currentZone['name']}</label>
 				<div class="margin-form">
 					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']}" />
 				</div>
 			{/foreach}
 			<div class="margin-form">
-				<input type="submit" class="button" id="{$table}_form_submit_btn" name="UpdateNumbers" value="{l s='Save'}"/>
+				<input type="submit" class="button" name="submitAccountingDetails" />
 			</div>
 		</form>
 		<div class="separation"></div>
