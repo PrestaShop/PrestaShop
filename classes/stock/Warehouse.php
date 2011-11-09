@@ -264,4 +264,54 @@ class WarehouseCore extends ObjectModel
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
+
+	/**
+	 * Gets the number of products in the current warehouse
+	 *
+	 * @return int
+	 */
+	public function getNumberOfProducts()
+	{
+		$query = '
+			SELECT COUNT(t.id_stock)
+			FROM
+				(
+					SELECT s.id_stock
+				 	FROM '._DB_PREFIX_.'stock s
+				 	WHERE s.id_warehouse = '.(int)$this->id.'
+				 	GROUP BY s.id_product, s.id_product_attribute
+				 ) as t';
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * Gets the number of quantities - for all products - in the current warehouse
+	 *
+	 * @return int
+	 */
+	public function getQuantitiesOfProducts()
+	{
+		$query = '
+			SELECT SUM(s.physical_quantity)
+			FROM '._DB_PREFIX_.'stock s
+			WHERE s.id_warehouse = '.(int)$this->id;
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * Gets the value of the stock in the current warehouse
+	 *
+	 * @return int
+	 */
+	public function getStockValue()
+	{
+		$query = new DbQuery();
+			$query->select('SUM(s.`price_te`)');
+			$query->from('stock s');
+			$query->where('s.`id_warehouse` = '.(int)$this->id);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
 }
