@@ -100,6 +100,57 @@ $(function(){ldelim}
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {if !isset($email_create)}
+	<script type="text/javascript">
+	{literal}
+	$(document).ready(function(){
+		$('#create-account_form').submit(function(){
+			submitFunction();
+			return false;
+		});
+		$('#SubmitCreate').click(function(){
+			submitFunction();
+		});
+	});
+	function submitFunction()
+	{
+		//send the ajax request to the server
+		$.ajax({
+			type: 'POST',
+			url: baseDir + 'index.php',
+			async: true,
+			cache: false,
+			dataType : "json",
+			data: 'controller=authentication&SubmitCreate=1&ajax=true&email_create='+$('#email_create').val()+'&token='+token,
+			success: function(jsonData)
+			{
+			//console.log(jsonData);
+				if (jsonData.hasError)
+				{
+					var errors = '';
+					for(error in jsonData.errors)
+						//IE6 bug fix
+						if(error != 'indexOf')
+							errors += jsonData.errors[error] + "\n";
+					alert(errors);
+				}
+				else
+				{
+					// adding a div to display a transition
+					$('#center_column').html('<div id="noSlide">'+$('#center_column').html()+'</div>');
+					$('#noSlide').fadeOut('slow', function(){
+						$('#noSlide').html(jsonData.page);
+					});
+					$('#noSlide').fadeIn('slow');
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown)
+			{
+				alert("TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			}
+		});
+	}
+	{/literal}
+	</script>
 	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std">
 		<fieldset>
 			<h3>{l s='Create your account'}</h3>
@@ -110,7 +161,7 @@ $(function(){ldelim}
 			</p>
 			<p class="submit">
 			{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-				<input type="submit" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create your account'}" />
+				<input type="button" id="SubmitCreate" name="SubmitCreate" class="button_large" value="{l s='Create your account'}" />
 				<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create your account'}" />
 			</p>
 		</fieldset>
