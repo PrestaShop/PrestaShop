@@ -131,7 +131,7 @@ class PackCore extends Product
 		return $arrayResult;
 	}
 
-	public static function getPacksTable($id_product, $id_lang, $full = false, $limit = NULL)
+	public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
 	{
 		if (!self::isFeatureActive())
 			return array();
