@@ -764,6 +764,18 @@ div.hint {
 	position: relative;
 }
 
+table tr th .hint {
+	display: none;
+	position: absolute;
+	margin: 30px 5px 5px 5px;
+	width: 400px;
+	border: 1px solid #ECE52F;
+	padding: 8px 6px 8px 34px;
+	color: #383838;
+	background: #FFFBE5 url(../img/admin/help2.png) no-repeat 6px 5px;
+	border-radius:3px;
+}
+
 .hintGroup{
 	position: relative;
 	margin-top: 10px;

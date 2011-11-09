@@ -436,6 +436,35 @@ if (helpboxes)
 				}
 			});
 		}
+		if ($('span.title_box'))
+		{
+			//Display by rollover
+			$('span.title_box').mouseover(function() { 
+				//get reference to the hint box
+				var parent = $(this).parent();
+				var box = parent.find('.hint:first'); 
+
+				if (box.length > 0)
+				{
+					//gets parent position
+					var left_position = parent.offset().left;
+				
+					//gets width of the box
+					var box_width = box.width();
+				
+					//gets width of the screen
+					var document_width = $(document).width();
+			
+					//changes position of the box if needed
+					if (document_width < (left_position + box_width))
+						box.css('margin-left', '-' + box_width + 'px');
+				
+					//shows the box
+					box.css('display', 'block');
+				}
+			});
+			$('span.title_box').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
+		}
 	});
 }
 
