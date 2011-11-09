@@ -46,10 +46,11 @@
 				{if isset($params.align)} {$params.align}{/if}"
 
 			{if (!isset($params.position) && !$no_link)}
-				onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">{if isset($params.prefix)}{$params.prefix}{/if}
+				onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
 			{else}
 				>
 			{/if}
+			{if isset($params.prefix)}{$params.prefix}{/if}
 			{if isset($params.color) && isset($tr[$params.color])}
 				<span class="color_field" style="background-color: {$tr.color}">
 			{/if}
