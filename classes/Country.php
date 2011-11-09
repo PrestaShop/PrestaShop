@@ -66,7 +66,7 @@ class CountryCore extends ObjectModel
 
 	protected $tables = array ('country', 'country_lang');
 
- 	protected $fieldsRequired = array('id_zone', 'id_currency', 'iso_code', 'contains_states', 'need_identification_number', 'display_tax_label');
+ 	protected $fieldsRequired = array('id_zone', 'iso_code', 'contains_states', 'need_identification_number', 'display_tax_label');
  	protected $fieldsSize = array('iso_code' => 3);
  	protected $fieldsValidate = array(
  		'id_zone' => 'isUnsignedId',
@@ -122,7 +122,7 @@ class CountryCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name'));
 	}
-	
+
 	public function delete()
 	{
 		if (!parent::delete())

@@ -64,17 +64,20 @@ class PrestashopExceptionCore extends Exception
 			echo '<ul>';
 			foreach ($this->getTrace() as $id => $trace)
 			{
-				$relative_file = ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/');
+				$relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
+				$current_line = (isset($trace['line'])) ? $trace['line'] : '';
 
 				echo '<li>';
 				echo '<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>';
-				echo ' - <a href="#" style="font-size: 12px; color: #000000" onclick="document.getElementById(\'psTrace_'.$id.'\').style.display = (document.getElementById(\'psTrace_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">[line '.$trace['line'].' - '.$relative_file.']</a>';
+				echo ' - <a href="#" style="font-size: 12px; color: #000000" onclick="document.getElementById(\'psTrace_'.$id.'\').style.display = (document.getElementById(\'psTrace_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">[line '.$current_line.' - '.$relative_file.']</a>';
 
 				if (count($trace['args']))
 					echo ' - <a href="#" onclick="document.getElementById(\'psArgs_'.$id.'\').style.display = (document.getElementById(\'psArgs_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">['.count($trace['args']).' Arguments]</a>';
 				else
 					echo ' - <span style="font-size: 12px;">[0 Argument]</a>';
-				$this->displayFileDebug($trace['file'], $trace['line'], $id);
+
+				if ($relative_file)
+					$this->displayFileDebug($trace['file'], $trace['line'], $id);
 				$this->displayArgsDebug($trace['args'], $id);
 				echo '</li>';
 			}

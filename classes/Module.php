@@ -989,7 +989,7 @@ abstract class ModuleCore
 		$sql = 'SELECT id_module, id_shop
 				FROM '._DB_PREFIX_.'hook_module
 				WHERE id_hook = '.(int)$id_hook.'
-				'.((!is_null($shopList)) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '').'
+				'.((!is_null($shopList) && $shopList) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '').'
 				ORDER BY position';
 		$results = Db::getInstance()->executeS($sql);
 		$position = array();

@@ -164,6 +164,8 @@ class CartCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
+		if (!$this->id_lang)
+			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
 		$return = parent::add($autodate);
 		Hook::exec('cart');
 		return $return;
@@ -253,7 +255,7 @@ class CartCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		return $this->getCartRules();
 	}
-	
+
 	public function getCartRules()
 	{
 		// TODO : add cache
@@ -266,7 +268,7 @@ class CartCore extends ObjectModel
 		$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 		$shipping_ti = $this->getOrderShippingCost();
 		$shipping_te = $this->getOrderShippingCost(NULL, false);
-		
+
 		$result = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'cart_cart_rule` cd
@@ -279,7 +281,7 @@ class CartCore extends ObjectModel
 			$cartRule = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
 			$row['value_real'] = $cartRule->getContextualValue(true);
 			$row['value_tax_exc'] = $cartRule->getContextualValue(false);
-			
+
 			// Retro compatibility < 1.5.0.2
 			$row['id_discount'] = $row['id_cart_rule'];
 			$row['description'] = $row['name'];
@@ -1016,7 +1018,7 @@ class CartCore extends ObjectModel
 			}
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)($this->id_currency)));
 		}
-		
+
 		$order_total_discount = 0;
 		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
 		{
@@ -1275,7 +1277,7 @@ class CartCore extends ObjectModel
 		}
 		return self::$_totalWeight[$this->id];
 	}
-	
+
 	/**
 	 * @deprecated 1.5.0.1
 	 */
