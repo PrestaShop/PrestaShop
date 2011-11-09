@@ -364,7 +364,8 @@ class LanguageCore extends ObjectModel
 			foreach($columns as $column)
 				$fields .= $column['Field'].', ';
 			$fields = rtrim($fields, ', ');
-			$identifier = 'id_'.str_replace('_lang', '', str_replace(_DB_PREFIX_, '', $name));
+			preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
+			$identifier = 'id_'.$m[1];
 
 			$sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
 			foreach($columns as $column) {

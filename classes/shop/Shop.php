@@ -58,7 +58,7 @@ class ShopCore extends ObjectModel
 	protected $identifier = 'id_shop';
 
 	/** @var array List of shops cached */
-	protected static $shops = array();
+	protected static $shops;
 
 	private	static $asso_tables = array(
 		'carrier' => 				array('type' => 'shop'),
@@ -403,8 +403,10 @@ class ShopCore extends ObjectModel
 	 */
 	public static function cacheShops($refresh = false)
 	{
-		if (self::$shops && !$refresh)
+		if (!is_null(self::$shops) && !$refresh)
 			return;
+
+		self::$shops = array();
 
 		$select = '';
 		$from = '';

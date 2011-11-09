@@ -254,9 +254,8 @@ abstract class ObjectModelCore
 		if (!Shop::isFeatureActive())
 		{
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
-			{
 				$result &= $this->associateTo(Context::getContext()->shop->getID(true), 'shop');
-			}
+
 			$assos = GroupShop::getAssoTables();
 			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
