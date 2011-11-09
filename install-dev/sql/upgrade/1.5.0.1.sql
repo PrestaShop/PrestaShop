@@ -1,5 +1,26 @@
 SET NAMES 'utf8';
 
+CREATE TABLE IF NOT EXISTS `PREFIX_accounting_zone_shop` (
+  `id_accounting_zone_shop` int(11) NOT NULL AUTO_INCREMENT,
+  `id_zone` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  `account_number` varchar(64) NOT NULL,
+  PRIMARY KEY (`id_accounting_zone_shop`),
+  UNIQUE KEY `id_zone` (`id_zone`,`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_accounting_product_zone_shop` (
+  `id_accounting_product_zone_shop` int(11) NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  `id_zone` int(11) NOT NULL,
+  `account_number` varchar(64) NOT NULL,
+  PRIMARY KEY (`id_accounting_product_zone_shop`),
+  UNIQUE KEY `id_product` (`id_product`,`id_shop`,`id_zone`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+/* PHP:add_accounting_tab(); */;
+
 CREATE TABLE IF NOT EXISTS `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_module` int(10) unsigned NOT NULL,
