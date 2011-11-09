@@ -137,7 +137,10 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
-		if (Tools::isSubmit('addsupplier_order_state') || Tools::isSubmit('updatesupplier_order_state'))
+		if (Tools::isSubmit('addsupplier_order_state') ||
+			Tools::isSubmit('updatesupplier_order_state') ||
+			Tools::isSubmit('submitAddsupplier_order_state') ||
+			Tools::isSubmit('submitUpdatesupplier_order_state'))
 		{
 			if (Tools::isSubmit('updatesupplier_order_state'))
 				$this->toolbar_title = $this->l('Stock : Update Supplier order state');
@@ -362,6 +365,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'title' => $this->l('   Save order   '),
 				)
 			);
+
+			//specific discount display
+			$this->object->discount_rate = Tools::ps_round($this->object->discount_rate, 4);
 
 			return parent::initForm();
 		}
@@ -1046,6 +1052,9 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			// specify global reference currency
 			$_POST['id_ref_currency'] = Currency::getDefaultCurrency()->id;
 
+			//specific discount check
+			$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
+
 			// manage each associated product
 			$this->manageOrderProducts();
 		}
@@ -1570,8 +1579,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				$item['price_with_order_discount_te'] = Tools::ps_round($item['price_with_order_discount_te'], 2);
 				$item['discount_value_te'] = Tools::ps_round($item['discount_value_te'], 2);
 
-				$item['discount_rate'] = Tools::ps_round($item['discount_rate'], 2);
-				$item['tax_rate'] = Tools::ps_round($item['tax_rate'], 2);
+				$item['discount_rate'] = Tools::ps_round($item['discount_rate'], 4);
+				$item['tax_rate'] = Tools::ps_round($item['tax_rate'], 4);
 			}
 
 			// renders list

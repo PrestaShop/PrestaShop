@@ -89,10 +89,10 @@
 										<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected}" size="5" />
 									</td>
 									<td class="center">
-										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.discount_rate, 2)}" size="5" />%
+										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.discount_rate, 4)}" size="5" />%
 									</td>
 									<td class="center">
-										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.tax_rate, 2)}" size="5" />%
+										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.tax_rate, 4)}" size="5" />%
 									</td>
 									<td class="center">
 										<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplierOrderLink">
