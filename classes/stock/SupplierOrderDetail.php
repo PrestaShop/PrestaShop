@@ -224,22 +224,22 @@ class SupplierOrderDetailCore extends ObjectModel
 	protected function calculatePrices()
 	{
 		// calcul entry price
-		$this->price_te = (float)$this->unit_price_te * (int)$this->quantity_expected;
+		$this->price_te = Tools::ps_round((float)$this->unit_price_te * (int)$this->quantity_expected, 6);
 
 		// calcul entry discount value
 		if ($this->discount_rate != null && is_float($this->discount_rate) && $this->discount_rate > 0)
-			$this->discount_value_te = (float)$this->price_te * ($this->discount_rate / 100);
+			$this->discount_value_te = Tools::ps_round((float)$this->price_te * ($this->discount_rate / 100), 6);
 
 		// calcul entry price with discount
-		$this->price_with_discount_te = $this->price_te - $this->discount_value_te;
+		$this->price_with_discount_te = Tools::ps_round($this->price_te - $this->discount_value_te, 6);
 
 		// calcul tax value
-		$this->tax_value = $this->price_with_discount_te * ((float)$this->tax_rate / 100);
-		$this->price_ti = $this->price_with_discount_te + $this->tax_value;
+		$this->tax_value = Tools::ps_round($this->price_with_discount_te * ((float)$this->tax_rate / 100), 6);
+		$this->price_ti = Tools::ps_round($this->price_with_discount_te + $this->tax_value, 6);
 
 		// define default values for order discount fields
-		$this->tax_value_with_order_discount = $this->tax_value;
-		$this->price_with_order_discount_te = $this->price_with_discount_te;
+		$this->tax_value_with_order_discount = Tools::ps_round($this->tax_value, 6);
+		$this->price_with_order_discount_te = Tools::ps_round($this->price_with_discount_te, 6);
 	}
 
 	/**
@@ -252,10 +252,11 @@ class SupplierOrderDetailCore extends ObjectModel
 		if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0)
 		{
 			// calculate new price, with global order discount, tax ecluded
-			$this->price_with_order_discount_te = $this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100));
+			$this->price_with_order_discount_te = Tools::ps_round($this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100)),
+																  6);
 
 			// calculate new tax value, with global order discount
-			$this->tax_value_with_order_discount = $this->price_with_order_discount_te * ((float)$this->tax_rate / 100);
+			$this->tax_value_with_order_discount = Tools::ps_round($this->price_with_order_discount_te * ((float)$this->tax_rate / 100), 6);
 
 			parent::update();
 		}
