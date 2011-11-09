@@ -24,4 +24,65 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$content}
+{extends file="helper/view/view.tpl"}
+{block name="override_tpl"}
+{if isset($warehouse)}
+	<div style="margin-top: 20px">
+			<fieldset>
+				<legend><img src="/img/t/AdminPreferences.gif" alt="" />  {l s='General informations'}</legend>
+				<table style="width: 400px;" classe="table">
+					<tr>
+						<td>{l s='Reference:'}</td>
+						<td>{$warehouse->reference}</td>
+					</tr>
+					<tr>
+						<td>{l s='Name:'}</td>
+						<td>{$warehouse->name}</td>
+					</tr>
+					<tr>
+						<td>{l s='Country:'}</td>
+						<td>{if $address->country != ''}{$address->country}{else}{l s='N/D'}{/if}</td>
+					</tr>
+					<tr>
+						<td>{l s='Phone:'}</td>
+						<td>{if $address->phone != ''}{$address->phone}{else}{l s='N/D'}{/if}</td>
+					</tr>
+					<tr>
+						<td>{l s='Management type:'}</td>
+						<td>{$warehouse->management_type}</td>
+					</tr>
+					<tr>
+						<td>{l s='Manager:'}</td>
+						<td>{$employee->lastname} {$employee->firstname}</td>
+					</tr>
+					<tr>
+						<td>{l s='Products:'}</td>
+						<td>{$warehouse_num_products} {l s='references'}</td>
+					</tr>
+					<tr>
+						<td>{l s='Products physical quantities:'}</td>
+						<td>{$warehouse_quantities}</td>
+					</tr>
+					<tr>
+						<td>{l s='Stock valuation:'}</td>
+						<td>{$currency->prefix} {$warehouse_value} {$currency->suffix}</td>
+					</tr>
+				</table>
+			</fieldset>
+		</div>
+		<div style="margin-top: 30px">
+			<fieldset>
+				<legend><img src="/img/t/AdminStock.gif" alt="" /> {l s='Stock'}</legend>
+				<a href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='Click here if you want details on products in this warehouse'}</a>
+			</fieldset>
+		</div>
+		<div style="margin-top: 30px">
+		<fieldset>
+			<legend><img src="/img/t/AdminLogs.gif" alt="" /> {l s='History'}</legend>
+			<a href="index.php?controller=adminstockmvt&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockMvt'}">{l s='Click here if you want details on what happened in this warehouse'}</a>
+		</fieldset>
+		</div>
+{else}
+	{l s='This warehouse does not exist'}
+{/if}
+{/block}

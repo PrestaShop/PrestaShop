@@ -100,7 +100,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
 			$id_product = (int)Tools::getValue('id');
-			$warehouse = (Tools::getValue('warehouse') ? (int)Tools::getValue('warehouse') : -1);
+			$warehouse = (Tools::getValue('id_warehouse') ? (int)Tools::getValue('id_warehouse') : -1);
 
 			$query = '
 			SELECT a.id_product_attribute as id, a.id_product, a.reference, a.ean13,
@@ -220,8 +220,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 		if ($warehouse == 0)
 		{
 			$warehouse = -1; // all warehouses
-			if ((int)Tools::getValue('instant_state_warehouse'))
-				$warehouse = (int)Tools::getValue('instant_state_warehouse');
+			if ((int)Tools::getValue('id_warehouse'))
+				$warehouse = (int)Tools::getValue('id_warehouse');
 		}
 		return $warehouse;
 	}

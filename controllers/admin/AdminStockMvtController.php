@@ -321,11 +321,8 @@ class AdminStockMvtControllerCore extends AdminController
 		if ($warehouse == 0)
 		{
 			$warehouse = -1;
-			if ((int)Tools::getValue('warehouse'))
-				$warehouse = (int)Tools::getValue('warehouse');
-			else if ((int)$this->context->cookie->warehouse)
-				$warehouse = (int)$this->context->cookie->warehouse;
-			$this->context->cookie->warehouse = $warehouse;
+			if ((int)Tools::getValue('id_warehouse'))
+				$warehouse = (int)Tools::getValue('id_warehouse');
 		}
 
 		return $warehouse;

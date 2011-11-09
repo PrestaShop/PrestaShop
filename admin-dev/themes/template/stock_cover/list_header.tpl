@@ -15,8 +15,8 @@
 	{/if}
 	{if count($stock_cover_warehouses) > 1}
 		<div id="stock_cover_form_warehouse">
-			<label for="coverage_warehouse">{l s="Select a warehouse:"}</label>
-			<select name="coverage_warehouse" onChange="$(this).parent().parent().submit();">
+			<label for="id_warehouse">{l s="Select a warehouse:"}</label>
+			<select name="id_warehouse" onChange="$(this).parent().parent().submit();">
 				{foreach from=$stock_cover_warehouses key=k item=i}
 					<option {if $i.id_warehouse == $stock_cover_cur_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 				{/foreach}

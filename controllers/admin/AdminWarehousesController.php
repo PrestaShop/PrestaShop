@@ -83,16 +83,29 @@ class AdminWarehousesControllerCore extends AdminController
 		if (!($this->tabAccess['add'] === '1'))
 			unset($this->toolbar_btn['new']);
 
+		// removes links on rows
 		$this->list_no_link = true;
+
+		// adds actions on rows
 		$this->addRowAction('edit');
-		$this->addRowAction('details');
+		$this->addRowAction('view');
 
-		$this->_select = 'reference, name, management_type, CONCAT(e.lastname, \' \', e.firstname) AS employee,
-						  ad.phone AS contact, CONCAT(ad.city, \' - \', c.iso_code) location';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
-						LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
-						LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
+		// query: select
+		$this->_select = '
+			reference,
+			name,
+			management_type,
+			CONCAT(e.lastname, \' \', e.firstname) as employee,
+			ad.phone as contact,
+			CONCAT(ad.city, \' - \', c.iso_code) as location';
 
+		// query: join
+		$this->_join = '
+			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
+			LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
+			LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
+
+		// display help informations
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the general default currency used.').'<br />');
 		$this->displayInformation($this->l('Futhermore, for each warehouse, you have to check :
@@ -117,8 +130,10 @@ class AdminWarehousesControllerCore extends AdminController
 		$query->where('active = 1');
 		$employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
+		// sets the title of the toolbar
 		$this->toolbar_title = $this->l('Stock : Warehouse management');
 
+		// sets the fields of the form
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Warehouse management'),
@@ -322,7 +337,6 @@ class AdminWarehousesControllerCore extends AdminController
 			);
 		else
 			$this->fields_value['id_address'] = 0;
-
 		$this->fields_value['ids_shops[]'] = $shops;
 		$this->fields_value['ids_carriers[]'] = $carriers;
 
@@ -335,10 +349,10 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-		// Checks access
+		// checks access
 		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
 		{
-			$this->_errors[] = Tools::displayError('You do not have the required permission to add warehouses.');
+			$this->_errors[] = Tools::displayError('You do not have the required permissions to add warehouses.');
 			return parent::postProcess();
 		}
 
@@ -357,11 +371,9 @@ class AdminWarehousesControllerCore extends AdminController
 
 			// updates/creates address if it does not exist
 			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
-				// updates address
-				$address = new Address((int)Tools::getValue('id_address'));
+				$address = new Address((int)Tools::getValue('id_address')); // updates address
 			else
-				// creates address
-				$address = new Address();
+				$address = new Address(); // creates address
 
 			$address->alias = Tools::getValue('reference', null);
 			$address->lastname = 'warehouse'; // skip problem with numeric characters in warehouse name
@@ -398,35 +410,34 @@ class AdminWarehousesControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function ajaxProcess()
+	/**
+	 * @see AdminController::initView()
+	 */
+	public function initView()
 	{
-		if (Tools::isSubmit('id'))
-		{
-			$this->lang = false;
-			$lang_id = (int)$this->context->language->id;
-			$id_warehouse = (int)Tools::getValue('id');
+		$this->displayInformation($this->l('This interface allows you to display detailed informations on your warehouse.').'<br />');
 
-			$query = '
-			SELECT COUNT(t.id_stock)
-			FROM
-				(SELECT s.id_stock
-				 FROM ps_stock s
-				 WHERE s.id_warehouse = 1
-				 GROUP BY s.id_product, s.id_product_attribute) as t';
-			$refs = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$id_warehouse = (int)Tools::getValue('id_warehouse');
+		$warehouse = new Warehouse($id_warehouse);
+		$employee = new Employee($warehouse->id_employee);
+		$currency = new Currency($warehouse->id_currency);
+		$address = new Address($warehouse->id_address);
 
-			$query = new DbQuery();
-			$query->select('SUM(s.`price_te`) as total, c.`sign` as sign, SUM(s.`physical_quantity`) as quantity');
-			$query->from('stock s');
-			$query->leftJoin('warehouse w ON (w.`id_warehouse` = s.`id_warehouse`)');
-			$query->leftJoin('currency c ON (w.`id_currency` = c.`id_currency`)');
-			$query->where('s.`id_warehouse` = '.$id_warehouse);
-			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		if (!Validate::isLoadedObject($warehouse) ||
+			!Validate::isLoadedObject($employee) ||
+			!Validate::isLoadedObject($currency))
+			return parent::initView();
 
-			$content = sprintf($this->l('This warehouse stores %s reference(s) (%d quantit/ies), worth %d %s'),
-							   $refs, $res[0]['quantity'], $res[0]['total'], $res[0]['sign']);
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
-		}
-		die;
+		$this->tpl_view_vars = array(
+			'warehouse' => $warehouse,
+			'employee' => $employee,
+			'currency' => $currency,
+			'address' => $address,
+			'warehouse_num_products' => $warehouse->getNumberOfProducts(),
+			'warehouse_value' => Tools::ps_round($warehouse->getStockValue(), 2),
+			'warehouse_quantities' => $warehouse->getQuantitiesofProducts(),
+		);
+
+		return parent::initView();
 	}
 }
