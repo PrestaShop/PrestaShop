@@ -157,6 +157,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-save-and-stay { background-image: url(process-icon-save-and-stay.png);}
 .toolbarBox .process-icon-edit { background-image: url(process-icon-edit.png);} 
 .toolbarBox .process-icon-back { background-image: url(process-icon-back.png);} 
+div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
 /*leadin*/
 .leadin { padding:10px;}
