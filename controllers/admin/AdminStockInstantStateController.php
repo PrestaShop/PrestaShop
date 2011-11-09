@@ -58,7 +58,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'title' => $this->l('Price (te)'),
 				'width' => 150,
 				'orderby' => false,
-				'search' => false
+				'search' => false,
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Physical quantity'),
@@ -70,13 +70,16 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'title' => $this->l('Usable quantity'),
 				'width' => 80,
 				'orderby' => false,
-				'search' => false
+				'search' => false,
 			),
 			'real_quantity' => array(
 				'title' => $this->l('Real quantity'),
 				'width' => 80,
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'hint' => $this->l('Pysical qty,
+									in combination with the quantity you ordered (atm) from your supplier,
+									minus what is ordered (atm) by clients.')
 			),
 		);
 
