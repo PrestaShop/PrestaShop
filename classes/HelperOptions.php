@@ -158,9 +158,9 @@ class HelperOptionsCore extends Helper
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
 			'required_fields' => isset($required_fields) ? $required_fields : false,
-			'languages' => isset($languages) ? $languages : null,
+			'languages' => isset($languages) ? $languages : null
 		));
-		return $this->tpl->fetch();
+		return parent::generate();
 	}
 
 	/**

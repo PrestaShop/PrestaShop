@@ -73,6 +73,7 @@ class AdminControllerCore extends Controller
 
 	public $tpl_form_vars = array();
 	public $tpl_list_vars = array();
+	public $tpl_option_vars = array();
 	public $tpl_view_vars = array();
 
 	public $fields_value = false;
@@ -1439,6 +1440,7 @@ class AdminControllerCore extends Controller
 			$helper->override_folder = $this->tpl_folder;
 			$helper->id = $this->id;
 			$helper->token = $this->token;
+			$helper->tpl_vars = $this->tpl_option_vars;
 			$helper->shopLinkType = $this->shopLinkType;
 			$helper->table = $this->table;
 			$helper->currentIndex = self::$currentIndex;
