@@ -30,28 +30,28 @@ if (!defined('_PS_VERSION_'))
 
 class StatsVisits extends ModuleGraph
 {
-    private $_html = '';
-    private $_query = '';
-    private $_query2 = '';
-    private $_option;
+	private $html = '';
+	private $_query = '';
+	private $_query2 = '';
+	private $_option;
 
-    function __construct()
-    {
-        $this->name = 'statsvisits';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statsvisits';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
-        $this->displayName = $this->l('Visits and Visitors');
-        $this->description = $this->l('Display statistics about your visits and visitors.');
-    }
+		$this->displayName = $this->l('Visits and Visitors');
+		$this->description = $this->l('Display statistics about your visits and visitors.');
+	}
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return parent::install() && $this->registerHook('AdminStatsModules');
 	}
 
 	public function getTotalVisits()
@@ -84,19 +84,19 @@ class StatsVisits extends ModuleGraph
 		$totalGuests = $this->getTotalGuests();
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => 3));
-		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-			<p><center>
+		$this->html = '
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+			<p>
 				<img src="../img/admin/down.gif" />'.$this->l('A visit corresponds to an internet user coming to your shop. Until the end of their session, only one visit is counted.').'
 				'.$this->l('A visitor is an unknown person, who has not registered or logged on, surfing on your shop. A visitor can come and visit your shop many times.').'
-			</center></p>
+			</p>
 			<div style="margin-top:20px"></div>
 			<p>'.$this->l('Total visits:').' '.$totalVisits.'</p>
 			<p>'.$this->l('Total visitors:').' '.$totalGuests.'</p>
 			'.($totalVisits ? $this->engine($graphParams).'<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>' : '').'
 		</fieldset>
-		<br class="clear" />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<br />
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 				<h2>'.$this->l('Determine the interest of a visit').'</h2>
 				'.$this->l('The visitors\' evolution graph strongly resembles the visits\' graph, but provides additional information:').'<br />
 				<ul>
@@ -106,7 +106,7 @@ class StatsVisits extends ModuleGraph
 				'.$this->l('This information is mostly qualitative: you have to determine the interest of a disjointed visit.').'<br />
 		</fieldset>';
 
-		return $this->_html;
+		return $this->html;
 	}
 
 	public function setOption($option, $layers = 1)
@@ -141,8 +141,8 @@ class StatsVisits extends ModuleGraph
 		for ($i = 0; $i < $layers; $i++)
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i].$this->getDate().' GROUP BY LEFT(date_add, 4)');
-			foreach ($result AS $row)
-				$this->_values[$i][(int)(substr($row['date_add'], 0, 4))] = (int)($row['total']);
+			foreach ($result as $row)
+				$this->_values[$i][(int)substr($row['date_add'], 0, 4)] = (int)$row['total'];
 		}
 	}
 
@@ -151,8 +151,8 @@ class StatsVisits extends ModuleGraph
 		for ($i = 0; $i < $layers; $i++)
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i].$this->getDate().' GROUP BY LEFT(date_add, 7)');
-			foreach ($result AS $row)
-				$this->_values[$i][(int)(substr($row['date_add'], 5, 2))] = (int)($row['total']);
+			foreach ($result as $row)
+				$this->_values[$i][(int)substr($row['date_add'], 5, 2)] = (int)$row['total'];
 		}
 	}
 
@@ -161,8 +161,8 @@ class StatsVisits extends ModuleGraph
 		for ($i = 0; $i < $layers; $i++)
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i].$this->getDate().' GROUP BY LEFT(date_add, 10)');
-			foreach ($result AS $row)
-				$this->_values[$i][(int)(substr($row['date_add'], 8, 2))] = (int)($row['total']);
+			foreach ($result as $row)
+				$this->_values[$i][(int)substr($row['date_add'], 8, 2)] = (int)$row['total'];
 		}
 	}
 
@@ -171,8 +171,8 @@ class StatsVisits extends ModuleGraph
 		for ($i = 0; $i < $layers; $i++)
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query[$i].$this->getDate().' GROUP BY LEFT(date_add, 13)');
-			foreach ($result AS $row)
-				$this->_values[$i][(int)(substr($row['date_add'], 11, 2))] = (int)($row['total']);
+			foreach ($result as $row)
+				$this->_values[$i][(int)substr($row['date_add'], 11, 2)] = (int)$row['total'];
 		}
 	}
 }
