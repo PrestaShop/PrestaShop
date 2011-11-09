@@ -676,7 +676,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				{
 					// calculate md5 checksum on each product for use in tpl
 					$item['checksum'] = md5(_COOKIE_KEY_.$item['id_product'].'_'.$item['id_product_attribute']);
-					$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], (int)$currency->decimals + 1);
+					$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], 2);
 
 					// add id to ids list
 					$product_ids[] = $item['id_product'].'_'.$item['id_product_attribute'];
@@ -1555,14 +1555,14 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			//some staff before render list
 			foreach ($this->_list as &$item)
 			{
-				$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], (int)$currency->decimals + 1);
-				$item['price_te'] = Tools::ps_round($item['price_te'], (int)$currency->decimals + 1);
-				$item['tax_value'] = Tools::ps_round($item['tax_value'], (int)$currency->decimals + 1);
-				$item['tax_value_with_order_discount'] = Tools::ps_round($item['tax_value_with_order_discount'], (int)$currency->decimals + 1);
-				$item['price_ti'] = Tools::ps_round($item['price_ti'], (int)$currency->decimals + 1);
-				$item['price_with_discount_te'] = Tools::ps_round($item['price_with_discount_te'], (int)$currency->decimals + 1);
-				$item['price_with_order_discount_te'] = Tools::ps_round($item['price_with_order_discount_te'], (int)$currency->decimals + 1);
-				$item['discount_value_te'] = Tools::ps_round($item['discount_value_te'], (int)$currency->decimals + 1);
+				$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], 2);
+				$item['price_te'] = Tools::ps_round($item['price_te'], 2);
+				$item['tax_value'] = Tools::ps_round($item['tax_value'], 2);
+				$item['tax_value_with_order_discount'] = Tools::ps_round($item['tax_value_with_order_discount'], 2);
+				$item['price_ti'] = Tools::ps_round($item['price_ti'], 2);
+				$item['price_with_discount_te'] = Tools::ps_round($item['price_with_discount_te'], 2);
+				$item['price_with_order_discount_te'] = Tools::ps_round($item['price_with_order_discount_te'], 2);
+				$item['discount_value_te'] = Tools::ps_round($item['discount_value_te'], 2);
 
 				$item['discount_rate'] = Tools::ps_round($item['discount_rate'], 2);
 				$item['tax_rate'] = Tools::ps_round($item['tax_rate'], 2);
@@ -1589,11 +1589,11 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'supplier_order_last_update' => Tools::displayDate($supplier_order->date_upd, $lang_id, true),
 				'supplier_order_expected' => Tools::displayDate($supplier_order->date_delivery_expected, $lang_id, true),
 				'supplier_order_discount_rate' => Tools::ps_round($supplier_order->discount_rate, 2),
-				'supplier_order_total_te' => Tools::ps_round($supplier_order->total_te, (int)$currency->decimals + 1),
-				'supplier_order_discount_value_te' => Tools::ps_round($supplier_order->discount_value_te, (int)$currency->decimals + 1),
-				'supplier_order_total_with_discount_te' => Tools::ps_round($supplier_order->total_with_discount_te, (int)$currency->decimals + 1),
-				'supplier_order_total_tax' => Tools::ps_round($supplier_order->total_tax, (int)$currency->decimals + 1),
-				'supplier_order_total_ti' => Tools::ps_round($supplier_order->total_ti, (int)$currency->decimals + 1),
+				'supplier_order_total_te' => Tools::ps_round($supplier_order->total_te, 2),
+				'supplier_order_discount_value_te' => Tools::ps_round($supplier_order->discount_value_te, 2),
+				'supplier_order_total_with_discount_te' => Tools::ps_round($supplier_order->total_with_discount_te, 2),
+				'supplier_order_total_tax' => Tools::ps_round($supplier_order->total_tax, 2),
+				'supplier_order_total_ti' => Tools::ps_round($supplier_order->total_ti, 2),
 				'supplier_order_currency' => $currency,
 			);
 		}
