@@ -564,6 +564,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		}
 
 		$supplier_order = new SupplierOrder($id_supplier_order);
+
 		if (!Validate::isLoadedObject($supplier_order))
 		{
 			$this->_errors[] = Tools::displayError($this->l('The specified supplier order is not valid'));
@@ -652,6 +653,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		if ($id_supplier_order != null)
 		{
 			$supplier_order = new SupplierOrder($id_supplier_order);
+
 			$currency = new Currency($supplier_order->id_currency);
 
 			if (Validate::isLoadedObject($supplier_order))
@@ -715,6 +717,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			return parent::initContent();
 
 		$supplier_order = new SupplierOrder($id_supplier_order);
+
 		// if it's not a valid order
 		if (!Validate::isLoadedObject($supplier_order))
 			return parent::initContent();
@@ -889,6 +892,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		if ($id_supplier_order != null)
 		{
 			$supplier_order = new SupplierOrder($id_supplier_order);
+
 			$products_already_in_order = $supplier_order->getEntries();
 			$currency = new Currency($supplier_order->id_ref_currency);
 
@@ -1068,6 +1072,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			{
 				// try to load supplier order
 				$supplier_order = new SupplierOrder($id_supplier_order);
+
 				if (Validate::isLoadedObject($supplier_order))
 				{
 					// get valid available possible states for this order
@@ -1143,6 +1148,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		{
 			$supplier_order_detail = new SupplierOrderDetail($id_supplier_order_detail);
 			$supplier_order = new SupplierOrder((int)Tools::getValue('id_supplier_order'));
+
 			if (Validate::isLoadedObject($supplier_order_detail) && Validate::isLoadedObject($supplier_order))
 			{
 				// checks if quantity is valid
@@ -1610,6 +1616,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	public function printPDFIcons($id_supplier_order, $tr)
 	{
 		$supplier_order = new SupplierOrder((int)$id_supplier_order);
+
 		if (!Validate::isLoadedObject($supplier_order))
 			return;
 

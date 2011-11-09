@@ -40,19 +40,19 @@
 			//get reference on save link
 			btn_save = $('span[class~="process-icon-save"]').parent();
 
-			if (btn_save.length > 0)
+			//get reference on form submit button
+			btn_submit = $('#{$table}_form_submit_btn');
+
+			if (btn_save.length > 0 && btn_submit.length > 0)
 			{
 				//get reference on save and stay link
 				btn_save_and_stay = $('span[class~="process-icon-save-and-stay"]').parent();
-
-				//get reference on form submit button
-				btn_submit = $('#{$table}_form_submit_btn');
 
 				//get reference on current save link label
 				lbl_save = $('#desc-{$table}-save div');
 
 				//override save link label with submit button value
-				if (btn_submit.attr("value").length > 0)
+				if (btn_submit.val().length > 0)
 					lbl_save.html(btn_submit.attr("value"));
 
 				if (btn_save_and_stay.length > 0)
@@ -61,8 +61,8 @@
 					lbl_save_and_stay = $('#desc-{$table}-save-and-stay div');
 
 					//override save and stay link label with submit button value
-					if (btn_submit.attr("value").length > 0)
-						lbl_save_and_stay.html(btn_submit.attr("value") + ' and stay');
+					if (btn_submit.val().length > 0)
+						lbl_save_and_stay.html(btn_submit.val() + ' and stay');
 				}
 
 				//hide standard submit button
