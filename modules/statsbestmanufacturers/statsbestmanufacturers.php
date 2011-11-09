@@ -31,26 +31,26 @@ if (!defined('_PS_VERSION_'))
 class StatsBestManufacturers extends ModuleGrid
 {
 	private $_html = null;
-	private $_query =  null;
+	private $_query = null;
 	private $_columns = null;
 	private $_defaultSortColumn = null;
 	private $_defaultSortDirection = null;
 	private $_emptyMessage = null;
 	private $_pagingMessage = null;
-	
-	function __construct()
+
+	public function __construct()
 	{
 		$this->name = 'statsbestmanufacturers';
 		$this->tab = 'analytics_stats';
 		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
 		$this->_defaultSortColumn = 'sales';
 		$this->_defaultSortDirection = 'DESC';
 		$this->_emptyMessage = $this->l('Empty recordset returned');
 		$this->_pagingMessage = $this->l('Displaying').' {0} - {1} '.$this->l('of').' {2}';
-		
+
 		$this->_columns = array(
 			array(
 				'id' => 'name',
@@ -74,18 +74,18 @@ class StatsBestManufacturers extends ModuleGrid
 				'align' => 'right'
 			)
 		);
-		
+
 		parent::__construct();
-		
+
 		$this->displayName = $this->l('Best manufacturers');
 		$this->description = $this->l('A list of the best manufacturers');
 	}
-	
+
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
-	
+
 	public function hookAdminStatsModules($params)
 	{
 		$engineParams = array(
@@ -97,18 +97,18 @@ class StatsBestManufacturers extends ModuleGrid
 			'emptyMessage' => $this->_emptyMessage,
 			'pagingMessage' => $this->_pagingMessage
 		);
-	
+
 		if (Tools::getValue('export'))
 			$this->csvExport($engineParams);
-	
+
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			'.$this->engine($engineParams).'
 			<br /><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>
 		</fieldset>';
 		return $this->_html;
 	}
-	
+
 	public function getTotalCount()
 	{
 		$sql = 'SELECT COUNT(DISTINCT(m.id_manufacturer))
@@ -122,9 +122,9 @@ class StatsBestManufacturers extends ModuleGrid
 					AND m.id_manufacturer IS NOT NULL';
 		return Db::getInstance()->getValue($sql);
 	}
-	
+
 	public function getData()
-	{	
+	{
 		$this->_totalCount = $this->getTotalCount();
 
 		$this->_query = 'SELECT m.name, SUM(od.product_quantity) as quantity, ROUND(SUM(od.product_quantity * od.product_price) / c.conversion_rate, 2) as sales
@@ -141,10 +141,10 @@ class StatsBestManufacturers extends ModuleGrid
 		if (Validate::IsName($this->_sort))
 		{
 			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
-			if (isset($this->_direction) AND Validate::IsSortDirection($this->_direction))
+			if (isset($this->_direction) && Validate::IsSortDirection($this->_direction))
 				$this->_query .= ' '.$this->_direction;
 		}
-		if (($this->_start === 0 OR Validate::IsUnsignedInt($this->_start)) AND Validate::IsUnsignedInt($this->_limit))
+		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
 			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
 		$this->_values = Db::getInstance()->executeS($this->_query);
 	}

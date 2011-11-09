@@ -30,33 +30,55 @@ if (!defined('_PS_VERSION_'))
 
 class StatsCheckUp extends Module
 {
-    function __construct()
-    {
-        $this->name = 'statscheckup';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	private $html = '';
+
+	public function __construct()
+	{
+		$this->name = 'statscheckup';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-        parent::__construct();
+		parent::__construct();
 
-        $this->displayName = $this->l('Catalog evaluation');
-        $this->description = $this->l('Quick evaluation of your catalog quality.');
-    }
+		$this->displayName = $this->l('Catalog evaluation');
+		$this->description = $this->l('Quick evaluation of your catalog quality.');
+	}
 
 	public function install()
 	{
-		foreach (array('CHECKUP_DESCRIPTIONS_LT'=>100,'CHECKUP_DESCRIPTIONS_GT'=>400,'CHECKUP_IMAGES_LT'=>1,'CHECKUP_IMAGES_GT'=>2,'CHECKUP_SALES_LT'=>1,'CHECKUP_SALES_GT'=>2,'CHECKUP_STOCK_LT'=>1,'CHECKUP_STOCK_GT'=>3) as $confname => $confdefault)
+		$confs = array(
+			'CHECKUP_DESCRIPTIONS_LT'=>100,
+			'CHECKUP_DESCRIPTIONS_GT'=>400,
+			'CHECKUP_IMAGES_LT'=>1,
+			'CHECKUP_IMAGES_GT'=>2,
+			'CHECKUP_SALES_LT'=>1,
+			'CHECKUP_SALES_GT'=>2,
+			'CHECKUP_STOCK_LT'=>1,
+			'CHECKUP_STOCK_GT'=>3
+		);
+		foreach ($confs as $confname => $confdefault)
 			if (!Configuration::get($confname))
 				Configuration::updateValue($confname, (int)$confdefault);
 		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
-    function hookAdminStatsModules()
-    {
+	public function hookAdminStatsModules()
+	{
 		if (Tools::isSubmit('submitCheckup'))
 		{
-			foreach (array('CHECKUP_DESCRIPTIONS_LT','CHECKUP_DESCRIPTIONS_GT','CHECKUP_IMAGES_LT','CHECKUP_IMAGES_GT','CHECKUP_SALES_LT','CHECKUP_SALES_GT','CHECKUP_STOCK_LT','CHECKUP_STOCK_GT') as $confname)
+			$confs = array(
+				'CHECKUP_DESCRIPTIONS_LT',
+				'CHECKUP_DESCRIPTIONS_GT',
+				'CHECKUP_IMAGES_LT',
+				'CHECKUP_IMAGES_GT',
+				'CHECKUP_SALES_LT',
+				'CHECKUP_SALES_GT',
+				'CHECKUP_STOCK_LT',
+				'CHECKUP_STOCK_GT'
+			);
+			foreach ($confs as $confname)
 				Configuration::updateValue($confname, (int)Tools::getValue($confname));
 			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"> '.$this->l('Configuration updated').'</div>';
 		}
@@ -100,7 +122,7 @@ class StatsCheckUp extends Module
 		$orderBy = 'p.id_product';
 		if ($this->context->cookie->checkup_order == 2)
 			$orderBy = 'pl.name';
-		elseif ($this->context->cookie->checkup_order == 3)
+		else if ($this->context->cookie->checkup_order == 3)
 			$orderBy = 'nbSales DESC';
 
 		// Get products stats
@@ -122,7 +144,8 @@ class StatsCheckUp extends Module
 					WHERE pa.id_product = p.id_product
 				), p.quantity) as stock
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
+				LEFT JOIN '._DB_PREFIX_.'product_lang pl
+					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
 				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				ORDER BY '.$orderBy;
 		$result = $db->executeS($sql);
@@ -137,29 +160,38 @@ class StatsCheckUp extends Module
 			'STOCK' => array('name' => $this->l('Stock'), 'text' => $this->l('items'))
 		);
 
-		$html = '
+		$this->html = '
 		<style type="text/css">
 			form.checkup input[type=text] {width:30px}
-			table.checkup {float:left}
-			form.checkup div {float:left;margin-left:20px}
+			form.checkup div {margin-top:20px}
 			table.checkup th {text-align:center}
 			table.checkup td {padding:5px 10px}
 			table.checkup2 td {text-align:right}
 		</style>
-		<form action="'.AdminTab::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="checkup">
-		<table class="table checkup" border="0" cellspacing="0" cellspacing="0">
-			<tr><th></th><th>'.$arrayColors[0].' '.$this->l('Not enough').'</th><th>'.$arrayColors[2].' '.$this->l('Alright').'</th></tr>';
-		foreach ($arrayConf as $conf => $translations)
-			$html .= '<tr>
-				<th>'.$translations['name'].'</th>
-				<td>'.$this->l('lower than').' <input type="text" name="CHECKUP_'.$conf.'_LT" value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT'))).'" /> '.$translations['text'].'
-				<td>'.$this->l('greater than').' <input type="text" name="CHECKUP_'.$conf.'_GT" value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT'))).'" /> '.$translations['text'].'
-			</tr>';
-		$html .= '</table>
+		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="checkup">
+			<table class="table checkup" border="0" cellspacing="0" cellspacing="0">
+				<tr>
+					<th></th>
+					<th>'.$arrayColors[0].' '.$this->l('Not enough').'</th>
+					<th>'.$arrayColors[2].' '.$this->l('Alright').'</th>
+				</tr>';
+			foreach ($arrayConf as $conf => $translations)
+				$this->html .= '<tr>
+					<th>'.$translations['name'].'</th>
+					<td>'.$this->l('lower than').'
+						 <input type="text" name="CHECKUP_'.$conf.'_LT"
+						 	value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_LT', Configuration::get('CHECKUP_'.$conf.'_LT'))).'" /> '.$translations['text'].'
+					</td>
+					<td>'.$this->l('greater than').'
+						 <input type="text" name="CHECKUP_'.$conf.'_GT"
+						 	value="'.Tools::safeOutput(Tools::getValue('CHECKUP_'.$conf.'_GT', Configuration::get('CHECKUP_'.$conf.'_GT'))).'" /> '.$translations['text'].'
+					</td>
+				</tr>';
+			$this->html .= '</table>
 			<div><input type="submit" name="submitCheckup" class="button" value="'.$this->l('   Save   ').'" /></div>
 		</form>
-		<div class="clear">&nbsp;</div>
-		<form action="'.AdminTab::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post">
+		<br />
+		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post">
 			'.$this->l('Order by').'
 			<select name="submitCheckupOrder" onchange="this.form.submit();" style="width:100px">
 				<option value="1">'.$this->l('ID').'</option>
@@ -167,15 +199,15 @@ class StatsCheckUp extends Module
 				<option value="3" '.($this->context->cookie->checkup_order == 3 ? 'selected="selected"' : '').'>'.$this->l('Sales').'</option>
 			</select>
 		</form>
-		<div class="clear">&nbsp;</div>
+		<br />
 		<table class="table checkup2" border="0" cellspacing="0" cellspacing="0">
 			<tr>
 				<th>'.$this->l('ID').'</th>
 				<th>'.$this->l('Item').'</th>
 				<th>'.$this->l('Active').'</th>';
 		foreach ($languages as $language)
-			$html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
-		$html .= '
+			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
+		$this->html .= '
 				<th>'.$this->l('Images').'</th>
 				<th>'.$this->l('Sales').'</th>
 				<th>'.$this->l('Stock').'</th>
@@ -194,7 +226,12 @@ class StatsCheckUp extends Module
 			$totals['images'] += (int)$scores['images'];
 			$totals['sales'] += (int)$scores['sales'];
 			$totals['stock'] += (int)$scores['stock'];
-			$descriptions = $db->executeS('SELECT l.iso_code, pl.description FROM '._DB_PREFIX_.'product_lang pl LEFT JOIN '._DB_PREFIX_.'lang l ON pl.id_lang = l.id_lang WHERE id_product = '.(int)$row['id_product'].$this->context->shop->addSqlRestrictionOnLang('pl'));
+			$descriptions = $db->executeS('
+				SELECT l.iso_code, pl.description
+				FROM '._DB_PREFIX_.'product_lang pl
+				LEFT JOIN '._DB_PREFIX_.'lang l
+					ON pl.id_lang = l.id_lang
+				WHERE id_product = '.(int)$row['id_product'].$this->context->shop->addSqlRestrictionOnLang('pl'));
 			foreach ($descriptions as $description)
 			{
 				$row['desclength_'.$description['iso_code']] = Tools::strlen(strip_tags($description['description']));
@@ -204,16 +241,16 @@ class StatsCheckUp extends Module
 			$scores['average'] = array_sum($scores) / $divisor;
 			$scores['average'] = ($scores['average'] < 1 ? 0 : ($scores['average'] > 1.5 ? 2 : 1));
 
-			$html .= '<tr>
+			$this->html .= '<tr>
 				<td>'.$row['id_product'].'</td>
 				<td style="text-align:left"><a href="index.php?tab=AdminCatalog&updateproduct&id_product='.$row['id_product'].'&token='.$tokenProducts.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
 				<td>'.$arrayColors[$scores['active']].'</td>';
 			foreach ($languages as $language)
 				if (isset($row['desclength_'.$language['iso_code']]))
-					$html .= '<td>'.(int)$row['desclength_'.$language['iso_code']].' '.$arrayColors[$scores['description_'.$language['iso_code']]].'</td>';
+					$this->html .= '<td>'.(int)$row['desclength_'.$language['iso_code']].' '.$arrayColors[$scores['description_'.$language['iso_code']]].'</td>';
 				else
-					$html .= '<td>0 '.$arrayColors[0].'</td>';
-			$html .= '
+					$this->html .= '<td>0 '.$arrayColors[0].'</td>';
+			$this->html .= '
 				<td>'.(int)$row['nbImages'].' '.$arrayColors[$scores['images']].'</td>
 				<td>'.(int)$row['nbSales'].' '.$arrayColors[$scores['sales']].'</td>
 				<td>'.(int)$row['stock'].' '.$arrayColors[$scores['stock']].'</td>
@@ -237,13 +274,13 @@ class StatsCheckUp extends Module
 		$totals['average'] = array_sum($totals) / $divisor;
 		$totals['average'] = ($totals['average'] < 1 ? 0 : ($totals['average'] > 1.5 ? 2 : 1));
 
-		$html .= '
+		$this->html .= '
 			<tr>
 				<th colspan="2"></th>
 				<th>'.$this->l('Active').'</th>';
 		foreach ($languages as $language)
-			$html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
-		$html .= '
+			$this->html .= '<th>'.$this->l('Desc.').' ('.strtoupper($language['iso_code']).')</th>';
+		$this->html .= '
 				<th>'.$this->l('Images').'</th>
 				<th>'.$this->l('Sales').'</th>
 				<th>'.$this->l('Stock').'</th>
@@ -253,19 +290,16 @@ class StatsCheckUp extends Module
 				<td colspan="2"></td>
 				<td>'.$arrayColors[$totals['active']].'</td>';
 		foreach ($languages as $language)
-			$html .= '<td>'.$arrayColors[$totals['description_'.$language['iso_code']]].'</td>';
-		$html .= '
+			$this->html .= '<td>'.$arrayColors[$totals['description_'.$language['iso_code']]].'</td>';
+		$this->html .= '
 				<td>'.$arrayColors[$totals['images']].'</td>
 				<td>'.$arrayColors[$totals['sales']].'</td>
 				<td>'.$arrayColors[$totals['stock']].'</td>
 				<td>'.$arrayColors[$totals['average']].'</td>
 			</tr>
 		</table>
-		<div class="clear">&nbsp;</div>
-		<script type="text/javascript">
-			$(document).ready(function(){$("#container").css("width", "1200px");});
-		</script>';
+		<div class="clear">&nbsp;</div>';
 
-        return $html;
-    }
+		return $this->html;
+	}
 }

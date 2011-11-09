@@ -38,7 +38,7 @@ class StatsBestCustomers extends ModuleGrid
 	private $_emptyMessage;
 	private $_pagingMessage;
 
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'statsbestcustomers';
 		$this->tab = 'analytics_stats';
@@ -92,7 +92,7 @@ class StatsBestCustomers extends ModuleGrid
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	public function hookAdminStatsModules($params)
@@ -109,19 +109,21 @@ class StatsBestCustomers extends ModuleGrid
 		if (Tools::getValue('export'))
 			$this->csvExport($engineParams);
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			'.$this->engine($engineParams).'
 		<p><a href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 		</fieldset><br />
-		<fieldset class="width3"><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
 			<h2 >'.$this->l('Develop clients\' loyalty').'</h2>
 			<p class="space">
 				'.$this->l('Keeping a client is more profitable than gaining a new one. Thus, it is necessary to develop their loyalty, in other words to make them want to come back to your webshop.').' <br />
 				'.$this->l('Word of mouth is also a means to of getting new, satisfied clients; a dissatisfied one won\'t attract new clients.').'<br />
 				'.$this->l('In order to achieve this goal you can organize: ').'
 				<ul>
-					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered), non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
-					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client, but also offer advantages to clients (private offers, discounts).').'</li>
+					<li>'.$this->l('Punctual operations: commercial rewards (personalized special offers, product or service offered),
+						non commercial rewards (priority handling of an order or a product), pecuniary rewards (bonds, discount coupons, payback).').'</li>
+					<li>'.$this->l('Sustainable operations: loyalty points or cards, which not only justify communication between merchant and client,
+						 but also offer advantages to clients (private offers, discounts).').'</li>
 				</ul>
 				'.$this->l('These operations encourage clients to buy products and visit your webshop regularly.').' <br />
 			</p><br />
@@ -130,7 +132,7 @@ class StatsBestCustomers extends ModuleGrid
 	}
 
 	public function getData()
-	{		
+	{
 		$this->_query = '
 		SELECT SQL_CALC_FOUND_ROWS c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`,
 			COUNT(co.`id_connections`) as totalVisits,
@@ -151,10 +153,10 @@ class StatsBestCustomers extends ModuleGrid
 		if (Validate::IsName($this->_sort))
 		{
 			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
-			if (isset($this->_direction) AND Validate::IsSortDirection($this->_direction))
+			if (isset($this->_direction) && Validate::IsSortDirection($this->_direction))
 				$this->_query .= ' '.$this->_direction;
 		}
-		if (($this->_start === 0 OR Validate::IsUnsignedInt($this->_start)) AND Validate::IsUnsignedInt($this->_limit))
+		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
 			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
 		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
 		$this->_totalCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');

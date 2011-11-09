@@ -38,7 +38,7 @@ class StatsBestCategories extends ModuleGrid
 	private $_emptyMessage;
 	private $_pagingMessage;
 
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'statsbestcategories';
 		$this->tab = 'analytics_stats';
@@ -90,7 +90,7 @@ class StatsBestCategories extends ModuleGrid
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('AdminStatsModules'));
+		return (parent::install() && $this->registerHook('AdminStatsModules'));
 	}
 
 	public function hookAdminStatsModules($params)
@@ -104,12 +104,12 @@ class StatsBestCategories extends ModuleGrid
 			'emptyMessage' => $this->_emptyMessage,
 			'pagingMessage' => $this->_pagingMessage
 		);
-	
+
 		if (Tools::getValue('export'))
 			$this->csvExport($engineParams);
-	
+
 		$this->_html = '
-		<fieldset class="width3"><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			'.$this->engine($engineParams).'
 			<br /><a href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>
 		</fieldset>';
@@ -120,7 +120,7 @@ class StatsBestCategories extends ModuleGrid
 	{
 		$dateBetween = $this->getDate();
 		$id_lang = $this->getLang();
-		
+
 		// If a shop is selected, get all children categories for the shop
 		$categories = array();
 		if ($this->context->shop->getContextType() != Shop::CONTEXT_ALL)
@@ -136,7 +136,7 @@ class StatsBestCategories extends ModuleGrid
 			{
 				$ntreeRestriction = array();
 				foreach ($result as $row)
-					$ntreeRestriction[] = '(nleft >= ' . $row['nleft'] . ' AND nright <= ' . $row['nright'] . ')';
+					$ntreeRestriction[] = '(nleft >= '.$row['nleft'].' AND nright <= '.$row['nright'].')';
 				
 				if ($ntreeRestriction)
 				{
@@ -194,10 +194,10 @@ class StatsBestCategories extends ModuleGrid
 		if (Validate::IsName($this->_sort))
 		{
 			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
-			if (isset($this->_direction) AND Validate::IsSortDirection($this->_direction))
+			if (isset($this->_direction) && Validate::IsSortDirection($this->_direction))
 				$this->_query .= ' '.$this->_direction;
 		}
-		if (($this->_start === 0 OR Validate::IsUnsignedInt($this->_start)) AND Validate::IsUnsignedInt($this->_limit))
+		if (($this->_start === 0 || Validate::IsUnsignedInt($this->_start)) && Validate::IsUnsignedInt($this->_limit))
 			$this->_query .= ' LIMIT '.$this->_start.', '.($this->_limit);
 		$this->_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query);
 		$this->_totalCount = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()');

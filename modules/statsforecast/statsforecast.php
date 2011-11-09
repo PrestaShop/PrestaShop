@@ -40,19 +40,19 @@ class StatsForecast extends Module
 	private $t7 = 0;
 	private $t8 = 0;
 
-    public function __construct()
-    {
-        $this->name = 'statsforecast';
-        $this->tab = 'analytics_stats';
-        $this->version = 1.0;
+	public function __construct()
+	{
+		$this->name = 'statsforecast';
+		$this->tab = 'analytics_stats';
+		$this->version = 1.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-        parent::__construct();
+		parent::__construct();
 
-        $this->displayName = $this->l('Stats Dashboard');
-        $this->description = '';
-    }
+		$this->displayName = $this->l('Stats Dashboard');
+		$this->description = '';
+	}
 
 	public function install()
 	{
@@ -61,7 +61,7 @@ class StatsForecast extends Module
 
 	public function getContent()
 	{
-		Tools::redirectAdmin('index.php?tab=AdminStats&module=statsforecast&token='.Tools::getAdminTokenLite('AdminStats'));
+		Tools::redirectAdmin('index.php?controller=AdminStats&module=statsforecast&token='.Tools::getAdminTokenLite('AdminStats'));
 	}
 
 	public function hookAdminStatsModules()
@@ -98,7 +98,7 @@ class StatsForecast extends Module
 			$intervalAvg = $interval2;
 		if ($this->context->cookie->stats_granularity == 42)
 			$intervalAvg = $interval2 / 7;
-		
+
 		// @todo : to remove
 		if (!defined('PS_BASE_URI'))
 			define('PS_BASE_URI', '/');
@@ -133,14 +133,14 @@ class StatsForecast extends Module
 		{
 			$dateEnd = strtotime($employee->stats_date_to.' 23:59:59');
 			$dateToday = time();
-			for ($i = strtotime($employee->stats_date_from.' 00:00:00'); $i <= $dateEnd AND $i <= $dateToday; $i += 86400)
+			for ($i = strtotime($employee->stats_date_from.' 00:00:00'); $i <= $dateEnd && $i <= $dateToday; $i += 86400)
 				$dataTable[$i] = array('fix_date' => date('Y-m-d', $i), 'countOrders' => 0, 'countProducts' => 0, 'totalProducts' => 0);
 		}
 
 		while ($row = $db->nextRow($result))
 			$dataTable[strtotime($row['fix_date'])] = $row;
 
-		$this->_html .= '<div style="float:left;width:660px">
+		$this->_html .= '<div>
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
 			<p style="float:left">'.$this->l('All amounts are without taxes.').'</p>
 			<form id="granularity" action="'.$ru.'#granularity" method="post" style="float:right">
@@ -176,7 +176,7 @@ class StatsForecast extends Module
 		while ($row = $db->nextRow($visits))
 			$visitArray[$row['fix_date']] = $row['visits'];
 
-		$discountArray = array();
+		/*$discountArray = array();
 		$sql = 'SELECT '.$dateFromGInvoice.' as fix_date, SUM(od.value) as total
 				FROM '._DB_PREFIX_.'orders o
 				LEFT JOIN '._DB_PREFIX_.'order_discount od ON o.id_order = od.id_order
@@ -187,12 +187,12 @@ class StatsForecast extends Module
 				GROUP BY '.$dateFromGInvoice;
 		$discounts = Db::getInstance()->executeS($sql, false);
 		while ($row = $db->nextRow($discounts))
-			$discountArray[$row['fix_date']] = $row['total'];
+			$discountArray[$row['fix_date']] = $row['total'];*/
 
 		$today = date('Y-m-d');
 		foreach ($dataTable as $row)
 		{
-			$discountToday = (isset($discountArray[$row['fix_date']]) ? $discountArray[$row['fix_date']] : 0);
+			$discountToday = 0;//(isset($discountArray[$row['fix_date']]) ? $discountArray[$row['fix_date']] : 0);
 			$visitsToday = (int)(isset($visitArray[$row['fix_date']]) ? $visitArray[$row['fix_date']] : 0);
 
 			$dateFromGReg = ($this->context->cookie->stats_granularity != 42
@@ -316,7 +316,7 @@ class StatsForecast extends Module
 					.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o');
 		$orders = Db::getInstance()->getValue($sql);
 
-		$this->_html .= '<div class="clear">&nbsp;</div>
+		$this->_html .= '<br />
 		<fieldset><legend><img src="../modules/'.$this->name.'/funnel.png" /> '.$this->l('Conversion').'</legend>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Visitors').'<br />'.$visitors.'</span>
 			<span style="float:left;text-align:center;margin-right:10px">
@@ -358,7 +358,7 @@ class StatsForecast extends Module
 		$prop5000 = 5000 / 30 * $interval;
 
 		$this->_html .= '
-		<div class="clear">&nbsp;</div>';
+		<br />';
 		$this->_html .= '<fieldset><legend id="payment"><img src="../img/t/AdminPayment.gif" />'.$this->l('Payment distibution').'</legend>
 			<form id="cat" action="'.$ru.'#payment" method="post" style="float:right">
 				<input type="hidden" name="submitIdZone" value="1" />
@@ -381,7 +381,7 @@ class StatsForecast extends Module
 			$this->_html .= '
 			</table>
 		</fieldset>
-		<div class="clear">&nbsp;</div>
+		<br />
 		<fieldset><legend><img src="../img/t/AdminCatalog.gif" /> '.$this->l('Category distribution').'</legend>
 			<form id="cat" action="'.$ru.'#cat" method="post" style="float:right">
 				<input type="hidden" name="submitIdZone" value="1" />
@@ -406,7 +406,7 @@ class StatsForecast extends Module
 			$this->_html .= '
 			</table>
 		</fieldset>
-		<div class="clear">&nbsp;</div>
+		<br />
 		<fieldset><legend><img src="../img/t/AdminLanguages.gif" /> '.$this->l('Language distribution').'</legend>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 				<tr><th>'.$this->l('Customers').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('%').'</th><th colspan="2">'.$this->l('Growth').'</th></tr>';
@@ -425,7 +425,7 @@ class StatsForecast extends Module
 		$this->_html .= '
 			</table>
 		</fieldset>
-		<div class="clear">&nbsp;</div>
+		<br />
 		<fieldset><legend><img src="../img/t/AdminLanguages.gif" />'.$this->l('Zone distribution').'</legend>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 				<tr><th>'.$this->l('Zone').'</th><th>'.$this->l('Count').'</th><th>'.$this->l('Total').'</th><th>'.$this->l('% Count').'</th><th>'.$this->l('% Sales').'</th></tr>';
@@ -441,7 +441,7 @@ class StatsForecast extends Module
 		$this->_html .= '
 			</table>
 		</fieldset>
-		<div class="clear">&nbsp;</div>
+		<br />
 		<fieldset><legend id="currencies"><img src="../img/t/AdminCurrencies.gif" />'.$this->l('Currency distribution').'</legend>
 			<form id="cat" action="'.$ru.'#currencies" method="post" style="float:right">
 				<input type="hidden" name="submitIdZone" value="1" />
@@ -465,7 +465,7 @@ class StatsForecast extends Module
 			$this->_html .= '
 			</table>
 		</fieldset>
-		<div class="clear">&nbsp;</div>
+		<br />
 		<fieldset><legend><img src="../img/t/AdminCatalog.gif" />'.$this->l('Attribute distribution').'</legend>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 				<tr><th>'.$this->l('Group').'</th><th>'.$this->l('Attribute').'</th><th>'.$this->l('Count').'</th></tr>';

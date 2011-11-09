@@ -25,11 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
-include_once(dirname(__FILE__).'/AdminStatsTab.php');
-
-class AdminStats extends AdminStatsTab
+class AdminStatsControllerCore extends AdminStatsTabControllerCore
 {
 }
-
-
