@@ -41,7 +41,7 @@ class TabCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	protected $fieldsRequired = array('class_name', 'position');
+	protected $fieldsRequired = array('class_name');
 	protected $fieldsSize = array('class_name' => 64, 'module' => 64);
 	protected $fieldsValidate = array(
 		'id_parent' => 'isInt',
@@ -105,7 +105,7 @@ class TabCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-	 	if (!$context->employee->id_profile)
+	 	if (!$context->employee || !$context->employee->id_profile)
 	 		return false;
 	 	/* Profile selection */
 	 	$profiles = Db::getInstance()->executeS('

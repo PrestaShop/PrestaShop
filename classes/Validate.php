@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -36,7 +36,7 @@ class ValidateCore
 	{
 		return true;
 	}
-	
+
  	/**
 	* Check for e-mail validity
 	*
@@ -106,7 +106,7 @@ class ValidateCore
     {
 		return strval((float)($float)) == strval($float);
 	}
-	
+
     public static function isUnsignedFloat($float)
     {
 			return strval((float)($float)) == strval($float) AND $float >= 0;
@@ -243,17 +243,17 @@ class ValidateCore
 	{
 		return preg_match('/^[a-zA-Z]{2,3}$/', $isoCode);
 	}
-	
+
 	public static function isLanguageCode($s)
 	{
 		return preg_match('/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/', $s);
 	}
-	
+
 	public static function isStateIsoCode($isoCode)
 	{
-		return preg_match('/^[a-zA-Z0-9]{2,3}((-)[a-zA-Z0-9]{1,3})?$/', $isoCode);
+		return preg_match('/^[a-zA-Z0-9]{1,3}((-)[a-zA-Z0-9]{1,3})?$/', $isoCode);
 	}
-	
+
 	public static function isNumericIsoCode($isoCode)
 	{
 		return preg_match('/^[0-9]{2,3}$/', $isoCode);
@@ -430,7 +430,7 @@ class ValidateCore
 	{
 		return (bool)preg_match('/^([0-9]{4})-((0?[0-9])|(1[0-2]))-((0?[0-9])|([1-2][0-9])|(3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date);
 	}
-	
+
 	/**
 	* Check for date validity
 	*
@@ -494,7 +494,7 @@ class ValidateCore
 	{
 		return !$ean13 OR preg_match('/^[0-9]{0,13}$/', $ean13);
 	}
-	
+
 	/**
 	* Check for barcode validity (UPC)
 	*
@@ -516,7 +516,7 @@ class ValidateCore
 	{
 		return empty($postcode) OR preg_match('/^[a-zA-Z 0-9-]+$/', $postcode);
 	}
-	
+
 	/**
 	* Check for zip code format validity
 	*
@@ -526,7 +526,7 @@ class ValidateCore
 	public static function isZipCodeFormat($zip_code)
 	{
 		if (!empty($zip_code))
-			return preg_match('/^[NLCnlc -]+$/', $zip_code);
+			return preg_match('/^[NLCnlc 0-9-]+$/', $zip_code);
 		return true;
 	}
 
@@ -691,12 +691,12 @@ class ValidateCore
 	{
 		return (in_array($engine, array('InnoDB', 'MyISAM')));
 	}
-	
+
 	public static function isUnixName($data)
 	{
 		return preg_match('/^[a-z0-9\._-]+$/ui', $data);
 	}
-	
+
 	public static function isTablePrefix($data)
 	{
 		// Even if "-" is theorically allowed, it will be considered a syntax error if you do not add backquotes (`) around the table name
@@ -729,7 +729,7 @@ class ValidateCore
 	{
 		return preg_match('/^[a-zA-Z]{1,3}$/', $unit);
 	}
-	
+
 	public static function isDistanceUnit($unit)
 	{
 		return preg_match('/^[a-zA-Z]{1,2}$/', $unit);
@@ -777,7 +777,7 @@ class ValidateCore
 	{
 		return ($data == PS_TAX_EXC OR $data == PS_TAX_INC);
 	}
-	
+
 	/**
 	 * @param string $dni to validate
 	 * @return bool
@@ -786,7 +786,7 @@ class ValidateCore
 	{
 		return empty($dni) OR (bool)preg_match('/^[0-9A-Za-z-.]{1,16}$/U', $dni);
 	}
-	
+
 	/**
 	 * Check if $data is a PrestaShop cookie object
 	 *
@@ -819,7 +819,7 @@ class ValidateCore
 	{
 		return ($data === 'amount' || $data === 'percentage');
 	}
-	
+
 	/**
 	* Check for bool_id
 	*
@@ -841,7 +841,7 @@ class ValidateCore
 	{
 		return ($data === 'states' OR $data === 'taxes' OR $data === 'currencies' OR $data === 'languages' OR $data === 'units');
 	}
-	
+
 	/**
 	* Check for PHP serialized data
 	*
@@ -852,7 +852,7 @@ class ValidateCore
 	{
 		return ($data == NULL) OR (bool)(is_string($data) AND preg_match('/^a:[0-9]+:{.*;}$/s', $data));
 	}
-	
+
 	/**
 	* Check for Latitude/Longitude
 	*
@@ -863,7 +863,7 @@ class ValidateCore
 	{
 		return ($data == NULL) OR (bool)(preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data));
 	}
-	
+
 	/**
 	* Check for Language Iso Code
 	*
@@ -874,7 +874,7 @@ class ValidateCore
 	{
 		return (bool)(preg_match('/^[a-zA-Z]{2,3}$/s', $iso_code));
 	}
-	
+
 	/**
 	* Check for Language File Name
 	*
@@ -885,11 +885,11 @@ class ValidateCore
 	{
 		return (bool)(preg_match('/^[a-zA-Z]{2,3}\.gzip$/s', $file_name));
 	}
-	
+
 	/**
 	 *
 	 * @param array $ids
-	 * @return boolean return true if the array contain only unsigned int value 
+	 * @return boolean return true if the array contain only unsigned int value
 	 */
 	public static function isArrayWithIds($ids)
 	{
@@ -899,11 +899,11 @@ class ValidateCore
 					return false;
 		return true;
 	}
-	
+
 	/**
 	 *
 	 * @param array $zones
-	 * @return boolean return true if array contain all value required for an image map zone 
+	 * @return boolean return true if array contain all value required for an image map zone
 	 */
 	public static function isSceneZones($zones)
 	{
@@ -922,9 +922,9 @@ class ValidateCore
 		}
 		return true;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param array $stock_management
 	 * @return boolean return true if is a valide stock management
 	 */

@@ -183,7 +183,7 @@ class CarrierCore extends ObjectModel
 			return false;
 		return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cart_rule_carrier WHERE id_carrier = '.(int)$this->id);
 	}
-	
+
 	/**
 	* Change carrier id in delivery prices when updating a carrier
 	*

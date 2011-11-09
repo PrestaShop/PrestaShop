@@ -196,6 +196,9 @@ class OrderCore extends ObjectModel
 
 	public function getFields()
 	{
+		if (!$this->id_lang)
+			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+
 		$this->validateFields();
 
 		$fields['id_group_shop'] = (int)$this->id_group_shop;
@@ -614,7 +617,7 @@ class OrderCore extends ObjectModel
 		}
 		return $virtual;
 	}
-	
+
 	/**
 	 * @deprecated 1.5.0.1
 	 */
@@ -623,7 +626,7 @@ class OrderCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		return Order::getCartRules();
 	}
-	
+
 	public function getCartRules()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -898,7 +901,7 @@ class OrderCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		return Order::addCartRule($id_cart_rule, $name, $value);
 	}
-	
+
 	public function	addCartRule($id_cart_rule, $name, $value)
 	{
 		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_cart_rule', array('id_order' => (int)$this->id, 'id_cart_rule' => (int)$id_cart_rule, 'name' => pSQL($name), 'value' => (float)$value), 'INSERT');

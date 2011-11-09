@@ -478,7 +478,7 @@ abstract class ObjectModelCore
 		foreach ($fieldsRequired as $field)
 			if (Tools::isEmpty($this->{$field}) AND (!is_numeric($this->{$field})))
 			{
-				if ($die) 
+				if ($die)
 					throw new PrestashopException('property empty : '.get_class($this).'->'.$field);
 				return $errorReturn ? get_class($this).' -> '.$field.' is empty' : false;
 			}
@@ -495,7 +495,7 @@ abstract class ObjectModelCore
 				throw new PrestashopException('Validation function not found. '.$method);
 			elseif (!empty($this->{$field}) AND !call_user_func(array('Validate', $method), $this->{$field}))
 			{
-				if ($die) 
+				if ($die)
 					throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field});
 				return $errorReturn ? get_class($this).' -> '.$field.' = '.$this->{$field} : false;
 			}
@@ -514,7 +514,7 @@ abstract class ObjectModelCore
 				continue ;
 			if (!$this->{$fieldArray} OR !sizeof($this->{$fieldArray}) OR ($this->{$fieldArray}[$defaultLanguage] !== '0' AND empty($this->{$fieldArray}[$defaultLanguage])))
 			{
-				if ($die) 
+				if ($die)
 					throw new PrestashopException('empty for default language : '.get_class($this).'->'.$fieldArray);
 				return $errorReturn ? get_class($this).'->'.$fieldArray.' '.Tools::displayError('is empty for default language.') : false;
 			}
@@ -526,7 +526,7 @@ abstract class ObjectModelCore
 			foreach ($this->{$fieldArray} as $k => $value)
 				if (Tools::strlen($value) > $size)
 				{
-					if ($die) 
+					if ($die)
 						throw new PrestashopException('fieldsize error '.get_class($this).'->'.$fieldArray.' length of '.$size.' for language');
 					return $errorReturn ? get_class($this).'->'.$fieldArray.' '.Tools::displayError('Length').' '.$size.' '.Tools::displayError('for language') : false;
 				}
@@ -541,7 +541,7 @@ abstract class ObjectModelCore
 					throw new PrestashopException('Validation function not found for lang: '.$method);
 				elseif (!empty($value) AND !call_user_func(array('Validate', $method), $value))
 				{
-					if ($die) 
+					if ($die)
 						throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field}. 'for language '.$k);
 					return $errorReturn ? Tools::displayError('The following field is invalid according to the validate method ').'<b>'.$method.'</b>:<br/> ('. get_class($this).'->'.$fieldArray.' = '.$value.' '.Tools::displayError('for language').' '.$k : false;
 				}

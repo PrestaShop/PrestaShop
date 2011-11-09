@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -30,14 +30,14 @@ class FeatureCore extends ObjectModel
  	/** @var string Name */
 	public 		$name;
 	public 		$position;
-	
+
  	protected 	$fieldsRequiredLang = array('name');
  	protected 	$fieldsSizeLang = array('name' => 128);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'position' => 'isInt');
-		
+
 	protected 	$table = 'feature';
 	protected 	$identifier = 'id_feature';
-	
+
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'product_features',
 		'objectNodeName' => 'product_feature',
@@ -48,7 +48,7 @@ class FeatureCore extends ObjectModel
 	{
 		return array('id_feature' => NULL, 'position' => (int)$this->position);
 	}
-	
+
 	/**
 	* Check then return multilingual fields for database interaction
 	*
@@ -59,7 +59,7 @@ class FeatureCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name'));
 	}
-	
+
 	/**
 	 * Get a feature data for a given id_feature and id_lang
 	 *
@@ -76,7 +76,7 @@ class FeatureCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON ( f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)($id_lang).')
 		WHERE f.`id_feature` = '.(int)($id_feature));
 	}
-	
+
 	/**
 	 * Get all features for a given language
 	 *
@@ -92,7 +92,7 @@ class FeatureCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)($id_lang).')
 		ORDER BY f.`position` ASC');
 	}
-	
+
 	/**
 	 * Delete several objects from database
 	 *
@@ -112,6 +112,9 @@ class FeatureCore extends ObjectModel
 
 	public function add($autodate = true, $nullValues = false)
 	{
+		if ($this->position <= 0)
+			$this->position = Feature::getHigherPosition() + 1;
+
 		$return = parent::add($autodate, true);
 		Hook::exec('afterSaveFeature', array('id_feature' => $this->id));
 		return $return;
@@ -124,21 +127,21 @@ class FeatureCore extends ObjectModel
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id));
 		/* Also delete related products */
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature` = '.(int)($this->id));
-		
+
 		$return = parent::delete();
 		if($return)
 			Hook::exec('afterDeleteFeature', array('id_feature' => $this->id));
-		
+
 		/* Reinitializing position */
 		$this->cleanPositions();
-		
+
 		return $return;
 	}
-	
+
 	public function update($nullValues = false)
 	{
 	 	$this->clearCache();
-	 	
+
 	 	$result = 1;
 	 	$fields = $this->getTranslationsFieldsChild();
 		foreach ($fields as $field)
@@ -146,19 +149,19 @@ class FeatureCore extends ObjectModel
 			foreach (array_keys($field) as $key)
 			 	if (!Validate::isTableOrIdentifier($key))
 	 				die(Tools::displayError());
-	 				
+
 	 		$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
 	 				WHERE `'.pSQL($this->identifier).'` = '.(int)$this->id.'
 	 					AND `id_lang` = '.(int)$field['id_lang'];
 			$mode = Db::getInstance()->getRow($sql);
-			$result &= (!$mode) ? Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT') : 
+			$result &= (!$mode) ? Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT') :
 			Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', '`'.
 			pSQL($this->identifier).'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']);
 		}
 		Hook::exec('afterSaveFeature', array('id_feature' => $this->id));
 		return $result;
 	}
-	
+
 	/**
 	* Count number of features for a given language
 	*
@@ -175,14 +178,14 @@ class FeatureCore extends ObjectModel
 		ORDER BY `name` ASC');
 		return ($result['nb']);
 	}
-	
+
 	/**
 	* Create a feature from import
 	*
 	* @param integer $id_feature Feature id
-	* @param integer $id_product Product id	
-	* @param array $value Feature Value		
-	*/	
+	* @param integer $id_product Product id
+	* @param array $value Feature Value
+	*/
 	public static function addFeatureImport($name, $position = false)
 	{
 		$rq = Db::getInstance()->getRow('SELECT `id_feature` FROM '._DB_PREFIX_.'feature_lang WHERE `name` = \''.pSQL($name).'\' GROUP BY `id_feature`');
@@ -200,21 +203,21 @@ class FeatureCore extends ObjectModel
 		$feature->add();
 		return $feature->id;
 	}
-	
+
 	public static function getFeaturesForComparison($list_ids_product, $id_lang)
 	{
 		if (!Feature::isFeatureActive())
 			return false;
-		
+
 		$ids = '';
 		foreach($list_ids_product as $id)
 			$ids .= (int)($id).',';
-			
+
 		$ids = rtrim($ids, ',');
-	
+
 		if (empty($ids))
 			return false;
-			
+
 		return Db::getInstance()->executeS('
 		SELECT * , COUNT(*) as nb
 		FROM `'._DB_PREFIX_.'feature` f
@@ -225,7 +228,7 @@ class FeatureCore extends ObjectModel
 		GROUP BY f.`id_feature`
 		ORDER BY nb DESC');
 	}
-	
+
 	/**
 	 * This metohd is allow to know if a feature is used or active
 	 * @since 1.5.0.1
@@ -235,7 +238,7 @@ class FeatureCore extends ObjectModel
 	{
 		return Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
 	}
-	
+
 	/**
 	 * Move a feature
 	 * @param boolean $way Up (1)  or Down (0)
@@ -273,7 +276,7 @@ class FeatureCore extends ObjectModel
 			SET `position` = '.(int)$position.'
 			WHERE `id_feature`='.(int)$movedFeature['id_feature']));
 	}
-	
+
 	/**
 	 * Reorder feature position
 	 * Call it after deleting a feature.
@@ -301,9 +304,9 @@ class FeatureCore extends ObjectModel
 
 	/**
 	 * getHigherPosition
-	 * 
+	 *
 	 * Get the higher feature position
-	 * 
+	 *
 	 * @return integer $position
 	 */
 	public static function getHigherPosition()
@@ -311,7 +314,7 @@ class FeatureCore extends ObjectModel
 		$sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'feature`';
 		$position = DB::getInstance()->getValue($sql);
-		return ($position !== false) ? $position : -1;
+		return (is_numeric($position)) ? $position : -1;
 	}
 }
 

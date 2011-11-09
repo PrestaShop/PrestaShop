@@ -61,6 +61,7 @@ class BlockCms extends Module
 		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
 		`id_cms_block` int(10) unsigned NOT NULL auto_increment,
+		`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT \'1\',
 		`id_cms_category` int(10) unsigned NOT NULL,
 		`location` tinyint(1) unsigned NOT NULL,
 		`position` int(10) unsigned NOT NULL default \'0\',
