@@ -32,12 +32,26 @@
  */
 class WarehouseCore extends ObjectModel
 {
+	/** @var int identifier of the warehouse */
 	public $id;
+
+	/** @var int The id of the address associated to the warehouse */
 	public $id_address;
+
+	/** @var string The reference of the warehouse */
 	public $reference;
+
+	/** @var string The name of the warehouse */
 	public $name;
+
+	/** @var int The id of the employee who is responsible of the warehouse */
 	public $id_employee;
+
+	/** @var int The id of the valuation currency of the warehouse */
 	public $id_currency;
+
+	/** @var boolean True if warehouse has been deleted (staying in database as deleted) */
+	public $deleted = 0;
 
 	/**
 	 * Describes the way a Warehouse is managed
@@ -78,9 +92,11 @@ class WarehouseCore extends ObjectModel
 		$fields['id_address'] = (int)$this->id_address;
 		$fields['reference'] = $this->reference;
 		$fields['name'] = pSQL($this->name);
+		$fields['deleted'] = (int)$this->deleted;
 		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['management_type'] = pSQL($this->management_type);
 		$fields['id_currency'] = (int)$this->id_currency;
+
 		return $fields;
 	}
 
@@ -192,6 +208,7 @@ class WarehouseCore extends ObjectModel
 		$query->select('id_warehouse');
 		$query->from('warehouse');
 		$query->where('id_warehouse = '.(int)$id_warehouse);
+		$query->where('deleted = 0');
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 	}
 
@@ -259,6 +276,7 @@ class WarehouseCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('w.id_warehouse, name');
 		$query->from('warehouse w');
+		$query->where('deleted = 0');
 		if (!$ignore_shop)
 			$query->innerJoin('warehouse_shop ws ON ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int)$id_shop);
 

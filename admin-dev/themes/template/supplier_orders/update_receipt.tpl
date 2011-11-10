@@ -31,7 +31,5 @@ $(function() {
 	});
 });
 </script>
-<fieldset>
-	<legend>{l s='Order'} #{$supplier_order_reference}</legend>
-	{$content}
-</fieldset>
+
+{$content}

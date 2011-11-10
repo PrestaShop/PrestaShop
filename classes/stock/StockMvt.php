@@ -33,28 +33,35 @@ class StockMvtCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0
-	 * @var int
+	 * @var int The stock id on wtich the movement is applied
 	 */
 	public $id_stock;
 
 	/**
 	 * @since 1.5.0
-	 * @var int
+	 * @var int the quantity of product with is moved
 	 */
 	public $physical_quantity;
 
+	/**
+	 * @var int id of the movement reason assoiated to the movement
+	 */
 	public $id_stock_mvt_reason;
+
+	/**
+	 * @var int Used when the movement is due to a customer order
+	 */
 	public $id_order = null;
 
 	/**
 	 * @since 1.5.0
-	 * @var int
+	 * @var int detrmine if the movement is a positive or negative operation
 	 */
 	public $sign;
 
 	/**
 	 * @since 1.5.0
-	 * @var int Will be used when supplier order are implemented
+	 * @var int Used when the movement is due to a supplier order
 	 */
 	public $id_supplier_order = null;
 
@@ -72,7 +79,7 @@ class StockMvtCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0
-	 * @var float
+	 * @var float The unit price without tax of the product associated to the movement
 	 */
 	public $price_te;
 

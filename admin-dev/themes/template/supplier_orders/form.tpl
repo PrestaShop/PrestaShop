@@ -189,7 +189,16 @@
 				$('#supplier_order_form').submit();
 			});
 
-			// set autocomplete
+			// bind enter key event on search field
+			$('#cur_product_name').bind('keypress', function(e) {
+				var code = (e.keyCode ? e.keyCode : e.which);
+				if(code == 13) { //Enter keycode
+					e.stopPropagation();//Stop event propagation
+					return false;
+				}
+			});
+
+			// set autocomplete on search field
 			$('#cur_product_name').autocomplete("ajax_supplier_order_products_list.php", {
 				delay: 100,
 				minChars: 4,

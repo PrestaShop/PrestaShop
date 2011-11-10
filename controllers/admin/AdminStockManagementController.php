@@ -116,10 +116,10 @@ class AdminStockManagementControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'addstock' :
-				$this->fields_form = array(
+				$this->fields_form[]['form'] = array(
 					'legend' => array(
 						'title' => $this->l('Add product to stock'),
-						'image' => '../img/admin/arrow_up.png'
+						'image' => '../img/admin/add_stock.png'
 					),
 					'input' => array(
 						array(
@@ -252,10 +252,10 @@ class AdminStockManagementControllerCore extends AdminController
 			break;
 
 			case 'removestock' :
-				$this->fields_form = array(
+				$this->fields_form[]['form'] = array(
 					'legend' => array(
 						'title' => $this->l('Remove product from stock'),
-						'image' => '../img/admin/arrow_down.png'
+						'image' => '../img/admin/remove_stock.png'
 					),
 					'input' => array(
 						array(
@@ -367,10 +367,10 @@ class AdminStockManagementControllerCore extends AdminController
 			break;
 
 			case 'transferstock' :
-				$this->fields_form = array(
+				$this->fields_form[]['form'] = array(
 					'legend' => array(
 						'title' => $this->l('Transfert product from warehouse to another'),
-						'image' => '../img/admin/arrow-right.png'
+						'image' => '../img/admin/transfer_stock.png'
 					),
 					'input' => array(
 						array(
