@@ -81,14 +81,32 @@ class AdminStockMvtControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
-						'identifier' => 'id_stock_mvt_reason'
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
 						'title' => $this->l('Default reason when decrementing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
-						'identifier' => 'id_stock_mvt_reason'
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'PS_STOCK_CUSTOMER_ORDER_REASON' => array(
+						'title' => $this->l('Default reason when decrementing stock when a customer order is shipped:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_dec,
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'PS_STOCK_MVT_SUPPLIER_ORDER' => array(
+						'title' => $this->l('Default reason when incrementing stock when a supplier order is received:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_inc,
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
 					),
 				),
 				'submit' => array(),
@@ -175,7 +193,8 @@ class AdminStockMvtControllerCore extends AdminController
 		 */
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 6, 7, 8));
+		$this->addRowActionSkipList('edit', array(1, 2, 3, 4, 5, 6, 7, 8));
+		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6, 7, 8));
 
 		$this->toolbar_title = $this->l('Stock : Stock movements reasons');
 		$first_list = parent::initList();
@@ -195,6 +214,7 @@ class AdminStockMvtControllerCore extends AdminController
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		// override table, land, className and identifier for the current controller
+		$this->deleted = false;
 	 	$this->table = 'stock_mvt';
 	 	$this->className = 'StockMvt';
 	 	$this->identifier = 'id_stock_mvt';
@@ -305,8 +325,14 @@ class AdminStockMvtControllerCore extends AdminController
 		// reset all query vars
 		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
+		// reset default table and className for options list management
+		$this->table = 'stock_mvt_reason';
+	 	$this->className = 'StockMvtReason';
+
 		// return the two lists
 		return $second_list.$first_list;
+
+
 	}
 
 	/**
@@ -326,5 +352,18 @@ class AdminStockMvtControllerCore extends AdminController
 		}
 
 		return $warehouse;
+	}
+
+	/**
+	 * AdminController::postProcess() override
+	 * @see AdminController::postProcess()
+	 */
+	public function postProcess()
+	{
+		//when deleting a movement reason, enable deleted flag for parent postProcess and no remove the corresponding row from the database
+		if (Tools::isSubmit('delete'.$this->table))
+			$this->deleted = true;
+
+		return parent::postProcess();
 	}
 }

@@ -129,6 +129,15 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				else
 					$this->_errors[] = Tools::displayError($this->l('You do not have permission to edit here.'));
 		}
+
+		if (Tools::isSubmit('update_receipt') && Tools::isSubmit('id_supplier_order'))
+		{
+			// change the display type in order to add specific actions to
+			$this->display = 'update_receipt';
+
+			// display correct toolBar
+			$this->initToolbar();
+		}
 	}
 
 	/**
@@ -142,11 +151,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			Tools::isSubmit('submitAddsupplier_order_state') ||
 			Tools::isSubmit('submitUpdatesupplier_order_state'))
 		{
-			if (Tools::isSubmit('updatesupplier_order_state'))
-				$this->toolbar_title = $this->l('Stock : Update Supplier order state');
-			else
-				$this->toolbar_title = $this->l('Stock : Add Supplier order state');
-
 			$this->fields_form = array(
 				'legend' => array(
 					'title' => $this->l('Supplier Order State'),
@@ -263,6 +267,48 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				)
 			);
 
+			if (Tools::isSubmit('addsupplier_order_state'))
+				$this->toolbar_title = $this->l('Stock : Add Supplier order state');
+			else
+			{
+				$this->toolbar_title = $this->l('Stock : Update Supplier order state');
+
+				$id_supplier_order_state = Tools::getValue('id_supplier_order_state', 0);
+
+				// only some fields are editable for initial states
+				if (in_array($id_supplier_order_state, array(1, 2, 3, 4, 5, 6)))
+				{
+					$this->fields_form = array(
+						'legend' => array(
+							'title' => $this->l('Supplier Order State'),
+							'image' => '../img/admin/edit.gif'
+						),
+						'input' => array(
+							array(
+								'type' => 'text',
+								'lang' => true,
+								'attributeLang' => 'name',
+								'label' => $this->l('Name:'),
+								'name' => 'name',
+								'size' => 50,
+								'required' => true
+							),
+							array(
+								'type' => 'color',
+								'label' => $this->l('Back office color:'),
+								'name' => 'color',
+								'size' => 20,
+								'p' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+							),
+						),
+						'submit' => array(
+							'title' => $this->l('   Save   '),
+							'class' => 'button'
+						)
+					);
+				}
+			}
+
 			return parent::initForm();
 		}
 
@@ -281,10 +327,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			$this->addJqueryUI('ui.datepicker');
 
 			//get warehouses list
-			$warehouses = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT `id_warehouse`, CONCAT(`reference`, " - ", `name`) as name
-				FROM `'._DB_PREFIX_.'warehouse`
-				ORDER BY `reference` ASC');
+			$warehouses = Warehouse::getWarehouseList(true);
 
 			//get currencies list
 			$currencies = Currency::getCurrencies();
@@ -421,7 +464,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		 */
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('edit', array(1, 2, 3, 4, 5, 6));
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
 
 		$this->toolbar_title = $this->l('Stock : Suppliers Orders States');
@@ -482,7 +524,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			),
 			'state' => array(
 				'title' => $this->l('State'),
-				'width' => 150,
+				'width' => 250,
 				'filter_key' => 'stl!name',
 				'color' => 'color',
 			),
@@ -523,7 +565,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->_select = '
 			CONCAT(e.lastname, \' \', e.firstname) AS employee,
 			s.name AS supplier,
-			CONCAT(w.reference, \' \', w.name) AS warehouse,
+			w.name AS warehouse,
 			stl.name AS state,
 			st.delivery_note,
 			st.editable,
@@ -588,10 +630,10 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->getlanguages();
 
 		// defines the fields of the form to display
-		$this->fields_form = array(
+		$this->fields_form[]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Supplier Order State'),
-				'image' => '../img/admin/edit.gif'
+				'image' => '../img/admin/cms.gif'
 			),
 			'input' => array(
 				array(
@@ -711,11 +753,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 */
 	public function initUpdateReceiptContent()
 	{
-		// change the display type in order to add specific actions to
-		$this->display = 'update_receipt';
-		// overrides parent::initContent();
-		$this->initToolbar();
-
 		$id_supplier_order = (int)Tools::getValue('id_supplier_order', null);
 
 		// if there is no order to fetch
@@ -797,13 +834,19 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			)
 		);
 
-		// defines which table we are using
+		// attributes override
 		unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
 		$this->table = 'supplier_order_detail';
 		$this->identifier = 'id_supplier_order_detail';
 	 	$this->className = 'SupplierOrderDetail';
-	 	// theme pruposes
-	 	$this->colorOnBackground = false;
+	 	$this->list_simple_header = true;
+	 	$this->list_no_link = true;
+	 	$this->bulk_actions = array('Update' => array('text' => $this->l('Update selected'), 'confirm' => $this->l('Update selected items?')));
+		$this->addRowAction('details');
+
+		// sets toolbar title with order reference
+		$this->toolbar_title = sprintf($this->l('Reception of products for supplier order #%s'), $supplier_order->reference);
+
 	 	// gets lang info
 		$this->lang = false;
 		$lang_id = (int)$this->context->language->id;
@@ -828,27 +871,18 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		$this->_where = 'AND a.`id_supplier_order` = '.(int)$id_supplier_order;
 		$this->_group = 'GROUP BY a.id_supplier_order_detail';
 
-		$this->addRowAction('details');
-
 		// gets the list ordered by price desc, without limit
 		$this->getList($lang_id, 'quantity_expected', 'DESC', 0, false, false);
 
 		// defines action for POST
 		$action = '&id_supplier_order='.$id_supplier_order.'&submitUpdateReceipt';
+
 		// renders list
 		$helper = new HelperList();
+		$this->setHelperDisplay($helper);
 		$helper->override_folder = 'supplier_orders_receipt_history/';
-		$helper->simple_header = true;
-		$helper->actions = $this->actions;
-		$helper->table = $this->table;
-		$helper->no_link = true;
-		$helper->show_toolbar = false;
-		$helper->toolbar_fix = false;
-		$helper->shopLinkType = '';
+		//$helper->shopLinkType = '';
 		$helper->currentIndex = self::$currentIndex.$action;
-		$helper->token = $this->token;
-		$helper->identifier = $this->identifier;
-		$helper->bulk_actions = array('Update' => array('text' => $this->l('Update selected'), 'confirm' => $this->l('Update selected items?')));
 
 		// display these global order informations
 		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
@@ -860,7 +894,6 @@ class AdminSupplierOrdersControllerCore extends AdminController
 		// assigns var
 		$this->context->smarty->assign(array(
 			'content' => $content,
-			'supplier_order_reference' => $supplier_order->reference
 		));
 	}
 
@@ -1193,7 +1226,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 										 		$warehouse,
 										 		(int)$quantity,
 										 		Configuration::get('PS_STOCK_MVT_SUPPLIER_ORDER'),
-										 		$supplier_order_detail->price_te,
+										 		$supplier_order_detail->unit_price_te,
 										 		true,
 										 		$supplier_order->id);
 					if ($res) // if product has been added
@@ -1410,6 +1443,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 	 	$this->className = 'SupplierOrderDetail';
 	 	$this->colorOnBackground = false;
 		$this->lang = false;
+		$this->list_simple_header = true;
+		$this->list_no_link = true;
 		$lang_id = (int)$this->context->language->id;
 
 		// gets the id supplier to view
@@ -1453,7 +1488,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			$warehouse = new Warehouse($supplier_order->id_warehouse);
 
 			// sets toolbar title with order reference
-			$this->toolbar_title = sprintf($this->l('View Supplier Order #%s'), $supplier_order->reference);
+			$this->toolbar_title = sprintf($this->l('Details on supplier order #%s'), $supplier_order->reference);
 
 			// re-defines fieldsDisplay
 			$this->fieldsDisplay = array(
@@ -1486,8 +1521,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
-					'prefix' => $currency->prefix,
-					'suffix' => $currency->suffix,
+					'type' => 'price',
+					'currency' => true,
 				),
 				'quantity_expected' => array(
 					'title' => $this->l('Quantity'),
@@ -1504,8 +1539,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
-					'prefix' => $currency->prefix,
-					'suffix' => $currency->suffix,
+					'type' => 'price',
+					'currency' => true,
 				),
 				'discount_rate' => array(
 					'title' => $this->l('Discount rate'),
@@ -1523,8 +1558,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
-					'prefix' => $currency->prefix,
-					'suffix' => $currency->suffix,
+					'type' => 'price',
+					'currency' => true,
 				),
 				'price_with_discount_te' => array(
 					'title' => $this->l('Price with product discount (te)'),
@@ -1533,8 +1568,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
-					'prefix' => $currency->prefix,
-					'suffix' => $currency->suffix,
+					'type' => 'price',
+					'currency' => true,
 				),
 				'tax_rate' => array(
 					'title' => $this->l('Tax rate'),
@@ -1552,8 +1587,8 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
-					'prefix' => $currency->prefix,
-					'suffix' => $currency->suffix,
+					'type' => 'price',
+					'currency' => true,
 				),
 				'price_ti' => array(
 					'title' => $this->l('Price (ti)'),
@@ -1562,35 +1597,22 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'orderby' => false,
 					'filter' => false,
 					'search' => false,
-					'prefix' => $currency->prefix,
-					'suffix' => $currency->suffix,
+					'type' => 'price',
+					'currency' => true,
 				),
 			);
 
 			//some staff before render list
 			foreach ($this->_list as &$item)
 			{
-				$item['unit_price_te'] = Tools::ps_round($item['unit_price_te'], 2);
-				$item['price_te'] = Tools::ps_round($item['price_te'], 2);
-				$item['tax_value'] = Tools::ps_round($item['tax_value'], 2);
-				$item['tax_value_with_order_discount'] = Tools::ps_round($item['tax_value_with_order_discount'], 2);
-				$item['price_ti'] = Tools::ps_round($item['price_ti'], 2);
-				$item['price_with_discount_te'] = Tools::ps_round($item['price_with_discount_te'], 2);
-				$item['price_with_order_discount_te'] = Tools::ps_round($item['price_with_order_discount_te'], 2);
-				$item['discount_value_te'] = Tools::ps_round($item['discount_value_te'], 2);
-
 				$item['discount_rate'] = Tools::ps_round($item['discount_rate'], 4);
 				$item['tax_rate'] = Tools::ps_round($item['tax_rate'], 4);
 			}
 
 			// renders list
 			$helper = new HelperList();
-			$helper->simple_header = true;
-			$helper->no_link = true;
+			$this->setHelperDisplay($helper);
 			$helper->show_toolbar = false;
-			$helper->toolbar_fix = false;
-			$helper->shopLinkType = '';
-			$helper->identifier = $this->identifier;
 
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
@@ -1604,11 +1626,11 @@ class AdminSupplierOrdersControllerCore extends AdminController
 				'supplier_order_last_update' => Tools::displayDate($supplier_order->date_upd, $lang_id, true),
 				'supplier_order_expected' => Tools::displayDate($supplier_order->date_delivery_expected, $lang_id, true),
 				'supplier_order_discount_rate' => Tools::ps_round($supplier_order->discount_rate, 2),
-				'supplier_order_total_te' => Tools::ps_round($supplier_order->total_te, 2),
-				'supplier_order_discount_value_te' => Tools::ps_round($supplier_order->discount_value_te, 2),
-				'supplier_order_total_with_discount_te' => Tools::ps_round($supplier_order->total_with_discount_te, 2),
-				'supplier_order_total_tax' => Tools::ps_round($supplier_order->total_tax, 2),
-				'supplier_order_total_ti' => Tools::ps_round($supplier_order->total_ti, 2),
+				'supplier_order_total_te' => Tools::displayPrice($supplier_order->total_te, $currency),
+				'supplier_order_discount_value_te' => Tools::displayPrice($supplier_order->discount_value_te, $currency),
+				'supplier_order_total_with_discount_te' => Tools::displayPrice($supplier_order->total_with_discount_te, $currency),
+				'supplier_order_total_tax' => Tools::displayPrice($supplier_order->total_tax, $currency),
+				'supplier_order_total_ti' => Tools::displayPrice($supplier_order->total_ti, $currency),
 				'supplier_order_currency' => $currency,
 			);
 		}
@@ -1658,6 +1680,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 					'desc' => $this->l('Save')
 				);
 
+			case 'update_receipt':
 				// Default cancel button - like old back link
 				if (!isset($this->no_back) || $this->no_back == false)
 				{

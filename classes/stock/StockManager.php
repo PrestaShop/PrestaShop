@@ -202,188 +202,202 @@ class StockManagerCore implements StockManagerInterface
 
 		$context = Context::getContext();
 
-		// gets total quantities in stock for the current product
-		$physical_quantity_in_stock = (int)$this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), false);
-		$usable_quantity_in_stock = (int)$this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
-
-		// check quantity if we want to decrement unusable quantity
-		if (!$is_usable)
-			$quantity_in_stock = $physical_quantity_in_stock - $usable_quantity_in_stock;
-		else
-			$quantity_in_stock = $usable_quantity_in_stock;
-
-		// checks if it's possible to remove the given quantity
-		if ($quantity_in_stock < $quantity)
-			return $return;
-
-		$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
-
-		// check if the collection is loaded
-		if (count($stock_collection) <= 0)
-			return $return;
-
-		$stock_history_qty_available = array();
-		$mvt_params = array();
-		$stock_params = array();
-		$quantity_to_decrement_by_stock = array();
-		$global_quantity_to_decrement = $quantity;
-
-		// switch on MANAGEMENT_TYPE
-		switch ($warehouse->management_type)
+		// Special case of a pack
+		if (Pack::isPack($id_product))
 		{
-			// case CUMP mode
-			case 'WA':
-				// There is one and only one stock for a given product in a warehouse in this mode
-				$stock = $stock_collection[0];
+			$products_pack = Pack::getItems((int)$product['id_product'], (int)Configuration::get('PS_LANG_DEFAULT'));
+			foreach ($products_pack as $product_pack)
+			{
+				$pack_id_product_attribute = Product::getDefaultAttribute($tab_product_pack['id_product'], 1); //@TODO is there a better way to retrieve the product attribute assciated to the pack ?
+				$this->removeProduct($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $quantity, $warehouse, $id_order);
+			}
+		}
+		else
+		{
+			// gets total quantities in stock for the current product
+			$physical_quantity_in_stock = (int)$this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), false);
+			$usable_quantity_in_stock = (int)$this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
 
-				$mvt_params = array(
-					'id_stock' => $stock->id,
-					'physical_quantity' => $quantity,
-					'id_stock_mvt_reason' => $id_stock_mvt_reason,
-					'id_order' => $id_order,
-					'price_te' => $stock->price_te,
-					'last_wa' => $stock->price_te,
-					'current_wa' => $stock->price_te,
-					'id_employee' => $context->employee->id,
-					'sign' => -1
-				);
-				$stock_params = array(
-					'physical_quantity' => ($stock->physical_quantity - $quantity),
-					'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity)
-				);
+			// check quantity if we want to decrement unusable quantity
+			if (!$is_usable)
+				$quantity_in_stock = $physical_quantity_in_stock - $usable_quantity_in_stock;
+			else
+				$quantity_in_stock = $usable_quantity_in_stock;
 
-				// saves stock in warehouse
-				$stock->hydrate($stock_params);
-				$stock->update();
+			// checks if it's possible to remove the given quantity
+			if ($quantity_in_stock < $quantity)
+				return $return;
 
-				// saves stock mvt
-				$stock_mvt = new StockMvt();
-				$stock_mvt->hydrate($mvt_params);
-				$stock_mvt->save();
+			$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
 
-				$return[$stock->id]['quantity'] = $quantity;
-				$return[$stock->id]['price_te'] = $stock->price_te;
+			// check if the collection is loaded
+			if (count($stock_collection) <= 0)
+				return $return;
 
-			break;
+			$stock_history_qty_available = array();
+			$mvt_params = array();
+			$stock_params = array();
+			$quantity_to_decrement_by_stock = array();
+			$global_quantity_to_decrement = $quantity;
 
-			case 'LIFO':
-			case 'FIFO':
+			// switch on MANAGEMENT_TYPE
+			switch ($warehouse->management_type)
+			{
+				// case CUMP mode
+				case 'WA':
+					// There is one and only one stock for a given product in a warehouse in this mode
+					$stock = $stock_collection[0];
 
-				// for each stock, parse its mvts history to calculate the quantities left for each positive mvt,
-				// according to the instant available quantities for this stock
-				foreach ($stock_collection as $stock)
-				{
-					$left_quantity_to_check = $stock->physical_quantity;
-					if ($left_quantity_to_check <= 0)
-						continue;
-
-					$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
-						SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
-							IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
-						FROM `'._DB_PREFIX_.'stock_mvt` sm
-						LEFT JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
-						WHERE sm.`sign` = 1
-						AND sm.`id_stock` = '.(int)$stock->id.'
-						GROUP BY sm.`id_stock_mvt`
-						ORDER BY sm.`date_add` DESC'
+					$mvt_params = array(
+						'id_stock' => $stock->id,
+						'physical_quantity' => $quantity,
+						'id_stock_mvt_reason' => $id_stock_mvt_reason,
+						'id_order' => $id_order,
+						'price_te' => $stock->price_te,
+						'last_wa' => $stock->price_te,
+						'current_wa' => $stock->price_te,
+						'id_employee' => $context->employee->id,
+						'sign' => -1
+					);
+					$stock_params = array(
+						'physical_quantity' => ($stock->physical_quantity - $quantity),
+						'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $quantity) : $stock->usable_quantity)
 					);
 
-					while ($row = Db::getInstance()->nextRow($resource))
+					// saves stock in warehouse
+					$stock->hydrate($stock_params);
+					$stock->update();
+
+					// saves stock mvt
+					$stock_mvt = new StockMvt();
+					$stock_mvt->hydrate($mvt_params);
+					$stock_mvt->save();
+
+					$return[$stock->id]['quantity'] = $quantity;
+					$return[$stock->id]['price_te'] = $stock->price_te;
+
+				break;
+
+				case 'LIFO':
+				case 'FIFO':
+
+					// for each stock, parse its mvts history to calculate the quantities left for each positive mvt,
+					// according to the instant available quantities for this stock
+					foreach ($stock_collection as $stock)
 					{
-						// break - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
-						if ($warehouse->management_type == 'FIFO')
-							if ($row['qty'] == 0)
-								break;
+						$left_quantity_to_check = $stock->physical_quantity;
+						if ($left_quantity_to_check <= 0)
+							continue;
 
-						// converts date to timestamp
-						$date = new DateTime($row['date_add']);
-						$timestamp = $date->format('U');
-
-						// history of the mvt
-						$stock_history_qty_available[$timestamp] = array(
-							'id_stock' => $stock->id,
-							'id_stock_mvt' => (int)$row['id_stock_mvt'],
-							'qty' => (int)$row['qty']
+						$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
+							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
+								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
+							FROM `'._DB_PREFIX_.'stock_mvt` sm
+							LEFT JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
+							WHERE sm.`sign` = 1
+							AND sm.`id_stock` = '.(int)$stock->id.'
+							GROUP BY sm.`id_stock_mvt`
+							ORDER BY sm.`date_add` DESC'
 						);
 
-						// break - in LIFO mode, checks only the necessary history to handle the global quantity for the current stock
-						if ($warehouse->management_type == 'LIFO')
+						while ($row = Db::getInstance()->nextRow($resource))
 						{
-							$left_quantity_to_check -= (int)$row['physical_quantity'];
-							if ($left_quantity_to_check <= 0)
-								break;
-						}
-					}
-				}
+							// break - in FIFO mode, we have to retreive the oldest positive mvts for which there are left quantities
+							if ($warehouse->management_type == 'FIFO')
+								if ($row['qty'] == 0)
+									break;
 
-				if ($warehouse->management_type == 'LIFO')
-					// orders stock history by timestamp to get newest history first
-					krsort($stock_history_qty_available);
-				else
-					// orders stock history by timestamp to get oldest history first
-					ksort($stock_history_qty_available);
+							// converts date to timestamp
+							$date = new DateTime($row['date_add']);
+							$timestamp = $date->format('U');
 
-				// checks each stock to manage the real quantity to decrement for each of them
-				foreach ($stock_history_qty_available as $entry)
-				{
-					if ($entry['qty'] >= $global_quantity_to_decrement)
-					{
-						$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $global_quantity_to_decrement;
-						$global_quantity_to_decrement = 0;
-					}
-					else
-					{
-						$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $entry['qty'];
-						$global_quantity_to_decrement -= $entry['qty'];
-					}
-
-					if ($global_quantity_to_decrement <= 0)
-						break;
-				}
-
-				// for each stock, decrements it and logs the mvts
-				foreach ($stock_collection as $stock)
-				{
-					if (array_key_exists($stock->id, $quantity_to_decrement_by_stock) && is_array($quantity_to_decrement_by_stock[$stock->id]))
-					{
-						$total_quantity_for_current_stock = 0;
-
-						foreach ($quantity_to_decrement_by_stock[$stock->id] as $id_mvt_referrer => $qte)
-						{
-							$mvt_params = array(
+							// history of the mvt
+							$stock_history_qty_available[$timestamp] = array(
 								'id_stock' => $stock->id,
-								'physical_quantity' => $qte,
-								'id_stock_mvt_reason' => $id_stock_mvt_reason,
-								'id_order' => $id_order,
-								'price_te' => $stock->price_te,
-								'sign' => -1,
-								'referer' => $id_mvt_referrer,
-								'id_employee' => $context->employee->id
+								'id_stock_mvt' => (int)$row['id_stock_mvt'],
+								'qty' => (int)$row['qty']
 							);
 
-							// saves stock mvt
-							$stock_mvt = new StockMvt();
-							$stock_mvt->hydrate($mvt_params);
-							$stock_mvt->save();
+							// break - in LIFO mode, checks only the necessary history to handle the global quantity for the current stock
+							if ($warehouse->management_type == 'LIFO')
+							{
+								$left_quantity_to_check -= (int)$row['physical_quantity'];
+								if ($left_quantity_to_check <= 0)
+									break;
+							}
+						}
+					}
 
-							$total_quantity_for_current_stock += $qte;
+					if ($warehouse->management_type == 'LIFO')
+						// orders stock history by timestamp to get newest history first
+						krsort($stock_history_qty_available);
+					else
+						// orders stock history by timestamp to get oldest history first
+						ksort($stock_history_qty_available);
+
+					// checks each stock to manage the real quantity to decrement for each of them
+					foreach ($stock_history_qty_available as $entry)
+					{
+						if ($entry['qty'] >= $global_quantity_to_decrement)
+						{
+							$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $global_quantity_to_decrement;
+							$global_quantity_to_decrement = 0;
+						}
+						else
+						{
+							$quantity_to_decrement_by_stock[$entry['id_stock']][$entry['id_stock_mvt']] = $entry['qty'];
+							$global_quantity_to_decrement -= $entry['qty'];
 						}
 
-						$stock_params = array(
-							'physical_quantity' => ($stock->physical_quantity - $total_quantity_for_current_stock),
-							'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity)
-						);
-
-						$return[$stock->id]['quantity'] = $total_quantity_for_current_stock;
-						$return[$stock->id]['price_te'] = $stock->price_te;
-
-						// saves stock in warehouse
-						$stock->hydrate($stock_params);
-						$stock->update();
+						if ($global_quantity_to_decrement <= 0)
+							break;
 					}
-				}
-			break;
+
+					// for each stock, decrements it and logs the mvts
+					foreach ($stock_collection as $stock)
+					{
+						if (array_key_exists($stock->id, $quantity_to_decrement_by_stock) && is_array($quantity_to_decrement_by_stock[$stock->id]))
+						{
+							$total_quantity_for_current_stock = 0;
+
+							foreach ($quantity_to_decrement_by_stock[$stock->id] as $id_mvt_referrer => $qte)
+							{
+								$mvt_params = array(
+									'id_stock' => $stock->id,
+									'physical_quantity' => $qte,
+									'id_stock_mvt_reason' => $id_stock_mvt_reason,
+									'id_order' => $id_order,
+									'price_te' => $stock->price_te,
+									'sign' => -1,
+									'referer' => $id_mvt_referrer,
+									'id_employee' => $context->employee->id
+								);
+
+								// saves stock mvt
+								$stock_mvt = new StockMvt();
+								$stock_mvt->hydrate($mvt_params);
+								$stock_mvt->save();
+
+								$total_quantity_for_current_stock += $qte;
+							}
+
+							$stock_params = array(
+								'physical_quantity' => ($stock->physical_quantity - $total_quantity_for_current_stock),
+								'usable_quantity' => ($is_usable ? ($stock->usable_quantity - $total_quantity_for_current_stock) : $stock->usable_quantity)
+							);
+
+							$return[$stock->id]['quantity'] = $total_quantity_for_current_stock;
+							$return[$stock->id]['price_te'] = $stock->price_te;
+
+							// saves stock in warehouse
+							$stock->hydrate($stock_params);
+							$stock->update();
+						}
+					}
+				break;
+			}
 		}
+
 		return $return;
 	}
 

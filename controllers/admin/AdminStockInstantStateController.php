@@ -59,6 +59,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'width' => 150,
 				'orderby' => false,
 				'search' => false,
+				'type' => 'price',
+				'currency' => true,
 			),
 			'physical_quantity' => array(
 				'title' => $this->l('Physical quantity'),
@@ -107,7 +109,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 				   IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 				   IFNULL(s.physical_quantity, 0) as physical_quantity,
 				   IFNULL(s.usable_quantity, 0) as usable_quantity,
-				   s.price_te
+				   s.price_te,
+				   w.id_currency as id_currency
 			FROM '._DB_PREFIX_.'product_attribute a
 			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
 			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
@@ -115,6 +118,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
 			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
 			INNER JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
+			LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = s.id_warehouse)
 			WHERE a.id_product = '.$id_product.
 			($warehouse != -1 ? ' AND s.id_warehouse = '.(int)$warehouse : ' ').'
 			GROUP BY a.id_product_attribute';
@@ -124,13 +128,19 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			// queries
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-			foreach ($datas as &$data) // retrieves real quantity for each product
+
+			foreach ($datas as &$data)
 			{
+				// retrieves real quantity for each product
 				$data['real_quantity'] = $manager->getProductRealQuantities($data['id_product'],
 																			$data['id'],
 																			($warehouse == -1 ? null : array($warehouse)), // all or selected warehouse(s)
 																			true);
+
+				// display price correctly
+				$data['price_te'] = Tools::displayPrice($data['price_te'], (int)$data['id_currency']);
 			}
+
 			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
 		}
 		die;
@@ -148,9 +158,13 @@ class AdminStockInstantStateControllerCore extends AdminController
 		COUNT(pa.id_product_attribute) as variations,
 		s.physical_quantity as physical_quantity,
 		s.usable_quantity as usable_quantity,
-		s.price_te as price_te';
+		s.price_te as price_te,
+		w.id_currency as id_currency';
+
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
-						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
+						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)
+						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = s.id_warehouse)';
+
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 

@@ -27,14 +27,26 @@
 
 class StockMvtReasonCore extends ObjectModel
 {
+	/** @var int identifier of the movement reason */
 	public $id;
+
+	/** @var string the name of the movement reason */
 	public $name;
+
+	/** @var int detrmine if the movement reason correspond to a positive or negative operation */
 	public $sign;
+
+	/** @var string the creation date of the movement reason */
 	public $date_add;
+
+	/** @var string the last update date of the movement reason */
 	public $date_upd;
+
+	/** @var boolean True if the movement reason has been deleted (staying in database as deleted) */
+	public $deleted = 0;
+
 	protected $table = 'stock_mvt_reason';
 	protected $identifier = 'id_stock_mvt_reason';
-
  	protected $fieldsRequiredLang = array('name');
  	protected $fieldsSizeLang = array('name' => 255);
  	protected $fieldsValidateLang = array('name' => 'isGenericName');
@@ -50,6 +62,7 @@ class StockMvtReasonCore extends ObjectModel
 		$fields['sign'] = (int)$this->sign;
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
+		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
 	}
 
@@ -65,6 +78,7 @@ class StockMvtReasonCore extends ObjectModel
 		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
 		$query->from('stock_mvt_reason smr');
 		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+		$query->where('smr.deleted = 0');
 
 		if ($sign != null)
 			$query->where('smr.sign = '.(int)$sign);
@@ -86,6 +100,7 @@ class StockMvtReasonCore extends ObjectModel
 		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
 		$query->from('stock_mvt_reason smr');
 		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+		$query->where('smr.deleted = 0');
 
 		if ($sign != null)
 			$query->where('smr.sign = '.(int)$sign);
@@ -111,6 +126,7 @@ class StockMvtReasonCore extends ObjectModel
 		$query->select('smr.id_stock_mvt_reason');
 		$query->from('stock_mvt_reason smr');
 		$query->where('smr.id_stock_mvt_reason = '.(int)$id_stock_mvt_reason);
+		$query->where('smr.deleted = 0');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }

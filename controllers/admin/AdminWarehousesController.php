@@ -35,7 +35,9 @@ class AdminWarehousesControllerCore extends AdminController
 	 	$this->table = 'warehouse';
 	 	$this->className = 'Warehouse';
 		$this->context = Context::getContext();
+		$this->deleted = true;
 		$this->lang = false;
+
 		$this->fieldsDisplay = array(
 			'reference'	=> array(
 				'title' => $this->l('Reference'),
@@ -89,6 +91,7 @@ class AdminWarehousesControllerCore extends AdminController
 		// adds actions on rows
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
+		$this->addRowAction('delete');
 
 		// query: select
 		$this->_select = '
@@ -123,6 +126,10 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
+		// loads current warehouse
+		if (!($obj = $this->loadObject(true)))
+			return;
+
 		// gets the manager of the warehouse
 		$query = new DbQuery();
 		$query->select('id_employee, CONCAT(lastname," ",firstname) as name');
@@ -137,7 +144,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Warehouse management'),
-				'image' => '../img/admin/tab.gif'
+				'image' => '../img/admin/edit.gif'
 			),
 			'input' => array(
 				array(
@@ -236,44 +243,6 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Management type:'),
-					'name' => 'management_type',
-					'required' => true,
-					'options' => array(
-						'query' => array(
-							array(
-								'id' => 'WA',
-								'name' => $this->l('Weight Average')
-							),
-							array(
-								'id' => 'FIFO',
-								'name' => $this->l('First In, First Out')
-							),
-							array(
-								'id' => 'LIFO',
-								'name' => $this->l('Last In, First Out')
-							),
-						),
-						'id' => 'id',
-						'name' => 'name'
-					),
-					'p' => $this->l('Inventory valuation method'),
-					'hint' => $this->l('Do not change this value before the end of the accounting period for this warehouse.'),
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Stock valuation currency:'),
-					'name' => 'id_currency',
-					'required' => true,
-					'options' => array(
-						'query' => Currency::getCurrencies(),
-						'id' => 'id_currency',
-						'name' => 'name'
-					),
-					'hint' => $this->l('Do not change this value before the end of the accounting period for this warehouse.'),
-				),
-				array(
-					'type' => 'select',
 					'label' => $this->l('Associated shops:'),
 					'name' => 'ids_shops[]',
 					'required' => true,
@@ -295,22 +264,72 @@ class AdminWarehousesControllerCore extends AdminController
 					'multiple' => true,
 					'options' => array(
 						'query' => Carrier::getCarriers($this->context->language->id, true),
-						'id' => 'id_carrier',
+						'id' => 'id_reference',
 						'name' => 'name'
 					),
 					'p' => $this->l('Associated carriers'),
 					'hint' => $this->l('You can specifiy the carriers available to ship orders from this warehouse'),
 				),
 			),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			)
+
 		);
 
-		// loads current warehouse
-		if (!($obj = $this->loadObject(true)))
-			return;
+		// It is not possible to change currency valuation and management type
+		if (Tools::isSubmit('addwarehouse'))
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'label' => $this->l('Management type:'),
+				'name' => 'management_type',
+				'required' => true,
+				'options' => array(
+					'query' => array(
+						array(
+							'id' => 'WA',
+							'name' => $this->l('Weight Average')
+						),
+						array(
+							'id' => 'FIFO',
+							'name' => $this->l('First In, First Out')
+						),
+						array(
+							'id' => 'LIFO',
+							'name' => $this->l('Last In, First Out')
+						),
+					),
+					'id' => 'id',
+					'name' => 'name'
+				),
+				'p' => $this->l('Inventory valuation method')
+			);
+
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'label' => $this->l('Stock valuation currency:'),
+				'name' => 'id_currency',
+				'required' => true,
+				'options' => array(
+					'query' => Currency::getCurrencies(),
+					'id' => 'id_currency',
+					'name' => 'name'
+				)
+			);
+		} else {
+			$this->fields_form['input'][] = array(
+				'type' => 'hidden',
+				'name' => 'management_type'
+			);
+
+			$this->fields_form['input'][] = array(
+				'type' => 'hidden',
+				'name' => 'id_currency'
+			);
+		}
+
+		$this->fields_form['submit'] = array(
+			'title' => $this->l('   Save   '),
+			'class' => 'button'
+		);
 
 		// loads current address for this warehouse - if possible
 		$address = null;
@@ -405,9 +424,19 @@ class AdminWarehousesControllerCore extends AdminController
 					$_POST['id_address'] = $address->id;
 				}
 			}
-		}
 
-		return parent::postProcess();
+			// hack for enable the possibility to update a warehouse without recreate new id
+			$this->deleted = false;
+
+			return parent::postProcess();
+		}
+		else if (Tools::isSubmit('delete'.$this->table))
+			if (!($obj = $this->loadObject(true)))
+				return;
+			else if ($obj->getQuantitiesOfProducts() > 0)
+				$this->_errors[] = $this->l('It is not possible to delete a Warehosue when there are products in it.');
+			else
+				return parent::postProcess();
 	}
 
 	/**

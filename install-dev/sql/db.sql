@@ -1985,6 +1985,7 @@ CREATE TABLE `PREFIX_stock_mvt_reason` (
   `sign` tinyint(1) NOT NULL DEFAULT 1,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `deleted` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY (`id_stock_mvt_reason`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
@@ -2017,6 +2018,7 @@ CREATE TABLE `PREFIX_warehouse` (
 `reference` VARCHAR(32) DEFAULT NULL,
 `name` VARCHAR(45) NOT NULL,
 `management_type` ENUM('WA', 'FIFO', 'LIFO') NOT NULL DEFAULT 'WA',
+`deleted` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY (`id_warehouse`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

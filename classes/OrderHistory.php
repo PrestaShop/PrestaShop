@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,13 +29,13 @@ class OrderHistoryCore extends ObjectModel
 {
 	/** @var integer Order id */
 	public 		$id_order;
-	
+
 	/** @var integer Order state id */
 	public 		$id_order_state;
-	
+
 	/** @var integer Employee id for this history entry */
 	public 		$id_employee;
-	
+
 	/** @var string Object creation date */
 	public 		$date_add;
 
@@ -43,13 +43,13 @@ class OrderHistoryCore extends ObjectModel
 	public 		$date_upd;
 
 	protected $tables = array ('order_history');
-	
+
 	protected	$fieldsRequired = array('id_order', 'id_order_state');
 	protected	$fieldsValidate = array('id_order' => 'isUnsignedId', 'id_order_state' => 'isUnsignedId', 'id_employee' => 'isUnsignedId');
 
 	protected 	$table = 'order_history';
 	protected 	$identifier = 'id_order_history';
-	
+
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'order_histories',
 		'fields' => array(
@@ -61,12 +61,12 @@ class OrderHistoryCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
-		
+
 		$fields['id_order'] = (int)$this->id_order;
 		$fields['id_order_state'] = (int)$this->id_order_state;
 		$fields['id_employee'] = (int)$this->id_employee;
 		$fields['date_add'] = pSQL($this->date_add);
-				
+
 		return $fields;
 	}
 
@@ -76,7 +76,7 @@ class OrderHistoryCore extends ObjectModel
 		{
 			Hook::updateOrderStatus((int)($new_order_state), (int)$id_order);
 			$order = new Order((int)($id_order));
-			
+
 			/* Best sellers */
 			$newOS = new OrderState((int)($new_order_state), $order->id_lang);
 			$oldOrderStatus = OrderHistory::getLastOrderState((int)$id_order);
@@ -91,20 +91,31 @@ class OrderHistoryCore extends ObjectModel
 					/* If becoming unlogable => removing sale */
 					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
-					
+
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))
 						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity']);
 					else if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0) // The product is removed from the physical stock. $id_warehouse is needed
-						Stock::updateQuantity($product['id_product'], $product['id_product_attribute'], -$product['cart_quantity'], $id_warehouse, $id_order);
+					{
+						$manager = StockManagerFactory::getManager();
+						$warehouse = new Warehouse($id_warehouse);
+
+						$manager->removeProduct($product['id_product'],
+								  $product['id_product_attribute'],
+								  $warehouse,
+								  $product['cart_quantity'],
+								  Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
+								  true,
+								  (int)$id_order);
+					}
 					// @todo If the old order states was "shipped" and the new is "not shipped" the stock is not decremented
 				}
-			
+
 			$this->id_order_state = (int)($new_order_state);
-			
+
 			/* Change invoice number of order ? */
 			if (!Validate::isLoadedObject($newOS) OR !Validate::isLoadedObject($order))
 				die(Tools::displayError('Invalid new order state'));
-			
+
 			/* The order is valid only if the invoice is available and the order is not cancelled */
 			$order->valid = $newOS->logable;
 			$order->update();
@@ -134,7 +145,7 @@ class OrderHistoryCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 		$lastOrderState = $this->getLastOrderState($this->id_order);
-		
+
 		if (!parent::add($autodate))
 			return false;
 
@@ -156,7 +167,7 @@ class OrderHistoryCore extends ObjectModel
 			$order = new Order((int)$this->id_order);
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
 			$data['{order_name}'] = sprintf("#%06d", (int)$order->id);
-			
+
 			// An additional email is sent the first time a virtual item is validated
 			if ($virtualProducts = $order->getVirtualProducts() AND (!$lastOrderState OR !$lastOrderState->logable) AND $newOrderState = new OrderState($this->id_order_state, Configuration::get('PS_LANG_DEFAULT')) AND $newOrderState->logable)
 			{
@@ -196,13 +207,13 @@ class OrderHistoryCore extends ObjectModel
 
 		return true;
 	}
-	
+
 	public function isValidated()
 	{
 		return Db::getInstance()->getValue('
 		SELECT COUNT(oh.`id_order_history`) AS nb
-		FROM `'._DB_PREFIX_.'order_state` os 
-		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`) 
+		FROM `'._DB_PREFIX_.'order_state` os
+		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
 		WHERE oh.`id_order` = '.(int)$this->id_order.'
 		AND os.`logable` = 1');
 	}
