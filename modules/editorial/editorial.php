@@ -80,7 +80,7 @@ class Editorial extends Module
 
 		$id_editorial = Db::getInstance()->Insert_ID();
 		$result = true;
-		foreach (Language::getLanguages() as $lang)
+		foreach (Language::getLanguages(false) as $lang)
 			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'editorial_lang', array(
 				'id_editorial' =>			$id_editorial,
 				'id_lang' =>				$lang['id_lang'],

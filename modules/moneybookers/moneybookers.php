@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_'))
 	exit;
 
 class MoneyBookers extends PaymentModule
-{	
+{
 	const LEFT_COLUMN = 0;
 	const RIGHT_COLUMN = 1;
 	const DISABLE = -1;
@@ -123,8 +123,8 @@ class MoneyBookers extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() OR 
-			!$this->registerHook('payment') OR 
+		if (!parent::install() OR
+			!$this->registerHook('payment') OR
 			!$this->registerHook('paymentReturn'))
 			return false;
 		Configuration::updateValue('MB_HIDE_LOGIN', 1);
@@ -134,6 +134,8 @@ class MoneyBookers extends PaymentModule
 		Configuration::updateValue('MB_ID_LOGO_WALLET', 1);
 		Configuration::updateValue('MB_PARAMETERS', 0);
 		Configuration::updateValue('MB_DISPLAY_MODE', 1);
+		Configuration::updateValue('MB_LOCAL_METHODS', 2);
+		Configuration::updateValue('MB_INTER_METHODS', 5);
 
 		return true;
 	}
@@ -169,28 +171,28 @@ class MoneyBookers extends PaymentModule
        	'max_redirects'		=> 10,
        	'timeout'       	=> $timeout,
        	'header'					=> array(
-       		'Accept-language: en', 
+       		'Accept-language: en',
           'Cookie: foo=bar')));
-    
+
     if (is_callable('curl_init') && ($ch = curl_init()))
 		{
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			
+
 			$content = curl_exec($ch);
 			curl_close($ch);
 		}
 		else
     {
-    	// Check availability of the context options     
+    	// Check availability of the context options
 			if (!is_array($contextOptions) || !count($contextOptions))
 				$contextOptions = $defaultContextOptions;
-			
+
 			// Create a stream context
 			$stream_context = @stream_context_create($contextOptions);
-		
+
 			if (($fp = @fopen($url, $mode, false, $stream_context)))
 			{
 				$content = fgets($fp, 4096);
@@ -199,7 +201,7 @@ class MoneyBookers extends PaymentModule
 			else if (!($content = @file_get_contents($url, false, $stream_context)))
 				if (($fp = @fsockopen($url, 80, $errnom, $errstr, $timeout)))
 					{
-						preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);  
+						preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
 						$host = $matches[1];
 						$out = "GET / HTTP/1.1\r\n";
     				$out .= "Host: ".$host."\r\n";
@@ -231,7 +233,7 @@ class MoneyBookers extends PaymentModule
 			if (isset($_POST['mb_email_to_validate']) &&
 				!empty($_POST['mb_email_to_validate']))
 			{
-				try 
+				try
 				{
 					$url = 'http://moneybookers.prestashop.com/email_check.php?email='.$_POST['mb_email_to_validate'].'&url=http://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__;
 					$content = $this->_fetchWebContent($url);
@@ -250,13 +252,13 @@ class MoneyBookers extends PaymentModule
 					}
 				}
 				catch(Exception $e)
-				{	
+				{
 					$errors[] = $this->l('Unable to contact activation server, please try again later.');
 				}
 			}
-			else 
+			else
 				$errors[] = $this->l('E-mail field is required');
-		
+
 		/* Validate secret word */
 		if (isset($_POST['SubmitSecret']))
 		{
@@ -325,7 +327,7 @@ class MoneyBookers extends PaymentModule
 			Configuration::updateValue('MB_INTER_METHODS', $inter);
 			Configuration::updateValue('MB_DISPLAY_MODE', (int)($_POST['mb_display_mode']));
 		}
-		
+
 		if (Tools::getValue('submitSettings'))
 		{
 			foreach(array('leftColumn', 'rightColumn') as $hookName)
@@ -336,7 +338,7 @@ class MoneyBookers extends PaymentModule
 			else if (Tools::getValue('logo_position') == self::RIGHT_COLUMN)
 				$this->registerHook('rightColumn');
 		}
-			
+
 		/* Display errors */
 		if (sizeof($errors))
 		{
@@ -364,9 +366,9 @@ class MoneyBookers extends PaymentModule
 			self::DISABLE => $this->l('Disable'),
 			self::LEFT_COLUMN => $this->l('Left Column'),
 			self::RIGHT_COLUMN => $this->l('Right Column'));
-		
-		$currentLogoBlockPosition = ($this->isRegisteredInHook('leftColumn')) ? self::LEFT_COLUMN : 
-			(($this->isRegisteredInHook('rightColumn')) ? self::RIGHT_COLUMN : -1); 
+
+		$currentLogoBlockPosition = ($this->isRegisteredInHook('leftColumn')) ? self::LEFT_COLUMN :
+			(($this->isRegisteredInHook('rightColumn')) ? self::RIGHT_COLUMN : -1);
 
 	/* Display settings form */
 		$output .= '
@@ -376,13 +378,13 @@ class MoneyBookers extends PaymentModule
 		$this->l('With more than 17 million users and more than 15,000 new accounts created per day, Moneybookers also offers one of the biggest electronic wallet in the world. Your customers can also pay by using their e-mail and password thanks to the e-Wallet solution.').'<br /><br />'.
 		$this->l('Moneybookers changes its name and becomes Skrill!').'<br /><br />
                 <div style="clear: both;"></div>
-		
+
 		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-settings">
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Settings').'</legend>
 				<div class="margin-form" style="margin:0; padding:0 0 1em 20px">'.$this->l('You can display the Skrill/Moneybookers logo on your shop, this may reassure your customers about the fact that you are a serious merchant.').'</div>
 				<div class="margin-form" style="margin:0; padding:0 0 1em 20px">
-					<b>'.$this->l('Select the logo position').'</b> : 
+					<b>'.$this->l('Select the logo position').'</b> :
 					<select name="logo_position">';
 					foreach($blockPositionList as $position => $translation)
 					{
@@ -394,8 +396,8 @@ class MoneyBookers extends PaymentModule
 		$iso_code = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
 		$landingPage = ($iso_code == 'en' || $iso_code == 'us') ? 'http://www.moneybookers.com/ads/partners/index.html?p=Prestashop' :
 			'http://www.moneybookers.com/ads/partners/'.$iso_code.'/index.html?p=Prestashop';
-		
-		
+
+
 		$output .= '
 					</select>
 					<p>'.$this->l('Change your logo position in the Front Office. Works with').'
@@ -438,7 +440,7 @@ class MoneyBookers extends PaymentModule
  <tr><td colspan="3" style="border-top: 1px solid black;"><small>'.$this->l('For merchants over €100,000 fees can be negotiated.').' Contact: ecommerce@moneybookers.com</small></td></tr>
 </table>
 <br />
-'.$this->l('To view the last update of the detailed fees').'<a href="'.$landingPage.'"> <b>'.$this->l('Click here').'</b></a> 
+'.$this->l('To view the last update of the detailed fees').'<a href="'.$landingPage.'"> <b>'.$this->l('Click here').'</b></a>
 
 <p align="left">
 ** '.$this->l('Moneybookers eWallet').'<br />
@@ -572,7 +574,7 @@ class MoneyBookers extends PaymentModule
 
 		return $output;
 	}
-	
+
 	private function _displayLogoBlock($position)
 	{
 		$imgPath = 'http://www.prestashop.com/images/logo_partners/logo-skrill.png';
@@ -580,7 +582,7 @@ class MoneyBookers extends PaymentModule
 			$imgPath = __PS_BASE_URI__.'modules/moneybookers/logo-skrill.png';
 		return '<div style="text-align:center;"><img src="'.$imgPath.'" width=150 /></div>';
 	}
-	
+
 	public function hookRightColumn($params)
 	{
 		return $this->_displayLogoBlock(self::RIGHT_COLUMN);
@@ -595,7 +597,7 @@ class MoneyBookers extends PaymentModule
 	public function hookPayment($params)
 	{
 		global $smarty, $cookie;
-		
+
 		if (!Configuration::get('MB_PARAMETERS') OR !Configuration::get('MB_PARAMETERS_2') OR (Configuration::get('MB_LOCAL_METHODS') == '' AND Configuration::get('MB_INTER_METHODS') == ''))
 			return;
 
@@ -617,7 +619,7 @@ class MoneyBookers extends PaymentModule
 		{
 			$localMethods = Configuration::get('MB_LOCAL_METHODS');
 			$interMethods = Configuration::get('MB_INTER_METHODS');
-			
+
 			$smarty->assign(array(
 			'display_mode' => (int)(Configuration::get('MB_DISPLAY_MODE')),
 			'local' => $localMethods ? explode('|', $localMethods) : array(),
@@ -684,11 +686,11 @@ class MoneyBookers extends PaymentModule
 			case _PS_OS_OUTOFSTOCK_:
 				$smarty->assign('status', 'ok');
 				break;
-				
+
 			case _PS_OS_BANKWIRE_:
 				$smarty->assign('status', 'pending');
 				break;
-				
+
 			case _PS_OS_ERROR_:
 			default:
 				$smarty->assign('status', 'failed');
@@ -697,7 +699,7 @@ class MoneyBookers extends PaymentModule
 
 		return $this->display(__FILE__, 'confirmation.tpl');
 	}
-	
+
 	/**
   * Set the detail of a payment - Call before the validate order init
   * correctly the pcc object
@@ -717,7 +719,7 @@ class MoneyBookers extends PaymentModule
 
       $this->pcc->card_expiration = '';
 
-      $this->pcc->card_holder = (string)(isset($response['pay_to_email']) ? 
+      $this->pcc->card_holder = (string)(isset($response['pay_to_email']) ?
       	$response['pay_to_email'] : '');
     }
   }
