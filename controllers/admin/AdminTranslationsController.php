@@ -25,14 +25,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
 include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
 define ('TEXTAREA_SIZED', 70);
 
-class AdminTranslations extends AdminTab
+class AdminTranslationsControllerCore extends AdminController
 {
-
 	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
 	protected $total_expression = 0;
 	protected $all_iso_lang = array();
@@ -54,6 +52,58 @@ class AdminTranslations extends AdminTab
 		self::$tpl_regexp = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( mod=\'.+\')?( js=1)?\}/U';
 		// added ? after spaces because some peoples forget them. see PSCFI-2501
 		self::$php_regexp = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
+	}
+
+	public function initContent()
+	{
+		if ($type = Tools::getValue('type'))
+			$this->content .= $this->{'initForm'.ucfirst($type)}(Tools::strtolower(Tools::getValue('lang')));
+		else
+			$this->content .= $this->initMain();
+
+		$this->context->smarty->assign(array('content' => $this->content));
+	}
+
+	public function initMain()
+	{
+		// Block modify
+		$translations = array(
+			'front' => $this->l('Front Office translations'),
+			'back' => $this->l('Back Office translations'),
+			'errors' => $this->l('Error message translations'),
+			'fields' => $this->l('Field name translations'),
+			'modules' => $this->l('Module translations'),
+			'pdf' => $this->l('PDF translations'),
+			'mails' => $this->l('E-mail template translations'),
+		);
+
+		// Block add/update
+		$packs_to_install = array();
+		$packs_to_update = array();
+		if ($lang_packs = Tools::file_get_contents($this->link_lang_pack .'?version='._PS_VERSION_, false, @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
+			// Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
+			if ($lang_packs != '' AND $lang_packs = Tools::jsonDecode($lang_packs,true))
+				foreach($lang_packs as $key => $lang_pack)
+				{
+					if (!Language::isInstalled($lang_pack['iso_code']))
+						$packs_to_install[$key] = $lang_pack;
+					else
+						$packs_to_update[$key] = $lang_pack;
+				}
+
+		$this->context->smarty->assign(array(
+			'theme_lang_dir' =>_THEME_LANG_DIR_,
+			'token' => $this->token,
+			'languages' => Language::getLanguages(false),
+			'translations' => $translations,
+			'packs_to_install' => $packs_to_install,
+			'packs_to_update' => $packs_to_update,
+			'url_submit' => self::$currentIndex.'&token='.$this->token,
+			'themes' => $themes = self::getThemesList(),
+			'url_create_language' => 'index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$this->context->employee->id),
+		));
+
+		return $this->context->smarty->fetch('translations/main.tpl');
 	}
 
 	/**
@@ -188,6 +238,7 @@ class AdminTranslations extends AdminTab
 		}
 		return $bool_flag;
 	}
+
 	public function submitExportLang()
 	{
 		$lang = strtolower(Tools::getValue('iso_code'));
@@ -431,7 +482,7 @@ class AdminTranslations extends AdminTab
 			return;
 		}
 		/* PrestaShop demo mode*/
-		
+
 		if (Tools::isSubmit('submitCopyLang'))
 		{
 		 	if ($this->tabAccess['add'] === '1')
@@ -471,7 +522,7 @@ class AdminTranslations extends AdminTab
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::isSubmit('submitTranslationsPDF'))
+		elseif (Tools::isSubmit('submitTranslationsPdf'))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
 		 	{
@@ -560,6 +611,7 @@ class AdminTranslations extends AdminTab
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 	}
+
 	protected function getMailPattern()
 	{
 		// Let the indentation like it.
@@ -683,157 +735,6 @@ class AdminTranslations extends AdminTab
 		if (count($this->_errors) == 0)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.$params_redirect);
 	}
-	public function display()
-	{
-		$translations = array(
-			'front' => $this->l('Front Office translations'),
-			'back' => $this->l('Back Office translations'),
-			'errors' => $this->l('Error message translations'),
-			'fields' => $this->l('Field name translations'),
-			'modules' => $this->l('Module translations'),
-			'pdf' => $this->l('PDF translations'),
-			'mails' => $this->l('E-mail template translations'),
-		);
-
-		if ($type = Tools::getValue('type'))
-			$this->{'displayForm'.ucfirst($type)}(Tools::strtolower(Tools::getValue('lang')));
-		else
-		{
-			$languages = Language::getLanguages(false);
-			echo '<fieldset class="width3"><legend><img src="../img/admin/translation.gif" />'.$this->l('Modify translations').'</legend>'.
-			$this->l('Here you can modify translations for all text input into PrestaShop.').'<br />'.
-			$this->l('First, select a section (such as Back Office or Modules), then click the flag representing the language you want to edit.').'<br /><br />
-			<form method="get" action="index.php" id="typeTranslationForm">
-				<input type="hidden" name="tab" value="AdminTranslations" />
-				<input type="hidden" name="lang" id="translation_lang" value="0" />
-				<select name="type" style="float:left; margin-right:10px;">';
-			foreach ($translations AS $key => $translation)
-				echo '<option value="'.$key.'">'.$translation.'&nbsp;</option>';
-			echo '</select>';
-			foreach ($languages AS $language)
-				echo '<a href="javascript:chooseTypeTranslation(\''.$language['iso_code'].'\')">
-						<img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" />
-					</a>';
-			echo '<input type="hidden" name="token" value="'.$this->token.'" /></form></fieldset>
-			<br /><br /><h2>'.$this->l('Translation exchange').'</h2>';
-			echo '<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
-			<fieldset class="width3">
-				<legend>
-					<img src="../img/admin/import.gif" />'.$this->l('Add / Update a language').'
-				</legend>
-				<div id="submitAddLangContent" style="float:left;"><p>'.$this->l('You can add or update a language directly from prestashop.com here').'</p>';
-			$this->displayWarning($this->l('If you choose to update an existing language pack, all your previous customization in the theme named prestashop will be lost. This includes front office expressions and default e-mail templates.'));
-			echo '<div style="font-weight:bold; float:left;">'.$this->l('Language you want to add or update:').' ';
-
-			if ($lang_packs = Tools::file_get_contents($this->link_lang_pack .'?version='._PS_VERSION_, false, @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
-			{
-				// Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
-				if ($lang_packs != '' AND $lang_packs = Tools::jsonDecode($lang_packs,true))
-				{
-					echo '
-					<select id="params_import_language" name="params_import_language">
-						<optgroup label="'.$this->l('Add a language').'">';
-
-					$alreadyInstalled = '<optgroup label="'.$this->l('Update a language').'">';
-					foreach($lang_packs AS $lang_pack)
-					{
-						if (!Language::isInstalled($lang_pack['iso_code']))
-							echo '<option value="'.$lang_pack['iso_code'].'|'.$lang_pack['version'].'">'.$lang_pack['name'].'</option>';
-						else
-							$alreadyInstalled.='<option value="'.$lang_pack['iso_code'].'|'.$lang_pack['version'].'">'.$lang_pack['name'].'</option>';
-					}
-
-					echo '
-						</optgroup>'.$alreadyInstalled.'</optgroup>
-					</select> &nbsp;<input type="submit" value="'.$this->l('Add or update the language').'" name="submitAddLanguage" class="button" />';
-				}
-				echo '</div>';
-			}
-			else
-				echo '<br /><br /><p class="error">'.$this->l('Cannot connect to prestashop.com to get languages list.').'</p></div>';
-			echo '	</div>
-			</fieldset>
-			</form><br /><br />';
-			echo '<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
-				<fieldset class="width3">
-					<legend>
-						<img src="../img/admin/import.gif" />'.$this->l('Import a language pack manually').'
-					</legend>
-					<div id="submitImportContent">'.
-						$this->l('If the name format is: isocode.gzip (e.g. fr.gzip) and the language corresponding to this package does not exist, it will automatically be created.').
-						$this->l('Be careful, as it will replace all existing data for the destination language!').'<br /><br />'.
-						$this->l('Language pack to import:').' <input type="file" name="file" /> &nbsp;<input type="submit" value="'.$this->l('Import').'" name="submitImport" class="button" /></p>
-					</div>
-				</fieldset>
-			</form>
-			<br /><br />
-			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
-				<fieldset class="width3"><legend><img src="../img/admin/export.gif" />'.$this->l('Export a language').'</legend>
-					<p>'.$this->l('Export data from one language to a file (language pack).').'<br />'.
-					$this->l('Choose the theme from which you want to export translations.').'<br />
-					<select name="iso_code" style="margin-top:10px;">';
-				foreach ($languages AS $language)
-					echo '<option value="'.$language['iso_code'].'">'.$language['name'].'</option>';
-				echo '
-					</select>
-					&nbsp;&nbsp;&nbsp;
-					<select name="theme" style="margin-top:10px;">';
-				$themes = self::getThemesList();
-				foreach ($themes AS $theme)
-					echo '<option value="'.$theme['name'].'">'.$theme['name'].'</option>';
-				echo '
-					</select>&nbsp;&nbsp;
-					<input type="submit" class="button" name="submitExport" value="'.$this->l('Export').'" />
-				</fieldset>
-			</form>
-			<br /><br />';
-			$allLanguages = Language::getLanguages(false);
-			echo '
-			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-				<fieldset class="width3"><legend><img src="../img/admin/copy_files.gif" />'.$this->l('Copy').'</legend>
-					<p>'.$this->l('Copies data from one language to another.').'<br />'.
-					$this->l('Be careful, as it will replace all existing data for the destination language!').'<br />'.
-					$this->l('If necessary').', <b><a href="index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$this->context->employee->id).'">'.$this->l('first create a new language').'</a></b>.</p>
-					<div style="float:left;">
-						<p>
-							<div style="width:75px; font-weight:bold; float:left;">'.$this->l('From:').'</div>
-							<select name="fromLang">';
-					foreach	($languages AS $language)
-						echo '<option value="'.$language['iso_code'].'">'.$language['name'].'</option>';
-					echo '
-							</select>
-							&nbsp;&nbsp;&nbsp;
-							<select name="fromTheme">';
-						$themes = self::getThemesList();
-						foreach ($themes AS $theme)
-							echo '<option value="'.$theme['name'].'">'.$theme['name'].'</option>';
-						echo '
-							</select> <span style="font-style: bold; color: red;">*</span>
-						</p>
-						<p>
-							<div style="width:75px; font-weight:bold; float:left;">'.$this->l('To:').'</div>
-							<select name="toLang">';
-					foreach	($allLanguages AS $language)
-						echo '<option value="'.$language['iso_code'].'">'.$language['name'].'</option>';
-					echo '
-							</select>
-							&nbsp;&nbsp;&nbsp;
-							<select name="toTheme">';
-						$themes = self::getThemesList();
-						foreach ($themes AS $theme)
-							echo '<option value="'.$theme['name'].'">'.$theme['name'].'</option>';
-						echo '
-							</select>
-						</p>
-					</div>
-					<div style="float:left;">
-						<input type="submit" value="'.$this->l('   Copy   ').'" name="submitCopyLang" class="button" style="margin:25px 0px 0px 25px;" />
-					</div>
-					<p style="clear: left; padding: 16px 0px 0px 0px;"><span style="font-style: bold; color: red;">*</span> '.$this->l('Language files (as indicated at Tools >> Languages >> Edition) must be complete to allow copying of translations').'</p>
-				</fieldset>
-			</form>';
-		}
-	}
 
 	public function fileExists($dir, $file, $var)
 	{
@@ -948,7 +849,7 @@ class AdminTranslations extends AdminTab
 		return $str_output;
 	}
 
-	public function displayFormFront($lang)
+	public function initFormFront($lang)
 	{
 		$_LANG = $this->fileExists(_PS_THEME_DIR_.'lang', Tools::strtolower($lang).'.php', '_LANG');
 		$str_output = '';
@@ -956,7 +857,7 @@ class AdminTranslations extends AdminTab
 		/* List templates to parse */
 		$templates = array_merge(scandir(_PS_THEME_DIR_), scandir(_PS_ALL_THEMES_DIR_));
 		$count = 0;
-		$files = array();
+		$tabsArray = array();
 		foreach ($templates AS $template)
 			if (preg_match('/^(.*).tpl$/', $template) AND (file_exists($tpl = _PS_THEME_DIR_.$template) OR file_exists($tpl = _PS_ALL_THEMES_DIR_.$template)))
 			{
@@ -983,66 +884,42 @@ class AdminTranslations extends AdminTab
 						$newLang[$key] = (key_exists($key2, $_LANG)) ? html_entity_decode($_LANG[$key2], ENT_COMPAT, 'UTF-8') : '';
 					}
 				}
-				$files[$template2] = $newLang;
+				$tabsArray[$template2] = $newLang;
 				$count += sizeof($newLang);
 			}
 
-		$str_output .= '
-		<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).' - '.$this->l('Front-Office translations').'</h2>
-		'.$this->l('Total expressions').' : <b>'.$count.'</b>. '.$this->l('Click the fieldset title to expand or close the fieldset.').'.<br /><br />';
-		$str_output .= $this->displayLimitPostWarning($count);
-		if (!$this->suhosin_limit_exceed)
-		{
-			$str_output .= '
-			<form method="post" action="'.self::$currentIndex.'&submitTranslationsFront=1&token='.$this->token.'" class="form">';
-			$str_output .= $this->displayToggleButton(sizeof($_LANG) >= $count);
-			$str_output .= $this->displayAutoTranslate();
-			$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsFront" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
-			foreach ($files AS $k => $newLang)
-				if (sizeof($newLang))
-				{
-					$countValues = array_count_values($newLang);
-					$empty = isset($countValues['']) ? $countValues[''] : 0;
-					$str_output .= '
-					<fieldset><legend style="cursor : pointer" onclick="$(\'#'.$k.'-tpl\').slideToggle();">'.$k.' - <font color="blue">'.sizeof($newLang).'</font> '.$this->l('expressions').' (<font color="red">'.$empty.'</font>)</legend>
-						<div name="front_div" id="'.$k.'-tpl" style="display: '.($empty ? 'block' : 'none').';">
-							<table cellpadding="2">';
-					foreach ($newLang AS $key => $value)
-					{
-						$str_output .= '<tr><td style="width: 40%">'.stripslashes($key).'</td><td>';
-						if (strlen($key) != 0 && strlen($key) < TEXTAREA_SIZED)
-							$str_output .= '= <input type="text" style="width: 450px" name="'.$k.'_'.md5($key).'" value="'.stripslashes(preg_replace('/"/', '\&quot;', stripslashes($value))).'" />';
-						elseif(strlen($key))
-							$str_output .= '= <textarea rows="'.(int)(strlen($key) / TEXTAREA_SIZED).'" style="width: 450px" name="'.$k.'_'.md5($key).'">'.stripslashes(preg_replace('/"/', '\&quot;', stripslashes($value))).'</textarea>';
-						else
-							$str_output .= '<span class="error-inline">'.implode(', ', $this->_errors).'</span>';
-						$str_output .= '</td></tr>';
-					}
-					$str_output .= '
-							</table>
-						</div>
-					</fieldset><br />';
-				}
-			$str_output .= '<br /><input type="submit" name="submitTranslationsFront" value="'.$this->l('Update translations').'" class="button" /></form>';
-		}
-		if (!empty($this->_errors))
-			$this->displayErrors();
-		echo $str_output;
+		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
+		$tpl->assign(array(
+			'lang' => Tools::strtoupper($lang),
+			'translation_type' => $this->l('Front-Office translations'),
+			'count' => $count,
+			'limit_warning' => $this->displayLimitPostWarning($count),
+			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
+			'toggle_button' => $this->displayToggleButton(),
+			'auto_translate' => $this->displayAutoTranslate(),
+			'tabsArray' => $tabsArray,
+			'textarea_sized' => TEXTAREA_SIZED,
+			'type' => 'front'
+		));
+		return $tpl->fetch();
 	}
 
-	public function displayFormBack($lang)
+	public function initFormBack($lang)
 	{
 		$_LANGADM = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'admin.php', '_LANGADM');
 		$str_output = '';
 		/* List templates to parse */
 		$count = 0;
-		$tabs = scandir(_PS_ADMIN_DIR_.'/tabs');
-		$tabs[] = '../../classes/AdminTab.php';
+		$tabs = scandir(_PS_ADMIN_CONTROLLER_DIR_);
+		$tabs[] = '../../classes/AdminController.php';
 		$files = array();
+		$i=0;
 		foreach ($tabs AS $tab)
-			if (preg_match('/^(.*)\.php$/', $tab) AND file_exists($tpl = _PS_ADMIN_DIR_.'/tabs/'.$tab))
+			if (preg_match('/^(.*)\.php$/', $tab) AND file_exists($tpl = _PS_ADMIN_CONTROLLER_DIR_.$tab))
 			{
-				$tab = basename(substr($tab, 0, -4));
+				// -4 becomes -14 to remove the ending "Controller.php" from the filename
+				$tab = basename(substr($tab, 0, -14));
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
 				fclose($fd);
@@ -1052,6 +929,7 @@ class AdminTranslations extends AdminTab
 					$tabsArray[$tab][$key] = stripslashes(key_exists($tab.md5($key), $_LANGADM) ? html_entity_decode($_LANGADM[$tab.md5($key)], ENT_COMPAT, 'UTF-8') : '');
 				$count += isset($tabsArray[$tab]) ? sizeof($tabsArray[$tab]) : 0;
 			}
+
 		foreach (array('header.inc', 'footer.inc', 'index', 'login', 'password', 'functions') AS $tab)
 		{
 			$tab = _PS_ADMIN_DIR_.'/'.$tab.'.php';
@@ -1065,59 +943,36 @@ class AdminTranslations extends AdminTab
 			$count += isset($tabsArray['index']) ? sizeof($tabsArray['index']) : 0;
 		}
 
-		$str_output .= '
-		<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).' - '.$this->l('Back-Office translations').'</h2>
-		'.$this->l('Expressions to translate').' : <b>'.$count.'</b>. '.$this->l('Click on the titles to open fieldsets').'.<br /><br />';
-		$str_output .= $this->displayLimitPostWarning($count);
-		if (!$this->suhosin_limit_exceed)
-		{
-			$str_output .= '
-			<form method="post" action="'.self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token.'" class="form">';
-			$str_output .= $this->displayToggleButton();
-			$str_output .= $this->displayAutoTranslate();
-			$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsBack" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
-			foreach ($tabsArray AS $k => $newLang)
-				if (sizeof($newLang))
-				{
-					$countValues = array_count_values($newLang);
-					$empty = isset($countValues['']) ? $countValues[''] : 0;
-					$str_output .= '
-					<fieldset><legend style="cursor : pointer" onclick="$(\'#'.$k.'-tpl\').slideToggle();">'.$k.' - <font color="blue">'.sizeof($newLang).'</font> '.$this->l('expressions').' (<font color="red">'.$empty.'</font>)</legend>
-						<div name="back_div" id="'.$k.'-tpl" style="display: '.($empty ? 'block' : 'none').';">
-							<table cellpadding="2">';
-					foreach ($newLang AS $key => $value)
-					{
-						$str_output .= '<tr><td style="width: 40%">'.stripslashes($key).'</td><td>= ';
-						if (strlen($key) < TEXTAREA_SIZED)
-							$str_output .= '<input type="text" style="width: 450px" name="'.$k.md5($key).'" value="'.stripslashes(preg_replace('/"/', '\&quot;', $value)).'" /></td></tr>';
-						else
-							$str_output .= '<textarea rows="'.(int)(strlen($key) / TEXTAREA_SIZED).'" style="width: 450px" name="'.$k.md5($key).'">'.stripslashes(preg_replace('/"/', '\&quot;', $value)).'</textarea></td></tr>';
-					}
-					$str_output .= '
-							</table>
-						</div>
-					</fieldset><br />';
-				}
-			$str_output .= '<br /><input type="submit" name="submitTranslationsBack" value="'.$this->l('Update translations').'" class="button" /></form>';
-		}
-		echo $str_output;
+		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
+		$tpl->assign(array(
+			'lang' => Tools::strtoupper($lang),
+			'translation_type' => $this->l('Back-Office translations'),
+			'count' => $count,
+			'limit_warning' => $this->displayLimitPostWarning($count),
+			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
+			'toggle_button' => $this->displayToggleButton(),
+			'auto_translate' => $this->displayAutoTranslate(),
+			'tabsArray' => $tabsArray,
+			'textarea_sized' => TEXTAREA_SIZED,
+			'type' => 'back'
+		));
+		return $tpl->fetch();
 	}
 
-	public function displayFormErrors($lang)
+	public function initFormErrors($lang)
 	{
 		$_ERRORS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'errors.php', '_ERRORS');
-
-		$str_output = '';
 
 		/* List files to parse */
 		$stringToTranslate = array();
 		$dirToParse = array(_PS_ADMIN_DIR_.'/../',
 							_PS_ADMIN_DIR_.'/../classes/',
-							_PS_ADMIN_DIR_.'/../controllers/',
+							_PS_ADMIN_DIR_.'/../controllers/front/',
+							_PS_ADMIN_DIR_.'/../controllers/admin/',
 							_PS_ADMIN_DIR_.'/../override/classes/',
 							_PS_ADMIN_DIR_.'/../override/controllers/',
-							_PS_ADMIN_DIR_.'/',
-							_PS_ADMIN_DIR_.'/tabs/');
+							_PS_ADMIN_DIR_.'/');
 		if (!file_exists(_PS_MODULE_DIR_))
 				die($this->displayWarning(Tools::displayError('Fatal error: Module directory is not here anymore ').'('._PS_MODULE_DIR_.')'));
 			if (!is_writable(_PS_MODULE_DIR_))
@@ -1143,30 +998,29 @@ class AdminTranslations extends AdminTab
 						$stringToTranslate[$key] = (key_exists(md5($key), $_ERRORS)) ? html_entity_decode($_ERRORS[md5($key)], ENT_COMPAT, 'UTF-8') : '';
 				}
 		$irow = 0;
-		$str_output .= $this->displayAutoTranslate();
-		$str_output .= '<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).' - '.$this->l('Error translations').'</h2>'
-		.$this->l('Errors to translate').' : <b>'.sizeof($stringToTranslate).'</b><br /><br />';
-		$str_output .= $this->displayLimitPostWarning(sizeof($stringToTranslate));
-		if (!$this->suhosin_limit_exceed)
-		{
-			$str_output .= '
-			<form method="post" action="'.self::$currentIndex.'&submitTranslationsErrors=1&lang='.$lang.'&token='.$this->token.'" class="form">
-			<input type="submit" name="submitTranslationsErrors" value="'.$this->l('Update translations').'" class="button" /><br /><br />
-			<table cellpadding="0" cellspacing="0" class="table">';
-			ksort($stringToTranslate);
-			foreach ($stringToTranslate AS $key => $value)
-				$str_output .= '<tr '.(empty($value) ? 'style="background-color:#FBB"' : (++$irow % 2 ? 'class="alt_row"' : '')).'><td>'.stripslashes($key).'</td><td style="width: 430px">= <input type="text" name="'.md5($key).'" value="'.preg_replace('/"/', '&quot;', stripslashes($value)).'" style="width: 380px"></td></tr>';
-			$str_output .= '</table><br /><input type="submit" name="submitTranslationsErrors" value="'.$this->l('Update translations').'" class="button" /></form>';
-		}
-		echo $str_output;
+
+		$tpl = $this->context->smarty->createTemplate('translations/translation_errors.tpl');
+		$tpl->assign(array(
+			'lang' => Tools::strtoupper($lang),
+			'translation_type' => $this->l('Error translations'),
+			'count' => count($stringToTranslate),
+			'limit_warning' => $this->displayLimitPostWarning($count),
+			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'url_submit' => self::$currentIndex.'&submitTranslationsErrors=1&token='.$this->token,
+			'auto_translate' => $this->displayAutoTranslate(),
+			'type' => 'errors',
+			'errorsArray' => $stringToTranslate,
+		));
+		return $tpl->fetch();
 	}
 
-	public function displayFormFields($lang)
+	public function initFormFields($lang)
 	{
 		$_FIELDS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'fields.php', '_FIELDS');
 
 		$str_output = '';
 		$classArray = array();
+		$validArray = array();
 		$count = 0;
 		foreach (scandir(_PS_CLASS_DIR_) AS $classFile)
 		{
@@ -1179,50 +1033,38 @@ class AdminTranslations extends AdminTab
 			if (!is_subclass_of($className, 'ObjectModel'))
 				continue;
 			$classArray[$className] = call_user_func(array($className, 'getValidationRules'), $className);
+
+			foreach ($classArray AS $className => $rules)
+			{
+				if (isset($rules['validate']))
+					foreach ($rules['validate'] AS $key => $value)
+						$validArray[$className][$key] = array_key_exists($className.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$className.'_'.md5(addslashes($key))], ENT_NOQUOTES, 'UTF-8') : '';
+
+				if (isset($rules['validateLang']))
+					foreach ($rules['validateLang'] AS $key => $value)
+						$validArray[$className][$key] = array_key_exists($className.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$className.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '';
+			}
 			if (isset($classArray[$className]['validate']))
 				$count += sizeof($classArray[$className]['validate']);
 			if (isset($classArray[$className]['validateLang']))
 				$count += sizeof($classArray[$className]['validateLang']);
 		}
 
-		$str_output .= $this->displayAutoTranslate();
-		$str_output .= '
-		<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).' - '.$this->l('Field name translations').'</h2>';
-		$str_output .= $this->displayLimitPostWarning($count);
-		if (!$this->suhosin_limit_exceed)
-		{
-			$str_output .= $this->l('Fields to translate').' : <b>'.$count.'</b>. '.$this->l('Click on the titles to open fieldsets').'.<br /><br />
-			<form method="post" action="'.self::$currentIndex.'&submitTranslationsFields=1&token='.$this->token.'" class="form">';
-			$str_output .= $this->displayToggleButton();
-			$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsFields" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
-			foreach ($classArray AS $className => $rules)
-			{
-				$translated = 0;
-				$toTranslate = 0;
-				if (isset($rules['validate']))
-					foreach ($rules['validate'] AS $key => $value)
-						(array_key_exists($className.'_'.md5($key), $_FIELDS)) ? ++$translated : ++$toTranslate;
-				if (isset($rules['validateLang']))
-					foreach ($rules['validateLang'] AS $key => $value)
-						(array_key_exists($className.'_'.md5($key), $_FIELDS)) ? ++$translated : ++$toTranslate;
-				$str_output .= '
-				<fieldset><legend style="cursor : pointer" onclick="$(\'#'.$className.'-tpl\').slideToggle();">'.$className.' - <font color="blue">'.($toTranslate + $translated).'</font> '.$this->l('fields').' (<font color="red">'.$toTranslate.'</font>)</legend>
-				<div name="fields_div" id="'.$className.'-tpl" style="display: '.($toTranslate ? 'block' : 'none').';">
-					<table cellpadding="2">';
-				if (isset($rules['validate']))
-					foreach ($rules['validate'] AS $key => $value)
-						$str_output .= '<tr><td style="text-align:right;width:200px;">'.stripslashes($key).'</td><td style="width: 680px">= <input type="text" name="'.$className.'_'.md5(addslashes($key)).'" value="'.(array_key_exists($className.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$className.'_'.md5(addslashes($key))], ENT_NOQUOTES, 'UTF-8') : '').'" style="width: 620px"></td></tr>';
-				if (isset($rules['validateLang']))
-					foreach ($rules['validateLang'] AS $key => $value)
-						$str_output .= '<tr><td style="text-align:right;width:200px;">'.stripslashes($key).'</td><td style="width: 680px">= <input type="text" name="'.$className.'_'.md5(addslashes($key)).'" value="'.(array_key_exists($className.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$className.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '').'" style="width: 620px"></td></tr>';
-				$str_output .= '
-					</table>
-				</div>
-				</fieldset><br />';
-			}
-			$str_output .= '<br /><input type="submit" name="submitTranslationsFields" value="'.$this->l('Update translations').'" class="button" /></form>';
-		}
-		echo $str_output;
+		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
+		$tpl->assign(array(
+			'lang' => Tools::strtoupper($lang),
+			'translation_type' => $this->l('Field name translations'),
+			'count' => $count,
+			'limit_warning' => $this->displayLimitPostWarning($count),
+			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'url_submit' => self::$currentIndex.'&submitTranslationsFields=1&token='.$this->token,
+			'toggle_button' => $this->displayToggleButton(),
+			'auto_translate' => $this->displayAutoTranslate(),
+			'tabsArray' => $validArray,
+			'textarea_sized' => TEXTAREA_SIZED,
+			'type' => 'fields'
+		));
+		return $tpl->fetch();
 	}
 
 	/**
@@ -1482,12 +1324,12 @@ class AdminTranslations extends AdminTab
 				}
 			</script>';
 	}
-	public function displayFormMails($lang, $noDisplay = false)
+	public function initFormMails($lang, $noDisplay = false)
 	{
 		$core_mails = array();
 		$module_mails = array();
 		$theme_mails = array();
-		$str_output = '';
+		$obj_lang = new Language(Language::getIdByIso($lang));
 
 		// get all mail subjects, this method parse each files in Prestashop !!
 		$subject_mail = array();
@@ -1495,8 +1337,8 @@ class AdminTranslations extends AdminTab
 		$arr_files_to_parse = array(
 			_PS_ROOT_DIR_.'/controllers',
 			_PS_ROOT_DIR_.'/classes',
-		_PS_ADMIN_DIR_.'/tabs',
-			PS_ADMIN_DIR,
+			_PS_ADMIN_DIR_.'/tabs',
+			_PS_ADMIN_DIR_,
 		);
 		$arr_files_to_parse = array_merge($arr_files_to_parse, $modules_has_mails);
 		foreach ($arr_files_to_parse as $path) {
@@ -1509,12 +1351,13 @@ class AdminTranslations extends AdminTab
 		{
 			$module_mails[$module_name] = $this->getMailFiles($module_path.'/mails/', $lang, 'module_mail');
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
+			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $obj_lang, Tools::strtolower($module_name), sprintf($this->l('E-mails for %s module'), '<em>'.$module_name.'</em>'), $module_name);
 		}
 
 		// Before 1.4.0.14 each theme folder was parsed,
 		// This page was really to low to load.
 		// Now just use the current theme.
-		if(_THEME_NAME_ !== AdminTranslations::DEFAULT_THEME_NAME)
+		if(_THEME_NAME_ !== self::DEFAULT_THEME_NAME)
 		{
 			if(file_exists(_PS_THEME_DIR_.'mails'))
 			{
@@ -1529,6 +1372,8 @@ class AdminTranslations extends AdminTab
 					{
 						$theme_mails[$module_dir] = $this->getMailFiles(_PS_THEME_DIR_.'modules/'.$module_dir.'/mails/', $lang, 'theme_module_mail');
 						$theme_mails[$module_dir]['subject'] = $theme_mails['theme_mail']['subject'];
+						$title = $theme_or_module_name != 'theme_mail' ? ucfirst(_THEME_NAME_).' '.sprintf($this->l('E-mails for %s module'), '<em>'.$theme_or_module_name.'</em>') : ucfirst(_THEME_NAME_).' '.$this->l('e-mails');
+						$theme_mails[$module_dir]['display'] = $this->displayMailContent($theme_mails[$module_dir], $subject_mail, $obj_lang, 'theme_'.Tools::strtolower($theme_or_module_name), $title, ($theme_or_module_name != 'theme_mail' ? $theme_or_module_name : false));
 					}
 				}
 			}
@@ -1553,54 +1398,22 @@ class AdminTranslations extends AdminTab
 			return array('total' => $total, 'empty' => $empty);
 		}
 
-		$obj_lang = new Language(Language::getIdByIso($lang));
-
-		// TinyMCE
-		$str_output .= $this->getTinyMCEForMails($obj_lang->iso_code);
-
-		$str_output .= '<!--'.$this->l('Language').'-->';
-		$str_output .= '
-		<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).' - '.$this->l('E-mail template translations').'</h2>'
-		.$this->l('Click on the titles to open fieldsets').'.<br /><br />';
-
-		// display form
-		$str_output .= '
-		<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'&type=mails&lang='.$obj_lang->iso_code.'" class="form">';
-		$str_output .= $this->displayToggleButton();
-		$str_output .= $this->displaySubmitButtons(Tools::getValue('type'));
-		$str_output .= '<br/><br/>';
-
-		// core emails
-		$str_output .= $this->l('Core e-mails:');
-		$str_output .= $this->displayMailContent($core_mails, $subject_mail, $obj_lang, 'core', $this->l('Core e-mails'));
-		// module mails
-		$str_output .= $this->l('Modules e-mails:');
-		foreach ($module_mails as $module_name => $mails)
-		{
-			$str_output .= $this->displayMailContent($mails, $subject_mail, $obj_lang, Tools::strtolower($module_name), sprintf($this->l('E-mails for %s module'), '<em>'.$module_name.'</em>'), $module_name);
-		}
-		// mail theme and module theme
-		if (!empty($theme_mails))
-		{
-			$str_output .= $this->l('Themes e-mails:');
-			$bool_title = false;
-			foreach ($theme_mails as $theme_or_module_name => $mails)
-			{
-				$title = $theme_or_module_name != 'theme_mail' ? ucfirst(_THEME_NAME_).' '.sprintf($this->l('E-mails for %s module'), '<em>'.$theme_or_module_name.'</em>') : ucfirst(_THEME_NAME_).' '.$this->l('e-mails');
-				if ($theme_or_module_name != 'theme_mail' && !$bool_title) {
-					$bool_title = true;
-					$str_output .= $this->l('E-mails modules in theme:');
-				}
-				$str_output .= $this->displayMailContent($mails, $subject_mail, $obj_lang, 'theme_'.Tools::strtolower($theme_or_module_name), $title, ($theme_or_module_name != 'theme_mail' ? $theme_or_module_name : false));
-			}
-		}
-		$str_output .= '
-				<input type="hidden" name="lang" value="'.$lang.'" />
-				<input type="hidden" name="type" value="'.Tools::getValue('type').'" />';
-		$str_output .= $this->displaySubmitButtons(Tools::getValue('type'));
-		$str_output .= '<br /><br />';
-		$str_output .= '</form>';
-		echo $str_output;
+		$tpl = $this->context->smarty->createTemplate('translations/translation_mails.tpl');
+		$tpl->assign(array(
+			'lang' => Tools::strtoupper($lang),
+			'translation_type' => $this->l('E-mail template translations'),
+			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'url_submit' => self::$currentIndex.'&submitTranslationsMails=1&token='.$this->token,
+			'toggle_button' => $this->displayToggleButton(),
+			'auto_translate' => $this->displayAutoTranslate(),
+			'type' => 'mails',
+			'tinyMCE' => $this->getTinyMCEForMails($obj_lang->iso_code),
+			'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $obj_lang, 'core', $this->l('Core e-mails')),
+			'module_mails' => $module_mails,
+			'theme_mails' => $theme_mails
+		));
+		return $tpl->fetch();
+		//<input type="hidden" name="type" value="'.Tools::getValue('type').'" />';
 	}
 
 	protected static function getSubjectMail($directory, $subject_mail)
@@ -1738,17 +1551,14 @@ class AdminTranslations extends AdminTab
 		}
 		return $array_files;
 	}
-	public function displayFormModules($lang)
+	public function initFormModules($lang)
 	{
 		global $_MODULES;
 
 		$array_lang_src = Language::getLanguages(false);
-		$str_output = '';
 
 		foreach ($array_lang_src as $language)
-		{
 			$this->all_iso_lang[] = $language['iso_code'];
-		}
 
 		if (!file_exists(_PS_MODULE_DIR_))
 			die($this->displayWarning(Tools::displayError('Fatal error: Module directory is not here anymore ').'('._PS_MODULE_DIR_.')'));
@@ -1772,61 +1582,23 @@ class AdminTranslations extends AdminTab
 			foreach ($arr_find_and_fill as $value)
 				$this->findAndFillTranslations($value['files'], $value['theme'], $value['module'], $value['dir'], $lang);
 
-			$str_output .= '
-			<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).' - '.$this->l('Modules translations').'</h2>
-			'.$this->l('Total expressions').' : <b>'.$this->total_expression.'</b>. '.$this->l('Click the fieldset title to expand or close the fieldset.').'.<br /><br />';
-			$str_output .= $this->displayLimitPostWarning($this->total_expression);
-			if (!$this->suhosin_limit_exceed)
-			{
-				$str_output .= '
-				<form method="post" action="'.self::$currentIndex.'&submitTranslationsModules=1&token='.$this->token.'" class="form">';
-				$str_output .= $this->displayToggleButton();
-				$str_output .= $this->displayAutoTranslate();
-				$str_output .= '<input type="hidden" name="lang" value="'.$lang.'" /><input type="submit" name="submitTranslationsModules" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
-
-				if (count($this->modules_translations) > 1)
-				{
-					$str_output .= '<h3 style="padding:0;margin:0;">'.$this->l('List of Themes - Click to access theme translation:').'</h3>';
-					$str_output .= '<ul style="list-style-type:none;padding:0;margin:0 0 10px 0;">';
-					foreach (array_keys($this->modules_translations) as $theme)
-						$str_output .= '<li><a href="#'.$theme.'" class="link">- '.($theme === 'default' ? $this->l('default') : $theme ).'</a></li>';
-					$str_output .= '</ul>';
-				}
-
-				foreach ($this->modules_translations AS $theme_name => $theme)
-				{
-					$str_output .= '<h2>&gt;'.$this->l('Theme:').' <a name="'.$theme_name.'">'.($theme_name === self::DEFAULT_THEME_NAME ? $this->l('default') : $theme_name ).'</h2>';
-					foreach ($theme AS $module_name => $module)
-					{
-						$str_output .= ''.$this->l('Module:').' <a name="'.$module_name.'" style="font-style:italic">'.$module_name.'</a>';
-						foreach ($module AS $template_name => $newLang)
-							if (sizeof($newLang))
-							{
-								$countValues = array_count_values($newLang);
-								$empty = isset($countValues['']) ? $countValues[''] : 0;
-								$str_output .= '
-								<fieldset style="margin-top:5px"><legend style="cursor : pointer" onclick="$(\'#'.$theme_name.'_'.$module_name.'_'.$template_name.'\').slideToggle();">'.($theme_name === 'default' ? $this->l('default') : $theme_name ).' - '.$template_name.' - <font color="blue">'.sizeof($newLang).'</font> '.$this->l('expressions').' (<font color="red">'.$empty.'</font>)</legend>
-									<div name="modules_div" id="'.$theme_name.'_'.$module_name.'_'.$template_name.'" style="display: '.($empty ? 'block' : 'none').';">
-										<table cellpadding="2">';
-								foreach ($newLang AS $key => $value)
-								{
-									$str_output .= '<tr><td style="width: 40%">'.stripslashes($key).'</td><td>= ';
-									if (strlen($key) < TEXTAREA_SIZED)
-										$str_output .= '<input type="text" style="width: 450px" name="'.md5(strtolower($module_name).'_'.strtolower($theme_name).'_'.strtolower($template_name).'_'.md5($key)).'" value="'.stripslashes(preg_replace('/"/', '\&quot;', stripslashes($value))).'" /></td></tr>';
-									else
-										$str_output .= '<textarea rows="'.(int)(strlen($key) / TEXTAREA_SIZED).'" style="width: 450px" name="'.md5(strtolower($module_name).'_'.strtolower($theme_name).'_'.strtolower($template_name).'_'.md5($key)).'">'.stripslashes(preg_replace('/"/', '\&quot;', stripslashes($value))).'</textarea></td></tr>';
-								}
-								$str_output .= '
-										</table>
-									</div>
-								</fieldset><br />';
-							}
-					}
-				}
-				$str_output .= '<br /><input type="submit" name="submitTranslationsModules" value="'.$this->l('Update translations').'" class="button" /></form>';
-			}
+			$tpl = $this->context->smarty->createTemplate('translations/translation_modules.tpl');
+			$tpl->assign(array(
+				'default_theme_name' => self::DEFAULT_THEME_NAME,
+				'lang' => Tools::strtoupper($lang),
+				'translation_type' => $this->l('Modules translations'),
+				'count' => $this->total_expression,
+				'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
+				'suoshin_exceeded' => $this->suhosin_limit_exceed,
+				'url_submit' => self::$currentIndex.'&submitTranslationsModules=1&token='.$this->token,
+				'toggle_button' => $this->displayToggleButton(),
+				'auto_translate' => $this->displayAutoTranslate(),
+				'textarea_sized' => TEXTAREA_SIZED,
+				'type' => 'modules',
+				'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array(),
+			));
+			return $tpl->fetch();
 		}
-		echo $str_output;
 	}
 
 	/** parse $filepath to find expression which match $regex, and return an
@@ -1848,11 +1620,10 @@ class AdminTranslations extends AdminTab
 		return $tabsArray;
 	}
 
-	public function displayFormPDF()
+	public function initFormPDF()
 	{
 		$lang = Tools::strtolower(Tools::getValue('lang'));
 		$_LANG = array();
-		$str_output = '';
 
 		if (!file_exists(_PS_TRANSLATIONS_DIR_.$lang))
 			if (!mkdir(_PS_TRANSLATIONS_DIR_.$lang, 0700))
@@ -1874,50 +1645,22 @@ class AdminTranslations extends AdminTab
 			$tabsArray = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/PDF.php', $regex, $_LANGPDF, $tab, $tabsArray);
 
 		$count += isset($tabsArray[$tab]) ? sizeof($tabsArray[$tab]) : 0;
-		$closed = sizeof($_LANGPDF) >= $count;
 
-		$str_output .= $this->displayAutoTranslate();
-		$str_output .= '<h2>'.$this->l('Language').' : '.Tools::strtoupper($lang).'</h2>'
-			.$this->l('Expressions to translate').' : <b>'.$count.'</b>. '.$this->l('Click on the titles to open fieldsets').'.<br /><br />';
-		$str_output .= $this->displayLimitPostWarning($count);
-		if (!$this->suhosin_limit_exceed)
-		{
-			$str_output .= '
-			<form method="post" action="'.self::$currentIndex.'&submitTranslationsPDF=1&token='.$this->token.'" class="form">
-					<script type="text/javascript">
-						var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
-						var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
-					</script>
-					<input type="hidden" name="lang" value="'.$lang.'" />
-					<input type="button" class="button" id="buttonall" onclick="openCloseAllDiv(\'pdf_div\', this.value == openAll); toggleElemValue(this.id, openAll, closeAll);" />
-					<script type="text/javascript">
-						toggleElemValue(\'buttonall\', '.($closed ? 'openAll' : 'closeAll').', '.($closed ? 'closeAll' : 'openAll').');
-					</script>';
-			$str_output .= '<input type="submit" name="submitTranslationsPDF" value="'.$this->l('Update translations').'" class="button" /><br /><br />';
-			foreach ($tabsArray AS $k => $newLang)
-				if (sizeof($newLang))
-				{
-					$countValues = array_count_values($newLang);
-					$empty = isset($countValues['']) ? $countValues[''] : 0;
-					$str_output .= '<fieldset><legend style="cursor : pointer" onclick="$(\'#'.$k.'-tpl\').slideToggle();">'.$k.' - <font color="blue">'.sizeof($newLang).'</font> '.$this->l('expressions').' (<font color="red">'.$empty.'</font>)</legend>
-						<div name="pdf_div" id="'.$k.'-tpl" style="display: '.($empty ? 'block' : 'none').';">
-							<table cellpadding="2">';
-					foreach ($newLang AS $key => $value)
-					{
-						$str_output .= '<tr>
-							<td>'.stripslashes($key).'</td>
-							<td style="width: 580px">
-								= <input type="text" name="'.$k.md5($key).'" value="'.stripslashes(preg_replace('/"/', '\&quot;', $value)).'" style="width: 515px">
-							</td>
-						</tr>';
-					}
-					$str_output .= '</table>
-						</div>
-					</fieldset><br />';
-				}
-			$str_output .= '<br /><input type="submit" name="submitTranslationsPDF" value="'.$this->l('Update translations').'" class="button" /></form>';
-		}
-		echo $str_output;
+		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
+		$tpl->assign(array(
+			'lang' => Tools::strtoupper($lang),
+			'translation_type' => $this->l('PDF translations'),
+			'count' => $count,
+			'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
+			'suoshin_exceeded' => $this->suhosin_limit_exceed,
+			'url_submit' => self::$currentIndex.'&submitTranslationsPdf=1&token='.$this->token,
+			'toggle_button' => $this->displayToggleButton(),
+			'auto_translate' => $this->displayAutoTranslate(),
+			'textarea_sized' => TEXTAREA_SIZED,
+			'type' => 'pdf',
+			'tabsArray' => $tabsArray,
+		));
+		return $tpl->fetch();
 	}
 
 	/**
