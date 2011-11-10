@@ -381,8 +381,9 @@ class DispatcherCore
 	 * @param string $route_id Name the route
 	 * @param array $params
 	 * @param bool $use_routes If false, don't use to create this url
+	 * @param string $anchor Optional anchor to add at the end of this url
 	 */
-	public function createUrl($route_id, $params = array(), $use_routes = true)
+	public function createUrl($route_id, $params = array(), $use_routes = true, $anchor = '')
 	{
 		if (!is_array($params))
 			die('Dispatcher::createUrl() $params must be an array');
@@ -390,7 +391,7 @@ class DispatcherCore
 		if (!isset($this->routes[$route_id]))
 		{
 			$query = http_build_query($params);
-			return ($route_id == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '');
+			return ($route_id == 'index') ? 'index.php'.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$route_id];
 
@@ -427,7 +428,7 @@ class DispatcherCore
 		else
 			$url = 'index.php?controller='.$route['controller'].(($query_params) ? '&'.http_build_query($query_params) : '');
 
-		return $url;
+		return $url.$anchor;
 	}
 
 	/**

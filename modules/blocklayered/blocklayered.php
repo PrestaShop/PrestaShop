@@ -2385,6 +2385,7 @@ class BlockLayered extends Module
 
 		//generate SEO link
 		$paramSelected = '';
+		$param_product_url = '';
 		$optionCheckedArray = array();
 		$paramGroupSelectedArray = array();
 		$titleValues = array();
@@ -2419,6 +2420,9 @@ class BlockLayered extends Module
 				$paramSelected .= '/'.str_replace('-', '_', Tools::link_rewrite($filterName)).$paramGroupSelected;
 				$optionCheckedArray[Tools::link_rewrite($filterName)] = $paramGroupSelected;
 			}
+			// select only attribute and group attribute to display an unique product combination link
+			if (!empty($paramGroupSelected) && $typeFilter['type'] == 'id_attribute_group')
+				$param_product_url .= '/'.str_replace('-', '_', Tools::link_rewrite($filterName)).$paramGroupSelected;
 		}
 
 		$blackList = array('weight','price');
@@ -2460,7 +2464,6 @@ class BlockLayered extends Module
 					$parameters = '';
 					foreach ($optionCheckedCloneArray as $keyGroup => $valueGroup)
 						$parameters .= '/'.str_replace('-', '_', $keyGroup).$valueGroup;
-					
 					// Check if there is an non indexable attribute or feature in the url
 					foreach ($nonIndexable as $value)
 						if (strpos($parameters, '/'.$value) !== false)
@@ -2489,7 +2492,7 @@ class BlockLayered extends Module
 		
 		$cache = array('layered_show_qties' => (int)Configuration::get('PS_LAYERED_SHOW_QTIES'), 'id_category_layered' => (int)$id_parent,
 		'selected_filters' => $selectedFilters, 'n_filters' => (int)$nFilters, 'nbr_filterBlocks' => count($filterBlocks), 'filters' => $filterBlocks,
-		'title_values' => $titleValues, 'current_friendly_url' => htmlentities($paramSelected), 'nofollow' => !empty($paramSelected) || $nofollow);
+		'title_values' => $titleValues, 'current_friendly_url' => htmlentities($paramSelected), 'param_product_url' => htmlentities($param_product_url), 'nofollow' => !empty($paramSelected) || $nofollow);
 		
 		return $cache;
 	}

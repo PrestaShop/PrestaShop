@@ -375,7 +375,8 @@ class ProductControllerCore extends FrontController
 	{
 		$attributes_combinations = Product::getAttributesInformationsByProduct($this->product->id);
 		foreach ($attributes_combinations as &$ac)
-			$ac = array_map('Tools::str2url', $ac);
+			foreach ($ac as &$val)
+				$val = str_replace('-', '_', Tools::link_rewrite($val));
 		$this->context->smarty->assign('attributesCombinations', $attributes_combinations);
 	}
 

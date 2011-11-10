@@ -68,9 +68,10 @@ class LinkCore
 	 * @param string $ean13
 	 * @param int $id_lang
 	 * @param int $id_shop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
+	 * @param int $ipa ID product attribute
 	 * @return string
 	 */
-	public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null)
+	public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0)
 	{
 		$dispatcher = Dispatcher::getInstance();
 		$url = _PS_BASE_URL_.__PS_BASE_URI__;
@@ -107,7 +108,12 @@ class LinkCore
 		if ($dispatcher->hasKeyword('product_rule', 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 
-		return $url.$dispatcher->createUrl('product_rule', $params, $this->allow);
+		if ($ipa)
+			$anchor = $product->getAnchor($ipa);
+		else
+			$anchor = '';
+
+		return $url.$dispatcher->createUrl('product_rule', $params, $this->allow, $anchor);
 	}
 
 	/**
