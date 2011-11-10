@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -37,7 +37,7 @@ class Editorial extends Module
 		$this->version = '1.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
-		
+
 		parent::__construct();
 
 		$this->displayName = $this->l('Home text editor');
@@ -52,7 +52,7 @@ class Editorial extends Module
 	{
 		if (!parent::install() OR !$this->registerHook('home') OR !$this->registerHook('header'))
 			return false;
-		
+
 		if (!Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'editorial` (
 		`id_editorial` int(10) unsigned NOT NULL auto_increment,
@@ -60,7 +60,7 @@ class Editorial extends Module
 		PRIMARY KEY (`id_editorial`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 			return false;
-		
+
 		if (!Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'editorial_lang` (
 		`id_editorial` int(10) unsigned NOT NULL,
@@ -72,24 +72,27 @@ class Editorial extends Module
 		PRIMARY KEY (`id_editorial`, `id_lang`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 			return false;
-		
+
 		if (!Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'editorial`(`id_editorial`, `body_home_logo_link`) 
-		VALUES(1, "http://www.prestashop.com")'))
+		INSERT INTO `'._DB_PREFIX_.'editorial`(`body_home_logo_link`)
+		VALUES("http://www.prestashop.com")'))
 			return false;
-		
-		if (!Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'editorial_lang`(`id_editorial`, `id_lang`, `body_title`, `body_subheading`, `body_paragraph`, `body_logo_subheading`)
-		VALUES(1, 1, "Lorem ipsum dolor sit amet", "Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua", "&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&lt;/p&gt;", "Excepteur sint prestashop cupidatat non proident")'))
-			return false;
-		
-		if (!Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'editorial_lang`(`id_editorial`, `id_lang`, `body_title`, `body_subheading`, `body_paragraph`, `body_logo_subheading`)
-		VALUES(1, 2, "Lorem ipsum dolor sit amet", "Excepteur sint occaecat cupidatat non proident", "&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&lt;/p&gt;", "Lorem ipsum presta shop amet")'))
-			return false;
-		return true;
+
+		$id_editorial = Db::getInstance()->Insert_ID();
+		$result = true;
+		foreach (Language::getLanguages() as $lang)
+			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'editorial_lang', array(
+				'id_editorial' =>			$id_editorial,
+				'id_lang' =>				$lang['id_lang'],
+				'body_title' =>				'Lorem ipsum dolor sit amet',
+				'body_subheading' =>		'Excepteur sint occaecat cupidatat non proident',
+				'body_paragraph' =>			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>',
+				'body_logo_subheading' =>	'Lorem ipsum presta shop amet',
+			), 'INSERT');
+
+		return $result;
 	}
-	
+
 	public function uninstall()
 	{
 		if (!parent::uninstall())
@@ -114,7 +117,7 @@ class Editorial extends Module
 
 	public function getContent()
 	{
-		
+
 		/* display the module name */
 		$this->_html = '<h2>'.$this->displayName.'</h2>';
 		$errors = '';
@@ -138,7 +141,7 @@ class Editorial extends Module
 		{
 			// Forbidden key
 			$forbidden = array('submitUpdate');
-			
+
 			$editorial = new EditorialClass(1);
 			$editorial->copyFromPost();
 			$editorial->update();
@@ -170,7 +173,7 @@ class Editorial extends Module
 
 		/* display the editorial's form */
 		$this->_displayForm();
-	
+
 		return $this->_html;
 	}
 
@@ -187,7 +190,7 @@ class Editorial extends Module
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 		$this->_html .=  '
-			<script type="text/javascript">	
+			<script type="text/javascript">
 			var iso = \''.$isoTinyMCE.'\' ;
 			var pathCSS = \''._THEME_CSS_DIR_.'\' ;
 			var ad = \''.$ad.'\' ;
@@ -201,7 +204,7 @@ class Editorial extends Module
 				<legend><img src="'.$this->_path.'logo.gif" alt="" title="" /> '.$this->displayName.'</legend>
 				<label>'.$this->l('Main title').'</label>
 				<div class="margin-form">';
-				
+
 				foreach ($languages as $language)
 				{
 					$this->_html .= '
@@ -210,14 +213,14 @@ class Editorial extends Module
 					</div>';
 				}
 				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'title', true);
-				
-				
+
+
 		$this->_html .= '
 					<p class="clear">'.$this->l('Appears along top of homepage').'</p>
 				</div>
 				<label>'.$this->l('Subheading').'</label>
 				<div class="margin-form">';
-				
+
 				foreach ($languages as $language)
 				{
 					$this->_html .= '
@@ -226,7 +229,7 @@ class Editorial extends Module
 					</div>';
 				 }
 				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'subheading', true);
-				
+
 		$this->_html .= '
 					<div class="clear"></div>
 				</div>
@@ -240,9 +243,9 @@ class Editorial extends Module
 						<textarea class="rte" cols="70" rows="30" id="body_paragraph_'.$language['id_lang'].'" name="body_paragraph_'.$language['id_lang'].'">'.(isset($editorial->body_paragraph[$language['id_lang']]) ? $editorial->body_paragraph[$language['id_lang']] : '').'</textarea>
 					</div>';
 				 }
-				
+
 				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'cpara', true);
-				
+
 				$this->_html .= '
 					<p class="clear">'.$this->l('Text of your choice; for example, explain your mission, highlight a new product, or describe a recent event.').'</p>
 				</div>
@@ -255,10 +258,10 @@ class Editorial extends Module
 							<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
 							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /> '.$this->l('Delete').'</a>
 						</div>';
-						
+
 				$this->_html .= '<input type="file" name="body_homepage_logo" />
 					<p style="clear: both">'.$this->l('Will appear next to the Introductory Text above').'</p>
-					
+
 				</div>
 				<label>'.$this->l('Homepage logo link').'</label>
 				<div class="margin-form">
@@ -267,7 +270,7 @@ class Editorial extends Module
 				</div>
 				<label>'.$this->l('Homepage logo subheading').'</label>
 				<div class="margin-form">';
-				
+
 				foreach ($languages as $language)
 				{
 					$this->_html .= '
@@ -275,9 +278,9 @@ class Editorial extends Module
 						<input type="text" name="body_logo_subheading_'.$language['id_lang'].'" id="logo_subheading_'.$language['id_lang'].'" size="64" value="'.(isset($editorial->body_logo_subheading[$language['id_lang']]) ? $editorial->body_logo_subheading[$language['id_lang']] : '').'" />
 					</div>';
 				 }
-				
+
 				$this->_html .= $this->displayFlags($languages, $defaultLanguage, $divLangName, 'logo_subheading', true);
-				
+
 				$this->_html .= '
 					<div class="clear"></div>
 				</div>
@@ -289,7 +292,7 @@ class Editorial extends Module
 
 	public function hookHome($params)
 	{
-				
+
 		$editorial = new EditorialClass(1, $this->context->language->id);
 		$this->context->smarty->assign(array(
 			'editorial' => $editorial,
@@ -302,7 +305,7 @@ class Editorial extends Module
 		));
 		return $this->display(__FILE__, 'editorial.tpl');
 	}
-	
+
 	public function hookHeader()
 	{
 		$this->context->controller->addCSS(($this->_path).'editorial.css', 'all');
