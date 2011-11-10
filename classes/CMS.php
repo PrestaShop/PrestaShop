@@ -127,9 +127,9 @@ class CMSCore extends ObjectModel
 	public function updatePosition($way, $position)
 	{
 		if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category` 
+			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
 			FROM `'._DB_PREFIX_.'cms` cp
-			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.' 
+			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.'
 			ORDER BY cp.`position` ASC'
 		))
 			return false;
@@ -146,7 +146,7 @@ class CMSCore extends ObjectModel
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'cms`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-			WHERE `position` 
+			WHERE `position`
 			'.($way
 				? '> '.(int)($movedCms['position']).' AND `position` <= '.(int)($position)
 				: '< '.(int)($movedCms['position']).' AND `position` >= '.(int)($position)).'
@@ -183,14 +183,17 @@ class CMSCore extends ObjectModel
 
 	public static function getCMSPages($id_lang = null, $id_cms_category = null, $active = true)
 	{
-		return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'cms` c
-		JOIN `'._DB_PREFIX_.'cms_lang` l ON (c.id_cms = l.id_cms)'.
-		(isset($id_cms_category) ? 'WHERE `id_cms_category` = '.(int)($id_cms_category) : '').
-		($active ? ' AND c.`active` = 1 ' : '').'
-		AND l.id_lang = '.(int)($id_lang).'
-		ORDER BY `position`');
+		$sql = new DbQuery();
+		$sql->select('*');
+		$sql->from('cms c');
+		if ($id_lang)
+			$sql->innerJoin('cms_lang l ON c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang);
+
+		if ($active)
+			$sql->where('c.active = 1');
+		$sql->orderBy('position');
+
+		return Db::getInstance()->executeS($sql);
 	}
 
 	public static function getUrlRewriteInformations($id_cms)

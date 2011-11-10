@@ -246,7 +246,7 @@ abstract class DbCore
 	 *
 	 * @param string $table Table where insert/update data
 	 * @param string $data Data to insert/update
-	 * @param string $type INSERT or UPDATE
+	 * @param string $type INSERT or INSERT IGNORE or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
 	 * @param string $limit LIMIT clause (optional)
 	 * @param bool $use_null If true, replace empty strings and NULL by a NULL value
@@ -257,7 +257,8 @@ abstract class DbCore
 		if (!$data)
 			return true;
 
-		if (strtoupper($type) == 'INSERT')
+		$type = strtoupper($type);
+		if ($type == 'INSERT' || $type == 'INSERT IGNORE')
 		{
 			// Check if $data is a list of row
 			$current = current($data);
@@ -291,12 +292,12 @@ abstract class DbCore
 				$values_stringified[] = '('.implode(', ', $values).')';
 			}
 
-			$sql = 'INSERT INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
+			$sql = $type.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
 			if ($limit)
 				$sql .= ' LIMIT '.(int)$limit;
 			return $this->q($sql, $use_cache);
 		}
-		else if (strtoupper($type) == 'UPDATE')
+		else if ($type == 'UPDATE')
 		{
 			$sql = 'UPDATE `'.$table.'` SET ';
 			foreach ($data as $key => $value)

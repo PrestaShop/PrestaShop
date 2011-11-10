@@ -87,18 +87,19 @@ class TagCore extends ObjectModel
 	*
 	* @param integer $id_lang Language id
 	* @param integer $id_product Product id to link tags with
-	* @param string $string Tags separated by commas
-	*
+	* @param string|array $tag_list List of tags, as array or as a string with comas
 	* @return boolean Operation success
 	*/
-	public static function addTags($id_lang, $id_product, $string)
+	public static function addTags($id_lang, $id_product, $tag_list)
 	{
-	 	if (!Validate::isUnsignedId($id_lang) || !Validate::isTagsList($string))
+	 	if (!Validate::isUnsignedId($id_lang))
 			return false;
 
-	 	$tmp_tab = array_unique(array_map('trim', preg_split('/,/', $string, null, PREG_SPLIT_NO_EMPTY)));
+		if (!is_array($tag_list))
+	 		$tag_list = array_unique(array_map('trim', preg_split('/,/', $tag_list, null, PREG_SPLIT_NO_EMPTY)));
+
 	 	$list = array();
-		foreach ($tmp_tab as $tag)
+		foreach ($tag_list as $tag)
 		{
 	 	 	if (!Validate::isGenericName($tag))
 	 	 		return false;
