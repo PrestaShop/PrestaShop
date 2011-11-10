@@ -56,32 +56,39 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			var placeholder = $(".toolbar-placeholder");
 			var message = $('.toolbarHead');
 			var view = $(window);
 
-			// bind only if placeholder exists
-			if (placeholder.length)
+			// bind only if message exists. placeholder will be its parent
 				view.bind("scroll resize", function(e)
 				{
-					if(e.type == 'resize')
-						message.css('width', message.width());
+					message.each(function(el){
 
-					var placeholderTop = placeholder.offset().top;
-					var viewTop = view.scrollTop() + 15;
-
-					if ((viewTop > placeholderTop) && !message.hasClass("fix-toolbar"))
+					if (message.length)
 					{
-						message.css('width', message.width());
-						message.addClass("fix-toolbar");
+						placeholder = $(this).parent();
+						if(e.type == 'resize')
+							$(this).css('width', $(this).width());
+	
+						placeholderTop = placeholder.offset().top;
+						var viewTop = view.scrollTop() + 15;
+// POUET	
+// CECI EST UN TEST
+						if ((viewTop > placeholderTop) && !$(this).hasClass("fix-toolbar"))
+						{
+							$(this).css('width', $(this).width());
+							$(this).addClass("fix-toolbar");
+						}
+						else if ( (viewTop <= placeholderTop) && $(this).hasClass("fix-toolbar"))
+						{
+							//$(this).css('width', 'auto');
+							$(this).removeClass("fix-toolbar");
+						}
 					}
-					else if ( (viewTop <= placeholderTop) && message.hasClass("fix-toolbar"))
-					{
-						message.css('width', 'auto');
-						message.removeClass("fix-toolbar");
-					}
+					});
 				});
 		});
+		
 		</script>
 	</body>
 </html>

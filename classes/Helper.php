@@ -66,10 +66,10 @@ class HelperCore
 		$this->context = Context::getContext();
 	}
 
-	/*public function setTpl($tpl)
+	public function setTpl($tpl)
 	{
 		$this->tpl = $this->createTemplate($tpl);
-	}*/
+	}
 
 	/**
 	 * Create a template from the override file, else from the base file.
