@@ -140,6 +140,7 @@ $(function(){ldelim}
 						$('#noSlide').html(jsonData.page);
 					});
 					$('#noSlide').fadeIn('slow');
+					document.location = '#account-creation';
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
@@ -554,9 +555,11 @@ $(function(){ldelim}
 		<input type="hidden" name="email_create" value="1" />
 		<input type="hidden" name="is_new_customer" value="1" />
 		{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
-		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive" />
 		<span><sup>*</sup>{l s='Required field'}</span>
 	</p>
-	
+	<p class="cart_navigation">
+		<a href="{$link->getPageLink("authentication")}" id="submitBack" class="button">{l s='Back'}</a>
+		<input type="submit" name="submitAccount" id="submitAccount" value="{l s='Register'}" class="exclusive" />
+	</p>
 </form>
 {/if}
