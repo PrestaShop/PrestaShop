@@ -1860,7 +1860,6 @@ class AdminControllerCore extends Controller
 
 	public function getFieldsValue($obj)
 	{
-		info($this->fields_form);
 		foreach ($this->fields_form as $fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
