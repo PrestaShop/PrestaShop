@@ -123,7 +123,6 @@ $(function(){ldelim}
 			data: 'controller=authentication&SubmitCreate=1&ajax=true&email_create='+$('#email_create').val()+'&token='+token,
 			success: function(jsonData)
 			{
-			//console.log(jsonData);
 				if (jsonData.hasError)
 				{
 					var errors = '';

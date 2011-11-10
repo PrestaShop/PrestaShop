@@ -63,6 +63,15 @@ class AuthControllerCore extends FrontController
 	}
 
 	/**
+	 * Run ajax process
+	 * @see FrontController::displayAjax()
+	 */
+	public function displayAjax()
+	{
+		$this->display();
+	}
+
+	/**
 	 * Assign template vars related to page content
 	 * @see FrontController::initContent()
 	 */
@@ -102,13 +111,6 @@ class AuthControllerCore extends FrontController
 					'countries' => $countries
 				));
 			}
-		}
-
-		// if account created with the 2 steps register process, remove 'accoun_created' from cookie
-		if (isset($this->context->cookie->account_created))
-		{
-			$this->context->smarty->assign('account_created', 1);
-			unset($this->context->cookie->account_created);
 		}
 
 		if (Tools::getValue('create_account'))
@@ -500,6 +502,12 @@ class AuthControllerCore extends FrontController
 							if ($back = Tools::getValue('back'))
 								Tools::redirect('index.php?controller='.$back);
 							Tools::redirect('index.php?controller=my-account');
+							// redirection: if cart is not empty : redirection to the cart
+							if (count($this->context->cart->getProducts(true)) > 0)
+								Tools::redirect('index.php?controller=order');
+							// else : redirection to the account
+							else
+								Tools::redirect('index.php?controller=my-account');
 						}
 					}
 				}
@@ -541,6 +549,24 @@ class AuthControllerCore extends FrontController
 			$this->create_account = true;
 			$this->context->smarty->assign('email_create', Tools::safeOutput($email));
 			$_POST['email'] = $email;
+		}
+		if ($this->ajax)
+		{
+			// Call a hook to display more information on form
+			$this->context->smarty->assign(array(
+				'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('createAccountForm'),
+				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('createAccountTop'),
+				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+				'genders' => Gender::getGenders()
+			));
+
+			$return = array(
+				'hasError' => !empty($this->errors),
+				'errors' => $this->errors,
+				'page' => $this->context->smarty->fetch(_PS_THEME_DIR_.'authentication.tpl'),
+				'token' => Tools::getToken(false)
+			);
+			die(Tools::jsonEncode($return));
 		}
 	}
 

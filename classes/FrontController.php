@@ -103,6 +103,13 @@ class FrontControllerCore extends Controller
 			$this->display_footer = false;
 		}
 
+		// if account created with the 2 steps register process, remove 'accoun_created' from cookie
+		if (isset($this->context->cookie->account_created))
+		{
+			$this->context->smarty->assign('account_created', 1);
+			unset($this->context->cookie->account_created);
+		}
+
 		ob_start();
 
 		// Switch language if needed and init cookie language

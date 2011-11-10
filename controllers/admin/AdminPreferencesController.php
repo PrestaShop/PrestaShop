@@ -56,11 +56,11 @@ class AdminPreferencesControllerCore extends AdminController
 			$registration_process_type = array(
 				array(
 					'value' => PS_REGISTRATION_PROCESS_STANDARD,
-					'name' => $this->l('2 steps (Account creation and address creation)')
+					'name' => $this->l('Only account creation')
 				),
 				array(
 					'value' => PS_REGISTRATION_PROCESS_AIO,
-					'name' => $this->l('Standard (all in one)')
+					'name' => $this->l('Standard (account creation and address creation)')
 				)
 			);
 
@@ -98,7 +98,7 @@ class AdminPreferencesControllerCore extends AdminController
 				'PS_COOKIE_LIFETIME_FO' => array('title' => $this->l('Lifetime of the Front Office cookie'), 'desc' => $this->l('Indicate the number of hours'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'text', 'default' => '480', 'visibility' => Shop::CONTEXT_ALL),
 				'PS_COOKIE_LIFETIME_BO' => array('title' => $this->l('Lifetime of the Back Office cookie'), 'desc' => $this->l('Indicate the number of hours'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'text', 'default' => '480', 'visibility' => Shop::CONTEXT_ALL),
 				'PS_ORDER_PROCESS_TYPE' => array('title' => $this->l('Order process type'), 'desc' => $this->l('You can choose the order process type as either standard (5 steps) or One Page Checkout'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $order_process_type, 'identifier' => 'value'),
-				'PS_REGISTRATION_PROCESS_TYPE' => array('title' => $this->l('Registration process type'), 'desc' => $this->l('The 2 steps register process allows the customer to register faster, and create his address later.'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $registration_process_type, 'identifier' => 'value'),
+				'PS_REGISTRATION_PROCESS_TYPE' => array('title' => $this->l('Registration process type'), 'desc' => $this->l('The "Only account creation" step register process allows the customer to register faster, and create his address later.'), 'validation' => 'isInt', 'cast' => 'intval', 'type' => 'select', 'list' => $registration_process_type, 'identifier' => 'value'),
 				'PS_GUEST_CHECKOUT_ENABLED' => array('title' => $this->l('Enable guest checkout'), 'desc' => $this->l('Your guest can make an order without registering'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				'PS_CONDITIONS' => array('title' => $this->l('Terms of service'), 'desc' => $this->l('Require customers to accept or decline terms of service before processing the order'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool', 'js' => array('on' => 'onchange="changeCMSActivationAuthorization()"', 'off' => 'onchange="changeCMSActivationAuthorization()"')),
 				'PS_CONDITIONS_CMS_ID' => array('title' => $this->l('Conditions of use CMS page'), 'desc' => $this->l('Choose the Conditions of use CMS page'), 'validation' => 'isInt', 'type' => 'select', 'list' => $cms_tab, 'identifier' => 'id', 'cast' => 'intval'),
