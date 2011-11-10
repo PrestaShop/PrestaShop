@@ -1,4 +1,9 @@
-	tinyMCE.init({
+function tinySetup(config)
+{
+	if(!config)
+		config = {};
+
+	default_config = {
 		mode : "specific_textareas",
 		theme : "advanced",
 		skin:"cirkuit",
@@ -25,7 +30,16 @@
 		convert_urls : false,
         language : iso
 		
+	}
+
+	$.each(default_config, function(index, el)
+	{
+		if (config[index] === undefined )
+			config[index] = el;
 	});
+	tinyMCE.init(config);
+};
+
 
 	function ajaxfilemanager(field_name, url, type, win) {
 		var ajaxfilemanagerurl = ad+"/ajaxfilemanager/ajaxfilemanager.php";

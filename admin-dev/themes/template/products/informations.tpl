@@ -92,7 +92,7 @@
 			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
 				<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" 
 					id="name_{$language.id_lang}" name="name_{$language.id_lang}"
-					value="{$language.name|htmlentitiesUTF8}"/><sup> *</sup>
+					value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
 				<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
 				</span>
 			</div>
@@ -683,8 +683,287 @@ $(document).ready(function(){
 					</tr>
 					{* [end] prices *}
 
+						
+<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+				{if !$ps_stock_management}
+						<tr>
+							<td colspan="2">{l s='The stock management is disabled'}</td>
+						</tr>
+					{/if}
+					{if !$has_attribute}
+					<tr>
+						<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
+						<td style="padding-bottom:5px;">
+							<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+							<p>{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
+						</td>
+					</tr>
+				{/if}
+					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+				<tr>
+					<td class="col-left"><label>{l s='Additional shipping cost:'}</label></td>
+					<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost" 
+							value="{$product->additional_shipping_cost}" />{$currency->suffix}
+						{if $country_display_tax_label}{l s='tax excl.'}{/if}
+						<p>{l s='Carrier tax will be applied.'}</p>
+				</td>
+			</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
+						<td style="padding-bottom:5px;">
+								{include file="products/input_text_lang.tpl" 
+									languages=$languages 
+									input_value=$product->available_now 
+									input_name='available_now'}
+							<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+					</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
+						<td style="padding-bottom:5px;">
+								{include file="products/input_text_lang.tpl" 
+									languages=$languages 
+									input_value=$product->available_later
+									input_name='available_later'}
+							<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+				</td>
+					</tr>
+			{if $countAttributes}
+				
+{* .(($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00').'" *}
+						<tr>
+							<td class="col-left"><label>{l s='Available date:'}</label></td>
+							<td style="padding-bottom:5px;">
+							<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
+							style="text-align: center;" type="text" />
+								<p>{l s='The available date when this product is out of stock'}</p>
+						</td>
+						</tr>
+			{/if}
+					<script type="text/javascript">
+						calcPriceTI();
+					</script>
+					<tr>
+						<td class="col-left"><label>{l s='When out of stock:'}</label></td>
+						<td style="padding-bottom:5px;">
+							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0"  {if $product->out_of_stock == 0}checked="checked"{/if} /> 
+								<label for="out_of_stock_1" class="t" id="label_out_of_stock_1">{l s='Deny orders'}</label>
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" {if $product->out_of_stock == 1}checked="checked"{/if} /> 
+								<label for="out_of_stock_2" class="t" id="label_out_of_stock_2">{l s='Allow orders'}</label>
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" {if $product->out_of_stock == 2}checked="checked"{/if} /> 
+								<label for="out_of_stock_3" class="t" id="label_out_of_stock_3">{l s='Default:'} 
+								<i>{if $ps_order_out_of_stock}{l s='Allow orders'}{else}{l s='Deny orders'}{/if}</i> ({l s='as set in'} <a href="{$link->getAdminLink('AdminPPreferences')}" 
+									onclick="return confirm(\'{l s='Are you sure you want to delete entered product information?'}')">{l s='Preferences'}</a>)</label>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="padding-bottom:5px;">
+							<div class="separation"></div>
+						</td>
+					</tr>
+			
+					<tr>
+						<td class="col-left"><label for="id_category_default" class="t">
+							{l s='Default category:'}
+							</label></td>
+						<td>
+						<div id="no_default_category" style="color: red;font-weight: bold;display: none;">
+							{l s='Please check a category in order to select the default category.'}
+						</div>
+						<script type="text/javascript">
+							var post_selected_cat;
+							post_selected_cat = '{$selected_cat_ids}';
+						</script>
+						<select id="id_category_default" name="id_category_default">
+						{foreach from=$selected_cat item=cat}
+							<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
+						{/foreach}
+						</select>
+						</td>
+					</tr>
+					<tr><td colspan="2">{$category_tree}</td></tr>
+					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+{************** DESCRIPTION *****************************}
+				<tr><td colspan="2">
+					<span onclick="$('#seo').slideToggle();" style="cursor: pointer"><img src="../img/admin/arrow.gif" alt="{l s='SEO'}" title="{l s='SEO'}" style="float:left; margin-right:5px;"/>{l s='Click here to improve product\'s rank in search engines (SEO)'}</span><br />
+					<div id="seo" style="display: none; padding-top: 15px;">
+					<table>
+						<tr>
+						<td class="col-left"><label>{l s='Meta title:'}</label></td>
+						<td>
+							{include file="products/input_text_lang.tpl" 
+								languages=$languages 
+								input_name='meta_title' 
+								input_value=$product->meta_title}
+								<p class="clear">{l s='Product page title; leave blank to use product name'}</p>
+						</td>
+						</tr>
+						<tr>
+							<td class="col-left"><label>{l s='Meta description:'}</label></td>
+							<td>
+								{include file="products/input_text_lang.tpl" 
+									languages=$languages 
+									input_name='meta_description' 
+									input_value=$product->meta_description
+									input_hint='{l s=\'Forbidden characters:\'\} <>;=#{\}'
+								}
+								<p class="clear">{l s='A single sentence for HTML header'}</p>
+							</td>
+						</tr>
+						<tr>
+							<td class="col-left"><label>{l s='Meta keywords:'}</label></td>
+							<td>
+							{include file="products/input_text_lang.tpl" languages=$languages 
+							input_value=$product->meta_keywords
+							input_name='meta_keywords'}
+								<p class="clear">{l s='Keywords for HTML header, separated by a comma'}</p>
+									</td>
+								</tr>
+								<tr>
+								<td class="col-left"><label>{l s='Friendly URL:'}</label></td>
+									<td>
+								{include file="products/input_text_lang.tpl" 
+									languages=$languages 
+									input_value=$product->link_rewrite 
+									input_name='link_rewrite'}
 
-{$content}
+								<p class="clear" style="padding:10px 0 0 0">
+									<a style="cursor:pointer" class="button" 
+									onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;{l s='Friendly-url from product\'s name.'}<br /><br />
+								{l s='Product link will look like this:'} 
+								{if $ps_ssl_enabled}https://{else}http://{/if}{*$smarty.server.SERVER_NAME*}/<b>id_product</b>-<span id="friendly-url"></span>.html</p>
+									</td>
+								</tr>
+		</td></tr></table>
+						</div>
+					</td></tr>
+					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+					<tr>
+						<td class="col-left"><label>{l s='Short description:'}<br /><br /><i>({l s='appears in the product lists and on the top of the product page'})</i></label></td>
+						<td style="padding-bottom:5px;">
+								{include file="products/textarea_lang.tpl" 
+								languages=$languages 
+								input_name='description_short'
+								input_value=$product->description_short}
+
+		<p class="clear"></p>
+			</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Description:'}<br /><br /><i>({l s='appears in the body of the product page'})</i></label></td>
+						<td style="padding-bottom:5px;"> 
+								{include file="products/textarea_lang.tpl" languages=$languages 
+								input_name='description'
+								input_value=$product->description
+								}
+		<p class="clear"></p>
+					</td>
+					</tr>
+
+{if $images}
+					
+					<tr>
+						<td class="col-left"><label></label></td>
+						<td style="padding-bottom:5px;">
+							<div style="display:block;width:620px;" class="hint clear">
+								{l s='Do you want an image associated with the product in your description?'}
+								<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
+								<table id="createImageDescription" style="display:none;">
+									<tr>
+										<td colspan="2" height="10"></td>
+									</tr>
+									<tr>
+										<td class="col-left"><label>{l s='Select your image:'}</label></td>
+										<td style="padding-bottom:5px;">
+											<ul>
+											{foreach from=$images item=image key=key}
+													<li>
+														<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+														<label for="smallImage_{$key}" class="t">
+															<img src="{$image.src}" alt="{$image.legend}" />
+														</label>
+													</li>
+											{/foreach}
+											</ul>
+											<p class="clear"></p>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-left"><label>{l s='Where to place it?'}</label></td>
+										<td style="padding-bottom:5px;">
+											<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
+											<label for="leftRight_1" class="t">{l s='left'}</label>
+											<br />
+											<input type="radio" name="leftRight" id="leftRight_2" value="right">
+											<label for="leftRight_2" class="t">{l s='right'}</label>
+											<p class="clear"></p>
+										</td>
+									</tr>
+									<tr>
+										<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
+										<td style="padding-bottom:5px;">
+											{foreach from=$imagesTypes key=key item=type}
+													<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
+													<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
+													<br />
+											{/foreach}
+									
+											<p class="clear"></p>
+										</td>
+									</tr>
+								
+									<tr>
+										<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
+										<td style="padding-bottom:5px;">
+											<input type="text" id="resultImage" name="resultImage" />
+											<p>{l s='The tag is to copy / paste in the description.'}</p>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<p class="clear"></p>
+						</td>
+					</tr>
+					
+					<script type="text/javascript">
+						$(function() {
+							changeTagImage();
+							$("#createImageDescription input").change(function(){
+								changeTagImage();
+							});
+
+							var i = 0;
+							$(".addImageDescription").click(function(){
+								if (i == 0){
+									$("#createImageDescription").animate({
+										opacity: 1, height: "toggle"
+										}, 500);
+									i = 1;
+								}else{
+									$("#createImageDescription").animate({
+										opacity: 0, height: "toggle"
+										}, 500);
+									i = 0;
+								}
+							});
+						});
+
+						function changeTagImage(){
+							var smallImage = $("input[name=smallImage]:checked").attr("value");
+							var leftRight = $("input[name=leftRight]:checked").attr("value");
+							var imageTypes = $("input[name=imageTypes]:checked").attr("value");
+							$("#resultImage").val("{img-"+smallImage+"-"+leftRight+"-"+imageTypes+"}");
+						}
+					</script>
+{/if}
+{$last_content}
 
 
 
+<script type="text/javascript">
+	var iso = '{$iso_tiny_mce}';
+	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
+	var ad = '{$ad}';
+</script>
+<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="../js/tinymce.inc.js"></script>

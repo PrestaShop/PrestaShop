@@ -27,19 +27,23 @@
 {if $firstCall}
 	<script type="text/javascript">
 		var vat_number = {$vat_number};
-		var module_dir = '{$module_dir}';
+		var module_dir = '{$smarty.const._MODULE_DIR_}';
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
 
 		$(document).ready(function() {
+
 			{foreach $languages as $k => $language}
 				languages[{$k}] = {
 					id_lang: {$language.id_lang},
 					iso_code: '{$language.iso_code}',
-					name: '{$language.name}'
+					name: '{$language.name}',
+					is_default: "{$language.is_default}"
 				};
 			{/foreach}
-			displayFlags(languages, id_language, {$allowEmployeeFormLang});
+			// we need allowEmployeeFormLang var in ajax request
+			allowEmployeeFormLang = {$allowEmployeeFormLang};
+			displayFlags(languages, id_language, allowEmployeeFormLang);
 
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))
@@ -78,10 +82,10 @@
 		</div>
 	</div>
 {/if}
-
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
+{block name="defaultForm"}
 <form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
@@ -210,7 +214,7 @@
 								<div class="translatable">
 									{foreach $languages as $language}
 										<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-											<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}">{$fields_value[$input.name][$language.id_lang]}</textarea>
+											<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if $input.autoload_rte}class="autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]}</textarea>
 										</div>
 									{/foreach}
 								</div>
@@ -334,8 +338,31 @@
 				var ad = '{$ad}';
 			</script>
 			<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'../js/tinymce.inc.js"></script>
+			<script type="text/javascript" src="../js/tinymce.inc.js"></script>
 		{/if}
 	</fieldset>
 	{block name="other_fieldsets"}{/block}
 </form>
+{/block}
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(document).ready(function(){
+		tinySetup();
+	});
+
+{block name="autoload_tinyMCE"}
+	$(".autoload_rte").click(function(e){
+		tinySetup({
+			mode :"exact",
+			editor_selector :"autoload_rte",
+			elements : $(this).attr("id"),
+			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
+			theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
+			theme_advanced_buttons3 : "",
+			theme_advanced_buttons4 : "", 
+		});
+	})
+{/block}
+});
+</script>

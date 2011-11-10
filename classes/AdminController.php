@@ -832,54 +832,6 @@ class AdminControllerCore extends Controller
 			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 	}
 
-	/**
-	 * Display form
-	 */
-	public function displayForm($first_call = true)
-	{
-		$content = '';
-		$content .= $this->initForm();
-		$allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-
-		if ($allow_employee_form_lang && !$this->context->cookie->employee_form_lang)
-			$this->context->cookie->employee_form_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-
-		$use_lang_from_cookie = false;
-		$this->_languages = Language::getLanguages(false);
-
-		if ($allow_employee_form_lang)
-			foreach ($this->_languages as $lang)
-				if ($this->context->cookie->employee_form_lang == $lang['id_lang'])
-					$use_lang_from_cookie = true;
-
-		if (!$use_lang_from_cookie)
-			$this->_defaultFormLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
-		else
-			$this->_defaultFormLanguage = (int)$this->context->cookie->employee_form_lang;
-
-		// Only if it is the first call to displayForm, otherwise it has already been defined
-		if ($first_call)
-		{
-			// language related
-			$content .= '
-			<script type="text/javascript">
-				$(document).ready(function() {
-					id_language = '.$this->_defaultFormLanguage.';
-					languages = new Array();';
-			foreach ($this->_languages as $k => $language)
-				$content .= '
-					languages['.$k.'] = {
-						id_lang: '.(int)$language['id_lang'].',
-						iso_code: \''.$language['iso_code'].'\',
-						name: \''.htmlentities($language['name'], ENT_COMPAT, 'UTF-8').'\'
-					};';
-			$content .= '
-					displayFlags(languages, id_language, '.$allow_employee_form_lang.');
-				});
-			</script>';
-		}
-		return $content;
-	}
 
 	/**
 	 * assign default action in toolbar_btn smarty var, if they are not set.
@@ -1384,6 +1336,7 @@ class AdminControllerCore extends Controller
 		$helper->identifier = $this->identifier;
 		$helper->override_folder = $this->tpl_folder;
 		$helper->token = $this->token;
+		$helper->languages = $this->_languages;
 		$helper->specificConfirmDelete = $this->specificConfirmDelete;
 		$helper->imageType = $this->imageType;
 		$helper->no_link = $this->list_no_link;
@@ -1411,7 +1364,6 @@ class AdminControllerCore extends Controller
 			$helper = new HelperForm($this);
 			$helper->override_folder = $this->tpl_folder;
 			$this->setHelperDisplay($helper);
-			$helper->languages = $this->_languages;
 			$helper->default_form_language = $this->default_form_language;
 			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 			$helper->fields_value = $this->getFieldsValue($this->object);
@@ -1891,6 +1843,11 @@ class AdminControllerCore extends Controller
 			$this->default_form_language = (int)Configuration::get('PS_LANG_DEFAULT');
 		else
 			$this->default_form_language = (int)$cookie->employee_form_lang;
+
+		foreach ($this->_languages as $k => $language)
+			$this->_languages[$k]['is_default'] = (int)($language['id_lang'] == $this->default_form_language);
+
+		return $this->_languages;
 	}
 
 	public function getFieldsValue($obj)
@@ -2332,7 +2289,7 @@ EOF;
 				return false;
 
 			// Check image validity
-			$max_size = isset($this->maxImageSize) ? $this->maxImageSize : 0;
+			$max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
 			if ($error = checkImage($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->_errors[] = $error;
 			else if (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))

@@ -18,8 +18,8 @@ var product_prices = new Array();
 					&gt;
 		<select name="sp_id_currency" id="spm_currency_0" onchange="changeCurrencySpecificPrice(0);">
 			<option value="0">{l s='All currencies'}</option>
-		{foreach from=$currencies item=currency}
-			<option value="{$currency['id_currency']}">{$currency['name']|htmlentitiesUTF8}</option>
+		{foreach from=$currencies item=curr}
+			<option value="{$curr['id_currency']}">{$curr['name']|htmlentitiesUTF8}</option>
 		{/foreach}
 		</select>
 					&gt;
@@ -66,7 +66,8 @@ var product_prices = new Array();
 				});
 				$('.datepicker').datepicker({
 					prevText: '',
-					nextText: ''
+					nextText: '',
+					dateFormat: 'yy-mm-dd'
 				});
 		});
 	</script>
@@ -76,4 +77,50 @@ var product_prices = new Array();
 				 {l s='(tax excl.):'}
 				 {/if}
 				 </label>
-{$content}
+					<div class="margin-form">
+						<span id="spm_currency_sign_pre_0" style="font-weight:bold; color:#000000; font-size:12px">{$currency->prefix}</span>
+						<input type="text" name="sp_price" value="0" size="11" />
+						<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">{$currency->suffix}</span>
+						<span>({l s='Current:'} </span><span id="sp_current_ht_price">'.Tools::displayPrice((float)($product->price), $defaultCurrency).'</span> )</span>
+						<div class="hint clear" style="display:block;">
+							{l s='You can set this value at 0 in order to apply the default price'}
+						</div>
+					</div>
+
+					<label>{l s='Apply a discount of:'}</label>
+					<div class="margin-form">
+							<input type="text" name="sp_reduction" value="0.00" size="11" />
+						<select name="sp_reduction_type">
+							<option selected="selected">---</option>
+							<option value="amount">{l s='Amount'}</option>
+							<option value="percentage">{l s='Percentage'}</option>
+						</select>
+						{l s='(if set to "amount", the tax is included)'}
+					</div>
+
+					<div class="margin-form">
+						<input type="submit" name="submitPriceAddition" value="{l s='Add'}" class="button" />
+					</div>
+				</div>
+				<div class="separation"></div>
+		<div class="block_specific_prices_modifications">
+			<h4>{l s='Current specific prices'}</h4>
+		<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th class="cell border" style="width: 12%;">{l s='Combination'}</th>
+					<th class="cell border" style="width: 12%;">{l s='Shop'}</th>
+					<th class="cell border" style="width: 12%;">{l s='Currency'}</th>
+					<th class="cell border" style="width: 11%;">{l s='Country'}</th>
+					<th class="cell border" style="width: 13%;">{l s='Group'}</th>
+					<th class="cell border" style="width: 12%;">{l s='Price'} {if $country_display_tax_label}{l s='(tax excl)'}{/if}</th>
+					<th class="cell border" style="width: 10%;">{l s='Reduction'}</th>
+					<th class="cell border" style="width: 15%;">{l s='Period'}</th>
+					<th class="cell border" style="width: 10%;">{l s='From (quantity)'}</th>
+					<th class="cell border" style="width: 15%;">{l s='Final price'} {if $country_display_tax_label}{l s='(tax excl.)'}{/if}</th>
+					<th class="cell border" style="width: 2%;">{l s='Action'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{$specificPriceModificationForm}
+
