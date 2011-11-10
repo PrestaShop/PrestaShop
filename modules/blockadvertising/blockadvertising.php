@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,20 +27,20 @@
 
 if (!defined('_PS_VERSION_'))
 	exit;
-	
+
 class BlockAdvertising extends Module
 {
 	public $adv_link;
 
 	/**
 	 * adv_title contains string for title and alt attributes
-	 * 
+	 *
 	 * @var mixed
 	 */
 	public $adv_title;
 	/**
 	 * adv_img contains url to the image to display.
-	 * 
+	 *
 	 * @var mixed
 	 */
 	public $adv_img;
@@ -87,14 +87,14 @@ class BlockAdvertising extends Module
 		Configuration::updateValue('BLOCKADVERT_LINK', 'http://www.prestashop.com');
 		if (!parent::install())
 			return false;
-		if (!$this->registerHook('leftColumn') OR !$this->registerHook('rightColumn'))
+		if (!$this->registerHook('leftColumn'))
 			return false;
 		return true;
 	}
 
 	/**
 	 * _deleteCurrentImg delete current image, (so this will use default image)
-	 * 
+	 *
 	 * @return void
 	 */
 	private function _deleteCurrentImg()
@@ -114,7 +114,7 @@ class BlockAdvertising extends Module
 	{
 		$errors = '';
 		if (Tools::isSubmit('submitDeleteImgConf'))
-			$this->_deleteCurrentImg();	
+			$this->_deleteCurrentImg();
 
 		if (Tools::isSubmit('submitAdvConf'))
 		{
@@ -160,12 +160,12 @@ class BlockAdvertising extends Module
 
 	/**
 	 * getContent used to display admin module form
-	 * 
+	 *
 	 * @return void
 	 */
 	public function getContent()
 	{
-		
+
 		$this->postProcess();
 		$output = '';
 		$output .= '

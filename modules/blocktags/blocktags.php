@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -41,14 +41,14 @@ class BlockTags extends Module
 		$this->need_instance = 0;
 
 		parent::__construct();
-		
+
 		$this->displayName = $this->l('Tags block');
 		$this->description = $this->l('Adds a block containing a tag cloud.');
 	}
 
 	function install()
 	{
-		if (parent::install() == false 
+		if (parent::install() == false
 				OR $this->registerHook('leftColumn') == false
 				OR $this->registerHook('header') == false
 				OR Configuration::updateValue('BLOCKTAGS_NBR', 10) == false)
@@ -107,7 +107,7 @@ class BlockTags extends Module
 		foreach ($tags AS &$tag)
 			$tag['class'] = 'tag_level'.($tag['times'] > BLOCKTAGS_MAX_LEVEL ? BLOCKTAGS_MAX_LEVEL : $tag['times']);
 		$this->context->smarty->assign('tags', $tags);
-		
+
 		return $this->display(__FILE__, 'blocktags.tpl');
 	}
 
@@ -115,7 +115,7 @@ class BlockTags extends Module
 	{
 		return $this->hookLeftColumn($params);
 	}
-	
+
 	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blocktags.css', 'all');
