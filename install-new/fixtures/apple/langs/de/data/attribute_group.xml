@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_attribute_group>
+	<attribute_group id="Disk_space">
+		<name><![CDATA[Speicherplatz]]></name>
+		<public_name><![CDATA[Disk space]]></public_name>
+	</attribute_group>
+	<attribute_group id="Color">
+		<name><![CDATA[Farbe]]></name>
+		<public_name><![CDATA[Color]]></public_name>
+	</attribute_group>
+	<attribute_group id="ICU">
+		<name><![CDATA[ICU]]></name>
+		<public_name><![CDATA[Processor]]></public_name>
+	</attribute_group>
+</entity_attribute_group>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_group>
+	<fields id="name" class="Group">
+		<field name="reduction" />
+		<field name="price_display_method" />
+	</fields>
+
+	<entities>
+		<group id="Default" reduction="0.00" price_display_method="0" />
+	</entities>
+</entity_group>

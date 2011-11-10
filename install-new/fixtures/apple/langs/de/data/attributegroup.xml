@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list_attributegroup>
+	<attributegroup id="capacity">
+		<name><![CDATA[Speicherplatz]]></name>
+	</attributegroup>
+	<attributegroup id="capacity_public">
+		<name><![CDATA[Disk space]]></name>
+	</attributegroup>
+	<attributegroup id="color">
+		<name><![CDATA[Farbe]]></name>
+	</attributegroup>
+	<attributegroup id="color_public">
+		<name><![CDATA[Color]]></name>
+	</attributegroup>
+	<attributegroup id="processor">
+		<name><![CDATA[ICU]]></name>
+	</attributegroup>
+	<attributegroup id="processor_public">
+		<name><![CDATA[Processor]]></name>
+	</attributegroup>
+</list_attributegroup>

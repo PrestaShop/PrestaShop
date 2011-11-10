@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_category>
+	<fields id="name" class="Category" sql="a.id_category = 1">
+		<field name="id_parent" relation="category" />
+		<field name="active" />
+	</fields>
+
+	<entities>
+		<category id="Home" id_parent="" active="1" />
+	</entities>
+</entity_category>

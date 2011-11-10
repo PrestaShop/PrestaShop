@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list_featurevalue>
+	<featurevalue id="jack_stereo">
+		<value><![CDATA[Jack stereo]]></value>
+	</featurevalue>
+	<featurevalue id="mini_jack_stereo">
+		<value><![CDATA[Mini-jack stéréo]]></value>
+	</featurevalue>
+	<featurevalue id="2.75in">
+		<value><![CDATA[69.8 mm]]></value>
+	</featurevalue>
+	<featurevalue id="2.06in">
+		<value><![CDATA[52.3 mm]]></value>
+	</featurevalue>
+	<featurevalue id="49.2g">
+		<value><![CDATA[49.2 g]]></value>
+	</featurevalue>
+	<featurevalue id="0.26in">
+		<value><![CDATA[6,5 mm]]></value>
+	</featurevalue>
+	<featurevalue id="1.07in">
+		<value><![CDATA[27.3 mm]]></value>
+	</featurevalue>
+	<featurevalue id="1.62in">
+		<value><![CDATA[41.2 mm]]></value>
+	</featurevalue>
+	<featurevalue id="15.5g">
+		<value><![CDATA[15.5 g]]></value>
+	</featurevalue>
+	<featurevalue id="0.41in">
+		<value><![CDATA[10,5 mm)]]></value>
+	</featurevalue>
+	<featurevalue id="4.33in">
+		<value><![CDATA[4.33 in]]></value>
+	</featurevalue>
+	<featurevalue id="2.76in">
+		<value><![CDATA[70 mm]]></value>
+	</featurevalue>
+	<featurevalue id="120g">
+		<value><![CDATA[120g]]></value>
+	</featurevalue>
+	<featurevalue id="0.31in">
+		<value><![CDATA[8 mm]]></value>
+	</featurevalue>
+</list_featurevalue>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_stock_mvt_reason>
+	<stock_mvt_reason id="Increase">
+		<name><![CDATA[Augmenter]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Decrease">
+		<name><![CDATA[Diminuer]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Client_Order">
+		<name><![CDATA[Commande client]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Missing_Stock_Movement">
+		<name><![CDATA[Mouvement de stock manquant]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Restocking">
+		<name><![CDATA[Réassort]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Transfer_to">
+		<name><![CDATA[Transferer (vers)]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Transfer_from">
+		<name><![CDATA[Transferer (depuis)]]></name>
+	</stock_mvt_reason>
+	<stock_mvt_reason id="Supplier_Order">
+		<name><![CDATA[Commande fournisseur)]]></name>
+	</stock_mvt_reason>
+</entity_stock_mvt_reason>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_tab>
+	<tab id="Catalog" name="Catalog" />
+	<tab id="Customers" name="Customers" />
+	<tab id="Orders" name="Orders" />
+	<tab id="Payment" name="Payment" />
+	<tab id="Shipping" name="Shipping" />
+	<tab id="Stats" name="Stats" />
+	<tab id="Modules" name="Modules" />
+	<tab id="Preferences" name="Preferences" />
+	<tab id="Tools" name="Tools" />
+	<tab id="Manufacturers" name="Manufacturers" />
+	<tab id="Attributes_and_Groups" name="Attributes and Groups" />
+	<tab id="Addresses" name="Addresses" />
+	<tab id="Statuses" name="Statuses" />
+	<tab id="Cart_Rules" name="Cart Rules" />
+	<tab id="Currencies" name="Currencies" />
+	<tab id="Taxes" name="Taxes" />
+	<tab id="Carriers" name="Carriers" />
+	<tab id="Countries" name="Countries" />
+	<tab id="Zones" name="Zones" />
+	<tab id="Price_Ranges" name="Price Ranges" />
+	<tab id="Weight_Ranges" name="Weight Ranges" />
+	<tab id="Positions" name="Positions" />
+	<tab id="Database" name="Database" />
+	<tab id="E-mail" name="E-mail" />
+	<tab id="Images" name="Images" />
+	<tab id="Products" name="Products" />
+	<tab id="Contacts" name="Contacts" />
+	<tab id="tab_29" name="Employees" />
+	<tab id="Profiles" name="Profiles" />
+	<tab id="Permissions" name="Permissions" />
+	<tab id="Languages" name="Languages" />
+	<tab id="Translations" name="Translations" />
+	<tab id="Suppliers" name="Suppliers" />
+	<tab id="Tabs" name="Tabs" />
+	<tab id="Features" name="Features" />
+	<tab id="Quick_Access" name="Quick Access" />
+	<tab id="Themes" name="Themes" />
+	<tab id="Contact_Information" name="Contact Information" />
+	<tab id="Keyword_Typos" name="Keyword Typos" />
+	<tab id="CSV_Import" name="CSV Import" />
+	<tab id="Invoices" name="Invoices" />
+	<tab id="Search" name="Search" />
+	<tab id="Localization" name="Localization" />
+	<tab id="States" name="States" />
+	<tab id="Merchandise_Returns" name="Merchandise Returns" />
+	<tab id="PDF" name="PDF" />
+	<tab id="Credit_Slips" name="Credit Slips" />
+	<tab id="Settings" name="Settings" />
+	<tab id="Subdomains" name="Subdomains" />
+	<tab id="DB_Backup" name="DB Backup" />
+	<tab id="Order_Messages" name="Order Messages" />
+	<tab id="Delivery_Slips" name="Delivery Slips" />
+	<tab id="SEO_URLs" name="SEO &amp; URLs" />
+	<tab id="CMS" name="CMS" />
+	<tab id="Image_Mapping" name="Image Mapping" />
+	<tab id="Customer_Messages" name="Customer Messages" />
+	<tab id="Monitoring" name="Monitoring" />
+	<tab id="Search_Engines" name="Search Engines" />
+	<tab id="Referrers" name="Referrers" />
+	<tab id="Groups" name="Groups" />
+	<tab id="Generators" name="Generators" />
+	<tab id="Shopping_Carts" name="Shopping Carts" />
+	<tab id="Tags" name="Tags" />
+	<tab id="Search_1" name="Search" />
+	<tab id="Attachments" name="Attachments" />
+	<tab id="Configuration_Information" name="Configuration Information" />
+	<tab id="Performance" name="Performance" />
+	<tab id="Customer_Service" name="Customer Service" />
+	<tab id="Webservice" name="Webservice" />
+	<tab id="Stock_Movement" name="Stock Movement" />
+	<tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog" />
+	<tab id="My_Account" name="My Account" />
+	<tab id="Stores" name="Stores" />
+	<tab id="Themes_1" name="Themes" />
+	<tab id="Geolocation" name="Geolocation" />
+	<tab id="Tax_Rules" name="Tax Rules" />
+	<tab id="Logs" name="Logs" />
+	<tab id="Home" name="Home" />
+	<tab id="Shops" name="Shops" />
+	<tab id="Group_Shops" name="Group Shops" />
+	<tab id="Shop_Urls" name="Shop Urls" />
+	<tab id="Genders" name="Genders" />
+	<tab id="SQL_Manager" name="SQL Manager" />
+	<tab id="Products_1" name="Products" />
+	<tab id="Categories" name="Categories" />
+	<tab id="tab_95" name="Stock" />
+	<tab id="Warehouses" name="Warehouses" />
+	<tab id="Stock_Management" name="Stock Management" />
+	<tab id="Stock_instant_state" name="Stock instant state" />
+	<tab id="Stock_cover" name="Stock cover" />
+	<tab id="Supplier_orders" name="Supplier orders" />
+	<tab id="Combinations_generator" name="Combinations generator" />
+	<tab id="Accounting" name="Accounting" />
+	<tab id="Account_Number_Management" name="Account Number Management" />
+	<tab id="Export" name="Export" />
+</entity_tab>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_theme>
+	<fields id="name" class="Theme">
+		<field name="name" />
+	</fields>
+
+	<entities>
+		<theme id="prestashop">
+			<name><![CDATA[prestashop]]></name>
+		</theme>
+	</entities>
+</entity_theme>

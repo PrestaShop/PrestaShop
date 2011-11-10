@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_tab>
+	<fields id="name" class="Tab" image="t">
+		<field name="id_parent" relation="tab" />
+		<field name="class_name" />
+	</fields>
+
+	<entities>
+		<tab id="Catalog" id_parent="">
+			<class_name><![CDATA[AdminCatalog]]></class_name>
+		</tab>
+		<tab id="Customers" id_parent="">
+			<class_name><![CDATA[AdminCustomers]]></class_name>
+		</tab>
+		<tab id="Orders" id_parent="">
+			<class_name><![CDATA[AdminOrders]]></class_name>
+		</tab>
+		<tab id="Payment" id_parent="">
+			<class_name><![CDATA[AdminPayment]]></class_name>
+		</tab>
+		<tab id="Shipping" id_parent="">
+			<class_name><![CDATA[AdminShipping]]></class_name>
+		</tab>
+		<tab id="Stats" id_parent="">
+			<class_name><![CDATA[AdminStats]]></class_name>
+		</tab>
+		<tab id="Modules" id_parent="">
+			<class_name><![CDATA[AdminModules]]></class_name>
+		</tab>
+		<tab id="Preferences" id_parent="">
+			<class_name><![CDATA[AdminPreferences]]></class_name>
+		</tab>
+		<tab id="Tools" id_parent="">
+			<class_name><![CDATA[AdminTools]]></class_name>
+		</tab>
+		<tab id="Manufacturers" id_parent="Catalog">
+			<class_name><![CDATA[AdminManufacturers]]></class_name>
+		</tab>
+		<tab id="Attributes_and_Groups" id_parent="Catalog">
+			<class_name><![CDATA[AdminAttributesGroups]]></class_name>
+		</tab>
+		<tab id="Addresses" id_parent="Customers">
+			<class_name><![CDATA[AdminAddresses]]></class_name>
+		</tab>
+		<tab id="Statuses" id_parent="Orders">
+			<class_name><![CDATA[AdminStatuses]]></class_name>
+		</tab>
+		<tab id="Cart_Rules" id_parent="Payment">
+			<class_name><![CDATA[AdminCartRules]]></class_name>
+		</tab>
+		<tab id="Currencies" id_parent="Payment">
+			<class_name><![CDATA[AdminCurrencies]]></class_name>
+		</tab>
+		<tab id="Taxes" id_parent="Payment">
+			<class_name><![CDATA[AdminTaxes]]></class_name>
+		</tab>
+		<tab id="Carriers" id_parent="Shipping">
+			<class_name><![CDATA[AdminCarriers]]></class_name>
+		</tab>
+		<tab id="Countries" id_parent="Shipping">
+			<class_name><![CDATA[AdminCountries]]></class_name>
+		</tab>
+		<tab id="Zones" id_parent="Shipping">
+			<class_name><![CDATA[AdminZones]]></class_name>
+		</tab>
+		<tab id="Price_Ranges" id_parent="Shipping">
+			<class_name><![CDATA[AdminRangePrice]]></class_name>
+		</tab>
+		<tab id="Weight_Ranges" id_parent="Shipping">
+			<class_name><![CDATA[AdminRangeWeight]]></class_name>
+		</tab>
+		<tab id="Positions" id_parent="Modules">
+			<class_name><![CDATA[AdminModulesPositions]]></class_name>
+		</tab>
+		<tab id="Database" id_parent="Preferences">
+			<class_name><![CDATA[AdminDb]]></class_name>
+		</tab>
+		<tab id="E-mail" id_parent="Preferences">
+			<class_name><![CDATA[AdminEmails]]></class_name>
+		</tab>
+		<tab id="Images" id_parent="Preferences">
+			<class_name><![CDATA[AdminImages]]></class_name>
+		</tab>
+		<tab id="Products" id_parent="Preferences">
+			<class_name><![CDATA[AdminPPreferences]]></class_name>
+		</tab>
+		<tab id="Contacts" id_parent="tab_29">
+			<class_name><![CDATA[AdminContacts]]></class_name>
+		</tab>
+		<tab id="tab_29" id_parent="">
+			<class_name><![CDATA[AdminEmployees]]></class_name>
+		</tab>
+		<tab id="Profiles" id_parent="tab_29">
+			<class_name><![CDATA[AdminProfiles]]></class_name>
+		</tab>
+		<tab id="Permissions" id_parent="tab_29">
+			<class_name><![CDATA[AdminAccess]]></class_name>
+		</tab>
+		<tab id="Languages" id_parent="Tools">
+			<class_name><![CDATA[AdminLanguages]]></class_name>
+		</tab>
+		<tab id="Translations" id_parent="Tools">
+			<class_name><![CDATA[AdminTranslations]]></class_name>
+		</tab>
+		<tab id="Suppliers" id_parent="Catalog">
+			<class_name><![CDATA[AdminSuppliers]]></class_name>
+		</tab>
+		<tab id="Tabs" id_parent="tab_29">
+			<class_name><![CDATA[AdminTabs]]></class_name>
+		</tab>
+		<tab id="Features" id_parent="Catalog">
+			<class_name><![CDATA[AdminFeatures]]></class_name>
+		</tab>
+		<tab id="Quick_Access" id_parent="Tools">
+			<class_name><![CDATA[AdminQuickAccesses]]></class_name>
+		</tab>
+		<tab id="Themes" id_parent="Preferences">
+			<class_name><![CDATA[AdminThemes]]></class_name>
+		</tab>
+		<tab id="Contact_Information" id_parent="Preferences">
+			<class_name><![CDATA[AdminContact]]></class_name>
+		</tab>
+		<tab id="Keyword_Typos" id_parent="Preferences">
+			<class_name><![CDATA[AdminAliases]]></class_name>
+		</tab>
+		<tab id="CSV_Import" id_parent="Tools">
+			<class_name><![CDATA[AdminImport]]></class_name>
+		</tab>
+		<tab id="Invoices" id_parent="Orders">
+			<class_name><![CDATA[AdminInvoices]]></class_name>
+		</tab>
+		<tab id="Search" id_parent="">
+			<class_name><![CDATA[AdminSearch]]></class_name>
+		</tab>
+		<tab id="Localization" id_parent="Preferences">
+			<class_name><![CDATA[AdminLocalization]]></class_name>
+		</tab>
+		<tab id="States" id_parent="Shipping">
+			<class_name><![CDATA[AdminStates]]></class_name>
+		</tab>
+		<tab id="Merchandise_Returns" id_parent="Orders">
+			<class_name><![CDATA[AdminReturn]]></class_name>
+		</tab>
+		<tab id="PDF" id_parent="Orders">
+			<class_name><![CDATA[AdminPDF]]></class_name>
+		</tab>
+		<tab id="Credit_Slips" id_parent="Orders">
+			<class_name><![CDATA[AdminSlip]]></class_name>
+		</tab>
+		<tab id="Settings" id_parent="Stats">
+			<class_name><![CDATA[AdminStatsConf]]></class_name>
+		</tab>
+		<tab id="Subdomains" id_parent="Tools">
+			<class_name><![CDATA[AdminSubDomains]]></class_name>
+		</tab>
+		<tab id="DB_Backup" id_parent="Tools">
+			<class_name><![CDATA[AdminBackup]]></class_name>
+		</tab>
+		<tab id="Order_Messages" id_parent="Orders">
+			<class_name><![CDATA[AdminOrderMessage]]></class_name>
+		</tab>
+		<tab id="Delivery_Slips" id_parent="Orders">
+			<class_name><![CDATA[AdminDeliverySlip]]></class_name>
+		</tab>
+		<tab id="SEO_URLs" id_parent="Preferences">
+			<class_name><![CDATA[AdminMeta]]></class_name>
+		</tab>
+		<tab id="CMS" id_parent="Tools">
+			<class_name><![CDATA[AdminCMSContent]]></class_name>
+		</tab>
+		<tab id="Image_Mapping" id_parent="Catalog">
+			<class_name><![CDATA[AdminScenes]]></class_name>
+		</tab>
+		<tab id="Customer_Messages" id_parent="Orders">
+			<class_name><![CDATA[AdminMessages]]></class_name>
+		</tab>
+		<tab id="Monitoring" id_parent="Catalog">
+			<class_name><![CDATA[AdminTracking]]></class_name>
+		</tab>
+		<tab id="Search_Engines" id_parent="Stats">
+			<class_name><![CDATA[AdminSearchEngines]]></class_name>
+		</tab>
+		<tab id="Referrers" id_parent="Stats">
+			<class_name><![CDATA[AdminReferrers]]></class_name>
+		</tab>
+		<tab id="Groups" id_parent="Customers">
+			<class_name><![CDATA[AdminGroups]]></class_name>
+		</tab>
+		<tab id="Generators" id_parent="Tools">
+			<class_name><![CDATA[AdminGenerator]]></class_name>
+		</tab>
+		<tab id="Shopping_Carts" id_parent="Customers">
+			<class_name><![CDATA[AdminCarts]]></class_name>
+		</tab>
+		<tab id="Tags" id_parent="Catalog">
+			<class_name><![CDATA[AdminTags]]></class_name>
+		</tab>
+		<tab id="Search_1" id_parent="Preferences">
+			<class_name><![CDATA[AdminSearchConf]]></class_name>
+		</tab>
+		<tab id="Attachments" id_parent="Catalog">
+			<class_name><![CDATA[AdminAttachments]]></class_name>
+		</tab>
+		<tab id="Configuration_Information" id_parent="Tools">
+			<class_name><![CDATA[AdminInformation]]></class_name>
+		</tab>
+		<tab id="Performance" id_parent="Preferences">
+			<class_name><![CDATA[AdminPerformance]]></class_name>
+		</tab>
+		<tab id="Customer_Service" id_parent="tab_29">
+			<class_name><![CDATA[AdminCustomerThreads]]></class_name>
+		</tab>
+		<tab id="Webservice" id_parent="Tools">
+			<class_name><![CDATA[AdminWebservice]]></class_name>
+		</tab>
+		<tab id="Stock_Movement" id_parent="tab_95">
+			<class_name><![CDATA[AdminStockMvt]]></class_name>
+		</tab>
+		<tab id="Modules_Themes_Catalog" id_parent="Modules">
+			<class_name><![CDATA[AdminAddonsCatalog]]></class_name>
+		</tab>
+		<tab id="My_Account" id_parent="Modules">
+			<class_name><![CDATA[AdminAddonsMyAccount]]></class_name>
+		</tab>
+		<tab id="Stores" id_parent="Tools">
+			<class_name><![CDATA[AdminStores]]></class_name>
+		</tab>
+		<tab id="Themes_1" id_parent="Modules">
+			<class_name><![CDATA[AdminThemes]]></class_name>
+		</tab>
+		<tab id="Geolocation" id_parent="Preferences">
+			<class_name><![CDATA[AdminGeolocation]]></class_name>
+		</tab>
+		<tab id="Tax_Rules" id_parent="Payment">
+			<class_name><![CDATA[AdminTaxRulesGroup]]></class_name>
+		</tab>
+		<tab id="Logs" id_parent="Tools">
+			<class_name><![CDATA[AdminLogs]]></class_name>
+		</tab>
+		<tab id="Home" id_parent="">
+			<class_name><![CDATA[AdminHome]]></class_name>
+		</tab>
+		<tab id="Shops" id_parent="">
+			<class_name><![CDATA[AdminShop]]></class_name>
+		</tab>
+		<tab id="Group_Shops" id_parent="Shops">
+			<class_name><![CDATA[AdminGroupShop]]></class_name>
+		</tab>
+		<tab id="Shop_Urls" id_parent="Shops">
+			<class_name><![CDATA[AdminShopUrl]]></class_name>
+		</tab>
+		<tab id="Genders" id_parent="Customers">
+			<class_name><![CDATA[AdminGenders]]></class_name>
+		</tab>
+		<tab id="SQL_Manager" id_parent="Tools">
+			<class_name><![CDATA[AdminRequestSql]]></class_name>
+		</tab>
+		<tab id="Products_1" id_parent="Catalog">
+			<class_name><![CDATA[AdminProducts]]></class_name>
+		</tab>
+		<tab id="Categories" id_parent="Catalog">
+			<class_name><![CDATA[AdminCategories]]></class_name>
+		</tab>
+		<tab id="tab_95" id_parent="">
+			<class_name><![CDATA[AdminStock]]></class_name>
+		</tab>
+		<tab id="Warehouses" id_parent="tab_95">
+			<class_name><![CDATA[AdminWarehouses]]></class_name>
+		</tab>
+		<tab id="Stock_Management" id_parent="tab_95">
+			<class_name><![CDATA[AdminStockManagement]]></class_name>
+		</tab>
+		<tab id="Stock_instant_state" id_parent="tab_95">
+			<class_name><![CDATA[AdminStockInstantState]]></class_name>
+		</tab>
+		<tab id="Stock_cover" id_parent="tab_95">
+			<class_name><![CDATA[AdminStockCover]]></class_name>
+		</tab>
+		<tab id="Supplier_orders" id_parent="tab_95">
+			<class_name><![CDATA[AdminSupplierOrders]]></class_name>
+		</tab>
+		<tab id="Combinations_generator" id_parent="">
+			<class_name><![CDATA[AdminAttributeGenerator]]></class_name>
+		</tab>
+		<tab id="Accounting" id_parent="">
+			<class_name><![CDATA[AdminAccounting]]></class_name>
+		</tab>
+		<tab id="Account_Number_Management" id_parent="Accounting">
+			<class_name><![CDATA[AdminAccountingManagement]]></class_name>
+		</tab>
+		<tab id="Export" id_parent="Accounting">
+			<class_name><![CDATA[AdminAccountingExport]]></class_name>
+		</tab>
+	</entities>
+</entity_tab>

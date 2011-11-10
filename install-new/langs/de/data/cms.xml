@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_cms>
+	<cms id="Delivery">
+		<meta_title><![CDATA[Lieferung]]></meta_title>
+		<meta_description><![CDATA[Unsere Lieferbedingungen]]></meta_description>
+		<meta_keywords><![CDATA[Bedingungen, Lieferung, Frist, Versand, Verpackung]]></meta_keywords>
+		<content><![CDATA[<h2>Versand und Rücknahme</h2><h3>Ihre Versandverpackung</h3><p>Pakete werden normalerweise 2 Tage nach Zahlungseingang mit UPS mit Bestellverfolgemöglichkeit und Ablieferung ohne Unterschrift geliefert. Wenn Sie lieber eine UPS-Sendung per Einschreiben erhalten möchten, entstehen zusätzliche Kosten. Bitte kontaktieren Sie uns, bevor Sie dieses Liefermethode wählen. Wir senden Ihnen einen Link für die Bestellverfolgung unabhängig davon, welche Liefermethode Sie wählen.</p><p>Die Versandkosten beinhalten Lade- und Verpackungsgebühren sowie die Portokosten. Die Verladegebühren stehen fest, wobei Transportkosten schwanken, je nach Gesamtgewicht des Pakets. Wir raten Ihnen, mehrere Artikel in einer Bestellung zusammenzufassen. Wir können zwei verschiedene Bestellungen nicht zusammenlegen, und die Versandkosten werden separat für jede Bestellung gerechnet. Ihr Paket wird auf Ihr Risiko versandt, aber zerbrechliche Ware wird besonders sorgsam behandelt.<br /><br />Die Versandschachteln sind weit geschnitten und ihre Ware wird gut geschützt verpackt.</p>]]></content>
+		<link_rewrite><![CDATA[Lieferung]]></link_rewrite>
+	</cms>
+	<cms id="Legal_Notice">
+		<meta_title><![CDATA[Rechtliche Hinweise]]></meta_title>
+		<meta_description><![CDATA[Rechtliche Hinweise]]></meta_description>
+		<meta_keywords><![CDATA[Hinweise, rechtlich, Gutscheine]]></meta_keywords>
+		<content><![CDATA[<h2>Legal</h2><h3>Credits</h3><p>Konzept und Gestaltung:</p><p>Diese Webseite wurde hergestellt unter Verwendung von <a href="http://www.prestashop.com">PrestaShop</a>&trade; open-source software.</p>]]></content>
+		<link_rewrite><![CDATA[rechtliche-hinweise]]></link_rewrite>
+	</cms>
+	<cms id="Terms_and_conditions_of_use">
+		<meta_title><![CDATA[Allgemeine Nutzungsbedingungen]]></meta_title>
+		<meta_description><![CDATA[Unsere allgemeinen Nutzungsbedingungen]]></meta_description>
+		<meta_keywords><![CDATA[Voraussetzungen, Bedingungen, nutzen, verkaufen]]></meta_keywords>
+		<content><![CDATA[<h2>Your terms and conditions of use</h2><h3>Rule 1</h3><p>Here is the rule 1 content</p>
+<h3>Rule 2</h3><p>Here is the rule 2 content</p>
+<h3>Rule 3</h3><p>Here is the rule 3 content</p>]]></content>
+		<link_rewrite><![CDATA[allgemeine-nutzungsbedingungen]]></link_rewrite>
+	</cms>
+	<cms id="About_us">
+		<meta_title><![CDATA[Über uns]]></meta_title>
+		<meta_description><![CDATA[Learn more about us]]></meta_description>
+		<meta_keywords><![CDATA[über uns, Informationen]]></meta_keywords>
+		<content><![CDATA[<h2>About us</h2>
+<h3>Our company</h3><p>Our company</p>
+<h3>Our team</h3><p>Our team</p>
+<h3>Informations</h3><p>Informations</p>]]></content>
+		<link_rewrite><![CDATA[uber-uns]]></link_rewrite>
+	</cms>
+	<cms id="Secure_payment">
+		<meta_title><![CDATA[Sichere Zahlung]]></meta_title>
+		<meta_description><![CDATA[Unsere Sicherheits-Zahlungsmethoden]]></meta_description>
+		<meta_keywords><![CDATA[Sichere Zahlung, SSL, Visa, MasterCard, PayPal]]></meta_keywords>
+		<content><![CDATA[<h2>Secure payment</h2>
+<h3>Our secure payment</h3><p>With SSL</p>
+<h3>Using Visa/Mastercard/Paypal</h3><p>About this services</p>]]></content>
+		<link_rewrite><![CDATA[sichere-zahlung]]></link_rewrite>
+	</cms>
+</entity_cms>

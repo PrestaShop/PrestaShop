@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_hook>
+	<fields id="name" class="Hook" sql="a.is_native = 1">
+		<field name="name" />
+		<field name="title" />
+		<field name="description" />
+		<field name="live_edit" />
+		<field name="is_native" />
+	</fields>
+
+	<entities>
+	</entities>
+</entity_hook>

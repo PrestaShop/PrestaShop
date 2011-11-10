@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_web_browser>
+	<fields id="name">
+		<field name="name" />
+	</fields>
+
+	<entities>
+		<web_browser id="Safari">
+			<name><![CDATA[Safari]]></name>
+		</web_browser>
+		<web_browser id="Firefox_2_x">
+			<name><![CDATA[Firefox 2.x]]></name>
+		</web_browser>
+		<web_browser id="Firefox_3_x">
+			<name><![CDATA[Firefox 3.x]]></name>
+		</web_browser>
+		<web_browser id="Opera">
+			<name><![CDATA[Opera]]></name>
+		</web_browser>
+		<web_browser id="IE_6_x">
+			<name><![CDATA[IE 6.x]]></name>
+		</web_browser>
+		<web_browser id="IE_7_x">
+			<name><![CDATA[IE 7.x]]></name>
+		</web_browser>
+		<web_browser id="IE_8_x">
+			<name><![CDATA[IE 8.x]]></name>
+		</web_browser>
+		<web_browser id="Google_Chrome">
+			<name><![CDATA[Google Chrome]]></name>
+		</web_browser>
+	</entities>
+</entity_web_browser>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_scene>
+	<scene id="The_iPods_Nano">
+		<name><![CDATA[Die iPods Nano]]></name>
+	</scene>
+	<scene id="The_iPods">
+		<name><![CDATA[Die iPods]]></name>
+	</scene>
+	<scene id="The_MacBooks">
+		<name><![CDATA[Die MacBooks]]></name>
+	</scene>
+</entity_scene>

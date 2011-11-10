@@ -1,0 +1,83 @@
+<?php $this->displayTemplate('header') ?>
+
+<script type="text/javascript">
+<!--
+var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
+-->
+</script>
+
+<div id="install_process_form">
+	<div id="progress_bar">
+		<div class="installing">
+			<?php echo $this->l('Installing') ?> <span></span>
+		</div>
+
+		<table>
+			<tr>
+				<?php foreach ($this->process_steps as $item): ?>
+					<td id="progress_bar_<?php echo $item ?>" style="width: <?php floor(100 / count($this->process_steps)) ?>%">&nbsp;</td>
+				<?php endforeach; ?>
+			</tr>
+		</table>
+
+		<ol class="process_list">
+			<?php foreach ($this->process_steps as $item): ?>
+				<li id="process_step_<?php echo $item ?>" class="process_step">
+					<?php echo $this->l('process_step_'.$item) ?>
+					<div class="error_log"></div>
+				</li>
+			<?php endforeach; ?>
+		</ol>
+	</div>
+</div>
+
+<div id="install_process_success">
+	<div class="clearfix">
+		<h2><?php echo $this->l('Your installation is finished!'); ?></h2>
+		<p><?php echo $this->l('You have just installed and configured PrestaShop as your online shop. We wish you all the best with the success of your online shop.'); ?></p>
+		<p><?php echo $this->l('Here is your shop information. You can modify it once you are logged in.') ?></p>
+		<table cellpadding="0" cellspacing="0" border="0" id="resultInstall" width="620">
+			<tr class="odd">
+				<td width="220" class="label"><?php echo $this->l('Shop name:') ?></td>
+				<td width="400" class="resultEnd"><?php echo htmlspecialchars($this->session->shop_name) ?></td>
+			</tr>
+			<tr>
+				<td class="label"><?php echo $this->l('First name:') ?></td>
+				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_firstname) ?></td>
+			</tr>
+			<tr class="odd">
+				<td class="label"><?php echo $this->l('Last name:') ?></td>
+				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_lastname) ?></td>
+			</tr>
+			<tr>
+				<td class="label"><?php echo $this->l('E-mail:') ?></td>
+				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
+			</tr>
+		</table>
+
+		<h3 class="infosBlock"><?php echo $this->l('WARNING: For security purposes, you must delete the "install" folder.') ?></h3>
+
+		<div id="boBlock" class="blockInfoEnd clearfix">
+				<img src="theme/img/visu_boBlock.png" />
+				<h3><?php echo $this->l('Back Office'); ?></h3>
+				<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>
+				<a href="../admin" id="access" class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
+		</div>
+		<div id="foBlock" class="blockInfoEnd last clearfix">
+				<img src="theme/img/visu_foBlock.png" />
+				<h3><?php echo $this->l('Front Office'); ?></h3>
+				<p class="description"><?php echo $this->l('Discover your store as your future customers will see it!') ?></p>
+				<a href="../" id="access" class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
+		</div>
+	</div>
+	<?php
+	if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
+	<iframe src="http://addons.prestashop.com/psinstall.php?lang=<?php echo $this->language->getLanguageIso() ?>" scrolling="no" id="prestastore">
+		<p>Your browser does not support iframes.</p>
+	</iframe>
+	<?php
+	endif; ?>
+
+</div>
+
+<?php $this->displayTemplate('footer') ?>

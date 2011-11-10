@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list_ordermessage>
+	<ordermessage id="delay">
+		<name><![CDATA[Ritardo]]></name>
+		<message><![CDATA[Salve,purtroppo un articolo che hai ordinato non è al momento in magazzino. Questo potrebbe provocare un leggero ritardo nella consegna.Ti preghiamo di scusarci; ci stiamo organizzando per ovviare a questo inconveniente.Cordialmente,]]></message>
+	</ordermessage>
+</list_ordermessage>

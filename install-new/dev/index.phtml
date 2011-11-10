@@ -1,0 +1,117 @@
+<html>
+<head>
+	<title>The Synchronizator</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<script type="text/javascript" src="../theme/js/jquery-1.4.4.min.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="style.css" />
+
+	<script type="text/javascript">
+	$().ready(function()
+	{
+		$('.table_item .table_name').click(function()
+		{
+			var list = $(this).parent().find('.column_list');
+			var check = $(this).parent().find('.table_item_checkbox');
+
+			if (list.css('display') == 'none')
+			{
+				list.show();
+				check.attr('checked', true);
+			}
+			else
+			{
+				list.hide();
+				check.attr('checked', false);
+			}
+		});
+
+		$('.table_item .table_item_checkbox').click(function()
+		{
+			var list = $(this).parent().find('.column_list');
+
+			if ($(this).attr('checked'))
+				list.show();
+			else
+				list.hide();
+		});
+	});
+	</script>
+</head>
+<body>
+	<?php if ($this->errors): ?>
+		<ul>
+			<?php foreach ($this->errors as $error): ?>
+				<li><?php echo $error ?></li>
+			<?php endforeach; ?>
+		</ul>
+	<?php endif; ?>
+
+	<ul>
+		<li><a href="index.php">Exporter les données</a></li>
+		<li><a href="index.php?type=demo">Exporter les produits de démo</a></li>
+	</ul>
+
+	<form action="" method="post">
+		<ul class="table_list">
+			<?php foreach ($this->loader->getTables() as $entity => $is_multilang): ?>
+				<?php $entity_info = $this->loader->getEntityInfo($entity); ?>
+				<li class="table_item" id="entity_<?php echo $entity ?>">
+					<input type="checkbox" class="table_item_checkbox" name="tables[]" value="<?php echo $entity ?>" <?php if ($this->loader->entityExists($entity)): ?>checked="checked"<?php endif; ?> />
+					<a href="#" onclick="return false" class="table_name"><?php echo $entity ?></a>
+					<ul class="column_list" <?php if (!$this->loader->entityExists($entity)): ?>style="display: none"<?php endif; ?>>
+						<li>
+							Nom de l'ID
+							<select name="id[<?php echo $entity ?>]">
+								<option value="0">Normal (node_xx)</option>
+								<?php foreach (array_merge($this->loader->getColumns($entity), $this->loader->getColumns($entity, true)) as $column => $is_text): ?>
+									<option value="<?php echo $column ?>" <?php if (isset($entity_info['config']['id']) && $entity_info['config']['id'] == $column): ?>selected="selected"<?php endif; ?>>
+										<?php echo $column ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+							&nbsp;
+							Clef primaire
+							<input type="text" name="primary[<?php echo $entity ?>]" value="<?php echo (isset($entity_info['config']['primary'])) ? $entity_info['config']['primary'] : '' ?>" />
+							&nbsp;
+							Classe
+							<select name="class[<?php echo $entity ?>]">
+								<option value=""></option>
+								<?php foreach ($this->loader->getClasses() as $class): ?>
+									<option value="<?php echo $class ?>" <?php if (isset($entity_info['config']['class']) && $entity_info['config']['class'] == $class): ?>selected="selected"<?php endif; ?>><?php echo $class ?></option>
+								<?php endforeach; ?>
+							</select>
+							<br />
+							Restriction SQL (WHERE ...)
+							<input type="text" name="sql[<?php echo $entity ?>]" value="<?php echo (isset($entity_info['config']['sql'])) ? $entity_info['config']['sql'] : '' ?>" />
+							<br />
+							Dossier des images
+							<input type="text" name="image[<?php echo $entity ?>]" value="<?php echo (isset($entity_info['config']['image'])) ? $entity_info['config']['image'] : '' ?>" />
+						</li>
+						<?php foreach ($this->loader->getColumns($entity) as $column => $is_text): ?>
+							<li class="table_item_column" id="table_column_<?php echo $entity?>_<?php echo $column ?>">
+								<label class="column_left">
+									<input type="checkbox" name="columns[<?php echo $entity ?>][]" value="<?php echo $column ?>" <?php if (isset($entity_info['fields'][$column])): ?>checked="checked"<?php endif; ?> />
+									<?php echo $column ?>
+								</label>
+								<div>
+									Relation avec l'entité
+									<select name="relations[<?php echo $entity ?>][<?php echo $column ?>]">
+										<option value=""></option>
+										<?php foreach ($this->loader->getTables() as $subentity => $bar): ?>
+											<option value="<?php echo $subentity ?>" <?php if (isset($entity_info['fields'][$column]['relation']) && $entity_info['fields'][$column]['relation'] == $subentity): ?>selected="selected"<?php endif; ?>>
+												<?php echo $subentity ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+
+		<input type="submit" name="submit" value="Enregistrer" />
+	</form>
+</body>
+</html>

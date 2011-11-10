@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_product>
+	<product id="iPod_Nano">
+		<description><![CDATA[<p><strong>Curvas aerodinámicas.</strong></p>
+<p>Para los aficionados a las sensaciones fuertes, os presentamos nueve nuevos colores. ¡ Y eso no es todo ! Experimenta el diseño elíptico de aluminio y vidrio. ¡ No querrás separarte de él nunca más !</p>
+<p><strong><br /> Estético e inteligente.</strong></p>
+<p>La nueva aplicación Genius hace de iPod nano tu discjockey personal. Genuis crea listas de lectura buscando en tu biblioteca las canciones que combinan entre si.</p>
+<p><strong><br /> Hecho para moverse contigo.</strong><br /> iPod nano está equipado de un acelerómetro. Muévelo para mezclar tu música. Voltéalo para mostrar Cover Flow. Y descubre juegos adaptados a tus movimientos.</p>]]></description>
+		<description_short><![CDATA[<p>Nuevo diseño. Nuevas aplicaciones. Ahora disponible en 8 y 16 Go. iPod nano, más rock que nunca.</p>]]></description_short>
+		<link_rewrite><![CDATA[ipod-nano]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[iPod Nano]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+	<product id="iPod_shuffle">
+		<description><![CDATA[<p><strong>Un enlace inmediato.</strong><br /> <br /> Lleva hasta 500 canciones colgadas de tu manga, de tu cinturón o de tu pantalón. Presume con tu iPod shuffle como signo exterior de tu pasión por la música. Ahora ya existen cuatro nuevos colores más llamativos. <br /> <br /> <strong>Llena tu iPod shuffle.</strong><br /> <br /> iTunes es una enorme tienda dedicada a la diversión, una colección de música organizada perfectamente y un jukebox. Con tan solo un clic puedes llenar tu iPod shuffle con canciones. <br /> <br /> <strong>La música en tecnicolor. </strong><br /> <br /> iPod shuffle presenta nuevos colores vivos que realzan su diseño estilizado en aluminio anodizado. Elige entre azul, verde, rosa, rojo y el plateado de origen.</p>]]></description>
+		<description_short><![CDATA[<p>iPod shuffle, el walkman más portátil del mundo, ahora en azul, verde, rosa y rojo.</p>]]></description_short>
+		<link_rewrite><![CDATA[ipod-shuffle]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[iPod shuffle]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+	<product id="MacBook_Air">
+		<description><![CDATA[<p>MacBook Air es casi tan fino como tu dedo. Se ha simplificado al máximo y a pesar de ello dispone de una pantalla panorámica de 13,3 pulgadas, de un teclado completo y de un amplio trackpad multi-touch. Portátil al 100%, te evitará tener que hacer un compromiso en lo que concierne a la pantalla y al teclado.  <br /> <br /> La increíble sutileza de MacBook Air es el resultado de un gran número de innovaciones en materia de reducción de tamaño y peso. Desde un disco duro más fino hasta puertos E/S disimulados hábilmente pasando por una batería más plana, cada detalle se consideró para que el resultado fuera lo más fino posible.<br /> <br /> MacBook Air fue creado y elaborado para disfrutar plenamente del mundo inalámbrico. Un mundo en el que la norma Wi-Fi 802.11n es tan rápida y accesible que permite liberarse completamente de cualquier atadura para comprar videos en línea, descargar programas, almacenar y compartir archivos en la Red.</p>]]></description>
+		<description_short><![CDATA[<p>MacBook Air es ultra fino, ultra portátil y ultra diferente de todo el resto. Pero no se pierden kilos y centímetros en tan solo una noche. Todo esto es el resultado de un nuevo invento de normas. De un sinfín de novedades sin cable. Y de una revolución en el diseño. Con MacBook Air, la informática móvil adquiere una nueva dimensión.</p>]]></description_short>
+		<link_rewrite><![CDATA[macbook-air]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[MacBook Air]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+	<product id="MacBook">
+		<description><![CDATA[<p>Cada MacBook está equipado de un disco duro más espacioso, de una capacidad de hasta  250 Go, para almacenar tus colecciones multimedia en expansión y tus datos más preciados. <br /> El modelo  MacBook de 2,4 GHz integra 2 Go de memoria en estándar. Lo ideal para realizar sin dificultad tus aplicaciones preferidas.</p>]]></description>
+		<description_short><![CDATA[<p>MacBook te ofrece una gran libertad de movimientos gracias a su exterior resistente en policarbonato, a su tecnología sin cable y a su adaptador cargador sector innovador que se desconecta automáticamente si alguien se engancha en el cable.</p>]]></description_short>
+		<link_rewrite><![CDATA[macbook]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[MacBook]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+	<product id="iPod_touch">
+		<description><![CDATA[<p>Cinco nuevas aplicaciones a mano</p>
+<p><br /> Consulta tu correo en formato HTML enriquecido, con fotos y ficheros adjuntos en formato PDF, Word y Excel. Consigue mapas, itinerarios e información sobre el estado de la carreteras en tiempo real. Escribe notas y consulta la bolsa y el tiempo. <br /> Alcanza con un dedo tu música y tus videos, entre otras cosas. <br /> La tecnología multi-touch revolucionaria integrada a la magnífica pantalla de 3,5 pulgadas te permitirá efectuar zoom hacia adelante y hacia atrás, y pasar y ojear las páginas solo con la ayuda de tus dedos.</p>
+<p>Internet en tu bolsillo</p>
+<p>Con el navegador Safari, podrás consultar sitios web en su compaginación de origen y efectuar un zoom hacia adelante y hacia atrás con la simple presión de un dedo en la pantalla.</p>
+<p>Contenido del estuche<br />    * iPod touch<br />    * Auriculares<br />    * Cable USB 2.0<br />    * Adaptador Dock<br />    * Paño de limpieza<br />    * Base<br />    * Guía de inicio rápido<br /> Título<br /> Párrafo</p>]]></description>
+		<description_short><![CDATA[<p>Interfaz multi-touch revolucionaria<br /> Pantalla panorámica color de 3,5 pulgadas<br /> Wi-Fi (802.11b/g)<br /> 8 mm de espesor<br /> Safari, YouTube, iTunes Wi-Fi Music Store, Correo, Mapas, Bolsa, El tiempo, Notas</p>]]></description_short>
+		<link_rewrite><![CDATA[ipod-touch]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[iPod touch]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+	<product id="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate">
+		<description><![CDATA[<p><strong>Características</strong></p>
+<ul>
+<li> Cuero suave resistente</li>
+<li>Acceso a la tecla Hold</li>
+<li>Cierre magnético</li>
+<li>Acceso al Dock Conector</li>
+<li>Salva pantallas</li>
+</ul>]]></description>
+		<description_short><![CDATA[<p>Este estuche de cuero de última moda garantiza una completa protección contra los arañazos y los pequeños contratiempos de la vida diaria. Su diseño elegante y compacto te permite meter tu Ipod directamente en tu bolsillo o en tu bolso.</p>]]></description_short>
+		<link_rewrite><![CDATA[funda-cuero-ipod-nano-negro-chocolate]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[Leather Case (iPod nano) - Negro / Chocolate]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+	<product id="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone">
+		<description><![CDATA[<p>Los auriculares SE210, ligeros y elegantes, están basados en la tecnología de los monitores personales que los músicos profesionales utilizan en carretera y que los ingenieros de Shure han perfeccionado. También están provistos de una salida audio de gama extendida exenta de todo ruido exterior. <br /> <br /> <strong>Creado para un aislamiento sonoro</strong></p>
+<p>Las almohadillas provistas de un aislamiento sonoro bloquean más del 90% del ruido ambiente. Combinadas con un diseño ergonómico atractivo y un cable modular, minimizan las intrusiones del mundo exterior y te permiten concentrarte en tu música. Creados para los apasionados por la música que quieren que su aparato audio móvil evolucione, los auriculares  SE210 te permitirán llevar la tecnología allí donde tú vayas. <br /> <br /> <strong>Micro-transductor alta definición </strong><br /> Desarrollados para poder tener una audición de calidad durante los desplazamientos, los auriculares SE210 utilizan un único transductor con un armazón equilibrado para poder disfrutar de una gama audio extendida. ¿El resultado ? Un confort audio increíble que restituye cada detalle de un espectáculo en directo. <br /> <br /> <strong>El kit universal Deluxe incluye los siguientes elementos :</strong><br /> - Almohadillas para aislamiento sonoro<br /> Las almohadillas para el aislamiento sonoro tienen una doble función : bloquear el ruido ambiente y garantizar una estabilidad y un confort personalizados. Como cada oreja es diferente el kit universal Deluxe incluye tres tallas (S, M, L) de almohadillas de espuma y flexibles. Elige la talla y el estilo de almohadilla que mejor te convenga : un buen aislamiento es un factor clave tanto para optimizar el aislamiento sonoro y la respuesta de los bajos como para aumentar el confort durante una audición prolongada. <br /> <br /> - Cable modular</p>
+<p>Basándose en los comentarios de los numerosos usuarios, los ingenieros de Shure han creado una solución de cable separable para permitir un grado de personalización sin precedentes. El cable de 1 metro te permite adaptar el confort en función de la actividad del momento y de la aplicación. <br /> <br /> - Estuche para el transporte</p>
+<p>Además de las almohadillas de aislamiento sonoro y del cable modular, los auriculares SE210 están provistos de un estuche de transporte compacto y resistente para guardar los auriculares de manera práctica y sin dificultad. <br /> - Garantía límite de dos años <br /> Cada solución SE210 tiene una garantía piezas y mano de obra de dos años.</p>
+<p><br /> <em><strong>Características técnicas</strong></em></p>
+<ul>
+<li>Tipo de transductor : micro-transductor alta definición</li>
+<li>Sensibilidad (1 mW) : presión acústica de 114 dB/mW</li>
+<li>Impedancia : (à 1 kHz) : 26 W</li>
+<li>Gama de frecuencias : 25 Hz ˆ 18,5 kHz</li>
+<li>Longitud del cable / con alargador : 45 cm / 136 cm</li>
+</ul>
+<p><br /> <strong><em>Contenido de la caja</em></strong></p>
+<ul>
+<li>Altavoces Shure SE210</li>
+<li>Kit universal Deluxe (almohadillas de aislamiento sonoro, cable modular, estuche de transporte)</li>
+</ul>]]></description>
+		<description_short><![CDATA[<p>Los auriculares con aislamiento ergonómicos y ligeros ofrecen la reproducción más fiel proveniente de fuentes audio estéreo móviles o de salón.</p>]]></description_short>
+		<link_rewrite><![CDATA[auriculares-aislantes-del-sonido-shure-se210]]></link_rewrite>
+		<meta_description><![CDATA[]]></meta_description>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_title><![CDATA[]]></meta_title>
+		<name><![CDATA[Auriculares aislantes del sonido Shure SE210]]></name>
+		<available_now><![CDATA[Disponible]]></available_now>
+		<available_later><![CDATA[]]></available_later>
+	</product>
+</entity_product>

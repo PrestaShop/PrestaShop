@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_category_product>
+	<fields primary="id_category, id_product">
+		<field name="id_category" relation="category" />
+		<field name="id_product" relation="product" />
+	</fields>
+
+	<entities>
+		<category_product id="category_product_1_1" id_category="Home" id_product="iPod_Nano" />
+		<category_product id="category_product_1_2" id_category="Home" id_product="iPod_shuffle" />
+		<category_product id="category_product_1_6" id_category="Home" id_product="MacBook" />
+		<category_product id="category_product_1_7" id_category="Home" id_product="iPod_touch" />
+		<category_product id="category_product_2_1" id_category="iPods" id_product="iPod_Nano" />
+		<category_product id="category_product_2_2" id_category="iPods" id_product="iPod_shuffle" />
+		<category_product id="category_product_2_7" id_category="iPods" id_product="iPod_touch" />
+		<category_product id="category_product_3_8" id_category="Accessories" id_product="Belkin_Leather_Folio_for_iPod_nano_-_Black_Chocolate" />
+		<category_product id="category_product_3_9" id_category="Accessories" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" />
+		<category_product id="category_product_4_5" id_category="Laptops" id_product="MacBook_Air" />
+		<category_product id="category_product_4_6" id_category="Laptops" id_product="MacBook" />
+	</entities>
+</entity_category_product>

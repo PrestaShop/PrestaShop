@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_quick_access>
+	<fields id="name" class="QuickAccess">
+		<field name="new_window" />
+		<field name="link" />
+	</fields>
+
+	<entities>
+		<quick_access id="Home" new_window="0">
+			<link><![CDATA[index.php]]></link>
+		</quick_access>
+		<quick_access id="My_Shop" new_window="1">
+			<link><![CDATA[../]]></link>
+		</quick_access>
+		<quick_access id="New_category" new_window="0">
+			<link><![CDATA[index.php?controller=AdminCatalog&addcategory]]></link>
+		</quick_access>
+		<quick_access id="New_product" new_window="0">
+			<link><![CDATA[index.php?controller=AdminCatalog&addproduct]]></link>
+		</quick_access>
+		<quick_access id="New_voucher" new_window="0">
+			<link><![CDATA[index.php?controller=AdminCartRules&addcart_rule]]></link>
+		</quick_access>
+	</entities>
+</entity_quick_access>
