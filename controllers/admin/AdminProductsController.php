@@ -2881,7 +2881,6 @@ if (false)
 				}
 				else
 					$content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
-		$this->content .= $content;
 		// @todo
 		$smarty->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
 		$this->context->smarty->assign(array(
@@ -2892,11 +2891,6 @@ if (false)
 		));
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->fetch('products/combinations.tpl');
 	}
-
-
-
-
-
 
 	public function initFormQuantities($obj)
 	{
