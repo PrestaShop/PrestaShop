@@ -99,7 +99,7 @@ class AdminCartsController extends AdminController
 		parent::__construct();
 	}
 	
-	public function viewCart()
+	public function initView()
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
@@ -157,20 +157,23 @@ class AdminCartsController extends AdminController
 			$imageProduct = new Image($image['id_image']);
 			$product['image'] = (isset($image['id_image']) ? cacheImage(_PS_IMG_DIR_.'p/'.$imageProduct->getExistingImgPath().'.jpg', 'product_mini_'.(int)($product['id_product']).(isset($product['id_product_attribute']) ? '_'.(int)($product['id_product_attribute']) : '').'.jpg', 45, 'jpg') : '--');
 		}
-		$this->context->smarty->assign(array('products' => $products,
-												'discounts' => $cart->getCartRules(),
-												'order' => $order,
-												'cart' => $cart,
-												'currency' => $currency,
-												'customer' => $customer,
-												'customer_stats' => $customer->getStats(),
-												'total_products' => $total_products,
-												'total_discounts' => $total_discounts,
-												'total_wrapping' => $total_wrapping,
-												'total_price' => $total_price,
-												'total_shipping' => $total_shipping,
-												'customized_datas' => $customized_datas
-												));
+		$this->tpl_view_vars = array(
+			'products' => $products,
+			'discounts' => $cart->getCartRules(),
+			'order' => $order,
+			'cart' => $cart,
+			'currency' => $currency,
+			'customer' => $customer,
+			'customer_stats' => $customer->getStats(),
+			'total_products' => $total_products,
+			'total_discounts' => $total_discounts,
+			'total_wrapping' => $total_wrapping,
+			'total_price' => $total_price,
+			'total_shipping' => $total_shipping,
+			'customized_datas' => $customized_datas
+		);
+
+		return parent::initView();
 	}
 	
 	public function ajaxPreProcess()

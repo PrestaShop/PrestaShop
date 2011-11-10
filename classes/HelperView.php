@@ -54,7 +54,8 @@ class HelperViewCore extends Helper
 			'table' => $this->table,
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_fix' => $this->toolbar_fix,
-			'toolbar_btn' => $this->toolbar_btn
+			'toolbar_btn' => $this->toolbar_btn,
+			'link' => $this->context->link
 		));
 
 		return parent::generate();
