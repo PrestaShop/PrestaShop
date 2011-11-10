@@ -621,51 +621,60 @@ function getProductAttribute()
 }
 
 $(document).ready(function(){
+	original_url = window.location+'';
+	first_url_check = true;
 	checkUrl();
-	initLocationChange(2000);
+	initLocationChange();
 });
 
 function initLocationChange(time)
 {
-	if(!time) time = 1000;
+	if(!time) time = 500;
 	setInterval(checkUrl, time);
 }
 
 function checkUrl()
 {
-	url = window.location+'';
-	// if we need to load a specific combination
-	if (url.indexOf('#/') != -1)
+	if (original_url != window.location || first_url_check)
 	{
-		// get the params to fill from a "normal" url
-		params = url.substring(url.indexOf('#') + 1, url.length);
-		tabParams = params.split('/');
-		tabValues = new Array();
-		if (tabParams[0] == '')
-			tabParams.shift();
-		for (i in tabParams)
-			tabValues.push(tabParams[i].split('-'));
-		product_id = $('#product_page_product_id').val();
-		// fill html with values
-		$('.color_pick').removeClass('selected');
-		count = 0;
-		for (z in tabValues)
-			for (a in attributesCombinations)
-				if (attributesCombinations[a]['group'] == tabValues[z][0]
-					&& attributesCombinations[a]['attribute'] == tabValues[z][1])
-				{
-					count++;
-					// add class 'selected' to the selected color
-					$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
-					$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', 'checked');
-					$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
-					$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
-				}
-		// find combination
-		if (count > 0)
-			findCombination();
-		// no combination found = removing attributes from url
-		else
-			window.location = url.substring(0, url.indexOf('#'));
+		first_url_check = false;
+		url = window.location+'';
+		// if we need to load a specific combination
+		if (url.indexOf('#/') != -1)
+		{
+			// get the params to fill from a "normal" url
+			params = url.substring(url.indexOf('#') + 1, url.length);
+			tabParams = params.split('/');
+			tabValues = new Array();
+			if (tabParams[0] == '')
+				tabParams.shift();
+			for (i in tabParams)
+				tabValues.push(tabParams[i].split('-'));
+			product_id = $('#product_page_product_id').val();
+			// fill html with values
+			$('.color_pick').removeClass('selected');
+			count = 0;
+			for (z in tabValues)
+				for (a in attributesCombinations)
+					if (attributesCombinations[a]['group'] == tabValues[z][0]
+						&& attributesCombinations[a]['attribute'] == tabValues[z][1])
+					{
+						count++;
+						// add class 'selected' to the selected color
+						$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
+						$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', 'checked');
+						$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+						$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+					}
+			// find combination
+			if (count > 0)
+			{
+				findCombination();
+				original_url = window.location+'';
+			}
+			// no combination found = removing attributes from url
+			else
+				window.location = url.substring(0, url.indexOf('#'));
+		}
 	}
 }
