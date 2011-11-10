@@ -52,11 +52,6 @@ class BlockCms extends Module
 
 	public function install()
 	{
-		$languages = Language::getLanguages(false);
-		$queryLang = 'INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`) VALUES';
-		foreach ($languages AS $language)
-		$queryLang .= '(1, '.(int)($language['id_lang']).'),';
-
 		if (!parent::install() OR !$this->registerHook('leftColumn') OR !$this->registerHook('rightColumn') OR !$this->registerHook('footer') OR !$this->registerHook('header') OR
 		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
@@ -69,15 +64,12 @@ class BlockCms extends Module
 		PRIMARY KEY (`id_cms_block`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
 		!Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`) VALUES(1, 0, 0)') OR
-		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_lang`(
 		`id_cms_block` int(10) unsigned NOT NULL,
 		`id_lang` int(10) unsigned NOT NULL,
 		`name` varchar(40) NOT NULL default \'\',
 		PRIMARY KEY (`id_cms_block`, `id_lang`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
-		!Db::getInstance()->execute(rtrim($queryLang, ',')) OR
 		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_page`(
 		`id_cms_block_page` int(10) unsigned NOT NULL auto_increment,
@@ -90,7 +82,32 @@ class BlockCms extends Module
 		!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) OR
 		!Configuration::updateValue('FOOTER_POWEREDBY', 1))
 		return false;
-		return true;
+
+		// Install fixtures for blockcms
+		if (!Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block', array(
+			'id_cms_category' =>	1,
+			'location' =>			0,
+			'position' =>			0,
+		), 'INSERT'))
+			return false;
+
+		$id_cms_block = Db::getInstance()->Insert_ID();
+		$result = true;
+		foreach (Language::getLanguages(false) as $lang)
+			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_lang', array(
+				'id_cms_block' =>	$id_cms_block,
+				'id_lang' =>		$lang['id_lang'],
+				'name' =>			$this->l('Information'),
+			), 'INSERT');
+
+		foreach (CMS::getCMSPages(null, 1) as $cms)
+			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_page', array(
+				'id_cms_block' =>	$id_cms_block,
+				'id_cms' =>			$cms['id_cms'],
+				'is_category' =>	0,
+			), 'INSERT');
+
+		return $result;
 	}
 
 	public function uninstall()
