@@ -84,6 +84,10 @@ class HookCore extends ObjectModel
 	 	if (!Validate::isHookName($hook_name))
 	 		die(Tools::displayError());
 
+		self::preloadHookAlias();
+		if (isset(self::$preloadHookAlias[$hook_name]))
+			$hook_name = self::$preloadHookAlias[$hook_name];
+
 		$result = Db::getInstance()->getRow('
 		SELECT `id_hook`, `name`
 		FROM `'._DB_PREFIX_.'hook`
