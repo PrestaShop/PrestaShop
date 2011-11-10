@@ -47,7 +47,6 @@ class StockAvailableCore extends ObjectModel
 	protected $fieldsRequired = array(
 		'id_product',
 		'id_product_attribute',
-		'id_shop',
 		'quantity',
 		'depends_on_stock',
 		'out_of_stock'
@@ -69,6 +68,9 @@ class StockAvailableCore extends ObjectModel
 
 	public function getFields()
 	{
+		if (!$this->id_shop)
+			$this->id_shop = Context::getContext()->shop->getID(true);
+
 		$this->validateFields();
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
