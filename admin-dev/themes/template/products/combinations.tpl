@@ -49,7 +49,7 @@
 <table cellpadding="5">
 	<tr>
 		<td colspan="2"><b>{l s='Add or modify combinations for this product'}</b> {l s='or go to'}
-		&nbsp;<a href="index.php?tab=AdminAttributeGenerator&id_product={$id_product}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" />&nbsp;{l s='Product combinations generator'}</a>
+		&nbsp;<a href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" />&nbsp;{l s='Product combinations generator'}</a>
 		</td>
 	</tr>
 </table>
@@ -126,7 +126,7 @@
 <a 
 
 </div>
-		<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1}')" href="index.php?tab=AdminProducts&id_product={$id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
+		<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
 {if $up_filename}
 <input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="{$up_filename}" />
 {/if}
