@@ -37,6 +37,17 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public function initContent()
 	{
 		$this->toolbar_title = $this->l('Stats');
+
+		$this->toolbar_btn['save-calendar'] = array(
+			'href' => '#',
+			'desc' => $this->l('Save Calendar')
+		);
+
+		$this->toolbar_btn['save-settings'] = array(
+			'href' => '#',
+			'desc' => $this->l('Save Settings')
+		);
+
 		if ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
@@ -59,7 +70,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function displayCalendar()
 	{
-		return $this->displayCalendarForm(array(
+		return self::displayCalendarForm(array(
 			'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
 			'Day' => $this->l('Day', 'AdminStatsTab'),
 			'Month' => $this->l('Month', 'AdminStatsTab'),
@@ -67,19 +78,24 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			'From' => $this->l('From:', 'AdminStatsTab'),
 			'To' => $this->l('To:', 'AdminStatsTab'),
 			'Save' => $this->l('Save', 'AdminStatsTab')
-		));
+		), $this->token);
 	}
 
-	public function displayCalendarForm($translations)
+	public static function displayCalendarForm($translations, $token, $action = null, $table = null, $identifier = null, $id = null)
 	{
-		$tpl = $this->context->smarty->createTemplate('stats/calendar.tpl');
+		$context = Context::getContext();
+		$tpl = $context->smarty->createTemplate('stats/calendar.tpl');
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
-			'token' => $this->token,
+			'token' => $token,
+			'action' => $action,
+			'table' => $table,
+			'identifier' => $identifier,
+			'id' => $id,
 			'translations' => $translations,
-			'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
-			'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to)
+			'datepickerFrom' => Tools::getValue('datepickerFrom', $context->employee->stats_date_from),
+			'datepickerTo' => Tools::getValue('datepickerTo', $context->employee->stats_date_to)
 		));
 
 		return $tpl->fetch();

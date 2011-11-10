@@ -87,7 +87,7 @@ if (Tools::isSubmit('ajaxProductManufacturers'))
 
 if (Tools::isSubmit('ajaxReferrers'))
 {
-	require('tabs/AdminReferrers.php');
+	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
 }
 
 if (Tools::isSubmit('ajaxProductSuppliers'))

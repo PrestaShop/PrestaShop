@@ -79,6 +79,8 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
+{block name="override_header"}{/block}
+
 <form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 	<table class="table_grid">
