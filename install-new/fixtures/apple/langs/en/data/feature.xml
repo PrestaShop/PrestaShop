@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_feature>
+	<feature id="Height">
+		<name><![CDATA[Height]]></name>
+	</feature>
+	<feature id="Width">
+		<name><![CDATA[Width]]></name>
+	</feature>
+	<feature id="Depth">
+		<name><![CDATA[Depth]]></name>
+	</feature>
+	<feature id="Weight">
+		<name><![CDATA[Weight]]></name>
+	</feature>
+	<feature id="Headphone">
+		<name><![CDATA[Headphone]]></name>
+	</feature>
+</entity_feature>

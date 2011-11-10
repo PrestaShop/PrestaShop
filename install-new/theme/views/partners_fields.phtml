@@ -1,0 +1,59 @@
+<br clear="left" /><hr /><br clear="left" />
+
+<?php foreach ($this->fields as $field_id => $field): ?>
+	<div>
+		<label class="aligned" style="float:left;width:200px;padding-left:10px;"><?php echo $field['label'] ?> :</label>
+
+		<?php if ($field['type'] == 'text' || $field['type'] == 'password'): ?>
+			<input
+				type="<?php echo $field['type'] ?>"
+				name="partner_fields[<?php echo $this->partner_id?>][<?php echo $field_id ?>]"
+				class="text required"
+				value="<?php echo htmlspecialchars($field['value']) ?>"
+				<?php if ($field['size']): ?>size="<?php echo $field['size'] ?>"<?php endif; ?>
+			/>
+		<?php elseif ($field['type'] == 'radio'): ?>
+			<?php foreach ($field['list'] as $value => $label): ?>
+				<?php echo $label ?>
+				<input
+					type="radio"
+					name="partner_fields[<?php echo $this->partner_id?>][<?php echo $field_id ?>]"
+					value="<?php echo $value ?>"
+					<?php if ($field['value'] == $value): ?>checked="checked"<?php endif; ?>
+				/>
+			<?php endforeach; ?>
+		<?php elseif ($field['type'] == 'select'): ?>
+			<select name="partner_fields[<?php echo $this->partner_id?>][<?php echo $field_id ?>]" class="pa_list">
+			<?php foreach ($field['list'] as $value => $label): ?>
+				<option value="<?php echo $value ?>" <?php if ($field['value'] == $value): ?>selected="selected"<?php endif; ?>>
+					<?php echo $label ?>
+				</option>
+			<?php endforeach; ?>
+			</select>
+		<?php elseif ($field['type'] == 'date'): ?>
+			<select name="partner_fields[<?php echo $this->partner_id?>][<?php echo $field_id ?>][year]" class="pa_list_year" style="border:1px solid #D41958">
+			<?php for ($i = date('Y') - 81; $i <= date('Y'); $i++): ?>
+				<option value="<?php echo $i ?>" <?php if ($field['value']['year'] == $i): ?>selected="selected"<?php endif; ?>><?php echo $i ?></option>
+			<?php endfor; ?>
+			</select>
+
+			<select name="partner_fields[<?php echo $this->partner_id?>][<?php echo $field_id ?>][month]" class="pa_list_month" style="border:1px solid #D41958">
+			<?php for ($i = 1; $i <= 12; $i++): ?>
+				<option value="<?php echo $i ?>" <?php if ($field['value']['month'] == $i): ?>selected="selected"<?php endif; ?>><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+			<?php endfor; ?>
+			</select>
+
+			<select name="partner_fields[<?php echo $this->partner_id?>][<?php echo $field_id ?>][day]" class="pa_list_day" style="border:1px solid #D41958">
+			<?php for ($i = 1; $i <= 31; $i++): ?>
+				<option value="<?php echo $i ?>" <?php if ($field['value']['day'] == $i): ?>selected="selected"<?php endif; ?>><?php echo str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+			<?php endfor; ?>
+			</select>
+		<?php endif; ?>
+
+		<?php if ($field['help']): ?>
+			<?php echo $field['help'] ?>
+		<?php endif; ?>
+		<br />
+	</div>
+	<br clear="left" />
+<?php endforeach; ?>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_profile>
+	<profile id="Administrator">
+		<name><![CDATA[Administrateur]]></name>
+	</profile>
+	<profile id="Logistician">
+		<name><![CDATA[Logisticien]]></name>
+	</profile>
+	<profile id="Translator">
+		<name><![CDATA[Traducteur]]></name>
+	</profile>
+	<profile id="Salesman">
+		<name><![CDATA[Commercial]]></name>
+	</profile>
+</entity_profile>

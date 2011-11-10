@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_meta>
+	<fields id="page" class="Meta">
+		<field name="page" />
+	</fields>
+
+	<entities>
+		<meta id="404">
+			<page><![CDATA[404]]></page>
+		</meta>
+		<meta id="best-sales">
+			<page><![CDATA[best-sales]]></page>
+		</meta>
+		<meta id="contact-form">
+			<page><![CDATA[contact-form]]></page>
+		</meta>
+		<meta id="index">
+			<page><![CDATA[index]]></page>
+		</meta>
+		<meta id="manufacturer">
+			<page><![CDATA[manufacturer]]></page>
+		</meta>
+		<meta id="new-products">
+			<page><![CDATA[new-products]]></page>
+		</meta>
+		<meta id="password">
+			<page><![CDATA[password]]></page>
+		</meta>
+		<meta id="prices-drop">
+			<page><![CDATA[prices-drop]]></page>
+		</meta>
+		<meta id="sitemap">
+			<page><![CDATA[sitemap]]></page>
+		</meta>
+		<meta id="supplier">
+			<page><![CDATA[supplier]]></page>
+		</meta>
+		<meta id="address">
+			<page><![CDATA[address]]></page>
+		</meta>
+		<meta id="addresses">
+			<page><![CDATA[addresses]]></page>
+		</meta>
+		<meta id="authentication">
+			<page><![CDATA[authentication]]></page>
+		</meta>
+		<meta id="cart">
+			<page><![CDATA[cart]]></page>
+		</meta>
+		<meta id="discount">
+			<page><![CDATA[discount]]></page>
+		</meta>
+		<meta id="history">
+			<page><![CDATA[history]]></page>
+		</meta>
+		<meta id="identity">
+			<page><![CDATA[identity]]></page>
+		</meta>
+		<meta id="my-account">
+			<page><![CDATA[my-account]]></page>
+		</meta>
+		<meta id="order-follow">
+			<page><![CDATA[order-follow]]></page>
+		</meta>
+		<meta id="order-slip">
+			<page><![CDATA[order-slip]]></page>
+		</meta>
+		<meta id="order">
+			<page><![CDATA[order]]></page>
+		</meta>
+		<meta id="search">
+			<page><![CDATA[search]]></page>
+		</meta>
+		<meta id="stores">
+			<page><![CDATA[stores]]></page>
+		</meta>
+		<meta id="order-opc">
+			<page><![CDATA[order-opc]]></page>
+		</meta>
+		<meta id="guest-tracking">
+			<page><![CDATA[guest-tracking]]></page>
+		</meta>
+	</entities>
+</entity_meta>

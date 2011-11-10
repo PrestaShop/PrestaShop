@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_cms>
+	<cms id="Delivery">
+		<meta_title><![CDATA[Livraison]]></meta_title>
+		<meta_description><![CDATA[Nos conditions générales de livraison]]></meta_description>
+		<meta_keywords><![CDATA[conditions, livraison, délais, transport, colis]]></meta_keywords>
+		<content><![CDATA[<h2>Livraisons et retours</h2><h3>Le transport de votre colis</h3><p>Les colis sont g&eacute;n&eacute;ralement exp&eacute;di&eacute;s en 48h apr&egrave;s r&eacute;ception de votre paiement. Le mode d'expédition standard est le Colissimo suivi, remis sans signature. Si vous souhaitez une remise avec signature, un co&ucirc;t suppl&eacute;mentaire s'applique, merci de nous contacter. Quel que soit le mode d'expédition choisi, nous vous fournirons d&egrave;s que possible un lien qui vous permettra de suivre en ligne la livraison de votre colis.</p><p>Les frais d'exp&eacute;dition comprennent l'emballage, la manutention et les frais postaux. Ils peuvent contenir une partie fixe et une partie variable en fonction du prix ou du poids de votre commande. Nous vous conseillons de regrouper vos achats en une unique commande. Nous ne pouvons pas grouper deux commandes distinctes et vous devrez vous acquitter des frais de port pour chacune d'entre elles. Votre colis est exp&eacute;di&eacute; &agrave; vos propres risques, un soin particulier est apport&eacute; au colis contenant des produits fragiles..<br /><br />Les colis sont surdimensionn&eacute;s et prot&eacute;g&eacute;s.</p>]]></content>
+		<link_rewrite><![CDATA[livraison]]></link_rewrite>
+	</cms>
+	<cms id="Legal_Notice">
+		<meta_title><![CDATA[Mentions légales]]></meta_title>
+		<meta_description><![CDATA[Mentions légales]]></meta_description>
+		<meta_keywords><![CDATA[mentions, légales, crédits]]></meta_keywords>
+		<content><![CDATA[<h2>Mentions l&eacute;gales</h2><h3>Cr&eacute;dits</h3><p>Concept et production :</p><p>Ce site internet a &eacute;t&eacute; r&eacute;alis&eacute; en utilisant la solution open-source <a href="http://www.prestashop.com">PrestaShop</a>&trade; .</p>]]></content>
+		<link_rewrite><![CDATA[mentions-legales]]></link_rewrite>
+	</cms>
+	<cms id="Terms_and_conditions_of_use">
+		<meta_title><![CDATA[Conditions d'utilisation]]></meta_title>
+		<meta_description><![CDATA[Nos conditions générales de ventes]]></meta_description>
+		<meta_keywords><![CDATA[conditions, utilisation, générales, ventes]]></meta_keywords>
+		<content><![CDATA[<h2>Vos conditions de ventes</h2><h3>Règle n°1</h3><p>Contenu de la règle numéro 1</p>
+<h3>Règle n°2</h3><p>Contenu de la règle numéro 2</p>
+<h3>Règle n°3</h3><p>Contenu de la règle numéro 3</p>]]></content>
+		<link_rewrite><![CDATA[conditions-generales-de-ventes]]></link_rewrite>
+	</cms>
+	<cms id="About_us">
+		<meta_title><![CDATA[A propos]]></meta_title>
+		<meta_description><![CDATA[Apprenez-en d'avantage sur nous]]></meta_description>
+		<meta_keywords><![CDATA[à propos, informations]]></meta_keywords>
+		<content><![CDATA[<h2>A propos</h2>
+<h3>Notre entreprise</h3><p>Notre entreprise</p>
+<h3>Notre équipe</h3><p>Notre équipe</p>
+<h3>Informations</h3><p>Informations</p>]]></content>
+		<link_rewrite><![CDATA[a-propos]]></link_rewrite>
+	</cms>
+	<cms id="Secure_payment">
+		<meta_title><![CDATA[Paiement sécurisé]]></meta_title>
+		<meta_description><![CDATA[Notre offre de paiement sécurisé]]></meta_description>
+		<meta_keywords><![CDATA[paiement sécurisé, ssl, visa, mastercard, paypal]]></meta_keywords>
+		<content><![CDATA[<h2>Paiement sécurisé</h2>
+<h3>Notre offre de paiement sécurisé</h3><p>Avec SSL</p>
+<h3>Utilisation de Visa/Mastercard/Paypal</h3><p>A propos de ces services</p>]]></content>
+		<link_rewrite><![CDATA[paiement-securise]]></link_rewrite>
+	</cms>
+</entity_cms>

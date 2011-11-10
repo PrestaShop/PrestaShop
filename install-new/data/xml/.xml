@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_>
+	<fields id="name" primary="" class="Zone" sql="">
+		<field name="name" />
+	</fields>
+
+	<entities>
+	</entities>
+</entity_>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_carrier>
+	<carrier id="0">
+		<delay><![CDATA[Retrait au magasin]]></delay>
+	</carrier>
+</entity_carrier>

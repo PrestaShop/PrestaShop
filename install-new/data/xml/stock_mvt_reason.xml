@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_stock_mvt_reason>
+	<fields id="name" class="StockMvtReason">
+		<field name="sign" />
+	</fields>
+
+	<entities>
+		<stock_mvt_reason id="Increase" sign="1" />
+		<stock_mvt_reason id="Decrease" sign="-1" />
+		<stock_mvt_reason id="Client_Order" sign="-1" />
+		<stock_mvt_reason id="Missing_Stock_Movement" sign="-1" />
+		<stock_mvt_reason id="Restocking" sign="1" />
+		<stock_mvt_reason id="Transfer_to" sign="1" />
+		<stock_mvt_reason id="Transfer_from" sign="-1" />
+		<stock_mvt_reason id="Supplier_Order" sign="1" />
+	</entities>
+</entity_stock_mvt_reason>

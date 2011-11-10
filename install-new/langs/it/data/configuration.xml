@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_configuration>
+	<configuration id="PS_INVOICE_PREFIX">
+		<value><![CDATA[FA]]></value>
+	</configuration>
+	<configuration id="PS_DELIVERY_PREFIX">
+		<value><![CDATA[BC]]></value>
+	</configuration>
+	<configuration id="PS_SEARCH_BLACKLIST">
+		<value><![CDATA[]]></value>
+	</configuration>
+	<configuration id="PS_META_KEYWORDS">
+		<value><![CDATA[0]]></value>
+	</configuration>
+	<configuration id="PS_CUSTOMER_SERVICE_SIGNATURE">
+		<value><![CDATA[Gentile Cliente,
+
+Cordiali saluti,
+Servizio Clienti]]></value>
+	</configuration>
+</entity_configuration>

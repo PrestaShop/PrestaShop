@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_manufacturer>
+	<fields id="name" class="Manufacturer" image="m">
+		<field name="name" />
+		<field name="active" />
+	</fields>
+
+	<entities>
+		<manufacturer id="Apple_Computer_Inc" active="1">
+			<name><![CDATA[Apple Computer, Inc]]></name>
+		</manufacturer>
+		<manufacturer id="Shure_Incorporated" active="1">
+			<name><![CDATA[Shure Incorporated]]></name>
+		</manufacturer>
+	</entities>
+</entity_manufacturer>

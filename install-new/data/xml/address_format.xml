@@ -1,0 +1,2448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_address_format>
+	<fields primary="id_country" class="AddressFormat">
+		<field name="id_country" relation="country" />
+		<field name="format" />
+	</fields>
+
+	<entities>
+		<address_format id="address_format_1" id_country="DE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_2" id_country="AT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_3" id_country="BE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_4" id_country="CA">
+			<format><![CDATA[firstname lastname
+company
+address1
+address2
+city State:name postcode
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_5" id_country="CN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_6" id_country="ES">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_7" id_country="FI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_8" id_country="FR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_9" id_country="GR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_10" id_country="IT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+State:name
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_11" id_country="JP">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_12" id_country="LU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_13" id_country="NL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_14" id_country="PL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_15" id_country="PT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_16" id_country="CZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_17" id_country="GB">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_18" id_country="SE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_19" id_country="CH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_20" id_country="DK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_21" id_country="US">
+			<format><![CDATA[firstname lastname
+company
+address1 address2
+city, State:name postcode
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_22" id_country="HK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_23" id_country="NO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_24" id_country="AU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_25" id_country="SG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_26" id_country="IE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_27" id_country="NZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_28" id_country="KR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_29" id_country="IL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_30" id_country="ZA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_31" id_country="NG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_32" id_country="CI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_33" id_country="TG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_34" id_country="BO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_35" id_country="MU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_36" id_country="RO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_37" id_country="SK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_38" id_country="DZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_39" id_country="AS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_40" id_country="AD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_41" id_country="AO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_42" id_country="AI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_43" id_country="AG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_44" id_country="AR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_45" id_country="AM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_46" id_country="AW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_47" id_country="AZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_48" id_country="BS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_49" id_country="BH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_50" id_country="BD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_51" id_country="BB">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_52" id_country="BY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_53" id_country="BZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_54" id_country="BJ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_55" id_country="BM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_56" id_country="BT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_57" id_country="BW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_58" id_country="BR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_59" id_country="BN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_60" id_country="BF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_61" id_country="MM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_62" id_country="BI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_63" id_country="KH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_64" id_country="CM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_65" id_country="CV">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_66" id_country="CF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_67" id_country="TD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_68" id_country="CL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_69" id_country="CO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_70" id_country="KM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_71" id_country="CD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_72" id_country="CG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_73" id_country="CR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_74" id_country="HR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_75" id_country="CU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_76" id_country="CY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_77" id_country="DJ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_78" id_country="DM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_79" id_country="DO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_80" id_country="TL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_81" id_country="EC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_82" id_country="EG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_83" id_country="SV">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_84" id_country="GQ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_85" id_country="ER">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_86" id_country="EE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_87" id_country="ET">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_88" id_country="FK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_89" id_country="FO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_90" id_country="FJ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_91" id_country="GA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_92" id_country="GM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_93" id_country="GE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_94" id_country="GH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_95" id_country="GD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_96" id_country="GL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_97" id_country="GI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_98" id_country="GP">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_99" id_country="GU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_100" id_country="GT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_101" id_country="GG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_102" id_country="GN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_103" id_country="GW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_104" id_country="GY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_105" id_country="HT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_106" id_country="HM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_107" id_country="VA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_108" id_country="HN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_109" id_country="IS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_110" id_country="IN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_111" id_country="ID">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_112" id_country="IR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_113" id_country="IQ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_114" id_country="IM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_115" id_country="JM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_116" id_country="JE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_117" id_country="JO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_118" id_country="KZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_119" id_country="KE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_120" id_country="KI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_121" id_country="KP">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_122" id_country="KW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_123" id_country="KG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_124" id_country="LA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_125" id_country="LV">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_126" id_country="LB">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_127" id_country="LS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_128" id_country="LR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_129" id_country="LY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_130" id_country="LI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_131" id_country="LT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_132" id_country="MO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_133" id_country="MK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_134" id_country="MG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_135" id_country="MW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_136" id_country="MY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_137" id_country="MV">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_138" id_country="ML">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_139" id_country="MT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_140" id_country="MH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_141" id_country="MQ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_142" id_country="MR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_143" id_country="HU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_144" id_country="YT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_145" id_country="MX">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_146" id_country="FM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_147" id_country="MD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_148" id_country="MC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_149" id_country="MN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_150" id_country="ME">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_151" id_country="MS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_152" id_country="MA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_153" id_country="MZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_154" id_country="NA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_155" id_country="NR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_156" id_country="NP">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_157" id_country="AN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_158" id_country="NC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_159" id_country="NI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_160" id_country="NE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_161" id_country="NU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_162" id_country="NF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_163" id_country="MP">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_164" id_country="OM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_165" id_country="PK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_166" id_country="PW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_167" id_country="PS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_168" id_country="PA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_169" id_country="PG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_170" id_country="PY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_171" id_country="PE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_172" id_country="PH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_173" id_country="PN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_174" id_country="PR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_175" id_country="QA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_176" id_country="RE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_177" id_country="RU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_178" id_country="RW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_179" id_country="BL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_180" id_country="KN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_181" id_country="LC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_182" id_country="MF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_183" id_country="PM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_184" id_country="VC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_185" id_country="WS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_186" id_country="SM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_187" id_country="ST">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_188" id_country="SA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_189" id_country="SN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_190" id_country="RS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_191" id_country="SC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_192" id_country="SL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_193" id_country="SI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_194" id_country="SB">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_195" id_country="SO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_196" id_country="GS">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_197" id_country="LK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_198" id_country="SD">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_199" id_country="SR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_200" id_country="SJ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_201" id_country="SZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_202" id_country="SY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_203" id_country="TW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_204" id_country="TJ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_205" id_country="TZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_206" id_country="TH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_207" id_country="TK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_208" id_country="TO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_209" id_country="TT">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_210" id_country="TN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_211" id_country="TR">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_212" id_country="TM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_213" id_country="TC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_214" id_country="TV">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_215" id_country="UG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_216" id_country="UA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_217" id_country="AE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_218" id_country="UY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_219" id_country="UZ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_220" id_country="VU">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_221" id_country="VE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_222" id_country="VN">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_223" id_country="VG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_224" id_country="VI">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_225" id_country="WF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_226" id_country="EH">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_227" id_country="YE">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_228" id_country="ZM">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_229" id_country="ZW">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_230" id_country="AL">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_231" id_country="AF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_232" id_country="AQ">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_233" id_country="BA">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_234" id_country="BV">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_235" id_country="IO">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_236" id_country="BG">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_237" id_country="KY">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_238" id_country="CX">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_239" id_country="CC">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_240" id_country="CK">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_241" id_country="GF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_242" id_country="PF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_243" id_country="TF">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+		<address_format id="address_format_244" id_country="AX">
+			<format><![CDATA[firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+Country:name
+phone]]></format>
+		</address_format>
+	</entities>
+</entity_address_format>

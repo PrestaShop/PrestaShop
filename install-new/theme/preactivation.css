@@ -1,0 +1,52 @@
+@CHARSET "UTF-8";
+
+.moduleTable {
+	padding: 5px;
+	width: 650px;
+	border: 1px solid #CCC;
+	border-bottom:none;
+}
+	.moduleTable tr {
+		border-bottom: 1px solid #CCC;
+	}
+		.moduleTable th {
+			font-size:13;
+			color:#000;
+			text-shadow:0 1px 0 #fff;
+			background:#cfcfcf url(img/bg_moduleTable_th.png) repeat-x 0 0;
+		}
+	.moduleTable .field {
+		padding:10px 0;
+		border-bottom:none;
+	}
+		.moduleTable .field label {
+			display:inline-block;
+			padding-left:10px;
+			width:180px;/* 190 */
+		}
+		.moduleTable .field label.radiolabel {width:auto;}
+		.moduleTable .field span.contentinput {
+			display:inline-block;
+			width:245px;
+			font-size: 11px;
+			font-style:italic;
+			color:#999;
+		}
+
+	.moduleTable select {
+		border: 1px solid #D41958;
+	}
+	
+		.moduleTable select.pa_list {
+			width: 175px;
+		}
+		
+		.moduleTable select.pa_list_year {
+			margin-right: 10px;
+			width: 60px !important;
+		}
+		
+		.moduleTable select.pa_list_month, .moduleTable select.pa_list_day {
+			margin-right: 10px;
+			width: 45px !important;
+		}

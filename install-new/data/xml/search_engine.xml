@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_search_engine>
+	<fields id="server" class="SearchEngine">
+		<field name="server" />
+		<field name="getvar" />
+	</fields>
+
+	<entities>
+		<search_engine id="google" getvar="q">
+			<server><![CDATA[google]]></server>
+		</search_engine>
+		<search_engine id="aol" getvar="q">
+			<server><![CDATA[aol]]></server>
+		</search_engine>
+		<search_engine id="yandex" getvar="text">
+			<server><![CDATA[yandex]]></server>
+		</search_engine>
+		<search_engine id="ask_com" getvar="q">
+			<server><![CDATA[ask.com]]></server>
+		</search_engine>
+		<search_engine id="nhl_com" getvar="q">
+			<server><![CDATA[nhl.com]]></server>
+		</search_engine>
+		<search_engine id="yahoo" getvar="p">
+			<server><![CDATA[yahoo]]></server>
+		</search_engine>
+		<search_engine id="baidu" getvar="wd">
+			<server><![CDATA[baidu]]></server>
+		</search_engine>
+		<search_engine id="lycos" getvar="query">
+			<server><![CDATA[lycos]]></server>
+		</search_engine>
+		<search_engine id="exalead" getvar="q">
+			<server><![CDATA[exalead]]></server>
+		</search_engine>
+		<search_engine id="search_live" getvar="q">
+			<server><![CDATA[search.live]]></server>
+		</search_engine>
+		<search_engine id="voila" getvar="rdata">
+			<server><![CDATA[voila]]></server>
+		</search_engine>
+		<search_engine id="altavista" getvar="q">
+			<server><![CDATA[altavista]]></server>
+		</search_engine>
+		<search_engine id="bing" getvar="q">
+			<server><![CDATA[bing]]></server>
+		</search_engine>
+		<search_engine id="daum" getvar="q">
+			<server><![CDATA[daum]]></server>
+		</search_engine>
+		<search_engine id="eniro" getvar="search_word">
+			<server><![CDATA[eniro]]></server>
+		</search_engine>
+		<search_engine id="naver" getvar="query">
+			<server><![CDATA[naver]]></server>
+		</search_engine>
+		<search_engine id="msn" getvar="q">
+			<server><![CDATA[msn]]></server>
+		</search_engine>
+		<search_engine id="netscape" getvar="query">
+			<server><![CDATA[netscape]]></server>
+		</search_engine>
+		<search_engine id="cnn" getvar="query">
+			<server><![CDATA[cnn]]></server>
+		</search_engine>
+		<search_engine id="about" getvar="terms">
+			<server><![CDATA[about]]></server>
+		</search_engine>
+		<search_engine id="mamma" getvar="query">
+			<server><![CDATA[mamma]]></server>
+		</search_engine>
+		<search_engine id="alltheweb" getvar="q">
+			<server><![CDATA[alltheweb]]></server>
+		</search_engine>
+		<search_engine id="virgilio" getvar="qs">
+			<server><![CDATA[virgilio]]></server>
+		</search_engine>
+		<search_engine id="alice" getvar="qs">
+			<server><![CDATA[alice]]></server>
+		</search_engine>
+		<search_engine id="najdi" getvar="q">
+			<server><![CDATA[najdi]]></server>
+		</search_engine>
+		<search_engine id="mama" getvar="query">
+			<server><![CDATA[mama]]></server>
+		</search_engine>
+		<search_engine id="seznam" getvar="q">
+			<server><![CDATA[seznam]]></server>
+		</search_engine>
+		<search_engine id="onet" getvar="qt">
+			<server><![CDATA[onet]]></server>
+		</search_engine>
+		<search_engine id="szukacz" getvar="q">
+			<server><![CDATA[szukacz]]></server>
+		</search_engine>
+		<search_engine id="yam" getvar="k">
+			<server><![CDATA[yam]]></server>
+		</search_engine>
+		<search_engine id="pchome" getvar="q">
+			<server><![CDATA[pchome]]></server>
+		</search_engine>
+		<search_engine id="kvasir" getvar="q">
+			<server><![CDATA[kvasir]]></server>
+		</search_engine>
+		<search_engine id="sesam" getvar="q">
+			<server><![CDATA[sesam]]></server>
+		</search_engine>
+		<search_engine id="ozu" getvar="q">
+			<server><![CDATA[ozu]]></server>
+		</search_engine>
+		<search_engine id="terra" getvar="query">
+			<server><![CDATA[terra]]></server>
+		</search_engine>
+		<search_engine id="mynet" getvar="q">
+			<server><![CDATA[mynet]]></server>
+		</search_engine>
+		<search_engine id="ekolay" getvar="q">
+			<server><![CDATA[ekolay]]></server>
+		</search_engine>
+		<search_engine id="rambler" getvar="words">
+			<server><![CDATA[rambler]]></server>
+		</search_engine>
+	</entities>
+</entity_search_engine>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_supplier_order_state>
+	<fields id="name" class="SupplierOrderState">
+		<field name="delivery_note" />
+		<field name="editable" />
+		<field name="receipt_state" />
+		<field name="pending_receipt" />
+		<field name="enclosed" />
+		<field name="color" />
+	</fields>
+
+	<entities>
+		<supplier_order_state id="creation_in_progress" delivery_note="0" editable="1" receipt_state="0" pending_receipt="0" enclosed="0" color="#faab00" />
+		<supplier_order_state id="Order_validated" delivery_note="1" editable="0" receipt_state="0" pending_receipt="0" enclosed="0" color="#273cff" />
+		<supplier_order_state id="Pending_receipt" delivery_note="0" editable="0" receipt_state="0" pending_receipt="1" enclosed="0" color="#ff37f5" />
+		<supplier_order_state id="Order_received_in_part" delivery_note="0" editable="0" receipt_state="1" pending_receipt="1" enclosed="0" color="#ff3e33" />
+		<supplier_order_state id="Order_received_completely" delivery_note="0" editable="0" receipt_state="1" pending_receipt="0" enclosed="1" color="#00d60c" />
+		<supplier_order_state id="order_fenced" delivery_note="0" editable="0" receipt_state="0" pending_receipt="0" enclosed="1" color="#666666" />
+	</entities>
+</entity_supplier_order_state>

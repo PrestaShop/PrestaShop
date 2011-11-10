@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_zone>
+	<fields id="name" class="Zone">
+		<field name="name" />
+		<field name="active" />
+	</fields>
+
+	<entities>
+		<zone id="Europe" active="1">
+			<name><![CDATA[Europe]]></name>
+		</zone>
+		<zone id="North_America" active="1">
+			<name><![CDATA[North America]]></name>
+		</zone>
+		<zone id="Asia" active="1">
+			<name><![CDATA[Asia]]></name>
+		</zone>
+		<zone id="Africa" active="1">
+			<name><![CDATA[Africa]]></name>
+		</zone>
+		<zone id="Oceania" active="1">
+			<name><![CDATA[Oceania]]></name>
+		</zone>
+		<zone id="South_America" active="1">
+			<name><![CDATA[South America]]></name>
+		</zone>
+		<zone id="Europe_out_E_U" active="1">
+			<name><![CDATA[Europe (out E.U)]]></name>
+		</zone>
+		<zone id="Centrale_America_Antilla" active="1">
+			<name><![CDATA[Centrale America/Antilla]]></name>
+		</zone>
+	</entities>
+</entity_zone>

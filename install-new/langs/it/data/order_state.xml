@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_order_state>
+	<order_state id="Awaiting_cheque_payment">
+		<name><![CDATA[In attesa di pagamento con assegno]]></name>
+		<template><![CDATA[cheque]]></template>
+	</order_state>
+	<order_state id="Payment_accepted">
+		<name><![CDATA[Pagamento accettato]]></name>
+		<template><![CDATA[payment]]></template>
+	</order_state>
+	<order_state id="Preparation_in_progress">
+		<name><![CDATA[Preparazione in corso]]></name>
+		<template><![CDATA[preparation]]></template>
+	</order_state>
+	<order_state id="Shipped">
+		<name><![CDATA[Consegna in corso]]></name>
+		<template><![CDATA[shipped]]></template>
+	</order_state>
+	<order_state id="Delivered">
+		<name><![CDATA[Consegnato]]></name>
+		<template><![CDATA[]]></template>
+	</order_state>
+	<order_state id="Canceled">
+		<name><![CDATA[Annullato]]></name>
+		<template><![CDATA[order_canceled]]></template>
+	</order_state>
+	<order_state id="Refund">
+		<name><![CDATA[Rimborsato]]></name>
+		<template><![CDATA[refund]]></template>
+	</order_state>
+	<order_state id="Payment_error">
+		<name><![CDATA[Errore di pagamento]]></name>
+		<template><![CDATA[payment_error]]></template>
+	</order_state>
+	<order_state id="On_backorder">
+		<name><![CDATA[In attesa di rifornimento]]></name>
+		<template><![CDATA[outofstock]]></template>
+	</order_state>
+	<order_state id="Awaiting_bank_wire_payment">
+		<name><![CDATA[In attesa di pagamento con bonifico bancario]]></name>
+		<template><![CDATA[bankwire]]></template>
+	</order_state>
+	<order_state id="Awaiting_PayPal_payment">
+		<name><![CDATA[In attesa di pagamento con PayPal]]></name>
+		<template><![CDATA[]]></template>
+	</order_state>
+	<order_state id="Payment_remotely_accepted">
+		<name><![CDATA[Payment remotely accepted]]></name>
+		<template><![CDATA[]]></template>
+	</order_state>
+</entity_order_state>

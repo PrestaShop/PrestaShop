@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_category>
+	<category id="iPods">
+		<name><![CDATA[iPods]]></name>
+		<description><![CDATA[Es hora de que el mejor jugador de la música, al escenario para hacer un bis. Con el nuevo iPod, el mundo es tu escenario.]]></description>
+		<link_rewrite><![CDATA[musica-ipods]]></link_rewrite>
+		<meta_title><![CDATA[]]></meta_title>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_description><![CDATA[]]></meta_description>
+	</category>
+	<category id="Accessories">
+		<name><![CDATA[Accesorios]]></name>
+		<description><![CDATA[Todos los accesorios de moda para tu iPod]]></description>
+		<link_rewrite><![CDATA[ipod-accesorios]]></link_rewrite>
+		<meta_title><![CDATA[]]></meta_title>
+		<meta_keywords><![CDATA[]]></meta_keywords>
+		<meta_description><![CDATA[]]></meta_description>
+	</category>
+	<category id="Laptops">
+		<name><![CDATA[Portátiles]]></name>
+		<description><![CDATA[El último procesador Intel, un disco duro más grande, con profusión de memoria y otras novedades. Todo en sólo 2,59 cm libres de cualquier obstrucción. Las nuevas portátiles Mac cumplir rendimiento, potencia y conectividad de una computadora de escritorio. Sin la parte del escritorio.]]></description>
+		<link_rewrite><![CDATA[portatiles-apple]]></link_rewrite>
+		<meta_title><![CDATA[Portátiles Apple]]></meta_title>
+		<meta_keywords><![CDATA[portátiles apple macbook air]]></meta_keywords>
+		<meta_description><![CDATA[portátiles apple poderoso y el diseño]]></meta_description>
+	</category>
+</entity_category>

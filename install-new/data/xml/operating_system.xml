@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_operating_system>
+	<fields id="name">
+		<field name="name" />
+	</fields>
+
+	<entities>
+		<operating_system id="Windows_XP">
+			<name><![CDATA[Windows XP]]></name>
+		</operating_system>
+		<operating_system id="Windows_Vista">
+			<name><![CDATA[Windows Vista]]></name>
+		</operating_system>
+		<operating_system id="MacOsX">
+			<name><![CDATA[MacOsX]]></name>
+		</operating_system>
+		<operating_system id="Linux">
+			<name><![CDATA[Linux]]></name>
+		</operating_system>
+	</entities>
+</entity_operating_system>

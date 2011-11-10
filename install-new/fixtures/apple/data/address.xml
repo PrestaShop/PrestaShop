@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_address>
+	<fields id="alias" class="Address">
+		<field name="id_country" relation="country" />
+		<field name="id_state" relation="state" />
+		<field name="id_customer" relation="customer" />
+		<field name="id_manufacturer" relation="manufacturer" />
+		<field name="id_supplier" relation="supplier" />
+		<field name="alias" />
+		<field name="company" />
+		<field name="lastname" />
+		<field name="firstname" />
+		<field name="address1" />
+		<field name="address2" />
+		<field name="postcode" />
+		<field name="city" />
+		<field name="other" />
+		<field name="phone" />
+		<field name="phone_mobile" />
+		<field name="vat_number" />
+		<field name="dni" />
+		<field name="active" />
+	</fields>
+
+	<entities>
+		<address id="manufacturer" id_country="US" id_state="CA" id_customer="" id_manufacturer="Apple_Computer_Inc" id_supplier="" alias="manufacturer" company="" lastname="JOBS" firstname="STEVE" postcode="95014" phone="(800) 275-2273" phone_mobile="" vat_number="" dni="" active="1">
+			<address1><![CDATA[1 Infinite Loop]]></address1>
+			<address2><![CDATA[]]></address2>
+			<city><![CDATA[Cupertino]]></city>
+			<other><![CDATA[]]></other>
+		</address>
+		<address id="Mon_adresse" id_country="FR" id_state="" id_customer="John" id_manufacturer="" id_supplier="" alias="Mon adresse" company="My Company" lastname="DOE" firstname="John" postcode="75000" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
+			<address1><![CDATA[16, Main street]]></address1>
+			<address2><![CDATA[2nd floor]]></address2>
+			<city><![CDATA[Paris ]]></city>
+			<other><![CDATA[]]></other>
+		</address>
+	</entities>
+</entity_address>

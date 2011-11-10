@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_cms>
+	<cms id="Delivery">
+		<meta_title><![CDATA[Entrega]]></meta_title>
+		<meta_description><![CDATA[Nuestras condiciones de entrega]]></meta_description>
+		<meta_keywords><![CDATA[condiciones, plazos de entrega, transporte, paquetería]]></meta_keywords>
+		<content><![CDATA[<h2><span id="result_box"><span style="background-color: #ffffff;" title="Livraisons et retours">shipping & Returns</span></span></h2>
+<h3><span id="result_box"><span style="background-color: #ffffff;" title="Le transport de votre colis">El transporte de su paquete</span></span></h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="Les colis sont généralement expédiés en 48h après réception de votre paiement.">Los paquetes son generalmente enviados en 48 horas después de la recepción de su pago. </span><span style="background-color: #ffffff;" title="Le mode d'expédition standard est le Colissimo suivi, remis sans signature.">La moda es el estándar expédition Colissimo seguido, entrega sin firma. </span><span style="background-color: #ffffff;" title="Si vous souhaitez une remise avec signature, un coût supplémentaire s'applique, merci de nous contacter.">Si desea una entrega con la firma, un cargo adicional, gracias al contacto con nosotros. </span><span style="background-color: #ffffff;" title="Quel que soit le mode d'expédition choisi, nous vous fournirons dès que possible un lien qui vous permettra de suivre en ligne la livraison de votre colis.">Sea cual sea el método de envío seleccionado, vamos a presentar lo antes posible, un vínculo que le permite rastrear el envío en línea de su paquete.<br /><br /></span><span style="background-color: #ffffff;" title="Les frais d'expédition comprennent l'emballage, la manutention et les frais postaux.">Gastos de envío incluyen el embalaje, la manipulación y envío. </span><span style="background-color: #ffffff;" title="Ils peuvent contenir une partie fixe et une partie variable en fonction du prix ou du poids de votre commande.">Pueden contener un fijo y una parte variable basado en el precio o el peso de su solicitud. </span><span style="background-color: #ffffff;" title="Nous vous conseillons de regrouper vos achats en une unique commande.">Le recomendamos que para consolidar sus compras en un solo comando. </span><span style="background-color: #ffffff;" title="Nous ne pouvons pas grouper deux commandes distinctes et vous devrez vous acquitter des frais de port pour chacune d'entre elles.">No podemos grupo de dos órdenes distintos y hay que pagar gastos de envío para cada uno. </span><span style="background-color: #ffffff;" title="Votre colis est expédié à vos propres risques, un soin particulier est apporté au colis contenant des produits fragiles..">Su paquete es enviado a su propio riesgo, se presta especial atención a las parcelas que contienen objetos frágiles ..<br /><br /></span><span style="background-color: #ffffff;" title="Les colis sont surdimensionnés et protégés.">Los paquetes son de gran tamaño y protegidas.</span></span></p>]]></content>
+		<link_rewrite><![CDATA[entrega]]></link_rewrite>
+	</cms>
+	<cms id="Legal_Notice">
+		<meta_title><![CDATA[Aviso legal]]></meta_title>
+		<meta_description><![CDATA[Aviso legal]]></meta_description>
+		<meta_keywords><![CDATA[términos, condiciones y créditos fotográficos]]></meta_keywords>
+		<content><![CDATA[<h2><span id="result_box"><span style="background-color: #ffffff;" title="Mentions légales">Pie de imprenta</span></span></h2>
+<h2><span id="result_box"><span style="background-color: #ffffff;" title="Mentions légales"> </span></span><span id="result_box"><span style="background-color: #ffffff;" title="Crédits">Créditos</span></span></h2>
+<h3><span id="result_box"></span></h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="Crédits"><br /></span><span style="background-color: #ffffff;" title="Concept et production :">Concepto y producción:<br /><br /></span><span style="background-color: #ffffff;" title="Ce site internet a été réalisé en utilisant la solution open-source PrestaShop™ .">Este sitio web fue creado utilizando la solución de código abierto <a href="http://www.prestashop.com" target="_blank">PrestaShop</a>™.</span></span></p>]]></content>
+		<link_rewrite><![CDATA[aviso-legal]]></link_rewrite>
+	</cms>
+	<cms id="Terms_and_conditions_of_use">
+		<meta_title><![CDATA[Condiciones de uso]]></meta_title>
+		<meta_description><![CDATA[Condiciones de uso]]></meta_description>
+		<meta_keywords><![CDATA[condiciones, el consumo, las ventas generales]]></meta_keywords>
+		<content><![CDATA[<h2><span id="result_box"><span style="background-color: #ffffff;" title="Vos conditions de ventes">Sus condiciones de venta</span></span></h2>
+<h3>Regla N º 1</h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="Contenu de la règle numéro 1">Contenido de la Regla Número 1</span></span></p>
+<h3><span id="result_box"></span>Regla N º 2</h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="Contenu de la règle numéro 2">Contenido de la Regla N º 2</span></span></p>
+<h3><span id="result_box"></span>Regla N º 3</h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="Contenu de la règle numéro 3">Contenido de la Regla Número 3</span></span></p>]]></content>
+		<link_rewrite><![CDATA[condiciones-de-uso]]></link_rewrite>
+	</cms>
+	<cms id="About_us">
+		<meta_title><![CDATA[Sobre]]></meta_title>
+		<meta_description><![CDATA[Conozca más sobre nosotros]]></meta_description>
+		<meta_keywords><![CDATA[sobre, información]]></meta_keywords>
+		<content><![CDATA[<h2>Sobre</h2>]]></content>
+		<link_rewrite><![CDATA[sobre]]></link_rewrite>
+	</cms>
+	<cms id="Secure_payment">
+		<meta_title><![CDATA[Pago seguro]]></meta_title>
+		<meta_description><![CDATA[Ofrecemos pago seguro]]></meta_description>
+		<meta_keywords><![CDATA[pago seguro, ssl, visa, mastercard, paypal]]></meta_keywords>
+		<content><![CDATA[<h2><span id="result_box"><span style="background-color: #ffffff;" title="Paiement sécurisé">Pago seguro</span></span></h2>
+<h3><span id="result_box"><span style="background-color: #ffffff;" title="Notre offre de paiement sécurisé">Ofrecemos pago seguro</span></span></h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="Avec SSL">SSL</span></span></p>
+<h3><span id="result_box"><span style="background-color: #ffffff;" title="Utilisation de Visa/Mastercard/Paypal">Utilice Visa / Mastercard / Paypal</span></span></h3>
+<p><span id="result_box"><span style="background-color: #ffffff;" title="A propos de ces services">Acerca de estos servicios</span></span></p>]]></content>
+		<link_rewrite><![CDATA[pago-seguro]]></link_rewrite>
+	</cms>
+</entity_cms>

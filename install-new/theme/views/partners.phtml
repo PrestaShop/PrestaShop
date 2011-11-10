@@ -1,0 +1,39 @@
+<h2><?php echo $this->l('Additional Benefits') ?></h2>
+<h3><?php echo ('Exclusive offers dedicated to PrestaShop merchants') ?></h3>
+<table cellpadding="0" cellspacing="0" border="0" class="moduleTable">
+<tr>
+	<th style="width: 30px;"></th>
+		<th style="width: 100px;"><?php echo $this->l('Modules') ?></th>
+		<th style="padding: 12px; width: 430px;"><?php echo $this->l('Benefits') ?></th>
+	</tr>
+</table>
+
+<?php foreach ($this->partners as $partner_id => $partner): ?>
+	<table cellpadding="0" cellspacing="0" border="0" class="moduleTable">
+		<tr style="border-bottom:0px">
+			<td valign="top" style="text-align: center; padding-top:10px; width: 30px;">
+				<span style="padding: 12px 4px 6px 2px;">
+					<input type="checkbox" style="vertical-align: middle;" class="preinstall_partner" name="partner[<?php echo $partner_id ?>]" <?php if ($partner['checked']): ?>checked="checked"<?php endif; ?> />
+				</span>
+			</td>
+			<td valign="top" style="width: 100px; text-align: center;">
+				<img src="<?php echo $partner['logo'] ?>" alt="<?php echo $partner['name'] ?>" title="<?php echo $partner['name'] ?>">
+			</td>
+			<td style="padding: 15px; width: 430px;">
+				<?php echo $partner['description'] ?>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<div id="partner_fields_<?php echo $partner_id ?>">
+					<?php if ($partner['checked'])
+					{
+						$this->fields = $this->getPartnersFields($partner_id, $this->iso);
+						$this->partner_id = $partner_id;
+						$this->displayTemplate('partners_fields');
+					} ?>
+				</div>
+			</td>
+		</tr>
+	</table>
+<?php endforeach; ?>

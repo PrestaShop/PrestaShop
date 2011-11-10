@@ -1,0 +1,8 @@
+.clear{
+	clear: both;
+}
+
+.column_left{
+	float: left;
+	width: 250px;
+}
