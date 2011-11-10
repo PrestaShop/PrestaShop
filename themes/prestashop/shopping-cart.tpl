@@ -29,6 +29,11 @@
 
 <h1 id="cart_title">{l s='Shopping cart summary'}</h1>
 
+{if isset($account_created)}
+	<p class="success">
+		{l s='Your account is now created.'}
+	</p>
+{/if}
 {assign var='current_step' value='summary'}
 {include file="$tpl_dir./order-steps.tpl"}
 {include file="$tpl_dir./errors.tpl"}
