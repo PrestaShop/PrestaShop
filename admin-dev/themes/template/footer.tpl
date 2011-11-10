@@ -59,7 +59,7 @@
 			var message = $('.toolbarHead');
 			var view = $(window);
 
-			// bind only if message exists. placeholder will be its parent
+				// bind only if message exists. placeholder will be its parent
 				view.bind("scroll resize", function(e)
 				{
 					message.each(function(el){
@@ -72,8 +72,7 @@
 	
 						placeholderTop = placeholder.offset().top;
 						var viewTop = view.scrollTop() + 15;
-// POUET	
-// CECI EST UN TEST
+
 						if ((viewTop > placeholderTop) && !$(this).hasClass("fix-toolbar"))
 						{
 							$(this).css('width', $(this).width());
@@ -81,7 +80,6 @@
 						}
 						else if ( (viewTop <= placeholderTop) && $(this).hasClass("fix-toolbar"))
 						{
-							//$(this).css('width', 'auto');
 							$(this).removeClass("fix-toolbar");
 						}
 					}
