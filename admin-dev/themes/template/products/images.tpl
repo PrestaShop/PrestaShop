@@ -19,7 +19,6 @@
 	<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
 	<ul id="listImage"></ul>
 	<script type="text/javascript">var upbutton = "{l s='Upload a file'}"; </script>
-	{firebug value=$product}
 	<script type="text/javascript">
 	function deleteImg(id)
 	{
