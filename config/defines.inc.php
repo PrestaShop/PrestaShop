@@ -129,9 +129,6 @@ define('_PS_GEOLOCATION_NO_ORDER_', 1);
 
 define('MIN_PASSWD_LENGTH', 8);
 
-if (!defined('_PS_CACHE_ENABLED_'))
-	define('_PS_CACHE_ENABLED_', 0);
-
 define('_PS_SMARTY_NO_COMPILE_', 0);
 define('_PS_SMARTY_CHECK_COMPILE_', 1);
 define('_PS_SMARTY_FORCE_COMPILE_', 2);
