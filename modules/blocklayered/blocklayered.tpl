@@ -28,6 +28,7 @@
 {if $nbr_filterBlocks != 0}
 <script type="text/javascript">
 current_friendly_url = '#{$current_friendly_url}';
+param_product_url = '#{$param_product_url}';
 </script>
 <div id="layered_block_left" class="block">
 	<h4>{l s='Catalog' mod='blocklayered'}</h4>

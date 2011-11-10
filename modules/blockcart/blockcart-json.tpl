@@ -32,7 +32,7 @@
 {assign var='productAttributeId' value=$product.id_product_attribute}
 	{ldelim}
 		"id":            {$product.id_product},
-		"link":          "{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop)|addslashes|replace:'\\\'':'\''}",
+		"link":          "{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|addslashes|replace:'\\\'':'\''}",
 		"quantity":      {$product.cart_quantity},
 		"priceByLine":   "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|escape|truncate:15:'...':true}",

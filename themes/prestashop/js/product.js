@@ -610,8 +610,8 @@ function getProductAttribute()
 	for (i in attributesCombinations)
 		for (a in tab_attributes)
 			if (attributesCombinations[i]['id_attribute'] == tab_attributes[a])
-				request += '&'+attributesCombinations[i]['group']+'='+attributesCombinations[i]['attribute'];
-	request = request.replace(request.substring(0, 1), '#');
+				request += '/'+attributesCombinations[i]['group']+'-'+attributesCombinations[i]['attribute'];
+	request = request.replace(request.substring(0, 1), '#/');
 	url = window.location+'';
 
 	// redirection
@@ -621,16 +621,30 @@ function getProductAttribute()
 }
 
 $(document).ready(function(){
+	checkUrl();
+	initLocationChange(2000);
+});
+
+function initLocationChange(time)
+{
+	if(!time) time = 1000;
+	setInterval(checkUrl, time);
+}
+
+function checkUrl()
+{
 	url = window.location+'';
 	// if we need to load a specific combination
-	if (url.indexOf('#') != -1)
+	if (url.indexOf('#/') != -1)
 	{
-		// get the params to fill
+		// get the params to fill from a "normal" url
 		params = url.substring(url.indexOf('#') + 1, url.length);
-		tabParams = params.split('&');
+		tabParams = params.split('/');
 		tabValues = new Array();
+		if (tabParams[0] == '')
+			tabParams.shift();
 		for (i in tabParams)
-			tabValues.push(tabParams[i].split('='));
+			tabValues.push(tabParams[i].split('-'));
 		product_id = $('#product_page_product_id').val();
 		// fill html with values
 		$('.color_pick').removeClass('selected');
@@ -648,10 +662,10 @@ $(document).ready(function(){
 					$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
 				}
 		// find combination
-		if (count == tabValues.length)
+		if (count > 0)
 			findCombination();
 		// no combination found = removing attributes from url
 		else
 			window.location = url.substring(0, url.indexOf('#'));
 	}
-});
+}
