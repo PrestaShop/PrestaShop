@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<form action="{$current}&token={$token}" method="post">
+<form action="{$current}&token={$token}" method="post" id="settings_form" name="settings_form">
 	<fieldset style="width:230px;">
 		<legend>
 			<img src="../img/admin/tab-preferences.gif" />{l s='Settings'}
@@ -54,7 +54,7 @@
 				{l s='No grid engine module installed'}
 			{/if}
 		</p>
-		<p><input type="submit" value="{l s='   Save   '}" name="submitSettings" class="button" /></p>
+		<p><input type="submit" value="{l s='   Save   '}" name="submitSettings" id="submitSettings" class="button" /></p>
 	</fieldset>
 </form>
 <div class="clear space">&nbsp;</div>

@@ -32,7 +32,7 @@
 				{$translations.Calendar}
 			</legend>
 			<div>
-				<form action="{$current}&token={$token}" method="post">
+				<form action="{$current}&token={$token}{if $action && $table}&{$action}{$table}{/if}{if $identifier && $id}&{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form">
 					<input type="submit" name="submitDateDay" class="button" value="{$translations.Day}">
 					<input type="submit" name="submitDateMonth" class="button" value="{$translations.Month}">
 					<input type="submit" name="submitDateYear" class="button" value="{$translations.Year}"><br />
@@ -45,7 +45,7 @@
 					<p>{if isset($translations.To)}{$translations.To}{else}{l s='From:'}{/if}
 						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo}">
 					</p>
-					<input type="submit" name="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='   Save   '}{/if}" />
+					<input type="submit" name="submitDatePicker" id="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='   Save   '}{/if}" />
 				</form>
 			</div>
 		</fieldset>

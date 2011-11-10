@@ -31,22 +31,18 @@ class HelperFormCore extends Helper
 	public $first_call = true;
 	public $toolbar = true;
 
-	/**
-	 * @var array of forms fields
-	 * Usage :
-	 *
-	 */
+	/** @var array of forms fields */
 	protected $fields_form = array();
+
+	/** @var array values ​​of form fields */
 	public $fields_value = array();
+
 	public $table;
 
-	/** @var if not null, a title will be added on that list */
+	/** @var string if not null, a title will be added on that list */
 	public $title = null;
 
-	/**
-	 * Used to override default 'submitAdd' parameter in form action attribute
-	 * @var string
-	 */
+	/** @var string Used to override default 'submitAdd' parameter in form action attribute */
 	public $submit_action = '';
 
 	public $token;
@@ -76,7 +72,7 @@ class HelperFormCore extends Helper
 		if (isset($this->fields_form['asso_shop']) && Shop::isFeatureActive())
 			if ($this->fields_form['asso_shop'] == 'group')
 				$asso_shop = $this->displayAssoShop('group_shop');
-			elseif ($this->fields_form['asso_shop'] == 'shop')
+			else if ($this->fields_form['asso_shop'] == 'shop')
 				$asso_shop = $this->displayAssoShop();
 
 		$iso = $this->context->language->iso_code;
@@ -103,12 +99,14 @@ class HelperFormCore extends Helper
 			'asso_shop' => isset($asso_shop) ? $asso_shop : null,
 			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
 			'path_css' => _THEME_CSS_DIR_,
-			'ad' => dirname($_SERVER["PHP_SELF"]),
-
+			'ad' => dirname($_SERVER['PHP_SELF'])
 		));
 		return parent::generate();
 	}
 
+	/**
+	 * Return true if there are required fields
+	 */
 	public function getFieldsRequired()
 	{
 		if (isset($this->fields_form['input']))
