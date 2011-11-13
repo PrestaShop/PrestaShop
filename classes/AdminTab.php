@@ -1104,23 +1104,6 @@ abstract class AdminTabCore
 	}
 
 
-
-	protected function uploadIco($name, $dest)
-	{
-
-		if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name']))
-		{
-			/* Check ico validity */
-			if ($error = checkIco($_FILES[$name]))
-				$this->_errors[] = $error;
-
-			/* Copy new ico */
-			elseif(!copy($_FILES[$name]['tmp_name'], $dest))
-				$this->_errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
-		}
-		return !count($this->_errors) ? true : false;
-	}
-
 	/**
 	 * Overload this method for custom checking
 	 *
