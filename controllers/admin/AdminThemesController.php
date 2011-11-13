@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminThemesController extends AdminController
+class AdminThemesControllerCore extends AdminController
 {
 	/** This value is used in isThemeCompatible method. only version node with an 
 	 * higher version number will be used in [theme]/config.xml

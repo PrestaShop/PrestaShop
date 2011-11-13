@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminWebserviceController extends AdminController
+class AdminWebserviceControllerCore extends AdminController
 {
 	// this will be filled later
 	public $fields_form = array('webservice form');
