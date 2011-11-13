@@ -25,10 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminContact extends AdminPreferences
+class AdminContactController extends AdminController
 {
 	public function __construct()
 	{
@@ -93,12 +90,13 @@ class AdminContact extends AdminPreferences
 			if (!isset($fields[$key]))
 				$fields[$key] = $formFields[$key];
 				
-		$this->optionsList = array(
+		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Contact details'),
 				'icon' =>	'tab-contact',
 				'class' =>	'width3',
 				'fields' =>	$fields,
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),
 		);
 	}
