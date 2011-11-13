@@ -170,8 +170,6 @@ if (Tools::isSubmit('ajaxDiscountCustomers'))
 
 if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
-if (Tools::getValue('page') == 'themes'  AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
-	readfile('http://addons.prestashop.com/adminthemes.php?lang='.$context->language->iso_code);
 
 if ($step = (int)(Tools::getValue('ajaxProductTab')))
 {

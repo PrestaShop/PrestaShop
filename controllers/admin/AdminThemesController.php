@@ -25,9 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminThemes extends AdminPreferences
+class AdminThemesController extends AdminController
 {
 	/** This value is used in isThemeCompatible method. only version node with an 
 	 * higher version number will be used in [theme]/config.xml
@@ -99,7 +97,7 @@ class AdminThemes extends AdminPreferences
 		parent::__construct();
 		
 		$id_shop = Context::getContext()->shop->getID();
-		$this->optionsList = array(
+		$this->options = array(
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
@@ -112,32 +110,43 @@ class AdminThemes extends AdminPreferences
 					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo_stores-'.(int)$id_shop.'.gif?date='.time(), 'pos' => 'before')),
 					'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
 				),
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
  			),
  		);
 	}
 
-	public function display()
+	public function initContent()
 	{
+		$content = '';
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
 		{
 			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.'logo.jpg');
 			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 		}
-
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		$this->displayOptionsList();
+		//	$this->displayOptionsList();
 
-		echo '<br /><br />';
-		if (@ini_get('allow_url_fopen') AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
-			echo '<script type="text/javascript">
+/*		if (@ini_get('allow_url_fopen') AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
+			$content .= '<script type="text/javascript">
 				$.post("'.dirname(self::$currentIndex).'/ajax.php",{page:"themes"},function(a){getE("prestastore-content").innerHTML="<legend><img src=\"../img/admin/prestastore.gif\" class=\"middle\" /> '.$this->l('Live from PrestaShop Addons!').'</legend>"+a;});
 			</script>
-			<fieldset id="prestastore-content" class="width3"></fieldset>';			
+			<fieldset id="prestastore-content" class="width3">ZZZZZ</fieldset>';
 		else
-			echo '<a href="http://addons.prestashop.com/3-prestashop-themes">'.$this->l('Find new themes on PrestaShop Addons!').'</a>';
+			$content .= '<a href="http://addons.prestashop.com/3-prestashop-themes">'.$this->l('Find new themes on PrestaShop Addons!').'</a>';
+			*/
+		$this->content .= $content;
+		return parent::initContent();
+	}
+
+	public function ajaxProcessGetAddonsThemes()
+	{
+		// notice : readfile should be replaced by something else
+		if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
+			readfile('http://addons.prestashop.com/adminmodules.php?lang='.$this->context->language->iso_code);
+		$this->content = '';
 	}
 
 	/**
@@ -348,5 +357,21 @@ class AdminThemes extends AdminPreferences
 		if ($id_shop = Configuration::get('PS_SHOP_DEFAULT'))
 			$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
 		$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico');
+	}
+
+	protected function uploadIco($name, $dest)
+	{
+
+		if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name']))
+		{
+			/* Check ico validity */
+			if ($error = checkIco($_FILES[$name]))
+				$this->_errors[] = $error;
+
+			/* Copy new ico */
+			elseif(!copy($_FILES[$name]['tmp_name'], $dest))
+				$this->_errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
+		}
+		return !count($this->_errors) ? true : false;
 	}
 }
