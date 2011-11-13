@@ -125,7 +125,7 @@ class AdminOrdersControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (!$order->hasBeenShipped())
-					die(Tools::displayError('The shipping number can only be set once the order has been shipped.'));
+					throw new PrestashopException('The shipping number can only be set once the order has been shipped.');
 				$_GET['view'.$this->table] = true;
 
 				$shipping_number = pSQL(Tools::getValue('shipping_number'));
