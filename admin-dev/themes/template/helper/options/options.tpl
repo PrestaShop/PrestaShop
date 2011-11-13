@@ -207,3 +207,4 @@
 		</fieldset><br />
 	{/foreach}
 </form>
+{block name="after"}{/block}
