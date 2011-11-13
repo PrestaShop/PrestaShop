@@ -25,9 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/tabs/AdminPreferences.php');
-
-class AdminLocalization extends AdminPreferences
+class AdminLocalizationController extends AdminController
 {
 	public function __construct()
 	{
@@ -36,7 +34,7 @@ class AdminLocalization extends AdminPreferences
 
 		parent::__construct();
 
-		$this->optionsList = array(
+		$this->options = array(
 			'localization' => array(
 				'title' =>	$this->l('Localization'),
 				'width' =>	'width2',
@@ -47,6 +45,7 @@ class AdminLocalization extends AdminPreferences
 					'PS_VOLUME_UNIT' => array('title' => $this->l('Volume unit:'), 'desc' => $this->l('The volume unit of your shop'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
 					'PS_DIMENSION_UNIT' => array('title' => $this->l('Dimension unit:'), 'desc' => $this->l('The dimension unit of your shop (eg. cm or in)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'),
 				),
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),
 			'options' => array(
 				'title' =>	$this->l('Advanced'),
@@ -56,6 +55,7 @@ class AdminLocalization extends AdminPreferences
 					'PS_LOCALE_LANGUAGE' => array('title' => $this->l('Language locale:'), 'desc' => $this->l('Your server\'s language locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
 					'PS_LOCALE_COUNTRY' => array('title' => $this->l('Country locale:'), 'desc' => $this->l('Your server\'s country locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL)
 				),
+				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),
 		);
 	}
@@ -87,46 +87,24 @@ class AdminLocalization extends AdminPreferences
 		parent::postProcess();
 	}
 
-	public function display()
+	public function initContent()
 	{
-		$this->displayOptionsList();
+		$localizations_pack = false; 
+		$this->tpl_option_vars['options_content'] = $this->initOptions();
 
-		echo '<br />
-		<form method="post" action="'.self::$currentIndex.'&token='.$this->token.'" class="width2" enctype="multipart/form-data">
-		<fieldset>
-			<legend><img src="../img/admin/localization.gif" />'.$this->l('Localization pack import').'</legend>
-			<div style="clear: both; padding-top: 15px;">
-			<label>'.$this->l('Localization pack you want to import:').'</label>
-			<div class="margin-form">
-			<select id="iso_localization_pack" name="iso_localization_pack">';
-			$localization_packs = Tools::simplexml_load_file('http://www.prestashop.com/rss/localization.xml');
-			if (!$localization_packs)
-			{
-				$localizationFile = dirname(__FILE__).'/../../localization/localization.xml';
-				if (file_exists($localizationFile))
-					$localization_packs = simplexml_load_file($localizationFile);
-			}
-			if ($localization_packs)
-				foreach($localization_packs->pack as $pack)
-						echo '<option value="'.$pack->iso.'">'.$pack->name.'</option>';
-			else
-				echo '<option value="0">'.$this->l('Cannot connect to prestashop.com').'</option>';
-			echo '</select></div>
-			<br />
-				<label>'.$this->l('Content to import:').'</label>
-				<div class="margin-form" style="padding-top: 5px;">
-					<input type="checkbox" name="selection[]" value="states" checked="checked" /> '.$this->l('States').'<br />
-					<input type="checkbox" name="selection[]" value="taxes" checked="checked" /> '.$this->l('Taxes').'<br />
-					<input type="checkbox" name="selection[]" value="currencies" checked="checked" /> '.$this->l('Currencies').'<br />
-					<input type="checkbox" name="selection[]" value="languages" checked="checked" /> '.$this->l('Languages').'<br />
-					<input type="checkbox" name="selection[]" value="units" checked="checked" /> '.$this->l('Units (e.g., weight, volume, distance)').'
-				</div>
-				<div align="center" style="margin-top: 20px;">
-					<input type="submit" class="button" name="submitLocalizationPack" value="'.$this->l('   Import   ').'" />
-				</div>
-			</div>
-		</fieldset>
-		</form>
-		<br />';
+		$xml_localization = Tools::simplexml_load_file('http://www.prestashop.com/rss/localization.xml');
+		if (!$xml_localization)
+		{
+			$localizationFile = dirname(__FILE__).'/../../localization/localization.xml';
+			if (file_exists($localizationFile))
+				$xml_localization = simplexml_load_file($localizationFile);
+		}
+
+			if ($xml_localization)
+				foreach($xml_localization->pack as $pack)
+					$localizations_pack[(string)$pack->iso] = (string)$pack->name;
+
+		$this->tpl_option_vars['localizations_pack'] = $localizations_pack;
+		parent::initContent();
 	}
 }
