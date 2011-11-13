@@ -131,7 +131,7 @@
 				<tr>
 					<td>{$message['status']}</td>
 					<td>
-						<a href="index.php?tab=AdminCustomerThreads&id_customer_thread='$message['id_customer_thread']}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}">
+						<a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}">
 							{$message['message']}...
 						</a>
 					</td>
