@@ -25,10 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(dirname(__FILE__).'/../../classes/AdminTab.php');
-
-class AdminWebservice extends AdminTab
+class AdminWebserviceController extends AdminController
 {
+	// this will be filled later
+	public $fields_form = array('webservice form');
 
 	public function __construct()
 	{
@@ -46,7 +46,7 @@ class AdminWebservice extends AdminTab
 		);
 		
 		if (file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$this->optionsList = array(
+			$this->options = array(
 				'general' => array(
 					'title' =>	$this->l('Configuration'),
 					'fields' =>	array(
@@ -76,47 +76,49 @@ class AdminWebservice extends AdminTab
 	
 	public function checkForWarning()
 	{
-		$warnings = array();
 		if (!file_exists(_PS_ROOT_DIR_.'/.htaccess'))
-			$warnings[] = $this->l('In order to enable the PrestaShop Webservice, please generate the .htaccess file via the "Generators" tab (in the "Tools" tab).');
+			$this->warnings[] = $this->l('In order to enable the PrestaShop Webservice, please generate the .htaccess file via the "Generators" tab (in the "Tools" tab).');
 		if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false)
-			$warnings[] = $this->l('To avoid operating problems, please use an Apache server.');
+			$this->warnings[] = $this->l('To avoid operating problems, please use an Apache server.');
 		{
 			if (function_exists('apache_get_modules'))
 			{
 				$apache_modules = apache_get_modules();
 				if (!in_array('mod_auth_basic', $apache_modules))
-					$warnings[] = $this->l('Please activate the Apache module \'mod_auth_basic\' to allow authentication of PrestaShop webservice.');
+					$this->warnings[] = $this->l('Please activate the Apache module \'mod_auth_basic\' to allow authentication of PrestaShop webservice.');
 				if (!in_array('mod_rewrite', $apache_modules))
-					$warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow using the PrestaShop webservice.');
+					$this->warnings[] = $this->l('Please activate the Apache module \'mod_rewrite\' to allow using the PrestaShop webservice.');
 			}
 			else
 			{
-				$warnings[] = $this->l('We could not check if basic authentication and rewrite extensions are activated. Please manually check if they are activated in order to use the PrestaShop webservice.');
+				$this->warnings[] = $this->l('We could not check if basic authentication and rewrite extensions are activated. Please manually check if they are activated in order to use the PrestaShop webservice.');
 			}
 		}
 		if (!extension_loaded('SimpleXML'))
-			$warnings[] = $this->l('Please activate the PHP extension \'SimpleXML\' to allow testing of PrestaShop webservice.');
+			$this->warnings[] = $this->l('Please activate the PHP extension \'SimpleXML\' to allow testing of PrestaShop webservice.');
 		if (!configuration::get('PS_SSL_ENABLED'))
-			$warnings[] = $this->l('If possible, it is preferable to use SSL (https) for webservice calls, as it avoids the security issues of type "man in the middle".');
+			$this->warnings[] = $this->l('If possible, it is preferable to use SSL (https) for webservice calls, as it avoids the security issues of type "man in the middle".');
 		
-		$this->displayWarning($warnings);
 
 		foreach ($this->_list as $k => $item)
 			if ($item['is_module'] && $item['class_name'] && $item['module_name'] && 
 				($instance = Module::getInstanceByName($item['module_name'])) && 
 				!$instance->useNormalPermissionBehaviour())
 				unset($this->_list[$k]);
-		parent::displayList();
+		$this->initList();
 	}
 	
-	public function displayForm($isMainTab = true)
+	/** @todo : to fill $this->fields_form in order to generate
+	 * the form automatically.. 
+	 *
+	 */
+	public function initForm($isMainTab = true)
 	{
-		parent::displayForm();
+		$content = '';
 		if (!($obj = $this->loadObject(true)))
 			return;
 			
-		echo '
+		$content = '
 		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
 			<fieldset><legend><img src="../img/admin/access.png" />'.$this->l('Webservice Accounts').'</legend>
@@ -165,11 +167,11 @@ class AdminWebservice extends AdminTab
 								<th><input type="checkbox" class="all_delete delete" /></th>
 								<th><input type="checkbox" class="all_head head" /></th>
 							</tr>
-						';
-$ressources = WebserviceRequest::getResources();
-$permissions = WebserviceKey::getPermissionForAccount($obj->key);
-foreach ($ressources as $resourceName => $resource)
-echo '
+		';
+		$ressources = WebserviceRequest::getResources();
+		$permissions = WebserviceKey::getPermissionForAccount($obj->key);
+		foreach ($ressources as $resourceName => $resource)
+			$content .= '
 							<tr>
 								<th>'.$resourceName.'</th>
 								<th><input type="checkbox" class="all"/></th>
@@ -179,51 +181,9 @@ echo '
 								<td><input type="checkbox" '.(isset($ressources[$resourceName]['forbidden_method']) && in_array('DELETE', $ressources[$resourceName]['forbidden_method']) ? 'disabled="disabled"' : '').' class="delete" name="resources['.$resourceName.'][DELETE]" '.(isset($permissions[$resourceName]) && in_array('DELETE', $permissions[$resourceName]) ? 'checked="checked"' : '').'/></td>
 								<td><input type="checkbox" '.(isset($ressources[$resourceName]['forbidden_method']) && in_array('HEAD', $ressources[$resourceName]['forbidden_method']) ? 'disabled="disabled"' : '').' class="head" name="resources['.$resourceName.'][HEAD]" '.(isset($permissions[$resourceName]) && in_array('HEAD', $permissions[$resourceName]) ? 'checked="checked"' : '').'/></td>
 							</tr>';
-echo '
+		$content .= '
 						</tbody>
 					</table>
-					<script>';?>
-				
-						$(function() {
-							$('table.permissions input.all').click(function() {
-								if($(this).is(':checked'))
-									$(this).parent().parent().find('input.get:not(:checked), input.put:not(:checked), input.post:not(:checked), input.delete:not(:checked), input.head:not(:checked)').click();
-								else
-									$(this).parent().parent().find('input.get:checked, input.put:checked, input.post:checked, input.delete:checked, input.head:checked').click();
-							});
-							$('table.permissions .all_get').click(function() {
-								if($(this).is(':checked'))
-									$(this).parent().parent().parent().find('input.get:not(:checked)').click();
-								else
-									$(this).parent().parent().parent().find('input.get:checked').click();
-							});
-							$('table.permissions .all_put').click(function() {
-								if($(this).is(':checked'))
-									$(this).parent().parent().parent().find('input.put:not(:checked)').click();
-								else
-									$(this).parent().parent().parent().find('input.put:checked').click();
-							});
-							$('table.permissions .all_post').click(function() {
-								if($(this).is(':checked'))
-									$(this).parent().parent().parent().find('input.post:not(:checked)').click();
-								else
-									$(this).parent().parent().parent().find('input.post:checked').click();
-							});
-							$('table.permissions .all_delete').click(function() {
-								if($(this).is(':checked'))
-									$(this).parent().parent().parent().find('input.delete:not(:checked)').click();
-								else
-									$(this).parent().parent().parent().find('input.delete:checked').click();
-							});
-							$('table.permissions .all_head').click(function() {
-								if($(this).is(':checked'))
-									$(this).parent().parent().parent().find('input.head:not(:checked)').click();
-								else
-									$(this).parent().parent().parent().find('input.head:checked').click();
-							});
-						});
-				<?php echo '
-					</script>
 				</div>
 				<div class="margin-form">
 					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
@@ -231,6 +191,8 @@ echo '
 				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
 			</fieldset>
 		</form>';
+		$this->tpl_form_vars['custom_form'] = $content;
+		return parent::initForm();
 	}
 
 	public function postProcess()
@@ -242,8 +204,9 @@ echo '
 		return parent::postProcess();
 	}
 
-	public function display()
+	public function initContent()
 	{
+		$content = '';
 		// Include other tab in current tab
 		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))){}
 
@@ -252,31 +215,32 @@ echo '
 		{
 			if ($this->tabAccess['add'] === '1')
 			{
-				$this->displayForm();
+				$this->display = 'add';
+//				$content .= $this->initForm();
 				if ($this->tabAccess['view'])
-					echo '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+					$content .= '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 			}
 			else
-				echo $this->l('You do not have permission to add here');
+				$content .= $this->l('You do not have permission to add here');
 		}
 		elseif (isset($_GET['update'.$this->table]))
 		{
 			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $this->context->employee->id == Tools::getValue('id_employee')))
 			{
-				$this->displayForm();
+				$content .= $this->initForm();
 				if ($this->tabAccess['view'])
-					echo '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+					$content .= '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : self::$currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 			}
 			else
-				echo $this->l('You do not have permission to edit here');
+				$content .= $this->l('You do not have permission to edit here');
 		}
 		elseif (isset($_GET['view'.$this->table]))
 			$this->{'view'.$this->table}();
-
 		else
 		{
 			$this->checkForWarning();
 			
+/*
 			$this->getList($this->context->language->id);
 			$this->displayList();
 			
@@ -288,7 +252,9 @@ echo '
 			elseif (isset($assos_shop[$this->table]) AND $assos_shop[$this->table]['type'] == 'group_shop')
 				$this->displayAssoShop('group_shop');
 			$this->displayOptionsList();
+*/
 		}
+		parent::initContent();
 	}
 
 }
