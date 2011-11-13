@@ -63,6 +63,9 @@ class HelperOptionsCore extends Helper
 
 		foreach ($option_list as $category => $category_data)
 		{
+			if(!is_array($category_data))
+				continue;
+
 			if (!isset($category_data['image']))
 				$category_data['image'] = (!empty($tab['module']) && file_exists($_SERVER['DOCUMENT_ROOT']._MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.gif') ? _MODULE_DIR_.$tab['module'].'/' : '../img/t/').$tab['class_name'].'.gif';
 

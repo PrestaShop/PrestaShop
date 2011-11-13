@@ -25,8 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminGenerator extends AdminTab
+class AdminGeneratorControllerCore extends AdminController
 {
+	protected $options = array('array for auto display');
+
 	public function __construct()
 	{
 		$this->_htFile = dirname(__FILE__).'/../../.htaccess';
@@ -36,66 +38,17 @@ class AdminGenerator extends AdminTab
 		return parent::__construct();
 	}
 
-	public function display()
+	public function initContent()
 	{
 		$languages = Language::getLanguages(false);
 
-		// Htaccess
-		echo '
-		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
-		<fieldset><legend><img src="../img/admin/htaccess.gif" alt="" />'.$this->l('Htaccess file generation').'</legend>
-		<p><b>'.$this->l('Warning:').'</b> '.$this->l('this tool can ONLY be used if you are hosted by an Apache web server. Please ask your webhost.').'</p>
-		<p>'.$this->l('This tool will automatically generate a ".htaccess" file that will give you the ability to do URL rewriting and to catch 404 errors.').'</p>';
+		$this->tpl_option_vars['checkConfiguration_ht'] = $this->_checkConfiguration($this->_htFile);
+		$this->tpl_option_vars['checkConfiguration_rb'] = $this->_checkConfiguration($this->_rbFile);
+		$this->tpl_option_vars['ps_htaccess_cache_control'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		$this->tpl_option_vars['ps_rewriting_settings'] = Configuration::get('PS_REWRITING_SETTINGS');
+		$this->tpl_option_vars['ps_htaccess_disable_multiviews'] = Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
 
-		if ($this->_checkConfiguration($this->_htFile))
-			echo '
-			<div class="clear">&nbsp;</div>
-			<label for="imageCacheControl">'.$this->l('Optimization').'</label>
-			<div class="margin-form">
-				<input type="checkbox" name="PS_HTACCESS_CACHE_CONTROL" id="PS_HTACCESS_CACHE_CONTROL" value="1" '.(Configuration::get('PS_HTACCESS_CACHE_CONTROL') == 1 ? 'checked="checked"' : '').' />
-				<p>'.$this->l('This will add directives to your .htaccess file which should improve caching and compression.').'</p>
-			</div>
-			<div class="clear">&nbsp;</div>
-			<label for="imageCacheControl">'.$this->l('Friendly URL').'</label>
-			<div class="margin-form">
-				<input type="checkbox" name="PS_REWRITING_SETTINGS" id="PS_REWRITING_SETTINGS" value="1" '.(Configuration::get('PS_REWRITING_SETTINGS') ? 'checked="checked"' : '').' />
-				<p>'.$this->l('Enable only if your server allows URL rewriting.').'</p>
-			</div>
-			<div class="clear">&nbsp;</div>
-			<label for="imageCacheControl">'.$this->l('Disable apache multiviews').'</label>
-			<div class="margin-form">
-				<input type="checkbox" name="PS_HTACCESS_DISABLE_MULTIVIEWS" id="PS_HTACCESS_CACHE_CONTROL" value="1" '.(Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS') == 1 ? 'checked="checked"' : '').' />
-				<p>'.$this->l('Enable this option only if you have problems with some pages URL rewriting.').'</p>
-			</div>
-			<p class="clear" style="font-weight:bold;">'.$this->l('Generate your ".htaccess" file by clicking on the following button:').' 
-			<input type="submit" value="'.$this->l('Generate .htaccess file').'" name="submitHtaccess" class="button" /></p>
-			<p>'.$this->l('This will erase your').'<b> '.$this->l('old').'</b> '.$this->l('.htaccess file!').'</p>';
-		else
-			echo '
-			<p style="color:red; font-weight:bold;">'.$this->l('Before being able to use this tool, you need to:').'</p>
-			<p>'.$this->l('- create a').' <b>'. $this->l('.htaccess').'</b> '.$this->l('blank file in directory').' <b>'.__PS_BASE_URI__.'</b>
-			<br />'.$this->l('- give it write permissions (CHMOD 666 on Unix system)').'</p>';
-		echo '</p></fieldset></form>';
-
-		// Robots
-		echo '<br /><br />
-		<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post" enctype="multipart/form-data">
-		<fieldset><legend><img src="../img/admin/binoculars.png" alt="" />'.$this->l('Robots file generation').'</legend>
-		<p><b>'.$this->l('Warning:').' </b>'.$this->l('Your file robots.txt MUST be in your website\'s root directory and nowhere else.').'</p>
-		<p>'.$this->l('eg: http://www.yoursite.com/robots.txt').'.</p>
-		<p>'.$this->l('This tool will automatically generate a "robots.txt" file that you can configure to deny access to search engines for some pages.').'</p>';
-		if ($this->_checkConfiguration($this->_rbFile))
-			echo '
-			<p style="font-weight:bold;">'.$this->l('Generate your "robots.txt" file by clicking on the following button:').' 
-			<input type="submit" value="'.$this->l('Generate robots.txt file').'" name="submitRobots" class="button" /></p>
-			<p>'.$this->l('This will erase your').'<b> '.$this->l('old').'</b> '.$this->l('robots.txt file!').'</p>';
-		else
-			echo '
-			<p style="color:red; font-weight:bold;">'.$this->l('Before being able to use this tool, you need to:').'</p>
-			<p>'.$this->l('- create a').' <b>'. $this->l('robots.txt').'</b> '.$this->l('blank file in dir:').' <b>'.__PS_BASE_URI__.'</b>
-			<br />'.$this->l('- give it write permissions (CHMOD 666 on Unix system)').'</p>';
-		echo '</p></fieldset></form>
-		<br />';
+		parent::initContent();
 	}
 
 	public function _checkConfiguration($file)

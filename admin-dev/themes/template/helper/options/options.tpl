@@ -26,6 +26,7 @@
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
 </script>
+{block name="defaultOptions"}
 <form action="{$current}&submitOptions{$table}=1&token={$token}" 
 	{if isset($categoryData['name'])} name={$categoryData['name']}{/if} 
 	{if isset($categoryData['id'])} id={$categoryData['id']} {/if}
@@ -207,4 +208,5 @@
 		</fieldset><br />
 	{/foreach}
 </form>
+{/block}
 {block name="after"}{/block}
