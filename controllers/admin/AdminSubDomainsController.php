@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminSubDomains extends AdminTab
+class AdminSubDomainsControllerCore extends AdminController
 {
 	public function __construct()
 	{
@@ -38,38 +38,38 @@ class AdminSubDomains extends AdminTab
 			'id_subdomain' => array('title' => $this->l('ID'), 'width' => 25),
 			'name' => array('title' => $this->l('Subdomain'), 'width' => 200)
 		);
+
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Subdomains'),
+				'image' => '../img/admin/subdomain.gif',
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Subdomains:'),
+						'name' => 'name',
+						'size' => '33',
+						'required' => true,
+						'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('   Save   '),
+					'class' => 'button'
+				)
+			);
+
+
 		parent::__construct();
 	}
 	
-	public function displayList()
+	public function initList()
 	{
-		$this->displayWarning($this->l('Cookies are different on each subdomain of your Website. If you want to use the same cookie, please add here the subdomains used by your shop. The most common is "www".'));
-		return parent::displayList();
+		$this->warnings[] = $this->l('Cookies are different on each subdomain of your Website. If you want to use the same cookie, please add here the subdomains used by your shop. The most common is "www".');
+		return parent::initList();
 	}
 
-	public function displayForm($isMainTab = true)
-	{
-		parent::displayForm();
-		
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		echo '
-		<form action="'.self::$currentIndex.'&submitAdd'.$this->table.'=1&token='.$this->token.'" method="post">
-		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
-			<fieldset><legend><img src="../img/admin/subdomain.gif" /> '.$this->l('Subdomains').'</legend>
-				<label>'.$this->l('Subdomain:').' </label>
-				<div class="margin-form">
-					<input type="text" size="15" name="name" value="'.htmlentities($this->getFieldValue($obj, 'name'), ENT_COMPAT, 'UTF-8').'" /> <sup>*</sup>
-					<p class="clear">'.$this->l('Additional subdomain').'</p>
-				</div>
-				<div class="margin-form">
-					<input type="submit" value="'.$this->l('   Save   ').'" name="submitAdd'.$this->table.'" class="button" />
-				</div>
-				<div class="small"><sup>*</sup> '.$this->l('Required field').'</div>
-			</fieldset>
-		</form>';
-	}
 	
 	public function postProcess()
 	{
