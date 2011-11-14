@@ -1136,5 +1136,14 @@ class OrderCore extends ObjectModel
 	{
 		return OrderDetail::getList($this->id);
 	}
+	
+	public function orderContainProduct($id_product)
+	{
+		$product_list = $this->getOrderDetailList();
+		foreach ($product_list as $product)
+			if ($product['product_id'] == (int)$id_product)
+				return true;
+		return false;
+	}
 
 }

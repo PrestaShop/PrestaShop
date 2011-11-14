@@ -46,7 +46,20 @@ class IdentityControllerCore extends FrontController
 	{
 		if (count($_POST))
 		{
-			$exclusion = array('secure_key', 'old_passwd', 'passwd', 'active', 'date_add', 'date_upd', 'last_passwd_gen', 'newsletter_date_add', 'id_default_group');
+			$exclusion = array('secure_key', 
+									'old_passwd', 
+									'passwd', 
+									'active', 
+									'date_add', 
+									'date_upd', 
+									'last_passwd_gen', 
+									'newsletter_date_add', 
+									'id_default_group', 
+									'id_shop', 
+									'id_group_shop', 
+									'ip_registration_newsletter',
+									'note',
+									'is_guest');
 			$fields = $this->customer->getFields();
 			foreach ($fields as $key => $value)
 				if (!in_array($key, $exclusion))

@@ -542,8 +542,7 @@
 	{
 		updateCartProducts(jsonSummary.summary.products);
 		updateCartVouchers(jsonSummary.summary.discounts);
-
-		if (jsonSummary.summary.products.length == 0 || !jsonSummary.addresses.length == 0)
+		if (!jsonSummary.summary.products.length || !jsonSummary.addresses.length)
 			$('#carriers_part,#summary_part').hide();
 		else
 			$('#carriers_part,#summary_part').show();

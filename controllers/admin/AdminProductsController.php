@@ -810,7 +810,7 @@ class AdminProductsController extends AdminController
 				{
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = $id_product;
-					$specificPrice->id_product_attribute = (int)Tools::getValue('id_product_attribute');
+					$specificPrice->id_product_attribute = (int)Tools::getValue('sp_id_product_attribute');
 					$specificPrice->id_shop = (int)$id_shop;
 					$specificPrice->id_currency = (int)($id_currency);
 					$specificPrice->id_country = (int)($id_country);

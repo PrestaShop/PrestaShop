@@ -228,10 +228,19 @@ class ProductControllerCore extends FrontController
 		$id_currency = (int)$this->context->cookie->id_currency;
 		$id_product = (int)$this->product->id;
 		$id_shop = $this->context->shop->getID(true);
-		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group);
-
+		
+		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true);
+		foreach($quantity_discounts as &$quantity_discount)
+			if ($quantity_discount['id_product_attribute'])
+			{
+				$combination = new Combination((int)$quantity_discount['id_product_attribute']);
+				$attributes = $combination->getAttributesName((int)$this->context->language->id);
+				foreach ($attributes as $attribute)
+					$quantity_discount['attributes'] = $attribute['name'].' - ';
+				$quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
+			}
+		
 		$product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
-
 		$address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		$this->context->smarty->assign(array(
 			'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax),
@@ -292,6 +301,7 @@ class ProductControllerCore extends FrontController
 		if (is_array($attributes_groups) && $attributes_groups)
 		{
 			$combination_images = $this->product->getCombinationImages($this->context->language->id);
+			
 			foreach ($attributes_groups as $k => $row)
 			{
 				// Color management

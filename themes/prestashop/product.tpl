@@ -49,13 +49,11 @@ var allowBuyWhenOutOfStock = {if $allow_oosp == 1}true{else}false{/if};
 var availableNowValue = '{$product->available_now|escape:'quotes':'UTF-8'}';
 var availableLaterValue = '{$product->available_later|escape:'quotes':'UTF-8'}';
 var productPriceTaxExcluded = {$product->getPriceWithoutReduct(true)|default:'null'} - {$product->ecotax};
-var reduction_percent = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
-var reduction_price = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction}{else}0{/if};
-var specific_price = {if $product->specificPrice AND $product->specificPrice.price}{$product->specificPrice.price}{else}0{/if};
 var product_specific_price = new Array();
-{foreach from=$product->specificPrice key='key_specific_price' item='specific_price_value'}
-	product_specific_price['{$key_specific_price}'] = '{$specific_price_value}';
-{/foreach}
+product_specific_price['reduction_percent'] = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'percentage'}{$product->specificPrice.reduction*100}{else}0{/if};
+product_specific_price['reduction_price'] = {if $product->specificPrice AND $product->specificPrice.reduction AND $product->specificPrice.reduction_type == 'amount'}{$product->specificPrice.reduction}{else}0{/if};
+product_specific_price['price'] = {if $product->specificPrice AND $product->specificPrice.price}{$product->specificPrice.price}{else}0{/if};
+product_specific_price['reduction_type'] = '{if $product->specificPrice}$product->specificPrice.reduction_type{/if}';
 var specific_currency = {if $product->specificPrice AND $product->specificPrice.id_currency}true{else}false{/if};
 var group_reduction = '{$group_reduction}';
 var default_eco_tax = {$product->ecotax};
@@ -79,7 +77,7 @@ var idDefaultImage = {if isset($cover.id_image_only)}{$cover.id_image_only}{else
 {/if}
 
 var productPriceWithoutRedution = '{$productPriceWithoutRedution}';
-var product_price = '{$productPrice}';
+var productPrice = '{$productPrice}';
 
 // Customizable field
 var img_ps_dir = '{$img_ps_dir}';
@@ -123,11 +121,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 	// Combinations
 	{foreach from=$combinations key=idCombination item=combination}
 		var specific_price_combination = new Array();
-		{if $combination.specific_price}
-			{foreach from=$combination.specific_price key='specific_price_key' item='combination_specific_price'}
-				specific_price_combination['{$specific_price_key}'] = '{$combination_specific_price}';
-			{/foreach}
-		{/if}
+		specific_price_combination['reduction_percent'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'percentage'}{$combination.specific_price.reduction*100}{else}0{/if};
+		specific_price_combination['reduction_price'] = {if $combination.specific_price AND $combination.specific_price.reduction AND $combination.specific_price.reduction_type == 'amount'}{$combination.specific_price.reduction}{else}0{/if};
+		specific_price_combination['price'] = {if $combination.specific_price AND $combination.specific_price.price}{$combination.specific_price.price}{else}0{/if};
+		specific_price_combination['reduction_type'] = '{if $combination.specific_price}{$combination.specific_price.reduction_type}{/if}';
 		addCombination({$idCombination|intval}, new Array({$combination.list}), {$combination.quantity}, {$combination.price}, {$combination.ecotax}, {$combination.id_image}, '{$combination.reference|addslashes}', {$combination.unit_impact}, {$combination.minimal_quantity}, '{$combination.available_date}', specific_price_combination);
 	{/foreach}
 {/if}
@@ -255,7 +252,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 						<img src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
 						<span class="on_sale">{l s='On sale!'}</span>
 					{/if}
-					<span style="{if !$product->specificPrice AND !$product->specificPrice.reduction AND $productPriceWithoutRedution < $productPrice}display:none;{/if}" id="discount_reduced_price" class="discount">{l s='Reduced price!'}</span>
+					<span style="{if !$product->specificPrice AND !$product->specificPrice.reduction AND $productPriceWithoutRedution <= $productPrice}display:none;{/if}" id="discount_reduced_price" class="discount">{l s='Reduced price!'}</span>
 					<br />
 					<span class="our_price_display">
 					{if $priceDisplay >= 0 && $priceDisplay <= 2}
@@ -282,7 +279,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 						{/if}
 					</span>
 				</p>
-				<p style="{if !$product->specificPrice AND !$product->specificPrice.reduction_type == 'percentage'}display:none;{/if}" id="reduction_percent">{l s='(price reduced by'} <span id="reduction_percent_display">{$product->specificPrice.reduction*100}</span> %{l s=')'}</p>
+				<p style="{if !$product->specificPrice || $product->specificPrice.reduction_type != 'percentage'}display:none;{/if}" id="reduction_percent">{l s='(price reduced by'} <span id="reduction_percent_display">{$product->specificPrice.reduction*100}</span> %{l s=')'}</p>
 				{if $packItems|@count}
 					<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
 					<br class="clear" />
@@ -421,6 +418,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				{else}
 					{l s='quantity'}
 				{/if}
+				{if $quantity_discount.attributes}{$quantity_discount.attributes}{/if}
 				</th>
 			{/foreach}
 		</tr>
