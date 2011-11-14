@@ -34,6 +34,8 @@ class AdminControllerCore extends Controller
 	public $warnings = array();
 	public $informations = array();
 
+	public $shopShareDatas = false;
+
 	public $_languages = array();
 	public $default_form_language;
 	public $allow_employee_form_lang;
