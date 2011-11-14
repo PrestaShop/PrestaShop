@@ -899,6 +899,8 @@ class AdminStockManagementControllerCore extends AdminController
 				$id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
 
 				$product_is_valid = false;
+				$is_pack = false;
+				$is_virtual = false;
 				$lang_id = $this->context->language->id;
 
 				// try to load product attribute first
