@@ -19,17 +19,9 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9930 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script language="javascript">
-$(function() {
-	$('input.quantity_received_today').live('click', function() {
-		/* checks checkbox when the input is clicked */
-		$(this).parents('tr:eq(0)').find('input[type=checkbox]').attr('checked', true);
-	});
-});
-</script>
-
-{$content}
+<a href="{$href}">
+<img src="../img/admin/delivery.gif" alt="{$action}" title="{$action}" /></a>

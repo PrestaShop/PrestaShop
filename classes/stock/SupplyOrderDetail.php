@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 10014 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,12 +28,12 @@
 /**
  * @since 1.5.0
  */
-class SupplierOrderDetailCore extends ObjectModel
+class SupplyOrderDetailCore extends ObjectModel
 {
 	/**
-	 * @var int Supplier order
+	 * @var int Supply order
 	 */
-	public $id_supplier_order;
+	public $id_supply_order;
 
 	/**
 	 * @var int Product ordered
@@ -46,12 +46,32 @@ class SupplierOrderDetailCore extends ObjectModel
 	public $id_product_attribute;
 
 	/**
+	 * @var string Product reference
+	 */
+	public $reference;
+
+	/**
+	 * @var int Product name
+	 */
+	public $name;
+
+	/**
+	 * @var int Product EAN13
+	 */
+	public $ean13;
+
+	/**
+	 * @var string UPC
+	 */
+	public $upc;
+
+	/**
 	 * @var int Currency used to buy this particular product
 	 */
 	public $id_currency;
 
 	/**
-	 * @var float Exchange rate between $id_currency and SupplierOrder::$id_ref_currency, at the time
+	 * @var float Exchange rate between $id_currency and SupplyOrder::$id_ref_currency, at the time
 	 */
 	public $exchange_rate;
 
@@ -107,20 +127,21 @@ class SupplierOrderDetailCore extends ObjectModel
 	public $price_ti = 0;
 
 	/**
-	 * @var float Tax value of the given product after applying the global order discount (i.e. if SupplierOrder::discount_rate is set)
+	 * @var float Tax value of the given product after applying the global order discount (i.e. if SupplyOrder::discount_rate is set)
 	 */
 	public $tax_value_with_order_discount = 0;
 
 	/**
 	 * @var float This is like $price_with_discount_te, considering the global order discount.
-	 * (i.e. if SupplierOrder::discount_rate is set)
+	 * (i.e. if SupplyOrder::discount_rate is set)
 	 */
 	public $price_with_order_discount_te = 0;
 
 	protected $fieldsRequired = array(
-		'id_supplier_order',
+		'id_supply_order',
 		'id_product',
 		'id_product_attribute',
+		'name',
 		'id_currency',
 		'exchange_rate',
 		'unit_price_te',
@@ -137,9 +158,13 @@ class SupplierOrderDetailCore extends ObjectModel
 	);
 
 	protected $fieldsValidate = array(
-		'id_supplier_order' => 'isUnsignedId',
+		'id_supply_order' => 'isUnsignedId',
 		'id_product' => 'isUnsignedId',
 		'id_product_attribute' => 'isUnsignedId',
+		'reference' => 'isReference',
+		'name' => 'isGenericName',
+		'ean13' => 'isEan13',
+		'upc' => 'isUpc',
 		'id_currency' => 'isUnsignedId',
 		'exchange_rate' => 'isFloat',
 		'unit_price_te' => 'isPrice',
@@ -159,12 +184,12 @@ class SupplierOrderDetailCore extends ObjectModel
 	/**
 	 * @var string Database table name
 	 */
-	protected $table = 'supplier_order_detail';
+	protected $table = 'supply_order_detail';
 
 	/**
 	 * @var string Database ID name
 	 */
-	protected $identifier = 'id_supplier_order_detail';
+	protected $identifier = 'id_supply_order_detail';
 
 	/**
 	 * @see ObjectModel::getFields()
@@ -173,9 +198,13 @@ class SupplierOrderDetailCore extends ObjectModel
 	{
 		$this->validateFields();
 
-		$fields['id_supplier_order'] = (int)$this->id_supplier_order;
+		$fields['id_supply_order'] = (int)$this->id_supply_order;
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
+		$fields['reference'] = pSQL($this->reference);
+		$fields['name'] = pSQL($this->name);
+		$fields['ean13'] = pSQL($this->ean13);
+		$fields['upc'] = pSQL($this->upc);
 		$fields['id_currency'] = (int)$this->id_currency;
 		$fields['exchange_rate'] = (float)$this->exchange_rate;
 		$fields['unit_price_te'] = (float)$this->unit_price_te;

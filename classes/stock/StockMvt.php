@@ -28,8 +28,28 @@
 class StockMvtCore extends ObjectModel
 {
 	public $id;
+
+	/**
+	 * @var string The creation date of the movement
+	 */
 	public $date_add;
+
+	/**
+	 * @var int The employee id, responsible of the movement
+	 */
 	public $id_employee;
+
+	/**
+	 * @since 1.5.0
+	 * @var string The first name of the employee responsible of the movement
+	 */
+	public $employee_firstname;
+
+	/**
+	 * @since 1.5.0
+	 * @var string The last name of the employee responsible of the movement
+	 */
+	public $employee_lastname;
 
 	/**
 	 * @since 1.5.0
@@ -118,6 +138,8 @@ class StockMvtCore extends ObjectModel
  	protected $fieldsValidate = array(
  		'date_add' => 'isDate',
  		'id_employee' => 'isUnsignedId',
+ 		'employee_firstname' => 'isName',
+ 		'employee_lastname' => 'isName',
  		'id_stock' => 'isUnsignedId',
  		'physical_quantity' => 'isUnsignedInt',
  	 	'id_stock_mvt_reason' => 'isUnsignedId',
@@ -145,6 +167,8 @@ class StockMvtCore extends ObjectModel
 		$this->validateFields();
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['id_employee'] = (int)$this->id_employee;
+		$fields['employee_lastname'] = pSQL($this->employee_lastname);
+		$fields['employee_firstname'] = pSQL(Tools::ucfirst($this->employee_firstname));
 		$fields['id_stock'] = (int)$this->id_stock;
 		$fields['physical_quantity'] = (int)$this->physical_quantity;
 		$fields['id_stock_mvt_reason'] = (int)$this->id_stock_mvt_reason;
@@ -163,6 +187,7 @@ class StockMvtCore extends ObjectModel
 	public static function addMissingMvt($id_employee)
 	{
 		Tools::displayAsDeprecated();
+		/*
 		// Search missing stock movement on products without attributes
 		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
 				FROM '._DB_PREFIX_.'product p
@@ -204,5 +229,6 @@ class StockMvtCore extends ObjectModel
 				$mvt->id_stock_mvt_reason = _STOCK_MOVEMENT_MISSING_REASON_;
 				$mvt->add();
 			}
+		*/
 	}
 }

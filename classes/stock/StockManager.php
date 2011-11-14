@@ -72,6 +72,8 @@ class StockManagerCore implements StockManagerInterface
 			'last_wa' => null,
 			'current_wa' => null,
 			'id_employee' => $context->employee->id,
+			'employee_firstname' => $context->employee->firstname,
+			'employee_lastname' => $context->employee->lastname,
 			'sign' => 1
 		);
 
@@ -257,6 +259,8 @@ class StockManagerCore implements StockManagerInterface
 						'last_wa' => $stock->price_te,
 						'current_wa' => $stock->price_te,
 						'id_employee' => $context->employee->id,
+						'employee_firstname' => $context->employee->firstname,
+						'employee_lastname' => $context->employee->lastname,
 						'sign' => -1
 					);
 					$stock_params = array(
@@ -583,7 +587,7 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	protected function calculateWA($stock, $quantity, $price_te)
 	{
-		return ((($stock->physical_quantity * $stock->price_te) + ($quantity * $price_te)) / ($stock->physical_quantity + $quantity));
+		return (float)Tools::ps_round(((($stock->physical_quantity * $stock->price_te) + ($quantity * $price_te)) / ($stock->physical_quantity + $quantity)), 6);
 	}
 
 	/**

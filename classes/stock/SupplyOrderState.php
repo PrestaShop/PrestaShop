@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 10019 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class SupplierOrderStateCore extends ObjectModel
+class SupplyOrderStateCore extends ObjectModel
 {
 	/**
 	 * @var string Name of the state
@@ -81,12 +81,12 @@ class SupplierOrderStateCore extends ObjectModel
 	/**
 	 * @var string Database table name
 	 */
-	protected $table = 'supplier_order_state';
+	protected $table = 'supply_order_state';
 
 	/**
 	 * @var string Database ID name
 	 */
-	protected $identifier = 'id_supplier_order_state';
+	protected $identifier = 'id_supply_order_state';
 
 	/**
 	 * @see ObjectModel::getFields()
@@ -114,21 +114,21 @@ class SupplierOrderStateCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the list of supplier order states
+	 * Gets the list of supply order states
 	 *
 	 * @param int $id_state_referrer The state refferer id used to know what state is available after the current state refferer
 	 * @param int $id_lang The language id
 	 * @return array
 	 */
-	public static function getSupplierOrderStates($id_state_referrer = null, $id_lang = null)
+	public static function getSupplyOrderStates($id_state_referrer = null, $id_lang = null)
 	{
 		if ($id_lang == null)
 			$id_lang = Context::getContext()->language->id;
 
 		$query = new DbQuery();
-		$query->select('sl.name, s.id_supplier_order_state');
-		$query->from('supplier_order_state s');
-		$query->leftjoin('supplier_order_state_lang sl ON (s.id_supplier_order_state = sl.id_supplier_order_state AND sl.id_lang='.(int)$id_lang.')');
+		$query->select('sl.name, s.id_supply_order_state');
+		$query->from('supply_order_state s');
+		$query->leftjoin('supply_order_state_lang sl ON (s.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang.')');
 
 		if (!is_null($id_state_referrer))
 		{
@@ -138,7 +138,7 @@ class SupplierOrderStateCore extends ObjectModel
 			$is_pending_receipt = false;
 
 			//check current state to see what state is available
-			$state = new SupplierOrderState((int)$id_state_referrer);
+			$state = new SupplyOrderState((int)$id_state_referrer);
 			if (Validate::isLoadedObject($state))
 			{
 				$is_receipt_state = $state->receipt_state;
@@ -147,7 +147,7 @@ class SupplierOrderStateCore extends ObjectModel
 				$is_pending_receipt = $state->pending_receipt;
 			}
 
-			$query->where('s.id_supplier_order_state <> '.$id_state_referrer);
+			$query->where('s.id_supply_order_state <> '.$id_state_referrer);
 
 			//check first if the order is editable
 			if ($is_editable)

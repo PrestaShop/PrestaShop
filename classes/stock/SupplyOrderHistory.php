@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9659 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,12 +28,12 @@
 /**
  * @since 1.5.0
  */
-class SupplierOrderReceiptHistoryCore extends ObjectModel
+class SupplyOrderHistoryCore extends ObjectModel
 {
 	/**
-	 * @var int Detail of the supplier order
+	 * @var int Supply order
 	 */
-	public $id_supplier_order_detail;
+	public $id_supply_order;
 
 	/**
 	 * @var int Employee
@@ -41,54 +41,60 @@ class SupplierOrderReceiptHistoryCore extends ObjectModel
 	public $id_employee;
 
 	/**
+	 * @var string The first name of the employee responsible of the movement
+	 */
+	public $employee_firstname;
+
+	/**
+	 * @var string The last name of the employee responsible of the movement
+	 */
+	public $employee_lastname;
+
+	/**
 	 * @var int State
 	 */
-	public $id_supplier_order_state;
+	public $id_state;
 
 	/**
-	 * @var int Quantity delivered
-	 */
-	public $quantity;
-
-	/**
-	 * @var string Date of delivery
+	 * @var string Date
 	 */
 	public $date_add;
 
 	protected $fieldsRequired = array(
-		'id_supplier_order_detail',
-		'id_supplier_order_state',
+		'id_supply_order',
 		'id_employee',
-		'quantity'
+		'id_state',
+		'date_add'
 	);
 
 	protected $fieldsValidate = array(
-		'id_supplier_order_detail' => 'isUnsignedId',
-		'id_supplier_order_state' => 'isUnsignedId',
+		'id_supply_order' => 'isUnsignedId',
 		'id_employee' => 'isUnsignedId',
-		'quantity' => 'isUnsignedInt',
+	 	'employee_firstname' => 'isName',
+ 		'employee_lastname' => 'isName',
+		'id_state' => 'isUnsignedId',
 		'date_add' => 'isDate'
 	);
 
 	/**
 	 * @var string Database table name
 	 */
-	protected $table = 'supplier_order_receipt_history';
+	protected $table = 'supply_order_history';
 
 	/**
 	 * @var string Database ID name
 	 */
-	protected $identifier = 'id_supplier_order_receipt_history';
+	protected $identifier = 'id_supply_order_history';
 
 	public function getFields()
 	{
 		$this->validateFields();
 
-		$fields['id_supplier_order_detail'] = (int)$this->id_supplier_order_detail;
-		$fields['id_supplier_order_state'] = (int)$this->id_supplier_order_state;
+		$fields['id_supply_order'] = (int)$this->id_supply_order;
 		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['quantity'] = (int)$this->quantity;
-
+		$fields['employee_lastname'] = pSQL($this->employee_lastname);
+		$fields['employee_firstname'] = pSQL(Tools::ucfirst($this->employee_firstname));
+		$fields['id_state'] = (int)$this->id_state;
 		$fields['date_add'] = pSQL($this->date_add);
 
 		return $fields;
