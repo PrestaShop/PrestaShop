@@ -62,6 +62,7 @@ $query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND a
 $query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
 $query->where('pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\'');
 $query->where('p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
+$query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
 if ($id_supplier)
 	$query->where('p.id_supplier = '.$id_supplier);
 $query->groupBy('pa.id_product_attribute');
