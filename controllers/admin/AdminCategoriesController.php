@@ -102,7 +102,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->_filter .= ' AND `id_parent` = '.(int)$this->_category->id.' ';
 		$this->_select = 'position ';
 
-		$categories_tree = $this->_category->getParentsCategories($this->context->language->id);
+		$categories_tree = $this->_category->getParentsCategories();
 		asort($categories_tree);
 		$categories_name = stripslashes($this->_category->getName());
 		$this->tpl_list_vars['categories_tree'] = $categories_tree;
