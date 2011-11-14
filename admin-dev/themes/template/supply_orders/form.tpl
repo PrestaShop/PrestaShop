@@ -57,6 +57,7 @@
 							<tr class="nodrag nodrop">
 								<th style="width: 150px">{l s='Reference'}</th>
 								<th style="width: 50px">{l s='EAN13'}</th>
+								<th style="width: 50px">{l s='UPC'}</th>
 								<th>{l s='Name'}</th>
 								<th style="width: 100px">{l s='Unit Price TE'}</th>
 								<th style="width: 100px">{l s='Quantity'}</th>
@@ -79,7 +80,11 @@
 										<input type="hidden" name="input_ean13_{$product.id_product}_{$product.id_product_attribute}" value="{$product.ean13}" />
 									</td>
 									<td>
-										{$product.name}
+										{$product.upc}
+										<input type="hidden" name="input_upc_{$product.id_product}_{$product.id_product_attribute}" value="{$product.upc}" />
+									</td>
+									<td>
+										{$product.name_displayed}
 										<input type="hidden" name="input_name_{$product.id_product}_{$product.id_product_attribute}" value="{$product.name}" />
 									</td>
 									<td class="center">
@@ -131,7 +136,8 @@
 				'<tr style="height:50px;">'+
 				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
-				'<td>'+product_infos.name+'<input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
+				'<td>'+product_infos.upc+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.upc+'" /></td>'+
+				'<td>'+product_infos.name+'<input type="hidden" name="input_name_displayed_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
 				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" />&nbsp;{$currency->suffix}</td>'+
 				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
@@ -199,7 +205,7 @@
 			});
 
 			// set autocomplete on search field
-			$('#cur_product_name').autocomplete("ajax_supplier_order_products_list.php", {
+			$('#cur_product_name').autocomplete("ajax_supply_order_products_list.php", {
 				delay: 100,
 				minChars: 4,
 				autoFill: true,

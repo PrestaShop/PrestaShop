@@ -33,15 +33,22 @@
  */
 class StockAvailableCore extends ObjectModel
 {
+	/** @var int identifier of the current product */
 	public $id_product;
+
+	/** @var int identifier of product attribute if necessary */
 	public $id_product_attribute;
+
+	/** @var int the shop associated to the current product and corresponding quantity */
 	public $id_shop;
+
+	/** @var int the quantity available for sale */
 	public $quantity = 0;
+
+	/** @var bool determine if the available stock value depends on physical stock */
 	public $depends_on_stock = 0;
 
-	/*
-	 * @var bool it was previously in Product class
-	 */
+	/** @var bool determine if a product is out of stock - it was previously in Product class */
 	public $out_of_stock = 0;
 
 	protected $fieldsRequired = array(

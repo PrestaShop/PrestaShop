@@ -333,7 +333,7 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (157, 'PS_STOCK_MVT_TRANSFER_TO', '7', NOW(), NOW()),
 (158, 'PS_STOCK_MVT_TRANSFER_FROM', '6', NOW(), NOW()),
 (159, 'PS_CARRIER_DEFAULT_ORDER', '0', NOW(), NOW()),
-(160, 'PS_STOCK_MVT_SUPPLIER_ORDER', '8', NOW(), NOW()),
+(160, 'PS_STOCK_MVT_SUPPLY_ORDER', '8', NOW(), NOW()),
 (161, 'PS_STOCK_CUSTOMER_ORDER_REASON', '3', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
@@ -950,7 +950,7 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (97, 'AdminStockManagement', 95, 2),
 (98, 'AdminStockInstantState', 95, 4),
 (99, 'AdminStockCover', 95, 5),
-(100, 'AdminSupplierOrders', 95, 6),
+(100, 'AdminSupplyOrders', 95, 6),
 (101, 'AdminAttributeGenerator', -1, 0),
 (102, 'AdminAccounting', 0, 16),
 (103, 'AdminAccountingManagement', 102, 1),
@@ -979,7 +979,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 97, 'Stock Management'),
 (1, 98, 'Stock instant state'),
 (1, 99, 'Stock cover'),
-(1, 100, 'Supplier orders'),
+(1, 100, 'Supply orders'),
 (1, 101, 'Combinations generator'),
 (1, 102, 'Accounting'),
 (1, 103, 'Account Number Management'),
@@ -1032,7 +1032,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 97, 'Stock Management'),
 (3, 98, 'Stock instant state'),
 (3, 99, 'Stock cover'),
-(3, 100, 'Supplier orders'),
+(3, 100, 'Supply orders'),
 (3, 101, 'Combinations generator'),
 (3, 102, 'Accounting'),
 (3, 103, 'Account Number Management'),
@@ -1472,11 +1472,11 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 (7, 3, 'Transfer from another warehouse'),
 (7, 4, 'Transfer from another warehouse'),
 (7, 5, 'Transfer from another warehouse'),
-(8, 1, 'Supplier Order'),
+(8, 1, 'Supply Order'),
 (8, 2, 'Commande fournisseur'),
-(8, 3, 'Supplier Order'),
-(8, 4, 'Supplier Order'),
-(8, 5, 'Supplier Order');
+(8, 3, 'Supply Order'),
+(8, 4, 'Supply Order'),
+(8, 5, 'Supply Order');
 
 INSERT INTO `PREFIX_warehouse` (`id_warehouse`, `id_currency`, `id_address`, `id_employee`, `reference`, `name`, `management_type`) VALUES
 (1, 1, 0, 1, 'default_warehouse', 'default warehouse', 'WA');
@@ -1539,7 +1539,7 @@ city State:name postcode
 Country:name
 phone' WHERE `PREFIX_address_format`.`id_country` = 4;
 
-INSERT INTO `PREFIX_supplier_order_state` (`id_supplier_order_state`, `delivery_note`, `editable`, `receipt_state`, `pending_receipt`, `enclosed`, `color`) VALUES
+INSERT INTO `PREFIX_supply_order_state` (`id_supply_order_state`, `delivery_note`, `editable`, `receipt_state`, `pending_receipt`, `enclosed`, `color`) VALUES
 (1, 0, 1, 0, 0, 0, '#faab00'),
 (2, 1, 0, 0, 0, 0, '#273cff'),
 (3, 0, 0, 0, 1, 0, '#ff37f5'),
@@ -1547,7 +1547,7 @@ INSERT INTO `PREFIX_supplier_order_state` (`id_supplier_order_state`, `delivery_
 (5, 0, 0, 1, 0, 1, '#00d60c'),
 (6, 0, 0, 0, 0, 1, '#666666');
 
-INSERT INTO `PREFIX_supplier_order_state_lang` (`id_supplier_order_state`, `id_lang`, `name`) VALUES
+INSERT INTO `PREFIX_supply_order_state_lang` (`id_supply_order_state`, `id_lang`, `name`) VALUES
 (1, 1, 'creation in progress'),
 (1, 2, 'Création en cours'),
 (1, 3, 'Création in progress'),

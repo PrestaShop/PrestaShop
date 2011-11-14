@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9991 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class SupplierOrderCore extends ObjectModel
+class SupplyOrderCore extends ObjectModel
 {
 	/**
 	 * @var int Supplier
@@ -36,9 +36,9 @@ class SupplierOrderCore extends ObjectModel
 	public $id_supplier;
 
 	/**
-	 * @var int Employee who initiated the order
+	 * @var int The language id used on the delivery note
 	 */
-	public $id_employee;
+	public $id_lang;
 
 	/**
 	 * @var int Warehouse where products will be delivered
@@ -48,7 +48,7 @@ class SupplierOrderCore extends ObjectModel
 	/**
 	 * @var int State of the order
 	 */
-	public $id_supplier_order_state;
+	public $id_supply_order_state;
 
 	/**
 	 * @var int Currency used for the order
@@ -112,9 +112,9 @@ class SupplierOrderCore extends ObjectModel
 
 	protected $fieldsRequired = array(
 		'id_supplier',
-		'id_employee',
+		'id_lang',
 		'id_warehouse',
-		'id_supplier_order_state',
+		'id_supply_order_state',
 		'id_currency',
 		'id_ref_currency',
 		'reference',
@@ -124,9 +124,9 @@ class SupplierOrderCore extends ObjectModel
 
 	protected $fieldsValidate = array(
 		'id_supplier' => 'isUnsignedId',
-		'id_employee' => 'isUnsignedId',
+		'id_lang' => 'isUnsignedId',
 		'id_warehouse' => 'isUnsignedId',
-		'id_supplier_order_state' => 'isUnsignedId',
+		'id_supply_order_state' => 'isUnsignedId',
 		'id_currency' => 'isUnsignedId',
 		'id_ref_currency' => 'isUnsignedId',
 		'reference' => 'isGenericName',
@@ -144,21 +144,21 @@ class SupplierOrderCore extends ObjectModel
 	/**
 	 * @var string Database table name
 	 */
-	protected $table = 'supplier_order';
+	protected $table = 'supply_order';
 
 	/**
 	 * @var string Database ID name
 	 */
-	protected $identifier = 'id_supplier_order';
+	protected $identifier = 'id_supply_order';
 
 	public function getFields()
 	{
 		$this->validateFields();
 
 		$fields['id_supplier'] = (int)$this->id_supplier;
-		$fields['id_employee'] = (int)$this->id_employee;
+		$fields['id_lang'] = (int)$this->id_lang;
 		$fields['id_warehouse'] = (int)$this->id_warehouse;
-		$fields['id_supplier_order_state'] = (int)$this->id_supplier_order_state;
+		$fields['id_supply_order_state'] = (int)$this->id_supply_order_state;
 		$fields['id_currency'] = (int)$this->id_currency;
 		$fields['id_ref_currency'] = (int)$this->id_ref_currency;
 		$fields['reference'] = pSQL($this->reference);
@@ -191,7 +191,7 @@ class SupplierOrderCore extends ObjectModel
 	}
 
 	/**
-	 * @see ObjectModel::update()
+	 * @see ObjectModel::add()
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
@@ -263,7 +263,7 @@ class SupplierOrderCore extends ObjectModel
 			p.reference as reference,
 			p.ean13 as ean13');
 
-		$query->from('supplier_order_detail s');
+		$query->from('supply_order_detail s');
 
 		$query->innerjoin('product_lang pl ON (pl.id_product = s.id_product AND pl.id_lang = '.$id_lang.')');
 
@@ -273,9 +273,9 @@ class SupplierOrderCore extends ObjectModel
 		$query->leftjoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang.')');
 		$query->leftjoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
 
-		$query->where('s.id_supplier_order = '.(int)$this->id);
+		$query->where('s.id_supply_order = '.(int)$this->id);
 
-		$query->groupBy('s.id_supplier_order_detail');
+		$query->groupBy('s.id_supply_order_detail');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
@@ -293,12 +293,12 @@ class SupplierOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.*');
-		$query->from('supplier_order_detail s');
-		$query->where('s.id_supplier_order = '.(int)$this->id);
+		$query->from('supply_order_detail s');
+		$query->where('s.id_supply_order = '.(int)$this->id);
 
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-		return ObjectModel::hydrateCollection('SupplierOrderDetail', $results);
+		return ObjectModel::hydrateCollection('SupplyOrderDetail', $results);
 	}
 
 
@@ -311,8 +311,8 @@ class SupplierOrderCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('COUNT(*)');
-		$query->from('supplier_order_detail s');
-		$query->where('s.id_supplier_order = '.(int)$this->id);
+		$query->from('supply_order_detail s');
+		$query->where('s.id_supply_order = '.(int)$this->id);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) > 0);
 	}
@@ -327,8 +327,8 @@ class SupplierOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.editable');
-		$query->from('supplier_order_state s');
-		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
+		$query->from('supply_order_state s');
+		$query->where('s.id_supply_order_state = '.(int)$this->id_supply_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
 	}
@@ -343,8 +343,8 @@ class SupplierOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.delivery_note');
-		$query->from('supplier_order_state s');
-		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
+		$query->from('supply_order_state s');
+		$query->where('s.id_supply_order_state = '.(int)$this->id_supply_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
 	}
@@ -359,8 +359,8 @@ class SupplierOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.receipt_state');
-		$query->from('supplier_order_state s');
-		$query->where('s.id_supplier_order_state = '.(int)$this->id_supplier_order_state);
+		$query->from('supply_order_state s');
+		$query->where('s.id_supply_order_state = '.(int)$this->id_supply_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
 	}
@@ -372,10 +372,12 @@ class SupplierOrderCore extends ObjectModel
 	 */
 	protected function addHistory()
 	{
-		$history = new SupplierOrderHistory();
-		$history->id_supplier_order = $this->id;
-		$history->id_state = $this->id_supplier_order_state;
-		$history->id_employee = $this->id_employee;
+		$history = new SupplyOrderHistory();
+		$history->id_supply_order = $this->id;
+		$history->id_state = $this->id_supply_order_state;
+		$history->id_employee = (int)$this->context->employee->id;
+		$history->employee_firstname = pSQL($this->context->employee->firstname);
+		$history->employee_lastname = pSQL($this->context->employee->lastname);
 
 		$history->save();
 	}

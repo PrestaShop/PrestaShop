@@ -100,7 +100,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'identifier' => 'id_stock_mvt_reason',
 						'visibility' => Shop::CONTEXT_ALL
 					),
-					'PS_STOCK_MVT_SUPPLIER_ORDER' => array(
+					'PS_STOCK_MVT_SUPPLY_ORDER' => array(
 						'title' => $this->l('Default reason when incrementing stock when a supplier order is received:'),
 						'cast' => 'intval',
 						'type' => 'select',
@@ -232,9 +232,23 @@ class AdminStockMvtControllerCore extends AdminController
 
 		// redifine fields display
 		$this->fieldsDisplay = array(
+			'product_reference' => array(
+				'title' => $this->l('Product Reference'),
+				'width' => 100,
+				'havingFilter' => true
+			),
+			'product_ean13' => array(
+				'title' => $this->l('Product EAN 13'),
+				'width' => 75,
+				'havingFilter' => true
+			),
+			'product_upc' => array(
+				'title' => $this->l('Product UPC'),
+				'width' => 75,
+				'havingFilter' => true
+			),
 			'product_name' => array(
 				'title' => $this->l('Product Name'),
-				'width' => 200,
 				'havingFilter' => true
 			),
 			'sign' => array(
@@ -267,11 +281,11 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'reason' => array(
 				'title' => $this->l('Reason'),
-				'width' => 200,
+				'width' => 250,
 				'havingFilter' => true
 			),
 			'id_order' => array(
-				'title' => $this->l('ID Order'),
+				'title' => $this->l('Supply Order'),
 				'width' => 40
 			),
 			'employee' => array(
@@ -290,9 +304,13 @@ class AdminStockMvtControllerCore extends AdminController
 
 		// make new query
 		$this->_select = '
-			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) AS employee,
+			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name,
+			CONCAT(a.employee_lastname, \' \', a.employee_firstname) AS employee,
 			mrl.name AS reason,
-			w.id_currency as id_currency';
+			stock.reference AS product_reference,
+			stock.ean13 AS product_ean13,
+			stock.upc AS product_upc,
+			w.id_currency AS id_currency';
 
 		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock
 							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
@@ -303,7 +321,6 @@ class AdminStockMvtControllerCore extends AdminController
 								a.id_stock_mvt_reason = mrl.id_stock_mvt_reason
 								AND mrl.id_lang = '.(int)$this->context->language->id.'
 							)
-							LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 							LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = stock.id_warehouse)
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
 							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
