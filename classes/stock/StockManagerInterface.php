@@ -70,6 +70,7 @@ interface StockManagerInterface
 
 	/**
 	 * For a given product, returns its physical quantity
+	 * If the given product has combinations and $id_product_attribute is null, returns the sum for all combinations
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
@@ -81,6 +82,7 @@ interface StockManagerInterface
 
 	/**
 	 * For a given product, returns its real quantity
+	 * If the given product has combinations and $id_product_attribute is null, returns the sum for all combinations
 	 * Real quantity : (physical_qty + supplier_orders_qty - client_orders_qty)
 	 * If $usable is defined, real quantity: usable_qty + supplier_orders_qty - client_orders_qty
 	 *

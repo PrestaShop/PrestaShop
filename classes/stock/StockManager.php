@@ -421,7 +421,9 @@ class StockManagerCore implements StockManagerInterface
 		$query = new DbQuery();
 		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
 		$query->from('stock s');
-		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('s.id_product = '.(int)$id_product);
+		if (0 != $id_product_attribute)
+			$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
 
 		if (count($ids_warehouse))
 			$query->where('s.id_warehouse IN('.implode(', ', $ids_warehouse).')');
@@ -439,7 +441,9 @@ class StockManagerCore implements StockManagerInterface
 		$query->select('SUM(od.product_quantity)');
 		$query->from('order_detail od');
 		$query->leftjoin('orders o ON o.id_order = od.id_order');
-		$query->where('od.product_id = '.(int)$id_product.' AND od.product_attribute_id = '.(int)$id_product_attribute);
+		$query->where('od.product_id = '.(int)$id_product);
+		if (0 != $id_product_attribute)
+			$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
 		$query->where('o.delivery_number = 0');
 		$query->where('o.valid = 1');
 		$client_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

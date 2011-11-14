@@ -587,31 +587,48 @@ class ProductCore extends ObjectModel
 
 	public function delete()
 	{
+		/*
+		 * @since 1.5.0
+		 * It is NOT possible to delete a product if there are currently:
+		 * - physical stock for this product
+		 * - supply order(s) for this product
+		 */
+		$stock_manager = StockManagerFactory::getManager();
+		$physical_quantity = $stock_manager->getProductPhysicalQuantities($this->id, 0);
+		$real_quantity = $stock_manager->getProductRealQuantities($this->id, 0);
+		if ($physical_quantity > 0)
+			return false;
+		if ($real_quantity > $physical_quantity)
+			return false;
+
 		if (!GroupReduction::deleteProductReduction($this->id))
 			return false;
 
 		Hook::exec('deleteProduct', array('product' => $this));
-		if (!parent::delete() OR
-			!$this->deleteCategories(true) OR
-			!$this->deleteImages() OR
-			!$this->deleteProductAttributes() OR
-			!$this->deleteProductFeatures() OR
-			!$this->deleteTags() OR
-			!$this->deleteCartProducts() OR
-			!$this->deleteAttributesImpacts() OR
-			!$this->deleteAttachments() OR
-			!$this->deleteCustomization() OR
-			!SpecificPrice::deleteByProductId((int)$this->id) OR
-			!$this->deletePack() OR
-			!$this->deleteProductSale() OR
-			!$this->deleteSceneProducts() OR
-			!$this->deleteSearchIndexes() OR
-			!$this->deleteAccessories() OR
+
+		if (!parent::delete() ||
+			!$this->deleteCategories(true) ||
+			!$this->deleteImages() ||
+			!$this->deleteProductAttributes() ||
+			!$this->deleteProductFeatures() ||
+			!$this->deleteTags() ||
+			!$this->deleteCartProducts() ||
+			!$this->deleteAttributesImpacts() ||
+			!$this->deleteAttachments() ||
+			!$this->deleteCustomization() ||
+			!SpecificPrice::deleteByProductId((int)$this->id) ||
+			!$this->deletePack() ||
+			!$this->deleteProductSale() ||
+			!$this->deleteSceneProducts() ||
+			!$this->deleteSearchIndexes() ||
+			!$this->deleteAccessories() ||
 			!$this->deleteFromAccessories())
 		return false;
+
 		if ($id = ProductDownload::getIdFromIdProduct($this->id))
-			if ($productDownload = new ProductDownload($id) AND !$productDownload->delete(true))
+			if ($product_download = new ProductDownload($id) && !$product_download->delete(true))
 				return false;
+
 		return true;
 	}
 
@@ -3844,7 +3861,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Get the combination url anchor of the product
-	 * 
+	 *
 	 * @param integer $id_product_attribute
 	 * @return string
 	 */
