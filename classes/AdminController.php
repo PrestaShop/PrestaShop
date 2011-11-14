@@ -367,8 +367,8 @@ class AdminControllerCore extends Controller
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
 			// Sub included tab postProcessing
-			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));	
-			
+			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
+
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 				$this->{'process'.Tools::toCamelCase($this->action)}($token);
 			else if (method_exists($this, $this->action))
@@ -856,7 +856,7 @@ class AdminControllerCore extends Controller
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
-
+				//no break
 			case 'view':
 				// Default cancel button - like old back link
 				if (!isset($this->no_back) || $this->no_back == false)
@@ -870,9 +870,9 @@ class AdminControllerCore extends Controller
 						'desc' => $this->l('Cancel')
 					);
 				}
-			break;
+				break;
 			case 'options':
-			break;
+				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
