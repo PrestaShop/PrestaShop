@@ -65,7 +65,6 @@
 		});
 	{block name="script"}{/block}
 	</script>
-	<script type="text/javascript" src="../js/form.js"></script>
 {/if}
 
 {if $show_toolbar}
@@ -244,7 +243,7 @@
 										</div><br />
 									{/if}
 								{/if}
-								<input type="file" name="{$input.name}" />
+								<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
 							{elseif $input.type == 'password'}
 								<input type="password"
 										name="{$input.name}"
@@ -275,7 +274,6 @@
 							{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 									{$asso_shop}
 							{elseif $input.type == 'color'}
-								<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
 								<input type="color"
 									size="{$input.size}"
 									data-hex="true"
@@ -284,7 +282,6 @@
 									name="{$input.name}"
 									value="{$fields_value[$input.name]}" />
 							{elseif $input.type == 'date'}
-								<script type="text/javascript" src="../js/jquery/jquery-colorpicker.js"></script>
 								<input type="text"
 									size="{$input.size}"
 									data-hex="true"
@@ -347,15 +344,6 @@
 			{if $required_fields}
 				<div class="small"><sup>*</sup> {l s ='Required field'}</div>
 			{/if}
-			{if isset($fields.tinymce) && $fields.tinymce}
-				<script type="text/javascript">
-					var iso = '{$iso}';
-					var pathCSS = '{$path_css}';
-					var ad = '{$ad}';
-				</script>
-				<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
-				<script type="text/javascript" src="../js/tinymce.inc.js"></script>
-			{/if}
 		</fieldset>
 		{block name="other_fieldsets"}{/block}
 		{if isset($fields[$f+1])}<br class="clear" />{/if}
@@ -364,23 +352,27 @@
 {/block}
 
 <script type="text/javascript">
-$(document).ready(function(){
-	$(document).ready(function(){
-		tinySetup();
-	});
 
-{block name="autoload_tinyMCE"}
-	$(".autoload_rte").click(function(e){
-		tinySetup({
-			mode :"exact",
-			editor_selector :"autoload_rte",
-			elements : $(this).attr("id"),
-			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
-			theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
-			theme_advanced_buttons3 : "",
-			theme_advanced_buttons4 : "", 
-		});
-	})
-{/block}
+var iso = '{$iso}';
+var pathCSS = '{$path_css}';
+var ad = '{$ad}';
+
+$(document).ready(function(){
+
+	tinySetup();
+
+	{block name="autoload_tinyMCE"}
+		$(".autoload_rte").click(function(e){
+			tinySetup({
+				mode :"exact",
+				editor_selector :"autoload_rte",
+				elements : $(this).attr("id"),
+				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
+				theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
+				theme_advanced_buttons3 : "",
+				theme_advanced_buttons4 : "", 
+			});
+		})
+	{/block}
 });
 </script>

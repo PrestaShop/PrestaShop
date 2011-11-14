@@ -294,13 +294,6 @@ class AdminCategoriesControllerCore extends AdminController
 			'size' => $image ? filesize(_PS_CAT_IMG_DIR_.'/'.$obj->id.'.jpg') / 1000 : false
 		);
 
-		$iso = $this->context->language->iso_code;
-		$this->context->smarty->assign(array(
-			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
-			'theme_path_css' => _THEME_CSS_DIR_,
-			'ad' => dirname($_SERVER["PHP_SELF"])
-		));
-
 		// Added values of object Group
 		$carrier_groups = $obj->getGroups();
 		$carrier_groups_ids = array();

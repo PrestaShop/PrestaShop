@@ -24,11 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if count($categories) && isset($categories)}
-	<script src="../js/jquery/plugins/treeview/jquery.treeview.js" type="text/javascript"></script>
-	<script src="../js/jquery/plugins/treeview/jquery.treeview.async.js" type="text/javascript"></script>
-	<script src="../js/jquery/plugins/treeview/jquery.treeview.edit.js" type="text/javascript"></script>
-	<script src="../js/admin-categories-tree.js" type="text/javascript"></script>
-	{if isset($categories.use_search) && $categories.use_search}<script src="../js/jquery/plugins/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>{/if}
 	<script type="text/javascript">
 		var inputName = '{$categories.input_name}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
@@ -37,7 +32,6 @@
 		var home = '{$categories.trads.Home}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 	</script>
-	<link type="text/css" rel="stylesheet" href="../css/jquery.treeview.css" />
 
 	<div style="background-color:#F4E6C9; width:99%;padding:5px 0 5px 5px;">
 		<a href="#" id="collapse_all" >{$categories.trads['Collapse All']}</a>

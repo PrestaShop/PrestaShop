@@ -393,6 +393,8 @@ class AdminImportController extends AdminController
 			)
 		);
 
+		$this->addJS(_PS_JS_DIR_.'adminImport.js');
+
 		$glue = Tools::getValue('separator', ';');
 		$handle = $this->openCsvFile();
 		$nb_column = $this->getNbrColumn($handle, $glue);

@@ -27,7 +27,6 @@
 {extends file="helper/view/view.tpl"}
 
 {block name="override_tpl"}
-	<script src="../js/adminImport.js"></script>
 	<script type="text/javascript">
 		var errorEmpty = "{l s='Please enter a name to save.'}"
 	</script>

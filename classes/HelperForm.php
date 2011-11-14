@@ -69,11 +69,71 @@ class HelperFormCore extends Helper
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
-		if (isset($this->fields_form['asso_shop']) && Shop::isFeatureActive())
-			if ($this->fields_form['asso_shop'] == 'group')
+		/* TODO : replace call method displayAssoShop() by form_shop.tpl */
+		if (isset($this->fields_form[0]['form']['asso_shop']) && Shop::isFeatureActive())
+			if ($this->fields_form[0]['asso_shop'] == 'group')
 				$asso_shop = $this->displayAssoShop('group_shop');
-			else if ($this->fields_form['asso_shop'] == 'shop')
+			else if ($this->fields_form[0]['form']['asso_shop'] == 'shop')
 				$asso_shop = $this->displayAssoShop();
+
+		$this->context->controller->addJS(_PS_JS_DIR_.'form.js');
+
+		$categories = true;
+		$color = true;
+		$date = true;
+		$tinymce = true;
+		foreach ($this->fields_form as $fieldset)
+			if (isset($fieldset['form']['input']))
+				foreach ($fieldset['form']['input'] as $key => $params)
+				{
+					switch ($params['type'])
+					{
+						case 'categories':
+							if ($categories)
+							{
+								// Added Jquery plugin treeview (css and js files)
+								$this->context->controller->addJqueryPlugin('treeview');
+	
+								// Added JS files
+								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js');
+								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js');
+								$this->context->controller->addJS(_PS_JS_DIR_.'admin-categories-tree.js');
+	
+								if (isset($params['use_search']) && $params['use_search'])
+									$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
+								$categories = false;
+							}
+							break;
+						case 'color':
+							if ($color)
+							{
+								// Added JS file
+								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+								$color = false;
+							}
+							break;
+						case 'date':
+							if ($date)
+							{
+								$this->context->controller->addJqueryUI('ui.datepicker');
+								$date = false;
+							}
+							break;
+						case 'textarea':
+							if ($tinymce)
+							{
+								$iso = $this->context->language->iso_code;
+								$this->tpl_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+								$this->tpl_vars['theme_path_css'] = _THEME_CSS_DIR_;
+								$this->tpl_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+	
+								$this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
+								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
+								$tinymce = false;
+							}
+							break;
+					}
+				}
 
 		$iso = $this->context->language->iso_code;
 		$this->tpl->assign(array(
