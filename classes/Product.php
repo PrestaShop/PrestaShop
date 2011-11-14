@@ -601,6 +601,14 @@ class ProductCore extends ObjectModel
 		if ($real_quantity > $physical_quantity)
 			return false;
 
+		/**
+		 * @since 1.5.0
+		 * Removes the product from StockAvailable, for the current shop
+		 */
+		$context = Context::getContext();
+		$id_shop = $context->shop->id;
+		StockAvailable::removeProductFromStockAvailable($this->id, null, $id_shop);
+
 		if (!GroupReduction::deleteProductReduction($this->id))
 			return false;
 

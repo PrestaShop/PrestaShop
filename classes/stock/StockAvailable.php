@@ -291,4 +291,20 @@ class StockAvailableCore extends ObjectModel
 		$stock_available->quantity = $stock_available->quantity + $delta_quantity;
 		$stock_available->save();
 	}
+
+	/**
+	 * Remove a given product from the stock available
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute Optional
+	 * @param int $id_shop Optional
+	 */
+	public static function removeProductFromStockAvailable($id_product, $id_product_attribute = null, $id_shop = null)
+	{
+		Db::getInstance()->execute('
+			DELETE FROM '._DB_PREFIX_.'stock_available
+			WHERE id_product = '.(int)$id_product.
+			($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
+			($id_shop ? ' AND id_shop = '.(int)$id_shop : ''));
+	}
 }
