@@ -327,7 +327,7 @@ class AdminSupplierOrdersControllerCore extends AdminController
 			$this->addJqueryUI('ui.datepicker');
 
 			//get warehouses list
-			$warehouses = Warehouse::getWarehouseList(true);
+			$warehouses = Warehouse::getWarehouses(true);
 
 			//get currencies list
 			$currencies = Currency::getCurrencies();

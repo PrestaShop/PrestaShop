@@ -82,7 +82,7 @@ class AdminStockCoverControllerCore extends AdminController
 		);
 
 		// gets the list of warehouses available
-		$this->stock_cover_warehouses = Warehouse::getWarehouseList(true);
+		$this->stock_cover_warehouses = Warehouse::getWarehouses(true);
 		// gets the final list of warehouses
 		array_unshift($this->stock_cover_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 

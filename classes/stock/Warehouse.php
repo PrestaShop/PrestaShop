@@ -260,14 +260,14 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the list of warehouses
+	 * Gets the wareehouses
 	 * It is possible via ignore_shop and id_shop to filter the list with shop id
 	 *
 	 * @param bool $ignore_shop false by default
 	 * @param int $id_shop null by default
 	 * @return array
 	 */
-	public static function getWarehouseList($ignore_shop = false, $id_shop = null)
+	public static function getWarehouses($ignore_shop = false, $id_shop = null)
 	{
 		if (!$ignore_shop)
 			if (is_null($id_shop))
@@ -326,10 +326,26 @@ class WarehouseCore extends ObjectModel
 	public function getStockValue()
 	{
 		$query = new DbQuery();
-			$query->select('SUM(s.`price_te`)');
-			$query->from('stock s');
-			$query->where('s.`id_warehouse` = '.(int)$this->id);
+		$query->select('SUM(s.`price_te`)');
+		$query->from('stock s');
+		$query->where('s.`id_warehouse` = '.(int)$this->id);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * For a given employee, gets the warehouse(s) he manages
+	 *
+	 * @param int $id_employee
+	 * @return array ids_warehouse
+	 */
+	public static function getWarehousesByEmployee($id_employee)
+	{
+		$query = new DbQuery();
+		$query->select('w.id_warehouse');
+		$query->from('warehouse w');
+		$query->where('w.id_employee = '.(int)$id_employee);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 }

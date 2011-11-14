@@ -85,7 +85,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			),
 		);
 
-		$this->stock_instant_state_warehouses = Warehouse::getWarehouseList(true);
+		$this->stock_instant_state_warehouses = Warehouse::getWarehouses(true);
 		array_unshift($this->stock_instant_state_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
