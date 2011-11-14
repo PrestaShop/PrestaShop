@@ -124,8 +124,9 @@ class HelperFormCore extends Helper
 							{
 								$iso = $this->context->language->iso_code;
 								$this->tpl_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
-								$this->tpl_vars['theme_path_css'] = _THEME_CSS_DIR_;
+								$this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
 								$this->tpl_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+								$this->tpl_vars['tinymce'] = true;
 	
 								$this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
 								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
@@ -135,7 +136,6 @@ class HelperFormCore extends Helper
 					}
 				}
 
-		$iso = $this->context->language->iso_code;
 		$this->tpl->assign(array(
 			'submit_action' => $this->submit_action,
 			'toolbar_btn' => $this->toolbar_btn,
@@ -156,10 +156,7 @@ class HelperFormCore extends Helper
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
-			'asso_shop' => isset($asso_shop) ? $asso_shop : null,
-			'iso' => file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en',
-			'path_css' => _THEME_CSS_DIR_,
-			'ad' => dirname($_SERVER['PHP_SELF'])
+			'asso_shop' => isset($asso_shop) ? $asso_shop : null
 		));
 		return parent::generate();
 	}
