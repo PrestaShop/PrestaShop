@@ -140,7 +140,7 @@ a.module_toggle_all{color: #268CCD;}
 .table td span.color_field { font-size:11px; padding:2px 5px; border-radius:3px; text-transform:uppercase; text-shadow:0 1px 0 #fff; color:#fff; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
 
 /*toolbarBox*/
-.toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; width:100% !important; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
+.toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
 .toolbarBox .pageTitle { margin-left:10px; line-height:48px}
 .toolbarBox .pageTitle h3 {font-size: 2em; font-weight: bold; line-height: 48px; margin: 0; padding: 0;}
 .toolbarBox ul.cc_button {float:right;margin:0;padding:0;}

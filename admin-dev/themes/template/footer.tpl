@@ -54,37 +54,41 @@
 		</script>
 {/if}
 
-	<script type="text/javascript">
+		<script type="text/javascript">
 		$(document).ready(function(){
 			var message = $('.toolbarHead');
 			var view = $(window);
 
-				// bind only if message exists. placeholder will be its parent
-				view.bind("scroll resize", function(e)
-				{
-					message.each(function(el){
-
+			// bind only if message exists. placeholder will be its parent
+			view.bind("scroll resize", function(e)
+			{
+				message.each(function(el){
 					if (message.length)
 					{
 						placeholder = $(this).parent();
 						if(e.type == 'resize')
-							$(this).css('width', $(this).width());
+							$(this).css('width', $(this).parent().width());
 	
 						placeholderTop = placeholder.offset().top;
 						var viewTop = view.scrollTop() + 15;
-
-						if ((viewTop > placeholderTop) && !$(this).hasClass("fix-toolbar"))
+						// here we force the toolbar to be "not fixed" when
+						// the height of the window is really small (toolbar hiding the page is not cool)
+						window_is_more_than_twice_the_toolbar  = view.height() > message.parent().height() * 2;
+						if (!$(this).hasClass("fix-toolbar") && (window_is_more_than_twice_the_toolbar && (viewTop > placeholderTop)))
 						{
 							$(this).css('width', $(this).width());
+							// fixing parent height will prevent that annoying "pagequake" thing
+							// the order is important : this has to be set before adding class fix-toolbar 
+							$(this).parent().css('height', $(this).parent().height());
 							$(this).addClass("fix-toolbar");
 						}
-						else if ( (viewTop <= placeholderTop) && $(this).hasClass("fix-toolbar"))
+						else if ($(this).hasClass("fix-toolbar") && (!window_is_more_than_twice_the_toolbar || (viewTop <= placeholderTop)) )
 						{
 							$(this).removeClass("fix-toolbar");
 						}
 					}
-					});
 				});
+			}); // end bind
 		});
 		
 		</script>
