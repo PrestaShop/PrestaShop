@@ -78,7 +78,7 @@ class BlockPermanentLinks extends Module
 	
 	function hookFooter($params)
 	{
-		return $this->hookLeftColumn($params);
+		return $this->display(__FILE__, 'blockpermanentlinks-footer.tpl');
 	}
 	
 	function hookHeader($params)

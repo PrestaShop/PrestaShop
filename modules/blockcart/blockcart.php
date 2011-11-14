@@ -146,7 +146,7 @@ class BlockCart extends Module
 		if
 		(
 			parent::install() == false
-			OR $this->registerHook('rightColumn') == false
+			OR $this->registerHook('top') == false
 			OR $this->registerHook('header') == false
 			OR Configuration::updateValue('PS_BLOCK_CART_AJAX', 1) == false
 		)
@@ -187,6 +187,11 @@ class BlockCart extends Module
 		$this->context->controller->addCSS(($this->_path).'blockcart.css', 'all');
 		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')))
 			$this->context->controller->addJS(($this->_path).'ajax-cart.js');
+	}
+	
+	public function hookTop($params)
+	{
+		return $this->hookRightColumn($params);
 	}
 }
 
