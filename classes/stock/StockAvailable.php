@@ -293,7 +293,7 @@ class StockAvailableCore extends ObjectModel
 	}
 
 	/**
-	 * Remove a given product from the stock available
+	 * Removes a given product from the stock available
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute Optional
