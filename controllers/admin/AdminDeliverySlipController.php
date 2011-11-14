@@ -30,6 +30,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->table = 'delivery';
+
 		$this->context = Context::getContext();
 
 		$this->options = array(
@@ -59,7 +60,10 @@ class AdminDeliverySlipControllerCore extends AdminController
 	public function initForm()
 	{
 		$this->fields_form = array(
-			'title' => $this->l('Print PDF delivery slips'),
+			'legend' => array(
+				'title' => $this->l('Print PDF delivery slips'),
+				'image' => '../img/t/AdminPDF.gif'
+			),
 			'input' => array(
 				array(
 					'type' => 'text',
@@ -90,11 +94,13 @@ class AdminDeliverySlipControllerCore extends AdminController
 			'date_from' => date('Y-m-d'),
 			'date_to' => date('Y-m-d')
 		);
+
+		return parent::initForm();
 	}
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitPrint'))
+		if (Tools::isSubmit('submitAdddelivery'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
 				$this->_errors[] = Tools::displayError('Invalid from date');
@@ -115,24 +121,14 @@ class AdminDeliverySlipControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->initForm();
-		$helper = new HelperForm();
-		$helper->override_folder = $this->tpl_folder;
-		$helper->currentIndex = self::$currentIndex;
-		$helper->token = $this->token;
-		$helper->table = $this->table;
-		$helper->identifier = $this->identifier;
-		$helper->languages = $this->_languages;
-		$helper->submit_action = 'submitPrint';
-		$helper->no_back = true;
-		$helper->default_form_language = $this->default_form_language;
-		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-		$helper->fields_value = $this->fields_value;
-		$this->content .= $helper->generateForm($this->fields_form);
+		$this->content .= $this->initForm().'<br />';
+		$this->content .= $this->initOptions();
 
-		parent::initContent();
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
+		));
 	}
-
 }
 
 
