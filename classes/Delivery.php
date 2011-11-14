@@ -29,13 +29,13 @@ class DeliveryCore extends ObjectModel
 {
 	/** @var integer */
 	public $id_delivery;
-	
+
 	/** @var int **/
 	public $id_shop;
-	
+
 	/** @var int **/
 	public $id_group_shop;
-	
+
 	/** @var integer */
 	public $id_carrier;
 
@@ -45,20 +45,32 @@ class DeliveryCore extends ObjectModel
 	/** @var integer */
 	public $id_range_weight;
 
-	/** @var integer */	
+	/** @var integer */
 	public $id_zone;
 
-	/** @var float */	
+	/** @var float */
 	public $price;
 
-	protected	$fieldsRequired = array ('id_carrier', 'id_range_price', 'id_range_weight', 'id_zone', 'price');	
-	protected	$fieldsValidate = array ('id_carrier' => 'isUnsignedId', 'id_range_price' => 'isUnsignedId', 
-	'id_range_weight' => 'isUnsignedId', 'id_zone' => 'isUnsignedId', 'price' => 'isPrice');
+	protected $fieldsRequired = array (
+		'id_carrier',
+		'id_range_price',
+		'id_range_weight',
+		'id_zone',
+		'price'
+	);
 
-	protected 	$table = 'delivery';
-	protected 	$identifier = 'id_delivery';
-	
-	protected	$webserviceParameters = array(
+	protected $fieldsValidate = array (
+		'id_carrier' => 'isUnsignedId',
+		'id_range_price' => 'isUnsignedId',
+		'id_range_weight' => 'isUnsignedId',
+		'id_zone' => 'isUnsignedId',
+		'price' => 'isPrice'
+	);
+
+	protected $table = 'delivery';
+	protected $identifier = 'id_delivery';
+
+	protected $webserviceParameters = array(
 			'objectsNodeName' => 'deliveries',
 			'fields' => array(
 				'id_carrier' => array('xlink_resource' => 'carriers'),
@@ -67,7 +79,7 @@ class DeliveryCore extends ObjectModel
 				'id_zone' => array('xlink_resource' => 'zones'),
 		)
 	);
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -81,8 +93,8 @@ class DeliveryCore extends ObjectModel
 		$fields['id_range_weight'] = (int)$this->id_range_weight;
 		$fields['id_zone'] = (int)$this->id_zone;
 		$fields['price'] = (float)$this->price;
-		
+
 		return $fields;
-	}	
+	}
 }
 
