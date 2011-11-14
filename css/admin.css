@@ -464,8 +464,8 @@ select optgroup option {
 }
 
 #content .warn  {
-	border: 1px solid #CC0000;
-	background-color: #FFEBE8;
+	border: 1px solid #9e6014;
+	background-color: #FEEFB3;
 	border-radius:3px;
 }
 
