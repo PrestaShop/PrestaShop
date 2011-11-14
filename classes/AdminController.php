@@ -75,6 +75,7 @@ class AdminControllerCore extends Controller
 
 	public $tpl_form_vars = array();
 	public $tpl_list_vars = array();
+	public $tpl_delete_link_vars = array();
 	public $tpl_option_vars = array();
 	public $tpl_view_vars = array();
 
@@ -1284,6 +1285,7 @@ class AdminControllerCore extends Controller
 		}
 
 		$helper->tpl_vars = $this->tpl_list_vars;
+		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 		$this->setHelperDisplay($helper);
 		$list = $helper->generateList($this->_list, $this->fieldsDisplay);
 		$this->toolbar_fix = false;

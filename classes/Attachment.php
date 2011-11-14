@@ -27,25 +27,25 @@
 
 class AttachmentCore extends ObjectModel
 {
-	public		$file;
-	public		$file_name;
-	public		$name;
-	public		$mime;
-	public		$description;
+	public $file;
+	public $file_name;
+	public $name;
+	public $mime;
+	public $description;
 
 	/** @var integer position */
-	public		$position;
+	public $position;
 
-	protected	$fieldsRequired = array('file', 'mime');
-	protected	$fieldsSize = array('file' => 40, 'mime' => 128, 'file_name' => 128);
-	protected	$fieldsValidate = array('file' => 'isGenericName', 'mime' => 'isCleanHtml', 'file_name' => 'isGenericName');
+	protected $fieldsRequired = array('file', 'mime');
+	protected $fieldsSize = array('file' => 40, 'mime' => 128, 'file_name' => 128);
+	protected $fieldsValidate = array('file' => 'isGenericName', 'mime' => 'isCleanHtml', 'file_name' => 'isGenericName');
 
-	protected	$fieldsRequiredLang = array('name');
-	protected	$fieldsSizeLang = array('name' => 32);
-	protected	$fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
+	protected $fieldsRequiredLang = array('name');
+	protected $fieldsSizeLang = array('name' => 32);
+	protected $fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
 
-	protected 	$table = 'attachment';
-	protected 	$identifier = 'id_attachment';
+	protected $table = 'attachment';
+	protected $identifier = 'id_attachment';
 
 	public function getFields()
 	{
@@ -61,66 +61,80 @@ class AttachmentCore extends ObjectModel
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('name', 'description'));
 	}
-	
+
 	public function delete()
 	{
 		@unlink(_PS_DOWNLOAD_DIR_.$this->file);
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)$this->id);
 		return parent::delete();
 	}
-	
+
 	public function deleteSelection($attachments)
 	{
 		$return = 1;
-		foreach ($attachments AS $id_attachment)
+		foreach ($attachments as $id_attachment)
 		{
-			$attachment = new Attachment((int)($id_attachment));
+			$attachment = new Attachment((int)$id_attachment);
 			$return &= $attachment->delete();
 		}
 		return $return;
 	}
-	
+
 	public static function getAttachments($id_lang, $id_product, $include = true)
 	{
 		return Db::getInstance()->executeS('
-		SELECT *
-		FROM '._DB_PREFIX_.'attachment a
-		LEFT JOIN '._DB_PREFIX_.'attachment_lang al ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int)($id_lang).')
-		WHERE a.id_attachment '.($include ? 'IN' : 'NOT IN').' (SELECT pa.id_attachment FROM '._DB_PREFIX_.'product_attachment pa WHERE id_product = '.(int)($id_product).')');
+			SELECT *
+			FROM '._DB_PREFIX_.'attachment a
+			LEFT JOIN '._DB_PREFIX_.'attachment_lang al
+				ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int)$id_lang.')
+			WHERE a.id_attachment '.($include ? 'IN' : 'NOT IN').' (
+				SELECT pa.id_attachment
+				FROM '._DB_PREFIX_.'product_attachment pa
+				WHERE id_product = '.(int)$id_product.'
+			)'
+		);
 	}
-	
+
 	public static function attachToProduct($id_product, $array)
 	{
-		$result1 = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)($id_product));
+		$result1 = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$id_product);
 		if (is_array($array))
 		{
 			$ids = array();
 			foreach ($array as $id_attachment)
-				$ids[] = '('.(int)($id_product).','.(int)($id_attachment).')';
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_has_attachments = '.(count($ids) ? '1' : '0').' WHERE id_product = '.(int)($id_product).' LIMIT 1');
-			return ($result1 && Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_attachment (id_product, id_attachment) VALUES '.implode(',',$ids)));
+				$ids[] = '('.(int)$id_product.','.(int)$id_attachment.')';
+			Db::getInstance()->execute('
+				UPDATE '._DB_PREFIX_.'product
+				SET cache_has_attachments = '.(count($ids) ? '1' : '0').'
+				WHERE id_product = '.(int)$id_product.'
+				LIMIT 1
+			');
+			return ($result1 && Db::getInstance()->execute('
+				INSERT INTO '._DB_PREFIX_.'product_attachment (id_product, id_attachment)
+				VALUES '.implode(',', $ids))
+			);
 		}
 		return $result1;
 	}
-	
+
 	public static function getProductAttached($id_lang, $list)
 	{
 		$ids_attachements = array();
 		if (is_array($list))
 		{
-			foreach($list as $attachement)
+			foreach ($list as $attachement)
 				$ids_attachements[] = $attachement['id_attachment'];
-				
+
 			$sql = 'SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
 					WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).')
 						AND pl.`id_lang` = '.(int)$id_lang;
 			$tmp = Db::getInstance()->executeS($sql);
-			$productAttachements = array();
-			foreach($tmp as $t)
-				$productAttachements[$t['id_attachment']][] =  $t['name'];
-			return $productAttachements;
-}
+			$product_attachements = array();
+			foreach ($tmp as $t)
+				$product_attachements[$t['id_attachment']][] = $t['name'];
+			return $product_attachements;
+		}
 		else
 			return false;
 	}
