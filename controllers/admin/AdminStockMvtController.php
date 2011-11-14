@@ -202,7 +202,7 @@ class AdminStockMvtControllerCore extends AdminController
 		/*
 		 * Manage second list
 		 */
-		$warehouses = Warehouse::getWarehouseList(true);
+		$warehouses = Warehouse::getWarehouses(true);
 		array_unshift($warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 		$this->tpl_list_vars['list_warehouses'] = $warehouses;
 		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouseId();

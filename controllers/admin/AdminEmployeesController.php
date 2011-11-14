@@ -331,6 +331,14 @@ class AdminEmployeesControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('You cannot disable or delete the last administrator account.');
 					return false;
 			}
+
+			// It is not possible to delete an employee if he manages warehouses
+			$warehouses = Warehouse::getWarehousesByEmployee((int)Tools::getValue('id_employee'));
+			if (Tools::isSubmit('deleteemployee') && count($warehouses) > 0)
+			{
+				$this->_errors[] = Tools::displayError('You cannot delete this account since it manages warehouses. Check your warehouses first.');
+				return false;
+			}
 		}
 		else if (Tools::isSubmit('submitAddemployee'))
 		{
