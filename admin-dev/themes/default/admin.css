@@ -154,12 +154,13 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-stats { background-image: url(process-icon-stats.png);}
 .toolbarBox .process-icon-cancel { background-image: url(process-icon-cancel.png);}
 .toolbarBox .process-icon-new, .toolbarBox .process-icon-newAttributes{ background-image: url(process-icon-new.png);}
-.toolbarBox .process-icon-save { background-image: url(process-icon-save.png);}
+.toolbarBox .process-icon-save, .toolbarBox .process-icon-save-settings { background-image: url(process-icon-save.png);}
 .toolbarBox .process-icon-save-and-stay { background-image: url(process-icon-save-and-stay.png);}
 .toolbarBox .process-icon-edit { background-image: url(process-icon-edit.png);}
 .toolbarBox .process-icon-back { background-image: url(process-icon-back.png);}
 .toolbarBox .process-icon-refresh-index  { background-image: url(process-icon-refresh-index.png);}
 .toolbarBox .process-icon-refresh-cache  { background-image: url(process-icon-refresh-cache.png);}
+.toolbarBox .process-icon-save-calendar { background-image: url(process-icon-save-calendar.png);}
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
 /*leadin*/
