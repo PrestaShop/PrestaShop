@@ -449,14 +449,14 @@ class HelperListCore extends Helper
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
-		$tpl->assign(array(
+		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$id.' ? '),
 			'action' => self::$cache_lang['Delete'],
-		));
+			'id' => $id,
+		)));
 
 		return $tpl->fetch();
-
 	}
 
 	/**
