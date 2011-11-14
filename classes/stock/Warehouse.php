@@ -183,6 +183,20 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
+	 * For a given carrier, removes it from the warehouse/carrier association
+	 * If $id_warehouse is set, it only removes the carrier for this warehouse
+	 * @param int $id_carrier
+	 * @param int $id_warehouse optional
+	 */
+	public static function removeCarrier($id_carrier, $id_warehouse = null)
+	{
+		Db::getInstance()->execute('
+			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
+			WHERE id_carrier = '.(int)$id_carrier.
+			($id_warehouse ? ' AND id_warehouse = '.(int)$id_warehouse : ''));
+	}
+
+	/**
 	 * Checks if a warehouse is empty - i.e. holds no stock
 	 *
 	 * @return bool
@@ -315,7 +329,9 @@ class WarehouseCore extends ObjectModel
 			FROM '._DB_PREFIX_.'stock s
 			WHERE s.id_warehouse = '.(int)$this->id;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+
+		return ($res ? $res : 0);
 	}
 
 	/**

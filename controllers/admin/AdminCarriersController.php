@@ -491,13 +491,21 @@ class AdminCarriersControllerCore extends AdminController
 				|| (isset($_GET['delete'.$this->table]) && Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
 					$this->_errors[] = $this->l('Please set another carrier as default before deleting');
 			else
+			{
+				// if deletion : removes the carrier from the warehouse/carrier association
+				if (Tools::isSubmit('delete'.$this->table))
+				{
+					$id = (int)Tools::getValue('id_'.$this->table);
+					Warehouse::removeCarrier($id);
+				}
 				parent::postProcess();
+			}
 		}
 	}
 
 	/**
 	 * Overload the property $fields_value
-	 * 
+	 *
 	 * @param object $obj
 	 */
 	public function getFieldsValues($obj)
