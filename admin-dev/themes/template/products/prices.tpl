@@ -40,7 +40,7 @@ var product_prices = new Array();
 	{if $combinations|@count != 0}
 		<label>{l s='Combination:'}</label>
 		<div class="margin-form">
-			<select id="id_product_attribute" name="id_product_attribute">
+			<select id="sp_id_product_attribute" name="sp_id_product_attribute">
 				<option value="0">{l s='Apply to all combinations'}</option>
 				{foreach from=$combinations item='combination'}
 					<option value="{$combination.id_product_attribute}">{$combination.attributes}</option>
@@ -81,7 +81,7 @@ var product_prices = new Array();
 						<span id="spm_currency_sign_pre_0" style="font-weight:bold; color:#000000; font-size:12px">{$currency->prefix}</span>
 						<input type="text" name="sp_price" value="0" size="11" />
 						<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">{$currency->suffix}</span>
-						<span>({l s='Current:'} </span><span id="sp_current_ht_price">'.Tools::displayPrice((float)($product->price), $defaultCurrency).'</span> )</span>
+						<span>({l s='Current:'} </span><span id="sp_current_ht_price">{displayWtPrice p=$product->price}</span> )</span>
 						<div class="hint clear" style="display:block;">
 							{l s='You can set this value at 0 in order to apply the default price'}
 						</div>

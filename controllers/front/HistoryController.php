@@ -53,7 +53,7 @@ class HistoryControllerCore extends FrontController
 		if ($orders = Order::getCustomerOrders($this->context->customer->id))
 			foreach ($orders as &$order)
 			{
-				$myOrder = new Order((int)($order['id_order']));
+				$myOrder = new Order((int)$order['id_order']);
 				if (Validate::isLoadedObject($myOrder))
 					$order['virtual'] = $myOrder->isVirtual(false);
 			}

@@ -169,7 +169,7 @@ class SpecificPriceCore extends ObjectModel
 					AND
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
-				ORDER BY `from_quantity` DESC, `score` DESC');
+				ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC');
 		}
 		return self::$_specificPriceCache[$key];
 	}
@@ -205,7 +205,7 @@ class SpecificPriceCore extends ObjectModel
 		');
 	}
 
-	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null)
+	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -217,7 +217,7 @@ class SpecificPriceCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE   
 					`id_product` IN(0, '.(int)$id_product.') AND
-					`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND
+					'.(!$all_combinations ? '`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND ' : '').'
 					`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
 					`id_country` IN(0, '.(int)$id_country.') AND
@@ -228,7 +228,7 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `from_quantity` DESC, `score` DESC
+					ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC
 		');
 
 		$targeted_prices = array();
