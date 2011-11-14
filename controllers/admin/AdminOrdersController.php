@@ -465,7 +465,7 @@ class AdminOrdersControllerCore extends AdminController
 		parent::postProcess();
 	}
 
-	public function viewOrder()
+	public function initView()
 	{
 		$order = $this->loadObject();
 		if (!Validate::isLoadedObject($order))
