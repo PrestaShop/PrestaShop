@@ -40,6 +40,9 @@ class TaxCore extends ObjectModel
 	/** @var boolean true if the tax has been historized */
 	public 		$deleted = 0;
 
+	/** @var string Account Number */
+	public 		$account_number;
+
  	protected 	$fieldsRequired = array('rate');
  	protected 	$fieldsValidate = array('rate' => 'isFloat');
  	protected 	$fieldsRequiredLang = array('name');
@@ -62,6 +65,7 @@ class TaxCore extends ObjectModel
 		$fields['rate'] = (float)($this->rate);
 		$fields['active'] = (int)($this->active);
 		$fields['deleted'] = (int)($this->deleted);
+		$fields['account_number'] = $this->account_number;
 		return $fields;
 	}
 
@@ -266,6 +270,19 @@ class TaxCore extends ObjectModel
 		$tax_calculator = $tax_manager->getTaxCalculator();
 
 		return $tax_calculator->getTotalRate();
+	}
+	
+	/**
+	 * Returns the Account number of a Tax
+	 *
+	 * @param integer $id_tax
+	 * @return string Account Number
+	 */
+	public static function getAccountNumberByIdTax($id_tax)
+	{
+		return Db::getInstance()->getValue('
+			SELECT account_number FROM `'._DB_PREFIX_.'tax`
+			WHERE id_tax = '.(int)$id_tax);	
 	}
 }
 

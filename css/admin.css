@@ -1766,3 +1766,9 @@ div.progressBarImage
 	color:#fff;
 	background:url(../img/loader.gif);
 }
+
+
+/* Accounting css */
+.formAccountingExport {
+	display: none;
+}

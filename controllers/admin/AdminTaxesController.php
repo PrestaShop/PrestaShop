@@ -162,6 +162,16 @@ class AdminTaxesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Account number:'),
+					'name' => 'account_number',
+					'size' => 33,
+					'maxlength' => 64,
+					'required' => false,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+					'p' => $this->l('Used for the accounting export')
 				)
 			),
 			'submit' => array(

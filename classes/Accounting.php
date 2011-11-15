@@ -40,6 +40,8 @@ class AccountingCore
 			VALUES %s';
 		
 		$values = '';
+		
+		// Build the query for the update 
 		foreach($assoZoneShopList as $asso)
 			if (array_key_exists('id_zone', $asso) && 
 					array_key_exists('id_shop', $asso) &&
