@@ -72,6 +72,23 @@
 		</div>
 		<div style="margin-top: 30px">
 			<fieldset>
+				<legend><img src="/img/t/AdminShop.gif" alt="" /> {l s='Shops'}</legend>
+				{l s='The following are the shops associated to this warehouse.'}
+				<table style="width: 400px; margin-top:20px" classe="table">
+					<tr>
+						<th>{l s='ID'}</th>
+						<th>{l s='Name'}</th>
+					{foreach $shops as $shop}
+					<tr>
+						<td>{$shop.id_shop}</td>
+						<td>{$shop.name}</td>
+					</tr>
+					{/foreach}
+				</table>
+			</fieldset>
+		</div>
+		<div style="margin-top: 30px">
+			<fieldset>
 				<legend><img src="/img/t/AdminStock.gif" alt="" /> {l s='Stock'}</legend>
 				<a href="index.php?controller=adminstockinstantstate&id_warehouse={$warehouse->id}&token={getAdminToken tab='AdminStockInstantState'}">{l s='Click here if you want details on products in this warehouse'}</a>
 			</fieldset>
