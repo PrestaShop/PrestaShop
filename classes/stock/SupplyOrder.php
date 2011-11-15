@@ -182,12 +182,12 @@ class SupplyOrderCore extends ObjectModel
 	{
 		$this->calculatePrices();
 
-		$return = parent::update($null_values);
+		$res = parent::update($null_values);
 
-		if ($return)
+		if ($res)
 			$this->addHistory();
 
-		return $return;
+		return $res;
 	}
 
 	/**
@@ -197,12 +197,12 @@ class SupplyOrderCore extends ObjectModel
 	{
 		$this->calculatePrices();
 
-		$return = parent::add($autodate, $null_values);
+		$res = parent::add($autodate, $null_values);
 
-		if ($return)
+		if ($res)
 			$this->addHistory();
 
-		return $return;
+		return $res;
 	}
 
 	/**
@@ -217,29 +217,28 @@ class SupplyOrderCore extends ObjectModel
 		$this->total_with_discount_te = 0;
 		$this->total_tax = 0;
 		$this->total_ti = 0;
-
 		$is_discount = false;
 
 		if (is_numeric($this->discount_rate) && (float)$this->discount_rate > 0)
 			$is_discount = true;
 
-		// get all product entries in this order
+		// gets all product entries in this order
 		$entries = $this->getEntriesCollection();
 
 		foreach ($entries as $entry)
 		{
-			// apply global discount rate on each product if possible
+			// applys global discount rate on each product if possible
 			if ($is_discount)
 				$entry->applyGlobalDiscount((float)$this->discount_rate);
 
-			// add new prices to the total
+			// adds new prices to the total
 			$this->total_te += $entry->price_with_discount_te;
 			$this->total_with_discount_te += $entry->price_with_order_discount_te;
 			$this->total_tax += $entry->tax_value_with_order_discount;
 			$this->total_ti = $this->total_tax + $this->total_with_discount_te;
 		}
 
-		// apply global discount rate if possible
+		// applies global discount rate if possible
 		if ($is_discount)
 			$this->discount_value_te = $this->total_te - $this->total_with_discount_te;
 	}
@@ -334,7 +333,7 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Check if the current state allow to generate delivery_note for this order
+	 * Checks if the current state allows to generate a delivery note for this order
 	 *
 	 * @return bool
 	 */
@@ -350,7 +349,7 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Check if the current state allow add products in stock
+	 * Checks if the current state allows add products in stock
 	 *
 	 * @return bool
 	 */
@@ -366,9 +365,7 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Add order history
-	 *
-	 * @return bool
+	 * Historizes
 	 */
 	protected function addHistory()
 	{
@@ -383,7 +380,7 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Remove all products in the order
+	 * Removes all products ordered
 	 */
 	public function resetProducts()
 	{
