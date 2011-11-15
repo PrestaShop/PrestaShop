@@ -32,7 +32,7 @@ class AccountingCore
 	* @var array $assoZoneShopList correspond to an associated list of id_zone - id_shop - num
 	* @return bool To know if any modification in the database succeed
 	*/
-	public static function setAccountNumberByZoneShop($assoZoneShopList, $table)
+	public static function setAccountNumberByZoneShop($assoZoneShopList)
 	{
 		$query = '
 			REPLACE INTO`'._DB_PREFIX_.'accounting_zone_shop`
