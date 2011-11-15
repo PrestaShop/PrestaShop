@@ -55,7 +55,7 @@ class SceneCore extends ObjectModel
 
  	public function __construct($id = NULL, $id_lang = NULL, $liteResult = true, $hideScenePosition = false)
 	{
-		parent::__construct((int)($id), (int)($id_lang));
+		parent::__construct($id, $id_lang);
 
 		if (!$liteResult)
 			$this->products = $this->getProducts(true, (int)($id_lang), false);
