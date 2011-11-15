@@ -523,10 +523,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'width' => 120,
 				'havingFilter' => true
 			),
-			/*'employee' => array(
-				'title' => $this->l('Employee'),
-				'havingFilter' => true
-			),*/
 			'supplier' => array(
 				'title' => $this->l('Supplier'),
 				'width' => 200,
@@ -780,15 +776,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// re-defines fieldsDisplay
 		$this->fieldsDisplay = array(
-			'id' => array(
-				'title' => $this->l('ID'),
-				'align' => 'center',
-				'width' => 20,
-				'orderby' => false,
-				'filter' => false,
-				'search' => false,
-			),
-			'p_reference' => array(
+			'reference' => array(
 				'title' => $this->l('Reference'),
 				'align' => 'center',
 				'width' => 30,
@@ -796,8 +784,16 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'filter' => false,
 				'search' => false,
 			),
-			'p_ean13' => array(
+			'ean13' => array(
 				'title' => $this->l('EAN13'),
+				'align' => 'center',
+				'width' => 30,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
+			'upc' => array(
+				'title' => $this->l('UPC'),
 				'align' => 'center',
 				'width' => 30,
 				'orderby' => false,
@@ -860,41 +856,40 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// sets toolbar title with order reference
 		$this->toolbar_title = sprintf($this->l('Reception of products for supply order #%s'), $supply_order->reference);
 
-	 	// gets lang info
 		$this->lang = false;
-		$lang_id = (int)$this->context->language->id;
+		$lang_id = (int)$this->context->language->id; //employee lang
 
 		// gets values corresponding to fieldsDisplay
 		$this->_select = '
-		a.id_supply_order_detail as id,
-		a.quantity_received as quantity_received,
-		a.quantity_expected as quantity_expected,
-		IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_left,
-		IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today,
-		IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
-		p.reference as p_reference,
-		p.ean13 as p_ean13';
+			a.id_supply_order_detail as id,
+			a.quantity_received as quantity_received,
+			a.quantity_expected as quantity_expected,
+			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_left,
+			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today,
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name';
+
 		$this->_join = '
-		INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-		LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
-		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-		LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-		LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-		LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
+			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
+			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
+			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
+			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
+			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
+
 		$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
+
 		$this->_group = 'GROUP BY a.id_supply_order_detail';
 
 		// gets the list ordered by price desc, without limit
 		$this->getList($lang_id, 'quantity_expected', 'DESC', 0, false, false);
 
 		// defines action for POST
-		$action = '&id_supply_order='.$id_supply_order.'&submitUpdateReceipt';
+		$action = '&id_supply_order='.$id_supply_order;
 
 		// renders list
 		$helper = new HelperList();
 		$this->setHelperDisplay($helper);
 		$helper->override_folder = 'supply_orders_receipt_history/';
-		//$helper->shopLinkType = '';
+
 		$helper->currentIndex = self::$currentIndex.$action;
 
 		// display these global order informations
@@ -940,13 +935,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	{
 		// load supply order
 		$id_supply_order = (int)Tools::getValue('id_supply_order', null);
+		$products_already_in_order = array();
 
 		if ($id_supply_order != null)
 		{
 			$supply_order = new SupplyOrder($id_supply_order);
-
-			$products_already_in_order = $supply_order->getEntries();
-			$currency = new Currency($supply_order->id_ref_currency);
 
 			if (Validate::isLoadedObject($supply_order))
 			{
@@ -962,6 +955,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				}
 				else
 				{
+					$products_already_in_order = $supply_order->getEntries();
+					$currency = new Currency($supply_order->id_ref_currency);
+
 					// gets all product ids to manage
 					$product_ids_str = Tools::getValue('product_ids', null);
 					$product_ids = explode('|', $product_ids_str);
@@ -1147,8 +1143,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						// if state is valid, change it in the order
 						if ($id_state == $state['id_supply_order_state'])
 						{
-							// special case of validate state - check if there are products in the order
-							if ($supply_order->isEditable() && !$supply_order->hasEntries())
+
+							$new_state = new SupplyOrderState($id_state);
+
+							// special case of validate state - check if there are products in the order and the required state is not an enclosed state
+							if ($supply_order->isEditable() && !$supply_order->hasEntries() && !$new_state->enclosed)
 								$this->_errors[] = Tools::displayError(
 									$this->l('It is not possible to change the state of this order because of no product are present in it')
 								);
@@ -1171,7 +1170,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			}
 		}
 
-		if (Tools::isSubmit('submitUpdateReceipt') && Tools::isSubmit('id_supply_order'))
+		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessUpdateReceipt();
 
 		parent::postProcess();
@@ -1184,6 +1183,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	protected function postProcessUpdateReceipt()
 	{
+		trace('test');
 		// gets all box selected
 		$rows = Tools::getValue('supply_order_detailBox');
 		if (!$rows)
@@ -1363,7 +1363,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
 			$this->_select = '
 			a.`date_add` as history_date,
-			CONCAT(e.`lastname`, \' \', e.`firstname`) as history_employee,
+			CONCAT(a.`employee_lastname`, \' \', a.`employee_firstname`) as history_employee,
 			sosl.`name` as history_state_name,
 			sos.`color` as color';
 
@@ -1373,8 +1373,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			(
 				a.`id_state` = sosl.`id_supply_order_state`
 				AND sosl.`id_lang` = '.(int)$lang_id.'
-			)
-			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.`id_employee` = a.`id_employee`)';
+			)';
 
 			$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
 			$this->_orderBy = 'a.`date_add`';
@@ -1430,8 +1429,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// loads history of the given order
 			unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
-			$this->_select = 'CONCAT(e.`lastname`, \' \', e.`firstname`) as employee';
-			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.`id_employee` = a.`id_employee`)';
+			$this->_select = 'CONCAT(a.`employee_lastname`, \' \', a.`employee_firstname`) as employee';
 			$this->_where = 'AND a.`id_supply_order_detail` = '.(int)$id_supply_order_detail;
 
 			// gets list and forces no limit clause in the request
@@ -1469,44 +1467,29 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->lang = false;
 		$this->list_simple_header = true;
 		$this->list_no_link = true;
-		$lang_id = (int)$this->context->language->id;
 
 		// gets the id supplier to view
 		$id_supply_order = (int)Tools::getValue('id_supply_order');
-
-		// just in case..
-		unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
-
-		// gets all information on the products ordered
-		$this->_select = '
-			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name,
-			p.reference as p_reference,
-			p.ean13 as p_ean13';
-
-		$this->_join = '
-			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = a.id_product)
-			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
-
-		$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
-		$this->_group = 'GROUP BY a.id_product';
 
 		// gets global order information
 		$supply_order = new SupplyOrder((int)$id_supply_order);
 
 		if (Validate::isLoadedObject($supply_order))
 		{
+			$lang_id = (int)$supply_order->id_lang;
+
+			// just in case..
+			unset($this->_select, $this->_join, $this->_where, $this->_orderBy, $this->_orderWay, $this->_group, $this->_filterHaving, $this->_filter);
+
+			// gets all information on the products ordered
+			$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
+			$this->_group = 'GROUP BY a.id_product';
+
 			// gets the list ordered by price desc, without limit
 			$this->getList($lang_id, 'price_te', 'DESC', 0, false, false);
 
 			// gets the currency used in this order
 			$currency = new Currency($supply_order->id_currency);
-
-			// gets the employee in charge of the order
-			$employee = new Employee($supply_order->id_employee);
 
 			// gets the warehouse where products will be received
 			$warehouse = new Warehouse($supply_order->id_warehouse);
@@ -1516,7 +1499,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// re-defines fieldsDisplay
 			$this->fieldsDisplay = array(
-				'p_reference' => array(
+				'reference' => array(
 					'title' => $this->l('Reference'),
 					'align' => 'center',
 					'width' => 120,
@@ -1524,7 +1507,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'filter' => false,
 					'search' => false,
 				),
-				'p_ean13' => array(
+				'ean13' => array(
 					'title' => $this->l('EAN13'),
 					'align' => 'center',
 					'width' => 100,
@@ -1532,7 +1515,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'filter' => false,
 					'search' => false,
 				),
-				'p_name' => array(
+				'upc' => array(
+					'title' => $this->l('UPC'),
+					'align' => 'center',
+					'width' => 100,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+				),
+				'name' => array(
 					'title' => $this->l('Name'),
 					'orderby' => false,
 					'filter' => false,
@@ -1643,7 +1634,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			// display these global order informations
 			$this->tpl_view_vars = array(
 				'supply_order_detail_content' => $content,
-				'supply_order_employee' => (Validate::isLoadedObject($employee) ? $employee->firstname.' '.$employee->lastname : ''),
 				'supply_order_warehouse' => (Validate::isLoadedObject($warehouse) ? $warehouse->name : ''),
 				'supply_order_reference' => $supply_order->reference,
 				'supply_order_creation_date' => Tools::displayDate($supply_order->date_add, $lang_id, true),
