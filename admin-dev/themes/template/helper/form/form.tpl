@@ -108,7 +108,7 @@
 							{/if}
 						{/block}
 						{if $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" value="{$fields_value[$input.name]}" />
+							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]}" />
 						{else}
 						{block name="start_field_block"}
 							<div class="margin-form">
@@ -320,7 +320,7 @@
 						<input type="submit"
 							id="{$table}_form_submit_btn"
 							value="{$field.title}"
-							name="{$submit_action}{if isset($field.stay) && $field.stay}AndStay{/if}"
+							name="{if isset($field.name)}{$field.name}{else}{$submit_action}{/if}{if isset($field.stay) && $field.stay}AndStay{/if}"
 							{if isset($field.class)}class="{$field.class}"{/if} />
 					</div>
 				{elseif $key == 'p'}

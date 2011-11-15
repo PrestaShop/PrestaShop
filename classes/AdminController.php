@@ -369,7 +369,6 @@ class AdminControllerCore extends Controller
 
 			// Sub included tab postProcessing
 			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
-
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 				$this->{'process'.Tools::toCamelCase($this->action)}($token);
 			else if (method_exists($this, $this->action))
@@ -1870,7 +1869,19 @@ class AdminControllerCore extends Controller
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
 					if (empty($this->fields_value[$input['name']]))
-						if (isset($input['lang']) && $input['lang'])
+						if ($input['type'] == 'group_shop' || $input['type'] == 'shop')
+						{
+							if ($obj->id)
+							{
+								$assos = array();
+								$sql = 'SELECT `id_'.$input['type'].'`, `'.pSQL($this->identifier).'`
+										FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$input['type'].'`
+										WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
+								foreach (Db::getInstance()->executeS($sql) as $row)
+									$this->fields_value['shop'][$row['id_'.$input['type']]][] = $row[$this->identifier];
+							}
+						}
+						else if (isset($input['lang']) && $input['lang'])
 							foreach ($this->_languages as $language)
 								$this->fields_value[$input['name']][$language['id_lang']] = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
 						else

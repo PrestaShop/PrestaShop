@@ -288,17 +288,6 @@ class AdminLanguagesControllerCore extends AdminController
 			'ps_version' => _PS_VERSION_
 		);
 
-		//Added values of object Shop
-		if ($obj->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
-		}
-
 		$this->addJS(_PS_JS_DIR_.'checkLangPack.js');
 
 		return parent::initForm();

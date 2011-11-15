@@ -51,8 +51,7 @@
 	</div>
 
 	{assign var=home_is_selected value=false}
-	
-	
+
 	{foreach $categories.selected_cat AS $cat}
 		{if is_array($cat)}
 			{if $cat.id_category != 1}

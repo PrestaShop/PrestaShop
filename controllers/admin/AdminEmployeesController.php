@@ -282,17 +282,6 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->fields_value['passwd'] = false;
 
-		//Added values of object Shop
-		if ($obj->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
-		}
-
 		return parent::initForm();
 	}
 

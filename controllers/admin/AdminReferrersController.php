@@ -360,17 +360,6 @@ class AdminReferrersControllerCore extends AdminController
 			'request_uri_like_not' => str_replace('\\', '\\\\', htmlentities($this->getFieldValue($obj, 'request_uri_like_not'), ENT_COMPAT, 'UTF-8'))
 		);
 
-		//Added values of object Shop
-		if ($obj->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
-		}
-
 		$this->tpl_form_vars = array('uri' => $uri);
 
 		return parent::initForm();
