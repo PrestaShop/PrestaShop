@@ -24,48 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $firstCall}
-	<script type="text/javascript">
-		var vat_number = {$vat_number};
-		var module_dir = '{$smarty.const._MODULE_DIR_}';
-		var id_language = {$defaultFormLanguage};
-		var languages = new Array();
-
-		$(document).ready(function() {
-
-			{foreach $languages as $k => $language}
-				languages[{$k}] = {
-					id_lang: {$language.id_lang},
-					iso_code: '{$language.iso_code}',
-					name: '{$language.name}',
-					is_default: "{$language.is_default}"
-				};
-			{/foreach}
-			// we need allowEmployeeFormLang var in ajax request
-			allowEmployeeFormLang = {$allowEmployeeFormLang};
-			displayFlags(languages, id_language, allowEmployeeFormLang);
-
-			{if isset($fields_value.id_state)}
-				if ($('#id_country') && $('#id_state'))
-				{
-					ajaxStates({$fields_value.id_state});
-					$('#id_country').change(function() {
-						ajaxStates();
-					});
-				}
-			{/if}
-
-			if ($(".datepicker").length > 0)
-				$(".datepicker").datepicker({
-					prevText: '',
-					nextText: '',
-					dateFormat: 'yy-mm-dd'
-				});
-
-		});
-	{block name="script"}{/block}
-	</script>
-{/if}
 
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
@@ -97,6 +55,8 @@
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
 						{$field.title}
 					</legend>
+				{elseif $key == 'description'}
+					<p class="description">{$field}</p>
 				{elseif $key == 'input'}
 					{foreach $field as $input}
 						{if $input.name == 'id_state'}
@@ -268,7 +228,7 @@
 								{assign var=groups value=$input.values}
 								{include file='helper/form/form_group.tpl'}
 							{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
-								{include file='helper/form/form_shop.tpl'}
+								{include file='helper/form/form_shop.tpl' input=$input fields_value=$fields_value}
 							{elseif $input.type == 'categories'}
 								{include file='helper/form/form_category.tpl' categories=$input.values}
 							{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
@@ -350,7 +310,7 @@
 	{/foreach}
 </form>
 {/block}
-
+{block name="after"}{/block}
 {if isset($tinymce) && $tinymce}
 	<script type="text/javascript">
 	
@@ -376,5 +336,47 @@
 			})
 		{/block}
 	});
+	</script>
+{/if}
+{if $firstCall}
+	<script type="text/javascript">
+		var vat_number = {$vat_number};
+		var module_dir = '{$smarty.const._MODULE_DIR_}';
+		var id_language = {$defaultFormLanguage};
+		var languages = new Array();
+
+		$(document).ready(function() {
+
+			{foreach $languages as $k => $language}
+				languages[{$k}] = {
+					id_lang: {$language.id_lang},
+					iso_code: '{$language.iso_code}',
+					name: '{$language.name}',
+					is_default: "{$language.is_default}"
+				};
+			{/foreach}
+			// we need allowEmployeeFormLang var in ajax request
+			allowEmployeeFormLang = {$allowEmployeeFormLang};
+			displayFlags(languages, id_language, allowEmployeeFormLang);
+
+			{if isset($fields_value.id_state)}
+				if ($('#id_country') && $('#id_state'))
+				{
+					ajaxStates({$fields_value.id_state});
+					$('#id_country').change(function() {
+						ajaxStates();
+					});
+				}
+			{/if}
+
+			if ($(".datepicker").length > 0)
+				$(".datepicker").datepicker({
+					prevText: '',
+					nextText: '',
+					dateFormat: 'yy-mm-dd'
+				});
+
+		});
+	{block name="script"}{/block}
 	</script>
 {/if}
