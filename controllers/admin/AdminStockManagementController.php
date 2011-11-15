@@ -50,6 +50,12 @@ class AdminStockManagementControllerCore extends AdminController
 				'filter_key' => 'a!ean13',
 				'width' => 100
 			),
+			'upc' => array(
+				'title' => $this->l('UPC'),
+				'align' => 'center',
+				'filter_key' => 'a!upc',
+				'width' => 100
+			),
 			'name' => array(
 				'title' => $this->l('Name'),
 			),
@@ -158,6 +164,13 @@ class AdminStockManagementControllerCore extends AdminController
 							'type' => 'text',
 							'label' => $this->l('EAN13:'),
 							'name' => 'ean13',
+							'size' => 15,
+							'disabled' => true,
+						),
+						array(
+							'type' => 'text',
+							'label' => $this->l('UPC:'),
+							'name' => 'upc',
 							'size' => 15,
 							'disabled' => true,
 						),
@@ -767,7 +780,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// Load product attributes with sql override
 			$this->table = 'product_attribute';
 
-			$this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13,
+			$this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc,
 				IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name';
 
 			$this->_join = '
@@ -836,6 +849,11 @@ class AdminStockManagementControllerCore extends AdminController
 					$this->addRowActionSkipList('addstock', array($item['id']));
 					$this->addRowActionSkipList('removestock', array($item['id']));
 					$this->addRowActionSkipList('transferstock', array($item['id']));
+
+					// does not display these informaions because this product has combinations
+					$item['reference'] = '--';
+					$item['ean13'] = '--';
+					$item['upc'] = '--';
 				}
 				else
 				{
@@ -915,6 +933,7 @@ class AdminStockManagementControllerCore extends AdminController
 						$id_product = $combination->id_product;
 						$reference = $combination->reference;
 						$ean13 = $combination->ean13;
+						$upc = $combination->upc;
 						$manufacturer_reference = $combination->supplier_reference;
 
 						// get the full name for this combination
@@ -941,6 +960,7 @@ class AdminStockManagementControllerCore extends AdminController
 						$product_is_valid = true;
 						$reference = $product->reference;
 						$ean13 = $product->ean13;
+						$upc = $product->upc;
 						$name = $product->name;
 						$manufacturer_reference = $product->supplier_reference;
 						$is_pack = $product->cache_is_pack;
@@ -974,6 +994,7 @@ class AdminStockManagementControllerCore extends AdminController
 						'manufacturer_reference' => $manufacturer_reference,
 						'name' => $name,
 						'ean13' => $ean13,
+						'upc' => $upc,
 						'check' => md5(_COOKIE_KEY_.$id_product.$id_product_attribute),
 						'quantity' => Tools::getValue('quantity', ''),
 						'id_warehouse' => Tools::getValue('id_warehouse', ''),

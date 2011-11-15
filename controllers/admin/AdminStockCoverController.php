@@ -53,6 +53,12 @@ class AdminStockCoverControllerCore extends AdminController
 				'width' => 100,
 				'filter_key' => 'a!ean13'
 			),
+			'upc' => array(
+				'title' => $this->l('UPC'),
+				'align' => 'center',
+				'width' => 100,
+				'filter_key' => 'a!upc'
+			),
 			'name' => array(
 				'title' => $this->l('Name'),
 				'filter_key' => 'b!name'
@@ -99,24 +105,32 @@ class AdminStockCoverControllerCore extends AdminController
 		{
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
-			$product_id = (int)Tools::getValue('id');
+			$id_product = (int)Tools::getValue('id');
 			$period = (Tools::getValue('period') ? (int)Tools::getValue('period') : 7);
 			$warehouse = (Tools::getValue('id_warehouse') ? (int)Tools::getValue('id_warehouse') : -1);
 
-			$query = '
-			SELECT a.id_product_attribute as id, a.id_product, a.reference, a.ean13,
-				   IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				   IFNULL(s.physical_quantity, 0) as stock
-			FROM '._DB_PREFIX_.'product_attribute a
-			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
-			INNER JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
-			WHERE a.id_product = '.$product_id.
-			($warehouse != -1 ? ' AND s.id_warehouse = '.(int)$warehouse : ' ').'
-			GROUP BY a.id_product_attribute';
+			$query = new DbQuery();
+			$query->select('pa.id_product_attribute as id, pa.id_product, stock_view.reference, stock_view.ean13,
+							stock_view.upc, stock_view.usable_quantity as stock,
+							IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name');
+			$query->from('product_attribute pa
+						  INNER JOIN
+						  (
+						  	SELECT SUM(s.usable_quantity) as usable_quantity, s.id_product_attribute, s.reference, s.ean13, s.upc
+						   	FROM '._DB_PREFIX_.'stock s
+						   	WHERE s.id_product = '.($id_product).'
+						   	GROUP BY s.id_product_attribute
+						   )
+						   stock_view ON (stock_view.id_product_attribute = pa.id_product_attribute)');
+			$query->innerJoin('product_lang pl ON (pl.id_product = pa.id_product AND pl.id_lang = '.$lang_id.')');
+			$query->leftJoin('product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)');
+			$query->leftJoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
+			$query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')');
+			$query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')');
+			$query->where('pa.id_product = '.$id_product);
+			if ($warehouse != -1)
+				$query->where('s.id_warehouse = '.(int)$warehouse);
+			$query->groupBy('pa.id_product_attribute');
 
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			foreach ($datas as &$data)
@@ -145,7 +159,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->list_no_link = true;
 
 		// query
-		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, s.physical_quantity as stock';
+		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, SUM(s.usable_quantity) as stock';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
 						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
 		if ($this->getCurrentCoverageWarehouse() != -1)
@@ -195,7 +209,12 @@ class AdminStockCoverControllerCore extends AdminController
 				$this->addRowActionSkipList('details', array($item['id']));
 			}
 			else
+			{
 				$item['stock'] = 'See details';
+				$item['reference'] = '--';
+				$item['ean13'] = '--';
+				$item['upc'] = '--';
+			}
 		}
 	}
 

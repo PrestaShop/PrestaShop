@@ -48,9 +48,9 @@ $id_lang = (int)Context::getContext()->language->id;
 $query = new DbQuery();
 $query->select('
 	CONCAT(p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\')) as id,
-	p.reference,
-	IFNULL(p.ean13, \'\') as ean13,
-	IFNULL(p.upc, \'\') as upc,
+	IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
+	IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
+	IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc,
 	md5(CONCAT(\''._COOKIE_KEY_.'\', p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\'))) as checksum,
 	IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name
 ');

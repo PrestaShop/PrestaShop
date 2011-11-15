@@ -27,7 +27,7 @@
 {extends file="helper/view/view.tpl"}
 {block name="override_tpl"}
 {if isset($warehouse)}
-	<div style="margin-top: 20px">
+	<div>
 			<fieldset>
 				<legend><img src="/img/t/AdminPreferences.gif" alt="" />  {l s='General informations'}</legend>
 				<table style="width: 400px;" classe="table">

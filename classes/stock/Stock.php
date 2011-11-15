@@ -141,11 +141,15 @@ class StockCore extends ObjectModel
 				$this->upc = $row['upc'];
 			}
 		}
-		else {
+		else
+		{
 			$product = new Product((int)$this->id_product);
-			$this->reference = $product->reference;
-			$this->ean13 = $product->ean13;
-			$this->upc = $product->upc;
+			if (Validate::isLoadedObject($product))
+			{
+				$this->reference = $product->reference;
+				$this->ean13 = $product->ean13;
+				$this->upc = $product->upc;
+			}
 		}
 	}
 }

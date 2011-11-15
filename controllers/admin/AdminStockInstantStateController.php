@@ -35,9 +35,9 @@ class AdminStockInstantStateControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-		$this->table = 'product';
-		$this->className = 'Product';
-		$this->lang = true;
+		$this->table = 'stock';
+		$this->className = 'Stock';
+		$this->lang = false;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
@@ -50,14 +50,19 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'align' => 'center',
 				'width' => 100,
 			),
+			'upc' => array(
+				'title' => $this->l('UPC'),
+				'align' => 'center',
+				'width' => 100,
+			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'filter_key' => 'b!name'
+				'havingFilter' => true
 			),
 			'price_te' => array(
 				'title' => $this->l('Price (te)'),
 				'width' => 150,
-				'orderby' => false,
+				'orderby' => true,
 				'search' => false,
 				'type' => 'price',
 				'currency' => true,
@@ -65,19 +70,19 @@ class AdminStockInstantStateControllerCore extends AdminController
 			'physical_quantity' => array(
 				'title' => $this->l('Physical quantity'),
 				'width' => 80,
-				'orderby' => false,
+				'orderby' => true,
 				'search' => false
 			),
 			'usable_quantity' => array(
 				'title' => $this->l('Usable quantity'),
 				'width' => 80,
-				'orderby' => false,
+				'orderby' => true,
 				'search' => false,
 			),
 			'real_quantity' => array(
 				'title' => $this->l('Real quantity'),
 				'width' => 80,
-				'orderby' => false,
+				'orderby' => true,
 				'search' => false,
 				'hint' => $this->l('Pysical qty,
 									in combination with the quantity you ordered (atm) from your supplier,
@@ -92,61 +97,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 	}
 
 	/**
-	 * Method called when an ajax request is made
-	 * @see AdminController::postProcess()
-	 */
-	public function ajaxProcess()
-	{
-		if (Tools::isSubmit('id')) // if a product id is submit
-		{
-			$this->lang = false;
-			$lang_id = (int)$this->context->language->id;
-			$id_product = (int)Tools::getValue('id');
-			$warehouse = (Tools::getValue('id_warehouse') ? (int)Tools::getValue('id_warehouse') : -1);
-
-			$query = '
-			SELECT a.id_product_attribute as id, a.id_product, a.reference, a.ean13,
-				   IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				   IFNULL(s.physical_quantity, 0) as physical_quantity,
-				   IFNULL(s.usable_quantity, 0) as usable_quantity,
-				   s.price_te,
-				   w.id_currency as id_currency
-			FROM '._DB_PREFIX_.'product_attribute a
-			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')
-			INNER JOIN '._DB_PREFIX_.'stock s ON (a.id_product_attribute = s.id_product_attribute)
-			LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = s.id_warehouse)
-			WHERE a.id_product = '.$id_product.
-			($warehouse != -1 ? ' AND s.id_warehouse = '.(int)$warehouse : ' ').'
-			GROUP BY a.id_product_attribute';
-
-			// gets stock manager
-			$manager = StockManagerFactory::getManager();
-
-			// queries
-			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-			foreach ($datas as &$data)
-			{
-				// retrieves real quantity for each product
-				$data['real_quantity'] = $manager->getProductRealQuantities($data['id_product'],
-																			$data['id'],
-																			($warehouse == -1 ? null : array($warehouse)), // all or selected warehouse(s)
-																			true);
-
-				// display price correctly
-				$data['price_te'] = Tools::displayPrice($data['price_te'], (int)$data['id_currency']);
-			}
-
-			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
-		}
-		die;
-	}
-
-	/**
 	 * AdminController::initList() override
 	 * @see AdminController::initList()
 	 */
@@ -154,26 +104,36 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		// query
 		$this->_select = '
-		a.id_product as id,
-		COUNT(pa.id_product_attribute) as variations,
-		s.physical_quantity as physical_quantity,
-		s.usable_quantity as usable_quantity,
-		s.price_te as price_te,
-		w.id_currency as id_currency';
+			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) as name,
+			a.reference,
+			a.ean13,
+			a.upc,
+			w.id_currency,
+			a.physical_quantity,
+			a.usable_quantity,
+			COUNT(a.id_stock) as multiple_prices';
 
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
-						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)
-						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = s.id_warehouse)';
+		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock
+							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+								stock.id_product = pl.id_product
+								AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').'
+							)
+							LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = stock.id_warehouse)
+							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
+							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+								al.id_attribute = pac.id_attribute
+								AND al.id_lang = '.(int)$this->context->language->id.'
+							)';
+		$this->_group = 'GROUP BY a.id_stock, a.id_product, a.id_product_attribute';
 
 		if ($this->getCurrentCoverageWarehouse() != -1)
-			$this->_where .= ' AND s.id_warehouse = '.$this->getCurrentCoverageWarehouse();
+			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentCoverageWarehouse();
 
 		// toolbar btn
 		$this->toolbar_btn = array();
 		// disables link
 		$this->list_no_link = true;
-		// adds action
-		$this->addRowAction('details');
+
 		// smarty
 		$this->tpl_list_vars['stock_instant_state_warehouses'] = $this->stock_instant_state_warehouses;
 		$this->tpl_list_vars['stock_instant_state_cur_warehouse'] = $this->getCurrentCoverageWarehouse();
@@ -198,27 +158,15 @@ class AdminStockInstantStateControllerCore extends AdminController
 		for ($i = 0; $i < $nb_items; ++$i)
 		{
 			$item = &$this->_list[$i];
-			if ((int)$item['variations'] <= 0) // if this product does not have combinations
-			{
-				// removes 'details' action on products without attributes
-				$this->addRowActionSkipList('details', array($item['id']));
 
-				// gets stock manager
-				$manager = StockManagerFactory::getManager();
+			// gets stock manager
+			$manager = StockManagerFactory::getManager();
 
-				// gets real_quantity depending on the warehouse
-				$item['real_quantity'] = $manager->getProductRealQuantities($item['id'],
-																			0,
-																			($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
-																			true);
-			}
-			else // else, this product does have combinations, hence we do not display informations
-			{
-				$item['price_te'] = '--';
-				$item['physical_quantity'] = '--';
-				$item['usable_quantity'] = '--';
-				$item['real_quantity'] = '--';
-			}
+			// gets real_quantity depending on the warehouse
+			$item['real_quantity'] = $manager->getProductRealQuantities($item['id_product'],
+																		$item['id_product_attribute'],
+																		($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
+																		true);
 		}
 	}
 
@@ -239,4 +187,5 @@ class AdminStockInstantStateControllerCore extends AdminController
 		}
 		return $warehouse;
 	}
+
 }
