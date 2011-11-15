@@ -258,7 +258,7 @@ class SupplyOrderCore extends ObjectModel
 
 		$query->select('
 			s.*,
-			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name,
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name_displayed,
 			p.reference as reference,
 			p.ean13 as ean13');
 
@@ -369,12 +369,13 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	protected function addHistory()
 	{
+		$context = Context::getContext();
 		$history = new SupplyOrderHistory();
 		$history->id_supply_order = $this->id;
 		$history->id_state = $this->id_supply_order_state;
-		$history->id_employee = (int)$this->context->employee->id;
-		$history->employee_firstname = pSQL($this->context->employee->firstname);
-		$history->employee_lastname = pSQL($this->context->employee->lastname);
+		$history->id_employee = (int)$context->employee->id;
+		$history->employee_firstname = pSQL($context->employee->firstname);
+		$history->employee_lastname = pSQL($context->employee->lastname);
 
 		$history->save();
 	}

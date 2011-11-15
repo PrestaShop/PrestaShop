@@ -30,17 +30,17 @@
 	<p>&nbsp;</p>
 
 	<input type="hidden" id="product_ids" name="product_ids" value="{$product_ids}" />
-	<input type="hidden" name="updatesupplier_order" value="1" />
+	<input type="hidden" name="updatesupply_order" value="1" />
 
 	<fieldset>
 		<legend>
-			<img alt="Supplier Order Management" src="../img/admin/edit.gif">
+			<img alt="Supply Order Management" src="../img/admin/edit.gif">
 			{l s='Manage the products you want to order from your supplier'}
 		</legend>
 
 		<p class="clear">{l s='To add a product to the order, type the first letters of the product name, then select the it from the drop-down list:'}</p>
 		<input type="text" size="100" id="cur_product_name" />
-		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supplier order'}" title="{l s='Add a product to the supplier order'}" /></span>
+		<span onclick="addProduct();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add a product to the supply order'}" title="{l s='Add a product to the supply order'}" /></span>
 
 		<p>&nbsp;</p>
 
@@ -48,7 +48,7 @@
 			<tr>
 				<td>
 					<table
-					id="products_in_supplier_order"
+					id="products_in_supply_order"
 					class="table"
 					cellpadding="0" cellspacing="0"
 					style="width: 100%; margin-bottom:10px;"
@@ -73,7 +73,7 @@
 										{$product.reference}
 										<input type="hidden" name="input_check_{$product.id_product}_{$product.id_product_attribute}" value="{$product.checksum}" />
 										<input type="hidden" name="input_reference_{$product.id_product}_{$product.id_product_attribute}" value="{$product.reference}" />
-										<input type="hidden" name="input_id_{$product.id_product}_{$product.id_product_attribute}" value="{$product.id_supplier_order_detail}" />
+										<input type="hidden" name="input_id_{$product.id_product}_{$product.id_product_attribute}" value="{$product.id_supply_order_detail}" />
 									</td>
 									<td>
 										{$product.ean13}
@@ -100,7 +100,7 @@
 										<input type="text" name="input_tax_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.tax_rate, 4)}" size="5" />%
 									</td>
 									<td class="center">
-										<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplierOrderLink">
+										<a href="#" id="deletelink|{$product.id_product}_{$product.id_product_attribute}" class="removeProductFromSupplyOrderLink">
 											<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order'}" title="{l s='Remove this product from the order'}" />
 										</a>
 									</td>
@@ -132,7 +132,7 @@
 			}
 
 			// add a new line in the products table
-			$('#products_in_supplier_order > tbody:last').append(
+			$('#products_in_supply_order > tbody:last').append(
 				'<tr style="height:50px;">'+
 				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
@@ -142,7 +142,7 @@
 				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
-				'<td class="center"><a href="#" class="removeProductFromSupplierOrderLink" id="deletelink|'+product_infos.id+'">'+
+				'<td class="center"><a href="#" class="removeProductFromSupplyOrderLink" id="deletelink|'+product_infos.id+'">'+
 				'<img src="../img/admin/delete.gif" alt="{l s="Remove this product from the order"}" title="{l s="Remove this product from the order"}" />'+
 				'</a></td></tr>'
 			);
@@ -163,7 +163,7 @@
 		/* function autocomplete */
 		$(function() {
 			// add click event on just created delete item link
-			$('a.removeProductFromSupplierOrderLink').live('click', function() {
+			$('a.removeProductFromSupplyOrderLink').live('click', function() {
 
 				var id = $(this).attr('id');
 				var product_id = id.split('|')[1];
@@ -192,7 +192,7 @@
 			btn_save = $('span[class~="process-icon-save"]').parent();
 
 			btn_save.click(function() {
-				$('#supplier_order_form').submit();
+				$('#supply_order_form').submit();
 			});
 
 			// bind enter key event on search field
