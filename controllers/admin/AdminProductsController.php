@@ -810,7 +810,7 @@ class AdminProductsController extends AdminController
 				{
 					$specificPrice = new SpecificPrice();
 					$specificPrice->id_product = $id_product;
-					$specificPrice->id_product_attribute = (int)Tools::getValue('sp_id_product_attribute');
+					$specificPrice->id_product_attribute = (int)Tools::getValue('id_product_attribute');
 					$specificPrice->id_shop = (int)$id_shop;
 					$specificPrice->id_currency = (int)($id_currency);
 					$specificPrice->id_country = (int)($id_country);
@@ -1848,11 +1848,13 @@ if (false)
 		}
 		return $preview_url;
 	}
+	
 	/**
 	* Post traitment for accounting 
 	*/
 	public function postProcessFormAccounting()
 	{
+		
 		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 		{
 			$id_shop = $this->context->shop->getID();
@@ -1870,8 +1872,11 @@ if (false)
 							'id_shop' => $id_shop,
 							'num' => $num);
 				
-				if (count($tab))
-					Accounting::saveProductAccountingInformations($tab);
+			// Save to the database the account 
+			if (count($tab) && Accounting::saveProductAccountingInformations($tab))
+				$this->confirmations[] = $this->l('Account numbers have been updated');
+			else
+				$this->_errors[] = $this->l('Account Numbers could not be updated or added in the database');
 			}
 		}
 	}

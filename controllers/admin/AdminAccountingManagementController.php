@@ -133,12 +133,12 @@ class AdminAccountingManagementControllerCore extends AdminController
 						'num' => $num);
 			
 			// Save to the database the account 
-			if (count($tab))
-			{
-				Accounting::setAccountNumberByZoneShop($tab);
-				$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-				Tools::redirectAdmin(self::$currentIndex.'&token='.$token);
-			}
+			if (count($tab) && Accounting::setAccountNumberByZoneShop($tab))
+				$this->confirmations[] = $this->l('Account numbers have been updated');
+			else
+				$this->_errors[] = $this->l('Account Numbers could not be updated or added in the database');
+				//$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+				//Tools::redirectAdmin(self::$currentIndex.'&token='.$token);
 		}
 	}
 	
