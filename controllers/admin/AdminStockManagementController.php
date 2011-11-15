@@ -106,11 +106,12 @@ class AdminStockManagementControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
-		//get warehouses list
-		$warehouses = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_warehouse`, CONCAT(`reference`, " - ", `name`) as name
-			FROM `'._DB_PREFIX_.'warehouse`
-			ORDER BY `reference` ASC');
+		$id_product = (int)Tools::getValue('id_product');
+		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
+
+		// gets warehouses
+		$warehouses_add = Warehouse::getWarehouses(true);
+		$warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
 
 		$currencies = Currency::getCurrencies();
 
@@ -203,7 +204,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'name' => 'id_warehouse',
 							'required' => true,
 							'options' => array(
-								'query' => $warehouses,
+								'query' => $warehouses_add,
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
@@ -339,7 +340,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'name' => 'id_warehouse',
 							'required' => true,
 							'options' => array(
-								'query' => $warehouses,
+								'query' => $warehouses_remove,
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
@@ -425,7 +426,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'p' => $this->l('Physical quantity to transfer for this product')
+							'p' => $this->l('Physical quantity to transfer.')
 						),
 						array(
 							'type' => 'select',
@@ -433,15 +434,15 @@ class AdminStockManagementControllerCore extends AdminController
 							'name' => 'id_warehouse_from',
 							'required' => true,
 							'options' => array(
-								'query' => $warehouses,
+								'query' => $warehouses_remove,
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'p' => $this->l('Select the warehouse from where you want to transfer the product')
+							'p' => $this->l('Select the warehouse want to transfer the product from.')
 						),
 						array(
 							'type' => 'radio',
-							'label' => $this->l('Usable for sale in source warehouse ?:'),
+							'label' => $this->l('Usable for sale in source warehouse ?'),
 							'name' => 'usable_from',
 							'required' => true,
 							'class' => 't',
@@ -458,7 +459,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Do you want to transfer this quantity from usable quantity for sale on shops in the source warehouse ?:')
+							'p' => $this->l('Is this a usable quantity for sale?')
 						),
 						array(
 							'type' => 'select',
@@ -466,15 +467,15 @@ class AdminStockManagementControllerCore extends AdminController
 							'name' => 'id_warehouse_to',
 							'required' => true,
 							'options' => array(
-								'query' => $warehouses,
+								'query' => $warehouses_add,
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'p' => $this->l('Select the warehouse where you want to transfer the product')
+							'p' => $this->l('Select the warehouse to transfer the product to.')
 						),
 						array(
 							'type' => 'radio',
-							'label' => $this->l('Usable for sale in destination warehosue ?:'),
+							'label' => $this->l('Usable for sale in destination warehouse ?'),
 							'name' => 'usable_to',
 							'required' => true,
 							'class' => 't',
@@ -491,7 +492,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Do you want to transfer this quantity as usable quantity for sale on shops in the destination warehouse ?:')
+							'p' => $this->l('Do you want it to be usable for sale?')
 						),
 					),
 					'submit' => array(

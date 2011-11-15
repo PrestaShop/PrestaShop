@@ -283,9 +283,10 @@ class WarehouseCore extends ObjectModel
 				$id_shop = Context::getContext()->shop->getID(true);
 
 		$query = new DbQuery();
-		$query->select('w.id_warehouse, name');
+		$query->select('w.id_warehouse, CONCAT(reference, \' - \', name) as name');
 		$query->from('warehouse w');
 		$query->where('deleted = 0');
+		$query->orderBy('reference ASC');
 		if (!$ignore_shop)
 			$query->innerJoin('warehouse_shop ws ON ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int)$id_shop);
 
@@ -356,6 +357,31 @@ class WarehouseCore extends ObjectModel
 		$query->select('w.id_warehouse');
 		$query->from('warehouse w');
 		$query->where('w.id_employee = '.(int)$id_employee);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
+	/**
+	 * For a given product, returns the warehouses it is stored in
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @return array
+	 */
+	public static function getWarehousesByProductId($id_product, $id_product_attribute)
+	{
+		if (!$id_product && !$id_product_attribute)
+			return array();
+
+		$query = new DbQuery();
+		$query->select('w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
+		$query->from('warehouse w');
+		$query->leftJoin('stock s ON (s.id_warehouse = w.id_warehouse)');
+		if ($id_product)
+			$query->where('s.id_product = '.(int)$id_product);
+		if ($id_product_attribute)
+			$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->orderBy('w.reference ASC');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
