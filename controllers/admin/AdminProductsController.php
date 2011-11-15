@@ -1910,7 +1910,7 @@ if (false)
 			'shopName' => $this->context->shop->name,
 			'error' => $error,
 		));
-		$this->content = $this->context->smarty->fetch('products/accounting.tpl');
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->fetch('products/accounting.tpl');
 	}
 
 	public function initFormPrices($obj, $languages, $defaultLanguage)
