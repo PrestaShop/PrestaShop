@@ -429,7 +429,6 @@ class AdminAccountingExportControllerCore extends AdminController
 		ob_clean();
     flush();
     
-		// Check if echo will be sufficient
 		@readfile($path);
 		exit();  
 	}
