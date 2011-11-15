@@ -28,17 +28,20 @@
 class FeatureCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
-	public 		$position;
+	public $name;
+	public $position;
 
- 	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 128);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'position' => 'isInt');
+	protected $fieldsRequiredLang = array('name');
+	protected $fieldsSizeLang = array('name' => 128);
+	protected $fieldsValidateLang = array(
+		'name' => 'isGenericName',
+		'position' => 'isInt'
+	);
 
-	protected 	$table = 'feature';
-	protected 	$identifier = 'id_feature';
+	protected $table = 'feature';
+	protected $identifier = 'id_feature';
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_features',
 		'objectNodeName' => 'product_feature',
 		'fields' => array(),
@@ -46,7 +49,7 @@ class FeatureCore extends ObjectModel
 
 	public function getFields()
 	{
-		return array('id_feature' => NULL, 'position' => (int)$this->position);
+		return array('id_feature' => null, 'position' => (int)$this->position);
 	}
 
 	/**
@@ -71,10 +74,12 @@ class FeatureCore extends ObjectModel
 	public static function getFeature($id_lang, $id_feature)
 	{
 		return Db::getInstance()->getRow('
-		SELECT *
-		FROM `'._DB_PREFIX_.'feature` f
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON ( f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)($id_lang).')
-		WHERE f.`id_feature` = '.(int)($id_feature));
+			SELECT *
+			FROM `'._DB_PREFIX_.'feature` f
+			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
+				ON ( f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)$id_lang.')
+			WHERE f.`id_feature` = '.(int)$id_feature
+		);
 	}
 
 	/**
@@ -87,10 +92,12 @@ class FeatureCore extends ObjectModel
 	public static function getFeatures($id_lang)
 	{
 		return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'feature` f
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)($id_lang).')
-		ORDER BY f.`position` ASC');
+			SELECT *
+			FROM `'._DB_PREFIX_.'feature` f
+			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
+				ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)$id_lang.')
+			ORDER BY f.`position` ASC
+		');
 	}
 
 	/**
@@ -102,7 +109,8 @@ class FeatureCore extends ObjectModel
 	public function deleteSelection($selection)
 	{
 		/* Also delete Attributes */
-		foreach ($selection AS $value) {
+		foreach ($selection as $value)
+		{
 			$obj = new Feature($value);
 			if (!$obj->delete())
 				return false;
@@ -123,13 +131,22 @@ class FeatureCore extends ObjectModel
 	public function delete()
 	{
 	 	/* Also delete related attributes */
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value_lang` WHERE `id_feature_value` IN (SELECT id_feature_value FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id).')');
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)($this->id));
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'feature_value_lang`
+			WHERE `id_feature_value` IN (SELECT id_feature_value FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)$this->id.')
+		');
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'feature_value`
+			WHERE `id_feature` = '.(int)$this->id
+		);
 		/* Also delete related products */
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'feature_product` WHERE `id_feature` = '.(int)($this->id));
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'feature_product`
+			WHERE `id_feature` = '.(int)$this->id
+		);
 
 		$return = parent::delete();
-		if($return)
+		if ($return)
 			Hook::exec('afterDeleteFeature', array('id_feature' => $this->id));
 
 		/* Reinitializing position */
@@ -174,7 +191,7 @@ class FeatureCore extends ObjectModel
 		$result = Db::getInstance()->getRow('
 		SELECT COUNT(ag.`id_feature`) as nb
 		FROM `'._DB_PREFIX_.'feature` ag
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)$id_lang.')
 		ORDER BY `name` ASC');
 		return ($result['nb']);
 	}
@@ -188,9 +205,14 @@ class FeatureCore extends ObjectModel
 	*/
 	public static function addFeatureImport($name, $position = false)
 	{
-		$rq = Db::getInstance()->getRow('SELECT `id_feature` FROM '._DB_PREFIX_.'feature_lang WHERE `name` = \''.pSQL($name).'\' GROUP BY `id_feature`');
+		$rq = Db::getInstance()->getRow('
+			SELECT `id_feature`
+			FROM '._DB_PREFIX_.'feature_lang
+			WHERE `name` = \''.pSQL($name).'\'
+			GROUP BY `id_feature`
+		');
 		if (!empty($rq))
-			return (int)($rq['id_feature']);
+			return (int)$rq['id_feature'];
 		// Feature doesn't exist, create it
 		$feature = new Feature();
 		$languages = Language::getLanguages();
@@ -210,8 +232,8 @@ class FeatureCore extends ObjectModel
 			return false;
 
 		$ids = '';
-		foreach($list_ids_product as $id)
-			$ids .= (int)($id).',';
+		foreach ($list_ids_product as $id)
+			$ids .= (int)$id.',';
 
 		$ids = rtrim($ids, ',');
 
@@ -219,14 +241,17 @@ class FeatureCore extends ObjectModel
 			return false;
 
 		return Db::getInstance()->executeS('
-		SELECT * , COUNT(*) as nb
-		FROM `'._DB_PREFIX_.'feature` f
-		LEFT JOIN `'._DB_PREFIX_.'feature_product` fp ON f.`id_feature` = fp.`id_feature`
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON f.`id_feature` = fl.`id_feature`
-		WHERE fp.`id_product` IN ('.$ids.')
-		AND `id_lang` = '.(int)($id_lang).'
-		GROUP BY f.`id_feature`
-		ORDER BY nb DESC');
+			SELECT * , COUNT(*) as nb
+			FROM `'._DB_PREFIX_.'feature` f
+			LEFT JOIN `'._DB_PREFIX_.'feature_product` fp
+				ON f.`id_feature` = fp.`id_feature`
+			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
+				ON f.`id_feature` = fl.`id_feature`
+			WHERE fp.`id_product` IN ('.$ids.')
+			AND `id_lang` = '.(int)$id_lang.'
+			GROUP BY f.`id_feature`
+			ORDER BY nb DESC
+		');
 	}
 
 	/**
@@ -255,11 +280,11 @@ class FeatureCore extends ObjectModel
 		))
 			return false;
 
-		foreach ($res AS $feature)
+		foreach ($res as $feature)
 			if ((int)$feature['id_feature'] == (int)$this->id)
-				$movedFeature = $feature;
+				$moved_feature = $feature;
 
-		if (!isset($movedFeature) || !isset($position))
+		if (!isset($moved_feature) || !isset($position))
 			return false;
 
 		// < and > statements rather than BETWEEN operator
@@ -269,12 +294,12 @@ class FeatureCore extends ObjectModel
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
-				? '> '.(int)$movedFeature['position'].' AND `position` <= '.(int)$position
-				: '< '.(int)$movedFeature['position'].' AND `position` >= '.(int)$position))
-		AND Db::getInstance()->execute('
+				? '> '.(int)$moved_feature['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$moved_feature['position'].' AND `position` >= '.(int)$position))
+		&& Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'feature`
 			SET `position` = '.(int)$position.'
-			WHERE `id_feature`='.(int)$movedFeature['id_feature']));
+			WHERE `id_feature`='.(int)$moved_feature['id_feature']));
 	}
 
 	/**

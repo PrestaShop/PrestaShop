@@ -372,7 +372,7 @@ class AdminManufacturersControllerCore extends AdminController
 	 	// Create Object Address
 		$address = new Address($id_address);
 
-		$this->fields_form = array(
+		$form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
 				'image' => '../img/admin/contact.gif'
@@ -380,7 +380,7 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 
 		if (!$address->id_manufacturer || !Manufacturer::manufacturerExists($address->id_manufacturer))
-			$this->fields_form['input'][] = array(
+			$form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Choose the manufacturer:'),
 				'name' => 'id_manufacturer',
@@ -392,24 +392,24 @@ class AdminManufacturersControllerCore extends AdminController
 			);
 		else
 		{
-			$this->fields_form['input'][] = array(
+			$form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Manufacturer:'),
 				'name' => 'name',
 				'disabled' => true,
 			);
 
-			$this->fields_form['input'][] = array(
+			$form['input'][] = array(
 				'type' => 'hidden',
 				'name' => 'id_manufacturer'
 			);
 		}
 
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'hidden',
 			'name' => 'alias',
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Last name:'),
 			'name' => 'lastname',
@@ -417,7 +417,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'required' => true,
 			'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('First name:'),
 			'name' => 'firstname',
@@ -425,35 +425,35 @@ class AdminManufacturersControllerCore extends AdminController
 			'required' => true,
 			'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Address:'),
 			'name' => 'address1',
 			'size' => 33,
 			'required' => true,
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Address (2):'),
 			'name' => 'address2',
 			'size' => 33,
 			'required' => false,
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Postcode / Zip Code:'),
 			'name' => 'postcode',
 			'size' => 33,
 			'required' => false,
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('City:'),
 			'name' => 'city',
 			'size' => 33,
 			'required' => true,
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Country:'),
 			'name' => 'id_country',
@@ -464,7 +464,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'name' => 'name'
 			)
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('State:'),
 			'name' => 'id_state',
@@ -475,21 +475,21 @@ class AdminManufacturersControllerCore extends AdminController
 				'name' => 'name'
 			)
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Home phone:'),
 			'name' => 'phone',
 			'size' => 33,
 			'required' => false,
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Mobile phone:'),
 			'name' => 'phone_mobile',
 			'size' => 33,
 			'required' => false,
 		);
-		$this->fields_form['input'][] = array(
+		$form['input'][] = array(
 			'type' => 'textarea',
 			'label' => $this->l('Other:'),
 			'name' => 'other',
@@ -498,7 +498,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'required' => false,
 			'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 		);
-		$this->fields_form['submit'] = array(
+		$form['submit'] = array(
 			'title' => $this->l('   Save   '),
 			'class' => 'button'
 		);
@@ -508,22 +508,15 @@ class AdminManufacturersControllerCore extends AdminController
 			'alias' => 'manufacturer'
 		);
 
-		$this->toolbar_btn = array(
-			'save' => array(
-				'href' => '#',
-				'desc' => $this->l('Save')
-			),
-			'cancel' => array(
-				'href' => self::$currentIndex.'&token='.$this->token,
-				'desc' => $this->l('Cancel')
-			)
-		);
+		$this->initToolbar();
+		$this->fields_form[0]['form'] = $form;
 		$this->getlanguages();
 		$helper = new HelperForm();
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		$helper->table = $this->table;
 		$helper->identifier = $this->identifier;
+		$helper->title = $this->l('Edit Addresses');
 		$helper->id = $address->id;
 		$helper->toolbar_fix = true;
 		$helper->languages = $this->_languages;
@@ -532,6 +525,41 @@ class AdminManufacturersControllerCore extends AdminController
 		$helper->fields_value = $this->getFieldsValue($address);
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$this->content .= $helper->generateForm($this->fields_form);
+	}
+
+	/**
+	 * AdminController::initToolbar() override
+	 * @see AdminController::initToolbar()
+	 *
+	 */
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			case 'editaddresses':
+			case 'addaddress':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+
+				// Default cancel button - like old back link
+				if (!isset($this->no_back) || $this->no_back == false)
+				{
+					$back = Tools::safeOutput(Tools::getValue('back', ''));
+					if (empty($back))
+						$back = self::$currentIndex.'&token='.$this->token;
+
+					$this->toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				}
+			break;
+
+			default:
+				parent::initToolbar();
+		}
 	}
 
 	public function initView()

@@ -1863,6 +1863,13 @@ class AdminControllerCore extends Controller
 		return $this->_languages;
 	}
 
+
+	/**
+	 * Return the list of fields value
+	 *
+	 * @param object $obj Object
+	 * @return array
+	 */
 	public function getFieldsValue($obj)
 	{
 		foreach ($this->fields_form as $fieldset)
@@ -1873,11 +1880,12 @@ class AdminControllerCore extends Controller
 						{
 							if ($obj->id)
 							{
-								$assos = array();
-								$sql = 'SELECT `id_'.$input['type'].'`, `'.pSQL($this->identifier).'`
-										FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$input['type'].'`
-										WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-								foreach (Db::getInstance()->executeS($sql) as $row)
+								if ($input['type'] == 'group_shop')
+									$result = GroupShop::getGroupShopById((int)$obj->id, $this->identifier, $this->table);
+								else
+									$result = Shop::getShopById((int)$obj->id, $this->identifier, $this->table);
+
+								foreach ($result as $row)
 									$this->fields_value['shop'][$row['id_'.$input['type']]][] = $row[$this->identifier];
 							}
 						}

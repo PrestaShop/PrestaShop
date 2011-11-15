@@ -48,6 +48,9 @@ class HelperListCore extends Helper
 	/** @var string Default ORDER BY clause when $orderBy is not defined */
 	public $_defaultOrderBy = false;
 
+	/** @var array : list of vars for button delete*/
+	public $tpl_delete_link_vars = array();
+
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	public $orderWay;
 
@@ -100,7 +103,8 @@ class HelperListCore extends Helper
 		'id_attribute' => 'id_attribute',
 		'id_attribute_group' => 'id_attribute_group',
 		'id_carrier' => 'id_carrier',
-		'id_tab' => 'id_tab'
+		'id_tab' => 'id_tab',
+		'id_feature' => 'id_feature'
 	);
 
 	/** @var if not null, a title will be added on that list */
@@ -219,7 +223,7 @@ class HelperListCore extends Helper
 
 					if (method_exists($this->context->controller, $method_name))
 						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id);
-					elseif (method_exists($this, $method_name))
+					else if (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($token, $id);
 
 				}
@@ -248,9 +252,9 @@ class HelperListCore extends Helper
 						Tools::getValue('id_product')
 					);
 				}
-				elseif (isset($params['activeVisu']))
+				else if (isset($params['activeVisu']))
 					$this->_list[$index][$key] = (bool)$tr[$key];
-				elseif (isset($params['position']))
+				else if (isset($params['position']))
 				{
 					$this->_list[$index][$key] = array(
 						'position' => $tr[$key],
@@ -262,7 +266,7 @@ class HelperListCore extends Helper
 							'&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
 					);
 				}
-				elseif (isset($params['image']))
+				else if (isset($params['image']))
 				{
 					// item_id is the product id in a product image context, else it is the image id.
 					$item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
@@ -276,24 +280,24 @@ class HelperListCore extends Helper
 
 					$this->_list[$index][$key] = cacheImage($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
 				}
-				elseif (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
+				else if (isset($params['icon']) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
 					$this->_list[$index][$key] = isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'];
-				elseif (isset($params['float']))
+				else if (isset($params['float']))
 					$this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
-				elseif (isset($params['type']) && $params['type'] == 'price')
+				else if (isset($params['type']) && $params['type'] == 'price')
 				{
 					$currency = isset($params['currency']) ? Currency::getCurrencyInstance($tr['id_currency']) : $this->context->currency;
 					$this->_list[$index][$key] = Tools::displayPrice($tr[$key], $currency, false);
 				}
-				elseif (isset($params['type']) && $params['type'] == 'date')
+				else if (isset($params['type']) && $params['type'] == 'date')
 					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id);
-				elseif (isset($params['type']) && $params['type'] == 'datetime')
+				else if (isset($params['type']) && $params['type'] == 'datetime')
 					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
-				elseif (isset($tr[$key]))
+				else if (isset($tr[$key]))
 				{
 					if ($key == 'price')
 						$echo = round($tr[$key], 2);
-					elseif (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
+					else if (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
 						$echo = '<span title="'.$tr[$key].'">'.Tools::substr($tr[$key], 0, $params['maxlength']).'...</span>';
 					else
 						$echo = $tr[$key];
@@ -393,7 +397,7 @@ class HelperListCore extends Helper
 		$tpl->assign(array(
 			'id' => $id,
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
-			'token' => $this->token,
+			'token' => $token != null ? $token : $this->token,
 			'action' => self::$cache_lang['Details'],
 			'params' => $this->ajax_params
 		));
@@ -496,7 +500,7 @@ class HelperListCore extends Helper
 			isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : null
 		);
 
-		$this->is_dnd_identifier = array_key_exists($this->identifier,$this->identifiersDnd);
+		$this->is_dnd_identifier = array_key_exists($this->identifier, $this->identifiersDnd);
 /*
 		if ($is_dnd_identifier)
 		{
@@ -605,7 +609,6 @@ class HelperListCore extends Helper
 			'current' => $this->currentIndex,
 			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
-
 			'back' => Tools::getValue('back'),
 			'no_back' => $this->no_back,
 		)));

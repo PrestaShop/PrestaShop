@@ -30,31 +30,31 @@
  */
 class GroupShopCore extends ObjectModel
 {
-	public	$name;
-	public	$active;
-	public	$share_customer;
-	public	$share_order;
-	public	$deleted;
+	public $name;
+	public $active;
+	public $share_customer;
+	public $share_order;
+	public $deleted;
 
-	protected	$fieldsSize = array('name' => 64);
- 	protected	$fieldsValidate = array(
+	protected $fieldsSize = array('name' => 64);
+ 	protected $fieldsValidate = array(
  					'active' => 'isBool',
  					'share_customer' => 'isBool',
  					'share_order' => 'isBool',
  					'name' => 'isGenericName',
  				);
-	protected	$table = 'group_shop';
-	protected	$identifier = 'id_group_shop';
+	protected $table = 'group_shop';
+	protected $identifier = 'id_group_shop';
 
 	private	static $assoTables = array(
-		'attribute_group' => 		array('type' => 'group_shop'),
-		'attribute' => 				array('type' => 'group_shop'),
-		'feature' => 				array('type' => 'group_shop'),
-		'group' => 					array('type' => 'group_shop'),
-		'manufacturer' => 			array('type' => 'group_shop'),
-		'supplier' => 				array('type' => 'group_shop'),
-		'zone' => 					array('type' => 'shop'),
-		'tax_rules_group' => 		array('type' => 'group_shop'),
+		'attribute_group' => array('type' => 'group_shop'),
+		'attribute' => array('type' => 'group_shop'),
+		'feature' => array('type' => 'group_shop'),
+		'group' => array('type' => 'group_shop'),
+		'manufacturer' => array('type' => 'group_shop'),
+		'supplier' => array('type' => 'group_shop'),
+		'zone' => array('type' => 'shop'),
+		'tax_rules_group' => array('type' => 'group_shop'),
 	);
 
 	public function getFields()
@@ -71,9 +71,11 @@ class GroupShopCore extends ObjectModel
 
 	public static function getGroupShops($active = true)
 	{
-		return Db::getInstance()->executeS('SELECT *
-														FROM '._DB_PREFIX_.'group_shop
-														WHERE `deleted`= 0 AND `active`='.(int)$active);
+		return Db::getInstance()->executeS('
+			SELECT *
+			FROM '._DB_PREFIX_.'group_shop
+			WHERE `deleted`= 0 AND `active`='.(int)$active
+		);
 	}
 
 	public function delete()
@@ -81,7 +83,7 @@ class GroupShopCore extends ObjectModel
 		if (!$res = parent::delete())
 			return false;
 
-		foreach (Shop::getAssoTables() AS $table_name => $row)
+		foreach (Shop::getAssoTables() as $table_name => $row)
 		{
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_group_shop')
@@ -96,7 +98,7 @@ class GroupShopCore extends ObjectModel
 
 	public static function getAssoTables()
 	{
-		return  self::$assoTables;
+		return self::$assoTables;
 	}
 
 	/**
@@ -104,7 +106,7 @@ class GroupShopCore extends ObjectModel
 	 */
 	public static function getTotalGroupShops($active = true)
 	{
-		return sizeof(GroupShop::getGroupShops($active));
+		return count(GroupShop::getGroupShops($active));
 	}
 
 	public function haveShops()
@@ -134,9 +136,28 @@ class GroupShopCore extends ObjectModel
 		return (int)Db::getInstance()->getValue($sql);
 	}
 
+	/**
+	 * Return the list of group shop by id
+	 *
+	 * @param int $id
+	 * @param string $identifier
+	 * @param string $table
+	 * @return array
+	 */
+	public static function getGroupShopById($id, $identifier, $table)
+	{
+		$sql = sprintf('
+			SELECT `id_group_shop`, `%s`
+			FROM `'._DB_PREFIX_.'%s_group_shop`
+			WHERE `%s` = %d'
+		, $identifier, $table, $identifier, $id);
+
+		return Db::getInstance()->executeS($sql);
+	}
+
 	public function copyGroupShopData($old_id, $tables_import = false, $deleted = false)
 	{
-		foreach (GroupShop::getAssoTables() AS $table_name => $row)
+		foreach (GroupShop::getAssoTables() as $table_name => $row)
 		{
 			if ($tables_import && !isset($tables_import[$table_name]))
 				continue;
