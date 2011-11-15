@@ -1101,7 +1101,8 @@ INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	FROM `PREFIX_lang` CROSS JOIN `PREFIX_tab`);
 
 INSERT INTO `PREFIX_quick_access` (`id_quick_access`, `link`, `new_window`) VALUES
-(1, 'index.php', 0),(2, '../', 1),(3, 'index.php?controller=AdminCatalog&addcategory', 0),(4, 'index.php?controller=AdminCatalog&addproduct', 0),(5, 'index.php?controller=AdminCartRules&addcart_rule', 0);
+(1, 'index.php', 0),(2, '../', 1),(3, 'index.php?controller=AdminCategories&addcategory', 0),
+(4, 'index.php?controller=AdminProducts&addproduct', 0),(5, 'index.php?controller=AdminCartRules&addcart_rule', 0);
 
 INSERT INTO `PREFIX_quick_access_lang` (`id_quick_access`, `id_lang`, `name`) VALUES
 (1, 1, 'Home'),(1, 2, 'Accueil'),(1, 3, 'Inicio'),(1, 4, 'Start'),(1, 5, 'Home page'),
