@@ -235,8 +235,6 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		if (count($this->_errors))
-			AdminTab::displayErrors();
 	}
 
 	protected function getDate()

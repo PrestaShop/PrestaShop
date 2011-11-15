@@ -326,7 +326,7 @@ class AdminManufacturersControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'group_shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('GroupShop association:'),
 				'name' => 'checkBoxShopAsso',
 				'values' => Shop::getTree()
 			);
@@ -357,17 +357,6 @@ class AdminManufacturersControllerCore extends AdminController
 				'description',
 				$language['id_lang']
 			)), ENT_COMPAT, 'UTF-8');
-		}
-
-		//Added values of object Shop
-		if ($manufacturer->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_group_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_group_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$manufacturer->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_group_shop']][] = $row[$this->identifier];
 		}
 
 		return parent::initForm();

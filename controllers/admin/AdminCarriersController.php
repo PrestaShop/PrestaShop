@@ -540,17 +540,6 @@ class AdminCarriersControllerCore extends AdminController
 		$groups = Group::getGroups($this->context->language->id);
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids)));
-
-		//Added values of object Shop
-		if ($obj->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_shop']][] = $row[$this->identifier];
-		}
 	}
 
 	public function beforeDelete($object)

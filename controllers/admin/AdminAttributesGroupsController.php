@@ -231,17 +231,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		//Added values of object Shop
-		if ($obj->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_group_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_group_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_group_shop']][] = $row[$this->identifier];
-		}
-
 		return parent::initForm();
 	}
 
@@ -338,17 +327,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'color' => $this->getFieldValue($obj, 'color'),
 			'id_attribute' => $this->getFieldValue($obj, 'id'),
 		);
-
-		// Added values of object GroupShop
-		if ($obj->id)
-		{
-			$assos = array();
-			$sql = 'SELECT `id_group_shop`, `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_group_shop`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$obj->id;
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$this->fields_value['shop'][$row['id_group_shop']][] = $row[$this->identifier];
-		}
 
 		$str_attributes_groups = '';
 		foreach ($attributes_groups as $attribute_group)

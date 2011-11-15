@@ -74,11 +74,11 @@ function check_all_shop() {ldelim}
 <div class="assoShop">
 	<table class="table" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
-			<th>{l s='Shop'}</th>
+			<th>{if $input.type == 'group_shop'}{l s='Group shop'}{else}{l s='Shop'}{/if}</th>
 		</tr>
 		<tr {if $input.type == 'group_shop'}class="alt_row"{/if}>
 			<td>
-				<label class="t"><input class="input_all_shop" type="checkbox" /> {l s='All shops'}</label>
+				<label class="t"><input class="input_all_shop" type="checkbox" /> {if $input.type == 'group_shop'}{l s='All group shops'}{else}{l s='All shops'}{/if}</label>
 			</td>
 		</tr>
 		{foreach $input.values as $groupID => $groupData}
