@@ -67,6 +67,14 @@
 	</div><br />
 {/if}
 
+{if isset($confirmations) && count($confirmations) && $confirmations}
+	<div class="conf" style="display:block;">
+		{foreach $confirmations as $conf}
+			{$conf}<br />
+		{/foreach}
+	</div><br />
+{/if}
+
 {if count($warnings)}
 	<script type="text/javascript">
 		$(document).ready(function() {
