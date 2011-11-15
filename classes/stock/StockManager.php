@@ -51,7 +51,7 @@ class StockManagerCore implements StockManagerInterface
 							   $id_stock_mvt_reason,
 							   $price_te,
 							   $is_usable = true,
-							   $id_supplier_order = null)
+							   $id_supply_order = null)
 	{
 		if (!Validate::isLoadedObject($warehouse) || !$price_te || !$quantity || !$id_product)
 			return false;
@@ -67,7 +67,7 @@ class StockManagerCore implements StockManagerInterface
 			'id_stock' => null,
 			'physical_quantity' => $quantity,
 			'id_stock_mvt_reason' => $id_stock_mvt_reason,
-			'id_supplier_order' => $id_supplier_order,
+			'id_supply_order' => $id_supply_order,
 			'price_te' => $price_te,
 			'last_wa' => null,
 			'current_wa' => null,
@@ -452,21 +452,21 @@ class StockManagerCore implements StockManagerInterface
 		$query->where('o.valid = 1');
 		$client_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
-		// Gets supplier_orders_qty
+		// Gets supply_orders_qty
 		$query = new DbQuery();
 		$query->select('SUM(sod.quantity_expected)');
-		$query->from('supplier_order so');
-		$query->leftjoin('supplier_order_detail sod ON (sod.id_supplier_order = so.id_supplier_order)');
-		$query->leftjoin('supplier_order_state sos ON (sos.id_supplier_order_state = so.id_supplier_order_state)');
+		$query->from('supply_order so');
+		$query->leftjoin('supply_order_detail sod ON (sod.id_supply_order = so.id_supply_order)');
+		$query->leftjoin('supply_order_state sos ON (sos.id_supply_order_state = so.id_supply_order_state)');
 		$query->where('sos.pending_receipt = 1');
 		$query->where('sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute);
-		$supplier_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$supply_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets {physical OR usable}_qty
 		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse, $usable);
 
-		// real qty = actual qty in stock - current client orders + current supplier orders
-		return ($qty - $client_orders_qty + $supplier_orders_qty);
+		// real qty = actual qty in stock - current client orders + current supply orders
+		return ($qty - $client_orders_qty + $supply_orders_qty);
 	}
 
 	/**

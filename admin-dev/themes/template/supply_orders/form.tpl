@@ -30,6 +30,7 @@
 	<p>&nbsp;</p>
 
 	<input type="hidden" id="product_ids" name="product_ids" value="{$product_ids}" />
+	<input type="hidden" id="product_ids_to_delete" name="product_ids_to_delete" value="{$product_ids_to_delete}" />
 	<input type="hidden" name="updatesupply_order" value="1" />
 
 	<fieldset>
@@ -122,6 +123,12 @@
 		else
 			product_ids = $('#product_ids').val().split('|');
 
+		if ($('#product_ids_to_delete').val() == '')
+			product_ids_to_delete = [];
+		else
+			product_ids_to_delete = $('#product_ids_to_delete').val().split('|');
+
+
 		function addProduct()
 		{
 			// check if it's possible to add the product
@@ -134,9 +141,9 @@
 			// add a new line in the products table
 			$('#products_in_supply_order > tbody:last').append(
 				'<tr style="height:50px;">'+
-				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_name_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
+				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_reference_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
-				'<td>'+product_infos.upc+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.upc+'" /></td>'+
+				'<td>'+product_infos.upc+'<input type="hidden" name="input_upc_'+product_infos.id+'" value="'+product_infos.upc+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_displayed_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
 				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" />&nbsp;{$currency->suffix}</td>'+
 				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
@@ -167,20 +174,22 @@
 
 				var id = $(this).attr('id');
 				var product_id = id.split('|')[1];
+				
 
 				//find the position of the product id in product_id array
 				var position = product_ids.indexOf(product_id);
-				console.log(product_ids);
-				console.log(product_id);
-				console.log(position);
 				if (position != -1)
 				{
-					console.log('test3');
 					//remove the id from the array
 					product_ids.splice(position, 1);
-
+					
+					var input_id = $('input[name~="input_id_'+product_id+'"]');
+					if (input_id.length > 0)
+						product_ids_to_delete.push(product_id);
+					
 					// update the product_ids hidden field
 					$('#product_ids').val(product_ids.join('|'));
+					$('#product_ids_to_delete').val(product_ids_to_delete.join('|'));
 
 					//remove the table row
 					$(this).parents('tr:eq(0)').remove();

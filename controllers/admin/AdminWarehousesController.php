@@ -275,7 +275,7 @@ class AdminWarehousesControllerCore extends AdminController
 		);
 
 		// It is not possible to change currency valuation and management type
-		if (Tools::isSubmit('addwarehouse'))
+		if (Tools::isSubmit('addwarehouse') || Tools::isSubmit('submitAddwarehouse'))
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
@@ -314,7 +314,9 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'name'
 				)
 			);
-		} else {
+		}
+		else
+		{
 			$this->fields_form['input'][] = array(
 				'type' => 'hidden',
 				'name' => 'management_type'

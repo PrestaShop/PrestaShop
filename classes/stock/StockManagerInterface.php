@@ -49,10 +49,10 @@ interface StockManagerInterface
 	 * @param int $id_stock_movement_reason
 	 * @param float $price_te
 	 * @param bool $is_usable
-	 * @param int $id_supplier_order optionnal
+	 * @param int $id_supply_order optionnal
 	 * @return bool
 	 */
-	public function addProduct($id_product, $id_product_attribute, Warehouse $warehouse, $quantity, $id_stock_movement_reason, $price_te, $is_usable = true, $id_supplier_order = null);
+	public function addProduct($id_product, $id_product_attribute, Warehouse $warehouse, $quantity, $id_stock_movement_reason, $price_te, $is_usable = true, $id_supply_order = null);
 
 	/**
 	 * For a given product, removes a given quantity
@@ -83,8 +83,8 @@ interface StockManagerInterface
 	/**
 	 * For a given product, returns its real quantity
 	 * If the given product has combinations and $id_product_attribute is null, returns the sum for all combinations
-	 * Real quantity : (physical_qty + supplier_orders_qty - client_orders_qty)
-	 * If $usable is defined, real quantity: usable_qty + supplier_orders_qty - client_orders_qty
+	 * Real quantity : (physical_qty + supply_orders_qty - client_orders_qty)
+	 * If $usable is defined, real quantity: usable_qty + supply_orders_qty - client_orders_qty
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute

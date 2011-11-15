@@ -743,6 +743,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 				$this->tpl_form_vars['products_list'] = $products;
 				$this->tpl_form_vars['product_ids'] = implode($product_ids, '|');
+				$this->tpl_form_vars['product_ids_to_delete'] = '';
 				$this->tpl_form_vars['supplier_id'] = $supply_order->id_supplier;
 				$this->tpl_form_vars['currency'] = $currency;
 			}
@@ -961,6 +962,27 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					// gets all product ids to manage
 					$product_ids_str = Tools::getValue('product_ids', null);
 					$product_ids = explode('|', $product_ids_str);
+					$product_ids_to_delete_str = Tools::getValue('product_ids_to_delete', null);
+					$product_ids_to_delete = array_unique(explode('|', $product_ids_to_delete_str));
+
+					//delete products that are not managed anymore
+					foreach ($products_already_in_order as $paio)
+					{
+						$product_ok = false;
+
+						foreach ($product_ids_to_delete as $id)
+						{
+							$id_check = $paio['id_product'].'_'.$paio['id_product_attribute'];
+							if ($id_check == $id)
+								$product_ok = true;
+						}
+
+						if ($product_ok === true)
+						{
+							$entry = new SupplyOrderDetail($paio['id_supply_order_detail']);
+							$entry->delete();
+						}
+					}
 
 					// manage each product
 					foreach ($product_ids as $id)
@@ -1041,25 +1063,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						}
 						else
 							$entry->save();
-					}
-
-					//delete products that are not managed anymore
-					foreach ($products_already_in_order as $paio)
-					{
-						$product_ok = false;
-
-						foreach ($product_ids as $id)
-						{
-							$id_check = $paio['id_product'].'_'.$paio['id_product_attribute'];
-							if ($id_check == $id)
-								$product_ok = true;
-						}
-
-						if ($product_ok === false)
-						{
-							$entry = new SupplyOrderDetail($paio['id_supply_order_detail']);
-							$entry->delete();
-						}
 					}
 				}
 			}
