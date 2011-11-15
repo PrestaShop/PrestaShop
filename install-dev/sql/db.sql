@@ -1595,6 +1595,7 @@ CREATE TABLE `PREFIX_tax` (
   `rate` DECIMAL(10, 3) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL default '1',
   `deleted` tinyint(1) unsigned NOT NULL default '0',
+  `account_number` varchar(64) NOT NULL,
   PRIMARY KEY  (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

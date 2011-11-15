@@ -495,4 +495,6 @@ ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_product` (`id_product`, `id_pr
 
 ALTER TABLE `PREFIX_hook` ADD `is_native` TINYINT( 1 ) NOT NULL DEFAULT '0';
 
+ALTER TABLE `PREFIX_tax` ADD COLUMN `account_number` VARCHAR(64) NOT NULL;
+
 /* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de combinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, 1); */;
