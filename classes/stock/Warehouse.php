@@ -374,7 +374,7 @@ class WarehouseCore extends ObjectModel
 			return array();
 
 		$query = new DbQuery();
-		$query->select('w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
+		$query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
 		$query->from('warehouse w');
 		$query->leftJoin('stock s ON (s.id_warehouse = w.id_warehouse)');
 		if ($id_product)
