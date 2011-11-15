@@ -269,7 +269,7 @@ class AdminControllerCore extends Controller
 			$this->shopLinkType = '';
 
 		// Get the name of the folder containing the custom tpl files
-		$this->tpl_folder = strtolower($controller[5]).substr($controller, 6);
+		$this->tpl_folder = substr($controller, 5);
 		$this->tpl_folder = Tools::toUnderscoreCase($this->tpl_folder).'/';
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
@@ -286,6 +286,7 @@ class AdminControllerCore extends Controller
 		$tabs = array();
 		$tabs = Tab::recursiveTab($this->id, $tabs);
 		$tabs = array_reverse($tabs);
+
 		$bread = '';
 		switch ($this->display)
 		{
@@ -1210,6 +1211,7 @@ class AdminControllerCore extends Controller
 		{
 			if (!$this->loadObject(true))
 				return;
+
 			$this->content .= $this->initForm();
 		}
 		else if ($this->display == 'view')

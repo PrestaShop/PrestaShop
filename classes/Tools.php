@@ -1236,14 +1236,16 @@ class ToolsCore
 	}
 
 	/**
-	 *
 	 * Transform a CamelCase string to underscore_case string
+	 *
 	 * @param string $string
 	 * @return string
 	 */
 	public static function toUnderscoreCase($string)
 	{
-		return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $string));
+		// 'CMSCategories' => 'cms_categories'
+		// 'RangePrice' => 'range_price'
+		return strtolower(preg_replace('/([a-zA-Z])([A-Z][a-z])/', '$1_$2', $string));
 	}
 
 	public static function getBrightness($hex)
