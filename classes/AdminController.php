@@ -33,7 +33,7 @@ class AdminControllerCore extends Controller
 	public $content;
 	public $warnings = array();
 	public $informations = array();
-
+	public $confirmations = array();
 	public $shopShareDatas = false;
 
 	public $_languages = array();
@@ -515,10 +515,10 @@ class AdminControllerCore extends Controller
 	{
 		/* Checking fields validity */
 		$this->validateRules();
+
 		if (!count($this->_errors))
 		{
 			$id = (int)Tools::getValue($this->identifier);
-
 			/* Object update */
 			if (isset($id) && !empty($id))
 			{
@@ -994,6 +994,7 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('errors', $this->_errors);
 			$this->context->smarty->assign('warnings', $this->warnings);
 			$this->context->smarty->assign('informations', $this->informations);
+			$this->context->smarty->assign('confirmations', $this->confirmations);
 			// page & layout if content_only = 1
 			$this->context->smarty->assign('page', $page);
 			$this->context->smarty->display($this->layout);
