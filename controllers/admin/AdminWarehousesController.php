@@ -338,6 +338,9 @@ class AdminWarehousesControllerCore extends AdminController
 
 		// loads current shops associated with this warehouse
 		$shops = $obj->getShops();
+		$ids_shop = array();
+		foreach ($shops as $shop)
+			$ids_shop[] = $shop['id_shop'];
 
 		// loads current carriers associated with this warehouse
 		$carriers = $obj->getCarriers();
@@ -356,7 +359,7 @@ class AdminWarehousesControllerCore extends AdminController
 			);
 		else
 			$this->fields_value['id_address'] = 0;
-		$this->fields_value['ids_shops[]'] = $shops;
+		$this->fields_value['ids_shops[]'] = $ids_shop;
 		$this->fields_value['ids_carriers[]'] = $carriers;
 
 		return parent::initForm();
@@ -451,6 +454,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$employee = new Employee($warehouse->id_employee);
 		$currency = new Currency($warehouse->id_currency);
 		$address = new Address($warehouse->id_address);
+		$shops = $warehouse->getShops();
 
 		if (!Validate::isLoadedObject($warehouse) ||
 			!Validate::isLoadedObject($employee) ||
@@ -462,6 +466,7 @@ class AdminWarehousesControllerCore extends AdminController
 			'employee' => $employee,
 			'currency' => $currency,
 			'address' => $address,
+			'shops' => $shops,
 			'warehouse_num_products' => $warehouse->getNumberOfProducts(),
 			'warehouse_value' => Tools::ps_round($warehouse->getStockValue(), 2),
 			'warehouse_quantities' => $warehouse->getQuantitiesofProducts(),

@@ -107,20 +107,14 @@ class WarehouseCore extends ObjectModel
 	 */
 	public function getShops()
 	{
-		$ids_shop = array();
-
 		$query = new DbQuery();
-		$query->select('ws.id_shop');
+		$query->select('ws.id_shop, s.name');
 		$query->from('warehouse_shop ws');
+		$query->leftJoin('shop s ON (s.id_shop = ws.id_shop)');
 		$query->where($this->identifier.' = '.(int)$this->id);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-		foreach ($res as $shops)
-			foreach ($shops as $shop)
-				$ids_shop[] = $shop;
-
-		return $ids_shop;
+		return $res;
 	}
 
 	/**
