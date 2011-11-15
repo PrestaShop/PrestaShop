@@ -35,22 +35,22 @@ class WarehouseCore extends ObjectModel
 	/** @var int identifier of the warehouse */
 	public $id;
 
-	/** @var int The id of the address associated to the warehouse */
+	/** @var int Id of the address associated to the warehouse */
 	public $id_address;
 
-	/** @var string The reference of the warehouse */
+	/** @var string Reference of the warehouse */
 	public $reference;
 
-	/** @var string The name of the warehouse */
+	/** @var string Name of the warehouse */
 	public $name;
 
-	/** @var int The id of the employee who is responsible of the warehouse */
+	/** @var int Id of the employee who manages the warehouse */
 	public $id_employee;
 
-	/** @var int The id of the valuation currency of the warehouse */
+	/** @var int Id of the valuation currency of the warehouse */
 	public $id_currency;
 
-	/** @var boolean True if warehouse has been deleted (staying in database as deleted) */
+	/** @var boolean True if warehouse has been deleted (hence, no deletion in DB) */
 	public $deleted = 0;
 
 	/**
@@ -79,7 +79,7 @@ class WarehouseCore extends ObjectModel
 		'reference' => 'isString',
 		'name' => 'isName',
 		'id_employee' => 'isUnsignedId',
-		'management_type' => 'isStockManagement',
+		'management_type' => 'isStockManagement', /* @see Validate::isStockManagement() */
 		'id_currency' => 'isUnsignedId'
 	);
 
@@ -101,9 +101,9 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the shops associated to the current warehouse
+	 * Gets the shops (id and name) associated to the current warehouse
 	 *
-	 * @return array ids
+	 * @return array
 	 */
 	public function getShops()
 	{
@@ -179,6 +179,7 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * For a given carrier, removes it from the warehouse/carrier association
 	 * If $id_warehouse is set, it only removes the carrier for this warehouse
+	 *
 	 * @param int $id_carrier
 	 * @param int $id_warehouse optional
 	 */
@@ -268,7 +269,7 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the wareehouses
+	 * Gets available warehouses
 	 * It is possible via ignore_shop and id_shop to filter the list with shop id
 	 *
 	 * @param bool $ignore_shop false by default

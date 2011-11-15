@@ -244,35 +244,35 @@ class SupplyOrderDetailCore extends ObjectModel
 	}
 
 	/**
-	 * Determine all price for this product based on its quantity and unit price
-	 * Apply discount if necessary
-	 * Calculate tax value in function of tax rate
+	 * Determines all prices for this product based on its quantity and unit price
+	 * Applies discount if necessary
+	 * Calculates tax value in function of tax rate
 	 *
 	 * @return array
 	 */
 	protected function calculatePrices()
 	{
-		// calcul entry price
+		// calculates entry price
 		$this->price_te = Tools::ps_round((float)$this->unit_price_te * (int)$this->quantity_expected, 6);
 
-		// calcul entry discount value
+		// calculates entry discount value
 		if ($this->discount_rate != null && is_float($this->discount_rate) && $this->discount_rate > 0)
 			$this->discount_value_te = Tools::ps_round((float)$this->price_te * ($this->discount_rate / 100), 6);
 
-		// calcul entry price with discount
+		// calculates entry price with discount
 		$this->price_with_discount_te = Tools::ps_round($this->price_te - $this->discount_value_te, 6);
 
-		// calcul tax value
+		// calculates tax value
 		$this->tax_value = Tools::ps_round($this->price_with_discount_te * ((float)$this->tax_rate / 100), 6);
 		$this->price_ti = Tools::ps_round($this->price_with_discount_te + $this->tax_value, 6);
 
-		// define default values for order discount fields
+		// defines default values for order discount fields
 		$this->tax_value_with_order_discount = Tools::ps_round($this->tax_value, 6);
 		$this->price_with_order_discount_te = Tools::ps_round($this->price_with_discount_te, 6);
 	}
 
 	/**
-	 * Apply a global order discount rate on the current product entity
+	 * Applies a global order discount rate on the current product entity
 	 *
 	 * @param $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
 	 */
@@ -280,11 +280,11 @@ class SupplyOrderDetailCore extends ObjectModel
 	{
 		if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0)
 		{
-			// calculate new price, with global order discount, tax ecluded
+			// calculates new price, with global order discount, tax ecluded
 			$this->price_with_order_discount_te = Tools::ps_round($this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100)),
 																  6);
 
-			// calculate new tax value, with global order discount
+			// calculates new tax value, with global order discount
 			$this->tax_value_with_order_discount = Tools::ps_round($this->price_with_order_discount_te * ((float)$this->tax_rate / 100), 6);
 
 			parent::update();
@@ -298,7 +298,7 @@ class SupplyOrderDetailCore extends ObjectModel
 	{
 		$errors = array();
 
-		/* Checking for required fields */
+		/* required fields */
 		$fields_required = $this->fieldsRequired;
 
 		if (isset(self::$fieldsRequiredDatabase[get_class($this)]))
@@ -313,13 +313,13 @@ class SupplyOrderDetailCore extends ObjectModel
 					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities)
 								.'</b> '.Tools::displayError('is required.');
 
-		/* Checking for maximum fields sizes */
+		/* Checks maximum fields sizes */
 		foreach ($this->fieldsSize as $field => $max_length)
 			if ($value = $this->{$field} && Tools::strlen($value) > $max_length)
 				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities)
 							.'</b> '.Tools::displayError('is too long.').' ('.Tools::displayError('Maximum length:').' '.$max_length.')';
 
-		/* Checking for fields validity */
+		/* Checks fields validity */
 		foreach ($this->fieldsValidate as $field => $function)
 			if ($value = $this->{$field})
 				if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
