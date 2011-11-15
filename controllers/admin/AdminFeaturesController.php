@@ -156,7 +156,9 @@ class AdminFeaturesControllerCore extends AdminController
 	{
 		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
 			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else if (!is_null($order_by))
+		else if (is_null($order_by))
+			$order_by = null;
+		else
 			$order_by = 'position';
 
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
