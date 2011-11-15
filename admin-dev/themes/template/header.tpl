@@ -227,8 +227,8 @@ $(document).ready(function()
 		{
 			var eltVal = $(elt).val();
 			if (eltVal == "0") return false;
-			else if (eltVal.substr(eltVal.length - 6) == "_blank") window.open(eltVal.substr(0, eltVal.length - 6), "_blank");
-			else location.href = eltVal;
+			else if (eltVal.substr(eltVal.length - 6) == "_blank") window.open(eltVal.substr(0, eltVal.length - 6)+'&token={$token}', "_blank");
+			else location.href = eltVal+'&token={$token}';
 		}
 		</script>
 		<select onchange="quickSelect(this);" id="quick_select">

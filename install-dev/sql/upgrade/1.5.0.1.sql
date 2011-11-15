@@ -498,3 +498,6 @@ ALTER TABLE `PREFIX_hook` ADD `is_native` TINYINT( 1 ) NOT NULL DEFAULT '0';
 ALTER TABLE `PREFIX_tax` ADD COLUMN `account_number` VARCHAR(64) NOT NULL;
 
 /* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de combinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, 1); */;
+
+UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCategories&addcategory' WHERE `id_quick_access` = 3;
+UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminProducts&addproduct' WHERE `id_quick_access` = 4;
