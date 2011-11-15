@@ -326,7 +326,7 @@ class AdminStatusesControllerCore extends AdminController
 	 	// Create Object OrderReturnState
 		$order_return_state = new OrderReturnState($id_order_return_state);
 
-		$this->fields_form = array(
+		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
 				'title' => $this->l('Order statuses'),
@@ -351,18 +351,7 @@ class AdminStatusesControllerCore extends AdminController
 			)
 		);
 
-
-		$this->toolbar_btn = array(
-			'save' => array(
-				'href' => '#',
-				'desc' => $this->l('Save')
-			),
-			'cancel' => array(
-				'href' => self::$currentIndex.'&token='.$this->token,
-				'desc' => $this->l('Cancel')
-			)
-		);
-
+		$this->initToolbar();
 		$this->getlanguages();
 		$helper = new HelperForm();
 		$helper->currentIndex = self::$currentIndex;
@@ -376,7 +365,42 @@ class AdminStatusesControllerCore extends AdminController
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->fields_value = $this->getFieldsValue($order_return_state);
 		$helper->toolbar_btn = $this->toolbar_btn;
+		$helper->title = $this->l('Edit Order Statuses');
 		$this->content .= $helper->generateForm($this->fields_form);
+	}
+
+	/**
+	 * AdminController::initToolbar() override
+	 * @see AdminController::initToolbar()
+	 *
+	 */
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			case 'editstatus':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+
+				// Default cancel button - like old back link
+				if (!isset($this->no_back) || $this->no_back == false)
+				{
+					$back = Tools::safeOutput(Tools::getValue('back', ''));
+					if (empty($back))
+						$back = self::$currentIndex.'&token='.$this->token;
+
+					$this->toolbar_btn['cancel'] = array(
+						'href' => $back,
+						'desc' => $this->l('Cancel')
+					);
+				}
+			break;
+
+			default:
+				parent::initToolbar();
+		}
 	}
 
 	private function getTemplates($iso_code)

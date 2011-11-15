@@ -167,7 +167,10 @@ class ShopCore extends ObjectModel
 				$id = 'id_shop';
 			else
 				$table_name .= '_'.$row['type'];
-			$res &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.$table_name.'` WHERE `'.$id.'`='.(int)$this->id);
+			$res &= Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.$table_name.'`
+				WHERE `'.$id.'`='.(int)$this->id
+			);
 		}
 
 		Shop::cacheShops(true);
@@ -183,13 +186,21 @@ class ShopCore extends ObjectModel
 	public static function has_dependency($id_shop)
 	{
 		$has_dependency = false;
-		$nbr_customer = (int)Db::getInstance()->getValue('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `id_shop`='.(int)$id_shop);
-		if($nbr_customer)
+		$nbr_customer = (int)Db::getInstance()->getValue('
+			SELECT `id_customer`
+			FROM `'._DB_PREFIX_.'customer`
+			WHERE `id_shop`='.(int)$id_shop
+		);
+		if ($nbr_customer)
 			$has_dependency = true;
 		else
 		{
-			$nbr_order= (int)Db::getInstance()->getValue('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE `id_shop`='.(int)$id_shop);
-			if($nbr_order)
+			$nbr_order = (int)Db::getInstance()->getValue('
+				SELECT `id_order`
+				FROM `'._DB_PREFIX_.'orders`
+				WHERE `id_shop`='.(int)$id_shop
+			);
+			if ($nbr_order)
 				$has_dependency = true;
 		}
 
@@ -607,6 +618,25 @@ class ShopCore extends ObjectModel
 			$list = Shop::getShops(true, null, true);
 
 		return $list;
+	}
+
+	/**
+	 * Return the list of shop by id
+	 *
+	 * @param int $id
+	 * @param string $identifier
+	 * @param string $table
+	 * @return array
+	 */
+	public static function getShopById($id, $identifier, $table)
+	{
+		$sql = sprintf('
+			SELECT `id_shop`, `%s`
+			FROM `'._DB_PREFIX_.'%s_shop`
+			WHERE `%s` = %d'
+		, $identifier, $table, $identifier, $id);
+
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/**

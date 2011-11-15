@@ -207,7 +207,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 	public function initRuleForm()
 	{
-		$this->fields_form = array(
+		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('New tax rule'),
 				'image' => '../img/admin/dollar.gif'
