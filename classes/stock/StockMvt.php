@@ -174,9 +174,9 @@ class StockMvtCore extends ObjectModel
 		$fields['id_stock_mvt_reason'] = (int)$this->id_stock_mvt_reason;
 		$fields['id_order'] = (int)$this->id_order;
 		$fields['sign'] = (int)$this->sign;
-		$fields['last_wa'] = (float)round($this->last_wa, 6);
-		$fields['current_wa'] = (float)round($this->current_wa, 6);
-		$fields['price_te'] = (float)round($this->price_te, 6);
+		$fields['last_wa'] = (float)Tools::ps_round($this->last_wa, 6);
+		$fields['current_wa'] = (float)Tools::ps_round($this->current_wa, 6);
+		$fields['price_te'] = (float)Tools::ps_round($this->price_te, 6);
 		$fields['referer'] = (int)$this->referer;
 		return $fields;
 	}

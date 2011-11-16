@@ -365,7 +365,7 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Historizes
+	 * Historizes the order : its id, its state, and the employee responsible for the current action
 	 */
 	protected function addHistory()
 	{
@@ -381,7 +381,7 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Removes all products ordered
+	 * Removes all products from the order
 	 */
 	public function resetProducts()
 	{
@@ -390,4 +390,27 @@ class SupplyOrderCore extends ObjectModel
 		foreach ($products as $p)
 			$p->delete();
 	}
+
+	/**
+	 * For a given $id_warehouse, tells if it has pending supply orders
+	 *
+	 * @param int $id_warehouse
+	 * @return bool
+	 */
+	public static function warehouseHasPendingOrders($id_warehouse)
+	{
+		if (!$id_warehouse)
+			return false;
+
+		$query = new DbQuery();
+		$query->select('COUNT(so.id_supply_order) as supply_orders');
+		$query->from('supply_order so');
+		$query->leftJoin('supply_order_state sos ON (so.id_supply_order_state = sos.id_supply_order_state)');
+		$query->where('sos.enclosed != 1');
+		$query->where('so.id_warehouse = '.(int)$id_warehouse);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		return ($res > 0);
+	}
+
 }

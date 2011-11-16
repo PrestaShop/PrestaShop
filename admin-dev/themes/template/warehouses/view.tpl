@@ -40,6 +40,10 @@
 						<td>{$warehouse->name}</td>
 					</tr>
 					<tr>
+						<td>{l s='Manager:'}</td>
+						<td>{$employee->lastname} {$employee->firstname}</td>
+					</tr>
+					<tr>
 						<td>{l s='Country:'}</td>
 						<td>{if $address->country != ''}{$address->country}{else}{l s='N/D'}{/if}</td>
 					</tr>
@@ -52,8 +56,8 @@
 						<td>{$warehouse->management_type}</td>
 					</tr>
 					<tr>
-						<td>{l s='Manager:'}</td>
-						<td>{$employee->lastname} {$employee->firstname}</td>
+						<td>{l s='Valuation currency:'}</td>
+						<td>{$currency->name} ({$currency->sign})</td>
 					</tr>
 					<tr>
 						<td>{l s='Products:'}</td>
