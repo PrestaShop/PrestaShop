@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -43,7 +43,7 @@ class CMSCategoryCore extends ObjectModel
 
 	/** @var integer Parent CMSCategory ID */
 	public 		$id_parent;
-	
+
 	/** @var  integer category position */
 	public 		$position;
 
@@ -152,7 +152,7 @@ class CMSCategoryCore extends ObjectModel
 
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
-		
+
 		//recursivity for subcategories
 		$children = array();
 		if (($maxDepth == 0 OR $currentDepth < $maxDepth) AND $subcats = $this->getSubCategories($id_lang, true) AND sizeof($subcats))
@@ -229,8 +229,8 @@ class CMSCategoryCore extends ObjectModel
 				$html .= self::recurseCMSCategory($categories, $categories[$id_cms_category][$key], $key, $id_selected, $is_html);
 		return $html;
 	}
-	
-	
+
+
 
 	/**
 	  * Recursively add specified CMSCategory childs to $toDelete array
@@ -257,7 +257,7 @@ class CMSCategoryCore extends ObjectModel
 	public function delete()
 	{
 		if ($this->id == 1) return false;
-		
+
 		$this->clearCache();
 
 		/* Get childs categories */
@@ -271,7 +271,7 @@ class CMSCategoryCore extends ObjectModel
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category_lang` WHERE `id_cms_category` IN ('.$list.')');
 
 		self::cleanPositions($this->id_parent);
-		
+
 		/* Delete pages which are in categories to delete */
 		$result = Db::getInstance()->executeS('
 		SELECT `id_cms`
@@ -285,7 +285,7 @@ class CMSCategoryCore extends ObjectModel
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Delete several categories from database
 	 *
@@ -530,9 +530,9 @@ class CMSCategoryCore extends ObjectModel
 		return Db::getInstance()->getRow('
 		SELECT c.*, cl.*
 	    FROM `'._DB_PREFIX_.'cms_category` c
-	    LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($id_lang).') 
-	    WHERE `name`  LIKE \''.pSQL($CMSCategory_name).'\' 
-		AND c.`id_cms_category` != 1 
+	    LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)($id_lang).')
+	    WHERE `name`  LIKE \''.pSQL($CMSCategory_name).'\'
+		AND c.`id_cms_category` != 1
 		AND c.`id_parent` = '.(int)($id_parent_CMSCategory));
 	}
 
@@ -565,20 +565,20 @@ class CMSCategoryCore extends ObjectModel
 			$idCurrent = $result[0]['id_parent'];
 		}
 	}
-	
+
 	public function updatePosition($way, $position)
-	{	
+	{
 		if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_cms_category`, cp.`position`, cp.`id_parent` 
+			SELECT cp.`id_cms_category`, cp.`position`, cp.`id_parent`
 			FROM `'._DB_PREFIX_.'cms_category` cp
-			WHERE cp.`id_parent` = '.(int)$this->id_parent.' 
+			WHERE cp.`id_parent` = '.(int)$this->id_parent.'
 			ORDER BY cp.`position` ASC'
 		))
 			return false;
 		foreach ($res AS $category)
 			if ((int)($category['id_cms_category']) == (int)($this->id))
 				$movedCategory = $category;
-		
+
 		if (!isset($movedCategory) || !isset($position))
 			return false;
 		// < and > statements rather than BETWEEN operator
@@ -586,8 +586,8 @@ class CMSCategoryCore extends ObjectModel
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'cms_category`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-			WHERE `position` 
-			'.($way 
+			WHERE `position`
+			'.($way
 				? '> '.(int)($movedCategory['position']).' AND `position` <= '.(int)($position)
 				: '< '.(int)($movedCategory['position']).' AND `position` >= '.(int)($position)).'
 			AND `id_parent`='.(int)($movedCategory['id_parent']))
@@ -597,7 +597,7 @@ class CMSCategoryCore extends ObjectModel
 			WHERE `id_parent` = '.(int)($movedCategory['id_parent']).'
 			AND `id_cms_category`='.(int)($movedCategory['id_cms_category'])));
 	}
-	
+
 	public static function cleanPositions($id_category_parent)
 	{
 		$result = Db::getInstance()->executeS('
@@ -616,7 +616,7 @@ class CMSCategoryCore extends ObjectModel
 			}
 		return true;
 	}
-	
+
 	public static function getLastPosition($id_category_parent)
 	{
 		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'cms_category` WHERE `id_parent` = '.(int)($id_category_parent)));

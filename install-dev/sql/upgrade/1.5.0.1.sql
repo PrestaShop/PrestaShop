@@ -399,10 +399,6 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) (
 
 UPDATE `PREFIX_tab` SET class_name = 'AdminCartRules' WHERE class_name = 'AdminDiscounts';
 
-
-
-
-
 UPDATE `PREFIX_hook` SET `name` = 'displayPayment' WHERE `name` = 'payment';
 UPDATE `PREFIX_hook` SET `name` = 'actionValidateOrder' WHERE `name` = 'newOrder';
 UPDATE `PREFIX_hook` SET `name` = 'actionPaymentConfirmation' WHERE `name` = 'paymentConfirm';
@@ -497,7 +493,9 @@ ALTER TABLE `PREFIX_hook` ADD `is_native` TINYINT( 1 ) NOT NULL DEFAULT '0';
 
 ALTER TABLE `PREFIX_tax` ADD COLUMN `account_number` VARCHAR(64) NOT NULL;
 
-/* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de combinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, 1); */;
+/* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de combinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, -1); */;
+/* PHP:add_new_tab(AdminCMSCategories, fr:Catégories CMS|es:CMS categories|en:CMS categories|de:CMS categories|it:CMS categories, -1); */;
+/* PHP:add_new_tab(AdminCMS, fr:Pages CMS|es:CMS pages|en:CMS pages|de:CMS pages|it:CMS pages, -1); */;
 
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCategories&addcategory' WHERE `id_quick_access` = 3;
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminProducts&addproduct' WHERE `id_quick_access` = 4;

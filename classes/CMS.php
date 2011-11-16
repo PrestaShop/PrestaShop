@@ -165,7 +165,7 @@ class CMSCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'cms`
 		WHERE `id_cms_category` = '.(int)($id_category).'
 		ORDER BY `position`');
-		for ($i = 0, $total = count($result); $i < $sizeof; ++$i)
+		for ($i = 0, $total = count($result); $i < $total; ++$i)
 		{
 			$sql = 'UPDATE `'._DB_PREFIX_.'cms`
 					SET `position` = '.(int)$i.'

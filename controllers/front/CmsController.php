@@ -55,8 +55,8 @@ class CmsControllerCore extends FrontController
 		$this->canonicalRedirection();
 
 		/* assignCase (1 = CMS page, 2 = CMS category) */
-		if (Validate::isLoadedObject($this->cms) && ($this->cms->isAssociatedToShop() && $this->cms->active || (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id)
-		&& file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php'))))
+		if (Validate::isLoadedObject($this->cms)
+			&& ($this->cms->isAssociatedToShop() && $this->cms->active || (Tools::getValue('adtoken') == Tools::encrypt('PreviewCMS'.$this->cms->id))))
 			$this->assignCase = 1;
 		else if (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;
