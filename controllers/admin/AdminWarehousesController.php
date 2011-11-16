@@ -440,6 +440,8 @@ class AdminWarehousesControllerCore extends AdminController
 				return;
 			else if ($obj->getQuantitiesOfProducts() > 0)
 				$this->_errors[] = $this->l('It is not possible to delete a Warehosue when there are products in it.');
+			else if (SupplyOrder::warehouseHasPendingOrders($obj->id))
+				$this->_errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
 			else
 				return parent::postProcess();
 	}

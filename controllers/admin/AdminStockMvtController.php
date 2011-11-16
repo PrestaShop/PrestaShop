@@ -101,7 +101,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_SUPPLY_ORDER' => array(
-						'title' => $this->l('Default reason when incrementing stock when a supplier order is received:'),
+						'title' => $this->l('Default reason when incrementing stock when a supply order is received:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
