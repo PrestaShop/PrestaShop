@@ -514,7 +514,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		// Smarty assign
-		$this->context->smarty->assign(array(
+		$this->tpl_view_vars = array(
 			'order' => $order,
 			'cart' => new Cart($order->id),
 			'customer' => $customer,
@@ -544,14 +544,13 @@ class AdminOrdersControllerCore extends AdminController
 			'carrierModuleCall' => $carrier_module_call,
 			'iso_code_lang' => $this->context->language->iso_code,
 			'id_lang' => $this->context->language->id,
-			'paymentCCDetails' => PaymentCC::getByOrderId($order->id)
-		));
+			'paymentCCDetails' => PaymentCC::getByOrderId($order->id),
 
-		// Assign Hook
-		$this->context->smarty->assign(array(
 			'HOOK_INVOICE' => Hook::exec('invoice', array('id_order' => $order->id)),
 			'HOOK_ADMIN_ORDER' => Hook::exec('adminOrder', array('id_order' => $order->id))
-		));
+		);
+
+		return parent::initView();
 	}
 	public function ajaxProcessSearchCustomers()
 	{
