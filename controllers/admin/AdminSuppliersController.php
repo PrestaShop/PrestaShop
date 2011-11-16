@@ -190,11 +190,13 @@ class AdminSuppliersControllerCore extends AdminController
 			}
 		}
 
-		$this->context->smarty->assign(array(
+		$this->tpl_view_vars = array(
 			'supplier' => $this->object,
 			'products' => $products,
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-		));
+		);
+
+		return parent::initView();
 	}
 
 	public function afterImageUpload()

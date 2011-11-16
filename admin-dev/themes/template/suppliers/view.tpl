@@ -24,6 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{extends file="helper/view/view.tpl"}
+
+{block name="override_tpl"}
+
 <h2>{$supplier->name}</h2>
 
 <h3>{l s='Total products:'} {count($products)}</h3>
@@ -61,5 +65,6 @@
 		</table>
 	{/if}
 {/foreach}
-<br /><br />
-<a href="{$current}&token={$token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to manufacturer list'}</a><br />
+
+{/block}
+
