@@ -70,6 +70,7 @@ abstract class ControllerCore
 	 */
 	protected $ajax = false;
 
+	protected $redirect_after = null;
 	/**
 	 * check that the controller is available for the current user/visitor
 	 */
@@ -89,6 +90,11 @@ abstract class ControllerCore
 	 * Display page view
 	 */
 	abstract public function display();
+
+	/**
+	 * Redirect after process if no error
+	 */
+	abstract protected function redirect();
 
 	/**
 	 * Set default media list for controller
@@ -131,6 +137,10 @@ abstract class ControllerCore
 		{
 			// postProcess handles ajaxProcess
 			$this->postProcess();
+
+			if (!empty($this->redirect_after))
+				$this->redirect();
+
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 			{
 				$this->setMedia();

@@ -390,6 +390,11 @@ class FrontControllerCore extends Controller
 	{
 	}
 
+	public function redirect()
+	{
+		Tools::redirectLink($this->redirect_after);
+	}
+
 	public function display()
 	{
 		Tools::safePostVars();
