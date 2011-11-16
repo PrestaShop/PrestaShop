@@ -92,12 +92,14 @@ class StockAvailableCore extends ObjectModel
 	 * For a given {id_product, id_product_attribute and id_shop}, gets the stock id associated
 	 *
 	 * @param int $id_product
-	 * @param int $id_product_attribute default null
-	 * @param int $id_shop
+	 * @param int $id_product_attribute Optional
+	 * @param int $id_shop Optional
 	 * @return int
 	 */
-	public static function getIdStockAvailable($id_product, $id_product_attribute = null, $id_shop = null)
+
+	public static function getIdStockAvailableByProductId($id_product, $id_product_attribute = null, $id_shop = null)
 	{
+		// if there is no $id_shop, gets the context one
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
@@ -119,11 +121,11 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function synchronize($id_product)
 	{
-		// used var in algorithm
+		// inits the list of warehouse ids and product ids
 		$ids_warehouse = array();
 		$ids_product_attribute = array();
 
-		// builds query to get all warehouses/shops
+		// builds query to get every warehouses/shops
 		$query = new DbQuery();
 		$query->select('id_warehouse, id_shop');
 		$query->from('warehouse_shop');
@@ -137,6 +139,7 @@ class StockAvailableCore extends ObjectModel
 		foreach (Product::getProductAttributesIds($id_product) as $id_product_attribute)
 			$ids_product_attribute[] = $id_product_attribute['id_product_attribute'];
 
+		$manager = StockManagerFactory::getManager();
 		// loops on ids_warehouse to synchronize
 		foreach ($ids_warehouse as $id_shop => $warehouses)
 		{
@@ -144,12 +147,12 @@ class StockAvailableCore extends ObjectModel
 
 			// if there are no product attributes
 			if (empty($ids_product_attribute))
-				$total_quantity = StockManagerFactory::getManager()->getProductRealQuantities($id_product, null, $warehouses, true);
+				$total_quantity = $manager->getProductRealQuantities($id_product, null, $warehouses, true);
 
 			// else loops on id_product_attribute and to get $total_quantity
 			foreach ($ids_product_attribute as $id_product_attribute)
 			{
-				$quantity = StockManagerFactory::getManager()->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
+				$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
 
 				$query = array(
 					'table' => 'stock_available',
@@ -178,11 +181,11 @@ class StockAvailableCore extends ObjectModel
 	/**
 	 * For a given id_product, sets if stock available depends on stock
 	 *
-	 * @param int $depends_on_stock
 	 * @param int $id_product
-	 * @param int $id_shop
+	 * @param int $depends_on_stock Optional : true by default
+	 * @param int $id_shop Optional : gets context by default
 	 */
-	public static function setProductDependsOnStock($depends_on_stock, $id_product, $id_shop = null)
+	public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
@@ -193,6 +196,8 @@ class StockAvailableCore extends ObjectModel
 			'UPDATE',
 			'id_product = '.(int)$id_product.' AND id_shop = '.(int)$id_shop
 		);
+
+		// depends on stock.. hence synchronizes
 		if ($depends_on_stock)
 			StockAvailable::synchronize($id_product);
 	}
@@ -200,11 +205,11 @@ class StockAvailableCore extends ObjectModel
 	/**
 	 * For a given id_product, sets if product is available out of stocks
 	 *
-	 * @param int $out_of_stock
 	 * @param int $id_product
-	 * @param int $id_shop
+	 * @param int $out_of_stock Optional false by default
+	 * @param int $id_shop Optional gets context by default
 	 */
-	public static function setProductOutOfStock($out_of_stock, $id_product, $id_shop = null)
+	public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
@@ -218,17 +223,21 @@ class StockAvailableCore extends ObjectModel
 	}
 
 	/**
-	 * For a given id_product and id_product_attribute, gets stock available
+	 * For a given id_product and id_product_attribute, gets its stock available
 	 *
 	 * @param int $id_product
-	 * @param int $id_product_attribute
-	 * @param int $id_shop
+	 * @param int $id_product_attribute Optional
+	 * @param int $id_shop Optional : gets context by default
 	 * @return int
 	 */
 	public static function getStockAvailableForProduct($id_product, $id_product_attribute = null, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
+
+		// if null, it's a product without attributes
+		if (!$id_product_attribute)
+			$id_product_attribute = 0;
 
 		$query = new DbQuery();
 		$query->select('quantity');
@@ -251,7 +260,7 @@ class StockAvailableCore extends ObjectModel
 		if ($this->id_product_attribute == 0)
 			return true;
 
-		$id_stock_available = StockAvailable::getIdStockAvailable($this->id_product, 0, $this->id_shop);
+		$id_stock_available = StockAvailable::getIdStockAvailableByProductId($this->id_product, 0, $this->id_shop);
 
 		$total_quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(quantity)
@@ -278,7 +287,7 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
 	{
-		$id_stock = self::getIdStockAvailable($id_product, $id_product_attribute, $id_shop);
+		$id_stock = self::getIdStockAvailableByProductId($id_product, $id_product_attribute, $id_shop);
 
 		if (!$id_stock)
 			return false;
@@ -286,7 +295,7 @@ class StockAvailableCore extends ObjectModel
 		// Update quantity of the pack products
 		if (Pack::isPack($id_product))
 		{
-			$products_pack = Pack::getItems((int)($product['id_product']), (int)(Configuration::get('PS_LANG_DEFAULT')));
+			$products_pack = Pack::getItems((int)$product['id_product'], (int)Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($products_pack as $product_pack)
 			{
 				$pack_id_product_attribute = Product::getDefaultAttribute($tab_product_pack['id_product'], 1);

@@ -85,7 +85,7 @@ class AdminProductsController extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` 
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
@@ -122,7 +122,7 @@ class AdminProductsController extends AdminController
 		foreach ($languages as $language)
 			if (isset($_POST['meta_keywords_'.$language['id_lang']]))
 			{
-				$_POST['meta_keywords_'.$language['id_lang']] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$language['id_lang']])); 
+				$_POST['meta_keywords_'.$language['id_lang']] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$language['id_lang']]));
 				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$language['id_lang']]));
 				$object->meta_keywords[$language['id_lang']] = $_POST['meta_keywords_'.$language['id_lang']];
 			}
@@ -1601,7 +1601,7 @@ if (false)
 			}
 			$this->tpl_list_vars['category_tree'] = $category_tree;
 		}
-		// @todo module free 
+		// @todo module free
 		$this->tpl_form_vars['vat_number'] = file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php');
 		parent::initContent();
 	}
@@ -1789,7 +1789,7 @@ if (false)
 	public function initForm()
 	{
 		$product = $this->object = new Product((int)(Tools::getValue('id_product')));
-		// getLanguages init this->_languages 
+		// getLanguages init this->_languages
 		$this->getLanguages();
 		$languages = $this->_languages;
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
@@ -1826,8 +1826,8 @@ if (false)
 	public function getPreviewUrl(Product $product)
 	{
 		$preview_url = $this->context->link->getProductLink(
-		$this->getFieldValue($product, 'id'), 
-			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id), 
+		$this->getFieldValue($product, 'id'),
+			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
 			Category::getLinkRewrite($product->id_category_default, $this->context->language->id), null, null, Context::getContext()->shop->getID());
 		if (!$product->active)
 		{
@@ -1848,17 +1848,17 @@ if (false)
 		}
 		return $preview_url;
 	}
-	
+
 	/**
-	* Post traitment for accounting 
+	* Post traitment for accounting
 	*/
 	public function postProcessFormAccounting()
 	{
-		
+
 		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 		{
 			$id_shop = $this->context->shop->getID();
-			
+
 			// If zone still exist, then update the database with the new value
 			if (count($zones = Zone::getZones()))
 			{
@@ -1871,8 +1871,8 @@ if (false)
 							'id_product' => $product->id,
 							'id_shop' => $id_shop,
 							'num' => $num);
-				
-			// Save to the database the account 
+
+			// Save to the database the account
 			if (count($tab) && Accounting::saveProductAccountingInformations($tab))
 				$this->confirmations[] = $this->l('Account numbers have been updated');
 			else
@@ -1880,7 +1880,7 @@ if (false)
 			}
 		}
 	}
-	
+
 	/**
 	* Init data for accounting
 	*/
@@ -1888,7 +1888,7 @@ if (false)
 	{
 		$error = '';
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-		
+
 		if (count($this->context->shop->getListOfID()) > 1)
 			$error = $this->l('Please select the shop you want to configure');
 		else
@@ -1896,7 +1896,7 @@ if (false)
 			$zones = Zone::getZones();
 			$id_shop = $this->context->shop->getID();
 			$detail = array();
-		
+
 			// Set default zone value to the shop	and sort it
 			foreach($zones as $zone)
 			{
@@ -1904,12 +1904,12 @@ if (false)
 				$detail['zones'][$zone['id_zone']]['account_number'] = '';
 			}
 			$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($product->id, $id_shop);
-			
+
 			// Set Account number to the id_zone for an id_shop if exist
 			foreach($zoneAccountNumberList as $zone)
 				$detail['zones'][$zone['id_zone']]['account_number'] = $zone['account_number'];
 		}
-		
+
 		$this->context->smarty->assign(array(
 			'productAccountNumberList' => $detail,
 			'shopName' => $this->context->shop->name,
@@ -2385,7 +2385,7 @@ if (false)
 		$product->name['class'] = 'updateCurrentText';
 		if (!$product->id)
 			$product->name['class'] .= ' copy2friendlyUrl';
-		
+
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
 		$product->supplier_name = Supplier::getNameById($product->id_supplier);
 
@@ -2478,7 +2478,7 @@ if (false)
 			$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product->id));
 
 		$data->assign('ps_order_out_of_stock', Configuration::get('PS_ORDER_OUT_OF_STOCK'));
-		
+
 		$default_category = Tools::getValue('id_category', 1);
 		$data->assign('default_category', $default_category);
 		if (!$product->id)
@@ -2505,7 +2505,7 @@ if (false)
 			'search' => $this->l('Search a category')
 		);
 		$data->assign('category_tree', Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox', false, true));
-			
+
 		$images = Image::getImages($this->context->language->id, $product->id);
 
 		foreach($images as $k => $image)
@@ -2513,7 +2513,7 @@ if (false)
 		$data->assign('ps_ssl_enabled', Configuration::get('PS_SSL_ENABLED'));
 		$data->assign('images', $images);
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
-			
+
 			$content .= '
 				<tr>
 					<td class="col-left"><label>'.$this->l('Tags:').'</label></td>
@@ -2661,7 +2661,7 @@ if (false)
 
 		foreach ($images as $k => $image)
 			$images[$k] = new Image($image['id_image']);
-		
+
 		$data->assign('images', $images);
 		$data->assign('token', $token);
 		$data->assign($this->tpl_form_vars);
@@ -2920,7 +2920,7 @@ if (false)
 			$totalQuantity += $physicalQuantity[$attribute['id_product_attribute']];
 
 			// @TODO
-			$availableQuantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct((int)$obj->id, $attribute['id_product_attribute']);
+			$availableQuantity[$attribute['id_product_attribute']] = StockAvailable::getIdStockAvailableByProductId((int)$obj->id, $attribute['id_product_attribute']);
 
 			// Get all product designation
 			$productDesignation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
@@ -3267,7 +3267,7 @@ if (false)
 		}
 		else
 			$content .= '<b>'.$this->l('You must save this product before adding features').'.</b>';
-		
+
 		$content .= '<script type="text/javascript">
 			displayFlags(languages, id_language, allowEmployeeFormLang);
 		</script>';
@@ -3288,7 +3288,7 @@ if (false)
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
 
-				StockAvailable::setProductDependsOnStock((int)Tools::getValue('value'), $product->id);
+				StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
 				break;
 
 			case 'out_of_stock':
@@ -3297,7 +3297,7 @@ if (false)
 				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
 
-				StockAvailable::setProductOutOfStock((int)Tools::getValue('value'), $product->id);
+				StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
 				break;
 
 			case 'set_qty':
@@ -3306,7 +3306,7 @@ if (false)
 				if (Tools::getValue('id_product_attribute') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
 				// @todo : Product class should handle that
-				$stock_available = new StockAvailable(StockAvailable::getIdStockAvailable($product->id, (int)Tools::getValue('id_product_attribute')));
+				$stock_available = new StockAvailable(StockAvailable::getIdStockAvailableByProductId($product->id, (int)Tools::getValue('id_product_attribute')));
 				if (!$stock_available->id)
 				{
 					$stock_available->id_product = $product->id;
