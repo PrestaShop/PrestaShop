@@ -956,7 +956,8 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
-		echo $this->content;
+		$this->layout = 'layout-ajax.tpl';
+		return $this->display();
 	}
 
 	public function display()
@@ -984,21 +985,18 @@ class AdminControllerCore extends Controller
 			$page = $this->context->smarty->fetch($tpl);
 		else
 			$page = $this->context->smarty->fetch($this->template);
-		if ($this->content_only)
-			echo $page;
-		else
-		{
-			if ($conf = Tools::getValue('conf'))
-				$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
 
-			$this->context->smarty->assign('errors', $this->_errors);
-			$this->context->smarty->assign('warnings', $this->warnings);
-			$this->context->smarty->assign('informations', $this->informations);
-			$this->context->smarty->assign('confirmations', $this->confirmations);
-			// page & layout if content_only = 1
-			$this->context->smarty->assign('page', $page);
-			$this->context->smarty->display($this->layout);
-		}
+
+		if ($conf = Tools::getValue('conf'))
+			$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
+
+		$this->context->smarty->assign('errors', $this->_errors);
+		$this->context->smarty->assign('warnings', $this->warnings);
+		$this->context->smarty->assign('informations', $this->informations);
+		$this->context->smarty->assign('confirmations', $this->confirmations);
+
+		$this->context->smarty->assign('page', $page);
+		$this->context->smarty->display($this->layout);
 	}
 
 	/**
