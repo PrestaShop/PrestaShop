@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{if !$firstCall}<br /><br />{/if}
 
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
@@ -155,7 +156,8 @@
 											name="{$input.name}"
 											id="{$value.id}"
 											value="{$value.value|escape:'htmlall':'UTF-8'}"
-											{if $fields_value[$input.name] == $value.value}checked="checked"{/if} />
+											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
+											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 									<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
 									 {if isset($input.is_bool) && $input.is_bool == true}
 									 	{if $value.value == 1}
@@ -168,6 +170,7 @@
 									 {/if}
 									</label>
 									{if isset($input.br) && $input.br}<br />{/if}
+									{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
 								{/foreach}
 							{elseif $input.type == 'textarea'}
 								{if isset($input.lang)}
@@ -278,7 +281,7 @@
 				{elseif $key == 'submit'}
 					<div class="margin-form">
 						<input type="submit"
-							id="{$table}_form_submit_btn"
+							id="{if isset($field.id)}{$field.id}{else}{$table}_form_submit_btn{/if}"
 							value="{$field.title}"
 							name="{if isset($field.name)}{$field.name}{else}{$submit_action}{/if}{if isset($field.stay) && $field.stay}AndStay{/if}"
 							{if isset($field.class)}class="{$field.class}"{/if} />
