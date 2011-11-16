@@ -383,4 +383,28 @@ class AdminStockMvtControllerCore extends AdminController
 
 		return parent::postProcess();
 	}
+
+	/**
+	 * AdminController::getList() override
+	 * @see AdminController::getList()
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		//If there is a field product_name in the list, check if this field is null and display standard message
+		foreach ($this->fieldsDisplay as $key => $value)
+			if ($key == 'product_name')
+			{
+				$nb_items = count($this->_list);
+
+				for ($i = 0; $i < $nb_items; ++$i)
+				{
+					$item = &$this->_list[$i];
+
+					if (empty($item['product_name']))
+						$item['product_name'] = $this->l('The name of this product is not available. Maybe it has been deleted from the system.');
+				}
+			}
+	}
 }
