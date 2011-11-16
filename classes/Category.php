@@ -971,13 +971,10 @@ class CategoryCore extends ObjectModel
 	public function addGroupsIfNoExist($id_group)
 	{
 		$groups = $this->getGroups();
-		foreach ($groups as $group)
-		{
-			if ($group == $id_group)
-				return false;
-			else
-				return $this->addGroups(array((int)$id_group));
-		}
+		if (!in_array((int)$id_group, $groups))
+			return $this->addGroups(array((int)$id_group));
+		else
+			return false;
 	}
 
 	/**
