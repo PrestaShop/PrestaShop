@@ -1089,7 +1089,7 @@ class AdminControllerCore extends Controller
 		$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
 		foreach ($quick_access as $index => $quick)
 		{
-			preg_match('/tab=(.+)(&.+)?$/', $quick['link'], $admin_tab);
+			preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
 			if (isset($admin_tab[1]))
 			{
 				if (strpos($admin_tab[1], '&'))
