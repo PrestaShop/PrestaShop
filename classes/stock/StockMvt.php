@@ -183,52 +183,11 @@ class StockMvtCore extends ObjectModel
 
 	/**
 	 * @deprecated since 1.5.0
+	 *
+	 * This method no longer exists, and have no equivalent because of the missing movements have to be handle by inventories on real stock.
 	 */
 	public static function addMissingMvt($id_employee)
 	{
 		Tools::displayAsDeprecated();
-		/*
-		// Search missing stock movement on products without attributes
-		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
-				FROM '._DB_PREFIX_.'product p
-				'.Product::sqlStock('p', null, true).'
-				LEFT JOIN '._DB_PREFIX_.'stock_mvt sm ON s.id_stock = sm.id_stock
-				WHERE (
-					SELECT COUNT(*) FROM '._DB_PREFIX_.'stock s2
-					WHERE s2.id_product = p.id_product
-						AND s2.id_product_attribute > 0
-				) = 0
-				GROUP BY s.id_product, s.id_shop
-				HAVING qty <> 0';
-		$products_without_attributes = Db::getInstance()->executeS($sql);
-
-		// Search missing stock movement on products with attributes
-		$sql = 'SELECT s.id_stock, (stock.quantity - SUM(IFNULL(sm.quantity, 0))) AS qty
-				FROM '._DB_PREFIX_.'product_attribute pa
-				'.Product::sqlStock('pa', 'pa', true).'
-				LEFT JOIN '._DB_PREFIX_.'stock_mvt sm ON s.id_stock = sm.id_stock
-				WHERE s.id_product_attribute > 0
-					AND (
-						SELECT COUNT(*) FROM '._DB_PREFIX_.'stock s2
-						WHERE s2.id_product = pa.id_product
-							AND s2.id_product_attribute > 0
-					) > 0
-				GROUP BY s.id_product_attribute
-				HAVING qty <> 0';
-		$products_with_attributes = Db::getInstance()->executeS($sql);
-
-		// Add missing stock movements
-		$products = array_merge($products_without_attributes, $products_with_attributes);
-		if ($products)
-			foreach ($products as $product)
-			{
-				$mvt = new StockMvt();
-				$mvt->id_stock = $product['id_stock'];
-				$mvt->id_employee = (int)$id_employee;
-				$mvt->quantity = $product['qty'];
-				$mvt->id_stock_mvt_reason = _STOCK_MOVEMENT_MISSING_REASON_;
-				$mvt->add();
-			}
-		*/
 	}
 }

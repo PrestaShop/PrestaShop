@@ -331,6 +331,7 @@ class ProductCore extends ObjectModel
 				$this->tags = Tag::getProductTags((int)$this->id);
 		}
 
+		// By default, the product quantity correspond to the available quantity to sell in the current shop
 		$this->quantity = StockAvailable::getStockAvailableForProduct($id_product, 0, Context::getContext()->shop->getID());
 		$this->out_of_stock = $this->getOutOfStock();
 		$this->depends_on_stock = $this->getDependsOnStock();
@@ -606,7 +607,7 @@ class ProductCore extends ObjectModel
 		 * Removes the product from StockAvailable, for the current shop
 		 */
 		$context = Context::getContext();
-		$id_shop = $context->shop->id;
+		$id_shop = $context->shop->getID();
 		StockAvailable::removeProductFromStockAvailable($this->id, null, $id_shop);
 
 		if (!GroupReduction::deleteProductReduction($this->id))
@@ -918,24 +919,23 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * addProductAttribute is deprecated
+	 *
+	 * The quantity params is now ignored
+	 *
+	 * @see StockManager if you want to manage real stock
+	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
+	 *
 	 * @deprecated
 	 */
 	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL)
 	{
 		Tools::displayAsDeprecated();
+
 		$id_product_attribute = $this->addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
+
 		if (!$id_product_attribute)
 			return false;
-		// @todo handle $quantity
-		/*
-		$stock_available = new StockAvailable(StockAvailable::getIdStockAvailable($this->id, $id_product_attribute));
-		if (!$stock_available->id)
-		{
-			$stock_available->id_product = $product->id;
-			$stock_available->id_product_attribute = Tools::getValue('id_product_attribute');
-			$stock_available->id_shop = Context::getContext()->shop->getID(true);
-		}
-		*/
+
 		return $id_product_attribute;
 	}
 
@@ -1125,6 +1125,8 @@ class ProductCore extends ObjectModel
 	 */
 	public function updateQuantityProductWithAttributeQuantity()
 	{
+		Tools::displayAsDeprecated();
+
 		return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'product`
 		SET `quantity` = IFNULL(
@@ -2105,7 +2107,7 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * Create JOIN query with 'stock' table
+	 * Create JOIN query with 'stock_available' table
 	 *
 	 * @param string $productAlias Alias of product table
 	 * @param string|int $productAttribute If string : alias of PA table ; if int : value of PA ; if null : nothing about PA
@@ -2201,15 +2203,23 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * Update available product quantities
-	 *
 	 * @deprecated since 1.5.0
+	 *
+	 * It's not possible to use this method with new stockManager and stockAvailable features
+	 * Now this method do nothing
+	 *
+	 * @see StockManager if you want to manage real stock
+	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
 	 *
 	 * @param array $product Array with ordered product (quantity, id_product_attribute if applicable)
 	 * @return mixed Query result
 	 */
 	public static function updateQuantity($product, $id_order = null)
 	{
+		Tools::displayAsDeprecated();
+
+		return false;
+		/*
 		if (!is_array($product))
 			die (Tools::displayError());
 
@@ -2230,13 +2240,25 @@ class ProductCore extends ObjectModel
 
 		$productObj = new Product((int)$product['id_product'], false, (int)Configuration::get('PS_LANG_DEFAULT'));
 		return $productObj->addStockMvt(-(int)$product['cart_quantity'], (int)_STOCK_MOVEMENT_ORDER_REASON_, (int)$product['id_product_attribute'], (int)$id_order, null);
+		*/
 	}
 
 	/**
 	 * @deprecated since 1.5.0
+	 *
+	 * It's not possible to use this method with new stockManager and stockAvailable features
+	 * Now this method do nothing
+	 *
+	 * @see StockManager if you want to manage real stock
+	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
+	 *
 	 */
 	public static function reinjectQuantities(&$orderDetail, $quantity, Context $context = null)
 	{
+		Tools::displayAsDeprecated();
+
+		return false;
+		/*
 		if (!$context)
 			$context = Context::getContext();
 		if (!Validate::isLoadedObject($orderDetail))
@@ -2256,6 +2278,7 @@ class ProductCore extends ObjectModel
 
 		$orderDetail->product_quantity_reinjected += (int)($quantity);
 		return true;
+		*/
 	}
 
 	public static function isAvailableWhenOutOfStock($out_of_stock)
@@ -3268,13 +3291,18 @@ class ProductCore extends ObjectModel
 	/**
 	 * Add a stock movement for current product
 	 *
+	 * Since 1.5, this method only permit to add/remove available quantities of the current product in the current shop
+	 *
+	 * @see StockManager if you want to manage real stock
+	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
+	 *
 	 * @deprecated since 1.5.0
 	 *
 	 * @param int $quantity
-	 * @param int $id_reason
+	 * @param int $id_reason - useless
 	 * @param int $id_product_attribute
-	 * @param int $id_order
-	 * @param int $id_employee
+	 * @param int $id_order - useless
+	 * @param int $id_employee - useless
 	 * @return bool
 	 */
 	public function addStockMvt($quantity, $id_reason, $id_product_attribute = null, $id_order = null, $id_employee = null)
@@ -3282,32 +3310,12 @@ class ProductCore extends ObjectModel
 		if (!$this->id)
 			return;
 
-		$reason = new StockMvtReason($id_reason);
-		if (!$reason->id)
-			return;
+		if ($id_product_attribute == null)
+			$id_product_attribute = 0;
 
-		// Update product stock
 		$quantity = abs((int)$quantity) * $reason->sign;
-		$this->setStock($quantity, $id_product_attribute, true);
 
-		// Add a new stock movement
-		$stockMvt = new StockMvt();
-		$stockMvt->id_stock = Stock::getStockId($this->id, $id_product_attribute, Context::getContext()->shop->getID(true));
-		$stockMvt->id_product = $this->id;
-		$stockMvt->id_product_attribute = (int)$id_product_attribute;
-		$stockMvt->id_order = (int)$id_order;
-		$stockMvt->id_employee = (int)$id_employee;
-		$stockMvt->quantity = $quantity;
-		$stockMvt->id_stock_mvt_reason = (int)$id_reason;
-
-		// adding stock mouvement, this action update the stock of product in database only
-		if ($stockMvt->add())
-		{
-			$this->quantity = $this->getStock();
-			Hook::exec('updateQuantity', array('product' => $this, 'order' => null));
-			return true;
-		}
-		return false;
+		return StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity, Context::getContext()->shop->getID());
 	}
 
 	/**
@@ -3315,6 +3323,8 @@ class ProductCore extends ObjectModel
 	 */
 	public function getStockMvts($id_lang)
 	{
+		Tools::displayAsDeprecated();
+
 		return Db::getInstance()->executeS('
 			SELECT sm.id_stock_mvt, sm.date_add, sm.quantity, sm.id_order,
 			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name, CONCAT(e.lastname, \' \', e.firstname) employee, mrl.name reason
