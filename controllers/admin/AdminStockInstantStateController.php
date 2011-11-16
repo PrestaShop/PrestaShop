@@ -90,6 +90,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			),
 		);
 
+		$this->addRowAction('details');
 		$this->stock_instant_state_warehouses = Warehouse::getWarehouses(true);
 		array_unshift($this->stock_instant_state_warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
@@ -104,27 +105,13 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		// query
 		$this->_select = '
-			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) as name,
-			a.reference,
-			a.ean13,
-			a.upc,
-			w.id_currency,
-			a.physical_quantity,
-			a.usable_quantity,
-			COUNT(a.id_stock) as multiple_prices';
+			SUM(a.physical_quantity) as physical_quantity,
+			SUM(a.usable_quantity) as usable_quantity,
+			w.id_currency';
 
-		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock
-							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-								stock.id_product = pl.id_product
-								AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').'
-							)
-							LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = stock.id_warehouse)
-							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
-							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
-								al.id_attribute = pac.id_attribute
-								AND al.id_lang = '.(int)$this->context->language->id.'
-							)';
-		$this->_group = 'GROUP BY a.id_stock, a.id_product, a.id_product_attribute';
+		$this->_group = 'GROUP BY a.id_product, a.id_product_attribute';
+
+		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'warehouse w ON (w.id_warehouse = a.id_warehouse)';
 
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentCoverageWarehouse();
@@ -138,7 +125,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->tpl_list_vars['stock_instant_state_warehouses'] = $this->stock_instant_state_warehouses;
 		$this->tpl_list_vars['stock_instant_state_cur_warehouse'] = $this->getCurrentCoverageWarehouse();
 		// adds ajax params
-		$this->ajax_params = array('warehouse' => $this->getCurrentCoverageWarehouse());
+		$this->ajax_params = array('id_warehouse' => $this->getCurrentCoverageWarehouse());
 
 		// displays help information
 		$this->displayInformation($this->l('This interface allows you to display detailed informations on your stock, per warehouse.'));
@@ -158,6 +145,10 @@ class AdminStockInstantStateControllerCore extends AdminController
 		for ($i = 0; $i < $nb_items; ++$i)
 		{
 			$item = &$this->_list[$i];
+
+			$item['price_te'] = '--';
+			$item[$this->identifier] = $item['id_product'].'_'.$item['id_product_attribute'];
+			$item['name'] = Product::getProductName($item['id_product'], $item['id_product_attribute']);
 
 			// gets stock manager
 			$manager = StockManagerFactory::getManager();
@@ -186,6 +177,47 @@ class AdminStockInstantStateControllerCore extends AdminController
 				$warehouse = (int)Tools::getValue('id_warehouse');
 		}
 		return $warehouse;
+	}
+
+	/**
+	 * Method called when an ajax request is made
+	 * @see AdminController::postProcess()
+	 */
+	public function ajaxProcess()
+	{
+		if (Tools::isSubmit('id')) // if a product id is submit
+		{
+			$this->lang = false;
+			$lang_id = (int)$this->context->language->id;
+			$ids = explode('_', Tools::getValue('id'));
+			if (count($ids) != 2)
+				die;
+
+			$id_product = $ids[0];
+			$id_product_attribute = $ids[1];
+			$id_warehouse = Tools::getValue('id_warehouse', -1);
+
+			$query = new DbQuery();
+			$query->select('w.id_currency, s.price_te, SUM(s.physical_quantity) as physical_quantity, SUM(s.usable_quantity) as usable_quantity');
+			$query->from('stock s');
+			$query->leftJoin('warehouse w ON (w.id_warehouse = s.id_warehouse)');
+			$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+			if ($id_warehouse != -1)
+				$query->where('s.id_warehouse = '.(int)$id_warehouse);
+			$query->groupBy('s.price_te');
+
+			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+			foreach ($datas as &$data)
+			{
+				$currency = new Currency($data['id_currency']);
+				if (Validate::isLoadedObject($currency))
+					$data['price_te'] = Tools::displayPrice($data['price_te'], $currency);
+			}
+
+			echo Tools::jsonEncode(array('data'=> $datas, 'fields_display' => $this->fieldsDisplay));
+		}
+		die;
 	}
 
 }

@@ -1186,7 +1186,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	protected function postProcessUpdateReceipt()
 	{
-		trace('test');
 		// gets all box selected
 		$rows = Tools::getValue('supply_order_detailBox');
 		if (!$rows)
