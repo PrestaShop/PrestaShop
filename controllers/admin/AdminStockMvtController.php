@@ -284,10 +284,6 @@ class AdminStockMvtControllerCore extends AdminController
 				'width' => 250,
 				'havingFilter' => true
 			),
-			'id_order' => array(
-				'title' => $this->l('Supply Order'),
-				'width' => 40
-			),
 			'employee' => array(
 				'title' => $this->l('Employee'),
 				'width' => 100,

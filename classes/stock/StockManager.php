@@ -562,7 +562,7 @@ class StockManagerCore implements StockManagerInterface
 
 		// gets all stock_mvt for the given coverage period
 		$query = '
-			SELECT SUM(quantity) as quantity_out
+			SELECT SUM(view.quantity) as quantity_out
 			FROM
 			(	SELECT sm.`physical_quantity` as quantity
 				FROM `'._DB_PREFIX_.'stock_mvt` sm
@@ -576,7 +576,7 @@ class StockManagerCore implements StockManagerInterface
 				AND s.`id_product_attribute` = '.(int)$id_product_attribute.
 				($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'
 				GROUP BY sm.`id_stock_mvt`
-			) as sq';
+			) as view';
 
 		$quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 		if (!$quantity_out)
