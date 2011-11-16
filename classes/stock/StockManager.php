@@ -453,7 +453,6 @@ class StockManagerCore implements StockManagerInterface
 			$ids_warehouse = array();
 
 		// Gets client_orders_qty
-		// @TODO: Add the warehouse the order will be shipped from
 		$query = new DbQuery();
 		$query->select('SUM(od.product_quantity)');
 		$query->from('order_detail od');
@@ -463,6 +462,8 @@ class StockManagerCore implements StockManagerInterface
 			$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
 		$query->where('o.delivery_number = 0');
 		$query->where('o.valid = 1');
+		// @FIXME: Once part-shipping is done, remove the comment on the line below.
+		// $query->where('o.id_warehouse IN (0, '.implode(', ', $ids_warehouse).')');
 		$client_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets supply_orders_qty
