@@ -1624,6 +1624,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			{
 				$item['discount_rate'] = Tools::ps_round($item['discount_rate'], 4);
 				$item['tax_rate'] = Tools::ps_round($item['tax_rate'], 4);
+				$item['id_currency'] = $currency->id;
 			}
 
 			// renders list

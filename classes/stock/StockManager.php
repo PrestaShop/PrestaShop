@@ -440,7 +440,20 @@ class StockManagerCore implements StockManagerInterface
 	 */
 	public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
 	{
+		if (!is_null($ids_warehouse))
+		{
+			// in case $ids_warehouse is not an array
+			if (!is_array($ids_warehouse))
+				$ids_warehouse = array($ids_warehouse);
+
+			// casts for security reason
+			$ids_warehouse = array_map('intval', $ids_warehouse);
+		}
+		else
+			$ids_warehouse = array();
+
 		// Gets client_orders_qty
+		// @TODO: Add the warehouse the order will be shipped from
 		$query = new DbQuery();
 		$query->select('SUM(od.product_quantity)');
 		$query->from('order_detail od');
@@ -460,6 +473,9 @@ class StockManagerCore implements StockManagerInterface
 		$query->leftjoin('supply_order_state sos ON (sos.id_supply_order_state = so.id_supply_order_state)');
 		$query->where('sos.pending_receipt = 1');
 		$query->where('sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute);
+		if (count($ids_warehouse))
+			$query->where('so.id_warehouse IN('.implode(', ', $ids_warehouse).')');
+
 		$supply_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets {physical OR usable}_qty
