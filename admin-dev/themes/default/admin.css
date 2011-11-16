@@ -144,7 +144,7 @@ a.module_toggle_all{color: #268CCD;}
 .processing {overflow: auto;}
 
 /*TABLE STATUS COMMANDE*/
-.table td span.color_field { font-size:11px; padding:2px 5px; border-radius:3px; text-transform:uppercase; text-shadow:0 1px 0 #fff; color:#fff; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
+.table td span.color_field { font-size:11px; padding:2px 5px; border-radius:3px; text-transform:uppercase; color:#fff; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
 
 /*toolbarBox*/
 .toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
@@ -170,6 +170,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-save-calendar { background-image: url(process-icon-save-calendar.png);}
 .toolbarBox .process-icon-new-module { background-image: url(process-icon-new-module.png);}
 .toolbarBox .process-icon-new-module-addon { background-image: url(process-icon-new-module-addon.png);}
+.toolbarBox .process-icon-save-and-preview { background-image: url(process-icon-preview.png);}
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 

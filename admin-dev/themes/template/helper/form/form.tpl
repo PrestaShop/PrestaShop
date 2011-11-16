@@ -78,9 +78,10 @@
 								{if isset($input.lang)}
 									<div class="translatable">
 										{foreach $languages as $language}
-											<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+											<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
 												<input type="text"
 														name="{$input.name}_{$language.id_lang}"
+														id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 														value="{$fields_value[$input.name][$language.id_lang]}"
 														{if isset($input.size)}size="{$input.size}"{/if}
 														{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
