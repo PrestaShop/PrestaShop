@@ -128,6 +128,9 @@ class HelperCore
 		
 		$context = Context::getContext();
 		
+		$context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
+		
+		
 		$context->controller->addJs(array(
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
@@ -155,9 +158,7 @@ class HelperCore
 			var selectedLabel = \''.$trads['selected'].'\';
 			var home = \''.$trads['Home'].'\';
 			var use_radio = '.(int)$use_radio.';
-		</script>
-		<link type="text/css" rel="stylesheet" href="../css/jquery.treeview.css" />
-		';
+		</script>';
 
 		$html .= '
 		<div style="background-color:#F4E6C9; width:99%;padding:5px 0 5px 5px;">
