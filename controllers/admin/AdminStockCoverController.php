@@ -64,16 +64,18 @@ class AdminStockCoverControllerCore extends AdminController
 				'filter_key' => 'b!name'
 			),
 			'coverage' => array(
-				'title' => $this->l('Average time left'),
-				'width' => 150,
+				'title' => $this->l('Coverage'),
+				'width' => 160,
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'hint' => $this->l('Days left before you run out of stock.')
 			),
 			'stock' => array(
 				'title' => $this->l('Quantity'),
 				'width' => 80,
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'hint' => $this->l('Physical (usable) quantity.')
 			),
 		);
 
