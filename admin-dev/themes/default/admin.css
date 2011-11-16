@@ -19,6 +19,8 @@ input[type="text"],input[type="password"],input[type="file"],textarea {border:1p
 select { border:1px solid #ccc;}
 select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
 .header_module{background:url(header_module.png);padding-left: 0.5em;padding-top: 0.8em;height:20px;color: #812143;border:solid 1px #CCC;}
+.double_select select{width:300px;height:160px;}
+.double_select a{text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px}
 
 /*BUTTON*/
 .button{background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent; 
