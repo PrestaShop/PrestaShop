@@ -107,7 +107,7 @@ class AdminStockCoverControllerCore extends AdminController
 			$lang_id = (int)$this->context->language->id;
 			$id_product = (int)Tools::getValue('id');
 			$period = (Tools::getValue('period') ? (int)Tools::getValue('period') : 7);
-			$warehouse = (Tools::getValue('id_warehouse') ? (int)Tools::getValue('id_warehouse') : -1);
+			$warehouse = Tools::getValue('id_warehouse', -1);
 
 			$query = new DbQuery();
 			$query->select('pa.id_product_attribute as id, pa.id_product, stock_view.reference, stock_view.ean13,
@@ -169,7 +169,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->tpl_list_vars['stock_cover_cur_period'] = $this->getCurrentCoveragePeriod();
 		$this->tpl_list_vars['stock_cover_warehouses'] = $this->stock_cover_warehouses;
 		$this->tpl_list_vars['stock_cover_cur_warehouse'] = $this->getCurrentCoverageWarehouse();
-		$this->ajax_params = array('period' => $this->getCurrentCoveragePeriod(), 'warehouse' => $this->getCurrentCoverageWarehouse());
+		$this->ajax_params = array('period' => $this->getCurrentCoveragePeriod(), 'id_warehouse' => $this->getCurrentCoverageWarehouse());
 
 		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
 					  						this interface gives you an idea of when one product will run out of stock.'));
