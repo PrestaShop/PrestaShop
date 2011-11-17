@@ -212,10 +212,10 @@ $(document).ready(function(){
 						$('#virtual_product_file_label').hide();
 						$('#file_missing').hide();
 						$('#delete_downloadable_product_attribute').show();
-						$('#virtual_product_name_attribute').attr('value', fileName);
 						$('#upload-confirmation2').html(
 							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">{l s='The file'}&nbsp;"' + fileName + '"&nbsp;{l s='has successfully been uploaded'}</a>' +
 							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
+						$('#virtual_product_name_attribute').attr('value', fileName);		
 						
 						link = $("#delete_downloadable_product_attribute").attr('href');		
 						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
