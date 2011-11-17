@@ -152,14 +152,18 @@ class ProductDownloadCore extends ObjectModel
 
 	/**
 	 * Delete the file
+	 * @param int $id_product_download : if we need to delete a specific product attribute file
 	 *
 	 * @return boolean
 	 */
-	public function deleteFile()
+	public function deleteFile($id_product_download = NULL)
 	{
 		if (!$this->checkFile())
 			return false;
-		return unlink(_PS_DOWNLOAD_DIR_.$this->filename);
+		
+		return unlink(_PS_DOWNLOAD_DIR_.$this->filename) && Db::getInstance()->Execute('DELETE
+			FROM `'._DB_PREFIX_.'product_download` 
+			WHERE `id_product_download` = '.(int)$id_product_download);
 	}
 
 	/**
@@ -216,7 +220,7 @@ class ProductDownloadCore extends ObjectModel
 		if (!self::isFeatureActive())
 			return false;
 		if (array_key_exists($id_product_attribute, self::$_productIds))
-			return self::$_productIds[$id_product];
+			return self::$_productIds[$id_product];	
 		self::$_productIds[$id_product_attribute] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
