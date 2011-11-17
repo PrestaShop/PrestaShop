@@ -256,14 +256,16 @@ class GroupCore extends ObjectModel
 	 * @param integer authorized
 	 */
 	public static function addModulesRestrictions($id_group, $modules, $authorized)
-	{
-		if (!is_array($modules))
+	{		
+		if (!is_array($modules) AND !empty($modules))
 			return false;
 		else
 		{
+			//delete all record for this group
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_module_restriction` WHERE `id_group` = '.(int)$id_group.' AND `authorized` = '.(int)$authorized);
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
 			foreach ($modules as $mod)
-				$sql .= '("'.(int)$id_group.'", "'.(int)Module::getModuleIdByName($mod).'", "'.(int)$authorized.'"),';
+				$sql .= '("'.(int)$id_group.'", "'.(int)$mod.'", "'.(int)$authorized.'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
 			Db::getInstance()->execute($sql);
