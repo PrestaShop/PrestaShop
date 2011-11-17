@@ -794,11 +794,11 @@ class AdminControllerCore extends Controller
 					if (!Tools::getValue($field) && isset($values['default']))
 						$_POST[$field] = $values['default'];
 
-				if (1 || !count($this->_errors))
+				if (!count($this->_errors))
 				{
 					foreach ($fields as $key => $options)
 					{
-						if (isset($options['visibility']) && $options['visibility'] > Context::getContext()->shop->getContextType())
+						if (Shop::isFeatureActive() && isset($options['visibility']) && ($options['visibility'] > Context::getContext()->shop->getContextType()))
 							continue;
 
 						if (Shop::isFeatureActive() && isset($_POST['configUseDefault'][$key]))
@@ -840,6 +840,7 @@ class AdminControllerCore extends Controller
 							}
 						}
 					}
+					//d('after ');
 				}
 			}
 			if (count($this->_errors) <= 0)
