@@ -481,6 +481,8 @@ class AdminControllerCore extends Controller
 					' <b>'.$this->table.'</b><br />'.
 					Tools::displayError('You cannot delete all of the items.');
 			}
+			else if (array_key_exists('delete', $this->list_skip_actions) AND in_array($object->id, $this->list_skip_actions['delete'])) //check if some ids are in list_skip_actions and forbid deletion
+					$this->_errors[] = Tools::displayError('You cannot delete this items.');
 			else
 			{
 				if ($this->deleted)
