@@ -28,20 +28,20 @@
 class WebserviceKeyCore extends ObjectModel
 {
  	/** @var string Key */
-	public 		$key;
+	public $key;
 
 	/** @var boolean Webservice Account statuts */
-	public 		$active = true;
+	public $active = true;
 
 	/** @var string Webservice Account description */
-	public 		$description;
+	public $description;
 
- 	protected 	$fieldsRequired = array('key');
- 	protected 	$fieldsSize = array('key' => 32);
- 	protected 	$fieldsValidate = array('active' => 'isBool');
+ 	protected $fieldsRequired = array('key');
+ 	protected $fieldsSize = array('key' => 32);
+ 	protected $fieldsValidate = array('active' => 'isBool');
 
-	protected 	$table = 'webservice_account';
-	protected 	$identifier = 'id_webservice_account';
+	protected $table = 'webservice_account';
+	protected $identifier = 'id_webservice_account';
 
 
 	public function add($autodate = true, $nullValues = false)
@@ -51,7 +51,7 @@ class WebserviceKeyCore extends ObjectModel
 		return parent::add($autodate = true, $nullValues = false);
 	}
 
-	static public function keyExists($key)
+	public static function keyExists($key)
 	{
 		return (!Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `key`
 			FROM '._DB_PREFIX_.'webservice_account
@@ -63,29 +63,27 @@ class WebserviceKeyCore extends ObjectModel
 		$this->validateFields();
 
 		$fields['key'] = pSQL($this->key);
-		$fields['active'] = (int)($this->active);
+		$fields['active'] = (int)$this->active;
 		$fields['description'] = pSQL($this->description);
 		return $fields;
 	}
 
 	public function delete()
 	{
-		if (!parent::delete() OR $this->deleteAssociations() === false)
+		if (!parent::delete() || $this->deleteAssociations() === false)
 			return false;
 		return true;
 	}
 
 	public function deleteAssociations()
 	{
-		if (
-			Db::getInstance()->execute('
+		if (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'webservice_permission`
-				WHERE `id_webservice_account` = '.(int)($this->id)) === false
+				WHERE `id_webservice_account` = '.(int)$this->id) === false
 			||
 			Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'webservice_permission`
-				WHERE `id_webservice_account` = '.(int)($this->id)) === false
-			)
+				WHERE `id_webservice_account` = '.(int)$this->id) === false)
 			return false;
 		return true;
 	}
@@ -115,9 +113,7 @@ class WebserviceKeyCore extends ObjectModel
 		if (!isset($result[0]))
 			return null;
 		else
-		{
 			return isset($result[0]['active']) && $result[0]['active'];
-		}
 	}
 
 	public static function getClassFromKey($auth_key)
@@ -130,38 +126,36 @@ class WebserviceKeyCore extends ObjectModel
 		if (!isset($result[0]))
 			return null;
 		else
-		{
 			return $result[0]['class'];
-		}
 	}
 
-	public static function setPermissionForAccount($idAccount, $permissionsToSet)
+	public static function setPermissionForAccount($id_account, $permissions_to_set)
 	{
 		$ok = true;
-		$sql = 'DELETE FROM `'._DB_PREFIX_.'webservice_permission` WHERE `id_webservice_account` = '.(int)($idAccount);
+		$sql = 'DELETE FROM `'._DB_PREFIX_.'webservice_permission` WHERE `id_webservice_account` = '.(int)$id_account;
 		if (!Db::getInstance()->execute($sql))
 			$ok = false;
-		if (isset($permissionsToSet))
-			{
+		if (isset($permissions_to_set))
+		{
 				$permissions = array();
 				$resources = WebserviceRequest::getResources();
 				$methods = array('GET', 'PUT', 'POST', 'DELETE', 'HEAD');
-				foreach ($permissionsToSet as $resourceName => $resource_methods)
-					if (in_array($resourceName, array_keys($resources)))
-						foreach (array_keys($resource_methods) as $methodName)
-							if (in_array($methodName, $methods))
-								$permissions[] = array($methodName, $resourceName);
-				$account = new WebserviceKey($idAccount);
+				foreach ($permissions_to_set as $resource_name => $resource_methods)
+					if (in_array($resource_name, array_keys($resources)))
+						foreach (array_keys($resource_methods) as $method_name)
+							if (in_array($method_name, $methods))
+								$permissions[] = array($method_name, $resource_name);
+				$account = new WebserviceKey($id_account);
 				if ($account->deleteAssociations() && $permissions)
 				{
 					$sql = 'INSERT INTO `'._DB_PREFIX_.'webservice_permission` (`id_webservice_permission` ,`resource` ,`method` ,`id_webservice_account`) VALUES ';
 					foreach ($permissions as $permission)
-						$sql .= '(NULL , \''.pSQL($permission[1]).'\', \''.pSQL($permission[0]).'\', '.(int)($idAccount).'), ';
+						$sql .= '(NULL , \''.pSQL($permission[1]).'\', \''.pSQL($permission[0]).'\', '.(int)$id_account.'), ';
 					$sql = rtrim($sql, ', ');
 					if (!Db::getInstance()->execute($sql))
 						$ok = false;
 				}
-			}
+		}
 		return $ok;
 	}
 }

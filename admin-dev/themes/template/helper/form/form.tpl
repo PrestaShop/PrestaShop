@@ -95,7 +95,7 @@
 								{else}
 									<input type="text"
 											name="{$input.name}"
-											id="{$input.name}"
+											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 											value="{$fields_value[$input.name]}"
 											{if isset($input.size)}size="{$input.size}"{/if}
 											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
