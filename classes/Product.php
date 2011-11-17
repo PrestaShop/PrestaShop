@@ -996,7 +996,7 @@ class ProductCore extends ObjectModel
 
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location = NULL, $upc = NULL)
 	{
-		$id_product_attribute = $this->addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
+		$id_product_attribute = $this->addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $supplier_reference, $ean13, $default, $location, $upc);
 		$result = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_attribute` SET `wholesale_price` = '.(float)$wholesale_price.' WHERE `id_product_attribute` = '.(int)$id_product_attribute);
 		if (!$id_product_attribute OR !$result)
 			return false;
