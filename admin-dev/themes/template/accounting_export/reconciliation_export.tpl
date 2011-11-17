@@ -27,11 +27,11 @@
 <div class="formAccountingExport" id="block_reconciliation_export">
 	<fieldset>
 		<legend>{$title}</legend>
-		<form action="{$smarty.server.REQUEST_URI}" method="POST">
+		<form id="reconfiliation_form" action="{$smarty.server.REQUEST_URI}" method="POST">
 			{include file="$pathAccountExportTpl/common_form.tpl"}
 			
 			<div class="margin-form">
-				<input type="submit" class="button" name="submitAccountingExportType" />
+				<input id="submitReconciliationExport" type="submit" class="button" name="submitAccountingExportType" />
 				<input type="hidden" name="exportType" value="reconciliation_export"/>
 			</div>
 		</form>

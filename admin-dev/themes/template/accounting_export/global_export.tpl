@@ -27,14 +27,14 @@
 <div class="formAccountingExport" id="block_global_export">
 	<fieldset>
 		<legend>{$title}</legend>
-		<form action="{$smarty.server.REQUEST_URI}" method="POST">
+		<form id="reconfiliation_form" action="{$smarty.server.REQUEST_URI}" method="POST">
 			{include file="$pathAccountExportTpl/common_form.tpl"}
 			<label for="clientPrefix">{l s='Journal:'}</label>
 			<div class="margin-form">
-				<input type="text" name="journal" />
+				<input type="text" name="journal" value="{$journal}"/>
 			</div>	
 			<div class="margin-form">
-				<input type="submit" class="button" name="submitAccountingExportType" />
+				<input id="submitGlobalExport" type="submit" class="button" name="submitAccountingExportType" />
 				<input type="hidden" name="exportType" value="global_export"/>
 			</div>
 		</form>

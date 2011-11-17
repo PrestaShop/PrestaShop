@@ -24,18 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-	
-	 $(document).ready(function() {
-		$('.datepicker').datepicker({
-     prevText: '',
-     nextText: '',
-     dateFormat: 'yy-mm-dd'
-    });
-	});
-
-</script>
-
 {if $existingExport}
 	<div class="hint" style="display:block;">
 		{l s='The last export has been for this section:'}
@@ -51,10 +39,10 @@
 
 <label for="beginDate">{l s='Begin to:'}</label>
 <div class="margin-form">
-	<input class="datepicker" id="beginDate" type="text" value="" name="beginDate" />
+	<input class="datepicker" id="beginDate_{$type}" type="text" name="beginDate" value="{$begin_date}" />
 </div>
 
 <label for="endDate">{l s='End to:'}</label>
 <div class="margin-form">
-	<input class="datepicker" id="endDate" type="text" value="" name="endDate" />
+	<input class="datepicker" id="endDate_{$type}" type="text" name="endDate" value="{$end_date}" />
 </div>
