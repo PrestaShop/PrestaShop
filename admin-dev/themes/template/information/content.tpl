@@ -1,6 +1,5 @@
-<h2>{l s='Information'}</h2>
 <fieldset>
-	<legend><img src="../img/t/AdminInformation.gif" alt="" /> {l s='Help'}</legend>
+	<legend><img src="../img/t/AdminInformation.gif" alt="" />{l s='Information'}</legend>
 	<p>{l s='This information must be indicated when you report a bug on our bug tracker or if you report a problem on our forum.'}</p>
 </fieldset>
 <br />
