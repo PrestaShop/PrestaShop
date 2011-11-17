@@ -1400,10 +1400,11 @@ if (false)
 			// Trick's
 			if ($edit == 1)
 			{
-				$id_product_download_attibute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
-				$id_product_download = ($id_product_download_attibute) ? (int) $id_product_download_attibute : (int) Tools::getValue('virtual_product_id');
-			}
-
+				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
+				$id_product_download = ($id_product_download_attribute) ? (int) $id_product_download_attribute : (int) Tools::getValue('virtual_product_id');
+			} else 
+				$id_product_download = Tools::getValue('virtual_product_id');
+				
 			$is_shareable = Tools::getValue('virtual_product_is_shareable');
 			$virtual_product_name = Tools::getValue('virtual_product_name');
 			$virtual_product_filename = Tools::getValue('virtual_product_filename');
@@ -1460,8 +1461,8 @@ if (false)
 			/* unactive download product if checkbox not checked */
 			if ($edit == 1)
 			{
-				$id_product_download_attibute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
-				$id_product_download = ($id_product_download_attibute) ? (int) $id_product_download_attibute : (int) Tools::getValue('virtual_product_id');
+				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
+				$id_product_download = ($id_product_download_attribute) ? (int) $id_product_download_attribute : (int) Tools::getValue('virtual_product_id');
 			}
 			else
 				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
