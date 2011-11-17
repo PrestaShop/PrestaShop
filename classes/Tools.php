@@ -1588,8 +1588,8 @@ FileETag INode MTime Size
 				trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
 				$message = self::displayError('The function').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
 			}
-
-			Logger::addLog($message, 3, $callee['class']);
+			$class = isset($callee['class']) ? $callee['class'] : null;
+			Logger::addLog($message, 3, $class);
 		}
 	}
 
@@ -1603,7 +1603,8 @@ FileETag INode MTime Size
 		$error = 'Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />';
 		$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
 
-		self::throwDeprecated($error, $message, $callee['class']);
+		$class = isset($callee['class']) ? $callee['class'] : null;
+		self::throwDeprecated($error, $message, $class);
 	}
 
 	public static function displayFileAsDeprecated()
@@ -1613,7 +1614,8 @@ FileETag INode MTime Size
 		$error = 'File <strong>'.$callee['file'].'</strong> is deprecated<br />';
 		$message = Tools::displayError('The file').' '.$callee['file'].' '.Tools::displayError('is deprecated and will be removed in the next major version.');
 
-		self::throwDeprecated($error, $message, $callee['class']);
+		$class = isset($callee['class']) ? $callee['class'] : null;
+		self::throwDeprecated($error, $message, $class);
 	}
 
 	protected static function throwDeprecated($error, $message, $class)
