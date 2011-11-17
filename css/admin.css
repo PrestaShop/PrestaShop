@@ -1792,3 +1792,21 @@ div.progressBarImage
 	color:#fff;
 	background:url(../img/loader.gif);
 }
+ul.connectedSortable
+{
+	padding-left: 0;	
+}
+ul.connectedSortable li.module_list {
+	margin: 0 5px 5px 5px;
+	padding: 5px;
+	font-size: 1.2em;
+	border: 1px solid #CCC;
+	background: #F6F6F6;
+	font-weight: bold;
+	color: #1C94C4;
+	outline: none;
+}
+/* Accounting css */
+.formAccountingExport {
+	display: none;
+}
