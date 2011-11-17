@@ -1816,7 +1816,7 @@ if (false)
 		$this->{'initForm'.$this->action}($this->object, $languages, $defaultLanguage);
 		$this->tpl_form_vars['product'] = $this->object;
 		if ($this->ajax)
-			if (empty($this->tpl_form_vars['custom_form']))
+			if (!isset($this->tpl_form_vars['custom_form']))
 				throw new PrestashopException('custom_form empty for action '.$this->action);
 			else
 				return $this->tpl_form_vars['custom_form'];
@@ -3160,7 +3160,8 @@ if (false)
 	{
 		if (!Feature::isFeatureActive())
 		{
-			$this->content .= $this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			$this->tpl_form_vars['custom_form'] = '';
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
 
