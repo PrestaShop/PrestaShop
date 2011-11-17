@@ -81,7 +81,6 @@ $(document).ready(function(){
 				async : true,
 				success :function(data)
 				{
-					$("#product-tab-content-wait").hide();
 					$("#product-tab-content-"+id).html(data);
 					$("#product-tab-content-"+id).removeClass('not-loaded');
 					$("#product-tab-content-"+id).show();
@@ -94,6 +93,7 @@ $(document).ready(function(){
 			$("#product-tab-content-"+id).show();
 			$("#link-"+id).addClass('selected');
 		}
+		$("#product-tab-content-wait").hide();
 		
 		var languages = new Array();
 		if (id == 3)
