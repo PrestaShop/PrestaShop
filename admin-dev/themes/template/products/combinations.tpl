@@ -121,7 +121,7 @@
 		<div id="upload-confirmation2">
 
 <p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-		<a id="make_downloadable_product_attribute" onclick="return confirm('.addslashes("{l s='Delete this file' slashes=1}")).')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
+		<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file'}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
 </p> 
 
 </div>
