@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if !$firstCall}<br /><br />{/if}
 
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
