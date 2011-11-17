@@ -84,5 +84,10 @@ class OrderReturnControllerCore extends FrontController
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
 	}
+
+	public function displayAjax()
+	{
+		$this->context->smarty->display($this->template);
+	}
 }
 

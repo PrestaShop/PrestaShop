@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {include file="$tpl_dir./errors.tpl"}
-{if isset($orderRe)}
+{if isset($orderRet)}
 	<h4>{l s='RE#'}<span class="color-myaccount">{$orderRet->id|string_format:"%06d"}</span> {l s='on'} {dateFormat date=$order->date_add full=0}</h4>
 	<div>
 		<p class="bold">{l s='We have logged your return request.'}</p>
@@ -43,7 +43,7 @@
 			</thead>
 			<tbody>
 			{foreach from=$products item=product name=products}
-	
+
 				{assign var='quantityDisplayed' value=0}
 				{foreach from=$returnedCustomizations item='customization' name=products}
 					{if $customization.product_id == $product.product_id}
@@ -78,7 +78,7 @@
 						{assign var='quantityDisplayed' value=$quantityDisplayed+$customization.product_quantity}
 					{/if}
 				{/foreach}
-	
+
 				{if $product.product_quantity > $quantityDisplayed}
 					<tr class="{if $smarty.foreach.products.first}first_item{/if} {if $smarty.foreach.products.index % 2}alternate_item{else}item{/if}">
 						<td>{if $product.product_reference}{$product.product_reference|escape:'htmlall':'UTF-8'}{else}--{/if}</td>
@@ -106,3 +106,4 @@
 		<p class="bold">{l s='You must wait for our confirmation before returning any merchandise.'}</p>
 	{/if}
 {/if}
+

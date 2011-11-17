@@ -528,7 +528,7 @@ class AdminTranslationsControllerCore extends AdminController
 		 	{
 				if (!Validate::isLanguageIsoCode(Tools::strtolower(Tools::getValue('lang'))))
 					die(Tools::displayError());
-				$this->writeTranslationFile('PDF', _PS_TRANSLATIONS_DIR_.Tools::strtolower(Tools::getValue('lang')).'/pdf.php', 'PDF');
+				$this->writeTranslationFile('PDF', _PS_THEME_DIR_.'pdf/lang/'.Tools::strtolower(Tools::getValue('lang')).'.php', 'PDF');
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -1624,25 +1624,46 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$lang = Tools::strtolower(Tools::getValue('lang'));
 		$_LANG = array();
+		$str_output = '';
 
-		if (!file_exists(_PS_TRANSLATIONS_DIR_.$lang))
-			if (!mkdir(_PS_TRANSLATIONS_DIR_.$lang, 0700))
-				die('Please create a "'.$iso.'" directory in '._PS_TRANSLATIONS_DIR_);
-		if (!file_exists(_PS_TRANSLATIONS_DIR_.$lang.'/pdf.php'))
-			if (!file_put_contents(_PS_TRANSLATIONS_DIR_.$lang.'/pdf.php', "<?php\n\nglobal \$_LANGPDF;\n\$_LANGPDF = array();\n\n?>"))
+        if (!Validate::isLangIsoCode($lang))
+            die('Invalid iso lang ('.$lang.')');
+
+        $i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
+        $i18n_file = $i18n_dir.$lang.'.php';
+		if (!file_exists($i18n_file))
+			if (!mkdir($i18n_dir, 0700))
+				die('Please create a "'.$lang.'" directory in '._PS_TRANSLATIONS_DIR_);
+
+		if (!file_exists($i18n_file))
+			if (!file_put_contents($i18n_file, "<?php\n\nglobal \$_LANGPDF;\n\$_LANGPDF = array();\n\n?>"))
 				die('Please create a "'.Tools::strtolower($lang).'.php" file in '.realpath(_PS_ADMIN_DIR_.'/'));
 		unset($_LANGPDF);
-		@include(_PS_TRANSLATIONS_DIR_.$lang.'/pdf.php');
+		@include($i18n_file);
 		$files = array();
 		$count = 0;
-		$tab = 'PDF_invoice';
+		$tab = 'PDF';
 		$tabsArray = array($tab=>array());
 		$regex = '/self::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 		// need to parse PDF.php in order to find $regex and add this to $tabsArray
 		// this has to be done for the core class, and eventually for the override
-		$tabsArray = $this->_parsePdfClass(_PS_CLASS_DIR_.'PDF.php', $regex, $_LANGPDF, $tab, $tabsArray);
-		if(file_exists(_PS_ROOT_DIR_.'/override/classes/PDF.php'))
-			$tabsArray = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/PDF.php', $regex, $_LANGPDF, $tab, $tabsArray);
+        foreach (glob(_PS_CLASS_DIR_.'pdf/'."*.php") as $filename)
+        {
+    		$tabsArray = $this->_parsePdfClass($filename, $regex, $_LANGPDF, $tab, $tabsArray);
+	    	if (file_exists(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename)))
+	    		$tabsArray = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename), $regex, $_LANGPDF, $tab, $tabsArray);
+        }
+
+        // parse pdf template 
+		/* Search language tags (eg {l s='to translate'}) */
+		$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( pdf=\'true\')?\}/U';
+        foreach (glob( _PS_THEME_DIR_.'/pdf/*.tpl') as $filename)
+        {
+			preg_match_all($regex, file_get_contents($filename), $matches);
+    		foreach ($matches[1] as $key)
+    			$tabsArray[$tab][$key] = stripslashes(key_exists($tab.md5(addslashes($key)), $_LANGPDF) ? html_entity_decode($_LANGPDF[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '');    
+
+        }
 
 		$count += isset($tabsArray[$tab]) ? sizeof($tabsArray[$tab]) : 0;
 

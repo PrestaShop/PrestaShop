@@ -1028,7 +1028,9 @@ CREATE TABLE `PREFIX_orders` (
 
 CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
   `id_order_detail` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL
+  `id_tax` int(11) NOT NULL,
+  `unit_amount` DECIMAL( 10,6 ) NOT NULL default '0.00',
+  `total_amount` DECIMAL( 10, 6 ) NOT NULL default '0.00'
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_detail` (
@@ -1052,21 +1054,30 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_reference` varchar(32) default NULL,
   `product_supplier_reference` varchar(32) default NULL,
   `product_weight` float NOT NULL,
+  `tax_computation_method` tinyint(1) unsigned NOT NULL default '0',
   `tax_name` varchar(16) NOT NULL,
   `tax_rate` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
-  `tax_computation_method` tinyint(1) unsigned NOT NULL default '0',
   `ecotax` decimal(21,6) NOT NULL default '0.00',
   `ecotax_tax_rate` DECIMAL(5,3) NOT NULL DEFAULT '0.000',
   `discount_quantity_applied` TINYINT(1) NOT NULL DEFAULT 0,
   `download_hash` varchar(255) default NULL,
   `download_nb` int(10) unsigned default '0',
   `download_deadline` datetime default '0000-00-00 00:00:00',
+  `total_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `total_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `unit_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `total_shipping_price_tax_incl` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `total_shipping_price_tax_excl` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `purchase_supplier_price` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `original_product_price` DECIMAL(20, 6) NOT NULL default '0.000000',
   PRIMARY KEY  (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (`product_id`),
   KEY `product_attribute_id` (`product_attribute_id`),
   KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `PREFIX_order_cart_rule` (
   `id_order_cart_rule` int(10) unsigned NOT NULL auto_increment,
@@ -2011,7 +2022,7 @@ CREATE TABLE `PREFIX_stock` (
 `usable_quantity` INT(11) UNSIGNED NOT NULL,
 `price_te` DECIMAL(20,6) DEFAULT '0.000000',
   PRIMARY KEY (`id_stock`),
-  KEY `id_warehouse` (`id_warehouse`),  
+  KEY `id_warehouse` (`id_warehouse`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

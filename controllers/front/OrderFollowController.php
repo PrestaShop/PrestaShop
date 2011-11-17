@@ -104,3 +104,4 @@ class OrderFollowControllerCore extends FrontController
 		$this->addJS(_THEME_JS_DIR_.'history.js');
 	}
 }
+

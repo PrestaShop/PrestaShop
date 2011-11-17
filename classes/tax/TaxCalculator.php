@@ -131,11 +131,11 @@ class TaxCalculatorCore
 		{
 			if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
 			{
-				$taxes_amounts[$tax->rate] = $price_te * (abs($tax->rate) / 100);
+				$taxes_amounts[$tax->id] = $price_te * (abs($tax->rate) / 100);
 				$price_te = $price_te + $taxes_amounts[$tax->rate];
 			}
 			else
-				$taxes_amounts[$tax->rate] = ($price_te * (abs($tax->rate) / 100));
+				$taxes_amounts[$tax->id] = ($price_te * (abs($tax->rate) / 100));
 		}
 
 		return $taxes_amounts;

@@ -61,6 +61,18 @@ class OrderDetailCore extends ObjectModel
 	public $product_price;
 
 	/** @var float */
+	public $unit_price_tax_incl;
+
+	/** @var float */
+	public $unit_price_tax_excl;
+
+	/** @var float */
+	public $total_price_tax_incl;
+
+	/** @var float */
+	public $total_price_tax_excl;
+
+	/** @var float */
 	public $reduction_percent;
 
 	/** @var float */
@@ -87,12 +99,6 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $product_weight;
 
-	/** @var string */
-	public $tax_name;
-
-	/** @var float */
-	public $tax_rate;
-
 	/** @var float */
 	public $ecotax;
 
@@ -111,12 +117,18 @@ class OrderDetailCore extends ObjectModel
 	/** @var date */
 	public $download_deadline;
 
+	/** @var string $tax_name **/
+	public $tax_name;
+
+	/** @var float $tax_rate **/
+	public $tax_rate;
+
 	protected $tables = array('order_detail');
 
 	protected	$fieldsRequired = array(
-		'id_order', 
-		'product_name', 
-		'product_quantity', 
+		'id_order',
+		'product_name',
+		'product_quantity',
 		'product_price');
 
 	protected	$fieldsValidate = array(
@@ -146,7 +158,11 @@ class OrderDetailCore extends ObjectModel
 		'discount_quantity_applied' => 'isInt',
 		'download_hash' => 'isGenericName',
 		'download_nb' => 'isInt',
-		'download_deadline' => 'isDateFormat'
+		'download_deadline' => 'isDateFormat',
+		'unit_price_tax_incl' => 'isPrice',
+		'unit_price_tax_excl' => 'isPrice',
+		'total_price_tax_incl' => 'isPrice',
+		'total_price_tax_excl' => 'isPrice'
 	);
 
 	protected 	$table = 'order_detail';
@@ -164,22 +180,22 @@ class OrderDetailCore extends ObjectModel
 		'download_deadline' => array()
 		)
 	);
-	
+
 	/** @var bool */
 	protected $outOfStock = false;
-	
+
 	/** @var TaxCalculator object */
 	protected $tax_calculator = null;
-	
+
 	/** @var Address object */
 	protected $vat_address = null;
-	
+
 	/** @var Address object */
 	protected $specificPrice = null;
-	
+
 	/** @var Customer object */
 	protected $customer = null;
-	
+
 	/** @var Context object */
 	protected $context = null;
 
@@ -187,7 +203,7 @@ class OrderDetailCore extends ObjectModel
 	{
 		$this->context = $context;
 	}
-	
+
 	public function getFields()
 	{
 		$this->validateFields();
@@ -218,6 +234,10 @@ class OrderDetailCore extends ObjectModel
 		$fields['download_hash'] = pSQL($this->download_hash);
 		$fields['download_nb'] = (int)$this->download_nb;
 		$fields['download_deadline'] = pSQL($this->download_deadline);
+		$fields['unit_price_tax_incl'] = (float)$this->unit_price_tax_incl;
+		$fields['unit_price_tax_excl'] = (float)$this->unit_price_tax_excl;
+		$fields['total_price_tax_incl'] = (float)$this->total_price_tax_incl;
+		$fields['total_price_tax_excl'] = (float)$this->total_price_tax_excl;
 
 		return $fields;
 	}
@@ -245,6 +265,7 @@ class OrderDetailCore extends ObjectModel
 
 	/**
 	 * Returns the tax calculator associated to this order detail.
+	 * @since 1.5.0.1
 	 * @return TaxCalculator
 	 */
 	public function getTaxCalculator()
@@ -254,6 +275,7 @@ class OrderDetailCore extends ObjectModel
 
 	/**
 	 * Return the tax calculator associated to this order_detail
+	 * @since 1.5.0.1
 	 * @param int $id_order_detail
 	 * @return TaxCalculator
 	 */
@@ -279,26 +301,36 @@ class OrderDetailCore extends ObjectModel
 
 	/**
 	 * Save the tax calculator
-	 * @param int $id_order_detail
-	 * @param TaxCalculator $tax_calculator
+	 * @since 1.5.0.1
 	 * @return boolean
 	 */
-	public static function saveTaxCalculatorStatic($id_order_detail, TaxCalculator $tax_calculator)
+	public function saveTaxCalculator()
 	{
-		if (count($tax_calculator->taxes) == 0)
+		// Nothing to save
+		if ($this->tax_calculator == null)
+			return true;
+
+		if (!($this->tax_calculator instanceOf TaxCalculator))
+			return false;
+
+		if (count($this->tax_calculator->taxes) == 0)
 			return true;
 
 		$values = '';
-		foreach ($tax_calculator->taxes as $tax)
-			$values .= '('.(int)$id_order_detail.','.(float)$tax->id.'),';
+		foreach ($this->tax_calculator->getTaxesAmount($this->unit_price_tax_excl) as $id_tax => $amount)
+		{
+			$unit_amount = (float)Tools::ps_round($amount, 2);
+			$total_amount = $unit_amount * $this->product_quantity;
+			$values .= '('.(int)$this->id.','.(float)$id_tax.','.$unit_amount.','.(float)$total_amount.'),';
+		}
 
 		$values = rtrim($values, ',');
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax)
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
 				VALUES '.$values;
 
 		return Db::getInstance()->execute($sql);
-	}	
-	
+	}
+
 	/**
 	 * Get a detailed order list of an id_order
 	 * @param int $id_order
@@ -308,14 +340,14 @@ class OrderDetailCore extends ObjectModel
 	{
 		$sql = '
 			SELECT *
-			FROM `'._DB_PREFIX_.'`order_detail
+			FROM `'._DB_PREFIX_.'order_detail`
 			WHERE `id_order` = '.(int)$id_order;
-		
+
 		return Db::getInstance()->executeS($sql);
 	}
-	
+
 	/*
-	 * Set virtual product information 
+	 * Set virtual product information
 	 * @param array $product
 	 */
 	protected function setVirtualProductInformation($product)
@@ -323,17 +355,17 @@ class OrderDetailCore extends ObjectModel
 		// Add some informations for virtual products
 		$this->download_deadline = '0000-00-00 00:00:00';
 		$this->download_hash = null;
-		
+
 		if ($id_product_download = ProductDownload::getIdFromIdProduct((int)($product['id_product'])))
 		{
 			$productDownload = new ProductDownload((int)($id_product_download));
 			$this->download_deadline = $productDownload->getDeadLine();
 			$this->download_hash = $productDownload->getHash();
-			
+
 			unset($productDownload);
 		}
 	}
-	
+
 	/**
 	 * Check the order state
 	 * @param array $product
@@ -350,7 +382,7 @@ class OrderDetailCore extends ObjectModel
 			Product::updateDefaultAttribute($product['id_product']);
 		}
 	}
-	
+
 	/**
 	 * Apply tax to the product
 	 * @param object $order
@@ -359,7 +391,7 @@ class OrderDetailCore extends ObjectModel
 	protected function setProductTax(Order $order, $product)
 	{
 		$this->ecotax = Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency));
-		
+
 		// Exclude VAT
 		if (!Tax::excludeTaxeOption())
 		{
@@ -372,19 +404,19 @@ class OrderDetailCore extends ObjectModel
     $this->ecotax_tax_rate = 0;
     if (!empty($product['ecotax']))
      	$this->ecotax_tax_rate = Tax::getProductEcotaxRate($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-    
+
    	$this->tax_computation_method = (int)$this->tax_calculator->computation_method;
 	}
-	
+
 	/**
 	 * Set specific price of the product
 	 * @param object $order
 	 */
 	protected function setSpecificPrice(Order $order)
 	{
-		$this->reduction_amont = 0.00;
+		$this->reduction_amount = 0.00;
 		$this->reduction_percent = 0.00;
-	
+
 		if ($this->specificPrice)
 			switch($this->specificPrice['reduction_type'])
 			{
@@ -393,11 +425,11 @@ class OrderDetailCore extends ObjectModel
 					break;
 				case 'amount':
 					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
-					$this->reduction_amont = (float)(!$this->specificPrice['id_currency'] ?  
+					$this->reduction_amount = (float)(!$this->specificPrice['id_currency'] ?
 						$price : $this->specificPrice['reduction']);
 			}
 	}
-	
+
 	/**
 	 * Set detailed product price to the order detail
 	 * @param object $order
@@ -406,34 +438,42 @@ class OrderDetailCore extends ObjectModel
 	 */
 	protected function setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
-		$this->specificPrice = null;
-		
-		$this->product_price = (float)Product::getPriceStatic((int)($product['id_product']), false, 
-			($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null), 
-			(Product::getTaxCalculationMethod((int)($order->id_customer)) == PS_TAX_EXC ? 2 : 6), 
-			null, false, false, $product['cart_quantity'], false, (int)($order->id_customer), 
-			(int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}), $this->specificPrice, false, false);
-		
+        $customer = new Customer((int)$order->id_customer);
+        $customer_address = new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+
+        $this->specificPrice = SpecificPrice::getSpecificPrice((int)$product['id_product'],
+                                                                (int)$order->id_shop,
+                                                                (int)$order->id_currency,
+                                                                (int)$customer_address->id_country,
+                                                                (int)$customer->id_default_group,
+                                                                (int)$product['cart_quantity']);
+
+		$this->product_price = (float)$product['price'];
+		$this->unit_price_tax_incl = (float)$product['price_wt'];
+		$this->unit_price_tax_excl = (float)$product['price'];
+		$this->total_price_tax_incl = (float)$product['total_wt'];
+		$this->total_price_tax_excl = (float)$product['total'];
+
 		$this->setSpecificPrice($order);
-		
+
 		$this->group_reduction = (float)(Group::getReduction((int)($order->id_customer)));
-		
-		$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $this->context->shop->getID(), 
+
+		$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $this->context->shop->getID(),
 			(int)$cart->id_currency, (int)$this->vat_address->id_country,
 			(int)$this->customer->id_default_group, (int)$product['cart_quantity']);
-		
-		$unitPrice = Product::getPriceStatic((int)$product['id_product'], true, 
-			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null), 
+
+		$unitPrice = Product::getPriceStatic((int)$product['id_product'], true,
+			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
 			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-		
-		$this->product_quantity_discount = (float)($quantityDiscount ? 
-			((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ? 
-				Tools::ps_round($unitPrice, 2) : $unitPrice) - $this->tax_calculator->addTaxes($quantityDiscount['price'])) : 
+
+		$this->product_quantity_discount = (float)($quantityDiscount ?
+			((Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC ?
+				Tools::ps_round($unitPrice, 2) : $unitPrice) - $this->tax_calculator->addTaxes($quantityDiscount['price'])) :
 				0.00);
-				
+
 		$this->discount_quantity_applied = (($this->specificPrice && $this->specificPrice['from_quantity'] > 1) ? 1 : 0);
 	}
-	
+
 	/**
 	 * Create an order detail liable to an id_order
 	 * @param object $order
@@ -444,38 +484,38 @@ class OrderDetailCore extends ObjectModel
 	protected function create(Order $order, Cart $cart, $product, $id_order_state)
 	{
 		$this->tax_calculator = new TaxCalculator();
-	
+
 		$this->id = null;
-			
+
 		$this->product_id = (int)($product['id_product']);
 		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null);
 		$this->product_name = pSQL($product['name'].
-			((isset($product['attributes']) && $product['attributes'] != null) ? 
+			((isset($product['attributes']) && $product['attributes'] != null) ?
 				' - '.$product['attributes'] : ''));
-			
+
 		$this->product_quantity = (int)($product['cart_quantity']);
 		$this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
 		$this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
 		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
 		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
 		$this->product_weight = (float)$product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight'];
-		
+
 		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
-		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ? 
+		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ?
 			$productQuantity : (int)($product['cart_quantity']);
-			
+
 		$this->setVirtualProductInformation($product);
 		$this->checkProductStock($product, $id_order_state);
 		$this->setProductTax($order, $product);
-		$this->setDetailProductPrice($order, $cart, $product);	
-	
-		// Add new entry to the table
-		$this->save();						
+		$this->setDetailProductPrice($order, $cart, $product);
 
-		OrderDetail::saveTaxCalculatorStatic($this->id, $this->tax_calculator);
+		// Add new entry to the table
+		$this->save();
+
+		$this->saveTaxCalculator();
 		unset($this->tax_calculator);
 	}
-	
+
 	/**
 	 * Create a list of order detail for a specified id_order using cart
 	 * @param object $order
@@ -483,22 +523,22 @@ class OrderDetailCore extends ObjectModel
 	 * @param int $id_order_status
 	*/
 	public function createList(Order $order, Cart $cart, $id_order_state)
-	{	
+	{
 		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$this->customer = new Customer((int)($order->id_customer));
-		
+
 		$this->id_order = $order->id;
 		$products = $cart->getProducts();
 		$this->outOfStock = false;
-		
+
 		foreach ($products as $product)
 			$this->create($order, $cart, $product, $id_order_state);
-		
+
 		unset($this->vat_address);
 		unset($products);
 		unset($this->customer);
 	}
-	
+
 	/**
 	 * Get the state of the current stock product
 	 * @return array

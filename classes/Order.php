@@ -55,7 +55,7 @@ class OrderCore extends ObjectModel
 	/** @var string Secure key */
 	public		$secure_key;
 
-	/** @var string Payment method id */
+	/** @var string Payment method */
 	public 		$payment;
 
 	/** @var string Payment module */
@@ -79,8 +79,17 @@ class OrderCore extends ObjectModel
 	/** @var float Discounts total */
 	public 		$total_discounts;
 
+	public $total_discounts_tax_incl;
+	public $total_discounts_tax_excl;
+
 	/** @var float Total to pay */
 	public 		$total_paid;
+
+	/** @var float Total to pay tax included */
+	public $total_paid_tax_incl;
+
+	/** @var float Total to pay tax excluded */
+	public $total_paid_tax_excl;
 
 	/** @var float Total really paid */
 	public 		$total_paid_real;
@@ -94,11 +103,23 @@ class OrderCore extends ObjectModel
 	/** @var float Shipping total */
 	public 		$total_shipping;
 
+	/** @var float Shipping total tax included */
+	public $total_shipping_tax_incl;
+
+	/** @var float Shipping total tax excluded */
+	public $total_shipping_tax_excl;
+
 	/** @var float Shipping tax rate */
 	public 		$carrier_tax_rate;
 
 	/** @var float Wrapping total */
 	public 		$total_wrapping;
+
+	/** @var float Wrapping total tax included */
+	public $total_wrapping_tax_incl;
+
+	/** @var float Wrapping total tax excluded */
+	public $total_wrapping_tax_excl;
 
 	/** @var integer Invoice number */
 	public 		$invoice_number;
@@ -219,13 +240,21 @@ class OrderCore extends ObjectModel
 		$fields['gift_message'] = pSQL($this->gift_message);
 		$fields['shipping_number'] = pSQL($this->shipping_number);
 		$fields['total_discounts'] = (float)($this->total_discounts);
+		$fields['total_discounts_tax_incl'] = (float)($this->total_discounts_tax_incl);
+		$fields['total_discounts_tax_excl'] = (float)($this->total_discounts_tax_excl);
 		$fields['total_paid'] = (float)($this->total_paid);
+		$fields['total_paid_tax_incl'] = (float)($this->total_paid_tax_incl);
+		$fields['total_paid_tax_excl'] = (float)($this->total_paid_tax_excl);
 		$fields['total_paid_real'] = (float)($this->total_paid_real);
 		$fields['total_products'] = (float)($this->total_products);
 		$fields['total_products_wt'] = (float)($this->total_products_wt);
 		$fields['total_shipping'] = (float)($this->total_shipping);
+		$fields['total_shipping_tax_incl'] = (float)($this->total_shipping_tax_incl);
+		$fields['total_shipping_tax_excl'] = (float)($this->total_shipping_tax_excl);
 		$fields['carrier_tax_rate'] = (float)($this->carrier_tax_rate);
 		$fields['total_wrapping'] = (float)($this->total_wrapping);
+		$fields['total_wrapping_tax_incl'] = (float)($this->total_wrapping_tax_incl);
+		$fields['total_wrapping_tax_excl'] = (float)($this->total_wrapping_tax_excl);
 		$fields['invoice_number'] = (int)($this->invoice_number);
 		$fields['delivery_number'] = (int)($this->delivery_number);
 		$fields['invoice_date'] = pSQL($this->invoice_date);
@@ -1146,4 +1175,133 @@ class OrderCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * This method returns true if at least one order details uses the 
+	 * One After Another tax computation method.
+	 *
+	 * @since 1.5.0.1
+	 * @return boolean 
+	 */
+	public function useOneAfterAnotherTaxComputationMethod()
+	{
+		// if one of the order details use the tax computation method the display will be different
+		return Db::getInstance()->getValue('
+		SELECT od.`tax_computation_method`
+		FROM `'._DB_PREFIX_.'order_detail_tax` odt
+		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+		WHERE od.`id_order` = '.(int)$this->id.'
+		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
+		);
+
+	}
+
+
+	/**
+	 * Returns the correct product taxes breakdown. 
+	 *
+	 * @since 1.5.0.1
+	 * @return array 
+	 */
+	public function getProductTaxesBreakdown()
+	{
+		$tmp_tax_infos = array();
+		if ($this->useOneAfterAnotherTaxComputationMethod())
+		{
+			// sum by taxes
+			$taxes_by_tax = Db::getInstance()->executeS('
+			SELECT odt.`id_order_detail`, t.`name`, t.`rate`, SUM(`total_amount`) AS `total_amount`
+			FROM `'._DB_PREFIX_.'order_detail_tax` odt
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+			WHERE od.`id_order` = '.(int)$this->id.'
+			GROUP BY odt.`id_tax`
+			');
+
+			// format response
+			$tmp_tax_infos = array();
+			foreach ($taxes_infos as $tax_infos)
+			{
+				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] = $tax_infos['tax_amount'];
+				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
+			}
+		}
+		else
+		{
+			// sum by order details in order to retrieve real taxes rate
+			$taxes_infos = Db::getInstance()->executeS('
+			SELECT odt.`id_order_detail`, t.`rate` AS `name`, SUM(od.`total_price_tax_excl`) AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`
+			FROM `'._DB_PREFIX_.'order_detail_tax` odt
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+			WHERE od.`id_order` = '.(int)$this->id.'
+			GROUP BY odt.`id_order_detail`
+			');
+
+			// sum by taxes
+			$tmp_tax_infos = array();
+			foreach ($taxes_infos as $tax_infos)
+			{
+				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
+					$tmp_tax_infos[$tax_infos['rate']] = array('total_amount' => 0,
+																'name' => 0,
+																'total_price_tax_excl' => 0);
+
+				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];
+				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
+				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'];
+			}
+		}
+
+		return $tmp_tax_infos;
+	}
+
+	/**
+	 * Returns the shipping taxes breakdown
+	 *
+	 * @since 1.5.0.1
+	 * @return array
+	 */	
+	public function getShippingTaxesBreakdown()
+	{
+		$taxes_breakdown = array();
+
+		$shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
+
+		if ($shipping_tax_amount > 0)
+			$taxes_breakdown[] = array(
+				'rate' => $this->carrier_tax_rate,
+				'total_amount' => $shipping_tax_amount
+			);
+
+		return $taxes_breakdown;
+	}
+
+	/**
+	 * Returns the wrapping taxes breakdown
+	 * @todo
+
+	 * @since 1.5.0.1
+	 * @return array
+	 */	
+	public function getWrappingTaxesBreakdown()
+	{
+		$taxes_breakdown = array();
+		return $taxes_breakdown;
+	}
+
+	/**
+	 * Returns the ecotax taxes breakdown
+	 *
+	 * @since 1.5.0.1
+	 * @return array
+	 */	
+	public function getEcoTaxTaxesBreakdown()
+	{
+		return Db::getInstance()->executeS('
+		SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
+		FROM `'._DB_PREFIX_.'order_detail`
+		WHERE `id_order` = '.(int)$this->id
+		);
+	}
 }
+

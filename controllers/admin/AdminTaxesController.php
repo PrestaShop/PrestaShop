@@ -245,3 +245,4 @@ class AdminTaxesControllerCore extends AdminController
 		}
 	}
 }
+
