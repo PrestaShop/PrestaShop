@@ -746,6 +746,9 @@ class AdminModulesControllerCore extends AdminController
 			else
 			{
 				// Fill module data
+				$modules[$km]->logo = 'logo.gif';
+				if (file_exists('../modules/'.$module->name.'/logo.png'))
+					$modules[$km]->logo = 'logo.png';
 				$modules[$km]->optionsHtml = $this->displayModuleOptions($module);
 				$modules[$km]->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
 				$modules[$km]->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'#anchor'.ucfirst($module->name);

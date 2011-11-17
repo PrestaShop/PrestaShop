@@ -191,7 +191,7 @@
 					{foreach from=$modules item=module}
 						<tr>
 							<td><input type="checkbox" name="modules" value="{$module->name}" class="noborder"></td>
-							<td><img class="imgm" alt="" src="../modules/{$module->name}/logo.gif"></td>
+							<td><img class="imgm" alt="" src="../modules/{$module->name}/{$module->logo}"></td>
 							<td>
 								<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
 									<h3>{$module->displayName}{if isset($module->id) && $module->id gt 0}<span class="setup{if isset($module->active) && $module->active eq 0} off{/if}">{l s='Installed'}</span>{else}<span class="setup non-install">{l s='Not installed'}</span>{/if}</h3>
