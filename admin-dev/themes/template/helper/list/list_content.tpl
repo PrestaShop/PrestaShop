@@ -33,7 +33,9 @@
 	>
 		<td class="center">
 			{if {$has_bulk_actions}}
-				<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+				{if isset($list_skip_actions.delete) && !in_array($tr.$identifier, $list_skip_actions.delete)}
+					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+				{/if}
 			{/if}
 		</td>
 		{foreach $fields_display AS $key => $params}
