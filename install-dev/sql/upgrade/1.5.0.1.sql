@@ -150,10 +150,6 @@ ALTER TABLE `PREFIX_tax` ADD `deleted` INT NOT NULL AFTER `active`;
 
 /* PHP:update_order_detail_taxes(); */;
 
-ALTER TABLE `PREFIX_order_detail`
-  DROP `tax_name`,
-  DROP `tax_rate`;
-
 CREATE TABLE `PREFIX_customer_message_sync_imap` (
   `md5_header` varbinary(32) NOT NULL,
   KEY `md5_header_index` (`md5_header`(4))
@@ -484,6 +480,11 @@ UPDATE `PREFIX_hook` SET `name` = 'actionAttributePostProcess' WHERE `name` = 'p
 UPDATE `PREFIX_hook` SET `name` = 'actionAttributeDelete' WHERE `name` = 'afterDeleteAttribute';
 UPDATE `PREFIX_hook` SET `name` = 'actionAttributeSave' WHERE `name` = 'afterSaveAttribute';
 UPDATE `PREFIX_hook` SET `name` = 'actionTaxManager' WHERE `name` = 'taxManager';
+
+ALTER TABLE `PREFIX_order_detail_tax` 
+ADD `unit_amount` DECIMAL( 10, 6 ) NOT NULL AFTER `id_tax` ,
+ADD `total_amount` DECIMAL( 10, 6 ) NOT NULL AFTER `unit_amount`;
+
 
 ALTER TABLE `PREFIX_specific_price` ADD `id_product_attribute` INT UNSIGNED NOT NULL AFTER `id_product`;
 ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;

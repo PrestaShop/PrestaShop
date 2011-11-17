@@ -35,16 +35,22 @@ class PdfOrderReturnControllerCore extends FrontController
 		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 
-		if (isset($_GET['id_order_return']) && Validate::isUnsignedId($_GET['id_order_return']))
-			$orderReturn = new OrderReturn($_GET['id_order_return']);
+		if (isset(Tools::getValue('id_order_return')) && Validate::isUnsignedId(Tools::getValue('id_order_return')))
+			$this->orderReturn = new OrderReturn(Tools::getValue('id_order_return'));
 
-		if (!isset($orderReturn) || !Validate::isLoadedObject($orderReturn))
+		if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn))
 			die(Tools::displayError('Order return not found'));
-		else if ($orderReturn->id_customer != $this->context->customer->id)
+		else if ($this->orderReturn->id_customer != $this->context->customer->id)
 			die(Tools::displayError('Order return not found'));
-		else if ($orderReturn->state < 2)
+		else if ($this->orderReturn->state < 2)
 			die(Tools::displayError('Order return not confirmed'));
-		else
-			PDF::orderReturn($orderReturn);
+
+	}
+
+	public function display()
+	{
+        $pdf = new PDF($this->orderReturn, PDF::TEMPLATE_ORDER_RETURN, $this->context->smarty);
+        $pdf->render();
 	}
 }
+

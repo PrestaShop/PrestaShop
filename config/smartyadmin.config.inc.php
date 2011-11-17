@@ -31,7 +31,33 @@ function smartyTranslate($params, &$smarty)
 {
 	global $_LANGADM;
 	$htmlentities = !isset($params['js']);
+    $pdf = isset($params['pdf']);
 	$addslashes = !isset($params['slashes']);
+
+    if ($pdf) 
+    {
+		global $_LANGPDF;
+		$iso = Context::getContext()->language->iso_code;
+		if (!Validate::isLanguageIsoCode($iso))
+			throw PrestashopException('Invalid iso lang!');
+
+        $translationsFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
+
+        if (Tools::file_exists_cache($translationsFile))
+            @include_once($translationsFile);
+        
+        $key = 'PDF'.md5($params['s']);
+        $lang_array = $_LANGPDF;
+
+	    $msg = $params['s'];
+	    if (is_array($lang_array) AND key_exists($key, $lang_array))
+		    $msg = $lang_array[$key];
+	    elseif (is_array($lang_array) AND key_exists(Tools::strtolower($key), $lang_array))
+		    $msg = $lang_array[Tools::strtolower($key)];
+
+        return $msg;
+    }
+
 
 	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 	$class = Tools::substr(basename($filename), 0, -4);
