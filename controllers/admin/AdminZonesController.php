@@ -32,22 +32,42 @@ class AdminZonesControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->table = 'zone';
-	 	$this->className = 'Zone';
+		$this->className = 'Zone';
 	 	$this->lang = false;
 
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-
 		$this->fieldsDisplay = array(
-		'id_zone' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'name' => array('title' => $this->l('Zone'), 'width' => 'auto'),
-		'active' => array('title' => $this->l('Enabled'), 'width' => '70', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'id_zone' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25
+			),
+			'name' => array(
+				'title' => $this->l('Zone'),
+				'width' => 'auto'
+			),
+			'active' => array(
+				'title' => $this->l('Enabled'),
+				'width' => '70',
+				'align' => 'center',
+				'active' => 'status',
+				'type' => 'bool',
+				'orderby' => false
+			)
 		);
-		
+
 		parent::__construct();
 	}
-	
+
+	public function initList()
+	{
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
+		return parent::initList();
+	}
+
 	public function initForm()
 	{
 		$this->fields_form = array(
@@ -84,19 +104,25 @@ class AdminZonesControllerCore extends AdminController
 						)
 					),
 					'p' => $this->l('Allow or disallow shipping to this zone')
-				),
-				array(
-					'type' => 'asso_shop',
-					'label' => 'Shop :',
-					'name' => ''
 				)
-			),
-			'asso_shop' => $this->asso_type,
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
 			)
 		);
+
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'group_shop',
+				'label' => $this->l('Group shop association:'),
+				'name' => 'checkBoxShopAsso',
+				'values' => Shop::getTree()
+			);
+		}
+
+		$this->fields_form['submit'] = array(
+			'title' => $this->l('   Save   '),
+			'class' => 'button'
+		);
+
 		return parent::initForm();
 	}
 }
