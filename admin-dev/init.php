@@ -39,14 +39,9 @@ if (isset($_GET['logout']))
 if (!isset($context->employee) || !$context->employee->isLoggedBack())
 	Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
 
-
 // Set current index
-//$currentIndex = $_SERVER['SCRIPT_NAME'].(($tab = Tools::getValue('tab')) ? '?tab='.$tab : '');
-//if (empty($tab))
-//{
-	$currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
-	$tab = $controller;
-//}
+$currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
+
 if ($back = Tools::getValue('back'))
 	$currentIndex .= '&back='.urlencode($back);
 AdminTab::$currentIndex = $currentIndex;

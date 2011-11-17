@@ -26,7 +26,7 @@
 {include file='header.tpl'}
 {if isset($conf)}
 	<div class="conf">
-		<img src="../img/admin/ok2.png" alt="" />{$conf}
+		{$conf}
 	</div>
 {/if}
 
@@ -35,7 +35,6 @@
 		<span style="float:right">
 			<a id="hideError" href="#"><img alt="X" src="../img/admin/close.png" /></a>
 		</span>
-		<img src="../img/admin/error2.png" />
 		{if count($errors) == 1}
 			{$errors[0]}
 		{else}
@@ -71,7 +70,6 @@
 		<span style="float:right">
 			<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
 		</span>
-		<img src="../img/admin/warn2.png" />
 		{if count($warnings) > 1}
 			{l s='There are'} {count($warnings)} {l s='warnings'}
 		{else}

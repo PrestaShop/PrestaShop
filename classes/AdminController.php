@@ -61,7 +61,7 @@ class AdminControllerCore extends Controller
 	/** @var integer Tab id */
 	public $id = -1;
 
-	/** @var array noTabLink array of admintab names witch have no content */
+	/** @var array noTabLink array of admintabs with no content */
 	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
 
 	/** @var string Security token */
@@ -748,7 +748,6 @@ class AdminControllerCore extends Controller
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$this->beforeUpdateOptions();
-
 			$languages = Language::getLanguages(false);
 
 			foreach ($this->options as $category => $category_data)
@@ -852,7 +851,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		
+
 		// todo : return value ?
 	}
 
