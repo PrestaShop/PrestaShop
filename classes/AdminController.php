@@ -998,12 +998,16 @@ class AdminControllerCore extends Controller
 			$this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
 		}
 
-		// Check if content template has been override
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
-			$page = $this->context->smarty->fetch($tpl);
+		if (!$this->ajax)
+		{
+			// Check if content template has been override
+			if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
+				$page = $this->context->smarty->fetch($tpl);
+			else
+				$page = $this->context->smarty->fetch($this->template);
+		}
 		else
-			$page = $this->context->smarty->fetch($this->template);
-
+			$page = $this->content;
 
 		if ($conf = Tools::getValue('conf'))
 			$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
