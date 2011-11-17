@@ -232,10 +232,13 @@ form#product, form#access_form{   background-color:#ebedf4; border:1px solid #cc
 #moduleContainer .moduleDesc .metadata dl dd { padding-right:10px;}
 #moduleContainer .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
 #moduleContainer .moduleDesc p.desc { color:#666; font-size:12px; display:block; clear:both;}
-#moduleContainer .setup  {background-color:#6db300; color:#fff; text-transform:uppercase; position:relative; padding:2px 4px; display: inline-block; float:right; border-radius:3px;}
+#moduleContainer .setup  {background-color:#6db300; font-size:10px; color:#fff; text-transform:uppercase; position:relative; left:10px; padding:0px 4px; display: inline-block; border-radius:3px;}
 #moduleContainer .setup.non-install { background-color:#ec7000;}
+#moduleContainer .setup.off{ background-color:#ccc;}
 #moduleContainer .row-actions-module span { padding-right:5px;}
 #moduleContainer .row-actions-module span a { font-size:12px;}
+#moduleContainer .button.uninstalled,
+#moduleContainer .button.installed { float:right; clear:both; margin-top:15px; font-size:12px;}
 
 
 /*FOOTER*/
