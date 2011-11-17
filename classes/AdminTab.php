@@ -199,6 +199,9 @@ abstract class AdminTabCore
 		'AdminStatsTab' => 'AdminStats'
 	);
 
+	/** @var array noTabLink array of admintabs with no content */
+	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();

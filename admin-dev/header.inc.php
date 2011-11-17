@@ -183,7 +183,8 @@ echo '		var html = "";
 	<body '.((!empty(Context::getContext()->employee->bo_color)) ? 'style="background:'.Tools::htmlentitiesUTF8(Context::getContext()->employee->bo_color).'"' : '').'>
 	<div id="top_container">
 		<div id="container">
-			<div id="header_infos"><span>
+			<div id="header">
+			<div id="header_infos">
 				<a id="header_shopname" href="index.php"><span>'.Configuration::get('PS_SHOP_NAME').'</span></a><div id="notifs_icon_wrapper">';
 				if (Configuration::get('PS_SHOW_NEW_ORDERS') == 1)
 				{
@@ -219,12 +220,14 @@ echo '		var html = "";
 						</div>';
 				}
 	echo		'</div><span id="employee_links">
+				<a href="index.php?controller=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" class="employee" alt="">'.translate('My preferences').'</a>
+				<span class="separator"></span>
+				<span class="employee_name">
 				'.Tools::substr(Context::getContext()->employee->firstname, 0, 1).'.&nbsp;'.htmlentities(Context::getContext()->employee->lastname, ENT_COMPAT, 'UTF-8').'
-				[ <a href="index.php?logout" id="header_logout"><span>'.translate('logout').'</span></a> ]';
+				</span><span class="separator"></span><a href="index.php?logout" id="header_logout"><span>'.translate('logout').'</span></a><span class="separator"></span>';
 				if (Context::getContext()->shop->getBaseURL())
-					echo '- <a href="'.Context::getContext()->shop->getBaseURL().'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'"><span>'.translate('View my shop').'</span></a>';
-	echo '		- <a href="index.php?controller=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" style="font-size: 10px;"><img src="../img/admin/employee.gif" alt="" /> '.translate('My preferences').'</a>
-			</span></div>
+					echo '<a href="'.Context::getContext()->shop->getBaseURL().'" id="header_foaccess" target="_blank" title="'.translate('View my shop').'"><span>'.translate('View my shop').'</span></a>';
+			echo '</span>
 			<div id="header_search">
 				<form method="post" action="index.php?controller=AdminSearch&token='.Tools::getAdminTokenLite('AdminSearch').'">
 					<input type="text" name="bo_query" id="bo_query"
@@ -271,15 +274,15 @@ echo '			</select>
 		if (Shop::isFeatureActive())
 			echo '<div id="header_shoplist">'.translate('Select your shop:').' '.generateShopList().'</div>';
 
-		echo '<div class="flatclear">&nbsp;</div>';
+		echo '</div>';
 			echo Hook::exec('backOfficeTop');
 			echo '<ul id="menu">';
 
 if (empty($tab))
 	echo '<div class="mainsubtablist" style="display:none"></div>';
 // This is made to display the subtab list
-$controllers = Dispatcher::getControllers(_PS_ADMIN_DIR_.'/tabs/');
-$id_current_tab = (int)Tab::getIdFromClassName($controllers[$tab]);
+$id_current_tab = (int)Tab::getIdFromClassName($tab);
+
 $myCurrentTab = new Tab($id_current_tab);
 $tabs = Tab::getTabs(Context::getContext()->language->id, 0);
 $echoLis = '';
@@ -292,42 +295,42 @@ foreach ($tabs AS $t)
 		if (trim($t['module']) != '')
 			$img = _MODULE_DIR_.$t['module'].'/'.$t['class_name'].'.gif';
 		$current = ((strtolower($t['class_name']) == $tab) OR ($myCurrentTab->id_parent == $t['id_tab']));
-		echo '<li class="submenu_size '.($current ? 'active' : '').'" id="maintab'.$t['id_tab'].'">
-			<a href="index.php?controller='.$t['class_name'].'&token='.Tools::getAdminToken($t['class_name'].(int)($t['id_tab']).(int)Context::getContext()->employee->id).'">
+
+		echo '<li class="submenu_size '.($current ? 'active' : '').' maintab" id="maintab'.$t['id_tab'].'">
+			<span class="title">
 				<img src="'.$img.'" alt="" /> '.$t['name'].'
-			</a>
-		</li>';
-		$echoLi = '';
+			</span>
+			<ul class="submenu">';
 		$subTabs = Tab::getTabs(Context::getContext()->language->id, (int)$t['id_tab']);
+
+		// @todo need a better way than using noTabLink property, keeping the fact to avoid db modification
+		if (!in_array($t['class_name'], $noTabLink))
+			array_unshift($subTabs, $t);
+
 		foreach ($subTabs AS $t2)
 			if (checkTabRights($t2['id_tab']) === true)
-				$echoLi .= '<li><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
+				echo '<li><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
+
+		echo '</ul></li>';
+		$echoLi = '';
+		foreach ($subTabs AS $t2)
+			if (checkTabRights($t2['id_tab']) === true)
+				$echoLi .= '<li class="subitem"><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
 
 		if ($current)
 			$mainsubtablist = $echoLi;
 		$echoLis .= '<div id="tab'.(int)($t['id_tab']).'_subtabs" style="display:none">'.$echoLi.'</div>';
 	}
 echo '		</ul>'.$echoLis;
-if (Context::getContext()->employee->bo_uimode == 'hover')
-	echo '	<script type="text/javascript">
-				$("#menu li").hoverIntent({over:hoverTabs,timeout:100,out:outTabs});
-				function outTabs(){}
-				function hoverTabs() {
-					var content = $("#tab"+parseInt(this.id.substr(7, 3))+"_subtabs").html();
-					$("#submenu").html(content);
-					if (content.length == 0)
-						$("#submenu").removeClass("withLeftBorder");
-					else
-						$("#submenu").addClass("withLeftBorder");
-					$("#menu li").removeClass("active");
-					$(this).addClass("active");
-				}
-			</script>';
-echo '		<ul id="submenu" '.(strlen($mainsubtablist) ? 'class="withLeftBorder clearfix"' : '').'>'.$mainsubtablist.'</ul>
-			<div id="main">
+
+echo '
+				</div>
+				<div id="main">
 				<div id="content">'
 			.(file_exists(_PS_ADMIN_DIR_.'/../install') ? '<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">'
 				.translate('For security reasons, you must also:').' '.
 				translate('delete the /install folder').
 				'</div>' : '').'
 				';
+				if(defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
+					echo '<div class="warn">This tab is an AdminTab</div>';

@@ -49,13 +49,20 @@ function bindDatepicker($id, $time)
 	});';
 }
 
-// id can be a identifier or an array of identifiers
+/**
+ * Deprecated since 1.5
+ * Use Controller::addJqueryUi('ui.datepicker') instead
+ *
+ * @param int|array $id id can be a identifier or an array of identifiers
+ * @param unknown_type $time
+ */
 function includeDatepicker($id, $time = false)
 {
+	Tools::displayAsDeprecated();
 	echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>';
 	$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
 	if ($iso != 'en')
-		echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/datepicker/ui/i18n/ui.datepicker-'.$iso.'.js"></script>';
+		echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.$iso.'.js"></script>';
 	echo '<script type="text/javascript">';
 		if (is_array($id))
 			foreach ($id as $id2)
@@ -233,16 +240,12 @@ function translate($string)
  */
 function checkingTab($tab)
 {
-	static $controllers;
-
-	if (is_null($controllers))
-		$controllers = Dispatcher::getControllers(_PS_ADMIN_DIR_.'/tabs/');
-
 	$tab = trim($tab);
+
 	$tab_lowercase = strtolower($tab);
 	if (!Validate::isTabName($tab))
 		return false;
-	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module FROM `'._DB_PREFIX_.'tab` WHERE class_name = \''.pSQL($tab).'\'');
+	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE class_name = \''.pSQL($tab).'\'');
 	if (!$row['id_tab'])
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
@@ -250,10 +253,8 @@ function checkingTab($tab)
 		echo sprintf(Tools::displayError('Tab %s cannot be found.'),$tab);
 		return false;
 	}
-	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab_lowercase].'.php'))
-		include_once(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$controllers[$tab_lowercase].'.php');
-	elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab_lowercase].'.php'))
-		include_once(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$tab_lowercase].'.php');
+
+	// Class file is included in Dispatcher::dispatch() function
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{
 		echo sprintf(Tools::displayError('Tab file %s cannot be found.'),$tab);
@@ -434,7 +435,7 @@ function generateShopList()
  *
  * @return void
  */
-function runAdminTab($ajaxMode = false)
+function runAdminTab($tab, $ajaxMode = false)
 {
 	$ajaxMode = (bool)$ajaxMode;
 
@@ -449,6 +450,7 @@ function runAdminTab($ajaxMode = false)
 	// $tab = $_REQUEST['tab'];
 	if ($adminObj = checkingTab($tab))
 	{
+		$noTabLink = $adminObj->noTabLink;
 		// init is different for new tabs (AdminController) and old tabs (AdminTab)
 		if ($adminObj instanceof AdminController)
 		{

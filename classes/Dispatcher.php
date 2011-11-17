@@ -144,12 +144,12 @@ class DispatcherCore
 	/**
 	 * @var string Set default controller, which will be used if http parameter 'controller' is empty
 	 */
-	protected $default_controller = 'index';
+	protected $default_controller = 'Index';
 
 	/**
 	 * @var string Controller to use if found controller doesn't exist
 	 */
-	protected $controller_not_found = 'pagenotfound';
+	protected $controller_not_found = 'PageNotFound';
 
 	/**
 	 * @var array List of controllers where are stored controllers
@@ -217,6 +217,30 @@ class DispatcherCore
 		$this->controller_directories = $dir;
 	}
 
+	public static function getAdminController($name)
+	{
+		if (!Validate::isTabName($name))
+		return false;
+
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, class_name, module FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($name).'\'');
+		return $row;
+	}
+
+	public static function includeModuleClass($module, $name)
+	{
+		if (file_exists(_PS_MODULE_DIR_.$module.'/'.$name.'Controller.php'))
+		{
+			include(_PS_MODULE_DIR_.$module.'/'.$name.'Controller.php');
+			return true;
+		}
+
+		if (file_exists(_PS_MODULE_DIR_.$module.'/'.$name.'.php'))
+		{
+			include(_PS_MODULE_DIR_.$module.'/'.$name.'.php');
+			return false;
+		}
+	}
+
 	/**
 	 * Find the controller and instantiate it
 	 */
@@ -234,26 +258,54 @@ class DispatcherCore
 
 		// Get current controller and list of controllers
 		$this->getController();
-		$controllers = Dispatcher::getControllers($this->controller_directories);
 
 		if (!$this->controller)
 			$this->controller = $this->default_controller;
 
-		// For retrocompatibility with admin/tabs/ old system
-		if (isset($controllers[$this->controller]) && defined('_PS_ADMIN_DIR_') && file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controllers[$this->controller].'.php'))
+		// FO dispatch
+		if (!defined('_PS_ADMIN_DIR_'))
 		{
-			require_once(_PS_ADMIN_DIR_.'/functions.php');
-			$ajaxMode = !empty($_REQUEST['ajaxMode']);
-			runAdminTab($ajaxMode);
-			return;
+			$controllers = self::getControllers($this->controller_directories);
+ 			if (isset($controllers[$this->controller]))
+ 				$this->controller = $controllers[$this->controller];
+			else
+ 				$this->controller = $this->controller_not_found;
 		}
-		else if (!isset($controllers[$this->controller]))
-			$this->controller = $this->controller_not_found;
+		// BO dispatch
+		else
+		{
+			// Get controller class name
+			$controller_row = self::getAdminController($this->controller);
+			if (empty($controller_row))
+				$this->controller = $this->controller_not_found;
+			else
+				$this->controller = $controller_row['class_name'];
+
+			// If Tab/Controller is in module, include it
+			if (!empty($controller_row['module']))
+				$is_controller = self::includeModuleClass($controller_row['module'], $this->controller);
+			// If it is an AdminTab, include it
+			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$this->controller.'.php'))
+			{
+				include(_PS_ADMIN_DIR_.'/tabs/'.$this->controller.'.php');
+				$is_controller = false;
+			}
+			// For retrocompatibility with admin/tabs/ old system
+			if (isset($is_controller) && !$is_controller)
+			{
+				require_once(_PS_ADMIN_DIR_.'/functions.php');
+				$ajaxMode = !empty($_REQUEST['ajaxMode']);
+				runAdminTab($this->controller, $ajaxMode);
+				return;
+			}
+			else
+				$this->controller = $this->controller.'Controller';
+		}
 
 		// Instantiate controller
 		try
 		{
-			Controller::getController($controllers[$this->controller])->run();
+			Controller::getController($this->controller)->run();
 		}
 		catch (PrestashopException $e)
 		{
