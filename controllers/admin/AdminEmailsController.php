@@ -52,13 +52,7 @@ class AdminEmailsControllerCore extends AdminController
 				'title' => $this->l('E-mail'),
 				'icon' => 'email',
   				'top' => '<div id="smtp" style="display: '.((Configuration::get('PS_MAIL_METHOD') == 2) ? 'block' : 'none').';">',
-				'bottom' => '<script type="text/javascript">
-					if (getE(\'PS_MAIL_METHOD2_on\').checked)
-						getE(\'smtp\').style.display = \'block\';
-					else
-						getE(\'smtp\').style.display = \'none\';
-				</script>
-				</div>',
+				'bottom' => '</div>',
   				'fields' =>	array(
 					'PS_MAIL_DOMAIN' => array('title' => $this->l('Mail domain:'), 'desc' => $this->l('Fully qualified domain name (keep it empty if you do not know)'), 'empty' => true, 'validation' => 'isUrl', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
 					'PS_MAIL_SERVER' => array('title' => $this->l('SMTP server:'), 'desc' => $this->l('IP or server name (e.g., smtp.mydomain.com)'), 'validation' => 'isGenericName', 'size' => 30, 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
@@ -75,14 +69,6 @@ class AdminEmailsControllerCore extends AdminController
 				'class' =>	'width2',
 				'fields' =>	array(
 				 	'PS_SHOP_EMAIL' => array('title' => $this->l('Send a test e-mail to'), 'type' => 'text', 'size' => 40, 'id' => 'testEmail'),
-					'PS_MAIL_METHOD' => array('type' => 'hidden'),
-					'PS_MAIL_SERVER' => array('type' => 'hidden'),
-					'PS_MAIL_USER' => array('type' => 'hidden'),
-					'PS_MAIL_PASSWD' => array('type' => 'hidden'),
-					'PS_MAIL_SMTP_PORT' => array('type' => 'hidden'),
-					'PS_MAIL_SMTP_ENCRYPTION' => array('type' => 'hidden'),
-					'PS_MAIL_SERVER' => array('type' => 'hidden'),
-					'PS_MAIL_SERVER' => array('type' => 'hidden'),
 				),
 				'bottom' => '<div class="margin-form"><input type="button" class="button" name="btEmailTest" id="btEmailTest" value="'.$this->l('Send an e-mail test').'" onClick="verifyMail();" /><br />
 					<p id="mailResultCheck" style="display:none;"></p></div>',
@@ -99,6 +85,10 @@ class AdminEmailsControllerCore extends AdminController
 			return;
 		}
 		/* PrestaShop demo mode*/
+
+		// We don't want to update the shop e-mail when sending test e-mails
+		if (isset($_POST['PS_SHOP_EMAIL']))
+			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
 		if ($_POST['PS_MAIL_METHOD'] == 2 AND (empty($_POST['PS_MAIL_SERVER']) OR empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->_errors[] = Tools::displayError('You must define a SMTP server and a SMTP port. If you do not know, use the PHP mail() function instead.');
