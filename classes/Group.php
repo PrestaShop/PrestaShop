@@ -57,8 +57,8 @@ class GroupCore extends ObjectModel
 	protected $table = 'group';
 	protected $identifier = 'id_group';
 
-	protected static $_cacheReduction = array();
-	protected static $_groupPriceDisplayMethod = array();
+	protected static $cache_reduction = array();
+	protected static $group_price_display_method = array();
 
 	protected	$webserviceParameters = array();
 
@@ -66,9 +66,9 @@ class GroupCore extends ObjectModel
 	{
 		$this->validateFields();
 		if (isset($this->id))
-			$fields['id_group'] = (int)($this->id);
-		$fields['reduction'] = (float)($this->reduction);
-		$fields['price_display_method'] = (int)($this->price_display_method);
+			$fields['id_group'] = (int)$this->id;
+		$fields['reduction'] = (float)$this->reduction;
+		$fields['price_display_method'] = (int)$this->price_display_method;
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
 
@@ -87,7 +87,7 @@ class GroupCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT g.`id_group`, g.`reduction`, g.`price_display_method`, gl.`name`
 		FROM `'._DB_PREFIX_.'group` g
-		LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)$id_lang.')
 		ORDER BY g.`id_group` ASC');
 	}
 
@@ -112,44 +112,44 @@ class GroupCore extends ObjectModel
 
 	public static function getReduction($id_customer = null)
 	{
-		if (!isset(self::$_cacheReduction['customer'][(int)$id_customer]))
-			self::$_cacheReduction['customer'][(int)$id_customer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		if (!isset(self::$cache_reduction['customer'][(int)$id_customer]))
+			self::$cache_reduction['customer'][(int)$id_customer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `reduction`
 			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.((int)$id_customer ? Customer::getDefaultGroupId((int)$id_customer) : 1));
-		return self::$_cacheReduction['customer'][(int)$id_customer];
-		}
+			WHERE `id_group` = '.((int)$id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Configuration::get('PS_CUSTOMER_GROUP')));
+		return self::$cache_reduction['customer'][(int)$id_customer];
+	}
 
 	public static function getReductionByIdGroup($id_group)
 	{
-		if (!isset(self::$_cacheReduction['group'][$id_group]))
+		if (!isset(self::$cache_reduction['group'][$id_group]))
 		{
-			self::$_cacheReduction['group'][$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			self::$cache_reduction['group'][$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `reduction`
 			FROM `'._DB_PREFIX_.'group`
 			WHERE `id_group` = '.(int)$id_group);
 		}
-		return self::$_cacheReduction['group'][$id_group];
+		return self::$cache_reduction['group'][$id_group];
 	}
 
 	public static function getPriceDisplayMethod($id_group)
 	{
-		if (!isset(self::$_groupPriceDisplayMethod[$id_group]))
-			self::$_groupPriceDisplayMethod[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		if (!isset(self::$group_price_display_method[$id_group]))
+			self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `price_display_method`
 			FROM `'._DB_PREFIX_.'group`
 			WHERE `id_group` = '.(int)$id_group);
-		return self::$_groupPriceDisplayMethod[$id_group];
+		return self::$group_price_display_method[$id_group];
 	}
 
 	public static function getDefaultPriceDisplayMethod()
 	{
-		return self::getPriceDisplayMethod(1);
+		return self::getPriceDisplayMethod((int)Configuration::get('PS_CUSTOMER_GROUP'));
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-		if (parent::add($autodate, $nullValues))
+		if (parent::add($autodate, $null_values))
 		{
 			Category::setNewGroupForHome((int)$this->id);
 
@@ -176,9 +176,9 @@ class GroupCore extends ObjectModel
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
 
-			// Add default group (id 1) to customers without groups
+			// Add default group (id 3) to customers without groups
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (
-				SELECT c.id_customer, 1 FROM `'._DB_PREFIX_.'customer` c
+				SELECT c.id_customer, '.(int)Configuration::get('PS_CUSTOMER_GROUP').' FROM `'._DB_PREFIX_.'customer` c
 				LEFT JOIN `'._DB_PREFIX_.'customer_group` cg
 				ON cg.id_customer = c.id_customer
 				WHERE cg.id_customer IS NULL)');
@@ -190,7 +190,7 @@ class GroupCore extends ObjectModel
 					IFNULL((
 						SELECT min(id_group) FROM `'._DB_PREFIX_.'customer_group`
 						WHERE id_customer = cg.id_customer),
-						1)
+						'.(int)Configuration::get('PS_CUSTOMER_GROUP').')
 				WHERE `id_default_group` = '.(int)$this->id);
 
 			return true;
@@ -217,11 +217,11 @@ class GroupCore extends ObjectModel
 	 */
 	public static function isCurrentlyUsed($table = null, $has_active_column = false)
 	{
-		// We don't use the parent method, for specific clause reason (id_group != 1)
+		// We don't use the parent method, for specific clause reason (id_group != 3)
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_group`
 			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` != 1
+			WHERE `id_group` != '.(int)Configuration::get('PS_CUSTOMER_GROUP').'
 		');
 	}
 

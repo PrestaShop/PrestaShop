@@ -2,7 +2,7 @@ SET NAMES 'utf8';
 
 /* Carrier */
 INSERT INTO `PREFIX_carrier` (`id_carrier`, `id_reference`, `id_tax_rules_group`, `name`, `active`, `deleted`, `shipping_handling`, `is_free`, `position`) VALUES (2, 2, 1, 'My carrier', 1, 0, 1, 0, 1);
-INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) VALUES (2, 1);
+INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) VALUES (2, 2), (2, 3);
 INSERT INTO `PREFIX_carrier_shop` (`id_carrier`, `id_shop`) VALUES (2, 1);
 INSERT INTO `PREFIX_carrier_lang` (`id_carrier`, `id_lang`, `delay`) VALUES (2, 1, 'Delivery next day!'),(2, 2, 'Livraison le lendemain !'),(2, 3, '¡Entrega día siguiente!'),(2, 4, 'Zustellung am nächsten Tag!'),(2, 5, 'Consegna il giorno dopo!');
 INSERT INTO `PREFIX_carrier_zone` (`id_carrier`, `id_zone`) VALUES (2, 1),(2, 2);
@@ -159,11 +159,11 @@ INSERT INTO `PREFIX_range_weight` (`id_range_weight`, `id_carrier`, `delimiter1`
 INSERT INTO `PREFIX_delivery` (`id_delivery`, `id_range_price`, `id_range_weight`, `id_carrier`, `id_zone`, `price`) VALUES
 (1, NULL, 1, 2, 1, 5.00),(2, NULL, 1, 2, 2, 5.00),(4, 1, NULL, 2, 1, 5.00),(5, 1, NULL, 2, 2, 5.00);
 
-INSERT INTO `PREFIX_customer_group` (`id_customer`, `id_group`) VALUES (1, 1);
-INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) VALUES (2, 1),(3, 1),(4, 1);
+INSERT INTO `PREFIX_customer_group` (`id_customer`, `id_group`) VALUES (1, 3);
+INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) VALUES (2, 1),(3, 1),(4, 1),(2, 2),(3, 2),(4, 2),(2, 3),(3, 3),(4, 3);
 
 INSERT INTO `PREFIX_customer` (`id_customer`, `id_gender`, `id_default_group`, `secure_key`, `email`, `passwd`, `birthday`, `lastname`, `newsletter`, `optin`, `firstname`, `active`, `is_guest`, `date_add`, `date_upd`)
-	VALUES (1, 1, 1, '47ce86627c1f3c792a80773c5d2deaf8', 'pub@prestashop.com', 'ad807bdf0426766c05c64041124d30ce', '1970-01-15', 'DOE', 1, 1, 'John', 1, 0, NOW(), NOW());
+	VALUES (1, 1, 3, '47ce86627c1f3c792a80773c5d2deaf8', 'pub@prestashop.com', 'ad807bdf0426766c05c64041124d30ce', '1970-01-15', 'DOE', 1, 1, 'John', 1, 0, NOW(), NOW());
 INSERT INTO `PREFIX_connections` (`id_connections`, `id_guest`, `id_page`, `ip_address`, `date_add`, `http_referer`)
 	VALUES (1, 1, 1, '2130706433', NOW(), 'http://www.prestashop.com');
 INSERT INTO `PREFIX_guest` (`id_guest`, `id_operating_system`, `id_web_browser`, `id_customer`, `javascript`, `screen_resolution_x`, `screen_resolution_y`, `screen_color`, `sun_java`, `adobe_flash`, `adobe_director`, `apple_quicktime`, `real_player`, `windows_media`, `accept_language`)
@@ -474,7 +474,7 @@ INSERT INTO `PREFIX_cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES (
 
 /* Currency/Country module */
 INSERT INTO `PREFIX_module_currency` (`id_module`, `id_currency`) VALUES (3, 1),(3, 2),(3, 3),(4, 1),(4, 2),(4, 3),(6, 1),(6, 2),(6, 3);
-INSERT INTO `PREFIX_module_group` (`id_module`, `id_group`) VALUES (3, 1),(4, 1),(6, 1);
+INSERT INTO `PREFIX_module_group` (`id_module`, `id_group`) VALUES (3, 2),(4, 2),(6, 2),(3, 3),(4, 3),(6, 3);
 
 INSERT INTO `PREFIX_module_country` (`id_module`, `id_country`) VALUES (3, 1),(3, 2),(3, 3),(3, 4),(3, 5),(3, 6),(3, 7),(3, 8),
 (3, 9),(3, 10),(3, 11),(3, 12),(3, 13),(3, 14),(3, 15),(3, 16),(3, 17),(3, 18),(3, 19),(3, 20),(3, 21),(3, 22),(3, 23),(3, 24),
@@ -1225,7 +1225,111 @@ INSERT INTO `PREFIX_group_module_restriction` (`id_group`, `id_module`, `authori
 ("1", "52", "1"),
 ("1", "53", "1"),
 ("1", "54", "1"),
-("1", "55", "1");
+("1", "55", "1"),
+("2", "1", "1"),
+("2", "2", "1"),
+("2", "3", "1"),
+("2", "4", "1"),
+("2", "5", "1"),
+("2", "6", "1"),
+("2", "7", "1"),
+("2", "8", "1"),
+("2", "9", "1"),
+("2", "10", "1"),
+("2", "11", "1"),
+("2", "12", "1"),
+("2", "13", "1"),
+("2", "14", "1"),
+("2", "15", "1"),
+("2", "16", "1"),
+("2", "17", "1"),
+("2", "18", "1"),
+("2", "19", "1"),
+("2", "20", "1"),
+("2", "21", "1"),
+("2", "22", "1"),
+("2", "24", "1"),
+("2", "25", "1"),
+("2", "26", "1"),
+("2", "27", "1"),
+("2", "28", "1"),
+("2", "30", "1"),
+("2", "31", "1"),
+("2", "32", "1"),
+("2", "33", "1"),
+("2", "34", "1"),
+("2", "35", "1"),
+("2", "36", "1"),
+("2", "37", "1"),
+("2", "39", "1"),
+("2", "40", "1"),
+("2", "41", "1"),
+("2", "42", "1"),
+("2", "43", "1"),
+("2", "44", "1"),
+("2", "45", "1"),
+("2", "46", "1"),
+("2", "47", "1"),
+("2", "48", "1"),
+("2", "49", "1"),
+("2", "50", "1"),
+("2", "51", "1"),
+("2", "52", "1"),
+("2", "53", "1"),
+("2", "54", "1"),
+("2", "55", "1"),
+("3", "1", "1"),
+("3", "2", "1"),
+("3", "3", "1"),
+("3", "4", "1"),
+("3", "5", "1"),
+("3", "6", "1"),
+("3", "7", "1"),
+("3", "8", "1"),
+("3", "9", "1"),
+("3", "10", "1"),
+("3", "11", "1"),
+("3", "12", "1"),
+("3", "13", "1"),
+("3", "14", "1"),
+("3", "15", "1"),
+("3", "16", "1"),
+("3", "17", "1"),
+("3", "18", "1"),
+("3", "19", "1"),
+("3", "20", "1"),
+("3", "21", "1"),
+("3", "22", "1"),
+("3", "24", "1"),
+("3", "25", "1"),
+("3", "26", "1"),
+("3", "27", "1"),
+("3", "28", "1"),
+("3", "30", "1"),
+("3", "31", "1"),
+("3", "32", "1"),
+("3", "33", "1"),
+("3", "34", "1"),
+("3", "35", "1"),
+("3", "36", "1"),
+("3", "37", "1"),
+("3", "39", "1"),
+("3", "40", "1"),
+("3", "41", "1"),
+("3", "42", "1"),
+("3", "43", "1"),
+("3", "44", "1"),
+("3", "45", "1"),
+("3", "46", "1"),
+("3", "47", "1"),
+("3", "48", "1"),
+("3", "49", "1"),
+("3", "50", "1"),
+("3", "51", "1"),
+("3", "52", "1"),
+("3", "53", "1"),
+("3", "54", "1"),
+("3", "55", "1");
 
 INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_product_attribute`, `id_shop`, `quantity`, `depends_on_stock`, `out_of_stock`) VALUES
 (1, 2, 7, 1, 10, 0, 2),

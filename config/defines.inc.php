@@ -120,7 +120,11 @@ define('_PS_ADMIN_PROFILE_', 1);
 define('_STOCK_MOVEMENT_ORDER_REASON_', 3);
 define('_STOCK_MOVEMENT_MISSING_REASON_', 4);
 
-define('_PS_DEFAULT_CUSTOMER_GROUP_', 1);
+/** 
+ * @deprecated 1.5.0.1
+ * @see Group::CUSTOMER 
+ */
+define('_PS_DEFAULT_CUSTOMER_GROUP_', 3);
 
 define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_.'/cache/cachefs/');
 

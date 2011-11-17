@@ -185,7 +185,10 @@ class CustomerCore extends ObjectModel
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
 		if (empty($this->id_default_group))
-			$this->id_default_group = 1;
+			if ($this->is_guest)
+				$this->id_default_group = 2;
+			else
+				$this->id_default_group = 3;
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 			return false;
@@ -524,7 +527,7 @@ class CustomerCore extends ObjectModel
 	public static function getGroupsStatic($id_customer)
 	{
 		if (!Group::isFeatureActive())
-			return array(1);
+			return array(3);
 
 		if (!isset(self::$_customer_groups[$id_customer]))
 		{
@@ -560,7 +563,7 @@ class CustomerCore extends ObjectModel
 	public static function getDefaultGroupId($id_customer)
 	{
 		if (!Group::isFeatureActive())
-			return 1;
+			return 3;
 
 		if (!isset(self::$_defaultGroupId[(int)$id_customer]))
 			self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('
@@ -616,6 +619,8 @@ class CustomerCore extends ObjectModel
 
 		$this->is_guest = 0;
 		$this->passwd = Tools::encrypt($password);
+		$this->cleanGroups();
+		$this->addGroups(array(3)); // add default customer group
 		if ($this->update())
 		{
 			$vars = array(

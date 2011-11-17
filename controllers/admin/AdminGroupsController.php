@@ -43,7 +43,8 @@ class AdminGroupsController extends AdminController
 		WHERE jc.`deleted` != 1
 		AND jcg.`id_group` = a.`id_group`) AS nb';
 
-		$this->_listSkipDelete = array(1);
+		$groups_to_keep = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
+		$this->_listSkipDelete = $groups_to_keep;
 
 		$this->fieldsDisplay = array(
 			'id_group' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -52,8 +53,8 @@ class AdminGroupsController extends AdminController
 			'nb' => array('title' => $this->l('Members'), 'width' => 25, 'align' => 'center'),
 			'date_add' => array('title' => $this->l('Creation date'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
 		
-		$this->addRowActionSkipList('delete', array(1));
-		//$this->addRowActionSkipList('delete', array(Group::UNINDENTIFIED, Group::GUEST, Group::CUSTOMER));
+		//$this->addRowActionSkipList('delete', array(1));
+		$this->addRowActionSkipList('delete', $groups_to_keep);
 		
 		parent::__construct();
 	}
