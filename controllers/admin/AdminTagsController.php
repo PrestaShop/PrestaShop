@@ -31,32 +31,58 @@ class AdminTagsControllerCore extends AdminController
 	{
 		$this->table = 'tag';
 		$this->className = 'Tag';
-		$this->addRowAction('edit');
-	 	$this->addRowAction('delete');
-	 	$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 
-			'confirm' => $this->l('Delete selected items?'))
-		);
 
 		$this->fieldsDisplay = array(
-		'id_tag' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25, 'filter_key' => 'a!id_seller_message'),
-		'lang' => array('title' => $this->l('Language'), 'filter_key' => 'l!name'),
-		'name' => array('title' => $this->l('Name'), 'width' => 200, 'filter_key' => 'a!name'),
-		'products' => array('title' => $this->l('Products'), 'align' => 'right', 'havingFilter' => true));
-
-		$this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
-		$this->_join = '
-		LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (a.`id_tag` = pt.`id_tag`)
-		LEFT JOIN `'._DB_PREFIX_.'lang` l ON (l.`id_lang` = a.`id_lang`)';
-		$this->_group = 'GROUP BY a.name, a.id_lang';
+			'id_tag' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25,
+				'filter_key' => 'a!id_seller_message'
+			),
+			'lang' => array(
+				'title' => $this->l('Language'),
+				'filter_key' => 'l!name'
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 200,
+				'filter_key' => 'a!name'
+			),
+			'products' => array(
+				'title' => $this->l('Products'),
+				'align' => 'right',
+				'havingFilter' => true
+			)
+		);
 
 		parent::__construct();
 	}
 
+	public function initList()
+	{
+		$this->addRowAction('edit');
+	 	$this->addRowAction('delete');
+
+	 	$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'),
+			'confirm' => $this->l('Delete selected items?'))
+		);
+
+		$this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
+		$this->_join = '
+			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt
+				ON (a.`id_tag` = pt.`id_tag`)
+			LEFT JOIN `'._DB_PREFIX_.'lang` l
+				ON (l.`id_lang` = a.`id_lang`)';
+		$this->_group = 'GROUP BY a.name, a.id_lang';
+
+		return parent::initList();
+	}
+
 	public function postProcess()
 	{
-		if ($this->tabAccess['edit'] === '1' AND Tools::getValue('submitAdd'.$this->table))
-			if ($id = (int)(Tools::getValue($this->identifier)) AND $obj = new $this->className($id) AND Validate::isLoadedObject($obj))
+		if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table))
+			if ($id = (int)Tools::getValue($this->identifier) && $obj = new $this->className($id) && Validate::isLoadedObject($obj))
 				$obj->setProducts($_POST['products']);
 		return parent::postProcess();
 	}

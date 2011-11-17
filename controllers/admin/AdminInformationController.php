@@ -54,9 +54,9 @@ class AdminInformationControllerCore extends AdminController
 				'encryption' => Configuration::get('PS_MAIL_SMTP_ENCRYPTION'),
 				'port' => Configuration::get('PS_MAIL_SMTP_PORT'),
 			),
-			'user_agent' => $_SERVER["HTTP_USER_AGENT"],
+			'user_agent' => $_SERVER['HTTP_USER_AGENT'],
 		));
-		
+
 		$this->context->smarty->assign($this->getTestResult());
 	}
 
@@ -72,7 +72,7 @@ class AdminInformationControllerCore extends AdminController
 		$tests = ConfigurationTest::getDefaultTests();
 		$tests_op = ConfigurationTest::getDefaultTestsOp();
 
-		$testsErrors = array(
+		$tests_errors = array(
 			'phpversion' => $this->l('Update your PHP version'),
 			'upload' => $this->l('Configure your server to allow the upload file'),
 			'system' => $this->l('Configure your server to allow the creation of directories and write to files'),
@@ -93,15 +93,15 @@ class AdminInformationControllerCore extends AdminController
 			'gz' => $this->l('Enable GZIP compression on your server')
 		);
 
-		$paramsRequiredResults = ConfigurationTest::check($tests);
-		$paramsOptionalResults = ConfigurationTest::check($tests_op);
+		$params_required_results = ConfigurationTest::check($tests);
+		$params_optional_results = ConfigurationTest::check($tests_op);
 
 		return array(
-			'failRequired' => in_array('fail', $paramsRequiredResults),
-			'failOptional' => in_array('fail', $paramsOptionalResults),
-			'testsErrors' => $testsErrors,
-			'testsRequired' => $paramsRequiredResults,
-			'testsOptional' => $paramsOptionalResults,
+			'failRequired' => in_array('fail', $params_required_results),
+			'failOptional' => in_array('fail', $params_optional_results),
+			'testsErrors' => $tests_errors,
+			'testsRequired' => $params_required_results,
+			'testsOptional' => $params_optional_results,
 		);
 	}
 }
