@@ -472,14 +472,14 @@ $(document).ready(function(){
 									<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
 								{/if}
 							</div>
-							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}" class="red">
+							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
 								{l s='Delete this file'}
 							</a>
 							</div>
 						{else}
 							<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
 							{l s='This is the link'}:&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-							<a onclick="return confirm('{l s='Delete this file' slashes=1 js=1})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}" class="red">{l s='Delete this file'}</a>
+							<a onclick="return confirm('{l s='Delete this file' slashes=1 js=1})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">{l s='Delete this file'}</a>
 						{/if}					
 						</p>
 						
