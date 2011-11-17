@@ -42,7 +42,6 @@
 		$('#' + '{$defaultType}').fadeIn('fast');
 	
 		$('.datepicker').each(function() {
-			console.log($(this));
 			$(this).datepicker({
 	     prevText: '',
 	     nextText: '',
@@ -53,8 +52,7 @@
     $('.formAccountingExport form input[type="submit"]').each(function()
     {
     	$(this).click(function() {
-    		dateRegex = /^[2-9]\d{2}-\d{3}-\d{4}$/
-      		return false;
+    		// TODO : Handle errors
     	});
     });
 	});
