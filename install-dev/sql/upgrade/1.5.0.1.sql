@@ -506,6 +506,7 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('3', '100', '1', '1', '1', '1');
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('4', '100', '0', '0', '0', '0');
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('5', '100', '1', '0', '0', '0');
+
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 93, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
 )
@@ -524,3 +525,16 @@ INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` 
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 104, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
 )
+
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('1', '105', '1', '1', '1', '1');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('2', '105', '1', '1', '1', '1');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('3', '105', '0', '0', '0', '0');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('4', '105', '1', '1', '1', '1');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('5', '105', '0', '0', '0', '0');
+
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('1', '106', '1', '1', '1', '1');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('2', '106', '1', '1', '1', '1');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('3', '106', '0', '0', '0', '0');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('4', '106', '1', '1', '1', '1');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('5', '106', '0', '0', '0', '0');
+

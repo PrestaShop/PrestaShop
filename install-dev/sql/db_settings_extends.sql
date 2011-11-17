@@ -955,6 +955,8 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (3, 102, 1, 1, 1, 1),
 (3, 103, 1, 1, 1, 1),
 (3, 104, 1, 1, 1, 1),
+(3, 105, 0, 0, 0, 0),
+(3, 106, 0, 0, 0, 0),
 (4, 1, 1, 1, 1, 1),
 (4, 2, 0, 0, 0, 0),
 (4, 3, 0, 0, 0, 0),
@@ -1050,6 +1052,8 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (4, 102, 1, 1, 1, 1),
 (4, 103, 1, 1, 1, 1),
 (4, 104, 1, 1, 1, 1),
+(4, 105, 1, 1, 1, 1),
+(4, 106, 1, 1, 1, 1),
 (5, 1, 1, 1, 1, 1),
 (5, 2, 1, 1, 1, 1),
 (5, 3, 1, 1, 1, 1),
@@ -1144,7 +1148,9 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (5, 101, 1, 1, 1, 1),
 (5, 102, 1, 1, 1, 1),
 (5, 103, 1, 1, 1, 1),
-(5, 104, 1, 1, 1, 1);
+(5, 104, 1, 1, 1, 1),
+(5, 105, 0, 0, 0, 0),
+(5, 106, 0, 0, 0, 0);
 
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 2, id_module, 0, 1 FROM PREFIX_module);
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 3, id_module, 0, 1 FROM PREFIX_module);
