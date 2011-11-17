@@ -277,7 +277,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 input:focus, textarea:focus {
-	background-color: #F0EBD6;
+	border:1px solid #3293D6;
 }
 
 fieldset {
@@ -438,7 +438,8 @@ select optgroup option {
 
 #content .conf, #content .warn, #content .error {
 	color:#383838;
-	font-weight:700;
+	font-size:12px;
+	font-weight:normal;
 	margin: 0 0 10px 0;
 	line-height: 20px;
 	padding: 10px 15px;
@@ -450,23 +451,33 @@ select optgroup option {
 }
 
 #content .conf {
-	border: 1px solid #72CB67;
-	background-color: #DFFAD3;
+	background: #DFF2BF url(../img/admin/icon-valid.png) no-repeat scroll 6px 6px;
+	border: 1px solid #4F8A10;
+	color:#4F8A10;
+	padding: 5px 5px 5px 40px;
+	border-radius:3px;
+	min-height:32px;
 }
 #content .conf img, #content .warn img, #content .error img {
 	margin:-4px 5px 0 0;
 }
 
 #content .error  {
+	background: #FFBABA url(../img/admin/icon-cancel.png) no-repeat scroll 6px 6px;
 	border: 1px solid #CC0000;
-	background-color: #FFEBE8;
+	color:#D8000C;
+	min-height: 32px;
+    padding: 5px 5px 5px 40px;
 	border-radius:3px;
 }
 
 #content .warn  {
+	background: #FEEFB3 url(../img/admin/icon-attention.png) no-repeat scroll 6px 6px;
 	border: 1px solid #9e6014;
-	background-color: #FEEFB3;
+	color:#9e6014;
+	padding: 5px 5px 5px 40px;
 	border-radius:3px;
+	min-height:32px;
 }
 
 #content .error ol {
@@ -479,6 +490,17 @@ select optgroup option {
 	font-weight:200;
 	margin-left:30px;
 }
+
+
+#content .confirm {
+	background: #DFF2BF url(../img/admin/icon-valid.png) no-repeat scroll 6px 6px;
+	border: 1px solid #4F8A10;
+	color:#4F8A10;
+	padding: 5px 5px 5px 40px;
+	border-radius:3px;
+	min-height:32px;	
+}
+
 
 #content .confirm h3 {
 	padding: 0 0 0 20px;
@@ -753,11 +775,12 @@ tr.deleted td {
 	position: absolute;
 	margin-top: 4px;
 	margin-bottom: 2px;
-	border: 1px solid #ECE52F;
-	padding: 8px 6px 8px 34px;
-	color: #383838;
-	background: #FFFBE5 url(../img/admin/help2.png) no-repeat 6px 5px;
+	border: 1px solid #00529B;
+	padding: 5px 5px 5px 40px;
+	color: #00529B;
+	background: #BDE5F8 url(../img/admin/icon-info.png) no-repeat 6px 5px;
 	border-radius:3px;
+	min-height:32px;
 }
 
 div.hint {
@@ -772,7 +795,7 @@ table tr th .hint {
 	border: 1px solid #ECE52F;
 	padding: 8px 6px 8px 34px;
 	color: #383838;
-	background: #FFFBE5 url(../img/admin/help2.png) no-repeat 6px 5px;
+	background: #FFFBE5 url(../img/admin/icon-info.png) no-repeat 6px 5px;
 	border-radius:3px;
 }
 
@@ -1624,18 +1647,21 @@ a.action_module_delete {
 }
 
 fieldset .optionsDescription{
-    background: url("../img/admin/help2.png") no-repeat scroll 6px center #DDE9F7;
-    border: 1px solid #50B0EC;
-    color: #7F7F7F;
+    background: url("../img/admin/icon-info.png") no-repeat scroll 6px 6px #BDE5F8;
+    border: 1px solid #00529B;
+    color: #00529B;
     font-family: Arial,Verdana,Helvetica,sans-serif;
     font-size: 0.85em;
     margin-bottom: 15px;
     padding: 5px 5px 5px 40px;
+	border-radius:3px;
 }
 
 p.preference_description{
+	font-family:Georgia, Arial, 'sans-serif';
+	font-style:italic;
     clear: both;
-    text-align: justify;
+    text-align: left;
     width: 500px;
 }
 
@@ -1765,22 +1791,4 @@ div.progressBarImage
 	width:24px;
 	color:#fff;
 	background:url(../img/loader.gif);
-}
-ul.connectedSortable
-{
-	padding-left: 0;	
-}
-ul.connectedSortable li.module_list {
-	margin: 0 5px 5px 5px;
-	padding: 5px;
-	font-size: 1.2em;
-	border: 1px solid #CCC;
-	background: #F6F6F6;
-	font-weight: bold;
-	color: #1C94C4;
-	outline: none;
-}
-/* Accounting css */
-.formAccountingExport {
-	display: none;
 }
