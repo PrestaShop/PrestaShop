@@ -34,9 +34,6 @@ class AdminCurrenciesControllerCore extends AdminController
 	 	$this->table = 'currency';
 	 	$this->className = 'Currency';
 	 	$this->lang = false;
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -47,7 +44,6 @@ class AdminCurrenciesControllerCore extends AdminController
 			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'float' => true, 'align' => 'center', 'width' => 50, 'search' => false),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
-		$this->_where = 'AND a.`deleted` = 0';
 
 		$this->options = array(
 			'general' => array(
@@ -56,7 +52,8 @@ class AdminCurrenciesControllerCore extends AdminController
 					'PS_CURRENCY_DEFAULT' => array(
 						'title' => $this->l('Default currency:'),
 						'desc' => $this->l('The default currency used in shop')
-							.'<div class=warn"><img src="../img/admin/warn2.png" />'.$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
+							.'<div class=warn"><img src="../img/admin/warn2.png" />'.
+								$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
 							'cast' => 'intval',
 							'type' => 'select',
 							'identifier' => 'id_currency',
@@ -79,10 +76,25 @@ class AdminCurrenciesControllerCore extends AdminController
 				'title' =>	$this->l('Currency rates update'),
 				'image' => '../img/admin/tab-tools.gif',
 				'info' => $this->l('Place this URL in crontab or call it manually daily').':<br />
-					<b>'.Tools::getShopDomain(true, true). __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
+					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
 			),
 		);
+		parent::__construct();
+	}
 
+	public function initList()
+	{
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
+		$this->_where = 'AND a.`deleted` = 0';
+
+		return parent::initList();
+	}
+
+	public function initForm()
+	{
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Currencies:'),
@@ -133,7 +145,8 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'p' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
+					'p' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. 
+						For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
 				),
 				array(
 					'type' => 'select',
@@ -214,21 +227,27 @@ class AdminCurrenciesControllerCore extends AdminController
 							'value' => 0,
 							'label' => $this->l('Disabled')
 						)
-					),
-				),
-				array(
-					'type' => 'asso_shop',
-					'label' => 'Shop:',
-					'name' => ''
+					)
 				)
-			),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			),
-			'asso_shop' => 'shop'
+			)
 		);
-		parent::__construct();
+
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+				'values' => Shop::getTree()
+			);
+		}
+
+		$this->fields_form['submit'] = array(
+			'title' => $this->l('   Save   '),
+			'class' => 'button'
+		);
+
+		return parent::initForm();
 	}
 
 	public function postProcess()
@@ -239,29 +258,31 @@ class AdminCurrenciesControllerCore extends AdminController
 			{
 				if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
 					$this->_errors[] = $this->l('You can\'t delete the default currency');
-				elseif ($object->delete())
+				else if ($object->delete())
 					Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
 				else
 					$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' 
+					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
-		elseif ($this->action == 'status')
+		else if ($this->action == 'status')
 		{
 			if (Validate::isLoadedObject($object = $this->loadObject()))
 			{
-				if ($object->active AND $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+				if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
 					$this->_errors[] = $this->l('You can\'t disable the default currency');
-				elseif ($object->toggleStatus())
-					Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
+				else if ($object->toggleStatus())
+					Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
 				else
 					$this->_errors[] = Tools::displayError('An error occurred while updating status.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' 
+					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
-		elseif (Tools::isSubmit('submitExchangesRates'))
+		else if (Tools::isSubmit('submitExchangesRates'))
 		{
 			if (!$this->_errors[] = Currency::refreshCurrencies())
 				Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
