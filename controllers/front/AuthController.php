@@ -347,8 +347,17 @@ class AuthControllerCore extends FrontController
 					{
 						if (!$customer->is_guest)
 						{
+							$customer->cleanGroups();
+							// we add the guest customer in the default customer group
+							$customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
 							if (!$this->sendConfirmationMail($customer))
 								$this->errors[] = Tools::displayError('Cannot send email');
+						}
+						else
+						{
+							$customer->cleanGroups();
+							// we add the guest customer in the guest customer group
+							$customer->addGroups(array((int)Configuration::get('PS_GUEST_GROUP')));
 						}
 
 						$this->updateContext($customer);
@@ -470,8 +479,17 @@ class AuthControllerCore extends FrontController
 						{
 							if (!$customer->is_guest)
 							{
+								$customer->cleanGroups();
+								// we add the guest customer in the default customer group
+								$customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
 								if (!$this->sendConfirmationMail($customer))
 									$this->errors[] = Tools::displayError('Cannot send email');
+							}
+							else
+							{
+								$customer->cleanGroups();
+								// we add the guest customer in the guest customer group
+								$customer->addGroups(array((int)Configuration::get('PS_GUEST_GROUP')));
 							}
 							$this->updateContext($customer);
 							$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)$customer->id);

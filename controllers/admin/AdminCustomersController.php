@@ -399,11 +399,12 @@ class AdminCustomersControllerCore extends AdminController
 			$messages[$i]['date_add'] = Tools::displayDate($messages[$i]['date_add'], $this->context->language->id, true);
 		}
 
-		$groups = Group::getGroups($this->default_form_language, true);
+		$groups = $customer->getGroups();
 		$total_groups = count($groups);
 		for ($i = 0; $i < $total_groups; $i++)
 		{
 			$group = new Group($groups[$i]);
+			$groups[$i] = array();
 			$groups[$i]['id_group'] = $group->id;
 			$groups[$i]['name'] = $group->name[$this->default_form_language];
 		}

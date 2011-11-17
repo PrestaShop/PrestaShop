@@ -499,6 +499,7 @@ ALTER TABLE `PREFIX_tax` ADD COLUMN `account_number` VARCHAR(64) NOT NULL;
 /* PHP:add_new_tab(AdminCMS, fr:Pages CMS|es:CMS pages|en:CMS pages|de:CMS pages|it:CMS pages, -1); */;
 
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCategories&addcategory' WHERE `id_quick_access` = 3;
+
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminProducts&addproduct' WHERE `id_quick_access` = 4;
 
 UPDATE `PREFIX_access` SET `view` = '1' WHERE `id_profile` = 5 AND `id_tab` = 95;
@@ -510,19 +511,19 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 93, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-)
+);
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 94, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-)
+);
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 101, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-)
+);
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 102, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-)
+);
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 103, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-)
+);
 INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
 	SELECT `id_profile`, 104, 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
 )
@@ -539,3 +540,7 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('4', '106', '1', '1', '1', '1');
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('5', '106', '0', '0', '0', '0');
 
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) ('PS_CUSTOMER_GROUP', '1', NOW(), NOW());
+
+/* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
+/* PHP:add_new_groups('Invité', 'Guest'); */;

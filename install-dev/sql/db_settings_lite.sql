@@ -319,7 +319,7 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (143, 'PS_VIRTUAL_PROD_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (144, 'PS_CUSTOMIZATION_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (145, 'PS_CART_RULE_FEATURE_ACTIVE', '0', NOW(), NOW()),
-(146, 'PS_GROUP_FEATURE_ACTIVE', '0', NOW(), NOW()),
+(146, 'PS_GROUP_FEATURE_ACTIVE', '1', NOW(), NOW()),
 (147, 'PS_PACK_FEATURE_ACTIVE', '0', NOW(), NOW()),
 (148, 'PS_ALIAS_FEATURE_ACTIVE', '1', NOW(), NOW()),
 (149, 'PS_CARRIER_DEFAULT', '1', NOW(), NOW()),
@@ -334,7 +334,10 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (158, 'PS_STOCK_MVT_TRANSFER_FROM', '6', NOW(), NOW()),
 (159, 'PS_CARRIER_DEFAULT_ORDER', '0', NOW(), NOW()),
 (160, 'PS_STOCK_MVT_SUPPLY_ORDER', '8', NOW(), NOW()),
-(161, 'PS_STOCK_CUSTOMER_ORDER_REASON', '3', NOW(), NOW());
+(161, 'PS_STOCK_CUSTOMER_ORDER_REASON', '3', NOW(), NOW()),
+(162, 'PS_UNIDENTIFIED_GROUP', '1', NOW(), NOW()),
+(163, 'PS_GUEST_GROUP', '2', NOW(), NOW()),
+(164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -1344,7 +1347,7 @@ INSERT INTO `PREFIX_cms_category` (`id_cms_category`, `id_parent`, `level_depth`
 /* Carrier */
 INSERT INTO `PREFIX_carrier` (`id_carrier`, `id_reference`, `id_tax_rules_group`, `name`, `active`, `deleted`, `shipping_handling`, `position`) VALUES (1, 1, 0, 0, 1, 0, 0, 0);
 
-INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) VALUES (1, 1);
+INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) (SELECT 1, `id_group` FROM `PREFIX_group`);
 
 INSERT INTO `PREFIX_carrier_lang` (`id_carrier`, `id_lang`, `delay`) VALUES (1, 1, 'Pick up in-store'),(1, 2, 'Retrait au magasin'),(1, 3, 'Recogida en la tienda'),(1, 4, 'Abholung im Geschäft'),(1, 5, 'Ritiro in magazzino');
 
@@ -1432,12 +1435,15 @@ INSERT INTO `PREFIX_timezone` (`name`) VALUES ('Africa/Abidjan'),('Africa/Accra'
 ('US/East-Indiana'),('US/Eastern'),('US/Hawaii'),('US/Indiana-Starke'),('US/Michigan'),('US/Mountain'),('US/Pacific'),('US/Pacific-New'),('US/Samoa'),
 ('UTC'),('W-SU'),('WET'),('Zulu');
 
-INSERT INTO `PREFIX_group` (`id_group`, `reduction`, `date_add`, `date_upd`) VALUES	(1, 0, NOW(), NOW());
+INSERT INTO `PREFIX_group` (`id_group`, `reduction`, `date_add`, `date_upd`) VALUES	(1, 0, NOW(), NOW()), (2, 0, NOW(), NOW()), (3, 0, NOW(), NOW());
 
-INSERT INTO `PREFIX_group_lang` (`id_group`, `id_lang`, `name`) VALUES	(1, 1, 'Default'),(1, 2, 'Défaut'),(1, 3, 'Predeterminado'),(1, 4, 'Default'),(1, 5, 'Default');
+INSERT INTO `PREFIX_group_lang` (`id_group`, `id_lang`, `name`) VALUES	
+(1, 1, 'Unidentified'),(1, 2, 'Non identifié'),(1, 3, 'Unidentified'),(1, 4, 'Unidentified'),(1, 5, 'Unidentified'),
+(2, 1, 'Guest'),(2, 2, 'Invité'),(2, 3, 'Guest'),(2, 4, 'Guest'),(2, 5, 'Guest'),
+(3, 1, 'Default'),(3, 2, 'Défaut'),(3, 3, 'Predeterminado'),(3, 4, 'Default'),(3, 5, 'Default');
 INSERT INTO `PREFIX_group_group_shop` (`id_group`, `id_group_shop`) (SELECT `id_group`, 1 FROM `PREFIX_group`);
 
-INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) VALUES (1, 1);
+INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) (SELECT 1, `id_group` FROM `PREFIX_group`);
 
 INSERT INTO `PREFIX_stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`) VALUES
 (1, 1, NOW(), NOW()), 
