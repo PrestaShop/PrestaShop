@@ -188,12 +188,12 @@ class FeatureCore extends ObjectModel
 	*/
 	public static function nbFeatures($id_lang)
 	{
-		$result = Db::getInstance()->getRow('
-		SELECT COUNT(ag.`id_feature`) as nb
+		return Db::getInstance()->getValue('
+		SELECT COUNT(*) as nb
 		FROM `'._DB_PREFIX_.'feature` ag
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)$id_lang.')
-		ORDER BY `name` ASC');
-		return ($result['nb']);
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl 
+		ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)$id_lang.')
+		');
 	}
 
 	/**
