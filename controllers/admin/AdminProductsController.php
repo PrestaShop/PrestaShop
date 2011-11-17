@@ -176,19 +176,18 @@ class AdminProductsController extends AdminController
 
 	public function deleteVirtualProduct()
 	{
-		if (!($id_product_download = ProductDownload::getIdFromIdProduct((int)Tools::getValue('id_product'))))
-			return false;
+		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), 0)))
+			return false;		
 		$productDownload = new ProductDownload((int)($id_product_download));
-		return $productDownload->deleteFile();
+		return $productDownload->deleteFile((int)($id_product_download));
 	}
 
 	public function deleteVirtualProductAttribute()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), (int) Tools::getValue('id_product_attribute'))))
 			return false;
-		$productDownload = new ProductDownload((int)($id_product_download));
-		
-		return $productDownload->deleteFile();
+		$productDownload = new ProductDownload((int)($id_product_download));		
+		return $productDownload->deleteFile((int)($id_product_download));
 	}
 
 	/**
@@ -659,7 +658,7 @@ class AdminProductsController extends AdminController
 					}
 					else
 						Product::updateDefaultAttribute($id_product);
-
+		
 					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
 				}
 				else
