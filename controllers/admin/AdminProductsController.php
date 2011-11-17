@@ -1837,7 +1837,7 @@ if (false)
 		$token = Tools::encrypt('PreviewProduct'.$product->id);
 		if (strpos($preview_url, '?') === false)
 			$preview_url .= '?';
-			$preview_url = ($this->context->link->getProductLink($this->getFieldValue($product, 'id'), $this->getFieldValue($product, 'link_rewrite', $this->_defaultFormLanguage), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id)));
+			$preview_url = ($this->context->link->getProductLink($this->getFieldValue($product, 'id'), $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id)));
 			if (!$product->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
@@ -3161,119 +3161,43 @@ if (false)
 	{
 		if (!Feature::isFeatureActive())
 		{
-			$this->tpl_form_vars['custom_form'] = '';
 			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
 
-		$content = '';
-
+		$data = $this->context->smarty->createData();
 		if ($obj->id)
 		{
-			$feature = Feature::getFeatures($this->context->language->id);
-			$ctab = '';
-			foreach ($feature as $tab)
-				$ctab .= 'ccustom_'.$tab['id_feature'].'¤';
-			$ctab = rtrim($ctab, '¤');
+			$features = Feature::getFeatures($this->context->language->id);
 
-			$content .= '
-			<table cellpadding="5">
-				<tr>
-					<td colspan="2">
-						<b>'.$this->l('Assign features to this product:').'</b><br />
-						<ul style="margin: 10px 0 0 20px;">
-							<li>'.$this->l('You can specify a value for each relevant feature regarding this product, empty fields will not be displayed.').'</li>
-							<li>'.$this->l('You can either set a specific value, or select among existing pre-defined values you added previously.').'</li>
-						</ul>
-					</td>
-				</tr>
-			</table>
-			<div class="separation"></div><br />';
-			// Header
-			$nb_feature = Feature::nbFeatures($this->context->language->id);
-			$content .= '
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:900px;">
-				<tr>
-					<th>'.$this->l('Feature').'</td>
-					<th style="width:30%">'.$this->l('Pre-defined value').'</td>
-					<th style="width:40%"><u>'.$this->l('or').'</u> '.$this->l('Customized value').'</td>
-				</tr>';
-			if (!$nb_feature)
-				$content .= '<tr><td colspan="3" style="text-align:center;">'.$this->l('No features defined').'</td></tr>';
-			$content .= '</table>';
-
-			// Listing
-			if ($nb_feature)
+			foreach ($features as $k => $tab_features)
 			{
-				$content .= '
-				<table cellpadding="5" style="width: 900px; margin-top: 10px">';
+				$features[$k]['current_item'] = false;
+				$features[$k]['val'] = array();
 
-				foreach ($feature as $tab_features)
-				{
-					$current_item = false;
-					$custom = true;
-					foreach ($obj->getFeatures() as $tab_products)
-						if ($tab_products['id_feature'] == $tab_features['id_feature'])
-							$current_item = $tab_products['id_feature_value'];
+				$custom = true;
+				foreach ($this->object->getFeatures() as $tab_products)
+					if ($tab_products['id_feature'] == $tab_features['id_feature'])
+						$features[$k]['current_item'] = $tab_products['id_feature_value'];
 
-					$featureValues = FeatureValue::getFeatureValuesWithLang($this->context->language->id, (int)$tab_features['id_feature']);
+				$features[$k]['featureValues'] = FeatureValue::getFeatureValuesWithLang($this->context->language->id, (int)$tab_features['id_feature']);
+				if (sizeof($features[$k]['featureValues']))
+					foreach ($features[$k]['featureValues'] as $value)
+						if ($features[$k]['current_item'] == $value['id_feature_value'])
+							$custom = false;
 
-					$content .= '
-					<tr>
-						<td>'.$tab_features['name'].'</td>
-						<td style="width: 30%">';
-
-					if (sizeof($featureValues))
-					{
-						$content .= '
-							<select id="feature_'.$tab_features['id_feature'].'_value" name="feature_'.$tab_features['id_feature'].'_value"
-								onchange="$(\'.custom_'.$tab_features['id_feature'].'_\').val(\'\');">
-								<option value="0">---&nbsp;</option>';
-
-						foreach ($featureValues as $value)
-						{
-							if ($current_item == $value['id_feature_value'])
-								$custom = false;
-							$content .= '<option value="'.$value['id_feature_value'].'"'.(($current_item == $value['id_feature_value']) ? ' selected="selected"' : '').'>'.substr($value['value'], 0, 40).(Tools::strlen($value['value']) > 40 ? '...' : '').'&nbsp;</option>';
-						}
-
-						$content .= '</select>';
-					}
-					else
-						$content .= '<input type="hidden" name="feature_'.$tab_features['id_feature'].'_value" value="0" /><span style="font-size: 10px; color: #666;">'.$this->l('N/A').' - <a href="index.php?tab=AdminFeatures&addfeature_value&id_feature='.(int)$tab_features['id_feature'].'&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$this->context->employee->id).'" style="color: #666; text-decoration: underline;">'.$this->l('Add pre-defined values first').'</a></span>';
-
-					$content .= '
-						</td>
-						<td style="width:40%" class="translatable">';
-					$tab_customs = ($custom ? FeatureValue::getFeatureValueLang($current_item) : array());
-					foreach ($this->_languages as $language)
-						$content .= '
-							<div class="lang_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $this->default_form_language ? 'block' : 'none').'; float: left;">
-								<textarea class="custom_'.$tab_features['id_feature'].'_" name="custom_'.$tab_features['id_feature'].'_'.$language['id_lang'].'" cols="40" rows="1"
-									onkeyup="if (isArrowKey(event)) return ;$(\'#feature_'.$tab_features['id_feature'].'_value\').val(0);" >'.htmlentities(Tools::getValue('custom_'.$tab_features['id_feature'].'_'.$language['id_lang'], FeatureValue::selectLang($tab_customs, $language['id_lang'])), ENT_COMPAT, 'UTF-8').'</textarea>
-							</div>';
-					$content .= '
-						</td>
-					</tr>';
-				}
-				$content .= '
-				<tr>
-					<td style="height: 50px; text-align: center;" colspan="3"><input type="submit" name="submitProductFeature" id="submitProductFeature" value="'.$this->l('Save modifications').'" class="button" /></td>
-				</tr>';
+				if($custom)
+					$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
 			}
-			$content .= '</table>
-			<div class="separation"></div>
-			<div style="text-align:center;">
-				<a href="index.php?tab=AdminFeatures&addfeature&token='.Tools::getAdminToken('AdminFeatures'.(int)(Tab::getIdFromClassName('AdminFeatures')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('You will lose all modifications not saved, you may want to save modifications first?', __CLASS__, true, false).'\');"><img src="../img/admin/add.gif" alt="new_features" title="'.$this->l('Add a new feature').'" />&nbsp;'.$this->l('Add a new feature').'</a>
-			</div>';
 		}
-		else
-			$content .= '<b>'.$this->l('You must save this product before adding features').'.</b>';
 
-		$content .= '<script type="text/javascript">
-			displayFlags(languages, id_language, allowEmployeeFormLang);
-		</script>';
-		$this->tpl_form_vars['custom_form'] = $content;
+		$data->assign('available_features', $features);
+
+		$data->assign('product', $obj);
+		$data->assign('link', $this->context->link);
+		$data->assign('languages', $this->_languages);
+		$data->assign('default_form_language', $this->default_form_language);
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
 	public function ajaxProcessProductQuantity()
