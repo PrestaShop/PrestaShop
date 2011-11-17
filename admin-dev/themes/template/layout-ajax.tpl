@@ -85,4 +85,4 @@
 	</div>
 {/if}
 
-{$content}
+{$page}
