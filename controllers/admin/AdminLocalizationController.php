@@ -40,10 +40,34 @@ class AdminLocalizationControllerCore extends AdminController
 				'width' =>	'width2',
 				'icon' =>	'localization',
 				'fields' =>	array(
-					'PS_WEIGHT_UNIT' => array('title' => $this->l('Weight unit:'), 'desc' => $this->l('The weight unit of your shop (eg. kg or lbs)'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
-					'PS_DISTANCE_UNIT' => array('title' => $this->l('Distance unit:'), 'desc' => $this->l('The distance unit of your shop (eg. km or mi)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'),
-					'PS_VOLUME_UNIT' => array('title' => $this->l('Volume unit:'), 'desc' => $this->l('The volume unit of your shop'), 'validation' => 'isWeightUnit', 'required' => true, 'type' => 'text'),
-					'PS_DIMENSION_UNIT' => array('title' => $this->l('Dimension unit:'), 'desc' => $this->l('The dimension unit of your shop (eg. cm or in)'), 'validation' => 'isDistanceUnit', 'required' => true, 'type' => 'text'),
+					'PS_WEIGHT_UNIT' => array(
+						'title' => $this->l('Weight unit:'),
+						'desc' => $this->l('The weight unit of your shop (eg. kg or lbs)'),
+						'validation' => 'isWeightUnit',
+						'required' => true,
+						'type' => 'text'
+					),
+					'PS_DISTANCE_UNIT' => array(
+						'title' => $this->l('Distance unit:'),
+						'desc' => $this->l('The distance unit of your shop (eg. km or mi)'),
+						'validation' => 'isDistanceUnit',
+						'required' => true,
+						'type' => 'text'
+					),
+					'PS_VOLUME_UNIT' => array(
+						'title' => $this->l('Volume unit:'),
+						'desc' => $this->l('The volume unit of your shop'),
+						'validation' => 'isWeightUnit',
+						'required' => true,
+						'type' => 'text'
+					),
+					'PS_DIMENSION_UNIT' => array(
+						'title' => $this->l('Dimension unit:'),
+						'desc' => $this->l('The dimension unit of your shop (eg. cm or in)'),
+						'validation' => 'isDistanceUnit',
+						'required' => true,
+						'type' => 'text'
+					)
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),
@@ -52,8 +76,20 @@ class AdminLocalizationControllerCore extends AdminController
 				'width' =>	'width2',
 				'icon' =>	'localization',
 				'fields' =>	array(
-					'PS_LOCALE_LANGUAGE' => array('title' => $this->l('Language locale:'), 'desc' => $this->l('Your server\'s language locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL),
-					'PS_LOCALE_COUNTRY' => array('title' => $this->l('Country locale:'), 'desc' => $this->l('Your server\'s country locale.'), 'validation' => 'isLanguageIsoCode', 'type' => 'text', 'visibility' => Shop::CONTEXT_ALL)
+					'PS_LOCALE_LANGUAGE' => array(
+						'title' => $this->l('Language locale:'),
+						'desc' => $this->l('Your server\'s language locale.'),
+						'validation' => 'isLanguageIsoCode',
+						'type' => 'text',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'PS_LOCALE_COUNTRY' => array(
+						'title' => $this->l('Country locale:'),
+						'desc' => $this->l('Your server\'s country locale.'),
+						'validation' => 'isLanguageIsoCode',
+						'type' => 'text',
+						'visibility' => Shop::CONTEXT_ALL
+					)
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),
@@ -64,21 +100,22 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
-			if (!$pack = @Tools::file_get_contents('http://www.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml') AND !$pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml'))
+			if (!$pack = @Tools::file_get_contents('http://www.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml') &&
+				!$pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml'))
 				$this->_errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
-			elseif (!$selection = Tools::getValue('selection'))
+			else if (!$selection = Tools::getValue('selection'))
 				$this->_errors[] = Tools::displayError('Please select at least one content item to import.');
 			else
 			{
-				foreach ($selection AS $selected)
+				foreach ($selection as $selected)
 					if (!Validate::isLocalizationPackSelection($selected))
 					{
 						$this->_errors[] = Tools::displayError('Invalid selection');
-						return ;
+						return;
 					}
-				$localizationPack = new LocalizationPack();
-				if (!$localizationPack->loadLocalisationPack($pack, $selection))
-					$this->_errors = array_merge($this->_errors, $localizationPack->getErrors());
+				$localization_pack = new LocalizationPack();
+				if (!$localization_pack->loadLocalisationPack($pack, $selection))
+					$this->_errors = array_merge($this->_errors, $localization_pack->getErrors());
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);
 			}
@@ -89,19 +126,19 @@ class AdminLocalizationControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$localizations_pack = false; 
+		$localizations_pack = false;
 		$this->tpl_option_vars['options_content'] = $this->initOptions();
 
 		$xml_localization = Tools::simplexml_load_file('http://www.prestashop.com/rss/localization.xml');
 		if (!$xml_localization)
 		{
-			$localizationFile = dirname(__FILE__).'/../../localization/localization.xml';
-			if (file_exists($localizationFile))
-				$xml_localization = simplexml_load_file($localizationFile);
+			$localization_file = dirname(__FILE__).'/../../localization/localization.xml';
+			if (file_exists($localization_file))
+				$xml_localization = simplexml_load_file($localization_file);
 		}
 
 			if ($xml_localization)
-				foreach($xml_localization->pack as $pack)
+				foreach ($xml_localization->pack as $pack)
 					$localizations_pack[(string)$pack->iso] = (string)$pack->name;
 
 		$this->tpl_option_vars['localizations_pack'] = $localizations_pack;
