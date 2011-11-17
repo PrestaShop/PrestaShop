@@ -154,6 +154,9 @@ class AdminAccountingExportControllerCore extends AdminController
 		
 		$this->context->smarty->assign(array(
 			'clientPrefix' => Configuration::get('ACCOUNTING_CLIENT_PREFIX_EXPORT'),
+			'journal' => Configuration::get('ACCOUNTING_JOURNAL_EXPORT'),
+			'begin_date' => Tools::getValue('beginDate'),
+			'end_date' => Tools::getValue('endDate'),
 			'pathAccountExportTpl' => $this->pathAccountExportTpl,
 			'urlDownload' => Tools::getShopDomain().'/download/'
 		));
@@ -201,6 +204,7 @@ class AdminAccountingExportControllerCore extends AdminController
 					break;
 				case 'global_export':
 					$this->runGlobalExport();
+					Configuration::updateValue('ACCOUNTING_JOURNAL_EXPORT', Tools::getValue('journal'));
 					break;
 				default:
 					// If not defined, set export type to default
