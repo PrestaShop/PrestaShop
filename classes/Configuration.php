@@ -159,6 +159,11 @@ class ConfigurationCore extends ObjectModel
 			return self::$_CONF[$langID]['global'][$key];
 		return false;
 	}
+	
+	static public function getGlobalValue($key, $langID = NULL)
+	{
+		return self::get($key, $langID, 0, 0);
+	}
 
 	/**
 	  * Get a single configuration value (in multiple languages)
