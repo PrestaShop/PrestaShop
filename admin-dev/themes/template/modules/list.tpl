@@ -30,7 +30,7 @@
 	
 			<ul class="cc_button">
 				<li>
-					<a id="desc-module-new" class="toolbar_btn" href="#" onclick="$('#module_install').slideToggle();return false;" title="Add new">
+					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="Add new">
 						<span class="process-icon-new-module" ></span>
 						<div>Add new module</div>
 					</a>
@@ -47,29 +47,30 @@
 				<h3><span id="current_obj" style="font-weight: normal;"><span class="breadcrumb item-0">Module</span> : <span class="breadcrumb item-1">Liste de modules</span></span></h3>
 			</div>
 
-			<div id="module_install" style="width:900px;{if !isset($smarty.post.downloadflag)}display: none;{/if}">
-				<fieldset>
-					<legend><img src="../img/admin/add.gif" alt="{l s='Add a new module'}" class="middle" /> {l s='Add a new module'}</legend>
-					<p>{'The module must be either a zip file or a tarball.'}</p>
-					<hr />
-					<div style="float:right;margin-right:50px;border-left:solid 1px #DFD5C3">
-						<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data">
-							<label style="width: 100px">{l s='Module file'}</label>
-							<div class="margin-form" style="padding-left: 140px">
-								<input type="file" name="file" />
-								<p>{l s='Upload the module from your computer.'}</p>
-							</div>
-							<div class="margin-form" style="padding-left: 140px">
-								<input type="submit" name="submitDownload2" value="{l s='Upload this module'}" class="button" />
-							</div>
-						</form>
-					</div>
-				</fieldset>
-				<br />
-			</div>
-
 		</div>
 	</div>
+
+
+	<div id="module_install" style="width:500px;margin-top:5px;{if !isset($smarty.post.downloadflag)}display: none;{/if}">
+		<fieldset>
+			<legend><img src="../img/admin/add.gif" alt="{l s='Add a new module'}" class="middle" /> {l s='Add a new module'}</legend>
+			<p>{'The module must be either a zip file or a tarball.'}</p>
+			<div style="float:left;margin-right:50px">
+				<form action="{$currentIndex}&token={$token}" method="post" enctype="multipart/form-data">
+					<label style="width: 100px">{l s='Module file'}</label>
+					<div class="margin-form" style="padding-left: 140px">
+						<input type="file" name="file" />
+						<p>{l s='Upload the module from your computer.'}</p>
+					</div>
+					<div class="margin-form" style="padding-left: 140px">
+						<input type="submit" name="download" value="{l s='Upload this module'}" class="button" />
+					</div>
+				</form>
+			</div>
+		</fieldset>
+		<br />
+	</div>
+
 
 	<!--start filter module-->
 	<div class="filter-module">
@@ -87,14 +88,18 @@
 						<option value="allModules" {if $showTypeModules eq 'allModules'}selected="selected"{/if}>{l s='All Modules'}</option>
 						<option value="nativeModules" {if $showTypeModules eq 'nativeModules'}selected="selected"{/if}>{l s='Native Modules'}</option>
 						<option value="partnerModules" {if $showTypeModules eq 'partnerModules'}selected="selected"{/if}>{l s='Partners Modules'}</option>
-						{$authorsOptionsList}
+						<optgroup label="{l s='Authors'}">
+							{foreach from=$list_modules_authors key=module_author item=status}
+								<option value="authorModules[{$module_author}]" {if $status eq "selected"}selected{/if}>{$module_author|truncate:20:'...'}</option>
+							{/foreach}
+						</optgroup>
 						<option value="otherModules" {if $showTypeModules eq 'otherModules'}selected="selected"{/if}>{l s='Others Modules'}</option>
 					</select>
 					&nbsp;
 					<select name="module_install">
 						<option value="installedUninstalled" {if $showInstalledModules eq 'installedUninstalled'}selected="selected"{/if}>{l s='Installed & Uninstalled'}</option>
 						<option value="installed" {if $showInstalledModules eq 'installed'}selected="selected"{/if}>{l s='Installed Modules'}</option>
-						<option value="unistalled" {if $showInstalledModules eq 'unistalled'}selected="selected"{/if}>{l s='Uninstalled Modules'}</option>
+						<option value="uninstalled" {if $showInstalledModules eq 'uninstalled'}selected="selected"{/if}>{l s='Uninstalled Modules'}</option>
 					</select>
 					&nbsp;
 					<select name="module_status">
@@ -111,8 +116,8 @@
 			</div>
 
 			<div class="button-filter">
-				<input type="submit" value="{l s='Reset'}" name="resetFilterModules" class="button">
-				<input type="submit" value="{l s='Filter'}" name="filterModules" class="button">
+				<input type="submit" value="{l s='Reset'}" name="resetFilterModules" class="button" />
+				<input type="submit" value="{l s='Filter'}" name="filterModules" class="button" />
 			</div>
 
 		</form>
@@ -136,6 +141,7 @@
 				</ul>
 			</div>
 			
+
 			<div class="categorieStatus">
 				<h3>Etat du module</h3>
 				<div class="subHeadline">{$nb_modules}</div>

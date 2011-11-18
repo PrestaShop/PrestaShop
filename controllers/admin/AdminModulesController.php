@@ -25,11 +25,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+
 include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 
 class AdminModulesControllerCore extends AdminController
 {
-	/** @var array map with $_GET keywords and their callback */
+
+	/*
+	** @var array map with $_GET keywords and their callback
+	*/
 	private $map = array(
 		'install' => 'install',
 		'uninstall' => 'uninstall',
@@ -49,6 +53,21 @@ class AdminModulesControllerCore extends AdminController
 
 	private $serial_modules = '';
 	private $modules_authors = array();
+
+	private $id_employee;
+	private $iso_default_country;
+	private $filter_configuration = array();
+
+
+
+
+	/*
+	** Admin Modules Controller Constructor
+	** Init list modules categories
+	** Load id employee
+	** Load filter configuration
+	** Load cache file
+	*/
 
 	public function __construct()
 	{
@@ -79,38 +98,49 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 
+		// Set Id Employee, Iso Default Country and Filter Configuration
+		$this->id_employee = (int)$this->context->employee->id;
+		$this->iso_default_country = $this->context->country->iso_code;
+		$this->filter_configuration = Configuration::getMultiple(array(
+			'PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee,
+			'PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee,
+			'PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee,
+			'PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee,
+			'PS_SHOW_CAT_MODULES_'.(int)$this->id_employee,
+		));
+
 		// Load cache file modules list (natives and partners modules)
+		$xmlModules = false;
 		if (file_exists(_PS_ROOT_DIR_.$this->cache_file_modules_list))
 			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.$this->cache_file_modules_list);
-		else
-			$xmlModules = false;
 		if ($xmlModules)
-		{
 			foreach($xmlModules->children() as $xmlModule)
-			{
-				if ($xmlModule->attributes() == 'native')
-					foreach($xmlModule->children() as $module)
-						foreach($module->attributes() as $key => $value)
-							if ($key == 'name')
-								$this->list_natives_modules[] = (string)$value;
-
-				if ($xmlModule->attributes() == 'partner')
-					foreach ($xmlModule->children() as $module)
-						foreach ($module->attributes() as $key => $value)
-							if ($key == 'name')
-								$this->list_partners_modules[] = (string)$value;
-			}
-		}
+				foreach($xmlModule->children() as $module)
+					foreach($module->attributes() as $key => $value)
+					{
+						if ($xmlModule->attributes() == 'native' && $key == 'name')
+							$this->list_natives_modules[] = (string)$value;
+						if ($xmlModule->attributes() == 'partner' && $key == 'name')
+							$this->list_partners_modules[] = (string)$value;
+					}
 	}
 
-	/** if modules_list.xml is outdated,
-	 * this function will re-upload it from prestashop.com
-	 *
-	 * @return null
-	 */
+
+
+
+
+	/*
+	** Ajax Request Methods
+	**
+	** if modules_list.xml is outdated,
+	** this function will re-upload it from prestashop.com
+	**
+	** @return null
+	*/
+
 	public function ajaxProcessRefreshModuleList()
 	{
-		//refresh modules_list.xml every week
+		// Refresh modules_list.xml every week
 		if (!$this->isFresh())
 		{
 			if ($this->refresh())
@@ -121,7 +151,6 @@ class AdminModulesControllerCore extends AdminController
 		else
 			$this->status = 'cache';
 	}
-
 
 	public function isFresh($timeout = 604800000)
 	{
@@ -141,30 +170,18 @@ class AdminModulesControllerCore extends AdminController
 		echo Tools::jsonEncode(array('status' => $this->status));
 	}
 
-	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
-	{
-		$this->context = Context::getContext();
-		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id, $module_type);
-		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id, $country_module_value);
-		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id, $module_install);
-		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id, $module_status);
-	}
 
-	private function resetFilterModules()
-	{
-		$this->context = Context::getContext();
-		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id, 'allModules');
-		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id, 0);
-		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id, 'installedUninstalled');
-		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id, 'enabledDisabled');
-	}
 
-	/**
-	 * Get current URL
-	 *
-	 * @param array $remove List of keys to remove from URL
-	 * @return string
-	 */
+
+
+
+	/*
+	** Get current URL
+	**
+	** @param array $remove List of keys to remove from URL
+	** @return string
+	*/
+
 	protected function getCurrentUrl($remove = array())
 	{
 		$url = $_SERVER['REQUEST_URI'];
@@ -181,330 +198,7 @@ class AdminModulesControllerCore extends AdminController
 		return $url;
 	}
 
-	private function _getSubmitedModuleAuthor($value)
-	{
-		$value = str_replace('authorModules[', '', $value);
-		$value = str_replace("\'", "'", $value);
-
-		$value = substr($value, 0, -1);
-		return $value;
-	}
-
-	public function postProcess()
-	{
-		$id_employee = (int)$this->context->employee->id;
-		$filter_conf = Configuration::getMultiple(array(
-			'PS_SHOW_TYPE_MODULES_'.$id_employee,
-			'PS_SHOW_COUNTRY_MODULES_'.$id_employee,
-			'PS_SHOW_INSTALLED_MODULES_'.$id_employee,
-			'PS_SHOW_ENABLED_MODULES_'.$id_employee
-		));
-
-		if (Tools::isSubmit('desactive') && isset($filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee] != 'enabledDisabled')
-			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee], 'disabled');
-
-		if (Tools::isSubmit('active') && isset($filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee] != 'enabledDisabled')
-			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee], 'enabled');
-
-		if (Tools::isSubmit('uninstall') && isset($filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee] != 'installedUninstalled')
-			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], 'unistalled', $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]);
-
-		if (Tools::isSubmit('install') && isset($filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee]) && $filter_conf['PS_SHOW_INSTALLED_MODULES_'.$id_employee] != 'installedUninstalled')
-			$this->setFilterModules($filter_conf['PS_SHOW_TYPE_MODULES_'.$id_employee], $filter_conf['PS_SHOW_COUNTRY_MODULES_'.$id_employee], 'installed', $filter_conf['PS_SHOW_ENABLED_MODULES_'.$id_employee]);
-
-		if (Tools::getValue('filterCategory') != '')
-		{
-			$newFilterCategory = Tools::getValue('filterCategory');
-			$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->context->employee->id));
-			
-			// Check if category is not already filtered
-			foreach ($filterCategories as $fc)
-				if ($fc == $newFilterCategory)
-					$newFilterCategory = '';
-
-			// Add the new filter
-			if ($newFilterCategory != '')
-				$filterCategories[] = $newFilterCategory;
-			$filterCategories = implode('|', $filterCategories);
-			
-			Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->context->employee->id, $filterCategories);
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-		}
-
-		if (Tools::getValue('unfilterCategory') != '')
-		{
-			$unfilterCategory = Tools::getValue('unfilterCategory');
-			$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->context->employee->id));
-			
-			// Remove the category
-			foreach ($filterCategories as $k => $fc)
-				if ($fc == $unfilterCategory)
-					unset($filterCategories[$k]);
-
-			$filterCategories = implode('|', $filterCategories);
-			Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->context->employee->id, $filterCategories);
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-		}
-
-		if (Tools::isSubmit('filterModules'))
-		{
-			$this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-		}
-		elseif (Tools::isSubmit('resetFilterModules'))
-		{
-			$this->resetFilterModules();
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-		}
-
-		if (Tools::isSubmit('active'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-			{
-				$module = Module::getInstanceByName(Tools::getValue('module_name'));
-				if (Validate::isLoadedObject($module))
-				{
-					if (!$module->getPermission('configure'))
-						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
-					else
-					{
-						$module->enable();
-						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-					}
-				}
-				else
-					$this->_errors[] = Tools::displayError('Cannot load module object');
-			} else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		elseif (Tools::isSubmit('desactive'))
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-			{
-				$module = Module::getInstanceByName(Tools::getValue('module_name'));
-				if (Validate::isLoadedObject($module))
-				{
-					if (!$module->getPermission('configure'))
-						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
-					else
-					{
-						$module->disable();
-						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-					}
-				}
-				else
-					$this->_errors[] = Tools::displayError('Cannot load module object');
-			} else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		elseif (Tools::isSubmit('reset'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$module = Module::getInstanceByName(Tools::getValue('module_name'));
-				if (Validate::isLoadedObject($module))
-				{
-					if (!$module->getPermission('configure'))
-						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
-					else
-					{
-						if ($module->uninstall())
-							if ($module->install())
-								Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-							else
-								$this->_errors[] = Tools::displayError('Cannot install module');
-						else
-							$this->_errors[] = Tools::displayError('Cannot uninstall module');
-					}
-				}
-				else
-					$this->_errors[] = Tools::displayError('Cannot load module object');
-			} else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-
-		}
-		/* Automatically copy a module from external URL and unarchive it in the appropriated directory */
-		if (Tools::isSubmit('submitDownload2'))
-		{
-		 	/* PrestaShop demo mode */
-			if (_PS_MODE_DEMO_)
-			{
-				$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
-				return;
-			}
-			/* PrestaShop demo mode*/
-		 	if ($this->tabAccess['add'] === '1')
-			{
-				if (!isset($_FILES['file']['tmp_name']) OR empty($_FILES['file']['tmp_name']))
-					$this->_errors[] = $this->l('no file selected');
-				elseif (substr($_FILES['file']['name'], -4) != '.tar' AND substr($_FILES['file']['name'], -4) != '.zip' AND substr($_FILES['file']['name'], -4) != '.tgz' AND substr($_FILES['file']['name'], -7) != '.tar.gz')
-					$this->_errors[] = Tools::displayError('Unknown archive type');
-				elseif (!@copy($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
-					$this->_errors[] = Tools::displayError('An error occurred while copying archive to module directory.');
-				else
-					$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-
-		// Enable / disable module
-		if (Tools::getValue('enable') !== false)
-		{
-		 	if ($this->tabAccess['edit'] === '1')
-			{
-				$module = Module::getInstanceByName(Tools::getValue('module_name'));
-				if (Validate::isLoadedObject($module))
-				{
-					if (!$module->getPermission('configure'))
-						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
-					else
-					{
-						if (Tools::getValue('enable'))
-							$module->enable();
-						else
-							$module->disable();
-						Tools::redirectAdmin($this->getCurrentUrl('enable'));
-					}
-				}
-				else
-					$this->_errors[] = Tools::displayError('Cannot load module object');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-
-		if (Tools::isSubmit('deleteModule'))
-		{
-		 	if ($this->tabAccess['delete'] === '1')
-			{
-				if (Tools::getValue('module_name') != '')
-				{
-					$module = Module::getInstanceByName(Tools::getValue('module_name'));
-					if (Validate::isLoadedObject($module) AND !$module->getPermission('configure'))
-						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
-					else
-					{
-						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
-						$this->recursiveDeleteOnDisk($moduleDir);
-						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
-					}
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-
-		/* Call appropriate module callback */
-		else
-		{
-		 	$return = false;
-			foreach ($this->map as $key => $method)
-			{
-				$modules = Tools::getValue($key);
-				if (strpos($modules, '|'))
-					$modules = explode('|', $modules);
-				else
-					$modules = empty($modules) ? false : array($modules);
-				$module_errors = array();
-				if ($modules)
-					foreach ($modules AS $name)
-					{
-						if (!($module = Module::getInstanceByName(urldecode($name))))
-							$this->_errors[] = $this->l('module not found');
-						elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
-							$this->_errors[] = Tools::displayError('You do not have permission to install a module.');
-						elseif ($key == 'uninstall' AND ($this->tabAccess['delete'] !== '1' OR !$module->getPermission('configure')))
-							$this->_errors[] = Tools::displayError('You do not have permission to delete this module.');
-						elseif ($key == 'configure' AND ($this->tabAccess['edit'] !== '1' OR !$module->getPermission('configure')))
-							$this->_errors[] = Tools::displayError('You do not have permission to configure this module.');
-						elseif ($key == 'install' AND Module::isInstalled($module->name))
-							$this->_errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
-						elseif ($key == 'uninstall' AND !Module::isInstalled($module->name))
-							$this->_errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
-						else
-						{
-							// If we install a module, force temporary global context for multishop
-							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
-							{
-								Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
-								Context::getContext()->shop = new Shop();
-								Configuration::updateValue('RSS_FEED_TITLE', 'lol');
-							}
-
-							if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
-							{
-								$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
-								$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
-								$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
-
-								$toolbar = '
-								<table class="table" cellpadding="0" cellspacing="0" style="margin:auto;text-align:center">
-									<tr>
-										<th>'.$this->l('Module').' <span style="color: green;">'.$module->name.'</span></th>
-										<th><a href="'.$backlink.'" style="padding:5px 10px">'.$this->l('Back').'</a></th>
-										<th><a href="'.$hooklink.'" style="padding:5px 10px">'.$this->l('Manage hooks').'</a></th>
-										<th style="padding:5px 10px">'.$this->l('Manage translations:').' ';
-										foreach (Language::getLanguages(false) AS $language)
-											$toolbar .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" style="margin-left:5px"><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
-								$toolbar .= '
-										</th>
-									</tr>';
-
-								// Display checkbox in toolbar if multishop
-								if (Shop::isFeatureActive())
-								{
-									$activateOnclick = 'onclick="location.href = \''.$this->getCurrentUrl('enable').'&enable=\'+(($(this).attr(\'checked\')) ? 1 : 0)"';
-									$toolbar .= '<tr>
-										<th colspan="4">
-											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
-									if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
-										$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
-									elseif ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP)
-										$toolbar .= 'all shops of group shop <b>'.$this->context->shop->getGroup()->name.'</b>';
-									else
-										$toolbar .= 'all shops';
-									$toolbar .= '</th>
-									</tr>';
-								}
-
-								$toolbar .= '</table>';
-
-								// Display configure page
-								// TODO : MAKE SOMETHING CLEANER
-								$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
-							}
-							elseif($echo)
-								$return = ($method == 'install' ? 12 : 13);
-							elseif ($echo === false)
-								$module_errors[] = $name;
-
-							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
-							{
-								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
-								unset(Context::getContext()->tmpOldShop);
-							}
-						}
-						if ($key != 'configure' && isset($_GET['bpay']))
-							Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->context->employee->id));
-					}
-				if (count($module_errors))
-				{
-					// If error during module installation, no redirection
-					$html_error = '<ul>';
-					foreach ($module_errors as $module_error)
-						$html_error .= '<li>'.$module_error.'</li>';
-					$html_error .= '</ul>';
-
-					$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
-				}
-			}
-			if ($return)
-				Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
-		}
-	}
-
-	public function extractArchive($file)
+	private function extractArchive($file)
 	{
 		$success = false;
 		if (substr($file, -4) == '.zip')
@@ -526,17 +220,7 @@ class AdminModulesControllerCore extends AdminController
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 
-	public static function sortModule($a, $b)
-	{
-	    if (sizeof($a) == sizeof($b)) {
-	        return 0;
-	    }
-	    return (sizeof($a) < sizeof($b)) ? -1 : 1;
-	}
-
-
-
-	public function recursiveDeleteOnDisk($dir)
+	private function recursiveDeleteOnDisk($dir)
 	{
 		if (strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false)
 			return ;
@@ -558,7 +242,338 @@ class AdminModulesControllerCore extends AdminController
 
 
 
-	// TODO : CHANGE THESE TWO METHODS INTO TPL
+
+
+
+	/*
+	** Filter Configuration Methods
+	** Set and reset filter configuration
+	*/
+
+	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
+	{
+		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee, $module_type);
+		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee, $country_module_value);
+		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee, $module_install);
+		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee, $module_status);
+	}
+
+	private function resetFilterModules()
+	{
+		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee, 'allModules');
+		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee, 0);
+		Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee, 'installedUninstalled');
+		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee, 'enabledDisabled');
+		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, '');
+	}
+
+
+
+
+	/*
+	** Post Process Filter
+	**
+	*/
+
+	public function postProcessFilterModules()
+	{
+		$this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+	}
+
+	public function postProcessResetFilterModules()
+	{
+		$this->resetFilterModules();
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+	}
+
+	public function postProcessFilterCategory()
+	{
+		// Retrieve filter categories configuration and the new filter category
+		$filterCategory = Tools::getValue('filterCategory');
+		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
+			
+		// Check if category filter not already exists
+		foreach ($filterCategories as $fc)
+			if ($fc == $filterCategories)
+				$filterCategories = '';
+
+		// If not, add the new filter
+		if ($filterCategories != '')
+			$filterCategories[] = $filterCategory;
+		$filterCategories = implode('|', $filterCategories);
+
+		// For the moment, we will filter only one category a time
+		$filterCategories = $filterCategory;
+
+		// Save configuration and redirect employee
+		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, $filterCategories);
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+	}
+
+	public function postProcessUnfilterCategory()
+	{
+		// Retrieve filter categories configuration and the filter category to remove
+		$unfilterCategory = Tools::getValue('unfilterCategory');
+		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
+			
+		// Remove the filter category
+		foreach ($filterCategories as $k => $fc)
+			if ($fc == $unfilterCategory)
+				unset($filterCategories[$k]);
+
+		// For the moment, we will filter only one category a time
+		$filterCategories = '';
+
+		// Save configuration and redirect employee
+		$filterCategories = implode('|', $filterCategories);
+		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, $filterCategories);
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+	}
+
+
+
+
+
+
+	/*
+	** Post Process Module CallBack
+	**
+	*/
+
+	public function postProcessReset()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$module = Module::getInstanceByName(Tools::getValue('module_name'));
+			if (Validate::isLoadedObject($module))
+			{
+				if (!$module->getPermission('configure'))
+					$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+				else
+				{
+					if ($module->uninstall())
+						if ($module->install())
+							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+						else
+							$this->_errors[] = Tools::displayError('Cannot install module');
+					else
+						$this->_errors[] = Tools::displayError('Cannot uninstall module');
+				}
+			}
+			else
+				$this->_errors[] = Tools::displayError('Cannot load module object');
+		}
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+	}
+
+	public function postProcessDownload()
+	{
+		// Check the flag
+		if (Tools::getValue('enable') === false)
+			return false;
+
+	 	// PrestaShop demo mode
+		if (_PS_MODE_DEMO_)
+		{
+			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			return;
+		}
+
+		// Try to upload and unarchive the module
+	 	if ($this->tabAccess['add'] === '1')
+		{
+			if (!isset($_FILES['file']['tmp_name']) OR empty($_FILES['file']['tmp_name']))
+				$this->_errors[] = $this->l('no file selected');
+			elseif (substr($_FILES['file']['name'], -4) != '.tar' AND substr($_FILES['file']['name'], -4) != '.zip' AND substr($_FILES['file']['name'], -4) != '.tgz' AND substr($_FILES['file']['name'], -7) != '.tar.gz')
+				$this->_errors[] = Tools::displayError('Unknown archive type');
+			elseif (!@copy($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
+				$this->_errors[] = Tools::displayError('An error occurred while copying archive to module directory.');
+			else
+				$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
+		}
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+	}
+
+	public function postProcessEnable()
+	{
+	 	if ($this->tabAccess['edit'] === '1')
+		{
+			$module = Module::getInstanceByName(Tools::getValue('module_name'));
+			if (Validate::isLoadedObject($module))
+			{
+				if (!$module->getPermission('configure'))
+					$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+				else
+				{
+					if (Tools::getValue('enable'))
+						$module->enable();
+					else
+						$module->disable();
+					Tools::redirectAdmin($this->getCurrentUrl('enable'));
+				}
+			}
+			else
+				$this->_errors[] = Tools::displayError('Cannot load module object');
+		}
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+	}
+
+	public function postProcessDelete()
+	{
+		 	if ($this->tabAccess['delete'] === '1')
+			{
+				if (Tools::getValue('module_name') != '')
+				{
+					$module = Module::getInstanceByName(Tools::getValue('module_name'));
+					if (Validate::isLoadedObject($module) AND !$module->getPermission('configure'))
+						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+					else
+					{
+						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
+						$this->recursiveDeleteOnDisk($moduleDir);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
+					}
+				}
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+	}
+
+	public function postProcessCallback()
+	{
+	 	$return = false;
+		foreach ($this->map as $key => $method)
+		{
+			$modules = Tools::getValue($key);
+			if (strpos($modules, '|'))
+				$modules = explode('|', $modules);
+			else
+				$modules = empty($modules) ? false : array($modules);
+			$module_errors = array();
+			if ($modules)
+				foreach ($modules AS $name)
+				{
+					if (!($module = Module::getInstanceByName(urldecode($name))))
+						$this->_errors[] = $this->l('module not found');
+					elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
+						$this->_errors[] = Tools::displayError('You do not have permission to install a module.');
+					elseif ($key == 'uninstall' AND ($this->tabAccess['delete'] !== '1' OR !$module->getPermission('configure')))
+						$this->_errors[] = Tools::displayError('You do not have permission to delete this module.');
+					elseif ($key == 'configure' AND ($this->tabAccess['edit'] !== '1' OR !$module->getPermission('configure')))
+						$this->_errors[] = Tools::displayError('You do not have permission to configure this module.');
+					elseif ($key == 'install' AND Module::isInstalled($module->name))
+						$this->_errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
+					elseif ($key == 'uninstall' AND !Module::isInstalled($module->name))
+						$this->_errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
+					else
+					{
+						// If we install a module, force temporary global context for multishop
+						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
+						{
+							Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
+							Context::getContext()->shop = new Shop();
+							Configuration::updateValue('RSS_FEED_TITLE', 'lol');
+						}
+
+						if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
+						{
+							$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
+							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
+							$tradlink = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+
+							$toolbar = '<table class="table" cellpadding="0" cellspacing="0" style="margin:auto;text-align:center"><tr>
+									<th>'.$this->l('Module').' <span style="color: green;">'.$module->name.'</span></th>
+									<th><a href="'.$backlink.'" style="padding:5px 10px">'.$this->l('Back').'</a></th>
+									<th><a href="'.$hooklink.'" style="padding:5px 10px">'.$this->l('Manage hooks').'</a></th>
+									<th style="padding:5px 10px">'.$this->l('Manage translations:').' ';
+									foreach (Language::getLanguages(false) AS $language)
+										$toolbar .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" style="margin-left:5px"><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
+							$toolbar .= '</th></tr>';
+
+							// Display checkbox in toolbar if multishop
+							if (Shop::isFeatureActive())
+							{
+								$activateOnclick = 'onclick="location.href = \''.$this->getCurrentUrl('enable').'&enable=\'+(($(this).attr(\'checked\')) ? 1 : 0)"';
+								$toolbar .= '<tr>
+										<th colspan="4">
+											<input type="checkbox" name="activateModule" value="1" '.(($module->active) ? 'checked="checked"' : '').' '.$activateOnclick.' /> '.$this->l('Activate module for').' ';
+								if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
+									$toolbar .= 'shop <b>'.$this->context->shop->name.'</b>';
+								elseif ($this->context->shop->getContextType() == Shop::CONTEXT_GROUP)
+									$toolbar .= 'all shops of group shop <b>'.$this->context->shop->getGroup()->name.'</b>';
+								else
+									$toolbar .= 'all shops';
+								$toolbar .= '</th>
+								</tr>';
+							}
+							$toolbar .= '</table>';
+
+							// Display configure page
+							// TODO : MAKE SOMETHING CLEANER
+							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
+						}
+						elseif($echo)
+							$return = ($method == 'install' ? 12 : 13);
+						elseif ($echo === false)
+							$module_errors[] = $name;
+
+						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
+						{
+							Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
+							unset(Context::getContext()->tmpOldShop);
+						}
+					}
+					if ($key != 'configure' && isset($_GET['bpay']))
+						Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->id_employee));
+				}
+			if (count($module_errors))
+			{
+				// If error during module installation, no redirection
+				$html_error = '<ul>';
+				foreach ($module_errors as $module_error)
+					$html_error .= '<li>'.$module_error.'</li>';
+				$html_error .= '</ul>';
+
+				$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
+			}
+		}
+		if ($return)
+			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+	}
+
+	public function postProcess()
+	{
+		// Execute filter or callback methods
+		$filterMethods = array('filterModules', 'resetFilterModules', 'filterCategory', 'unfilterCategory');
+		$callbackMethods = array('reset', 'download', 'enable', 'delete');
+		$postProcessMethodsList = array_merge((array)$filterMethods, (array)$callbackMethods);
+		foreach ($postProcessMethodsList as $ppm)
+			if (Tools::isSubmit($ppm))
+			{
+				$ppm = 'postProcess'.ucfirst($ppm);
+				if (method_exists($this, $ppm))
+					$ppmReturn = $this->$ppm();
+			}
+
+		// Call appropriate module callback
+		if (!isset($ppmReturn))
+			$this->postProcessCallback();
+	}
+
+
+
+
+
+
+	/*
+	** Display Modules Lists
+	**
+	*/
+
 	public function displayModuleOptions($module)
 	{		
 		$return = '';
@@ -572,26 +587,11 @@ class AdminModulesControllerCore extends AdminController
 		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isFeatureActive()))
 			$return .= (!empty($result) ? '|' : '').'<span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Configure').'</a></span>';
 
-		$hrefDelete = self::$currentIndex.'&deleteModule='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
+		$hrefDelete = self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
 		$return .= (!empty($result) ? '|' : '').'<span class="delete-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?').'\');" href="'.$hrefDelete.'">'.$this->l('Delete').'</a></span>';
 
 		return $return;
 	}
-	private function displayModuleAuthorsOptGroup($authors, $fieldName = "UNDEFINED")
-	{
-		$out = '<optgroup label="'.$this->l('Authors').'">';
-		foreach($authors as $author_item => $status)
-		{
-			$author_item = Tools::htmlentitiesUTF8($author_item);
-			$disp_author = ((strlen($author_item) > 20) ? substr($author_item, 0, 20).'...' : $author_item);
-
-			$out .= '<option value="'.$fieldName.'['.$author_item. ']"'. (($status === "selected") ? ' selected>' : '>').$disp_author .'</option>';
-		}
-		$out .= '</optgroup>';
-		return $out;
-	}
-
-
 
 	public function initModulesList($modules)
 	{
@@ -601,7 +601,7 @@ class AdminModulesControllerCore extends AdminController
 				$this->serial_modules .= $module->name.' '.$module->version.'-'.($module->active ? 'a' : 'i')."\n";
 			$module_author = $module->author;
 			if (!empty($module_author)&& ($module_author != ""))
-				$this->modules_authors[(string)$module_author] = true;
+				$this->modules_authors[(string)$module_author] = 'notselected';
 		}
 		$this->serial_modules = urlencode($this->serial_modules);
 	}
@@ -623,86 +623,71 @@ class AdminModulesControllerCore extends AdminController
 			$this->list_modules_categories['others']['nb']++;
 	}
 
-	public function moduleFiltered($module)
+	public function isModuleFiltered($module)
 	{
-		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id);
-		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id);
-		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id);
-		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id);
-		$nameCountryDefault = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
-		$isoCountryDefault = $this->context->country->iso_code;
-		$filterName = Tools::getValue('filtername');
+		// Beware $module could be an instance of Module or stdClass, that explain the static call
+		if ($module->id AND !Module::getPermissionStatic($module->id, 'view') AND !Module::getPermissionStatic($module->id, 'configure'))
+			return true;
 
+
+		// Filter on module category
 		$categoryFiltered = array();
-		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->context->employee->id));
+		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
 		if (count($filterCategories) > 0)
 			foreach ($filterCategories as $fc)
 				if (!empty($fc))
 					$categoryFiltered[$fc] = 1;
 		if (count($categoryFiltered) > 0 && !isset($categoryFiltered[$module->tab]))
 			return true;
-		
-		
 
-		// beware $module could be an instance of Module or stdClass, that explain the static call
-		if ($module->id AND !Module::getPermissionStatic($module->id, 'view') AND !Module::getPermissionStatic($module->id, 'configure'))
+
+		// Filter on module type and author
+		$show_type_modules = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
+		if ($show_type_modules == 'nativeModules' && !in_array($module->name, $this->list_natives_modules))
 			return true;
-
-		switch ($showTypeModules)
+		else if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
+			return true;
+		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) OR in_array($module->name, $this->list_natives_modules)))
+			return true;
+		else if (strpos($show_type_modules, 'authorModules[') !== false)
 		{
-			case 'nativeModules':
-				if (!in_array($module->name, $this->list_natives_modules))
-					return true;
-			break;
-			case 'partnerModules':
-				if (!in_array($module->name, $this->list_partners_modules))
-					return true;
-			break;
-			case 'otherModules':
-				if (in_array($module->name, $this->list_partners_modules) OR in_array($module->name, $this->list_natives_modules))
-					return true;
-			break;
-			default:
-				if (strpos($showTypeModules, 'authorModules[') !== false)
-				{
-					$author_selected = $this->_getSubmitedModuleAuthor($showTypeModules);
-					$modulesAuthors[$author_selected] = 'selected';		// setting selected author in authors set
-					if (empty($module->author) || $module->author != $author_selected)
-						return true;
-				}
-			break;
+			// setting selected author in authors set
+			$author_selected = substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
+			$this->modules_authors[$author_selected] = 'selected';
+			if (empty($module->author) || $module->author != $author_selected)
+				return true;
 		}
 
-		switch ($showInstalledModules)
-		{
-			case 'installed':
-				if (!$module->id)
-					return true;
-			break;
-			case 'unistalled':
-				if ($module->id)
-					return true;
-			break;
-		}
 
-		switch ($showEnabledModules)
-		{
-			case 'enabled':
-				if (!$module->active)
-					return true;
-			break;
-			case 'disabled':
-				if ($module->active)
-					return true;
-			break;
-		}
-
-		if ($showCountryModules AND (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($isoCountryDefault), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($isoCountryDefault) != strval($module->limited_countries)))))
+		// Filter on install status
+		$show_installed_modules = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
+		if ($show_installed_modules == 'installed' && !$module->id)
+			return true;
+		if ($show_installed_modules == 'uninstalled' && $module->id)
 			return true;
 
-		if (!empty($filterName) AND (stristr($module->name, $filterName) === false AND stristr($module->displayName, $filterName) === false AND stristr($module->description, $filterName) === false))
+
+		// Filter on active status
+		$show_enabled_modules = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
+		if ($show_enabled_modules == 'enabled' && !$module->active)
 			return true;
-		
+		if ($show_enabled_modules == 'disabled' && $module->active)
+			return true;
+
+
+		// Filter on country
+		$show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
+		if ($show_country_modules AND (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($this->iso_default_country), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($this->iso_default_country) != strval($module->limited_countries)))))
+			return true;
+
+
+		// Filter on module name
+		$filter_name = Tools::getValue('filtername');
+		if (!empty($filter_name) AND (stristr($module->name, $filter_name) === false AND stristr($module->displayName, $filter_name) === false AND stristr($module->description, $filter_name) === false))
+			return true;
+
+
+		// Module has not been filtered		
 		return false;
 	}
 
@@ -714,14 +699,9 @@ class AdminModulesControllerCore extends AdminController
 		// Init
 		$smarty = $this->context->smarty;
 		$autocompleteList = 'var moduleList = [';
-		$showTypeModules = Configuration::get('PS_SHOW_TYPE_MODULES_'.(int)$this->context->employee->id);
-		$showInstalledModules = Configuration::get('PS_SHOW_INSTALLED_MODULES_'.(int)$this->context->employee->id);
-		$showEnabledModules = Configuration::get('PS_SHOW_ENABLED_MODULES_'.(int)$this->context->employee->id);
-		$showCountryModules = Configuration::get('PS_SHOW_COUNTRY_MODULES_'.(int)$this->context->employee->id);
 		$nameCountryDefault = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
-		$isoCountryDefault = $this->context->country->iso_code;
 		$categoryFiltered = array();
-		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->context->employee->id));
+		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
 		if (count($filterCategories) > 0)
 			foreach ($filterCategories as $fc)
 				$categoryFiltered[$fc] = 1;
@@ -741,7 +721,7 @@ class AdminModulesControllerCore extends AdminController
 			$this->makeModulesStats($module);
 
 			// Apply filter
-			if ($this->moduleFiltered($module))
+			if ($this->isModuleFiltered($module))
 				unset($modules[$km]);
 			else
 			{
@@ -770,21 +750,20 @@ class AdminModulesControllerCore extends AdminController
 
 		// Init tpl vars for smarty
 		$tpl_vars = array();
-		
+
 		$tpl_vars['token'] = $this->token;
 		$tpl_vars['currentIndex'] = self::$currentIndex;
 		$tpl_vars['dirNameCurrentIndex'] = dirname(self::$currentIndex);
 		$tpl_vars['ajaxCurrentIndex'] = str_replace('index', 'ajax-tab', self::$currentIndex);
 		$tpl_vars['autocompleteList'] = rtrim($autocompleteList, ' ,').'];';
 
-		$tpl_vars['showTypeModules'] = $showTypeModules;
-		$tpl_vars['showInstalledModules'] = $showInstalledModules;
-		$tpl_vars['showEnabledModules'] = $showEnabledModules;
-		$tpl_vars['showCountryModules'] = $showCountryModules;
-		$tpl_vars['nameCountryDefault'] = $nameCountryDefault;
-		$tpl_vars['isoCountryDefault'] = $isoCountryDefault;
+		$tpl_vars['showTypeModules'] = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['showInstalledModules'] = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['showEnabledModules'] = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['showCountryModules'] = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['nameCountryDefault'] = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
+		$tpl_vars['isoCountryDefault'] = $this->iso_default_country;
 
-		$tpl_vars['authorsOptionsList'] = $this->displayModuleAuthorsOptGroup($this->modules_authors, 'authorModules');
 		$tpl_vars['addonsUrl'] = 'index.php?tab=AdminAddonsMyAccount&token='.Tools::getAdminTokenLite('AdminAddonsMyAccount');
 		$tpl_vars['categoryFiltered'] = $categoryFiltered;
 
@@ -795,6 +774,7 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['nb_modules_activated'] = $this->nb_modules_activated;
 		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
 		$tpl_vars['list_modules_categories'] = $this->list_modules_categories;
+		$tpl_vars['list_modules_authors'] = $this->modules_authors;
 
 		$smarty->assign($tpl_vars);
 	}
