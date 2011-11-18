@@ -25,7 +25,7 @@
 *}
 {if isset($conf)}
 	<div class="conf">
-		<img src="../img/admin/ok2.png" alt="" />{$conf}
+		{$conf}
 	</div>
 {/if}
 

@@ -1247,7 +1247,7 @@ abstract class AdminTabCore
 		if ($conf = Tools::getValue('conf'))
 			echo '
 			<div class="conf">
-				<img src="../img/admin/ok2.png" alt="" /> '.$this->_conf[(int)($conf)].'
+				'.$this->_conf[(int)($conf)].'
 			</div>';
 	}
 
