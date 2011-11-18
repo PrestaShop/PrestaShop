@@ -147,7 +147,7 @@ class CartCore extends ObjectModel
 		$fields['gift_message'] = pSQL($this->gift_message);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['allow_seperated_package'] = (boolean)$this->allow_seperated_package;
+		$fields['allow_seperated_package'] = (int)$this->allow_seperated_package;
 		$fields['delivery_option'] = $this->delivery_option;
 
 		return $fields;
