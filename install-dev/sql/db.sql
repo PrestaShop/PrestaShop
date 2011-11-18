@@ -141,7 +141,7 @@ CREATE TABLE `PREFIX_carrier` (
   `position` int(10) unsigned NOT NULL default '0',
   `max_width` int(10) DEFAULT 0,
   `max_height` int(10)  DEFAULT 0,
-  `max_deep` int(10)  DEFAULT 0,
+  `max_depth` int(10)  DEFAULT 0,
   `max_weight` int(10)  DEFAULT 0,
   `grade` int(10)  DEFAULT 0,
   PRIMARY KEY (`id_carrier`),
