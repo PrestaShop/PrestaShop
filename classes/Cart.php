@@ -1785,7 +1785,10 @@ class CartCore extends ObjectModel
 				if (array_key_exists('id_carrier', $module))
 					$module->id_carrier = $carrier->id;
 				if ($carrier->need_range)
-					$shipping_cost = $module->getPackageShippingCost($this, $shipping_cost);
+					if (method_exists($module, 'getPackageShippingCost'))
+						$shipping_cost = $module->getPackageShippingCost($this, $shipping_cost, $products);
+					else
+						$shipping_cost = $module->getOrderShippingCost($this, $shipping_cost);
 				else
 					$shipping_cost = $module->getOrderShippingCostExternal($this);
 
