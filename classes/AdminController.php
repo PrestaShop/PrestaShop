@@ -919,7 +919,9 @@ class AdminControllerCore extends Controller
 				$this->object = new $this->className($id);
 			if (Validate::isLoadedObject($this->object))
 				return $this->object;
+			// throw exception
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
+			return false;
 		}
 		else if ($opt)
 		{
@@ -927,7 +929,10 @@ class AdminControllerCore extends Controller
 			return $this->object;
 		}
 		else
+		{
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
+			return false;
+		}
 
 		$this->content = $this->displayErrors();
 		return $this->object;
