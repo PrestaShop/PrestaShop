@@ -474,10 +474,13 @@ class AdminModulesControllerCore extends AdminController
 						// If we install a module, force temporary global context for multishop
 						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
 						{
-							Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
-							Context::getContext()->shop = new Shop();
-							Configuration::updateValue('RSS_FEED_TITLE', 'lol');
-						}
+							// If we install a module, force temporary global context for multishop
+							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $method != 'getContent')
+							{
+								Context::getContext()->tmpOldShop = clone(Context::getContext()->shop);
+								Context::getContext()->shop = new Shop();
+								Configuration::updateValue('RSS_FEED_TITLE', 'lol');
+							}
 
 						if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
 						{
@@ -512,9 +515,11 @@ class AdminModulesControllerCore extends AdminController
 							}
 							$toolbar .= '</table>';
 
-							// Display configure page
-							// TODO : MAKE SOMETHING CLEANER
-							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
+							if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop))
+							{
+								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
+								unset(Context::getContext()->tmpOldShop);
+							}
 						}
 						elseif($echo)
 							$return = ($method == 'install' ? 12 : 13);
