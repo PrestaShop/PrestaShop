@@ -307,7 +307,7 @@ class DispatcherCore
 				$controller_type = 'tab';
 			}
 			// For retrocompatibility with admin/tabs/ old system
-			if (isset($controller_type) && !$controller_type == 'tab')
+			if (isset($controller_type) && $controller_type == 'tab')
 			{
 				require_once(_PS_ADMIN_DIR_.'/functions.php');
 				$ajaxMode = !empty($_REQUEST['ajaxMode']);

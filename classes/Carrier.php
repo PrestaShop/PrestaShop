@@ -50,6 +50,9 @@ class CarrierCore extends ObjectModel
 	/** @var int Tax id (none = 0) */
 	public $id_tax_rules_group;
 
+	/** @var int common id for carrier historization */
+	public $id_reference;
+
  	/** @var string Name */
 	public $name;
 
@@ -154,12 +157,12 @@ class CarrierCore extends ObjectModel
 		$fields['external_module_name'] = $this->external_module_name;
 		$fields['need_range'] = $this->need_range;
 		$fields['position'] = (int)$this->position;
+		$fields['id_reference'] = (int)$this->id_reference;
 		$fields['max_width'] = (int)$this->max_width;
 		$fields['max_height'] = (int)$this->max_height;
 		$fields['max_depth'] = (int)$this->max_depth;
 		$fields['max_weight'] = (int)$this->max_weight;
 		$fields['grade'] = (int)$this->grade;
-
 		return $fields;
 	}
 
@@ -1015,10 +1018,10 @@ class CarrierCore extends ObjectModel
 		$position = DB::getInstance()->getValue($sql);
 		return ($position !== false) ? $position : -1;
 	}
-	
+
 	/**
 	 * For a given {product, warehouse}, gets the carrier available
-	 * 
+	 *
 	 * @param $product integer The id of the product, or an array with at least the package size and weight
 	 */
 	public static function getAvailableCarrierList($product, $id_warehouse, $id_shop = null)
@@ -1030,10 +1033,10 @@ class CarrierCore extends ObjectModel
 			$product['id'] = $product['id_product'];
 			$product = (object)$product;
 		}
-		
+
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
-		
+
 		// Does the product is linked with carriers?
 		$query = new DbQuery();
 		$query->select('id_carrier');
@@ -1049,9 +1052,9 @@ class CarrierCore extends ObjectModel
 				$carrier_list[] = $carrier['id_carrier'];
 			return $carrier_list;
 		}
-		
+
 		$carrier_list = array();
-		
+
 		// The product is not dirrectly linked with a carrier
 		// Get all the carriers linked to a warehouse
 		if ($id_warehouse)
@@ -1059,7 +1062,7 @@ class CarrierCore extends ObjectModel
 			$warehouse = new Warehouse($id_warehouse);
 			$carrier_list = $warehouse->getCarriers();
 		}
-		
+
 		if (empty($carrier_list)) // No carriers defined, get all available carriers
 		{
 			$carrier_list = array();
@@ -1070,7 +1073,7 @@ class CarrierCore extends ObjectModel
 			foreach ($carriers as $carrier)
 				$carrier_list[] = $carrier['id_carrier'];
 		}
-		
+
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{
 			foreach ($carrier_list as $key => $id_carrier)
