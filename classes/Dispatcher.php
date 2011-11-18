@@ -217,6 +217,11 @@ class DispatcherCore
 		$this->controller_directories = $dir;
 	}
 
+	/**
+	 * Get the controller row in db
+	 *
+	 * @param string $name
+	 */
 	public static function getAdminController($name)
 	{
 		if (!Validate::isTabName($name))
@@ -226,19 +231,27 @@ class DispatcherCore
 		return $row;
 	}
 
+	/**
+	 * Include the file containing a controller or tab from a mdodule
+	 *
+	 * @param string $module
+	 * @param string $name controller name
+	 * @return string|bool controller type or false if file not found
+	 */
 	public static function includeModuleClass($module, $name)
 	{
 		if (file_exists(_PS_MODULE_DIR_.$module.'/'.$name.'Controller.php'))
 		{
 			include(_PS_MODULE_DIR_.$module.'/'.$name.'Controller.php');
-			return true;
+			return 'controller';
 		}
 
 		if (file_exists(_PS_MODULE_DIR_.$module.'/'.$name.'.php'))
 		{
 			include(_PS_MODULE_DIR_.$module.'/'.$name.'.php');
-			return false;
+			return 'tab';
 		}
+		return false;
 	}
 
 	/**
@@ -266,10 +279,9 @@ class DispatcherCore
 		if (!defined('_PS_ADMIN_DIR_'))
 		{
 			$controllers = self::getControllers($this->controller_directories);
- 			if (isset($controllers[$this->controller]))
- 				$this->controller = $controllers[$this->controller];
-			else
- 				$this->controller = $this->controller_not_found;
+ 			if (!isset($controllers[$this->controller]))
+ 				$this->controller = strtolower($this->controller_not_found);
+ 			$this->controller_class = $controllers[$this->controller];
 		}
 		// BO dispatch
 		else
@@ -277,35 +289,39 @@ class DispatcherCore
 			// Get controller class name
 			$controller_row = self::getAdminController($this->controller);
 			if (empty($controller_row))
-				$this->controller = $this->controller_not_found;
+			{
+				// We need controller_not_found to be the camelcase controller name
+				$this->controller = strtolower($this->controller_not_found);
+				$this->controller_class = $this->controller_not_found;
+			}
 			else
-				$this->controller = $controller_row['class_name'];
+				$this->controller_class = $controller_row['class_name'];
 
 			// If Tab/Controller is in module, include it
 			if (!empty($controller_row['module']))
-				$is_controller = self::includeModuleClass($controller_row['module'], $this->controller);
+				$controller_type = self::includeModuleClass($controller_row['module'], $this->controller_class);
 			// If it is an AdminTab, include it
-			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$this->controller.'.php'))
+			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$this->controller_class.'.php'))
 			{
-				include(_PS_ADMIN_DIR_.'/tabs/'.$this->controller.'.php');
-				$is_controller = false;
+				include(_PS_ADMIN_DIR_.'/tabs/'.$this->controller_class.'.php');
+				$controller_type = 'tab';
 			}
 			// For retrocompatibility with admin/tabs/ old system
-			if (isset($is_controller) && !$is_controller)
+			if (isset($controller_type) && !$controller_type == 'tab')
 			{
 				require_once(_PS_ADMIN_DIR_.'/functions.php');
 				$ajaxMode = !empty($_REQUEST['ajaxMode']);
-				runAdminTab($this->controller, $ajaxMode);
+				runAdminTab($this->controller_class, $ajaxMode);
 				return;
 			}
-			else
-				$this->controller = $this->controller.'Controller';
+
+			$this->controller_class = $this->controller_class.'Controller';
 		}
 
 		// Instantiate controller
 		try
 		{
-			Controller::getController($this->controller)->run();
+			Controller::getController($this->controller_class)->run();
 		}
 		catch (PrestashopException $e)
 		{
@@ -508,7 +524,7 @@ class DispatcherCore
 		if ($this->use_routes && !$controller)
 		{
 			if (!$this->request_uri)
-				return $this->controller_not_found;
+				return strtolower($this->controller_not_found);
 			$controller = $this->default_controller;
 
 			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
@@ -540,7 +556,7 @@ class DispatcherCore
 	}
 
 	/**
-	 * Get list of all available controllers
+	 * Get list of all available FO controllers
 	 *
 	 * @var mixed $dirs
 	 * @return array
