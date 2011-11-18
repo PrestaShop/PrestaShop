@@ -59,9 +59,6 @@ class EmployeeCore extends ObjectModel
 	/** @var string employee's chosen theme */
 	public $bo_theme;
 
-	/** @var string / enum hover or click mode */
-	public $bo_uimode;
-
 	/** @var bool, true */
 	public $bo_show_screencast;
 
@@ -74,7 +71,7 @@ class EmployeeCore extends ObjectModel
  	protected $fieldsSize = array('lastname' => 32, 'firstname' => 32, 'email' => 128, 'passwd' => 32, 'bo_color' => 32, 'bo_theme' => 32);
  	protected $fieldsValidate = array('lastname' => 'isName', 'firstname' => 'isName', 'email' => 'isEmail', 'id_lang' => 'isUnsignedInt',
 		'passwd' => 'isPasswdAdmin', 'active' => 'isBool', 'id_profile' => 'isInt', 'bo_color' => 'isColor', 'bo_theme' => 'isGenericName',
-		'bo_uimode' => 'isGenericName', 'bo_show_screencast' => 'isBool');
+		'bo_show_screencast' => 'isBool');
 
 	protected $table = 'employee';
 	protected $identifier = 'id_employee';
@@ -112,7 +109,6 @@ class EmployeeCore extends ObjectModel
 
 		$fields['bo_color'] = pSQL($this->bo_color);
 		$fields['bo_theme'] = pSQL($this->bo_theme);
-		$fields['bo_uimode'] = pSQL($this->bo_uimode);
 		$fields['bo_show_screencast'] = (int)$this->bo_show_screencast;
 		$fields['active'] = (int)$this->active;
 

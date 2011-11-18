@@ -185,26 +185,6 @@ class AdminEmployeesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'radio',
-				'label' => $this->l('UI mode:'),
-				'name' => 'bo_uimode',
-				'required' => false,
-				'class' => 't',
-				'values' => array(
-					array(
-						'id' => 'uimode_on',
-						'value' => 'hover',
-						'label' => $this->l('Hover on tabs')
-					),
-					array(
-						'id' => 'uimode_off',
-						'value' => 'click',
-						'label' => $this->l('Click on tabs')
-					)
-				)
-			);
-
-			$this->fields_form['input'][] = array(
-				'type' => 'radio',
 				'label' => $this->l('Show screencast:'),
 				'name' => 'bo_show_screencast',
 				'required' => false,
