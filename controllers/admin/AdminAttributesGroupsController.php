@@ -182,7 +182,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name¤public_name',
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
@@ -192,7 +191,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'label' => $this->l('Public name:'),
 					'name' => 'public_name',
 					'lang' => true,
-					'attributeLang' => 'name¤public_name',
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
@@ -249,7 +247,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name',
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'

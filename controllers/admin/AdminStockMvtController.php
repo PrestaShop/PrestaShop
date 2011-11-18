@@ -135,7 +135,6 @@ class AdminStockMvtControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'lang' => true,
-					'attributeLang' => 'name',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'size' => 50,

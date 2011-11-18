@@ -70,7 +70,6 @@ class AdminOrderMessageController extends AdminController
 				array(
 					'type' => 'text',
 					'lang' => true,
-					'attributeLang' => 'name¤message',
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'size' => 53,
@@ -79,7 +78,6 @@ class AdminOrderMessageController extends AdminController
 				array(
 					'type' => 'textarea',
 					'lang' => true,
-					'attributeLang' => 'name¤message',
 					'label' => $this->l('Message:'),
 					'name' => 'message',
 					'cols' => 50,

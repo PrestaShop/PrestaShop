@@ -190,7 +190,6 @@ class AdminStatusesControllerCore extends AdminController
 					'label' => $this->l('Status name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name¤template',
 					'size' => 40,
 					'required' => true,
 					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',
@@ -289,7 +288,6 @@ class AdminStatusesControllerCore extends AdminController
 					'label' => $this->l('Template:'),
 					'name' => 'template',
 					'lang' => true,
-					'attributeLang' => 'name¤template',
 					'options' => array(
 						'query' => $this->getTemplates($this->context->language->iso_code),
 						'id' => 'id',
@@ -338,7 +336,6 @@ class AdminStatusesControllerCore extends AdminController
 					'label' => $this->l('Status name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name¤template',
 					'size' => 40,
 					'required' => true,
 					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',

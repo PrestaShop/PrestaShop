@@ -102,7 +102,6 @@ class AdminTabsControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name',
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
@@ -222,7 +221,7 @@ class AdminTabsControllerCore extends AdminController
 			return;
 		}
 		/* PrestaShop demo mode*/
-		
+
 		if (($id_tab = (int)Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab)))
 		{
 			if ($tab->move($direction))

@@ -77,7 +77,6 @@ class AdminQuickAccessesController extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name',
 					'size' => 33,
 					'maxlength' => 32,
 					'required' => true,

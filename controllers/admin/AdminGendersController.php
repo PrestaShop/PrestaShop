@@ -102,7 +102,6 @@ class AdminGendersController extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name',
 					'size' => 33,
 					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:',
 					'required' => true

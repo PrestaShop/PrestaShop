@@ -208,7 +208,6 @@ class AdminCarriersControllerCore extends AdminController
 					'label' => $this->l('Transit time:'),
 					'name' => 'delay',
 					'lang' => true,
-					'attributeLang' => 'delay',
 					'required' => true,
 					'size' => 41,
 					'maxlength' => 128,
