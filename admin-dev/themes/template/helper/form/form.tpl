@@ -38,12 +38,12 @@
 				</div>
 		</div>
 	</div>
+	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
-<div class="leadin">{block name="leadin"}{/block}</div>
 
 {if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 {block name="defaultForm"}
-<form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data">
+<form id="{$table}_form" class="defaultForm" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
 		<input type="hidden" name="id_{$table}" id="id_{$table}" value="{$form_id}" />
 	{/if}
