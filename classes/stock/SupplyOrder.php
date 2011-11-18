@@ -36,6 +36,11 @@ class SupplyOrderCore extends ObjectModel
 	public $id_supplier;
 
 	/**
+	 * @var string Supplier Name
+	 */
+	public $supplier_name;
+
+	/**
 	 * @var int The language id used on the delivery note
 	 */
 	public $id_lang;
@@ -112,6 +117,7 @@ class SupplyOrderCore extends ObjectModel
 
 	protected $fieldsRequired = array(
 		'id_supplier',
+		'supplier_name',
 		'id_lang',
 		'id_warehouse',
 		'id_supply_order_state',
@@ -124,6 +130,7 @@ class SupplyOrderCore extends ObjectModel
 
 	protected $fieldsValidate = array(
 		'id_supplier' => 'isUnsignedId',
+		'supplier_name' => 'isCatalogName',
 		'id_lang' => 'isUnsignedId',
 		'id_warehouse' => 'isUnsignedId',
 		'id_supply_order_state' => 'isUnsignedId',
@@ -156,6 +163,7 @@ class SupplyOrderCore extends ObjectModel
 		$this->validateFields();
 
 		$fields['id_supplier'] = (int)$this->id_supplier;
+		$fields['supplier_name'] = pSQL($this->supplier_name);
 		$fields['id_lang'] = (int)$this->id_lang;
 		$fields['id_warehouse'] = (int)$this->id_warehouse;
 		$fields['id_supply_order_state'] = (int)$this->id_supply_order_state;

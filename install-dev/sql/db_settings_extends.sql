@@ -220,6 +220,12 @@ INSERT INTO `PREFIX_product` (`id_product`, `indexed`, `id_supplier`, `id_manufa
 (8, 1, 0, 0, 1, 3, 0, 1, '0', 0.00, 0, 25.041806, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW(), '0000-00-00'),
 (9, 1, 2, 2, 1, 3, 0, 1, '0', 0.00, 0, 124.581940, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW(), '0000-00-00');
 
+INSERT INTO `PREFIX_product_supplier` (`id_product_supplier`, `id_product`, `id_product_attribute`, `id_supplier`, `product_supplier_reference`) VALUES
+(1, 1, 0, 1, ''),
+(2, 2, 0, 1, ''),
+(3, 6, 0, 1, ''),
+(4, 7, 0, 1, '');
+
 INSERT INTO `PREFIX_product_shop` (`id_product`, `id_shop`) (SELECT `id_product`, 1 FROM `PREFIX_product`);
 
 INSERT INTO `PREFIX_product_lang` (`id_product`, `id_lang`, `description`, `description_short`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `available_now`, `available_later`) VALUES

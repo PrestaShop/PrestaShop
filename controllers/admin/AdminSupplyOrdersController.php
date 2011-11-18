@@ -1022,17 +1022,23 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						//get the product name in the order language
 						$entry->name = Product::getProductName($entry->id_product, $entry->id_product_attribute, $supply_order->id_lang);
 
-						//get the product name displayed in the backoffice according to the employee language
-						$entry->name_displayed = Tools::getValue('input_name_'.$id, '');
-
 						if (empty($entry->name))
-							$entry->name = $entry->name_displayed;
+							$entry->name = '';
+
+						//get the product supplier reference
+						$entry->supplier_reference = ProductSupplier::getProductSupplierReference($entry->id_product, $entry->id_product_attribute, $supply_order->id_supplier);
+
+						if ($entry->supplier_reference == null)
+							$entry->supplier_reference = '';
 
 						$entry->exchange_rate = $currency->conversion_rate;
 						$entry->id_currency = $currency->id;
 						$entry->id_supply_order = $supply_order->id;
 
 						$errors = $entry->validateController();
+
+						//get the product name displayed in the backoffice according to the employee language
+						$entry->name_displayed = Tools::getValue('input_name_'.$id, '');
 
 						// if there is a problem, handle error for the current product
 						if (count($errors) > 0)
@@ -1098,14 +1104,20 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
 				$this->_errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
-			// specify initial state
-			$_POST['id_supply_order_state'] = 1; //defaut creation state
+			if (!count($this->_errors))
+			{
+				// specify initial state
+				$_POST['id_supply_order_state'] = 1; //defaut creation state
 
-			// specify global reference currency
-			$_POST['id_ref_currency'] = Currency::getDefaultCurrency()->id;
+				// specify global reference currency
+				$_POST['id_ref_currency'] = Currency::getDefaultCurrency()->id;
 
-			//specific discount check
-			$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
+				// specify supplier name
+				$_POST['supplier_name'] = Supplier::getNameById($id_supplier);
+
+				//specific discount check
+				$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
+			}
 
 			// manage each associated product
 			$this->manageOrderProducts();
@@ -1499,6 +1511,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// re-defines fieldsDisplay
 			$this->fieldsDisplay = array(
+				'supplier_reference' => array(
+					'title' => $this->l('Supplier Reference'),
+					'align' => 'center',
+					'width' => 120,
+					'orderby' => false,
+					'filter' => false,
+					'search' => false,
+				),
 				'reference' => array(
 					'title' => $this->l('Reference'),
 					'align' => 'center',
@@ -1637,6 +1657,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'supply_order_detail_content' => $content,
 				'supply_order_warehouse' => (Validate::isLoadedObject($warehouse) ? $warehouse->name : ''),
 				'supply_order_reference' => $supply_order->reference,
+				'supply_order_supplier_name' => $supply_order->supplier_name,
 				'supply_order_creation_date' => Tools::displayDate($supply_order->date_add, $lang_id, true),
 				'supply_order_last_update' => Tools::displayDate($supply_order->date_upd, $lang_id, true),
 				'supply_order_expected' => Tools::displayDate($supply_order->date_delivery_expected, $lang_id, true),

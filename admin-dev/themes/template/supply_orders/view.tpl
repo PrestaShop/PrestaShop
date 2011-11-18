@@ -36,6 +36,10 @@
 					<td>{$supply_order_creation_date}</td>
 				</tr>
 				<tr>
+					<td>{l s='Supplier:'}</td>
+					<td>{$supply_order_supplier_name}</td>
+				</tr>
+				<tr>
 					<td>{l s='Last update:'}</td>
 					<td>{$supply_order_last_update}</td>
 				</tr>

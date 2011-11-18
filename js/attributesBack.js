@@ -26,7 +26,7 @@
 
 var storeUsedGroups = {};
 
-function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impact, reference, supplier_reference, 
+function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impact, reference, 
 ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, location, upc, minimal_quantity, available_date,
 virtual_product_name_attribute, virtual_product_filename_attribute, virtual_product_nb_downloable, virtual_product_expiration_date_attribute, 
 virtual_product_nb_days, is_shareable)
@@ -52,7 +52,6 @@ virtual_product_nb_days, is_shareable)
 	getE('virtual_product_expiration_date_attribute').value = virtual_product_expiration_date_attribute;
 	getE('virtual_product_nb_days_attribute').value = virtual_product_nb_days;
 	
-	getE('attribute_supplier_reference').value = supplier_reference;
 	getE('attribute_ean13').value = ean;
 	getE('attribute_upc').value = upc;
 	getE('submitProductAttribute').value = modifyattributegroup;

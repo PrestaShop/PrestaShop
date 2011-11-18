@@ -2100,6 +2100,7 @@ CREATE TABLE `PREFIX_stock_available` (
 CREATE TABLE `PREFIX_supply_order` (
 `id_supply_order` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 `id_supplier` INT(11) UNSIGNED NOT NULL,
+`supplier_name` VARCHAR(64) NOT NULL,
 `id_lang` INT(11) UNSIGNED NOT NULL,
 `id_warehouse` INT(11) UNSIGNED NOT NULL,
 `id_supply_order_state` INT(11) UNSIGNED NOT NULL,
@@ -2128,6 +2129,7 @@ CREATE TABLE `PREFIX_supply_order_detail` (
 `id_product` INT(11) UNSIGNED NOT NULL,
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
 `reference`  VARCHAR(32) NOT NULL,
+`supplier_reference`  VARCHAR(32) NOT NULL,
 `name`  varchar(128) NOT NULL,
 `ean13`  VARCHAR(13) DEFAULT NULL,
 `upc`  VARCHAR(12) DEFAULT NULL,
@@ -2197,15 +2199,23 @@ CREATE TABLE `PREFIX_supply_order_receipt_history` (
   KEY `id_supply_order_state` (`id_supply_order_state`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_product_supplier` (
+  `id_product_supplier` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) UNSIGNED NOT NULL,
+  `id_product_attribute` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `id_supplier` int(11) UNSIGNED NOT NULL,
+  `product_supplier_reference` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id_product_supplier`),
+  UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_supplier_rates` (
-`id_product` INT(11) UNSIGNED NOT NULL,
-`id_product_attribute` INT(11) UNSIGNED NOT NULL,
-`id_supplier` INT(11) UNSIGNED NOT NULL,
+`id_product_supplier` INT(11) UNSIGNED NOT NULL,
 `id_currency` INT(11) UNSIGNED NOT NULL,
 `quantity_min` INT(11) UNSIGNED NOT NULL,
 `quantity_max` INT(11) UNSIGNED NOT NULL,
 `price_te` DECIMAL(20,6) DEFAULT '0.000000',
-  PRIMARY KEY (`id_product`, `id_product_attribute`, `id_supplier`, `quantity_min`, `quantity_max`)
+  PRIMARY KEY (`id_product_supplier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_accounting_zone_shop` (

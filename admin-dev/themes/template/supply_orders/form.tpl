@@ -115,7 +115,7 @@
 
 	</fieldset>
 
-	<script language="javascript">
+	<script type="text/javascript">
 		product_infos = null;
 		debug = null;
 		if ($('#product_ids').val() == '')
@@ -174,7 +174,7 @@
 
 				var id = $(this).attr('id');
 				var product_id = id.split('|')[1];
-				
+
 
 				//find the position of the product id in product_id array
 				var position = product_ids.indexOf(product_id);
@@ -182,11 +182,11 @@
 				{
 					//remove the id from the array
 					product_ids.splice(position, 1);
-					
+
 					var input_id = $('input[name~="input_id_'+product_id+'"]');
 					if (input_id.length > 0)
 						product_ids_to_delete.push(product_id);
-					
+
 					// update the product_ids hidden field
 					$('#product_ids').val(product_ids.join('|'));
 					$('#product_ids_to_delete').val(product_ids_to_delete.join('|'));
