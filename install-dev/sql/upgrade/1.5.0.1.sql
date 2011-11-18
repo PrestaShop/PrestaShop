@@ -544,3 +544,5 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) ('P
 
 /* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
 /* PHP:add_new_groups('Invité', 'Guest'); */;
+
+UPDATE `PREFIX_employee` SET `bo_theme` = 'default';

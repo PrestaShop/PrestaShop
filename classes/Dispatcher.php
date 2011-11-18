@@ -281,7 +281,7 @@ class DispatcherCore
 			$controllers = self::getControllers($this->controller_directories);
  			if (!isset($controllers[$this->controller]))
  				$this->controller = strtolower($this->controller_not_found);
- 			$this->controller_class = $controllers[$this->controller];
+ 			$controller_class = $controllers[$this->controller];
 		}
 		// BO dispatch
 		else
@@ -292,18 +292,18 @@ class DispatcherCore
 			{
 				// We need controller_not_found to be the camelcase controller name
 				$this->controller = strtolower($this->controller_not_found);
-				$this->controller_class = $this->controller_not_found;
+				$controller_class = $this->controller_not_found;
 			}
 			else
-				$this->controller_class = $controller_row['class_name'];
+				$controller_class = $controller_row['class_name'];
 
 			// If Tab/Controller is in module, include it
 			if (!empty($controller_row['module']))
-				$controller_type = self::includeModuleClass($controller_row['module'], $this->controller_class);
+				$controller_type = self::includeModuleClass($controller_row['module'], $controller_class);
 			// If it is an AdminTab, include it
-			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$this->controller_class.'.php'))
+			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php'))
 			{
-				include(_PS_ADMIN_DIR_.'/tabs/'.$this->controller_class.'.php');
+				include(_PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php');
 				$controller_type = 'tab';
 			}
 			// For retrocompatibility with admin/tabs/ old system
@@ -311,17 +311,17 @@ class DispatcherCore
 			{
 				require_once(_PS_ADMIN_DIR_.'/functions.php');
 				$ajaxMode = !empty($_REQUEST['ajaxMode']);
-				runAdminTab($this->controller_class, $ajaxMode);
+				runAdminTab($controller_class, $ajaxMode);
 				return;
 			}
 
-			$this->controller_class = $this->controller_class.'Controller';
+			$controller_class = $controller_class.'Controller';
 		}
 
 		// Instantiate controller
 		try
 		{
-			Controller::getController($this->controller_class)->run();
+			Controller::getController($controller_class)->run();
 		}
 		catch (PrestashopException $e)
 		{
