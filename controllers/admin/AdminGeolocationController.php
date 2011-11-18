@@ -37,7 +37,13 @@ class AdminGeolocationControllerCore extends AdminController
 				'icon' =>	'world',
 				'class' =>	'width3',
 				'fields' =>	array(
-		 			'PS_GEOLOCATION_ENABLED' => array('title' => $this->l('Geolocation by IP:'), 'desc' => $this->l('This option allows you, among other things, to restrict access to your shop for many countries. See below.'), 'validation' => 'isUnsignedId', 'cast' => 'intval', 'type' => 'bool'),
+		 			'PS_GEOLOCATION_ENABLED' => array(
+		 				'title' => $this->l('Geolocation by IP:'),
+		 				'desc' => $this->l('This option allows you, among other things, to restrict access to your shop for many countries. See below.'),
+		 				'validation' => 'isUnsignedId',
+		 				'cast' => 'intval',
+		 				'type' => 'bool'
+					),
 				),
 				'submit' => array(),
 			),
@@ -88,7 +94,7 @@ class AdminGeolocationControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitGeolocationConfiguration'))
 		{
-			if ($this->_isGeoLiteCityAvailable())
+			if ($this->isGeoLiteCityAvailable())
 			{
 				Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
@@ -99,11 +105,14 @@ class AdminGeolocationControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitGeolocationCountries'))
 		{
-			if (!is_array(Tools::getValue('countries')) OR !sizeof(Tools::getValue('countries')))
+			if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
 				$this->_errors[] = Tools::displayError('Country selection is invalid');
 			else
 			{
-				Configuration::updateValue('PS_GEOLOCATION_BEHAVIOR', (!(int)(Tools::getValue('PS_GEOLOCATION_BEHAVIOR')) ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_));
+				Configuration::updateValue(
+					'PS_GEOLOCATION_BEHAVIOR',
+					(!(int)Tools::getValue('PS_GEOLOCATION_BEHAVIOR') ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_)
+				);
 				Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
 				Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
@@ -116,7 +125,10 @@ class AdminGeolocationControllerCore extends AdminController
 				$this->_errors[] = Tools::displayError('Invalid whitelist');
 			else
 			{
-				Configuration::updateValue('PS_GEOLOCATION_WHITELIST', str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST'))));
+				Configuration::updateValue(
+					'PS_GEOLOCATION_WHITELIST',
+					str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
+				);
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 		}
@@ -124,19 +136,24 @@ class AdminGeolocationControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
+	public function initOptions()
+	{
+		$this->tpl_option_vars = array('allowed_countries' => explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')));
+
+		return parent::initOptions();
+	}
+
 	public function initContent()
 	{
-		if (!$this->_isGeoLiteCityAvailable())
-			$this->displayWarning($this->l('In order to use Geolocation, please download').' <a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.$this->l('and decompress it into tools/geoip/ directory'));
+		if (!$this->isGeoLiteCityAvailable())
+			$this->displayWarning($this->l('In order to use Geolocation, please download').' 
+				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
+				$this->l('and decompress it into tools/geoip/ directory'));
 
-		$this->context->smarty->assign(array(
-			'allowed_countries' => explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')),
-			'url_countries' => self::$currentIndex.'&token='.Tools::getValue('token'),
-		));
 		parent::initContent();
 	}
 
-	private function _isGeoLiteCityAvailable()
+	private function isGeoLiteCityAvailable()
 	{
 		if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
 			return true;
