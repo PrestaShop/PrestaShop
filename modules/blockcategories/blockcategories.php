@@ -183,7 +183,7 @@ class BlockCategories extends Module
 				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'))
 			)
 
-				return;
+				return Tools::restoreCacheSettings();
 
 			$resultParents = array();
 			$resultIds = array();
