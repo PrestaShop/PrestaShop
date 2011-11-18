@@ -460,29 +460,9 @@ class AdminProductsController extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				/* Delete product image */
-				if (isset($_GET['deleteImage']) || $this->action == 'deleteImage')
-				{
-					$image->delete();
-
-					if (!Image::getCover($image->id_product))
-					{
-						$first_img = Db::getInstance()->getRow('
-						SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-						WHERE `id_product` = '.(int)($image->id_product));
-						Db::getInstance()->Execute('
-						UPDATE `'._DB_PREFIX_.'image`
-						SET `cover` = 1
-						WHERE `id_image` = '.(int)($first_img['id_image']));
-					}
-					@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
-					@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
-					if (!$this->ajax)
-						Tools::redirectAdmin($currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1'.'&token='.($token ? $token : $this->token));
-				}
-
 				/* Update product image/legend */
-				else if (isset($_GET['editImage']))
+				// @todo : move in processEditProductImage
+				if (isset($_GET['editImage']))
 				{
 					if ($image->cover)
 						$_POST['cover'] = 1;
@@ -931,15 +911,13 @@ class AdminProductsController extends AdminController
 		//Manage suppliers
 		else if (Tools::isSubmit('submitSupplierReferences'))
 			$this->postProcessFormSupplierReferences();
-		else
-			parent::postProcess(true);
+
+		parent::postProcess(true);
 	}
 
-	public function ajaxPreProcess()
+	// @todo rename to processaddproductimage
+	public function ajaxProcessAddImage()
 	{
-		$this->action = Tools::getValue('action');
-		if (Tools::getValue('addImage') !== false)
-		{
 			self::$currentIndex = 'index.php?tab=AdminProducts';
 			$allowedExtensions = array("jpeg", "gif", "png", "jpg");
 			// max file size in bytes
@@ -956,11 +934,15 @@ class AdminProductsController extends AdminController
 				$images = Image::getImages($this->context->language->id, $obj->id);
 				$imagesTotal = Image::getImagesTotal($obj->id);
 				$html = $this->getLineTableImage($result['success'], $imagesTotal + 1, $this->token, $shops);
-				die(Tools::jsonEncode(array("success" => $html)));
+				die($html);
 			}
 			else
 				die(Tools::jsonEncode($result));
 		}
+
+	public function ajaxPreProcess()
+	{
+		$this->action = Tools::getValue('action');
 
 		if (Tools::getValue('updateProductImageShopAsso'))
 		{
@@ -970,32 +952,32 @@ class AdminProductsController extends AdminController
 				else
 					die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
 		}
-
-
-
 	}
 
-	public function	ajaxProcessDeleteImage()
+	public function ajaxProcessDeleteProductImage()
 	{
-if (false)
-{
-		$image = new Image((int)Tools::getValue('id_image'));
-		$image->delete();
-		if (!Image::getCover($image->id_product))
+		/* Delete product image */
+		if (isset($_GET['deleteProductImage']) || $this->action == 'deleteProductImage')
 		{
-			$first_img = Db::getInstance()->getRow('
-			SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-			WHERE `id_product` = '.(int)($image->id_product));
-			Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 1
-			WHERE `id_image` = '.(int)($first_img['id_image']));
+			$image = new Image((int)Tools::getValue('id_image'));
+			$image->delete();
+			if (!Image::getCover($image->id_product))
+			{
+				$first_img = Db::getInstance()->getRow('
+				SELECT `id_image` FROM `'._DB_PREFIX_.'image`
+				WHERE `id_product` = '.(int)($image->id_product));
+				Db::getInstance()->Execute('
+				UPDATE `'._DB_PREFIX_.'image`
+				SET `cover` = 1
+				WHERE `id_image` = '.(int)($first_img['id_image']));
+			}
+			@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
+			@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
+			if (!$this->ajax)
+				Tools::redirectAdmin($currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1'.'&token='.($token ? $token : $this->token));
+		else
+			$this->content = '{"status":"ok"}';
 		}
-		@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
-	}
-		$this->content = '{deleted:1}';
-		die("deleted");
 	}
 
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
@@ -1540,10 +1522,14 @@ if (false)
 		if (Tools::getValue('id_product') || ((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND sizeof($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
 		{
 			$this->fields_form = array();
-			if (empty($this->action) || !method_exists($this, 'initForm'.$this->action))
+			if (empty($this->action))
 				$this->action = 'Informations';
 
-			$this->tpl_form = 'products/'.strtolower($this->action).'.tpl';
+
+
+			if(method_exists($this, 'initForm'.$this->action))
+				$this->tpl_form = 'products/'.strtolower($this->action).'.tpl';
+
 			if ($this->ajax)
 			{
 				$this->display = 'edit';
@@ -1782,7 +1768,8 @@ if (false)
 	 */
 	public function initForm()
 	{
-		$product = $this->object = new Product((int)(Tools::getValue('id_product')));
+		if(!method_exists($this, 'initForm'.$this->action))
+			return "";
 		// getLanguages init this->_languages
 		$this->getLanguages();
 		$languages = $this->_languages;
@@ -1804,16 +1791,20 @@ if (false)
 		$this->tpl_form_vars['country_display_tax_label'] = $this->context->country->display_tax_label;
 
 		// let's calculate this once for all
-		if (!($obj = $this->loadObject(true)))
-			throw new PrestashopException('object not loaded');
-		$this->_displayDraftWarning($obj->active);
-		$this->{'initForm'.$this->action}($this->object, $languages, $defaultLanguage);
-		$this->tpl_form_vars['product'] = $this->object;
-		if ($this->ajax)
-			if (!isset($this->tpl_form_vars['custom_form']))
-				throw new PrestashopException('custom_form empty for action '.$this->action);
-			else
-				return $this->tpl_form_vars['custom_form'];
+		if (!Validate::isLoadedObject($this->object) && Tools::getValue('id_product'))
+			$this->_errors[] = 'Unable to load object';
+	//		throw new PrestashopException('object not loaded');
+		else
+		{
+			$this->_displayDraftWarning($this->object->active);
+			$this->{'initForm'.$this->action}($this->object, $languages, $defaultLanguage);
+			$this->tpl_form_vars['product'] = $this->object;
+			if ($this->ajax)
+				if (!isset($this->tpl_form_vars['custom_form']))
+					throw new PrestashopException('custom_form empty for action '.$this->action);
+				else
+					return $this->tpl_form_vars['custom_form'];
+		}
 		return parent::initForm();
 	}
 
@@ -2470,6 +2461,7 @@ if (false)
 
 		$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
+		// @todo : uses the helperform
 		$data->assign('displayAssoShop', $this->displayAssoShop());
 
 		$product_props = array();
@@ -3255,10 +3247,21 @@ if (false)
 		$html .= '
 				<td class="center"><a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img class="covered" src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
 				<td class="center">
-				<a href="#" onclick="deleteImg('.(int)$image['id_image'].');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
+				<a href="#" class="delete_product_image"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
 				</td>
 			</tr>';
-		return $html;
+		$json = array(
+			'status' => 'ok',
+			'id'=>$image_obj->id, 
+			'path' => _THEME_PROD_DIR_.$img_path.'.jpg',
+			'path_small' => _THEME_PROD_DIR_.$img_path.'-small.jpg',
+			'position' => $image['position'],
+			'cover' => $image['cover'],
+			'html' => $html
+			);
+
+		return $this->content = Tools::jsonEncode($json);
+	//	return $html;
 	}
 
 	public function getCombinationImagesJS()

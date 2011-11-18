@@ -20,41 +20,51 @@
 	<ul id="listImage"></ul>
 	<script type="text/javascript">var upbutton = "{l s='Upload a file'}"; </script>
 	<script type="text/javascript">
-	function deleteImg(id)
-	{
-		var conf = confirm("{l s='Are you sure?'}");
-		if (conf)
-			$.post(
-				"ajax-tab.php",
-			{
-				action: "deleteImage",
-				id_image:id,
-				id_product : "{$product->id}",
-				id_category : "{$id_category_default}",
-				token : "{$token}",
-				tab : "AdminProducts",
-				ajax : 1,
-				updateproduct : 1},
-				function (data) {
-					if (data)
+	$(document).ready(function(){
+		$('.delete_product_image').die().live('click', function(e)
+		{
+			e.preventDefault();
+			id = $(this).parent().parent().attr('id').substr(3);
+
+			if (confirm("{l s='Are you sure?'}"))
+				$.post("ajax-tab.php",
 					{
-						cover = 0;
-						if(data.imageDeleted)
-						{
-							if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
-								cover = 1;
-							$("#tr_" + id).remove();
+						action: "deleteProductImage",
+						id_image:id,
+						id_product : "{$product->id}",
+						id_category : "{$id_category_default}",
+						token : "{$token}",
+						tab : "AdminProducts",
+						ajax : 1,
+					},
+					function (data)
+					{
+						try{
+						data = $.parseJSON(data);
+							if (data)
+							{
+								cover = 0;
+								if(data.status == 'ok')
+								{
+									if ($("#tr_" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
+										cover = 1;
+									$("#tr_" + id).remove();
+								}
+								if (cover)
+									$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
+
+								$("#countImage").html(parseInt($("#countImage").html()) - 1);
+
+								refreshImagePositions($("#imageTable"));
+							}
 						}
-						if (cover)
-							$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
-
-						$("#countImage").html(parseInt($("#countImage").html()) - 1);
-
-						// refreshImagePositions($("#imageTable"));
-					}
-			});
-			return false;
-	}
+						catch(e){
+							alert("TECHNICAL ERROR");
+						}
+				}
+			);
+		});
+	});
 
 	function delQueue(id)
 	{
@@ -73,10 +83,9 @@
 			token : "{$token}",
 			tab : "AdminProducts",
 			updateproduct : 1,
-			addImage : 1,
-			ajaxMode : 1,
+			action : 'addImage',
 			ajax: 1,
-			},
+		},
 			onComplete: function(id, fileName, responseJSON){
 				var percent = ((filecheck * 100) / nbfile);
 				$("#progressBarImage").progressbar({
@@ -99,9 +108,9 @@
 					nbfile = 0;
 					filecheck = 0;
 				}
-				if (responseJSON.success)
+				if (responseJSON.status == 'ok')
 				{
-					$("#imageTable tr:last").after(responseJSON.success);
+					$("#imageTable tr:last").after(responseJSON.html);
 					$("#countImage").html(parseInt($("#countImage").html()) + 1);
 					$("#img" + id).remove();
 				}
@@ -152,29 +161,9 @@
 									<th style="width: 100px;">{l s='Image'}</th>
 									<th>&nbsp;</th>
 									<th>{l s='Position'}</th>
-						{if $shops}
-							<script type="text/javascript">
-											$(document).ready(function() {
-												$('.image_shop').change(function() {
-													$.post("ajax-tab.php",
-														{
-															updateProductImageShopAsso: 1,
-															id_image:$(this).attr("name"),
-															id_shop: $(this).val(),
-															active:$(this).attr("checked"),
-															id_product : "{$product->id}",
-															id_category : "{$product->id_category_default}",
-															token : "{$token}",
-															tab : "AdminProducts",
-															updateproduct : 1,
-														});
-												});
-											});
-										</script>
-							{foreach from=$shops item=shop}
-								<th>{$shop.name}</th>
-							{/foreach}
-						{/if}
+									{foreach from=$shops item=shop}
+										<th>{$shop.name}</th>
+									{/foreach}
 						
 									<th>{l s='Cover'}</th>
 									<th>{l s='Action'}</th>
@@ -196,16 +185,19 @@
 						<img src="../img/admin/down.gif" alt="" border="0">
 					</a>
 				</td>
-				{foreach from=$shops item=shop}
-				<td class="center">
-				<input type="checkbox" class="image_shop" name="{$image->id_image}" value="{$shop.id_shop}" {if $image->isAssociatedToShop($shop.id_shop)}checked="checked"{/if} />
-				</td>
-				{/foreach}
+				
+				{if $shops}
+					{foreach from=$shops item=shop}
+					<td class="center">
+					<input type="checkbox" class="image_shop" name="{$image->id_image}" value="{$shop.id_shop}" {if $image->isAssociatedToShop($shop.id_shop)}checked="checked"{/if} />
+					</td>
+					{/foreach}
+				{/if}
 				<td class="center"><a href="{$currentIndex}&amp;id_image={$image->id_image}&amp;coverImage&amp;token={$token}">
 					<img class="covered" src="../img/admin/{if $image->cover}enabled.gif{else}forbbiden.gif{/if}" alt="e" /></a>
 				</td>
 				<td class="center">
-					<a href="#" onclick="deleteImg('{$image->id_image}');">
+					<a href="#" class="delete_product_image" >
 						<img src="../img/admin/delete.gif" alt="{l s='Delete this image'}" title="{l s='Delete this image'}" />
 					</a>
 				</td>
@@ -218,3 +210,23 @@
 				</table>
 			</div>
 
+{if $shops}
+	<script type="text/javascript">
+					$(document).ready(function() {
+						$('.image_shop').change(function() {
+							$.post("ajax-tab.php",
+								{
+									updateProductImageShopAsso: 1,
+									id_image:$(this).attr("name"),
+									id_shop: $(this).val(),
+									active:$(this).attr("checked"),
+									id_product : "{$product->id}",
+									id_category : "{$product->id_category_default}",
+									token : "{$token}",
+									tab : "AdminProducts",
+									updateproduct : 1,
+								});
+						});
+					});
+				</script>
+{/if}
