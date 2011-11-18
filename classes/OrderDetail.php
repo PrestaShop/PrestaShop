@@ -522,13 +522,13 @@ class OrderDetailCore extends ObjectModel
 	 * @param object $cart
 	 * @param int $id_order_status
 	*/
-	public function createList(Order $order, Cart $cart, $id_order_state)
+	public function createList(Order $order, Cart $cart, $id_order_state, $product_list)
 	{
 		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$this->customer = new Customer((int)($order->id_customer));
 
 		$this->id_order = $order->id;
-		$products = $cart->getProducts();
+		$products = $product_list;
 		$this->outOfStock = false;
 
 		foreach ($products as $product)

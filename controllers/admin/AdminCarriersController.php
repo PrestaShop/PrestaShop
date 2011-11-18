@@ -216,6 +216,14 @@ class AdminCarriersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
+					'label' => $this->l('Grade:'),
+					'name' => 'grade',
+					'required' => false,
+					'size' => 1,
+					'p' => $this->l('"0" for a longest shipping delay,"9" for the shortest shipping delay.')
+				),
+				array(
+					'type' => 'text',
 					'label' => $this->l('URL:'),
 					'name' => 'url',
 					'size' => 40,
@@ -361,6 +369,38 @@ class AdminCarriersControllerCore extends AdminController
 					'p' => $this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)')
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('Maximium package height:'),
+					'name' => 'max_height',
+					'required' => false,
+					'size' => 10,
+					'p' => $this->l('Maximum height managed by this carrier. Set "0" or nothing, to ignore this field.')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Maximium package width:'),
+					'name' => 'max_width',
+					'required' => false,
+					'size' => 10,
+					'p' => $this->l('Maximum width managed by this carrier. Set "0" or nothing, to ignore this field.')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Maximium package deep:'),
+					'name' => 'max_deep',
+					'required' => false,
+					'size' => 10,
+					'p' => $this->l('Maximum deep managed by this carrier. Set "0" or nothing, to ignore this field.')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Maximium package weigth:'),
+					'name' => 'max_weight',
+					'required' => false,
+					'size' => 10,
+					'p' => $this->l('Maximum weight managed by this carrier. Set "0" or nothing, to ignore this field.')
+				),
+				array(
 					'type' => 'hidden',
 					'name' => 'is_module'
 				),
@@ -375,7 +415,7 @@ class AdminCarriersControllerCore extends AdminController
 				array(
 					'type' => 'hidden',
 					'name' => 'need_range'
-				)
+				),
 			)
 		);
 

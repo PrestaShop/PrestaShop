@@ -31,6 +31,7 @@ class CartControllerCore extends FrontController
 
 	protected $id_product;
 	protected $id_product_attribute;
+	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
 
@@ -54,6 +55,7 @@ class CartControllerCore extends FrontController
 		$this->id_product_attribute = (int)Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
 		$this->customization_id = (int)Tools::getValue('id_customization');
 		$this->qty = abs(Tools::getValue('qty', 1));
+		$this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
 	}
 
 	public function postProcess()
@@ -68,6 +70,10 @@ class CartControllerCore extends FrontController
 				$this->processChangeProductInCart();
 			else if (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
+			else if(Tools::getIsset('changeAddressDelivery'))
+				$this->processChangeProductAddressDelivery();
+			else if(Tools::getIsset('duplicate'))
+				$this->processDuplicateProduct();
 
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
@@ -94,7 +100,8 @@ class CartControllerCore extends FrontController
 	 */
 	protected function processDeleteProductInCart()
 	{
-		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id))
+		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
+		{
 			if (!Cart::getNbProducts((int)($this->context->cart->id)))
 			{
 				$this->context->cart->id_carrier = 0;
@@ -102,7 +109,39 @@ class CartControllerCore extends FrontController
 				$this->context->cart->gift_message = '';
 				$this->context->cart->update();
 			}
+		}
 		CartRule::autoRemoveFromCart();
+	}
+	
+	protected function processChangeProductAddressDelivery()
+	{
+		$old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
+		$new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
+		
+		$this->context->cart->setProductAddressDelivery(
+			$this->id_product,
+			$this->id_product_attribute,
+			$old_id_address_delivery,
+			$new_id_address_delivery);
+	}
+	
+	protected function processDuplicateProduct()
+	{
+		if (
+			!$this->context->cart->duplicateProduct(
+				$this->id_product,
+				$this->id_product_attribute,
+				$this->id_address_delivery,
+				(int)Tools::getValue('new_id_address_delivery'),
+				1,
+				true
+			)
+		)
+		{
+			//$error_message = $this->l('Error durring product duplication');
+			// For the moment no translations
+			$error_message = 'Error durring product duplication';
+		}
 	}
 
 	/**
@@ -160,7 +199,7 @@ class CartControllerCore extends FrontController
 
 			if (!$this->errors)
 			{
-				$updateQuantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'));
+				$updateQuantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery, Tools::getValue('op', 'up'));
 				if ($updateQuantity < 0)
 				{
 					// If product has attribute, minimal quantity is set with minimal quantity of attribute

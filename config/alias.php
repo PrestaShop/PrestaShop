@@ -25,6 +25,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+function fd($var)
+{
+	return (Tools::fd($var));
+}
+
 function p($var)
 {
 	return (Tools::p($var));

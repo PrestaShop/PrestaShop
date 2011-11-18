@@ -19,16 +19,10 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7471 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{*
-** Retro compatibility for PrestaShop version < 1.4.2.5 with a recent theme
-** Syntax smarty for v2
-*}
-
 {* Will be deleted for 1.5 version and more *}
 {if !isset($formatedAddressFieldsValuesList)}
 	{$ignoreList.0 = "id_address"}
@@ -158,32 +152,91 @@
 {include file="$tpl_dir./order-steps.tpl"}
 {include file="$tpl_dir./errors.tpl"}
 
-<div class="address-form-multishipping">
-	<a href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')}" title="{l s='Multi-shipping'}" class="button exclusive">
-		{l s='Multi-shipping'}
-	</a>
+<p>{l s='Choose the delivery addresses:'}</p>
+
+<div id="order-detail-content" class="table_block">
+	<table id="cart_summary" class="std">
+		<thead>
+			<tr>
+				<th class="cart_product first_item">{l s='Product'}</th>
+				<th class="cart_description item">{l s='Description'}</th>
+				<th class="cart_ref item">{l s='Ref.'}</th>
+				<th class="cart_quantity item">{l s='Qty'}</th>
+				<th class="shipping_address last_item">{l s='Shipping address'}</th>
+			</tr>
+		</thead>
+		<tbody>
+		{foreach from=$products item=product name=productLoop}
+			{assign var='productId' value=$product.id_product}
+			{assign var='productAttributeId' value=$product.id_product_attribute}
+			{assign var='quantityDisplayed' value=0}
+			{* Display the product line *}
+			{include file="$tpl_dir./order-address-product-line.tpl" productLast=$smarty.foreach.productLoop.last productFirst=$smarty.foreach.productLoop.first}
+			{* Then the customized datas ones*}
+			{if isset($customizedDatas.$productId.$productAttributeId)}
+				{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization'}
+					<tr id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" class="product_{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval} alternate_item cart_item">
+						<td colspan="4">
+							{foreach from=$customization.datas key='type' item='datas'}
+								{if $type == $CUSTOMIZE_FILE}
+									<div class="customizationUploaded">
+										<ul class="customizationUploaded">
+											{foreach from=$datas item='picture'}<li><img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" /></li>{/foreach}
+										</ul>
+									</div>
+								{elseif $type == $CUSTOMIZE_TEXTFIELD}
+									<ul class="typedText">
+										{foreach from=$datas item='textField' name='typedText'}<li>{if $textField.name}{$textField.name}{else}{l s='Text #'}{$smarty.foreach.typedText.index+1}{/if}{l s=':'} {$textField.value}</li>{/foreach}
+									</ul>
+								{/if}
+							{/foreach}
+						</td>
+						<td class="cart_quantity">
+							{if isset($cannotModify) AND $cannotModify == 1}
+								<span style="float:left">{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
+							{else}
+								<div style="float:right">
+									<a rel="nofollow" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$token_cart}")}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" title="{l s='Delete this customization'}" width="11" height="13" class="icon" /></a>
+								</div>
+								<div id="cart_quantity_button" style="float:left">
+								<a rel="nofollow" class="cart_quantity_up" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")}" title="{l s='Add'}"><img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" /></a><br />
+								{if $product.minimal_quantity < ($customization.quantity -$quantityDisplayed) OR $product.minimal_quantity <= 1}
+								<a rel="nofollow" class="cart_quantity_down" id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")}" title="{l s='Subtract'}">
+									<img src="{$img_dir}icon/quantity_down.gif" alt="{l s='Subtract'}" width="14" height="9" />
+								</a>
+								{else}
+								<a class="cart_quantity_down" style="opacity: 0.3;" id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="#" title="{l s='Subtract'}">
+									<img src="{$img_dir}icon/quantity_down.gif" alt="{l s='Subtract'}" width="14" height="9" />
+								</a>
+								{/if}
+								</div>
+								<input type="hidden" value="{$customization.quantity}" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}_hidden"/>
+								<input size="2" type="text" value="{$customization.quantity}" class="cart_quantity_input" name="quantity_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"/>
+							{/if}
+						</td>
+						<td class="cart_total"></td>
+					</tr>
+					{assign var='quantityDisplayed' value=$quantityDisplayed+$customization.quantity}
+				{/foreach}
+				{* If it exists also some uncustomized products *}
+				{if $product.quantity-$quantityDisplayed > 0}
+					{include file="$tpl_dir./order-address-product-line.tpl" productLast=$smarty.foreach.productLoop.last productFirst=$smarty.foreach.productLoop.first}
+				{/if}
+				
+			{/if}
+		{/foreach}
+		</tbody>
+	</table>
 </div>
-<form action="{$link->getPageLink('order', true)}" method="post">
+
+<form action="{$link->getPageLink('order', true, NULL, 'multi-shipping=1')}" method="post">
 {else}
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
-	<div class="addresses">
-		<p class="address_delivery select">
-			<label for="id_address_delivery">{l s='Choose a delivery address:'}</label>
-			<select name="id_address_delivery" id="id_address_delivery" class="address_select" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
 
-			{foreach from=$addresses key=k item=address}
-				<option value="{$address.id_address|intval}" {if $address.id_address == $cart->id_address_delivery}selected="selected"{/if}>{$address.alias|escape:'htmlall':'UTF-8'}</option>
-			{/foreach}
-			
-			</select>
-		</p>
-		<p class="checkbox" {if $cart->isVirtualCart()}style="display:none;"{/if}>
-			<input type="checkbox" name="same" id="addressesAreEquals" value="1" onclick="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" {if $cart->id_address_invoice == $cart->id_address_delivery || $addresses|@count == 1}checked="checked"{/if} />
-			<label for="addressesAreEquals">{l s='Use the same address for billing.'}</label>
-		</p>
-		
+	<div class="addresses">
+		<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}" />
 		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
 		
 		{if $addresses|@count > 1}
@@ -202,16 +255,14 @@
 			{/if}
 		</p>
 		<div class="clear"></div>
-		<ul class="address item" id="address_delivery" {if $cart->isVirtualCart()}style="display:none;"{/if}>
-		</ul>
-		<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
+		<ul class="address item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
 		</ul>
 		<br class="clear" />
 		<p class="address_add submit">
 		{if $back}
-			<a href="{$link->getPageLink('address', true, NULL, "back=order&amp;step=1&amp;mod={$back}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back=order%26step=1%26mod={$back}%26multi-shipping=1")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 		{else}
-			<a href="{$link->getPageLink('address', true, NULL, "back=order&amp;step=1")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back=order%26step=1%26multi-shipping=1")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 		{/if}
 		</p>
 		{if !$opc}

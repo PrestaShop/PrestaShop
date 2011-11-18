@@ -92,13 +92,29 @@ class CarrierCore extends ObjectModel
 	/** @var int Position */
 	public $position;
 
+	/** @var int maximum package width managed by the transporter */
+	public $max_width;
+
+	/** @var int maximum package height managed by the transporter */
+	public $max_height;
+
+	/** @var int maximum package deep managed by the transporter */
+	public $max_depth;
+
+	/** @var int maximum package weight managed by the transporter */
+	public $max_weight;
+
+	/** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
+	public $grade;
+
 	protected $langMultiShop = true;
 
 	protected $fieldsRequired = array('name', 'active');
-	protected $fieldsSize = array('name' => 64);
+	protected $fieldsSize = array('name' => 64, 'grade' => 1);
 	protected $fieldsValidate = array('id_tax_rules_group' => 'isInt', 'name' => 'isCarrierName', 'active' => 'isBool',
 		'is_free' => 'isBool', 'url' => 'isAbsoluteUrl', 'shipping_handling' => 'isBool', 'range_behavior' => 'isBool',
-		'shipping_method' => 'isUnsignedInt');
+		'shipping_method' => 'isUnsignedInt', 'max_width' => 'isUnsignedInt', 'max_height' => 'isUnsignedInt',
+		'max_deep' => 'isUnsignedInt', 'max_weight' => 'isUnsignedInt', 'grade' => 'isUnsignedInt');
 	protected $fieldsRequiredLang = array('delay');
 	protected $fieldsSizeLang = array('delay' => 128);
 	protected $fieldsValidateLang = array('delay' => 'isGenericName');
@@ -138,6 +154,11 @@ class CarrierCore extends ObjectModel
 		$fields['external_module_name'] = $this->external_module_name;
 		$fields['need_range'] = $this->need_range;
 		$fields['position'] = (int)$this->position;
+		$fields['max_width'] = (int)$this->max_width;
+		$fields['max_height'] = (int)$this->max_height;
+		$fields['max_depth'] = (int)$this->max_depth;
+		$fields['max_weight'] = (int)$this->max_weight;
+		$fields['grade'] = (int)$this->grade;
 
 		return $fields;
 	}
@@ -553,6 +574,7 @@ class CarrierCore extends ObjectModel
 		}
 
 		// if we have to sort carriers by price
+		$prices = array();
 		if (Configuration::get('PS_CARRIER_DEFAULT_SORT') == Carrier::SORT_BY_PRICE)
 		{
 			foreach ($results_array as $r)
@@ -992,6 +1014,77 @@ class CarrierCore extends ObjectModel
 				WHERE `deleted` = 0';
 		$position = DB::getInstance()->getValue($sql);
 		return ($position !== false) ? $position : -1;
+	}
+	
+	/**
+	 * For a given {product, warehouse}, gets the carrier available
+	 * 
+	 * @param $product integer The id of the product, or an array with at least the package size and weight
+	 */
+	public static function getAvailableCarrierList($product, $id_warehouse, $id_shop = null)
+	{
+		if(is_numeric($product))
+			$product = new Product((int)$product);
+		else if (is_array($product))
+		{
+			$product['id'] = $product['id_product'];
+			$product = (object)$product;
+		}
+		
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+		
+		// Does the product is linked with carriers?
+		$query = new DbQuery();
+		$query->select('id_carrier');
+		$query->from('product_carrier pc');
+		$query->innerJoin('carrier c ON (c.id_reference = pc.id_carrier_reference AND c.deleted = 0)');
+		$query->where('id_product = '.(int)($product->id));
+		$query->where('id_shop = '.(int)$id_shop);
+		$carriers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		if (!empty($carriers))
+		{
+			$carrier_list = array();
+			foreach ($carriers as $carrier)
+				$carrier_list[] = $carrier['id_carrier'];
+			return $carrier_list;
+		}
+		
+		$carrier_list = array();
+		
+		// The product is not dirrectly linked with a carrier
+		// Get all the carriers linked to a warehouse
+		if ($id_warehouse)
+		{
+			$warehouse = new Warehouse($id_warehouse);
+			$carrier_list = $warehouse->getCarriers();
+		}
+		
+		if (empty($carrier_list)) // No carriers defined, get all available carriers
+		{
+			$carrier_list = array();
+			$id_address = ((isset($product->id_address_delivery) && $product->id_address_delivery != 0) ? $product->id_address_delivery : Context::getContext()->cart->id_address_delivery);
+			$address = new Address($id_address);
+			$id_zone = Address::getZoneById($address->id);
+			$carriers = Carrier::getCarriersForOrder($id_zone, Context::getContext()->customer->getGroups());
+			foreach ($carriers as $carrier)
+				$carrier_list[] = $carrier['id_carrier'];
+		}
+		
+		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
+		{
+			foreach ($carrier_list as $key => $id_carrier)
+			{
+				$carrier = new Carrier($id_carrier);
+				if (($carrier->max_width > 0 && $carrier->max_width < $product->width)
+					|| ($carrier->max_height > 0 && $carrier->max_height > $product->height)
+					|| ($carrier->max_depth > 0 && $carrier->max_depth > $product->depth)
+					|| ($carrier->max_weight > 0 && $carrier->max_weight > $product->weight)
+				)
+					unset($carrier_list[$key]);
+			}
+		}
+		return $carrier_list;
 	}
 }
 

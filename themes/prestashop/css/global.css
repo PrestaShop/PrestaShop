@@ -361,6 +361,8 @@ table.std {
 .std tr.alternate_item td,
 .std tr.alternate_item th { background-color: #f1f2f4 }
 .std tbody td,.std tfoot td { border-top: 1px solid #bdc2c9 }
+.std tbody tr.shipping-address td,.std tfoot tr.shipping-address td { border-top: none }
+.std tbody tr.shipping-address td.label,.std tfoot tr.shipping-address td.label { text-align: right; }
 .std thead th {
 	background-color: transparent;
 	background-image: url('../img/table_header.gif');
@@ -1024,10 +1026,13 @@ p.cart_navigation .button,
 p.cart_navigation .exclusive,
  p.cart_navigation .exclusive_large,
  p.cart_navigation .exclusive_large_disabled { float: right }
+p.cart_navigation .multishipping-button { margin-right: 10px }
 p.cart_navigation_extra {
 	text-align: center;
 	width: auto
 }
+.address-form-multishipping { padding: 10px; }
+.address-form-multishipping a { float: none; margin-left: 210px; }
 form.std p.cart_navigation span {
 	float: none;
 	text-align: left;
@@ -1044,6 +1049,7 @@ form.std p.cart_navigation span {
 	font-size: 1em;
 	text-decoration: none
 }
+tr.cart_item td .cart_address_delivery { width: 100px; margin-right: 10px; }
 tr.cart_item td { padding: 0.5em 0 }
 td.cart_product a { margin: 0 0.6em }
 td.cart_product a img {
@@ -1099,22 +1105,12 @@ tr.cart_total_price { font-weight: bold }
 	cursor:pointer;
 }
 #order form#voucher h4,
- #order form#voucher p,
- #order form#voucher .button { display: inline }
+#order form#voucher p,
+#order form#voucher .button { display: inline }
 #order form#voucher h4 {
 	float: left;
 	line-height: 1.5em;
 	margin-right: 6em
-}
-#order #order_carrier {
-	clear: both;
-	margin-top: 1em;
-	border: 1px solid #bdc2c9;
-	padding: 0.5em
-}
-#order #order_carrier h4 {
-	width: 50%;
-	display: inline
 }
 #order #order_carrier img { vertical-align: middle }
 #order #order_carrier span { margin: 0 0.2em }
@@ -1123,6 +1119,65 @@ tr.cart_total_price { font-weight: bold }
 	display: block;
 	width: 100%;
 	margin: 1em 0
+}
+#order .delivery_options_address {
+	width: 541px;
+	margin-left: 7px;
+}
+#order .delivery_options_address h3 {
+	background: url("../img/table_header.gif") no-repeat;
+	background: url("http://prestashop15.localhost/themes/prestashop/css/../img/table_header.gif") no-repeat;
+	color: #374853;
+	font-weight: bold;
+	height: 14px;
+	padding: 5px 10px;
+	margin: 10px 0 0 0;
+}
+#order .delivery_option_radio {
+	float: left;
+	margin-top: 12px;
+}
+#order .delivery_option label {
+	display: block;
+	padding-bottom: 5px;
+}
+#order .delivery_option label > table.resume {
+	width: 522px;
+	height: 40px;
+}
+#order .delivery_option.item {
+	background: #FAFAFA;
+}
+#order .delivery_option.alternate_item {
+	background: #F1F2F4;
+	border-top: 1px solid #BDC2C9;
+}
+#order .delivery_option label > table.resume td {
+	padding: 0 8px;
+}
+#order .delivery_option label > table.resume td + td {
+	text-align: left;
+	width: 380px;
+}
+#order .delivery_option label > table.resume td + td + td {
+	text-align: right;
+	width: 100px;
+}
+#order .delivery_options_address .delivery_option_logo {
+	text-align: center;
+	width: 100px;
+}
+#order .delivery_option_icon {
+}
+#order .delivery_option_price {
+}
+#order .delivery_options_address .delivery_option_logo img { height: 40px; }
+#order .delivery_option_carrier {
+	border: 1px solid #BDC2C9;
+	background: white;
+	margin: 5px 20px;
+	padding: 5px;
+	width: 500px;
 }
 
 #order-opc tfoot p {

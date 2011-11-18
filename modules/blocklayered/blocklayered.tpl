@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7310 $
+*  @version  Release: $Revision: 9528 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 *}
@@ -72,7 +72,7 @@ param_product_url = '#{$param_product_url}';
 						{if isset($filter.slider)}
 						<div class="layered_{$filter.type}" style="display: none;">
 						{else}
-					<div>
+						<div>
 						{/if}
 						<span class="layered_subtitle">{$filter.name|escape:html:'UTF-8'}</span>
 						<span class="layered_close"><a href="#" rel="ul_layered_{$filter.type}_{$filter.id_key}">v</a></span>
@@ -85,39 +85,40 @@ param_product_url = '#{$param_product_url}';
 									<input type="button" name="layered_{$filter.type_lite}_{$id_value}" rel="{$id_value}_{$filter.id_key}" id="layered_id_attribute_group_{$id_value}" {if !$value.nbr} value="X" disabled="disabled"{/if} style="background: {if isset($value.color)}{$value.color}{else}#CCC{/if}; margin-left: 0; width: 16px; height: 16px; padding:0; border: 1px solid {if isset($value.checked) && $value.checked}red{else}#666{/if};" />
 									{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
 								{else}
-										<input type="checkbox" class="checkbox" name="layered_{$filter.type_lite}_{$id_value}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} /> 
-									{/if}
-								<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" rel="{$id_value}_{$filter.id_key}"{/if}{/if}>
-									{if !$value.nbr}
-									{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> (0)</span>{/if}</a>
-									{else}
-									<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a></label>
-									{/if}
+									<input type="checkbox" class="checkbox" name="layered_{$filter.type_lite}_{$id_value}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}{if $filter.id_key}_{$filter.id_key}{/if}"{if isset($value.checked)} checked="checked"{/if}{if !$value.nbr} disabled="disabled"{/if} /> 
+								{/if}
+									<label for="layered_{$filter.type_lite}_{$id_value}"{if !$value.nbr} class="disabled"{else}{if isset($filter.is_color_group) && $filter.is_color_group} name="layered_{$filter.type_lite}_{$id_value}" class="layered_color" rel="{$id_value}_{$filter.id_key}"{/if}{/if}>
+										{if !$value.nbr}
+										{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> (0)</span>{/if}</a>
+										{else}
+										<a href="{$value.link}" rel="{$value.rel}">{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
+										{/if}
+									</label>
 								</li>
 							{/foreach}
 						{else}
 							<label for="{$filter.type}">{l s='Range:'}</label> <span id="layered_{$filter.type}_range"></span>
 							<div style="margin: 6px 0 6px 6px; width: 93%;">
-							<div style="margin-top:5px;" class="layered_slider" id="layered_{$filter.type}_slider"></div>
+								<div style="margin-top:5px;" class="layered_slider" id="layered_{$filter.type}_slider"></div>
 							</div>
 							<script type="text/javascript">
 							{literal}
 								addSlider('{/literal}{$filter.type}{literal}',{
-										range: true,
-										min: {/literal}{$filter.min}{literal},
-										max: {/literal}{$filter.max}{literal},
-										values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
-										slide: function( event, ui ) {
-											$('#layered_{/literal}{$filter.type}{literal}_range').html(ui.values[ 0 ] + '{/literal}{$filter.unit}{literal}' + ' - ' + ui.values[ 1 ] + '{/literal}{$filter.unit}{literal}');
-										},
-										stop: function () {
-											reloadContent();
-										}
+									range: true,
+									min: {/literal}{$filter.min}{literal},
+									max: {/literal}{$filter.max}{literal},
+									values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
+									slide: function( event, ui ) {
+										$('#layered_{/literal}{$filter.type}{literal}_range').html(ui.values[ 0 ] + '{/literal}{$filter.unit}{literal}' + ' - ' + ui.values[ 1 ] + '{/literal}{$filter.unit}{literal}');
+									},
+									stop: function () {
+										reloadContent();
+									}
 								}, '{/literal}{$filter.unit}{literal}');
 								$(document).ready(function()
 								{
 									$('.layered_{/literal}{$filter.type}{literal}').show();
-									});
+								});
 							{/literal}
 							</script>
 						{/if}

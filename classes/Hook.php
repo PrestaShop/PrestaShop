@@ -366,44 +366,46 @@ class HookCore extends ObjectModel
 
 	static public function orderConfirmation($id_order)
 	{
-	    if (Validate::isUnsignedId($id_order))
-	    {
+		if (Validate::isUnsignedId($id_order))
+		{
 			$params = array();
 			$order = new Order((int)$id_order);
 			$currency = new Currency((int)$order->id_currency);
 
-	    	if (Validate::isLoadedObject($order))
-	    	{
-				$params['total_to_pay'] = $order->total_paid;
+			if (Validate::isLoadedObject($order))
+			{
+				$cart = new Cart((int)$order->id_cart);
+				$params['total_to_pay'] = $cart->getOrderTotal();
 				$params['currency'] = $currency->sign;
 				$params['objOrder'] = $order;
 				$params['currencyObj'] = $currency;
 
 				return Hook::exec('orderConfirmation', $params);
+			}
 		}
-	    }
-	    return false;
+		return false;
 	}
 
 	static public function paymentReturn($id_order, $id_module)
 	{
-	    if (Validate::isUnsignedId($id_order) AND Validate::isUnsignedId($id_module))
-	    {
+		if (Validate::isUnsignedId($id_order) AND Validate::isUnsignedId($id_module))
+		{
 			$params = array();
 			$order = new Order((int)($id_order));
 			$currency = new Currency((int)($order->id_currency));
 
-	    	if (Validate::isLoadedObject($order))
-	    	{
-				$params['total_to_pay'] = $order->total_paid;
+			if (Validate::isLoadedObject($order))
+			{
+				$cart = new Cart((int)$order->id_cart);
+				$params['total_to_pay'] = $cart->getOrderTotal();
 				$params['currency'] = $currency->sign;
 				$params['objOrder'] = $order;
 				$params['currencyObj'] = $currency;
 
 				return Hook::exec('paymentReturn', $params, (int)($id_module));
 			}
-	    }
-	    return false;
+		}
+		return false;
 	}
 
 	static public function PDFInvoice($pdf, $id_order)

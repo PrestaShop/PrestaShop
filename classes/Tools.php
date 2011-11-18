@@ -591,6 +591,20 @@ class ToolsCore
 	}
 
 	/**
+	* Display a var dump in firebug console
+	*
+	* @param object $object Object to display
+	*/
+	public static function fd($object)
+	{
+		echo '
+			<script type="text/javascript">
+				console.log('.json_encode($object).');
+			</script>
+		';
+	}
+
+	/**
 	* ALIAS OF dieObject() - Display an error with detailed object
 	*
 	* @param object $object Object to display
