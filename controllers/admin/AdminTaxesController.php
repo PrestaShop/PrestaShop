@@ -131,7 +131,7 @@ class AdminTaxesControllerCore extends AdminController
 					'required' => true,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Tax name to display in cart and on invoice, e.g., VAT')
+					'desc' => $this->l('Tax name to display in cart and on invoice, e.g., VAT')
 				),
 				array(
 					'type' => 'text',
@@ -141,7 +141,7 @@ class AdminTaxesControllerCore extends AdminController
 					'maxlength' => 6,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Format: XX.XX or XX.XXX (e.g., 19.60 or 13.925)')
+					'desc' => $this->l('Format: XX.XX or XX.XXX (e.g., 19.60 or 13.925)')
 				),
 				array(
 					'type' => 'radio',
@@ -171,7 +171,7 @@ class AdminTaxesControllerCore extends AdminController
 					'maxlength' => 64,
 					'required' => false,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Used for the accounting export')
+					'desc' => $this->l('Used for the accounting export')
 				)
 			),
 			'submit' => array(

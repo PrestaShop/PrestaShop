@@ -104,7 +104,7 @@ class AdminReturnControllerCore extends AdminController
 						'id' => 'id_order_return_state',
 						'name' => 'name'
 					),
-					'p' => $this->l('Merchandise return (RMA) status')
+					'desc' => $this->l('Merchandise return (RMA) status')
 				),
 				array(
 					'type' => 'list_products',
@@ -112,7 +112,7 @@ class AdminReturnControllerCore extends AdminController
 					'name' => '',
 					'size' => '',
 					'required' => false,
-					'p' => $this->l('List of products in return package')
+					'desc' => $this->l('List of products in return package')
 				),
 			),
 			'submit' => array(

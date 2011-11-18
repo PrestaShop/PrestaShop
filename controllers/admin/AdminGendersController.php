@@ -141,14 +141,14 @@ class AdminGendersController extends AdminController
 					'label' => $this->l('Image Width:'),
 					'name' => 'img_width',
 					'size' => 4,
-					'p' => $this->l('Image width in pixel. "0" to use original size')
+					'desc' => $this->l('Image width in pixel. "0" to use original size')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Image Height:'),
 					'name' => 'img_height',
 					'size' => 4,
-					'p' => $this->l('Image height in pixel. "0" to use original size')
+					'desc' => $this->l('Image height in pixel. "0" to use original size')
 				)
 			),
 			'submit' => array(

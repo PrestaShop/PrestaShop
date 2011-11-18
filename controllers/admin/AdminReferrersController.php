@@ -211,10 +211,10 @@ class AdminReferrersControllerCore extends AdminController
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'size' => 20,
-					'p' => $this->l('Leave blank if no change')
+					'desc' => $this->l('Leave blank if no change')
 				)
 			),
-			'p' => array(
+			'desc' => array(
 				$this->l('Affiliates can access their own data with this name and password.'),
 				$this->l('Front access:').' <a href="'.$uri.'modules/trackingfront/stats.php" style="font-style: italic;">'.$uri.'modules/trackingfront/stats.php</a>'
 			)
@@ -231,21 +231,21 @@ class AdminReferrersControllerCore extends AdminController
 					'label' => $this->l('Click fee:'),
 					'name' => 'click_fee',
 					'size' => 8,
-					'p' => $this->l('Fee given for each visit.')
+					'desc' => $this->l('Fee given for each visit.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Base fee:'),
 					'name' => 'base_fee',
 					'size' => 8,
-					'p' => $this->l('Fee given for each order placed.')
+					'desc' => $this->l('Fee given for each order placed.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Percent fee:'),
 					'name' => 'percent_fee',
 					'size' => 8,
-					'p' => $this->l('Percent of the sales.')
+					'desc' => $this->l('Percent of the sales.')
 				)
 			)
 		));
@@ -298,7 +298,7 @@ class AdminReferrersControllerCore extends AdminController
 					'rows' => 1
 				)
 			),
-			'p' => $this->l('If you know how to use MySQL regular expressions, you can use the').' 
+			'desc' => $this->l('If you know how to use MySQL regular expressions, you can use the').' 
 					<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">'.$this->l('expert mode').'.</a>',
 			'submit' => array(
 				'title' => $this->l('   Save   '),

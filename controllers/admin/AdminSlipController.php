@@ -80,7 +80,7 @@ class AdminSlipControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'p' => $this->l('Format: 2007-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2007-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'text',
@@ -89,7 +89,7 @@ class AdminSlipControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'p' => $this->l('Format: 2008-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2008-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(

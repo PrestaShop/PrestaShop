@@ -145,7 +145,7 @@ class AdminStoresControllerCore extends AdminController
 					'size' => 33,
 					'required' => false,
 					'hint' => $this->l('Allowed characters: letters, spaces and').' (-)',
-					'p' => $this->l('Store name, e.g. Citycentre Mall Store')
+					'desc' => $this->l('Store name, e.g. Citycentre Mall Store')
 				),
 				array(
 					'type' => 'text',
@@ -202,7 +202,7 @@ class AdminStoresControllerCore extends AdminController
 					'required' => true,
 					'size' => 11,
 					'maxlength' => 12,
-					'p' => $this->l('Store coords, eg. 45.265469 / -47.226478')
+					'desc' => $this->l('Store coords, eg. 45.265469 / -47.226478')
 				),
 				array(
 					'type' => 'text',
@@ -248,7 +248,7 @@ class AdminStoresControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Display or not this store')
+					'desc' => $this->l('Display or not this store')
 				)
 			),
 			'rightCols' => array (
@@ -256,7 +256,7 @@ class AdminStoresControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Picture:'),
 					'name' => 'image',
-					'p' => $this->l('Store window picture')
+					'desc' => $this->l('Store window picture')
 				)
 			),
 			'submit' => array(

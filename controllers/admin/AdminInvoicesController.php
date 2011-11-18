@@ -86,7 +86,7 @@ class AdminInvoicesControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'p' => $this->l('Format: 2007-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2007-12-31 (inclusive)')
 				),
 				array(
 					'type' => 'text',
@@ -95,7 +95,7 @@ class AdminInvoicesControllerCore extends AdminController
 					'size' => 20,
 					'maxlength' => 10,
 					'required' => true,
-					'p' => $this->l('Format: 2008-12-31 (inclusive)')
+					'desc' => $this->l('Format: 2008-12-31 (inclusive)')
 				)
 			),
 			'submit' => array(
@@ -133,7 +133,7 @@ class AdminInvoicesControllerCore extends AdminController
 						'id' => 'id_order_state',
 						'name' => 'name'
 					),
-					'p' => $this->l('You can also export orders which have not been charged yet').' (<img src="../img/admin/charged_ko.gif" alt="" />).'
+					'desc' => $this->l('You can also export orders which have not been charged yet').' (<img src="../img/admin/charged_ko.gif" alt="" />).'
 				)
 			),
 			'submit' => array(

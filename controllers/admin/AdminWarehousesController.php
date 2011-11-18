@@ -158,7 +158,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'p' => $this->l('Reference of this warehouse'),
+					'desc' => $this->l('Reference of this warehouse'),
 				),
 				array(
 					'type' => 'text',
@@ -167,7 +167,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'size' => 40,
 					'maxlength' => 45,
 					'required' => true,
-					'p' => $this->l('Name of this warehouse')
+					'desc' => $this->l('Name of this warehouse')
 				),
 				array(
 					'type' => 'text',
@@ -175,7 +175,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'phone',
 					'size' => 15,
 					'maxlength' => 16,
-					'p' => $this->l('Phone number of this warehouse')
+					'desc' => $this->l('Phone number of this warehouse')
 				),
 				array(
 					'type' => 'text',
@@ -218,7 +218,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name'
 					),
-					'p' => $this->l('Country where the state, region or city is located')
+					'desc' => $this->l('Country where the state, region or city is located')
 				),
 				array(
 					'type' => 'select',
@@ -252,7 +252,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_shop',
 						'name' => 'name'
 					),
-					'p' => $this->l('Shops'),
+					'desc' => $this->l('Shops'),
 					'hint' => $this->l('By associating a shop to a warehouse, all products in the warehouse will be available
 						for sale in it. It is also possible to ship orders of this shop from this warehouse'),
 				),
@@ -267,7 +267,7 @@ class AdminWarehousesControllerCore extends AdminController
 						'id' => 'id_reference',
 						'name' => 'name'
 					),
-					'p' => $this->l('Associated carriers'),
+					'desc' => $this->l('Associated carriers'),
 					'hint' => $this->l('You can specifiy the carriers available to ship orders from this warehouse'),
 				),
 			),
@@ -300,7 +300,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'id' => 'id',
 					'name' => 'name'
 				),
-				'p' => $this->l('Inventory valuation method')
+				'desc' => $this->l('Inventory valuation method')
 			);
 
 			$this->fields_form['input'][] = array(

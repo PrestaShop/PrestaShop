@@ -109,7 +109,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'maxlength' => 32,
 					'required' => true,
 					'hint' => $this->l('Only letters and the minus character are allowed'),
-					'p' => $this->l('Will appear on Front Office, e.g., euro, dollar').'...',
+					'desc' => $this->l('Will appear on Front Office, e.g., euro, dollar').'...',
 				),
 				array(
 					'type' => 'text',
@@ -118,7 +118,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'p' => $this->l('ISO code, e.g., USD for dollar, EUR for euro').'...',
+					'desc' => $this->l('ISO code, e.g., USD for dollar, EUR for euro').'...',
 				),
 				array(
 					'type' => 'text',
@@ -127,7 +127,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'p' => $this->l('Numeric ISO code, e.g., 840 for dollar, 978 for euro').'...',
+					'desc' => $this->l('Numeric ISO code, e.g., 840 for dollar, 978 for euro').'...',
 				),
 				array(
 					'type' => 'text',
@@ -136,7 +136,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 8,
 					'required' => true,
-					'p' => $this->l('Will appear on Front Office, e.g., &euro;, $').'...',
+					'desc' => $this->l('Will appear on Front Office, e.g., &euro;, $').'...',
 				),
 				array(
 					'type' => 'text',
@@ -145,7 +145,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'p' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. 
+					'desc' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. 
 						For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
 				),
 				array(
@@ -155,7 +155,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'p' =>$this->l('Applies to all prices, e.g.,').' $1,240.15',
+					'desc' =>$this->l('Applies to all prices, e.g.,').' $1,240.15',
 					'options' => array(
 						'query' => array(
 							array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('as with dollars').')'),
@@ -174,7 +174,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('Display decimals on prices'),
+					'desc' => $this->l('Display decimals on prices'),
 					'values' => array(
 						array(
 							'id' => 'decimals_on',
@@ -195,7 +195,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('Include a blank between sign and price, e.g.,').'<br />$1,240.15 -> $ 1,240.15',
+					'desc' => $this->l('Include a blank between sign and price, e.g.,').'<br />$1,240.15 -> $ 1,240.15',
 					'values' => array(
 						array(
 							'id' => 'blank_on',

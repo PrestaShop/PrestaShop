@@ -193,20 +193,20 @@ class AdminStatusesControllerCore extends AdminController
 					'size' => 40,
 					'required' => true,
 					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',
-					'p' => $this->l('Order status (e.g., \'Pending\')')
+					'desc' => $this->l('Order status (e.g., \'Pending\')')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('Icon:'),
 					'name' => 'icon',
-					'p' => $this->l('Upload an icon from your computer (File type: .gif, suggested size: 16x16)')
+					'desc' => $this->l('Upload an icon from your computer (File type: .gif, suggested size: 16x16)')
 				),
 				array(
 					'type' => 'color',
 					'label' => $this->l('Color:'),
 					'name' => 'color',
 					'size' => 30,
-					'p' => $this->l('Status will be highlighted in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+					'desc' => $this->l('Status will be highlighted in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'checkbox',
@@ -294,7 +294,7 @@ class AdminStatusesControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'hint' => $this->l('Only letters, number and -_ are allowed'),
-					'p' => $this->l('E-mail template for both .html and .txt')
+					'desc' => $this->l('E-mail template for both .html and .txt')
 				)
 			),
 			'submit' => array(
@@ -339,7 +339,7 @@ class AdminStatusesControllerCore extends AdminController
 					'size' => 40,
 					'required' => true,
 					'hint' => $this->l('Invalid characters: numbers and').' !<>,;?=+()@#"�{}_$%:',
-					'p' => $this->l('Order return status name')
+					'desc' => $this->l('Order return status name')
 				)
 			),
 			'submit' => array(

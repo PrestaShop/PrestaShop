@@ -93,7 +93,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'dni',
 					'size' => 30,
 					'required' => false,
-					'p' => $this->l('DNI / NIF / NIE')
+					'desc' => $this->l('DNI / NIF / NIE')
 				),
 				array(
 					'type' => 'text',
@@ -124,7 +124,7 @@ class AdminAddressesControllerCore extends AdminController
 					'cols' => 36,
 					'rows' => 4,
 					'required' => false,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+					'hint' => $this->l('Forbidden characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span>'
 				),
 			),
 			'submit' => array(
@@ -171,14 +171,13 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'company',
 					'size' => 33,
 					'required' => false,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span></span>'
+					'hint' => $this->l('Invalid characters:').' <>;=#{}<span class="hint-pointer">&nbsp;</span>'
 				);
 				$temp_fields[] = array(
 					'type' => 'text',
 					'label' => $this->l('VAT number'),
 					'name' => 'vat_number',
 					'size' => 33,
-					''
 				);
 			}
 			elseif ($addr_field_item == 'lastname')
@@ -189,7 +188,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'lastname',
 					'size' => 33,
 					'required' => true,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>'
 				);
 			}
 			elseif ($addr_field_item == 'firstname')
@@ -200,7 +199,7 @@ class AdminAddressesControllerCore extends AdminController
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true,
-					'p' => '<span class="hint" name="help_box">'.$this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span></span>'
+					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:<span class="hint-pointer">&nbsp;</span>'
 				);
 			}
 			elseif ($addr_field_item == 'address1')

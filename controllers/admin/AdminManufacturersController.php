@@ -267,7 +267,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
-					'p' => $this->l('Upload manufacturer logo from your computer')
+					'desc' => $this->l('Upload manufacturer logo from your computer')
 				),
 				array(
 					'type' => 'text',

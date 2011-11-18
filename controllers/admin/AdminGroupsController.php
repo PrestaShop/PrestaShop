@@ -143,13 +143,13 @@ class AdminGroupsController extends AdminController
 					'label' => $this->l('Discount:'),
 					'name' => 'reduction',
 					'size' => 33,
-					'p' => $this->l('Will automatically apply this value as a discount on ALL shop\'s products for this group\'s members.')
+					'desc' => $this->l('Will automatically apply this value as a discount on ALL shop\'s products for this group\'s members.')
 				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Price display method:'),
 					'name' => 'price_display_method',
-					'p' => $this->l('How the prices are displayed on order summary for this customer group (tax included or excluded).'),
+					'desc' => $this->l('How the prices are displayed on order summary for this customer group (tax included or excluded).'),
 					'options' => array(
 						'query' => array(array('id_method' => PS_TAX_EXC, 'name' => $this->l('Tax excluded'), array('id_method' => PS_TAX_INC, 'name' => $this->l('Tax included')))),
 						'id' => 'id_method',

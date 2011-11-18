@@ -119,7 +119,7 @@ class AdminMetaControllerCore extends AdminController
 						'id' => 'page',
 						'name' => 'page',
 					),
-					'p' => $this->l('Name of the related page'),
+					'desc' => $this->l('Name of the related page'),
 					'required' => true,
 					'empty_message' => '<p>'.$this->l('There is no page available!').'</p>',
 					'size' => 30
@@ -130,7 +130,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'title',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Title of this page'),
+					'desc' => $this->l('Title of this page'),
 					'size' => 30
 				),
 				array(
@@ -139,7 +139,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'description',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('A short description'),
+					'desc' => $this->l('A short description'),
 					'size' => 50
 				),
 				array(
@@ -148,7 +148,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'keywords',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('List of keywords'),
+					'desc' => $this->l('List of keywords'),
 					'size' => 50
 				),
 				array(
@@ -157,7 +157,7 @@ class AdminMetaControllerCore extends AdminController
 					'name' => 'url_rewrite',
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
+					'desc' => $this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
 				),
 			),

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -84,7 +84,7 @@ class AdminAttachmentsControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('File:'),
 					'name' => 'file',
-					'p' => $this->l('Upload file from your computer')
+					'desc' => $this->l('Upload file from your computer')
 				),
 			),
 			'submit' => array(

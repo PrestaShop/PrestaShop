@@ -220,7 +220,7 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'size' => 33,
-					'p' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
+					'desc' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
 				),
 				array(
 					'type' => 'text',
@@ -258,7 +258,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Allow or disallow this customer to log in')
+					'desc' => $this->l('Allow or disallow this customer to log in')
 				),
 				array(
 					'type' => 'radio',
@@ -279,7 +279,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Customer will receive your newsletter via e-mail')
+					'desc' => $this->l('Customer will receive your newsletter via e-mail')
 				),
 				array(
 					'type' => 'radio',
@@ -300,7 +300,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Customer will receive your ads via e-mail')
+					'desc' => $this->l('Customer will receive your ads via e-mail')
 				),
 				array(
 					'type' => 'select',
@@ -319,7 +319,7 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'groupBox',
 					'values' => $groups,
 					'required' => true,
-					'p' => $this->l('Check all the box(es) of groups of which the customer is to be a member')
+					'desc' => $this->l('Check all the box(es) of groups of which the customer is to be a member')
 				)
 			)
 		);

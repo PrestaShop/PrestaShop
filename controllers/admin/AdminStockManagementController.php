@@ -188,7 +188,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'p' => $this->l('Physical quantity to add')
+							'desc' => $this->l('Physical quantity to add')
 						),
 						array(
 							'type' => 'radio',
@@ -209,7 +209,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Is this quantity usable for sale on shops, or reserved in the warehouse for other purposes?')
+							'desc' => $this->l('Is this quantity usable for sale on shops, or reserved in the warehouse for other purposes?')
 						),
 						array(
 							'type' => 'select',
@@ -221,7 +221,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'p' => $this->l('Select the warehouse where you want to add the product into')
+							'desc' => $this->l('Select the warehouse where you want to add the product into')
 						),
 						array(
 							'type' => 'text',
@@ -230,7 +230,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'required' => true,
 							'size' => 10,
 							'maxlength' => 10,
-							'p' => $this->l('Unit purchase price or unit manufacturing cost for this product, tax excluded')
+							'desc' => $this->l('Unit purchase price or unit manufacturing cost for this product, tax excluded')
 						),
 						array(
 							'type' => 'select',
@@ -242,7 +242,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_currency',
 								'name' => 'name'
 							),
-							'p' => $this->l('The currency associated to the product unit price'),
+							'desc' => $this->l('The currency associated to the product unit price'),
 						),
 						array(
 							'type' => 'select',
@@ -256,7 +256,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
-							'p' => $this->l('Reason used in stock movements'),
+							'desc' => $this->l('Reason used in stock movements'),
 						),
 					),
 					'submit' => array(
@@ -324,7 +324,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'p' => $this->l('Physical quantity to remove')
+							'desc' => $this->l('Physical quantity to remove')
 						),
 						array(
 							'type' => 'radio',
@@ -345,7 +345,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Do you want to remove this quantity from the usable quantity(yes) or the physical quantity(no)?')
+							'desc' => $this->l('Do you want to remove this quantity from the usable quantity(yes) or the physical quantity(no)?')
 						),
 						array(
 							'type' => 'select',
@@ -357,7 +357,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'p' => $this->l('Select the warehouse from where you want to remove the product')
+							'desc' => $this->l('Select the warehouse from where you want to remove the product')
 						),
 						array(
 							'type' => 'select',
@@ -371,7 +371,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
-							'p' => $this->l('Reason used in stock movements'),
+							'desc' => $this->l('Reason used in stock movements'),
 						),
 					),
 					'submit' => array(
@@ -439,7 +439,7 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'p' => $this->l('Physical quantity to transfer.')
+							'desc' => $this->l('Physical quantity to transfer.')
 						),
 						array(
 							'type' => 'select',
@@ -451,7 +451,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'p' => $this->l('Select the warehouse want to transfer the product from.')
+							'desc' => $this->l('Select the warehouse want to transfer the product from.')
 						),
 						array(
 							'type' => 'radio',
@@ -472,7 +472,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Is this a usable quantity for sale?')
+							'desc' => $this->l('Is this a usable quantity for sale?')
 						),
 						array(
 							'type' => 'select',
@@ -484,7 +484,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_warehouse',
 								'name' => 'name'
 							),
-							'p' => $this->l('Select the warehouse to transfer the product to.')
+							'desc' => $this->l('Select the warehouse to transfer the product to.')
 						),
 						array(
 							'type' => 'radio',
@@ -505,7 +505,7 @@ class AdminStockManagementControllerCore extends AdminController
 									'label' => $this->l('Disabled')
 								)
 							),
-							'p' => $this->l('Do you want it to be usable for sale?')
+							'desc' => $this->l('Do you want it to be usable for sale?')
 						),
 					),
 					'submit' => array(

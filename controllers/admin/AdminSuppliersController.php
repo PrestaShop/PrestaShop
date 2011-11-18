@@ -77,14 +77,14 @@ class AdminSuppliersControllerCore extends AdminController
 					'size' => 33,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Will appear in supplier list')
+					'desc' => $this->l('Will appear in supplier list')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
 					'display_image' => true,
-					'p' => $this->l('Upload supplier logo from your computer')
+					'desc' => $this->l('Upload supplier logo from your computer')
 				),
 				array(
 					'type' => 'text',

@@ -81,7 +81,7 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Share customers between shops of this group')
+					'desc' => $this->l('Share customers between shops of this group')
 				),
 				array(
 					'type' => 'radio',
@@ -102,7 +102,7 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and stock)')
+					'desc' => $this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and stock)')
 				),
 				array(
 					'type' => 'radio',
@@ -123,7 +123,7 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Enable or disable shop')
+					'desc' => $this->l('Enable or disable shop')
 				)
 			),
 			'submit' => array(
@@ -179,7 +179,7 @@ class AdminGroupShopControllerCore extends AdminController
 				'type' => 'checkbox',
 				'values' => $import_data
 			),
-			'p' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
+			'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
 		);
 
 		$this->tpl_form_vars = array(

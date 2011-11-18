@@ -159,7 +159,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'p' => $this->l('Select the corresponding action : increments or decrements stock.')
+					'desc' => $this->l('Select the corresponding action : increments or decrements stock.')
 				),
 			),
 			'submit' => array(
