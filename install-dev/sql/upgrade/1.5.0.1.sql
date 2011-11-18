@@ -244,7 +244,7 @@ ALTER TABLE `PREFIX_carrier`
 	ADD COLUMN `max_width` int(10) DEFAULT 0 AFTER `position`,
 	ADD COLUMN `max_height` int(10) DEFAULT 0 AFTER `max_width`,
 	ADD COLUMN `max_depth` int(10) DEFAULT 0 AFTER `max_height`,
-	ADD COLUMN `max_weight` int(10) DEFAULT 0 AFTER `max_deep`,
+	ADD COLUMN `max_weight` int(10) DEFAULT 0 AFTER `max_depth`,
 	ADD COLUMN `grade` int(10)  DEFAULT 0 AFTER `max_weight`;
 
 ALTER TABLE `PREFIX_cart_product`
