@@ -75,7 +75,7 @@ class AdminImagesController extends AdminController
 					'label' => $this->l('Type name:'),
 					'name' => 'name',
 					'required' => true,
-					'p' => $this->l('Letters only (e.g., small, medium, large, extra-large)')
+					'desc' => $this->l('Letters only (e.g., small, medium, large, extra-large)')
 				),
 				array(
 					'type' => 'text',
@@ -84,7 +84,7 @@ class AdminImagesController extends AdminController
 					'required' => true,
 					'size' => 4,
 					'maxlength' => 5,
-					'p' => $this->l('Maximum image width in pixels')
+					'desc' => $this->l('Maximum image width in pixels')
 				),
 				array(
 					'type' => 'text',
@@ -93,7 +93,7 @@ class AdminImagesController extends AdminController
 					'required' => true,
 					'size' => 4,
 					'maxlength' => 5,
-					'p' => $this->l('Maximum image height in pixels')
+					'desc' => $this->l('Maximum image height in pixels')
 				),
 				array(
 					'type' => 'radio',
@@ -102,7 +102,7 @@ class AdminImagesController extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('This type will be applied to product images'),
+					'desc' => $this->l('This type will be applied to product images'),
 					'values' => array(
 						array(
 							'id' => 'products_on',
@@ -123,7 +123,7 @@ class AdminImagesController extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('This type will be applied to categories images'),
+					'desc' => $this->l('This type will be applied to categories images'),
 					'values' => array(
 						array(
 							'id' => 'categories_on',
@@ -144,7 +144,7 @@ class AdminImagesController extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('This type will be applied to manufacturers images'),
+					'desc' => $this->l('This type will be applied to manufacturers images'),
 					'values' => array(
 						array(
 							'id' => 'manufacturers_on',
@@ -165,7 +165,7 @@ class AdminImagesController extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('This type will be applied to suppliers images'),
+					'desc' => $this->l('This type will be applied to suppliers images'),
 					'values' => array(
 						array(
 							'id' => 'suppliers_on',
@@ -186,7 +186,7 @@ class AdminImagesController extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('This type will be applied to scenes images'),
+					'desc' => $this->l('This type will be applied to scenes images'),
 					'values' => array(
 						array(
 							'id' => 'scenes_on',
@@ -207,7 +207,7 @@ class AdminImagesController extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('This type will be applied to stores images'),
+					'desc' => $this->l('This type will be applied to stores images'),
 					'values' => array(
 						array(
 							'id' => 'stores_on',

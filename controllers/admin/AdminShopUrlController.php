@@ -87,13 +87,13 @@ class AdminShopUrlControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Physical URI:'),
 					'name' => 'physical_uri',
-					'p' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path.')
+					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Virtual URI:'),
 					'name' => 'virtual_uri',
-					'p' => array(
+					'desc' => array(
 						$this->l('This virtual folder must not exist on your server and is used to associate an URI to a shop.'),
 						'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
 					)
@@ -139,7 +139,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
 						)
 					),
-					'p' => array(
+					'desc' => array(
 						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url
 							(you can only have one main url per shop).'),
 						array(
@@ -170,7 +170,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
 						)
 					),
-					'p' => $this->l('Enabled or disabled')
+					'desc' => $this->l('Enabled or disabled')
 				)
 			),
 			'submit' => array(

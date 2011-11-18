@@ -192,7 +192,7 @@ class AdminCarriersControllerCore extends AdminController
 					'size' => 25,
 					'required' => true,
 					'hint' => $this->l('Allowed characters: letters, spaces and').' ().-',
-					'p' => array(
+					'desc' => array(
 						$this->l('Carrier name displayed during checkout'),
 						$this->l('With a value of 0, the carrier name will be replaced by the shop name')
 					)
@@ -201,7 +201,7 @@ class AdminCarriersControllerCore extends AdminController
 					'type' => 'file',
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
-					'p' => $this->l('Upload logo from your computer').' (.gif, .jpg, .jpeg '.$this->l('or').' .png)'
+					'desc' => $this->l('Upload logo from your computer').' (.gif, .jpg, .jpeg '.$this->l('or').' .png)'
 				),
 				array(
 					'type' => 'text',
@@ -211,7 +211,7 @@ class AdminCarriersControllerCore extends AdminController
 					'required' => true,
 					'size' => 41,
 					'maxlength' => 128,
-					'p' => $this->l('Time taken for product delivery; displayed during checkout')
+					'desc' => $this->l('Time taken for product delivery; displayed during checkout')
 				),
 				array(
 					'type' => 'text',
@@ -219,14 +219,14 @@ class AdminCarriersControllerCore extends AdminController
 					'name' => 'grade',
 					'required' => false,
 					'size' => 1,
-					'p' => $this->l('"0" for a longest shipping delay,"9" for the shortest shipping delay.')
+					'desc' => $this->l('"0" for a longest shipping delay,"9" for the shortest shipping delay.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('URL:'),
 					'name' => 'url',
 					'size' => 40,
-					'p' => $this->l('URL for the tracking number; type \'@\' where the tracking number will appear')
+					'desc' => $this->l('URL for the tracking number; type \'@\' where the tracking number will appear')
 				),
 				array(
 					'type' => 'checkbox',
@@ -237,14 +237,14 @@ class AdminCarriersControllerCore extends AdminController
 						'id' => 'id_zone',
 						'name' => 'name'
 					),
-					'p' => $this->l('The zone in which this carrier is to be used')
+					'desc' => $this->l('The zone in which this carrier is to be used')
 				),
 				array(
 					'type' => 'group',
 					'label' => $this->l('Group access:'),
 					'name' => 'groupBox',
 					'values' => Group::getGroups(Context::getContext()->language->id),
-					'p' => $this->l('Mark all groups you want to give access to this carrier')
+					'desc' => $this->l('Mark all groups you want to give access to this carrier')
 				),
 				array(
 					'type' => 'radio',
@@ -265,7 +265,7 @@ class AdminCarriersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Include or exclude carrier from list of carriers on Front Office')
+					'desc' => $this->l('Include or exclude carrier from list of carriers on Front Office')
 				),
 				array(
 					'type' => 'radio',
@@ -285,7 +285,7 @@ class AdminCarriersControllerCore extends AdminController
 							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
 						)
 					),
-					'p' => $this->l('Apply shipping costs and additional shipping costs by products in carrier price')
+					'desc' => $this->l('Apply shipping costs and additional shipping costs by products in carrier price')
 				),
 				array(
 					'type' => 'select',
@@ -320,7 +320,7 @@ class AdminCarriersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Include the shipping & handling costs in carrier price')
+					'desc' => $this->l('Include the shipping & handling costs in carrier price')
 				),
 				array(
 					'type' => 'radio',
@@ -365,7 +365,7 @@ class AdminCarriersControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'p' => $this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)')
+					'desc' => $this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)')
 				),
 				array(
 					'type' => 'text',
@@ -373,7 +373,7 @@ class AdminCarriersControllerCore extends AdminController
 					'name' => 'max_height',
 					'required' => false,
 					'size' => 10,
-					'p' => $this->l('Maximum height managed by this carrier. Set "0" or nothing, to ignore this field.')
+					'desc' => $this->l('Maximum height managed by this carrier. Set "0" or nothing, to ignore this field.')
 				),
 				array(
 					'type' => 'text',
@@ -381,7 +381,7 @@ class AdminCarriersControllerCore extends AdminController
 					'name' => 'max_width',
 					'required' => false,
 					'size' => 10,
-					'p' => $this->l('Maximum width managed by this carrier. Set "0" or nothing, to ignore this field.')
+					'desc' => $this->l('Maximum width managed by this carrier. Set "0" or nothing, to ignore this field.')
 				),
 				array(
 					'type' => 'text',
@@ -389,7 +389,7 @@ class AdminCarriersControllerCore extends AdminController
 					'name' => 'max_deep',
 					'required' => false,
 					'size' => 10,
-					'p' => $this->l('Maximum deep managed by this carrier. Set "0" or nothing, to ignore this field.')
+					'desc' => $this->l('Maximum deep managed by this carrier. Set "0" or nothing, to ignore this field.')
 				),
 				array(
 					'type' => 'text',
@@ -397,7 +397,7 @@ class AdminCarriersControllerCore extends AdminController
 					'name' => 'max_weight',
 					'required' => false,
 					'size' => 10,
-					'p' => $this->l('Maximum weight managed by this carrier. Set "0" or nothing, to ignore this field.')
+					'desc' => $this->l('Maximum weight managed by this carrier. Set "0" or nothing, to ignore this field.')
 				),
 				array(
 					'type' => 'hidden',

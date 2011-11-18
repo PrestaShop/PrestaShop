@@ -94,7 +94,7 @@ class AdminWebserviceControllerCore extends AdminController
 					'id' => 'code',
 					'size' => 32,
 					'required' => true,
-					'p' => $this->l('Webservice account key'),
+					'desc' => $this->l('Webservice account key'),
 				),
 				array(
 					'type' => 'textarea',
@@ -102,7 +102,7 @@ class AdminWebserviceControllerCore extends AdminController
 					'name' => 'description',
 					'rows' => 3,
 					'cols' => 110,
-					'p' => $this->l('Key description'),
+					'desc' => $this->l('Key description'),
 				),
 				array(
 					'type' => 'radio',

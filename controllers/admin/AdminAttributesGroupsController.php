@@ -194,7 +194,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Term or phrase displayed to the customer')
+					'desc' => $this->l('Term or phrase displayed to the customer')
 				),
 				array(
 					'type' => 'select',
@@ -206,7 +206,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'p' => $this->l('Choose the type of the attribute group')
+					'desc' => $this->l('Choose the type of the attribute group')
 				)
 			)
 		);
@@ -261,7 +261,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id_attribute_group',
 						'name' => 'name'
 					),
-					'p' => $this->l('Choose the type of the attribute group')
+					'desc' => $this->l('Choose the type of the attribute group')
 				)
 			)
 		);
@@ -281,14 +281,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Color:'),
 			'name' => 'color',
 			'size' => 33,
-			'p' => $this->l('HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+			'desc' => $this->l('HTML colors only (e.g.,').' "lightblue", "#CC6600")'
 		);
 
 		$this->fields_form['input'][] = array(
 			'type' => 'file',
 			'label' => $this->l('Texture:'),
 			'name' => 'texture',
-			'p' => array(
+			'desc' => array(
 				$this->l('Upload color texture from your computer'),
 				$this->l('This will override the HTML color!')
 			)

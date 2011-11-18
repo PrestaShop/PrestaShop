@@ -107,7 +107,7 @@
 								{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
 									{$input.empty_message}
 									{$input.required = false}
-									{$input.p = null}
+									{$input.desc = null}
 								{else}
 									<select name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
@@ -255,10 +255,10 @@
 								{$fields_value[$input.name]}
 							{/if}
 							{if isset($input.required) && $input.required} <sup>*</sup>{/if}
-							{if isset($input.p)}
+							{if isset($input.desc)}
 								<p class="clear">
-									{if is_array($input.p)}
-										{foreach $input.p as $p}
+									{if is_array($input.desc)}
+										{foreach $input.desc as $p}
 											{if is_array($p)}
 												<span id="{$p.id}">{$p.text}</span><br />
 											{else}
@@ -266,7 +266,7 @@
 											{/if}
 										{/foreach}
 									{else}
-										{$input.p}
+										{$input.desc}
 									{/if}
 								</p>
 							{/if}
@@ -285,7 +285,7 @@
 							name="{if isset($field.name)}{$field.name}{else}{$submit_action}{/if}{if isset($field.stay) && $field.stay}AndStay{/if}"
 							{if isset($field.class)}class="{$field.class}"{/if} />
 					</div>
-				{elseif $key == 'p'}
+				{elseif $key == 'desc'}
 					<p class="clear">
 						{if is_array($field)}
 							{foreach $field as $k => $p}

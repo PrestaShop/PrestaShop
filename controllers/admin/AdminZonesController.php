@@ -82,7 +82,7 @@ class AdminZonesControllerCore extends AdminController
 					'name' => 'name',
 					'size' => 33,
 					'required' => true,
-					'p' => $this->l('Zone name, e.g., Africa, West Coast, Neighboring Countries'),
+					'desc' => $this->l('Zone name, e.g., Africa, West Coast, Neighboring Countries'),
 				),
 				array(
 					'type' => 'radio',
@@ -103,7 +103,7 @@ class AdminZonesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Allow or disallow shipping to this zone')
+					'desc' => $this->l('Allow or disallow shipping to this zone')
 				)
 			)
 		);

@@ -68,7 +68,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'label' => $this->l('Carrier:'),
 					'name' => 'id_carrier',
 					'required' => false,
-					'p' => $this->l('Carrier to which this range will be applied'),
+					'desc' => $this->l('Carrier to which this range will be applied'),
 					'options' => array(
 						'query' => $carriers,
 						'id' => 'id_carrier',
@@ -83,7 +83,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'p' => $this->l('Range start (included)'),
+					'desc' => $this->l('Range start (included)'),
 				),
 				array(
 					'type' => 'text',
@@ -92,7 +92,7 @@ class AdminRangeWeightControllerCore extends AdminController
 					'size' => 5,
 					'required' => true,
 					'suffix' => Configuration::get('PS_WEIGHT_UNIT'),
-					'p' => $this->l('Range end (excluded)'),
+					'desc' => $this->l('Range end (excluded)'),
 				),
 			),
 			'submit' => array(

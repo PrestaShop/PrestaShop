@@ -61,7 +61,7 @@ class AdminContactsControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'p' => $this->l('Contact name, e.g., Technical Support'),
+					'desc' => $this->l('Contact name, e.g., Technical Support'),
 				),
 				array(
 					'type' => 'text',
@@ -69,7 +69,7 @@ class AdminContactsControllerCore extends AdminController
 					'name' => 'email',
 					'size' => 33,
 					'required' => false,
-					'p' => $this->l('E-mails will be sent to this address'),
+					'desc' => $this->l('E-mails will be sent to this address'),
 				),
 				array(
 					'type' => 'radio',
@@ -78,7 +78,7 @@ class AdminContactsControllerCore extends AdminController
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'p' => $this->l('The messages will be saved in the Customer Service tab'),
+					'desc' => $this->l('The messages will be saved in the Customer Service tab'),
 					'values' => array(
 						array(
 							'id' => 'customer_service_on',
@@ -100,7 +100,7 @@ class AdminContactsControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 36,
 					'rows' => 5,
-					'p' => $this->l('Additional information about this contact'),
+					'desc' => $this->l('Additional information about this contact'),
 				),
 			),
 			'submit' => array(

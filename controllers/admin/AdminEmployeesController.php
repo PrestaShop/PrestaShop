@@ -141,7 +141,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'passwd',
 					'required' => true,
 					'size' => 33,
-					'p' => ($obj->id ?
+					'desc' => ($obj->id ?
 								$this->l('Leave blank if you do not want to change your password') :
 									$this->l('Min. 8 characters; use only letters, numbers or').' -_')
 				),
@@ -158,7 +158,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'bo_color',
 					'class' => 'color mColorPickerInput',
 					'size' => 20,
-					'p' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+					'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
 				),
 				array(
 					'type' => 'select',
@@ -176,7 +176,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Theme:'),
 					'name' => 'bo_theme',
 					'options' => array('query' => $this->themes),
-					'p' => $this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)')
+					'desc' => $this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)')
 				)
 			)
 		);
@@ -202,7 +202,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'label' => $this->l('Disabled')
 					)
 				),
-				'p' => $this->l('Show the welcome video on the dashbord of the back office')
+				'desc' => $this->l('Show the welcome video on the dashbord of the back office')
 			);
 
 			$this->fields_form['input'][] = array(
@@ -224,7 +224,7 @@ class AdminEmployeesControllerCore extends AdminController
 						'label' => $this->l('Disabled')
 					)
 				),
-				'p' => $this->l('Allow or disallow this employee to log into this Back Office')
+				'desc' => $this->l('Allow or disallow this employee to log into this Back Office')
 			);
 
 			$this->fields_form['input'][] = array(

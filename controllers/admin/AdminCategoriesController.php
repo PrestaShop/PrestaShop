@@ -233,7 +233,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Image:'),
 					'name' => 'image',
 					'display_image' => true,
-					'p' => $this->l('Upload category logo from your computer')
+					'desc' => $this->l('Upload category logo from your computer')
 				),
 				array(
 					'type' => 'text',
@@ -269,7 +269,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Group access:'),
 					'name' => 'groupBox',
 					'values' => Group::getGroups(Context::getContext()->language->id),
-					'p' => $this->l('Mark all groups you want to give access to this category')
+					'desc' => $this->l('Mark all groups you want to give access to this category')
 				)
 			),
 			'submit' => array(

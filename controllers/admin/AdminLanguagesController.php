@@ -149,7 +149,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 4,
 					'maxlength' => 2,
-					'p' => $this->l('2-letter ISO code (e.g., fr, en, de)')
+					'desc' => $this->l('2-letter ISO code (e.g., fr, en, de)')
 				),
 				array(
 					'type' => 'text',
@@ -158,7 +158,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'required' => true,
 					'size' => 10,
 					'maxlength' => 5,
-					'p' => $this->l('Full language code (e.g., en-us, pt-br)')
+					'desc' => $this->l('Full language code (e.g., en-us, pt-br)')
 				),
 				array(
 					'type' => 'text',
@@ -166,7 +166,7 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_lite',
 					'required' => true,
 					'size' => 15,
-					'p' => $this->l('Date format, lite (e.g., Y-m-d, d/m/Y)')
+					'desc' => $this->l('Date format, lite (e.g., Y-m-d, d/m/Y)')
 				),
 				array(
 					'type' => 'text',
@@ -174,21 +174,21 @@ class AdminLanguagesControllerCore extends AdminController
 					'name' => 'date_format_full',
 					'required' => true,
 					'size' => 25,
-					'p' => $this->l('Date format, full (e.g., Y-m-d H:i:s, d/m/Y H:i)')
+					'desc' => $this->l('Date format, full (e.g., Y-m-d H:i:s, d/m/Y H:i)')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('Flag:'),
 					'name' => 'flag',
 					'required' => true,
-					'p' => $this->l('Upload country flag from your computer')
+					'desc' => $this->l('Upload country flag from your computer')
 				),
 				array(
 					'type' => 'file',
 					'label' => $this->l('"No-picture" image:'),
 					'name' => 'no-picture',
 					'required' => true,
-					'p' => $this->l('Image displayed when "no picture found"')
+					'desc' => $this->l('Image displayed when "no picture found"')
 				),
 				array(
 					'type' => 'radio',
@@ -209,7 +209,7 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('To active if this language is a right to left language').' '.
+					'desc' => $this->l('To active if this language is a right to left language').' '.
 							$this->l('(Experimental: your theme must be compliant with RTL language)')
 				),
 				array(
@@ -231,7 +231,7 @@ class AdminLanguagesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Allow or disallow this language to be selected by the customer')
+					'desc' => $this->l('Allow or disallow this language to be selected by the customer')
 				),
 				array(
 					'type' => 'special',

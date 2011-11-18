@@ -170,7 +170,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'label' => $this->l('Back office color:'),
 						'name' => 'color',
 						'size' => 20,
-						'p' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+						'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
 					),
 					array(
 						'type' => 'radio',
@@ -191,7 +191,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'p' => $this->l('You have to define if it is possible to edit the order in this state.
+						'desc' => $this->l('You have to define if it is possible to edit the order in this state.
 										An editable order is an order not valid to send to the supplier.')
 					),
 					array(
@@ -213,7 +213,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'p' => $this->l('You have to define if it is possible to generate the delivery note of the order in this state.
+						'desc' => $this->l('You have to define if it is possible to generate the delivery note of the order in this state.
 										The order has to be valid to use this function.')
 					),
 					array(
@@ -235,7 +235,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'p' => $this->l('You have to define if this state correspond to a product receipt on this order (partial or complete).
+						'desc' => $this->l('You have to define if this state correspond to a product receipt on this order (partial or complete).
 										This permit to know if the concerned products have to be added in stock.')
 					),
 					array(
@@ -257,7 +257,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'p' => $this->l('You have to define if some products are pending receipt in this state.')
+						'desc' => $this->l('You have to define if some products are pending receipt in this state.')
 					),
 				),
 				'submit' => array(
@@ -296,7 +296,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('Back office color:'),
 								'name' => 'color',
 								'size' => 20,
-								'p' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+								'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
 							),
 						),
 						'submit' => array(
@@ -348,7 +348,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'reference',
 						'size' => 50,
 						'required' => true,
-						'p' => $this->l('This is the reference of your order.'),
+						'desc' => $this->l('This is the reference of your order.'),
 					),
 					array(
 						'type' => 'select',
@@ -360,7 +360,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_supplier',
 							'name' => 'name'
 						),
-						'p' => $this->l('Select the supplier you are buying product from'),
+						'desc' => $this->l('Select the supplier you are buying product from'),
 						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
@@ -373,7 +373,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_warehouse',
 							'name' => 'name'
 						),
-						'p' => $this->l('Select the warehouse where you want the order to be sent to.'),
+						'desc' => $this->l('Select the warehouse where you want the order to be sent to.'),
 					),
 					array(
 						'type' => 'select',
@@ -385,7 +385,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_currency',
 							'name' => 'name'
 						),
-						'p' => $this->l('The currency of the order'),
+						'desc' => $this->l('The currency of the order'),
 						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
@@ -398,7 +398,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_lang',
 							'name' => 'name'
 						),
-						'p' => $this->l('The language of the order')
+						'desc' => $this->l('The language of the order')
 					),
 					array(
 						'type' => 'date',
@@ -406,7 +406,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'date_delivery_expected',
 						'size' => 20,
 						'required' => true,
-						'p' => $this->l('This is the expected delivery date for this order'),
+						'desc' => $this->l('This is the expected delivery date for this order'),
 					),
 					array(
 						'type' => 'text',
@@ -414,7 +414,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'discount_rate',
 						'size' => 7,
 						'required' => true,
-						'p' => $this->l('This is the global discount rate in percents for the order.'),
+						'desc' => $this->l('This is the global discount rate in percents for the order.'),
 					),
 				),
 				'submit' => array(
@@ -657,7 +657,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'id' => 'id_supply_order_state',
 						'name' => 'name'
 					),
-					'p' => $this->l('Choose the new state of your order')
+					'desc' => $this->l('Choose the new state of your order')
 				),
 			),
 			'submit' => array(

@@ -306,7 +306,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 							'label' => $this->l('No Tax')
 						)
 					),
-					'p' => $this->l('(Total tax:').'9%)'
+					'desc' => $this->l('(Total tax:').'9%)'
 				),
 				array(
 					'type' => 'text',

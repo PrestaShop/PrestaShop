@@ -157,7 +157,7 @@ class AdminCountriesControllerCore extends AdminController
 					'size' => 30,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
-					'p' => $this->l('Name of country')
+					'desc' => $this->l('Name of country')
 				),
 				array(
 					'type' => 'text',
@@ -167,7 +167,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'p' => $this->l('2- or 3-letter ISO code, e.g., FR for France').'.
+					'desc' => $this->l('2- or 3-letter ISO code, e.g., FR for France').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
 							</a>.'
@@ -180,7 +180,7 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'p' => $this->l('International call prefix, e.g., 33 for France.')
+					'desc' => $this->l('International call prefix, e.g., 33 for France.')
 				),
 				array(
 					'type' => 'select',
@@ -205,7 +205,7 @@ class AdminCountriesControllerCore extends AdminController
 						'id' => 'id_zone',
 						'name' => 'name'
 					),
-					'p' => $this->l('Geographical zone where country is located')
+					'desc' => $this->l('Geographical zone where country is located')
 				),
 				array(
 					'type' => 'radio',
@@ -233,7 +233,7 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
-					'p' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France.
+					'desc' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France.
 									No verification if undefined')
 				),
 				array(
@@ -264,7 +264,7 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Display or not this store')
+					'desc' => $this->l('Display or not this store')
 				),
 				array(
 					'type' => 'radio',

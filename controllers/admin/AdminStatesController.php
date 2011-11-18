@@ -77,7 +77,7 @@ class AdminStatesControllerCore extends AdminController
 					'size' => 30,
 					'maxlength' => 32,
 					'required' => true,
-					'p' => $this->l('State name to display in addresses and on invoices')
+					'desc' => $this->l('State name to display in addresses and on invoices')
 				),
 				array(
 					'type' => 'text',
@@ -87,7 +87,7 @@ class AdminStatesControllerCore extends AdminController
 					'maxlength' => 4,
 					'required' => true,
 					'class' => 'uppercase',
-					'p' => $this->l('1 to 4 letter ISO code (search on Wikipedia if you don\'t know)')
+					'desc' => $this->l('1 to 4 letter ISO code (search on Wikipedia if you don\'t know)')
 				),
 				array(
 					'type' => 'select',
@@ -99,7 +99,7 @@ class AdminStatesControllerCore extends AdminController
 						'id' => 'id_country',
 						'name' => 'name'
 					),
-					'p' => $this->l('Country where state, region or city is located')
+					'desc' => $this->l('Country where state, region or city is located')
 				),
 				array(
 					'type' => 'select',
@@ -111,7 +111,7 @@ class AdminStatesControllerCore extends AdminController
 						'id' => 'id_zone',
 						'name' => 'name'
 					),
-					'p' => array(
+					'desc' => array(
 						$this->l('Geographical zone where this state is located'),
 						$this->l('Used for shipping')
 					)
@@ -134,7 +134,7 @@ class AdminStatesControllerCore extends AdminController
 							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('Disabled').'" title="'.$this->l('Disabled').'" />'
 						)
 					),
-					'p' => $this->l('Enabled or disabled')
+					'desc' => $this->l('Enabled or disabled')
 				)
 			),
 			'submit' => array(

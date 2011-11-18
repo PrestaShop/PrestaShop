@@ -185,7 +185,7 @@ class AdminScenesControllerCore extends AdminController
 				'type' => 'file',
 				'label' => $this->l('Alternative thumbnail:'),
 				'name' => 'thumb',
-				'p' => $img_alt_desc
+				'desc' => $img_alt_desc
 			);
 
 			$selectedCat = array();
@@ -240,7 +240,7 @@ class AdminScenesControllerCore extends AdminController
 			'label' => $this->l('Image to be mapped:'),
 			'name' => 'image',
 			'display_image' => true,
-			'p' => $image_to_map_desc,
+			'desc' => $image_to_map_desc,
 		);
 
 		if(isset($input_img_alt))

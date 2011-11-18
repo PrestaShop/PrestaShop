@@ -222,7 +222,7 @@ class AdminShopControllerCore extends AdminController
 					'label' => $this->l('Disabled')
 				)
 			),
-			'p' => $this->l('Enable or disable shop')
+			'desc' => $this->l('Enable or disable shop')
 		);
 
 		$themes = Theme::getThemes();
@@ -299,7 +299,7 @@ class AdminShopControllerCore extends AdminController
 				'type' => 'checkbox',
 				'values' => $import_data
 			),
-			'p' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
+			'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
 		);
 
 		$this->fields_value = array(

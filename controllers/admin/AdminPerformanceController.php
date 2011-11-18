@@ -101,19 +101,19 @@ class AdminPerformanceController extends AdminController
 							'id' => 'smarty_force_compile_'._PS_SMARTY_NO_COMPILE_,
 							'value' => _PS_SMARTY_NO_COMPILE_,
 							'label' => $this->l('Never compile cache'),
-							'p' => $this->l('Templates are never recompiled, performance are better and this option should be used in production environement')
+							'desc' => $this->l('Templates are never recompiled, performance are better and this option should be used in production environement')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
 							'value' => _PS_SMARTY_CHECK_COMPILE_,
 							'label' => $this->l('Compile cache if templates are updated'),
-							'p' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your templates files, you should use force compile instead of this option.  It should never be used in a production environment.')
+							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your templates files, you should use force compile instead of this option.  It should never be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
 							'value' => _PS_SMARTY_FORCE_COMPILE_,
 							'label' => $this->l('Force compile'),
-							'p' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.')
+							'desc' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.')
 						)
 					)
 				),
@@ -135,7 +135,7 @@ class AdminPerformanceController extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'p' => $this->l('Should be enabled except for debugging.')
+					'desc' => $this->l('Should be enabled except for debugging.')
 				)
 			),
 			'submit' => array(
@@ -179,7 +179,7 @@ class AdminPerformanceController extends AdminController
 				'title' => $this->l('Features detachables'),
 				'image' => '../img/admin/tab-plugins.gif'
 			),
-			'p' => $this->l('Some features can be disabled in order to improve performance.'),
+			'desc' => $this->l('Some features can be disabled in order to improve performance.'),
 			'input' => array(
 				array(
 					'type' => 'radio',
@@ -200,7 +200,7 @@ class AdminPerformanceController extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'p' => $this->l('These features are going to be disabled:')
+					'desc' => $this->l('These features are going to be disabled:')
 				),
 				array(
 					'type' => 'radio',
@@ -220,7 +220,7 @@ class AdminPerformanceController extends AdminController
 							'label' => $this->l('No')
 						)
 					),
-					'p' => $this->l('These features are going to be disabled:')
+					'desc' => $this->l('These features are going to be disabled:')
 				)
 			),
 			'submit' => array(
@@ -268,7 +268,7 @@ class AdminPerformanceController extends AdminController
 				'title' => $this->l('CCC (Combine, Compress and Cache)'),
 				'image' => '../img/admin/arrow_in.png'
 			),
-			'p' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. 
+			'desc' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. 
 				Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
 			'input' => array(
 				array(
@@ -413,28 +413,28 @@ class AdminPerformanceController extends AdminController
 				'title' => $this->l('Media servers (used only with CCC)'),
 				'image' => '../img/admin/subdomain.gif'
 			),
-			'p' => $this->l('You must enter another domain or subdomain in order to use cookieless static content.'),
+			'desc' => $this->l('You must enter another domain or subdomain in order to use cookieless static content.'),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #1:'),
 					'name' => '_MEDIA_SERVER_1_',
 					'size' => 30,
-					'p' => $this->l('Name of the second domain of your shop, (e.g., myshop-media-server-1.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the second domain of your shop, (e.g., myshop-media-server-1.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #2:'),
 					'name' => '_MEDIA_SERVER_2_',
 					'size' => 30,
-					'p' => $this->l('Name of the third domain of your shop, (e.g., myshop-media-server-2.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the third domain of your shop, (e.g., myshop-media-server-2.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #3:'),
 					'name' => '_MEDIA_SERVER_3_',
 					'size' => 30,
-					'p' => $this->l('Name of the fourth domain of your shop, (e.g., myshop-media-server-3.com). If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the fourth domain of your shop, (e.g., myshop-media-server-3.com). If you do not have another domain, leave this field blank')
 				),
 			),
 			'submit' => array(
@@ -481,7 +481,7 @@ class AdminPerformanceController extends AdminController
 				'title' => $this->l('Ciphering'),
 				'image' => '../img/admin/computer_key.png'
 			),
-			'p' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
+			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
 				array(
 					'type' => 'radio',
@@ -581,7 +581,7 @@ class AdminPerformanceController extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'p' => $this->l('Enable or disable caching system')
+					'desc' => $this->l('Enable or disable caching system')
 				),
 				array(
 					'type' => 'select',
