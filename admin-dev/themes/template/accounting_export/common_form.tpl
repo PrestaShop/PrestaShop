@@ -35,14 +35,17 @@
 <label for="clientPrefix">{l s='Client prefix:'}</label>
 <div class="margin-form">
 	<input type="text" value="{$clientPrefix}" name="clientPrefix" />
+	<span class="input-error"></span>
 </div>
 
 <label for="beginDate">{l s='Begin to:'}</label>
 <div class="margin-form">
 	<input class="datepicker" id="beginDate_{$type}" type="text" name="beginDate" value="{$begin_date}" />
+	<span class="input-error">{l s="The date has not the right format"}</span>
 </div>
 
 <label for="endDate">{l s='End to:'}</label>
 <div class="margin-form">
 	<input class="datepicker" id="endDate_{$type}" type="text" name="endDate" value="{$end_date}" />
+	<span class="input-error">{l s="The date has not the right format"}</span>
 </div>

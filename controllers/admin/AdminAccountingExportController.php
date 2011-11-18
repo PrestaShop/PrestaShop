@@ -308,6 +308,8 @@ class AdminAccountingExportControllerCore extends AdminController
 			case 1:
 				$line[2] = !empty($row['account']) ? $row['account'] : 
 					Configuration::get('default_account_number', NULL, NULL, $row['id_shop']);
+				// Force an empty string if Configuration send false
+				$line[2] = empty($line[2]) ? '' : $linep[2];
 				$line[5] = $row['product_price_ht'];
 				break;
 			case 2:
@@ -379,7 +381,7 @@ class AdminAccountingExportControllerCore extends AdminController
  					WHEN (acc_zs.`account_number` != "" AND acc_zs.`account_number` IS NOT NULL) THEN acc_zs.`account_number`
  					ELSE  ""
 				END AS account,
-				CONCAT(\''.Configuration::get('PS_INVOICE_PREFIX').'\', LPAD(o.`invoice_number`, 6, 0)) AS invoice_number,
+				CONCAT(\''.Configuration::get('PS_INVOICE_PREFIX').'\', LPAD(o.`invoice_number`, 6, "0")) AS invoice_number,
 				o.`total_paid_real`,
 				od.`product_price` AS product_price_ht,
 				pcc.`transaction_id`,
