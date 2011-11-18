@@ -880,17 +880,14 @@ class AdminControllerCore extends Controller
 				//no break
 			case 'view':
 				// Default cancel button - like old back link
-				if (!isset($this->no_back) || $this->no_back == false)
-				{
-					$back = Tools::safeOutput(Tools::getValue('back', ''));
-					if (empty($back))
-						$back = self::$currentIndex.'&token='.$this->token;
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
 
-					$this->toolbar_btn['cancel'] = array(
-						'href' => $back,
-						'desc' => $this->l('Cancel')
-					);
-				}
+				$this->toolbar_btn['cancel'] = array(
+					'href' => $back,
+					'desc' => $this->l('Cancel')
+				);
 				break;
 			case 'options':
 				$this->toolbar_btn['save'] = array(
@@ -1327,9 +1324,6 @@ class AdminControllerCore extends Controller
 	 */
 	public function initView()
 	{
-		if (empty($this->toolbar_title))
-			$this->initToolbarTitle();
-
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_view_vars;
@@ -1350,9 +1344,6 @@ class AdminControllerCore extends Controller
 		{
 			if (!$this->multiple_fieldsets)
 				$this->fields_form = array(array('form' => $this->fields_form));
-
-			if (empty($this->toolbar_title))
-				$this->initToolbarTitle();
 
 			$this->getlanguages();
 			$helper = new HelperForm($this);
@@ -1380,9 +1371,6 @@ class AdminControllerCore extends Controller
 	{
 		if ($this->options && is_array($this->options))
 		{
-			if (empty($this->toolbar_title))
-				$this->initToolbarTitle();
-
 			if ($this->display != 'options')
 				$this->show_toolbar = false;
 
@@ -1435,7 +1423,6 @@ class AdminControllerCore extends Controller
 		$helper->imageType = $this->imageType;
 		$helper->no_link = $this->list_no_link;
 		$helper->colorOnBackground = $this->colorOnBackground;
-		$helper->no_back = isset($this->no_back) ? $this->no_back : true;
 		$helper->ajax_params = (isset($this->ajax_params) ? $this->ajax_params : null);
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
