@@ -177,7 +177,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Name:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name¤description¤meta_title¤meta_description¤meta_keywords¤link_rewrite',
 					'size' => 48,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
@@ -225,7 +224,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
-					'attributeLang' => 'name¤description¤meta_title¤meta_description¤meta_keywords¤link_rewrite',
 					'rows' => 10,
 					'cols' => 100,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}'
@@ -242,7 +240,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'attributeLang' => 'name¤description¤meta_title¤meta_description¤meta_keywords¤link_rewrite',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -250,7 +247,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'attributeLang' => 'name¤description¤meta_title¤meta_description¤meta_keywords¤link_rewrite',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -258,7 +254,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'attributeLang' => 'name¤description¤meta_title¤meta_description¤meta_keywords¤link_rewrite',
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -266,7 +261,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Friendly URL:'),
 					'name' => 'link_rewrite',
 					'lang' => true,
-					'attributeLang' => 'name¤description¤meta_title¤meta_description¤meta_keywords¤link_rewrite',
 					'required' => true,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),

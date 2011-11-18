@@ -55,7 +55,6 @@ class AdminProfilesControllerCore extends AdminController
 					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'attributeLang' => 'name',
 				)
 			),
 			'submit' => array(

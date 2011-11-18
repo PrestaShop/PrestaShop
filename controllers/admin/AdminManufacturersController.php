@@ -227,7 +227,6 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function initForm()
 	{
-		$lang_tags = 'short_description¤description¤meta_title¤meta_keywords¤meta_description';
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -248,7 +247,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Short description:'),
 					'name' => 'short_description',
 					'lang' => true,
-					'attributeLang' => $lang_tags,
 					'cols' => 60,
 					'rows' => 10,
 					'class' => 'rte',
@@ -259,7 +257,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Description:'),
 					'name' => 'description',
 					'lang' => true,
-					'attributeLang' => $lang_tags,
 					'cols' => 60,
 					'rows' => 10,
 					'class' => 'rte',
@@ -277,7 +274,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta title:'),
 					'name' => 'meta_title',
 					'lang' => true,
-					'attributeLang' => $lang_tags,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -285,7 +281,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'meta_description',
 					'lang' => true,
-					'attributeLang' => $lang_tags,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
@@ -293,7 +288,6 @@ class AdminManufacturersControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
-					'attributeLang' => $lang_tags,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(

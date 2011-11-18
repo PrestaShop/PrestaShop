@@ -154,7 +154,6 @@ class AdminCountriesControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'name',
 					'lang' => true,
-					'attributeLang' => 'name',
 					'size' => 30,
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',

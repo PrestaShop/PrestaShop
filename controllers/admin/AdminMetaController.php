@@ -129,7 +129,6 @@ class AdminMetaControllerCore extends AdminController
 					'label' => $this->l('Page\'s title:'),
 					'name' => 'title',
 					'lang' => true,
-					'attributeLang' => 'title',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'p' => $this->l('Title of this page'),
 					'size' => 30
@@ -139,7 +138,6 @@ class AdminMetaControllerCore extends AdminController
 					'label' => $this->l('Meta description:'),
 					'name' => 'description',
 					'lang' => true,
-					'attributeLang' => 'description',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'p' => $this->l('A short description'),
 					'size' => 50
@@ -149,7 +147,6 @@ class AdminMetaControllerCore extends AdminController
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'keywords',
 					'lang' => true,
-					'attributeLang' => 'keywords',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'p' => $this->l('List of keywords'),
 					'size' => 50
@@ -159,7 +156,6 @@ class AdminMetaControllerCore extends AdminController
 					'label' => $this->l('Rewritten URL:'),
 					'name' => 'url_rewrite',
 					'lang' => true,
-					'attributeLang' => 'url_rewrite',
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'p' => $this->l('Example : "contacts" for http://mysite.com/shop/contacts to redirect to http://mysite.com/shop/contact-form.php'),
 					'size' => 50
