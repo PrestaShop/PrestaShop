@@ -367,6 +367,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			return;
 		}
 
+
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!($this->object = $this->loadObject(true)))
@@ -382,14 +385,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		else if ($this->display != 'view' && !$this->ajax)
 		{
-			$this->toolbar_btn['newAttributes'] = array(
-				'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-				'desc' => $this->l('Add new Attributes')
-			);
-
-			// toolbar (save, cancel, new, ..)
-			$this->initToolbar();
-
 			$this->content .= $this->initList();
 			$this->content .= $this->initOptions();
 		}
@@ -401,6 +396,38 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
+	}
+
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			// @todo defining default buttons
+			case 'add':
+			case 'edit':
+			case 'editAttributes':
+				// Default save button - action dynamically handled in javascript
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
+				
+				$back = self::$currentIndex.'&token='.$this->token;
+				$this->toolbar_btn['cancel'] = array(
+					'href' => $back,
+					'desc' => $this->l('Cancel')
+				);
+				break;
+			default: // list
+				$this->toolbar_btn['new'] = array(
+					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+					'desc' => $this->l('Add new Group')
+				);
+				$this->toolbar_btn['newAttributes'] = array(
+					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
+					'desc' => $this->l('Add new Attributes')
+				);
+		}
 	}
 
 	public function postProcess()
