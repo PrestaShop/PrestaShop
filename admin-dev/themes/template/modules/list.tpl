@@ -212,7 +212,7 @@
 										</dl>
 									</div>
 									<p class="desc">{l s='Description'} : {$module->description}</p>
-									{if isset($module->message)}<div class="conf"><img src="../img/admin/ok2.png" alt="" />{$module->message}</div>{/if}
+									{if isset($module->message)}<div class="conf">{$module->message}</div>{/if}
 									<div class="row-actions-module">
 										{$module->optionsHtml}
 									</div>
