@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,25 +27,25 @@
 
 class AdminThemesControllerCore extends AdminController
 {
-	/** This value is used in isThemeCompatible method. only version node with an 
+	/** This value is used in isThemeCompatible method. only version node with an
 	 * higher version number will be used in [theme]/config.xml
 	 * @since 1.4.0.11, check theme compatibility 1.4
 	 * @static
 		*/
 	public static $check_features_version = '1.4';
-	
-	/** $check_features is a multidimensional array used to check [theme]/config.xml values, 
+
+	/** $check_features is a multidimensional array used to check [theme]/config.xml values,
 	 * and also checks prestashop current configuration if not match.
 	 * @static
 	 */
 	public static $check_features = array(
 		'ccc' => array( // feature key name
 			'attributes' => array(
-				'available' => array( 
+				'available' => array(
 					'value' => 'true', // accepted attribute value
-					// if value doesnt match, 
+					// if value doesnt match,
 					// prestashop configuration value must have thoses values
-					'check_if_not_valid' => array( 
+					'check_if_not_valid' => array(
 						'PS_CSS_THEME_CACHE' => 0,
 						'PS_JS_THEME_CACHE' => 0,
 						'PS_HTML_THEME_COMPRESSION' => 0,
@@ -63,7 +63,7 @@ class AdminThemesControllerCore extends AdminController
 				'value' => 'true',
 				'check_if_not_valid' => array('PS_GUEST_CHECKOUT_ENABLED' => 0)
 				),
-			), 
+			),
 			'error' => 'This theme may not correctly use "guest checkout"',
 			'tab' => 'AdminPreferences',
 		),
@@ -93,21 +93,26 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		
+
 		parent::__construct();
-		
-		$id_shop = Context::getContext()->shop->getID();
+
+		// Thumbnails filenames depend on multishop activation
+		if (Shop::isFeatureActive())
+			$shop_suffix = '-'.(int)Context::getContext()->shop->getID();
+		else
+			$shop_suffix = '';
+
 		$this->options = array(
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
 				'class' => 'width3',
 				'fields' =>	array(
-					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time(), 'pos' => 'before')),
-					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => ((file_exists(_PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg')) ? _PS_IMG_.'logo_mail-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),
-					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => array('file' => (file_exists(_PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg') ? _PS_IMG_.'logo_invoice-'.(int)$id_shop.'.jpg?date='.time() : _PS_IMG_.'logo-'.(int)$id_shop.'.jpg?date='.time()), 'pos' => 'before')),
-					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'favicon-'.(int)$id_shop.'.ico?date='.time(), 'pos' => 'after')),
-					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => array('file' => _PS_IMG_.'logo_stores-'.(int)$id_shop.'.gif?date='.time(), 'pos' => 'before')),
+					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
+					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (file_exists(_PS_IMG_DIR_.'logo_mail'.$shop_suffix.'.jpg')) ? _PS_IMG_.'logo_mail'.$shop_suffix.'.jpg?date='.time() : _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
+					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => file_exists(_PS_IMG_DIR_.'logo_invoice'.$shop_suffix.'.jpg') ? _PS_IMG_.'logo_invoice'.$shop_suffix.'.jpg?date='.time() : _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
+					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => _PS_IMG_.'favicon'.$shop_suffix.'.ico?date='.time()),
+					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => _PS_IMG_.'logo_stores'.$shop_suffix.'.gif?date='.time()),
 					'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
@@ -150,7 +155,7 @@ class AdminThemesControllerCore extends AdminController
 	}
 
 	/**
-	 * This function checks if the theme designer has thunk to make his theme compatible 1.4, 
+	 * This function checks if the theme designer has thunk to make his theme compatible 1.4,
 	 * and noticed it on the $theme_dir/config.xml file. If not, some new functionnalities has
 	 * to be desactivated
 	 *
@@ -180,8 +185,8 @@ class AdminThemesControllerCore extends AdminController
 		// will be set to false if any version node in xml is correct
 		$xml_version_too_old = true;
 
-		// foreach version in xml file, 
-		// node means feature, attributes has to match 
+		// foreach version in xml file,
+		// node means feature, attributes has to match
 		// the corresponding value in AdminThemes::$check_features[feature] array
 		$xmlArray = simpleXMLToArray($xml);
 		foreach($xmlArray AS $version)
@@ -207,7 +212,7 @@ class AdminThemesControllerCore extends AdminController
 
 	/**
 	 * _checkConfigForFeatures
-	 * 
+	 *
 	 * @param array $arrFeature array of feature code to check
 	 * @param mixed $configItem will precise the attribute which not matches. If empty, will check every attributes
 	 * @return error message, or null if disabled
@@ -258,7 +263,7 @@ class AdminThemesControllerCore extends AdminController
 
 	/**
 	 * This functions make checks about AdminThemes configuration edition only.
-	 * 
+	 *
 	 * @since 1.4
 	 */
 	public function postProcess()
@@ -272,7 +277,7 @@ class AdminThemesControllerCore extends AdminController
 
 		parent::postProcess();
 	}
-	
+
 	/**
 	 * Update PS_LOGO
 	 */
@@ -289,11 +294,11 @@ class AdminThemesControllerCore extends AdminController
 				$this->_errors[] = 'an error occurred during logo copy';
 			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo-'.(int)$id_shop.'.jpg'))
 				$this->_errors[] = 'an error occurred during logo copy';
-				
+
 			unlink($tmpName);
 		}
 	}
-	
+
 	/**
 	 * Update PS_LOGO_MAIL
 	 */
@@ -313,7 +318,7 @@ class AdminThemesControllerCore extends AdminController
 			unlink($tmpName);
 		}
 	}
-	
+
 	/**
 	 * Update PS_LOGO_INVOICE
 	 */
@@ -330,11 +335,11 @@ class AdminThemesControllerCore extends AdminController
 				$this->_errors[] = 'an error occurred during logo copy';
 			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg'))
 				$this->_errors[] = 'an error occurred during logo copy';
-				
+
 			unlink($tmpName);
 		}
 	}
-	
+
 	/**
 	 * Update PS_STORES_ICON
 	 */

@@ -126,31 +126,10 @@
 				{elseif $field['type'] == 'textarea'}
 					<textarea name={$key} cols="{$field['cols']}" rows="{$field['rows']}">{$field['value']|escape:'htmlall':'UTF-8'}</textarea>
 				{elseif $field['type'] == 'file'}
-					{if isset($field['thumb']) && $field['thumb'] && $field['thumb']['pos'] == 'before'}
-						<img src="{$field['thumb']['file']}" alt="{$field['title']}" title="{$field['title']}" /><br />
+					{if isset($field['thumb']) && $field['thumb']}
+						<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" /><br />
 					{/if}
 					<input type="file" name="{$key}" />
-			{*	{elseif $field['type'] == 'image'}	
-					<table cellspacing="0" cellpadding="0">
-					<tr>
-					$i = 0;
-					foreach ($field['list'] as $theme)
-					{
-						<td class="center" style="width: 180px; padding:0px 20px 20px 0px;">
-							<input type="radio" name="{$key}" id="{$key}_{$theme['name']}_on" style="vertical-align: text-bottom;" value="{$theme['name']}"'.(_THEME_NAME_ == $theme['name'] ? 'checked="checked"' : '').' />';
-							echo '<label class="t" for="{$key}_'.$theme['name'].'_on"> '.Tools::strtolower($theme['name']).'</label>';
-							echo '<br />';
-							echo '<label class="t" for="{$key}_'.$theme['name'].'_on">';
-								echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
-							echo '</label>';
-						echo '</td>';
-						if (isset($field['max']) && ($i +1 ) % $field['max'] == 0)
-							echo '</tr><tr>';
-						$i++;
-					}
-					echo '</tr>';
-					echo '</table>';
-			*}
 				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 					{if $field['type'] == 'textLang'}
 						{foreach $field['languages'] AS $id_lang => $value}
@@ -198,8 +177,6 @@
 					{/if}
 					<br style="clear:both">			
 				{/if}
-				{if isset($field['method'])}$field['method']{/if}
-		
 				{if ($field['multishop_default'])}
 					<div class="preference_default_multishop">
 						<label>
