@@ -44,6 +44,8 @@ class BlockAdvertising extends Module
 	 * @var mixed
 	 */
 	public $adv_img;
+	
+	public $use_global = true;
 
 	/**
 	 * adv_imgname is the filename of the image to display
@@ -56,7 +58,7 @@ class BlockAdvertising extends Module
 	{
 		$this->name = 'blockadvertising';
 		$this->tab = 'advertising_marketing';
-		$this->version = 0.3;
+		$this->version = '0.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -64,7 +66,26 @@ class BlockAdvertising extends Module
 
 		$this->displayName = $this->l('Block advertising');
 		$this->description = $this->l('Adds a block to display an advertisement.');
+		
+		if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP)
+		{	
+			if (defined('_PS_ADMIN_DIR_') || file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'-'.(int)$this->context->shop->id.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
+			{
+				$this->adv_imgname .= '-'.(int)$this->context->shop->id;
+				$this->use_global = false;
+				$advert_link = Configuration::get('BLOCKADVERT_LINK');
+				$advert_title = Configuration::get('BLOCKADVERT_TITLE');
+			}
+			else
+				$this->use_global = true;
+		}
 
+		if ($this->use_global)
+		{
+			$advert_link = Configuration::getGlobalValue('BLOCKADVERT_LINK');
+			$advert_title = Configuration::getGlobalValue('BLOCKADVERT_TITLE');
+		}
+		
 		if (!file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
 		{
 			$this->adv_imgname = 'advertising';
@@ -77,8 +98,8 @@ class BlockAdvertising extends Module
 		if (!empty($this->adv_imgname))
 			$this->adv_img = Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT');
 
-		$this->adv_link = htmlentities(Configuration::get('BLOCKADVERT_LINK'), ENT_QUOTES, 'UTF-8');
-		$this->adv_title = htmlentities(Configuration::get('BLOCKADVERT_TITLE'), ENT_QUOTES, 'UTF-8');
+		$this->adv_link = htmlentities($advert_link, ENT_QUOTES, 'UTF-8');
+		$this->adv_title = htmlentities($advert_title, ENT_QUOTES, 'UTF-8');
 	}
 
 
@@ -99,7 +120,8 @@ class BlockAdvertising extends Module
 	 */
 	private function _deleteCurrentImg()
 	{
-
+		if ($this->adv_imgname == 'advertising')
+			return;
 		if (file_exists(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT')))
 			unlink(_PS_MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT'));
 		$this->adv_imgname = $this->adv_imgname == 'advertising_custom'?'advertising':'';
@@ -130,8 +152,7 @@ class BlockAdvertising extends Module
 					$this->_deleteCurrentImg();
 					$this->adv_imgname = 'advertising';
 					$ext = substr($_FILES['adv_img']['name'], $dot_pos+1);
-					$newname = 'advertising_custom';
-
+					$newname = 'advertising_custom'.'-'.(int)$this->context->shop->id;
 					if (!move_uploaded_file($_FILES['adv_img']['tmp_name'],_PS_MODULE_DIR_.$this->name.'/'.$newname.'.'.$ext))
 						$errors .= $this->l('Error move uploaded file');
 					else
@@ -141,7 +162,6 @@ class BlockAdvertising extends Module
 					$this->adv_img = Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.$this->adv_imgname.'.'.Configuration::get('BLOCKADVERT_IMG_EXT');
 				}
 			}
-
 			if ($link = Tools::getValue('adv_link'))
 			{
 				Configuration::updateValue('BLOCKADVERT_LINK', $link);
@@ -167,35 +187,34 @@ class BlockAdvertising extends Module
 	{
 
 		$this->postProcess();
-		$output = '';
-		$output .= '
-<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
-<fieldset><legend>'.$this->l('Advertising block configuration').'</legend>
-<a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">';
-		if ($this->adv_img)
-		{
-			$output .= '<img src="'.$this->context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
-			$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
-		}
-		else
-			$output .= '<div style="margin-left: 100px;width:163px;"/>'.$this->l('no image').'</div>';
-		$output .= '</a>';
-		$output .= '<br/>
-<br/>
-<label for="adv_img">'.$this->l('Change image').'&nbsp;&nbsp;</label><input id="adv_img" type="file" name="adv_img" />
-( '.$this->l('Image will be displayed as 155x163').' )
-<br/>
-<br class="clear"/>
-<label for="adv_link">'.$this->l('Image link').'&nbsp;&nbsp;</label><input id="adv_link" type="text" name="adv_link" value="'.$this->adv_link.'" />
-<br class="clear"/>
-<br/>
-<label for="adv_title">'.$this->l('Title').'&nbsp;&nbsp;</label><input id="adv_title" type="text" name="adv_title" value="'.$this->adv_title.'" />
-<br class="clear"/>
-<br/>
-<input class="button" type="submit" name="submitAdvConf" value="'.$this->l('validate').'" style="margin-left: 200px;"/>
-</fieldset>
-</form>
-';
+		$output = '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
+							<fieldset>
+								<legend>'.$this->l('Advertising block configuration').'</legend>
+								<a href="'.$this->adv_link.'" target="_blank" title="'.$this->adv_title.'">';
+								if ($this->adv_img)
+								{
+									$output .= '<img src="'.$this->context->link->protocol_content.$this->adv_img.'" alt="'.$this->adv_title.'" title="'.$this->adv_title.'" style="height:163px;margin-left: 100px;width:163px"/>';
+									$output .= '<input class="button" type="submit" name="submitDeleteImgConf" value="'.$this->l('Delete image').'" style=""/>';
+								}
+								else
+									$output .= '<div style="margin-left: 100px;width:163px;"/>'.$this->l('no image').'</div>';
+								$output .= '
+								</a>
+								<br/>
+								<br/>
+								<label for="adv_img">'.$this->l('Change image').'&nbsp;&nbsp;</label><input id="adv_img" type="file" name="adv_img" />
+								( '.$this->l('Image will be displayed as 155x163').' )
+								<br/>
+								<br class="clear"/>
+								<label for="adv_link">'.$this->l('Image link').'&nbsp;&nbsp;</label><input id="adv_link" type="text" name="adv_link" value="'.$this->adv_link.'" />
+								<br class="clear"/>
+								<br/>
+								<label for="adv_title">'.$this->l('Title').'&nbsp;&nbsp;</label><input id="adv_title" type="text" name="adv_title" value="'.$this->adv_title.'" />
+								<br class="clear"/>
+								<br/>
+								<input class="button" type="submit" name="submitAdvConf" value="'.$this->l('validate').'" style="margin-left: 200px;"/>
+							</fieldset>
+						</form>';
 		return $output;
 	}
 
