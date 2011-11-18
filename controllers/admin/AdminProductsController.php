@@ -44,6 +44,7 @@ class AdminProductsController extends AdminController
 		'Customization',
 		'Attachments',
 		'Quantities',
+		'Suppliers',
 		'Accounting');
 
 	public function __construct()
@@ -87,7 +88,7 @@ class AdminProductsController extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
 		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final';
 
@@ -177,7 +178,7 @@ class AdminProductsController extends AdminController
 	public function deleteVirtualProduct()
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), 0)))
-			return false;		
+			return false;
 		$productDownload = new ProductDownload((int)($id_product_download));
 		return $productDownload->deleteFile((int)($id_product_download));
 	}
@@ -186,7 +187,7 @@ class AdminProductsController extends AdminController
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), (int) Tools::getValue('id_product_attribute'))))
 			return false;
-		$productDownload = new ProductDownload((int)($id_product_download));		
+		$productDownload = new ProductDownload((int)($id_product_download));
 		return $productDownload->deleteFile((int)($id_product_download));
 	}
 
@@ -553,16 +554,14 @@ class AdminProductsController extends AdminController
 							{
 								if (Validate::isDateFormat(Tools::getValue('available_date')))
 								{
-									$product->updateProductAttribute($id_product_attribute,
+									$product->updateAttribute($id_product_attribute,
 										Tools::getValue('attribute_wholesale_price'),
 										Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
 										Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
 										Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
 										Tools::getValue('attribute_ecotax'),
-										false,
 										Tools::getValue('id_image_attr'),
 										Tools::getValue('attribute_reference'),
-										Tools::getValue('attribute_supplier_reference'),
 										Tools::getValue('attribute_ean13'),
 										Tools::getValue('attribute_default'),
 										Tools::getValue('attribute_location'),
@@ -603,7 +602,7 @@ class AdminProductsController extends AdminController
 									Tools::getValue('attribute_ecotax'),
 									Tools::getValue('id_image_attr'),
 									Tools::getValue('attribute_reference'),
-									Tools::getValue('attribute_supplier_reference'),
+									null,
 									Tools::getValue('attribute_ean13'),
 									Tools::getValue('attribute_default'),
 									Tools::getValue('attribute_location'),
@@ -658,7 +657,7 @@ class AdminProductsController extends AdminController
 					}
 					else
 						Product::updateDefaultAttribute($id_product);
-		
+
 					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token));
 				}
 				else
@@ -926,6 +925,12 @@ class AdminProductsController extends AdminController
 		}
 		else if (Tools::isSubmit('submitAccountingDetails'))
 			$this->postProcessFormAccounting();
+		//Manage suppliers
+		else if (Tools::isSubmit('submitSuppliers'))
+			$this->postProcessFormSuppliers();
+		//Manage suppliers
+		else if (Tools::isSubmit('submitSupplierReferences'))
+			$this->postProcessFormSupplierReferences();
 		else
 			parent::postProcess(true);
 	}
@@ -1032,7 +1037,6 @@ if (false)
 			}
 		return (0);
 	}
-
 
 	/**
 	 * Add or update a product image
@@ -1195,7 +1199,6 @@ if (false)
 					$this->copyFromPost($object, $this->table);
 					if ($object->update())
 					{
-						$this->addCarriers();
 						if ($id_reason = (int)Tools::getValue('id_mvt_reason') && Tools::getValue('mvt_quantity') > 0 && $id_reason > 0)
 						{
 							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, null, null, $this->context->employee->id))
@@ -1259,7 +1262,6 @@ if (false)
 				$this->copyFromPost($object, $this->table);
 				if ($object->add())
 				{
-					$this->addCarriers();
 					$this->updateAssoShop((int)$object->id);
 					$this->updateAccessories($object);
 					if (!$this->updatePackItems($object))
@@ -1307,30 +1309,19 @@ if (false)
 					$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 			}
 		}
-	}
-	
-	protected function addCarriers()
-	{
-		if (Tools::getValue('carriers'))
-		{
-			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-			{
-				if (Tools::getValue('carriers'))
-					$product->setCarriers(Tools::getValue('carriers'));
-			}
-		}
+
 	}
 
 	private function _removeTaxFromEcotax()
 	{
-		$ecotaxTaxRate = Tax::getProductEcotaxRate();
+	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($ecotax = Tools::getValue('ecotax'))
 			$_POST['ecotax'] = Tools::ps_round(Tools::getValue('ecotax') / (1 + $ecotaxTaxRate / 100), 6);
 	}
 
 	private function _applyTaxToEcotax($product)
 	{
-		$ecotaxTaxRate = Tax::getProductEcotaxRate();
+	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($product->ecotax)
 			$product->ecotax = Tools::ps_round($product->ecotax * (1 + $ecotaxTaxRate / 100), 2);
 	}
@@ -1415,9 +1406,9 @@ if (false)
 			{
 				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
 				$id_product_download = ($id_product_download_attribute) ? (int) $id_product_download_attribute : (int) Tools::getValue('virtual_product_id');
-			} else 
+			} else
 				$id_product_download = Tools::getValue('virtual_product_id');
-				
+
 			$is_shareable = Tools::getValue('virtual_product_is_shareable');
 			$virtual_product_name = Tools::getValue('virtual_product_name');
 			$virtual_product_filename = Tools::getValue('virtual_product_filename');
@@ -1632,17 +1623,6 @@ if (false)
 		}
 	}
 
-	public function ajaxProcessProductSuppliers()
-	{
-		$suppliers = Supplier::getSuppliers();
-		if ($suppliers)
-		{
-			$jsonArray = array();
-			foreach ($suppliers AS $supplier)
-				$jsonArray[] = '{"optionValue": "'.$supplier['id_supplier'].'", "optionDisplay": "'.htmlspecialchars(trim($supplier['name'])).'"}';
-			die('['.implode(',', $jsonArray).']');
-		}
-	}
 	/**
 	 * displayList show ordered list of current category
 	 *
@@ -1896,6 +1876,132 @@ if (false)
 	}
 
 	/**
+	* Post traitment for suppliers
+	*/
+	public function postProcessFormSuppliers()
+	{
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			// Get all available suppliers
+			$suppliers = Supplier::getSuppliers();
+
+			// Get already associated suppliers
+			$associated_suppliers = ProductSupplier::getSupplierCollection($product->id);
+
+			$suppliers_to_associate = array();
+			$new_default_supplier = 0;
+
+			if (Tools::isSubmit('default_supplier'))
+				$new_default_supplier = (int)Tools::getValue('default_supplier');
+
+			// Get new associations
+			foreach ($suppliers as $supplier)
+				if (Tools::isSubmit('check_supplier_'.$supplier['id_supplier']))
+					$suppliers_to_associate[] = $supplier['id_supplier'];
+
+			// Delete already associated suppliers if needed
+			foreach ($associated_suppliers as &$associated_supplier)
+				if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate))
+					$associated_supplier->delete();
+
+			// Associate suppliers
+			foreach ($suppliers_to_associate as $id)
+			{
+				$to_add = true;
+				foreach ($associated_suppliers as $as)
+					if ($id == $as->id_supplier)
+						$to_add = false;
+
+				if ($to_add)
+				{
+					$product_supplier = new ProductSupplier();
+					$product_supplier->id_product = $product->id;
+					$product_supplier->id_product_attribute = 0;
+					$product_supplier->id_supplier = $id;
+					$product_supplier->save();
+				}
+			}
+
+			// Manage defaut supplier for product
+			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
+			{
+				$product->id_supplier = $new_default_supplier;
+				$product->update();
+			}
+
+			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
+		}
+	}
+
+	/**
+	* Post traitment for supplier product references
+	*/
+	public function postProcessFormSupplierReferences()
+	{
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			// Get all id_product_attribute
+			$attributes = $product->getAttributesResume($this->context->language->id);
+			if (empty($attributes))
+				$attributes[] = array(
+					'id_product_attribute' => 0,
+					'attribute_designation' => ''
+				);
+
+			// get associated suppliers
+			$associated_suppliers = ProductSupplier::getSupplierCollection($product->id);
+
+			// Get already associated suppliers and force to retreive product declinaisons
+			$product_supplier_collection = ProductSupplier::getSupplierCollection($product->id, false);
+
+			// Manage references
+			foreach ($attributes as $attribute)
+				foreach ($associated_suppliers as $supplier)
+					if (Tools::isSubmit('supplier_reference_'.$attribute['id_product'].'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))
+					{
+						$reference = Tools::getValue('supplier_reference_'.$attribute['id_product'].'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, '');
+
+						if (!empty($reference))
+						{
+							$existing_reference = ProductSupplier::getProductSupplierReference($attribute['id_product'], $attribute['id_product_attribute'], $supplier->id_supplier);
+
+							if (empty($existing_reference))
+							{
+								//create new record
+								$product_supplier_entity = new ProductSupplier();
+								$product_supplier_entity->id_product = $attribute['id_product'];
+								$product_supplier_entity->id_product_attribute = $attribute['id_product_attribute'];
+								$product_supplier_entity->id_supplier = $supplier->id_supplier;
+								$product_supplier_entity->product_supplier_reference = pSQL($reference);
+								$product_supplier_entity->save();
+							}
+							else
+							{
+								//update existing record
+								foreach ($product_supplier_collection as &$psc)
+									if ($psc->id_product == $attribute['id_product']
+										&& $psc->id_product_attribute == $attribute['id_product_attribute']
+										&& $psc->id_supplier == $supplier->id_supplier
+										)
+									{
+										$reference = pSQL($reference);
+
+										if ($reference != $psc->product_supplier_reference)
+										{
+											$psc->product_supplier_reference = pSQL($reference);
+											$psc->save();
+										}
+										break;
+									}
+							}
+						}
+					}
+
+			$this->confirmations[] = $this->l('Supplier Reference(s) of the product have been updated');
+		}
+	}
+
+	/**
 	* Init data for accounting
 	*/
 	public function initFormAccounting($product, $t)
@@ -2133,7 +2239,6 @@ if (false)
 		return $content;
 	}
 
-
 	private function _getCustomizationFieldIds($labels, $alreadyGenerated, $obj)
 	{
 		$customizableFieldIds = array();
@@ -2366,14 +2471,12 @@ if (false)
 		$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
 		$data->assign('displayAssoShop', $this->displayAssoShop());
-		$data->assign('carrier_list', $this->getCarrierList());
-		
 
 		$product_props = array();
 		// global informations
-		array_push($product_props, 'reference', 'supplier_reference', 'ean13', 'upc', 'location',
+		array_push($product_props, 'reference', 'ean13', 'upc', 'location',
 		'available_for_order', 'show_price', 'online_only',
-		'id_manufacturer', 'id_supplier'
+		'id_manufacturer'
 		);
 
 		// specific / detailled information
@@ -2403,7 +2506,6 @@ if (false)
 			$product->name['class'] .= ' copy2friendlyUrl';
 
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
-		$product->supplier_name = Supplier::getNameById($product->id_supplier);
 
 		$data->assign('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT'));
 		$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
@@ -2790,7 +2892,6 @@ if (false)
 						$combArray[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
 						$combArray[$combinaison['id_product_attribute']]['unit_impact'] = $combinaison['unit_price_impact'];
 						$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
-						$combArray[$combinaison['id_product_attribute']]['supplier_reference'] = $combinaison['supplier_reference'];
 						$combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 						$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
@@ -2866,7 +2967,7 @@ if (false)
 							$content .= '<td class="center">
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
-							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['supplier_reference'].'\', \''.$product_attribute['ean13'].'\',
+							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['ean13'].'\',
 							\'0\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
 							\''.$product->productDownload->display_filename.'\', \''.$filename.'\', \''.$product->productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$product->productDownload->nb_days_accessible.'\',  \''.$product->productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
@@ -2916,260 +3017,126 @@ if (false)
 
 	public function initFormQuantities($obj)
 	{
+		$data = $this->context->smarty->createData();
 
-		// Get all id_product_atribute
-		$attributes = $obj->getAttributesResume($this->context->language->id);
-		if (empty($attributes))
-			$attributes[] = array(
-				'id_product_attribute' => 0,
-				'attribute_designation' => ''
-			);
-
-		// Get physical quantities & available quantities
-		$totalQuantity = 0;
-		$physicalQuantity = array();
-		$availableQuantity = array();
-		$productDesignation = array();
-		foreach ($attributes as $attribute)
+		if ($this->object->id)
 		{
-			$physicalQuantity[$attribute['id_product_attribute']] = (int)StockManagerFactory::getManager()->getProductPhysicalQuantities((int)$obj->id, $attribute['id_product_attribute']);
-			$totalQuantity += $physicalQuantity[$attribute['id_product_attribute']];
+			// Get all id_product_attribute
+			$attributes = $obj->getAttributesResume($this->context->language->id);
+			if (empty($attributes))
+				$attributes[] = array(
+					'id_product_attribute' => 0,
+					'attribute_designation' => ''
+				);
 
-			// @TODO
-			$availableQuantity[$attribute['id_product_attribute']] = StockAvailable::getIdStockAvailableByProductId((int)$obj->id, $attribute['id_product_attribute']);
+			// Get physical quantities & available quantities
+			$stock_manager = StockManagerFactory::getManager();
+			$total_quantity = 0;
+			$physical_quantity = array();
+			$available_quantity = array();
+			$product_designation = array();
 
-			// Get all product designation
-			$productDesignation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+			foreach ($attributes as $attribute)
+			{
+				$physical_quantity[$attribute['id_product_attribute']] = (int)$stock_manager->getProductPhysicalQuantities(
+					(int)$obj->id,
+					(int)$attribute['id_product_attribute']
+				);
+
+				$total_quantity += $physical_quantity[$attribute['id_product_attribute']];
+
+				// Get available quantity for the current product attribute in the current shop
+				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct(
+					(int)$obj->id,
+					$attribute['id_product_attribute']
+				);
+
+				// Get all product designation
+				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+			}
+
+			$data->assign(array(
+				'attributes' => $attributes,
+				'total_quantity' => $total_quantity,
+				'physical_quantity' => $physical_quantity,
+				'available_quantity' => $available_quantity,
+				'product_designation' => $product_designation,
+				'product' => $this->object,
+				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
+				'token' => $this->token
+			));
 		}
+		else
+			$data->assign('content', '<b>'.$this->l('You must save this product before manage quantities').'.</b>');
 
-		$content = '
-		<div class="tab-page" id="step8">
-			<h4 class="tab">8. '.$this->l('Quantities').'</h4>
-			<table cellpadding="5">
-				<tbody>
-					<tr>
-						<td colspan="2">
-							<b>'.$this->l('Available stock in warehouses').'</b>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="separation"></div>
-			<p>'.sprintf($this->l('There is %s quantities available in stock for this product'), '<b>'.$totalQuantity.'</b>').'</p>
-			<table cellpadding="5" style="width:100%">
-				<tbody>
-					<tr>
-						<td valign="top" style="text-align:center;vertical-align:top;">
-							<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
-								<thead>
-									<tr>
-										<th>'.$this->l('Quantity').'</th>
-										<th>'.$this->l('Designation').'</th>
-									</tr>
-								</thead>
-								<tbody>';
-		foreach ($attributes as $attribute)
-			$content .= '
-									<tr>
-										<td>'.$physicalQuantity[$attribute['id_product_attribute']].'</td>
-										<td>'.$productDesignation[$attribute['id_product_attribute']].'</td>
-									</tr>';
-		$content .= '
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<br />
-			<table cellpadding="5">
-				<tbody>
-					<tr>
-						<td colspan="2">
-							<b>'.$this->l('Available quantities for sale').'</b>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="separation"></div>
-			<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
-			<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
-			<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
-			';
-		$content .= '
-			<table cellpadding="5" style="width:100%">
-				<tbody>
-					<tr>
-						<td valign="top" style="vertical-align:top;">
-							<input '.(($obj->depends_on_stock) ? 'checked="checked"' : '' ).' type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-							<label style="float:none;font-weight:normal" for="depends_on_stock_1">'.$this->l('Available quantities for current product and its combinations are based on stock in the warehouses').'</label>
-							<br /><br />
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" style="vertical-align:top;">
-							<input '.((!$obj->depends_on_stock) ? 'checked="checked"' : '' ).' type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
-							<label style="float:none;font-weight:normal" for="depends_on_stock_0">'.$this->l('I want to specify available quantities manually, and manage my stock independently').'</label>
-							<br /><br />
-						</td>
-					</tr>
-					<tr>
-						<td valign="top" style="text-align:center;vertical-align:top;">
-							<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
-								<thead>
-									<tr>
-										<th style="width:200px;">'.$this->l('Quantity').'</th>
-										<th>'.$this->l('Designation').'</th>
-									</tr>
-								</thead>
-								<tbody>';
-		foreach ($attributes as $attribute)
-			$content .= '
-									<tr>
-										<td  class="available_quantity" id="qty_'.$attribute['id_product_attribute'].'">
-											<span>'.$availableQuantity[$attribute['id_product_attribute']].'</span>
-											<input type="text" value="'.$availableQuantity[$attribute['id_product_attribute']].'"/>
-										</td>
-										<td>'.$productDesignation[$attribute['id_product_attribute']].'</td>
-									</tr>';
-		$content .= '
-								</tbody>
-							</table>
-						</td>
-					</tr>
-					<tr id="when_out_of_stock">
-						<td>
-							<table style="margin-top: 15px;">
-								<tbody>
-									<tr>
-										<td class="col-left"><label>'.$this->l('When out of stock:').'</label></td>
-										<td style="padding-bottom:5px;">
-											<input '.(($obj->out_of_stock == 0) ? 'checked="checked"' : '' ).' id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
-											<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">'.$this->l('Deny orders').'</label>
-											<br>
-											<input '.(($obj->out_of_stock == 1) ? 'checked="checked"' : '' ).' id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
-											<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">'.$this->l('Allow orders').'</label>
-											<br>
-											<input '.(($obj->out_of_stock == 2) ? 'checked="checked"' : '' ).' id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
-											<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
-												Default:
-												<i>Deny orders</i>
-												'.sprintf($this->l('(as set in %s)'),
-													'<a onclick="return confirm(\''.$this->l('Are you sure you want to delete entered product information?').'\');"
-													href="index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'">
-														'.$this->l('Preferences').'</a>').'
-											</label>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tbody>
-			</table>';
-		$content .= '
-		</div>
-		<script type="text/javascript">
-			var showAjaxError = function(msg)
-			{
-				$(\'#available_quantity_ajax_error_msg\').html(msg);
-				$(\'#available_quantity_ajax_error_msg\').show();
-				$(\'#available_quantity_ajax_msg\').hide();
-				$(\'#available_quantity_ajax_success_msg\').hide();
-			};
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
 
-			var showAjaxSuccess = function(msg)
-			{
-				$(\'#available_quantity_ajax_success_msg\').html(msg);
-				$(\'#available_quantity_ajax_error_msg\').hide();
-				$(\'#available_quantity_ajax_msg\').hide();
-				$(\'#available_quantity_ajax_success_msg\').show();
-			};
+	public function initFormSuppliers($obj)
+	{
+		$data = $this->context->smarty->createData();
 
-			var showAjaxMsg = function(msg)
-			{
-				$(\'#available_quantity_ajax_msg\').html(msg);
-				$(\'#available_quantity_ajax_error_msg\').hide();
-				$(\'#available_quantity_ajax_msg\').show();
-				$(\'#available_quantity_ajax_success_msg\').hide();
-			};
+		if ($this->object->id)
+		{
+			// Get all id_product_attribute
+			$attributes = $obj->getAttributesResume($this->context->language->id);
+			if (empty($attributes))
+				$attributes[] = array(
+					'id_product_attribute' => 0,
+					'attribute_designation' => ''
+				);
 
-			var ajaxCall = function(data)
+			$product_designation = array();
+
+			foreach ($attributes as $attribute)
+				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+
+			// Get all available suppliers
+			$suppliers = Supplier::getSuppliers();
+
+			// Get already associated suppliers
+			$associated_suppliers = ProductSupplier::getSupplierCollection($this->object->id);
+
+			// Get already associated suppliers and force to retreive product declinaisons
+			$product_supplier_collection = ProductSupplier::getSupplierCollection($this->object->id, false);
+
+			$default_supplier = 0;
+
+			foreach ($suppliers as &$supplier)
 			{
-				data.ajaxProductQuantity = 1;
-				data.id_product = '.(int)$obj->id.';
-				data.token = "'.$this->token.'";
-				data.ajax = 1;
-				data.controller = "AdminProducts";
-				data.action = "productQuantity";
-				showAjaxMsg(\''.$this->l('Saving data...').'\');
-				$.ajax({
-					type: "POST",
-					url: "ajax-tab.php",
-					data: data,
-					dataType: \'json\',
-					async : true,
-					success: function(msg)
+				$supplier['is_selected'] = false;
+				$supplier['is_default'] = false;
+
+				foreach ($associated_suppliers as &$associated_supplier)
+					if ($associated_supplier->id_supplier == $supplier['id_supplier'])
 					{
-						if (msg.error)
+						$associated_supplier->name = $supplier['name'];
+						$supplier['is_selected'] = true;
+
+						if ($this->object->id_supplier == $supplier['id_supplier'])
 						{
-							showAjaxError(\''.$this->l('Error durring saving data').'\');
-							return;
+							$supplier['is_default'] = true;
+							$default_supplier = $supplier['id_supplier'];
 						}
-						showAjaxSuccess(\''.$this->l('Data saved').'\');
-					},
-					error: function(msg)
-					{
-						showAjaxError(\''.$this->l('Error durring saving data').'\');
 					}
-				});
-			};
-			var refreshQtyAvaibilityForm = function()
-			{
-				if ($(\'#depends_on_stock_0\').attr(\'checked\'))
-				{
-					$(\'.available_quantity\').find(\'input\').show();
-					$(\'.available_quantity\').find(\'span\').hide();
-				}
-				else
-				{
-					$(\'.available_quantity\').find(\'input\').hide();
-					$(\'.available_quantity\').find(\'span\').show();
-				}
-			};
-			$(\'.depends_on_stock\').click(function(e)
-			{
-				refreshQtyAvaibilityForm();
-				ajaxCall({actionQty: \'depends_on_stock\', value: $(this).attr(\'value\')});
-				if($(this).val() == 0)
-					$(\'.available_quantity input\').trigger(\'change\');
-			});
-			$(\'.available_quantity\').find(\'input\').change(function(e)
-			{
-				ajaxCall({actionQty: \'set_qty\', id_product_attribute: $(this).parent().attr(\'id\').split(\'_\')[1], value: $(this).val()});
-			});
-			$(\'.available_quantity\').find(\'input\').click(function(e)
-			{
-				if(typeof(this.intervalId) != \'undefined\')
-					window.clearInterval(this.intervalId);
-				this.intervalId = window.setInterval(function(it, initialValue)
-				{
-					if(initialValue != $(it).val())
-					{
-						window.clearInterval(it.intervalId);
-						$(it).trigger(\'change\');
-						$(it).trigger(\'click\');
-					}
-				}, 500, this, $(this).val())
-			});
-			$(\'.out_of_stock\').click(function(e)
-			{
-				ajaxCall({actionQty: \'out_of_stock\', value: $(this).val()});
-			});
-			refreshQtyAvaibilityForm();
-		</script>';
+			}
 
-		$this->tpl_form_vars['custom_form'] = $content;
+			$data->assign(array(
+				'attributes' => $attributes,
+				'suppliers' => $suppliers,
+				'default_supplier' => $default_supplier,
+				'associated_suppliers' => $associated_suppliers,
+				'associated_suppliers_collection' => $product_supplier_collection,
+				'product_designation' => $product_designation,
+				'product' => $this->object,
+				'link' => $this->context->link,
+				'token' => $this->token
+			));
+		}
+		else
+			$data->assign('content', '<b>'.$this->l('You must save this product before manage suppliers').'.</b>');
+
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
 	public function initFormFeatures($obj)
@@ -3213,23 +3180,6 @@ if (false)
 		$data->assign('languages', $this->_languages);
 		$data->assign('default_form_language', $this->default_form_language);
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
-	}
-	
-	protected function getCarrierList()
-	{
-		$carrier_list = Carrier::getCarriers($this->context->language->id);
-		if ($product = $this->loadObject(true))
-		{
-			$carrier_selected_list = $product->getCarriers();
-			foreach ($carrier_list as &$carrier)
-				foreach ($carrier_selected_list as $carrier_selected)
-					if ($carrier_selected['id_reference'] == $carrier['id_reference'])
-					{
-						$carrier['selected'] = true;
-						continue;
-					}
-		}
-		return $carrier_list;
 	}
 
 	public function ajaxProcessProductQuantity()
@@ -3358,8 +3308,6 @@ if (false)
 				$input_namepack_items.= $packItem->pack_quantity.' x '.$packItem->name.'¤';
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
-
-
 
 	public function updatePackItems($product)
 	{

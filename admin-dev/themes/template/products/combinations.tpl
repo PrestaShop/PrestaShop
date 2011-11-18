@@ -7,7 +7,7 @@
 			updateMvtStatus($(this).val());
 		});
 		updateMvtStatus($(this).val());
-		
+
 		if ( $("input[name=is_virtual_file]:checked").val() == 1)
 		{
 			$("#virtual_good_attributes").show();
@@ -18,7 +18,7 @@
 			$("#virtual_good_attributes").hide();
 			$("#is_virtual_file_product").hide();
 		}
-		
+
 		$("input[name=is_virtual_file]").live("change", function() {
 			if($(this).val() == "1")
 			{
@@ -31,7 +31,7 @@
 				$("#is_virtual_file_product").hide();
 			}
 		});
-	}); 
+	});
 </script>
 <script type="text/javascript">
 	var attrs = new Array();
@@ -39,7 +39,7 @@
 	attrs[0] = new Array(0, "---");
 {foreach from=$attributeJs key=idgrp item=group}
 	attrs[{$idgrp}] = new Array(0
-	, '---' 
+	, '---'
 	{foreach from=$group key=idattr item=attrname}
 		, "{$idattr}", "{$attrname|addslashes}"
 	{/foreach}
@@ -98,22 +98,17 @@
 	<td style="padding-bottom:5px;">
 	<input size="55" type="text" id="attribute_reference" name="attribute_reference" value="" style="width: 130px; margin-right: 44px;" />
 	{l s='EAN13:'}<input size="55" maxlength="13" type="text" id="attribute_ean13" name="attribute_ean13" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
-	{l s='UPC:'}<input size="55" maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" style="width: 110px; margin-left: 10px;" />
+	{l s='UPC:'}<input size="55" maxlength="12" type="text" id="attribute_upc" name="attribute_upc" value="" style="width: 110px; margin-left: 10px; margin-right: 44px;" />
 	<span class="hint" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
-	</td>
-</tr>
-<tr>
-	<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;">{l s='Supplier Reference:'}</td>
-	<td style="padding-bottom:5px;">
-	<input size="55" type="text" id="attribute_supplier_reference" name="attribute_supplier_reference" value="" style="width: 130px; margin-right: 44px;" />
 	{l s='Location:'}<input size="55" type="text" id="attribute_location" name="attribute_location" value="" style="width: 101px; margin-left: 10px;" />
 	<span class="hint" name="help_box">{l s='Special characters allowed:'} .-_#<span class="hint-pointer">&nbsp;</span></span>
 	</td>
 </tr>
+
 <tr><td colspan="2"><div class="separation"></div></td></tr>
 <table cellpadding="5" id="virtual_good_attributes" style="width:100%;display:none;">
 <tr>
-<td colspan="2">	
+<td colspan="2">
 	<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
 		<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize}</p>
 		<label id="virtual_product_file_attribute_label" for="virtual_product_file_attribute" class="t">{l s='Upload a file'}</label>
@@ -122,7 +117,7 @@
 
 <p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$product->productDownload->getHtmlLink(false, true)}
 		<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
-</p> 
+</p>
 
 </div>
 		<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
@@ -183,10 +178,10 @@
 				{if $country_display_tax_label}
 						 {l s='(tax excl.)'}
 						 <span {if $tax_exclude_option}style="display:none"{/if}> {l s='or'} {if $currency->format % 2 != 0}{$currency->sign} {/if}
-							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00" 
+							<input type="text" size="6" name="attribute_priceTI" id="attribute_priceTI" value="0.00"
 							onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); calcImpactPriceTE();"/>
 							{if $currency->format % 2 == 0} {$currency->sign}{/if} {l s='(tax incl.)'}
-							</span> {l s='final product price will be set to'} 
+							</span> {l s='final product price will be set to'}
 							{if $currency->format % 2 != 0}{$currency->sign} {/if}
 							<span id="attribute_new_total_price">0.00</span>
 							{if $currency->format % 2 == 0}{$currency->sign} {/if}
@@ -222,7 +217,7 @@
 		{l s='Eco-tax:'}
 	</td>
 	<td style="padding-bottom:5px;">{if $currency->format % 2 != 0}{$currency->sign}{/if}
-		<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00" 
+		<input type="text" size="3" name="attribute_ecotax" id="attribute_ecotax" value="0.00"
 		onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		{if $currency->format % 2 == 0} {$currency->sign}{/if}
 						 ({l s='overrides Eco-tax on Information tab'})

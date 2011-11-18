@@ -28,7 +28,7 @@
 						}
 
 					});
-					$.ajax({
+					/*$.ajax({
 						url: "ajax-tab.php",
 						cache: false,
 						dataType: "json",
@@ -51,7 +51,7 @@
 							$("select#id_supplier").replaceWith("<p id=\"id_supplier\">[TECHNICAL ERROR] ajaxProductSuppliers : "+textStatus+"</p>");
 						}
 
-					});
+					});*/
 					if ($('#available_for_order').is(':checked')){
 						$('#show_price').attr('checked', 'checked');
 						$('#show_price').attr('disabled', 'disabled');
@@ -90,7 +90,7 @@
 		<td style="padding-bottom:5px;" class="translatable">
 		{foreach from=$languages item=language}
 			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
-				<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" 
+				<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text"
 					id="name_{$language.id_lang}" name="name_{$language.id_lang}"
 					value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
 				<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
@@ -107,13 +107,13 @@
 							<span class="hint" name="help_box">{l s='Special characters allowed:' }.-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
 					</tr>
-					<tr>
+					<!--tr>
 						<td class="col-left"><label>{l s='Supplier Reference:' }</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" type="text" name="supplier_reference" value="{$product->supplier_reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
 							<span class="hint" name="help_box">{l s='Special characters allowed:' } .-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
-					</tr>
+					</tr-->
 					<tr>
 						<td class="col-left"><label>{l s='EAN13 or JAN:' }</label></td>
 						<td style="padding-bottom:5px;">
@@ -132,8 +132,6 @@
 							<input size="55" type="text" name="location" value="{$product->location|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
 						</td>
 					</tr>
-
-
 </table>
 {* status informations *}
 <table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
@@ -141,7 +139,7 @@
 	<td class="col-left"><label>{l s='Status:' }</label></td>
 	<td style="padding-bottom:5px;">
 		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" 
+		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}"
 			title="{l s='Enabled'}" style="float:left; padding:0px 5px 0px 5px;" />
 		{l s='Enabled'}</label>
 		<br class="clear" />
@@ -171,7 +169,7 @@
 					}
 					else
 					{
-						$('#show_price').attr('disabled', ''); 
+						$('#show_price').attr('disabled', '');
 					}
 				});
 			});
@@ -210,7 +208,7 @@
 	</a>
 	</td>
 	</tr>
-	<tr>
+	<!--tr>
 	<td class="col-left"><label>{l s='Supplier:' }</label></td>
 	<td style="padding-bottom:5px;">
 	<select name="id_supplier" id="id_supplier">
@@ -224,7 +222,7 @@
 	<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
 	</a>
 	</td>
-	</tr>
+	</tr-->
 </table>
 <div class="clear"></div>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
@@ -341,7 +339,7 @@ function delPackItem(id)
 		ids = ids.replace(/\,$/,'');
 		return ids;
 	}
-	
+
 	$(function() {
 		$('#curPackItemName')
 			.autocomplete('ajax_products_list.php', {
@@ -451,7 +449,7 @@ $(document).ready(function(){
 			<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 				<tr><td>
 					<br/>{l s='Does this product has an associated file ?'}<br />
-					<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'} 
+					<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}
 					<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}<br /><br />
 					{if $download_product_file_missing}
 						<p class="alert" id="file_missing">
@@ -494,9 +492,9 @@ $(document).ready(function(){
 							<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
 							{l s='This is the link'}:&nbsp;{$product->productDownload->getHtmlLink(false, true)}
 							<a onclick="return confirm('{l s='Delete this file' slashes=1 js=1})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">{l s='Delete this file'}</a>
-						{/if}					
+						{/if}
 						</p>
-						
+
 						<p class="block">
 							<label for="virtual_product_name" class="t">{l s='Filename'}</label>
 							<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentitiesUTF8}" />
@@ -586,7 +584,7 @@ $(document).ready(function(){
 <tr>
 	<td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td>
  </tr>
-					
+
 	{* @todo : prices related has to be moved in price subtab *}
 	<tr>
 		<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
@@ -619,7 +617,7 @@ $(document).ready(function(){
 			{/foreach}
 			ecotaxTaxRate = {$ecotaxTaxRate / 100};
 			</script>
-					
+
 					<span {if $tax_exclude_taxe_option}style="display:none;"{/if} >
 					 <select onChange="javascript:calcPriceTI(); unitPriceWithTax('unit');" name="id_tax_rules_group" id="id_tax_rules_group" {if $tax_exclude_taxe_option}disabled="disabled"{/if} >
 					     <option value="0">{l s='No Tax'}</option>
@@ -658,10 +656,10 @@ $(document).ready(function(){
 				<td class="col-left"><label>{l s='Unit price without tax:' }</label></td>
 				<td style="padding-bottom:5px;">
 					{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$product->unit_price}"
-						onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix} 
+						onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
 						{l s='per'} <input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 							{if $ps_tax && $country_display_tax_label}
-								<span style="margin-left:15px">{l s='or'} 
+								<span style="margin-left:15px">{l s='or'}
 									{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
 									{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 								</span>
@@ -697,7 +695,7 @@ $(document).ready(function(){
 					</tr>
 					{* [end] prices *}
 
-						
+
 <tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 				{if !$ps_stock_management}
 						<tr>
@@ -716,7 +714,7 @@ $(document).ready(function(){
 					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 				<tr>
 					<td class="col-left"><label>{l s='Additional shipping cost:'}</label></td>
-					<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost" 
+					<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost"
 							value="{$product->additional_shipping_cost}" />{$currency->suffix}
 						{if $country_display_tax_label}{l s='tax excl.'}{/if}
 						<p>{l s='Carrier tax will be applied.'}</p>
@@ -725,9 +723,9 @@ $(document).ready(function(){
 					<tr>
 						<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
 						<td style="padding-bottom:5px;">
-								{include file="products/input_text_lang.tpl" 
-									languages=$languages 
-									input_value=$product->available_now 
+								{include file="products/input_text_lang.tpl"
+									languages=$languages
+									input_value=$product->available_now
 									input_name='available_now'}
 							<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 					</td>
@@ -735,15 +733,15 @@ $(document).ready(function(){
 					<tr>
 						<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
 						<td style="padding-bottom:5px;">
-								{include file="products/input_text_lang.tpl" 
-									languages=$languages 
+								{include file="products/input_text_lang.tpl"
+									languages=$languages
 									input_value=$product->available_later
 									input_name='available_later'}
 							<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 				</td>
 					</tr>
 			{if $countAttributes}
-				
+
 {* .(($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00').'" *}
 						<tr>
 							<td class="col-left"><label>{l s='Available date:'}</label></td>
@@ -760,13 +758,13 @@ $(document).ready(function(){
 					<tr>
 						<td class="col-left"><label>{l s='When out of stock:'}</label></td>
 						<td style="padding-bottom:5px;">
-							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0"  {if $product->out_of_stock == 0}checked="checked"{/if} /> 
+							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0"  {if $product->out_of_stock == 0}checked="checked"{/if} />
 								<label for="out_of_stock_1" class="t" id="label_out_of_stock_1">{l s='Deny orders'}</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" {if $product->out_of_stock == 1}checked="checked"{/if} /> 
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" {if $product->out_of_stock == 1}checked="checked"{/if} />
 								<label for="out_of_stock_2" class="t" id="label_out_of_stock_2">{l s='Allow orders'}</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" {if $product->out_of_stock == 2}checked="checked"{/if} /> 
-								<label for="out_of_stock_3" class="t" id="label_out_of_stock_3">{l s='Default:'} 
-								<i>{if $ps_order_out_of_stock}{l s='Allow orders'}{else}{l s='Deny orders'}{/if}</i> ({l s='as set in'} <a href="{$link->getAdminLink('AdminPPreferences')}" 
+							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" {if $product->out_of_stock == 2}checked="checked"{/if} />
+								<label for="out_of_stock_3" class="t" id="label_out_of_stock_3">{l s='Default:'}
+								<i>{if $ps_order_out_of_stock}{l s='Allow orders'}{else}{l s='Deny orders'}{/if}</i> ({l s='as set in'} <a href="{$link->getAdminLink('AdminPPreferences')}"
 									onclick="return confirm(\'{l s='Are you sure you want to delete entered product information?'}')">{l s='Preferences'}</a>)</label>
 						</td>
 					</tr>
@@ -775,7 +773,7 @@ $(document).ready(function(){
 							<div class="separation"></div>
 						</td>
 					</tr>
-			
+
 					<tr>
 						<td class="col-left"><label for="id_category_default" class="t">
 							{l s='Default category:'}
@@ -805,9 +803,9 @@ $(document).ready(function(){
 						<tr>
 						<td class="col-left"><label>{l s='Meta title:'}</label></td>
 						<td>
-							{include file="products/input_text_lang.tpl" 
-								languages=$languages 
-								input_name='meta_title' 
+							{include file="products/input_text_lang.tpl"
+								languages=$languages
+								input_name='meta_title'
 								input_value=$product->meta_title}
 								<p class="clear">{l s='Product page title; leave blank to use product name'}</p>
 						</td>
@@ -815,9 +813,9 @@ $(document).ready(function(){
 						<tr>
 							<td class="col-left"><label>{l s='Meta description:'}</label></td>
 							<td>
-								{include file="products/input_text_lang.tpl" 
-									languages=$languages 
-									input_name='meta_description' 
+								{include file="products/input_text_lang.tpl"
+									languages=$languages
+									input_name='meta_description'
 									input_value=$product->meta_description
 									input_hint='{l s=\'Forbidden characters:\'\} <>;=#{\}'
 								}
@@ -827,7 +825,7 @@ $(document).ready(function(){
 						<tr>
 							<td class="col-left"><label>{l s='Meta keywords:'}</label></td>
 							<td>
-							{include file="products/input_text_lang.tpl" languages=$languages 
+							{include file="products/input_text_lang.tpl" languages=$languages
 							input_value=$product->meta_keywords
 							input_name='meta_keywords'}
 								<p class="clear">{l s='Keywords for HTML header, separated by a comma'}</p>
@@ -836,15 +834,15 @@ $(document).ready(function(){
 								<tr>
 								<td class="col-left"><label>{l s='Friendly URL:'}</label></td>
 									<td>
-								{include file="products/input_text_lang.tpl" 
-									languages=$languages 
-									input_value=$product->link_rewrite 
+								{include file="products/input_text_lang.tpl"
+									languages=$languages
+									input_value=$product->link_rewrite
 									input_name='link_rewrite'}
 
 								<p class="clear" style="padding:10px 0 0 0">
-									<a style="cursor:pointer" class="button" 
+									<a style="cursor:pointer" class="button"
 									onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;{l s='Friendly-url from product\'s name.'}<br /><br />
-								{l s='Product link will look like this:'} 
+								{l s='Product link will look like this:'}
 								{if $ps_ssl_enabled}https://{else}http://{/if}{*$smarty.server.SERVER_NAME*}/<b>id_product</b>-<span id="friendly-url"></span>.html</p>
 									</td>
 								</tr>
@@ -855,8 +853,8 @@ $(document).ready(function(){
 					<tr>
 						<td class="col-left"><label>{l s='Short description:'}<br /><br /><i>({l s='appears in the product lists and on the top of the product page'})</i></label></td>
 						<td style="padding-bottom:5px;">
-								{include file="products/textarea_lang.tpl" 
-								languages=$languages 
+								{include file="products/textarea_lang.tpl"
+								languages=$languages
 								input_name='description_short'
 								input_value=$product->description_short}
 
@@ -865,8 +863,8 @@ $(document).ready(function(){
 					</tr>
 					<tr>
 						<td class="col-left"><label>{l s='Description:'}<br /><br /><i>({l s='appears in the body of the product page'})</i></label></td>
-						<td style="padding-bottom:5px;"> 
-								{include file="products/textarea_lang.tpl" languages=$languages 
+						<td style="padding-bottom:5px;">
+								{include file="products/textarea_lang.tpl" languages=$languages
 								input_name='description'
 								input_value=$product->description
 								}
@@ -875,7 +873,7 @@ $(document).ready(function(){
 					</tr>
 
 {if $images}
-					
+
 					<tr>
 						<td class="col-left"><label></label></td>
 						<td style="padding-bottom:5px;">
@@ -921,11 +919,11 @@ $(document).ready(function(){
 													<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
 													<br />
 											{/foreach}
-									
+
 											<p class="clear"></p>
 										</td>
 									</tr>
-								
+
 									<tr>
 										<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
 										<td style="padding-bottom:5px;">
@@ -938,7 +936,7 @@ $(document).ready(function(){
 							<p class="clear"></p>
 						</td>
 					</tr>
-					
+
 					<script type="text/javascript">
 						$(function() {
 							changeTagImage();

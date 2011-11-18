@@ -51,6 +51,11 @@ class SupplyOrderDetailCore extends ObjectModel
 	public $reference;
 
 	/**
+	 * @var string Product supplier reference
+	 */
+	public $supplier_reference;
+
+	/**
 	 * @var int Product name
 	 */
 	public $name;
@@ -162,6 +167,7 @@ class SupplyOrderDetailCore extends ObjectModel
 		'id_product' => 'isUnsignedId',
 		'id_product_attribute' => 'isUnsignedId',
 		'reference' => 'isReference',
+		'supplier_reference' => 'isReference',
 		'name' => 'isGenericName',
 		'ean13' => 'isEan13',
 		'upc' => 'isUpc',
@@ -202,6 +208,7 @@ class SupplyOrderDetailCore extends ObjectModel
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['reference'] = pSQL($this->reference);
+		$fields['supplier_reference'] = pSQL($this->supplier_reference);
 		$fields['name'] = pSQL($this->name);
 		$fields['ean13'] = pSQL($this->ean13);
 		$fields['upc'] = pSQL($this->upc);
@@ -281,8 +288,9 @@ class SupplyOrderDetailCore extends ObjectModel
 		if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0)
 		{
 			// calculates new price, with global order discount, tax ecluded
-			$this->price_with_order_discount_te = Tools::ps_round($this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100)),
-																  6);
+			$discount_value = $this->price_with_discount_te - ($this->price_with_discount_te * ((float)$discount_rate / 100));
+
+			$this->price_with_order_discount_te = Tools::ps_round($discount_value, 6);
 
 			// calculates new tax value, with global order discount
 			$this->tax_value_with_order_discount = Tools::ps_round($this->price_with_order_discount_te * ((float)$this->tax_rate / 100), 6);

@@ -155,7 +155,7 @@ class StockAvailableCore extends ObjectModel
 				$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
 
 				$query = array(
-					'table' => 'stock_available',
+					'table' => _DB_PREFIX_.'stock_available',
 					'data' => array('quantity' => $quantity),
 					'type' => 'UPDATE',
 					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.' AND id_shop = '.(int)$id_shop
@@ -167,7 +167,7 @@ class StockAvailableCore extends ObjectModel
 			}
 
 			$query = array(
-				'table' => 'stock_available',
+				'table' => _DB_PREFIX_.'stock_available',
 				'data' => array('quantity' => $total_quantity),
 				'type' => 'UPDATE',
 				'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0 AND id_shop = '.(int)$id_shop
@@ -215,7 +215,7 @@ class StockAvailableCore extends ObjectModel
 			$id_shop = Context::getContext()->shop->getID(true);
 
 		Db::getInstance()->autoExecute(
-			'stock_available',
+			_DB_PREFIX_.'stock_available',
 			array('out_of_stock' => (int)$out_of_stock),
 			'UPDATE',
 			'id_product = '.(int)$id_product.' AND id_shop = '.(int)$id_shop
