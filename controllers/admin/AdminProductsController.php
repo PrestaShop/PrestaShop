@@ -87,7 +87,7 @@ class AdminProductsController extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
-	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 		$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
 		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final';
 
@@ -1195,6 +1195,7 @@ if (false)
 					$this->copyFromPost($object, $this->table);
 					if ($object->update())
 					{
+						$this->addCarriers();
 						if ($id_reason = (int)Tools::getValue('id_mvt_reason') && Tools::getValue('mvt_quantity') > 0 && $id_reason > 0)
 						{
 							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, null, null, $this->context->employee->id))
@@ -1258,6 +1259,7 @@ if (false)
 				$this->copyFromPost($object, $this->table);
 				if ($object->add())
 				{
+					$this->addCarriers();
 					$this->updateAssoShop((int)$object->id);
 					$this->updateAccessories($object);
 					if (!$this->updatePackItems($object))
@@ -1305,19 +1307,30 @@ if (false)
 					$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 			}
 		}
-
+	}
+	
+	protected function addCarriers()
+	{
+		if (Tools::getValue('carriers'))
+		{
+			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+			{
+				if (Tools::getValue('carriers'))
+					$product->setCarriers(Tools::getValue('carriers'));
+			}
+		}
 	}
 
 	private function _removeTaxFromEcotax()
 	{
-	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
+		$ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($ecotax = Tools::getValue('ecotax'))
 			$_POST['ecotax'] = Tools::ps_round(Tools::getValue('ecotax') / (1 + $ecotaxTaxRate / 100), 6);
 	}
 
 	private function _applyTaxToEcotax($product)
 	{
-	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
+		$ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($product->ecotax)
 			$product->ecotax = Tools::ps_round($product->ecotax * (1 + $ecotaxTaxRate / 100), 2);
 	}
@@ -2353,6 +2366,8 @@ if (false)
 		$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
 		$data->assign('displayAssoShop', $this->displayAssoShop());
+		$data->assign('carrier_list', $this->getCarrierList());
+		
 
 		$product_props = array();
 		// global informations
@@ -3198,6 +3213,23 @@ if (false)
 		$data->assign('languages', $this->_languages);
 		$data->assign('default_form_language', $this->default_form_language);
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+	
+	protected function getCarrierList()
+	{
+		$carrier_list = Carrier::getCarriers($this->context->language->id);
+		if ($product = $this->loadObject(true))
+		{
+			$carrier_selected_list = $product->getCarriers();
+			foreach ($carrier_list as &$carrier)
+				foreach ($carrier_selected_list as $carrier_selected)
+					if ($carrier_selected['id_reference'] == $carrier['id_reference'])
+					{
+						$carrier['selected'] = true;
+						continue;
+					}
+		}
+		return $carrier_list;
 	}
 
 	public function ajaxProcessProductQuantity()

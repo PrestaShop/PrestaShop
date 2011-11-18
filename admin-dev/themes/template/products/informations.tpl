@@ -429,6 +429,20 @@ $(document).ready(function(){
 				</td>
 			</tr>
 		</table>
+		<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
+			<tr>
+				<td class="col-left" style="width:600px">
+					<label>Carriers:</label>
+				</td>
+				<td class="padding-bottom:5px;">
+					<select name="carriers[]" multiple="multiple" size="4">
+						{foreach $carrier_list as $carrier}
+							<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
+						{/foreach}
+					</select>
+				</td>
+			</tr>
+		</table>
 		</div>
 		{* [end] of physical product *}
 		{* [begin] virtual product *}

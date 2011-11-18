@@ -139,6 +139,11 @@ CREATE TABLE `PREFIX_carrier` (
   `external_module_name` varchar(64) DEFAULT NULL,
   `shipping_method` int(2) NOT NULL DEFAULT '0',
   `position` int(10) unsigned NOT NULL default '0',
+  `max_width` int(10) DEFAULT 0,
+  `max_height` int(10)  DEFAULT 0,
+  `max_deep` int(10)  DEFAULT 0,
+  `max_weight` int(10)  DEFAULT 0,
+  `grade` int(10)  DEFAULT 0,
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`,`active`),
   KEY `id_tax_rules_group` (`id_tax_rules_group`)
@@ -148,8 +153,8 @@ CREATE TABLE `PREFIX_carrier_lang` (
   `id_carrier` int(10) unsigned NOT NULL,
   `id_shop` int(11) unsigned NOT NULL DEFAULT '1',
   `id_lang` int(10) unsigned NOT NULL,
-  `delay` varchar(128) default NULL,
-  UNIQUE KEY `shipper_lang_index` (`id_lang`,`id_shop`, `id_carrier`)
+  `delay` varchar(128) DEFAULT NULL,
+  PRIMARY KEY `shipper_lang_index` (`id_lang`,`id_shop`, `id_carrier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_carrier_zone` (
@@ -163,6 +168,7 @@ CREATE TABLE `PREFIX_cart` (
   `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
+  `delivery_option` varchar(100),
   `id_lang` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) unsigned NOT NULL,
   `id_address_invoice` int(10) unsigned NOT NULL,
@@ -173,6 +179,7 @@ CREATE TABLE `PREFIX_cart` (
   `recyclable` tinyint(1) unsigned NOT NULL default '1',
   `gift` tinyint(1) unsigned NOT NULL default '0',
   `gift_message` text,
+  `allow_seperated_package` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY  (`id_cart`),
@@ -274,6 +281,7 @@ CREATE TABLE `PREFIX_cart_cart_rule` (
 CREATE TABLE `PREFIX_cart_product` (
   `id_cart` int(10) unsigned NOT NULL,
   `id_product` int(10) unsigned NOT NULL,
+  `id_address_delivery` int(10) UNSIGNED DEFAULT 0,
   `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `id_product_attribute` int(10) unsigned default NULL,
   `quantity` int(10) unsigned NOT NULL default '0',
@@ -583,13 +591,14 @@ CREATE TABLE `PREFIX_customer_thread` (
 CREATE TABLE `PREFIX_customization` (
   `id_customization` int(10) unsigned NOT NULL auto_increment,
   `id_product_attribute` int(10) unsigned NOT NULL default '0',
+  `id_address_delivery` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `id_cart` int(10) unsigned NOT NULL,
   `id_product` int(10) NOT NULL,
   `quantity` int(10) NOT NULL,
   `quantity_refunded` INT NOT NULL DEFAULT '0',
   `quantity_returned` INT NOT NULL DEFAULT '0',
   `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  PRIMARY KEY  (`id_customization`,`id_cart`,`id_product`),
+  PRIMARY KEY  (`id_customization`,`id_cart`,`id_product`, `id_address_delivery`),
   KEY `id_product_attribute` (`id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -752,6 +761,13 @@ CREATE TABLE `PREFIX_product_group_reduction_cache` (
 	`reduction` DECIMAL(4, 3) NOT NULL,
 	PRIMARY KEY(`id_product`, `id_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_product_carrier` (
+  `id_product` int(10) unsigned NOT NULL,
+  `id_carrier_reference` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_product`, `id_carrier_reference`, `id_shop`)
+) ENGINE = ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_guest` (
   `id_guest` int(10) unsigned NOT NULL auto_increment,
@@ -971,9 +987,11 @@ CREATE TABLE `PREFIX_operating_system` (
 
 CREATE TABLE `PREFIX_orders` (
   `id_order` int(10) unsigned NOT NULL auto_increment,
+  `reference` VARCHAR(9),
   `id_group_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_carrier` int(10) unsigned NOT NULL,
+  `id_warehouse` int(10) unsigned DEFAULT 0,
   `id_lang` int(10) unsigned NOT NULL,
   `id_customer` int(10) unsigned NOT NULL,
   `id_cart` int(10) unsigned NOT NULL,

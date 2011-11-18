@@ -33,7 +33,7 @@
 <ul class="step" id="order_step">
 	<li class="{if $current_step=='summary'}step_current{else}{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address' || $current_step=='login'}step_done{else}step_todo{/if}{/if}">
 		{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address' || $current_step=='login'}
-		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}")}">
+		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&multi-shipping={$multi_shipping}")}">
 			{l s='Summary'}
 		</a>
 		{else}
@@ -42,7 +42,7 @@
 	</li>
 	<li class="{if $current_step=='login'}step_current{else}{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address'}step_done{else}step_todo{/if}{/if}">
 		{if $current_step=='payment' || $current_step=='shipping' || $current_step=='address'}
-		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1")}">
+		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1&multi-shipping={$multi_shipping}")}">
 			{l s='Login'}
 		</a>
 		{else}
@@ -51,7 +51,7 @@
 	</li>
 	<li class="{if $current_step=='address'}step_current{else}{if $current_step=='payment' || $current_step=='shipping'}step_done{else}step_todo{/if}{/if}">
 		{if $current_step=='payment' || $current_step=='shipping'}
-		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1")}">
+		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=1&multi-shipping={$multi_shipping}")}">
 			{l s='Address'}
 		</a>
 		{else}
@@ -60,7 +60,7 @@
 	</li>
 	<li class="{if $current_step=='shipping'}step_current{else}{if $current_step=='payment'}step_done{else}step_todo{/if}{/if}">
 		{if $current_step=='payment'}
-		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=2")}">
+		<a href="{$link->getPageLink('order', true, NULL, "{$smarty.capture.url_back}&step=2&multi-shipping={$multi_shipping}")}">
 			{l s='Shipping'}
 		</a>
 		{else}

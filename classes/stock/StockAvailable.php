@@ -250,13 +250,33 @@ class StockAvailableCore extends ObjectModel
 
 	/**
 	 * Upgrades total_quantity_available after having saved
-	 * @see ObjectModel::save()
+	 * @see ObjectModel::add()
 	 */
-	public function save($null_values = false, $autodate = true)
+	public function add($autodate = true, $null_values = false)
 	{
-		if (!parent::save($null_values, $autodate))
+		if (!parent::add($autodate, $null_values))
 			return false;
+		$this->afterSave();
+	}
 
+	/**
+	 * Upgrades total_quantity_available after having update
+	 * @see ObjectModel::update()
+	 */
+	public function update($null_values = false)
+	{
+		if (!parent::update($null_values))
+			return false;
+		$this->afterSave();
+	}
+
+	/**
+	 * Upgrades total_quantity_available after having saved
+	 * @see StockAvailableCore::update()
+	 * @see StockAvailableCore::add()
+	 */
+	public function afterSave()
+	{
 		if ($this->id_product_attribute == 0)
 			return true;
 

@@ -19,11 +19,10 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <tr id="product_{$product.id_product}_{$product.id_product_attribute}_0_{$product.id_address_delivery|intval}" class="{if $productLast}last_item{elseif $productFirst}first_item{/if} {if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0}alternate_item{/if} cart_item">
 	<td class="cart_product">
 		<a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'htmlall':'UTF-8'}"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small')}" alt="{$product.name|escape:'htmlall':'UTF-8'}" {if isset($smallSize)}width="{$smallSize.width}" height="{$smallSize.height}" {/if} /></a>
@@ -33,25 +32,6 @@
 		{if isset($product.attributes) && $product.attributes}<a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category)|escape:'htmlall':'UTF-8'}">{$product.attributes|escape:'htmlall':'UTF-8'}</a>{/if}
 	</td>
 	<td class="cart_ref">{if $product.reference}{$product.reference|escape:'htmlall':'UTF-8'}{else}--{/if}</td>
-	<td class="cart_availability">
-		{if $product.active AND ($product.allow_oosp OR ($product.quantity <= $product.stock_quantity)) AND $product.available_for_order AND !$PS_CATALOG_MODE}
-			<img src="{$img_dir}icon/available.gif" alt="{l s='Available'}" width="14" height="14" />
-		{else}
-			<img src="{$img_dir}icon/unavailable.gif" alt="{l s='Out of stock'}" width="14" height="14" />
-		{/if}
-	</td>
-	<td class="cart_unit">
-		<span class="price" id="product_price_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}">
-			{if isset($product.is_discounted) && $product.is_discounted}
-				<span style="text-decoration:line-through;">{convertPrice price=$product.price_without_specific_price}</span><br />
-			{/if}
-			{if !$priceDisplay}
-				{convertPrice price=$product.price_wt}
-			{else}
-				{convertPrice price=$product.price}
-			{/if}
-		</span>
-	</td>
 	<td class="cart_quantity"{if isset($customizedDatas.$productId.$productAttributeId) AND $quantityDisplayed == 0} style="text-align: center;"{/if}>
 		{if isset($cannotModify) AND $cannotModify == 1}
 			<span style="float:left">{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
@@ -79,13 +59,26 @@
 			{/if}
 		{/if}
 	</td>
-	<td class="cart_total">
-		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}">
-			{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}
-				{if !$priceDisplay}{displayPrice price=$product.total_customization_wt}{else}{displayPrice price=$product.total_customization}{/if}
-			{else}
-				{if !$priceDisplay}{displayPrice price=$product.total_wt}{else}{displayPrice price=$product.total}{/if}
-			{/if}
-		</span>
-	</td>
+	<td>
+			<from method="post" action="{$link->getPageLink('cart', true, NULL, "token={$token_cart}")}">
+				<input type="hidden" name="id_product" value="{$product.id_product}" />
+				<input type="hidden" name="id_product_attribute" value="{$product.id_product_attribute}" />
+				<select name="address_delivery" id="select_address_delivery_{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}" class="cart_address_delivery">
+					{if $product.id_address_delivery == 0 && $delivery->id == 0}
+					<option></option>
+					{/if}
+					<option value="-1">{l s='New address'}</option>
+					{foreach $address_list as $address}
+						<option value="{$address.id_address}"
+							{if ($product.id_address_delivery > 0 && $product.id_address_delivery == $address.id_address) || ($product.id_address_delivery == 0  && $address.id_address == $delivery->id)}
+								selected="selected"
+							{/if}
+						>
+							{$address.alias}
+						</option>
+					{/foreach}
+					<option value="-2">{l s='Ship to an other address'}</option>
+				</select>
+			</form>
+		</td>
 </tr>

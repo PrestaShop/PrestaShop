@@ -64,6 +64,16 @@ class OrderControllerCore extends ParentOrderController
 
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
 			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step));
+		
+		if (Tools::getValue('multi-shipping') == 1)
+			$this->context->smarty->assign('multi_shipping', true);
+		else
+			$this->context->smarty->assign('multi_shipping', false);
+		
+		if ($this->context->customer->id)
+			$this->context->smarty->assign('address_list', $this->context->customer->getAddresses($this->context->language->id));
+		else
+			$this->context->smarty->assign('address_list', array());
 	}
 
 	/**
@@ -84,11 +94,17 @@ class OrderControllerCore extends ParentOrderController
 				$this->context->smarty->assign('empty', 1);
 				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 			break;
-
+			
 			case 1:
 				$this->_assignAddress();
 				$this->processAddressFormat();
-				$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
+				if (Tools::getValue('multi-shipping') == 1)
+				{
+					$this->_assignSummaryInformations();
+					$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping.tpl');
+				}
+				else
+					$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 			break;
 
 			case 2:
@@ -183,6 +199,11 @@ class OrderControllerCore extends ParentOrderController
 	 */
 	public function processAddress()
 	{
+		if (!Tools::getValue('multi-shipping'))
+			$this->context->cart->setNoMultishipping();
+		
+		// Add checking for all addresses
+		
 		if (!Tools::isSubmit('id_address_delivery') || !Address::isCountryActiveById((int)Tools::getValue('id_address_delivery')))
 			$this->errors[] = Tools::displayError('This address is not in a valid area.');
 		else
@@ -213,7 +234,6 @@ class OrderControllerCore extends ParentOrderController
 	protected function processCarrier()
 	{
 		global $orderTotal;
-
 		parent::_processCarrier();
 
 		if (count($this->errors))
@@ -227,7 +247,7 @@ class OrderControllerCore extends ParentOrderController
 		}
 		$orderTotal = $this->context->cart->getOrderTotal();
 	}
-
+	
 	/**
 	 * Address step
 	 */
@@ -235,6 +255,9 @@ class OrderControllerCore extends ParentOrderController
 	{
 		parent::_assignAddress();
 
+		if (Tools::getValue('multi-shipping'))
+			$this->context->cart->autosetProductAddress();
+		
 		$this->context->smarty->assign('cart', $this->context->cart);
 		if ($this->context->customer->is_guest)
 			Tools::redirect('index.php?controller=order&step=2');

@@ -189,7 +189,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
 
 /* PHP:add_new_tab(AdminRequestSql, fr:SQL Manager|es:SQL Manager|en:SQL Manager|de:Wunsh|it:SQL Manager, 9); */;
 
-
 ALTER TABLE `PREFIX_carrier` ADD COLUMN `id_reference` int(10)  NOT NULL AFTER `id_carrier`;
 UPDATE `PREFIX_carrier` SET id_reference = id_carrier;
 
@@ -239,6 +238,31 @@ ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT 
 
 ALTER TABLE `PREFIX_order_state` ADD COLUMN `shipped` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `delivery`;
 UPDATE `PREFIX_order_state` SET `shipped` = 1 WHERE id_order_states IN (4, 5);
+
+
+ALTER TABLE `PREFIX_carrier`
+	ADD COLUMN `max_width` int(10) DEFAULT 0 AFTER `position`,
+	ADD COLUMN `max_height` int(10) DEFAULT 0 AFTER `max_width`,
+	ADD COLUMN `max_depth` int(10) DEFAULT 0 AFTER `max_height`,
+	ADD COLUMN `max_weight` int(10) DEFAULT 0 AFTER `max_deep`,
+	ADD COLUMN `grade` int(10)  DEFAULT 0 AFTER `max_weight`;
+
+ALTER TABLE `PREFIX_cart_product`
+	ADD COLUMN `id_address_delivery` int(10) UNSIGNED DEFAULT 0 AFTER `date_add`;
+	
+UPDATE `PREFIX_cart_product` SET id_address_delivery = 0;
+
+ALTER TABLE `PREFIX_cart` ADD COLUMN `allow_seperated_package` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `gift_message`;
+CREATE TABLE `PREFIX_product_carrier` (
+  `id_product` int(10) unsigned NOT NULL,
+  `id_carrier_reference` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_product`, `id_carrier_reference`, `id_shop`)
+) ENGINE = ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_customization` ADD COLUMN `id_address_delivery` int(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `id_product_attribute`,
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY  USING BTREE(`id_customization`, `id_cart`, `id_product`, `id_address_delivery`);
 
 
 CREATE TABLE `PREFIX_cart_rule` (
@@ -489,6 +513,13 @@ ADD `total_amount` DECIMAL( 10, 6 ) NOT NULL AFTER `unit_amount`;
 ALTER TABLE `PREFIX_specific_price` ADD `id_product_attribute` INT UNSIGNED NOT NULL AFTER `id_product`;
 ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_product` (`id_product`, `id_product_attribute`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`);
+
+
+ALTER TABLE `PREFIX_orders` ADD COLUMN `reference` varchar(9) AFTER `id_order`;
+ALTER TABLE `PREFIX_orders` ADD COLUMN `id_warehouse` int(10) unsigned DEFAULT 0 AFTER `id_carrier`;
+
+ALTER TABLE `PREFIX_cart` ADD COLUMN `order_reference` varchar(9) AFTER `id_cart`;
+ALTER TABLE `PREFIX_cart` ADD COLUMN `delivery_option` varchar(100) AFTER `id_carrier`;
 
 ALTER TABLE `PREFIX_hook` ADD `is_native` TINYINT( 1 ) NOT NULL DEFAULT '0';
 

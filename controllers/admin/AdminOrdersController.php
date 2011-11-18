@@ -30,25 +30,25 @@ class AdminOrdersControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->table = 'order';
-	 	$this->className = 'Order';
-	 	$this->lang = false;
+		$this->className = 'Order';
+		$this->lang = false;
 		$this->edit = true;
-	 	$this->addRowAction('view');
+		$this->addRowAction('view');
 
-	 	$this->deleted = false;
-	 	$this->colorOnBackground = true;
-	 	$this->requiredDatabase = false;
-	 	$this->context = Context::getContext();
+		$this->deleted = false;
+		$this->colorOnBackground = true;
+		$this->requiredDatabase = false;
+		$this->context = Context::getContext();
 
-	 	$this->_select = '
+		$this->_select = '
 			a.id_order AS id_pdf,
 			CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 			osl.`name` AS `osname`,
 			os.`color`,
 			IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
 			(SELECT COUNT(od.`id_order`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = a.`id_order` GROUP BY `id_order`) AS product_number';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
-	 	LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
+		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_where = 'AND oh.`id_order_history` = (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` moh WHERE moh.`id_order` = a.`id_order` GROUP BY moh.`id_order`)';
@@ -62,6 +62,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 		'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+		'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 65),
 		'new' => array('title' => $this->l('New'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'filter_key' => 'new', 'tmpTableFilter' => true, 'icon' => array(0 => 'blank.gif', 1 => 'news-new.gif'), 'orderby' => false),
 		'customer' => array('title' => $this->l('Customer'), 'filter_key' => 'customer', 'tmpTableFilter' => true),
 		'total_paid' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'prefix' => '<b>', 'suffix' => '</b>', 'type' => 'price', 'currency' => true),
@@ -70,8 +71,8 @@ class AdminOrdersControllerCore extends AdminController
 		'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'width' => 35, 'align' => 'center', 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false));
 
- 		$this->shopLinkType = 'shop';
- 		$this->shopShareDatas = Shop::SHARE_ORDER;
+		$this->shopLinkType = 'shop';
+		$this->shopShareDatas = Shop::SHARE_ORDER;
 
 		parent::__construct();
 	}

@@ -48,7 +48,7 @@
 
 		"customizedDatas":[
 		{if isset($blockcart_customizedDatas.$productId.$productAttributeId)}
-		{foreach from=$blockcart_customizedDatas.$productId.$productAttributeId key='id_customization' item='customization' name='customizedDatas'}{ldelim}
+		{foreach from=$blockcart_customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key='id_customization' item='customization' name='customizedDatas'}{ldelim}
 {* This empty line was made in purpose (product addition debug), please leave it here *}
 
 			"customizationId":	{$id_customization},

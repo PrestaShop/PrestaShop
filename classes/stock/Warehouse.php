@@ -267,6 +267,30 @@ class WarehouseCore extends ObjectModel
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 	}
+	
+	/**
+	 * For a given {product, product attribute} gets warehouse list
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $id_shop
+	 * @return string
+	 */
+	public static function getProductWarehouseList($id_product, $id_product_attribute, $id_shop = null)
+	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+			
+		$query = new DbQuery();
+		$query->select('wpl.id_warehouse');
+		$query->from('warehouse_product_location wpl');
+		$query->innerJoin('warehouse_shop ws ON (ws.id_warehouse = wpl.id_warehouse AND id_shop = '.(int)$id_shop.')');
+		$query->where('id_product = '.(int)$id_product);
+		$query->where('id_product_attribute = '.(int)$id_product_attribute);
+		$query->groupBy('wpl.id_warehouse');
+
+		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query));
+	}
 
 	/**
 	 * Gets available warehouses

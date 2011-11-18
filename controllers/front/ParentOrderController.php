@@ -217,10 +217,8 @@ class ParentOrderControllerCore extends FrontController
 		else
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
-		if (Validate::isInt(Tools::getValue('id_carrier')) && count(Carrier::checkCarrierZone((int)(Tools::getValue('id_carrier')), (int)($id_zone))))
-			$this->context->cart->id_carrier = (int)(Tools::getValue('id_carrier'));
-		else if (!$this->context->cart->isVirtualCart() && (int)(Tools::getValue('id_carrier')) == 0)
-			$this->errors[] = Tools::displayError('Invalid carrier or no carrier selected');
+		if (Tools::getIsset('delivery_option') && $this->validateDeliveryOption(Tools::getValue('delivery_option')))
+			$this->context->cart->delivery_option = serialize(Tools::getValue('delivery_option'));
 
 		Hook::exec('processCarrier', array('cart' => $this->context->cart));
 
@@ -229,6 +227,22 @@ class ParentOrderControllerCore extends FrontController
 
 		// Carrier has changed, so we check if the cart rules still apply
 		CartRule::autoRemoveFromCart();
+	}
+	
+	/**
+	 * Validate get/post param delivery option
+	 * @param array $delivery_option
+	 */
+	protected function validateDeliveryOption($delivery_option)
+	{
+		if (!is_array($delivery_option))
+			return false;
+		
+		foreach ($delivery_option as $option)
+			if (!preg_match('/(\d+,)?\d+/', $option))
+				return false;
+		
+		return true;
 	}
 
 	protected function _assignSummaryInformations()
@@ -364,10 +378,14 @@ class ParentOrderControllerCore extends FrontController
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
 		$carriers = Carrier::getCarriersForOrder($id_zone, $this->context->customer->getGroups());
+		
 
 		$this->context->smarty->assign(array(
 			'checked' => $this->setDefaultCarrierSelection($carriers),
 			'carriers' => $carriers,
+			'address_collection' => $this->context->cart->getAddressCollection(),
+			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+			'delivery_option' => $this->context->cart->getDeliveryOption(),
 			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT'))
 		));
 		$this->context->smarty->assign(array(

@@ -82,7 +82,7 @@
 
 {include file="$tpl_dir./errors.tpl"}
 
-<form id="form" action="{$link->getPageLink('order', true)}" method="post" onsubmit="return acceptCGV();">
+<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();">
 {else}
 <div id="opc_delivery_methods" class="opc-main-block">
 	<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>
@@ -112,45 +112,83 @@
 		<label for="recyclable">{l s='I agree to receive my order in recycled packaging'}.</label>
 	</p>
 	{/if}
-	<p class="warning" id="noCarrierWarning" {if isset($carriers) && $carriers && count($carriers)}style="display:none;"{/if}>{l s='There are no carriers available that deliver to this address.'}</p>
-	<table id="carrierTable" class="std" {if !isset($carriers) || !$carriers || !count($carriers)}style="display:none;"{/if}>
-		<thead>
-			<tr>
-				<th class="carrier_action first_item"></th>
-				<th class="carrier_name item">{l s='Carrier'}</th>
-				<th class="carrier_infos item">{l s='Information'}</th>
-				<th class="carrier_price last_item">{l s='Price'}</th>
-			</tr>
-		</thead>
-		<tbody>
-		{if isset($carriers)}
-			{foreach from=$carriers item=carrier name=myLoop}
-				<tr class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{else}item{/if}">
-					<td class="carrier_action radio">
-						<input type="radio" name="id_carrier" value="{$carrier.id_carrier|intval}" id="id_carrier{$carrier.id_carrier|intval}"  {if $opc}onclick="updateCarrierSelectionAndGift();"{/if} {if !($carrier.is_module AND $opc AND !$isLogged)}{if $carrier.id_carrier == $checked}checked="checked"{/if}{else}disabled="disabled"{/if} />
-					</td>
-					<td class="carrier_name">
-						<label for="id_carrier{$carrier.id_carrier|intval}">
-							{if $carrier.img}<img src="{$carrier.img|escape:'htmlall':'UTF-8'}" alt="{$carrier.name|escape:'htmlall':'UTF-8'}" />{else}{$carrier.name|escape:'htmlall':'UTF-8'}{/if}
-						</label>
-					</td>
-					<td class="carrier_infos">{$carrier.delay|escape:'htmlall':'UTF-8'}</td>
-					<td class="carrier_price">
-						{if $carrier.price}
-							<span class="price">
-								{if $priceDisplay == 1}{convertPrice price=$carrier.price_tax_exc}{else}{convertPrice price=$carrier.price}{/if}
-							</span>
-							{if $use_taxes}{if $priceDisplay == 1} {l s='(tax excl.)'}{else} {l s='(tax incl.)'}{/if}{/if}
-						{else}
-							{l s='Free!'}
-						{/if}
-					</td>
-				</tr>
-			{/foreach}
-			<tr id="HOOK_EXTRACARRIER">{$HOOK_EXTRACARRIER}</tr>
-		{/if}
-		</tbody>
-	</table>
+	<div class="delivery_options_address">
+	{foreach $delivery_option_list as $id_address => $option_list}
+		<h3>{$address_collection[$id_address]->alias}</h3>
+		<div class="delivery_options">
+		{foreach $option_list as $key => $option}
+			<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
+				<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$id_address}_{$option@index}" value="{$key}" />
+				<label for="delivery_option_{$id_address}_{$option@index}">
+					<table class="resume">
+						<tr>
+							<td class="delivery_option_logo">
+								{* If there is only one carrier, show the logo of the carrier *}
+								{if $option.unique_carrier}
+									{foreach $option.carrier_list as $carrier}
+										{if $carrier.logo}
+											<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+										{else}
+											{$carrier.instance->name}
+										{/if}
+									{/foreach}
+								{else}
+									{$carrier.instance->name}
+								{/if}
+							</td>
+							<td>
+							{if $option.is_best_grade}
+								{if $option.is_best_price}
+								<div class="delivery_option_best delivery_option_icon">{l s="The best price and grade"}</div>
+								{else}
+								<div class="delivery_option_fast delivery_option_icon">{l s="The faster"}</div>
+								{/if}
+							{else}
+								{if $option.is_best_price}
+								<div class="delivery_option_best_price delivery_option_icon">{l s="The best price"}</div>
+								{/if}
+							{/if}
+							</td>
+							<td>
+							<div class="delivery_option_price">
+								{if $option.total_price_with_tax}
+									{if $use_taxes == 1}
+										{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+									{else}
+										{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+									{/if}
+								{else}
+									{l s='Free!'}
+								{/if}
+							</div>
+							</td>
+						</tr>
+					</table>
+						<table class="delivery_option_carrier">
+							{foreach $option.carrier_list as $carrier}
+								<tr>
+									<td>
+									{if $carrier.logo}
+										<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+									{/if}
+								</td>
+								<td>
+									{$carrier.instance->name}
+								</td>
+								<td>
+									{if isset($carrier.instance->delay[$cookie->id_lang])}
+										{$carrier.instance->delay[$cookie->id_lang]}
+									{/if}
+								</td>
+								</tr>
+							{/foreach}
+						</table>
+				</label>
+			</div>
+		{/foreach}
+		</div>
+	{/foreach}
+	</div>
 	<div style="display: none;" id="extra_carrier"></div>
 	
 		{if $giftAllowed}
@@ -182,12 +220,12 @@
 		<input type="hidden" name="back" value="{$back}" />
 		{if !$is_guest}
 			{if $back}
-				<a href="{$link->getPageLink('order', true, NULL, "step=1&amp;back={$back}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
+				<a href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
 			{else}
-				<a href="{$link->getPageLink('order', true, NULL, "step=1")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
+				<a href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
 			{/if}
 		{else}
-				<a href="{$link->getPageLink('order', true)}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
+				<a href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
 		{/if}
 		<input type="submit" name="processCarrier" value="{l s='Next'} &raquo;" class="exclusive" />
 	</p>

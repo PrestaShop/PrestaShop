@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7096 $
+*  @version  Release: $Revision: 9532 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -52,16 +52,16 @@ $(document).ready(function()
 	
 	// Click on label
 	$('label a').live({
-		  click: function() {
-			if($(this).parent().parent().find('input').attr('disabled') == '')
+		click: function() {
+			if ($(this).parent().parent().find('input').attr('disabled') == '')
 			{
-			  $(this).parent().parent().find('input').click();
-			  reloadContent();
+				$(this).parent().parent().find('input').click();
+				reloadContent();
 			}
 				
-			  return false;
-		  }
-		});
+			return false;
+		}
+	});
 	paginationButton();
 	initLayered();
 });
@@ -94,14 +94,6 @@ function initLayered()
 		var params = window.location.href.split('#')[1];
 		reloadContent('&selected_filters='+params);
 	}
-		}
-
-function updatelink(link)
-{
-	baseUrl = link.split('#');
-	linkFilterUpdate = baseUrl[0]+getValueSelected();
-	linkFilterUpdate = friendlyUrl(linkFilterUpdate, 'short');
-	return linkFilterUpdate;
 }
 
 function  getValueSelected(){
@@ -123,37 +115,6 @@ function  getValueSelected(){
 		}
 	});
 	return checkboxChecked;
-}
-
-function friendlyUrl(link, encode)
-{
-		 var friendlyTab = 
-		 {
-				 'layered_condition_' : 'cond_',
-				 'layered_id_attribute_group_' : 'g_',
-				 'id_category_layered=' : 'c=',
-				 'layered_manufacturer_' : 'm_',
-				 'layered_id_feature_' : 'f_',
-				 'layered_category_' : 'cat_',
-				};
-		
-		 if(encode == 'short')
-		 {
-			$.each(friendlyTab, function(key, value)
-			{
-				 	Expression = new RegExp(key,'g');
-				 	link = link.replace(Expression, value);
-			 });
-		 }else
-		 {
-			$.each(friendlyTab, function(key, value)
-			{
-				 Expression = new RegExp(value,'g');
-				 link = link.replace(Expression, key);
-			 });
-		 }
-	
-	return link;
 }
 
 function paginationButton() {
@@ -181,7 +142,7 @@ function cancelFilter()
 {
 	$('#enabled_filters a').live('click', function(e)
 	{
-		if($(this).attr('rel').search(/_slider$/) > 0)
+		if ($(this).attr('rel').search(/_slider$/) > 0)
 		{
 			$('#'+$(this).attr('rel')).slider('values' , 0, $('#'+$(this).attr('rel')).slider('option' , 'min' ));
 			$('#'+$(this).attr('rel')).slider('values' , 1, $('#'+$(this).attr('rel')).slider('option' , 'max' ));
@@ -189,8 +150,8 @@ function cancelFilter()
 		}
 		else
 		{
-		$('#'+$(this).attr('rel')).attr('checked', false);
-		$('#layered_form input[name='+$(this).attr('rel')+']:hidden').remove();
+			$('#'+$(this).attr('rel')).attr('checked', false);
+			$('#layered_form input[name='+$(this).attr('rel')+']:hidden').remove();
 		}
 		reloadContent();
 		e.preventDefault();
@@ -224,7 +185,7 @@ function reloadContent(params_plus)
 
 	if (!ajaxLoaderOn)
 	{
-		$('#product_list').prepend($('#layered_ajax_loader').html());	
+		$('#product_list').prepend($('#layered_ajax_loader').html());
 		$('#product_list').css('opacity', '0.7');
 		ajaxLoaderOn = 1;
 	}
@@ -233,7 +194,7 @@ function reloadContent(params_plus)
 	$('.layered_slider').each( function () {
 		var sliderStart = $(this).slider('values', 0);
 		var sliderStop = $(this).slider('values', 1);
-		if(typeof(sliderStart) == 'number' && typeof(sliderStop) == 'number')
+		if (typeof(sliderStart) == 'number' && typeof(sliderStop) == 'number')
 			data += '&'+$(this).attr('id')+'='+sliderStart+'_'+sliderStop;
 	});
 	
@@ -244,7 +205,7 @@ function reloadContent(params_plus)
 	}
 	
 	var slideUp = true;
-	if(params_plus == undefined)
+	if (params_plus == undefined)
 	{
 		params_plus = '';
 		slideUp = false;
@@ -267,7 +228,7 @@ function reloadContent(params_plus)
 		{
 			$('#layered_block_left').after('<div id="tmp_layered_block_left"></div>').remove();
 			$('#tmp_layered_block_left').html(result.filtersBlock).attr('id', 'layered_block_left');
-
+			
 			$('.category-product-count').html(result.categoryCount);
 
 			$('#product_list').replaceWith(result.productList);
@@ -290,7 +251,7 @@ function reloadContent(params_plus)
 				return false;
 			});
 			if (typeof(ajaxCart) != "undefined")
-			ajaxCart.overrideButtonsInThePage();
+				ajaxCart.overrideButtonsInThePage();
 			
 			if (typeof(reloadProductComparison) == 'function')
 				reloadProductComparison();
@@ -314,7 +275,7 @@ function reloadContent(params_plus)
 			});
 			if (current_friendly_url == '#')
 				current_friendly_url = '#/';
-				window.location = current_friendly_url;
+			window.location = current_friendly_url;
 			lockLocationChecking = true;
 			
 			if(slideUp)
@@ -339,7 +300,7 @@ function initLocationChange(func, time)
 			
 			lockLocationChecking = true;
 			reloadContent('&selected_filters='+getUrlParams().replace(/^#/, ''));
-			}
+		}
 		else {
 			lockLocationChecking = false;
 			current_friendly_url = getUrlParams();
