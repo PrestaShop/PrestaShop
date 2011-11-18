@@ -56,8 +56,8 @@
 			var new_msg = '{l s='A new message posted on your shop.'}';
 			var excerpt_msg = '{l s='Excerpt : '}';
 			var see_msg = '{l s='Click here to see that message'}';
-			var token_admin_orders = '{$token_admin_orders}';
-			var token_admin_customers = '{$token_admin_customers}';
+			var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
+			var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		</script>
 
 		{if isset($css_files)}
@@ -163,7 +163,7 @@ $(document).ready(function()
 							<h3>{l s='Last orders'}</h3>
 							<p class="no_notifs">{l s='No new orders has been made on your shop'}</p>
 							<ul id="list_orders_notif"></ul>
-							<p><a href="index.php?controller=AdminOrders&token={$token_admin_orders}">{l s='Show all orders'}</a></p>
+							<p><a href="index.php?controller=AdminOrders&token={getAdminToken tab='AdminOrders'}">{l s='Show all orders'}</a></p>
 						</div>
 					</div>
 				{/if}
@@ -176,7 +176,7 @@ $(document).ready(function()
 							<h3>{l s='Last customers'}</h3>
 							<p class="no_notifs">{l s='No new customers registered on your shop'}</p>
 							<ul id="list_customers_notif"></ul>
-							<p><a href="index.php?controller=AdminCustomers&token={$token_admin_customers}">{l s='Show all customers'}</a></p>
+							<p><a href="index.php?controller=AdminCustomers&token={getAdminToken tab='AdminCustomers'}">{l s='Show all customers'}</a></p>
 						</div>
 					</div>
 				{/if}
@@ -189,13 +189,13 @@ $(document).ready(function()
 							<h3>{l s='Last messages'}</h3>
 							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
 							<ul id="list_messages_notif"></ul>
-							<p><a href="index.php?controller=AdminMessages&token={$token_admin_messages}">{l s='Show all messages'}</a></p>
+							<p><a href="index.php?controller=AdminMessages&token={getAdminToken tab='AdminMessages'}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
 				{/if}
 				</div>
 				<span id="employee_links">
-						<a class="employee" href="index.php?controller=AdminEmployees&id_employee={$employee->id}&updateemployee&token={$token_admin_employees}"  alt="" /> {l s='My preferences'}</a>
+						<a class="employee" href="index.php?controller=AdminEmployees&id_employee={$employee->id}&updateemployee&token={getAdminToken tab='AdminEmployees'}"  alt="" /> {l s='My preferences'}</a>
 					<span class="separator"></span><span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
 						<span class="separator"></span><a href="index.php?logout" id="header_logout">
 						<span>{l s='logout'}</span>
@@ -205,7 +205,7 @@ $(document).ready(function()
 				{/if}
 			</span>
 			<div id="header_search">
-			<form method="post" action="index.php?controller=AdminSearch&token={$token_admin_search}">
+			<form method="post" action="index.php?controller=AdminSearch&token={getAdminToken tab='AdminSearch'}">
 				<input type="text" name="bo_query" id="bo_query" value="{$bo_query}" />
 				<select name="bo_search_type" id="bo_search_type">
 					<option value="0">{l s='everywhere'}</option>
