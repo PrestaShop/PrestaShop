@@ -2,7 +2,7 @@ SET NAMES 'utf8';
 
 /* Carrier */
 INSERT INTO `PREFIX_carrier` (`id_carrier`, `id_reference`, `id_tax_rules_group`, `name`, `active`, `deleted`, `shipping_handling`, `is_free`, `position`) VALUES (2, 2, 1, 'My carrier', 1, 0, 1, 0, 1);
-INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) VALUES (2, 2), (2, 3);
+INSERT INTO `PREFIX_carrier_group` (`id_carrier`, `id_group`) VALUES (2, 1), (2, 2), (2, 3);
 INSERT INTO `PREFIX_carrier_shop` (`id_carrier`, `id_shop`) VALUES (2, 1);
 INSERT INTO `PREFIX_carrier_lang` (`id_carrier`, `id_lang`, `delay`) VALUES (2, 1, 'Delivery next day!'),(2, 2, 'Livraison le lendemain !'),(2, 3, '¡Entrega día siguiente!'),(2, 4, 'Zustellung am nächsten Tag!'),(2, 5, 'Consegna il giorno dopo!');
 INSERT INTO `PREFIX_carrier_zone` (`id_carrier`, `id_zone`) VALUES (2, 1),(2, 2);
