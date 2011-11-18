@@ -1810,3 +1810,14 @@ ul.connectedSortable li.module_list {
 .formAccountingExport {
 	display: none;
 }
+
+.input-error
+{
+	color:#D8000C;
+	font-size:12px;
+	font-weight:normal;
+	margin: 0 0 10px 0;
+	line-height: 20px;
+	padding: 10px 15px;
+	display:none;
+}

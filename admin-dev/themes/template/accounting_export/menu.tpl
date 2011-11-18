@@ -25,12 +25,42 @@
 *}
 
 <script type="text/javascript">
+	
+	function validateInputDate(input, displayError)
+	{
+		{literal}
+		dateRegex = /^\d{4}-\d{1,2}-\d{1,2}$/
+  	{/literal}
+			
+  	if (!input.val().match(dateRegex))
+  	{
+			input.parent().find('span.input-error').fadeIn('fast');
+			return false;
+		}
+		input.parent().find('span.input-error').css('display','none');
+		return true;
+	}
+	
+	function validateAccountingForm()
+	{
+		validation = true;
+		
+		$('span.input-error').css('display', 'none');
+		$('.datepicker:visible').each(function() {
+			if (!(validateInputDate($(this), true)))
+				validation = false;
+		});
+    
+		return validation;
+	}
+	
 	$(document).ready(function() {
 		$('#export_menu').find('a').each(function() {
 			$(this).click(function() {
 				blockID = 'block_' + $(this).attr('id');
 				if (!$('#' + blockID).is(':visible'))
 				{
+				
 					$('.formAccountingExport:visible').each(function() {
 						$(this).fadeOut('fast', function() {
 							$('#' + blockID).fadeIn('fast');
@@ -39,9 +69,13 @@
 				}
 			});
 		});
+		
 		$('#' + '{$defaultType}').fadeIn('fast');
 	
 		$('.datepicker').each(function() {
+			$(this).change(function() {
+				validateInputDate($(this), true);
+			});
 			$(this).datepicker({
 	     prevText: '',
 	     nextText: '',
@@ -52,7 +86,7 @@
     $('.formAccountingExport form input[type="submit"]').each(function()
     {
     	$(this).click(function() {
-    		// TODO : Handle errors
+    		return validateAccountingForm();
     	});
     });
 	});
