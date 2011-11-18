@@ -748,6 +748,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 
 		$this->tpl_form_vars['content'] = $this->content;
+		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['show_product_management_form'] = true;
 
 		// call parent initcontent to render standard form content
@@ -1460,9 +1461,63 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
+
 		die;
 	}
 
+	/**
+	 * method call when ajax request is made for search product to add to the order
+	 * @TODO - Update this method to retreive the reference, ean13, upc corresponding to a product attribute
+	 */
+	public function	ajaxProcessSearchProduct()
+	{
+		// Get the search pattern
+		$pattern = pSQL(Tools::getValue('q', false));
+
+		if (!$pattern || $pattern == '' || strlen($pattern) < 1)
+			die();
+
+		// get supplier id
+		$id_supplier = (int)Tools::getValue('id_supplier', false);
+
+		// get lang from context
+		$id_lang = (int)Context::getContext()->language->id;
+
+		$query = new DbQuery();
+		$query->select('
+			CONCAT(p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\')) as id,
+			IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
+			IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
+			IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc,
+			md5(CONCAT(\''._COOKIE_KEY_.'\', p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\'))) as checksum,
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name
+		');
+
+		$query->from('product p');
+
+		$query->innerJoin('product_lang pl ON (pl.id_product = p.id_product AND pl.id_lang = '.$id_lang.')');
+		$query->leftJoin('product_attribute pa ON (pa.id_product = p.id_product)');
+		$query->leftJoin('product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)');
+		$query->leftJoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
+		$query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang.')');
+		$query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
+
+		$query->where('pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\'');
+		$query->where('p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
+		$query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
+
+		if ($id_supplier)
+			$query->where('p.id_supplier = '.$id_supplier);
+
+		$query->groupBy('pa.id_product_attribute');
+
+		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		if ($items)
+			die(Tools::jsonEncode($items));
+
+		die();
+	}
 	/**
 	 * @see AdminController::initView()
 	 */

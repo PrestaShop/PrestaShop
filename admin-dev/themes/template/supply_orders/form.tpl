@@ -214,7 +214,7 @@
 			});
 
 			// set autocomplete on search field
-			$('#cur_product_name').autocomplete("ajax_supply_order_products_list.php", {
+			$('#cur_product_name').autocomplete("ajax-tab.php", {
 				delay: 100,
 				minChars: 4,
 				autoFill: true,
@@ -226,6 +226,10 @@
 	            dataType: 'json',
 	            extraParams: {
 	                supplier_id: '{$supplier_id}',
+					ajax : '1',
+					controller : 'AdminSupplyOrders',
+					token : '{$token}',
+					action : 'searchProduct',
 	            },
 	            parse: function(data) {
 	            	return $.map(data, function(row) {
