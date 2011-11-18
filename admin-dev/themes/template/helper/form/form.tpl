@@ -24,7 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
 		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">

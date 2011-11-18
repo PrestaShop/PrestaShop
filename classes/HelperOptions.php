@@ -30,17 +30,7 @@
  */
 class HelperOptionsCore extends Helper
 {
-	public $first_call = true;
 	public $required = false;
-
-	/**
-	 * @var array of forms fields
-	 * Usage :
-	 *
-	 */
-	protected $fields_form = array();
-
-	public $fields_value = array();
 
 	public function __construct()
 	{
@@ -155,6 +145,10 @@ class HelperOptionsCore extends Helper
 		}
 
 		$this->tpl->assign(array(
+			'title' => $this->title,
+			'toolbar_btn' => $this->toolbar_btn,
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_fix' => $this->toolbar_fix,
 			'current' => $this->currentIndex,
 			'table' => $this->table,
 			'token' => $this->token,
@@ -163,6 +157,7 @@ class HelperOptionsCore extends Helper
 			'required_fields' => isset($required_fields) ? $required_fields : false,
 			'languages' => isset($languages) ? $languages : null
 		));
+
 		return parent::generate();
 	}
 
@@ -224,15 +219,5 @@ class HelperOptionsCore extends Helper
 		if (isset($field['defaultValue']) && !$value)
 			$value = $field['defaultValue'];
 		return $value;
-	}
-
-	public function getFieldsRequired()
-	{
-		if (isset($this->fields_form['input']))
-			foreach ($this->fields_form['input'] as $input)
-				if (array_key_exists('required', $input) && $input['required'])
-					return true;
-
-		return false;
 	}
 }

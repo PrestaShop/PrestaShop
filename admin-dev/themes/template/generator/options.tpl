@@ -59,7 +59,7 @@
 		{else}
 			
 			<p style="color:red; font-weight:bold;">{l s='Before being able to use this tool, you need to:'}</p>
-			<p>{l s='- create a'} <b>'. $this->l('.htaccess').'</b> {l s='blank file in directory'} <b>'.__PS_BASE_URI__.'</b>
+			<p>{l s='- create a'} <b>{l s='.htaccess'}</b> {l s='blank file in directory'} <b>{$smarty.const.__PS_BASE_URI__}</b>
 			<br />{l s='- give it write permissions (CHMOD 666 on Unix system)'}</p>
 		{/if}
 		</p></fieldset></form>
@@ -77,7 +77,7 @@
 			<p>{l s='This will erase your'}<b> {l s='old'}</b> {l s='robots.txt file!'}</p>
 		{else}
 			<p style="color:red; font-weight:bold;">{l s='Before being able to use this tool, you need to:'}</p>
-			<p>{l s='- create a'} <b>'. $this->l('robots.txt').'</b> {l s='blank file in dir:'} <b>{$smarty.const.__PS_BASE_URI__}</b>
+			<p>{l s='- create a'} <b>{l s='robots.txt'}</b> {l s='blank file in dir:'} <b>{$smarty.const.__PS_BASE_URI__}</b>
 			<br />{l s='- give it write permissions (CHMOD 666 on Unix system)'}</p>
 		{/if}
 		</p></fieldset></form>

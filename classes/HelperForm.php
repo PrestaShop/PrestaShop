@@ -29,7 +29,6 @@ class HelperFormCore extends Helper
 {
 	public $id;
 	public $first_call = true;
-	public $toolbar = true;
 
 	/** @var array of forms fields */
 	protected $fields_form = array();
@@ -137,11 +136,11 @@ class HelperFormCore extends Helper
 				}
 
 		$this->tpl->assign(array(
-			'submit_action' => $this->submit_action,
+			'title' => $this->title,
 			'toolbar_btn' => $this->toolbar_btn,
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_fix' => $this->toolbar_fix,
-			'title' => $this->title,
+			'submit_action' => $this->submit_action,
 			'firstCall' => $this->first_call,
 			'current' => $this->currentIndex,
 			'token' => $this->token,
