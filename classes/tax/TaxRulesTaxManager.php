@@ -26,6 +26,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0.1
+ */
 class TaxRulesTaxManagerCore implements TaxManagerInterface
 {
 	public $address;
@@ -35,6 +38,11 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	private static $cache_tax_calculator;
 
 
+	/**
+	 * 
+	 * @param Address $address
+	 * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+	 */
 	public function __construct(Address $address, $type)
 	{
 		$this->address = $address;
