@@ -85,6 +85,7 @@ class AdminAccessController extends AdminController
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		unset($this->toolbar_btn['save']);
+		unset($this->toolbar_btn['cancel']);
 
 		if (!$this->loadObject(true))
 			return;

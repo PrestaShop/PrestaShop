@@ -65,8 +65,6 @@ class HelperListCore extends Helper
 
 	protected $is_dnd_identifier = false;
 
-	public $toolbar = true;
-
 	/* Customize list display
 	 *
 	 * align  : determine value alignment
@@ -562,12 +560,15 @@ class HelperListCore extends Helper
 		}
 
 		$this->header_tpl->assign(array_merge($this->tpl_vars, array(
+			'title' => $this->title,
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_fix' => $this->toolbar_fix,
+			'toolbar_btn' => $this->toolbar_btn,
 			'table' => $this->table,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
 			'page' => $page,
 			'simple_header' => $this->simple_header,
-			'title' => $this->title,
 			'total_pages' => $total_pages,
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
@@ -583,16 +584,12 @@ class HelperListCore extends Helper
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => !empty($this->actions),
 			'has_bulk_actions' => !empty($this->bulk_actions),
-			'toolbar_btn' => $this->toolbar_btn,
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
-			'show_toolbar' => $this->show_toolbar,
-			'toolbar_fix' => $this->toolbar_fix,
-
-			'back' => Tools::getValue('back'),
-			'no_back' => $this->no_back,
+			/*'back' => Tools::getValue('back'),
+			'no_back' => $this->no_back,*/
 		)));
 
 		return $this->header_tpl->fetch();

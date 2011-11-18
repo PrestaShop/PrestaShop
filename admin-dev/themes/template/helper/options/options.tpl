@@ -23,14 +23,35 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+{if $show_toolbar}
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+				<div class="pageTitle">
+					<h3>
+						{block name=pageTitle}
+							<span id="current_obj" style="font-weight: normal;">
+								{$title|default:'&nbsp;'}
+							</span>
+						{/block}
+					</h3>
+				</div>
+		</div>
+	</div>
+	<div class="leadin">{block name="leadin"}{/block}</div>
+{/if}
+
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
 </script>
+
 {block name="defaultOptions"}
-<form action="{$current}&submitOptions{$table}=1&token={$token}" 
-	{if isset($categoryData['name'])} name={$categoryData['name']}{/if} 
+<form action="{$current}&submitOptions{$table}=1&token={$token}"
+	id="{$table}_form"
+	{if isset($categoryData['name'])} name={$categoryData['name']}{/if}
 	{if isset($categoryData['id'])} id={$categoryData['id']} {/if}
-	method="post" 
+	method="post"
 	enctype="multipart/form-data">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
@@ -195,9 +216,10 @@
 		{if isset($categoryData['submit'])}
 			<div class="margin-form">
 				<input type="submit" 
-					   value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='   Save   '}{/if}" 
-					   name="{if isset($categoryData['submit']['name'])}$categoryData['submit']['name']{else}submit{$category|ucfirst}{$table}{/if}" 
-					   class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}button{/if}"
+						value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='   Save   '}{/if}" 
+						name="{if isset($categoryData['submit']['name'])}$categoryData['submit']['name']{else}submit{$category|ucfirst}{$table}{/if}" 
+						class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}button{/if}"
+						id="{$table}_form_submit_btn"
 				/>
 			</div>
 		{/if}

@@ -61,7 +61,7 @@ class AdminControllerCore extends Controller
 	/** @var integer Tab id */
 	public $id = -1;
 
-	/** @var array noTabLink array of admintabs with no content */
+	/** @var array noTabLink array of admintab names witch have no content */
 	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
 
 	/** @var string Security token */
@@ -90,9 +90,6 @@ class AdminControllerCore extends Controller
 	/** @var define if the header of the list contains filter and sorting links or not */
 	protected $list_simple_header;
 
-	/** @var define if the header of the list contains filter and sorting links or not */
-	protected $toolbar_title;
-
 	/** @var array list to be generated */
 	protected $fieldsDisplay;
 
@@ -107,6 +104,9 @@ class AdminControllerCore extends Controller
 	/** @var array Cache for query results */
 	protected $_list = array();
 
+	/** @var define if the header of the list contains filter and sorting links or not */
+	protected $toolbar_title;
+
 	/** @var array list of toolbar buttons */
 	protected $toolbar_btn = null;
 
@@ -115,6 +115,9 @@ class AdminControllerCore extends Controller
 
 	/** @var boolean set to false to hide toolbar and page title */
 	protected $show_toolbar = true;
+
+	/** @var boolean set to true to show toolbar and page title for options */
+	protected $show_toolbar_options = false;
 
 	/** @var integer Number of results in list */
 	protected $_listTotal = 0;
@@ -748,6 +751,7 @@ class AdminControllerCore extends Controller
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$this->beforeUpdateOptions();
+
 			$languages = Language::getLanguages(false);
 
 			foreach ($this->options as $category => $category_data)
@@ -851,7 +855,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-
+		
 		// todo : return value ?
 	}
 
@@ -889,6 +893,10 @@ class AdminControllerCore extends Controller
 				}
 				break;
 			case 'options':
+				$this->toolbar_btn['save'] = array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				);
 				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
@@ -995,7 +1003,7 @@ class AdminControllerCore extends Controller
 
 		// new smarty : template_dir is an array.
 		// @todo : add override path to the smarty config, and checking all array item
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action) && $this->display != 'view')
+		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action) && $this->display != 'view' && $this->display != 'options')
 		{
 			if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
 				$this->{$this->display.Tools::toCamelCase($this->className)}();
@@ -1301,6 +1309,9 @@ class AdminControllerCore extends Controller
 			return false;
 
 		$helper = new HelperList();
+		$this->setHelperDisplay($helper);
+		$helper->tpl_vars = $this->tpl_list_vars;
+		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 		// Check if list templates have been overriden
 
 		// For compatibility reasons, we have to check standard actions in class attributes
@@ -1310,11 +1321,9 @@ class AdminControllerCore extends Controller
 				$this->actions[] = $action;
 		}
 
-		$helper->tpl_vars = $this->tpl_list_vars;
-		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
-		$this->setHelperDisplay($helper);
 		$list = $helper->generateList($this->_list, $this->fieldsDisplay);
 		$this->toolbar_fix = false;
+
 		return $list;
 	}
 
@@ -1327,59 +1336,12 @@ class AdminControllerCore extends Controller
 			$this->initToolbarTitle();
 
 		$helper = new HelperView($this);
-		$helper->override_folder = $this->tpl_folder;
-		$helper->tpl_vars = $this->tpl_view_vars;
 		$this->setHelperDisplay($helper);
+		$helper->tpl_vars = $this->tpl_view_vars;
 		$view = $helper->generateView();
 		$this->toolbar_fix = false;
 
 		return $view;
-	}
-
-	/**
-	 * this function set various display option for helper list
-	 *
-	 * @param Helper $helper
-	 * @return void
-	 */
-	public function setHelperDisplay(Helper $helper)
-	{
-		if (empty($this->toolbar_title))
-			$this->initToolbarTitle();
-		// tocheck
-		if ($this->object && $this->object->id)
-			$helper->id = $this->object->id;
-
-		// @todo : move that in Helper
-		$helper->actions = $this->actions;
-		$helper->simple_header = $this->list_simple_header;
-		$helper->title = $this->toolbar_title;
-		$helper->toolbar_btn = $this->toolbar_btn;
-		$helper->show_toolbar = $this->show_toolbar;
-		$helper->toolbar_fix = $this->toolbar_fix;
-		$helper->bulk_actions = $this->bulk_actions;
-		$helper->currentIndex = self::$currentIndex;
-		$helper->className = $this->className;
-		$helper->table = $this->table;
-		$helper->orderBy = $this->_orderBy;
-		$helper->orderWay = $this->_orderWay;
-		$helper->listTotal = $this->_listTotal;
-		$helper->shopLink = $this->shopLink;
-		$helper->shopLinkType = $this->shopLinkType;
-		$helper->identifier = $this->identifier;
-		$helper->override_folder = $this->tpl_folder;
-		$helper->token = $this->token;
-		$helper->languages = $this->_languages;
-		$helper->specificConfirmDelete = $this->specificConfirmDelete;
-		$helper->imageType = $this->imageType;
-		$helper->no_link = $this->list_no_link;
-		$helper->colorOnBackground = $this->colorOnBackground;
-		$helper->no_back = isset($this->no_back) ? $this->no_back : true;
-		$helper->ajax_params = (isset($this->ajax_params) ? $this->ajax_params : null);
-
-		// For each action, try to add the corresponding skip elements list
-		$helper->list_skip_actions = $this->list_skip_actions;
-
 	}
 
 	/**
@@ -1399,13 +1361,9 @@ class AdminControllerCore extends Controller
 
 			$this->getlanguages();
 			$helper = new HelperForm($this);
-			$helper->override_folder = $this->tpl_folder;
 			$this->setHelperDisplay($helper);
-			$helper->default_form_language = $this->default_form_language;
-			$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 			$helper->fields_value = $this->getFieldsValue($this->object);
 			$helper->tpl_vars = $this->tpl_form_vars;
-			$helper->multiple_fieldsets = $this->multiple_fieldsets;
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))
@@ -1415,6 +1373,7 @@ class AdminControllerCore extends Controller
 			}
 			$form = $helper->generateForm($this->fields_form);
 			$this->toolbar_fix = false;
+
 			return $form;
 		}
 	}
@@ -1426,16 +1385,69 @@ class AdminControllerCore extends Controller
 	{
 		if ($this->options && is_array($this->options))
 		{
-			$helper = new HelperOptions();
-			$helper->override_folder = $this->tpl_folder;
+			if (empty($this->toolbar_title))
+				$this->initToolbarTitle();
+
+			if ($this->display != 'options')
+				$this->show_toolbar = false;
+
+			$helper = new HelperOptions($this);
+			$this->setHelperDisplay($helper);
 			$helper->id = $this->id;
-			$helper->token = $this->token;
 			$helper->tpl_vars = $this->tpl_option_vars;
-			$helper->shopLinkType = $this->shopLinkType;
-			$helper->table = $this->table;
-			$helper->currentIndex = self::$currentIndex;
-			return $helper->generateOptions($this->options);
+			$options = $helper->generateOptions($this->options);
+			$this->toolbar_fix = false;
+
+			return $options;
 		}
+	}
+
+	/**
+	 * this function set various display option for helper list
+	 *
+	 * @param Helper $helper
+	 * @return void
+	 */
+	public function setHelperDisplay(Helper $helper)
+	{
+		if (empty($this->toolbar_title))
+			$this->initToolbarTitle();
+		// tocheck
+		if ($this->object && $this->object->id)
+			$helper->id = $this->object->id;
+
+		// @todo : move that in Helper
+		$helper->title = $this->toolbar_title;
+		$helper->toolbar_btn = $this->toolbar_btn;
+		$helper->show_toolbar = $this->show_toolbar;
+		$helper->toolbar_fix = $this->toolbar_fix;
+		$helper->override_folder = $this->tpl_folder;
+		$helper->actions = $this->actions;
+		$helper->simple_header = $this->list_simple_header;
+		$helper->bulk_actions = $this->bulk_actions;
+		$helper->currentIndex = self::$currentIndex;
+		$helper->className = $this->className;
+		$helper->table = $this->table;
+		$helper->orderBy = $this->_orderBy;
+		$helper->orderWay = $this->_orderWay;
+		$helper->listTotal = $this->_listTotal;
+		$helper->shopLink = $this->shopLink;
+		$helper->shopLinkType = $this->shopLinkType;
+		$helper->identifier = $this->identifier;
+		$helper->token = $this->token;
+		$helper->languages = $this->_languages;
+		$helper->specificConfirmDelete = $this->specificConfirmDelete;
+		$helper->imageType = $this->imageType;
+		$helper->no_link = $this->list_no_link;
+		$helper->colorOnBackground = $this->colorOnBackground;
+		$helper->no_back = isset($this->no_back) ? $this->no_back : true;
+		$helper->ajax_params = (isset($this->ajax_params) ? $this->ajax_params : null);
+		$helper->default_form_language = $this->default_form_language;
+		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
+		$helper->multiple_fieldsets = $this->multiple_fieldsets;
+
+		// For each action, try to add the corresponding skip elements list
+		$helper->list_skip_actions = $this->list_skip_actions;
 	}
 
 	public function setMedia()
@@ -1678,7 +1690,7 @@ class AdminControllerCore extends Controller
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		if (isset($_GET['view'.$this->table]))
+		else if (isset($_GET['view'.$this->table]))
 		{
 			if ($this->tabAccess['view'] === '1')
 			{
@@ -1706,13 +1718,17 @@ class AdminControllerCore extends Controller
 					break;
 				}
 			}
-			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
-				$this->ajaxPreProcess();
-			$this->context->smarty->assign(array(
-				'table' => $this->table,
-				'current' => self::$currentIndex,
-				'token' => $this->token,
-			));
+		else if (!empty($this->options) && empty($this->fieldsDisplay))
+			$this->display = 'options';
+
+		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
+			$this->ajaxPreProcess();
+
+		$this->context->smarty->assign(array(
+			'table' => $this->table,
+			'current' => self::$currentIndex,
+			'token' => $this->token,
+		));
 	}
 
 	/**
