@@ -30,98 +30,123 @@ class AdminSlipControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->table = 'order_slip';
-	 	$this->className = 'OrderSlip';
-		$this->addRowAction('edit');
-	 	$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-		unset($this->toolbar_btn['new']);
+		$this->className = 'OrderSlip';
 
- 		$this->fieldsDisplay = array(
-		'id_order_slip' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-		'id_order' => array('title' => $this->l('ID Order'), 'width' => 75, 'align' => 'center'),
-		'date_add' => array('title' => $this->l('Date issued'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
+		$this->fieldsDisplay = array(
+			'id_order_slip' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25
+ 			),
+			'id_order' => array(
+				'title' => $this->l('ID Order'),
+				'width' => 75,
+				'align' => 'center'
+ 			),
+			'date_add' => array(
+				'title' => $this->l('Date issued'),
+				'width' => 60,
+				'type' => 'date',
+				'align' => 'right'
+ 			)
+ 		);
 
 		$this->optionTitle = $this->l('Slip');
 
 		parent::__construct();
 	}
 
+	public function initList()
+	{
+		$this->addRowAction('edit');
+	 	$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
+		return parent::initList();
+	}
+
+	public function initForm()
+	{
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('Print a PDF'),
+				'image' => '../img/admin/pdf.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('From:'),
+					'name' => 'date_from',
+					'size' => 20,
+					'maxlength' => 10,
+					'required' => true,
+					'p' => $this->l('Format: 2007-12-31 (inclusive)')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('To:'),
+					'name' => 'date_to',
+					'size' => 20,
+					'maxlength' => 10,
+					'required' => true,
+					'p' => $this->l('Format: 2008-12-31 (inclusive)')
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('Generate PDF file'),
+				'class' => 'button',
+				'id' => 'submitPrint'
+			)
+		);
+
+		$this->fields_value = array(
+			'date_from' => date('Y-m-d'),
+			'date_to' => date('Y-m-d')
+		);
+
+		$this->show_toolbar = false;
+		return parent::initForm();
+	}
+
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitPrint'))
+		if (Tools::getValue('submitAddorder_slip'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
 				$this->_errors[] = $this->l('Invalid from date');
 			if (!Validate::isDate(Tools::getValue('date_to')))
 				$this->_errors[] = $this->l('Invalid end date');
-			if (!sizeof($this->_errors))
+			if (!count($this->_errors))
 			{
-				$orderSlips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
-				if (count($orderSlips))
-					Tools::redirectAdmin('pdf.php?slips&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
+				$order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
+				if (count($order_slips))
+					Tools::redirectAdmin(
+						'pdf.php?slips&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
 				$this->_errors[] = $this->l('No order slips found for this period');
 			}
 		}
-		return parent::postProcess();
+		else
+			return parent::postProcess();
 	}
 
 	public function initContent()
 	{
+		$this->initToolbar();
+		$this->content .= $this->initList();
+		$this->content .= $this->initForm();
+
 		$this->context->smarty->assign(array(
-			'date' => date('Y-m-d'),
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
-
-		parent::initContent();
 	}
 
-/*	public function display()
+	public function initToolbar()
 	{
-		echo '<div style="float:left;width:600px">';
-		$this->getList($this->context->language->id, !Tools::getValue($this->table.'Orderby') ? 'date_add' : NULL, !Tools::getValue($this->table.'Orderway') ? 'DESC' : NULL);
-		$this->displayList();
-		echo '</div>';
-
-		echo '
-		<fieldset style="float:left;width:280px"><legend><img src="../img/admin/pdf.gif" alt="" /> '.$this->l('Print PDF').'</legend>
-			<form action="'.self::$currentIndex.'&token='.$this->token.'" method="post">
-				<label style="width:90px">'.$this->l('From:').' </label>
-				<div class="margin-form" style="padding-left:100px">
-					<input type="text" size="4" maxlength="10" name="date_from" value="'.date('Y-m-01').'" style="width: 120px;" />
-					<p class="clear">'.$this->l('Format: 2007-12-31 (inclusive)').'</p>
-				</div>
-				<label style="width:90px">'.$this->l('To:').' </label>
-				<div class="margin-form" style="padding-left:100px">
-					<input type="text" size="4" maxlength="10" name="date_to" value="'.date('Y-m-t').'" style="width: 120px;" />
-					<p class="clear">'.$this->l('Format: 2008-12-31 (inclusive)').'</p>
-				</div>
-				<div class="margin-form" style="padding-left:100px">
-					<input type="submit" value="'.$this->l('Generate PDF file').'" name="submitPrint" class="button" />
-				</div>
-			</form>
-		</fieldset><div class="clear">&nbsp;</div>';
+		$this->toolbar_btn['save-date'] = array(
+			'href' => '#',
+			'desc' => $this->l('Generate PDF file')
+		);
 	}
-*/
-/*	public function displayListContent($token = NULL)
-	{
-		$irow = 0;
-		if ($this->_list)
-			foreach ($this->_list AS $tr)
-			{
-				$tr['id_order'] = $this->l('#').sprintf('%06d', $tr['id_order']);
-				echo '<tr'.($irow++ % 2 ? ' class="alt_row"' : '').'>';
-				echo '<td class="center"><input type="checkbox" name="'.$this->table.'Box[]" value="'.$tr['id_order_slip'].'" class="noborder" /></td>';
-				foreach ($this->fieldsDisplay AS $key => $params)
-					echo '<td class="pointer" onclick="document.location = \'pdf.php?id_order_slip='.$tr['id_order_slip'].'\'">'.$tr[$key].'</td>';
-				echo '<td class="center">';
-				echo '
-				<a href="pdf.php?id_order_slip='.$tr['id_order_slip'].'">
-				<img src="../img/admin/details.gif" border="0" alt="'.$this->l('View').'" title="'.$this->l('View').'" /></a>';
-				echo '
-				<a href="'.self::$currentIndex.'&id_'.$this->table.'='.$tr['id_order_slip'].'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$this->l('Delete item #', __CLASS__, true, false).$tr['id_order_slip'].$this->l('?', __CLASS__, true, false).'\');">
-				<img src="../img/admin/delete.gif" border="0" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a>';
-				echo '</td>';
-				echo '</tr>';
-			}
-	}*/
 }
 
