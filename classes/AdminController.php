@@ -1552,9 +1552,8 @@ class AdminControllerCore extends Controller
 			unset($parse_query['setShopContext']);
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query);
 		}
-		else if (!Shop::isFeatureActive())
+		elseif (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-1';
-
 		$shop_id = '';
 		if ($this->context->cookie->shopContext)
 		{
@@ -1562,12 +1561,13 @@ class AdminControllerCore extends Controller
 			if (count($split) == 2 && $split[0] == 's')
 				$shop_id = (int)$split[1];
 		}
-		else if ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
+		elseif ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
 			$shop_id = '';
-		else if ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
+		elseif ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
 		{
 			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
-			$shop_id = (int)$shops[0];
+			if (count($shops))
+				$shop_id = (int)$shops[0];
 		}
 		else
 			Employee::getEmployeeShopAccess((int)$this->context->employee->id);

@@ -520,6 +520,7 @@ class AdminModulesControllerCore extends AdminController
 								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
 								unset(Context::getContext()->tmpOldShop);
 							}
+							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
 						elseif($echo)
 							$return = ($method == 'install' ? 12 : 13);
