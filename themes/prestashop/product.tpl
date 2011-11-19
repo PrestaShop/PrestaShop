@@ -289,7 +289,6 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 						
 						<br />
 						<span style="{if !$product->specificPrice AND !$product->specificPrice.reduction}display:none;{/if}" id="not_impacted_by_discount">{l s='(not impacted by the discount)'}</span>
-						{/if}
 					</p>
 				{/if}
 				{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
@@ -399,11 +398,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<div class="clear"></div>
 		</form>
 		{/if}
-		{if $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}
+		{if isset($HOOK_EXTRA_RIGHT) && $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}
 	</div>
 </div>
 
-{if $quantity_discounts}
+{if isset($quantity_discounts) && $quantity_discounts}
 <!-- quantity discount -->
 <ul class="idTabs">
 	<li><a style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
@@ -436,11 +435,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 	</table>
 </div>
 {/if}
-
-{$HOOK_PRODUCT_FOOTER}
+{if isset($HOOK_PRODUCT_FOOTER) && $HOOK_PRODUCT_FOOTER}{$HOOK_PRODUCT_FOOTER}{/if}
 
 <!-- description and features -->
-{if $product->description || $features || $accessories || $HOOK_PRODUCT_TAB || $attachments}
+{if (isset($product) && $product->description) || (isset($features) && $features) || (isset($accessories) && $accessories) || (isset($HOOK_PRODUCT_TAB) && $HOOK_PRODUCT_TAB) || (isset($attachments) && $attachments)}
 <div id="more_info_block" class="clear">
 	{if $product->description && !$features && !$accessories && !$attachments && !$HOOK_PRODUCT_TAB}
 		<h2>{l s='More info'}</h2>
@@ -461,11 +459,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 	{/if}
 	
 	<div id="more_info_sheets" class="sheets align_justify">
-	{if $product->description}
+	{if isset($product) && $product->description}
 		<!-- full description -->
 		<div id="idTab1" class="rte">{$product->description}</div>
 	{/if}
-	{if $features}
+	{if isset($features) && $features}
 		<!-- product's features -->
 		<ul id="idTab2" class="bullet">
 		{foreach from=$features item=feature}
@@ -473,7 +471,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		{/foreach}
 		</ul>
 	{/if}
-	{if $attachments}
+	{if isset($attachments) && $attachments}
 		<ul id="idTab9" class="bullet">
 		{foreach from=$attachments item=attachment}
 			<li><a href="{$link->getPageLink('attachment', true, NULL, "id_attachment={$attachment.id_attachment}")}">{$attachment.name|escape:'htmlall':'UTF-8'}</a><br />{$attachment.description|escape:'htmlall':'UTF-8'}</li>
@@ -512,13 +510,13 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			</div>
 		</ul>
 	{/if}
-	{$HOOK_PRODUCT_TAB_CONTENT}
+	{if isset($HOOK_PRODUCT_TAB_CONTENT) && $HOOK_PRODUCT_TAB_CONTENT}{$HOOK_PRODUCT_TAB_CONTENT}{/if}
 	</div>
 </div>
 {/if}
 
 <!-- Customizable products -->
-{if $product->customizable}
+{if isset($product) && $product->customizable}
 	<ul class="idTabs">
 		<li><a style="cursor: pointer">{l s='Product customization'}</a></li>
 	</ul>
@@ -576,9 +574,10 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 	</div>
 {/if}
 
-{if $packItems|@count > 0}
+{if isset($packItems) && $packItems|@count > 0}
 	<div>
 		<h2>{l s='Pack content'}</h2>
 		{include file="$tpl_dir./product-list.tpl" products=$packItems}
 	</div>
+{/if}
 {/if}
