@@ -535,6 +535,7 @@ class AdminModulesControllerCore extends AdminController
 					if ($key != 'configure' && isset($_GET['bpay']))
 						Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->id_employee));
 				}
+			}
 			if (count($module_errors))
 			{
 				// If error during module installation, no redirection
@@ -549,7 +550,7 @@ class AdminModulesControllerCore extends AdminController
 		if ($return)
 			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
 	}
-
+	
 	public function postProcess()
 	{
 		// Execute filter or callback methods
