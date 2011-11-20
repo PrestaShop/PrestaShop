@@ -14,6 +14,8 @@
 	</div>
 </div>
 <form action="{$currentIndex}&token={$currentToken}&addcart_rule" id="cart_rule_form" method="post">
+	{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
+	<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
 	<div id="cart_rule_informations" class="cart_rule_tab">
 		<h4>{l s='Cart rule informations'}</h4>
 		<div class="separation"></div>
@@ -30,11 +32,15 @@
 		{include file='cart_rules/actions.tpl'}
 	</div>
 	<div class="separation"></div>
-	<div style="text-align:center"><input type="submit" value="{l s='Save'}" class="button" name="submitAddcart_rule" /></div>
+	<div style="text-align:center">
+		<input type="submit" value="{l s='Save'}" class="button" name="submitAddcart_rule" />
+		<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" />
+	</div>
 </form>
 <script type="text/javascript">
 	var product_rules_counter = {if isset($product_rules_counter)}{$product_rules_counter}{else}0{/if};
 	var currentToken = '{$currentToken}';
+	var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape}{else}informations{/if}';
 	
 	var languages = new Array();
 	{foreach from=$languages item=language key=k}

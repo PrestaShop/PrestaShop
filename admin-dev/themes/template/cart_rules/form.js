@@ -305,12 +305,13 @@ function displayCartRuleTab(tab)
 	$('.tab-page').removeClass('selected');
 	$('#cart_rule_' + tab).show();
 	$('#cart_rule_link_' + tab).addClass('selected');
+	$('#currentFormTab').val(tab);
 }
 
 $('.cart_rule_tab').hide();
 $('.tab-page').removeClass('selected');
-$('#cart_rule_informations').show();
-$('#cart_rule_link_informations').addClass('selected');
+$('#cart_rule_' + currentFormTab).show();
+$('#cart_rule_link_' + currentFormTab).addClass('selected');
 
 var date = new Date();
 var hours = date.getHours();

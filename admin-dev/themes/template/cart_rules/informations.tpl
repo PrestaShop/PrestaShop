@@ -1,7 +1,6 @@
 <table cellpadding="0" cellspacing="0">
 	<tr>
 		<td style="width:50%">
-			{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 			<label>{l s='Name'}</label>
 			<div class="margin-form">
 				<div class="translatable">
