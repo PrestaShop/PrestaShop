@@ -56,14 +56,15 @@ class AdminCarriersControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 100
+				'width' => 'auto'
 			),
 			'image' => array(
 				'title' => $this->l('Logo'),
 				'align' => 'center',
 				'image' => 's',
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'width' => 120
 			),
 			'delay' => array(
 				'title' => $this->l('Delay'),
@@ -75,7 +76,8 @@ class AdminCarriersControllerCore extends AdminController
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'width' => 25
 			),
 			'is_free' => array(
 				'title' => $this->l('Is Free'),
@@ -86,7 +88,8 @@ class AdminCarriersControllerCore extends AdminController
 					'default' => 'disabled.gif'
 				),
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'width' => 25
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
@@ -622,14 +625,6 @@ class AdminCarriersControllerCore extends AdminController
 					$carrier->addZone($zone['id_zone']);
 	}
 
-	public function displayListContent($token = null)
-	{
-		foreach ($this->_list as $key => $list)
-			if ($list['name'] == '0')
-				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
-		parent::displayListContent($token);
-	}
-
 	/**
 	 * Modifying initial getList method to display position feature (drag and drop)
 	 */
@@ -641,6 +636,10 @@ class AdminCarriersControllerCore extends AdminController
 			$order_by = 'position';
 
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+		
+		foreach ($this->_list as $key => $list)
+			if ($list['name'] == '0')
+				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
 	}
 
 }
