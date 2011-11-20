@@ -7,9 +7,9 @@
 <label>{l s='Validity'}</label>
 <div class="margin-form">
 	<strong>{l s='from'}</strong>
-	<input type="text" name="date_from" value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')}{else}{$defaultDateFrom}{/if}" />
+	<input type="text" class="datepicker" name="date_from" value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')}{else}{$defaultDateFrom}{/if}" />
 	<strong>{l s='to'}</strong>
-	<input type="text" name="date_to" value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')}{else}{$defaultDateTo}{/if}" />
+	<input type="text" class="datepicker" name="date_to" value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')}{else}{$defaultDateTo}{/if}" />
 	<p>{l s='Default period is one year.'}</p>
 </div>
 <label>{l s='Minimum amount'}</label>

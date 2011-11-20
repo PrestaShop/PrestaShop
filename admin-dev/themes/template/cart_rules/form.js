@@ -298,3 +298,32 @@ $('#customerFilter')
 		$('#id_customer').val(data.id_customer);
 		$('#customerFilter').val(data.cname + ' (' + data.email + ')');
 	});
+
+function displayCartRuleTab(tab)
+{
+	$('.cart_rule_tab').hide();
+	$('.tab-page').removeClass('selected');
+	$('#cart_rule_' + tab).show();
+	$('#cart_rule_link_' + tab).addClass('selected');
+}
+
+$('.cart_rule_tab').hide();
+$('.tab-page').removeClass('selected');
+$('#cart_rule_informations').show();
+$('#cart_rule_link_informations').addClass('selected');
+
+var date = new Date();
+var hours = date.getHours();
+if (hours < 10)
+	hours = "0" + hours;
+var mins = date.getMinutes();
+if (mins < 10)
+	mins = "0" + mins;
+var secs = date.getSeconds();
+if (secs < 10)
+	secs = "0" + secs;
+$('.datepicker').datepicker({
+	prevText: '',
+	nextText: '',
+	dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+});

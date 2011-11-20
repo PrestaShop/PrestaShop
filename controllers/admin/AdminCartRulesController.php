@@ -296,6 +296,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'giftProductFilter' => $giftProductFilter,
 				'reductionProductFilter' => $reductionProductFilter,
 				'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
+				'defaultLanguage' => Configuration::get('PS_LANG_DEFAULT'),
 				'currencies' => Currency::getCurrencies(),
 				'countries' => $currentObject->getAssociatedRestrictions('country', 1),
 				'carriers' => $currentObject->getAssociatedRestrictions('carrier', 1),
@@ -312,24 +313,16 @@ class AdminCartRulesControllerCore extends AdminController
 		);
 
 		$this->content .= Context::getContext()->smarty->fetch('cart_rules/form.tpl');
-		
-		// Todo: replace by the new "includeDatepicker" version
-		$ob_content = ob_get_contents();
-		ob_clean();
-		includeDatepicker(array('date_from', 'date_to'), true);
-		$this->content .= ob_get_contents();
-		ob_clean();
-		echo $ob_content;
-		
+
+		$this->addJqueryUI('ui.datepicker');
 		return parent::initForm();
 	}
 
 	public function displayAjaxSearchCartRuleVouchers()
 	{	
+		$found = false;
 		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)Context::getContext()->cookie->id_lang))
 			$found = true;
-		else
-			$found = false;
 		echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
 	}
 
