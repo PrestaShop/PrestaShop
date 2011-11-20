@@ -47,14 +47,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 140
+				'width' => 'auto'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
 				'width' => 25,
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'align' => 'center'
 			)
 		);
 

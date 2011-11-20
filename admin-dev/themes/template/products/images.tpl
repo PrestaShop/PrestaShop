@@ -178,10 +178,10 @@
 				</td>
 				<td class="center positionImage">{$image->position}</td>
 					<td id="td_{$image->id}" class="pointer dragHandle center">
-					<a {if $image->position}style="display: none;"{/if} href="{$currentIndex}&amp;id_image={$image->id_image}&amp;imgPosition={$image->position -1}&amp;imgDirection=0&amp;token={$token}">
+					<a {if $image->position == 1}style="display: none;"{/if} href="{$currentIndex}&amp;id_image={$image->id_image}&amp;imgPosition={$image->position -1}&amp;imgDirection=0&amp;token={$token}">
 						<img src="../img/admin/up.gif" alt="" border="0">
 					</a>
-					<a {if $image->position} == $imagesTotal} style="display: none;"{/if} href="{$currentIndex}&amp;id_image={$image->id_image}&amp;imgPosition={$image->position+1}&amp;imgDirection=1&amp;token={$token}">
+					<a {if $image->position == count($images)} style="display: none;"{/if} href="{$currentIndex}&amp;id_image={$image->id_image}&amp;imgPosition={$image->position+1}&amp;imgDirection=1&amp;token={$token}">
 						<img src="../img/admin/down.gif" alt="" border="0">
 					</a>
 				</td>
