@@ -735,19 +735,26 @@ class AdminTranslationsControllerCore extends AdminController
 		if (count($this->_errors) == 0)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.$params_redirect);
 	}
-
+	
+	/** include file $dir/$file and return the var $var declared in it.
+	 * This create the file if not exists
+	 * @param string $dir
+	 * @param string $file
+	 * @param string $var var to return (_LANGADM, _LANG, _FIELDS, _ERRORS)
+	 * return array
+	 */
 	public function fileExists($dir, $file, $var)
 	{
 		${$var} = array();
 		if (!file_exists($dir))
 			if (!mkdir($dir, 0700))
-				die('Please create the directory '.$dir);
-		if (!file_exists($dir.'/'.$file))
+				throw new PrestashopException('Directory '.$dir.' cannot be created.');
+		if (!file_exists($dir.DIRECTORY_SEPARATOR.$file))
 			if (!file_put_contents($dir.'/'.$file, "<?php\n\nglobal \$".$var.";\n\$".$var." = array();\n\n?>"))
-				die('Please create a "'.$file.'" file in '.$dir);
-		if (!is_writable($dir.'/'.$file))
+				throw new PrestashopException('File "'.$file.'" doesn\'t exists and cannot be created in '.$dir);
+		if (!is_writable($dir.DIRECTORY_SEPARATOR.$file))
 			$this->displayWarning(Tools::displayError('This file must be writable:').' '.$dir.'/'.$file);
-		include($dir.'/'.$file);
+		include($dir.DIRECTORY_SEPARATOR.$file);
 		return ${$var};
 	}
 
@@ -851,6 +858,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initFormFront($lang)
 	{
+		$missing_translations = array();
 		$_LANG = $this->fileExists(_PS_THEME_DIR_.'lang', Tools::strtolower($lang).'.php', '_LANG');
 		$str_output = '';
 
@@ -861,7 +869,7 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($templates AS $template)
 			if (preg_match('/^(.*).tpl$/', $template) AND (file_exists($tpl = _PS_THEME_DIR_.$template) OR file_exists($tpl = _PS_ALL_THEMES_DIR_.$template)))
 			{
-				$template2 = substr(basename($template), 0, -4);
+				$prefix_key = substr(basename($template), 0, -4);
 				$newLang = array();
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
@@ -879,12 +887,22 @@ class AdminTranslationsControllerCore extends AdminController
 						$newLang[$key] = '';
 					}
 					else
-					{
-						$key2 = $template2.'_'.md5($key);
-						$newLang[$key] = (key_exists($key2, $_LANG)) ? html_entity_decode($_LANG[$key2], ENT_COMPAT, 'UTF-8') : '';
+					{	
+						// Caution ! front has underscore between prefix key and md5, back has not 
+						if (isset($_LANG[$prefix_key.'_'.md5($key)]))
+							// @todo check if stripslashes is needed, it wasn't present in 1.4
+							$newLang[$key] = stripslashes(html_entity_decode($_LANG[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
+						else
+						{
+							$newLang[$key] = '';
+							if (!isset($missing_translations[$prefix_key]))
+								$missing_translations[$prefix_key] = 1;
+							else
+								$missing_translations[$prefix_key]++;
+						}
 					}
 				}
-				$tabsArray[$template2] = $newLang;
+				$tabsArray[$prefix_key] = $newLang;
 				$count += sizeof($newLang);
 			}
 
@@ -892,6 +910,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$tpl->assign(array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('Front-Office translations'),
+			'missing_translations' => $missing_translations,
 			'count' => $count,
 			'limit_warning' => $this->displayLimitPostWarning($count),
 			'suoshin_exceeded' => $this->suhosin_limit_exceed,
@@ -909,8 +928,10 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$_LANGADM = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'admin.php', '_LANGADM');
 		$str_output = '';
-		/* List templates to parse */
+		// count will contain the number of expressions of the page
 		$count = 0;
+		$missing_translations = array();
+		// parsing .php files
 		$tabs = scandir(_PS_ADMIN_CONTROLLER_DIR_);
 		$tabs[] = '../../classes/AdminController.php';
 		$files = array();
@@ -919,19 +940,36 @@ class AdminTranslationsControllerCore extends AdminController
 			if (preg_match('/^(.*)\.php$/', $tab) AND file_exists($tpl = _PS_ADMIN_CONTROLLER_DIR_.$tab))
 			{
 				// -4 becomes -14 to remove the ending "Controller.php" from the filename
-				$tab = basename(substr($tab, 0, -14));
+				$prefix_key = basename(substr($tab, 0, -14));
+				
+				// @todo this is retrcompatible, but we should not leave this
+				if( $prefix_key == 'Admin')
+					$prefix_key = 'AdminTab';
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
 				fclose($fd);
 				$regex = '/this->l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 				preg_match_all($regex, $content, $matches);
 				foreach ($matches[1] AS $key)
-					$tabsArray[$tab][$key] = stripslashes(key_exists($tab.md5($key), $_LANGADM) ? html_entity_decode($_LANGADM[$tab.md5($key)], ENT_COMPAT, 'UTF-8') : '');
-				$count += isset($tabsArray[$tab]) ? sizeof($tabsArray[$tab]) : 0;
+				{
+					// Caution ! front has underscore between prefix key and md5, back has not 
+					if (isset($_LANGADM[$prefix_key.md5($key)]))
+						$tabsArray[$prefix_key][$key] = stripslashes(html_entity_decode($_LANGADM[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+					else
+					{
+						$tabsArray[$prefix_key][$key] = '';
+						if (!isset($missing_translations[$prefix_key]))
+							$missing_translations[$prefix_key] = 1;
+						else
+							$missing_translations[$prefix_key]++;
+					}
+				}
+				$count += isset($tabsArray[$prefix_key]) ? sizeof($tabsArray[$prefix_key]) : 0;
 			}
 
 		foreach (array('header.inc', 'footer.inc', 'index', 'login', 'password', 'functions') AS $tab)
 		{
+			$prefix_key = 'index';
 			$tab = _PS_ADMIN_DIR_.'/'.$tab.'.php';
 			$fd = fopen($tab, 'r');
 			$content = fread($fd, filesize($tab));
@@ -939,10 +977,83 @@ class AdminTranslationsControllerCore extends AdminController
 			$regex = '/translate\(\''._PS_TRANS_PATTERN_.'\'\)/U';
 			preg_match_all($regex, $content, $matches);
 			foreach ($matches[1] AS $key)
-				$tabsArray['index'][$key] = stripslashes(key_exists('index'.md5($key), $_LANGADM) ? html_entity_decode($_LANGADM['index'.md5($key)], ENT_COMPAT, 'UTF-8') : '');
+			{
+				// Caution ! front has underscore between prefix key and md5, back has not 
+				if (isset($_LANGADM[$prefix_key.md5($key)]))
+					$tabsArray[$prefix_key][$key] = stripslashes(html_entity_decode($_LANGADM[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
+				else
+				{
+					$tabsArray[$prefix_key][$key] = '';
+					if (!isset($missing_translations[$prefix_key]))
+						$missing_translations[$prefix_key] = 1;
+					else
+						$missing_translations[$prefix_key]++;
+				}
+			}
 			$count += isset($tabsArray['index']) ? sizeof($tabsArray['index']) : 0;
 		}
 
+		/* List templates to parse */
+		$templates = $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template');
+		foreach ($templates AS $template)
+			if (preg_match('/^(.*).tpl$/', $template))
+			{
+				//$tpl = _PS_ADMIN_DIR_.'/themes/template/'.$template;
+				$tpl = $template;
+				
+				// get controller name instead of file name
+				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR, '', $tpl), true);
+				$prefix_key = 'Admin'.substr($prefix_key, 0, strpos($prefix_key, DIRECTORY_SEPARATOR));
+				
+				// @todo retrompatibility : we assume here than files directly in template/
+				// use the prefix "AdminTab (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
+				if( $prefix_key == 'Admin')
+					$prefix_key = 'AdminTab';
+				// and helpers in helper
+					
+				$newLang = array();
+				$fd = fopen($tpl, 'r');
+				$content = fread($fd, filesize($tpl));
+
+				/* Search language tags (eg {l s='to translate'}) */
+				$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?\}/U';
+				preg_match_all($regex, $content, $matches);
+
+				/* Get string translation for each tpl file */
+				foreach($matches[1] AS $english_string)
+				{
+					if(empty($english_string))
+					{
+						$this->_errors[] = $this->l('Error in template - Empty string found, please edit:').' <br />'.$tpl;
+						$newLang[$english_string] = '';
+					}
+					else
+					{
+						$trans_key = $prefix_key.md5($english_string);
+
+						if (isset($_LANGADM[$trans_key]))
+						{
+							$newLang[$english_string] = html_entity_decode($_LANGADM[$trans_key], ENT_COMPAT, 'UTF-8');
+						}
+						else
+						{
+							$newLang[$english_string] = '';
+							if(!isset($missing_translations[$prefix_key]))
+								$missing_translations[$prefix_key] = 1;
+							else
+								$missing_translations[$prefix_key]++;
+						}
+					}
+				}
+				if( isset($tabsArray[$prefix_key]))
+					$tabsArray[$prefix_key] = array_merge($tabsArray[$prefix_key], $newLang);
+				else
+					$tabsArray[$prefix_key] = $newLang;
+				$count += sizeof($newLang);
+			}
+		// with php then tpl files, order can be a mess
+		asort($tabsArray);
+		// @todo : something to make differences between .php and .tpl
 		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
 		$tpl->assign(array(
 			'lang' => Tools::strtoupper($lang),
@@ -954,6 +1065,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'toggle_button' => $this->displayToggleButton(),
 			'auto_translate' => $this->displayAutoTranslate(),
 			'tabsArray' => $tabsArray,
+			'missing_translations' => $missing_translations,
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'back'
 		));
@@ -1551,6 +1663,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		return $array_files;
 	}
+	
 	public function initFormModules($lang)
 	{
 		global $_MODULES;
@@ -1624,6 +1737,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$lang = Tools::strtolower(Tools::getValue('lang'));
 		$_LANG = array();
+		$missing_translations = array();
 		$str_output = '';
 
         if (!Validate::isLangIsoCode($lang))
@@ -1642,16 +1756,16 @@ class AdminTranslationsControllerCore extends AdminController
 		@include($i18n_file);
 		$files = array();
 		$count = 0;
-		$tab = 'PDF';
-		$tabsArray = array($tab=>array());
+		$prefix_key = 'PDF';
+		$tabsArray = array($prefix_key=>array());
 		$regex = '/self::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 		// need to parse PDF.php in order to find $regex and add this to $tabsArray
 		// this has to be done for the core class, and eventually for the override
         foreach (glob(_PS_CLASS_DIR_.'pdf/'."*.php") as $filename)
         {
-    		$tabsArray = $this->_parsePdfClass($filename, $regex, $_LANGPDF, $tab, $tabsArray);
+    		$tabsArray = $this->_parsePdfClass($filename, $regex, $_LANGPDF, $prefix_key, $tabsArray);
 	    	if (file_exists(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename)))
-	    		$tabsArray = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename), $regex, $_LANGPDF, $tab, $tabsArray);
+	    		$tabsArray = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename), $regex, $_LANGPDF, $prefix_key, $tabsArray);
         }
 
         // parse pdf template 
@@ -1661,11 +1775,23 @@ class AdminTranslationsControllerCore extends AdminController
         {
 			preg_match_all($regex, file_get_contents($filename), $matches);
     		foreach ($matches[1] as $key)
-    			$tabsArray[$tab][$key] = stripslashes(key_exists($tab.md5(addslashes($key)), $_LANGPDF) ? html_entity_decode($_LANGPDF[$tab.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '');    
-
+			{
+				// Caution ! front has underscore between prefix key and md5, back has not 
+				if (isset($_LANGPDF[$prefix_key.md5($key)]))
+					// @todo check key : md5($key) was initially md5(addslashes($key))
+					$tabsArray[$prefix_key][$key] = (html_entity_decode($_LANGPDF[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));    
+				else
+				{
+					$tabsArray[$prefix_key][$key] = '';
+					if (!isset($missing_translations[$prefix_key]))
+						$missing_translations[$prefix_key] = 1;
+					else
+						$missing_translations[$prefix_key]++;
+				}
+			}
         }
 
-		$count += isset($tabsArray[$tab]) ? sizeof($tabsArray[$tab]) : 0;
+		$count += isset($tabsArray[$prefix_key]) ? sizeof($tabsArray[$prefix_key]) : 0;
 
 		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
 		$tpl->assign(array(
@@ -1680,6 +1806,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'pdf',
 			'tabsArray' => $tabsArray,
+			'missing_translations' => $missing_translations,
 		));
 		return $tpl->fetch();
 	}
@@ -1698,4 +1825,28 @@ class AdminTranslationsControllerCore extends AdminController
 		closedir($dir);
 		return isset($themes) ? $themes : array();
 	}
+	/** recursively list files in directory $dir
+	 *
+	 */
+	public function listFiles($dir, $list = array())
+	{
+		$fileext = 'tpl';
+		$res = true;
+		$dir = rtrim($dir,'/').DIRECTORY_SEPARATOR;
+
+		$toParse = scandir($dir);
+		// copied (and kind of) adapted from AdminImages.php
+		foreach ($toParse AS $file)
+		{
+			if ($file!='.' AND $file != '..' AND $file != '.svn')
+			{
+				if (preg_match('#'.preg_quote($fileext,'#').'$#i',$file))
+					$list[] = $dir.$file;
+				else if (is_dir($dir.$file))
+					$list = $this->listFiles($dir.$file, $list);
+			}
+		}
+		return $list;
+	}
+	
 }
