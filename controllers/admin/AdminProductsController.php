@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminProductsController extends AdminController
+class AdminProductsControllerCore extends AdminController
 {
 	protected $max_file_size = 20000000;
 	/** @var integer Max image size for upload
@@ -2435,7 +2435,16 @@ class AdminProductsController extends AdminController
 	public function initFormInformations($product, $languages, $defaultLanguage)
 	{
 		$data = $this->context->smarty->createData();
+		
+		// autoload rich text editor (tiny mce)
+		$iso = $this->context->language->iso_code;
+		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+		$this->tpl_form_vars['tinymce'] = true;
+		$this->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
+		$this->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 
+		
 		$currency = $this->context->currency;
 
 		$data->assign('languages',$languages);

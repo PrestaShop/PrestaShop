@@ -317,7 +317,7 @@
 	<script type="text/javascript">
 	
 	var iso = '{$iso}';
-	var pathCSS = '{$path_css}';
+	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
 	var ad = '{$ad}';
 	
 	$(document).ready(function(){
@@ -325,7 +325,8 @@
 		tinySetup();
 	
 		{block name="autoload_tinyMCE"}
-			$(".autoload_rte").click(function(e){
+			// change each by click to load only on click
+			$(".autoload_rte").each(function(e){
 				tinySetup({
 					mode :"exact",
 					editor_selector :"autoload_rte",

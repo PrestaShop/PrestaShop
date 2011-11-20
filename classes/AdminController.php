@@ -1473,7 +1473,11 @@ class AdminControllerCore extends Controller
 		{
 			$iso = Context::getContext()->language->iso_code;
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
-			$_LANGADM = array_change_key_case($_LANGADM);
+			
+			if (isset($_LANGADM))
+				$_LANGADM = array_change_key_case($_LANGADM);
+			else
+				$_LANGADM = array();
 		}
 
 		$class = strtolower($class);
