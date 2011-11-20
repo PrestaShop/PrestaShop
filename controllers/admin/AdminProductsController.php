@@ -58,7 +58,8 @@ class AdminProductsController extends AdminController
 		$this->duplicate = true;
 		$this->imageType = 'jpg';
 		$this->context = Context::getContext();
-
+		$this->_defaultOrderBy = 'position';
+		
 		$this->fieldsDisplay = array(
 			'id_product' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 20),
 			'image' => array('title' => $this->l('Photo'), 'align' => 'center', 'image' => 'p',

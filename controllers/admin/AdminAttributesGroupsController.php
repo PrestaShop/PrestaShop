@@ -33,6 +33,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->table = 'attribute_group';
 		$this->className = 'AttributeGroup';
 		$this->lang = true;
+		$this->_defaultOrderBy = 'position';
 
 		$this->fieldsDisplay = array(
 			'id_attribute_group' => array(
@@ -41,7 +42,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 140,
+				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'position' => array(
@@ -529,18 +530,5 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else
 				parent::postProcess();
 		}
-	}
-
-	/**
-	 * Modifying initial getList method to display position feature (drag and drop)
-	 */
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else
-			$order_by = 'position';
-
-		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 }

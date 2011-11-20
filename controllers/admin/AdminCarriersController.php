@@ -37,6 +37,7 @@ class AdminCarriersControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
+		$this->_defaultOrderBy = 'position';
 		$this->requiredDatabase = true;
 
 		$this->context = Context::getContext();
@@ -630,11 +631,6 @@ class AdminCarriersControllerCore extends AdminController
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else
-			$order_by = 'position';
-
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 		
 		foreach ($this->_list as $key => $list)
