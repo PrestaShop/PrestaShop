@@ -366,6 +366,14 @@ abstract class ObjectModelCore
 		if (method_exists($this, 'getTranslationsFieldsChild'))
 			Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
 
+		$assos = Shop::getAssoTables();
+		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->table.'_shop` WHERE `'.$this->identifier.'`='.(int)$this->id);
+
+		$assos = GroupShop::getAssoTables();
+		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->table.'group_shop` WHERE `'.$this->identifier.'`='.(int)$this->id);
+	
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'DeleteAfter');
 
