@@ -272,7 +272,9 @@ class AdminCMSControllerCore extends AdminController
 					$this->copyFromPost($cms, 'cms');
 					if (!$cms->add())
 						$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-					elseif (Tools::isSubmit('submitAddcmsAndPreview'))
+					else
+						$this->updateAssoShop($cms->id);
+					if (Tools::isSubmit('submitAddcmsAndPreview'))
 					{
 						$preview_url = $this->context->link->getCMSLink($cms, $this->getFieldValue($cms, 'link_rewrite', $this->context->language->id), $this->context->language->id);
 
@@ -295,7 +297,9 @@ class AdminCMSControllerCore extends AdminController
 					$this->copyFromPost($cms, 'cms');
 					if (!$cms->update())
 						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-					elseif (Tools::isSubmit('submitAddcmsAndPreview'))
+					else
+						$this->updateAssoShop($cms->id);
+					if (Tools::isSubmit('submitAddcmsAndPreview'))
 					{
 						$preview_url = $this->context->link->getCMSLink($cms, $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), $this->context->language->id);
 						if (!$cms->active)
