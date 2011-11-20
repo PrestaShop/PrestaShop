@@ -1129,37 +1129,46 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormFields($lang)
 	{
 		$_FIELDS = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'fields.php', '_FIELDS');
-
+		$missing_translations = array();
 		$str_output = '';
 		$classArray = array();
-		$validArray = array();
+		$tabsArray = array();
 		$count = 0;
 		foreach (scandir(_PS_CLASS_DIR_) AS $classFile)
 		{
 			if (!preg_match('/\.php$/', $classFile) OR $classFile == 'index.php')
 				continue;
 			include_once(_PS_CLASS_DIR_.$classFile);
-			$className = substr($classFile, 0, -4);
-			if (!class_exists($className))
+			$prefix_key = substr($classFile, 0, -4);
+			if (!class_exists($prefix_key, false))
 				continue;
-			if (!is_subclass_of($className, 'ObjectModel'))
+			if (!is_subclass_of($prefix_key, 'ObjectModel'))
 				continue;
-			$classArray[$className] = call_user_func(array($className, 'getValidationRules'), $className);
+			$classArray[$prefix_key] = call_user_func(array($prefix_key, 'getValidationRules'), $prefix_key);
 
-			foreach ($classArray AS $className => $rules)
+			foreach ($classArray AS $prefix_key => $rules)
 			{
 				if (isset($rules['validate']))
 					foreach ($rules['validate'] AS $key => $value)
-						$validArray[$className][$key] = array_key_exists($className.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$className.'_'.md5(addslashes($key))], ENT_NOQUOTES, 'UTF-8') : '';
-
+						if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
+							// @todo check key : md5($key) was initially md5(addslashes($key))
+							$tabsArray[$prefix_key][$key] = html_entity_decode($_FIELDS[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');    
+						else
+						{
+							$tabsArray[$prefix_key][$key] = '';
+							if (!isset($missing_translations[$prefix_key]))
+								$missing_translations[$prefix_key] = 1;
+							else
+								$missing_translations[$prefix_key]++;
+						}
 				if (isset($rules['validateLang']))
 					foreach ($rules['validateLang'] AS $key => $value)
-						$validArray[$className][$key] = array_key_exists($className.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$className.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '';
+						$tabsArray[$prefix_key][$key] = array_key_exists($prefix_key.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$prefix_key.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '';
 			}
-			if (isset($classArray[$className]['validate']))
-				$count += sizeof($classArray[$className]['validate']);
-			if (isset($classArray[$className]['validateLang']))
-				$count += sizeof($classArray[$className]['validateLang']);
+			if (isset($classArray[$prefix_key]['validate']))
+				$count += sizeof($classArray[$prefix_key]['validate']);
+			if (isset($classArray[$prefix_key]['validateLang']))
+				$count += sizeof($classArray[$prefix_key]['validateLang']);
 		}
 
 		$tpl = $this->context->smarty->createTemplate('translations/translation_form.tpl');
@@ -1172,7 +1181,8 @@ class AdminTranslationsControllerCore extends AdminController
 			'url_submit' => self::$currentIndex.'&submitTranslationsFields=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
 			'auto_translate' => $this->displayAutoTranslate(),
-			'tabsArray' => $validArray,
+			'tabsArray' => $tabsArray,
+			'missing_translations' => $missing_translations,
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'fields'
 		));
