@@ -1,4 +1,4 @@
-<?php
+*<?php
 /*
 * 2007-2011 PrestaShop
 *
@@ -79,7 +79,7 @@ class AdminCountriesControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Country'),
-				'width' => 130,
+				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'iso_code' => array(
@@ -104,7 +104,9 @@ class AdminCountriesControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
-				'filter_key' => 'a!active'
+				'filter_key' => 'a!active',
+				'width' => 25
+					
 			)
 		);
 
