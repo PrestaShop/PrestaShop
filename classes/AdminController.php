@@ -1455,9 +1455,27 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'notifications.js'
 		));
 	}
-
+	/**
+	 * use translations files to replace english expression.
+	 *
+	 * @param mixed $string term or expression in english
+	 * @param string $class the classname (without "Controller" suffix)
+	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @return string the translation if available, or the english default text.
+	 */
 	public static function translate($string, $class, $addslashes = false, $htmlentities = true)
 	{
+		// every admin translations should use this method
+		// @todo remove global keyword in translations files and use static
+		global $_LANGADM, $_ERRORS, $_FIELDS;
+		if (!is_array($_LANGADM) || !is_array($_ERRORS) || !is_array($_FIELDS))
+		{
+			$iso = Context::getContext()->language->iso_code;
+			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+			$_LANGADM = array_change_key_case($_LANGADM);
+		}
+
 		$class = strtolower($class);
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 		//$currentClass = get_class($this);
@@ -1471,29 +1489,39 @@ class AdminControllerCore extends Controller
 			$_LANGADM = array_change_key_case($_LANGADM);
 		else
 			$_LANGADM = array();
-
-        //if ($class == __CLASS__)
-        //        $class = 'AdminTab';
-
 		$key = md5(str_replace('\'', '\\\'', $string));
+		// retrocomp : 
+		// if value is not set, try with "AdminTab" as prefix.
+		// @todo : change AdminTab to Helper
+		if ( isset($_LANGADM[$class.$key]))
+			$str = $_LANGADM[$class.$key];
+		elseif ( isset($_LANGADM['admintab'.$key]))
+			$str = $_LANGADM['admintab'.$key];
+		else
+			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
+			$str = $string;
 
-		$str = (key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : ((key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 
 	/**
-	 * use translations files to replace english expression.
+	 * non-static method which uses AdminController::translate()
 	 *
 	 * @param mixed $string term or expression in english
-	 * @param string $class
+	 * @param string $class name of the class, without "Controller" suffix
 	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
 	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
 	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
 	{
-		$class = get_class($this);
+		// classname has changed, from AdminXXX to AdminXXXController
+		// So we remove 10 characters and we keep same keys
+		if (strtolower(substr($class, -10)) == 'controller')
+			$class = substr($class, 0, -10);
+		else if ($class == 'AdminTab')
+			$class = substr(get_class($this), 0, -10);
 		return self::translate($string, $class, $addslashes, $htmlentities);
 	}
 
@@ -1520,10 +1548,6 @@ class AdminControllerCore extends Controller
 		if ($back = Tools::getValue('back'))
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
-		$iso = $this->context->language->iso_code;
-		include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
-		include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
-		include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 
 		/* Server Params */
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
