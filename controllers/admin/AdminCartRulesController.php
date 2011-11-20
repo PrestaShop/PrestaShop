@@ -51,7 +51,7 @@ class AdminCartRulesControllerCore extends AdminController
 	
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitAddcart_rule'))
+		if (Tools::isSubmit('submitAddcart_rule') || Tools::isSubmit('submitAddcart_ruleAndStay'))
 		{
 			// These are checkboxes (which aren't sent through POST when they are not check), so they are forced to 0
 			foreach (array('country', 'carrier', 'group', 'cart_rule', 'product') as $type)
