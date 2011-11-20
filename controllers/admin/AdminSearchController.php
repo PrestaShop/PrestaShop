@@ -27,12 +27,6 @@
 
 class AdminSearchControllerCore extends AdminController
 {
-	public function __construct()
-	{
-		$this->display = 'view';
-		parent::__construct();
-	}
-	
 	public function postProcess()
 	{
 		$this->context = Context::getContext();
@@ -105,7 +99,9 @@ class AdminSearchControllerCore extends AdminController
 			/* IP */
 			// 6 - but it is included in the customer block
 		}
+		$this->display = 'view';
 	}	
+
 	
 	public function	searchIP()
 	{
@@ -220,10 +216,10 @@ class AdminSearchControllerCore extends AdminController
 	
 	public function initView()
 	{
-		$this->context->smarty->assign('query', $this->query);
+		$this->tpl_view_vars['query'] = $this->query;
 
 		if (sizeof($this->_errors))
-			parent::initView();
+			return parent::initView();
 		else
 		{
 			$helper = new HelperList();
@@ -232,13 +228,13 @@ class AdminSearchControllerCore extends AdminController
 			$helper->shopLinkType = '';
 			$helper->simple_header = true;
 			if (isset($this->_list['features']))
-				$this->context->smarty->assign('features', $this->_list['features']);
+				$this->tpl_view_vars['features'] = $this->_list['features'];
 			if (isset($this->_list['categories']))
 			{
-				$categorie = array();
+				$categories = array();
 				foreach($this->_list['categories'] as $category)
-					$categorie[] = getPath(self::$currentIndex.'?tab=AdminCatalog', (int)$category['id_category']);
-				$this->context->smarty->assign('categories', $categorie);
+					$categories[] = getPath(self::$currentIndex.'?tab=AdminCatalog', (int)$category['id_category']);
+				$this->tpl_view_vars['categories'] = $categories;
 			}
 			if (isset($this->_list['products']))
 			{
@@ -249,7 +245,8 @@ class AdminSearchControllerCore extends AdminController
 				$helper->show_toolbar = false;
 				if ($this->_list['products'])
 					$view = $helper->generateList($this->_list['products'], $this->fieldsDisplay['products']);
-				$this->context->smarty->assign('products', $view);
+
+				$this->tpl_view_vars['products'] =  $view;
 			}
 			if (isset($this->_list['customers']))
 			{
@@ -263,9 +260,9 @@ class AdminSearchControllerCore extends AdminController
 						$this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int)$val['id_customer']);
 					$view = $helper->generateList($this->_list['customers'], $this->fieldsDisplay['customers']);
 				}	
-				$this->context->smarty->assign('customers', $view);
+				$this->tpl_view_vars['customers'] =  $view;
 			}
-			parent::initView();
+			return parent::initView();
 		}
 	}	
 }

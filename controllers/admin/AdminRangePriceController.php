@@ -39,7 +39,7 @@ class AdminRangePriceControllerCore extends AdminController
 
 	 	$this->fieldsDisplay = array(
 			'id_range_price' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'carrier_name' => array('title' => $this->l('Carrier'), 'align' => 'center', 'width' => 25, 'filter_key' => 'ca!name'),
+			'carrier_name' => array('title' => $this->l('Carrier'), 'align' => 'left', 'width' => 'auto', 'filter_key' => 'ca!name'),
 			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'type' => 'price', 'align' => 'right'),
 			'delimiter2' => array('title' => $this->l('To'), 'width' => 86, 'type' => 'price', 'align' => 'right'));
 
