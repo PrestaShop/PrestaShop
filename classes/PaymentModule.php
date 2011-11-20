@@ -214,7 +214,7 @@ abstract class PaymentModuleCore extends Module
 						$order_list[] = $order;
 						
 						// Insert new Order detail list using cart for the current order
-						$order_detail = new OrderDetail($this->context);
+						$order_detail = new OrderDetail(null, null, $this->context);
 						$order_detail->createList($order, $cart, $id_order_state, $product_list);
 						$order_detail_list[] = $order_detail;
 					}
@@ -243,7 +243,7 @@ abstract class PaymentModuleCore extends Module
 					}
 
 					// Insert new Order detail list using cart for the current order
-					//$orderDetail = new OrderDetail($this->context);
+					//$orderDetail = new OrderDetail(null, null, $this->context);
 					//$orderDetail->createList($order, $cart, $id_order_state);
 					
 					//$this->addPCC($order->id, $order->id_currency, $amountPaid);
