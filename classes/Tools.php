@@ -1283,21 +1283,8 @@ class ToolsCore
 	*/
 	public static function minifyHTMLpregCallback($preg_matches)
 	{
-<<<<<<< .working
 		Tools::displayAsDeprecated();
 		return Media::minifyHTMLpregCallback($preg_matches);
-=======
-		$args = array();
-		preg_match_all('/[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']/is', $preg_matches[2], $args);
-		$args = $args[0];
-		sort($args);
-		// if there is no args in the balise, we don't write a space (avoid previous : <title >, now : <title>)
-		if (empty($args))
-			$output = $preg_matches[1].'>';
-		else
-			$output = $preg_matches[1].' '.implode(' ', $args).'>';
-		return $output;
->>>>>>> .merge-right.r10309
 	}
 
 	/**
@@ -1305,25 +1292,8 @@ class ToolsCore
 	*/
 	public static function packJSinHTML($html_content)
 	{
-<<<<<<< .working
 		Tools::displayAsDeprecated();
 		return Media::packJSinHTML($html_content);
-=======
-		if (strlen($html_content) > 0)
-		{
-			$htmlContentCopy = $html_content;
-			$html_content = preg_replace_callback(
-				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i'
-				,array('Tools', 'packJSinHTMLpregCallback')
-				,$html_content);
-
-			// If the string is too big preg_replace return null: http://php.net/manual/en/function.preg-replace-callback.php
-			// In this case, we don't compress the content
-			if ($html_content === null)
-			{
-				error_log('Error occured in function packJSinHTML');
-				return $htmlContentCopy;
->>>>>>> .merge-right.r10309
 	}
 
 	/**
