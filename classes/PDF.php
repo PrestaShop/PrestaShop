@@ -898,7 +898,7 @@ class PDFCore extends PDF_PageGroupCore
 					$this->MultiCell($w[++$i], 5, Tools::iconv('utf-8', self::encoding(), $product['product_name']), 'B');
 					$lineSize = $this->GetY() - $before;
 					$this->SetXY($this->GetX() + $w[0] + ($delivery ? 15 : 0), $this->GetY() - $lineSize);
-					$this->Cell($w[++$i], $lineSize, ($product['product_reference'] ? $product['product_reference'] : '--'), 'B');
+					$this->Cell($w[++$i], $lineSize, ($product['product_reference'] ? Tools::iconv('utf-8', self::encoding(), $product['product_reference']) : '--'), 'B');
 					if (!$delivery)
 						$this->Cell($w[++$i], $lineSize, (self::$orderSlip ? '-' : '').self::convertSign(Tools::displayPrice($unit_price, self::$currency, true)), 'B', 0, 'R');
 					$this->Cell($w[++$i], $lineSize, $productQuantity, 'B', 0, 'C');
