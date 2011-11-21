@@ -28,6 +28,6 @@
 {if isset($module_content)}
 	{$module_content}
 {else}
-	{include file='themes/template/modules/js.tpl'}
-	{include file='themes/template/modules/list.tpl'}
+	{include file='modules/js.tpl'}
+	{include file='modules/page.tpl'}
 {/if}
