@@ -341,6 +341,21 @@ class AdminControllerCore extends Controller
 		return (!empty($token) && $token === $this->token);
 	}
 
+	public function ajaxProcessHelpAccess()
+	{
+		$this->json = true;
+		$item = Tools::getValue('item');
+		$isoUser = Tools::getValue('isoUser');
+		$country = Tools::getValue('country');
+		$version = Tools::getValue('version');
+
+		if (isset($item) AND isset($isoUser) AND isset($country))
+			$this->content = HelpAccess::getHelp($item, $isoUser,  $country, $version);
+		else
+			$this->content = 'none';
+		$this->display = 'content';
+	}
+
 	/**
 	 * @todo uses redirectAdmin only if !$this->ajax
 	 */
@@ -589,7 +604,8 @@ class AdminControllerCore extends Controller
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
 								$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token;
 							// Default behavior (save and back)
-							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token;
+							if (empty($this->redirect_after))
+								$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token;
 						}
 					}
 					else
@@ -901,6 +917,7 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Add new')
 				);
 		}
+
 	}
 
 	/**
@@ -983,6 +1000,13 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
+		if($this->json)
+		{
+			$this->context->smarty->assign(array(
+				'json' => true,
+				'status' => $this->status, 
+			));
+		}
 		$this->layout = 'layout-ajax.tpl';
 		return $this->display();
 	}
@@ -1024,12 +1048,32 @@ class AdminControllerCore extends Controller
 			$page = $this->content;
 
 		if ($conf = Tools::getValue('conf'))
-			$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
+			if ($this->json)
+				$this->context->smarty->assign('conf', Tools::jsonEncode($this->_conf[(int)$conf]));
+			else
+				$this->context->smarty->assign('conf', $this->_conf[(int)$conf]);
 
-		$this->context->smarty->assign('errors', $this->_errors);
-		$this->context->smarty->assign('warnings', $this->warnings);
-		$this->context->smarty->assign('informations', $this->informations);
-		$this->context->smarty->assign('confirmations', $this->confirmations);
+
+		if ($this->json)
+			$this->context->smarty->assign('errors', Tools::jsonEncode($this->_errors));
+		else
+			$this->context->smarty->assign('errors', $this->_errors);
+
+		if ($this->json)
+			$this->context->smarty->assign('warnings', Tools::jsonEncode($this->warnings));
+		else
+			$this->context->smarty->assign('warnings', $this->warnings);
+
+
+		if ($this->json)
+			$this->context->smarty->assign('informations', Tools::jsonEncode($this->informations));
+		else
+			$this->context->smarty->assign('informations', $this->informations);
+
+		if ($this->json)
+			$this->context->smarty->assign('confirmations', Tools::jsonEncode($this->confirmations));
+		else
+			$this->context->smarty->assign('confirmations', $this->confirmations);
 
 		$this->context->smarty->assign('page', $page);
 		$this->context->smarty->display($this->layout);
@@ -1407,6 +1451,8 @@ class AdminControllerCore extends Controller
 		// @todo : move that in Helper
 		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
+
+		$helper->ps_help_context = !Configuration::get('PS_NO_HELP_CONTEXT');
 		$helper->show_toolbar = $this->show_toolbar;
 		$helper->toolbar_fix = $this->toolbar_fix;
 		$helper->override_folder = $this->tpl_folder;
@@ -1697,6 +1743,7 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['add'] === '1')
 			{
 				$this->action = 'new';
+				$this->action = 'Informations';
 				$this->display = 'add';
 			}
 			else
@@ -2008,7 +2055,7 @@ class AdminControllerCore extends Controller
 				if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
 					$this->_errors[] = $this->l('the field').
 						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
-						$this->l('is required');
+						$this->l('is required ZZZ');
 
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] as $field_lang)

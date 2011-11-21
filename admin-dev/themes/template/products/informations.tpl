@@ -962,8 +962,88 @@ $(document).ready(function(){
 						}
 					</script>
 {/if}
-{$last_content}
 
+				<tr>
+					<td class="col-left"><label>{l s='Tags:'}</label></td>
+					<td style="padding-bottom:5px;" class="translatable">
+
+			{foreach from=$languages item=language}
+				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
+						<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
+						value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
+						</div>
+			{/foreach}
+				<p class="clear">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
+					</td>
+				</tr>
+				
+				<tr>
+					<td class="col-left"><label>{l s='Accessories:'}<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i></label></td>
+					<td style="padding-bottom:5px;">
+						<div id="divAccessories">
+				{* @todo : donot use 3 foreach, but assign var *}
+				{foreach from=$accessories item=accessory}
+					{$accessory.name|htmlentitiesUTF8}{if !empty($accessory.reference)}{$accessory.reference}{/if} <span onclick="delAccessory({$accessory.id_product});" style="cursor: pointer;"><img src="../img/admin/delete.gif" class="middle" alt="" /></span><br />
+				{/foreach}
+				</div>
+				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
+				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|htmlentitiesUTF8}¤{/foreach}" />
+<script type="text/javascript">
+var formProduct;
+var accessories = new Array();
+</script>
+						
+						<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
+							<p class="clear">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}</p>
+							<input type="text" value="" id="product_autocomplete_input" />
+							<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />
+						</div>
+						<script type="text/javascript">
+							urlToCall = null;
+							/* function autocomplete */
+							$(document).ready(function() {
+								$('#product_autocomplete_input')
+									.autocomplete('ajax_products_list.php', {
+										minChars: 1,
+										autoFill: true,
+										max:20,
+										matchContains: true,
+										mustMatch:true,
+										scroll:false,
+										cacheLength:0,
+										formatItem: function(item) {
+											return item[1]+' - '+item[0];
+										}
+									}).result(addAccessory);
+								$('#product_autocomplete_input').setOptions({
+									extraParams: {
+										excludeIds : getAccessorieIds()
+									}
+								});
+							});
+
+							function getAccessorieIds()
+							{
+								var ids = {$product->id}+',';
+								ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
+								ids = ids.replace(/\,$/,'');
+
+								return ids;
+							}
+						</script>
+					</td>
+				</tr>
+				<tr><td colspan="2" style="padding-bottom:10px;"><div class="separation"></div></td></tr>
+			</table>
+		<br />
+		</div>
+
+		
+			<script type="text/javascript">
+					toggleVirtualProduct(getE(\'is_virtual_good\'));
+					unitPriceWithTax(\'unit\');
+			</script>
 
 
 <script type="text/javascript">
