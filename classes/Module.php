@@ -593,7 +593,6 @@ abstract class ModuleCore
 		global $_MODULES;
 
 		$moduleList = array();
-		$moduleListCursor = 0;
 		$moduleNameList = array();
 		$modulesNameToCursor = array();
 		$errors = array();
@@ -655,10 +654,9 @@ abstract class ModuleCore
 						$item->confirmUninstall = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
-					$moduleList[$moduleListCursor] = $item;
-					$moduleNameList[$moduleListCursor] = '\''.pSQL($item->name).'\'';
-					$modulesNameToCursor[strval($item->name)] = $moduleListCursor;
-					$moduleListCursor++;
+					$moduleList[] = $item;
+					$moduleNameList[] = '\''.pSQL($item->name).'\'';
+					$modulesNameToCursor[strval($item->name)] = $item;
 				}
 			}
 
@@ -732,8 +730,8 @@ abstract class ModuleCore
 			foreach ($results as $result)
 			{
 				$moduleCursor = $modulesNameToCursor[$result['name']];
-				$moduleList[$moduleCursor]->id = $result['id_module'];
-				$moduleList[$moduleCursor]->active = ($result['total'] == count($list)) ? 1 : 0;
+				$moduleCursor->id = $result['id_module'];
+				$moduleCursor->active = ($result['total'] == count($list)) ? 1 : 0;
 			}
 		}
 
