@@ -155,39 +155,41 @@ class AdminGroupShopControllerCore extends AdminController
 			'tax_rules_group' => $this->l('Tax rules groups'),
 			'zone' => $this->l('Zones'),
 		);
-
-		$this->fields_import_form = array(
-			'legend' => array(
-				'title' => $this->l('Import data from another group shop')
-			),
-			'label' => $this->l('Duplicate data from group shop'),
-			'checkbox' => array(
-				'type' => 'checkbox',
+		
+		if (!$this->object->id)
+			$this->fields_import_form = array(
+				'legend' => array(
+					'title' => $this->l('Import data from another group shop')
+				),
 				'label' => $this->l('Duplicate data from group shop'),
-				'name' => 'useImportData',
-				'value' => 1
-			),
-			'list' => array(
-				'type' => 'select',
-				'name' => 'importFromShop',
-				'options' => array(
-					'query' => Shop::getTree(),
-					'name' => 'name'
-				)
-			),
-			'allcheckbox' => array(
-				'type' => 'checkbox',
-				'values' => $import_data
-			),
-			'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
-		);
+				'checkbox' => array(
+					'type' => 'checkbox',
+					'label' => $this->l('Duplicate data from group shop'),
+					'name' => 'useImportData',
+					'value' => 1
+				),
+				'list' => array(
+					'type' => 'select',
+					'name' => 'importFromShop',
+					'options' => array(
+						'query' => Shop::getTree(),
+						'name' => 'name'
+					)
+				),
+				'allcheckbox' => array(
+					'type' => 'checkbox',
+					'values' => $import_data
+				),
+				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
+			);
 
 		$this->tpl_form_vars = array(
 			'disabled' => $disabled,
 			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
 			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID(),
-			'form_import' => $this->fields_import_form
 		);
+		if (isset($this->fields_import_form))
+			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
 
 		return parent::initForm();
 	}
