@@ -267,7 +267,7 @@ class WarehouseCore extends ObjectModel
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
 	}
-	
+
 	/**
 	 * For a given {product, product attribute} gets warehouse list
 	 *
@@ -280,7 +280,7 @@ class WarehouseCore extends ObjectModel
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
-			
+
 		$query = new DbQuery();
 		$query->select('wpl.id_warehouse');
 		$query->from('warehouse_product_location wpl');
@@ -315,6 +315,26 @@ class WarehouseCore extends ObjectModel
 			$query->innerJoin('warehouse_shop ws ON ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int)$id_shop);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
+	/**
+	 * Gets ids of warehouses, grouped by ids of shops
+	 *
+	 * @return array
+	 */
+	public static function getWarehousesGroupedByShops()
+	{
+		$ids_warehouse = array();
+		$query = new DbQuery();
+		$query->select('id_warehouse, id_shop');
+		$query->from('warehouse_shop');
+		$query->orderBy('id_shop');
+
+		// queries to get warehouse ids grouped by shops
+		foreach (Db::getInstance()->executeS($query) as $row)
+			$ids_warehouse[$row['id_shop']][] = $row['id_warehouse'];
+
+		return $ids_warehouse;
 	}
 
 	/**

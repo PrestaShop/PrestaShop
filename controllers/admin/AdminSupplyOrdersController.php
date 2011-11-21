@@ -1271,6 +1271,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
+						// synchronizes
+						StockAvailable::synchronize($id_product);
 					}
 					else
 						$this->_errors[] = Tools::displayError($this->l('Something went wrong when adding products in warehouse'));

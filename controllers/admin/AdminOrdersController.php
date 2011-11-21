@@ -575,7 +575,7 @@ class AdminOrdersControllerCore extends AdminController
 				$productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
 				$combinations = array();
 				$attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
-				$product['qty_in_stock'] = StockAvailable::getStockAvailableForProduct((int)$product['id_product'], 0, (int)$this->context->shop->getID());
+				$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], 0, (int)$this->context->shop->getID());
 				foreach($attributes AS $attribute)
 				{
 					if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
@@ -586,7 +586,7 @@ class AdminOrdersControllerCore extends AdminController
 					if (!isset($combinations[$attribute['id_product_attribute']]['price']))
 						$combinations[$attribute['id_product_attribute']]['price'] =  Tools::displayPrice(Tools::convertPrice(Product::getPriceStatic((int)$product['id_product'], true, $attribute['id_product_attribute']), $currency), $currency);
 					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
-						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getStockAvailableForProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
+						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
 				}
 
 				foreach ($combinations AS &$combination)

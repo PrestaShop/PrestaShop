@@ -332,7 +332,7 @@ class ProductCore extends ObjectModel
 		}
 
 		// By default, the product quantity correspond to the available quantity to sell in the current shop
-		$this->quantity = StockAvailable::getStockAvailableForProduct($id_product, 0, Context::getContext()->shop->getID());
+		$this->quantity = StockAvailable::getQuantityAvailableByProduct($id_product, 0, Context::getContext()->shop->getID());
 		$this->out_of_stock = $this->getOutOfStock();
 		$this->depends_on_stock = $this->getDependsOnStock();
 
@@ -2260,7 +2260,7 @@ class ProductCore extends ObjectModel
 			return 0;
 
 		// @since 1.5.0
-		return (StockAvailable::getStockAvailableForProduct($id_product, $id_product_attribute, Context::getContext()->shop->getID()));
+		return (StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, Context::getContext()->shop->getID()));
 	}
 
 	/**
@@ -2463,7 +2463,7 @@ class ProductCore extends ObjectModel
 		else
 			$id_product_attribute = 0;
 
-		return ($qty <= StockAvailable::getStockAvailableForProduct($this->id, $id_product_attribute, Context::getContext()->shop->getID()));
+		return ($qty <= StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute, Context::getContext()->shop->getID()));
 	}
 
 	/**
