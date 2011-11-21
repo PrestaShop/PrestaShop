@@ -218,6 +218,21 @@ class AdminModulesControllerCore extends AdminController
 		die('OK');
 	}
 
+	public function ajaxProcessReloadModulesList()
+	{
+		if (Tools::getValue('filterCategory'))
+			Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, Tools::getValue('filterCategory'));
+		if (Tools::getValue('unfilterCategory'))
+			Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, '');
+
+		$this->initContent();
+		$this->context->smarty->display('modules/list.tpl');
+		exit;
+	}
+
+
+
+
 
 	/*
 	** Get current URL
@@ -333,45 +348,15 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessFilterCategory()
 	{
-		// Retrieve filter categories configuration and the new filter category
-		$filterCategory = Tools::getValue('filterCategory');
-		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
-			
-		// Check if category filter not already exists
-		foreach ($filterCategories as $fc)
-			if ($fc == $filterCategories)
-				$filterCategories = '';
-
-		// If not, add the new filter
-		if ($filterCategories != '')
-			$filterCategories[] = $filterCategory;
-		$filterCategories = implode('|', $filterCategories);
-
-		// For the moment, we will filter only one category a time
-		$filterCategories = $filterCategory;
-
 		// Save configuration and redirect employee
-		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, $filterCategories);
+		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, Tools::getValue('filterCategory'));
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
 	public function postProcessUnfilterCategory()
 	{
-		// Retrieve filter categories configuration and the filter category to remove
-		$unfilterCategory = Tools::getValue('unfilterCategory');
-		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
-			
-		// Remove the filter category
-		foreach ($filterCategories as $k => $fc)
-			if ($fc == $unfilterCategory)
-				unset($filterCategories[$k]);
-
-		// For the moment, we will filter only one category a time
-		$filterCategories = '';
-
 		// Save configuration and redirect employee
-		$filterCategories = implode('|', $filterCategories);
-		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, $filterCategories);
+		Configuration::updateValue('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee, '');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
