@@ -577,3 +577,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) ('P
 /* PHP:add_new_groups('Invité', 'Guest'); */;
 
 UPDATE `PREFIX_employee` SET `bo_theme` = 'default';
+
+UPDATE `PREFIX_tab` SET `class_name` = 'AdminCmsContent' WHERE `class_name` = 'AdminCMSContent';
+UPDATE `PREFIX_tab` SET `class_name` = 'AdminCms' WHERE `class_name` = 'AdminCMS';
+UPDATE `PREFIX_tab` SET `class_name` = 'AdminCmsCategories' WHERE `class_name` = 'AdminCMSCategories';
