@@ -466,9 +466,9 @@ if (Tools::getValue('submitPublishCMS'))
 	if (Tools::getIsset('id_cms'))
 	{
 		$id_cms = (int)(Tools::getValue('id_cms'));
-		$id_tab_cms = (int)(Tab::getIdFromClassName('AdminCMSContent'));
-		$token = Tools::getAdminToken('AdminCMSContent'.(int)($id_tab_cms).(int)$context->employee->id);
-		$bo_cms_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCMSContent&id_cms='.(int)$id_cms.'&updatecms&token='.$token;
+		$id_tab_cms = (int)(Tab::getIdFromClassName('AdminCmsContent'));
+		$token = Tools::getAdminToken('AdminCmsContent'.(int)($id_tab_cms).(int)$context->employee->id);
+		$bo_cms_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCmsContent&id_cms='.(int)$id_cms.'&updatecms&token='.$token;
 
 		if (Tools::getValue('redirect'))
 			die($bo_cms_url);
