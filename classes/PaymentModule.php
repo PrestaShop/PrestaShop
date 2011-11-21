@@ -120,10 +120,8 @@ abstract class PaymentModuleCore extends Module
 			$package_list = $cart->getPackageList();
 			$cart_delivery_option = unserialize($cart->delivery_option);
 			foreach ($delivery_option_list as $id_address => $package)
-			{
 				if (!isset($cart_delivery_option[$id_address]) || !array_key_exists($cart_delivery_option[$id_address], $package))
 					die('Error: delivery option for some addresses is not defined');
-			}
 			
 			$order_list = array();
 			$order_detail_list = array();
@@ -299,7 +297,6 @@ abstract class PaymentModuleCore extends Module
 					$cartRulesList = '';
 					$result = $cart->getCartRules();
 					$cartRules = ObjectModel::hydrateCollection('CartRule', $result, (int)$order->id_lang);
-// @todo How to menage cart rules, with multiple shipping?
 					foreach ($cartRules as $cartRule)
 					{
 						$value = $cartRule->getContextualValue(true);

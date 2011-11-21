@@ -2236,14 +2236,16 @@ class CartCore extends ObjectModel
 			return false;
 		
 		// Duplicating cart_product line
-		$sql = 'INSERT INTO '._DB_PREFIX_.'cart_product values(
-			'.(int)$this->id.',
-			'.(int)$id_product.',
-			'.(int)$this->id_shop.',
-			'.(int)$id_product_attribute.',
-			'.(int)$quantity.',
-			NOW(),
-			'.(int)$new_id_address_delivery.')';
+		$sql = 'INSERT INTO '._DB_PREFIX_.'cart_product
+			(`id_cart`, `id_product`, `id_shop`, `id_product_attribute`, `quantity`, `date_add`, `id_address_delivery`)
+			values(
+				'.(int)$this->id.',
+				'.(int)$id_product.',
+				'.(int)$this->id_shop.',
+				'.(int)$id_product_attribute.',
+				'.(int)$quantity.',
+				NOW(),
+				'.(int)$new_id_address_delivery.')';
 		Db::getInstance()->execute($sql);
 		
 		if (!$keep_quantity)
