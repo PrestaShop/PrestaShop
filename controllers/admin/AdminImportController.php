@@ -385,14 +385,6 @@ class AdminImportController extends AdminController
 
 	public function initView()
 	{
-		$this->toolbar_fix = false;
-		$this->toolbar_btn = array(
-			'cancel' => array(
-				'href' => self::$currentIndex.'&token='.$this->token,
-				'desc' => $this->l('Cancel')
-			)
-		);
-
 		$this->addJS(_PS_JS_DIR_.'adminImport.js');
 
 		$glue = Tools::getValue('separator', ';');
@@ -430,6 +422,30 @@ class AdminImportController extends AdminController
 		);
 
 		return parent::initView();
+	}
+
+	public function initToolbar()
+	{
+		switch ($this->display)
+		{
+			// @todo defining default buttons
+			case 'import':
+				// Default cancel button - like old back link
+				$back = Tools::safeOutput(Tools::getValue('back', ''));
+				if (empty($back))
+					$back = self::$currentIndex.'&token='.$this->token;
+
+				$this->toolbar_btn['cancel'] = array(
+					'href' => $back,
+					'desc' => $this->l('Cancel')
+				);
+				// Default save button - action dynamically handled in javascript
+				$this->toolbar_btn['save-import'] = array(
+					'href' => '#',
+					'desc' => $this->l('Import CSV data')
+				);
+				break;
+		}
 	}
 
 	private function generateContentTable($current_table, $nb_column, $handle, $glue)
@@ -1656,7 +1672,7 @@ class AdminImportController extends AdminController
 		 $handle = fopen(_PS_ADMIN_DIR_.'/import/'.strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))), 'r');
 
 		if (!$handle)
-			die(Tools::displayError('Cannot read the CSV file'));
+			$this->_errors[] = Tools::displayError('Cannot read the CSV file');
 
 		self::rewindBomAware($handle);
 
