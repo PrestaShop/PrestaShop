@@ -141,7 +141,7 @@ class OrderCore extends ObjectModel
 
 	/** @var string Object last modification date */
 	public $date_upd;
-	
+
 	/** @var string Order reference
 	 * This reference is not unique, but unique for a payment
 	 */
@@ -170,13 +170,21 @@ class OrderCore extends ObjectModel
 		'gift' => 'isBool',
 		'gift_message' => 'isMessage',
 		'total_discounts' => 'isPrice',
+		'total_discounts_tax_incl' => 'isPrice',
+		'total_discounts_tax_excl' => 'isPrice',
 		'total_paid' => 'isPrice',
+		'total_paid_tax_incl' => 'isPrice',
+		'total_paid_tax_excl' => 'isPrice',
 		'total_paid_real' => 'isPrice',
 		'total_products' => 'isPrice',
 		'total_products_wt' => 'isPrice',
 		'total_shipping' => 'isPrice',
+		'total_shipping_tax_incl' => 'isPrice',
+		'total_shipping_tax_excl' => 'isPrice',
 		'carrier_tax_rate' => 'isFloat',
 		'total_wrapping' => 'isPrice',
+		'total_wrapping_tax_incl' => 'isPrice',
+		'total_wrapping_tax_excl' => 'isPrice',
 		'shipping_number' => 'isUrl',
 		'conversion_rate' => 'isFloat'
 	);
@@ -1176,11 +1184,11 @@ class OrderCore extends ObjectModel
 	{
 		return OrderDetail::getList($this->id);
 	}
-	
+
 	/**
 	 * Gennerate a unique reference for orders generated with the same cart id
 	 * This references, is usefull for check payment
-	 * 
+	 *
 	 * @return String
 	 */
 	public static function generateReference()
@@ -1189,12 +1197,12 @@ class OrderCore extends ObjectModel
 		// This number is a rand concated with the current timestamp
 		$rand = (int)(microtime(true) * 100 % 10000000000).rand(10, 1000);
 		$reference = '';
-		
+
 		do {
 			$reference .= chr(65 + $rand % 26);
 			$rand = (int)($rand / 26);
 		} while ($rand > 26);
-		
+
 		// Check if semi-random string generated is not already used
 		// /!\ Here we CANNOT/MUSTN'T use _PS_USE_SQL_SLAVE_
 		if (Db::getInstance()->getValue('
@@ -1202,10 +1210,10 @@ class OrderCore extends ObjectModel
 			FROM '._DB_PREFIX_.'orders
 			WHERE reference = \''.$reference.'\'') > 0)
 			return self::generateReference(); // If the reference already exists, generate a new one
-		
+
 		return $reference;
 	}
-	
+
 	public function orderContainProduct($id_product)
 	{
 		$product_list = $this->getOrderDetailList();
@@ -1215,11 +1223,11 @@ class OrderCore extends ObjectModel
 		return false;
 	}
 	/**
-	 * This method returns true if at least one order details uses the 
+	 * This method returns true if at least one order details uses the
 	 * One After Another tax computation method.
 	 *
 	 * @since 1.5.0.1
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function useOneAfterAnotherTaxComputationMethod()
 	{
@@ -1236,10 +1244,10 @@ class OrderCore extends ObjectModel
 
 
 	/**
-	 * Returns the correct product taxes breakdown. 
+	 * Returns the correct product taxes breakdown.
 	 *
 	 * @since 1.5.0.1
-	 * @return array 
+	 * @return array
 	 */
 	public function getProductTaxesBreakdown()
 	{
@@ -1299,7 +1307,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * @since 1.5.0.1
 	 * @return array
-	 */	
+	 */
 	public function getShippingTaxesBreakdown()
 	{
 		$taxes_breakdown = array();
@@ -1321,7 +1329,7 @@ class OrderCore extends ObjectModel
 
 	 * @since 1.5.0.1
 	 * @return array
-	 */	
+	 */
 	public function getWrappingTaxesBreakdown()
 	{
 		$taxes_breakdown = array();
@@ -1333,7 +1341,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * @since 1.5.0.1
 	 * @return array
-	 */	
+	 */
 	public function getEcoTaxTaxesBreakdown()
 	{
 		return Db::getInstance()->executeS('
