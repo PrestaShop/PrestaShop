@@ -618,7 +618,10 @@ class AdminStockManagementControllerCore extends AdminController
 				$stock_manager = StockManagerFactory::getManager();
 
 				if ($stock_manager->addProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $price, $usable))
+				{
+					StockAvailable::synchronize($id_product);
 					Tools::redirectAdmin($redirect.'&conf=1');
+				}
 				else
 					$this->_errors[] = Tools::displayError('An error occured. No stock was added.');
 			}
@@ -636,7 +639,10 @@ class AdminStockManagementControllerCore extends AdminController
 				$removed_products = $stock_manager->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $usable);
 
 				if (count($removed_products) > 0)
+				{
+					StockAvailable::synchronize($id_product);
 					Tools::redirectAdmin($redirect.'&conf=2');
+				}
 				else
 					$this->_errors[] = Tools::displayError('It is not possible to remove the specified quantity or an error occured. No stock was removed.');
 			}

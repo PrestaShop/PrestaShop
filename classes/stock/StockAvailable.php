@@ -89,7 +89,7 @@ class StockAvailableCore extends ObjectModel
 	}
 
 	/**
-	 * For a given {id_product, id_product_attribute and id_shop}, gets the stock id associated
+	 * For a given {id_product, id_product_attribute and id_shop}, gets the stock available id associated
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute Optional
@@ -97,7 +97,7 @@ class StockAvailableCore extends ObjectModel
 	 * @return int
 	 */
 
-	public static function getIdStockAvailableByProductId($id_product, $id_product_attribute = null, $id_shop = null)
+	public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
 	{
 		// if there is no $id_shop, gets the context one
 		if (is_null($id_shop))
@@ -121,60 +121,54 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function synchronize($id_product)
 	{
-		// inits the list of warehouse ids and product ids
-		$ids_warehouse = array();
-		$ids_product_attribute = array();
-
-		// builds query to get every warehouses/shops
-		$query = new DbQuery();
-		$query->select('id_warehouse, id_shop');
-		$query->from('warehouse_shop');
-		$query->orderBy('id_shop');
-
-		// queries to get warehouse ids grouped by shops
-		foreach (Db::getInstance()->executeS($query) as $row)
-			$ids_warehouse[$row['id_shop']][] = $row['id_warehouse'];
+		// gets warehouse ids grouped by shops
+		$ids_warehouse = Warehouse::getWarehousesGroupedByShops();
 
 		// gets all product attributes ids
+		$ids_product_attribute = array();
 		foreach (Product::getProductAttributesIds($id_product) as $id_product_attribute)
 			$ids_product_attribute[] = $id_product_attribute['id_product_attribute'];
 
 		$manager = StockManagerFactory::getManager();
-		// loops on ids_warehouse to synchronize
+		// loops on $ids_warehouse to synchronize quantities
 		foreach ($ids_warehouse as $id_shop => $warehouses)
 		{
-			$total_quantity = 0;
-
-			// if there are no product attributes
-			if (empty($ids_product_attribute))
-				$total_quantity = $manager->getProductRealQuantities($id_product, null, $warehouses, true);
-
-			// else loops on id_product_attribute and to get $total_quantity
-			foreach ($ids_product_attribute as $id_product_attribute)
+			// first, checks if the product depends on stock for the given shop $id_shop
+			if (self::dependsOnStock($id_product, $id_shop))
 			{
-				$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
+				// inits quantity
+				$product_quantity = 0;
 
+				// if it's a simple product
+				if (empty($ids_product_attribute))
+					$product_quantity = $manager->getProductRealQuantities($id_product, null, $warehouses, true);
+
+				// else this product has attributes, hence loops on $ids_product_attribute
+				foreach ($ids_product_attribute as $id_product_attribute)
+				{
+					$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
+
+					$query = array(
+						'table' => _DB_PREFIX_.'stock_available',
+						'data' => array('quantity' => $quantity),
+						'type' => 'UPDATE',
+						'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.' AND id_shop = '.(int)$id_shop
+					);
+					Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
+
+					$product_quantity += $quantity;
+				}
+
+				// updates
+				// if $id_product has attributes, it also updates the sum for all attributes
 				$query = array(
 					'table' => _DB_PREFIX_.'stock_available',
-					'data' => array('quantity' => $quantity),
+					'data' => array('quantity' => $product_quantity),
 					'type' => 'UPDATE',
-					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.' AND id_shop = '.(int)$id_shop
+					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0 AND id_shop = '.(int)$id_shop
 				);
-
 				Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
-
-				$total_quantity += $quantity;
 			}
-
-			$query = array(
-				'table' => _DB_PREFIX_.'stock_available',
-				'data' => array('quantity' => $total_quantity),
-				'type' => 'UPDATE',
-				'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0 AND id_shop = '.(int)$id_shop
-			);
-
-			// saves quantities
-			Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
 		}
 	}
 
@@ -228,15 +222,15 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $id_product
 	 * @param int $id_product_attribute Optional
 	 * @param int $id_shop Optional : gets context by default
-	 * @return int
+	 * @return int Quantity
 	 */
-	public static function getStockAvailableForProduct($id_product, $id_product_attribute = null, $id_shop = null)
+	public static function getQuantityAvailableByProduct($id_product, $id_product_attribute = null, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
 		// if null, it's a product without attributes
-		if (!$id_product_attribute)
+		if (is_null($id_product_attribute))
 			$id_product_attribute = 0;
 
 		$query = new DbQuery();
@@ -256,7 +250,7 @@ class StockAvailableCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-		$this->afterSave();
+		$this->postSave();
 	}
 
 	/**
@@ -267,7 +261,7 @@ class StockAvailableCore extends ObjectModel
 	{
 		if (!parent::update($null_values))
 			return false;
-		$this->afterSave();
+		$this->postSave();
 	}
 
 	/**
@@ -275,12 +269,12 @@ class StockAvailableCore extends ObjectModel
 	 * @see StockAvailableCore::update()
 	 * @see StockAvailableCore::add()
 	 */
-	public function afterSave()
+	public function postSave()
 	{
 		if ($this->id_product_attribute == 0)
 			return true;
 
-		$id_stock_available = StockAvailable::getIdStockAvailableByProductId($this->id_product, 0, $this->id_shop);
+		$id_stock_available = StockAvailable::getStockAvailableIdByProductId($this->id_product, 0, $this->id_shop);
 
 		$total_quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(quantity)
@@ -303,11 +297,11 @@ class StockAvailableCore extends ObjectModel
 	}
 
 	/**
-	 * For a given id_product and id_product_attribute update the quantity available
+	 * For a given id_product and id_product_attribute updates the quantity available
 	 */
 	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
 	{
-		$id_stock = self::getIdStockAvailableByProductId($id_product, $id_product_attribute, $id_shop);
+		$id_stock = self::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
 
 		if (!$id_stock)
 			return false;
@@ -342,5 +336,26 @@ class StockAvailableCore extends ObjectModel
 			WHERE id_product = '.(int)$id_product.
 			($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
 			($id_shop ? ' AND id_shop = '.(int)$id_shop : ''));
+	}
+
+	/**
+	 * For a given product, tells if it depends on the physical (usable) stock
+	 *
+	 * @param int $id_product
+	 * @param int $id_shop Optional : gets context if null @see Context::getContext()
+	 * @return bool : depends on stock @see $depends_on_stock
+	 */
+	public static function dependsOnStock($id_product, $id_shop = null)
+	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+
+		$query = new DbQuery();
+		$query->select('depends_on_stock');
+		$query->from('stock_available');
+		$query->where('id_product = '.(int)$id_product);
+		$query->where('id_shop = '.(int)$id_shop);
+
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }

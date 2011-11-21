@@ -59,7 +59,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->imageType = 'jpg';
 		$this->context = Context::getContext();
 		$this->_defaultOrderBy = 'position';
-		
+
 		$this->fieldsDisplay = array(
 			'id_product' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 20),
 			'image' => array('title' => $this->l('Photo'), 'align' => 'center', 'image' => 'p',
@@ -2435,7 +2435,7 @@ class AdminProductsControllerCore extends AdminController
 	public function initFormInformations($product, $languages, $defaultLanguage)
 	{
 		$data = $this->context->smarty->createData();
-		
+
 		// autoload rich text editor (tiny mce)
 		$iso = $this->context->language->iso_code;
 		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
@@ -2444,7 +2444,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
 		$this->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 
-		
+
 		$currency = $this->context->currency;
 
 		$data->assign('languages',$languages);
@@ -3048,10 +3048,8 @@ class AdminProductsControllerCore extends AdminController
 				$total_quantity += $physical_quantity[$attribute['id_product_attribute']];
 
 				// Get available quantity for the current product attribute in the current shop
-				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct(
-					(int)$obj->id,
-					$attribute['id_product_attribute']
-				);
+				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$obj->id,
+																														$attribute['id_product_attribute']);
 
 				// Get all product designation
 				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
@@ -3216,7 +3214,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('id_product_attribute') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
 				// @todo : Product class should handle that
-				$stock_available = new StockAvailable(StockAvailable::getIdStockAvailableByProductId($product->id, (int)Tools::getValue('id_product_attribute')));
+				$stock_available = new StockAvailable(StockAvailable::getStockAvailableIdByProductId($product->id, (int)Tools::getValue('id_product_attribute')));
 				if (!$stock_available->id)
 				{
 					$stock_available->id_product = $product->id;
@@ -3262,7 +3260,7 @@ class AdminProductsControllerCore extends AdminController
 			</tr>';
 		$json = array(
 			'status' => 'ok',
-			'id'=>$image_obj->id, 
+			'id'=>$image_obj->id,
 			'path' => _THEME_PROD_DIR_.$img_path.'.jpg',
 			'path_small' => _THEME_PROD_DIR_.$img_path.'-small.jpg',
 			'position' => $image['position'],
