@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_supplier_order_state>
-	<fields id="name" class="SupplierOrderState">
+	<fields id="name">
 		<field name="delivery_note" />
 		<field name="editable" />
 		<field name="receipt_state" />
