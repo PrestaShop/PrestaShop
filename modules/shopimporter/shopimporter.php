@@ -413,7 +413,6 @@ class shopimporter extends ImportModule
 							<input type="submit" class="button" name="checkAndSaveConfig" id="checkAndSaveConfig" value="'.$this->l('Next Step').'">
 						</div>
 					</div>
-				</div>
 				</fieldset>';
 		return $html;
 	}
@@ -499,7 +498,7 @@ class shopimporter extends ImportModule
 			$json['hasError'] = true;
 			$json['error'] = $errors;
 		}
-			
+
 		if ($save || Tools::isSubmit('syncLang') || Tools::isSubmit('syncLangWS'))
 		{
 			//add language if not exist in prestashop
@@ -551,21 +550,21 @@ class shopimporter extends ImportModule
 		$table = $this->supportedImports[strtolower($className)]['table'];
 
 		$object = new $className();
-		
+
 		$rules = call_user_func(array($className, 'getValidationRules'), $className);
-		
+
 
 		if ((sizeof($rules['requiredLang']) || sizeof($rules['sizeLang']) || sizeof($rules['validateLang']) || Tools::isSubmit('syncLangWS') ||  Tools::isSubmit('syncCurrency')))
 		{
 			$moduleName = Tools::getValue('moduleName');
 			if (file_exists('../../modules/'.$moduleName.'/'.$moduleName.'.php'))
 			{
-				
+
 				require_once('../../modules/'.$moduleName.'/'.$moduleName.'.php');
 				$importModule = new $moduleName();
 
 				$defaultLanguage = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
-				
+
 				$languages = $importModule->getLangagues();
 
 				if (Tools::isSubmit('syncLangWS'))
@@ -573,10 +572,10 @@ class shopimporter extends ImportModule
 					$defaultIdLand = $importModule->getDefaultIdLang();
 					$defaultLanguageImport = new Language(Language::getIdByIso($languages[$defaultIdLand]['iso_code']));
 					if ($defaultLanguage->iso_code != $defaultLanguageImport->iso_code)
-						$errors[] = $this->l('Default language doesn\'t match : ').'<br>'.Configuration::get('PS_SHOP_NAME').' : '.$defaultLanguage->name.' ≠ 
+						$errors[] = $this->l('Default language doesn\'t match : ').'<br>'.Configuration::get('PS_SHOP_NAME').' : '.$defaultLanguage->name.' ≠
 											'.$importModule->displayName.' : '.$defaultLanguageImport->name.'<br>'.$this->l('Please change default language in your configuration');
 				}
-				
+
 				if (Tools::isSubmit('syncCurrency'))
 				{
 					$defaultIdCurrency = $importModule->getDefaultIdCurrency();
@@ -585,7 +584,7 @@ class shopimporter extends ImportModule
 						$defaultCurrencyImport = new Currency((int)Currency::getIdByIsoCode($currencies[$defaultIdCurrency]['iso_code']));
 					else
 						$defaultCurrencyImport = new Currency((int)Currency::getIdByIsoCodeNum($currencies[$defaultIdCurrency]['iso_code_num']));
-						
+
 					$defaultCurrency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 					if ($defaultCurrency->iso_code != $defaultCurrencyImport->iso_code)
 						$errors[] = $this->l('Default currency doesn\'t match : ').'<br>'.Configuration::get('PS_SHOP_NAME').' : '.$defaultCurrency->name.' ≠ '.$importModule->displayName.' : '.$defaultCurrencyImport->name.'<br>'.$this->l('Please change default currency in your configuration');
@@ -596,7 +595,7 @@ class shopimporter extends ImportModule
 			else
 				die('{"hasError" : true, "error" : ["FATAL ERROR"], "datas" : []}');
 		}
-		
+
 		foreach($fields as $key => $field)
 		{
 			$id = $this->supportedImports[strtolower($className)]['identifier'];
@@ -616,7 +615,7 @@ class shopimporter extends ImportModule
 				array_unshift($errors[sizeof($errors)-1], $field[$id]);
 			}
 		}
-		if (sizeof($errors) > 0) 
+		if (sizeof($errors) > 0)
 		{
 			$json['hasError'] = true;
 			$json['error'] = $errors;
@@ -652,14 +651,14 @@ class shopimporter extends ImportModule
 			if ($className == 'Category' AND (sizeof($fields) != (int)Tools::getValue('nbr_import')))
 				$this->updateCat();
 		}
-		if (sizeof($errors) > 0 AND is_array($errors)) 
+		if (sizeof($errors) > 0 AND is_array($errors))
 		{
 			$json['hasError'] = true;
 			$json['error'] = $errors;
 		}
 		die(Tools::jsonEncode($json));
 	}
-	
+
 	private function saveObject($className, $items)
 	{
 		$return = array();
@@ -667,13 +666,14 @@ class shopimporter extends ImportModule
 		//creating temporary fields for identifiers matching and password
 		if (array_key_exists('alterTable', $this->supportedImports[strtolower($className)]))
 			$this->alterTable(strtolower($className));
+		$matchIdLang = $this->getMatchIdLang(1);
 		foreach($items as $item)
 		{
 			$object = new $className;
 			$id = $item[$this->supportedImports[strtolower($className)]['identifier']];
 			if (array_key_exists('foreign_key', $this->supportedImports[strtolower($className)]))
 				$this->replaceForeignKey($item, $table);
-			$matchIdLang = $this->getMatchIdLang(1);
+
 			foreach($item as $key => $val)
 			{
 				if ($key == 'passwd')
@@ -683,14 +683,16 @@ class shopimporter extends ImportModule
 				}
 				if (is_array($val) AND $key != 'images')
 				{
-
+					$tmp = array();
 					foreach($matchIdLang as $k => $v)
-						if (($k != $v) AND array_key_exists($k, $val))
 						{
-							$item[$key][$v] = $val[$k];
-							unset($item[$key][$k]);
+						if (array_key_exists($k, $val))
+						{
+							$tmp[$v] = $val[$k];
 						}
-					$object->$key = $item[$key];
+				}
+
+					$object->$key = $tmp;
 				}
 				else
 					$object->$key = $val;
@@ -863,7 +865,7 @@ class shopimporter extends ImportModule
 			foreach($item['images'] as $key => $image)
 			{
 				$tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'import');
-				if (@copy($image, $tmpfile))
+					if (@copy(str_replace(' ', '%20', $image), $tmpfile))
 				{
 
 					$imagesTypes = ImageType::getImagesTypes($type);
@@ -1089,9 +1091,10 @@ class shopimporter extends ImportModule
 						$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
 		/* Checking for multilingual fields validity */
 		foreach ($rules['validateLang'] AS $fieldLang => $function)
+			{
 			foreach ($languages AS $language)
 			{
-				if (array_key_exists($fieldLang, $fields) AND ($value = $fields[$fieldLang][$language['id_lang']]) !== false AND !empty($value))
+					if (array_key_exists($fieldLang, $fields) AND array_key_exists($language['id_lang'], $fields[$fieldLang]) AND ($value = $fields[$fieldLang][$language['id_lang']]) !== false AND !empty($value))
 				{
 					if (!Validate::$function($value))
 						if ($hasErrors == 2)
@@ -1106,6 +1109,7 @@ class shopimporter extends ImportModule
 							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
 				}
 			}
+		}
 		}
 		return $returnErrors;
 	}
@@ -1152,8 +1156,8 @@ class shopimporter extends ImportModule
 						}
 						else
 							$returnErrors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
-		
-	
+
+
 		return $returnErrors;
 	}
 	public function checkAndAddLang ($languages, $add = true)
@@ -1233,9 +1237,9 @@ class shopimporter extends ImportModule
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'country_lang');
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'country');
 			case 'group' :
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'ps_group_lang');
-				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'group');
+				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group');
+				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'group_lang');
+				Db::getInstance()->Execute('TRUNCATE TABLE `'._DB_PREFIX_.'group');
 				break;
 			case 'combination' :
 				Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute');

@@ -319,6 +319,12 @@ class ThemeInstallator extends Module
 	*/
 	public function getContent()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_)
+		{
+			return '<div class="error">'.Tools::displayError('This functionnality has been disabled.').'</div>';
+			
+		}
 		self::init_defines();
 		if (!Tools::isSubmit('cancelExport') AND $this->page == 'exportPage')
 			return self::getContentExport();

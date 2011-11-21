@@ -265,6 +265,7 @@ class ProductCore extends ObjectModel
 	protected $identifier = 'id_product';
 
 	protected $webserviceParameters = array(
+		'objectMethods' => array('add' => 'addWs', 'update' => 'updateWs'),
 		'objectNodeNames' => 'products',
 		'fields' => array(
 			'id_manufacturer' => array('xlink_resource' => 'manufacturers'),
@@ -930,13 +931,13 @@ class ProductCore extends ObjectModel
 	 * @deprecated
 	 */
 	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference,
-		$supplier_reference = null, $ean13, $default, $location = null, $upc = null)
+		$supplier_reference = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
 	{
 		Tools::displayAsDeprecated();
 
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
-			$reference, $ean13, $default, $location, $upc
+			$reference, $ean13, $default, $location, $upc, $minimal_quantity
 		);
 
 		if (!$id_product_attribute)
@@ -996,9 +997,10 @@ class ProductCore extends ObjectModel
 	* @param string $location Location
 	* @param string $ean13 Ean-13 barcode
 	* @param boolean $default Is default attribute for product
+	* @param integer $minimal_quantity Minimal quantity to add to cart
 	* @return mixed $id_product_attribute or false
 	*/
-	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13, $default, $location = null, $upc = null)
+	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
 	{
 		if (!$this->id)
 			return;
@@ -1017,7 +1019,8 @@ class ProductCore extends ObjectModel
 			'location' => pSQL($location),
 			'ean13' => pSQL($ean13),
 			'upc' => pSQL($upc),
-			'default_on' => (int)$default
+			'default_on' => (int)$default,
+			'minimal_quantity' => (int)$minimal_quantity,
 		), 'INSERT');
 
 		$id_product_attribute = Db::getInstance()->Insert_ID();
@@ -1042,11 +1045,11 @@ class ProductCore extends ObjectModel
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-		$id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null)
+		$id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
 	{
 		$id_product_attribute = $this->addProductAttribute(
 			$price, $weight, $unit_impact, $ecotax, $quantity, $id_images,
-			$reference, $supplier_reference, $ean13, $default, $location, $upc
+			$reference, $supplier_reference, $ean13, $default, $location, $upc, $minimal_quantity
 		);
 
 		$result = Db::getInstance()->execute(
@@ -4106,5 +4109,19 @@ class ProductCore extends ObjectModel
 		return Db::getInstance()->getValue($query);
 	}
 
-}
+	public function addWs($autodate = true, $nullValues = false)
+	{
+		$success = parent::add($autodate, $nullValues);
+		if ($success)
+			Search::indexation(false, $this->id);
+		return $success;
+	}
 
+	public function updateWs($nullValues = false)
+	{
+		$success = parent::update($nullValues);
+		if ($success)
+			Search::indexation(false, $this->id);
+		return $success;
+	}
+}

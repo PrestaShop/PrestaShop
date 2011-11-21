@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,7 +27,7 @@
 
 if (!defined('_PS_VERSION_'))
 	exit;
-	
+
 class authorizeAIM extends PaymentModule
 {
 	public function __construct()
@@ -46,19 +46,19 @@ class authorizeAIM extends PaymentModule
 
 		/* For 1.4.3 and less compatibility */
 		$updateConfig = array(
-			'PS_OS_CHEQUE' => 1, 
-			'PS_OS_PAYMENT' => 2, 
-			'PS_OS_PREPARATION' => 3, 
-			'PS_OS_SHIPPING' => 4, 
-			'PS_OS_DELIVERED' => 5, 
+			'PS_OS_CHEQUE' => 1,
+			'PS_OS_PAYMENT' => 2,
+			'PS_OS_PREPARATION' => 3,
+			'PS_OS_SHIPPING' => 4,
+			'PS_OS_DELIVERED' => 5,
 			'PS_OS_CANCELED' => 6,
-			'PS_OS_REFUND' => 7, 
-			'PS_OS_ERROR' => 8, 
-			'PS_OS_OUTOFSTOCK' => 9, 
-			'PS_OS_BANKWIRE' => 10, 
-			'PS_OS_PAYPAL' => 11, 
+			'PS_OS_REFUND' => 7,
+			'PS_OS_ERROR' => 8,
+			'PS_OS_OUTOFSTOCK' => 9,
+			'PS_OS_BANKWIRE' => 10,
+			'PS_OS_PAYPAL' => 11,
 			'PS_OS_WS_PAYMENT' => 12);
-			
+
 		foreach ($updateConfig as $u => $v)
 			if (!Configuration::get($u) || (int)Configuration::get($u) < 1)
 			{
@@ -75,8 +75,8 @@ class authorizeAIM extends PaymentModule
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('orderConfirmation') AND 
-			$this->registerHook('payment') AND Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1));
+		return (parent::install() && $this->registerHook('orderConfirmation') && $this->registerHook('payment')
+			AND $this->registerHook('header') && Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1));
 	}
 
 	public function uninstall()
@@ -94,15 +94,15 @@ class authorizeAIM extends PaymentModule
 
 	public function hookOrderConfirmation($params)
 	{
-		if ($params['objOrder']->module != $this->name) 
+		if ($params['objOrder']->module != $this->name)
 			return;
 
-		if ($params['objOrder']->getCurrentState() != Configuration::get('PS_OS_ERROR')) 
+		if ($params['objOrder']->getCurrentState() != Configuration::get('PS_OS_ERROR'))
 			$this->context->smarty->assign(array('status' => 'ok', 'id_order' => intval($params['objOrder']->id)));
 		else
 			$this->context->smarty->assign('status', 'failed');
 
-		return $this->display(__FILE__, 'hookorderconfirmation.tpl'); 
+		return $this->display(__FILE__, 'hookorderconfirmation.tpl');
 	}
 
 	public function getContent()
@@ -165,7 +165,7 @@ class authorizeAIM extends PaymentModule
 		if (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$invoiceAddress = new Address((int)$params['cart']->id_address_invoice);
-			
+
 			$authorizeAIMParams = array();
 			$authorizeAIMParams['x_login'] = Configuration::get('AUTHORIZE_AIM_LOGIN_ID');
 			$authorizeAIMParams['x_tran_key'] = Configuration::get('AUTHORIZE_AIM_KEY');
@@ -182,7 +182,7 @@ class authorizeAIM extends PaymentModule
 			$authorizeAIMParams['x_zip'] = $invoiceAddress->postcode;
 			$authorizeAIMParams['x_first_name'] = $this->context->customer->firstname;
 			$authorizeAIMParams['x_last_name'] = $this->context->customer->lastname;
-			
+
 			$isFailed = Tools::getValue('aimerror');
 
 			$cards = array();
@@ -198,31 +198,35 @@ class authorizeAIM extends PaymentModule
 			return $this->display(__FILE__, 'authorizeaim.tpl');
 		}
 	}
-	
-  /**
-  * Set the detail of a payment - Call before the validate order init
-  * correctly the pcc object
-  * See Authorize documentation to know the associated key => value
-  * @param array fields
-  */
-  public function setTransactionDetail($response)
-  {
-  	// If Exist we can store the details
-  	if (isset($this->pcc))
-  	{
-  		$this->pcc->transaction_id = (string)$response[6];
-			
+
+	public function hookHeader()
+	{
+		Tools::addJS(_PS_JS_DIR_.'jquery/jquery.validate.creditcard2-1.0.1.js');
+  	}
+
+	/**
+	* Set the detail of a payment - Call before the validate order init
+	* correctly the pcc object
+	* See Authorize documentation to know the associated key => value
+	* @param array fields
+	*/
+	public function setTransactionDetail($response)
+	{
+	// If Exist we can store the details
+	if (isset($this->pcc))
+	{
+		$this->pcc->transaction_id = (string)$response[6];
+
 			// 50 => Card number (XXXX0000)
 			$this->pcc->card_number = (string)substr($response[50], -4);
-			
+
 			// 51 => Card Mark (Visa, Master card)
 			$this->pcc->card_brand = (string)$response[51];
-			
+
 			$this->pcc->card_expiration = (string)Tools::getValue('x_exp_date');
-			
+
 			// 68 => Owner name
 			$this->pcc->card_holder = (string)$response[68];
-  	}
-  }
+	}
+	}
 }
-?>

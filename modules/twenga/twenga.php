@@ -720,11 +720,11 @@ class Twenga extends PaymentModule
 				</div><!-- .margin-form -->
 				<label>'.$this->l('Login').' <sup>*</sup> : </label>
 				<div class="margin-form">
-					<input type="text" size="38" maxlength="32" name="twenga_user_name" value="'.self::$obj_twenga->getUserName().'"/>&nbsp;
+					<input type="text" size="38" maxlength="64" name="twenga_user_name" value="'.self::$obj_twenga->getUserName().'"/>&nbsp;
 				</div><!-- .margin-form -->
 				<label>'.$this->l('Password').' <sup>*</sup> : </label>
 				<div class="margin-form">
-					<input type="password" size="38" maxlength="32" name="twenga_password" value="'.self::$obj_twenga->getPassword().'"/>&nbsp;
+					<input type="password" size="38" maxlength="64" name="twenga_password" value="'.self::$obj_twenga->getPassword().'"/>&nbsp;
 				</div><!-- .margin-form -->
 				<div class="margin-form">' .$this->l('If you forgot your login, retrieve it back here').' <a href="'.$lost_link.'" target="_blank">'.$lost_link.'</a></div>'
 			.'<input type="submit" value="'.$this->l('Save').'" name="submitTwengaLogin" class="button"/>

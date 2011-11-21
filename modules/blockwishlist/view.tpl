@@ -87,6 +87,7 @@
 		</li>
 	</div>
 	</ul>
+		<div class="clear">&nbsp;</div>
 	{/foreach}
 	<p class="clear" />
 </div>

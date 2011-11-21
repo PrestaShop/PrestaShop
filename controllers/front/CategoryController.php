@@ -83,15 +83,14 @@ class CategoryControllerCore extends FrontController
 
 	public function initContent()
 	{
-		if (isset($this->context->customer->id))
-			$this->context->smarty->assign('compareProducts', CompareProduct::getCustomerCompareProducts($this->context->customer->id));
-		else if (isset($this->context->customer->id_guest))
-			$this->context->smarty->assign('compareProducts', CompareProduct::getGuestCompareProducts($this->context->customer->id_guest));
+		if (isset($this->context->cookie->id_compare))
+			$this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
+
 
 		$this->assignScenes();
 		if ($this->category->id != 1)
 			$this->assignProductList();
-		
+
 		$this->productSort();
 		$this->context->smarty->assign(array(
 			'category' => $this->category,

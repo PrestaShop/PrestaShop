@@ -49,7 +49,7 @@ if(empty($_POST['action']) OR !in_array($_POST['action'],array('upgradeDb')))
 	// Add Upgrader class : if > 1.4.5.0 , uses core class
 	// otherwise, use Upgrader.php in modules.
 	// in both cases, use override if files exists
-	if (!version_compare(_PS_VERSION_,'1.4.5.0','<') && file_exists(_PS_ROOT_DIR_.'/classes/Upgrader.php'))
+	if (!version_compare(_PS_VERSION_,'1.4.6.0','<') && file_exists(_PS_ROOT_DIR_.'/classes/Upgrader.php'))
 		require_once(_PS_ROOT_DIR_.'/classes/Upgrader.php');
 	else
 		require_once(dirname(__FILE__).'/Upgrader.php');
@@ -118,6 +118,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public $prodRootDir = '';
 	public $adminDir = '';
 	public $rootWritable = false;
+
+	public $lastAutoupgradeVersion = '';
 	public $svnDir = 'svn';
 	public $destDownloadFilename = 'prestashop.zip';
 	public $toUpgradeFileList = 'filesToUpgrade.list';
@@ -156,7 +158,7 @@ class AdminSelfUpgrade extends AdminSelfTab
   * value = the next step you want instead
  	*	example : public static $skipAction = array('download' => 'upgradeFiles');
 	*/
-	public static $skipAction;
+	public static $skipAction = array();
 	public $useSvn;
 
 	protected $_includeContainer = false;
@@ -276,12 +278,40 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 	public function configOk()
 	{
-		$allowed = (ConfigurationTest::test_fopen() && $this->rootWritable);
-		$allowed &= !Configuration::get('PS_SHOP_ENABLE');
-		$allowed &= $this->upgrader->autoupgrade;
-		$allowed &= (Configuration::get('PS_AUTOUP_KEEP_TRAD') !== false);
-
+		$allowed_array = $this->getCheckCurrentConfig();
+		$allowed = array_product($allowed_array);
 		return $allowed;
+	}
+
+	public function getcheckCurrentConfig()
+	{
+		static $allowed_array;
+
+		if(empty($allowed_array))
+		{
+			$allowed_array = array();
+			$allowed_array['fopen'] = ConfigurationTest::test_fopen();
+			$allowed_array['root_writable'] = $this->rootWritable;
+			$allowed_array['shop_enabled'] = !Configuration::get('PS_SHOP_ENABLE');
+			$allowed_array['autoupgrade_allowed'] = $this->upgrader->autoupgrade;
+			$module_version = '0.1';
+			if ($module_version = simplexml_load_file(dirname(__FILE__).'/config.xml'))
+				$module_version = (string)$module_version->version;
+			$allowed_array['module_version_ok'] = version_compare($module_version, $this->upgrader->autoupgrade_last_version, '>=');
+			// if one option has been defined, all options are.
+			$allowed_array['module_configured'] = (Configuration::get('PS_AUTOUP_KEEP_TRAD') !== false);
+		}
+		return $allowed_array;
+	}
+
+
+	public function checkAutoupgradeLastVersion(){
+		if ($module_version = simplexml_load_file(_PS_MODULE_DIR_.'autoupgrade'.'/config.xml'))
+			$module_version = (string)$module_version['version'];
+		else
+			$module_version = '';
+
+		return version_compare($this->upgrader->autoupgrade_last_version, $module_version, '==');
 	}
 
 	/**
@@ -315,7 +345,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->action = empty($_REQUEST['action'])?null:$_REQUEST['action'];
 		$this->currentParams = empty($_REQUEST['params'])?null:$_REQUEST['params'];
 		// test writable recursively
-		if(version_compare(_PS_VERSION_,'1.4.5.0','<'))
+		if(version_compare(_PS_VERSION_,'1.4.6.0','<') || !class_exists('ConfigurationTest', false))
 		{
 			require_once('ConfigurationTest.php');
 			if(!class_exists('ConfigurationTest', false) AND class_exists('ConfigurationTestCore'))
@@ -324,8 +354,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (ConfigurationTest::test_dir($this->prodRootDir,true))
 			$this->rootWritable = true;
 
-		if (!in_array($this->action,array('upgradeFile', 'upgradeDb', 'upgradeComplete','rollback','restoreFiles','restoreDb')))
+		if (!in_array($this->action, array('upgradeFile', 'upgradeDb', 'upgradeComplete','rollback','restoreFiles','restoreDb', 'checkFilesVersion')))
 		{
+
 			$this->upgrader = new Upgrader();
 			$this->upgrader->checkPSVersion();
 			$this->nextParams['install_version'] = $this->upgrader->version_num;
@@ -464,8 +495,21 @@ class AdminSelfUpgrade extends AdminSelfTab
 	}
 	public function ajaxProcessCheckFilesVersion()
 	{
-		if ($this->upgrader->isAuthenticPrestashopVersion() !== false)
+		$this->_loadDbRelatedClasses();
+		$this->upgrader = new Upgrader();
+
+		$changedFileList = $this->upgrader->getChangedFilesList();
+		if ($this->upgrader->isAuthenticPrestashopVersion() == true
+			&& !is_array($changedFileList) )
 		{
+			$this->nextParams['status'] = 'error';
+			$this->nextParams['msg'] = '[TECHNICAL ERROR] Unable to check files';
+			$testOrigCore = false;
+		}
+		else
+		{
+			if ($this->upgrader->isAuthenticPrestashopVersion() != false)
+			{
 			$this->nextParams['status'] = 'ok';
 			$testOrigCore = true;
 		}
@@ -475,7 +519,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->nextParams['status'] = 'warn';
 		}
 
-		$changedFileList = $this->upgrader->getChangedFilesList();
 		if (!isset($changedFileList['core']))
 			$changedFileList['core'] = array();
 		if (!isset($changedFileList['translation']))
@@ -494,6 +537,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->nextParams['msg'] = ($testOrigCore?$this->l('Core files are ok'):sprintf($this->l('%1$s core files have been modified (%2$s total)'), count($changedFileList['core']), count(array_merge($changedFileList['core'], $changedFileList['mail'], $changedFileList['translation']))));
 		}
 		$this->nextParams['result'] = $changedFileList;
+	}
 	}
 
 	public function ajaxProcessUpgradeNow()
@@ -551,7 +595,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 	/**
 	 * extract last version into admin/autoupgrade/latest directory
-	 * 
+	 *
 	 * @return void
 	 */
 	public function ajaxProcessUnzip(){
@@ -938,7 +982,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	}
 
 	/**
-	 * ajaxProcessRestoreFiles restore the previously saved files, 
+	 * ajaxProcessRestoreFiles restore the previously saved files,
 	 * and delete files that weren't archived
 	 *
 	 * @return boolean true if succeed
@@ -947,13 +991,13 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 				$this->next = 'restoreFiles';
 		// @TODO : workaround max_execution_time / ajax batch unzip
-		// very first restoreFiles step : extract backup 
+		// very first restoreFiles step : extract backup
 		if (!empty($this->backupFilesFilename) AND file_exists($this->backupFilesFilename))
 		{
 			// cleanup current PS tree
 			$fromArchive = $this->_listArchivedFiles();
 			file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList, serialize($fromArchive));
-	
+
 			//$this->_cleanUp($this->prodRootDir.'/');
 			$this->nextQuickInfo[] = $this->l('root directory cleaned.');
 
@@ -963,7 +1007,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (self::ZipExtract($filepath, $destExtract))
 			{
 				$this->next = 'restoreFiles';
-				// get new file list 
+				// get new file list
 				$this->nextDesc = $this->l('Files restored. Removing files added by upgrade ...');
 				// once it's restored, do not delete the archive file. This has to be done manually
 				// but we can empty the var, to avoid loop.
@@ -977,9 +1021,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 				return false;
 			}
 		}
-		
+
 		// very second restoreFiles step : remove new files that shouldn't be there
-		// for that, we will make a diff between the current filelist in root dir 
+		// for that, we will make a diff between the current filelist in root dir
 		// and the archive file list we previously saved
 		// files to remove : differences between complete list and archive list
 		if (!file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList))
@@ -989,7 +1033,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$toRemove = array_diff($this->_listFilesInDir($this->prodRootDir), $fromArchive);
 			file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList,serialize($toRemove));
 		}
-		
+
 		if (!isset($toRemove))
 			$toRemove = unserialize(file_get_contents($this->toRemoveFileList));
 
@@ -1007,8 +1051,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			else
 			{
 				$checkFile = array_shift($toRemove);
-				// 
-				if (in_array($checkFile, $toRemove) 
+				//
+				if (in_array($checkFile, $toRemove)
 					&& !$this->_skipFile('', $path.$file, 'backup')
 					&& !$this->_skipFile('', $path.$file, 'upgrade')
 				)
@@ -1461,8 +1505,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 */
 	public function displayConf()
 	{
-
-		if (version_compare(_PS_VERSION_,'1.4.6.0','<') AND false)
+		if (version_compare(_PS_VERSION_,'1.4.5.0','<') AND false)
 			$this->_errors[] = Tools::displayError('This class depends of several files modified in 1.4.5.0 version and should not be used in an older version');
 		parent::displayConf();
 	}
@@ -1470,10 +1513,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public function ajaxPreProcess()
 	{
 		/* PrestaShop demo mode */
-		if (_PS_MODE_DEMO_)
+		if (defined('_PS_MODE_DEMO_') && _PS_MODE_DEMO_)
 			return;
 		/* PrestaShop demo mode*/
-		
+
 		if (!empty($_POST['responseType']) AND $_POST['responseType'] == 'json')
 			header('Content-Type: application/json');
 
@@ -1587,7 +1630,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 	}
 
 	/** this returns fieldset containing the configuration points you need to use autoupgrade
-	 * @return string 
+	 * @return string
 	 */
 	private function getCurrentConfiguration()
 	{
@@ -1596,6 +1639,19 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$content .= '<div id="currentConfiguration">
 		<p>'.$this->l('All the following points must be ok in order to allow the upgrade.').'</p>
 		<b>'.$this->l('Root directory').' : </b>'.$this->prodRootDir.'<br/><br/>';
+
+		if ($this->checkAutoupgradeLastVersion())
+			$srcModuleVersion = '../img/admin/enabled.gif';
+		else
+			$srcModuleVersion = '../img/admin/disabled.gif';
+
+		if ($module_version = simplexml_load_file(dirname(__FILE__).'/config.xml'))
+			$module_version = (string)$module_version->version;
+
+		$content .= '<b>'.$this->l('Module version').' : </b>'
+			.'<img src="'.$srcModuleVersion.'" /> '
+			.sprintf($this->lastAutoupgradeVersion?
+				$this->l('You have the last version (%s)'):$this->l('You currently use the version %1$s of the autoupgrade module. Please install the last version (%2$s)'), $module_version, $this->upgrader->autoupgrade_last_version).'<br/><br/>';
 
 			if ($this->rootWritable)
 				$srcRootWritable = '../img/admin/enabled.gif';
@@ -1645,7 +1701,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			$configurationDone = '../img/admin/enabled.gif';
 		else
 			$configurationDone = '../img/admin/disabled.gif';
-		$content .= '<b>'.$this->l('Options chosen').' : </b>'.'<img src="'.$configurationDone.'" /> 
+		$content .= '<b>'.$this->l('Options chosen').' : </b>'.'<img src="'.$configurationDone.'" />
 		<a class="button" id="scrollToOptions" href="#options">'
 		.($testConfigDone
 			?$this->l('autoupgrade configuration ok').' - '.$this->l('Modify your options')
@@ -1673,7 +1729,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$content .= '<script type="text/javascript">
 			$("#currentConfigurationToggle").click(function(e){e.preventDefault();$("#currentConfiguration").toggle()});'
 			.($this->configOk()?'$("#currentConfiguration").hide();$("#currentConfigurationToggle").after("<img src=\"../img/admin/enabled.gif\" />");':'').'</script>';
-		$content .= '<div style="float:left">
+		$content .= '<div style="clear:left">&nbsp;</div><div style="float:left">
 		<h1>'.sprintf($this->l('Your current prestashop version : %s '),_PS_VERSION_).'</h1>';
 		$content .= '<p>'.sprintf($this->l('Last version is %1$s (%2$s) '), $this->upgrader->version_name, $this->upgrader->version_num).'</p>';
 
@@ -1700,10 +1756,10 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		{
 			$content .= '<span class="button-autoupgrade upgradestep" >'.$this->l('Your shop is already up to date.').'</span> ';
 		}
-		$content .= '<br/><br/><small>'.sprintf($this->l('last datetime check : %s '),date('Y-m-d H:i:s',Configuration::get('PS_LAST_VERSION_CHECK'))).'</span> 
+		$content .= '<br/><br/><small>'.sprintf($this->l('last datetime check : %s '),date('Y-m-d H:i:s',Configuration::get('PS_LAST_VERSION_CHECK'))).'</span>
 		<a class="button" href="index.php?tab=AdminSelfUpgrade&token='.Tools::getAdminToken('AdminSelfUpgrade'.(int)(Tab::getIdFromClassName(get_class($this))).(int)$cookie->id_employee).'&refreshCurrentVersion=1">'.$this->l('Please click to refresh').'</a>
 		</small>';
-	
+
 		$content .= '</div>
 		<div id="currentlyProcessing" style="display:none;float:right"><h4>Currently processing <img id="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
 
@@ -1747,7 +1803,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		else
 			$content .= '<p>'.$this->l('Your current configuration does not allow upgrade.').'</p>';
 
-		$content .= '<br/><br/><small>'.sprintf($this->l('last datetime check : %s '),date('Y-m-d H:i:s',Configuration::get('PS_LAST_VERSION_CHECK'))).'</span> 
+		$content .= '<br/><br/><small>'.sprintf($this->l('last datetime check : %s '),date('Y-m-d H:i:s',Configuration::get('PS_LAST_VERSION_CHECK'))).'</span>
 		<a class="button" href="index.php?tab=AdminSelfUpgrade&token='.Tools::getAdminToken('AdminSelfUpgrade'.(int)(Tab::getIdFromClassName(get_class($this))).(int)$cookie->id_employee).'&refreshCurrentVersion=1">'.$this->l('Please click to refresh').'</a>
 		</small>';
 
@@ -1773,14 +1829,13 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 	public function display()
 	{
 		/* PrestaShop demo mode */
-		if (_PS_MODE_DEMO_)
+		if (defined('_PS_MODE_DEMO_') && _PS_MODE_DEMO_)
 		{
 			echo '<div class="error">'.Tools::displayError('This functionnality has been disabled.').'</div>';
 			return;
 		}
 		/* PrestaShop demo mode*/
 
-		
 		if(isset($_GET['refreshCurrentVersion']))
 		{
 			$upgrader = new Upgrader();
@@ -1823,7 +1878,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			$this->_displayForm('autoUpgradeOptions',$this->_fieldsAutoUpgrade,'<a href="" name="options" id="options">'.$this->l('Options').'</a>', '','prefs');
 			// @todo manual upload with a form
 
-			// We need jquery 1.6 for json 
+			// We need jquery 1.6 for json
 			echo '<script type="text/javascript">
 				jq13 = jQuery.noConflict(true);
 				</script>
@@ -2225,7 +2280,7 @@ function handleError(res)
 	$("#cchangedList").append("<br/>");
 
 }';
-					
+
 		$js.= '$(document).ready(function(){
 	$.ajax({
 			type:"POST",
@@ -2264,6 +2319,7 @@ function handleError(res)
 			,
 			error: function(res,textStatus,jqXHR)
 			{
+				//$("#checkPrestaShopFilesVersion").html("<img src=\"../img/admin/warning.gif\" /> "+textStatus);
 				if (textStatus == "timeout" && action == "download")
 				{
 					updateInfoStep("'.$this->l('Your server can\'t download the file. Please upload it first by ftp in your admin/autoupgrade directory').'");
@@ -2299,7 +2355,7 @@ function handleError(res)
 			$zip = new ZipArchive();
 			if ($zip->open($fromFile) === true)
 			{
-				if (@$zip->extractTo($toDir.'/') 
+				if (@$zip->extractTo($toDir.'/')
 					&& $zip->close()
 				)
 				{

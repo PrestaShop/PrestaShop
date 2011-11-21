@@ -45,6 +45,11 @@ class CMSCore extends ObjectModel
 	protected $table = 'cms';
 	protected $identifier = 'id_cms';
 
+	protected	$webserviceParameters = array(
+		'objectNodeName' => 'content',
+		'objectsNodeName' => 'content_management_system',
+	);
+
 	public function getFields()
 	{
 		$this->validateFields();

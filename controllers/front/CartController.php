@@ -112,19 +112,19 @@ class CartControllerCore extends FrontController
 		}
 		CartRule::autoRemoveFromCart();
 	}
-	
+
 	protected function processChangeProductAddressDelivery()
 	{
 		$old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
 		$new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
-		
+
 		$this->context->cart->setProductAddressDelivery(
 			$this->id_product,
 			$this->id_product_attribute,
 			$old_id_address_delivery,
 			$new_id_address_delivery);
 	}
-	
+
 	protected function processDuplicateProduct()
 	{
 		if (
@@ -249,6 +249,7 @@ class CartControllerCore extends FrontController
 				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
 				$result['carriers'] = Carrier::getCarriersForOrder(Country::getIdZone($id_country), $groups);
 				//$result['checked'] = Carrier::getDefaultCarrierSelection($result['carriers'], (int)$this->cart->id_carrier);
+				$result['HOOK_EXTRACARRIER'] = Module::hookExec('extraCarrier', array('address' => (isset($deliveryAddress) && (int)$deliveryAddress->id) ? $deliveryAddress : null));
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);

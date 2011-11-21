@@ -274,7 +274,8 @@ return;
 			var removedProductData = null;
 			var removedProductDomId = null;
 			//look for a product to delete...
-				$('#'+parentId+' #cart_block_list dl.products dt').each(function(){
+				$('#'+parentId+' #cart_block_list dl.products dt').each(function()
+				{
 				//retrieve idProduct and idCombination from the displayed product in the block cart
 				var domIdProduct = $(this).attr('id');
 				var firstCut =  domIdProduct.replace('cart_block_product_', '');
@@ -299,7 +300,6 @@ return;
 					removedProductId = $(this).attr('id');
 					//return false; // Regarding that the customer can only remove products one by one, we break the loop
 				}
-			});
 
 			//if there is a removed product, delete it from the displayed block cart
 			if (removedProductId != null)
@@ -324,6 +324,7 @@ return;
 					});
 				});
 			}
+				});
 		}
 		});
 	},

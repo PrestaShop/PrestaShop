@@ -643,7 +643,7 @@ class ToolsCore
 	* @param integer $id_lang Language id
 	* @return array Meta tags
 	*/
-	public static function getMetaTags($id_lang, $page_name)
+	public static function getMetaTags($id_lang, $page_name, $title = '')
 	{
 		global $maintenance;
 
@@ -670,6 +670,8 @@ class ToolsCore
 			/* Categories specifics meta tags */
 			elseif ($id_category = self::getValue('id_category'))
 			{
+				if (!empty($title))
+					$title = ' - '.$title;
 				$page_number = (int)self::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
@@ -682,9 +684,12 @@ class ToolsCore
 
 					// Paginate title
 					if (!empty($row['meta_title']))
-						$row['meta_title'] = $row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+						$row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
 					else
 						$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+
+					if (!empty($title))
+						$row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
 
 					return self::completeMetaTags($row, $row['name']);
 				}
@@ -1227,10 +1232,12 @@ class ToolsCore
 			return false;
 	}
 
-	/**
-	* @deprecated as of 1.5 use Media::minifyHTML()
-	*/
 
+	public static $a = 0;
+
+	/**
+	 * @deprecated as of 1.5 use Media::minifyHTML()
+	 */
 	public static function minifyHTML($html_content)
 	{
 		Tools::displayAsDeprecated();
@@ -1276,8 +1283,21 @@ class ToolsCore
 	*/
 	public static function minifyHTMLpregCallback($preg_matches)
 	{
+<<<<<<< .working
 		Tools::displayAsDeprecated();
 		return Media::minifyHTMLpregCallback($preg_matches);
+=======
+		$args = array();
+		preg_match_all('/[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']/is', $preg_matches[2], $args);
+		$args = $args[0];
+		sort($args);
+		// if there is no args in the balise, we don't write a space (avoid previous : <title >, now : <title>)
+		if (empty($args))
+			$output = $preg_matches[1].'>';
+		else
+			$output = $preg_matches[1].' '.implode(' ', $args).'>';
+		return $output;
+>>>>>>> .merge-right.r10309
 	}
 
 	/**
@@ -1285,8 +1305,25 @@ class ToolsCore
 	*/
 	public static function packJSinHTML($html_content)
 	{
+<<<<<<< .working
 		Tools::displayAsDeprecated();
 		return Media::packJSinHTML($html_content);
+=======
+		if (strlen($html_content) > 0)
+		{
+			$htmlContentCopy = $html_content;
+			$html_content = preg_replace_callback(
+				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i'
+				,array('Tools', 'packJSinHTMLpregCallback')
+				,$html_content);
+
+			// If the string is too big preg_replace return null: http://php.net/manual/en/function.preg-replace-callback.php
+			// In this case, we don't compress the content
+			if ($html_content === null)
+			{
+				error_log('Error occured in function packJSinHTML');
+				return $htmlContentCopy;
+>>>>>>> .merge-right.r10309
 	}
 
 	/**
@@ -1796,11 +1833,11 @@ FileETag INode MTime Size
 				$orderByPrefix = '';
 				if ($prefix)
 				{
-					if ($value == 'id_product' || $value == 'date_add' || $value == 'price')
+					if ($value == 'id_product' || $value == 'date_add' || $value == 'date_upd' || $value == 'price')
 						$orderByPrefix = 'p.';
 					elseif ($value == 'name')
 						$orderByPrefix = 'pl.';
-					elseif ($value == 'manufacturer')
+					elseif ($value == 'manufacturer_name')
 						$orderByPrefix = 'm.';
 					elseif ($value == 'position' || empty($value))
 						$orderByPrefix = 'cp.';

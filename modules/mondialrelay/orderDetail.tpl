@@ -23,7 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $mr_addr}
 <p id="dateofdelivery"><b>{l s='Delivery to' mod='mondialrelay'}</b> {$mr_addr}</p>
+{if $mr_url}
+<a href="{$mr_url}" target="_blank">{l s='Follow my package on Mondial Relay website' mod='mondialrelay'}.</a>
+{/if}
 {/if}

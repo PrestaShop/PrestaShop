@@ -46,11 +46,21 @@ class BlockSearch extends Module
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('top'))
+		if (!parent::install() || !$this->registerHook('top') || !$this->registerHook('header'))
 			return false;
 		return true;
 	}
 
+	public function hookHeader($params)
+	{
+		if (Configuration::get('PS_SEARCH_AJAX'))
+		{
+			Tools::addCSS(_PS_CSS_DIR_.'jquery.autocomplete.css');
+			Tools::addJS(_PS_JS_DIR_.'jquery/jquery.autocomplete.js');
+		}
+		Tools::addCSS(_THEME_CSS_DIR_.'product_list.css');
+		Tools::addCSS(($this->_path).'blocksearch.css', 'all');
+	}
 
 	public function hookLeftColumn($params)
 	{
@@ -79,15 +89,9 @@ class BlockSearch extends Module
 	{
 		$this->context->smarty->assign('ENT_QUOTES', ENT_QUOTES);
 		$this->context->smarty->assign('search_ssl', Tools::usingSecureMode());
+		$this->context->smarty->assign('ajaxsearch', Configuration::get('PS_SEARCH_AJAX'));
+		$this->context->smarty->assign('instantsearch', Configuration::get('PS_INSTANT_SEARCH'));
 
-		$ajax_search = (int)Configuration::get('PS_SEARCH_AJAX');
-		$this->context->smarty->assign('ajaxsearch', $ajax_search);
-
-		$instant_search = (int)(Configuration::get('PS_INSTANT_SEARCH'));
-		$this->context->smarty->assign('instantsearch', $instant_search);
-		if ($ajax_search)
-			$this->context->controller->addJqueryPlugin('autocomplete');
-		$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
-		$this->context->controller->addCSS(($this->_path).'blocksearch.css', 'all');
+		return true;
 	}
 }

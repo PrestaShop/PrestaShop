@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -39,12 +39,14 @@ class UpgraderCore
 
 	public $version_name;
 	public $version_num;
+	public $version_is_modified = null;
 	/**
 	 * @var string contains hte url where to download the file
 	 */
 	public $link;
 	public $autoupgrade;
 	public $autoupgrade_module;
+	public $autoupgrade_last_version;
 	public $changelog;
 	public $md5;
 
@@ -65,7 +67,7 @@ class UpgraderCore
 
 	/**
 	 * downloadLast download the last version of PrestaShop and save it in $dest/$filename
-	 * 
+	 *
 	 * @param string $dest directory where to save the file
 	 * @param string $filename new filename
 	 * @return boolean
@@ -94,13 +96,12 @@ class UpgraderCore
 
 	/**
 	 * checkPSVersion ask to prestashop.com if there is a new version. return an array if yes, false otherwise
-	 * 
+	 *
 	 * @return mixed
 	 */
 	public function checkPSVersion($force = false)
 	{
-		if (empty($this->link))
-		{
+
 			if (class_exists('Configuration'))
 				$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
 			else
@@ -112,7 +113,6 @@ class UpgraderCore
 				libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 				if ($feed = @simplexml_load_file($this->rss_version_link))
 				{
-
 					$this->version_name = (string)$feed->version->name;
 					$this->version_num = (string)$feed->version->num;
 					$this->link = (string)$feed->download->link;
@@ -120,6 +120,7 @@ class UpgraderCore
 					$this->changelog = (string)$feed->download->changelog;
 					$this->autoupgrade = (int)$feed->autoupgrade;
 					$this->autoupgrade_module = (int)$feed->autoupgrade_module;
+				$this->autoupgrade_last_version = (string)$feed->autoupgrade_last_version;
 					$this->desc = (string)$feed->desc ;
 					$config_last_version = array(
 						'name' => $this->version_name,
@@ -128,6 +129,7 @@ class UpgraderCore
 						'md5' => $this->md5,
 						'autoupgrade' => $this->autoupgrade,
 						'autoupgrade_module' => $this->autoupgrade_module,
+					'autoupgrade_last_version' => $this->autoupgrade_last_version,
 						'changelog' => $this->changelog,
 						'desc' => $this->desc
 					);
@@ -139,8 +141,7 @@ class UpgraderCore
 			}
 			}
 			else
-				$this->loadFromConfig();
-		}
+			$this->loadFromConfig();
 		// retro-compatibility :
 		// return array(name,link) if you don't use the last version
 		// false otherwise
@@ -155,7 +156,7 @@ class UpgraderCore
 
 	/**
 	 * load the last version informations stocked in base
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function loadFromConfig()
@@ -173,6 +174,8 @@ class UpgraderCore
 				$this->autoupgrade = $last_version_check['autoupgrade'];
 			if (isset($last_version_check['autoupgrade_module']))
 				$this->autoupgrade_module = $last_version_check['autoupgrade_module'];
+			if (isset($last_version_check['autoupgrade_last_version']))
+				$this->autoupgrade_last_version = $last_version_check['autoupgrade_last_version'];
 			if (isset($last_version_check['md5']))
 				$this->md5 = $last_version_check['md5'];
 			if (isset($last_version_check['desc']))
@@ -184,17 +187,19 @@ class UpgraderCore
 	}
 
 	/**
-	 * return an array of files 
+	 * return an array of files
 	 * that the md5file does not match to the original md5file (provided by $rss_md5file_link_dir )
 	 * @return void
 	 */
 	public function getChangedFilesList()
 	{
-		if (count($this->changed_files) == 0)
+		if (is_array($this->changed_files) && count($this->changed_files) == 0)
 		{
 			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
-		if ($checksum === false)
-				return false;
+			if ($checksum == false)
+			{
+				$this->changed_files = false;
+			}
 			else
 				$this->browseXmlAndCompare($checksum->ps_root_dir[0]);
 }
@@ -202,13 +207,13 @@ class UpgraderCore
 	}
 
 	/** populate $this->changed_files with $path
-	 * in sub arrays  mail, translation and core items 
+	 * in sub arrays  mail, translation and core items
 	 * @param string $path filepath to add, relative to _PS_ROOT_DIR_
 	 */
 	protected function addChangedFile($path)
 	{
 		$this->version_is_modified = true;
-		
+
 		if (strpos($path, 'mails/') !== false)
 			$this->changed_files['mail'][] = $path;
 		else if (
@@ -254,7 +259,7 @@ class UpgraderCore
 
 				$fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
-					// replace default admin dir by current one 
+					// replace default admin dir by current one
 				$fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
 				if (!file_exists($fullpath))
 					$this->addMissingFile($relative_path);
@@ -274,6 +279,7 @@ class UpgraderCore
 
 	public function isAuthenticPrestashopVersion()
 	{
+
 		$this->getChangedFilesList();
 		return !$this->version_is_modified;
 	}

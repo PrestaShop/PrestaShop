@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -95,7 +95,7 @@ function displayConfirm()
 		'logo' => $ppPayment->getLogo(),
 		'cust_currency' => Context::getContext()->cart->id_currency,
 		'currency' => $ppPayment->getCurrency((int)Context::getContext()->cart->id_currency),
-		'total' => Context::getContext()->cart->getOrderTotal(true, Cart::BOTH),
+		'total' => Context::getContext()->cart->getOrderTotal(true, PayPal::BOTH),
 		'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'. $ppPayment->name.'/',
 		'mode' => 'payment/'
 	));
@@ -116,7 +116,7 @@ function submitConfirm()
 	}
 	elseif (!$id_currency = (int)(Tools::getValue('currency_payement')))
 		die('No currency');
-	elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
+	elseif (!Context::getContext()->cart->getOrderTotal(true, PayPal::BOTH))
 		die('Empty cart');
 	$currency = new Currency((int)($id_currency));
 	if (!Validate::isLoadedObject($currency))
@@ -133,7 +133,7 @@ function validOrder()
 		header('location:../../../'); exit;
 		die('Not logged');
 	}
-	elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
+	elseif (!Context::getContext()->cart->getOrderTotal(true, PayPal::BOTH))
 		die('Empty cart');
 	if (!$token = Tools::htmlentitiesUTF8(strval(Tools::getValue('token'))))
 	{
@@ -153,7 +153,7 @@ function validOrder()
 
 if (!Context::getContext()->customer->isLogged(true))
 	die('Not logged');
-elseif (!Context::getContext()->cart->getOrderTotal(true, Cart::BOTH))
+elseif (!Context::getContext()->cart->getOrderTotal(true, PayPal::BOTH))
 	die('Empty cart');
 
 // No submit, confirmation page

@@ -39,11 +39,9 @@ virtual_product_nb_days, is_shareable)
 	$('#attribute_quantity').html(quantity);
 	$('#attribute_quantity').show();
 	$('#attr_qty_stock').show();
-    if(available_date != undefined)
-        getE('available_date').value = available_date;
-    else
-        getE('available_date').value = '0000-00-00';
-	getE('minimal_quantity').value = minimal_quantity;
+
+	$('#attribute_minimal_quantity').val(minimal_quantity);
+
 	getE('attribute_reference').value = reference;
 	
 	getE('virtual_product_name_attribute').value = virtual_product_name_attribute;

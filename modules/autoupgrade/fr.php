@@ -21,7 +21,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_8d8e0207549d32c6f86424640303
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_c62f82b25de72c3b0bb07225c49fe9d0'] = '%1$s fichier(s) du coeur a été modifié  (sur %2$s au total)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7b2f224649ef2ad10a2d73595d67a876'] = 'Démarrage mise à niveau ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_6b2d0404b7faba0e791e15a52586a149'] = 'Basculer vers svn checkout (useSvn activé)';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f0e38ac0c558a7f216ae98382b9e58f5'] = 'Site désactivé. Téléchargement en cours (peut prendre ';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_13b35313a987313838f0105902bb6742'] = 'Boutique désactivée. Téléchargement en cours... (ce qui peut prendre un certain temps) ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_6824d57b7af37f605bd97d34defc3761'] = 'Exportation svn terminée. Suppression des fichiers exemples...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f70307d8297e48a8783d41e6f3313d51'] = 'Erreur lors de l\'export SVN';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4eecd9c195e46c054ef7da6d9d1a738b'] = 'Extraction terminée. Suppression des fichiers exemples...';
@@ -144,7 +144,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_af566be1636d11ecc8ddb728a155
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ea4d3af79ad2392b7c0cca4b8ddd7028'] = 'Vous avez déjà la dernière version disponible.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3d9f7f5927158b5a7dac0d65b4537265'] = 'Boutique désactivée';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_69af703e1b0af65d0eb16b85e3ebd738'] = 'Boutique désactivée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_94af5df6182efd3591d0ccccaa04bd5c'] = 'Limite de temps PHP';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_075ae3d2fc31640504f814f60e5ef713'] = 'désactivée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_783e8e29e6a8c3e22baa58a19420eb4f'] = 'secondes';

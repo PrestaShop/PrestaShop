@@ -115,7 +115,7 @@ function smarty_modifier_truncate($string, $length = 80, $etc = '...', $break_wo
 		$length -= min($length, Tools::strlen($etc));
 		if (!$break_words && !$middle)
 			$string = preg_replace('/\s+?(\S+)?$/u', '', Tools::substr($string, 0, $length+1, $charset));
-		return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length/2, $charset).$etc.Tools::substr($string, -$length/2, $charset);
+		return !$middle ? Tools::substr($string, 0, $length, $charset).$etc : Tools::substr($string, 0, $length/2, $charset).$etc.Tools::substr($string, -$length/2, $length, $charset);
 	}
 	else
 		return $string;

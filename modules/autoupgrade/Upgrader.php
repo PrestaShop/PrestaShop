@@ -39,15 +39,26 @@ class UpgraderCore
 
 	public $version_name;
 	public $version_num;
+	public $version_is_modified = null;
 	/**
 	 * @var string contains hte url where to download the file
 	 */
 	public $link;
 	public $autoupgrade;
 	public $autoupgrade_module;
+	public $autoupgrade_last_version;
 	public $changelog;
 	public $md5;
 
+	public function __construct($autoload = false)
+	{
+		if ($autoload)
+		{
+			$this->loadFromConfig();
+			// checkPSVersion to get need_upgrade
+			$this->checkPSVersion();
+		}
+	}
 	public function __get($var)
 	{
 		if ($var == 'need_upgrade')
@@ -90,8 +101,7 @@ class UpgraderCore
 	 */
 	public function checkPSVersion($force = false)
 	{
-		if (empty($this->link))
-		{
+
 			if (class_exists('Configuration'))
 				$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
 			else
@@ -103,7 +113,6 @@ class UpgraderCore
 				libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 				if ($feed = @simplexml_load_file($this->rss_version_link))
 				{
-
 					$this->version_name = (string)$feed->version->name;
 					$this->version_num = (string)$feed->version->num;
 					$this->link = (string)$feed->download->link;
@@ -111,6 +120,7 @@ class UpgraderCore
 					$this->changelog = (string)$feed->download->changelog;
 					$this->autoupgrade = (int)$feed->autoupgrade;
 					$this->autoupgrade_module = (int)$feed->autoupgrade_module;
+				$this->autoupgrade_last_version = (string)$feed->autoupgrade_last_version;
 					$this->desc = (string)$feed->desc ;
 					$config_last_version = array(
 						'name' => $this->version_name,
@@ -119,6 +129,7 @@ class UpgraderCore
 						'md5' => $this->md5,
 						'autoupgrade' => $this->autoupgrade,
 						'autoupgrade_module' => $this->autoupgrade_module,
+					'autoupgrade_last_version' => $this->autoupgrade_last_version,
 						'changelog' => $this->changelog,
 						'desc' => $this->desc
 					);
@@ -130,8 +141,29 @@ class UpgraderCore
 			}
 			}
 			else
+			$this->loadFromConfig();
+		// retro-compatibility :
+		// return array(name,link) if you don't use the last version
+		// false otherwise
+		if (version_compare(_PS_VERSION_, $this->version_num, '<'))
 			{
+			$this->need_upgrade = true;
+			return array('name' => $this->version_name, 'link' => $this->link);
+		}
+		else
+			return false;
+	}
+
+	/**
+	 * load the last version informations stocked in base
+	 * 
+	 * @return $this
+	 */
+	public function loadFromConfig()
+	{
 				$last_version_check = @unserialize(Configuration::get('PS_LAST_VERSION'));
+		if($last_version_check)
+		{
 				if (isset($last_version_check['name']))
 				$this->version_name = $last_version_check['name'];
 				if (isset($last_version_check['num']))
@@ -142,6 +174,8 @@ class UpgraderCore
 				$this->autoupgrade = $last_version_check['autoupgrade'];
 				if (isset($last_version_check['autoupgrade_module']))
 				$this->autoupgrade_module = $last_version_check['autoupgrade_module'];
+			if (isset($last_version_check['autoupgrade_last_version']))
+				$this->autoupgrade_last_version = $last_version_check['autoupgrade_last_version'];
 				if (isset($last_version_check['md5']))
 				$this->md5 = $last_version_check['md5'];
 				if (isset($last_version_check['desc']))
@@ -149,26 +183,23 @@ class UpgraderCore
 				if (isset($last_version_check['changelog']))
 				$this->changelog = $last_version_check['changelog'];
 			}
+		return $this;
 		}
-		// retro-compatibility :
-		// return array(name,link) if you don't use the last version
-		// false otherwise
-		if (version_compare(_PS_VERSION_, $this->version_num, '<'))
-		{
-			$this->need_upgrade = true;
-			return array('name' => $this->version_name, 'link' => $this->link);
-		}
-		else
-			return false;
-	}
 
+	/**
+	 * return an array of files 
+	 * that the md5file does not match to the original md5file (provided by $rss_md5file_link_dir )
+	 * @return void
+	 */
 	public function getChangedFilesList()
 	{
-		if (count($this->changed_files) == 0)
+		if (is_array($this->changed_files) && count($this->changed_files) == 0)
 		{
 			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
-		if ($checksum === false)
-				return false;
+			if ($checksum == false)
+			{
+				$this->changed_files = false;
+			}
 			else
 				$this->browseXmlAndCompare($checksum->ps_root_dir[0]);
 }
@@ -248,6 +279,7 @@ class UpgraderCore
 
 	public function isAuthenticPrestashopVersion()
 	{
+
 		$this->getChangedFilesList();
 		return !$this->version_is_modified;
 	}

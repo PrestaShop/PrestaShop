@@ -59,16 +59,22 @@ class AdminMondialRelay extends AdminTab
 
 		$errorListTicket = $MRCreateTicket->checkPreValidation();
 
-		if (count($errorListTicket))
-		{
-			$html .= '<div class="error">'.
-				$this->l('Thanks to kindly correct the following errors on ').
+		$titleType = array(
+			'error' => $this->l('Thanks to kindly correct the following errors on ').
 			' <a href="index.php?tab=AdminContact&token='.Tools::getAdminToken('AdminContact'.
 				(int)Tab::getIdFromClassName('AdminContact').(int)$this->context->id_employee).'" style="color:#f00;">&nbsp;'.
-			$this->l('the contact page').'</a>:<ul>';
-			foreach($errorListTicket as $type => $error)
+					$this->l('the contact page').'</a>:<ul>',
+			'warn' => $this->l('Please take a look to this following warning, maybe the ticket won\'t be generated'));
+		
+		foreach($errorListTicket as $errorType => $errorList)
+		{
+			if (count($errorList))
+			{
+				$html .= '<div class="MR_'.$errorType.'">'.$titleType[$errorType];
+				foreach($errorList as $type => $error)
 				$html .= '<li>'.$type.': '.$error.'</li>';
 			$html .= '</ul></div>';
+		}
 		}
 
 		$html .= '<p>'.$this->l('All orders which have the state').' "<b>'.$order_state->name.'</b>" '.

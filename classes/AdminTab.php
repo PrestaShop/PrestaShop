@@ -483,8 +483,8 @@ abstract class AdminTabCore
 		$this->_childValidation();
 
 		/* Checking for fields validity */
-		foreach ($rules['validate'] as $field => $function)
-			if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
+		foreach ($rules['validate'] AS $field => $function)
+			if (($value = Tools::getValue($field)) !== false AND !empty($value) AND ($field != 'passwd'))
 				if (!Validate::$function($value))
 					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
 

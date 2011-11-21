@@ -614,6 +614,8 @@ class FrontControllerCore extends Controller
 			$this->context = Context::getContext();
 
 		$nArray = (int)(Configuration::get('PS_PRODUCTS_PER_PAGE')) != 10 ? array((int)(Configuration::get('PS_PRODUCTS_PER_PAGE')), 10, 20, 50) : array(10, 20, 50);
+		// Clean duplicate values
+		$nArray = array_unique($nArray);
 		asort($nArray);
 		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
 		$this->p = abs((int)(Tools::getValue('p', 1)));

@@ -170,7 +170,7 @@ class GroupReductionCore extends ObjectModel
 	public static function setProductReduction($id_product, $id_group, $id_category, $reduction)
 	{
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction` 
+			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction`
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = '.(int)$id_product
 		);
@@ -197,7 +197,7 @@ class GroupReductionCore extends ObjectModel
 	public static function duplicateReduction($id_product_old, $id_product)
 	{
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction` 
+			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction`
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = '.(int)$id_product_old
 		);

@@ -7,7 +7,7 @@
  * @package Swift_Connection
  * @license GNU Lesser General Public License
  */
-
+ini_set('display_errors','1');
 require_once dirname(__FILE__) . "/../ClassLoader.php";
 Swift_ClassLoader::load("Swift_Events_SendListener");
 Swift_ClassLoader::load("Swift_Events_BeforeSendListener");

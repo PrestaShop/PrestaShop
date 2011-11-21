@@ -43,8 +43,8 @@ class PaypalExpress extends Paypal
 			return false;
 
 		// Making request
-		$returnURL = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/paypal/express/submit.php';
-		$cancelURL = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'order.php';
+		$returnURL = PayPal::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/paypal/express/submit.php';
+		$cancelURL = PayPal::getShopDomainSsl(true, true).__PS_BASE_URI__.'order.php';
 		$paymentAmount = (float)$cart->getOrderTotal();
 		$currencyCodeType = strval($currency->iso_code);
 		$paymentType = Configuration::get('PAYPAL_CAPTURE') == 1 ? 'Authorization' : 'Sale';

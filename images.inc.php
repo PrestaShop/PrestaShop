@@ -251,6 +251,7 @@ function imageResize($sourceFile, $destFile, $destWidth = NULL, $destHeight = NU
 	}
 
 	imagecopyresampled($destImage, $sourceImage, (int)(($destWidth - $nextWidth) / 2), (int)(($destHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight);
+
 	return (returnDestImage($fileType, $destImage, $destFile));
 }
 
@@ -326,6 +327,7 @@ function returnDestImage($type, $ressource, $filename)
 			$quality = (Configuration::get('PS_PNG_QUALITY') === false ? 7 : Configuration::get('PS_PNG_QUALITY'));
 			$flag = imagepng($ressource, $filename, (int)$quality);
 			break;
+		case 'jpg':
 		case 'jpeg':
 		default:
 			$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));

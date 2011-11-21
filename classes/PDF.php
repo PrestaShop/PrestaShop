@@ -631,6 +631,22 @@ class PDFCore extends PDF_PageGroupCore
 		$pdf->Ln(15);
 		$pdf->ProdTab((self::$delivery ? true : ''));
 
+
+
+		/* Canada */
+		$taxable_address = new Address((int)self::$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		if (!self::$delivery && strtoupper(Country::getIsoById((int)$taxable_address->id_country)) == 'CA')
+		{
+			$pdf->Ln(15);
+			$taxToDisplay = Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'order_tax WHERE id_order = '.(int)self::$order->id);
+			foreach ($taxToDisplay AS $t)
+			{
+				$pdf->Cell(0, 6, utf8_decode($t['tax_name']).' ('.number_format($t['tax_rate'], 2, '.', '').'%)      '.self::convertSign(Tools::displayPrice($t['amount'], self::$currency, true)), 0, 0, 'R');
+				$pdf->Ln(5);
+			}
+		}
+		/* End */
+
 		/* Exit if delivery */
 		if (!self::$delivery)
 		{
@@ -1055,8 +1071,10 @@ class PDFCore extends PDF_PageGroupCore
 	*/
 	public function TaxTab(&$priceBreakDown)
 	{
+		$taxable_address = new Address((int)self::$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		if (strtoupper(Country::getIsoById((int)$taxable_address->id_country)) == 'CA')
+		 	return;
 
-     $invoiceAddress = new Address(self::$order->id_address_invoice);
 		if (Configuration::get('VATNUMBER_MANAGEMENT') AND !empty($invoiceAddress->vat_number) AND $invoiceAddress->id_country != Configuration::get('VATNUMBER_COUNTRY'))
 		{
 			$this->Ln();

@@ -355,9 +355,9 @@ if ($lm->getIncludeTradFilename())
 
 		<h2><?php echo lang('What do you want to do?')?></h2>
 		<form id="formSetMethod" action="<?php $_SERVER['REQUEST_URI']; ?>" method="post">
-			<p><input <?php echo (!($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion)) ? 'checked="checked"' : '' ?> type="radio" value="install" name="typeInstall" id="typeInstallInstall" style="vertical-align: middle;" /> <label for="typeInstallInstall"><?php echo lang('I want to').' <b>'.lang('install').'</b> '.lang('a new online shop with PrestaShop'); ?></label></p>
+			<p><input <?php echo (!($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion)) ? 'checked="checked"' : '' ?> type="radio" value="install" name="typeInstall" id="typeInstallInstall" style="vertical-align: middle;" /> <label for="typeInstallInstall"><?php echo lang('I want to <b>install</b> a new online shop with PrestaShop'); ?></label></p>
 			<p style="font-style: italic;"><?php echo lang('- or -'); ?></p>
-			<p <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? '' : 'class="disabled"'; ?>><input <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? 'checked="checked"' : 'disabled="disabled"'; ?> type="radio" value="upgrade" name="typeInstall" id="typeInstallUpgrade" style="vertical-align: middle;" /> <label <?php echo ($oldversion === false) ? 'class="disabled"' : ''; ?> for="typeInstallUpgrade"><?php echo lang('I want to').' <b>'.lang('update').'</b> '.lang('my existing PrestaShop to a newer version'); ?> <?php echo ($oldversion === false) ? lang('(No previous version detected)') : ("(".(($tooOld) ? lang('Your current version is too old, updates are possible only from version').' '.MINIMUM_VERSION_TO_UPDATE.' '.lang('and higher') : ($installOfOldVersion ? lang('Your current version is already up-to-date') : lang('Currently installed version detected:').' <b>v'.$oldversion.'</b>')).")") ?></label></p>
+			<p <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? '' : 'class="disabled"'; ?>><input <?php echo ($oldversion AND !$tooOld AND !$sameVersions AND !$installOfOldVersion) ? 'checked="checked"' : 'disabled="disabled"'; ?> type="radio" value="upgrade" name="typeInstall" id="typeInstallUpgrade" style="vertical-align: middle;" /> <label <?php echo ($oldversion === false) ? 'class="disabled"' : ''; ?> for="typeInstallUpgrade"><?php echo lang('I want to <b>update</b> my existing PrestaShop to a newer version'); ?> <?php echo ($oldversion === false) ? lang('(No previous version detected)') : ("(".(($tooOld) ? lang('Your current version is too old, updates are possible only from version').' '.MINIMUM_VERSION_TO_UPDATE.' '.lang('and higher') : ($installOfOldVersion ? lang('Your current version is already up-to-date') : lang('Currently installed version detected:').' <b>v'.$oldversion.'</b>')).")") ?></label></p>
 		</form>
 		<h2><?php echo lang('License Agreement')?></h2>
 		<div style="height:200px; border:1px solid #ccc; margin-bottom:8px; padding:5px; background:#fff; overflow: auto; overflow-x:hidden; overflow-y:scroll;">
@@ -1364,3 +1364,4 @@ if ($lm->getIncludeTradFilename())
 </ul>
 </body>
 </html>
+

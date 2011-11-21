@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,155 +27,104 @@
 
 class CompareProductCore extends ObjectModel
 {
-	public		$id;
-	
-	public 		$id_product;
-	
-	public 		$id_guest;
-	
+	public		$id_compare;
+
 	public 		$id_customer;
-	
+
 	public 		$date_add;
-	
+
 	public 		$date_upd;
-	
+
 	protected 	$fieldRequired = array(
-		'id_product', 
-		'id_guest', 
+		'id_compare',
 		'id_customer');
-	
+
 	protected 	$fieldsValidate = array(
-		'id_product' => 'isUnsignedInt',
-		'id_guest' => 'isUnsignedInt',
+		'id_compare' => 'isUnsignedInt',
 		'id_customer' => 'isUnsignedInt'
 	);
-	
-	protected $table = 'compare_product';
-	
-	protected $identifier = 'id_compare_product';
-	
-	
-	/**
-	 * Get all compare products of the guest
-	 * @param int $id_guest
-	 * @return array
-	 */
-	public static function getGuestCompareProducts($id_guest)
-	{
-		$results = Db::getInstance()->executeS('
-		SELECT DISTINCT `id_product`
-		FROM `'._DB_PREFIX_.'compare_product`
-		WHERE `id_guest` = '.(int)($id_guest));
-	
-		$compareProducts = null;
-		
-		if ($results)
-		foreach($results as $result)
-			$compareProducts[] = $result['id_product'];
-		
-		return $compareProducts; 
-	}
-	
-	
-	/**
-	 * Add a compare product for the guest
-	 * @param int $id_guest, int $id_product
-	 * @return boolean
-	 */
-	public static function addGuestCompareProduct($id_guest, $id_product)
-	{
-		return Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `id_customer`, `date_add`, `date_upd`) 
-			VALUES ('.(int)($id_product).', '.(int)($id_guest).', 0, NOW(), NOW())
-		');
-	}
-	
-	
-	/**
-	 * Remove a compare product for the guest
-	 * @param int $id_guest, int $id_product
-	 * @return boolean
-	 */
-	public static function removeGuestCompareProduct($id_guest, $id_product)
-	{
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'compare_product` WHERE `id_guest` = '.(int)($id_guest).' AND `id_product` = '.(int)($id_product));
-	}
-		
-	
-	/**
-	 * Get the number of compare products of the guest
-	 * @param int $id_guest
-	 * @return int
-	 */
-	public static function getGuestNumberProducts($id_guest)
-	{
-		return (int)(Db::getInstance()->getValue('
-			SELECT count(`id_compare_product`)
-			FROM `'._DB_PREFIX_.'compare_product`
-			WHERE `id_guest` = '.(int)($id_guest)));;
-	}
 
-	
+	protected $table = 'compare';
+
+	protected $identifier = 'id_compare';
+
+
 	/**
 	 * Get all comapare products of the customer
 	 * @param int $id_customer
 	 * @return array
 	 */
-	public static function getCustomerCompareProducts($id_customer)
+	public static function getCompareProducts($id_compare)
 	{
 		$results = Db::getInstance()->executeS('
 		SELECT DISTINCT `id_product`
-		FROM `'._DB_PREFIX_.'compare_product`
-		WHERE `id_customer` = '.(int)($id_customer));
-	
+		FROM `'._DB_PREFIX_.'compare` c
+		LEFT JOIN `'._DB_PREFIX_.'compare_product` cp ON (cp.`id_compare` = c.`id_compare`)
+		WHERE cp.`id_compare` = '.(int)($id_compare));
+
 		$compareProducts = null;
-		
+
 		if ($results)
 		foreach($results as $result)
 			$compareProducts[] = $result['id_product'];
-		
-		return $compareProducts; 
+
+		return $compareProducts;
 	}
-	
-	
+
+
 	/**
 	 * Add a compare product for the customer
 	 * @param int $id_customer, int $id_product
 	 * @return boolean
 	 */
-	public static function addCustomerCompareProduct($id_customer, $id_product)
+	public static function addCompareProduct($id_compare, $id_product)
 	{
+		if (!$id_compare)
+		{
+			$id_customer = false;
+			if (Context::getContext()->customer)
+				$id_customer = Context::getContext()->customer->id;
+			$sql = Db::getInstance()->execute('
+			INSERT INTO `'._DB_PREFIX_.'compare` (`id_compare`, `id_customer`) VALUES (NULL, "'.($id_customer ? $id_customer: '0').'")');
+			if ($sql)
+			{
+				$id_compare = Db::getInstance()->getValue('SELECT MAX(`id_compare`) FROM `'._DB_PREFIX_.'compare`');
+				$cookie->id_compare = $id_compare;
+			}
+		}
 		return Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_product`, `id_guest`, `id_customer`, `date_add`, `date_upd`)
-			VALUES ('.(int)($id_product).', 0, '.(int)($id_customer).', NOW(), NOW())');
+			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_compare`, `id_product`, `date_add`, `date_upd`)
+			VALUES ('.(int)($id_compare).', '.(int)($id_product).', NOW(), NOW())');
 	}
-	
-	
+
 	/**
 	 * Remove a compare product for the customer
-	 * @param int $id_customer, int $id_product
+	 * @param int $id_compare, int $id_product
 	 * @return boolean
 	 */
-	public static function removeCustomerCompareProduct($id_customer, $id_product)
+	public static function removeCompareProduct($id_compare, $id_product)
 	{
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'compare_product` WHERE `id_customer` = '.(int)($id_customer).' AND `id_product` = '.(int)($id_product));
-	}	
-	
-	
+		return Db::getInstance()->execute('
+		DELETE cp FROM `'._DB_PREFIX_.'compare_product` cp, `'._DB_PREFIX_.'compare` c
+		WHERE cp.`id_compare`=c.`id_compare`
+		AND cp.`id_product` = '.(int)$id_product.'
+		AND c.`id_compare` = '.(int)$id_compare);
+	}
+
 	/**
 	 * Get the number of compare products of the customer
-	 * @param int $id_customer
+	 * @param int $id_compare
 	 * @return int
 	 */
-	public static function getCustomerNumberProducts($id_customer)
+	public static function getNumberProducts($id_compare)
 	{
 		return (int)(Db::getInstance()->getValue('
-			SELECT count(`id_compare_product`)
+			SELECT count(`id_compare`)
 			FROM `'._DB_PREFIX_.'compare_product`
-			WHERE `id_customer` = '.(int)($id_customer)));
+			WHERE `id_compare` = '.(int)($id_compare)));
 	}
-	
-	
+
+
 	/**
 	 * Clean entries which are older than the period
 	 * @param string $period
@@ -191,12 +140,25 @@ class CompareProductCore extends ObjectModel
 			$interval = '1 YEAR';
 		else
 			return;
-			
+
 		if ($interval != null)
 		{
 			Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'compare_product`
-			WHERE date_upd < DATE_SUB(NOW(), INTERVAL '.pSQL($interval).')');
+			DELETE cp, c FROM `'._DB_PREFIX_.'compare_product` cp, `'._DB_PREFIX_.'compare` c
+			WHERE cp.date_upd < DATE_SUB(NOW(), INTERVAL 1 WEEK) AND c.`id_compare`=cp.`id_compare`');
 		}
+	}
+
+	/**
+	 * Get the id_compare by id_customer
+	 * @param integer $id_customer
+	 * @return integer $id_compare
+	 */
+	public static function getIdCompareByIdCustomer($id_customer)
+	{
+		return (int)Db::getInstance()->getValue('
+		SELECT `id_compare`
+		FROM `'._DB_PREFIX_.'compare`
+		WHERE `id_customer`= '.(int)$id_customer);
 	}
 }

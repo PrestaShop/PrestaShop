@@ -1115,7 +1115,11 @@ class OrderCore extends ObjectModel
 		return $result;
 	}
 
-	public function setCurrentState($id_order_state, $id_employee)
+	/** Set current order state
+	 * @param int $id_order_state
+	 * @param int $id_employee (/!\ not optional except for Webservice.
+	 */
+	public function setCurrentState($id_order_state, $id_employee = 0)
 	{
 		if (empty($id_order_state))
 			return false;

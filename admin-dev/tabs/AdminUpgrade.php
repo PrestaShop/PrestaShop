@@ -433,7 +433,7 @@ class AdminUpgrade extends AdminPreferences
 		else
 		{
 			$this->next = 'download';
-			$this->nextDesc = $this->l('Shop desactivated. Now downloading (this can takes some times )...');
+			$this->nextDesc = $this->l('Shop deactivated. Now downloading (this can takes some times )...');
 		}
 	}
 

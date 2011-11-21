@@ -100,8 +100,8 @@ $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_8dd66ca6788218bd7d2ba7fe43
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_5580bc4adbb864a67180bf2f058393f3'] = 'Geben Sie Ihre Online-Kunden ein starker Grund, mit dem Trusted Shops Käuferschutz kaufen. Diese zusätzliche Sicherheit führt zu weniger Warenkorb Verzicht';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_710142158c105c01ef807ce959cbc451'] = 'Profitable und langfristige Kundenbeziehung';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_f7e15d97ad927ef705de61e787883ada'] = 'Für viele Online-Shopper ist das Trusted Shops Gütesiegel mit Käuferschutz ein wirksames Zeichen der Qualität für sicheres Einkaufen im Internet. One-Time-Käufer werden zu Stammkunden.';
-$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_7442a1e0ab5e2e26ca9363d226b93d13'] = 'Umwelt-Typ';
-$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_8e77e16312de3f95afdf5b92b10232a2'] = 'Sie sind zur Zeit von der Betriebsart:';
+$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_7442a1e0ab5e2e26ca9363d226b93d13'] = 'Trusted Shops Modus';
+$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_8e77e16312de3f95afdf5b92b10232a2'] = 'Sie verwenden die Umgebung:';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_dc62561dd8d390e274487516e869fc93'] = 'Holen Sie den Registrierungs-Link';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_6e637d8b8b8a933612b19c881d33672d'] = 'Diese Variable wurde Ihnen per E-Mail von TrustedShops geschickt';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_233a96df2f68dbeafaa3126edadc1ce8'] = 'Interne Identifikation von Shop-Software auf Trusted Shops';
@@ -109,10 +109,10 @@ $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_261720a5c993fb1cfad560d874
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_02977dc4b8561c8d7312b1931782c36b'] = 'Etracker-Kampagne';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_4994a8ffeba4ac3140beb89e8d41f174'] = 'Sprache';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_2541d938b0a58946090d7abdde0d3890'] = 'senden';
-$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_72ca0dcf49befb037f8d4734ee0a2a1c'] = 'Add Trusted Shops Zertifikat';
+$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_72ca0dcf49befb037f8d4734ee0a2a1c'] = 'Trusted Shops Zertifikat hinzufügen';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_48e31908bfdcda34b0f01cad9d7077af'] = 'Neues Zertifikat';
-$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_75904cf055527a97739601e0f5ff7e51'] = 'Fügen Sie es';
-$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_566853604b7330b3adbb9105cb15e96b'] = 'Verwalten Trusted Shops Zertifikate';
+$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_75904cf055527a97739601e0f5ff7e51'] = 'Hinzufügen';
+$_MODULE['<{trustedshops}prestashop>tsbuyerprotection_566853604b7330b3adbb9105cb15e96b'] = 'Verwaltung Trusted Shops Zertifikate';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_eb0f48a107df1a0f343d4cd513b555e6'] = 'Zertifikat';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_46a2a41cc6e552044816a2d04634545d'] = 'Zustand';
 $_MODULE['<{trustedshops}prestashop>tsbuyerprotection_a1fa27779242b4902f7ae3bdd5c6d508'] = 'Typ';
