@@ -1159,6 +1159,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						{
 
 							$new_state = new SupplyOrderState($id_state);
+							$old_state = new SupplyOrderState($supply_order->id_supply_order_state);
 
 							// special case of validate state - check if there are products in the order and the required state is not an enclosed state
 							if ($supply_order->isEditable() && !$supply_order->hasEntries() && !$new_state->enclosed)
@@ -1171,6 +1172,24 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								$supply_order->id_supply_order_state = $state['id_supply_order_state'];
 								if ($supply_order->save())
 								{
+									// if pending_receipt,
+									// or if the order is being canceled,
+									// synchronizes StockAvailable
+									if (($new_state->pending_receipt && !$new_state->receipt_state) ||
+										($old_state->receipt_state && $new_state->enclosed && !$new_state->receipt_state))
+									{
+										$supply_order_details = $supply_order->getEntries();
+										$products_done = array();
+										foreach ($supply_order_details as $supply_order_detail)
+										{
+											if (!in_array($supply_order_detail['id_product'], $products_done))
+											{
+												StockAvailable::synchronize($supply_order_detail['id_product']);
+												$products_done[] = $supply_order_detail['id_product'];
+											}
+										}
+									}
+
 									$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 									$redirect = self::$currentIndex.'&token='.$token;
 									Tools::redirectAdmin($redirect.'&conf=5');
@@ -1271,8 +1290,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$supplier_receipt_history->add();
 						$supply_order_detail->save();
 						$supply_order->save();
-						// synchronizes
-						StockAvailable::synchronize($id_product);
 					}
 					else
 						$this->_errors[] = Tools::displayError($this->l('Something went wrong when adding products in warehouse'));
@@ -1552,7 +1569,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// gets all information on the products ordered
 			$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
-			$this->_group = 'GROUP BY a.id_product';
 
 			// gets the list ordered by price desc, without limit
 			$this->getList($lang_id, 'price_te', 'DESC', 0, false, false);
