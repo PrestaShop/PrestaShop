@@ -58,8 +58,10 @@ class AdminModulesControllerCore extends AdminController
 	private $iso_default_country;
 	private $filter_configuration = array();
 
-
-
+	private $addons_url = 'https://addons.prestashop.com/webservice/151/';
+	private $logged_on_addons = false;
+	private $cache_file_default_country_modules_list = '/config/default_country_modules_list.xml';
+	private $cache_file_customer_modules_list = '/config/default_customer_modules_list.xml';
 
 	/*
 	** Admin Modules Controller Constructor
@@ -123,6 +125,10 @@ class AdminModulesControllerCore extends AdminController
 						if ($xmlModule->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
+
+		// Check if logged on Addons
+		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
+			$this->logged_on_addons = true;
 	}
 
 
@@ -138,31 +144,61 @@ class AdminModulesControllerCore extends AdminController
 	** @return null
 	*/
 
+	public function isFresh($file, $timeout = 604800000)
+	{
+		if (file_exists(_PS_ROOT_DIR_.$file))
+			return ((time() - filemtime(_PS_ROOT_DIR_.$this->cache_file_modules_list)) < $timeout);
+		else
+			return false;
+	}
+
+	public function refresh($file_to_refresh, $external_file)
+	{
+		return file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, Tools::file_get_contents($external_file));
+	}
+
+
 	public function ajaxProcessRefreshModuleList()
 	{
 		// Refresh modules_list.xml every week
-		if (!$this->isFresh())
+		if (!$this->isFresh($this->cache_file_modules_list, 604800))
 		{
-			if ($this->refresh())
+			if ($this->refresh($this->cache_file_modules_list, $this->xml_modules_list))
 				$this->status = 'refresh';
 			else
 				$this->status = 'error';
 		}
 		else
 			$this->status = 'cache';
-	}
 
-	public function isFresh($timeout = 604800000)
-	{
-		if (file_exists(_PS_ROOT_DIR_ . $this->_moduleCacheFile))
-			return ((time() - filemtime(_PS_ROOT_DIR_ . $this->_moduleCacheFile)) < $timeout);
-		else
-			return false;
-	}
 
-	public function refresh()
-	{
-		return file_put_contents(_PS_ROOT_DIR_.$this->_moduleCacheFile, Tools::file_get_contents($this->xml_modules_list));
+		// If logged to Addons Webservices, refresh default country modules list every day
+		if ($this->logged_on_addons && $this->status != 'error')
+		{
+			if (!$this->isFresh($this->cache_file_default_country_modules_list, 86400))
+			{
+				if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url.'listing/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
+					$this->status = 'refresh';
+				else
+					$this->status = 'error';
+			}
+			else
+				$this->status = 'cache';
+		}
+
+		// If logged to Addons Webservices, refresh customer modules list every day
+		if ($this->logged_on_addons && $this->status != 'error')
+		{
+			if (!$this->isFresh($this->cache_file_customer_modules_list, 86400))
+			{
+				if ($this->refresh($this->cache_file_customer_modules_list, $this->addons_url.'listing/customer/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons))))
+					$this->status = 'refresh';
+				else
+					$this->status = 'error';
+			}
+			else
+				$this->status = 'cache';
+		}
 	}
 
 	public function displayAjaxRefreshModuleList()
@@ -171,8 +207,16 @@ class AdminModulesControllerCore extends AdminController
 	}
 
 
-
-
+	public function ajaxProcessLogOnAddonsWebservices()
+	{
+		$content = Tools::file_get_contents($this->addons_url.'listing/customer/'.pSQL(trim(Tools::getValue('username_addons'))).'/'.pSQL(trim(Tools::getValue('password_addons'))));
+		$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+		if (!$xml)
+			die('KO');
+		$this->context->cookie->username_addons = pSQL(trim(Tools::getValue('username_addons')));
+		$this->context->cookie->password_addons = pSQL(trim(Tools::getValue('password_addons')));
+		die('OK');
+	}
 
 
 	/*
@@ -558,6 +602,9 @@ class AdminModulesControllerCore extends AdminController
 	
 	public function postProcess()
 	{
+		// Parent Post Process
+		parent::postProcess();
+
 		// Execute filter or callback methods
 		$filterMethods = array('filterModules', 'resetFilterModules', 'filterCategory', 'unfilterCategory');
 		$callbackMethods = array('reset', 'download', 'enable', 'delete');
@@ -786,6 +833,9 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
 		$tpl_vars['list_modules_categories'] = $this->list_modules_categories;
 		$tpl_vars['list_modules_authors'] = $this->modules_authors;
+
+		if ($this->logged_on_addons)
+			$tpl_vars['logged_on_addons'] = 1;
 
 		$smarty->assign($tpl_vars);
 	}
