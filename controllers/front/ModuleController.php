@@ -52,6 +52,8 @@ class ModuleControllerCore extends FrontController
 		$action = Tools::getValue('action');
 		$method = 'action'.$action;
 
+		$this->context->smarty->assign('page_name', 'module-'.$name.'-'.$action);
+
 		if ($action && method_exists($module, $method))
 			$this->setTemplate($module->$method());
 		else
