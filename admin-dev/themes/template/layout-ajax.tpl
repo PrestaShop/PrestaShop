@@ -27,9 +27,7 @@
 	<div class="conf">
 		{$conf}
 	</div>
-{/if}
-
-{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
+{/if}{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
 	<div class="error">
 		<span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/error2.png" />
 		{if count($errors) == 1}
@@ -44,25 +42,19 @@
 			</ol>
 		{/if}
 	</div>
-{/if}
-
-{if isset($informations) && count($informations) && $informations}
+{/if}{if isset($informations) && count($informations) && $informations}
 	<div class="hint clear" style="display:block;">
 		{foreach $informations as $info}
 			{$info}<br />
 		{/foreach}
 	</div><br />
-{/if}
-
-{if isset($confirmations) && count($confirmations) && $confirmations}
+{/if}{if isset($confirmations) && count($confirmations) && $confirmations}
 	<div class="conf" style="display:block;">
 		{foreach $confirmations as $conf}
 			{$conf}<br />
 		{/foreach}
 	</div><br />
-{/if}
-
-{if count($warnings)}
+{/if}{if count($warnings)}
 	<div class="warn">
 		<span style="float:right">
 			<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
@@ -83,6 +75,4 @@
 		{/foreach}
 		</ul>
 	</div>
-{/if}
-
-{$page}
+{/if}{$page}
