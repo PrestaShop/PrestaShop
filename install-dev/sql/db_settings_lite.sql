@@ -939,7 +939,7 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (21, 'AdminRangeWeight', 5, 7),(51, 'AdminStatsConf', 6, 1),(61, 'AdminSearchEngines', 6, 2),(62, 'AdminReferrers', 6, 3),
 (22, 'AdminModulesPositions', 7, 4),(30, 'AdminProfiles', 29, 1),(31, 'AdminAccess', 29, 2),(28, 'AdminContacts', 29, 3),(39, 'AdminContact', 8, 1),
 (38, 'AdminThemes', 8, 2),(56, 'AdminMeta', 8, 3),(27, 'AdminPPreferences', 8, 4),(24, 'AdminEmails', 8, 5),(26, 'AdminImages', 8, 6),(23, 'AdminDb', 8, 7),
-(48, 'AdminPDF', 3, 8),(44, 'AdminLocalization', 8, 9),(67, 'AdminSearchConf', 8, 10),(32, 'AdminLanguages', 9, 1),(33, 'AdminTranslations', 9, 2),
+(48, 'AdminPdf', 3, 8),(44, 'AdminLocalization', 8, 9),(67, 'AdminSearchConf', 8, 10),(32, 'AdminLanguages', 9, 1),(33, 'AdminTranslations', 9, 2),
 (35, 'AdminTabs', 29, 3),(37, 'AdminQuickAccesses', 9, 4),(40, 'AdminAliases', 8, 5),(41, 'AdminImport', 9, 6),(52, 'AdminSubDomains', 9, 7),
 (53, 'AdminBackup', 9, 8),(57, 'AdminCmsContent', 9, 9),(64, 'AdminGenerator', 9, 10),(43, 'AdminSearch', -1, 0),(69, 'AdminInformation', 9, 5),
 (70, 'AdminPerformance', 8, 11),(71, 'AdminCustomerThreads', 29, 4),(72, 'AdminWebservice', 9, 12),(73, 'AdminStockMvt', 95, 3),

@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminPDFControllerCore extends AdminController
+class AdminPdfControllerCore extends AdminController
 {
 	private $encoding_list = array();
 
