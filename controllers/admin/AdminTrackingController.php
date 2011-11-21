@@ -44,6 +44,8 @@ class AdminTrackingController extends AdminController
 			$this->className = 'Category';
 		}
 
+		$this->list_no_link = true;
+
 		parent::postprocess();
 	}
 
