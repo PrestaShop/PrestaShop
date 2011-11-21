@@ -79,9 +79,6 @@
 				<div style="clear: both; padding-top:15px;" id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>
 				{if isset($field['title'])}
 					<label class="conf_title">
-					{if (isset($field['required']) && $field['required'])}
-						<sup>*</sup>
-					{/if}
 					{$field['title']}</label>
 				{/if}
 				{block name="start_field_block"}
@@ -130,6 +127,8 @@
 						<img src="{$field['thumb']}" alt="{$field['title']}" title="{$field['title']}" /><br />
 					{/if}
 					<input type="file" name="{$key}" />
+				{elseif $field['type'] == 'price'}
+					{$currency_left_sign}<input type="text" size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />{$currency_right_sign} {l s='(tax excl.)'}
 				{elseif $field['type'] == 'textLang' || $field['type'] == 'textareaLang' || $field['type'] == 'selectLang'}
 					{if $field['type'] == 'textLang'}
 						{foreach $field['languages'] AS $id_lang => $value}
@@ -175,7 +174,7 @@
 							{/foreach}
 						</div>
 					{/if}
-					<br style="clear:both">			
+					<br style="clear:both">	
 				{/if}
 				{if ($field['multishop_default'])}
 					<div class="preference_default_multishop">
@@ -183,6 +182,9 @@
 							<input type="checkbox" name="configUseDefault['{$key}']" value="1" {if $field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" /> {l s='Use default value'}
 						</label>
 					</div>
+				{/if}
+				{if (isset($field['required']) && $field['required'])}
+					<sup>*</sup>
 				{/if}
 				{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
 				{if $field['is_invisible']}<p class="multishop_warning">{l s='You can\'t change the value of this configuration field in this shop context'}</p>{/if}
