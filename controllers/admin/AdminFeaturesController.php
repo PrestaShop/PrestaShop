@@ -31,6 +31,7 @@ class AdminFeaturesControllerCore extends AdminController
 	 	$this->table = 'feature';
 		$this->className = 'Feature';
 	 	$this->lang = true;
+	 	$this->_defaultOrderBy = 'position';
 
 		$this->fieldsDisplay = array(
 			'id_feature' => array(
@@ -39,7 +40,7 @@ class AdminFeaturesControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 128,
+				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'value' => array(
@@ -147,21 +148,6 @@ class AdminFeaturesControllerCore extends AdminController
 
 			$this->content = Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
-	}
-
-	/**
-	 * Modifying initial getList method to display position feature (drag and drop)
-	 */
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-	{
-		if ($order_by && $this->context->cookie->__get($this->table.'Orderby'))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby');
-		else if (is_null($order_by))
-			$order_by = null;
-		else
-			$order_by = 'position';
-
-		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 
 	/**
