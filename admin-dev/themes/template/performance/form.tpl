@@ -40,9 +40,8 @@
 
 {block name="start_field_block"}
 	<div class="margin-form">
-	{if $input.type == 'radio' && $input.name == 'combination' && $combination}
+	{if $input.type == 'radio' && $input.name == 'combination' && $input.disabled}
 		<div class="warn">
-			<img src="../img/admin/warn2.png">
 			{l s='This feature can\'t be disabled because this is currently in use.'}
 		</div>
 	{/if}
@@ -124,6 +123,20 @@
 
 {block name="script"}
 
+	function showMemcached()
+	{
+		if ($('#caching_system option:selected').val() == 'CacheMemcache')
+		{
+			$('#memcachedServers').show();
+			$('#directory_depth').hide();
+		}
+		else
+		{
+			$('#memcachedServers').hide();
+			$('#directory_depth').show();
+		}
+	}
+
 	$(document).ready(function() {
 
 		showMemcached();
@@ -132,99 +145,35 @@
 			showMemcached();
 		});
 	
-		function showMemcached()
-		{
-			if ($('#caching_system option:selected').val() == 'CacheMemcache')
-			{
-				$('#memcachedServers').show();
-				$('#directory_depth').hide();
-			}
-			else
-			{
-				$('#memcachedServers').hide();
-				$('#directory_depth').show();
-			}
-		}
-	
 		$('#addMemcachedServer').click(function() {
 			$('#formMemcachedServer').show();
 			return false;
 		});
 
-		var btn_save_feature = $('span[class~="process-icon-save-feature"]').parent();
-		var btn_submit_feature = $('#submitFeaturesDetachables');
+		$('input[name="smarty_force_compile"], input[name="smarty_cache"]').change(function(){
+			$('#smarty_up').val(1);
+		});
 
-		if (btn_save_feature.length > 0 && btn_submit_feature.length > 0)
-		{
-			btn_submit_feature.hide();
-			btn_save_feature.find('span').removeClass('process-icon-save-feature');
-			btn_save_feature.find('span').addClass('process-icon-save');
-			btn_save_feature.click(function() {
-				btn_submit_feature.before('<input type="hidden" name="'+btn_submit_feature.attr("name")+'" value="1" />');
+		$('input[name="combination"], input[name="feature"]').change(function(){
+			$('#features_detachables_up').val('true');
+		});
 
-				$('#features_detachables_form').submit();
-			});
-		}
+		$('input[name="PS_CSS_THEME_CACHE"], input[name="PS_JS_THEME_CACHE"], input[name="PS_HTML_THEME_COMPRESSION"], input[name="PS_JS_HTML_THEME_COMPRESSION"], input[name="PS_HIGH_HTML_THEME_COMPRESSION"]').change(function(){
+			$('#ccc_up').val(1);
+		});
 
-		var btn_save_ccc = $('span[class~="process-icon-save-ccc"]').parent();
-		var btn_submit_ccc = $('#submitCCC');
+		$('input[name="_MEDIA_SERVER_1_"], input[name="_MEDIA_SERVER_2_"], input[name="_MEDIA_SERVER_3_"]').change(function(){
+			$('#media_server_up').val(1);
+		});
 
-		if (btn_save_ccc.length > 0 && btn_submit_ccc.length > 0)
-		{
-			btn_submit_ccc.hide();
-			btn_save_ccc.find('span').removeClass('process-icon-save-ccc');
-			btn_save_ccc.find('span').addClass('process-icon-save');
-			btn_save_ccc.click(function() {
-				btn_submit_ccc.before('<input type="hidden" name="'+btn_submit_ccc.attr("name")+'" value="1" />');
+		$('input[name="PS_CIPHER_ALGORITHM"]').change(function(){
+			$('#ciphering_up').val(1);
+		});
 
-				$('#ccc_form').submit();
-			});
-		}
+		$('input[name="active"], select[name="caching_system"]').change(function(){
+			$('#cache_up').val(1);
+		});
 
-		var btn_save_media = $('span[class~="process-icon-save-media"]').parent();
-		var btn_submit_media = $('#submitMediaServers');
-
-		if (btn_save_media.length > 0 && btn_submit_media.length > 0)
-		{
-			btn_submit_media.hide();
-			btn_save_media.find('span').removeClass('process-icon-save-media');
-			btn_save_media.find('span').addClass('process-icon-save');
-			btn_save_media.click(function() {
-				btn_submit_media.before('<input type="hidden" name="'+btn_submit_media.attr("name")+'" value="1" />');
-
-				$('#media_server_form').submit();
-			});
-		}
-
-		var btn_save_ciphering = $('span[class~="process-icon-save-ciphering"]').parent();
-		var btn_submit_ciphering = $('#submitCiphering');
-
-		if (btn_save_ciphering.length > 0 && btn_submit_ciphering.length > 0)
-		{
-			btn_submit_ciphering.hide();
-			btn_save_ciphering.find('span').removeClass('process-icon-save-ciphering');
-			btn_save_ciphering.find('span').addClass('process-icon-save');
-			btn_save_ciphering.click(function() {
-				btn_submit_ciphering.before('<input type="hidden" name="'+btn_submit_ciphering.attr("name")+'" value="1" />');
-
-				$('#ciphering_form').submit();
-			});
-		}
-
-		var btn_save_caching = $('span[class~="process-icon-save-caching"]').parent();
-		var btn_submit_caching = $('#submitCaching');
-
-		if (btn_save_caching.length > 0 && btn_submit_caching.length > 0)
-		{
-			btn_submit_caching.hide();
-			btn_save_caching.find('span').removeClass('process-icon-save-caching');
-			btn_save_caching.find('span').addClass('process-icon-save');
-			btn_save_caching.click(function() {
-				btn_submit_caching.before('<input type="hidden" name="'+btn_submit_caching.attr("name")+'" value="1" />');
-
-				$('#caching_form').submit();
-			});
-		}
 	});
 
 {/block}
