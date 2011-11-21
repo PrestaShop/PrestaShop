@@ -227,7 +227,7 @@ $(document).ready(function(){
 	//]]>
 </script>
 
-<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
+<form id="product_form" action="{$form_action}&amp;{$submit_action}=1" method="post" enctype="multipart/form-data" name="product">
 	<input type="hidden" name="id_product" value="{$id_product}" />
 	<input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
@@ -255,6 +255,8 @@ $(document).ready(function(){
 	{/if}
 </div>
 <input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
+<input id="product_form_submit_btn"  type="submit" value="{l s='Save'}" name="submitAdd{$table}" class="button" />
+&nbsp;<input type="submit" value="{l s='Save and stay'}" name="submitAdd{$table}AndStay" class="button" />
 </form>
 </div>
 <br/>
