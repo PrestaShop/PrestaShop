@@ -123,10 +123,6 @@ class HelperOptionsCore extends Helper
 					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP').'</a>';
 					if (!isset($category_data['bottom']))
 						$category_data['bottom'] = '<script type="text/javascript">changeCMSActivationAuthorization();</script>';
-				} else if ($field['type'] == 'price')
-				{
-					$field['currency_left'] = $this->context->currency->getSign('left');
-					$field['currency_right'] = $this->context->currency->getSign('right').' '.$this->l('(tax excl.)');
 				}
 
 				// Multishop default value
@@ -155,7 +151,9 @@ class HelperOptionsCore extends Helper
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
 			'required_fields' => isset($required_fields) ? $required_fields : false,
-			'languages' => isset($languages) ? $languages : null
+			'languages' => isset($languages) ? $languages : null,
+			'currency_left_sign' => $this->context->currency->getSign('left'),
+			'currency_right_sign' => $this->context->currency->getSign('right'),
 		));
 
 		return parent::generate();
