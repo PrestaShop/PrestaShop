@@ -1259,7 +1259,7 @@ class ToolsCore
 	{
 		// 'CMSCategories' => 'cms_categories'
 		// 'RangePrice' => 'range_price'
-		return strtolower(preg_replace('/([a-zA-Z])([A-Z][a-z])/', '$1_$2', $string));
+		return strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
 	}
 
 	public static function getBrightness($hex)
