@@ -77,6 +77,50 @@
 		});
 	});
 
+
+
+
+	// Method to reload filter in ajax
+	$(document).ready(function(){
+		$('.categoryModuleFilterLink').click(function()
+		{
+			$('.categoryModuleFilterLink').css('background-color', 'white');
+			$(this).css('background-color', '#EBEDF4');
+			var ajaxReloadCurrentIndex = $(this).find('a').attr('href').replace('index.php', 'ajax-tab.php');
+			try
+			{
+				resAjax = $.ajax({
+						type:"POST",
+						url : ajaxReloadCurrentIndex,
+						async: true,
+						data : {
+							ajax : "1",
+							token : token,
+							controller : "AdminModules",
+							action : "reloadModulesList",
+						},
+ 						beforeSend: function(xhr)
+						{
+							$('#moduleContainer').html('<img src="../img/loader.gif" border="0">');
+						},
+						success : function(data)
+						{
+							$('#moduleContainer').html(data);
+						},
+						error: function(res,textStatus,jqXHR)
+						{
+							//alert("TECHNICAL ERROR"+res);
+						}
+				});
+			}
+			catch(e){}
+			return false;
+		});
+	});
+
+
+
+
 	// Method to get modules_list.xml from prestashop.com and default_country_modules_list.xml from addons.prestashop.com
 	$(document).ready(function(){
 			try

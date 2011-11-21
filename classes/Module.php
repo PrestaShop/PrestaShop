@@ -785,8 +785,8 @@ abstract class ModuleCore
 				}
 			}
 
-		//echo '<pre>'.print_r($moduleList, 1).'</pre>';
-		echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
+
+		//echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
 
 		if ($errors)
 		{
