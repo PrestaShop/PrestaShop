@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminCMSContentControllerCore extends AdminController
+class AdminCmsContentControllerCore extends AdminController
 {
 	/** @var object adminCMSCategories() instance */
 	private $adminCMSCategories;
@@ -45,8 +45,8 @@ class AdminCMSContentControllerCore extends AdminController
 			die('Category cannot be loaded');
 
 		$this->table = array('cms_category', 'cms');
-		$this->adminCMSCategories = new AdminCMSCategoriesController();
-		$this->adminCMS = new AdminCMSController();
+		$this->adminCMSCategories = new AdminCmsCategoriesController();
+		$this->adminCMS = new AdminCmsController();
 
 		parent::__construct();
 	}

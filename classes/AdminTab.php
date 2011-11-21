@@ -189,8 +189,8 @@ abstract class AdminTabCore
 	public static $tabParenting = array(
 //		'AdminProducts' => 'AdminCatalog',
 //		'AdminCategories' => 'AdminCatalog',
-		'AdminCMS' => 'AdminCMSContent',
-		'AdminCMSCategories' => 'AdminCMSContent',
+		'AdminCms' => 'AdminCmsContent',
+		'AdminCmsCategories' => 'AdminCmsContent',
 		'AdminOrdersStates' => 'AdminStatuses',
 		'AdminAttributeGenerator' => 'AdminProducts',
 		'AdminAttributes' => 'AdminAttributesGroups',

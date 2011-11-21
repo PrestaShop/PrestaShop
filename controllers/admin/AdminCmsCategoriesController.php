@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminCMSCategoriesControllerCore extends AdminController
+class AdminCmsCategoriesControllerCore extends AdminController
 {
 	/** @var object CMSCategory() instance for navigation*/
 	private $_CMSCategory;
@@ -47,7 +47,7 @@ class AdminCMSCategoriesControllerCore extends AdminController
 		'position' => array('title' => $this->l('Position'), 'width' => 40,'filter_key' => 'position', 'align' => 'center', 'position' => 'position'),
 		'active' => array('title' => $this->l('Displayed'), 'width' => 25, 'active' => 'status', 'align' => 'center', 'type' => 'bool', 'orderby' => false));
 
-		$this->_CMSCategory = AdminCMSContentController::getCurrentCMSCategory();
+		$this->_CMSCategory = AdminCmsContentController::getCurrentCMSCategory();
 		$this->_filter = 'AND `id_parent` = '.(int)($this->_CMSCategory->id);
 		$this->_select = 'position ';
 
@@ -145,7 +145,7 @@ class AdminCMSCategoriesControllerCore extends AdminController
 			elseif (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_cms_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCMSContent'));
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier, Tools::getValue('id_cms_category_parent', 1)))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))
@@ -160,7 +160,7 @@ class AdminCMSCategoriesControllerCore extends AdminController
 					if ($result)
 					{
 						$cms_category->cleanPositions((int)(Tools::getValue('id_cms_category')));
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCMSContent').'&id_category='.(int)(Tools::getValue('id_cms_category')));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_category='.(int)(Tools::getValue('id_cms_category')));
 					}
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 

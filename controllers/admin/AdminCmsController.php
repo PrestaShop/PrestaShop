@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminCMSControllerCore extends AdminController
+class AdminCmsControllerCore extends AdminController
 {
 	private $_category;
 
@@ -49,7 +49,7 @@ class AdminCMSControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 			);
 
-		$this->_category = AdminCMSContentController::getCurrentCMSCategory();
+		$this->_category = AdminCmsContentController::getCurrentCMSCategory();
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
 		$this->_select = 'a.position ';
@@ -236,7 +236,7 @@ class AdminCMSControllerCore extends AdminController
 			if (!$cms->delete())
 				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=1&token='.Tools::getAdminTokenLite('AdminCMSContent'));
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=1&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}/* Delete multiple objects */
 		elseif (Tools::getValue('submitDel'.$this->table))
 		{
@@ -250,7 +250,7 @@ class AdminCMSControllerCore extends AdminController
 					if ($result)
 					{
 						$cms->cleanPositions((int)(Tools::getValue('id_cms_category')));
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCMSContent').'&id_category='.(int)(Tools::getValue('id_cms_category')));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_category='.(int)(Tools::getValue('id_cms_category')));
 					}
 					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 
@@ -289,7 +289,7 @@ class AdminCMSControllerCore extends AdminController
 						Tools::redirectAdmin($preview_url);
 					}
 					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=3&token='.Tools::getAdminTokenLite('AdminCMSContent'));
+						Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=3&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 				}
 				else
 				{
@@ -313,7 +313,7 @@ class AdminCMSControllerCore extends AdminController
 						Tools::redirectAdmin($preview_url);
 					}
 					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCMSContent'));
+						Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 				}
 			}
 		}
@@ -326,7 +326,7 @@ class AdminCMSControllerCore extends AdminController
 			elseif (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4'.(($id_category = (int)(Tools::getValue('id_cms_category'))) ? ('&id_cms_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCMSContent'));
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4'.(($id_category = (int)(Tools::getValue('id_cms_category'))) ? ('&id_cms_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		/* Change object statuts (active, inactive) */
 		elseif (Tools::isSubmit('status') AND Tools::isSubmit($this->identifier))
