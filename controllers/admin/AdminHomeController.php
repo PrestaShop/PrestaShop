@@ -89,9 +89,9 @@ class AdminHomeControllerCore extends AdminController
 		$shopEnabled = (Configuration::get('PS_SHOP_ENABLE') ? 2 : 1);
 
 		$lights = array(
-		0 => array('image'=>'error2.png','color'=>'#fbe8e8'),
-		1 => array('image'=>'warn2.png','color'=>'#fffac6'),
-		2 => array('image'=>'ok2.png','color'=>'#dffad3'));
+		0 => array('image'=>'bullet_red.png','color'=>'red'),
+		1 => array('image'=>'bullet_orange.png','color'=>'orange'),
+		2 => array('image'=>'bullet_green.png','color'=>'green'));
 
 
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)

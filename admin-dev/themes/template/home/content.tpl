@@ -24,7 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-	<h1>{l s='Dashboard'}</h1>
+<div class="toolbarBox">
+	<div class="pageTitle">
+		<span><h3>{l s='Dashboard'}</h3></span>
+	</div>
+</div>
 	{if $upgrade}
 		<div id="blockNewVersionCheck">
 		{if $upgrade->need_upgrade}
@@ -39,7 +43,7 @@
 	{/if}
 {if $employee->bo_show_screencast}
 <div id="adminpresentation">
-	<iframe src="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:384px;" scrolling="no"></iframe>
+	<iframe src="{$protocol}://localhost:8888/screencast/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:384px;" scrolling="no"></iframe>
 	<div id="footer_iframe_home">
 		<!--<a href="#">{l s ='View more video tutorials'}</a>-->
 		<input type="checkbox" id="screencast_dont_show_again">

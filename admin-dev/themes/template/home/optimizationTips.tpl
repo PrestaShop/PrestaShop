@@ -27,15 +27,15 @@
 <h5>{l s='A good beginning...'}
 	<span style="float:right">
 	<a id="optimizationTipsFold" href="#">
-		<img alt="v" style="padding-top:0px; padding-right: 5px;" src="../img/admin/{if $hide_tips}down-white.gif{else}close-white.png{/if}" />
+		<img alt="v" src="../img/admin/{if $hide_tips}arrow-down.png{else}arrow-up.png{/if}" />
 	</a>
 	</span>
 </h5>
 			<ul id="list-optimization-tips" class="admin-home-box-list" {if $hide_tips}style="display:none"{/if} >
 			{foreach from=$opti_list item=i key=k}
-				<li style="background-color:{$i.color}">
+				<li>
 				<img src="../img/admin/{$i.image}" class="pico" />
-					<a href="{$i.href}">{$i.title}</a>
+					<a  style="color:{$i.color}" href="{$i.href}">{$i.title}</a>
 				</li>
 
 			{/foreach}
@@ -76,10 +76,10 @@ $(document).ready(function(){
 	$("#optimizationTipsFold").click(function(e){
 		e.preventDefault();
 		$("#list-optimization-tips").toggle(function(){
-			if($("#optimizationTipsFold").children("img").attr("src") == "../img/admin/down-white.gif")
-				$("#optimizationTipsFold").children("img").attr("src","../img/admin/close-white.png");
+			if($("#optimizationTipsFold").children("img").attr("src") == "../img/admin/arrow-up.png")
+				$("#optimizationTipsFold").children("img").attr("src","../img/admin/arrow-down.png");
 			else
-				$("#optimizationTipsFold").children("img").attr("src","../img/admin/down-white.gif");
+				$("#optimizationTipsFold").children("img").attr("src","../img/admin/arrow-up.png");
 		});
 	})
 });
