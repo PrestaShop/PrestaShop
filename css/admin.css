@@ -1695,6 +1695,8 @@ fieldset .optionsDescription{
     margin-bottom: 15px;
     padding: 5px 5px 5px 40px;
 	border-radius:3px;
+	min-height:32px;
+	line-height:32px;
 }
 
 p.preference_description{
