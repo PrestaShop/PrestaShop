@@ -126,12 +126,6 @@
 							<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
 						</td>
 					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Location (warehouse):' }</label></td>
-						<td style="padding-bottom:5px;">
-							<input size="55" type="text" name="location" value="{$product->location|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
-						</td>
-					</tr>
 </table>
 {* status informations *}
 <table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">

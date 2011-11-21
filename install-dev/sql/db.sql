@@ -2067,14 +2067,13 @@ CREATE TABLE `PREFIX_warehouse` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_warehouse_product_location` (
-`id_product` INT(11) UNSIGNED NOT NULL,
-`id_product_attribute` INT(11) UNSIGNED NOT NULL,
-`id_warehouse` INT(11) UNSIGNED NOT NULL,
-`location` VARCHAR(64) DEFAULT NULL,
-  PRIMARY KEY (`id_product`, `id_product_attribute`, `id_warehouse`),
-  KEY `id_warehouse` (`id_warehouse`),
-  KEY `id_product` (`id_product`),
-  KEY `id_product_attribute` (`id_product_attribute`)
+  `id_warehouse_product_location` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) unsigned NOT NULL,
+  `id_product_attribute` int(11) unsigned NOT NULL,
+  `id_warehouse` int(11) unsigned NOT NULL,
+  `location` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id_warehouse_product_location`),
+  UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_warehouse`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_warehouse_shop` (

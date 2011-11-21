@@ -280,7 +280,7 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'reason' => array(
 				'title' => $this->l('Reason'),
-				'width' => 250,
+				'width' => 100,
 				'havingFilter' => true
 			),
 			'employee' => array(

@@ -518,22 +518,22 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'reference' => array(
 				'title' => $this->l('Order Reference'),
-				'width' => 120,
+				'width' => 100,
 				'havingFilter' => true
 			),
 			'supplier' => array(
 				'title' => $this->l('Supplier'),
-				'width' => 200,
+				'width' => 100,
 				'filter_key' => 's!name'
 			),
 			'warehouse' => array(
 				'title' => $this->l('Warehouse'),
-				'width' => 200,
+				'width' => 100,
 				'filter_key' => 'w!name'
 			),
 			'state' => array(
 				'title' => $this->l('State'),
-				'width' => 250,
+				'width' => 200,
 				'filter_key' => 'stl!name',
 				'color' => 'color',
 			),
