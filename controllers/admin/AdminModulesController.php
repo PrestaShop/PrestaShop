@@ -481,6 +481,7 @@ class AdminModulesControllerCore extends AdminController
 								Context::getContext()->shop = new Shop();
 								Configuration::updateValue('RSS_FEED_TITLE', 'lol');
 							}
+						}
 
 						if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
 						{
@@ -515,11 +516,15 @@ class AdminModulesControllerCore extends AdminController
 							}
 							$toolbar .= '</table>';
 
+
 							if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop))
 							{
 								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
 								unset(Context::getContext()->tmpOldShop);
 							}
+
+							// Display module configuration
+							// TODO : Make something cleaner
 							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
 						elseif($echo)
@@ -536,7 +541,6 @@ class AdminModulesControllerCore extends AdminController
 					if ($key != 'configure' && isset($_GET['bpay']))
 						Tools::redirectAdmin('index.php?tab=AdminPayment&token='.Tools::getAdminToken('AdminPayment'.(int)(Tab::getIdFromClassName('AdminPayment')).(int)$this->id_employee));
 				}
-			}
 			if (count($module_errors))
 			{
 				// If error during module installation, no redirection
