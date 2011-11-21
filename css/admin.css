@@ -1026,17 +1026,14 @@ table.permissions td {
 		}
 		
 .multishop_info{
-	background-image: url(../img/admin/info_multishop.png);
-	background-repeat: no-repeat;
-	background-position: 2px 2px;
-	background-color: #C6DEFC;
-	border: 1px solid #669BDB;
-	clear: both;
-	display: block;
-	font-size: 14px;
-	padding: 10px;
-	padding-left: 40px;
-	margin-bottom: 15px;
+	margin-top: 4px;
+	margin-bottom: 10px;
+	border: 1px solid #00529B;
+ 	padding: 13px 5px 0 40px;
+	color: #00529B;
+	background: #BDE5F8 url(../img/admin/icon-info.png) no-repeat 6px 5px;
+	border-radius:3px;
+	min-height:32px;
 }
 
 .assoShop{
@@ -1076,7 +1073,7 @@ html[xmlns] .clearfix {
 	border:1px solid #cccccc;
 	background-color: #F8F8F8;
 	float: left;
-	margin:0;
+	margin: 0 0 15px;
 	padding: 10px;
 	position:relative;
 }
@@ -1263,6 +1260,12 @@ html[xmlns] .clearfix {
 	padding-right: 10px;
 }
 
+.admin-box1 a#optimizationTipsFold img {
+	padding:5px 0;
+}
+
+
+
 #table_info_last{
 	margin-left: 0;
 	float: left;
@@ -1340,45 +1343,57 @@ html[xmlns] .clearfix {
 }
 
 .admin-box1{
+	background-color:#F8F8F8;
 	width: 310px;
 	float: left;
-	padding: 1px;
-	border: 1px solid #8E8E8E;
+	padding: 0;
+	border: 1px solid #ccc;
 	font-size: 8pt;
 	margin-bottom: 20px;
+	border-radius:3px;
 }
 
 .admin-box1 h5{
-	background-image: url('../img/admin/orange-gradient.png');
-	color: #FFFFFF;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	color: #333;
+	text-shadow: 0 1px 0 #fff;
 	margin: 0;
+	padding:0;
 	line-height: 29px;
 	padding-left: 15px;
 	font-size: 12pt;
+	font-weight:normal;
+	
 }
 
 .admin-box2{
 	width: 310px;
 	float: left;
-	padding: 1px;
-	border: 1px solid #8E8E8E;
+	padding: 0;
+	border: 1px solid #CCCCCC;
 	font-size: 8pt;
 	margin-bottom: 20px;
 	background-color: #f2f2f2;
+	border-radius:3px;
 }
 
 .admin-box2 h5{
-	background-image: url('../img/admin/pink-gradient.png');
-	color: #FFFFFF;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	color: #333;
+	text-shadow: 0 1px 0 #fff;
 	margin: 0;
+	padding:0;
 	line-height: 29px;
 	padding-left: 15px;
 	font-size: 12pt;
+	font-weight:normal;
 }
 
 
 .admin-home-box-list li img{
-	margin: 0 15px 0 5px;
+	margin: 0 5px;
 }
 .admin-home-box-list{
 	padding-left:0;
@@ -1387,7 +1402,7 @@ html[xmlns] .clearfix {
 }
 
 #prestashop_link{
-	background: url('../img/admin/bg_pslink.png') no-repeat 0px 0px;
+	background: transparent none no-repeat 0px 0px;
 }
 
 .admin-home-box-list li{
@@ -1396,25 +1411,27 @@ html[xmlns] .clearfix {
 }
 
 #prestashop_link li{
-	height: 67px;
-	margin: 1px;
+	height: 58px;
+	margin: 0px;
 }
 
 .admin-home-box-list li p{
-	padding: 5px 5px 0px 90px;
+	font-family: Georgia, 'Lucida Grande', Arial;
+	font-style:italic;
+	font-size:13px;
+	margin: 2px 0;
+	padding: 0px 5px 0px 15px;
 }
 .admin-home-box-list li a{
 	color: #812143;
-	font-weight: bold;
-	text-decoration: underline;
 	line-height: 18px;
-	font-size: 8.5pt;
+	font-size: 12px;
 	text-align: left;
 }
 
 #prestashop_link li a{
-	color: #812143;
-	margin-left: 90px;
+	color: #3A6EA7;
+	margin-left: 15px;
 	font-weight: bold;
 	text-decoration: underline;
 	line-height: 18px;
