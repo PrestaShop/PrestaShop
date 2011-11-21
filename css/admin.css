@@ -1050,12 +1050,13 @@ html[xmlns] .clearfix {
 	margin-top: 5px;
 }
 #adminpresentation{
-	width: 923px;
-	border:1px solid #8E8E8E;
-	background-color: #EFEFEF;
+	width: 902px;
+	border:1px solid #cccccc;
+	background-color: #F8F8F8;
 	float: left;
-	padding: 1px;
-	font-size: 8pt;
+	margin:0;
+	padding: 10px;
+	position:relative;
 }
 
 #listpresentation{
@@ -1103,11 +1104,9 @@ html[xmlns] .clearfix {
 }
 
 #footer_iframe_home{
-	float: left;
-	background-color: #DEDEDE;
-	width: 100%;
-	height: 25px;
-	padding-top: 10px;
+	position:absolute;
+	top:379px;
+	left:675px;
 }
 
 #footer_iframe_home label{
@@ -1140,80 +1139,92 @@ html[xmlns] .clearfix {
 	padding-top: 5px;
 }
 
+/*homepage*/
+#homepage { width:925px;}
+
 .F_list{
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
 
-#first_block{
-	margin: 0;
-	background: #EFEFEF url('../img/admin/catalog_xl.png') no-repeat 6px 6px;
+
+#first_block a, #second_block a, #third_block a, #fourth_block a{ background: #F8F8F8 none no-repeat scroll center 6px;}
+
+#first_block a{
+	background-image: url('../img/admin/folder_add.png');
+	margin-left:0;
 }
 
-#second_block{
-	background: #EFEFEF url('../img/admin/customer_xl.png') no-repeat 6px 6px;
+#second_block a{
+	background-image: url('../img/admin/package_add.png');
 }
 
-#third_block{
-	background: #EFEFEF url('../img/admin/stats_xl.png') no-repeat 6px 6px;
+#third_block a {
+	background-image: url('../img/admin/chart_bar.png');
 }
 
-#fourth_block{
-	background: #EFEFEF url('../img/admin/employees_xl.png') no-repeat 6px 6px;
+#fourth_block a{
+	background-image: url('../img/admin/user_add.png');
 }
 
 .F_list li{
-	width: 125px;
 	float: left;
-	margin-left: 14px;
-	border: 1px solid #8E8E8E;
-	padding: 5px;
-	height: 120px;
 }
 
 .F_list li h4{
 	width: 115px;
-	color: #903E5B;
-	text-decoration: underline;
-	font-size: 12px;
+	font-size: 14px;
+	font-weight:bold;
 	margin-top: 35px;
 	margin-bottom: 0;
 }
 
 .F_list a{
-	color: #903E5B;
+	float:left;
+	color: #333;
+	width: 125px;
+	margin-left: 14px;
+	border: 1px solid #ccc;
+	padding: 5px;
+	height: 120px;
+	text-align:center;
+	border-radius:3px;
 }
 
 .F_list a:hover{
-	color: #903E5B;
+	border:1px solid #666;
 }
 
 .F_list li p{
 	font-size: 8pt;
 }
 
-.table_info{
+.table_info{	
 	width: 283px;
 	float: left;
-	padding: 1px;
-	border: 1px solid #8E8E8E;
+	padding: 0;
+	border: 1px solid #ccc;
 	margin-right: 15px;
 	margin-top: 20px;
+	border-radius:3px;
 }
 
 .table_info h5{
-	background-image: url('../img/admin/green-gradient.png');
-	color: #FFFFFF;
-	margin: 0;
-	line-height: 29px;
-	padding-left: 15px;
-	font-size: 12pt;
-}
+		font-size:16px;
+		font-weight:normal;
+		color:000;
+		margin:0;
+		padding:6px;
+ 		text-shadow:0 1px 0 #fff; 
+		display:block;
+		background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+		background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;}
+
 
 .table_info h5 a,
 .admin-box1 h5 a{
-	color: #FFFFFF;
+	color: #000;
 	font-size: 8pt;
 	float: right;
 	text-decoration: underline;
@@ -1236,31 +1247,35 @@ html[xmlns] .clearfix {
 }
 
 .table_info_details{
+	border-collapse: collapse;
 	width: 283px;
-	border: 0;
+	border: none;
 }
 
 .table_info_details tr{
 	height: 30px;
-	background-color: #EFEFEF;
 	width: 290px;
 	color: #000000;
 	font-weight: bold;
 	padding-left: 5px;
 	width: 100%;
 	text-align: center;
+	border: none;
 }
 
-.tr_odd td{
-	background-color: #DEDEDE;
+.tr_odd {
+	background-color:#eff4f9;
 }
 .table_info_details tr td.td_align_left{
+	font-weight:normal;
 	text-align: left;
 	padding-left: 10px;
 	width: 150px;
+	font-size:12px;
 }
 
 .table_info_details tr td{
+	font-size:16px;
 	text-align: right;
 	padding-right: 10px;
 }
@@ -1270,22 +1285,25 @@ html[xmlns] .clearfix {
 	margin-bottom: 20px;
 	width: 586px;
 	float: left;
-	padding: 1px;
-	border: 1px solid #8E8E8E;
+	padding: 0;
+	border: 1px solid #ccc;
+	border-radius:3px;
 }
 
 #table_info_large h5{
-	background-image: url('../img/admin/green-gradient.png');
-	color: #FFFFFF;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	color: #000;
 	margin: 0;
 	line-height: 29px;
 	padding-left: 15px;
 	font-size: 12pt;
 	font-weight: normal;
+	display:block;
 }
 
 #table_info_large h5 a{
-	color: #FFFFFF;
+	color: #000;
 	float: right;
 	font-size: 8pt;
 	text-decoration: underline;
@@ -1296,7 +1314,7 @@ html[xmlns] .clearfix {
 #stat_google{
 	width: 586px;
 	height: 175px;
-	background-color: #DEDEDE;
+	background-color: #fff;
 }
 
 .admin-box1{
@@ -1384,16 +1402,20 @@ html[xmlns] .clearfix {
 }
 
 #table_customer{
+	border:1px solid #ccc;
 	width: 590px;
 	cellpadding: 0;
 	cellspacing: 0;
+	border-collapse:collapse;
+	border-radius:3px;
 }
 
 #table_customer thead span{
-	background: url('../img/admin/greenlight-gradient.png');
-	color: #FFFFFF;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	color: #000;
+	text-shadow: 0 1px 0 #fff;
 	line-height: 35px;
-	border: 1px solid #416110;
 	display: block;
 	text-align: center;
 	height: 30px;
@@ -1402,13 +1424,9 @@ html[xmlns] .clearfix {
 }
 
 #table_customer thead span.first{
-	border: 1px solid #416110;
-	border-right: none;
 }
 
 #table_customer thead span.last{
-	border: 1px solid #416110;
-	border-left: none;
 }
 
 #table_customer thead th{
