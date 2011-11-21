@@ -204,8 +204,8 @@ class AdminWarehousesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('City:'),
 					'name' => 'city',
-					'size' => 10,
-					'maxlength' => 12,
+					'size' => 20,
+					'maxlength' => 32,
 					'required' => true,
 				),
 				array(

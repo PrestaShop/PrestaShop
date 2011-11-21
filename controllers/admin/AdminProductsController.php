@@ -45,6 +45,7 @@ class AdminProductsControllerCore extends AdminController
 		'Attachments',
 		'Quantities',
 		'Suppliers',
+		'Warehouses',
 		'Accounting');
 
 	public function __construct()
@@ -912,7 +913,9 @@ class AdminProductsControllerCore extends AdminController
 		//Manage suppliers
 		else if (Tools::isSubmit('submitSupplierReferences'))
 			$this->postProcessFormSupplierReferences();
-
+		//Manage warehouses
+		else if (Tools::isSubmit('submitProductWarehouses'))
+			$this->postProcessFormWarehouses();
 		parent::postProcess(true);
 	}
 
@@ -1783,6 +1786,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->addJs(_PS_JS_DIR_.'attributesBack.js');
 		$this->display = 'edit';
 		$this->addJqueryUI('ui.datepicker');
+		$this->addJqueryUI('ui.accordion');
 		$this->tpl_form_vars['pos_select'] = ($tab = Tools::getValue('tabs')) ? $tab : '0';
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
@@ -1983,7 +1987,7 @@ class AdminProductsControllerCore extends AdminController
 										if ($reference != $psc->product_supplier_reference)
 										{
 											$psc->product_supplier_reference = pSQL($reference);
-											$psc->save();
+											$psc->update();
 										}
 										break;
 									}
@@ -1992,6 +1996,88 @@ class AdminProductsControllerCore extends AdminController
 					}
 
 			$this->confirmations[] = $this->l('Supplier Reference(s) of the product have been updated');
+		}
+	}
+
+	/**
+	* Post traitment for warehouses
+	*/
+	public function postProcessFormWarehouses()
+	{
+		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		{
+			// Get all id_product_attribute
+			$attributes = $product->getAttributesResume($this->context->language->id);
+			if (empty($attributes))
+				$attributes[] = array(
+					'id_product_attribute' => 0,
+					'attribute_designation' => ''
+				);
+
+			// Get all available warehouses
+			$warehouses = Warehouse::getWarehouses(true);
+
+			// Get already associated warehouses
+			$associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
+
+			$elements_to_manage = array();
+
+			// get form inforamtion
+			foreach ($attributes as $attribute)
+			{
+				foreach ($warehouses as $warehouse)
+				{
+					$key = $warehouse['id_warehouse'].'_'.$attribute['id_product'].'_'.$attribute['id_product_attribute'];
+
+					// get elements to manage
+					if (Tools::isSubmit('check_warehouse_'.$key))
+					{
+						$location = Tools::getValue('location_warehouse_'.$key, '');
+						$elements_to_manage[$key] = $location;
+					}
+				}
+			}
+
+			// Delete entry if necessary
+			foreach ($associated_warehouses_collection as $awc)
+			{
+				if (!array_key_exists($awc->id_warehouse.'_'.$awc->id_product.'_'.$awc->id_product_attribute, $elements_to_manage))
+					$awc->delete();
+			}
+
+			// Manage locations
+			foreach ($elements_to_manage as $key => $location)
+			{
+				$params = explode('_', $key);
+
+				$wpl_id = WarehouseProductLocation::getIdByProductAndWarehouse($params[1], $params[2], $params[0]);
+
+				if (empty($wpl_id))
+				{
+					//create new record
+					$warehouse_location_entity = new WarehouseProductLocation();
+					$warehouse_location_entity->id_product = $params[1];
+					$warehouse_location_entity->id_product_attribute = $params[2];
+					$warehouse_location_entity->id_warehouse = $params[0];
+					$warehouse_location_entity->location = pSQL($location);
+					$warehouse_location_entity->save();
+				}
+				else
+				{
+					$warehouse_location_entity = new WarehouseProductLocation($wpl_id);
+
+					$location = pSQL($location);
+
+					if ($location != $warehouse_location_entity->location)
+					{
+						$warehouse_location_entity->location = pSQL($location);
+						$warehouse_location_entity->update();
+					}
+					break;
+				}
+			}
+
+			$this->confirmations[] = $this->l('Warehouses and location(s) of the product have been updated');
 		}
 	}
 
@@ -2476,11 +2562,11 @@ class AdminProductsControllerCore extends AdminController
 		// @todo : uses the helperform
 		$data->assign('displayAssoShop', $this->displayAssoShop());
 		$data->assign('carrier_list', $this->getCarrierList());
-		
+
 
 		$product_props = array();
 		// global informations
-		array_push($product_props, 'reference', 'ean13', 'upc', 'location',
+		array_push($product_props, 'reference', 'ean13', 'upc',
 		'available_for_order', 'show_price', 'online_only',
 		'id_manufacturer'
 		);
@@ -2756,7 +2842,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
-	
+
 	protected function getCarrierList()
 	{
 		$carrier_list = Carrier::getCarriers($this->context->language->id);
@@ -2773,7 +2859,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 		return $carrier_list;
 	}
-	
+
 	protected function addCarriers()
 	{
 		if (Tools::getValue('carriers'))
@@ -2785,7 +2871,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function initFormImages($obj, $token = null)
 	{
 		$this->addJs('admin-dnd');
@@ -2931,7 +3017,6 @@ class AdminProductsControllerCore extends AdminController
 						$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
 						$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
-						$combArray[$combinaison['id_product_attribute']]['location'] = $combinaison['location'];
 						$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
 						$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
 						$combArray[$combinaison['id_product_attribute']]['ecotax'] = $combinaison['ecotax'];
@@ -3003,7 +3088,7 @@ class AdminProductsControllerCore extends AdminController
 							<a style="cursor: pointer;">
 							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
 							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['ean13'].'\',
-							\'0\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['location'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
+							\'0\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
 							\''.$product->productDownload->display_filename.'\', \''.$filename.'\', \''.$product->productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$product->productDownload->nb_days_accessible.'\',  \''.$product->productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
 							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
 							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
@@ -3168,6 +3253,47 @@ class AdminProductsControllerCore extends AdminController
 		}
 		else
 			$data->assign('content', '<b>'.$this->l('You must save this product before manage suppliers').'.</b>');
+
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
+	public function initFormWarehouses($obj)
+	{
+		$data = $this->context->smarty->createData();
+
+		if ($this->object->id)
+		{
+			// Get all id_product_attribute
+			$attributes = $obj->getAttributesResume($this->context->language->id);
+			if (empty($attributes))
+				$attributes[] = array(
+					'id_product_attribute' => 0,
+					'attribute_designation' => ''
+				);
+
+			$product_designation = array();
+
+			foreach ($attributes as $attribute)
+				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+
+			// Get all available warehouses
+			$warehouses = Warehouse::getWarehouses(true);
+
+			// Get already associated warehouses
+			$associated_warehouses_collection = WarehouseProductLocation::getCollection($this->object->id);
+
+			$data->assign(array(
+				'attributes' => $attributes,
+				'warehouses' => $warehouses,
+				'associated_warehouses' => $associated_warehouses_collection,
+				'product_designation' => $product_designation,
+				'product' => $this->object,
+				'link' => $this->context->link,
+				'token' => $this->token
+			));
+		}
+		else
+			$data->assign('content', '<b>'.$this->l('You must save this product before manage warehouses').'.</b>');
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
