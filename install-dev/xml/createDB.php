@@ -138,7 +138,7 @@ switch (_DB_TYPE_)
 				if (!Db::getInstance()->Execute($query))
 				{
 					if (Db::getInstance()->getNumberError() == 1050)
-					{
+					{echo $query.'<br />';
 						$logger->logError('A Prestashop database already exists, please drop it or change the prefix.');
 						die('<action result="fail" error="14" />'."\n");
 					}
