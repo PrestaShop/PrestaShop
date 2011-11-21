@@ -26,13 +26,7 @@
 
 {extends file="helper/options/options.tpl"} 
 {block name="start_field_block"}
-	{if $field['type'] == 'price'}
-		<div class="margin-form">
-			{$field['currency_left']}
-			<input type="text"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else} 5{/if}" name="{$key}" value="{$field['value']|escape:'htmlall':'UTF-8'}" />
-			{if isset($field['next'])} &nbsp; {$field['next']|strval}{/if}
-			{$field['currency_right']}
-	{elseif $field['type'] == 'disabled'}
+	{if $field['type'] == 'disabled'}
 		<div class="margin-form">
 			{$field['disabled']}
 	{elseif $field['type'] == 'maintenance_ip'}
