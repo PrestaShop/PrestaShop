@@ -1182,6 +1182,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->copyFromPost($object, $this->table);
 					if ($object->update())
 					{
+						$this->addCarriers();
 						if ($id_reason = (int)Tools::getValue('id_mvt_reason') && Tools::getValue('mvt_quantity') > 0 && $id_reason > 0)
 						{
 							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, null, null, $this->context->employee->id))
@@ -1245,6 +1246,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->copyFromPost($object, $this->table);
 				if ($object->add())
 				{
+					$this->addCarriers();
 					$this->updateAssoShop((int)$object->id);
 					$this->updateAccessories($object);
 					if (!$this->updatePackItems($object))
@@ -2473,6 +2475,8 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
 		// @todo : uses the helperform
 		$data->assign('displayAssoShop', $this->displayAssoShop());
+		$data->assign('carrier_list', $this->getCarrierList());
+		
 
 		$product_props = array();
 		// global informations
@@ -2752,7 +2756,36 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
-
+	
+	protected function getCarrierList()
+	{
+		$carrier_list = Carrier::getCarriers($this->context->language->id);
+		if ($product = $this->loadObject(true))
+		{
+			$carrier_selected_list = $product->getCarriers();
+			foreach ($carrier_list as &$carrier)
+				foreach ($carrier_selected_list as $carrier_selected)
+					if ($carrier_selected['id_reference'] == $carrier['id_reference'])
+					{
+						$carrier['selected'] = true;
+						continue;
+					}
+		}
+		return $carrier_list;
+	}
+	
+	protected function addCarriers()
+	{
+		if (Tools::getValue('carriers'))
+		{
+			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+			{
+				if (Tools::getValue('carriers'))
+					$product->setCarriers(Tools::getValue('carriers'));
+			}
+		}
+	}
+	
 	public function initFormImages($obj, $token = null)
 	{
 		$this->addJs('admin-dnd');
