@@ -69,6 +69,8 @@ abstract class ControllerCore
 	 * @var bool If ajax parameter is detected in request, set this flag to true
 	 */
 	protected $ajax = false;
+	protected $json = false;
+	protected $status = '';
 
 	protected $redirect_after = null;
 	/**

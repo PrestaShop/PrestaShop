@@ -82,11 +82,18 @@ class HelpAccessCore
 	}
 
     public static function displayHelp($label, $iso_lang, $country, $ps_version)
+		{
+			echo HelpAccess::getHelp($label, $iso_lang, $country, $ps_version);
+			return true;
+		}
+    public static function getHelp($label, $iso_lang, $country, $ps_version)
     {
+			$content = '';
         $infos = HelpAccess::retrieveInfos($label, $iso_lang, $country, $ps_version);
+				print_r($infos);
         if (array_key_exists('image', $infos) && $infos['image'] != 'none')
         {
-	        echo '
+	        $content .= '
 			        <a class="help-button" href="#" onclick="showHelp(\''.HelpAccess::URL.'\',\''.$label.'\',\''.$iso_lang.'\',\''.$ps_version.'\',\''.$infos['version'].'\',\''.$country.'\');" title="'.Tools::htmlentitiesUTF8($infos['tooltip']).'">
 			        <img id="help-'.$label.'" src="../img/admin/'.Tools::htmlentitiesUTF8($infos['image']).'" alt="" class="middle" style="margin-top: -5px"/> '.Tools::displayError('HELP').'
 			        </a>
@@ -95,7 +102,7 @@ class HelpAccessCore
 
 
 		     if (!empty($infos['tooltip']))
-    		     echo ' <script type="text/javascript">
+    		     $content .= ' <script type="text/javascript">
 			            $(document).ready(function() {
               			      $("a.help-button").cluetip({
 				              	splitTitle: "|",
@@ -108,6 +115,7 @@ class HelpAccessCore
 			            });
 		              </script>';
 		 }
+		 return $content;
     }
 }
 

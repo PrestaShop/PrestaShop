@@ -37,6 +37,7 @@ class HelperCore
 	public $identifier;
 	public $token;
 	public $toolbar_btn;
+	public $ps_help_context;
 	public $title;
 	public $show_toolbar = true;
 	public $context;
