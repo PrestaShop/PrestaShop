@@ -227,7 +227,7 @@ $(document).ready(function(){
 	//]]>
 </script>
 
-<form id="product" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
+<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
 	<input type="hidden" name="id_product" value="{$id_product}" />
 	<input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
