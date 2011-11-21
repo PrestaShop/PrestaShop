@@ -38,8 +38,6 @@
 		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
 	{/if}
 {if $employee->bo_show_screencast}
-
-
 <div id="adminpresentation">
 	<iframe src="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:384px;" scrolling="no"></iframe>
 	<div id="footer_iframe_home">
