@@ -855,7 +855,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		
+
 		// todo : return value ?
 	}
 
@@ -1473,7 +1473,7 @@ class AdminControllerCore extends Controller
 		{
 			$iso = Context::getContext()->language->iso_code;
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
-			
+
 			if (isset($_LANGADM))
 				$_LANGADM = array_change_key_case($_LANGADM);
 			else
@@ -1481,6 +1481,9 @@ class AdminControllerCore extends Controller
 		}
 
 		$class = strtolower($class);
+		// For traductions in a tpl folder with an underscore
+		$class = str_replace('_', '', $class);
+
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 		//$currentClass = get_class($this);
 		if (false && Module::getModuleNameFromClass($class))
@@ -1489,12 +1492,14 @@ class AdminControllerCore extends Controller
 			return Module::findTranslation(Module::$classInModule[$class], $string, $class);
 		}
 		global $_LANGADM;
+
 		if (is_array($_LANGADM))
 			$_LANGADM = array_change_key_case($_LANGADM);
 		else
 			$_LANGADM = array();
 		$key = md5(str_replace('\'', '\\\'', $string));
-		// retrocomp : 
+
+		// retrocomp :
 		// if value is not set, try with "AdminTab" as prefix.
 		// @todo : change AdminTab to Helper
 		if ( isset($_LANGADM[$class.$key]))
