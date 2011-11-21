@@ -32,8 +32,6 @@ class AdminLocalizationControllerCore extends AdminController
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
 
-		parent::__construct();
-
 		$this->options = array(
 			'localization' => array(
 				'title' =>	$this->l('Localization'),
@@ -90,10 +88,11 @@ class AdminLocalizationControllerCore extends AdminController
 						'type' => 'text',
 						'visibility' => Shop::CONTEXT_ALL
 					)
-				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
-			),
+				)
+			)
 		);
+
+		parent::__construct();
 	}
 
 	public function postProcess()
@@ -124,7 +123,7 @@ class AdminLocalizationControllerCore extends AdminController
 		parent::postProcess();
 	}
 
-	public function initContent()
+	public function initForm()
 	{
 		$localizations_pack = false;
 		$this->tpl_option_vars['options_content'] = $this->initOptions();
@@ -137,11 +136,103 @@ class AdminLocalizationControllerCore extends AdminController
 				$xml_localization = simplexml_load_file($localization_file);
 		}
 
-			if ($xml_localization)
-				foreach ($xml_localization->pack as $pack)
-					$localizations_pack[(string)$pack->iso] = (string)$pack->name;
+		$i = 0;
+		if ($xml_localization)
+			foreach ($xml_localization->pack as $key => $pack)
+			{
+				$localizations_pack[$i]['iso_localization_pack'] = (string)$pack->iso;
+				$localizations_pack[$i]['name'] = (string)$pack->name;
+				$i++;
+			}
 
-		$this->tpl_option_vars['localizations_pack'] = $localizations_pack;
-		parent::initContent();
+		if (!$localizations_pack)
+			return $this->displayWarning($this->l('Cannot connect to prestashop.com'));
+
+		$selection_import = array(
+			array(
+				'id' => 'states',
+				'name' => $this->l('States')
+			),
+			array(
+				'id' => 'taxes',
+				'name' => $this->l('Taxes')
+			),
+			array(
+				'id' => 'currencies',
+				'name' => $this->l('Currencies')
+			),
+			array(
+				'id' => 'languages',
+				'name' => $this->l('Languages')
+			),
+			array(
+				'id' => 'units',
+				'name' => $this->l('Units (e.g., weight, volume, distance)')
+			)
+		);
+
+		$this->fields_form = array(
+			'tinymce' => true,
+			'legend' => array(
+				'title' => $this->l('Localization pack import'),
+				'image' => '../img/admin/localization.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'select',
+					'label' => $this->l('Localization pack you want to import:'),
+					'name' => 'iso_localization_pack',
+					'options' => array(
+						'query' => $localizations_pack,
+						'id' => 'iso_localization_pack',
+						'name' => 'name'
+					)
+				),
+				array(
+					'type' => 'checkbox',
+					'label' => $this->l('Content to import:'),
+					'name' => 'selection[]',
+					'lang' => true,
+					'values' => array(
+						'query' => $selection_import,
+						'id' => 'id',
+						'name' => 'name'
+					)
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Import   '),
+				'class' => 'button',
+				'name' => 'submitLocalizationPack'
+			)
+		);
+
+		$this->fields_value = array(
+			'selection[]_states' => true,
+			'selection[]_taxes' => true,
+			'selection[]_currencies' => true,
+			'selection[]_languages' => true,
+			'selection[]_units' => true
+		);
+
+		$this->show_toolbar = false;
+		return parent::initForm();
+	}
+
+	public function initContent()
+	{
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
+		$this->content .= $this->initOptions();
+
+		if (!$this->loadObject(true))
+			return;
+
+		$this->content .= $this->initForm();
+
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
+		));
 	}
 }
