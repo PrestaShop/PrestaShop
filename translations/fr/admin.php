@@ -2,11 +2,11 @@
 
 global $_LANGADM;
 $_LANGADM = array();
-$_LANGADM['AdminPDF788ebe0fc7fc09c0c20069659af8e139'] = 'Configuration des PDF dans la langue courante :';
-$_LANGADM['AdminPDF41fcf9407f9c20e5d2306bbc4c3fed2f'] = 'Encodage :';
-$_LANGADM['AdminPDF7b66a66ca2141a1184bf40c300d00007'] = 'Encodage des factures PDF';
-$_LANGADM['AdminPDF7b33872f9b52c649fda24a8fef9492bb'] = 'Police :';
-$_LANGADM['AdminPDF8b28d3153d454696bef299fd0bbc2d7e'] = 'Police des factures PDF';
+$_LANGADM['AdminPdf788ebe0fc7fc09c0c20069659af8e139'] = 'Configuration des PDF dans la langue courante :';
+$_LANGADM['AdminPdf41fcf9407f9c20e5d2306bbc4c3fed2f'] = 'Encodage :';
+$_LANGADM['AdminPdf7b66a66ca2141a1184bf40c300d00007'] = 'Encodage des factures PDF';
+$_LANGADM['AdminPdf7b33872f9b52c649fda24a8fef9492bb'] = 'Police :';
+$_LANGADM['AdminPdf8b28d3153d454696bef299fd0bbc2d7e'] = 'Police des factures PDF';
 $_LANGADM['AdminSubDomainsb718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_LANGADM['AdminSubDomainsbeed05bccb8b6f21466910eb4a4f142b'] = 'Sous-domaine';
 $_LANGADM['AdminSubDomains51e2fe0e1a41fe9fec46ae2129bb8513'] = 'Sous-domaines';

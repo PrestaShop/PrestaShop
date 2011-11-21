@@ -581,3 +581,4 @@ UPDATE `PREFIX_employee` SET `bo_theme` = 'default';
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminCmsContent' WHERE `class_name` = 'AdminCMSContent';
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminCms' WHERE `class_name` = 'AdminCMS';
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminCmsCategories' WHERE `class_name` = 'AdminCMSCategories';
+UPDATE `PREFIX_tab` SET `class_name` = 'AdminPdf' WHERE `class_name` = 'AdminPDF';
