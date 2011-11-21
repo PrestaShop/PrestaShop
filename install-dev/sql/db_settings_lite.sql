@@ -1061,7 +1061,6 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 55, 'Lieferscheine'),(4, 56, 'SEO & URLs'),(4, 57, 'CMS'),(4, 58, 'Image Mapping'),(4, 59, 'Kundennachrichten'),(4, 60, 'Tracking'),
 (4, 61, 'Suchmaschinen'),(4, 62, 'Referrer'),(4, 63, 'Gruppen'),(4, 64, 'Generatoren'),(4, 65, 'Warenkörbe'),(4, 66, 'Tags'),(4, 67, 'Suche'),
 (4, 68, 'Anhänge'),(4, 69, 'Konfigurationsinformationen'),(4, 70, 'Leistung'),(4, 71, 'Kundenservice'),(4, 72, 'Webservice'),(4, 73, 'Lagerbewegungen'),
-<<<<<<< .working
 (4, 80, 'Module und Themenkatalog'),(4, 81, 'Mein Konto'),(4, 82, 'Shops'),(4, 83, 'Themen'),(4, 84, 'Geotargeting'),(4, 85, 'Steuerregeln'),(4, 86, 'Log'),
 (4, 87,'Home'), (4, 88, 'Shops'), (4, 89, 'Group Shops'), (4, 90, 'Shop Urls'),(4, 91, 'Genders'),(4, 92, 'SQL Manager'),
 (4, 93, 'Products'),
