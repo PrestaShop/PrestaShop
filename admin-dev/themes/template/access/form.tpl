@@ -65,11 +65,10 @@
 				{
 					try
 					{
-						res = $.parseJSON(res);
-						if (res.result == 'ok')
-							showSuccessMessage(res.msg);
+						if (res == 'ok')
+							showSuccessMessage("{l s='Update successful'}");
 						else
-							showErrorMessage(res.msg);
+							showErrorMessage("{l s='Update error'}");
 					}
 					catch(e)
 					{
@@ -111,11 +110,10 @@
 				{
 					try
 					{
-						res = $.parseJSON(res);
-						if (res.result == "ok")
-							showSuccessMessage(res.msg);
+						if (res == 'ok')
+							showSuccessMessage("{l s='Update successful'}");
 						else
-							showErrorMessage(res.msg);
+							showErrorMessage("{l s='Update error'}");
 					}
 					catch(e)
 					{
