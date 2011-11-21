@@ -344,7 +344,7 @@ class BlockCms extends Module
 		<fieldset>
 			<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('CMS block configuration').'</legend>
 
-			<p><a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMS"><img src="'._PS_ADMIN_IMG_.'add.gif" alt="" /> '.$this->l('Add a new CMS block').'</a></p>';
+			<p><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMS"><img src="'._PS_ADMIN_IMG_.'add.gif" alt="" /> '.$this->l('Add a new CMS block').'</a></p>';
 
 		$this->_html .= '<div style="width:440px; float:left; margin-right:10px;" ><h3>'.$this->l('List of Left CMS blocks').'</h3>';
 		if (sizeof($cms_blocks_left))
@@ -370,14 +370,14 @@ class BlockCms extends Module
 						<td width="30%" class="center">'.(empty($cms_block['block_name']) ? $cms_block['category_name'] : $cms_block['block_name']).'</td>
 						<td width="30%" class="center">'.$cms_block['category_name'].'</td>
 						<td class="center pointer dragHandle">
-							<a'.(($cms_block['position'] == (sizeof($cms_blocks_left) - 1) OR sizeof($cms_blocks_left) == 1) ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.(($cms_block['position'] == (sizeof($cms_blocks_left) - 1) OR sizeof($cms_blocks_left) == 1) ? ' style="display: none;"' : '').' href="'.AdminController::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/down.gif" alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>
-							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.AdminController::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=0&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/up.gif" alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>
 						</td>
 						<td width="10%" class="center">
-							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
-							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
+							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
+							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 						</td>
 					</tr>';
 			}
@@ -413,14 +413,14 @@ class BlockCms extends Module
 						<td width="30%" class="center">'.(empty($cms_block['block_name']) ? $cms_block['category_name'] : $cms_block['block_name']).'</td>
 						<td width="30%" class="center">'.$cms_block['category_name'].'</td>
 						<td class="center pointer dragHandle">
-							<a'.(($cms_block['position'] == (sizeof($cms_blocks_right) - 1) OR sizeof($cms_blocks_right) == 1) ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.(($cms_block['position'] == (sizeof($cms_blocks_right) - 1) OR sizeof($cms_blocks_right) == 1) ? ' style="display: none;"' : '').' href="'.AdminController::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=1&position='.(int)($cms_block['position'] + 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/down.gif" alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>
-							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.AdminTab::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
+							<a'.($cms_block['position'] == 0 ? ' style="display: none;"' : '').' href="'.AdminController::$currentIndex.'&configure=blockcms&id_cms_block='.$cms_block['id_cms_block'].'&way=0&position='.(int)($cms_block['position'] - 1).'&location=1&token='.Tools::getAdminTokenLite('AdminModules').'">
 							<img src="../img/admin/up.gif" alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>
 						</td>
 						<td width="10%" class="center">
-							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
-							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
+							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
+							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMS&id_cms_block='.(int)($cms_block['id_cms_block']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 						</td>
 					</tr>';
 			}
@@ -535,7 +535,7 @@ class BlockCms extends Module
 			    $this->_html .=	'<div id="cms_subcategories"></div>
 			<p class="center">
 				<input type="submit" class="button" name="submitBlockCMS" value="'.$this->l('Save').'" />
-				<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
+				<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
 			</p>';
 
 			    $this->_html .= '
@@ -646,7 +646,7 @@ class BlockCms extends Module
 				SET `position` = '.((int)Tools::getValue('position')).'
 				WHERE `id_cms_block` = '.(int)Tools::getValue('id_cms_block'));
 		}
-		Tools::redirectAdmin(AdminTab::$currentIndex.'index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+		Tools::redirectAdmin(AdminController::$currentIndex.'index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
 	}
 
 	private function _postProcess()
@@ -723,9 +723,9 @@ class BlockCms extends Module
 					VALUES('.(int)$id_cms_block.', '.(int)$cms_properties[1].', '.(int)$cms_properties[0].')');
 			}
 			if (Tools::isSubmit('addBlockCMS'))
-			Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMSConfirmation');
+			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMSConfirmation');
 			elseif (Tools::isSubmit('editBlockCMS'))
-			Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMSConfirmation');
+			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editBlockCMSConfirmation');
 		}
 		elseif (Tools::isSubmit('deleteBlockCMS') AND Tools::getValue('id_cms_block'))
 		{
@@ -746,7 +746,7 @@ class BlockCms extends Module
 				DELETE FROM `'._DB_PREFIX_.'cms_block_page`
 				WHERE `id_cms_block` = '.(int)(Tools::getValue('id_cms_block')));
 
-				Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMSConfirmation');
+				Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteBlockCMSConfirmation');
 			}
 			else
 			$this->_html .= $this->displayError($this->l('Error: you are trying to delete a non-existent block cms'));

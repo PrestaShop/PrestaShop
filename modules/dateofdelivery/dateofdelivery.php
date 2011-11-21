@@ -178,7 +178,7 @@ class DateOfDelivery extends Module
 					INSERT INTO `'._DB_PREFIX_.'dateofdelivery_carrier_rule`(`id_carrier`, `minimal_time`, `maximal_time`, `delivery_saturday`, `delivery_sunday`) 
 					VALUES ('.(int)($carrier->id).', '.(int)(Tools::getValue('minimal_time')).', '.(int)(Tools::getValue('maximal_time')).', '.(int)(Tools::isSubmit('delivery_saturday')).', '.(int)(Tools::isSubmit('delivery_sunday')).')
 					'))
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmAddCarrierRule');
+						Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmAddCarrierRule');
 					else
 						$this->_html .= $this->displayError($this->l('An error occurred on adding of carrier rule.'));
 				}
@@ -189,7 +189,7 @@ class DateOfDelivery extends Module
 					SET `id_carrier` = '.(int)($carrier->id).', `minimal_time` = '.(int)(Tools::getValue('minimal_time')).', `maximal_time` = '.(int)(Tools::getValue('maximal_time')).', `delivery_saturday` = '.(int)(Tools::isSubmit('delivery_saturday')).', `delivery_sunday` = '.(int)(Tools::isSubmit('delivery_sunday')).'
 					WHERE `id_carrier_rule` = '.(int)(Tools::getValue('id_carrier_rule'))
 					))
-						Tools::redirectAdmin(AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmEditCarrierRule');
+						Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&confirmEditCarrierRule');
 					else
 						$this->_html .= $this->displayError($this->l('An error occurred on updating of carrier rule.'));
 				}
@@ -218,7 +218,7 @@ class DateOfDelivery extends Module
 		<fieldset>
 			<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time.png" alt="" /> '.$this->l('Carrier configuration').'</legend>
 			
-			<p><a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addCarrierRule"><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time_add.png" alt="" /> '.$this->l('Add a new carrier rule').'</a></p>
+			<p><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addCarrierRule"><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time_add.png" alt="" /> '.$this->l('Add a new carrier rule').'</a></p>
 			
 			<h3>'.$this->l('List of carrier rules').'</h3>';
 			
@@ -261,8 +261,8 @@ class DateOfDelivery extends Module
 				$this->_html .= '
 					</td>
 					<td width="10%" class="center">
-						<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editCarrierRule&id_carrier_rule='.(int)($rule['id_carrier_rule']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
-						<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteCarrierRule&id_carrier_rule='.(int)($rule['id_carrier_rule']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
+						<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&editCarrierRule&id_carrier_rule='.(int)($rule['id_carrier_rule']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a> 
+						<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteCarrierRule&id_carrier_rule='.(int)($rule['id_carrier_rule']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 					</td>
 				</tr>';
 			}
@@ -277,7 +277,7 @@ class DateOfDelivery extends Module
 		$this->_html .= '
 		</fieldset>
 		<br />
-		<form method="POST" action="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">
+		<form method="POST" action="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">
 			<fieldset style="width:500px;">
 				<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/img/time.png" alt="" /> '.$this->l('More options').'</legend>
 				
@@ -357,7 +357,7 @@ class DateOfDelivery extends Module
 			</div>
 			
 			<p class="center"><input type="submit" class="button" name="submitCarrierRule" value="'.$this->l('Save').'" /></p>
-			<p class="center"><a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a></p>
+			<p class="center"><a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a></p>
 		';
 		
 		$this->_html .= '

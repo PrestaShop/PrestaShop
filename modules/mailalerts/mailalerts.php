@@ -393,7 +393,7 @@ class MailAlerts extends Module
 		$token = Tools::getValue('token');
 
 		$this->_html .= '
-		<form action="'.AdminTab::$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
+		<form action="'.AdminController::$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
 			<fieldset class="width3"><legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Customer notification').'</legend>
 				<label>'.$this->l('Product availability:').' </label>
 				<div class="margin-form">
@@ -406,7 +406,7 @@ class MailAlerts extends Module
 			</fieldset>
 		</form>
 		<br />
-		<form action="'.AdminTab::$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
+		<form action="'.AdminController::$currentIndex.'&token='.$token.'&configure=mailalerts" method="post">
 			<fieldset class="width3"><legend><img src="'.$this->_path.'logo.gif" />'.$this->l('Merchant notification').'</legend>
 				<label>'.$this->l('New order:').' </label>
 				<div class="margin-form">

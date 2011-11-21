@@ -428,7 +428,7 @@ class Hipay extends PaymentModule
 			</div>';
 		}
 
-		$link = AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::safeOutput(Tools::getValue('token'));
+		$link = AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::safeOutput(Tools::getValue('token'));
 		$form = '
 		<style>
 			.hipay_label {float:none;font-weight:normal;padding:0;text-align:left;width:100%;line-height:30px}
@@ -535,7 +535,7 @@ class Hipay extends PaymentModule
 		<fieldset>
 			<legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Zones restrictions').'</legend>
 			'.$this->l('Select the authorized shipping zones').'<br /><br />
-			<form action="'.AdminTab::$currentIndex.'&configure=hipay&token='.Tools::safeOutput(Tools::getValue('token')).'" method="post">
+			<form action="'.AdminController::$currentIndex.'&configure=hipay&token='.Tools::safeOutput(Tools::getValue('token')).'" method="post">
 				<table cellspacing="0" cellpadding="0" class="table">
 					<tr>
 						<th class="center">'.$this->l('ID').'</th>

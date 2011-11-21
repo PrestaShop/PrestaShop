@@ -269,7 +269,7 @@ class StatsProduct extends ModuleGraph
 				<tr>
 					<td>'.$product['reference'].'</td>
 					<td>
-						<a href="'.AdminTab::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a>
+						<a href="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'&id_product='.$product['id_product'].'">'.$product['name'].'</a>
 					</td>
 					<td>'.$product['quantity'].'</td>
 				</tr>';

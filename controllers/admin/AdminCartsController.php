@@ -250,7 +250,14 @@ class AdminCartsController extends AdminController
 		$this->context->cart->save();
 		if (!count($errors))
 		{
-			if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, 'up')))
+			if ((int)$qty < 0)
+			{
+				$qty = str_replace('-', '', $qty);
+				$operator = 'down';
+			}
+			else
+				$operator = 'up';
+			if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, 0, $operator)))
 				$errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
 		}
 

@@ -1575,7 +1575,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$this->display = 'list';
 			if ($id_category = (int)Tools::getValue('id_category'))
-				AdminTab::$currentIndex .= '&id_category='.$id_category;
+				AdminController::$currentIndex .= '&id_category='.$id_category;
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
 
 			$id_category = Tools::getValue('id_category', 1);

@@ -173,7 +173,7 @@ class ThemeInstallator extends Module
 
 		if (!Tools::isSubmit('cancelExport') AND (Tools::isSubmit('exportTheme') OR Tools::isSubmit('submitExport')))
 			$this->page = 'exportPage';
-		$this->_html = '<form action="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::htmlentitiesUTF8(Tools::getValue('token')).'" method="POST" enctype=multipart/form-data>';
+		$this->_html = '<form action="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::htmlentitiesUTF8(Tools::getValue('token')).'" method="POST" enctype=multipart/form-data>';
 
 		if (Tools::isSubmit('modulesToExport') OR Tools::isSubmit('submitModules'))
 			$this->to_export = Tools::getValue('modulesToExport');
