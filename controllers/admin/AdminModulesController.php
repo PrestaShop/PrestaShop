@@ -616,22 +616,34 @@ class AdminModulesControllerCore extends AdminController
 	** Display Modules Lists
 	**
 	*/
-
+	private $translationsTab = array();
 	public function displayModuleOptions($module)
-	{		
+	{	
+		if (!isset($this->translationsTab['Disable this module']))
+		{
+			$this->translationsTab['Disable this module'] = $this->l('Disable this module');
+			$this->translationsTab['Enable this module for all shops'] = $this->l('Enable this module for all shops');
+			$this->translationsTab['Disable'] = $this->l('Disable');
+			$this->translationsTab['Enable'] = $this->l('Enable');
+			$this->translationsTab['Reset'] = $this->l('Reset');
+			$this->translationsTab['Configure'] = $this->l('Configure');
+			$this->translationsTab['Delete'] = $this->l('Delete');
+			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this ?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?');
+		}	
+			
 		$return = '';
 		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&tab_module='.$module->tab;
 		if ($module->id)
-			$return .= '<span class="desactive-module"><a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->l('Disable this module') : $this->l('Enable this module for all shops')).'"' : '').'>'.($module->active ? $this->l('Disable') : $this->l('Enable')).'</a></span>';
+			$return .= '<span class="desactive-module"><a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']).'"' : '').'>'.($module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable']).'</a></span>';
 
 		if ($module->id AND $module->active)
-			$return .= (!empty($result) ? '|' : '').'<span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->l('Reset').'</a></span>';
+			$return .= (!empty($result) ? '|' : '').'<span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
 
 		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isFeatureActive()))
-			$return .= (!empty($result) ? '|' : '').'<span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->l('Configure').'</a></span>';
+			$return .= (!empty($result) ? '|' : '').'<span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
 
 		$hrefDelete = self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
-		$return .= (!empty($result) ? '|' : '').'<span class="delete-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->l('This action will permanently remove the module from the server. Are you sure you want to do this ?').'\');" href="'.$hrefDelete.'">'.$this->l('Delete').'</a></span>';
+		$return .= (!empty($result) ? '|' : '').'<span class="delete-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this ?'].'\');" href="'.$hrefDelete.'">'.$this->translationsTab['Delete'].'</a></span>';
 
 		return $return;
 	}
