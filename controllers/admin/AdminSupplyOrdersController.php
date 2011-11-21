@@ -1765,8 +1765,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			return;
 
 		$content = '<span style="width:20px; margin-right:5px;">';
-		if ($supply_order_state->editable == false) // @TODO Decide what states are allowed
-			$content .= '<a href="#"><img src="../img/admin/pdf.gif" alt="invoice" /></a>';
+		if ($supply_order_state->editable == false)
+			$content .= '<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'"><img src="../img/admin/pdf.gif" alt="invoice" /></a>';
 		else
 			$content .= '-';
 		$content .= '</span>';
