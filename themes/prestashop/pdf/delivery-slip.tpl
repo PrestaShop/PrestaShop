@@ -13,7 +13,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 50%">
-							<span style="font-weight: bold; font-size: 11pt; color: #9E9F9E">{ŀ s='Delivery Address' pdf='true'}</span><br />
+							<span style="font-weight: bold; font-size: 11pt; color: #9E9F9E">{l s='Delivery Address' pdf='true'}</span><br />
 							 {$delivery_address}
 						</td>
 						<td style="width: 50%">
