@@ -23,9 +23,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div>
+
 	<h1>{l s='Dashboard'}</h1>
-	<hr style="background-color: #812143;color: #812143;" />
 	{if $upgrade}
 		<div id="blockNewVersionCheck">
 		{if $upgrade->need_upgrade}
@@ -39,8 +38,10 @@
 		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
 	{/if}
 {if $employee->bo_show_screencast}
+
+
 <div id="adminpresentation">
-	<iframe src="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:420px;" scrolling="no"></iframe>
+	<iframe src="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:384px;" scrolling="no"></iframe>
 	<div id="footer_iframe_home">
 		<!--<a href="#">{l s ='View more video tutorials'}</a>-->
 		<input type="checkbox" id="screencast_dont_show_again">
@@ -83,12 +84,16 @@ $(document).ready(function() {
 </script>
 <div class="clear"></div>
 {/if}
+
+<div id="homepage">
 	<div id="column_left">
 		<ul class="F_list clearfix">
 		{foreach from=$quick_links key=k item=link}
 		<li id="{$k}_block">
-			<h4><a href="{$link.href}">{$link.title}</a></h4>
-			<p>{$link.description}</p>
+			<a href="{$link.href}">
+				<h4>{$link.title}</h4>
+				<p>{$link.description}</p>
+			</a>
 		</li>
 		{/foreach}
 		</ul>
@@ -96,7 +101,7 @@ $(document).ready(function() {
 		{$customers_service}
 		{$stats_sales}
 		{$last_orders}
-	</div>
+
 
 	<div id="column_right">
 	{$tips_optimization}
@@ -104,6 +109,7 @@ $(document).ready(function() {
 	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 	</div>
 	{$HOOK_BACKOFFICEHOME}
+</div>
 	<div class="clear">&nbsp;</div>
 <script type="text/javascript">
 $(document).ready(function() {
