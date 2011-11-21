@@ -1119,7 +1119,6 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (4, 85, 0, 0, 0, 0),
 (4, 86, 0, 0, 0, 0),
 (4, 87, 0, 0, 0, 0),
-<<<<<<< .working
 (4, 88, 0, 0, 0, 0),
 (4, 89, 0, 0, 0, 0),
 (4, 90, 0, 0, 0, 0),
@@ -1237,7 +1236,6 @@ INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `del
 (5, 105, 0, 0, 0, 0),
 (5, 106, 0, 0, 0, 0),
 (4, 88, 1, 1, 1, 1);
->>>>>>> .merge-right.r10309
 
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 2, id_module, 0, 1 FROM PREFIX_module);
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 3, id_module, 0, 1 FROM PREFIX_module);
