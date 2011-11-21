@@ -52,12 +52,12 @@
 								<input type="text" 
 									   style="width: 450px" 
 									   name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
-									   value="{$value|htmlentitiesUTF8}" />
+									   value="{$value|regex_replace:'/"/':'&quot;'|stripslashes}" />
 							{else}
 								<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
 										 style="width: 450px" 
 								name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
-								>{$value}</textarea>
+								>{$value|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
 							{/if}
 						</td>
 					</tr>
