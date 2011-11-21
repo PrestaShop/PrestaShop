@@ -39,6 +39,7 @@ class PDFCore
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
     const TEMPLATE_ORDER_SLIP = 'OrderSlip';
     const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
+    const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
 	public function __construct($objects, $template, $smarty)
 	{

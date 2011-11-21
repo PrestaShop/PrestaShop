@@ -39,7 +39,8 @@ $functionArray = array(
 	'invoices' => 'generateInvoicesPDF',
 	'invoices2' => 'generateInvoicesPDF2',
 	'slips' => 'generateOrderSlipsPDF',
-	'deliveryslips' => 'generateDeliverySlipsPDF'
+	'deliveryslips' => 'generateDeliverySlipsPDF',
+	'id_supply_order' => 'generateSupplyOrderFormPDF'
 );
 
 foreach ($functionArray as $var => $function)
@@ -48,6 +49,20 @@ foreach ($functionArray as $var => $function)
 		call_user_func($function);
 		die;
 	}
+
+function generateSupplyOrderFormPDF()
+{
+	if (!isset($_GET['id_supply_order']))
+		die (Tools::displayError('Missing supply order ID'));
+
+	$id_supply_order = (int)$_GET['id_supply_order'];
+	$supply_order = new SupplyOrder($id_supply_order);
+
+	if (!Validate::isLoadedObject($supply_order))
+		die(Tools::displayError('Cannot find this supply order in the database'));
+
+    generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
+}
 
 function generateInvoicePDF()
 {
