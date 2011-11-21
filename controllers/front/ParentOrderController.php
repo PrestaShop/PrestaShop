@@ -227,6 +227,8 @@ class ParentOrderControllerCore extends FrontController
 
 		// Carrier has changed, so we check if the cart rules still apply
 		CartRule::autoRemoveFromCart();
+		
+		return true;
 	}
 	
 	/**
@@ -247,8 +249,6 @@ class ParentOrderControllerCore extends FrontController
 
 	protected function _assignSummaryInformations()
 	{
-		if (file_exists(_PS_SHIP_IMG_DIR_.$this->context->cart->id_carrier.'.jpg'))
-			$this->context->smarty->assign('carrierPicture', 1);
 		$summary = $this->context->cart->getSummaryDetails();
 		$customizedDatas = Product::getAllCustomizedDatas($this->context->cart->id);
 
@@ -435,13 +435,15 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function setNoCarrier()
 	{
-		$this->context->cart->id_carrier = 0;
+		$this->context->cart->delivery_option = 0;
 		$this->context->cart->update();
 	}
 
 	/**
 	 * Decides what the default carrier is and update the cart with it
 	 *
+	 * @todo this function must be modified - id_carrier is now delivery_option
+	 * 
 	 * @param array $carriers
 	 * @return number the id of the default carrier
 	 */

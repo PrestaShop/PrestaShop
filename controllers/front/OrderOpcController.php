@@ -61,7 +61,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							}
 							break;
 						case 'updateCarrierAndGetPayments':
-							if (Tools::isSubmit('id_carrier') AND Tools::isSubmit('recyclable') AND Tools::isSubmit('gift') AND Tools::isSubmit('gift_message'))
+							if (Tools::isSubmit('delivery_option') AND Tools::isSubmit('recyclable') AND Tools::isSubmit('gift') AND Tools::isSubmit('gift_message'))
 							{
 								if ($this->_processCarrier())
 								{
@@ -343,7 +343,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	protected function _assignPayment()
 	{
 		$this->context->smarty->assign(array(
-		    'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('paymentTop') : ''),
+			'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('paymentTop') : ''),
 			'HOOK_PAYMENT' => $this->_getPaymentMethods()
 		));
 	}
@@ -360,14 +360,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		$address_invoice = ($this->context->cart->id_address_delivery == $this->context->cart->id_address_invoice ? $address_delivery : new Address($this->context->cart->id_address_invoice));
 		if (!$this->context->cart->id_address_delivery OR !$this->context->cart->id_address_invoice OR !Validate::isLoadedObject($address_delivery) OR !Validate::isLoadedObject($address_invoice) OR $address_invoice->deleted OR $address_delivery->deleted)
 			return '<p class="warning">'.Tools::displayError('Error: please choose an address').'</p>';
-		if (!$this->context->cart->id_carrier AND !$this->context->cart->isVirtualCart())
+		if (!$this->context->cart->delivery_option AND !$this->context->cart->isVirtualCart())
 			return '<p class="warning">'.Tools::displayError('Error: please choose a carrier').'</p>';
-		elseif ($this->context->cart->id_carrier != 0)
-		{
-			$carrier = new Carrier((int)($this->context->cart->id_carrier));
-			if (!Validate::isLoadedObject($carrier) OR $carrier->deleted OR !$carrier->active)
-				return '<p class="warning">'.Tools::displayError('Error: the carrier is invalid').'</p>';
-		}
 		if (!$this->context->cart->id_currency)
 			return '<p class="warning">'.Tools::displayError('Error: no currency has been selected').'</p>';
 		if (!$this->context->cookie->checkedTOS AND Configuration::get('PS_CONDITIONS'))

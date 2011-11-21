@@ -120,43 +120,43 @@ function updateAddressSelection()
 	$('#opc_payment_methods-overlay').fadeIn('slow');
 	
 	$.ajax({
-           type: 'POST',
-           url: orderOpcUrl,
-           async: true,
-           cache: false,
-           dataType : "json",
-           data: 'ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
-           success: function(jsonData)
-           {
-				if (jsonData.hasError)
-				{
-					var errors = '';
-					for(error in jsonData.errors)
-						//IE6 bug fix
-						if(error != 'indexOf')
-							errors += jsonData.errors[error] + "\n";
-					alert(errors);
-				}
-				else
-				{
-					updateCarrierList(jsonData);
-					updatePaymentMethods(jsonData);
-					updateCartSummary(jsonData.summary);
-					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
-					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-					if ($('#gift-price').length == 1)
-						$('#gift-price').html(jsonData.gift_price);
-					$('#opc_account-overlay').fadeOut('slow');
-					$('#opc_delivery_methods-overlay').fadeOut('slow');
-					$('#opc_payment_methods-overlay').fadeOut('slow');
-				}
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+		type: 'POST',
+		url: orderOpcUrl,
+		async: true,
+		cache: false,
+		dataType : "json",
+		data: 'ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
+		success: function(jsonData)
+		{
+			if (jsonData.hasError)
+			{
+				var errors = '';
+				for(error in jsonData.errors)
+					//IE6 bug fix
+					if(error != 'indexOf')
+						errors += jsonData.errors[error] + "\n";
+				alert(errors);
+			}
+			else
+			{
+				updateCarrierList(jsonData);
+				updatePaymentMethods(jsonData);
+				updateCartSummary(jsonData.summary);
+				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
+				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
+				if ($('#gift-price').length == 1)
+					$('#gift-price').html(jsonData.gift_price);
 				$('#opc_account-overlay').fadeOut('slow');
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
 				$('#opc_payment_methods-overlay').fadeOut('slow');
 			}
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+			$('#opc_account-overlay').fadeOut('slow');
+			$('#opc_delivery_methods-overlay').fadeOut('slow');
+			$('#opc_payment_methods-overlay').fadeOut('slow');
+		}
 	});
 }
 
@@ -164,14 +164,14 @@ function getCarrierListAndUpdate()
 {
 	$('#opc_delivery_methods-overlay').fadeIn('slow');
 	$.ajax({
-        type: 'POST',
-        url: orderOpcUrl,
-        async: true,
-        cache: false,
-        dataType : "json",
-        data: 'ajax=true&method=getCarrierList&token=' + static_token,
-        success: function(jsonData)
-        {
+		type: 'POST',
+		url: orderOpcUrl,
+		async: true,
+		cache: false,
+		dataType : "json",
+		data: 'ajax=true&method=getCarrierList&token=' + static_token,
+		success: function(jsonData)
+		{
 				if (jsonData.hasError)
 				{
 					var errors = '';
@@ -194,6 +194,12 @@ function updateCarrierSelectionAndGift()
 	var gift = 0;
 	var giftMessage = '';
 	var idCarrier = 0;
+	
+	var delivery_option_radio = $('.delivery_option_radio');
+	var delivery_option_params = '&';
+	$.each(delivery_option_radio, function(i) {
+		delivery_option_params += $(delivery_option_radio[i]).attr('name') + '=' + $(delivery_option_radio[i]).val() + '&';
+	});
 
 	if ($('input#recyclable:checked').length)
 		recyclablePackage = 1;
@@ -212,33 +218,33 @@ function updateCarrierSelectionAndGift()
 	$('#opc_payment_methods-overlay').fadeIn('slow');
 	$('#opc_delivery_methods-overlay').fadeIn('slow');
 	$.ajax({
-       type: 'POST',
-       url: orderOpcUrl,
-       async: false,
-       cache: false,
-       dataType : "json",
-       data: 'ajax=true&method=updateCarrierAndGetPayments&id_carrier=' + idCarrier + '&recyclable=' + recyclablePackage + '&gift=' + gift + '&gift_message=' + giftMessage + '&token=' + static_token ,
-       success: function(jsonData)
-       {
-       		if (jsonData.hasError)
-    		{
-    			var errors = '';
-    			for(error in jsonData.errors)
-    				//IE6 bug fix
-    				if(error != 'indexOf')
-    					errors += jsonData.errors[error] + "\n";
-    			alert(errors);
-    		}
-    		else
-    		{
-    			updateCartSummary(jsonData.summary);
-    			updatePaymentMethods(jsonData);
-    			updateHookShoppingCart(jsonData.summary.HOOK_SHOPPING_CART);
+		type: 'POST',
+		url: orderOpcUrl,
+		async: false,
+		cache: false,
+		dataType : "json",
+		data: 'ajax=true&method=updateCarrierAndGetPayments' + delivery_option_params + 'recyclable=' + recyclablePackage + '&gift=' + gift + '&gift_message=' + giftMessage + '&token=' + static_token ,
+		success: function(jsonData)
+		{
+			if (jsonData.hasError)
+			{
+				var errors = '';
+				for(error in jsonData.errors)
+					//IE6 bug fix
+					if(error != 'indexOf')
+						errors += jsonData.errors[error] + "\n";
+				alert(errors);
+			}
+			else
+			{
+				updateCartSummary(jsonData.summary);
+				updatePaymentMethods(jsonData);
+				updateHookShoppingCart(jsonData.summary.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.summary.HOOK_SHOPPING_CART_EXTRA);
 				$('#opc_payment_methods-overlay').fadeOut('slow');
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
-    		}
-    	},
+			}
+		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			alert("TECHNICAL ERROR: unable to save carrier \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 			$('#opc_payment_methods-overlay').fadeOut('slow');
@@ -305,18 +311,18 @@ function saveAddress(type)
 	var result = false;
 	
 	$.ajax({
-       type: 'POST',
-       url: addressUrl,
-       async: false,
-       cache: false,
-       dataType : "json",
-       data: 'ajax=true&submitAddress=true&type='+type+'&'+params+'&token=' + static_token,
-       success: function(jsonData)
-       {
+		type: 'POST',
+		url: addressUrl,
+		async: false,
+		cache: false,
+		dataType : "json",
+		data: 'ajax=true&submitAddress=true&type='+type+'&'+params+'&token=' + static_token,
+		success: function(jsonData)
+		{
 			if (jsonData.hasError)
 			{
-       			var tmp = '';
-       			var i = 0;
+				var tmp = '';
+				var i = 0;
 				for(error in jsonData.errors)
 					//IE6 bug fix
 					if(error != 'indexOf')
@@ -348,7 +354,7 @@ function saveAddress(type)
 			$('#opc_delivery_methods-overlay').fadeOut('slow');
 			$('#opc_payment_methods-overlay').fadeOut('slow');
 		}
-    });
+		});
 
 	return result;
 }
@@ -644,15 +650,15 @@ $(function() {
 	$('#message').blur(function() {
 		$('#opc_delivery_methods-overlay').fadeIn('slow');
 		$.ajax({
-           type: 'POST',
-           url: orderOpcUrl,
-           async: false,
-           cache: false,
-           dataType : "json",
-           data: 'ajax=true&method=updateMessage&message=' + encodeURIComponent($('#message').val()) + '&token=' + static_token ,
-           success: function(jsonData)
-           {
-           		if (jsonData.hasError)
+			type: 'POST',
+			url: orderOpcUrl,
+			async: false,
+			cache: false,
+			dataType : "json",
+			data: 'ajax=true&method=updateMessage&message=' + encodeURIComponent($('#message').val()) + '&token=' + static_token ,
+			success: function(jsonData)
+			{
+				if (jsonData.hasError)
 				{
 					var errors = '';
 					for(error in jsonData.errors)
@@ -661,14 +667,14 @@ $(function() {
 							errors += jsonData.errors[error] + "\n";
 					alert(errors);
 				}
-           		else
-           			$('#opc_delivery_methods-overlay').fadeOut('slow');
+			else
+				$('#opc_delivery_methods-overlay').fadeOut('slow');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				alert("TECHNICAL ERROR: unable to save message \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
 			}
-       });
+		});
 	});
 	
 	// Recyclable checkbox
@@ -695,7 +701,7 @@ $(function() {
 		updateCarrierSelectionAndGift();
 	});
 	
-	// TOS
+	// Term Of Service (TOS)
 	$('#cgv').click(function() {
 		if ($('#cgv:checked').length != 0)
 			var checked = 1;
@@ -704,19 +710,19 @@ $(function() {
 		
 		$('#opc_payment_methods-overlay').fadeIn('slow');
 		$.ajax({
-           type: 'POST',
-           url: orderOpcUrl,
-           async: true,
-           cache: false,
-           dataType : "json",
-           data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
-           success: function(json)
-           {
+			type: 'POST',
+			url: orderOpcUrl,
+			async: true,
+			cache: false,
+			dataType : "json",
+			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
+			success: function(json)
+			{
 				$('div#HOOK_TOP_PAYMENT').html(json.HOOK_TOP_PAYMENT);
 				$('#opc_payment_methods-content div#HOOK_PAYMENT').html(json.HOOK_PAYMENT);
 				$('#opc_payment_methods-overlay').fadeOut('slow');
-           }
-       });
+			}
+		});
 	});
 	
 	$('#opc_account_form input,select,textarea').change(function() {

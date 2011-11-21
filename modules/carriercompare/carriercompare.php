@@ -116,6 +116,9 @@ class CarrierCompare extends Module
 		return (count($carriers) ? $carriers : array());
 	}
 
+	/**
+	 * @todo this function must be modified - id_carrier is now delivery_option
+	 */
 	public function saveSelection($id_country, $id_state, $zipcode, $id_carrier)
 	{
 		$errors = array();

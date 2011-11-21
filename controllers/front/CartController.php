@@ -104,7 +104,7 @@ class CartControllerCore extends FrontController
 		{
 			if (!Cart::getNbProducts((int)($this->context->cart->id)))
 			{
-				$this->context->cart->id_carrier = 0;
+				$this->context->cart->delivery_option = '';
 				$this->context->cart->gift = 0;
 				$this->context->cart->gift_message = '';
 				$this->context->cart->update();
@@ -248,7 +248,7 @@ class CartControllerCore extends FrontController
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
 				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
 				$result['carriers'] = Carrier::getCarriersForOrder(Country::getIdZone($id_country), $groups);
-				$result['checked'] = Carrier::getDefaultCarrierSelection($result['carriers'], (int)$this->cart->id_carrier);
+				//$result['checked'] = Carrier::getDefaultCarrierSelection($result['carriers'], (int)$this->cart->id_carrier);
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);

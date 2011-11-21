@@ -219,9 +219,7 @@ class FrontControllerCore extends Controller
 				$cart->id_address_invoice = 0;
 			}
 		}
-		if (!$cart->nbProducts())
-			$cart->id_carrier = NULL;
-
+		
 		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
 		setlocale(LC_COLLATE, $locale);
 		setlocale(LC_CTYPE, $locale);
