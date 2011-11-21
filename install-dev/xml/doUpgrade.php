@@ -141,6 +141,10 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_feature_detachable_cache.php
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_accounting_tab.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'hook_blocksearch_on_header.php');
+
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_canada.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;

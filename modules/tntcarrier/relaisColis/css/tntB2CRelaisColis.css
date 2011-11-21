@@ -1,0 +1,357 @@
+.tntRCHeader {
+	background-color: #ffffff;
+	background-image: url(../img/logo_24_relaiscolis.jpg);
+	background-position: 10px center;
+	background-repeat: no-repeat;
+	border-color: gray;
+	border-style: solid;
+	border-width: 1px;
+	color: #a0a0a0;
+	display: bloc;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 30pt;
+	font-style: italic;
+	height: 75px;
+	padding-right: 10px;
+	padding-top: 25px;
+	text-align: right;
+	width: 530px;
+}
+
+.tntRCSubHeader {
+	background-color: #ffffff;
+	border-width: 0px;
+	color: #a0a0a0;
+	display: bloc;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 16pt;
+	font-weight: bold;
+	padding-bottom: 3px;
+	padding-top: 3px;	
+	width: 600px;
+}
+
+.tntRCBody {
+	background-color: #ffffff;
+	border-color: gray;
+	border-style: solid;
+	border-width: 1px;
+	color: #000000;
+	display: bloc;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12pt;
+	padding-bottom: 10px;	
+	padding-left: 10px;
+	padding-top: 10px;	
+	width: 530px;
+}
+
+.tntRCBodySearch {
+	background-color: #ffffff;
+	border-color: gray;
+	border-style: solid;
+	border-width: 1px;
+	color: #a0a0a0;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	padding-left: 3px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	width: 550px;
+}
+
+.tntRCError {
+	background-color: #ff6600;
+	color: #ffffff;
+	display: bloc;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12pt;
+	font-weight: bold;
+	width: 520px;
+}
+
+.tntRCGray {
+	background-color: #a0a0a0;
+	border-width: 0px;
+	display: bloc;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+	heigth: 12px;
+	width: 520px;
+}
+
+.tntRCInput {
+	background-color: #ffffff;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+	font-weight: normal;
+	text-align: center;
+	width: 50px;
+}
+
+.tntRCWhite {
+	background-color: #ffffff;
+	border-width: 0px;
+	display: bloc;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 14pt;
+	width: 600px;
+}
+
+.tntRCrelaisColis {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10px;
+	color: #000000;
+	border-bottom-style: solid;
+	border-bottom-color: #a0a0a0;
+	border-bottom-width: 1px;	
+	background-color: #ffffff;
+	padding-bottom: 3px;	
+	vertical-align: middle;
+}
+		
+.tntRCtitreMode {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 28px;
+	color: #a0a0a0;
+	font-style: italic;
+	background-color: #ffffff; 	
+}
+.tntRCchoix {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 14px;
+	color: #a0a0a0;
+	font-weight: bold;
+	background-color: #ffffff;
+}	
+.tntRCdetailGros {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 14pt;
+	color: #a0a0a0;
+	background-color: #ffffff;
+}
+
+.tntRCnoirPetit {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12pt;
+	color: #000000;
+	background-color: #ffffff;
+}	
+.tntRCdetailPetit {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12pt;
+	color: #a0a0a0;
+	background-color: #ffffff;
+	font-weight: bold;
+}	
+.tntRCentree {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12pt;
+	color: #000000;
+	background-color: #ffffff;
+	vertical-align: middle;
+}	
+.tntRCgris {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+	color: #ffffff;
+	background-color: #a0a0a0;
+	font-weight: bold;
+}
+
+table.tntRCHoraire td {
+	border: 1px solid gray;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+	vertical-align: middle;
+}
+
+.tntRCHoraireJour{
+	color: #a0a0a0;
+	text-align: right;
+	padding-right: 10px;
+	height: 36px;
+	width: 79px;
+	font-weight: bold;
+}
+
+.tntRCHoraireHeure {
+	color: #000000;
+	padding-left: 10px;			
+	width: 84px;
+}				
+
+.tntRCblanc {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12px;
+	color: #000000;
+	background-color: #ffffff;
+	padding-top: 4px;
+	padding-bottom: 3px;	
+}			
+.tntRCblancpetit {
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12px;
+	color: #000000;
+	background-color: #ffffff;
+	padding-top: 4px;
+	padding-bottom: 3px;					
+}	
+.tntRCfermeture {
+	padding-left: 585px;
+}
+
+.tntRCBack2Communes {
+	background-color: #ffffff;
+	color: #a0a0a0;
+	font-family: arial,helvetica,sans-serif;
+	font-style: italic;
+	font-size: 11pt;
+	font-weight: bold;
+	padding-top: 18px;
+	text-align: right;
+}
+
+.tntRCBack2Communes a {
+	color: #a0a0a0;
+	text-decoration: none;
+	padding-right: 5px;
+}
+
+.tntRCBack2Communes a img{
+	border: 0;
+	padding-right: 5px;
+	vertical-align: text-bottom;
+}
+
+.tntRCBoutonLoupe {
+	background-color: #ffffff;
+	border: 0px;	
+	color: #000000;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 12px;
+	padding-top: 4px;
+	padding-bottom: 3px;	
+	text-decoration: none;
+	vertical-align: middle;
+}	
+.jqmWindow {
+	background-color: #FFF;
+	border: 1px solid black;
+	color: #333;
+	display: none;
+	padding: 12px;
+	position: fixed;
+	left: 50%;
+	margin-left: -300px;
+	margin-top: -240px;
+	width: 600px;
+}
+
+div.tntRCfermeture .jqmClose em{display:none;}
+div.tntRCfermeture .jqmClose {
+	background: transparent url(../img/close_icon_double.png) 0 0 no-repeat;
+	display: block;
+	width: 20px;
+	height: 20px;
+}
+
+div.tntRCfermeture a.jqmClose:hover{ background-position: 0 -20px; }
+
+.jqmOverlay { 
+	background-color: #000; 
+	overflow: hidden;
+}
+
+* html .jqmWindow {
+	position: absolute;
+	top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+}
+
+img.tntRCButton {
+	border: 0px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+sup.tntRCSup {
+	
+}
+	
+	table.horairesRC td {
+		width : 100%;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	table.horairesRCPopup {
+		width : 100%;
+		margin: 0px;
+		padding: 0px;
+	}
+	
+	table.horairesRCPopup tr.selected td {
+		background-color: #eeeeee;
+		color: #ff6600;
+	}
+	
+	td.horaireRCPopup {
+		width : 60%;
+	}
+	
+	td.horairesRCJourPopup {
+		width : 40%;
+		font-weight: bold;
+		color: #808080;
+	}
+	
+	td.horairesRCJour {
+		font-weight: bold;
+		color: #808080;
+	}
+	table.horairesRC tr.selected td {
+		background-color: #eeeeee;
+		color: #ff6600;
+	}
+	
+	div.ag {
+		background-image: url(/img/google/agenceTnt.png); 
+		background-repeat: no-repeat;
+		padding-left:60px;
+	}
+
+	div.rc {
+		background-image: url(/img/google/relaisColis.png); 
+		background-repeat: no-repeat;
+		padding-left:50px;
+	}
+
+	
+.lien_reset {
+	color : #ff6600;
+	font-family: arial,helvetica,sans-serif;
+	font-weight: bold;
+	font-size : 15px;
+	text-decoration:none;
+}
+
+a {
+	color: #f60;
+	outline-color: #f60 !important;
+	outline: none;
+}
+				
+a:hover {
+	text-decoration: none;
+}
+
+.exemplePresentation {
+	display: inline; 
+	float: left;
+	margin-top: 10px;
+}
+
+#tntB2CRelaisColis {
+	width: 550px;
+}

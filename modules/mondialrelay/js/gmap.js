@@ -1337,6 +1337,14 @@
     }
     
     /**
+     * Resize map
+     **/
+    this.resize = function()
+    {
+    	google.maps.event.trigger(this.getMap(), 'resize');
+    }
+    
+    /**
      * add markers (without address resolution)
      **/
     this.addmarkers = function(todo){

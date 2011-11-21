@@ -450,6 +450,8 @@ class TrustedShopsRating extends AbsTrustedShops
 			$certificate = (array)$certificate;
 			if (isset($certificate['tsID']) && $certificate['tsID'] !== '' && $certificate['user'] != '')
 				$displayWidget = true;
+			if (isset($certificate['tsID']) && $certificate['tsID'] !== '' && $certificate['typeEnum'] === 'CLASSIC')
+				$displayWidget = true;
 		}
 		if ($displayWidget == false)
 			return '';

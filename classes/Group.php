@@ -112,12 +112,12 @@ class GroupCore extends ObjectModel
 
 	public static function getReduction($id_customer = null)
 	{
-		if (!isset(self::$cache_reduction['customer'][(int)$id_customer]))
-			self::$cache_reduction['customer'][(int)$id_customer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `reduction`
-			FROM `'._DB_PREFIX_.'group`
-			WHERE `id_group` = '.((int)$id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Configuration::get('PS_CUSTOMER_GROUP')));
-		return self::$cache_reduction['customer'][(int)$id_customer];
+		if (!isset(self::$_cacheReduction['customer'][(int)$id_customer]))
+        {
+            $id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Configuration::get('PS_CUSTOMER_GROUP');
+			self::$_cacheReduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
+        }
+		return self::$_cacheReduction['customer'][(int)$id_customer];
 	}
 
 	public static function getReductionByIdGroup($id_group)
@@ -256,7 +256,7 @@ class GroupCore extends ObjectModel
 	 * @param integer authorized
 	 */
 	public static function addModulesRestrictions($id_group, $modules, $authorized)
-	{		
+	{
 		if (!is_array($modules) AND !empty($modules))
 			return false;
 		else

@@ -43,32 +43,21 @@ class CompareControllerCore extends FrontController
 	 */
 	public function displayAjax()
 	{
-		//Add or remove product with Ajax
-		if (Tools::getValue('id_product') && Tools::getValue('action'))
+		// Add or remove product with Ajax
+		if (Tools::getValue('ajax') && Tools::getValue('id_product') && Tools::getValue('action'))
 		{
 			if (Tools::getValue('action') == 'add')
 			{
-				if (isset($this->context->customer->id))
-				{
-					if (CompareProduct::getCustomerNumberProducts($this->context->customer->id) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-						CompareProduct::addCustomerCompareProduct((int)$this->context->customer->id, (int)Tools::getValue('id_product'));
-					else
-						die('0');
-				}
+				$id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: false;
+				if (CompareProduct::getNumberProducts($id_compare) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+					CompareProduct::addCompareProduct($id_compare, (int)Tools::getValue('id_product'));
 				else
-				{
-					if ((isset($this->context->customer->id_guest) && CompareProduct::getGuestNumberProducts($this->context->customer->id_guest) < Configuration::get('PS_COMPARATOR_MAX_ITEM')))
-						CompareProduct::addGuestCompareProduct((int)$this->context->customer->id_guest, (int)Tools::getValue('id_product'));
-					else
-						die('0');
-				}
+					die('0');
 			}
 			else if (Tools::getValue('action') == 'remove')
 			{
-				if (isset($this->context->customer->id))
-					CompareProduct::removeCustomerCompareProduct((int)$this->context->customer->id, (int)Tools::getValue('id_product'));
-				else if (isset($this->context->customer->id_guest))
-					CompareProduct::removeGuestCompareProduct((int)$this->context->customer->id_guest, (int)Tools::getValue('id_product'));
+				if (isset(self::$cookie->id_compare))
+					CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));
 				else
 					die('0');
 			}
@@ -95,10 +84,8 @@ class CompareControllerCore extends FrontController
 
 		if ($product_list = Tools::getValue('compare_product_list') && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
 			$ids = array_unique(explode('|', $postProducts));
-		else if (isset($this->context->customer->id))
-			$ids = CompareProduct::getCustomerCompareProducts($this->context->customer->id);
-		else if (isset($this->context->customer->id_guest))
-			$ids = CompareProduct::getGuestCompareProducts($this->context->customer->id_guest);
+		else if (isset(self::$cookie->id_compare))
+			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 		else
 			$ids = null;
 

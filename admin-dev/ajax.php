@@ -557,6 +557,11 @@ if (Tools::isSubmit('helpAccess'))
 
 if (Tools::isSubmit('getHookableList'))
 {
+	/* PrestaShop demo mode */
+	if (_PS_MODE_DEMO_)
+		die('{"hasError" : true, "errors" : ["Live Edit : This functionnality has been disabled"]}');
+	/* PrestaShop demo mode*/
+
 	if (!strlen(Tools::getValue('hooks_list')))
 		die('{"hasError" : true, "errors" : ["Live Edit : no module on this page"]}');
 
@@ -589,6 +594,10 @@ if (Tools::isSubmit('getHookableList'))
 
 if (Tools::isSubmit('getHookableModuleList'))
 {
+	/* PrestaShop demo mode */
+	if (_PS_MODE_DEMO_)
+		die('{"hasError" : true, "errors" : ["Live Edit : This functionnality has been disabled"]}');
+	/* PrestaShop demo mode*/
 
 	include('../init.php');
 	$hook_name = Tools::getValue('hook');
@@ -609,6 +618,11 @@ if (Tools::isSubmit('getHookableModuleList'))
 
 if (Tools::isSubmit('saveHook'))
 {
+	/* PrestaShop demo mode */
+	if (_PS_MODE_DEMO_)
+		die('{"hasError" : true, "errors" : ["Live Edit : This functionnality has been disabled"]}');
+	/* PrestaShop demo mode*/
+
 	$hooks_list = explode(',', Tools::getValue('hooks_list'));
 	$id_shop = (int)Tools::getValue('id_shop');
 	if ($id_shop)
@@ -627,10 +641,15 @@ if (Tools::isSubmit('saveHook'))
 			$hookedModules = explode(',', Tools::getValue($hook));
 			$i = 1;
 			$value = '';
+			$ids = array();
 			foreach ($hookedModules as $module)
 			{
-				$ids = explode('_', $module);
-				$value .= '('.(int)$ids[1].', '.$id_shop.', (SELECT id_hook FROM '._DB_PREFIX_.'hook WHERE `name` = \''.pSQL($hook).'\' LIMIT 1), '.(int)$i.'),';
+				$id = explode('_', $module);
+				if (!in_array($id[1], $ids))
+				{
+					$ids[] = $id[1];
+					$value .= '('.(int)$id[1].', (SELECT id_hook FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook).'\' LIMIT 0, 1), '.(int)$i.'),';
+				}
 				$i++;
 			}
 			$value = rtrim($value, ',');

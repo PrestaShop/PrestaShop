@@ -24,6 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{if $opc}
+	{assign var="back_order_page" value="order-opc.php"}
+{else}
+	{assign var="back_order_page" value="order.php"}
+{/if}
+
 {*
 ** Retro compatibility for PrestaShop version < 1.4.2.5 with a recent theme
 ** Syntax smarty for v2
@@ -40,8 +46,8 @@
 	{$ignoreList.6 = "date_add"}
 	{$ignoreList.7 = "date_upd"}
 	{$ignoreList.8 = "active"}
-	{$ignoreList.9 = "deleted"}	
-	
+	{$ignoreList.9 = "deleted"}
+
 	{* PrestaShop 1.4.0.17 compatibility *}
 	{if isset($addresses)}
 		{foreach from=$addresses key=k item=address}
@@ -106,11 +112,11 @@
 
 		ordered_fields_name = ordered_fields_name.concat(formatedAddressFieldsValuesList[id_address]['ordered_fields']);
 		ordered_fields_name = ordered_fields_name.concat(['update']);
-		
+
 		dest_comp.html('');
 
 		li_content['title'] = adr_titles_vals[address_type];
-		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")}'+id_address+'&amp;back=order?step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">{l s='Update'}</a>';
+		li_content['update'] = '<a href="{$link->getPageLink('address', true, NULL, "id_address")}'+id_address+'&amp;back={$back_order_page}?step=1{if $back}&mod={$back}{/if}" title="{l s='Update'}">{l s='Update'}</a>';
 
 		appendAddressList(dest_comp, li_content, ordered_fields_name);
 	{rdelim}
@@ -163,7 +169,7 @@
 		{l s='Multi-shipping'}
 	</a>
 </div>
-<form action="{$link->getPageLink('order', true)}" method="post">
+<form action="{$link->getPageLink($back_order_page, true)}" method="post">
 {else}
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
@@ -176,16 +182,16 @@
 			{foreach from=$addresses key=k item=address}
 				<option value="{$address.id_address|intval}" {if $address.id_address == $cart->id_address_delivery}selected="selected"{/if}>{$address.alias|escape:'htmlall':'UTF-8'}</option>
 			{/foreach}
-			
+
 			</select>
 		</p>
 		<p class="checkbox" {if $cart->isVirtualCart()}style="display:none;"{/if}>
 			<input type="checkbox" name="same" id="addressesAreEquals" value="1" onclick="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" {if $cart->id_address_invoice == $cart->id_address_delivery || $addresses|@count == 1}checked="checked"{/if} />
 			<label for="addressesAreEquals">{l s='Use the same address for billing.'}</label>
 		</p>
-		
+
 		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
-		
+
 		{if $addresses|@count > 1}
 			<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
 			<select name="id_address_invoice" id="id_address_invoice" class="address_select" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
@@ -194,11 +200,7 @@
 			{/section}
 			</select>
 			{else}
-				{if $back}
-					<a style="margin-left: 221px;" href="{$link->getPageLink('address', true, NULL, "back=order&amp;step=1&amp;select_address=1&mod=$back")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
-				{else}
-					<a style="margin-left: 221px;" href="{$link->getPageLink('address', true, NULL, "back=order&amp;step=1&amp;select_address=1")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
-				{/if}
+				<a style="margin-left: 221px;" href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1&select_address=1{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 			{/if}
 		</p>
 		<div class="clear"></div>
@@ -208,11 +210,7 @@
 		</ul>
 		<br class="clear" />
 		<p class="address_add submit">
-		{if $back}
-			<a href="{$link->getPageLink('address', true, NULL, "back=order&amp;step=1&amp;mod={$back}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
-		{else}
-			<a href="{$link->getPageLink('address', true, NULL, "back=order&amp;step=1")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
-		{/if}
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 		</p>
 		{if !$opc}
 		<div id="ordermsg">
@@ -225,11 +223,7 @@
 	<p class="cart_navigation submit">
 		<input type="hidden" class="hidden" name="step" value="2" />
 		<input type="hidden" name="back" value="{$back}" />
-		{if $back}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
-		{else}
-			<a href="{$link->getPageLink('order', true, NULL, "step=0")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
-		{/if}
+		<a href="{$link->getPageLink($back_order_page, true, NULL, "step=0{if $back}&back={$back}{/if}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
 		<input type="submit" name="processAddress" value="{l s='Next'} &raquo;" class="exclusive" />
 	</p>
 </form>

@@ -31,7 +31,10 @@ class Autoupgrade extends Module
 	{
 		$this->name = 'autoupgrade';
 		$this->tab = 'administration';
-		$this->version = 0.1;
+		// version number x.y.z 
+		// y+1 means a major bugfix or improvement
+		// z+1 means a bugfix
+		$this->version = '0.2.1';
 
 		if (!defined('_PS_ADMIN_DIR_'))
 		{
@@ -53,7 +56,6 @@ class Autoupgrade extends Module
 
 	public function install()
 	{
-
 		$res = true;
 		// before adding AdminSelfUpgrade, we should remove AdminUpgrade
 		$idTab = Tab::getIdFromClassName('AdminUpgrade');
@@ -72,7 +74,9 @@ class Autoupgrade extends Module
 			$tab->class_name = 'AdminSelfUpgrade';
 			$tab->module = 'autoupgrade';
 			$tab->id_parent = 9;
-			$tab->name = array_fill(1, sizeof(Language::getLanguages(false)), 'Upgrade');
+			$languages = Language::getLanguages(false);
+			foreach ($languages as $lang)
+				$tab->name[$lang['id_lang']] = 'Upgrade';
 			$res &= $tab->save();
 		}
 		else
@@ -103,12 +107,18 @@ class Autoupgrade extends Module
 
 	public function uninstall()
 	{
-		$idtab = Configuration::get('PS_AUTOUPDATE_MODULE_IDTAB');
-		$tab = new Tab($idtab,1);
+		$id_tab = Configuration::get('PS_AUTOUPDATE_MODULE_IDTAB');
+		if ($id_tab)
+		{
+			$tab = new Tab($id_tab,1);
 		$res = $tab->delete();
+		}
+		else
+			$res = true;
+		// for people in 1.4.4.0 or 1.4.4.1, we have to remove that file
+		// and of course delete it in the database.
 		if (file_exists(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'tabs'.'AdminUpgrade.php'))
 		{
-			// Should we create the correct AdminUpgrade tab (not the module)
 			if($idOldTab = Tab::getIdFromClassName('AdminUpgrade'))
 			{
 				$tab = new Tab($idOldTab);

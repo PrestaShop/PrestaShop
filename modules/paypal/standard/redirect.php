@@ -66,18 +66,18 @@ $smarty->assign(array(
 	'address' => $address,
 	'country' => $country,
 	'state' => $state,
-	'amount' => (float)($cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING)),
+	'amount' => (float)($cart->getOrderTotal(true, PayPal::BOTH_WITHOUT_SHIPPING)),
 	'customer' => $customer,
-	'total' => (float)($cart->getOrderTotal(true, Cart::BOTH)),
-	'shipping' => Tools::ps_round((float)($cart->getOrderShippingCost()) + (float)($cart->getOrderTotal(true, Cart::ONLY_WRAPPING)), 2),
-	'discount' => $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS),
+	'total' => (float)($cart->getOrderTotal(true, PayPal::BOTH)),
+	'shipping' => Tools::ps_round((float)($cart->getOrderShippingCost()) + (float)($cart->getOrderTotal(true, PayPal::ONLY_WRAPPING)), 2),
+	'discount' => $cart->getOrderTotal(true, PayPal::ONLY_DISCOUNTS),
 	'business' => $business,
 	'currency_module' => $currency_module,
 	'cart_id' => (int)($cart->id).'_'.pSQL($cart->secure_key),
 	'products' => $cart->getProducts(),
 	'paypal_id' => (int)($paypal->id),
 	'header' => $header,
-	'url' => Tools::getShopDomain(true, true).__PS_BASE_URI__
+	'url' => PayPal::getShopDomain(true, true).__PS_BASE_URI__
 ));
 
 

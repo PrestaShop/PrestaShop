@@ -26,7 +26,7 @@
 
 <html>
 	<head>
-		<script type="text/javascript" src="{$url}js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="{$url}js/jquery/{$jquery}"></script>
 	</head>
 	<body>
 		<p>{$redirect_text}<br /><a href="javascript:history.go(-1);">{$cancel_text}</a></p>

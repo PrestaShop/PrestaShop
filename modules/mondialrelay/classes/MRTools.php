@@ -64,14 +64,14 @@ class MRTools
 	{
 		$id_country = $params['id_country'];
 		
-		$zipcodeFormat = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		$zipcodeFormat = Db::getInstance()->getValue('
 				SELECT `zip_code_format`
 				FROM `'._DB_PREFIX_.'country`
 				WHERE `id_country` = '.(int)$id_country);
 
-		// Skip the cheking format if doesn't exist
+		// -1 to warn user that no layout exist
 		if (!$zipcodeFormat)
-			return true;
+			return -1;
 
 		$regxMask = str_replace(
 				array('N', 'C', 'L'),

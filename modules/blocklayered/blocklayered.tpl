@@ -97,7 +97,7 @@ param_product_url = '#{$param_product_url}';
 								</li>
 							{/foreach}
 						{else}
-							<label for="{$filter.type}">{l s='Range:'}</label> <span id="layered_{$filter.type}_range"></span>
+							<label for="{$filter.type}">{l s='Range:' mod='blocklayered'}</label> <span id="layered_{$filter.type}_range"></span>
 							<div style="margin: 6px 0 6px 6px; width: 93%;">
 								<div style="margin-top:5px;" class="layered_slider" id="layered_{$filter.type}_slider"></div>
 							</div>

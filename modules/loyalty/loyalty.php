@@ -544,7 +544,7 @@ class Loyalty extends Module
 		$loyalty->id_customer = (int)$params['customer']->id;
 		$loyalty->id_order = (int)$params['order']->id;
 		$loyalty->points = LoyaltyModule::getOrderNbPoints($params['order']);
-		if ((int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND (int)($loyalty->points) == 0)
+		if (!Configuration::get('PS_LOYALTY_NONE_AWARD') AND (int)$loyalty->points == 0)
 			$loyalty->id_loyalty_state = LoyaltyStateModule::getNoneAwardId();
 		else
 			$loyalty->id_loyalty_state = LoyaltyStateModule::getDefaultId();
@@ -569,7 +569,7 @@ class Loyalty extends Module
 		{
 			if (!Validate::isLoadedObject($loyalty = new LoyaltyModule(LoyaltyModule::getByOrderId($order->id))))
 				return false;
-			if ((int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND $loyalty->id_loyalty_state == LoyaltyStateModule::getNoneAwardId())
+			if ((int)Configuration::get('PS_LOYALTY_NONE_AWARD') AND $loyalty->id_loyalty_state == LoyaltyStateModule::getNoneAwardId())
 				return true;
 
 			if ($newOrder->id == $this->loyaltyStateValidation->id_order_state)

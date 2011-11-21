@@ -511,6 +511,8 @@ function PS_MRDisplayRelayPoint(json, blockContent, carrier_id)
 	{
 		numberDisplayed = 0;
 		
+		// Disable Gmap for IE user
+		if (!$.browser.msie)
 		PS_MRCreateGmap(carrier_id);
 		blockContent.fadeOut('fast', function()
 		{
@@ -541,7 +543,13 @@ function PS_MRDisplayRelayPoint(json, blockContent, carrier_id)
 					// Store all the object content to prevent an ajax request
 					relayPointDataContainers[json.success[relayPoint].Num] = json.success[relayPoint];
 					++numberDisplayed;
+					// Display popup for IE user
+					if (!$.browser.msie)
 					PS_MRAddGMapMarker(carrier_id, json.success[relayPoint].Num, contentBlockid);
+					else
+						$('#' + contentBlockid).children('p').click(function() {
+							PS_MROpenPopupDetail(json.success[relayPoint].permaLinkDetail);
+						});
 				}
 			}
 			PS_MRHandleSelectedRelayPoint();
@@ -684,6 +692,9 @@ function PS_MRGmapPlaceViewOnMarker($map, marker, relayNum)
 			callback: function()
 			{
         PS_MRDisplayClickedGmapWindow(marker, relayNum, $map);
+        
+        // Make dancing markers in Firefox will use the CPU to 100 %
+        if (!$.browser.mozilla)
 				(function(m)
 				{
       		setTimeout(function() 

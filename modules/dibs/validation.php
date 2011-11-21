@@ -1,5 +1,5 @@
 <?php
- 
+
 include(dirname(__FILE__). '/../../config/config.inc.php');
 include(dirname(__FILE__).'/dibs.php');
 
@@ -19,7 +19,7 @@ if (count($_POST))
 	$secure_cart = explode('_', $posted_values['uniqueoid']);
 	$arr_order_id = explode('_',$posted_values['orderid']);
 	$posted_values['orderid'] = $arr_order_id[0];
-	
+
 	if ((string)$posted_values['merchant'] !== (string)dibs::$ID_MERCHANT)
 		$errors[] = Tools::displayError('You did not use the correct merchant ID.');
 
@@ -42,11 +42,10 @@ if (count($_POST))
 	$message = nl2br(strip_tags($message));
 	if ($valid_order === true)
 	{
-		$obj_dibs->setTransactionDetail($posted_values);
-		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_PAYMENT'), 
+    $obj_dibs->setTransactionDetail($posted_values);
+		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_PAYMENT'),
 			(float)((int)$posted_values['amount'] / 100), $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
 	}
 	else if ($valid_order === false)
-		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_ERROR'), 0, $obj_dibs->displayName, 
-			$message, array(), NULL, false, $secure_cart[2]);
+		$obj_dibs->validateOrder((int)$posted_values['orderid'], Configuration::get('PS_OS_ERROR'), 0, $obj_dibs->displayName, $message, array(), NULL, false, $secure_cart[2]);
 }

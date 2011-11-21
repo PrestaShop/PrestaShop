@@ -108,7 +108,7 @@ class ChartCore
 			$options = 'xaxis:{mode:"time",timeformat:\''.addslashes($this->format).'\',min:'.$this->from.'000,max:'.$this->to.'000}';
 			if ($this->granularity == 'd')
 				foreach ($this->curves as $curve)
-					for ($i = $this->from; $i <= $this->to; $i += 86400)
+					for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i))
 						if (!$curve->getPoint($i))
 							$curve->setPoint($i, 0);
 		}

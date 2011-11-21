@@ -58,7 +58,7 @@
 			<a href="{$link->getPageLink('order', true, NULL, "step=3")}" class="button_large">{l s='Return' mod='paypal'}</a><br /><br />
 			<span style="color: red;">{l s='Session expired, please go back and try again' mod='paypal'}</span>
 		{else}
-		<a href="{$link->getPageLink('order', true, NULL, "step=3")}" class="button_large">{l s='Other payment methods' mod='paypal'}</a>
+			<a href="{$link->getPageLink('order', true, NULL, "step=3")}" class="button_large">{l s='Other payment methods' mod='paypal'}</a>
 		<input type="submit" name="submitPayment" value="{l s='I confirm my order' mod='paypal'}" class="exclusive_large" />
 		{/if}
 	</p>

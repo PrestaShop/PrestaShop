@@ -274,7 +274,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	{
 		$this->_fields['list']['Enseigne']['value'] = Configuration::get('MR_ENSEIGNE_WEBSERVICE');
 		$this->_fields['list']['Expe_Langage']['value'] = Configuration::get('MR_LANGUAGE');
-		$this->_fields['list']['Expe_Ad1']['value'] = Configuration::get('PS_MR_SHOP_NAME');
+		$this->_fields['list']['Expe_Ad1']['value'] = Configuration::get('PS_SHOP_NAME');
 		$this->_fields['list']['Expe_Ad3']['value'] = Configuration::get('PS_SHOP_ADDR1');
 		// Deleted, cause to many failed for the process
 		// $this->_fields['list']['Expe_Ad4']['value'] = Configuration::get('PS_SHOP_ADDR2');
@@ -331,7 +331,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$tmp['NDossier']['value'] = $orderDetail['id_order'];
 				$tmp['NClient']['value'] = $orderDetail['id_customer'];
 				$tmp['Dest_Langage']['value'] = 'FR'; //Language::getIsoById($orderDetail['id_lang']);
-				$tmp['Dest_Ad1']['value'] = $deliveriesAddress->lastname;
+				$tmp['Dest_Ad1']['value'] = $deliveriesAddress->firstname.' '.$deliveriesAddress->lastname;
 				$tmp['Dest_Ad2']['value'] = $deliveriesAddress->address2;
 				$tmp['Dest_Ad3']['value'] = $deliveriesAddress->address1;
 				$tmp['Dest_Ville']['value'] = $deliveriesAddress->city;
@@ -342,7 +342,6 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$tmp['Dest_Tel2']['value'] = $deliveriesAddress->phone_mobile;
 				$tmp['Dest_Mail']['value'] = $customer->email;
 				$tmp['Assurance']['value'] = $orderDetail['mr_ModeAss'];
-
 				if ($orderDetail['MR_Selected_Num'] != 'LD1' && $orderDetail['MR_Selected_Num'] != 'LDS')
 				{
 					$tmp['LIV_Rel_Pays']['value'] = $orderDetail['MR_Selected_Pays'];
@@ -511,7 +510,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	*/
 	public function checkPreValidation()
 	{
-		$errorList = array();
+		$errorList = array('error' => array(), 'warn' => array());
 		
 		if (!$this->_mondialRelay)
 			$this->_mondialRelay = new MondialRelay();
@@ -521,7 +520,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				'value' => Configuration::get('MR_LANGUAGE'),
 				'error' => $this->_mondialRelay->l('Please check your language configuration')),
 			'Expe_Ad1' => array(
-				'value' => Configuration::get('PS_MR_SHOP_NAME'),
+				'value' => Configuration::get('PS_SHOP_NAME'),
 				'error' => $this->_mondialRelay->l('Please check your shop name configuration')),
 			'Expe_Ad3' => array(
 				'value' => Configuration::get('PS_SHOP_ADDR1'),
@@ -531,7 +530,8 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				'error' => $this->_mondialRelay->l('Please check your city configuration')),
 			'Expe_CP' => array(
 				'value' => Configuration::get('PS_SHOP_CODE'),
-				'error' => $this->_mondialRelay->l('Please check your zipcode configuration')),
+				'error' => $this->_mondialRelay->l('Please check your zipcode configuration'),
+				'warn' => $this->_mondialRelay->l('It seems the layout of your zipcode country is not configured or you didn\'t set a right zipcode')),
 			'Expe_Pays' => array(
 				'value' => ((_PS_VERSION_ >= '1.4') ? 
 					Country::getIsoById(Configuration::get('PS_SHOP_COUNTRY_ID')) : 
@@ -546,16 +546,22 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		
 		foreach($list as $name => $tab)
 		{
-			$tab['value'] = strtoupper($tab['value']);
+			// Mac server make an empty string instead of a cleaned string
+			// TODO : test on windows and linux server
+			$cleanedString = MRTools::replaceAccentedCharacters($tab['value']);
+			$tab['value'] = !empty($cleanedString) ? strtoupper($cleanedString) : strtoupper($tab['value']);
+				
 			if ($name == 'Expe_CP')
 			{
-				if (!MRTools::checkZipcodeByCountry($tab['value'], array(
-						'id_country' => Configuration::get('PS_COUNTRY_DEFAULT'))))
-					$errorList[$name] = $tab['error'];
+				if (!($zipcodeError = MRTools::checkZipcodeByCountry($tab['value'], array(
+						'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')))))
+					$errorList['error'][$name] = $tab['error'];
+				else if ($zipcodeError < 0)
+					$errorList['warn'][$name] = $tab['warn'];
 			}
 			else if (isset($this->_fields['list'][$name]['regexValidation']) && 
 					(!preg_match($this->_fields['list'][$name]['regexValidation'], $tab['value'], $matches)))
-				$errorList[$name] = $tab['error'];
+				$errorList['error'][$name] = $tab['error'];
 		}
 		return $errorList;
 	}

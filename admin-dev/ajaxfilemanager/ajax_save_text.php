@@ -84,8 +84,8 @@
 		$error = TXT_UNKNOWN_REQUEST;
 	}
 		echo "{";
-		echo "error:'" . $error . "',\n";
-		echo  "path:'" . $path . "'";
+		echo "error:'" . Tools::safeOutput($error) . "',\n";
+		echo  "path:'" . Tools::safeOutput($path) . "'";
 		echo "}";
 	
 ?>

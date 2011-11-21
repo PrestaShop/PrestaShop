@@ -207,9 +207,12 @@ class ProductControllerCore extends FrontController
 	protected function assignPriceAndTax()
 	{
 		$id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
-		$group_reduction = (100 - Group::getReduction($id_customer)) / 100;
 		$id_group = (isset($this->context->customer) ? $this->context->customer->id_default_group : _PS_DEFAULT_CUSTOMER_GROUP_);
 		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
+
+		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
+		if ($group_reduction == 0)
+			$group_reduction = Group::getReduction((int)$this->context->cookie->id_customer) / 100;
 
 		// Tax
 		$tax = (float)$this->product->getTaxesRate(new Address((int)$this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
@@ -228,7 +231,7 @@ class ProductControllerCore extends FrontController
 		$id_currency = (int)$this->context->cookie->id_currency;
 		$id_product = (int)$this->product->id;
 		$id_shop = $this->context->shop->getID(true);
-		
+
 		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true);
 		foreach($quantity_discounts as &$quantity_discount)
 			if ($quantity_discount['id_product_attribute'])
@@ -239,7 +242,7 @@ class ProductControllerCore extends FrontController
 					$quantity_discount['attributes'] = $attribute['name'].' - ';
 				$quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
 			}
-		
+
 		$product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
 		$address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 		$this->context->smarty->assign(array(
@@ -248,7 +251,7 @@ class ProductControllerCore extends FrontController
 			'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
 			'ecotaxTax_rate' => $ecotax_rate,
 			'productPriceWithoutEcoTax' => (float)$product_price_without_eco_tax,
-			'group_reduction' => $group_reduction,
+			'group_reduction' => (1 - $group_reduction),,
 			'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
 			'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
 			'tax_enabled' => Configuration::get('PS_TAX')
@@ -295,13 +298,13 @@ class ProductControllerCore extends FrontController
 	{
 		$colors = array();
 		$groups = array();
-		
+
 		// @todo (RM) should only get groups and not all declination ?
 		$attributes_groups = $this->product->getAttributesGroups($this->context->language->id);
 		if (is_array($attributes_groups) && $attributes_groups)
 		{
 			$combination_images = $this->product->getCombinationImages($this->context->language->id);
-			
+
 			foreach ($attributes_groups as $k => $row)
 			{
 				// Color management
@@ -319,7 +322,7 @@ class ProductControllerCore extends FrontController
 						'group_type' => $row['group_type'],
 						'default' => -1,
 					);
-				
+
 				$groups[$row['id_attribute_group']]['attributes'][$row['id_attribute']] = $row['attribute_name'];
 				if ($row['default_on'] && $groups[$row['id_attribute_group']]['default'] == -1)
 					$groups[$row['id_attribute_group']]['default'] = (int)$row['id_attribute'];
@@ -344,7 +347,7 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
 				$combinations[$row['id_product_attribute']]['available_date'] = $available_date;
-				
+
 				if (isset($combination_images[$row['id_product_attribute']][0]['id_image']))
 					$combinations[$row['id_product_attribute']]['id_image'] = $combination_images[$row['id_product_attribute']][0]['id_image'];
 				else

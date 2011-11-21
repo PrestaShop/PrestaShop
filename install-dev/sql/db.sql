@@ -380,14 +380,18 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   KEY `category_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_compare_product` (
-  `id_compare_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_product` int(10) unsigned NOT NULL,
-  `id_guest` int(10) unsigned NOT NULL,
+CREATE TABLE `PREFIX_compare` (
+  `id_compare` int(10) unsigned NOT NULL auto_increment,
   `id_customer` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_compare`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_compare_product` (
+  `id_compare` int(10) unsigned NOT NULL,
+  `id_product` int(10) unsigned NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  PRIMARY KEY  (`id_compare_product`)
+  PRIMARY KEY (`id_compare`,`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_configuration` (
@@ -1095,6 +1099,12 @@ CREATE TABLE `PREFIX_order_detail` (
   KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_order_tax` (
+  `id_order` int(11) NOT NULL,
+  `tax_name` varchar(40) NOT NULL,
+  `tax_rate` decimal(6,3) NOT NULL,
+  `amount` decimal(20,6) NOT NULL
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_cart_rule` (
   `id_order_cart_rule` int(10) unsigned NOT NULL auto_increment,
@@ -1544,7 +1554,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`id_group` INT UNSIGNED NOT NULL,
 	`id_product_attribute` INT UNSIGNED NOT NULL,
 	`price` DECIMAL(20, 6) NOT NULL,
-	`from_quantity` SMALLINT UNSIGNED NOT NULL,
+	`from_quantity` mediumint(8) UNSIGNED NOT NULL,
 	`reduction` DECIMAL(20, 6) NOT NULL,
 	`reduction_type` ENUM('amount', 'percentage') NOT NULL,
 	`from` DATETIME NOT NULL,
@@ -1668,8 +1678,8 @@ CREATE TABLE `PREFIX_store` (
   `address2` varchar(128) DEFAULT NULL,
   `city` varchar(64) NOT NULL,
   `postcode` varchar(12) NOT NULL,
-  `latitude` decimal(10,8) DEFAULT NULL,
-  `longitude` decimal(10,8) DEFAULT NULL,
+  `latitude` decimal(11,8) DEFAULT NULL,
+  `longitude` decimal(11,8) DEFAULT NULL,
   `hours` varchar(254) DEFAULT NULL,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
@@ -1855,6 +1865,12 @@ CREATE TABLE `PREFIX_carrier_shop` (
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
 PRIMARY KEY (`id_carrier`, `id_shop`),
   KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_address_format` (
+  `id_country` int(10) unsigned NOT NULL,
+  `format` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id_country`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cms_shop` (

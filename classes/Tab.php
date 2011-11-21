@@ -115,11 +115,13 @@ class TabCore extends ObjectModel
 	 	');
 	 	if (!$profiles || empty($profiles))
 	 		return false;
+
 	 	/* Query definition */
 		// note : insert ignore should be avoided
 	 	$query = 'INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
 		// default admin
 		$query .= '(1, '.(int)$id_tab.', 1, 1, 1, 1),';
+
 	 	foreach ($profiles as $profile)
 	 	{
 			// no cast needed for profile[id_profile], which cames from db
@@ -251,7 +253,7 @@ class TabCore extends ObjectModel
 	public static function getNewLastPosition($id_parent)
 	{
 		return (Db::getInstance()->getValue('
-			SELECT MAX(position)+1
+			SELECT IFNULL(MAX(position),0)+1
 			FROM `'._DB_PREFIX_.'tab`
 			WHERE `id_parent` = '.(int)$id_parent
 		));

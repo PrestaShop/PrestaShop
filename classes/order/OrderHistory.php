@@ -122,7 +122,8 @@ class OrderHistoryCore extends ObjectModel
 
 			if ($newOS->invoice AND !$order->invoice_number)
 				$order->setInvoice();
-			if ($newOS->delivery AND !$order->delivery_number)
+			// Update delivery date even if it was already set by another state change
+			if ($newOS->delivery)
 				$order->setDelivery();
 			Hook::postUpdateOrderStatus((int)($new_order_state), (int)($id_order));
 		}

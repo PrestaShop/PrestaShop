@@ -56,7 +56,7 @@ class FedexCarrier extends CarrierModule
 	{
 		$this->name = 'fedexcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2.4';
+		$this->version = '1.2.5';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -349,6 +349,10 @@ class FedexCarrier extends CarrierModule
 			$alert['webserviceTest'] = 1;
 		if (!extension_loaded('soap'))
 			$alert['soap'] = 1;
+		if (!ini_get('allow_url_fopen'))
+			$alert['url_fopen'] = 1;
+		if (!extension_loaded('openssl'))
+			$alert['openssl'] = 1;
 
 
 		if (!count($alert))
@@ -360,6 +364,8 @@ class FedexCarrier extends CarrierModule
 			$this->_html .= '<br />'.(isset($alert['deliveryServices']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' 2) '.$this->l('Select your available delivery service');
 			$this->_html .= '<br />'.(isset($alert['webserviceTest']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' 3) '.$this->l('Webservice test connection').($this->_webserviceError ? ' : '.$this->_webserviceError : '');
 			$this->_html .= '<br />'.(isset($alert['soap']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' 4) '.$this->l('Soap is enabled');
+			$this->_html .= '<br />'.(isset($alert['url_fopen']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' 5) '.$this->l('Url fopen is enabled');
+			$this->_html .= '<br />'.(isset($alert['openssl']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' 6) '.$this->l('OpenSSL is enabled');
 		}
 
 

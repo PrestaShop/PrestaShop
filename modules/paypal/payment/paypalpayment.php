@@ -46,8 +46,8 @@ class PaypalPayment extends Paypal
 
 		// Making request
 		$vars = '?fromPayPal=1';
-		$returnURL = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/paypal/payment/submit.php'.$vars;
-		$cancelURL = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'order.php';
+		$returnURL = PayPal::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/paypal/payment/submit.php'.$vars;
+		$cancelURL = PayPal::getShopDomainSsl(true, true).__PS_BASE_URI__.'order.php';
 		$paymentAmount = (float)($cart->getOrderTotal());
 		$currencyCodeType = strval($currency->iso_code);
 		$paymentType = Configuration::get('PAYPAL_CAPTURE') == 1 ? 'Authorization' : 'Sale';
@@ -68,7 +68,7 @@ class PaypalPayment extends Paypal
 		$country = new Country((int)$address->id_country);
 		if ($address->id_state)
 			$state = new State((int)$address->id_state);
-		$discounts = (float)($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+		$discounts = (float)($cart->getOrderTotal(true, PayPal::ONLY_DISCOUNTS));
 		if ($discounts == 0)
 		{
 			if ($params['cart']->id_customer)

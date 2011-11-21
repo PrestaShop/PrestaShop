@@ -109,7 +109,7 @@ class TSBuyerProtection extends AbsTrustedShops
 	 * )
 	 * @var array
 	 */
-	private static $CERTIFICATE;
+	public static $CERTIFICATE;
 	private static $DEFAULT_LANG;
 	private static $CAT_ID;
 	private static $ENV_API;
@@ -649,8 +649,8 @@ class TSBuyerProtection extends AbsTrustedShops
 		$sql = '
 		DELETE ts, p, pl
 		FROM `'._DB_PREFIX_.TSBuyerProtection::DB_ITEMS.'` AS ts
-		LEFT JOIN `ps_product` AS p ON ts.`id_product` = p.`id_product`
-		LEFT JOIN `ps_product_lang` AS pl ON ts.`id_product` = pl.`id_product`
+		LEFT JOIN `'._DB_PREFIX_.'product` AS p ON ts.`id_product` = p.`id_product`
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` AS pl ON ts.`id_product` = pl.`id_product`
 		WHERE ts.`ts_id`="'.$ts_id.'"';
 		Db::getInstance()->execute($sql);
 
@@ -1062,7 +1062,7 @@ class TSBuyerProtection extends AbsTrustedShops
 				$out .= '
 							</td>
 							<td>';
-				if ($certificate['typeEnum'] === 'EXCELLENCE') {
+				if ($certificate['typeEnum'] === 'EXCELLENCE' || $certificate['typeEnum'] === 'CLASSIC') {
 					$out .= '<input type="checkbox" name="certificate_delete[]" value="'.$lang.'" />';
 				} else {
 					$out .= $this->l('No need');

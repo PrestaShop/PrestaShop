@@ -1140,7 +1140,9 @@ class eBayRequest
 							else $reference = $skuItem;
 						}
 						
-
+						$reference = trim($reference);
+						if (!empty($reference))
+						{
 						$id_product = Db::getInstance()->getValue('
 						SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 						WHERE `reference` = \''.pSQL($reference).'\'');
@@ -1155,6 +1157,7 @@ class eBayRequest
 								$itemList[] = array('id_product' => $row['id_product'], 'id_product_attribute' => $row['id_product_attribute'], 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
 				}
 					}
+				}
 				}
 
 				$orderList[] = array(

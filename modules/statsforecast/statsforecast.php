@@ -80,12 +80,9 @@ class StatsForecast extends Module
 		$currency = $this->context->currency;
 		$employee = $this->context->employee;
 
-		// @todo use PHP functions to get timestamp ...
-		$result = $db->getRow('SELECT UNIX_TIMESTAMP(\'2009-06-05 00:00:00\') as t1, UNIX_TIMESTAMP(\''.$employee->stats_date_from.' 00:00:00\') as t2');
-		$from = max($result['t1'], $result['t2']);
+		$from = max(strtotime(_PS_CREATION_DATE_.' 00:00:00'), strtotime($employee->stats_date_from.' 00:00:00'));
 		$to = strtotime($employee->stats_date_to.' 23:59:59');
-		$result2 = $db->getRow('SELECT UNIX_TIMESTAMP(NOW()) as t1, UNIX_TIMESTAMP(\''.$employee->stats_date_to.' 23:59:59\') as t2');
-		$to2 = min($result2['t1'], $result2['t2']);
+		$to2 = min(time(), $to);
 		$interval = ($to - $from) / 60 / 60 / 24;
 		$interval2 = ($to2 - $from) / 60 / 60 / 24;
 		$prop30 = $interval / $interval2;
@@ -99,18 +96,17 @@ class StatsForecast extends Module
 		if ($this->context->cookie->stats_granularity == 42)
 			$intervalAvg = $interval2 / 7;
 
-		// @todo : to remove
-		if (!defined('PS_BASE_URI'))
-			define('PS_BASE_URI', '/');
-		$result = $db->getRow('SELECT UNIX_TIMESTAMP(\'2009-06-05\') as t1, UNIX_TIMESTAMP(\''.$employee->stats_date_from.'\') as t2');
-		$from = max($result['t1'], $result['t2']);
-		$to = strtotime($employee->stats_date_to.'');
+		$dataTable = array();
+		if ($cookie->stats_granularity == 10)
+			for ($i = $from; $i <= $to2; $i = strtotime('+1 day', $i))
+				$dataTable[date('Y-m-d', $i)] = array('fix_date' => date('Y-m-d', $i), 'countOrders' => 0, 'countProducts' => 0, 'totalProducts' => 0);
 
 		$dateFromGAdd = ($this->context->cookie->stats_granularity != 42
-			? 'SUBSTRING(date_add, 1, '.(int)$this->context->cookie->stats_granularity.')'
+			? 'LEFT(date_add, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(date_add),DAYOFYEAR(date_add)-WEEKDAY(date_add)), CONCAT(YEAR(date_add),"-01-01*"))');
+
 		$dateFromGInvoice = ($this->context->cookie->stats_granularity != 42
-			? 'SUBSTRING(invoice_date, 1, '.(int)$this->context->cookie->stats_granularity.')'
+			? 'LEFT(invoice_date, '.(int)$this->context->cookie->stats_granularity.')'
 			: 'IFNULL(MAKEDATE(YEAR(invoice_date),DAYOFYEAR(invoice_date)-WEEKDAY(invoice_date)), CONCAT(YEAR(invoice_date),"-01-01*"))');
 
 		$sql = 'SELECT
@@ -128,17 +124,8 @@ class StatsForecast extends Module
 				ORDER BY fix_date';
 		$result = $db->executeS($sql, false);
 
-		$dataTable = array();
-		if ($this->context->cookie->stats_granularity == 10)
-		{
-			$dateEnd = strtotime($employee->stats_date_to.' 23:59:59');
-			$dateToday = time();
-			for ($i = strtotime($employee->stats_date_from.' 00:00:00'); $i <= $dateEnd && $i <= $dateToday; $i += 86400)
-				$dataTable[$i] = array('fix_date' => date('Y-m-d', $i), 'countOrders' => 0, 'countProducts' => 0, 'totalProducts' => 0);
-		}
-
 		while ($row = $db->nextRow($result))
-			$dataTable[strtotime($row['fix_date'])] = $row;
+			$dataTable[$row['fix_date']] = $row;
 
 		$this->_html .= '<div>
 		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>

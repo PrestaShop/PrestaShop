@@ -33,17 +33,31 @@ class Ekomi extends Module
 	private $_html = '';
 	private $_postErrors = array();
 
+	public $id_lang;
+	public $iso_lang;
+
     function __construct()
     {
         $this->name = 'ekomi';
         $this->tab = 'advertising_marketing';
-		$this->version = 1.1;
+		$this->author = 'PrestaShop';
+		$this->version = 1.2;
 		$this->need_instance = 0;
 
 		parent::__construct();
 
 		$this->displayName = $this->l('eKomi');
 		$this->description = $this->l('Adds an eKomi block');
+
+		if (self::isInstalled($this->name))
+		{
+			$this->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+			$this->iso_lang = pSQL(Language::getIsoById($this->id_lang));
+
+			/* Check Mail Directory */
+			if (!file_exists(dirname(__FILE__.'/'.$this->iso_lang.'/')))
+				$this->warning .= $this->l('directory').' "'.$this->iso_lang.'" does not exist ';
+	}
 	}
 
 	public function install()
@@ -115,6 +129,10 @@ class Ekomi extends Module
 		if (!Configuration::get('PS_EKOMI_EMAIL'))
 			return true;
 
+		/* Check Mail Directory */
+		if (!file_exists(dirname(__FILE__.'/'.$this->iso_lang.'/')))
+			return true;
+
 		/* Email generation */
 		$subject = '[Ekomi-Prestashop] '.Configuration::get('PS_SHOP_NAME');
 		$templateVars = array(
@@ -125,8 +143,9 @@ class Ekomi extends Module
 		);
 
 		/* Email sending */
-		if (!Mail::Send(1, 'ekomi', $subject, $templateVars, Configuration::get('PS_EKOMI_EMAIL'), NULL, $params['customer']->email, Configuration::get('PS_SHOP_NAME'), NULL, NULL, dirname(__FILE__).'/mails/'))
+		if (!Mail::Send((int)$this->id_lang, 'ekomi', $subject, $templateVars, Configuration::get('PS_EKOMI_EMAIL'), NULL, $params['customer']->email, Configuration::get('PS_SHOP_NAME'), NULL, NULL, dirname(__FILE__).'/mails/'))
 			return true;
+
 		return true;
 	}
 }

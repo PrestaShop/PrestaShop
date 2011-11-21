@@ -2,7 +2,7 @@
 <module>
 	<name>autoupgrade</name>
 	<displayName><![CDATA[Autoupgrade module]]></displayName>
-	<version><![CDATA[0.1]]></version>
+	<version><![CDATA[0.2.1]]></version>
 	<description><![CDATA[Provides an automated method to upgrade your shop to the last PrestaShop version. Caution : custom theme are not updated.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[administration]]></tab>

@@ -20,3 +20,8 @@ $_MODULE['<{importerosc}prestashop>importerosc_14ae0ea02f571a833786d13d9ca6a897'
 $_MODULE['<{importerosc}prestashop>importerosc_e307db07b3975fef922a80d07455ee5e'] = 'Base de données';
 $_MODULE['<{importerosc}prestashop>importerosc_dac130bdd2c5492a8108a4145bd9f04a'] = 'Préfixe base de données';
 $_MODULE['<{importerosc}prestashop>importerosc_6bdc02625540b5264cffe801c37a82dd'] = '(Le préfixe est optionnel. Si toute votre base de données commence par \"pref_\", votre préfixe est \"pref_\")';
+$_MODULE['<{importerosc}prestashop>importerosc_4685343b5e2e0f0fbee63dddafde693f'] = 'Vous essayez d\'importer des catégories et nous avons détecté que votre base de données osCommerce n\'ont pas le champs \"niveau\" dans la table catégorie. Vous devez avoir ce champs pour continuer l\'importation de catégories.';
+$_MODULE['<{importerosc}prestashop>importerosc_16f35420186575c2a1d9c0b59edf6ad3'] = 'Cliquez ici pour ajouter et de calculer le champs niveau';
+$_MODULE['<{importerosc}prestashop>importerosc_fced104d747e0855ceff3020653104ab'] = 'Le champ \"niveau\" a été créé et calculé, vous pouvez continuer';
+$_MODULE['<{importerosc}prestashop>importerosc_b405d0bebeedbdc1773a44ac36b8ffc4'] = 'Il est fortement recommandé de sauvegarder votre base de données avant de continuer. Avez-vous fait une sauvegarde?';
+$_MODULE['<{importerosc}prestashop>importerosc_9f95fc55011203d91d50a0ed512f805f'] = 'Impossible de \"ALTER TABLE\"';

@@ -81,7 +81,7 @@
 						</span>
 					{/if}
 				</p>
-					<a class="cmp_remove" href="{$link->getPageLink('products-comparison.php', true)}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
+					<a class="cmp_remove" href="{$link->getPageLink('products-comparison.php')}" rel="ajax_id_product_{$product->id}">{l s='Remove'}</a>
 					<a class="button" href="{$product->getLink()}" title="{l s='View'}">{l s='View'}</a>
 					{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
 						{if ($product->quantity > 0 OR $product->allow_oosp)}

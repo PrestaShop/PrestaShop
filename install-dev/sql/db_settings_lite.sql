@@ -1052,8 +1052,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
 (4, 5, 'Versandkosten'),(4, 6, 'Statistik'),(4, 7, 'Module'),(4, 8, 'Voreinstellungen'),(4, 9, 'Tools'),(4, 10, 'Hersteller'),(4, 11, 'Attribute und Gruppen'),
-(4, 12, 'Adressen'),(4, 13, 'Status'),(4, 14, 'Gutscheine'),(4, 15, 'Währungen'),(4, 16, 'Steuern'),(4, 17, 'Lieferanten'),(4, 18, 'Länder'),
-(4, 19, 'Zonen'),(4, 20, 'Preislagen'),(4, 21, 'Gewichtsklassen'),(4, 22, 'Positionen'),(4, 23, 'Datenbank'),(4, 24, 'E-Mail'),(4, 26, 'Bild'),
+(4, 12, 'Adressen'),(4, 13, 'Status'),(4, 14, 'Gutscheine'),(4, 15, 'Währungen'),(4, 16, 'Steuern'),(4, 17, 'Versanddienst'),(4, 18, 'Länder'),
+(4, 19, 'Zonen'),(4, 20, 'Preisspanne'),(4, 21, 'Gewichtsklassen'),(4, 22, 'Positionen'),(4, 23, 'Datenbank'),(4, 24, 'E-Mail'),(4, 26, 'Bild'),
 (4, 27, 'Produkte'),(4, 28, 'Kontakte'),(4, 29, 'Mitarbeiter'),(4, 30, 'Profile'),(4, 31, 'Berechtigungen'),(4, 32, 'Sprachen'),(4, 33, 'Übersetzungen'),
 (4, 34, 'Zulieferer'),(4, 35, 'Tabs'),(4, 36, 'Funktionen'),(4, 37, 'Schnellzugriff'),(4, 38, 'Themen'),(4, 39, 'Kontaktinformation'),(4, 40, 'Alias'),
 (4, 41, 'Import'),(4, 42, 'Rechnungen'),(4, 43, 'Suche'),(4, 44, 'Lokalisierung'),(4, 46, 'Staaten'),(4, 47, 'Warenrücksendungen'),(4, 48, 'PDF'),
@@ -1061,6 +1061,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 55, 'Lieferscheine'),(4, 56, 'SEO & URLs'),(4, 57, 'CMS'),(4, 58, 'Image Mapping'),(4, 59, 'Kundennachrichten'),(4, 60, 'Tracking'),
 (4, 61, 'Suchmaschinen'),(4, 62, 'Referrer'),(4, 63, 'Gruppen'),(4, 64, 'Generatoren'),(4, 65, 'Warenkörbe'),(4, 66, 'Tags'),(4, 67, 'Suche'),
 (4, 68, 'Anhänge'),(4, 69, 'Konfigurationsinformationen'),(4, 70, 'Leistung'),(4, 71, 'Kundenservice'),(4, 72, 'Webservice'),(4, 73, 'Lagerbewegungen'),
+<<<<<<< .working
 (4, 80, 'Module und Themenkatalog'),(4, 81, 'Mein Konto'),(4, 82, 'Shops'),(4, 83, 'Themen'),(4, 84, 'Geotargeting'),(4, 85, 'Steuerregeln'),(4, 86, 'Log'),
 (4, 87,'Home'), (4, 88, 'Shops'), (4, 89, 'Group Shops'), (4, 90, 'Shop Urls'),(4, 91, 'Genders'),(4, 92, 'SQL Manager'),
 (4, 93, 'Products'),

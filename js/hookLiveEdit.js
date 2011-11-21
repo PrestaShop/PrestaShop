@@ -3,7 +3,6 @@ var hooks_list = new Array();
 var hookable_list = new Array();
 var timer;
 $(document).ready(function() {
-
     $('body').css('margin-bottom', '45px');
     $('#fancy').fancybox({
         autoDimensions: true,
@@ -23,8 +22,7 @@ $(document).ready(function() {
         if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir) {
             if (search.length == 0) {
                 $(this).attr('search', hrefAdd);
-            }
-            else {
+			} else {
                 $(this).attr('search', search + '&' + hrefAdd);
             }
         }
@@ -37,23 +35,19 @@ $(document).ready(function() {
         });
         return false;
     });
-
     $('#cancelMove').unbind('click').click(function() {
         $('#' + cancelMove + '').sortable('cancel');
         return false;
     });
-
     $('#saveLiveEdit').unbind('click').click(function() {
         saveModulePosition();
         return false;
     });
-
     $('#closeLiveEdit').unbind('click').click(function() {
         $("#live_edit_feedback_str").html('<div style="padding:10px;"><p style="margin-bottom:10px;">' + confirmClose + '</p><p style="height:1.6em;display:block"><a style="margin:auto;float:left" class="button" href="#" onclick="closeLiveEdit();">' + confirm + '</a><a style="margin:auto;float:right;" class="button" href="#" onclick="closeFancybox();">' + cancel + '</a></p></div>');
         $("#fancy").attr('href', '#live_edit_feedback');
         $("#fancy").trigger("click");
     });
-
     $('.add_module_live_edit').unbind('click').click(function() {
         $("#live_edit_feedback_str").html('<div style="padding:10px"><img src="img/loadingAnimation.gif"></div>');
         $("#fancy").attr('href', '#live_edit_feedback');
@@ -62,17 +56,14 @@ $(document).ready(function() {
         getHookableModuleList(id.substr(4, id.length));
         return false;
     });
-
     $('.dndHook').each(function() {
         var id_hook = $(this).attr('id');
         var new_target = '';
         var old_target = '';
         var cancel = false;
-
         $('#' + id_hook + '').sortable({
             opacity: 0.5,
             cursor: 'move',
-
             connectWith: '.dndHook',
             receive: function(event, ui) {
                 if (new_target == '') {
@@ -83,11 +74,9 @@ $(document).ready(function() {
                 new_target = ui.item[0].parentNode.id;
             },
             stop: function(event, ui) {
-
                 if (cancel) {
                     $(this).sortable('cancel');
-                }
-                else {
+				} else {
                     old_target = event.target.id;
                     cancelMove = old_target;
                     if (new_target == '') new_target = old_target;
@@ -103,8 +92,7 @@ $(document).ready(function() {
                         border: '1px solid #72CB67',
                         background: '#DFFAD3'
                     });
-                }
-                else {
+				} else {
                     ui.placeholder.css({
                         visibility: 'visible',
                         border: '1px solid #EC9B9B',
@@ -126,17 +114,12 @@ function getHookableList() {
         dataType: 'json',
         data: 'ajax=true&getHookableList&hooks_list=' + hooks_list + '&modules_list=' + modules_list + '&id_shop=' + get('id_shop'),
         success: function(jsonData) {
-        	if (jsonData.hasError)
-        	{
+			if (jsonData.hasError) {
 	        	var errors = '';
-				for(error in jsonData.errors)
-					//IE6 bug fix
-					if(error != 'indexOf')
-						errors += jsonData.errors[error] + "\n";
+				for (error in jsonData.errors) //IE6 bug fix
+				if (error != 'indexOf') errors += jsonData.errors[error] + "\n";
 				alert(errors);
-			}
-			else
-            hookable_list = jsonData;
+			} else hookable_list = jsonData;
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko"><img src="img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + loadFail + '<br><br><a style="margin:auto" class="button" href="#" onclick="closeFancybox();">' + close + '</a></div>');
@@ -145,9 +128,7 @@ function getHookableList() {
         }
     });
 }
-
 function getHookableModuleList(hook) {
-
     $.ajax({
         type: 'GET',
         url: baseDir + ad + '/ajax.php',
@@ -155,7 +136,6 @@ function getHookableModuleList(hook) {
         dataType: 'json',
         data: 'ajax=true&getHookableModuleList&hook=' + hook + '&id_shop=' + get('id_shop'),
         success: function(jsonData) {
-
             var select = '<select id="select_module">';
             for (var i = 0; i < jsonData.length; i++) {
                 select += '<option value="' + jsonData[i].id + '">' + jsonData[i].name + '</option>';
@@ -168,7 +148,6 @@ function getHookableModuleList(hook) {
         }
     });
 }
-
 function saveModulePosition() {
     $("#live_edit_feedback_str").html('<div style="padding:10px"><img src="img/loadingAnimation.gif"></div>');
     $("#fancy").attr('href', '#live_edit_feedback');
@@ -197,17 +176,14 @@ function saveModulePosition() {
         }
     });
 }
-
 function closeFancybox() {
     clearTimeout(timer);
     $.fancybox.close();
     $('#live_edit_feedback_str').html('');
 }
-
 function closeLiveEdit(){
 	window.location.href = window.location.protocol+'//'+window.location.host+window.location.pathname;
 }
-
 function hideFeedback() {
     $('#live_edit_feed_back').fadeOut('slow', function() {
         $.fancybox.close();
@@ -221,8 +197,7 @@ function get(name) {
     var results = regex.exec(window.location.href);
     if (results == null) {
         return "";
-    }
-    else {
+	} else {
         return results[1];
     }
 }
