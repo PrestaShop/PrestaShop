@@ -948,7 +948,8 @@ function refreshImagePositions(imageTable)
  */
 function showSuccessMessage(msg)
 {
-	$("#ajax_confirmation").show().html("<div style=\"background-color:green;color:white;padding:20px;position:fixed;bottom:0;width:100%;left:0;text-align:center;\">"+msg+"</div>").delay(3000).fadeOut("slow");
+	$("#ajax_confirmation").show()
+		.html("<div class=\"conf\">"+msg+"</div>").delay(3000).fadeOut("slow");
 }
 			
 /** display a warning message in a #ajax_confirmation container
@@ -957,7 +958,7 @@ function showSuccessMessage(msg)
 function showErrorMessage(msg)
 {
 	$("#ajax_confirmation").show()
-	.html("<div class=\"error\"><img src=\"../img/admin/error.png\" alt=\"ERROR\" />"+msg+"</div>");
+		.html("<div class=\"error\">"+msg+"</div>").delay(3000).fadeOut("slow");
 }
 
 $(document).ready(function(){

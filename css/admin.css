@@ -471,6 +471,28 @@ select optgroup option {
 	border-radius:3px;
 }
 
+#ajax_confirmation .error  {
+	background: #FFBABA url(../img/admin/icon-cancel.png) no-repeat scroll 6px 6px;
+	border: 1px solid #CC0000;
+	color:#D8000C;
+	padding:20px;
+	position:fixed;
+	bottom:0;
+	width:100%;
+	left:0;
+}
+
+#ajax_confirmation .conf  {
+	background: #DFF2BF url(../img/admin/icon-valid.png) no-repeat scroll 6px 6px;
+	border: 1px solid #4F8A10;
+	color:#4F8A10;
+	padding:20px;
+	position:fixed;
+	bottom:0;
+	width:100%;
+	left:0;
+}
+
 #content .warn  {
 	background: #FEEFB3 url(../img/admin/icon-attention.png) no-repeat scroll 6px 6px;
 	border: 1px solid #9e6014;

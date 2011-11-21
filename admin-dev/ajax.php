@@ -1022,7 +1022,7 @@ if (Tools::isSubmit('submitAddAccess'))
 				AND `id_profile` = '.(int)$id_profile
 		);
 	$res = $res?'ok':'error';
-	die(Tools::jsonEncode($res));
+	die($res);
 }
 
 /* Update Access Modules */
@@ -1056,6 +1056,6 @@ if (Tools::isSubmit('changeModuleAccess'))
 	}
 
 	$res = $res?'ok':'error';
-	die(Tools::jsonEncode($res));
+	die($res);
 }
 
