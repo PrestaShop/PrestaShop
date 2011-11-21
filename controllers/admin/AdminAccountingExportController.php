@@ -262,7 +262,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				o.`total_paid_real`,
 				o.`invoice_date`,
 				pcc.`transaction_id`,
-				CONCAT(\''.$this->clientPrefix.'\', LPAD(c.`id_customer`, 6, 0)) AS account_client
+				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(c.`id_customer`, 6, 0)) AS account_client
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
@@ -387,7 +387,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				pcc.`transaction_id`,
 				o.`payment` AS payment_type,
 				currency.`iso_code` as currency_code,
-				CONCAT(\''.$this->clientPrefix.'\', LPAD(customer.`id_customer`, 6, 0)) AS account_client,
+				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(customer.`id_customer`, 6, 0)) AS account_client,
 				CASE 
  					WHEN (a.`company` != "" AND a.`company` IS NOT NULL) THEN a.`company`
 					ELSE  a.`lastname`
