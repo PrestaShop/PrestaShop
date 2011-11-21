@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminTrackingController extends AdminController
+class AdminTrackingControllerCore extends AdminController
 {
 	public function __construct()
 	{
@@ -54,7 +54,7 @@ class AdminTrackingController extends AdminController
 
 	public function initContent()
 	{
-		//$tpl_vars['categories'] = $this->getObjects('categories_empty')->displayCategories();
+	//$tpl_vars['categories'] = $this->getObjects('categories_empty')->displayCategories();
 		$methods = get_class_methods($this);
 		$tpl_vars['arrayList'] = array();
 		foreach ($methods as $method_name)
