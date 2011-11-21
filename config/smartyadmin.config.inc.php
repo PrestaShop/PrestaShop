@@ -32,9 +32,9 @@ function smartyTranslate($params, &$smarty)
 	global $_LANGADM;
 	$htmlentities = !isset($params['js']);
     $pdf = isset($params['pdf']);
-	$addslashes = !isset($params['slashes']);
+	$addslashes = isset($params['slashes']);
 
-    if ($pdf) 
+    if ($pdf)
     {
 		global $_LANGPDF;
 		$iso = Context::getContext()->language->iso_code;
@@ -45,7 +45,7 @@ function smartyTranslate($params, &$smarty)
 
         if (Tools::file_exists_cache($translationsFile))
             @include_once($translationsFile);
-        
+
         $key = 'PDF'.md5($params['s']);
         $lang_array = $_LANGPDF;
 
@@ -57,8 +57,6 @@ function smartyTranslate($params, &$smarty)
 
         return $msg;
     }
-
-
 
 	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 	// 1.5 admin : default filename is .tpl; test is made on dir
@@ -73,7 +71,7 @@ function smartyTranslate($params, &$smarty)
 		// note : this may be modified later
 		case '.': $class = 'index';break;
 		case 'helper' : $class = 'AdminTab';break;
-		default : 
+		default :
 			$class = 'Admin'.ucfirst($dir_filename);
 	}
 
