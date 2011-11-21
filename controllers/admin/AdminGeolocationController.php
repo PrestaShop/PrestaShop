@@ -35,7 +35,6 @@ class AdminGeolocationControllerCore extends AdminController
 			'geolocationConfiguration' => array(
 				'title' =>	$this->l('Geolocation by IP:'),
 				'icon' =>	'world',
-				'class' =>	'width3',
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_ENABLED' => array(
 		 				'title' => $this->l('Geolocation by IP:'),
@@ -45,12 +44,10 @@ class AdminGeolocationControllerCore extends AdminController
 		 				'type' => 'bool'
 					),
 				),
-				'submit' => array(),
 			),
 			'geolocationCountries' => array(
 				'title' =>	$this->l('Options'),
 				'icon' =>	'world',
-				'class' =>	'width4',
 				'description' => $this->l('The following features are only available if you enable the Geolocation by IP feature.'),
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_BEHAVIOR' => array(
@@ -75,12 +72,10 @@ class AdminGeolocationControllerCore extends AdminController
 						'list' => Country::getCountries($this->context->language->id)
 					),
 				),
-				'submit' => array(),
 			),
 			'geolocationWhitelist' => array(
 				'title' =>	$this->l('Whitelist of IP addresses'),
 				'icon' =>	'world',
-				'class' =>	'width3',
 				'description' => $this->l('You can add many IP addresses, these addresses will always be allowed to access your shop (e.g. Google bots IP).'),
 				'fields' =>	array(
 		 			'PS_GEOLOCATION_WHITELIST' => array('title' => $this->l('Allowed IP addresses:'), 'type' => 'textarea_newlines', 'cols' => 80, 'rows' => 30),
@@ -92,19 +87,17 @@ class AdminGeolocationControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitGeolocationConfiguration'))
+		if (Tools::isSubmit('submitGeolocationWhitelist'))
 		{
+			$redirectAdmin = false;
 			if ($this->isGeoLiteCityAvailable())
 			{
 				Configuration::updateValue('PS_GEOLOCATION_ENABLED', intval(Tools::getValue('PS_GEOLOCATION_ENABLED')));
-				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				$redirectAdmin = true;
 			}
 			else
 				$this->_errors[] = Tools::displayError('Geolocation database is unavailable.');
-		}
 
-		if (Tools::isSubmit('submitGeolocationCountries'))
-		{
 			if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
 				$this->_errors[] = Tools::displayError('Country selection is invalid');
 			else
@@ -115,12 +108,9 @@ class AdminGeolocationControllerCore extends AdminController
 				);
 				Configuration::updateValue('PS_GEOLOCATION_NA_BEHAVIOR', (int)Tools::getValue('PS_GEOLOCATION_NA_BEHAVIOR'));
 				Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
-				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				$redirectAdmin = true;
 			}
-		}
 
-		if (Tools::isSubmit('submitGeolocationWhitelist'))
-		{
 			if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST')))
 				$this->_errors[] = Tools::displayError('Invalid whitelist');
 			else
@@ -129,8 +119,11 @@ class AdminGeolocationControllerCore extends AdminController
 					'PS_GEOLOCATION_WHITELIST',
 					str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
 				);
-				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
+				$redirectAdmin = true;
 			}
+
+			if ($redirectAdmin)
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 		}
 
 		return parent::postProcess();
@@ -145,6 +138,7 @@ class AdminGeolocationControllerCore extends AdminController
 
 	public function initContent()
 	{
+		$this->display = 'options';
 		if (!$this->isGeoLiteCityAvailable())
 			$this->displayWarning($this->l('In order to use Geolocation, please download').' 
 				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
