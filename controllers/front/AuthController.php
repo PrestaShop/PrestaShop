@@ -273,7 +273,7 @@ class AuthControllerCore extends FrontController
 				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0))
 					$this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
 				// Update cart address
-				$this->context->cart->id_carrier = 0;
+				$this->context->cart->delivery_option = '';
 				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->update();

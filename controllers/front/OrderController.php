@@ -190,7 +190,7 @@ class OrderControllerCore extends ParentOrderController
 				unset($this->context->cart->id_address_invoice);
 			Tools::redirect('index.php?controller=order&step=1');
 		}
-		else if ($this->step >= 3 && !$this->context->cart->id_carrier && !$isVirtualCart)
+		else if ($this->step >= 3 && !$this->context->cart->delivery_option && !$isVirtualCart)
 			Tools::redirect('index.php?controller=order&step=2');
 	}
 

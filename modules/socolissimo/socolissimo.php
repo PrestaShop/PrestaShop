@@ -363,6 +363,7 @@ class Socolissimo extends CarrierModule
 
 	public function hookExtraCarrier($params)
 	{
+		global $cookie;
 		$customer = new Customer($params['address']->id_customer);
 		$gender = new Gender($customer->id_gender);
 		$carrierSo = new Carrier((int)(Configuration::get('SOCOLISSIMO_CARRIER_ID')));
@@ -458,10 +459,10 @@ class Socolissimo extends CarrierModule
 	public function hookAdminOrder($params)
 	{
 
-	$deliveryMode = array('DOM' => 'Livraison à domicile', 'BPR' => 'Livraison en Bureau de Poste',
-						  'A2P' => 'Livraison Commerce de proximité', 'MRL' => 'Livraison Commerce de proximité',
-						  'CIT' => 'Livraison en Cityssimo', 'ACP' => 'Agence ColiPoste', 'CDI' => 'Centre de distribution',
-						  'RDV' => 'Livraison sur Rendez-vous');
+		$deliveryMode = array('DOM' => 'Livraison à domicile', 'BPR' => 'Livraison en Bureau de Poste',
+			'A2P' => 'Livraison Commerce de proximité', 'MRL' => 'Livraison Commerce de proximité',
+			'CIT' => 'Livraison en Cityssimo', 'ACP' => 'Agence ColiPoste', 'CDI' => 'Centre de distribution',
+			'RDV' => 'Livraison sur Rendez-vous');
 
 		$order = new Order($params['id_order']);
 		$addressDelivery = new Address((int)($order->id_address_delivery), (int)($params['cookie']->id_lang));
@@ -583,9 +584,9 @@ class Socolissimo extends CarrierModule
 				$zones = Zone::getZones(true);
 				foreach ($zones as $zone)
 				{
-					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'carrier_zone VALUE (\''.(int)($carrier->id).'\',\''.(int)($zone['id_zone']).'\')');
-					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'delivery VALUE (\'\',\''.(int)($carrier->id).'\',\''.(int)($rangePrice->id).'\',NULL,\''.(int)($zone['id_zone']).'\',\'1\')');
-					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'delivery VALUE (\'\',\''.(int)($carrier->id).'\',NULL,\''.(int)($rangeWeight->id).'\',\''.(int)($zone['id_zone']).'\',\'1\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'carrier_zone  (id_carrier, id_zone) VALUE (\''.(int)($carrier->id).'\',\''.(int)($zone['id_zone']).'\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUE (\''.(int)($carrier->id).'\',\''.(int)($rangePrice->id).'\',NULL,\''.(int)($zone['id_zone']).'\',\'1\')');
+					Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUE (\''.(int)($carrier->id).'\',NULL,\''.(int)($rangeWeight->id).'\',\''.(int)($zone['id_zone']).'\',\'1\')');
 				}
 				//copy logo
 				if (!copy(dirname(__FILE__).'/socolissimo.jpg',_PS_SHIP_IMG_DIR_.'/'.$carrier->id.'.jpg'))

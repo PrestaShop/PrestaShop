@@ -350,7 +350,7 @@
 	{$addresses_style.alias = 'address_title'}
 {/if}
 
-{if (($carrier->id AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
+{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
 <div class="order_delivery">
 	{if !isset($formattedAddresses)}
 	{if $delivery->id}
@@ -393,6 +393,7 @@
 		{/foreach}
 		<p class="clear" />
 	{/if}
+	{* @todo Replace the $carrier by using delivery_option *}
 	{if $carrier->id AND !isset($virtualCart)}
 	<div id="order_carrier">
 		<h4>{l s='Carrier:'}</h4>

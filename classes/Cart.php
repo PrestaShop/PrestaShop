@@ -51,9 +51,6 @@ class CartCore extends ObjectModel
 	/** @var integer Language ID */
 	public $id_lang;
 
-	/** @var integer Carrier ID */
-	public $id_carrier;
-
 	/** @var boolean True if the customer wants a recycled package */
 	public $recyclable = 1;
 
@@ -87,7 +84,7 @@ class CartCore extends ObjectModel
 	protected $fieldsRequired = array('id_currency', 'id_lang');
 	protected $fieldsValidate = array('id_address_delivery' => 'isUnsignedId', 'id_address_invoice' => 'isUnsignedId',
 		'id_currency' => 'isUnsignedId', 'id_customer' => 'isUnsignedId', 'id_guest' => 'isUnsignedId', 'id_lang' => 'isUnsignedId',
-		'id_carrier' => 'isUnsignedId', 'recyclable' => 'isBool', 'gift' => 'isBool', 'gift_message' => 'isMessage',
+		'recyclable' => 'isBool', 'gift' => 'isBool', 'gift_message' => 'isMessage',
 		'allow_seperated_package' => 'isBool');
 
 	protected $_products = null;
@@ -107,7 +104,6 @@ class CartCore extends ObjectModel
 		'id_customer' => array('xlink_resource' => 'customers'),
 		'id_guest' => array('xlink_resource' => 'guests'),
 		'id_lang' => array('xlink_resource' => 'languages'),
-		'id_carrier' => array('xlink_resource' => 'carriers'),
 		),
 		'associations' => array(
 			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(
@@ -140,7 +136,6 @@ class CartCore extends ObjectModel
 		$fields['id_customer'] = (int)($this->id_customer);
 		$fields['id_guest'] = (int)($this->id_guest);
 		$fields['id_lang'] = (int)($this->id_lang);
-		$fields['id_carrier'] = (int)($this->id_carrier);
 		$fields['recyclable'] = (int)($this->recyclable);
 		$fields['gift'] = (int)($this->gift);
 		$fields['secure_key'] = pSQL($this->secure_key);
@@ -1633,10 +1628,6 @@ class CartCore extends ObjectModel
 			$id_zone = (int)$default_country->id_zone;
 		}
 
-		// If no carrier, select default one
-		if (!$id_carrier)
-			$id_carrier = $this->id_carrier;
-
 		if ($id_carrier && !$this->isCarrierInRange($id_carrier, $id_zone))
 			$id_carrier = '';
 
@@ -1890,7 +1881,7 @@ class CartCore extends ObjectModel
 			'invoice' => $invoice,
 			'invoice_state' => State::getNameById($invoice->id_state),
 			'formattedAddresses' => $formattedAddresses,
-			'carrier' => new Carrier($this->id_carrier, $id_lang),
+//'carrier' => new Carrier($this->id_carrier, $id_lang),
 			'products' => $this->getProducts(false),
 			'discounts' => $this->getCartRules(),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),

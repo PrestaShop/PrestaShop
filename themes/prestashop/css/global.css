@@ -1120,11 +1120,11 @@ tr.cart_total_price { font-weight: bold }
 	width: 100%;
 	margin: 1em 0
 }
-#order .delivery_options_address {
+#order .delivery_options_address, #orderopc .delivery_options_address {
 	width: 541px;
 	margin-left: 7px;
 }
-#order .delivery_options_address h3 {
+#order .delivery_options_address h3, #orderopc .delivery_options_address h3 {
 	background: url("../img/table_header.gif") no-repeat;
 	background: url("http://prestashop15.localhost/themes/prestashop/css/../img/table_header.gif") no-repeat;
 	color: #374853;
@@ -1133,46 +1133,46 @@ tr.cart_total_price { font-weight: bold }
 	padding: 5px 10px;
 	margin: 10px 0 0 0;
 }
-#order .delivery_option_radio {
+#order .delivery_option_radio, #orderopc .delivery_option_radio {
 	float: left;
 	margin-top: 12px;
 }
-#order .delivery_option label {
+#order .delivery_option label, #orderopc .delivery_option label {
 	display: block;
 	padding-bottom: 5px;
 }
-#order .delivery_option label > table.resume {
+#order .delivery_option label > table.resume, #orderopc .delivery_option label > table.resume {
 	width: 522px;
 	height: 40px;
 }
-#order .delivery_option.item {
+#order .delivery_option.item, #orderopc .delivery_option.item, #orderopc {
 	background: #FAFAFA;
 }
-#order .delivery_option.alternate_item {
+#order .delivery_option.alternate_item, #orderopc .delivery_option.alternate_item {
 	background: #F1F2F4;
 	border-top: 1px solid #BDC2C9;
 }
-#order .delivery_option label > table.resume td {
+#order .delivery_option label > table.resume td, #orderopc .delivery_option label > table.resume td, #orderopc {
 	padding: 0 8px;
 }
-#order .delivery_option label > table.resume td + td {
+#order .delivery_option label > table.resume td + td, #orderopc .delivery_option label > table.resume td + td {
 	text-align: left;
 	width: 380px;
 }
-#order .delivery_option label > table.resume td + td + td {
+#order .delivery_option label > table.resume td + td + td, #orderopc .delivery_option label > table.resume td + td + td {
 	text-align: right;
 	width: 100px;
 }
-#order .delivery_options_address .delivery_option_logo {
+#order .delivery_options_address .delivery_option_logo, #orderopc .delivery_options_address .delivery_option_logo {
 	text-align: center;
 	width: 100px;
 }
-#order .delivery_option_icon {
+#order .delivery_option_icon, #orderopc .delivery_option_icon {
 }
-#order .delivery_option_price {
+#order .delivery_option_price, #orderopc .delivery_option_price {
 }
-#order .delivery_options_address .delivery_option_logo img { height: 40px; }
-#order .delivery_option_carrier {
+#order .delivery_options_address .delivery_option_logo img, #orderopc .delivery_options_address .delivery_option_logo img { height: 40px; }
+#order .delivery_option_carrier, #orderopc .delivery_option_carrier {
 	border: 1px solid #BDC2C9;
 	background: white;
 	margin: 5px 20px;
