@@ -206,7 +206,7 @@ class HomeSlider extends Module
 		<fieldset>
 			<legend><img src="'._PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Slides configuration').'</legend>
 			<strong>
-				<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addSlide">
+				<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addSlide">
 					<img src="'._PS_ADMIN_IMG_.'add.gif" alt="" /> '.$this->l('Add Slide').'
 				</a>
 			</strong>';
@@ -227,8 +227,8 @@ class HomeSlider extends Module
     					<strong>#'.$slide['id_slide'].'</strong> '.$slide['title'].'
     					<p style="float: right">'.
     						$this->displayStatus($slide['id_slide'], $slide['active']).'
-    						<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
-							<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&delete_id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
+    						<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Edit').'"><img src="'._PS_ADMIN_IMG_.'edit.gif" alt="" /></a>
+							<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&delete_id_slide='.(int)($slide['id_slide']).'" title="'.$this->l('Delete').'"><img src="'._PS_ADMIN_IMG_.'delete.gif" alt="" /></a>
 						</p>
   					</li>';
 			}
@@ -358,7 +358,7 @@ class HomeSlider extends Module
 		$this->_html .= '
 		<p class="center">
 			<input type="submit" class="button" name="submitSlide" value="'.$this->l('Save').'" />
-			<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
+			<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
 		</p>';
 
 		/* End of fieldset & form */
@@ -642,7 +642,7 @@ class HomeSlider extends Module
 	{
 		$title = ((int)$active == 0 ? $this->l('Disabled') : $this->l('Enabled'));
 		$img = ((int)$active == 0 ? 'disabled.gif' : 'enabled.gif');
-		$html = '<a href="'.AdminTab::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&changeStatus&id_slide='.(int)($id_slide).'" title="'.$title.'"><img src="'._PS_ADMIN_IMG_.''.$img.'" alt="" /></a>';
+		$html = '<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&changeStatus&id_slide='.(int)($id_slide).'" title="'.$title.'"><img src="'._PS_ADMIN_IMG_.''.$img.'" alt="" /></a>';
 		return $html;
 	}
 
