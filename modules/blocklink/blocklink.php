@@ -60,6 +60,12 @@ class BlockLink extends Module
 			PRIMARY KEY(`id_blocklink`))
 			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') OR
 			!Db::getInstance()->execute('
+			CREATE TABLE '._DB_PREFIX_.'blocklink_shop (
+			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
+			`id_shop` varchar(255) NOT NULL,
+			PRIMARY KEY(`id_blocklink`, `id_shop`))
+			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8') OR
+			!Db::getInstance()->execute('
 			CREATE TABLE '._DB_PREFIX_.'blocklink_lang (
 			`id_blocklink` int(2) NOT NULL,
 			`id_lang` int(2) NOT NULL,
@@ -106,7 +112,9 @@ class BlockLink extends Module
 	{
 		$result = array();
 		/* Get id and url */
-		if (!$links = Db::getInstance()->executeS('SELECT `id_blocklink`, `url`, `new_window` FROM '._DB_PREFIX_.'blocklink'.((int)(Configuration::get('PS_BLOCKLINK_ORDERWAY')) == 1 ? ' ORDER BY `id_blocklink` DESC' : '')))
+		if (!$links = Db::getInstance()->executeS('SELECT `id_blocklink`, `url`, `new_window` 
+																FROM '._DB_PREFIX_.'blocklink'.
+																((int)Configuration::get('PS_BLOCKLINK_ORDERWAY') == 1 ? ' ORDER BY `id_blocklink` DESC' : '')))
 			return false;
 		$i = 0;
 		foreach ($links AS $link)
@@ -115,7 +123,9 @@ class BlockLink extends Module
 			$result[$i]['url'] = $link['url'];
 			$result[$i]['newWindow'] = $link['new_window'];
 			/* Get multilingual text */
-			if (!$texts = Db::getInstance()->executeS('SELECT `id_lang`, `text` FROM '._DB_PREFIX_.'blocklink_lang WHERE `id_blocklink`='.(int)($link['id_blocklink'])))
+			if (!$texts = Db::getInstance()->executeS('SELECT `id_lang`, `text` 
+																	FROM '._DB_PREFIX_.'blocklink_lang 
+																	WHERE `id_blocklink`='.(int)$link['id_blocklink']))
 				return false;
 			foreach ($texts AS $text)
 				$result[$i]['text_'.$text['id_lang']] = $text['text'];
@@ -127,7 +137,9 @@ class BlockLink extends Module
 	public function addLink()
 	{
 		/* Url registration */
-		if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink VALUES (NULL, \''.pSQL($_POST['url']).'\', '.((isset($_POST['newWindow']) AND $_POST['newWindow']) == 'on' ? 1 : 0).')') OR !$lastId = Db::getInstance()->Insert_ID())
+		if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink 
+													VALUES (NULL, \''.pSQL($_POST['url']).'\', '.((isset($_POST['newWindow']) AND $_POST['newWindow']) == 'on' ? 1 : 0).')') OR 
+													!$lastId = Db::getInstance()->Insert_ID())
 			return false;
 		/* Multilingual text */
 		$languages = Language::getLanguages();
@@ -137,7 +149,8 @@ class BlockLink extends Module
 		foreach ($languages AS $language)
 			if (!empty($_POST['text_'.$language['id_lang']]))
 			{
-				if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang VALUES ('.(int)($lastId).', '.(int)($language['id_lang']).', \''.pSQL($_POST['text_'.$language['id_lang']]).'\')'))
+				if (!Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_lang 
+															VALUES ('.(int)$lastId.', '.(int)$language['id_lang'].', \''.pSQL($_POST['text_'.$language['id_lang']]).'\')'))
 					return false;
 			}
 			else
@@ -339,7 +352,7 @@ class BlockLink extends Module
 	 	{
 			$this->_html .= '
 			<script type="text/javascript">
-				var currentUrl = \''.AdminTab::$currentIndex.'&configure='.$this->name.'\';
+				var currentUrl = \''.AdminController::$currentIndex.'&configure='.$this->name.'\';
 				var token=\''.Tools::getValue('token').'\';
 				var links = new Array();';
 			foreach ($links AS $link)

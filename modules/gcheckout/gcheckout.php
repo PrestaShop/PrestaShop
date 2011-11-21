@@ -105,7 +105,7 @@ class GCheckout extends PaymentModule
 				Configuration::updateValue('GCHECKOUT_NO_SHIPPING', 0);
 
 			if (!$errors)
-				Tools::redirectAdmin(AdminTab::$currentIndex.'&configure=gcheckout&token='.Tools::safeOutput(Tools::getValue('token')).'&conf=4');
+				Tools::redirectAdmin(AdminController::$currentIndex.'&configure=gcheckout&token='.Tools::safeOutput(Tools::getValue('token')).'&conf=4');
 			foreach ($errors as $error)
 				echo $error;
 		}
