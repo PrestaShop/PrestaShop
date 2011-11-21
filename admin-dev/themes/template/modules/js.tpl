@@ -35,6 +35,7 @@
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var by = '{l s='by'}';
+	var errorLogin = '{l s='Could not login to Addons'}';
 	
 	{literal}
 	function getPrestaStore(){if(getE("prestastore").style.display!='block')return;$.post(dirNameCurrentIndex+"/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
@@ -76,7 +77,7 @@
 		});
 	});
 
-	// the following to get modules_list.xml from prestashop.com
+	// Method to get modules_list.xml from prestashop.com and default_country_modules_list.xml from addons.prestashop.com
 	$(document).ready(function(){
 			try
 			{
@@ -102,6 +103,53 @@
 			});
 		}
 		catch(e){}
+	});
+
+
+	// Method to log on PrestaShop Addons WebServices
+	$(document).ready(function(){
+		$('#addons_login_button').click(function()
+		{
+			var username_addons = $("#username_addons").val();
+			var password_addons = $("#password_addons").val();
+			try
+			{
+				resAjax = $.ajax({
+						type:"POST",
+						url : ajaxCurrentIndex,
+						async: true,
+						data : {
+							ajax : "1",
+							token : token,
+							controller : "AdminModules",
+							action : "logOnAddonsWebservices",
+							username_addons : username_addons,
+							password_addons : password_addons
+						},
+ 						beforeSend: function(xhr)
+						{
+							$('#addons_loading').html('<img src="../img/loader.gif" border="0">');
+						},
+						success : function(data)
+						{
+							// res.status  = cache or refresh
+							if (data != 'KO')
+							{
+								$('#addons_loading').html('');
+								$('#addons_login_div').fadeOut();
+							}
+							else
+								$('#addons_loading').html(errorLogin);
+						},
+						error: function(res,textStatus,jqXHR)
+						{
+							//alert("TECHNICAL ERROR"+res);
+						}
+				});
+			}
+			catch(e){}
+			return false;
+		});
 	});
 	{/literal}
 </script>

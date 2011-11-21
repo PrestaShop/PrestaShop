@@ -616,20 +616,25 @@ abstract class ModuleCore
 				}
 			}
 
+			// Check if config.xml module file exists and if it's not outdated
 			$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
 			$xml_exist = file_exists($configFile);
 			if ($xml_exist)
 				$needNewConfigFile = (filemtime($configFile) < filemtime(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
 			else
 				$needNewConfigFile = true;
+
+			// If config.xml exists and that the use config flag is at true
 			if ($useConfig && $xml_exist)
 			{
+				// Load config.xml
 				libxml_use_internal_errors(true);
 				$xml_module = simplexml_load_file($configFile);
 				foreach (libxml_get_errors() as $error)
 					$errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
 				libxml_clear_errors();
 
+				// If no errors in Xml, no need instand and no need new config.xml file, we load only translations
 				if (!count($errors) && (int)$xml_module->need_instance == 0 && !$needNewConfigFile)
 				{
 					$file = _PS_MODULE_DIR_.$module.'/'.Context::getContext()->language->iso_code.'.php';
@@ -657,28 +662,49 @@ abstract class ModuleCore
 				}
 			}
 
+			// If use config flag is at false or config.xml does not exist OR need instance OR need a new config.xml file
 			if (!$useConfig OR !$xml_exist OR (isset($xml_module->need_instance) AND (int)$xml_module->need_instance == 1) OR $needNewConfigFile)
 			{
-				// If class already exists, don't include the file
+				// If class does not exists, we include the file
 				if (!class_exists($module, false))
 				{
+					// Get content from php file
 					$filepath = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
-				$file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
-				if (substr($file, 0, 5) == '<?php')
-					$file = substr($file, 5);
-				if (substr($file, -2) == '?>')
-					$file = substr($file, 0, -2);
-					// if (false) is a trick to not load the class with "eval".
-					// this way require_once will works correctly
+					$file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
+					if (substr($file, 0, 5) == '<?php')
+						$file = substr($file, 5);
+					if (substr($file, -2) == '?>')
+						$file = substr($file, 0, -2);
+
+					// If (false) is a trick to not load the class with "eval".
+					// This way require_once will works correctly
 					if (eval('if (false){	'.$file.' }') !== false)
 						require_once( _PS_MODULE_DIR_.$module.'/'.$module.'.php' );
 					else
 						$errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($filepath, strlen(_PS_ROOT_DIR_)));
 				}
 
+				// If class exists, we just instanciate it
 				if (class_exists($module,false))
 				{
-					$moduleList[$moduleListCursor++] = new $module;
+					$tmpModule = new $module;
+
+					$item = new stdClass();
+					$item->id = $tmpModule->id;
+					$item->warning = $tmpModule->warning;
+					$item->name = $tmpModule->name;
+					$item->version = $tmpModule->version;
+					$item->tab = $tmpModule->tab;
+					$item->displayName = $tmpModule->displayName;
+					$item->description = $tmpModule->description;
+					$item->author = $tmpModule->author;
+					$item->limited_countries = $tmpModule->limited_countries;
+					$item->is_configurable = isset($tmpModule->is_configurable) ? $tmpModule->is_configurable : 0;
+					$item->need_instance = isset($tmpModule->need_instance) ? $tmpModule->need_instance : 0;
+					$item->active = $tmpModule->active;
+					unset($tmpModule);
+
+					$moduleList[] = $item;
 					if (!$xml_exist OR $needNewConfigFile)
 					{
 						self::$_generateConfigXmlMode = true;
@@ -710,6 +736,57 @@ abstract class ModuleCore
 				$moduleList[$moduleCursor]->active = ($result['total'] == count($list)) ? 1 : 0;
 			}
 		}
+
+
+		// Get Default Country Modules and customer module
+		$filesList = array(_PS_ROOT_DIR_.'/config/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/default_customer_modules_list.xml');
+		foreach ($filesList as $file)
+			if (file_exists($file))
+			{
+				$content = Tools::file_get_contents($file);
+				$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+				foreach ($xml->module as $modaddons)
+				{
+					$flagFound = 0;
+					foreach ($moduleList as $k => $m)
+						if ($m->name == $modaddons->name && !isset($m->available_on_addons))
+						{
+							$flagFound = 1;
+							if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
+								$moduleList[$k]->version_addons = $modaddons->version;
+						}
+					if ($flagFound == 0)
+					{
+						$item = new stdClass();
+						$item->id = 0;
+						$item->warning = '';
+						$item->name = strip_tags((string)$modaddons->name);
+						$item->version = strip_tags((string)$modaddons->version);
+						$item->tab = strip_tags((string)$modaddons->tab);
+						$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
+						$item->description = strip_tags((string)$modaddons->description);
+						$item->author = strip_tags((string)$modaddons->author);
+						$item->limited_countries = array();
+						$item->is_configurable = 0;
+						$item->need_instance = 0;
+						$item->available_on_addons = 1;
+						$item->active = 0;
+						if (!isset($modaddons->img) && isset($modaddons->id))
+							$modaddons->img = 'http://media.prestastore.com/img/pico/'.(int)$modaddons->id.'.jpg';
+						if (isset($modaddons->img))
+						{
+							if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+								copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
+							if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+								$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+						}
+						$moduleList[] = $item;
+					}
+				}
+			}
+
+		//echo '<pre>'.print_r($moduleList, 1).'</pre>';
+		echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
 
 		if ($errors)
 		{
