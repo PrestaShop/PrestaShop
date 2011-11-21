@@ -39,6 +39,7 @@
 		</tr>
 	</tbody>
 </table>
+<p>&nbsp;</p>
 <div class="margin-form">
 	<input type="submit" class="button" name="submitSuppliers" value="{l s='Update suppliers of this product'}"/>
 </div>
@@ -54,42 +55,48 @@
 </table>
 <div class="separation"></div>
 <p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
-<table cellpadding="5" style="width:100%">
-	<tbody>
-		<tr>
-			<td valign="top" style="text-align:center;vertical-align:top;">
-				<table class="table" cellpadding="0" cellspacing="0" style="min-width:80%;margin-left:10%;">
-					<thead>
-						<tr>
-							<th>{l s='Product Name'}</th>
-							{foreach from=$associated_suppliers item=supplier}
-								<th>{$supplier->name}</th>
-							{/foreach}
-						</tr>
-					</thead>
-					<tbody>
-					{foreach from=$attributes item=attribute}
-						<tr>
-							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-							{foreach from=$associated_suppliers item=supplier}
-								{assign var=reference value=''}
-								{foreach from=$associated_suppliers_collection item=asc}
-									{if $asc->id_product == $attribute['id_product'] && $asc->id_product_attribute == $attribute['id_product_attribute'] && $asc->id_supplier == $supplier->id_supplier}
-										{assign var=reference value=$asc->product_supplier_reference}
-									{/if}
-								{/foreach}
-								<td>
-									<input type="text" size="10" value="{$reference}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
-								</td>
-							{/foreach}
-						</tr>
+
+<div id="accordion" style="margin-top:10px; display:block;">
+	{foreach from=$associated_suppliers item=supplier}
+	    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
+	    <div style="display:block;">
+			<table cellpadding="5" cellspacing="5" style="width:80%; margin-left:0;">
+				<thead>
+					<tr>
+						<th>{l s='product name'}</th>
+						<th width="150">{l s='supplier reference'}</th>
+					</tr>
+				</thead>
+				<tbody>
+				{foreach from=$attributes item=attribute}
+					{assign var=reference value=''}
+					{foreach from=$associated_suppliers_collection item=asc}
+						{if $asc->id_product == $attribute['id_product'] && $asc->id_product_attribute == $attribute['id_product_attribute'] && $asc->id_supplier == $supplier->id_supplier}
+							{assign var=reference value=$asc->product_supplier_reference}
+						{/if}
 					{/foreach}
-					</tbody>
-				</table>
-			</td>
-		</tr>
-	</tbody>
-</table>
+					<tr>
+						<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+						<td>
+							<input type="text" size="10" value="{$reference}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+						</td>
+					</tr>
+				{/foreach}
+				</tbody>
+			</table>
+		</div>
+	{/foreach}
+</div>
+
+<p>&nbsp;</p>
 <div class="margin-form">
 	<input type="submit" class="button" name="submitSupplierReferences" value="{l s='Update supplier reference(s)'}"/>
 </div>
+
+<script type="text/javascript">
+	$(function() {
+		window.setTimeout(function() {
+			$('#accordion').accordion();
+		}, 500);
+	});
+</script>

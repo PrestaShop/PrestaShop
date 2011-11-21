@@ -27,7 +27,7 @@
 var storeUsedGroups = {};
 
 function fillCombinaison(wholesale_price, price_impact, weight_impact, unit_impact, reference, 
-ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, location, upc, minimal_quantity, available_date,
+ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date,
 virtual_product_name_attribute, virtual_product_filename_attribute, virtual_product_nb_downloable, virtual_product_expiration_date_attribute, 
 virtual_product_nb_days, is_shareable)
 {
@@ -59,7 +59,7 @@ virtual_product_nb_days, is_shareable)
 	getE('attribute_unity').value = Math.abs(unit_impact);
 	if ($('#attribute_ecotax').length != 0)
 		getE('attribute_ecotax').value = eco_tax;
-	getE('attribute_location').value = location;
+
 	if (default_attribute == 1)
 		getE('attribute_default').checked = true;
 	else
