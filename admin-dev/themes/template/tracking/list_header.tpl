@@ -19,13 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9639 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<h2 class="space">{l s='Catalog tracking'}</h2>
-{foreach from=$arrayList item=list}
-{$list}
-{/foreach}
+{extends file="helper/list/list_header.tpl"}
 
+{block name="override_header"}
+	<h2>{$sub_title}</h2>
+{/block}
