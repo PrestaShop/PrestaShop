@@ -157,7 +157,7 @@ class AdminShopControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('GroupShop name:'),
+					'label' => $this->l('Shop name:'),
 					'name' => 'name',
 					'required' => true,
 				)
@@ -276,31 +276,32 @@ class AdminShopControllerCore extends AdminController
 			'store' => $this->l('Stores'),
 		);
 
-		$this->fields_import_form = array(
-			'legend' => array(
-				'title' => $this->l('Import data from another shop')
-			),
-			'label' => $this->l('Import data from another shop'),
-			'checkbox' => array(
-				'type' => 'checkbox',
-				'label' => $this->l('Duplicate data from shop'),
-				'name' => 'useImportData',
-				'value' => 1
-			),
-			'select' => array(
-				'type' => 'select',
-				'name' => 'importFromShop',
-				'options' => array(
-					'query' => Shop::getTree(),
-					'name' => 'name'
-				)
-			),
-			'allcheckbox' => array(
-				'type' => 'checkbox',
-				'values' => $import_data
-			),
-			'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
-		);
+		if (!$this->object->id)
+			$this->fields_import_form = array(
+				'legend' => array(
+					'title' => $this->l('Import data from another shop')
+				),
+				'label' => $this->l('Import data from another shop'),
+				'checkbox' => array(
+					'type' => 'checkbox',
+					'label' => $this->l('Duplicate data from shop'),
+					'name' => 'useImportData',
+					'value' => 1
+				),
+				'select' => array(
+					'type' => 'select',
+					'name' => 'importFromShop',
+					'options' => array(
+						'query' => Shop::getTree(),
+						'name' => 'name'
+					)
+				),
+				'allcheckbox' => array(
+					'type' => 'checkbox',
+					'values' => $import_data
+				),
+				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
+			);
 
 		$this->fields_value = array(
 			'id_group_shop' => $obj->id_group_shop
@@ -310,8 +311,10 @@ class AdminShopControllerCore extends AdminController
 			'disabled' => $disabled,
 			'checked' => (Tools::getValue('addshop') !== false) ? true : false,
 			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID(),
-			'form_import' => $this->fields_import_form
 		);
+
+		if (isset($this->fields_import_form))
+			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
 
 		return parent::initForm();
 	}
