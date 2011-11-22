@@ -1508,22 +1508,18 @@ class CartCore extends ObjectModel
 		}
 		
 		if (count($delivery_option) == 1)
-		{
 			$this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);
-			$this->delivery_option = serialize($delivery_option);
-		}
+			
+		$this->delivery_option = serialize($delivery_option);
 	}
 	
 	private function getIdCarrierFromDeliveryOption($delivery_option)
 	{
-		$delivery_option_list = $this->getDeliveryOptionList();die();
+		$delivery_option_list = $this->getDeliveryOptionList();
 		foreach ($delivery_option as $key => $value)
 			if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value]))
 				if (count($delivery_option_list[$key][$value]['carrier_list']) == 1)
-				{
-					elog($delivery_option_list[$key][$value]['carrier_list']);
-					return $delivery_option_list[$key][$value]['carrier_list'][0];
-				}
+					return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
 		return 0;
 	}
 	
