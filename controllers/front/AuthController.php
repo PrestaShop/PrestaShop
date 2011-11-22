@@ -294,10 +294,8 @@ class AuthControllerCore extends FrontController
 				}
 			}
 		}
-			elog('here???');
 		if ($this->ajax)
 		{
-			elog(Tools::getToken(false));
 			$return = array(
 				'hasError' => !empty($this->errors),
 				'errors' => $this->errors,

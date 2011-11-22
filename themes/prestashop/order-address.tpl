@@ -178,6 +178,13 @@
 	<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery addresses'}" class="button exclusive" style="display:none">
 		{l s='Choose the delivery addresses'}
 	</a>
+	<script type="text/javascript">
+		{if $is_multi_address_delivery}
+		var multishipping_mode = true;
+		{else}
+		var multishipping_mode = false;
+		{/if}
+	</script>
 </div>
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
