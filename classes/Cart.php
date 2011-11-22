@@ -167,6 +167,18 @@ class CartCore extends ObjectModel
 		}
 		else
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+			
+		// id_carrier is not setted since 1.5.0
+		// Need to set it virtualy by using the delivery_option_list
+		if (!empty($this->delivery_option))
+		{
+			$delivery_option = unserialize($this->delivery_option);
+			if (count($delivery_option) == 1)
+			{
+				$delivery_option_list = $this->getDeliveryOptionList();
+				$this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);
+			}
+		}
 	}
 
 	public function add($autodate = true, $nullValues = false)
@@ -1509,13 +1521,19 @@ class CartCore extends ObjectModel
 		
 		if (count($delivery_option) == 1)
 		{
-			$delivery_option_list = $this->getDeliveryOptionList();
-			foreach ($delivery_option as $key => $value)
-				if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value]))
-					if (count($delivery_option_list[$key][$value]['carrier_list']) == 1)
-						$this->id_carrier = $delivery_option_list[$key][$value]['carrier_list'][0];
+			$this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);
 			$this->delivery_option = serialize($delivery_option);
 		}
+	}
+	
+	private function getIdCarrierFromDeliveryOption($delivery_option)
+	{
+		$delivery_option_list = $this->getDeliveryOptionList();
+		foreach ($delivery_option as $key => $value)
+			if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value]))
+				if (count($delivery_option_list[$key][$value]['carrier_list']) == 1)
+					return $delivery_option_list[$key][$value]['carrier_list'][0];
+		return 0;
 	}
 	
 	/**
