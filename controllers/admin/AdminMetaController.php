@@ -76,7 +76,14 @@ class AdminMetaControllerCore extends AdminController
 			$this->options['routes']['submit'] = array();
 		}
 	}
-
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryUi('ui.widget');
+		$this->addJqueryPlugin('tagify');
+	}
+	
 	public function addFieldRoute($routeID, $title)
 	{
 		$keywords = array();
@@ -122,7 +129,6 @@ class AdminMetaControllerCore extends AdminController
 					'desc' => $this->l('Name of the related page'),
 					'required' => true,
 					'empty_message' => '<p>'.$this->l('There is no page available!').'</p>',
-					'size' => 30
 				),
 				array(
 					'type' => 'text',
@@ -143,7 +149,7 @@ class AdminMetaControllerCore extends AdminController
 					'size' => 50
 				),
 				array(
-					'type' => 'text',
+					'type' => 'tags',
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'keywords',
 					'lang' => true,
