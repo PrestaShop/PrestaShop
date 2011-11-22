@@ -77,25 +77,21 @@ class blockcontactinfos extends Module
 		$content = '
 		<h2>'.$this->displayName.'</h2>
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2">	
+			<fieldset>	
 				<p><label for="company">'.$this->l('Company name').' :</label>
 				<input type="text" id="company" name="company" value="'.Configuration::get('blockcontactinfos_company').'" /></p>
 				<p><label for="address">'.$this->l('Address').' :</label>
-				<textarea id="address" name="address">'.Configuration::get('blockcontactinfos_address').'</textarea></p>
+				<textarea id="address" name="address" cols="60" rows="4">'.Configuration::get('blockcontactinfos_address').'</textarea></p>
 				<p><label for="phone">'.$this->l('Phone number').' :</label>
 				<input type="text" id="phone" name="phone" value="'.Configuration::get('blockcontactinfos_phone').'" /></p>
 				<p><label for="email">'.$this->l('Email').' :</label>
 				<input type="text" id="email" name="email" value="'.Configuration::get('blockcontactinfos_email').'" />	</p>
-				<div class="clear">&nbsp;</div>
-				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
+				<div class="margin-form">
+					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
+				</div>
 			</fieldset>
 		</form>
-		<div class="clear">&nbsp;</div>
-		<fieldset>
-			<legend>Addons</legend>
-			'.$this->l('This module has been developped by PrestaShop and can only be sold through').' <a href="http://addons.prestashop.com">addons.prestashop.com</a>.<br />
-			'.$this->l('Please report all bugs to').' <a href="mailto:addons@prestashop.com">addons@prestashop.com</a> '.$this->l('or using our').' <a href="http://addons.prestashop.com/contact-form.php">'.$this->l('contact form').'</a>.
-		</fieldset>';
+		';
 		
 		return $content;
 	}
