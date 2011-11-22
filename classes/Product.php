@@ -4035,7 +4035,7 @@ class ProductCore extends ObjectModel
 
 		// selects different names, if it is a combination
 		if ($id_product_attribute)
-			$query->select('IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name');
+			$query->select('IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name');
 		else
 			$query->select('DISTINCT pl.name as name');
 
