@@ -45,10 +45,6 @@
 	</tbody>
 </table>
 <p>&nbsp;</p>
-<div class="margin-form">
-	<input type="submit" class="button" name="submitSuppliers" value="{l s='Update suppliers of this product'}"/>
-</div>
-<br />
 <table cellpadding="5">
 	<tbody>
 		<tr>
@@ -91,11 +87,6 @@
 			</table>
 		</div>
 	{/foreach}
-</div>
-
-<p>&nbsp;</p>
-<div class="margin-form">
-	<input type="submit" class="button" name="submitSupplierReferences" value="{l s='Update supplier reference(s)'}"/>
 </div>
 
 <script type="text/javascript">

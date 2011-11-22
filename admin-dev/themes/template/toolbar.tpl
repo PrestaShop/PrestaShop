@@ -70,7 +70,7 @@
 
 					//override save and stay link label with submit button value
 					if (btn_submit.val().length > 0)
-						lbl_save_and_stay.html(btn_submit.val() + ' and stay');
+						lbl_save_and_stay.html(btn_submit.val() + " {l s='and stay'} ");
 				}
 
 				//hide standard submit button

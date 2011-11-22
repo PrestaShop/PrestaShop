@@ -29,7 +29,7 @@
 			onchange="$('.custom_{$available_feature.id_feature}_').val('');">
 			<option value="0">---&nbsp;</option>
 				{foreach from=$available_feature.featureValues item=value}
-					<option value="{$value.id_feature_value}"{if $available_feature.current_item == $value.id_feature_value}selected="selected"{/if} > 
+					<option value="{$value.id_feature_value}"{if $available_feature.current_item == $value.id_feature_value}selected="selected"{/if} >
 						{$value.value|truncate:40}&nbsp;
 					</option>
 				{/foreach}
@@ -37,7 +37,7 @@
 		</select>
 	{else}
 		<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
-			<span style="font-size: 10px; color: #666;">{l s='N/A'} - 
+			<span style="font-size: 10px; color: #666;">{l s='N/A'} -
 			<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
 			 style="color: #666; text-decoration: underline;">{l s='Add pre-defined values first'}</a>
 		</span>
@@ -52,15 +52,10 @@
 	{/foreach}
 	</td>
 </tr>
-				
+
 {foreachelse}
 	<tr><td colspan="3" style="text-align:center;">{l s='No features defined'}</td></tr>
 {/foreach}
-	<tr>
-		<td style="height: 50px; text-align: center;" colspan="3">
-			<input type="submit" name="submitProductFeature" id="submitProductFeature" value="{l s='Save modifications'}" class="button" />
-		</td>
-	</tr>
 
 </table>
 <div class="separation"></div>
