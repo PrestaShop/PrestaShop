@@ -72,13 +72,13 @@
 				{elseif $key == 'select'}
 						<select name="{$field.name}" id="{$field.name}">
 							{foreach $field.options.query AS $key => $option}
-								<option value="{$key}" {if $key == $defaultGroup}selected="selected"{/if}>
+								<option value="{$key}" {if $key == $defaultShop}selected="selected"{/if}>
 									{$option.name}
 								</option>
 							{/foreach}
 						</select>
 				{elseif $key == 'allcheckbox'}
-						<div id="importList" {if !$checked}style="display:none"{/if}>
+						<div id="importList" style="clear:both;{if !$checked}display:none{/if}">
 							<ul>
 								{foreach $field.values as $key => $label}
 									<li><label><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</label></li>
