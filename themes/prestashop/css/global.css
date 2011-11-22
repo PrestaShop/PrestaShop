@@ -1126,7 +1126,7 @@ tr.cart_total_price { font-weight: bold }
 }
 #order .delivery_options_address h3, #orderopc .delivery_options_address h3 {
 	background: url("../img/table_header.gif") no-repeat;
-	background: url("http://prestashop15.localhost/themes/prestashop/css/../img/table_header.gif") no-repeat;
+	background: url("../img/table_header.gif") no-repeat;
 	color: #374853;
 	font-weight: bold;
 	height: 14px;
