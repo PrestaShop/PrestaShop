@@ -27,13 +27,15 @@
 
 class AdminInformationControllerCore extends AdminController
 {
-
-
 	public function initContent()
 	{
+		$this->display = 'view';
 		parent::initContent();
+	}
 
-		$this->context->smarty->assign(array(
+	public function initView()
+	{
+		$this->tpl_view_vars = array(
 			'version' => array(
 				'mysql' => Db::getInstance()->getVersion(),
 				'php' => phpversion(),
@@ -55,9 +57,12 @@ class AdminInformationControllerCore extends AdminController
 				'port' => Configuration::get('PS_MAIL_SMTP_PORT'),
 			),
 			'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-		));
+		);
+		$this->tpl_view_vars = array_merge($this->getTestResult(), $this->tpl_view_vars);
 
-		$this->context->smarty->assign($this->getTestResult());
+		$this->toolbar_title = $this->l('Tools : Informations');
+		unset($this->toolbar_btn['cancel']);
+		return parent::initView();
 	}
 
 	/**
