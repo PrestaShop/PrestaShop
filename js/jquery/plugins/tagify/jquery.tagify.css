@@ -1,0 +1,36 @@
+/* Tagify styles 
+Author: Alicia Liu
+*/
+
+.tagify-container {
+    width: 300px;
+    height: 100px;
+    border: 1px solid #CCC;
+    background-color: #FFF;
+    border-radius: 2px;
+    font-family: Verdana, sans-serif;
+    font-size: 12px;
+    overflow: auto;
+}
+.tagify-container > span {
+    display: inline-block;
+    padding: 3px 5px;
+    margin: 3px;
+    border-radius: 2px;
+    border: 1px solid #EEE;
+    background-color: #FFEBA1;
+    color: #888;
+}
+.tagify-container > span > a {
+    padding-left: 5px;
+    color: #EB7E14;
+    text-decoration: none;
+    font-weight: bold;
+}
+.tagify-container > input {
+    border: 0 none;
+    width: 100px;
+}
+.tagify-container > input:focus {
+    outline: none;
+}
