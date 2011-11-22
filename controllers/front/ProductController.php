@@ -251,7 +251,7 @@ class ProductControllerCore extends FrontController
 			'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
 			'ecotaxTax_rate' => $ecotax_rate,
 			'productPriceWithoutEcoTax' => (float)$product_price_without_eco_tax,
-			'group_reduction' => (1 - $group_reduction),,
+			'group_reduction' => (1 - $group_reduction),
 			'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
 			'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
 			'tax_enabled' => Configuration::get('PS_TAX')
