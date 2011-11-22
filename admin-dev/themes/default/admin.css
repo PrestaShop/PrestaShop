@@ -89,7 +89,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #menu{ background-color: #f8f8f8; border-bottom:1px solid #e5e5e5; float:left;line-height:normal;margin:0;padding:0;width:100%;}
 #header #menu li.maintab{float:left;height:29px;list-style:none;margin:0 1px 0 0;list-style:none;display:block; border-left:1px solid #fff; border-right:1px solid #ccc;}
 #header #menu li#maintab1 { margin-left:20px;}
-#header #menu li.submenu_size .title{color:#000;display:block; padding:8px 6px 4px 0;font-weight:normal;font-size:12px;}
+#header #menu li.submenu_size .title{cursor:default;color:#000;display:block; padding:8px 6px 4px 0;font-weight:normal;font-size:12px;}
 #header #menu li.submenu_size .title{_display:inline;_padding:6px 5px 4px 0}
 #header #menu li{_height:32px;_padding-top:3px}
 #header #menu img{display:inline;padding:0 3px 0 6px; margin-top:-4px; vertical-align:middle;width:16px;height:16px}
