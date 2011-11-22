@@ -65,6 +65,9 @@ class CartCore extends ObjectModel
 
 	/** @var string secure_key */
 	public $secure_key;
+	
+	/* @var integer Carrier ID */
+	public $id_carrier = 0;
 
 	/** @var string Object last modification date */
 	public $date_upd;
@@ -82,7 +85,7 @@ class CartCore extends ObjectModel
 	protected static $_isVirtualCart = array();
 
 	protected $fieldsRequired = array('id_currency', 'id_lang');
-	protected $fieldsValidate = array('id_address_delivery' => 'isUnsignedId', 'id_address_invoice' => 'isUnsignedId',
+	protected $fieldsValidate = array('id_address_delivery' => 'isUnsignedId', 'id_carrier' => 'isUnsignedId', 'id_address_invoice' => 'isUnsignedId',
 		'id_currency' => 'isUnsignedId', 'id_customer' => 'isUnsignedId', 'id_guest' => 'isUnsignedId', 'id_lang' => 'isUnsignedId',
 		'recyclable' => 'isBool', 'gift' => 'isBool', 'gift_message' => 'isMessage',
 		'allow_seperated_package' => 'isBool');
@@ -134,6 +137,7 @@ class CartCore extends ObjectModel
 		$fields['id_address_invoice'] = (int)($this->id_address_invoice);
 		$fields['id_currency'] = (int)($this->id_currency);
 		$fields['id_customer'] = (int)($this->id_customer);
+		$fields['id_carrier'] = (int)($this->id_carrier);
 		$fields['id_guest'] = (int)($this->id_guest);
 		$fields['id_lang'] = (int)($this->id_lang);
 		$fields['recyclable'] = (int)($this->recyclable);
@@ -1492,7 +1496,30 @@ class CartCore extends ObjectModel
 	}
 	
 	/**
-	* Return the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
+	* Set the delivery option and id_carrier, if there is only one carrier
+	*/
+	public function setDeliveryOption($delivery_option = null)
+	{
+		if (empty($delivery_option) || count($delivery_option) == 0)
+		{
+			$this->delivery_option = '';
+			$this->id_carrier = 0;
+			return;
+		}
+		
+		if (count($delivery_option) == 1)
+		{
+			$delivery_option_list = $this->getDeliveryOptionList();
+			foreach ($delivery_option as $key => $value)
+				if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value]))
+					if (count($delivery_option_list[$key][$value]['carrier_list']) == 1)
+						$this->id_carrier = $delivery_option_list[$key][$value]['carrier_list'][0];
+			$this->delivery_option = serialize($delivery_option);
+		}
+	}
+	
+	/**
+	* Get the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
 	* @return array delivery option
 	*/
 	public function getDeliveryOption($default_country = null)
@@ -1529,13 +1556,14 @@ class CartCore extends ObjectModel
 		$delivery_option_list = $this->getDeliveryOptionList();
 		foreach ($delivery_option as $id_address => $key)
 		{
-			if ($id_address == 0)
+			if (!isset($delivery_option_list[$id_address]))
 				continue;
 			if ($useTax)
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
 			else
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
 		}
+		
 		return $total_shipping;
 	}
 
@@ -1812,9 +1840,9 @@ class CartCore extends ObjectModel
 			foreach($products as $product)
 			{
 				if (is_null($product['weight_attribute']))
-					$total_weight += $product['weight'];
+					$total_weight += $product['weight'] * $product['cart_quantity'];
 				else
-					$total_weight += $product['weight_attribute'];
+					$total_weight += $product['weight_attribute'] * $product['cart_quantity'];
 			}
 			return $total_weight;
 		}
@@ -1891,8 +1919,8 @@ class CartCore extends ObjectModel
 			'total_discounts_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
 			'total_wrapping' => $this->getOrderTotal(true, Cart::ONLY_WRAPPING),
 			'total_wrapping_tax_exc' => $this->getOrderTotal(false, Cart::ONLY_WRAPPING),
-			'total_shipping' => $this->getOrderShippingCost(),
-			'total_shipping_tax_exc' => $this->getOrderShippingCost(NULL, false),
+			'total_shipping' => $this->getTotalShippingCost(),
+			'total_shipping_tax_exc' => $this->getTotalShippingCost(null, false),
 			'total_products_wt' => $this->getOrderTotal(true, Cart::ONLY_PRODUCTS),
 			'total_products' => $this->getOrderTotal(false, Cart::ONLY_PRODUCTS),
 			'total_price' => $this->getOrderTotal(),
