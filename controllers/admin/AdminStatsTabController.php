@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -161,8 +161,8 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$tpl->assign(array(
 			'module_name' => $module_name,
-			'module_instance' => $module_instance,
-			'hook' => $hook
+			'module_instance' => isset($module_instance) ? $module_instance : null,
+			'hook' => isset($hook) ? $hook : null
 		));
 
 		return $tpl->fetch();
