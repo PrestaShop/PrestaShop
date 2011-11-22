@@ -63,6 +63,8 @@ class BlockStore extends Module
 
 	function hookRightColumn($params)
 	{
+
+
 		$this->context->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		return $this->display(__FILE__, 'blockstore.tpl');
 	}
@@ -85,10 +87,9 @@ class BlockStore extends Module
 					if (!move_uploaded_file($_FILES['store_img']['tmp_name'], dirname(__FILE__).'/'.$_FILES['store_img']['name']))
 						return $this->displayError($this->l('an error occurred on uploading file'));
 					else
-					{						
-						if (Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
-							if ($this->context->shop->getContextType() != Shop::CONTEXT_SHOP || Configuration::hasContext('BLOCKSTORE_IMG', null, Shop::CONTEXT_SHOP))
-								@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
+					{
+						if (Configuration::hasContext('BLOCKSTORE_IMG', null, $this->context->shop->getContextType()) && Configuration::get('BLOCKSTORE_IMG') != $_FILES['store_img']['name'])
+							@unlink(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG'));
 						Configuration::updateValue('BLOCKSTORE_IMG', $_FILES['store_img']['name']);
 						return $this->displayConfirmation($this->l('Settings are updated'));
 					}
@@ -100,21 +101,12 @@ class BlockStore extends Module
 
 	public function getContent()
 	{
-		$img = false;
-		if ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP && file_exists(dirname(__FILE__).'/'.Configuration::get('BLOCKSTORE_IMG')))
-			$img = Configuration::get('BLOCKSTORE_IMG');
-		if (!$img || ($this->context->shop->getContextType() != Shop::CONTEXT_SHOP && file_exists(dirname(__FILE__).'/'.Configuration::getGlobalValue('BLOCKSTORE_IMG'))));
-			$img = Configuration::getGlobalValue('BLOCKSTORE_IMG');
-		
-		$img_src = ($img ? Tools::getProtocol().Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.$img : false);
-			
-		
 		$output = $this->postProcess().'
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<legend>'.$this->l('Store block configuration').'</legend>';
-		if ($img_src)
-			$output .= '<div class="margin-form"><img src="'.$img_src.'" alt="'.$this->l('Store image').'" style="height:115px;margin-left: 100px;width:174px"/></div>';
+		if (Configuration::get('BLOCKSTORE_IMG'))
+			$output .= '<div class="margin-form"><img src="'.Tools::getProtocol().Tools::getMediaServer($this->name)._MODULE_DIR_.$this->name.'/'.Configuration::get('BLOCKSTORE_IMG').'" alt="'.$this->l('Store image').'" style="height:115px;margin-left: 100px;width:174px"/></div>';
 		$output .= '
 				<label for="store_img">'.$this->l('Change image').'</label>
 				<div class="margin-form">
