@@ -191,6 +191,31 @@ class StockAvailableCore extends ObjectModel
 			'id_product = '.(int)$id_product.' AND id_shop = '.(int)$id_shop
 		);
 
+		$existing_id = self::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
+
+		if ($existing_id > 0)
+		{
+			Db::getInstance()->autoExecute(
+				_DB_PREFIX_.'stock_available',
+				array('depends_on_stock' => (bool)$depends_on_stock),
+				'UPDATE',
+				'id_product = '.(int)$id_product.' AND id_product_attribute = 0 AND id_shop = '.(int)$id_shop
+			);
+		}
+		else
+		{
+			Db::getInstance()->autoExecute(
+				_DB_PREFIX_.'stock_available',
+				array(
+					'depends_on_stock' => (bool)$depends_on_stock,
+					'id_product' => (int)$id_product,
+					'id_product_attribute' => 0,
+					'id_shop' => (int)$id_shop
+				),
+				'INSERT'
+			);
+		}
+
 		// depends on stock.. hence synchronizes
 		if ($depends_on_stock)
 			StockAvailable::synchronize($id_product);
@@ -354,6 +379,29 @@ class StockAvailableCore extends ObjectModel
 		$query->select('depends_on_stock');
 		$query->from('stock_available');
 		$query->where('id_product = '.(int)$id_product);
+		$query->where('id_product_attribute = 0');
+		$query->where('id_shop = '.(int)$id_shop);
+
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * For a given product, get its "out of stock" flag
+	 *
+	 * @param int $id_product
+	 * @param int $id_shop Optional : gets context if null @see Context::getContext()
+	 * @return bool : depends on stock @see $depends_on_stock
+	 */
+	public function outOfStock($id_product, $id_shop = null)
+	{
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+
+		$query = new DbQuery();
+		$query->select('out_of_stock');
+		$query->from('stock_available');
+		$query->where('id_product = '.(int)$id_product);
+		$query->where('id_product_attribute = 0');
 		$query->where('id_shop = '.(int)$id_shop);
 
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

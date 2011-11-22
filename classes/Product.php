@@ -334,8 +334,8 @@ class ProductCore extends ObjectModel
 
 		// By default, the product quantity correspond to the available quantity to sell in the current shop
 		$this->quantity = StockAvailable::getQuantityAvailableByProduct($id_product, 0, Context::getContext()->shop->getID());
-		$this->out_of_stock = $this->getOutOfStock();
-		$this->depends_on_stock = $this->getDependsOnStock();
+		$this->out_of_stock = StockAvailable::outOfStock($this->id);
+		$this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
 
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
@@ -944,7 +944,7 @@ class ProductCore extends ObjectModel
 			return false;
 
 		//Try to set available quantitiy if product quantity not depend on stock
-		$depend_on_stock = $this->getDependsOnStock();
+		$depend_on_stock = StockAvailable::dependsOnStock($this->id);
 
 		if (!$depend_on_stock)
 			if (!StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity))
@@ -954,7 +954,7 @@ class ProductCore extends ObjectModel
 				$stock_available->id_product_attribute = (int)$id_product_attribute;
 				$stock_available->id_shop = (int)$context->shop->getID();
 				$stock_available->quantity = (int)$quantity;
-				$stock_available->out_of_stock = $this->getOutOfStock();
+				$stock_available->out_of_stock = StockAvailable::outOfStock($this->id);
 				$stock_available->depends_on_stock = 0;
 				$stock_available->save();
 			}
@@ -2315,54 +2315,6 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	 * Get the value of "out of stock" of current product
-	 * "ouf of stock" allow to order product without stock
-	 *
-	 * @since 1.5.0
-	 * @param Context $context
-	 * @return int
-	 */
-	public function getOutOfStock(Context $context = null)
-	{
-		if (!$this->id)
-			return 0;
-		if (!$context)
-			$context = Context::getContext();
-
-		$id_shop = $context->shop->getID(true);
-		$sql = 'SELECT out_of_stock
-				FROM '._DB_PREFIX_.'stock_available
-				WHERE id_product = '.$this->id.'
-				AND id_product_attribute = 0'.
-				$context->shop->addSqlRestriction();
-		return (int)Db::getInstance()->getValue($sql);
-	}
-
-	/**
-	 * Get the value of "depends on stock" of current product
-	 * "depends on stock" allow managing quantity available manually
-	 *
-	 * @since 1.5.0
-	 * @param Context $context
-	 * @return int
-	 */
-	public function getDependsOnStock(Context $context = null)
-	{
-		if (!$this->id)
-			return 0;
-		if (!$context)
-			$context = Context::getContext();
-
-		$id_shop = $context->shop->getID(true);
-		$sql = 'SELECT depends_on_stock
-				FROM '._DB_PREFIX_.'stock_available
-				WHERE id_product = '.$this->id.'
-				AND id_product_attribute = 0'.
-				$context->shop->addSqlRestriction();
-		return (int)Db::getInstance()->getValue($sql);
-	}
-
-	/**
 	 * @deprecated since 1.5.0
 	 *
 	 * It's not possible to use this method with new stockManager and stockAvailable features
@@ -2458,7 +2410,7 @@ class ProductCore extends ObjectModel
 		if (Pack::isPack((int)$this->id) && !Pack::isInStock((int)$this->id))
 			return false;
 
-		if ($this->isAvailableWhenOutOfStock($this->getOutOfStock()))
+		if ($this->isAvailableWhenOutOfStock(StockAvailable::outOfStock($this->id)))
 			return true;
 
 		if (isset($this->id_product_attribute))
