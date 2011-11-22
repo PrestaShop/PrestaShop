@@ -1041,8 +1041,8 @@ var accessories = new Array();
 
 		
 			<script type="text/javascript">
-					toggleVirtualProduct(getE(\'is_virtual_good\'));
-					unitPriceWithTax(\'unit\');
+					toggleVirtualProduct(getE('is_virtual_good'));
+					unitPriceWithTax('unit');
 			</script>
 
 
