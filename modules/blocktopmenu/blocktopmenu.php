@@ -1,4 +1,30 @@
 <?php
+/*/*
+* 2007-2011 PrestaShop 
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 7095 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 include _PS_MODULE_DIR_.'blocktopmenu/menutoplinks.class.php';
 class blocktopmenu extends Module
 {
@@ -28,20 +54,22 @@ class blocktopmenu extends Module
 
   public function installDb()
   {
-    Db::getInstance()->execute('
+    return (Db::getInstance()->execute('
     CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop` (
-      `id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+      `id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      `id_shop` INT UNSIGNED NOT NULL,
       `new_window` TINYINT( 1 ) NOT NULL,
-      `link` VARCHAR( 128 ) NOT NULL
-    ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;');
-    Db::getInstance()->execute('
-    CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
-    `id_link` INT NOT NULL ,
-    `id_lang` INT NOT NULL ,
-    `label` VARCHAR( 128 ) NOT NULL ,
-    INDEX ( `id_link` , `id_lang` )
-    ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;');
-    return true;
+      `link` VARCHAR( 128 ) NOT NULL,
+      INDEX (`id_shop`)
+    ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;') AND
+		 Db::getInstance()->execute('
+		 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
+		 `id_link` INT NOT NULL,
+		 `id_lang` INT NOT NULL,
+		 `id_shop` INT NOT NULL,
+		 `label` VARCHAR( 128 ) NOT NULL ,
+		 INDEX ( `id_link` , `id_lang`, `id_shop`)
+		 ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;'));
   }
 
   public function uninstall()
@@ -64,7 +92,6 @@ class blocktopmenu extends Module
   public function getContent()
   {
     global $cookie;
-
     if(Tools::isSubmit('submitBlocktopmenu'))
     {
       if(Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', Tools::getValue('items')))
@@ -81,21 +108,25 @@ class blocktopmenu extends Module
       }
       else
       {
-        MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0));
+        MenuTopLinks::add(Tools::getValue('link'), Tools::getValue('label'), Tools::getValue('new_window', 0), (int)$this->context->shop->id);
         $this->_html .= $this->displayConfirmation($this->l('The link has been added'));
       }
     }
     if(Tools::isSubmit('submitBlocktopmenuRemove'))
     {
       $id_link = Tools::getValue('id_link', 0);
-      MenuTopLinks::remove($id_link);
+      MenuTopLinks::remove($id_link, (int)$this->context->shop->id);
       Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', str_replace(array('LNK'.$id_link.',', 'LNK'.$id_link), '', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
       $this->_html .= $this->displayConfirmation($this->l('The link has been removed'));
     }
+    
     $this->_html .= '
     <fieldset>
+    	<div class="multishop_info">
+    	'.$this->l('The modifications will be applied to').' '.(Context::shop() == Shop::CONTEXT_SHOP ? $this->l('shop:').' '.$this->context->shop->name : $this->l('all shops')).'.
+    	</div>
       <legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Settings').'</legend>
-      <form action="'.$_SERVER['REQUEST_URI'].'" method="post" id="form">
+      <form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
         <div style="display: none">
   			<label>'.$this->l('Items').'</label>
   			<div class="margin-form">
@@ -149,7 +180,7 @@ class blocktopmenu extends Module
                 // END Products
                 // BEGIN Menu Top Links
                 $this->_html .= '<optgroup label="'.$this->l('Menu Top Links').'">';
-                $links = MenuTopLinks::gets($cookie->id_lang);
+                $links = MenuTopLinks::gets($cookie->id_lang, null, (int)$this->context->shop->id);
                 foreach($links as $link)
                   $this->_html .= '<option value="LNK'.$link['id_link'].'" style="margin-left:10px;">'.$link['label'].'</option>';
                 $this->_html .= '</optgroup>';
@@ -221,7 +252,7 @@ class blocktopmenu extends Module
     $this->_html .= '
     <fieldset>
       <legend><img src="../img/admin/add.gif" alt="" title="" />'.$this->l('Add Menu Top Link').'</legend>
-      <form action="'.$_SERVER['REQUEST_URI'].'" method="post" id="form">
+      <form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" id="form">
   			<label>'.$this->l('Label').'</label>
         <div class="margin-form">';
 				foreach ($languages as $language)
@@ -262,7 +293,7 @@ class blocktopmenu extends Module
           </tr>
         </thead>
         <tbody>';
-        $links = MenuTopLinks::gets($cookie->id_lang);
+        $links = MenuTopLinks::gets($cookie->id_lang, null, $this->context->shop->id);
         foreach($links as $link)
         {
           $this->_html .= '
@@ -282,108 +313,125 @@ class blocktopmenu extends Module
         $this->_html .= '</tbody>
       </table>
   	</fieldset>';
-    echo $this->_html;
+    return $this->_html;
   }
 
   private function getMenuItems()
   {
-    $items = Configuration::get('MOD_BLOCKTOPMENU_ITEMS');
-    $items = explode(',', $items);
-    return $items;
+    if (Context::shop() == Shop::CONTEXT_SHOP)
+    {
+    	if (!Configuration::isOverridenByCurrentContext('MOD_BLOCKTOPMENU_ITEMS'))	
+	    	$items_shop = Configuration::get('MOD_BLOCKTOPMENU_ITEMS');
+    }
+    if (!isset($items_shop))
+    	$items_shop = '';
+    
+    $items_shop = explode(',', $items_shop);
+    $items_global = Configuration::getGlobalValue('MOD_BLOCKTOPMENU_ITEMS');
+    $items_global = explode(',', $items_global);
+    
+    return array('global' => $items_global, 'shop' => $items_shop);
   }
 
   private function makeMenuOption()
   {
     global $cookie;
-    foreach($this->getMenuItems() as $item)
+    foreach($this->getMenuItems() as $type => $items)
     {
-      $id = (int)substr($item, 3, strlen($item));
-      switch(substr($item, 0, 3))
-      {
-        case'CAT':
-          $this->getCategoryOption($id, $cookie->id_lang, false);
-        break;
-        case'PRD':
-          $product = new Product($id, true, $cookie->id_lang);
-          if(!is_null($product->id))
-            $this->_html .= '<option value="PRD'.$id.'">'.$product->name.'</option>'.PHP_EOL;
-        break;
-        case'CMS':
-          $cms = CMS::getLinks($cookie->id_lang, array($id));
-          if(count($cms))
-            $this->_html .= '<option value="CMS'.$id.'">'.$cms[0]['meta_title'].'</option>'.PHP_EOL;
-        break;
-        case'MAN':
-          $manufacturer = new Manufacturer($id, $cookie->id_lang);
-          if(!is_null($manufacturer->id))
-            $this->_html .= '<option value="MAN'.$id.'">'.$manufacturer->name.'</option>'.PHP_EOL;
-        break;
-        case'SUP':
-          $supplier = new Supplier($id, $cookie->id_lang);
-          if(!is_null($supplier->id))
-            $this->_html .= '<option value="SUP'.$id.'">'.$supplier->name.'</option>'.PHP_EOL;
-        break;
-        case'LNK':
-          $link = MenuTopLinks::get($id, $cookie->id_lang);
-          if(count($link))
-            $this->_html .= '<option value="LNK'.$id.'">'.$link[0]['label'].'</option>'.PHP_EOL;
-        break;
+    	foreach ($items as $item)
+    	{
+		   $id = (int)substr($item, 3, strlen($item));
+		   $disabled = ((Context::shop() == Shop::CONTEXT_SHOP && $type == 'global') ? ' disabled="disabled"': '');
+		   switch(substr($item, 0, 3))
+		   {
+		     case'CAT':
+		       $this->getCategoryOption($id, $cookie->id_lang, false);
+		     break;
+		     case'PRD':
+		       $product = new Product($id, true, $cookie->id_lang);
+		       if(!is_null($product->id))
+		         $this->_html .= '<option value="PRD'.$id.'"'.$disabled.'>'.$product->name.'</option>'.PHP_EOL;
+		     break;
+		     case'CMS':
+		       $cms = CMS::getLinks($cookie->id_lang, array($id));
+		       if(count($cms))
+		         $this->_html .= '<option value="CMS'.$id.'"'.$disabled.'>'.$cms[0]['meta_title'].'</option>'.PHP_EOL;
+		     break;
+		     case'MAN':
+		       $manufacturer = new Manufacturer($id, $cookie->id_lang);
+		       if(!is_null($manufacturer->id))
+		         $this->_html .= '<option value="MAN'.$id.'"'.$disabled.'>'.$manufacturer->name.'</option>'.PHP_EOL;
+		     break;
+		     case'SUP':
+		       $supplier = new Supplier($id, $cookie->id_lang);
+		       if(!is_null($supplier->id))
+		         $this->_html .= '<option value="SUP'.$id.'"'.$disabled.'>'.$supplier->name.'</option>'.PHP_EOL;
+		     break;
+		     case'LNK':
+		       $link = MenuTopLinks::get($id, $cookie->id_lang, (int)$this->context->shop->id);
+		       if(count($link))
+		         $this->_html .= '<option value="LNK'.$id.'"'.$disabled.'>'.$link[0]['label'].'</option>'.PHP_EOL;
+		     break;
+			}
       }
     }
   }
 
   private function makeMenu()
   {
-		global $cookie, $page_name;
-    foreach($this->getMenuItems() as $item)
+	global $cookie, $page_name;
+    foreach($this->getMenuItems() as $type => $items)
     {
-      $id = (int)substr($item, 3, strlen($item));
-      switch(substr($item, 0, 3))
-      {
-        case'CAT':
-          $this->getCategory($id, $cookie->id_lang);
-        break;
-        case'PRD':
-          $selected = ($page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
-          $product = new Product($id, true, $cookie->id_lang);
-          if(!is_null($product->id))
-            $this->_menu .= '<li'.$selected.'><a href="'.$product->getLink().'">'.$product->name.'</a></li>'.PHP_EOL;
-        break;
-        case'CMS':
-          $selected = ($page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
-          $cms = CMS::getLinks($cookie->id_lang, array($id));
-          if(count($cms))
-            $this->_menu .= '<li'.$selected.'><a href="'.$cms[0]['link'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
-        break;
-        case'MAN':
-          $selected = ($page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
-          $manufacturer = new Manufacturer($id, $cookie->id_lang);
-          if(!is_null($manufacturer->id))
-          {
-      			if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
-      				$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name, false);
-      			else
-      				$manufacturer->link_rewrite = 0;
-      			$link = new Link;
-            $this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink($id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
-          }
-        break;
-        case'SUP':
-          $selected = ($page_name == 'supplier' && (Tools::getValue('id_supplier') == $id)) ? ' class="sfHover"' : '';
-          $supplier = new Supplier($id, $cookie->id_lang);
-          if(!is_null($supplier->id))
-          {
-            $link = new Link;
-            $this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink($id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
-          }
-        break;
-        case'LNK':
-          $link = MenuTopLinks::get($id, $cookie->id_lang);
-          if(count($link))
-            $this->_menu .= '<li><a href="'.$link[0]['link'].'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
-        break;
-      }
-    }
+    	foreach ($items as $item)
+    	{
+		   $id = (int)substr($item, 3, strlen($item));
+		   switch(substr($item, 0, 3))
+		   {
+		     case'CAT':
+		       $this->getCategory($id, $cookie->id_lang);
+		     break;
+		     case'PRD':
+		       $selected = ($page_name == 'product' && (Tools::getValue('id_product') == $id)) ? ' class="sfHover"' : '';
+		       $product = new Product($id, true, $cookie->id_lang);
+		       if(!is_null($product->id))
+		         $this->_menu .= '<li'.$selected.'><a href="'.$product->getLink().'">'.$product->name.'</a></li>'.PHP_EOL;
+		     break;
+		     case'CMS':
+		       $selected = ($page_name == 'cms' && (Tools::getValue('id_cms') == $id)) ? ' class="sfHover"' : '';
+		       $cms = CMS::getLinks($cookie->id_lang, array($id));
+		       if(count($cms))
+		         $this->_menu .= '<li'.$selected.'><a href="'.$cms[0]['link'].'">'.$cms[0]['meta_title'].'</a></li>'.PHP_EOL;
+		     break;
+		     case'MAN':
+		       $selected = ($page_name == 'manufacturer' && (Tools::getValue('id_manufacturer') == $id)) ? ' class="sfHover"' : '';
+		       $manufacturer = new Manufacturer($id, $cookie->id_lang);
+		       if(!is_null($manufacturer->id))
+		       {
+		   			if (intval(Configuration::get('PS_REWRITING_SETTINGS')))
+		   				$manufacturer->link_rewrite = Tools::link_rewrite($manufacturer->name, false);
+		   			else
+		   				$manufacturer->link_rewrite = 0;
+		   			$link = new Link;
+		         $this->_menu .= '<li'.$selected.'><a href="'.$link->getManufacturerLink($id, $manufacturer->link_rewrite).'">'.$manufacturer->name.'</a></li>'.PHP_EOL;
+		       }
+		     break;
+		     case'SUP':
+		       $selected = ($page_name == 'supplier' && (Tools::getValue('id_supplier') == $id)) ? ' class="sfHover"' : '';
+		       $supplier = new Supplier($id, $cookie->id_lang);
+		       if(!is_null($supplier->id))
+		       {
+		         $link = new Link;
+		         $this->_menu .= '<li'.$selected.'><a href="'.$link->getSupplierLink($id, $supplier->link_rewrite).'">'.$supplier->name.'</a></li>'.PHP_EOL;
+		       }
+		     break;
+		     case'LNK':
+		       $link = MenuTopLinks::get($id, $cookie->id_lang, (int)$this->context->shop->id);
+		       if(count($link))
+		         $this->_menu .= '<li><a href="'.$link[0]['link'].'"'.(($link[0]['new_window']) ? ' target="_blank"': '').'>'.$link[0]['label'].'</a></li>'.PHP_EOL;
+		     break;
+		   }
+		 }
+	}
   }
 
   private function getCategoryOption($id_category, $id_lang, $children = true)
