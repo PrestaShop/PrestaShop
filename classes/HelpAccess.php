@@ -88,19 +88,14 @@ class HelpAccessCore
 		}
     public static function getHelp($label, $iso_lang, $country, $ps_version)
     {
-			$content = '';
+	$content = '';
         $infos = HelpAccess::retrieveInfos($label, $iso_lang, $country, $ps_version);
-				print_r($infos);
         if (array_key_exists('image', $infos) && $infos['image'] != 'none')
         {
 	        $content .= '
 			        <a class="help-button" href="#" onclick="showHelp(\''.HelpAccess::URL.'\',\''.$label.'\',\''.$iso_lang.'\',\''.$ps_version.'\',\''.$infos['version'].'\',\''.$country.'\');" title="'.Tools::htmlentitiesUTF8($infos['tooltip']).'">
 			        <img id="help-'.$label.'" src="../img/admin/'.Tools::htmlentitiesUTF8($infos['image']).'" alt="" class="middle" style="margin-top: -5px"/> '.Tools::displayError('HELP').'
-			        </a>
-
-		          ';
-
-
+			        </a>';
 		     if (!empty($infos['tooltip']))
     		     $content .= ' <script type="text/javascript">
 			            $(document).ready(function() {
