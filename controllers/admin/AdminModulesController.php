@@ -486,7 +486,7 @@ class AdminModulesControllerCore extends AdminController
 			if ($modules)
 				foreach ($modules AS $name)
 				{
-					// If Addons Module
+					// If Addons module, download and unzip it before installing it
 					if ($this->logged_on_addons && !is_dir('../modules/'.$name.'/'))
 					{
 						$file = _PS_ROOT_DIR_.'/config/default_customer_modules_list.xml';
@@ -495,17 +495,14 @@ class AdminModulesControllerCore extends AdminController
 							$content = Tools::file_get_contents($file);
 							$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
 							foreach ($xml->module as $modaddons)
-							{
 								if ($name == $modaddons->name && isset($modaddons->id))
-								{
-									@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$this->name.'.zip');
-									$this->extractArchive('../modules/'.$this->name.'.zip');
-								}
-							}
+									if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$this->name.'.zip'))
+										$this->extractArchive('../modules/'.$this->name.'.zip');
 						}
 
 					}
 
+					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->_errors[] = $this->l('module not found');
 					elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
@@ -654,16 +651,16 @@ class AdminModulesControllerCore extends AdminController
 		$return = '';
 		$href = self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&tab_module='.$module->tab;
 		if ($module->id)
-			$return .= '<span class="desactive-module"><a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']).'"' : '').'>'.($module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable']).'</a></span>';
+			$return .= ' <span class="desactive-module"><a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']).'"' : '').'>'.($module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable']).'</a></span>';
 
 		if ($module->id AND $module->active)
-			$return .= (!empty($result) ? '|' : '').'<span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
+			$return .= (!empty($result) ? '|' : '').' <span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
 
 		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isFeatureActive()))
-			$return .= (!empty($result) ? '|' : '').'<span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
+			$return .= (!empty($result) ? '|' : '').' <span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
 
 		$hrefDelete = self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
-		$return .= (!empty($result) ? '|' : '').'<span class="delete-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this ?'].'\');" href="'.$hrefDelete.'">'.$this->translationsTab['Delete'].'</a></span>';
+		$return .= (!empty($result) ? '|' : '').' <span class="delete-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('delete', $hrefDelete).'"' : '').' onclick="return confirm(\''.$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this ?'].'\');" href="'.$hrefDelete.'">'.$this->translationsTab['Delete'].'</a></span>';
 
 		return $return;
 	}

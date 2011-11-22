@@ -25,6 +25,7 @@
 *}
 
 	<!--start filter module-->
+	<style>.ac_results { border:1px solid #C2C4D9; }</style>
 	<div class="filter-module">
 		<form id="filternameForm" method="post">
 			<input type="text" value="" name="filtername" autocomplete="off" class="ac_input">
