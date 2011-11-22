@@ -119,7 +119,7 @@ abstract class PaymentModuleCore extends Module
 			$delivery_option_list = $cart->getDeliveryOptionList();
 			$package_list = $cart->getPackageList();
 			$cart_delivery_option = unserialize($cart->delivery_option);
-			
+
 			// If some delivery options are not defined, or not valid, use the first valid option
 			foreach ($delivery_option_list as $id_address => $package)
 				if (!isset($cart_delivery_option[$id_address]) || !array_key_exists($cart_delivery_option[$id_address], $package))
@@ -264,7 +264,7 @@ abstract class PaymentModuleCore extends Module
 						$price_wt = Product::getPriceStatic((int)($product['id_product']), true, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 2, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
 						/* Store tax info */
-						$id_country = (int)Country::getDefaultCountryId();
+						$id_country = (int)$context->country->id;
 						$id_state = 0;
 						$id_county = 0;
 						$rate = 0;
