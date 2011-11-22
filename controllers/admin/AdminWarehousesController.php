@@ -243,21 +243,6 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Associated shops:'),
-					'name' => 'ids_shops[]',
-					'required' => true,
-					'multiple' => true,
-					'options' => array(
-						'query' => Shop::getShops(),
-						'id' => 'id_shop',
-						'name' => 'name'
-					),
-					'desc' => $this->l('Shops'),
-					'hint' => $this->l('By associating a shop to a warehouse, all products in the warehouse will be available
-						for sale in it. It is also possible to ship orders of this shop from this warehouse'),
-				),
-				array(
-					'type' => 'select',
 					'label' => $this->l('Carriers:'),
 					'name' => 'ids_carriers[]',
 					'required' => true,
@@ -273,6 +258,16 @@ class AdminWarehousesControllerCore extends AdminController
 			),
 
 		);
+
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+				'values' => Shop::getTree()
+			);
+		}
 
 		// It is not possible to change currency valuation and management type
 		if (Tools::isSubmit('addwarehouse') || Tools::isSubmit('submitAddwarehouse'))
