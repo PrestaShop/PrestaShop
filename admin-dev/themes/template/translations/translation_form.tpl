@@ -24,48 +24,54 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-{l s='Expressions to translate'} : <b>{$count}</b>. {l s='Click on the titles to open fieldsets'}.<br /><br />
-<p>{l s='total missing expresssions:'} {$missing_translations|array_sum} </p>
-{$limit_warning}
-{if !$suoshin_exceeded}
-	<form method="post" action="{$url_submit}" class="form">
-	{$toggle_button}
-	{$auto_translate}
-	<input type="hidden" name="lang" value="{$lang}" />
-	<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-	<br /><br />
-	{foreach $tabsArray as $k => $newLang}
-		{if !empty($newLang)}
-			<fieldset>
-				<legend style="cursor : pointer" onclick="$('#{$k}-tpl').slideToggle();">
-					{$k} - <font color="blue">{$newLang|count}</font> {l s='expressions'}
-					{if isset($missing_translations[$k])}(<font color="red">{$missing_translations[$k]} {l s='missing'}</font>){/if}
-				</legend>
-				<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
-				<table cellpadding="2">
-				{foreach $newLang as $key => $value}
-					<tr>
-						<td style="width: 40%">{$key|stripslashes}</td>
-						<td>= {*todo : md5 is already calculated in AdminTranslationsController*}
-							{if $key|strlen < $textarea_sized}
-								<input type="text" 
-									   style="width: 450px" 
-									   name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
-									   value="{$value|regex_replace:'/"/':'&quot;'|stripslashes}" />
-							{else}
-								<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
-										 style="width: 450px" 
-								name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
-								>{$value|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
-							{/if}
-						</td>
-					</tr>
-				{/foreach}
-				</table>
-				</div>
-			</fieldset><br />
-		{/if}
-	{/foreach}
-	<br /><input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" /></form>
-{/if}
+{extends file="helper/view/view.tpl"}
+
+{block name="override_tpl"}
+
+	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
+	{l s='Expressions to translate'} : <b>{$count}</b>. {l s='Click on the titles to open fieldsets'}.<br /><br />
+	<p>{l s='total missing expresssions:'} {$missing_translations|array_sum} </p>
+	{$limit_warning}
+	{if !$suoshin_exceeded}
+		<form method="post" action="{$url_submit}" class="form">
+		{$toggle_button}
+		{$auto_translate}
+		<input type="hidden" name="lang" value="{$lang}" />
+		<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+		<br /><br />
+		{foreach $tabsArray as $k => $newLang}
+			{if !empty($newLang)}
+				<fieldset>
+					<legend style="cursor : pointer" onclick="$('#{$k}-tpl').slideToggle();">
+						{$k} - <font color="blue">{$newLang|count}</font> {l s='expressions'}
+						{if isset($missing_translations[$k])}(<font color="red">{$missing_translations[$k]} {l s='missing'}</font>){/if}
+					</legend>
+					<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
+					<table cellpadding="2">
+					{foreach $newLang as $key => $value}
+						<tr>
+							<td style="width: 40%">{$key|stripslashes}</td>
+							<td>= {*todo : md5 is already calculated in AdminTranslationsController*}
+								{if $key|strlen < $textarea_sized}
+									<input type="text" 
+										   style="width: 450px" 
+										   name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
+										   value="{$value|regex_replace:'/"/':'&quot;'|stripslashes}" />
+								{else}
+									<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
+											 style="width: 450px" 
+									name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
+									>{$value|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
+								{/if}
+							</td>
+						</tr>
+					{/foreach}
+					</table>
+					</div>
+				</fieldset><br />
+			{/if}
+		{/foreach}
+		<br /><input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" /></form>
+	{/if}
+
+{/block}
