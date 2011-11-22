@@ -1529,10 +1529,12 @@ class CartCore extends ObjectModel
 		$delivery_option_list = $this->getDeliveryOptionList();
 		foreach ($delivery_option as $id_address => $key)
 		{
-				if ($useTax)
-					$total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
-				else
-					$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
+			if ($id_address == 0)
+				continue;
+			if ($useTax)
+				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+			else
+				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
 		}
 		return $total_shipping;
 	}
