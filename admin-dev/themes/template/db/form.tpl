@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,17 +19,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{extends file="helper/form/form.tpl"}
 
-<br />
-{$content}
-<br />
-<fieldset class="width2">
-	<legend>{l s='MySQL Engine'}</legend>
-	<form name="updateEngine" action="{$update_url}" method="post">
+{block name="label"}
+	{if $input.type == 'table'}
 		<table cellspacing="0" cellpadding="0" class="table width2 clear">
 			<tr>
 				<th><input type="checkbox" onclick="checkDelBoxes(this.form, 'tablesBox[]', this.checked)" class="noborder" name="checkme"></th>
@@ -41,15 +38,8 @@
 				</tr>
 			{/foreach}
 		</table>
-		<br />
-		<label for="dbEngine">{l s='Change Engine to'}</label>
-		<div class="margin-form">
-			<select name="engineType">
-				{foreach $engines AS $engine}
-					<option value="{$engine}">{$engine}</option>
-				{/foreach}
-			</select>
-			<input style="margin-left:15px;" class="button" type="submit" value="Submit" name="submitEngine" />
-		</div>
-	</form>
-</fieldset>
+	{/if}
+	{if isset($input.label)}
+		<label>{$input.label} </label>
+	{/if}
+{/block}

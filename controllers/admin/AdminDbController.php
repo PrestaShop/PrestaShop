@@ -38,29 +38,136 @@ class AdminDbControllerCore extends AdminController
 			'database' => array(
 				'title' =>	$this->l('Database'),
 				'icon' =>	'database_gear',
-				'class' =>	'width2',
 				'fields' =>	array(
-				 	'db_server' => array('title' => $this->l('Server:'), 'desc' => $this->l('IP or server name; \'localhost\' will work in most cases'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_SERVER_, 'visibility' => Shop::CONTEXT_ALL),
-					'db_name' => array('title' => $this->l('Database:'), 'desc' => $this->l('Database name (e.g., \'prestashop\')'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_NAME_, 'visibility' => Shop::CONTEXT_ALL),
-					'db_prefix' => array('title' => $this->l('Prefix:'), 'size' => 30, 'type' => 'text', 'defaultValue' => _DB_PREFIX_, 'visibility' => Shop::CONTEXT_ALL),
-					'db_user' => array('title' => $this->l('User:'), 'size' => 30, 'type' => 'text', 'required' => true, 'defaultValue' => _DB_USER_, 'visibility' => Shop::CONTEXT_ALL),
-					'db_passwd' => array('title' => $this->l('Password:'), 'size' => 30, 'type' => 'password', 'desc' => $this->l('Leave blank if no change'), 'defaultValue' => _DB_PASSWD_, 'visibility' => Shop::CONTEXT_ALL),
+				 	'db_server' => array(
+				 		'title' => $this->l('Server:'),
+				 		'desc' => $this->l('IP or server name; \'localhost\' will work in most cases'),
+				 		'size' => 30,
+				 		'type' => 'text',
+				 		'required' => true,
+				 		'defaultValue' => _DB_SERVER_,
+				 		'visibility' => Shop::CONTEXT_ALL
+					),
+					'db_name' => array(
+						'title' => $this->l('Database:'),
+						'desc' => $this->l('Database name (e.g., \'prestashop\')'),
+						'size' => 30,
+						'type' => 'text',
+						'required' => true,
+						'defaultValue' => _DB_NAME_,
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'db_prefix' => array(
+						'title' => $this->l('Prefix:'),
+						'size' => 30,
+						'type' => 'text',
+						'defaultValue' => _DB_PREFIX_,
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'db_user' => array(
+						'title' => $this->l('User:'),
+						'size' => 30,
+						'type' => 'text',
+						'required' => true,
+						'defaultValue' => _DB_USER_,
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'db_passwd' => array(
+						'title' => $this->l('Password:'),
+						'size' => 30,
+						'type' => 'password',
+						'desc' => $this->l('Leave blank if no change'),
+						'defaultValue' => _DB_PASSWD_,
+						'visibility' => Shop::CONTEXT_ALL
+					)
 				),
 				'submit' => array()
-			),
+			)
 		);
 
 		$this->fieldsDisplay = array (
-			'table' => array('title' => $this->l('Table'), 'type' => 'string', 'width' => 120),
-			'table_engine' => array('title' => $this->l('Table Engine'), 'type' => 'string', 'width' => 120),
+			'table' => array(
+				'title' => $this->l('Table'),
+				'type' => 'string',
+				'width' => 120
+			),
+			'table_engine' => array(
+				'title' => $this->l('Table Engine'),
+				'type' => 'string',
+				'width' => 120
+			)
 		);
 	}
 
 	public function initContent()
 	{
-		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.');
+		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. 
+			For all issues, check the config/settings.inc.php file.');
 
-		$this->content .= $this->initToolbar();
+		$this->display = 'options';
+		$this->initToolbar();
+		$this->content .= $this->initOptions();
+		$this->content .= $this->initForm();
+
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
+		));
+	}
+
+	public function initForm()
+	{
+		$engines = array();
+		$tab_engines = $this->getEngines();
+		foreach ($tab_engines as $key => $engine)
+			$engines[]['name'] = $engine;
+
+		$this->fields_form = array(
+			'legend' => array(
+				'title' => $this->l('MySQL Engine'),
+				'image' => '../img/admin/AdminBackup.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'table',
+					'name' => 'table'
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Change Engine to'),
+					'name' => 'engineType',
+					'options' => array(
+						'query' => $engines,
+						'id' => 'name',
+						'name' => 'name'
+					)
+				)
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+
+		$table_status = $this->getTablesStatus();
+		foreach ($table_status as $key => $table)
+			if (!preg_match('#^'._DB_PREFIX_.'.*#Ui', $table['Name']))
+				unset($table_status[$key]);
+
+		$this->tpl_form_vars = array('table_status' => $table_status);
+
+		$this->show_toolbar = false;
+
+		return parent::initForm();
+	}
+
+	/*
+	public function initContent()
+	{
+		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. 
+			For all issues, check the config/settings.inc.php file.');
+
+		$this->initToolbar();
 		$this->content .= $this->initOptions();
 
 		$table_status = $this->getTablesStatus();
@@ -74,8 +181,8 @@ class AdminDbControllerCore extends AdminController
 			'engines' => $this->getEngines(),
 			'content' => $this->content,
 		));
-
 	}
+	*/
 
 	public function postProcess()
 	{
@@ -88,12 +195,12 @@ class AdminDbControllerCore extends AdminController
 
 		if ($this->action == 'update_options')
 		{
-			foreach ($this->options['database']['fields'] AS $field => $values)
-				if (isset($values['required']) AND $values['required'])
-					if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
+			foreach ($this->options['database']['fields'] as $field => $values)
+				if (isset($values['required']) && $values['required'])
+					if (($value = Tools::getValue($field)) == false && (string)$value != '0')
 						$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 
-			if (!sizeof($this->_errors))
+			if (!count($this->_errors))
 			{
 				/* Datas are not saved in database but in config/settings.inc.php */
 				$settings = array();
@@ -109,7 +216,7 @@ class AdminDbControllerCore extends AdminController
 					true
 				) == 0)
 				{
-			 		rewriteSettingsFile(NULL, NULL, $settings);
+			 		rewriteSettingsFile(null, null, $settings);
 			 		Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
 				}
 				else
@@ -120,7 +227,7 @@ class AdminDbControllerCore extends AdminController
 		// Change engine
 		if ($this->action == 'save')
 		{
-			if (!isset($_POST['tablesBox']) OR !sizeof($_POST['tablesBox']))
+			if (!isset($_POST['tablesBox']) || !count($_POST['tablesBox']))
 				$this->_errors[] = Tools::displayError('You did not select any tables');
 			else
 			{
@@ -128,39 +235,36 @@ class AdminDbControllerCore extends AdminController
 				$tables_status = $this->getTablesStatus();
 				$tables_engine = array();
 
-				foreach ($tables_status AS $table)
+				foreach ($tables_status as $table)
 					$tables_engine[$table['Name']] = $table['Engine'];
 
-				$engineType = pSQL(Tools::getValue('engineType'));
+				$engine_type = pSQL(Tools::getValue('engineType'));
 
 				/* Datas are not saved in database but in config/settings.inc.php */
-				$settings = array('_MYSQL_ENGINE_' => $engineType);
-			    rewriteSettingsFile(NULL, NULL, $settings);
+				$settings = array('_MYSQL_ENGINE_' => $engine_type);
+			    rewriteSettingsFile(null, null, $settings);
 
-				foreach ($_POST['tablesBox'] AS $table)
+				foreach ($_POST['tablesBox'] as $table)
 				{
-					if ($engineType == $tables_engine[$table])
-						$this->_errors[] = $table.' '.$this->l('is already in').' '.$engineType;
+					if ($engine_type == $tables_engine[$table])
+						$this->_errors[] = $table.' '.$this->l('is already in').' '.$engine_type;
 					else
-						if (!Db::getInstance()->execute('ALTER TABLE `'.bqSQL($table).'` ENGINE=`'.bqSQL($engineType).'`'))
+						if (!Db::getInstance()->execute('ALTER TABLE `'.bqSQL($table).'` ENGINE=`'.bqSQL($engine_type).'`'))
 							$this->_errors[] = $this->l('Can\'t change engine for').' '.$table;
-						else
-							echo '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Engine change of').' '.$table.' '.$this->l('to').' '.$engineType.'</div>';
 				}
+				if (!count($this->_errors))
+			 		Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
 			}
 		}
-
 	}
 
 	public function getEngines()
 	{
 		$engines = Db::getInstance()->executeS('SHOW ENGINES');
 		$allowed_engines = array();
-		foreach ($engines AS $engine)
-		{
-			if (in_array($engine['Engine'], array('InnoDB', 'MyISAM')) AND in_array($engine['Support'], array('DEFAULT', 'YES')))
+		foreach ($engines as $engine)
+			if (in_array($engine['Engine'], array('InnoDB', 'MyISAM')) && in_array($engine['Support'], array('DEFAULT', 'YES')))
 				$allowed_engines[] = $engine['Engine'];
-		}
 		return $allowed_engines;
 	}
 
