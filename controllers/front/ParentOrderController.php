@@ -379,18 +379,18 @@ class ParentOrderControllerCore extends FrontController
 		$id_zone = Address::getZoneById($address->id);
 		$carriers = Carrier::getCarriersForOrder($id_zone, $this->context->customer->getGroups());
 		
-
 		$this->context->smarty->assign(array(
-			'checked' => $this->setDefaultCarrierSelection($carriers),
-			'carriers' => $carriers,
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
-			'delivery_option' => $this->context->cart->getDeliveryOption(),
-			'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT'))
+			'delivery_option' => $this->context->cart->getDeliveryOption()
 		));
 		$this->context->smarty->assign(array(
 			'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address)),
-			'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array('carriers' => $carriers))
+			'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array(
+				'carriers' => $carriers,
+				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+				'delivery_option' => $this->context->cart->getDeliveryOption()
+			))
 		));
 	}
 

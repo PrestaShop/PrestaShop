@@ -113,81 +113,83 @@
 	</p>
 	{/if}
 	<div class="delivery_options_address">
-	{foreach $delivery_option_list as $id_address => $option_list}
-		<h3>{$address_collection[$id_address]->alias}</h3>
-		<div class="delivery_options">
-		{foreach $option_list as $key => $option}
-			<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
-				<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" {if $opc}onclick="updateCarrierSelectionAndGift();"{/if} id="delivery_option_{$id_address}_{$option@index}" value="{$key}" />
-				<label for="delivery_option_{$id_address}_{$option@index}">
-					<table class="resume">
-						<tr>
-							<td class="delivery_option_logo">
-								{* If there is only one carrier, show the logo of the carrier *}
-								{if $option.unique_carrier}
-									{foreach $option.carrier_list as $carrier}
+	{if isset($delivery_option_list)}
+		{foreach $delivery_option_list as $id_address => $option_list}
+			<h3>{$address_collection[$id_address]->alias}</h3>
+			<div class="delivery_options">
+			{foreach $option_list as $key => $option}
+				<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
+					<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" {if $opc}onclick="updateCarrierSelectionAndGift();"{/if} id="delivery_option_{$id_address}_{$option@index}" value="{$key}" />
+					<label for="delivery_option_{$id_address}_{$option@index}">
+						<table class="resume">
+							<tr>
+								<td class="delivery_option_logo">
+									{* If there is only one carrier, show the logo of the carrier *}
+									{if $option.unique_carrier}
+										{foreach $option.carrier_list as $carrier}
+											{if $carrier.logo}
+												<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+											{else}
+												{$carrier.instance->name}
+											{/if}
+										{/foreach}
+									{else}
+										{$carrier.instance->name}
+									{/if}
+								</td>
+								<td>
+								{if $option.is_best_grade}
+									{if $option.is_best_price}
+									<div class="delivery_option_best delivery_option_icon">{l s="The best price and grade"}</div>
+									{else}
+									<div class="delivery_option_fast delivery_option_icon">{l s="The faster"}</div>
+									{/if}
+								{else}
+									{if $option.is_best_price}
+									<div class="delivery_option_best_price delivery_option_icon">{l s="The best price"}</div>
+									{/if}
+								{/if}
+								</td>
+								<td>
+								<div class="delivery_option_price">
+									{if $option.total_price_with_tax}
+										{if $use_taxes == 1}
+											{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+										{else}
+											{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+										{/if}
+									{else}
+										{l s='Free!'}
+									{/if}
+								</div>
+								</td>
+							</tr>
+						</table>
+							<table class="delivery_option_carrier">
+								{foreach $option.carrier_list as $carrier}
+									<tr>
+										<td>
 										{if $carrier.logo}
 											<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
-										{else}
-											{$carrier.instance->name}
 										{/if}
-									{/foreach}
-								{else}
-									{$carrier.instance->name}
-								{/if}
-							</td>
-							<td>
-							{if $option.is_best_grade}
-								{if $option.is_best_price}
-								<div class="delivery_option_best delivery_option_icon">{l s="The best price and grade"}</div>
-								{else}
-								<div class="delivery_option_fast delivery_option_icon">{l s="The faster"}</div>
-								{/if}
-							{else}
-								{if $option.is_best_price}
-								<div class="delivery_option_best_price delivery_option_icon">{l s="The best price"}</div>
-								{/if}
-							{/if}
-							</td>
-							<td>
-							<div class="delivery_option_price">
-								{if $option.total_price_with_tax}
-									{if $use_taxes == 1}
-										{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
-									{else}
-										{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
-									{/if}
-								{else}
-									{l s='Free!'}
-								{/if}
-							</div>
-							</td>
-						</tr>
-					</table>
-						<table class="delivery_option_carrier">
-							{foreach $option.carrier_list as $carrier}
-								<tr>
+									</td>
 									<td>
-									{if $carrier.logo}
-										<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
-									{/if}
-								</td>
-								<td>
-									{$carrier.instance->name}
-								</td>
-								<td>
-									{if isset($carrier.instance->delay[$cookie->id_lang])}
-										{$carrier.instance->delay[$cookie->id_lang]}
-									{/if}
-								</td>
-								</tr>
-							{/foreach}
-						</table>
-				</label>
+										{$carrier.instance->name}
+									</td>
+									<td>
+										{if isset($carrier.instance->delay[$cookie->id_lang])}
+											{$carrier.instance->delay[$cookie->id_lang]}
+										{/if}
+									</td>
+									</tr>
+								{/foreach}
+							</table>
+					</label>
+				</div>
+			{/foreach}
 			</div>
 		{/foreach}
-		</div>
-	{/foreach}
+	{/if}
 	</div>
 	<div style="display: none;" id="extra_carrier"></div>
 	

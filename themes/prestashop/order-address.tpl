@@ -171,6 +171,14 @@
 </div>
 <form action="{$link->getPageLink($back_order_page, true)}" method="post">
 {else}
+<div class="address-form-multishipping">
+	<a href="#" id="multishipping_mode" title="{l s='Multi-shipping'}" class="button exclusive" onclick="multishippingMode(this); return false;">
+		{l s='Multi-shipping'}
+	</a>
+	<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery addresses'}" class="button exclusive" style="display:none">
+		{l s='Choose the delivery addresses'}
+	</a>
+</div>
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}

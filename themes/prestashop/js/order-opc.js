@@ -734,3 +734,48 @@ $(function() {
 	});
 	
 });
+
+function multishippingMode(it)
+{
+	if (!$(it).hasClass('on'))
+	{
+		$('#address_delivery').hide();
+		$('#address_invoice').removeClass('alternate_item').addClass('item');
+		$(it).addClass('on');
+		$('#link_multishipping_form').show();
+		
+		$('#link_multishipping_form').fancybox({
+			'transitionIn' : 'elastic',
+			'transitionOut' : 'elastic',
+			'type' : 'ajax',
+			'onClosed' : function()
+			{
+				// Relaod the cart
+				$.ajax({
+					url: orderOpcUrl,
+					data: 'ajax=true&method=cartReload',
+					dataType : 'html',
+					success: function(data) {
+						$('#cart_summary').replaceWith($(data).find('#cart_summary'));
+					}
+				})
+				updateCarrierSelectionAndGift();
+			},
+			'onStart' : function()
+			{
+				// Removing all ids on the cart to avoid conflic with the new one on the fancybox
+				// This action could "break" the cart design, if css rules use ids of the cart
+				$.each($('#cart_summary *'), function(it, el) {
+					$(el).attr('id', '');
+				});
+			}
+		});
+	}
+	else
+	{
+		$('#address_delivery').show();
+		$('#address_invoice').removeClass('item').addClass('alternate_item');
+		$(it).removeClass('on');
+		$('#link_multishipping_form').hide();
+	}
+}

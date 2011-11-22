@@ -202,15 +202,35 @@ class OrderOpcControllerCore extends ParentOrderController
 							}
 							die(Tools::displayError());
 							break;
+						case 'multishipping':
+							$this->_assignSummaryInformations();
+							if ($this->context->customer->id)
+								$this->context->smarty->assign('address_list', $this->context->customer->getAddresses($this->context->language->id));
+							else
+								$this->context->smarty->assign('address_list', array());
+							$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping-products.tpl');
+							$this->display();
+							die();
+						case 'cartReload':
+							$this->_assignSummaryInformations();
+							if ($this->context->customer->id)
+								$this->context->smarty->assign('address_list', $this->context->customer->getAddresses($this->context->language->id));
+							else
+								$this->context->smarty->assign('address_list', array());
+							$this->context->smarty->assign('opc', true);
+							$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
+							$this->display();
+							die();
 						default:
-							exit;
+							throw new PrestashopException('Unknown method "'.Tools::getValue('method').'"');
 					}
 				}
-				exit;
+				else
+					throw new PrestashopException('Method is not defined'.Tools::isSubmit('method'));
 			}
 		}
 		elseif (Tools::isSubmit('ajax'))
-			exit;
+			throw new PrestashopException('Method is not defined');
 	}
 
 	public function setMedia()
@@ -329,11 +349,12 @@ class OrderOpcControllerCore extends ParentOrderController
 		{
 			$carriers = Carrier::getCarriersForOrder(Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT')));
 			$this->context->smarty->assign(array(
-				'checked' => $this->_setDefaultCarrierSelection($carriers),
-				'carriers' => $carriers,
-				'default_carrier' => (int)(Configuration::get('PS_CARRIER_DEFAULT')),
 				'HOOK_EXTRACARRIER' => NULL,
-				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array('carriers' => $carriers))
+				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array(
+					'carriers' => $carriers,
+					'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+					'delivery_option' => $this->context->cart->getDeliveryOption()
+				))
 			));
 		}
 		else
@@ -404,9 +425,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		{
 			$carriers = Carrier::getCarriersForOrder((int)Address::getZoneById((int)($address_delivery->id)), $groups);
 			$result = array(
-				'checked' => $this->_setDefaultCarrierSelection($carriers),
-				'carriers' => $carriers,
-				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array('carriers' => $carriers)),
+				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array(
+					'carriers' => $carriers,
+					'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+					'delivery_option' => $this->context->cart->getDeliveryOption()
+				)),
 				'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address_delivery))
 			);
 			return $result;
