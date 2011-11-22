@@ -745,10 +745,10 @@ function multishippingMode(it)
 		$('#link_multishipping_form').show();
 		
 		$('#link_multishipping_form').fancybox({
-			'transitionIn' : 'elastic',
-			'transitionOut' : 'elastic',
-			'type' : 'ajax',
-			'onClosed' : function()
+			'transitionIn': 'elastic',
+			'transitionOut': 'elastic',
+			'type': 'ajax',
+			'onClosed': function()
 			{
 				// Relaod the cart
 				$.ajax({
@@ -761,13 +761,17 @@ function multishippingMode(it)
 				})
 				updateCarrierSelectionAndGift();
 			},
-			'onStart' : function()
+			'onStart': function()
 			{
 				// Removing all ids on the cart to avoid conflic with the new one on the fancybox
 				// This action could "break" the cart design, if css rules use ids of the cart
 				$.each($('#cart_summary *'), function(it, el) {
 					$(el).attr('id', '');
 				});
+			},
+			'onComplete': function()
+			{
+				cleanSelectAddressDelivery();
 			}
 		});
 	}
