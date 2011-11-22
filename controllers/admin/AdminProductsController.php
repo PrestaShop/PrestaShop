@@ -922,42 +922,69 @@ class AdminProductsControllerCore extends AdminController
 	// @todo rename to processaddproductimage
 	public function ajaxProcessAddImage()
 	{
-			self::$currentIndex = 'index.php?tab=AdminProducts';
-			$allowedExtensions = array("jpeg", "gif", "png", "jpg");
-			// max file size in bytes
-			$sizeLimit = $this->max_file_size;
-			$uploader = new FileUploader($allowedExtensions, $sizeLimit);
-			$result = $uploader->handleUpload();
-			if (isset($result['success']))
-			{
-				$shops = false;
-				if (Shop::isFeatureActive())
-					$shops = Shop::getShops();
-				$obj = new Product((int)Tools::getValue('id_product'));
-				$countImages = (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'image  WHERE id_product = '.(int)$obj->id);
-				$images = Image::getImages($this->context->language->id, $obj->id);
-				$imagesTotal = Image::getImagesTotal($obj->id);
-				$html = $this->getLineTableImage($result['success'], $imagesTotal + 1, $this->token, $shops);
-				die($html);
-			}
-			else
-				die(Tools::jsonEncode($result));
+		self::$currentIndex = 'index.php?tab=AdminProducts';
+		$allowedExtensions = array("jpeg", "gif", "png", "jpg");
+		// max file size in bytes
+		$sizeLimit = $this->max_file_size;
+		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
+		$result = $uploader->handleUpload();
+		if (isset($result['success']))
+		{
+			$obj = new Image($result['success']['id_image']);
+			$json = array(
+				'status' => 'ok',
+				'id'=>$obj->id, 
+				'path' => $obj->getExistingImgPath(),
+				'position' => $obj->position,
+				'cover' => $obj->cover,
+			);
+			die(Tools::jsonEncode($json));
 		}
-
+		else
+			die(Tools::jsonEncode($result));
+	}
+	
 	public function ajaxPreProcess()
 	{
 		$this->action = Tools::getValue('action');
-
-		if (Tools::getValue('updateProductImageShopAsso'))
+	}
+	
+	public function ajaxProcessUpdateProductImageShopAsso()
+	{
+		if (($id_image = $_GET['id_image']) && ($id_shop = (int)$_GET['id_shop']))
+			if (Tools::getValue('active') == "true")
+				die('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
+			else
+				die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
+	}
+	
+	public function ajaxProcessUpdateImagePosition()
+	{
+		if ($json = Tools::getValue('json'))
 		{
-			if ($id_image = (int)Tools::getValue('id_image') && $id_shop = (int)Tools::getValue('id_shop'))
-				if (Tools::getValue('active') == "true")
-					die(Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')'));
-				else
-					die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
+			$json = stripslashes($json);
+			$images = Tools::jsonDecode($json, true);
+			foreach ($images as $id => $position)
+			{
+				$img = new Image((int)$id);
+				$img->position = (int)$position;
+				$img->update();
+			}
+		}
+		exit();
+	}
+	
+	public function ajaxProcessUpdateCover()
+	{
+		if ($this->action == 'UpdateCover')
+		{
+			Image::deleteCover((int)$_GET['id_product']);
+			$img = new Image((int)$_GET['id_image']);
+			$img->cover = 1;
+			$img->update();
 		}
 	}
-
+	
 	public function ajaxProcessDeleteProductImage()
 	{
 		/* Delete product image */
