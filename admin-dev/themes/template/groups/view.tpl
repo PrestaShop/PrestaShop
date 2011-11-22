@@ -24,32 +24,38 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<fieldset style="width: 400px">
-	<span style="font-weight: bold; font-size: 14px;">{l s='Name:'}</span>
-	<div class="clear">&nbsp;</div>
-	<span style="font-weight: bold; font-size: 14px;">{l s='Discount:'}</span> {$group->reduction} {l s='%'}
-	<div class="clear">&nbsp;</div>
-	<span style="font-weight: bold; font-size: 14px;">{l s='Current category discount:'}</span>
-		{if !$categorieReductions}
-			{l s='None'}
-		{else}
-			<table cellspacing="0" cellpadding="0" class="table" style="margin-top:10px">
-				{foreach $categorieReductions key=key item=category }
-					<tr class="alt_row">
-						<td>{$category.path}</td>
-						<td>{l s='Discount:'} {$category.reduction}{l s='%'}</td>
-					</tr>
-				{/foreach}
-			</table>
-		{/if}
-	<div class="clear">&nbsp;</div>
-	<span style="font-weight: bold; font-size: 14px;">{l s='Price display method:'}</span>
-		{if $group->price_display_method}
-			{l s='Tax excluded'}
-		{else}
-			{l s='Tax included'}
+{extends file="helper/view/view.tpl"}
+
+{block name="override_tpl"}
+
+	<fieldset style="width: 400px">
+		<span style="font-weight: bold; font-size: 14px;">{l s='Name:'}</span>
+		<div class="clear">&nbsp;</div>
+		<span style="font-weight: bold; font-size: 14px;">{l s='Discount:'}</span> {$group->reduction} {l s='%'}
+		<div class="clear">&nbsp;</div>
+		<span style="font-weight: bold; font-size: 14px;">{l s='Current category discount:'}</span>
+			{if !$categorieReductions}
+				{l s='None'}
+			{else}
+				<table cellspacing="0" cellpadding="0" class="table" style="margin-top:10px">
+					{foreach $categorieReductions key=key item=category }
+						<tr class="alt_row">
+							<td>{$category.path}</td>
+							<td>{l s='Discount:'} {$category.reduction}{l s='%'}</td>
+						</tr>
+					{/foreach}
+				</table>
 			{/if}
-	<div class="clear">&nbsp;</div>
-</fieldset>
-<h2>{l s='Customer members of this group'}</h2>
-{$customerList}
+		<div class="clear">&nbsp;</div>
+		<span style="font-weight: bold; font-size: 14px;">{l s='Price display method:'}</span>
+			{if $group->price_display_method}
+				{l s='Tax excluded'}
+			{else}
+				{l s='Tax included'}
+				{/if}
+		<div class="clear">&nbsp;</div>
+	</fieldset>
+	<h2>{l s='Customer members of this group'}</h2>
+	{$customerList}
+
+{/block}
