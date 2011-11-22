@@ -29,7 +29,20 @@
 	var come_from = 'AdminModulesPositions';
 </script>
 <script type="text/javascript" src="../js/admin-dnd.js"></script>
-<a href="{$url_transplant}"><img src="../img/admin/add.gif" border="0" /> <b>{l s='Transplant a module'}</b></a><br /><br />
+
+{if $show_toolbar}
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+			{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+			<div class="pageTitle">
+				<h3>{block name=pageTitle}
+					<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+					{/block}
+				</h3>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <form>
 	{l s='Show'} :
