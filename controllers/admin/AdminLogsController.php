@@ -57,27 +57,19 @@ class AdminLogsControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'text',
 						'size' => 5
-					),
+					)
 				),
 				'submit' => array()
-			),
+			)
 		);
 
 		parent::__construct();
 	}
 
-	/**
-	 * Assign smarty variables for all default views, list and form, then call other init functions
-	 */
-	public function initContent()
+	public function initToolbar()
 	{
-		$this->context->smarty->assign(array(
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
-			'list' => $this->initList(),
-			'options' => $this->initOptions()
-		));
+		parent::initToolbar();
+		unset($this->toolbar_btn['new']);
 	}
 
 }

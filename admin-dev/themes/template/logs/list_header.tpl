@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,12 +19,15 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 9639 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $list}
+{extends file="helper/list/list_header.tpl"}
+
+{block name="override_header"}
+
 	<fieldset>
 		<legend>{l s='Severity levels'}</legend>
 		<p>{l s='Meaning of severity levels:'}</p>
@@ -34,11 +37,6 @@
 			<li style="color: orange;">{l s='Error'}</li>
 			<li style="color: red;">{l s='Major issue (crash)'}</li>
 		</ol>
-	</fieldset>
-{/if}
+	</fieldset><br />
 
-{$list}
-<br />
-<h2>{l s='Logs by e-mail'}</h2>
-
-{$options}
+{/block}
