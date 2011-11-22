@@ -697,7 +697,7 @@ abstract class ModuleCore
 					$item->description = $tmpModule->description;
 					$item->author = $tmpModule->author;
 					$item->limited_countries = $tmpModule->limited_countries;
-					$item->is_configurable = isset($tmpModule->is_configurable) ? $tmpModule->is_configurable : 0;
+					$item->is_configurable = isset($tmpModule->is_configurable) ? $tmpModule->is_configurable : 1;
 					$item->need_instance = isset($tmpModule->need_instance) ? $tmpModule->need_instance : 0;
 					$item->active = $tmpModule->active;
 					unset($tmpModule);
