@@ -97,7 +97,7 @@ class StatsForecast extends Module
 			$intervalAvg = $interval2 / 7;
 
 		$dataTable = array();
-		if ($cookie->stats_granularity == 10)
+		if ($this->context->cookie->stats_granularity == 10)
 			for ($i = $from; $i <= $to2; $i = strtotime('+1 day', $i))
 				$dataTable[date('Y-m-d', $i)] = array('fix_date' => date('Y-m-d', $i), 'countOrders' => 0, 'countProducts' => 0, 'totalProducts' => 0);
 
