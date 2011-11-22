@@ -44,20 +44,20 @@ class HTMLTemplateSupplyOrderForm extends HTMLTemplate
         $this->address_warehouse = new Address($this->warehouse->id_address);
 
    		// header informations
-		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->context->language->id);
+		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
 		$this->title = self::l('Supply order form').sprintf(' #%s', $supply_order->reference);
-
-		// footer informations : displays the address of the warehouse
-		$this->address = $this->address_warehouse;
 	}
 
 	/**
-	 * Returns the template's HTML content
-	 * @return string HTML content
+	 * @see HTMLTemplate::getContent()
 	 */
 	public function getContent()
 	{
-		$supply_order_details = $this->supply_order->getEntriesCollection($this->context->language->id);
+		$supply_order_details = $this->supply_order->getEntriesCollection($this->supply_order->id_lang);
+		$this->roundSupplyOrderDetails($supply_order_details);
+
+		$this->roundSupplyOrder($this->supply_order);
+
 		$tax_order_summary = $this->getTaxOrderSummary();
 		$currency = new Currency($this->supply_order->id_currency);
 
@@ -73,8 +73,7 @@ class HTMLTemplateSupplyOrderForm extends HTMLTemplate
 	}
 
 	/**
-	 * Returns the template filename when using bulk rendering
-	 * @return string filename
+	 * @see HTMLTemplate::getBulkFilename()
 	 */
     public function getBulkFilename()
     {
@@ -82,8 +81,7 @@ class HTMLTemplateSupplyOrderForm extends HTMLTemplate
     }
 
 	/**
-	 * Returns the template filename
-	 * @return string filename
+	 * @see HTMLTemplate::getFileName()
 	 */
     public function getFilename()
     {
@@ -103,6 +101,67 @@ class HTMLTemplateSupplyOrderForm extends HTMLTemplate
     	$query->groupBy('tax_rate');
 
     	$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+    	foreach ($results as &$result)
+    	{
+    		$result['base_te'] = Tools::ps_round($result['base_te'], 2);
+    		$result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
+    		$result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
+    	}
+
     	return $results;
     }
+
+    /**
+     * @see HTMLTemplate::getFooter()
+     */
+	public function getFooter()
+	{
+		$this->address = $this->address_warehouse;
+		$shop_address = '';
+		if (isset($this->address) && $this->address instanceof Address)
+			$shop_address = AddressFormat::generateAddress($this->address, array(), ' - ', ' ');
+
+		$free_text = $this->l('DE: Discount excluded ');
+		$free_text .= $this->l(' DI: Discount included');
+
+		$this->smarty->assign(array(
+			'shop_address' => $shop_address,
+			'shop_fax' => Configuration::get('PS_SHOP_FAX'),
+			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
+			'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
+			'free_text' => $free_text,
+		));
+		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/supply-order-footer.tpl');
+	}
+
+	/**
+	 * Rounds values of a SupplyOrderDetail object
+	 * @param array $collection
+	 */
+	protected function roundSupplyOrderDetails(&$collection)
+	{
+		foreach ($collection as $supply_order_detail)
+		{
+			$supply_order_detail->unit_price_te = Tools::ps_round($supply_order_detail->unit_price_te, 2);
+			$supply_order_detail->price_te = Tools::ps_round($supply_order_detail->price_te, 2);
+			$supply_order_detail->discount_rate = Tools::ps_round($supply_order_detail->discount_rate, 2);
+			$supply_order_detail->price_with_discount_te = Tools::ps_round($supply_order_detail->price_with_discount_te, 2);
+			$supply_order_detail->tax_rate = Tools::ps_round($supply_order_detail->tax_rate, 2);
+			$supply_order_detail->price_ti = Tools::ps_round($supply_order_detail->price_ti, 2);
+		}
+	}
+
+	/**
+	 * Rounds values of a SupplyOrder object
+	 * @param SupplyOrder $supply_order
+	 */
+	protected function roundSupplyOrder(SupplyOrder &$supply_order)
+	{
+		$supply_order->total_te = Tools::ps_round($supply_order->total_te, 2);
+		$supply_order->discount_value_te = Tools::ps_round($supply_order->discount_value_te, 2);
+		$supply_order->total_with_discount_te = Tools::ps_round($supply_order->total_with_discount_te, 2);
+		$supply_order->total_tax = Tools::ps_round($supply_order->total_tax, 2);
+		$supply_order->total_ti = Tools::ps_round($supply_order->total_ti, 2);
+	}
 }
