@@ -486,6 +486,26 @@ class AdminModulesControllerCore extends AdminController
 			if ($modules)
 				foreach ($modules AS $name)
 				{
+					// If Addons Module
+					if ($this->logged_on_addons && !is_dir('../modules/'.$name.'/'))
+					{
+						$file = _PS_ROOT_DIR_.'/config/default_customer_modules_list.xml';
+						if (file_exists($file))
+						{
+							$content = Tools::file_get_contents($file);
+							$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+							foreach ($xml->module as $modaddons)
+							{
+								if ($name == $modaddons->name && isset($modaddons->id))
+								{
+									@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$this->name.'.zip');
+									$this->extractArchive('../modules/'.$this->name.'.zip');
+								}
+							}
+						}
+
+					}
+
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->_errors[] = $this->l('module not found');
 					elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
