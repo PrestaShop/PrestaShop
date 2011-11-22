@@ -40,6 +40,9 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		if ($this->nbProducts)
 			$this->context->smarty->assign('virtual_cart', false);
+		
+		$this->context->smarty->assign('is_multi_address_delivery', $this->context->cart->isMultiAddressDelivery());
+		
 		$this->isLogged = (bool)($this->context->customer->id AND Customer::customerIdExistsStatic((int)($this->context->cookie->id_customer)));
 
 		if ($this->context->cart->nbProducts())
@@ -211,6 +214,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping-products.tpl');
 							$this->display();
 							die();
+							break;
 						case 'cartReload':
 							$this->_assignSummaryInformations();
 							if ($this->context->customer->id)
@@ -221,6 +225,11 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 							$this->display();
 							die();
+							break;
+						case 'noMultiAddressDelivery':
+							$this->context->cart->setNoMultishipping();
+							die();
+							break;
 						default:
 							throw new PrestashopException('Unknown method "'.Tools::getValue('method').'"');
 					}
