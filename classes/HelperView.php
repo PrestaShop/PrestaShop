@@ -42,9 +42,9 @@ class HelperViewCore extends Helper
 		parent::__construct();
 	}
 
-	public function generateView()
+	public function generateView($tpl = false)
 	{
-		$this->tpl = $this->createTemplate($this->base_tpl);
+		$this->tpl = $this->createTemplate(!$tpl ? $this->base_tpl : $tpl);
 
 		$this->tpl->assign(array(
 			'title' => $this->title,
