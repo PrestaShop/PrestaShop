@@ -403,7 +403,7 @@ abstract class DbCore
 		// This methode must be used only with queries which display results
 		if (!preg_match('#^\s*(select|show|explain)\s#i', $sql))
 		{
-			if (_PS_MODE_DEV_)
+			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
 				throw new PrestashopDatabaseException('Db->executeS() must be used only with select, show or explain queries');
 			return $this->execute($sql, $use_cache);
 		}
