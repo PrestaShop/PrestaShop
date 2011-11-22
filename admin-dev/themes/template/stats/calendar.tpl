@@ -40,13 +40,25 @@
 					<input type="submit" name="submitDateMonthPrev" class="button" value="{$translations.Month}-1" style="margin-top:2px">
 					<input type="submit" name="submitDateYearPrev" class="button" value="{$translations.Year}-1" style="margin-top:2px">
 					<p>{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}
-						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom}">
+						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom}" class="datepicker">
 					</p>
 					<p>{if isset($translations.To)}{$translations.To}{else}{l s='From:'}{/if}
-						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo}">
+						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo}" class="datepicker">
 					</p>
 					<input type="submit" name="submitDatePicker" id="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='   Save   '}{/if}" />
 				</form>
+
+				<script type="text/javascript">
+					$(document).ready(function() {
+						if ($("form#calendar_form .datepicker").length > 0)
+							$("form#calendar_form .datepicker").datepicker({
+								prevText: '',
+								nextText: '',
+								dateFormat: 'yy-mm-dd'
+							});
+					});
+				</script>
+
 			</div>
 		</fieldset>
 		<div class="clear space">&nbsp;</div>
