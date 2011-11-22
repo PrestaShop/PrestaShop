@@ -38,16 +38,6 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	{
 		$this->toolbar_title = $this->l('Stats');
 
-		$this->toolbar_btn['save-calendar'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save Calendar')
-		);
-
-		$this->toolbar_btn['save-settings'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save Settings')
-		);
-
 		if ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
@@ -85,6 +75,8 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	{
 		$context = Context::getContext();
 		$tpl = $context->smarty->createTemplate('stats/calendar.tpl');
+
+		$context->controller->addJqueryUI('ui.datepicker');
 
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
