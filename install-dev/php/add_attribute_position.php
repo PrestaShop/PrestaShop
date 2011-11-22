@@ -28,9 +28,9 @@
 function add_attribute_position()
 {
 	$groups = Db::getInstance()->executeS('
-	SELECT `id_attribute_group`
+	SELECT DISTINCT `id_attribute_group`
 	FROM `'._DB_PREFIX_.'attribute`');
-	if (sizeof($groups) && is_array($groups))
+	if (count($groups) && is_array($groups))
 		foreach ($groups as $group)
 		{
 			$attributes = Db::getInstance()->executeS('
@@ -38,7 +38,7 @@ function add_attribute_position()
 			FROM `'._DB_PREFIX_.'attribute`
 			WHERE `id_attribute_group` = '. (int)($group['id_attribute_group']));
 			$i = 0;
-			if (sizeof($attributes) && is_array($attributes))
+			if (count($attributes) && is_array($attributes))
 				foreach ($attributes as $attribute)
 				{
 					Db::getInstance()->execute('

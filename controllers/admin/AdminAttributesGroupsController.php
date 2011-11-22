@@ -129,9 +129,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			// get list and force no limit clause in the request
 			$this->getList($this->context->language->id);
 
+
 			// Render list
 			$helper = new HelperList();
 			$helper->actions = $this->actions;
+			$helper->override_folder = $this->tpl_folder;
 			$helper->no_link = true;
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;

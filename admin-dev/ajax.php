@@ -842,7 +842,7 @@ if (Tools::isSubmit('ajaxAttributesPositions'))
 	$way = (int)Tools::getValue('way');
 	$id_attribute = (int)Tools::getValue('id_attribute');
 	$id_attribute_group = (int)Tools::getValue('id_attribute_group');
-	$positions = Tools::getValue('attribute_'.(int)Tools::getValue('id_attribute_group'));
+	$positions = Tools::getValue('attribute');
 
 	if (is_array($positions))
 		foreach ($positions as $position => $value)

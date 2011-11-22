@@ -286,7 +286,14 @@ class AttributeCore extends ObjectModel
 
 		if (!isset($moved_attribute) || !isset($position))
 			return false;
-
+p('
+			UPDATE `'._DB_PREFIX_.'attribute`
+			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+			WHERE `position`
+			'.($way
+				? '> '.(int)$moved_attribute['position'].' AND `position` <= '.(int)$position
+				: '< '.(int)$moved_attribute['position'].' AND `position` >= '.(int)$position).'
+			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']);
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
 		return (Db::getInstance()->execute('
