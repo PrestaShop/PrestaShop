@@ -783,15 +783,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// Load product attributes with sql override
 			$this->table = 'product_attribute';
 
-			$this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc,
-				IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name';
-
-			$this->_join = '
-				INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-				LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-				LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-				LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-				LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
+			$this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc';
 
 			$this->_where = 'AND a.id_product = '.$product_id;
 			$this->_group = 'GROUP BY a.id_product_attribute';
@@ -839,6 +831,7 @@ class AdminStockManagementControllerCore extends AdminController
 				// if it's an ajax request we have to consider manipulating a product variation
 				if ($this->ajax == '1')
 				{
+					$item['name'] = Product::getProductName($item['id_product'], $item['id']);
 					// no details for this row
 					$this->addRowActionSkipList('details', array($item['id']));
 

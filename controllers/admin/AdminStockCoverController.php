@@ -113,8 +113,7 @@ class AdminStockCoverControllerCore extends AdminController
 
 			$query = new DbQuery();
 			$query->select('pa.id_product_attribute as id, pa.id_product, stock_view.reference, stock_view.ean13,
-							stock_view.upc, stock_view.usable_quantity as stock,
-							IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name');
+							stock_view.upc, stock_view.usable_quantity as stock');
 			$query->from('product_attribute pa
 						  INNER JOIN
 						  (
@@ -124,11 +123,6 @@ class AdminStockCoverControllerCore extends AdminController
 						   	GROUP BY s.id_product_attribute
 						   )
 						   stock_view ON (stock_view.id_product_attribute = pa.id_product_attribute)');
-			$query->innerJoin('product_lang pl ON (pl.id_product = pa.id_product AND pl.id_lang = '.$lang_id.')');
-			$query->leftJoin('product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)');
-			$query->leftJoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
-			$query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')');
-			$query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')');
 			$query->where('pa.id_product = '.$id_product);
 			if ($warehouse != -1)
 				$query->where('s.id_warehouse = '.(int)$warehouse);
@@ -137,6 +131,8 @@ class AdminStockCoverControllerCore extends AdminController
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			foreach ($datas as &$data)
 			{
+				$data['name'] = Product::getProductName($data['id_product'], $data['id']);
+
 				if ($this->getCurrentCoverageWarehouse() == -1)
 					$data['coverage'] = StockManagerFactory::getManager()->getProductCoverage($data['id_product'], $data['id'], $period);
 				else
