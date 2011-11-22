@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,20 +19,23 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision$
+*  @version  Release: $Revision: 8971 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if isset($download)}
-	<fieldset style="margin: 40px 0;" class="width3">
-		<legend><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /> {l s='Download'}</legend>
-		<p style="font-size: 13px;"><a href="{$backup_url}"><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /></a><b><a href="{$backup_url}">{l s='Download the Backup file'} ({$backup_weight}{l s='Mb'})</a></b><br /><br />
-		{l s='Tip: You can also download this file by FTP, Backup files are located in "admin/backups" directory.'}</p>
-	</fieldset>
-{/if}
+{extends file="helper/view/view.tpl"}
 
-{if isset($how_to)}
+{block name="override_tpl"}
+
+	<fieldset class="width3">
+		<legend><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /> {l s='Download'}</legend>
+		<p style="font-size: 13px;">
+			<a href="{$backup_url}"><img src="../img/admin/AdminBackup.gif" alt="" class="icon" /></a>
+			<b><a href="{$backup_url}">{l s='Download the Backup file'} ({$backup_weight}{l s='Mb'})</a></b><br /><br />
+		{l s='Tip: You can also download this file by FTP, Backup files are located in "admin/backups" directory.'}</p>
+	</fieldset><br /><br />
+
 	<div class="error width1" style="float: left; margin-right: 10px;">
 		<p>{l s='Disclaimer before creating a new Backup'}</p>
 		<ol style="font-size: 11px; font-weight: normal; line-height: 20px; padding-left: 10px;">
@@ -46,12 +49,8 @@
 			<li>{l s='Always check your data.'}</li>
 			<li>{l s='Never restore a Backup on a live site.'}</li>
 		</ol>
-	{if $show_form}
-		<form action="{$current}&add{$table}&token={$token}" method="post" style="text-align: center;">
-			<input type="submit" class="button" value="{l s='I read the disclaimer - Create a new Backup'}" style="padding: 10px; font-weight: bold; border: 1px solid;" />
-		</form>
-	{/if}
 	</div>
+
 	<div class="warn width2" style="float: left;">
 		<p>{l s='How-to restore a database Backup in 10 easy steps'}</p>
 		<ol style="font-size: 11px; font-weight: normal; line-height: 20px;">
@@ -67,10 +66,9 @@
 			<li>{l s='Click on the "Go" button and wait during the import, the process can take several minutes'}</li>
 		</ol>
 	</div>
-	<div class="clear"></div>
-{/if}
-{if isset($download)}
-	<br /><br /><a href="{$current}&token={$token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a><br />
-{/if}
 
-{$content}
+	<div class="clear"></div>
+
+{/block}
+
+
