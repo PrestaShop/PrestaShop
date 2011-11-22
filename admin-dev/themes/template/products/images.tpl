@@ -96,8 +96,13 @@
 					assoc += '"{$shop.id_shop}" : {if $image->isAssociatedToShop($shop.id_shop)}1{else}0{/if},';
 				{/foreach}
 			{/if}
-			assoc = assoc.slice(0, -1);
-			assoc += {literal}"}"{/literal};
+			if (assoc != {literal}"{"{/literal})
+			{
+				assoc = assoc.slice(0, -1);
+				assoc += {literal}"}"{/literal};
+			}
+			else
+				assoc = false;
 			imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}enabled{else}forbbiden{/if}", assoc);
 		{/foreach}
 		{literal}
@@ -157,10 +162,10 @@
 				}
 				if (responseJSON.status == 'ok')
 				{
-					cover = "forbbiden"
+					cover = "forbbiden";
 					if (responseJSON.cover == "1")
-						cover = "enabled"
-					imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover)
+						cover = "enabled";
+					imageLine(responseJSON.id, responseJSON.path, responseJSON.position, cover, false)
 					$("#imageTable tr:last").after(responseJSON.html);
 					$("#countImage").html(parseInt($("#countImage").html()) + 1);
 					$("#img" + id).remove();
@@ -172,15 +177,13 @@
 					$("#img" + id + " .errorImg").html(responseJSON.error);
 					$("#img" + id + " .errorImg").show();
 				}
-				/*if (percent >= 100)
-					refreshImagePositions($("#imageTable"));*/
 				filecheck++;
 			},
 			onSubmit: function(id, filename)
 			{
 				$("#imageTable").show();
 				$("#listImage").append("<li id='img"+id+"'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px\"href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
-			},
+			}
 		});
 		
 		$('.delete_product_image').die().live('click', function(e)
@@ -219,8 +222,9 @@
 			});
 		});
 		
-		$('.covered').die().live('click', function(data)
+		$('.covered').die().live('click', function(e)
 		{
+			e.preventDefault();
 			id = $(this).parent().parent().parent().attr('id');
 			$("#imageList .cover img").each( function(i){
 				$(this).attr("src", $(this).attr("src").replace("enabled", "forbbiden"));
@@ -242,9 +246,9 @@
 		$('.image_shop').die().live('click', function()
 		{
 			active = false;
-			if ($(this).attr("checked") == "checked")
+			if ($(this).attr("checked"))
 				active = true;
-			sid = $(this).parent().parent().attr('id');
+			id = $(this).parent().parent().attr('id');
 			id_shop = $(this).attr("id").replace(id, "");
 			$.ajax(
 			{
@@ -291,11 +295,14 @@
 			line = line.replace(/blank/g, cover);
 			line = line.replace("<tbody>", "");
 			line = line.replace("</tbody>", "");
-			tmp = jQuery.parseJSON(shops);
-			$.each(tmp, function(key, value){
-				if (value == 1)
-					line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
-			});
+			if (shops != false)
+			{
+				tmp = jQuery.parseJSON(shops);
+				$.each(tmp, function(key, value){
+					if (value == 1)
+						line = line.replace('id="' + key + '' + id + '"','id="' + key + '' + id + '" checked=checked');
+				});
+			}
 			$("#imageList").append(line);
 		}
 	});
