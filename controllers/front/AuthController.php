@@ -278,6 +278,9 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->update();
+				// Add customer to the context
+				$this->context->customer = $customer;
+
 				Hook::exec('authentication');
 
 				// Login information have changed, so we check if the cart rules still apply
@@ -291,8 +294,10 @@ class AuthControllerCore extends FrontController
 				}
 			}
 		}
+			elog('here???');
 		if ($this->ajax)
 		{
+			elog(Tools::getToken(false));
 			$return = array(
 				'hasError' => !empty($this->errors),
 				'errors' => $this->errors,
