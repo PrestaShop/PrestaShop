@@ -43,8 +43,11 @@ class AdminGroupsController extends AdminController
 		WHERE jc.`deleted` != 1
 		AND jcg.`id_group` = a.`id_group`) AS nb';
 
-		$groups_to_keep = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
-		$this->_listSkipDelete = $groups_to_keep;
+		$groups_to_keep = array(
+			Configuration::get('PS_UNIDENTIFIED_GROUP'),
+			Configuration::get('PS_GUEST_GROUP'),
+			Configuration::get('PS_CUSTOMER_GROUP')
+		);
 
 		$this->fieldsDisplay = array(
 			'id_group' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -52,10 +55,9 @@ class AdminGroupsController extends AdminController
 			'reduction' => array('title' => $this->l('Discount'), 'width' => 50, 'align' => 'right'),
 			'nb' => array('title' => $this->l('Members'), 'width' => 25, 'align' => 'center'),
 			'date_add' => array('title' => $this->l('Creation date'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
-		
-		//$this->addRowActionSkipList('delete', array(1));
+
 		$this->addRowActionSkipList('delete', $groups_to_keep);
-		
+
 		parent::__construct();
 	}
 
@@ -89,7 +91,7 @@ class AdminGroupsController extends AdminController
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}
-		$customerFieldsDisplay = (array(
+		$customer_fields_display = (array(
 				'id_customer' => array('title' => $this->l('ID'), 'align' => 'center'),
 				'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders),
 				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
@@ -101,7 +103,7 @@ class AdminGroupsController extends AdminController
 				'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool')
 			));
 
-		$customerList = $group->getCustomers(false);
+		$customer_list = $group->getCustomers(false);
 
 		$helper = new HelperList();
 		$helper->currentIndex = self::$currentIndex;
@@ -111,14 +113,14 @@ class AdminGroupsController extends AdminController
 		$helper->actions = array('edit', 'view');
 		$helper->show_toolbar = false;
 
-		return $helper->generateList($customerList, $customerFieldsDisplay);
+		return $helper->generateList($customer_list, $customer_fields_display);
 	}
 
 	public function initForm()
 	{
 		if (!($group = $this->loadObject(true)))
 			return;
-		
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Customer group'),
@@ -151,7 +153,16 @@ class AdminGroupsController extends AdminController
 					'name' => 'price_display_method',
 					'desc' => $this->l('How the prices are displayed on order summary for this customer group (tax included or excluded).'),
 					'options' => array(
-						'query' => array(array('id_method' => PS_TAX_EXC, 'name' => $this->l('Tax excluded'), array('id_method' => PS_TAX_INC, 'name' => $this->l('Tax included')))),
+						'query' => array(
+							array(
+								'id_method' => PS_TAX_EXC,
+								'name' => $this->l('Tax excluded'),
+								array(
+									'id_method' => PS_TAX_INC,
+									'name' => $this->l('Tax included')
+								)
+							)
+						),
 						'id' => 'id_method',
 						'name' => 'name'
 					)
@@ -171,7 +182,7 @@ class AdminGroupsController extends AdminController
 				)
 			)
 		);
-		
+
 		$trads = array(
 			'Home' => $this->l('Home'),
 			'selected' => $this->l('selected'),
@@ -181,8 +192,8 @@ class AdminGroupsController extends AdminController
 			'Uncheck All'  => $this->l('Uncheck All'),
 			'search' => $this->l('Search a category')
 		);
-		$this->tpl_form_vars['categoryTreeView'] =  Helper::renderAdminCategorieTree($trads, array(), 'id_category', true);
-		
+		$this->tpl_form_vars['categoryTreeView'] = Helper::renderAdminCategorieTree($trads, array(), 'id_category', true);
+
 		return parent::initForm();
 
 	}
@@ -190,45 +201,45 @@ class AdminGroupsController extends AdminController
 	protected function formatCategoryDiscountList($id)
 	{
 		$categorie = GroupReduction::getGroupReductions((int)$id, $this->context->language->id);
-		$categorieReductions = array();
+		$categorie_reductions = array();
 		$category_reduction = Tools::getValue('category_reduction');
-		
-		foreach($categorie as $category)
+
+		foreach ($categorie as $category)
 		{
-			if (is_array($category_reduction) AND array_key_exists($category['id_category'], $category_reduction))
+			if (is_array($category_reduction) && array_key_exists($category['id_category'], $category_reduction))
 				$category['reduction'] = $category_reduction[$category['id_category']];
-			
+
 			$tmp = array();
 			$tmp['path'] = getPath(self::$currentIndex.'?tab=AdminCatalog', (int)$category['id_category']);
 			$tmp['reduction'] = (float)$category['reduction'] * 100;
 			$tmp['id_category'] = (int)$category['id_category'];
-			$categorieReductions[(int)$category['id_category']] = $tmp;
+			$categorie_reductions[(int)$category['id_category']] = $tmp;
 		}
-		
+
 		if (is_array($category_reduction))
-			foreach($category_reduction as $key => $val)
+			foreach ($category_reduction as $key => $val)
 			{
-				if (!array_key_exists($key, $categorieReductions))
+				if (!array_key_exists($key, $categorie_reductions))
 				{
 					$tmp = array();
 					$tmp['path'] = getPath(self::$currentIndex.'?tab=AdminCatalog', (int)$key);
 					$tmp['reduction'] = (float)$val * 100;
 					$tmp['id_category'] = (int)$key;
-					$categorieReductions[(int)$category['id_category']] = $tmp;
+					$categorie_reductions[(int)$category['id_category']] = $tmp;
 				}
 			}
-		
-		return $categorieReductions;
+
+		return $categorie_reductions;
 	}
-	
+
 	public function formatModuleListAuth($id_group)
 	{
 		$modules = Module::getModulesInstalled();
 		$authorized_modules = '';
-		
+
 		$auth_modules = array();
 		$unauth_modules = array();
-		
+
 		if ($id_group)
 			$authorized_modules = Module::getAuthorizedModules($id_group);
 
@@ -250,22 +261,22 @@ class AdminGroupsController extends AdminController
 		else
 			$auth_modules = $modules;
 		$auth_modules_tmp = array();
-		foreach($auth_modules as $key => $val)
+		foreach ($auth_modules as $key => $val)
 			$auth_modules_tmp[] = Module::getInstanceById($val['id_module']);
-		
+
 		$auth_modules = $auth_modules_tmp;
-		
+
 		$unauth_modules_tmp = array();
-		foreach($unauth_modules as $key => $val)
+		foreach ($unauth_modules as $key => $val)
 			$unauth_modules_tmp[] = Module::getInstanceById($val['id_module']);
-		
+
 		$unauth_modules = $unauth_modules_tmp;
-		
+
 		return array('unauth_modules' => $unauth_modules, 'auth_modules' => $auth_modules);
 	}
-	
+
 	public function postProcess()
-	{		
+	{
 		if (Tools::isSubmit('submitAddgroup'))
 		{
 			if ($this->tabAccess['add'] === '1')
@@ -285,7 +296,7 @@ class AdminGroupsController extends AdminController
 		else
 			parent::postProcess();
 	}
-	
+
 	protected function validateDiscount($reduction)
 	{
 		if (!Validate::isPrice($reduction) || $reduction > 100 || $reduction < 0)
@@ -293,12 +304,12 @@ class AdminGroupsController extends AdminController
 		else
 			return true;
 	}
-	
+
 	public function ajaxProcessAddCategoryReduction()
 	{
 		$category_reduction = Tools::getValue('category_reduction');
 		$id_category = Tools::getValue('id_category'); //no cast validation is done with Validate::isUnsignedId($id_category)
-		
+
 		$result = array();
 		if (!Validate::isUnsignedId($id_category))
 		{
@@ -319,8 +330,7 @@ class AdminGroupsController extends AdminController
 		}
 		die(Tools::jsonEncode($result));
 	}
-	
-	
+
 	/**
 	 * Update (or create) restrictions for modules by group
 	 */
@@ -332,14 +342,14 @@ class AdminGroupsController extends AdminController
 		$return = true;
 		if ($id_group)
 			Group::truncateModulesRestrictions((int)$id_group);
-		
+
 		if (is_array($auth_modules))
 			$return &= Group::addModulesRestrictions($id_group, $auth_modules, 1);
 		if (is_array($unauth_modules))
 			$return &= Group::addModulesRestrictions($id_group, $unauth_modules, 0);
 		return $return;
 	}
-	
+
 	protected function updateCategoryReduction()
 	{
 		$category_reduction = Tools::getValue('category_reduction');
@@ -351,15 +361,22 @@ class AdminGroupsController extends AdminController
 					$this->_errors[] = Tools::displayError('Discount value is incorrect');
 				else
 				{
-					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)Tools::getValue('id_group').' AND `id_category` = '.(int)$cat);
-					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)Tools::getValue('id_group'));
-					$category = new Category((int)($cat));
+					Db::getInstance()->execute('
+						DELETE FROM `'._DB_PREFIX_.'group_reduction`
+						WHERE `id_group` = '.(int)Tools::getValue('id_group').'
+							AND `id_category` = '.(int)$cat
+					);
+					Db::getInstance()->execute('
+						DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
+						WHERE `id_group` = '.(int)Tools::getValue('id_group')
+					);
+					$category = new Category((int)$cat);
 					$category->addGroupsIfNoExist((int)Tools::getValue('id_group'));
-					$groupReduction = new GroupReduction();
-					$groupReduction->id_group = (int)Tools::getValue('id_group');
-					$groupReduction->reduction = (float)($reduction/100);
-					$groupReduction->id_category = (int)$cat;
-					if (!$groupReduction->save())
+					$group_reduction = new GroupReduction();
+					$group_reduction->id_group = (int)Tools::getValue('id_group');
+					$group_reduction->reduction = (float)($reduction / 100);
+					$group_reduction->id_category = (int)$cat;
+					if (!$group_reduction->save())
 						$this->_errors[] = Tools::displayError('Cannot save group reductions');
 				}
 			}
