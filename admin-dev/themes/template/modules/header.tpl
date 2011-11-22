@@ -75,7 +75,7 @@
 		<div class="filter-module" id="addons_login_div">
 			<form id="addons_login_form" method="post">
 				{l s='Login Addons'} : <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
-				{l s= 'Password Addons'} : <input type="text" value="" id="password_addons" autocomplete="off" class="ac_input">
+				{l s= 'Password Addons'} : <input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
 				<input type="submit" class="button" id="addons_login_button" value="{l s='Log in'}">
 				<span id="addons_loading" style="color:red"></span>
 			</form>
