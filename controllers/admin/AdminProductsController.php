@@ -82,7 +82,7 @@ class AdminProductsControllerCore extends AdminController
 		if ($id_category = Tools::getvalue('id_category'))
 			$this->_category = new Category($id_category);
 		else
-			$this->_category = new Category(1);
+			$this->_category = new Category();
 
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
@@ -91,7 +91,11 @@ class AdminProductsControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
-		$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
+
+		// if no category selected, display all products
+		if (Validate::isLoadedObject($this->_category))
+			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
+
 		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final';
 
 		parent::__construct();
@@ -1606,7 +1610,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$this->display = 'list';
 			if ($id_category = (int)Tools::getValue('id_category'))
-				AdminController::$currentIndex .= '&id_category='.$id_category;
+				self::$currentIndex .= '&id_category='.$id_category;
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
 
 			$id_category = Tools::getValue('id_category', 1);
@@ -1617,6 +1621,19 @@ class AdminProductsControllerCore extends AdminController
 			$root_categ = Category::getRootCategory();
 			$children = $root_categ->getAllChildren();
 			$category_tree = array();
+
+			// Add category "all products" to tree
+			$all_categ = new Category();
+			$all_categ->name = 'All products';
+			$all_categ->selected = $this->_category->id_category == $all_categ->id;
+			$all_categ->dashes = '';
+			$category_tree[] = $all_categ;
+
+			// Add root category to tree
+			$root_categ->selected = $this->_category->id_category == $root_categ->id;
+			$root_categ->dashes = str_repeat('&nbsp;-&nbsp;',$root_categ->level_depth);
+			$category_tree[] = $root_categ;
+
 			foreach ($children as $k => $categ)
 			{
 				$categ = new Category($categ['id_category'],$this->context->language->id);
@@ -1625,10 +1642,20 @@ class AdminProductsControllerCore extends AdminController
 				$category_tree[] = $categ;
 			}
 			$this->tpl_list_vars['category_tree'] = $category_tree;
+
+			// used to build the new url when changing category
+			$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
 		}
 		// @todo module free
 		$this->tpl_form_vars['vat_number'] = file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php');
 		parent::initContent();
+	}
+
+	public function initList()
+	{
+		if (!Tools::getValue('id_category'))
+			unset($this->fieldsDisplay['position']);
+		return parent::initList();
 	}
 
 	public function ajaxProcessProductManufacturers()
@@ -1641,26 +1668,6 @@ class AdminProductsControllerCore extends AdminController
 				$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
 			die('['.implode(',', $jsonArray).']');
 		}
-	}
-
-	/**
-	 * displayList show ordered list of current category
-	 *
-	 * @param mixed $token
-	 * @return void
-	 */
-	public function displayList($token = null)
-	{
-		/* Display list header (filtering, pagination and column names) */
-	//	$this->displayListHeader($token);
-		if (!sizeof($this->_list))
-			echo '<tr><td class="center" colspan="'.(sizeof($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
-
-		/* Show the content of the table */
-		$this->displayListContent($token);
-
-		/* Close list table and submit button */
-		$this->displayListFooter($token);
 	}
 
 	/**

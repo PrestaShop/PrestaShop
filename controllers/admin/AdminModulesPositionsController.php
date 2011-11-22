@@ -18,7 +18,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
+*  @author PrestaShop SA <contact@prestashop.com>o
 *  @copyright  2007-2011 PrestaShop SA
 *  @version  Release: $Revision: 7466 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -224,11 +224,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 		else
 			$this->content .= $this->initMain();
 
-		$this->context->smarty->assign(array('content' => $this->content));
+		$this->context->smarty->assign(array(
+			'content' => $this->content
+		));
 	}
 
 	public function initMain()
 	{
+		// Init toolbar
+		$this->initToolbarTitle();
+
 		$admin_dir = basename(_PS_ADMIN_DIR_);
 		$modules = Module::getModulesInstalled();
 
@@ -256,8 +261,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		$this->addJqueryPlugin("tablednd");
 
+		$this->toolbar_btn['save'] = array(
+			'href' => self::$currentIndex.'&addToHook'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token,
+			'desc' => $this->l('Transplant a module')
+		);
+
 		$this->context->smarty->assign(array(
-			'url_transplant' => self::$currentIndex.'&addToHook'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token,
+			'show_toolbar' => true,
+			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->toolbar_title,
+			'toolbar_fix' => 'false',
 			'token' => $this->token,
 			'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
 			'modules' => $module_instances,
@@ -276,6 +289,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 	public function initForm()
 	{
+		// Init toolbar
+		$this->initToolbarTitle();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		$id_module = (int)(Tools::getValue('id_module'));
@@ -343,6 +358,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'modules' => $modules,
 			'show_toolbar' => true,
 			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->toolbar_title,
 			'table' => 'hook_module',
 		));
 
