@@ -39,9 +39,6 @@
 					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']}" />
 				</div>
 			{/foreach}
-			<div class="margin-form">
-				<input type="submit" class="button" name="submitAccountingDetails" />
-			</div>
 		</form>
 		<div style="text-align:left; font-size:11px;">
 			<i>{l s='Theses fields are used for the accounting export'}</i>
