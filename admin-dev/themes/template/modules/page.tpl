@@ -29,24 +29,6 @@
 	{include file='modules/header.tpl'}
 	{include file='modules/filters.tpl'}
 
-
-	{if !isset($logged_on_addons)}
-		<!--start addons login-->
-		<div class="filter-module" id="addons_login_div">
-			<form id="addons_login_form" method="post">
-				<input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
-				<input type="text" value="" id="password_addons" autocomplete="off" class="ac_input">
-				<input type="submit" class="button" id="addons_login_button" value="{l s='Log in'}">
-				<span id="addons_loading" style="color:red"></span>
-			</form>
-
-		</div>
-		<!--end addons login-->
-	{/if}
-
-
-
-
 	<div id="container">
 		<!--start sidebar module-->
 		<div class="sidebar">
