@@ -57,7 +57,7 @@ class HelperCore
 	/**
 	 * @var string base template name
 	 */
-	protected $base_tpl = 'content.tpl';
+	public $base_tpl = 'content.tpl';
 
 	public $tpl_vars = array();
 
