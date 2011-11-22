@@ -33,7 +33,7 @@ class AdminInformationControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	public function initView($tpl = false)
+	public function initView()
 	{
 		$this->tpl_view_vars = array(
 			'version' => array(
