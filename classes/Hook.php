@@ -264,7 +264,7 @@ class HookCore extends ObjectModel
 					$output .= '<script type="text/javascript"> modules_list.push(\''.$moduleInstance->name.'\');</script>
 								<div id="hook_'.$array['id_hook'].'_module_'.$moduleInstance->id.'_moduleName_'.$moduleInstance->name.'"
 								class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-								<span><img src="'.$moduleInstance->_path.'/logo.gif">'
+								<span><img src="'._MODULE_DIR_.$moduleInstance->name.'/logo.gif">'
 							 	.$moduleInstance->displayName.'<span style="float:right">
 							 	<a href="#" id="'.$array['id_hook'].'_'.$moduleInstance->id.'" class="moveModule">
 							 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
