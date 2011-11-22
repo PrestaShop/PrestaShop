@@ -1105,6 +1105,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
 				$this->_errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
+			// get delivery date
+			$delivery_expected = new DateTime(pSQL(Tools::getValue('date_delivery_expected')));
+			// converts date to timestamp
+			if ($delivery_expected <= (new DateTime('yesterday')))
+				$this->_errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
+
 			if (!count($this->_errors))
 			{
 				// specify initial state
@@ -1192,7 +1198,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 									$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 									$redirect = self::$currentIndex.'&token='.$token;
-									Tools::redirectAdmin($redirect.'&conf=5');
+									$this->redirect_after($redirect.'&conf=5');
 								}
 							}
 						}
@@ -1302,7 +1308,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			// display confirm message
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 			$redirect = self::$currentIndex.'&token='.$token;
-			Tools::redirectAdmin($redirect.'&conf=4');
+			$this->redirect_after($redirect.'&conf=4');
 		}
 	}
 
