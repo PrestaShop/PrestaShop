@@ -243,8 +243,6 @@ class AdminShopControllerCore extends AdminController
 
 		if (Shop::getTotalShops() > 1 && $obj->id)
 			$disabled = array(
-				'share_customer' => true,
-				'share_order' => true,
 				'active' => false
 			);
 		else
@@ -292,7 +290,7 @@ class AdminShopControllerCore extends AdminController
 					'type' => 'select',
 					'name' => 'importFromShop',
 					'options' => array(
-						'query' => Shop::getTree(),
+						'query' => Shop::getShops(false),
 						'name' => 'name'
 					)
 				),
@@ -310,7 +308,7 @@ class AdminShopControllerCore extends AdminController
 		$this->tpl_form_vars = array(
 			'disabled' => $disabled,
 			'checked' => (Tools::getValue('addshop') !== false) ? true : false,
-			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID(),
+			'defaultShop' => (int)Configuration::get('PS_SHOP_DEFAULT'),
 		);
 
 		if (isset($this->fields_import_form))
