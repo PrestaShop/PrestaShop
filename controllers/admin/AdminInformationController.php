@@ -33,7 +33,7 @@ class AdminInformationControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	public function initView()
+	public function initView($tpl = false)
 	{
 		$this->tpl_view_vars = array(
 			'version' => array(
@@ -67,7 +67,7 @@ class AdminInformationControllerCore extends AdminController
 
 	/**
 	 * get all tests
-	 * 
+	 *
 	 * @return array of test results
 	 */
 	public function getTestResult()
@@ -110,3 +110,4 @@ class AdminInformationControllerCore extends AdminController
 		);
 	}
 }
+
