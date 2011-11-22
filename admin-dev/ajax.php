@@ -911,12 +911,12 @@ if (Tools::isSubmit('ajaxFeaturesPositions'))
 
 	foreach ($new_positions as $position => $value)
 	{
-		// pos[1] = id_feature, pos[2] = old position
+		// pos[2] = id_feature, pos[3] = old position
 		$pos = explode('_', $value);
 
-		if (isset($pos[1]) && (int)$pos[1] === $id_feature)
+		if (isset($pos[2]) && (int)$pos[2] === $id_feature)
 		{
-			if ($feature = new Feature((int)$pos[1]))
+			if ($feature = new Feature((int)$pos[2]))
 				if (isset($position) && $feature->updatePosition($way, $position))
 					echo "ok position $position for feature $pos[1]\r\n";
 				else
