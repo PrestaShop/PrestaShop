@@ -290,7 +290,7 @@ class AdminStockMvtControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'width' => 50,
+				'width' => 150,
 				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
