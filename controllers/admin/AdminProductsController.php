@@ -953,7 +953,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (($id_image = $_GET['id_image']) && ($id_shop = (int)$_GET['id_shop']))
 			if (Tools::getValue('active') == "true")
-				die('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
+				die(Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')'));
 			else
 				die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
 	}
