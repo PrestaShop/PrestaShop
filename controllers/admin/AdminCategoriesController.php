@@ -87,6 +87,13 @@ class AdminCategoriesControllerCore extends AdminController
 
 		parent::__construct();
 	}
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryUi('ui.widget');
+		$this->addJqueryPlugin('tagify');
+	}
 
 	public function initList()
 	{
@@ -259,7 +266,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'text',
+					'type' => 'tags',
 					'label' => $this->l('Meta keywords:'),
 					'name' => 'meta_keywords',
 					'lang' => true,
