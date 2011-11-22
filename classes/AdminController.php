@@ -79,6 +79,8 @@ class AdminControllerCore extends Controller
 	public $tpl_option_vars = array();
 	public $tpl_view_vars = array();
 
+	public $base_tpl_view = null;
+
 	/** @var bool if you want more fieldsets in the form */
 	public $multiple_fieldsets = false;
 
@@ -1376,6 +1378,7 @@ class AdminControllerCore extends Controller
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_view_vars;
+		!is_null($this->base_tpl_view) ? $helper->base_tpl = $this->base_tpl_view : '';
 		$view = $helper->generateView();
 		$this->toolbar_fix = false;
 
