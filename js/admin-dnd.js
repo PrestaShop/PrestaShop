@@ -119,7 +119,7 @@ function initTableDnD(table)
 				if (table.id == 'feature') {
 					params = {
 						ajaxFeaturesPositions: true,
-						id_feature : ids[1],
+						id_feature : ids[2],
 						way: way,
 						token: token
 					}
