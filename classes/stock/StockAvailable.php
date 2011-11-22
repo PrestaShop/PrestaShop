@@ -392,7 +392,7 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $id_shop Optional : gets context if null @see Context::getContext()
 	 * @return bool : depends on stock @see $depends_on_stock
 	 */
-	public function outOfStock($id_product, $id_shop = null)
+	public static function outOfStock($id_product, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
