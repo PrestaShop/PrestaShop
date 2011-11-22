@@ -66,22 +66,19 @@ class blockcontact extends Module
 		return '
 		<h2>'.$this->displayName.'</h2>
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2">			
+			<fieldset>			
 				<label for="telnumber">'.$this->l('Telephone number : ').'</label>
 				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != "") ? Configuration::get('blockcontact_telnumber') : "").'" />
 				<div class="clear">&nbsp;</div>
 				<label for="email">'.$this->l('Email : ').'</label>
 				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != "") ? Configuration::get('blockcontact_email') : "").'" />
 				<div class="clear">&nbsp;</div>
-				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
+				<div class="margin-form">
+					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
+				</div>
 			</fieldset>
 		</form>
-		<div class="clear">&nbsp;</div>
-		<fieldset>
-			<legend>Addons</legend>
-			'.$this->l('This module has been developped by PrestaShop and can only be sold through').' <a href="http://addons.prestashop.com">addons.prestashop.com</a>.<br />
-			'.$this->l('Please report all bugs to').' <a href="mailto:addons@prestashop.com">addons@prestashop.com</a> '.$this->l('or using our').' <a href="http://addons.prestashop.com/contact-form.php">'.$this->l('contact form').'</a>.
-		</fieldset>';
+		';
 	}
 	
 	public function hookRightColumn()
