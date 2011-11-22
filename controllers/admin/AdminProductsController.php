@@ -1787,12 +1787,12 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$this->toolbar_btn['save'] = array(
 						'short' => 'Save',
-						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
 						'desc' => $this->l('Save'),
 					);
 					$this->toolbar_btn['save-and-stay'] = array(
 						'short' => 'SaveAndStay',
-						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
 						'desc' => $this->l('Save and stay'),
 					);
 				}

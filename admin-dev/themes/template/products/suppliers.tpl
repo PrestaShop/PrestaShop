@@ -1,3 +1,8 @@
+<div class="hint" style="display:block; position:'auto';">
+	<p>{l s='This interface allows you to specify the suppliers of the current product and eventually its combinations.'}</p>
+	<p>{l s='It is also possible to specify for each product/product combinations the supplier reference according to previously associated suppliers.'}</p>
+</div>
+<br />
 <table cellpadding="5">
 	<tbody>
 		<tr>
@@ -56,7 +61,7 @@
 <div class="separation"></div>
 <p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
 
-<div id="accordion" style="margin-top:10px; display:block;">
+<div id="suppliers_accordion" style="margin-top:10px; display:block;">
 	{foreach from=$associated_suppliers item=supplier}
 	    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
 	    <div style="display:block;">
@@ -95,8 +100,72 @@
 
 <script type="text/javascript">
 	$(function() {
-		window.setTimeout(function() {
-			$('#accordion').accordion();
+		var default_is_ok = false;
+
+		var manageDefaultSupplier = function() {
+
+			var availables_radio_buttons = [];
+			var radio_buttons = $('input[name="default_supplier"]');
+
+			for (i=0; i<radio_buttons.length; i++)
+			{
+				var item = $(radio_buttons[i]);
+
+				if (item.is(':disabled'))
+				{
+					if (item.is(':checked'))
+					{
+						item.attr("checked", "");
+						default_is_ok = false;
+					}
+				}
+				else
+				{
+					availables_radio_buttons.push(item);
+				}
+			}
+
+			if (default_is_ok == false)
+			{
+				for (i=0; i<availables_radio_buttons.length; i++)
+				{
+					var item = $(availables_radio_buttons[i]);
+
+					if (item.is(':disabled') == false)
+					{
+						item.attr("checked", "checked");
+						default_is_ok = true;
+					}
+
+					break;
+				}
+			}
+		};
+
+		$('.supplierCheckBox').click(function() {
+
+			var check = $(this);
+
+			var checkbox = $('#default_supplier_'+check.val());
+
+			if (this.checked)
+			{
+				//enable default radio button associated
+				checkbox.attr("disabled","");
+			}
+			else
+			{
+				//enable default radio button associated
+				checkbox.attr("disabled","disabled");
+			}
+
+			//manage default supplier check
+			manageDefaultSupplier();
+
+		});
+
+		setTimeout(function() {
+			$('#suppliers_accordion').accordion();
 		}, 500);
 	});
 </script>
