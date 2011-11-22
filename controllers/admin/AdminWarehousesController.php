@@ -259,12 +259,14 @@ class AdminWarehousesControllerCore extends AdminController
 
 		);
 
+		// Shop Association
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shops:'),
 				'name' => 'checkBoxShopAsso',
+				'desc' => 'Associated shops',
 				'values' => Shop::getTree()
 			);
 		}
