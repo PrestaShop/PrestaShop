@@ -160,26 +160,6 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->_group = 'GROUP BY sa.id_referrer';
 
-		$this->toolbar_btn['save-calendar'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save Calendar')
-		);
-
-		$this->toolbar_btn['save-settings'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save Settings')
-		);
-
-		$this->toolbar_btn['refresh-index'] = array(
-			'href' => '#',
-			'desc' => $this->l('Refresh Index')
-		);
-
-		$this->toolbar_btn['refresh-cache'] = array(
-			'href' => '#',
-			'desc' => $this->l('Refresh Cache')
-		);
-
 		$this->tpl_list_vars = array(
 			'enable_calendar' => $this->enableCalendar(),
 			'calendar_form' => $this->displayCalendar(),
@@ -419,11 +399,6 @@ class AdminReferrersControllerCore extends AdminController
 
 	public function initView()
 	{
-		$this->toolbar_btn['save-calendar'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save Calendar')
-		);
-
 		$referrer = new Referrer((int)Tools::getValue('id_referrer'));
 
 		$display_tab = array(
