@@ -929,7 +929,7 @@ class AdminProductsController extends AdminController
 			$obj = new Image($result['success']['id_image']);
 			$json = array(
 				'status' => 'ok',
-				'id'=>$obj->id, 
+				'id'=>$obj->id,
 				'path' => $obj->getExistingImgPath(),
 				'position' => $obj->position,
 				'cover' => $obj->cover,
@@ -939,12 +939,12 @@ class AdminProductsController extends AdminController
 		else
 			die(Tools::jsonEncode($result));
 	}
-	
+
 	public function ajaxPreProcess()
 	{
 		$this->action = Tools::getValue('action');
 	}
-	
+
 	public function ajaxProcessUpdateProductImageShopAsso()
 	{
 		if (($id_image = $_GET['id_image']) && ($id_shop = (int)$_GET['id_shop']))
@@ -953,7 +953,7 @@ class AdminProductsController extends AdminController
 			else
 				die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
 	}
-	
+
 	public function ajaxProcessUpdateImagePosition()
 	{
 		if ($json = Tools::getValue('json'))
@@ -969,7 +969,7 @@ class AdminProductsController extends AdminController
 		}
 		exit();
 	}
-	
+
 	public function ajaxProcessUpdateCover()
 	{
 		if ($this->action == 'UpdateCover')
@@ -980,7 +980,7 @@ class AdminProductsController extends AdminController
 			$img->update();
 		}
 	}
-	
+
 	public function ajaxProcessDeleteProductImage()
 	{
 		/* Delete product image */
@@ -3048,36 +3048,22 @@ class AdminProductsController extends AdminController
 					'attribute_designation' => ''
 				);
 
-			// Get physical quantities & available quantities
-			$stock_manager = StockManagerFactory::getManager();
-			$total_quantity = 0;
-			$physical_quantity = array();
 			$available_quantity = array();
 			$product_designation = array();
 
 			foreach ($attributes as $attribute)
 			{
-				$physical_quantity[$attribute['id_product_attribute']] = (int)$stock_manager->getProductPhysicalQuantities(
-					(int)$obj->id,
-					(int)$attribute['id_product_attribute']
-				);
-
-				$total_quantity += $physical_quantity[$attribute['id_product_attribute']];
-
 				// Get available quantity for the current product attribute in the current shop
-				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getStockAvailableForProduct(
+				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct(
 					(int)$obj->id,
 					$attribute['id_product_attribute']
 				);
-
 				// Get all product designation
 				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
 			}
 
 			$data->assign(array(
 				'attributes' => $attributes,
-				'total_quantity' => $total_quantity,
-				'physical_quantity' => $physical_quantity,
 				'available_quantity' => $available_quantity,
 				'product_designation' => $product_designation,
 				'product' => $this->object,
@@ -3279,7 +3265,7 @@ class AdminProductsController extends AdminController
 			</tr>';
 		$json = array(
 			'status' => 'ok',
-			'id'=>$image_obj->id, 
+			'id'=>$image_obj->id,
 			'path' => _THEME_PROD_DIR_.$img_path.'.jpg',
 			'path_small' => _THEME_PROD_DIR_.$img_path.'-small.jpg',
 			'position' => $image['position'],

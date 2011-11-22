@@ -53,6 +53,7 @@
 			}
 		});
 	};
+
 	var refreshQtyAvaibilityForm = function()
 	{
 		if ($('#depends_on_stock_0').attr('checked'))
@@ -66,17 +67,20 @@
 			$('.available_quantity').find('span').show();
 		}
 	};
+
 	$('.depends_on_stock').click(function(e)
 	{
 		refreshQtyAvaibilityForm();
-		ajaxCall( { actionQty: 'depends_on_stock', value: $(this).attr('value') } );
+		ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
 		if($(this).val() == 0)
 			$('.available_quantity input').trigger('change');
 	});
+
 	$('.available_quantity').find('input').change(function(e)
 	{
 		ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );
 	});
+
 	$('.available_quantity').find('input').click(function(e)
 	{
 		if(typeof(this.intervalId) != 'undefined')
@@ -91,50 +95,18 @@
 			}
 		}, 500, this, $(this).val())
 	});
+
 	$('.out_of_stock').click(function(e)
 	{
+		refreshQtyAvaibilityForm();
 		ajaxCall( { actionQty: 'out_of_stock', value: $(this).val() } );
 	});
+
 	refreshQtyAvaibilityForm();
 </script>
 
-<div class="tab-page" id="step8">
-	<h4 class="tab">8. {l s='Quantities'}</h4>
-	<table cellpadding="5">
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<b>{l s='Available stock in warehouses'}</b>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<div class="separation"></div>
-	<p>{l s='There is %s quantities available in stock for this product'|sprintf:$total_quantity}</p>
-	<table cellpadding="5" style="width:100%">
-		<tbody>
-			<tr>
-				<td valign="top" style="text-align:center;vertical-align:top;">
-					<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
-						<thead>
-							<tr>
-								<th>{l s='Quantity'}</th>
-								<th>{l s='Designation'}</th>
-							</tr>
-						</thead>
-						<tbody>
-						{foreach from=$attributes item=attribute}
-							<tr>
-								<td>{$physical_quantity[$attribute['id_product_attribute']]}</td>
-								<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-							</tr>
-						{/foreach}
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<p>{l s='This interface ...'}</p>
+
 	<br />
 	<table cellpadding="5">
 		<tbody>
@@ -220,4 +192,3 @@
 			</tr>
 		</tbody>
 	</table>
-</div>
