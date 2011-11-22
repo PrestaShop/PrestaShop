@@ -272,12 +272,12 @@ function confirmFreeOrder()
 		{
 			var array_split = html.split(':');
 			if (array_split[0] === 'freeorder')
-	   		{
-	   			if (isGuest)
-	   				document.location.href = guestTrackingUrl+'?id_order='+encodeURIComponent(array_split[1])+'&email='+encodeURIComponent(array_split[2]);
-	   			else
-	   				document.location.href = historyUrl;
-	   		}
+			{
+				if (isGuest)
+					document.location.href = guestTrackingUrl+'?id_order='+encodeURIComponent(array_split[1])+'&email='+encodeURIComponent(array_split[2]);
+				else
+					document.location.href = historyUrl;
+			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to confirm the order \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
 	});
