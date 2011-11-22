@@ -1595,7 +1595,7 @@ class AdminControllerCore extends Controller
 			$this->context->employee->logout();
 
 		if (!isset($this->context->employee) || !$this->context->employee->isLoggedBack())
-			$this->redirect_after = 'login.php?redirect='.$_SERVER['REQUEST_URI'];
+			$this->redirect_after = 'login.php'.(!isset($_GET['logout']) ? '?redirect='.$_SERVER['REQUEST_URI'] : '');
 
 		// Set current index
 		$current_index = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
