@@ -218,7 +218,7 @@ class ParentOrderControllerCore extends FrontController
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		if (Tools::getIsset('delivery_option') && $this->validateDeliveryOption(Tools::getValue('delivery_option')))
-			$this->context->cart->delivery_option = serialize(Tools::getValue('delivery_option'));
+			$this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
 
 		Hook::exec('processCarrier', array('cart' => $this->context->cart));
 
@@ -435,7 +435,7 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	protected function setNoCarrier()
 	{
-		$this->context->cart->delivery_option = 0;
+		$this->context->cart->setDeliveryOption(null);
 		$this->context->cart->update();
 	}
 
@@ -445,6 +445,9 @@ class ParentOrderControllerCore extends FrontController
 	 * @todo this function must be modified - id_carrier is now delivery_option
 	 * 
 	 * @param array $carriers
+	 * 
+	 * @deprecated since 1.5.0
+	 * 
 	 * @return number the id of the default carrier
 	 */
 	protected function setDefaultCarrierSelection($carriers)
@@ -467,7 +470,7 @@ class ParentOrderControllerCore extends FrontController
 				$this->context->cart->id_carrier = (int)$carriers[0]['id_carrier'];
 		}
 		else
-			$this->context->cart->id_carrier = 0;
+			$this->context->cart->setDeliveryOption(null);
 		if ($this->context->cart->update())
 			return $this->context->cart->id_carrier;
 		return 0;
@@ -477,6 +480,9 @@ class ParentOrderControllerCore extends FrontController
 	 * Decides what the default carrier is and update the cart with it
 	 *
 	 * @param array $carriers
+	 * 
+	 * @deprecated since 1.5.0
+	 * 
 	 * @return number the id of the default carrier
 	 */
 	protected function _setDefaultCarrierSelection($carriers)
