@@ -3219,7 +3219,7 @@ class AdminProductsController extends AdminController
 				if (Tools::getValue('id_product_attribute') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
 				// @todo : Product class should handle that
-				$stock_available = new StockAvailable(StockAvailable::getIdStockAvailableByProductId($product->id, (int)Tools::getValue('id_product_attribute')));
+				$stock_available = new StockAvailable(StockAvailable::getStockAvailableIdByProductId($product->id, (int)Tools::getValue('id_product_attribute')));
 				if (!$stock_available->id)
 				{
 					$stock_available->id_product = $product->id;
