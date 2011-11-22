@@ -800,7 +800,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'filter' => false,
 				'search' => false,
 			),
-			'p_name' => array(
+			'name' => array(
 				'title' => $this->l('Name'),
 				'align' => 'center',
 				'width' => 350,
@@ -865,15 +865,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			a.quantity_received as quantity_received,
 			a.quantity_expected as quantity_expected,
 			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_left,
-			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today,
-			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as p_name';
-
-		$this->_join = '
-			INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = a.id_product AND pl.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = a.id_product_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.id_attribute = pac.id_attribute)
-			LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$lang_id.')
-			LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$lang_id.')';
+			IF (a.quantity_expected < a.quantity_received, 0, a.quantity_expected - a.quantity_received) as quantity_received_today';
 
 		$this->_where = 'AND a.`id_supply_order` = '.(int)$id_supply_order;
 
@@ -1198,7 +1190,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 									$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 									$redirect = self::$currentIndex.'&token='.$token;
-									$this->redirect_after($redirect.'&conf=5');
+									$this->redirect_after = $redirect.'&conf=5';
 								}
 							}
 						}
@@ -1282,13 +1274,27 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$this->_errors[] = Tools::displayError($this->l('Warehouse could not be loaded'));
 						return;
 					}
+
+					// converts the unit price to the warehouse currency if needed
+					if ($supply_order->id_currency != $warehouse->id_currency)
+					{
+						// first, converts the price to the default currency
+						$price_converted_to_default_currency = Tools::convertPrice($supply_order_detail->unit_price_te, $supply_order->id_currency, false);
+
+						// then, converts the newly calculated price from the default currency to the needed currency
+						$price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency,
+																								  $warehouse->id_currency,
+																								  true),
+																			  6);
+					}
+
 					$manager = StockManagerFactory::getManager();
 					$res = $manager->addProduct($supply_order_detail->id_product,
 										 		$supply_order_detail->id_product_attribute,
 										 		$warehouse,
 										 		(int)$quantity,
 										 		Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'),
-										 		$supply_order_detail->unit_price_te,
+										 		$price,
 										 		true,
 										 		$supply_order->id);
 					if ($res) // if product has been added
@@ -1308,7 +1314,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			// display confirm message
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 			$redirect = self::$currentIndex.'&token='.$token;
-			$this->redirect_after($redirect.'&conf=4');
+			$this->redirect_after = $redirect.'&conf=4';
 		}
 	}
 
@@ -1515,7 +1521,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
 			IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc,
 			md5(CONCAT(\''._COOKIE_KEY_.'\', p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\'))) as checksum,
-			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name
 		');
 
 		$query->from('product p');
