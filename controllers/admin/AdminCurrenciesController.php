@@ -32,7 +32,7 @@ class AdminCurrenciesControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->table = 'currency';
-	 	$this->className = 'Currency';
+		$this->className = 'Currency';
 	 	$this->lang = false;
 
 		$this->fieldsDisplay = array(
@@ -52,13 +52,13 @@ class AdminCurrenciesControllerCore extends AdminController
 					'PS_CURRENCY_DEFAULT' => array(
 						'title' => $this->l('Default currency:'),
 						'desc' => $this->l('The default currency used in shop')
-							.'<div class=warn"><img src="../img/admin/warn2.png" />'.
+							.'<div class="warn">'.
 								$this->l('If you change default currency, you will have to manually edit every product price.').'</div>',
-							'cast' => 'intval',
-							'type' => 'select',
-							'identifier' => 'id_currency',
-							'list' => Currency::getCurrencies()
-						),
+						'cast' => 'intval',
+						'type' => 'select',
+						'identifier' => 'id_currency',
+						'list' => Currency::getCurrencies()
+					)
 				),
 				'submit' => array()
 			),
@@ -70,14 +70,14 @@ class AdminCurrenciesControllerCore extends AdminController
 					'title' => $this->l('Update currency rates'),
 					'class' => 'button',
 					'name' => 'SubmitExchangesRates'
-				),
+				)
 			),
 			'cron' => array(
 				'title' =>	$this->l('Currency rates update'),
 				'image' => '../img/admin/tab-tools.gif',
 				'info' => $this->l('Place this URL in crontab or call it manually daily').':<br />
 					<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</b></p>',
-			),
+			)
 		);
 		parent::__construct();
 	}
@@ -274,7 +274,8 @@ class AdminCurrenciesControllerCore extends AdminController
 				if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
 					$this->_errors[] = $this->l('You can\'t disable the default currency');
 				else if ($object->toggleStatus())
-					Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
+						(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
 				else
 					$this->_errors[] = Tools::displayError('An error occurred while updating status.');
 			}

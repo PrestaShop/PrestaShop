@@ -1,4 +1,4 @@
-*<?php
+<?php
 /*
 * 2007-2011 PrestaShop
 *
@@ -106,7 +106,6 @@ class AdminCountriesControllerCore extends AdminController
 				'orderby' => false,
 				'filter_key' => 'a!active',
 				'width' => 25
-					
 			)
 		);
 
