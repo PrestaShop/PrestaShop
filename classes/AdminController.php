@@ -1371,12 +1371,12 @@ class AdminControllerCore extends Controller
 	/**
 	 * Override to init display of the view page
 	 */
-	public function initView($tpl = false)
+	public function initView()
 	{
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_view_vars;
-		$view = $helper->generateView($tpl);
+		$view = $helper->generateView();
 		$this->toolbar_fix = false;
 
 		return $view;
