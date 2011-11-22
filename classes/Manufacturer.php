@@ -180,7 +180,8 @@ class ManufacturerCore extends ObjectModel
 		if (!$id_lang)
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		if (!$id_group_shop)
-			$id_group_shop = Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT'));
+			$id_group_shop = (Context::getContext()->shop->id ? Shop::getGroupFromShop(Context::getContext()->shop->id) : Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')));
+
 		$sql = 'SELECT m.*, ml.`description`';
 		$sql .= 'FROM `'._DB_PREFIX_.'manufacturer_group_shop` mgs
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.id_manufacturer = mgs.id_manufacturer)
