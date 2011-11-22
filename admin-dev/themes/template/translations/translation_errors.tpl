@@ -24,23 +24,29 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-{l s='Errors to translate'} : <b>{$count}</b>
-{$limit_warning}
-{if !$suoshin_exceeded}
-	<form method="post" action="{$url_submit}" class="form">
-		{$auto_translate}
-		<input type="hidden" name="lang" value="{$lang}" />
-		<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-		<br /><br />
-		<table cellpadding="0" cellspacing="0" class="table">
-		{foreach $errorsArray as $key => $value}
-			<tr {if empty($value)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
-				<td>{$key|stripslashes}</td>
-				<td style="width: 430px">= <input type="text" name="{$key|md5}" value="{$value|regex_replace:'#"#':'&quot;'|stripslashes}" style="width: 380px"></td>
-			</tr>
-		{/foreach}
-		</table><br />
-		<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-	</form>
-{/if}
+{extends file="helper/view/view.tpl"}
+
+{block name="override_tpl"}
+	
+	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
+	{l s='Errors to translate'} : <b>{$count}</b>
+	{$limit_warning}
+	{if !$suoshin_exceeded}
+		<form method="post" action="{$url_submit}" class="form">
+			{$auto_translate}
+			<input type="hidden" name="lang" value="{$lang}" />
+			<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+			<br /><br />
+			<table cellpadding="0" cellspacing="0" class="table">
+			{foreach $errorsArray as $key => $value}
+				<tr {if empty($value)}style="background-color:#FBB"{else}{cycle values='class="alt_row",'}{/if}>
+					<td>{$key|stripslashes}</td>
+					<td style="width: 430px">= <input type="text" name="{$key|md5}" value="{$value|regex_replace:'#"#':'&quot;'|stripslashes}" style="width: 380px"></td>
+				</tr>
+			{/foreach}
+			</table><br />
+			<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+		</form>
+	{/if}
+
+{/block}
