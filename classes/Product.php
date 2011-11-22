@@ -213,7 +213,7 @@ class ProductCore extends ObjectModel
 	/** @var array tables */
 	protected $tables = array ('product', 'product_lang');
 
-	protected $fieldsRequired = array('quantity', 'price');
+	protected $fieldsRequired = array('price'); // quantity removed
 	protected $fieldsSize = array('reference' => 32, 'supplier_reference' => 32, 'location' => 64, 'ean13' => 13, 'upc' => 12, 'unity' => 10);
 	protected $fieldsValidate = array(
 		'id_tax_rules_group' => 'isUnsignedId',
