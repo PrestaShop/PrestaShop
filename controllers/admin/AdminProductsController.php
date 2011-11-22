@@ -46,7 +46,22 @@ class AdminProductsControllerCore extends AdminController
 		'Quantities',
 		'Suppliers',
 		'Warehouses',
-		'Accounting');
+		'Accounting'
+	);
+
+	protected $tabs_toolbar_save_buttons = array(
+		'Informations' => true,
+		'Images' => true,
+		'Prices' => false,
+		'Combinations' => false,
+		'Features' => true,
+		'Customization' => false,
+		'Attachments' => true,
+		'Quantities' => false,
+		'Suppliers' => true,
+		'Warehouses' => true,
+		'Accounting' => true
+	);
 
 	public function __construct()
 	{
@@ -690,7 +705,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 
 		/* Product features management */
-		else if (Tools::isSubmit('submitProductFeature'))
+		else if (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay'))
 		{
 			if (!Feature::isFeatureActive())
 				return;
@@ -909,17 +924,16 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
 		}
-		else if (Tools::isSubmit('submitAccountingDetails'))
+		else if (Tools::isSubmit('submitAccounting') || Tools::isSubmit('submitAccountingAndStay'))
 			$this->postProcessFormAccounting();
 		//Manage suppliers
-		else if (Tools::isSubmit('submitSuppliers'))
+		else if (Tools::isSubmit('submitSuppliers') || Tools::isSubmit('submitSuppliersAndStay'))
 			$this->postProcessFormSuppliers();
-		//Manage suppliers
-		else if (Tools::isSubmit('submitSupplierReferences'))
-			$this->postProcessFormSupplierReferences();
 		//Manage warehouses
-		else if (Tools::isSubmit('submitProductWarehouses'))
+		else if (Tools::isSubmit('submitWarehouses') || Tools::isSubmit('submitWarehousesAndStay'))
+		{
 			$this->postProcessFormWarehouses();
+		}
 		parent::postProcess(true);
 	}
 
@@ -1587,7 +1601,7 @@ class AdminProductsControllerCore extends AdminController
 					foreach($this->available_tabs as $product_tab)
 					{
 						$product_tabs[$product_tab] = array(
-							'id' => ++$i,
+							'id' => ++$i.'-'.$product_tab,
 							'selected' => (strtolower($product_tab) == strtolower($action)),
 							// @todo $this->l() instead of product_tab
 							'name' => $product_tab,
@@ -1600,6 +1614,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->tpl_form_vars['newproduct'] = 1;
 
 				$this->tpl_form_vars['product_tabs'] = $product_tabs;
+				$this->tpl_form_vars['tabs_toolbar_save_buttons'] = $this->tabs_toolbar_save_buttons;
 			}
 
 
@@ -1971,6 +1986,8 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
+
+			$this->postProcessFormSupplierReferences();
 		}
 	}
 

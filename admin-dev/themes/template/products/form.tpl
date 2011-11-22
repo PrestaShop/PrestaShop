@@ -48,16 +48,49 @@
 	</div>
 </div>
 <script type="text/javascript">
+
+function showSaveButtons()
+{
+	$('#desc-product-save').show();
+	$('#desc-product-save-and-stay').show();
+}
+
+function hideSaveButtons()
+{
+	$('#desc-product-save').hide();
+	$('#desc-product-save-and-stay').hide();
+}
+
 var toload = new Array();
 var pos_select = {$pos_select};
+var tabs_toolbar_save_buttons = [];
+{foreach $tabs_toolbar_save_buttons key=key item=value}
+{if $value == true}
+	tabs_toolbar_save_buttons.push('{$key}');
+{/if}
+{/foreach}
+
 $(document).ready(function(){
 	{* submenu binding *}
 	$(".tab-page").click(function(e){
 		e.preventDefault();
+
 		// currentId is the current producttab id
 		currentId = $(".productTabs a.selected").attr('id').substr(5);
 		// id is the wanted producttab id
 		id = $(this).attr('id').substr(5);
+
+		// Update submit button value
+		var split_position = id.indexOf('-') + 1;
+		var btn_name = id.substr(split_position);
+		$("#product_form_submit_btn").attr('name', 'submit'+btn_name);
+
+		// Show/hide save buttons
+		if (jQuery.inArray(btn_name, tabs_toolbar_save_buttons) != -1)
+			showSaveButtons();
+		else
+			hideSaveButtons();
+
 		if ($(this).attr("id") != $(".productTabs a.selected").attr('id'))
 		{
 			$(".tab-page").removeClass('selected');
@@ -72,7 +105,7 @@ $(document).ready(function(){
 		}
 
 		$("#product-tab-content-wait").show();
-		
+
 		if ($("#product-tab-content-"+id).hasClass('not-loaded') || $(this).hasClass('selected'))
 		{
 			myurl = $(this).attr("href")+"&ajax=1";
@@ -94,7 +127,7 @@ $(document).ready(function(){
 			$("#link-"+id).addClass('selected');
 		}
 		$("#product-tab-content-wait").hide();
-		
+
 		var languages = new Array();
 		if (id == 3)
 			populate_attrs();
@@ -135,7 +168,7 @@ $(document).ready(function(){
 	{
 		$("#is_virtual_file_product").hide();
 		$("#virtual_good_attributes").hide();
-			
+
 		if (elt.checked)
 		{
 			$('#virtual_good').show('slow');
@@ -187,7 +220,7 @@ $(document).ready(function(){
 				}
 			}
 		);
-	}	
+	}
 
 	function uploadFile2()
 	{
@@ -215,9 +248,9 @@ $(document).ready(function(){
 						$('#upload-confirmation2').html(
 							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">{l s='The file'}&nbsp;"' + fileName + '"&nbsp;{l s='has successfully been uploaded'}</a>' +
 							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
-						$('#virtual_product_name_attribute').attr('value', fileName);		
-						
-						link = $("#delete_downloadable_product_attribute").attr('href');		
+						$('#virtual_product_name_attribute').attr('value', fileName);
+
+						link = $("#delete_downloadable_product_attribute").attr('href');
 						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
 					}
 				}
@@ -227,7 +260,7 @@ $(document).ready(function(){
 	//]]>
 </script>
 
-<form id="product_form" action="{$form_action}&amp;{$submit_action}=1" method="post" enctype="multipart/form-data" name="product">
+<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
 	<input type="hidden" name="id_product" value="{$id_product}" />
 	<input type="hidden" name="tabs" id="tabs" value="0" />
 <div class="tab-pane" id="tabPane1">
@@ -256,7 +289,6 @@ $(document).ready(function(){
 </div>
 <input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 <input id="product_form_submit_btn"  type="submit" value="{l s='Save'}" name="submitAdd{$table}" class="button" />
-&nbsp;<input type="submit" value="{l s='Save and stay'}" name="submitAdd{$table}AndStay" class="button" />
 </form>
 </div>
 <br/>

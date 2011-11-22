@@ -66,9 +66,6 @@
 	{/foreach}
 </div>
 <p>&nbsp;</p>
-<div class="margin-form">
-	<input type="submit" class="button" name="submitProductWarehouses" value="{l s='Update warehouses locations'}" />
-</div>
 
 <script type="text/javascript">
 	$(function() {
