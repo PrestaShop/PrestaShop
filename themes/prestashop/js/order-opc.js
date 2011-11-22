@@ -220,7 +220,7 @@ function updateCarrierSelectionAndGift()
 	$.ajax({
 		type: 'POST',
 		url: orderOpcUrl,
-		async: false,
+		async: true,
 		cache: false,
 		dataType : "json",
 		data: 'ajax=true&method=updateCarrierAndGetPayments' + delivery_option_params + 'recyclable=' + recyclablePackage + '&gift=' + gift + '&gift_message=' + giftMessage + '&token=' + static_token ,
