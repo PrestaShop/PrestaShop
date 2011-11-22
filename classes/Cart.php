@@ -1481,6 +1481,19 @@ class CartCore extends ObjectModel
 	}
 	
 	/**
+	 * Does the cart use multiple 
+	 */
+	public function isMultiAddressDelivery()
+	{
+		$sql = new DbQuery();
+		$sql->select('count(distinct id_address_delivery)');
+		$sql->from('cart_product as cp');
+		$sql->where('id_cart = '.(int)$this->id);
+		
+		return (boolean)(Db::getInstance()->getValue($sql) > 1);
+	}
+	
+	/**
 	 * Get all delivery addresses object for the current cart
 	 */
 	public function getAddressCollection()
@@ -1916,7 +1929,6 @@ class CartCore extends ObjectModel
 			'invoice' => $invoice,
 			'invoice_state' => State::getNameById($invoice->id_state),
 			'formattedAddresses' => $formattedAddresses,
-//'carrier' => new Carrier($this->id_carrier, $id_lang),
 			'products' => $this->getProducts(false),
 			'discounts' => $this->getCartRules(),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
@@ -1930,7 +1942,8 @@ class CartCore extends ObjectModel
 			'total_products' => $this->getOrderTotal(false, Cart::ONLY_PRODUCTS),
 			'total_price' => $this->getOrderTotal(),
 			'total_tax' => $total_tax,
-			'total_price_without_tax' => $this->getOrderTotal(false));
+			'total_price_without_tax' => $this->getOrderTotal(false),
+			'is_multi_address_delivery' => $this->isMultiAddressDelivery());
 	}
 
 	public function checkQuantities()

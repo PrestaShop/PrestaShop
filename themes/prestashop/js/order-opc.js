@@ -29,7 +29,7 @@ function updateCarrierList(json)
 	var carriers = json.carriers;
 	
 	/* contains all carrier available for this address */
-	if (carriers.length == 0)
+	if (!carriers || carriers.length == 0)
 	{
 		checkedCarrier = 0;
 		$('input[name=id_carrier]:checked').attr('checked', false);
@@ -750,15 +750,16 @@ function multishippingMode(it)
 			'type': 'ajax',
 			'onClosed': function()
 			{
-				// Relaod the cart
+				// Reload the cart
 				$.ajax({
 					url: orderOpcUrl,
 					data: 'ajax=true&method=cartReload',
 					dataType : 'html',
+					cache: false,
 					success: function(data) {
 						$('#cart_summary').replaceWith($(data).find('#cart_summary'));
 					}
-				})
+				});
 				updateCarrierSelectionAndGift();
 			},
 			'onStart': function()
@@ -781,5 +782,30 @@ function multishippingMode(it)
 		$('#address_invoice').removeClass('item').addClass('alternate_item');
 		$(it).removeClass('on');
 		$('#link_multishipping_form').hide();
+		
+		// Disable multi address shipping
+		$.ajax({
+			url: orderOpcUrl,
+			async: false,
+			cache: false,
+			data: 'ajax=true&method=noMultiAddressDelivery',
+		});
+		
+		// Reload the cart
+		$.ajax({
+			url: orderOpcUrl,
+			async: false,
+			cache: false,
+			data: 'ajax=true&method=cartReload',
+			dataType : 'html',
+			success: function(data) {
+				$('#cart_summary').replaceWith($(data).find('#cart_summary'));
+			}
+		});
 	}
 }
+
+$(document).ready(function() {
+	if (multishipping_mode)
+		$('#multishipping_mode').click();
+});
