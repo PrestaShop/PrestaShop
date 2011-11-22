@@ -35,11 +35,22 @@ class AdminProfilesControllerCore extends AdminController
 	 	$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->addRowActionSkipList('delete', array(1));
+
+	 	$this->bulk_actions = array(
+			'delete' => array('text' => $this->l('Delete selected'), 
+			'confirm' => $this->l('Delete selected items?'))
+			);
 
 		$this->fieldsDisplay = array(
-			'id_profile' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 200));
+			'id_profile' => array(
+						'title' => $this->l('ID'), 
+						'align' => 'center', 
+						'width' => 25
+						),
+			'name' => array('title' => $this->l('Name'), 'width' => 200)
+			);
+			
 		$this->identifier = 'id_profile';
 
 		$this->fields_form = array(
