@@ -123,6 +123,23 @@ class AuthControllerCore extends FrontController
 			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('createAccountForm'),
 			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('createAccountTop')
 		));
+		
+		if ($this->ajax)
+		{
+			// Call a hook to display more information on form
+			$this->context->smarty->assign(array(
+				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+				'genders' => Gender::getGenders()
+			));
+
+			$return = array(
+				'hasError' => !empty($this->errors),
+				'errors' => $this->errors,
+				'page' => $this->context->smarty->fetch(_PS_THEME_DIR_.'authentication.tpl'),
+				'token' => Tools::getToken(false)
+			);
+			die(Tools::jsonEncode($return));
+		}
 		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
 	}
 
@@ -572,24 +589,6 @@ class AuthControllerCore extends FrontController
 			$this->create_account = true;
 			$this->context->smarty->assign('email_create', Tools::safeOutput($email));
 			$_POST['email'] = $email;
-		}
-		if ($this->ajax)
-		{
-			// Call a hook to display more information on form
-			$this->context->smarty->assign(array(
-				'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('createAccountForm'),
-				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('createAccountTop'),
-				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-				'genders' => Gender::getGenders()
-			));
-
-			$return = array(
-				'hasError' => !empty($this->errors),
-				'errors' => $this->errors,
-				'page' => $this->context->smarty->fetch(_PS_THEME_DIR_.'authentication.tpl'),
-				'token' => Tools::getToken(false)
-			);
-			die(Tools::jsonEncode($return));
 		}
 	}
 
