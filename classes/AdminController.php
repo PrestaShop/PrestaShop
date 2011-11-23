@@ -261,6 +261,8 @@ class AdminControllerCore extends Controller
 			21 => $this->l('Module reset successfully'), 22 => $this->l('Module deleted successfully'),
 			23 => $this->l('Localization pack imported successfully'), 24 => $this->l('Refund Successful'),
 			25 => $this->l('Images successfully moved'),
+			26 => $this->l('Cover selection saved'),
+			27 => $this->l('Image shop association modified'),
 		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
@@ -1084,7 +1086,11 @@ class AdminControllerCore extends Controller
 		else
 			$this->context->smarty->assign('confirmations', $this->confirmations);
 
-		$this->context->smarty->assign('page', $page);
+		if ($this->json)
+			$this->context->smarty->assign('page', Tools::jsonEncode($page));
+		else
+			$this->context->smarty->assign('page', $page);
+
 		$this->context->smarty->display($this->layout);
 	}
 
