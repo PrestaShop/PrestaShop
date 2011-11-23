@@ -1649,39 +1649,42 @@ class AdminProductsControllerCore extends AdminController
 			if ($id_category = (int)Tools::getValue('id_category'))
 				self::$currentIndex .= '&id_category='.$id_category;
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
-
-			$id_category = Tools::getValue('id_category', 1);
-			if (!$id_category)
-				$id_category = 1;
-			// @todo lot of ergonomy works around here
-			// @todo : move blockcategories select queries in class Category
-			$root_categ = Category::getRootCategory();
-			$children = $root_categ->getAllChildren();
-			$category_tree = array();
-
-			// Add category "all products" to tree
-			$all_categ = new Category();
-			$all_categ->name = 'All products';
-			$all_categ->selected = $this->_category->id_category == $all_categ->id;
-			$all_categ->dashes = '';
-			$category_tree[] = $all_categ;
-
-			// Add root category to tree
-			$root_categ->selected = $this->_category->id_category == $root_categ->id;
-			$root_categ->dashes = str_repeat('&nbsp;-&nbsp;',$root_categ->level_depth);
-			$category_tree[] = $root_categ;
-
-			foreach ($children as $k => $categ)
+	
+			if (!empty($this->_list))
 			{
-				$categ = new Category($categ['id_category'],$this->context->language->id);
-				$categ->selected = $this->_category->id_category == $categ->id;
-				$categ->dashes = str_repeat('&nbsp;-&nbsp;',$categ->level_depth);
-				$category_tree[] = $categ;
+				$id_category = Tools::getValue('id_category', 1);
+				if (!$id_category)
+					$id_category = 1;
+				// @todo lot of ergonomy works around here
+				// @todo : move blockcategories select queries in class Category
+				$root_categ = Category::getRootCategory();
+				$children = $root_categ->getAllChildren();
+				$category_tree = array();
+		
+				// Add category "all products" to tree
+				$all_categ = new Category();
+				$all_categ->name = 'All products';
+				$all_categ->selected = $this->_category->id_category == $all_categ->id;
+				$all_categ->dashes = '';
+				$category_tree[] = $all_categ;
+		
+				// Add root category to tree
+				$root_categ->selected = $this->_category->id_category == $root_categ->id;
+				$root_categ->dashes = str_repeat('&nbsp;-&nbsp;',$root_categ->level_depth);
+				$category_tree[] = $root_categ;
+		
+				foreach ($children as $k => $categ)
+				{
+					$categ = new Category($categ['id_category'],$this->context->language->id);
+					$categ->selected = $this->_category->id_category == $categ->id;
+					$categ->dashes = str_repeat('&nbsp;-&nbsp;',$categ->level_depth);
+					$category_tree[] = $categ;
+				}
+				$this->tpl_list_vars['category_tree'] = $category_tree;
+		
+				// used to build the new url when changing category
+				$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
 			}
-			$this->tpl_list_vars['category_tree'] = $category_tree;
-
-			// used to build the new url when changing category
-			$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
 		}
 		// @todo module free
 		$this->tpl_form_vars['vat_number'] = file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php');
