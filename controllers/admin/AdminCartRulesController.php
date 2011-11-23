@@ -258,9 +258,23 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		$i = 1;
 		$productRulesArray = array();
-		$productRules = $cartRule->getProductRules();
-		foreach ($productRules as $productRule)
-			$productRulesArray[] = $this->getProductRuleDisplay($i++, $productRule['type'], $productRule['quantity'], $productRule['values']);
+		if (Tools::getValue('product_restriction') && is_array($array = Tools::getValue('product_rule')) && count($array))
+		{
+			foreach ($array as $id)
+			{
+				$productRulesArray[] = $this->getProductRuleDisplay(
+					$i++,
+					Tools::getValue('product_rule_'.$id.'_type'),
+					(int)Tools::getValue('product_rule_'.$id.'_quantity'),
+					Tools::getValue('product_rule_select_'.$id)
+				);
+			}
+		}
+		else
+		{
+			foreach ($cartRule->getProductRules() as $productRule)
+				$productRulesArray[] = $this->getProductRuleDisplay($i++, $productRule['type'], $productRule['quantity'], $productRule['values']);
+		}
 		return $productRulesArray;
 	}
 	
