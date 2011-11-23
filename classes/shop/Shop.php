@@ -235,7 +235,7 @@ class ShopCore extends ObjectModel
 		// Find current shop from URL
 		if (!$id_shop = Tools::getValue('id_shop') && !defined('_PS_ADMIN_DIR_'))
 		{
-			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri
+			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
 					FROM '._DB_PREFIX_.'shop_url su
 					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
 					WHERE su.domain = \''.pSQL(Tools::getHttpHost()).'\'
@@ -244,13 +244,27 @@ class ShopCore extends ObjectModel
 					ORDER BY LENGTH(uri) DESC';
 
 			$id_shop = '';
+			$found_uri = '';
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
 				{
-					if (preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
+					// An URL matching current shop was found
+					if (!$id_shop && preg_match('#^'.preg_quote($row['uri'], '#').'#', $_SERVER['REQUEST_URI']))
 					{
 						$id_shop = $row['id_shop'];
-						break;
+						$found_uri = $row['uri'];
+
+						// If this is the main URL, use it in current script
+						if ($row['main'])
+							break;
+					}
+					else if ($id_shop && $row['main'])
+					{
+						// If an URL was found but is not current URL, redirect to main URL
+						$request_uri = substr($_SERVER['REQUEST_URI'], strlen($found_uri));
+						header('HTTP/1.1 301 Moved Permanently');
+						header('location: http://'.$row['domain'].$row['uri'].$request_uri);
+						exit;
 					}
 				}
 		}
