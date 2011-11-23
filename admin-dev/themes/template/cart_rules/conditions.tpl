@@ -134,7 +134,7 @@
 	</table>
 </div>
 {/if}
-{if $cart_rules.unselected|@count + $cart_rules.selected|@count > 1}
+{if $cart_rules.unselected|@count + $cart_rules.selected|@count > 0}
 <br />
 <input type="checkbox" id="cart_rule_restriction" name="cart_rule_restriction" value="1" {if $cart_rules.unselected|@count}checked="checked"{/if} /> <strong>{l s='Other cart rules compatibility'}</strong>
 <div id="cart_rule_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
