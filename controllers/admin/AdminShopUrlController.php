@@ -45,6 +45,10 @@ class AdminShopUrlControllerCore extends AdminController
 				'align' => 'center',
 				'width' => 25
 			),
+			'shop_name' => array(
+				'title' => $this->l('Shop name'),
+				'width' => 70
+			),
 			'domain' => array(
 				'title' => $this->l('Domain'),
 				'width' => 'auto',
@@ -59,10 +63,6 @@ class AdminShopUrlControllerCore extends AdminController
 				'title' => $this->l('Uri'),
 				'width' => 200,
 				'filter_key' => 'uri'
-			),
-			'shop_name' => array(
-				'title' => $this->l('Shop name'),
-				'width' => 70
 			),
 			'main' => array(
 				'title' => $this->l('Main URL'),
