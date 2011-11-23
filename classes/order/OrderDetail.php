@@ -517,7 +517,7 @@ class OrderDetailCore extends ObjectModel
 		$this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
 		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
 		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
-		$this->product_weight = (float)$product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight'];
+		$this->product_weight = (float)($product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight']);
 
 		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
 		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ?
@@ -549,7 +549,7 @@ class OrderDetailCore extends ObjectModel
 	 * @param int $id_order_invoice
 	 * @param bool $use_taxes set to false if you don't want to use taxes
 	*/
-	public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice, $use_taxes = true)
+	public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true)
 	{
 		$this->vat_address = new Address((int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 		$this->customer = new Customer((int)($order->id_customer));

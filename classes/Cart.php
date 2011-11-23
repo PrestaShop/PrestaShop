@@ -439,7 +439,7 @@ class CartCore extends ObjectModel
 			// for compatibility with 1.2 themes
 			$row['quantity'] = (int)($row['cart_quantity']);
 			if (isset($row['id_product_attribute']) && (int)$row['id_product_attribute'] && isset($row['weight_attribute']))
-				$row['weight'] = $row['weight_attribute'];
+				$row['weight'] = (float)$row['weight_attribute'];
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				$row['price'] = Product::getPriceStatic((int)$row['id_product'], false, isset($row['id_product_attribute']) ? (int)($row['id_product_attribute']) : NULL, 2, NULL, false, true, (int)($row['cart_quantity']), false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL), $specificPriceOutput); // Here taxes are computed only once the quantity has been applied to the product price
