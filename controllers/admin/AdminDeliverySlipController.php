@@ -122,6 +122,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->content .= $this->initForm().'<br />';
+		$this->show_toolbar = false;
 		$this->content .= $this->initOptions();
 
 		$this->context->smarty->assign(array(
