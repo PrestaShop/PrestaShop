@@ -1629,30 +1629,30 @@ class CartCore extends ObjectModel
 			$products = $product_list;
 		
 		// Checking discounts in cart
-		if (Discount::isFeatureActive())
-			$discounts = $this->getDiscounts(true);
-		else
-			$discounts = null;
-		if ($discounts)
-			foreach ($discounts AS $id_discount)
-				if ($id_discount['id_discount_type'] == Discount::FREE_SHIPPING)
-				{
-					if ($id_discount['minimal'] > 0)
-					{
-						$total_cart = 0;
+		// if (Discount::isFeatureActive())
+			// $discounts = $this->getDiscounts(true);
+		// else
+			// $discounts = null;
+		// if ($discounts)
+			// foreach ($discounts AS $id_discount)
+				// if ($id_discount['id_discount_type'] == Discount::FREE_SHIPPING)
+				// {
+					// if ($id_discount['minimal'] > 0)
+					// {
+						// $total_cart = 0;
 
-						$categories = Discount::getCategories((int)($id_discount['id_discount']));
-						if (sizeof($categories))
-							foreach($complete_product_list AS $product)
-								if (Product::idIsOnCategoryId((int)($product['id_product']), $categories))
-									$total_cart += $product['total_wt'];
+						// $categories = Discount::getCategories((int)($id_discount['id_discount']));
+						// if (sizeof($categories))
+							// foreach($complete_product_list AS $product)
+								// if (Product::idIsOnCategoryId((int)($product['id_product']), $categories))
+									// $total_cart += $product['total_wt'];
 
-						if ($total_cart >= $id_discount['minimal'])
-							return 0;
-					}
-					else
-						return 0;
-				}
+						// if ($total_cart >= $id_discount['minimal'])
+							// return 0;
+					// }
+					// else
+						// return 0;
+				// }
 
 		// Order total in default currency without fees
 		$order_total = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING, $product_list);

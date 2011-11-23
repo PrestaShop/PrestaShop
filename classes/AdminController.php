@@ -1716,7 +1716,7 @@ class AdminControllerCore extends Controller
 		}
 		else if ($submitted_action = Tools::getValue('submitAction'.$this->table))
 				$this->action = $submitted_action;
-		else if (Tools::getValue('submitAdd'.$this->table))
+		else if (Tools::getValue('submitAdd'.$this->table) || Tools::getValue('submitAdd'.$this->table.'AndStay'))
 		{
 			// case 1: updating existing entry
 			if ((int)(Tools::getValue('id_'.$this->table)))
