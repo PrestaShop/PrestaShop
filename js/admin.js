@@ -943,13 +943,33 @@ function refreshImagePositions(imageTable)
 	imageTable.find("tr td.dragHandle:last a:last").hide();
 }
 
+
+function doAdminAjax(data)
+{
+	$.ajax(
+	{
+		url : 'index.php',
+		data : data,
+		success : function(data){
+			data = $.parseJSON(data);
+			if(data.confirmations.length != 0)
+				showSuccessMessage(data.confirmations);
+			else
+				showErrorMessage(data.error);
+		},
+		error : function(data){
+			alert("[TECHNICAL ERROR]");
+		}
+	});
+}
+
 /** display a success message in a #ajax_confirmation container
  * @param string msg string to display
  */
 function showSuccessMessage(msg)
 {
-	$("#ajax_confirmation").show()
-		.html("<div class=\"conf\">"+msg+"</div>").delay(3000).fadeOut("slow");
+	$("#ajax_confirmation")
+		.html("<div class=\"conf\">"+msg+"</div>").show().delay(3000).fadeOut("slow");
 }
 			
 /** display a warning message in a #ajax_confirmation container
