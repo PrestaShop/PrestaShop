@@ -7,7 +7,8 @@ body {
 	font-size: 13px;
 	color: #333;
 	text-align: center;
-	background-image: url('../img/admin/bg_2.png');
+	background-image: url('../img/admin/bg-admin-gradient.png'),url('../img/admin/bg-admin.jpg');
+	background-position: center center;
 }
 
 h1 {
@@ -19,15 +20,15 @@ h1 {
 }
 
 h2 a {
-	color: #dedede;
-	font-size: 7pt;
-	text-decoration: underline;
+	color: #eee;
+	font-size: 11px;
 	margin: 0;
+	text-shadow: 0 -1px 0 #000;
+	text-decoration:none;
 }
 
 h2 a:hover {
-	color: #dedede;
-	font-size: 7pt;
+	color: #eee;
 	text-decoration: underline;
 	margin: 0;
 }
@@ -59,7 +60,7 @@ input:focus, textarea:focus {
 
 #container {
 	width: 464px;
-	margin: 5em auto 1em auto;
+	margin: 12% auto 1em;
 	padding: 0;
 }
 
@@ -70,7 +71,7 @@ input:focus, textarea:focus {
 	font-weight: bold;
 	background-color:#F5F5F5;
 	border-radius:9px;
-	box-shadow: 0 1px 20px #333333;
+	box-shadow: 0 1px 30px #333333;
 }
 
 #login h1 {
@@ -118,6 +119,7 @@ input:focus, textarea:focus {
 	background-color: #FAE2E3;
 	text-align: left;
 	border-radius:9px;
+	box-shadow: 0 1px 30px #333333;
 }
 
 #error ol {
@@ -127,15 +129,17 @@ input:focus, textarea:focus {
 
 #error li {
 	_margin-left: 45px;
-	font-family: Arial;
-	font-size: 11px;
+	font-family: Georgia;
+	font-size: 13px;
+	font-style: italic;
 }
 
 #error h3 {
-	margin: 0 0 .83em 0;
-	padding: 5px 0 0 30px;
-	background: url(../img/admin/error.png) no-repeat 0 0;
-	font-size: 1em;
+	margin: 0;
+	padding: 5px 0 12px 30px;
+	background: url(../img/admin/icon-cancel.png) no-repeat 0 0;
+	font-size: 16px;
+	text-indent:14px;
 }
 
 /* CLASS */
@@ -162,8 +166,8 @@ input:focus, textarea:focus {
 }
 
 .button:hover {
-	background-color: #F0EBD6;
-	cursor:default;
+	border:1px solid #939393;
+	cursor:pointer;
 }
 
 .center {

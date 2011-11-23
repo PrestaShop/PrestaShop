@@ -1197,6 +1197,7 @@ html[xmlns] .clearfix {
 	font-weight:bold;
 	margin-top: 35px;
 	margin-bottom: 0;
+	line-height: 14px;
 }
 
 .F_list a{
@@ -1445,7 +1446,6 @@ html[xmlns] .clearfix {
 	width: 590px;
 	cellpadding: 0;
 	cellspacing: 0;
-	border-collapse:collapse;
 	border-radius:3px;
 }
 
@@ -1508,8 +1508,7 @@ html[xmlns] .clearfix {
 }
 
 #table_customer tbody tr td{
-	border: 1px solid #E0E0E0;
-	border-top: none;
+	border: none;
 	padding-left: 10px;
 	height: 35px;
 }
