@@ -2,7 +2,7 @@ Hi {firstname} {lastname},
 
 A new command has been generated to you.
 
-Go on {backoffice_order} to finalize the payment.
+Go on {order_link} to finalize the payment.
 
 {shop_name} - {shop_url}
 
