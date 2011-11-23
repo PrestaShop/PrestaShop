@@ -630,7 +630,7 @@ $(function() {
 	});
 	
 	// Term Of Service (TOS)
-	$('#cgv').click(function() {
+	$('#cgv').live('click', function() {
 		if ($('#cgv:checked').length != 0)
 			var checked = 1;
 		else
