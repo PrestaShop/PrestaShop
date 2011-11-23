@@ -1227,23 +1227,7 @@ class OrderCore extends ObjectModel
 	{
 		// To generate a random reference, we first generate a random number
 		// This number is a rand concated with the current timestamp
-		$rand = (int)(microtime(true) * 100 % 10000000000).rand(10, 1000);
-		$reference = '';
-
-		do {
-			$reference .= chr(65 + $rand % 26);
-			$rand = (int)($rand / 26);
-		} while ($rand > 26);
-
-		// Check if semi-random string generated is not already used
-		// /!\ Here we CANNOT/MUSTN'T use _PS_USE_SQL_SLAVE_
-		if (Db::getInstance()->getValue('
-			SELECT count(*)
-			FROM '._DB_PREFIX_.'orders
-			WHERE reference = \''.$reference.'\'') > 0)
-			return self::generateReference(); // If the reference already exists, generate a new one
-
-		return $reference;
+		return uniqid();
 	}
 
 	public function orderContainProduct($id_product)
