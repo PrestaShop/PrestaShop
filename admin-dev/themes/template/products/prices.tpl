@@ -82,7 +82,7 @@ var product_prices = new Array();
 						<input type="text" name="sp_price" value="0" size="11" />
 						<span id="spm_currency_sign_post_0" style="font-weight:bold; color:#000000; font-size:12px">{$currency->suffix}</span>
 						<span>({l s='Current:'} </span><span id="sp_current_ht_price">{displayWtPrice p=$product->price}</span> )</span>
-						<div class="hint clear" style="display:block;">
+						<div class="hint" style="display:block;">
 							{l s='You can set this value at 0 in order to apply the default price'}
 						</div>
 					</div>
