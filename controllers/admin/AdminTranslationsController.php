@@ -916,7 +916,7 @@ class AdminTranslationsControllerCore extends AdminController
 				// -4 becomes -14 to remove the ending "Controller.php" from the filename
 				$prefix_key = basename(substr($tab, 0, -14));
 
-				// @todo this is retrcompatible, but we should not leave this
+				// @todo this is retrocompatible, but we should not leave this
 				if ( $prefix_key == 'Admin')
 					$prefix_key = 'AdminController';
 				$fd = fopen($tpl, 'r');
@@ -978,6 +978,8 @@ class AdminTranslationsControllerCore extends AdminController
 				// get controller name instead of file name
 				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR, '', $tpl), true);
 				$prefix_key = 'Admin'.substr($prefix_key, 0, strpos($prefix_key, DIRECTORY_SEPARATOR));
+				if ($prefix_key == 'AdminHelper')
+					$prefix_key = 'Helper';
 
 				// @todo retrompatibility : we assume here than files directly in template/
 				// use the prefix "AdminController" (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
