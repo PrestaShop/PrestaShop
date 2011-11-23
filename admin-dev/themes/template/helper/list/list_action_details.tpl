@@ -88,7 +88,7 @@ $(document).ready(function() {
 								}
 							});
 							content.append($('<td class="empty"></td>'));
-							$('#details_{$id}').parent().parent().after(content);
+							$('#details_{$id}').parent().parent().after(content.show('slow'));
 						});
 					}
 					else
@@ -98,7 +98,7 @@ $(document).ready(function() {
 						else
 							var content = $('<tr class="details_{$id}"></tr>');
 						content.append($('<td style="border:none!important;">'+data.data+'</td>').attr('colspan', $('#details_{$id}').parent().parent().find('td').length));
-						$('#details_{$id}').parent().parent().after(content);
+						$('#details_{$id}').parent().parent().after(content.show('slow'));
 					}
 					this.dataMaped = true;
 					this.opened = false;
@@ -110,13 +110,13 @@ $(document).ready(function() {
 		if (this.opened)
 		{
 			$(this).find('img').attr('src', '../img/admin/more.png');
-			$(this).parent().parent().parent().find('.details_{$id}').hide();
+			$(this).parent().parent().parent().find('.details_{$id}').hide('slow');
 			this.opened = false
 		}
 		else
 		{
 			$(this).find('img').attr('src', '../img/admin/less.png');
-			$(this).parent().parent().parent().find('.details_{$id}').show();
+			$(this).parent().parent().parent().find('.details_{$id}').show('slow');
 			this.opened = true;
 		}
 		return false;

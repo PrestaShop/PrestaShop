@@ -351,8 +351,8 @@ class AdminControllerCore extends Controller
 		$country = Tools::getValue('country');
 		$version = Tools::getValue('version');
 
-		if (isset($item) AND isset($isoUser) AND isset($country))
-			$this->content = HelpAccess::getHelp($item, $isoUser,  $country, $version);
+		if (isset($item) && isset($isoUser) && isset($country))
+			$this->content = HelpAccess::getHelp($item, $isoUser, $country, $version);
 		else
 			$this->content = 'none';
 		$this->display = 'content';
@@ -501,7 +501,7 @@ class AdminControllerCore extends Controller
 					' <b>'.$this->table.'</b><br />'.
 					Tools::displayError('You cannot delete all of the items.');
 			}
-			else if (array_key_exists('delete', $this->list_skip_actions) AND in_array($object->id, $this->list_skip_actions['delete'])) //check if some ids are in list_skip_actions and forbid deletion
+			else if (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) //check if some ids are in list_skip_actions and forbid deletion
 					$this->_errors[] = Tools::displayError('You cannot delete this items.');
 			else
 			{
@@ -544,6 +544,7 @@ class AdminControllerCore extends Controller
 		if (!count($this->_errors))
 		{
 			$id = (int)Tools::getValue($this->identifier);
+
 			/* Object update */
 			if (isset($id) && !empty($id))
 			{
@@ -643,7 +644,8 @@ class AdminControllerCore extends Controller
 						if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
 							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
 						// Default behavior (save and back)
-						$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
+						if (empty($this->redirect_after))
+							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
 					}
 				}
 				else
@@ -1002,7 +1004,7 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
-		if($this->json)
+		if ($this->json)
 		{
 			$this->context->smarty->assign(array(
 				'json' => true,
@@ -1638,7 +1640,7 @@ class AdminControllerCore extends Controller
 			unset($parse_query['setShopContext'], $parse_query['conf']);
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query);
 		}
-		elseif (!Shop::isFeatureActive())
+		else if (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-1';
 		$shop_id = '';
 		if ($this->context->cookie->shopContext)
@@ -1647,9 +1649,9 @@ class AdminControllerCore extends Controller
 			if (count($split) == 2 && $split[0] == 's')
 				$shop_id = (int)$split[1];
 		}
-		elseif ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
+		else if ($this->context->employee->id_profile == _PS_ADMIN_PROFILE_)
 			$shop_id = '';
-		elseif ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
+		else if ($this->context->shop->getTotalShopsWhoExists() != Employee::getTotalEmployeeShopById((int)$this->context->employee->id))
 		{
 			$shops = Employee::getEmployeeShopById((int)$this->context->employee->id);
 			if (count($shops))
