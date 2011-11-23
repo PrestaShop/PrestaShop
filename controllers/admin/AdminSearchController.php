@@ -42,7 +42,7 @@ class AdminSearchControllerCore extends AdminController
 		{
 			if (!$searchType and strlen($this->query) > 1)
 				$this->searchFeatures();
-			
+
 			/* Product research */
 			if (!$searchType OR $searchType == 1)
 			{
@@ -64,7 +64,7 @@ class AdminSearchControllerCore extends AdminController
 					if ($searchType AND (int)$this->query AND Validate::isUnsignedInt((int)$this->query))
 						if ($customer = new Customer((int)$this->query) AND Validate::isLoadedObject($customer))
 							Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer='.(int)($customer->id).'&viewcustomer'.'&token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id));
-		
+
 					/* Normal customer search */
 					$this->searchCustomer();
 				}
@@ -100,9 +100,9 @@ class AdminSearchControllerCore extends AdminController
 			// 6 - but it is included in the customer block
 		}
 		$this->display = 'view';
-	}	
+	}
 
-	
+
 	public function	searchIP()
 	{
 		if (!ip2long(trim($this->query)))
@@ -131,10 +131,10 @@ class AdminSearchControllerCore extends AdminController
 	* @params string $query String to find in the catalog
 	*/
 	public function	searchCustomer()
-	{		
+	{
 		$this->_list['customers'] = Customer::searchByName($this->query);
 	}
-	
+
 	/**
 	* Search a feature in all store
 	*
@@ -166,13 +166,13 @@ class AdminSearchControllerCore extends AdminController
 				$this->_list['features'][$tabs[$key]][] = array('link' => '?tab='.Tools::safeOutput($key).'&token='.Tools::getAdminTokenLite($key) , 'value' => Tools::safeOutput($value));
 			}
 		}
-			
+
 		if (!count($this->_list['features']))
 			$this->_list['features'] = false;
 		else
 			$this->_list['features'];
 	}
-	
+
 	protected function initCustomerList()
 	{
 		$genders_icon = array('default' => 'unknown.gif');
@@ -194,7 +194,7 @@ class AdminSearchControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool'),
 		));
 	}
-	
+
 	protected function initProductList()
 	{
 		$this->show_toolbar = false;
@@ -207,16 +207,27 @@ class AdminSearchControllerCore extends AdminController
 			'status' => array('title' => $this->l('Status'), 'align' => 'center'),
 		));
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin('highlight');
 	}
-	
+
+	// Override because we don't want any buttons
+	public function initToolbar()
+	{
+	}
+
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = $this->l('Search results');
+	}
+
 	public function initView()
 	{
 		$this->tpl_view_vars['query'] = $this->query;
+		$this->tpl_view_vars['show_toolbar'] = true;
 
 		if (sizeof($this->_errors))
 			return parent::initView();
@@ -259,10 +270,10 @@ class AdminSearchControllerCore extends AdminController
 					foreach($this->_list['customers'] as $key => $val)
 						$this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int)$val['id_customer']);
 					$view = $helper->generateList($this->_list['customers'], $this->fieldsDisplay['customers']);
-				}	
+				}
 				$this->tpl_view_vars['customers'] =  $view;
 			}
 			return parent::initView();
 		}
-	}	
+	}
 }
