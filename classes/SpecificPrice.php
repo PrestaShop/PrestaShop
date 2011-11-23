@@ -127,10 +127,12 @@ class SpecificPriceCore extends ObjectModel
 
     	if (!isset(self::$_cache_priorities[(int)$id_product]))
     	{
-		   self::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		   SELECT `priority`
-			FROM `'._DB_PREFIX_.'specific_price_priority`
-			WHERE `id_product` = '.(int)$id_product);
+			self::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `priority`, `id_specific_price_priority`
+				FROM `'._DB_PREFIX_.'specific_price_priority`
+				WHERE `id_product` = '.(int)$id_product.'
+				ORDER BY `id_specific_price_priority` DESC
+			');
 		}
 
 		$priority = self::$_cache_priorities[(int)$id_product];
