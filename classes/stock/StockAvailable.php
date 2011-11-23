@@ -83,8 +83,9 @@ class StockAvailableCore extends ObjectModel
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_shop'] = (int)$this->id_shop;
 		$fields['quantity'] = (int)$this->quantity;
-		$fields['depends_on_stock'] = (bool)$this->depends_on_stock;
-		$fields['out_of_stock'] = (bool)$this->out_of_stock;
+		// booleans can NOT be inserted in an INTEGER database field
+		$fields['depends_on_stock'] = (int)(bool)$this->depends_on_stock;
+		$fields['out_of_stock'] = (int)(bool)$this->out_of_stock;
 		return $fields;
 	}
 
