@@ -361,7 +361,7 @@ class HelperListCore extends Helper
 			'action' => self::$cache_lang['Duplicate'],
 			'confirm' => self::$cache_lang['Copy images too?'],
 			'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
-			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\\',
+			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token),
 		));
 
 		return $tpl->fetch();
@@ -564,13 +564,13 @@ class HelperListCore extends Helper
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_fix' => $this->toolbar_fix,
 			'toolbar_btn' => $this->toolbar_btn,
-			
+
 			'ps_help_context' => $this->ps_help_context,
 			'class_name' => get_class($this->context->controller),
 			'iso_user' => $this->context->language->id,
 			'country_iso_code' => $this->context->country->iso_code,
 			'version' => _PS_VERSION_,
-			
+
 			'table' => $this->table,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,
