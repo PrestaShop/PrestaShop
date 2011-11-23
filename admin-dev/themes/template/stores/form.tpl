@@ -60,7 +60,7 @@
 				<label style="text-align: left; width: inherit;">{$input.label} </label>
 				<div class="margin-form" style="padding: 0; display: inline;">
 					<input type="file" name="{$input.name}" />
-					<p class="clear">{$input.p}</p>
+					<p class="clear">{$input.desc}</p>
 					{if isset($fields_value.image) && $fields_value.image}
 						<div id="image" style="width:370px;">
 							{$fields_value.image}

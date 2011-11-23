@@ -333,7 +333,7 @@
 				{block name="other_input"}{/block}
 			{/foreach}
 			{if $required_fields}
-				<div class="small"><sup>*</sup> {l s ='Required field'}</div>
+				<div class="small"><sup>*</sup> {l s='Required field'}</div>
 			{/if}
 		</fieldset>
 		{block name="other_fieldsets"}{/block}

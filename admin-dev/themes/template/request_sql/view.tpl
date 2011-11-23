@@ -28,7 +28,7 @@
 
 {block name="override_tpl"}
 	{if isset($view['error'])}
-		<p>{l s ='This query has no result.'}</p>
+		<p>{l s='This query has no result.'}</p>
 	{else}
 		<h2>{$view['name']}</h2>
 		<table cellpadding="0" cellspacing="0" class="table" id="viewRequestSql">
