@@ -152,6 +152,9 @@ $(document).ready(function(){
 			});
 		}
 	});
+	{if $show_product_tab_content}
+		$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
+	{/if}
 });
 
 </script>
@@ -294,7 +297,7 @@ $(document).ready(function(){
 	{/if}
 </div>
 <input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
-<input id="product_form_submit_btn"  type="submit" value="{l s='Save'}" name="submitAdd{$table}" class="button" />
+<input id="product_form_submit_btn"  type="submit" value="{l s='Save'}" name="submitAddProduct" class="button" />
 </form>
 </div>
 <br/>

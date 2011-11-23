@@ -761,7 +761,7 @@ class AdminProductsControllerCore extends AdminController
 						}
 					}
 					if (!sizeof($this->_errors))
-						$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=4&conf=4&token='.($token ? $token : $this->token);
+						$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Features&tabs=4&conf=4&token='.($token ? $token : $this->token);
 				}
 				else
 					$this->_errors[] = Tools::displayError('Product must be created before adding features.');
@@ -1279,9 +1279,9 @@ class AdminProductsControllerCore extends AdminController
 							$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 						else if (!$this->updateTags($languages, $object))
 							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
-						else if ($id_image = $this->addProductImage($object, Tools::getValue('resizer')))
+						else if (Tools::getValue('id_image') && $id_image = $this->addProductImage($object, Tools::getValue('resizer')))
 						{
-							self::$currentIndex .= '&image_updated='.(int)Tools::getValue('id_image');
+							self::$currentIndex .= '&image_updated='.$id_image;
 							Hook::exec('updateProduct', array('product' => $object));
 							Search::indexation(false, $object->id);
 							if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
@@ -1606,6 +1606,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initContent($token = null)
 	{
+		// this is made to "save and stay" feature
+		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
 		if (Tools::getValue('id_product') || ((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND sizeof($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
 		{
 			$this->fields_form = array();
@@ -1806,7 +1808,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
-		if ($this->display == 'edit')
+		if ($this->display == 'edit' || $this->display == 'add')
 			if ($product = $this->loadObject(true))
 			{
 				if ($this->tabAccess['delete'])
