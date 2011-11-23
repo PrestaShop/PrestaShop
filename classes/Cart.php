@@ -1094,6 +1094,9 @@ class CartCore extends ObjectModel
 		$warehouse_carrier_list = array();
 		foreach ($product_list as &$product)
 		{
+			if ((int)$product['id_address_delivery'] == 0)
+				$product['id_address_delivery'] = (int)$this->id_address_delivery;
+			
 			if (!isset($warehouse_count_by_address[$product['id_address_delivery']]))
 				$warehouse_count_by_address[$product['id_address_delivery']] = array();
 
@@ -1137,7 +1140,7 @@ class CartCore extends ObjectModel
 				$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
 			}
 		}
-
+		
 		// If product from the cart are not in any warehouse, return false
 		//foreach ($warehouse_count_by_address as $warehouse_count)
 		//	if (empty($warehouse_count))
@@ -1500,12 +1503,13 @@ class CartCore extends ObjectModel
 	public function getAddressCollection()
 	{
 		$collection = array();
-		foreach (Db::getInstance()->executeS('SELECT DISTINCT `id_address_delivery`
+		$result = Db::getInstance()->executeS('SELECT DISTINCT `id_address_delivery`
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE id_cart = '.(int)$this->id)
-			as $row
-		)
-			$collection[$row['id_address_delivery']] = new Address($row['id_address_delivery']);
+			WHERE id_cart = '.(int)$this->id);
+		$result[] = array('id_address_delivery' => (int)$this->id_address_delivery);
+		foreach ($result as $row)
+			if ((int)$row['id_address_delivery'] != 0)
+				$collection[(int)$row['id_address_delivery']] = new Address((int)$row['id_address_delivery']);
 		return $collection;
 	}
 
