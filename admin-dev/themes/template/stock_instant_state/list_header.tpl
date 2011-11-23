@@ -1,5 +1,6 @@
 {extends file="helper/list/list_header.tpl"}
-{block name=leadin}
+{block name=override_header}
+<div class="filter-stock">
 	<form id="stock_instant_state" type="get">
 		<input type="hidden" name="controller" value="AdminStockInstantState" />
 		<input type="hidden" name="token" value="{$token}" />
@@ -14,4 +15,5 @@
 		</div>
 	{/if}
 	</form>
+</div>
 {/block}
