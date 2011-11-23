@@ -333,6 +333,32 @@ class AdminOrdersControllerCore extends AdminController
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 
+		/* Partial refund from order */
+		elseif (Tools::isSubmit('partialRefund') AND Validate::isLoadedObject($order = new Order((int)(Tools::getValue('id_order')))))
+		{
+			$amount = 0;
+			$order_detail_list = array();
+			foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
+				if (isset($amount_detail) && !empty($amount_detail))
+				{
+					$amount += $amount_detail;
+					$order_detail_list[$id_order_detail] = $amount_detail;
+				}
+			$shipping_cost_amount = (float)(Tools::getValue('partialRefundShippingCost'));
+
+			if ($shipping_cost_amount > 0 OR $amount > 0)
+			{
+				if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
+					$this->_errors[] = Tools::displayError('Cannot generate partial credit slip');
+			}
+			else
+				$this->_errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
+
+			// Redirect if no errors
+			if (!sizeof($this->_errors))
+				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
+		}
+
 		/* Cancel product from order */
 		elseif (Tools::isSubmit('cancelProduct') AND Validate::isLoadedObject($order = new Order((int)(Tools::getValue('id_order')))))
 		{

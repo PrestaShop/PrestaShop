@@ -82,7 +82,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
          	'tax_tab' => '',
 		));
 
-		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/invoice.tpl');
+		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/order-slip.tpl');
 	}
 
 	/**

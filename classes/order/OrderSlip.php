@@ -40,7 +40,13 @@ class OrderSlipCore extends ObjectModel
 	public		$conversion_rate;
 
 	/** @var integer */
+	public		$amount;
+
+	/** @var integer */
 	public		$shipping_cost;
+
+	/** @var integer */
+	public		$shipping_cost_amount;
 
 	/** @var string Object creation date */
 	public 		$date_add;
@@ -63,7 +69,9 @@ class OrderSlipCore extends ObjectModel
 		$fields['id_customer'] = (int)($this->id_customer);
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['conversion_rate'] = (float)($this->conversion_rate);
+		$fields['amount'] = (int)($this->amount);
 		$fields['shipping_cost'] = (int)($this->shipping_cost);
+		$fields['shipping_cost_amount'] = (float)($this->shipping_cost_amount);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
 		return $fields;
@@ -177,5 +185,29 @@ class OrderSlipCore extends ObjectModel
 		$orderSlip->addSlipDetail($productList, $qtyList);
 		return true;
 	}
+
+	public static function createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list)
+	{
+		$currency = new Currency($order->id_currency);
+		$orderSlip =  new OrderSlip();
+		$orderSlip->id_customer = (int)($order->id_customer);
+		$orderSlip->id_order = (int)($order->id);
+		$orderSlip->amount = (float)($amount);
+		$orderSlip->shipping_cost = false;
+		$orderSlip->shipping_cost_amount = (float)($shipping_cost_amount);
+		$orderSlip->conversion_rate = $currency->conversion_rate;
+		if (!$orderSlip->add())
+			return false;
+
+		$orderSlip->addPartialSlipDetail($order_detail_list);
+		return true;
+	}
+
+	public function addPartialSlipDetail($order_detail_list)
+	{
+		foreach ($order_detail_list as $id_order_detail => $amount)
+			Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_slip_detail', array('id_order_slip' => (int)($this->id), 'id_order_detail' => (int)($id_order_detail), 'product_quantity' => 0, 'amount' => (float)($amount)), 'INSERT');
+	}
+
 }
 

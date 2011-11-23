@@ -94,7 +94,7 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields" style="text-align:right;background-color:rgb(232, 237, 194);display:none"><input type="text" size="3" name="partialRefund[{$k}]" /> &euro;</td>
+	<td class="partial_refund_fields" style="text-align:right;background-color:rgb(232, 237, 194);display:none"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</td>
 	{if $can_edit}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
 		{if $order->hasBeenPaid()}
