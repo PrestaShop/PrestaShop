@@ -700,6 +700,8 @@ abstract class ModuleCore
 					$item->is_configurable = isset($tmpModule->is_configurable) ? $tmpModule->is_configurable : 1;
 					$item->need_instance = isset($tmpModule->need_instance) ? $tmpModule->need_instance : 0;
 					$item->active = $tmpModule->active;
+					$item->currencies = isset($tmpModule->currencies) ? $tmpModule->currencies : null;
+					$item->currencies_mode = isset($tmpModule->currencies_mode) ? $tmpModule->currencies_mode : null;
 					unset($tmpModule);
 
 					$moduleList[] = $item;
