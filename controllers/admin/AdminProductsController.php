@@ -53,7 +53,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $tabs_toolbar_save_buttons = array(
 		'Informations' => true,
-		'Images' => true,
+		'Images' => false,
 		'Prices' => false,
 		'Combinations' => false,
 		'Features' => true,
@@ -987,38 +987,53 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateProductImageShopAsso()
 	{
+		$this->json = true;
 		if (($id_image = $_GET['id_image']) && ($id_shop = (int)$_GET['id_shop']))
 			if (Tools::getValue('active') == "true")
-				die(Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')'));
+				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
 			else
-				die(Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop));
+				$res= Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image`='.(int)$id_image.' && `id_shop`='.(int)$id_shop);
+
+		if ($res)
+			$this->confirmations[] = $this->_conf[27];
+		else
+			$this->_errors[] = Tools::displayError('Error on picture shop association');
+		$this->status = 'ok';
 	}
 
 	public function ajaxProcessUpdateImagePosition()
 	{
+		$this->json = true;
+		$res = false;
 		if ($json = Tools::getValue('json'))
 		{
+			$res = true;
 			$json = stripslashes($json);
 			$images = Tools::jsonDecode($json, true);
 			foreach ($images as $id => $position)
 			{
 				$img = new Image((int)$id);
 				$img->position = (int)$position;
-				$img->update();
+				$res &= $img->update();
 			}
 		}
-		exit();
+		if ($res)
+			$this->confirmations[] = $this->_conf[25];
+		else
+			$this->_errors[] = Tools::displayError('Error on moving picture');
+		$this->status = 'ok';
 	}
 
 	public function ajaxProcessUpdateCover()
 	{
-		if ($this->action == 'UpdateCover')
-		{
-			Image::deleteCover((int)$_GET['id_product']);
-			$img = new Image((int)$_GET['id_image']);
-			$img->cover = 1;
-			$img->update();
-		}
+		$this->json = true;
+		Image::deleteCover((int)$_GET['id_product']);
+		$img = new Image((int)$_GET['id_image']);
+		$img->cover = 1;
+		if ($img->update())
+			$this->confirmations[] = $this->_conf[26];
+		else
+			$this->_errors[] = Tools::displayError('Error on moving picture');
 	}
 
 	public function ajaxProcessDeleteProductImage()
