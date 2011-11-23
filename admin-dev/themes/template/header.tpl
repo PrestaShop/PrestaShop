@@ -35,7 +35,7 @@
 				var iso_user = '{$iso_user}';
 				var country_iso_code = '{$country_iso_code}';
 				var _PS_VERSION_ = '{$smarty.const._PS_VERSION_}';
-				
+
 				var helpboxes = {$help_box};
 				var roundMode = {$round_mode};
 				{if isset($shop_context)}
@@ -77,7 +77,7 @@
 			<script type="text/javascript" src="{$js_uri}"></script>
 			{/foreach}
 		{/if}
-	
+
 		<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
 		{if $display_header}
 			{$HOOK_HEADER}
@@ -216,13 +216,13 @@
 				{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
 			</div>
 		{/if}
-		
+
 		{if $display_header && $is_multishop && $shop_context != 'all'}
 			<div class="multishop_info">
 				{if $shop_context == 'group'}
-					{l s='You are configuring your store for group shop'} <b> {$group_shop->name}</b>
+					{l s='You are configuring your store for group shop '} <b>{$group_shop->name}</b>
 				{elseif $shop_context == 'shop'}
-					{l s='You are configuring your store for shop'} <b> {$shop->name}</b>
+					{l s='You are configuring your store for shop '} <b>{$shop->name}</b>
 				{/if}
 			</div>
 		{/if}

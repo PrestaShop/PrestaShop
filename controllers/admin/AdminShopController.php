@@ -286,6 +286,7 @@ class AdminShopControllerCore extends AdminController
 			'scene' => $this->l('Scenes'),
 			'stock' => $this->l('Stock'),
 			'store' => $this->l('Stores'),
+			'warehouse' => $this->l('Warehouse'),
 		);
 
 		if (!$this->object->id)

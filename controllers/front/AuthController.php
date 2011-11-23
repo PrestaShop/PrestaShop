@@ -323,8 +323,8 @@ class AuthControllerCore extends FrontController
 
 		// Preparing customer
 		$customer = new Customer();
-		$_POST['lastname'] = $_POST['customer_lastname'];
-		$_POST['firstname'] = $_POST['customer_firstname'];
+		$_POST['lastname'] = Tools::getValue('customer_lastname');
+		$_POST['firstname'] = Tools::getValue('customer_firstname');
 		if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile') && Configuration::get('PS_REGISTRATION_PROCESS_TYPE'))
 			$this->errors[] = Tools::displayError('You must register at least one phone number');
 		$this->errors = array_unique(array_merge($this->errors, $customer->validateController()));
