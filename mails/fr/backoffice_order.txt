@@ -2,7 +2,7 @@ Bonjour {firstname} {lastname},
 
 Une nouvelle commande vous a été générée.
 
-Rendez vous sur cette adresse pour finaliser le paiement : {backoffice_order}
+Rendez vous sur cette adresse pour finaliser le paiement : {order_link}
 
 {shop_name} - {shop_url}
 
