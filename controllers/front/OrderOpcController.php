@@ -449,9 +449,9 @@ class OrderOpcControllerCore extends ParentOrderController
 			$groups = $this->context->customer->getGroups();
 		else
 			$groups = array(1);
-		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)))
+		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) && $this->context->cart->id_address_delivery != 0)
 			$this->errors[] = Tools::displayError('This address is not in a valid area.');
-		elseif (!Validate::isLoadedObject($address_delivery) OR $address_delivery->deleted)
+		elseif ((!Validate::isLoadedObject($address_delivery) OR $address_delivery->deleted) && $this->context->cart->id_address_delivery != 0)
 			$this->errors[] = Tools::displayError('This address is invalid.');
 		else
 		{
