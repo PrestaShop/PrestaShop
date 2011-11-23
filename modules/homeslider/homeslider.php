@@ -25,6 +25,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0
+ * @version 1.1 (2011-11-23)
+ */
+
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -38,7 +43,7 @@ class HomeSlider extends Module
 	{
 		$this->name = 'homeslider';
 		$this->tab = 'front_office_features';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -213,7 +218,7 @@ class HomeSlider extends Module
 
 		/* Display notice if there are no slides yet */
 		if (!$slides)
-			$this->_html .= '<p style="margin-left: 40px;">'.$this->l("You did not add any slides yet.").'</p>';
+			$this->_html .= '<p style="margin-left: 40px;">'.$this->l('You did not add any slides yet.').'</p>';
 		else /* Display slides */
 		{
 			$this->_html .= '
@@ -465,7 +470,10 @@ class HomeSlider extends Module
 		else if (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide'))
 		{
 			$slide = new HomeSlide((int)Tools::getValue('id_slide'));
-			$slide->active = (int)($slide->active == 0 ? 1 : 0);
+			if ($slide->active == 0)
+				$slide->active = 1;
+			else
+				$slide->active = 0;
 			$res = $slide->update();
 			$this->_html = ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayErro($this->l('Configuration could not be updated')));
 		}
@@ -502,16 +510,19 @@ class HomeSlider extends Module
 				if (Tools::getValue('description_'.$language['id_lang']) != '')
 					$slide->description[$language['id_lang']] = pSQL(Tools::getValue('description_'.$language['id_lang']));
 				/* Uploads image and sets slide */
-				if (isset($_FILES['image_'.$language['id_lang']]) && isset($_FILES['image_'.$language['id_lang']]['tmp_name']) && !empty($_FILES['image_'.$language['id_lang']]['tmp_name']))
+				if (isset($_FILES['image_'.$language['id_lang']]) &&
+					isset($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
+					!empty($_FILES['image_'.$language['id_lang']]['tmp_name']))
 				{
+					$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 					if ($error = checkImage($_FILES['image_'.$language['id_lang']]))
 						$errors .= $error;
-					else if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $tmpName))
+					else if (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
-					else if (!imageResize($tmpName, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name']).'.jpg'))
+					else if (!imageResize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name']).'.jpg'))
 						$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
-					if (isset($tmpName))
-						unlink($tmpName);
+					if (isset($temp_name))
+						unlink($temp_name);
 					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name']).'.jpg');
 				}
 				if (Tools::getValue('image_old_'.$language['id_lang']) != '')
@@ -568,7 +579,7 @@ class HomeSlider extends Module
 	{
 		if (!$this->getSlides(true))
 			return;
-		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
+		$this->context->controller->addJqueryUI('ui.sortable');
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
@@ -576,6 +587,9 @@ class HomeSlider extends Module
 
 	public function hookBackOfficeTop()
 	{
+		if (Tools::getValue('controller') != 'AdminModules' && Tools::getValue('configure') != $this->name)
+			return;
+
 		/* Style & js for fieldset 'slides configuration' */
 		$html = '
 		<style>
@@ -588,7 +602,7 @@ class HomeSlider extends Module
 			color:#000;
 		}
 		</style>
-		<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+		<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui.will.be.removed.in.1.6.js"></script>
 	 	<script type="text/javascript">
 			$(function() {
 				var $mySlides = $("#slides");
@@ -626,23 +640,35 @@ class HomeSlider extends Module
 	public function getSlides($active = null)
 	{
 		$this->context = Context::getContext();
-		$idShop = $this->context->shop->getID();
-		$idLang = $this->context->language->id;
+		$id_shop = $this->context->shop->getID();
+		$id_lang = $this->context->language->id;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT hs.`id_slide` AS id_slide, hssl.`image` as image, hss.`position` AS position, hss.`active` as active, hssl.`title` as title, hssl.`url` as url, hssl.`legend` as legend
-			FROM `'._DB_PREFIX_.'homeslider` hs, `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider_slides_lang` hssl
-			WHERE hs.`id_shop` = '.(int)$idShop.((int)$idShop != 0 ? ' OR hs.`id_shop` = 0' : '').' AND hs.`id_slide` = hss.`id_slide` AND hss.`id_slide` = hssl.`id_slide` AND hs.`id_slide` = hssl.`id_slide`
-			AND hssl.`id_lang` = '.(int)$idLang.($active ? ' AND hss.`active` = 1' : '').'
-			ORDER BY hss.`position`
-		');
+			SELECT hs.`id_slide`,
+					   hssl.`image`,
+					   hss.`position`,
+					   hss.`active`,
+					   hssl.`title`,
+					   hssl.`url`,
+					   hssl.`legend`
+			FROM '._DB_PREFIX_.'homeslider hs
+			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_slide = hss.id_slide)
+			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hssl.id_slide = hs.id_slide)
+			WHERE id_shop = '.(int)$id_shop.' OR id_shop = 0
+			AND hssl.id_lang = '.(int)$id_lang.
+			($active ? ' AND hss.`active` = 1' : ' ').'
+			GROUP BY hs.id_slide
+			ORDER BY hss.position');
 	}
 
 	public function displayStatus($id_slide, $active)
 	{
 		$title = ((int)$active == 0 ? $this->l('Disabled') : $this->l('Enabled'));
 		$img = ((int)$active == 0 ? 'disabled.gif' : 'enabled.gif');
-		$html = '<a href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&changeStatus&id_slide='.(int)($id_slide).'" title="'.$title.'"><img src="'._PS_ADMIN_IMG_.''.$img.'" alt="" /></a>';
+		$html = '<a href="'.AdminController::$currentIndex.
+				'&configure='.$this->name.'
+				&token='.Tools::getAdminTokenLite('AdminModules').'
+				&changeStatus&id_slide='.(int)$id_slide.'" title="'.$title.'"><img src="'._PS_ADMIN_IMG_.''.$img.'" alt="" /></a>';
 		return $html;
 	}
 
