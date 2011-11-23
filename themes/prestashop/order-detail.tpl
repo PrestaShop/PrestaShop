@@ -301,6 +301,34 @@
 		</tbody>
 	</table>
 </div>
+<div class="table_block">
+{if $order->getShipping()|count > 0}
+	<table class="std">
+		<thead>
+			<tr>
+				<th class="first_item">{l s='Date'}</th>
+				<th class="item">{l s='Carrier'}</th>
+				<th class="item">{l s='Weight'}</th>
+				<th class="item">{l s='Shipping cost'}</th>
+				<th class="last_item">{l s='Tracking number'}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach from=$order->getShipping() item=line}
+			<tr class="item">
+				<td>{$line.date_add}</td>
+				<td>{$line.state_name}</td>
+				<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
+				<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
+				<td>
+					<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+{/if}
+</div>
 <br />
 {if !$is_guest}
 	{if $return_allowed}

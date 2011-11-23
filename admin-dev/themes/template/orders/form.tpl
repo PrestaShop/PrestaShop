@@ -467,10 +467,10 @@
 					products_found += '<label>{l s='Product:'}</label><select id="id_product" onclick="displayProductAttributes();">';
 					attributes_html += '<label>{l s='Combination:'}</label>';
 					$.each(res.products, function() {
-						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.price : '')+'</option>';
+						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						$.each(this.combinations, function() {
-							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.price+'</option>';
+							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 						});
 						attributes_html += '</select>';
 					});
@@ -508,7 +508,7 @@
 		var cart_content = '';
 		$.each(products, function() {
 			cart_quantity[this.id_product+'_'+this.id_product_attribute] = this.cart_quantity;
-			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
+			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.formatted_price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
 			cart_content += '<p><a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'" ><img src="../img/admin/delete.gif" /></a>';
 			cart_content += '<a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'" ><img src="../img/admin/up.gif" /></a><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" /></p>';
 			cart_content += '<p style="float:right"><center><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'"><img src="../img/admin/down.gif" /></center></a>';

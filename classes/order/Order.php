@@ -91,13 +91,13 @@ class OrderCore extends ObjectModel
 	/** @var float Total to pay tax excluded */
 	public $total_paid_tax_excl;
 
-	/** @var float Total really paid */
+	/** @var float Total really paid @deprecated 1.5.0.1 */
 	public $total_paid_real;
 
 	/** @var float Products total */
 	public $total_products;
 
-	/** @var float Products total tax excluded */
+	/** @var float Products total tax included */
 	public $total_products_wt;
 
 	/** @var float Shipping total */
@@ -467,8 +467,14 @@ class OrderCore extends ObjectModel
 		');
 	}
 
+	/**
+	 *
+	 * @deprecated 1.5.0.1
+	 * @see OrderInvoice::setProductPrices
+	 */
 	public function setProductPrices(&$row)
 	{
+		//Tools::displayAsDeprecated();
 		$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$row['id_order_detail']);
 		$row['tax_calculator'] = $tax_calculator;
 		$row['tax_rate'] = $tax_calculator->getTotalRate();
@@ -979,36 +985,50 @@ class OrderCore extends ObjectModel
 			return ((int)(Configuration::get('PS_ORDER_RETURN')) == 1 AND (int)($this->getCurrentState()) == Configuration::get('PS_OS_DELIVERED') AND $this->getNumberOfDays());
 	}
 
-
-	public static function getLastInvoiceNumber()
-	{
-		return (int)Db::getInstance()->getValue('
-			SELECT MAX(`invoice_number`) AS `invoice_number`
-				FROM `'._DB_PREFIX_.'orders`');
+    public static function getLastInvoiceNumber()
+    {
+		return Db::getInstance()->getValue('
+			SELECT MAX(`number`)
+			FROM `'._DB_PREFIX_.'order_invoice`
+		');
 	}
 
 	public function setInvoice()
 	{
-		$number = (int)Configuration::get('PS_INVOICE_START_NUMBER');
-		if ($number)
+		$order_invoice = new OrderInvoice();
+		$order_invoice->id_order = $this->id;
+		$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER');
+		// If invoice start number has been set, you clean the value of this configuration
+		if ($order_invoice->number)
 			Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
 		else
-			$number = '(SELECT `invoice_number`
-						FROM (
-							SELECT MAX(`invoice_number`) + 1 AS `invoice_number`
-							FROM `'._DB_PREFIX_.'orders`)
-						tmp )';
-		// a way to avoid duplicate invoice number
+			$order_invoice->number = self::getLastInvoiceNumber() + 1;
+
+		$order_invoice->total_discount_tax_excl = $this->total_discount_tax_excl;
+		$order_invoice->total_discount_tax_incl = $this->total_discount_tax_incl;
+		$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
+		$order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
+		$order_invoice->total_products = $this->total_products;
+		$order_invoice->total_products_wt = $this->total_products_wt;
+		$order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
+		$order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
+		$order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
+		$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
+
+		// Save Order invoice
+		$order_invoice->add();
+
+		// Update order_carrier
 		Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'orders`
-		SET `invoice_number` = '.$number.', `invoice_date` = \''.date('Y-m-d H:i:s').'\'
-		WHERE `id_order` = '.(int)$this->id
-		);
-		$res = Db::getInstance()->getRow('
-		SELECT `invoice_number`, `invoice_date`
-		FROM `'._DB_PREFIX_.'orders`
-		WHERE `id_order` = '.(int)$this->id
-		);
+			UPDATE `'._DB_PREFIX_.'order_carrier`
+			SET `id_order_invoice` = '.(int)$order_invoice->id.'
+			WHERE `id_order` = '.(int)$order_invoice->id_order);
+
+		// Update order detail
+		Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'order_detail`
+			SET `id_order_invoice` = '.(int)$order_invoice->id.'
+			WHERE `id_order` = '.(int)$order_invoice->id_order);
 
 		$this->invoice_date = $res['invoice_date'];
 		$this->invoice_number = $res['invoice_number'];
@@ -1070,8 +1090,14 @@ class OrderCore extends ObjectModel
 		return (float)($result['weight']);
 	}
 
+	/**
+	 *
+	 * @param int $id_invoice
+	 * @deprecated 1.5.0.1
+	 */
 	public static function getInvoice($id_invoice)
 	{
+		Tools::displayAsDeprecated();
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `invoice_number`, `id_order`
 		FROM `'._DB_PREFIX_.'orders`
@@ -1128,9 +1154,9 @@ class OrderCore extends ObjectModel
 		$history->id_employee = (int)$id_employee;
 		$history->changeIdOrderState((int)$id_order_state, (int)$this->id);
 		$res = Db::getInstance()->getRow('
-		SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
-											FROM `'._DB_PREFIX_.'orders`
-											WHERE `id_order` = '.(int)$this->id);
+			SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
+			FROM `'._DB_PREFIX_.'orders`
+			WHERE `id_order` = '.(int)$this->id);
 		$this->invoice_date = $res['invoice_date'];
 		$this->invoice_number = $res['invoice_number'];
 		$this->delivery_date = $res['delivery_date'];
@@ -1156,6 +1182,7 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * This method return the ID of the previous order
+	 * @since 1.5.0.1
 	 * @return int
 	 */
 	public function getPreviousOrderId()
@@ -1169,6 +1196,7 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * This method return the ID of the next order
+	 * @since 1.5.0.1
 	 * @return int
 	 */
 	public function getNextOrderId()
@@ -1243,9 +1271,162 @@ class OrderCore extends ObjectModel
 		WHERE od.`id_order` = '.(int)$this->id.'
 		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
 		);
-
 	}
 
+	/**
+	 * This method allows to get all Order Payment for the current order
+	 * @since 1.5.0.1
+	 * @return array Collection of Order Payment
+	 */
+	public function getOrderPaymentCollection()
+	{
+		$order_payment = Db::getInstance()->ExecuteS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'order_payment`
+			WHERE `id_order` = '.(int)$this->id);
+		return ObjectModel::hydrateCollection('OrderPayment', $order_payment);
+	}
+
+	/**
+	 *
+	 * This method allows to add a payment to the current order
+	 * @since 1.5.0.1
+	 * @param float $amount_paid
+	 * @param string $payment_method
+	 * @param string $payment_transaction_id
+	 * @param Currency $currency
+	 * @param string $date
+	 * @return bool
+	 */
+	public function addOrderPayment($amount_paid, $payment_method = null, $payment_transaction_id = null, $currency = null, $date = null)
+	{
+		$order_payment = new OrderPayment();
+		$order_payment->id_order = $this->id;
+		$order_payment->id_currency = ($currency ? $currency->id : $this->id_currency);
+		// we kept the currency rate for historization reasons
+		$order_payment->conversion_rate = ($currency ? $currency->conversion_rate : 1);
+		// if payment_method is define, we used this
+		$order_payment->payment_method = ($payment_method ? $payment_method : $this->payment);
+		$order_payment->transacation_id = $payment_transaction_id;
+		$order_payment->amount = $amount_paid;
+		$order_payment->date_add = ($date ? $date : null);
+
+		// Update total_paid_real value for backward compatibility reasons
+		if ($order_payment->id_currency == $this->id_currency)
+			$this->total_paid_real += $order_payment->amount;
+		else
+			$this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false), 2);
+
+		return $order_payment->add() && $this->update();
+	}
+
+	/**
+	 * Returns the correct product taxes breakdown.
+	 *
+	 * Get all documents linked to the current order
+	 *
+	 * @since 1.5.0.1
+	 * @return array
+	 */
+	public function getDocuments()
+	{
+		// TODO
+		$invoices = $this->getInvoicesCollection();
+
+		return $invoices;
+	}
+
+	public function getReturn()
+	{
+		return OrderReturn::getOrdersReturn($this->id_customer, $this->id);
+	}
+
+	public function getShipping()
+	{
+		$shipping = Db::getInstance()->ExecuteS('
+			SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `state_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`
+			FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN `'._DB_PREFIX_.'order_history` oh
+				ON (o.`id_order` = oh.`id_order`)
+			LEFT JOIN `'._DB_PREFIX_.'order_carrier` oc
+				ON (o.`id_order` = oc.`id_order`)
+			LEFT JOIN `'._DB_PREFIX_.'carrier` c
+				ON (oc.`id_carrier` = c.`id_carrier`)
+			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl
+				ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)Context::getContext()->language->id.')
+			WHERE o.`id_order` = '.(int)$this->id);
+		return $shipping;
+	}
+
+	/**
+	 *
+	 * Get all invoices for the current order
+	 * @since 1.5.0.1
+	 * @return array Collection of Order invoice
+	 */
+	public function getInvoicesCollection()
+	{
+		$invoices = Db::getInstance()->ExecuteS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` = '.(int)$this->id);
+		return ObjectModel::hydrateCollection('OrderInvoice', $invoices);
+	}
+
+	/**
+	 * Get total paid
+	 *
+	 * @since 1.5.0.1
+	 * @param Currency $currency currency used for the total paid of the current order
+	 * @return float amount in the $currency
+	 */
+	public function getTotalPaid($currency = null)
+	{
+		if (!$currency)
+			$currency = new Currency($this->id_currency);
+
+		$total = 0;
+		// Retrieve all payments
+		$payments = $this->getOrderPaymentCollection();
+		foreach($payments as $payment)
+		{
+			if ($payment->id_currency == $currency->id)
+				$total += $payment->amount;
+			else
+			{
+				$amount = Tools::convertPrice($payment->amount, $payment->id_currency, false);
+				if ($currency->id == Configuration::get('PS_DEFAULT_CURRENCY'))
+					$total += $amount;
+				else
+					$total += Tool::convertPrice($amount, $currency->id, true);
+			}
+		}
+
+		return Tools::ps_round($total, 2);
+	}
+
+	/**
+	 *
+	 * This method allows to change the shipping cost of the current order
+	 * @since 1.5.0.1
+	 * @param float $amount
+	 * @return bool
+	 */
+	public function updateShippingCost($amount)
+	{
+		$difference = $amount - $this->total_shipping;
+		// if the current amount is same as the new, we return true
+		if ($difference == 0)
+			return true;
+
+		// update the total_shipping value
+		$this->total_shipping = $amount;
+		// update the total of this order
+		$this->total_paid += $difference;
+
+		// update database
+		return $this->update();
+	}
 
 	/**
 	 * Returns the correct product taxes breakdown.

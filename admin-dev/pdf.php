@@ -66,13 +66,31 @@ function generateSupplyOrderFormPDF()
 
 function generateInvoicePDF()
 {
-    if (!isset($_GET['id_order']))
-		die (Tools::displayError('Missing order ID'));
-	$order = new Order((int)($_GET['id_order']));
+    if (Tools::isSubmit('id_order'))
+    	generateInvoicePDFByIdOrder(Tools::getValue('id_order'));
+    elseif (Tools::isSubmit('id_order_invoice'))
+    	generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
+	else
+		die (Tools::displayError('Missing order ID or invoice order ID'));
+	exit;
+}
+
+function generateInvoicePDFByIdOrder($id_order)
+{
+	$order = new Order($id_order);
 	if (!Validate::isLoadedObject($order))
 		die(Tools::displayError('Cannot find order in database'));
 
-    generatePDF($order, PDF::TEMPLATE_INVOICE);
+	generatePDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE);
+}
+
+function generateInvoicePDFByIdOrderInvoice($id_order_invoice)
+{
+	$order_invoice = new OrderInvoice($id_order_invoice);
+	if (!Validate::isLoadedObject($order_invoice))
+		die(Tools::displayError('Cannot find order invoice in database'));
+
+	generatePDF($order_invoice, PDF::TEMPLATE_INVOICE);
 }
 
 function generateOrderSlipPDF()

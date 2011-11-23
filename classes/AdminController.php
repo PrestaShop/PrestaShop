@@ -918,6 +918,8 @@ class AdminControllerCore extends Controller
 					'desc' => $this->l('Save')
 				);
 				break;
+			case 'view':
+				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
@@ -1849,7 +1851,6 @@ class AdminControllerCore extends Controller
 
 		if (empty($order_by))
 			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
-
 		if (empty($order_way))
 			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
 

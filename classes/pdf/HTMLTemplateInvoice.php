@@ -34,17 +34,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
    public $available_in_your_account = false;
 
-	public function __construct(Order $order, $smarty)
+	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
-		$this->order = $order;
-        $this->smarty = $smarty;
+		$this->order_invoice = $order_invoice;
+        $this->order = new Order($this->order_invoice->id_order);
+		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($order->invoice_date, (int)$order->id_lang);
-		$this->title = self::l('Invoice ').Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $order->invoice_number);
+		$this->date = Tools::displayDate($order_invoice->date_add, (int)$this->order->id_lang);
+		$this->title = self::l('Invoice ').Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $order_invoice->number);
 
 		// footer informations
-		$shop = new Shop((int)$order->id_shop);
+		$shop = new Shop((int)$this->order->id_shop);
 		$this->address = $shop->getAddress();
 	}
 
@@ -69,7 +70,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order->getProducts(),
+			'order_details' => $this->order_invoice->getProducts(),
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
@@ -91,11 +92,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
-				'use_one_after_another_method' => $this->order->useOneAfterAnotherTaxComputationMethod(),
-				'product_tax_breakdown' => $this->order->getProductTaxesBreakdown(),
-				'shipping_tax_breakdown' => $this->order->getShippingTaxesBreakdown(),
-				'ecotax_tax_breakdown' => $this->order->getEcoTaxTaxesBreakdown(),
+				'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
+				'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown(),
+				'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
+				'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 				'order' => $this->order,
+				'order_invoice' => $this->order_invoice
 			));
 
 			return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/invoice.tax-tab.tpl');
@@ -131,7 +133,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
     public function getFilename()
     {
-        return Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $this->order->invoice_number).'.pdf';
+        return Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $this->order_invoice->number).'.pdf';
     }
 }
 

@@ -97,6 +97,7 @@ class OrderSlipCore extends ObjectModel
 		.($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
 	}
 
+	// TODO clean getProducts($resTab) => now getProducts method don't use his parameters
 	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
 		$cart_rules = $order->getCartRules(true);
