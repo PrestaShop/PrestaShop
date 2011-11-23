@@ -1194,9 +1194,8 @@ class AdminControllerCore extends Controller
 					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
 
 				// retrocompatibility
-				if (!file_exists($img))
+				if (!file_exists(dirname(_PS_ROOT_DIR_).$img))
 					$img = str_replace('png', 'gif', $img);
-
 				// tab[class_name] does not contains the "Controller" suffix
 				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || (Tab::getCurrentParentId() == $tab['id_tab']);
 				$tabs[$index]['img'] = $img;
