@@ -70,10 +70,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
-		$this->edit = true;
-	 	$this->delete = true;
-		$this->view = false;
-		$this->duplicate = true;
+		$this->addRowAction('edit');
+		$this->addRowAction('duplicate');
+		$this->addRowAction('delete');
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->imageType = 'jpg';
 		$this->context = Context::getContext();
 		$this->_defaultOrderBy = 'position';
