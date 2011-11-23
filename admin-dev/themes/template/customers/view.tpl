@@ -296,29 +296,25 @@
 	{/if}
 	
 	<div class="clear">&nbsp;</div>
-	<h2>{l s='Discounts'} ({count($discounts)})</h2>
+	<h2>{l s='Vouchers'} ({count($discounts)})</h2>
 	{if count($discounts)}
 		<table cellspacing="0" cellpadding="0" class="table">
 			<tr>
 				<th>{l s='ID'}</th>
 				<th>{l s='Code'}</th>
-				<th>{l s='Type'}</th>
-				<th>{l s='Value'}</th>
-				<th>{l s='Qty available'}</th>
+				<th>{l s='Name'}</th>
 				<th>{l s='Status'}</th>
 				<th>{l s='Actions'}</th>
 			</tr>
 		{foreach $discounts AS $key => $discount}
 			<tr {if $key %2}class="alt_row"{/if}>
-				<td align="center">{$discount['id_discount']}</td>
+				<td align="center">{$discount['id_cart_rule']}</td>
+				<td>{$discount['code']}</td>
 				<td>{$discount['name']}</td>
-				<td>{$discount['type']}</td>
-				<td align="right">{$discount['value']}</td>
-				<td align="center">{$discount['quantity_for_user']}</td>
 				<td align="center"><img src="../img/admin/{if $discount['active']}enabled.gif{else}disabled.gif{/if}" alt="{l s='Status'}" title="{l s='Status'}" /></td>
 				<td align="center">
-					<a href="?tab=AdminDiscounts&id_discount={$discount['id_discount']}&adddiscount&token={getAdminToken tab='AdminDiscounts'}"><img src="../img/admin/edit.gif" /></a>
-					<a href="?tab=AdminDiscounts&id_discount={$discount['id_discount']}&deletediscount&token={getAdminToken tab='AdminDiscounts'}"><img src="../img/admin/delete.gif" /></a>
+					<a href="?tab=AdminCartRules&id_cart_rule={$discount['id_cart_rule']}&addcart_rule&token={getAdminToken tab='AdminCartRules'}"><img src="../img/admin/edit.gif" /></a>
+					<a href="?tab=AdminCartRules&id_cart_rule={$discount['id_cart_rule']}&deletecart_rule&token={getAdminToken tab='AdminCartRules'}"><img src="../img/admin/delete.gif" /></a>
 				</td>
 			</tr>
 		{/foreach}

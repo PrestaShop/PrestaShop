@@ -194,7 +194,7 @@ class AdminCartRulesControllerCore extends AdminController
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'categories':
-				// Todo: Consider optimization (with code below)
+				// Todo: Consider optimization
 				$categories = array('selected' => array(), 'unselected' => array());
 				$result = Db::getInstance()->ExecuteS('
 				SELECT name, id_category as id
@@ -206,16 +206,6 @@ class AdminCartRulesControllerCore extends AdminController
 				Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
 				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
-				// $translations = array(
-					// 'Home' => $this->l('Home'),
-					// 'selected' => $this->l('selected'),
-					// 'Collapse All' => $this->l('Collapse All'),
-					// 'Expand All' => $this->l('Expand All'),
-					// 'Check All' => $this->l('Check All'),
-					// 'Uncheck All'  => $this->l('Uncheck All'),
-					// 'search' => $this->l('Search a category')
-				// );
-				// Context::getContext()->smarty->assign('product_rule_choose_content', Helper::renderAdminCategorieTree($translations, $selected, 'categoryBox', false, true));
 				break;
 			default:
 				die;
