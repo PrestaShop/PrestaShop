@@ -1,6 +1,5 @@
 $(document).ready(function() {
-	if (document.getElementById('email')) document.getElementById('email').focus(); 
-	//$("#login").effect( "slide", { direction: "up" }, 1000 );
+	if (document.getElementById('email')) document.getElementById('email').focus(); //$("#login").effect( "slide", { direction: "up" }, 1000 );
 });
 
 function displayForgotPassword() {
@@ -36,11 +35,7 @@ function doAjaxLogin() {
 				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
 				} else {
-					$("#login").effect("slide", {
-						direction: "up"
-					}, 1000, function() {
-						window.location.href = jsonData.redirect;
-					});
+					window.location.href = jsonData.redirect;
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
