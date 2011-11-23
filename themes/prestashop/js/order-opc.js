@@ -169,7 +169,7 @@ function updateCarrierSelectionAndGift()
 				updatePaymentMethods(jsonData);
 				updateHookShoppingCart(jsonData.summary.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.summary.HOOK_SHOPPING_CART_EXTRA);
-				updateCarrierList(json.carrier_data);
+				updateCarrierList(jsonData.carrier_data);
 				$('#opc_payment_methods-overlay').fadeOut('slow');
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
 			}
