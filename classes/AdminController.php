@@ -1503,7 +1503,9 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'toggle.js',
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
-			_PS_JS_DIR_.'notifications.js'
+			_PS_JS_DIR_.'notifications.js',
+			_PS_JS_DIR_.'helpAccess.js',
+			_PS_JS_DIR_.'toolbar.js'
 		));
 	}
 	/**
