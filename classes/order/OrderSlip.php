@@ -48,6 +48,9 @@ class OrderSlipCore extends ObjectModel
 	/** @var integer */
 	public		$shipping_cost_amount;
 
+	/** @var integer */
+	public		$partial;
+
 	/** @var string Object creation date */
 	public 		$date_add;
 
@@ -72,6 +75,7 @@ class OrderSlipCore extends ObjectModel
 		$fields['amount'] = (int)($this->amount);
 		$fields['shipping_cost'] = (int)($this->shipping_cost);
 		$fields['shipping_cost_amount'] = (float)($this->shipping_cost_amount);
+		$fields['partial'] = (int)($this->partial);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
 		return $fields;
@@ -179,6 +183,7 @@ class OrderSlipCore extends ObjectModel
 		$orderSlip->id_order = (int)($order->id);
 		$orderSlip->shipping_cost = (int)($shipping_cost);
 		$orderSlip->conversion_rate = $currency->conversion_rate;
+		$orderSlip->partial = 0;
 		if (!$orderSlip->add())
 			return false;
 
@@ -196,6 +201,7 @@ class OrderSlipCore extends ObjectModel
 		$orderSlip->shipping_cost = false;
 		$orderSlip->shipping_cost_amount = (float)($shipping_cost_amount);
 		$orderSlip->conversion_rate = $currency->conversion_rate;
+		$orderSlip->partial = 1;
 		if (!$orderSlip->add())
 			return false;
 

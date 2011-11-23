@@ -29,6 +29,9 @@ var current_product = null;
 $(document).ready(function() {
 	$('.add_product').click(function() {
 		$('.cancel_product_change_link:visible').trigger('click');
+		$('.add_product_fields').show();
+		$('.edit_product_fields').hide();
+		$('.standard_refund_fields').hide();
 		$('tr#new_product').slideDown('fast', function () {
 			$('tr#new_product td').fadeIn('fast');
 		});
@@ -263,6 +266,9 @@ $(document).ready(function() {
 	});
 	
 	$('.edit_product_change_link').click(function() {
+		$('.add_product_fields').hide();
+		$('.standard_refund_fields').hide();
+		$('.edit_product_fields').show();
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
 		
@@ -307,7 +313,7 @@ $(document).ready(function() {
 	
 	$('.cancel_product_change_link').click(function() {
 		current_product = null;
-		
+		$('.edit_product_fields').show();
 		$(this).parent().parent().css('background-color', '#FFF');
 		
 		$(this).parent().parent().find('td .product_price_show').show();
@@ -324,7 +330,7 @@ $(document).ready(function() {
 		$(this).parent().children('.edit_product_change_link').show();
 		$(this).parent().children('input[name=submitProductChange]').hide();
 		$(this).parent().children('.cancel_product_change_link').hide();
-		
+		$('.standard_refund_fields').hide();
 		return false;
 	});
 	

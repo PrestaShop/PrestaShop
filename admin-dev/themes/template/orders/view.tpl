@@ -504,7 +504,9 @@
 						{if ($order->hasBeenDelivered())}<th style="width: 3%; text-align: center">{l s='Returned'}</th>{/if}
 						<th style="width: 3%; text-align: center">{l s='Stock'}</th>
 						<th style="width: 10%; text-align: center">{l s='Total'} <sup>*</sup></th>
-						<th colspan="2" style="width: 13%; display: none;" class="standard_refund_fields"><img src="../img/admin/delete.gif" alt="{l s='Products'}" />
+						<th colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
+						<th colspan="2" style="display: none;" class="edit_product_fields">&nbsp;</th>
+						<th colspan="2" style="display: none;" class="standard_refund_fields"><img src="../img/admin/delete.gif" alt="{l s='Products'}" />
 							{if ($order->hasBeenDelivered())}
 								{l s='Return'}
 							{elseif ($order->hasBeenPaid())}
@@ -551,29 +553,29 @@
 						<tr id="total_products">
 							<td width="150px;">{l s='Products'}</td>
 							<td align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
 							<td>{l s='Discounts'}</td>
 							<td align="right">-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
 							<td>{l s='Wrapping'}</td>
 							<td align="right">{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_shipping">
 							<td>{l s='Shipping'}</td>
 							<td align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="background-color:rgb(232, 237, 194);"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
+							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
 						</tr>
 						<tr style="font-size: 20px" id="total_order">
 							<td>{l s='Total'}</td>
 							<td align="right">
 								{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}
 							</td>
-							<td class="partial_refund_fields" style="background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 					</table>
 				</div>

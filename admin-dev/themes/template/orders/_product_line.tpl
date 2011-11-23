@@ -63,6 +63,7 @@
 	<td align="center" class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>
+	<td colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
 	<td align="center" class="cancelCheck standard_refund_fields" style="background-color:rgb(232, 237, 194);display:none">
 		<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="{$product['product_quantity_return']}" />
 		<input type="hidden" name="totalQty" id="totalQty" value="{$product['product_quantity']}" />

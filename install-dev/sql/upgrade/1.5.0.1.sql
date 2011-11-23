@@ -625,4 +625,5 @@ CREATE TABLE `PREFIX_order_carrier` (
 
 ALTER TABLE `PREFIX_order_slip` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER `shipping_cost`;
 ALTER TABLE `PREFIX_order_slip` ADD COLUMN `shipping_cost_amount` DECIMAL(10,2) NOT NULL AFTER `amount`;
+ALTER TABLE `PREFIX_order_slip` ADD COLUMN `partial` TINYINT(1) NOT NULL AFTER `shipping_cost_amount`;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER `product_quantity`;
