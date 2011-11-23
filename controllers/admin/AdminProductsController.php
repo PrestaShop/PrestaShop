@@ -1795,48 +1795,59 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->display == 'edit')
 			if ($product = $this->loadObject(true))
 			{
-				if($this->tabAccess['delete'])
+				if ($this->tabAccess['delete'])
 					$this->toolbar_btn['delete'] = array(
 						'short' => 'Delete',
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct',
 						'desc' => $this->l('Delete this product'),
 						'confirm' => 1);
 
-				if($this->tabAccess['add'])
+				if ($this->tabAccess['add'])
 					$this->toolbar_btn['duplicate'] = array(
 						'short' => 'Duplicate',
-						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Duplicate'),
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
+						'desc' => $this->l('Duplicate'),
 						'confirm' => 1
 					);
-		// @TODO navigation
+
+				// @TODO navigation
 				$this->toolbar_btn['preview'] = array(
-				'short' => 'Preview',
-				'href' => '', 'desc' => 'prevdesc',
-				'class' => 'previewUrl',
+					'short' => 'Preview',
+					'href' => $this->getPreviewUrl($product),
+					'desc' => $this->l('prevdesc'),
+					'target' => true,
+					'class' => 'previewUrl'
 				);
+
 				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
 					$this->toolbar_btn['stats'] = array(
 					'short' => 'Statistics',
 					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id,
 					'desc' => $this->l('View product sales'),
-					);
+				);
 
 				$this->toolbar_btn['cancel'] = array(
-				'short' => 'Close',
-				'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Cancel'),
-				 'confirm' => 1);
-				if($this->tabAccess['add'])
+					'short' => 'Close',
+					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
+					'desc' => $this->l('Cancel'),
+					'confirm' => 1
+				);
+
+				if ($this->tabAccess['add'])
 					$this->toolbar_btn['new'] = array(
 					'short' => 'Create',
-					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id, 'desc' => $this->l('Create'),
+					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
+					'desc' => $this->l('Create'),
 				);
-				if($this->tabAccess['edit'])
+
+				if ($this->tabAccess['edit'])
 				{
 					$this->toolbar_btn['save'] = array(
 						'short' => 'Save',
 						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
 						'desc' => $this->l('Save'),
 					);
+
 					$this->toolbar_btn['save-and-stay'] = array(
 						'short' => 'SaveAndStay',
 						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
