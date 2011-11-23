@@ -507,9 +507,9 @@ class ShopCore extends ObjectModel
 				if ((!$active || $shop_data['active']) && (!$id_group_shop || $id_group_shop == $group_id))
 				{
 					if ($get_as_list_id)
-						$results[] = $id;
+						$results[$id] = $id;
 					else
-						$results[] = $shop_data;
+						$results[$id] = $shop_data;
 				}
 		return $results;
 	}
@@ -869,7 +869,7 @@ class ShopCore extends ObjectModel
 	{
 		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'group_shop` WHERE `id_group_shop` = %d', (int)$id));
 	}
-	
+
 	public static function getShopWithoutUrls($id_shop = false)
 	{
 		$without = array();

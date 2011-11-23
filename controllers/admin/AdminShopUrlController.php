@@ -40,13 +40,48 @@ class AdminShopUrlControllerCore extends AdminController
 			$this->deleted = false;
 
 		$this->fieldsDisplay = array(
-			'id_shop_url' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'domain' => array('title' => $this->l('Domain'), 'width' => 130, 'filter_key' => 'domain'),
-			'domain_ssl' => array('title' => $this->l('Domain SSL'), 'width' => 130, 'filter_key' => 'domain'),
-			'uri' => array('title' => $this->l('Uri'), 'width' => 130, 'filter_key' => 'uri'),
-			'shop_name' => array('title' => $this->l('Shop name'), 'width' => 70),
-			'main' => array('title' => $this->l('Main URL'), 'align' => 'center', 'activeVisu' => 'main', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'main'),
-			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
+			'id_shop_url' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25
+			),
+			'domain' => array(
+				'title' => $this->l('Domain'),
+				'width' => 'auto',
+				'filter_key' => 'domain'
+			),
+			'domain_ssl' => array(
+				'title' => $this->l('Domain SSL'),
+				'width' => 130,
+				'filter_key' => 'domain'
+			),
+			'uri' => array(
+				'title' => $this->l('Uri'),
+				'width' => 200,
+				'filter_key' => 'uri'
+			),
+			'shop_name' => array(
+				'title' => $this->l('Shop name'),
+				'width' => 70
+			),
+			'main' => array(
+				'title' => $this->l('Main URL'),
+				'align' => 'center',
+				'activeVisu' => 'main',
+				'type' => 'bool',
+				'orderby' => false,
+				'filter_key' => 'main',
+				'width' => 50,
+			),
+			'active' => array(
+				'title' => $this->l('Enabled'),
+				'align' => 'center',
+				'active' => 'status',
+				'type' => 'bool',
+				'orderby' => false,
+				'filter_key' => 'active',
+				'width' => 50,
+			),
 		);
 
 		parent::__construct();
@@ -87,14 +122,14 @@ class AdminShopUrlControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Physical URI:'),
 					'name' => 'physical_uri',
-					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path.')
+					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path. E.g. if your store is available from www.my-prestashop.com/my-store/, you have to set my-store/ in this field.')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Virtual URI:'),
 					'name' => 'virtual_uri',
 					'desc' => array(
-						$this->l('This virtual folder must not exist on your server and is used to associate an URI to a shop.'),
+						$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server. E.g. if you want your store to be available with url www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field (we considere that my-store/ is your physical URI).'),
 						'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
 					)
 				),

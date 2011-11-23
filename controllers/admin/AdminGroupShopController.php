@@ -42,9 +42,25 @@ class AdminGroupShopControllerCore extends AdminController
 			$this->deleted = false;
 
 		$this->fieldsDisplay = array(
-			'id_group_shop' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('County'), 'width' => 130, 'filter_key' => 'b!name'),
-			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'filter_key' => 'active'),
+			'id_group_shop' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25,
+			),
+			'name' => array(
+				'title' => $this->l('Group shop'),
+				'width' => 'auto',
+				'filter_key' => 'b!name',
+			),
+			'active' => array(
+				'title' => $this->l('Enabled'),
+				'align' => 'center',
+				'active' => 'status',
+				'type' => 'bool',
+				'orderby' => false,
+				'filter_key' => 'active',
+				'width' => 50,
+			),
 		);
 
 		parent::__construct();
@@ -155,7 +171,7 @@ class AdminGroupShopControllerCore extends AdminController
 			'tax_rules_group' => $this->l('Tax rules groups'),
 			'zone' => $this->l('Zones'),
 		);
-		
+
 		if (!$this->object->id)
 			$this->fields_import_form = array(
 				'legend' => array(

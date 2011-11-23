@@ -64,8 +64,8 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
-	 * checkAccess 
-	 * 
+	 * checkAccess
+	 *
 	 * @return void
 	 */
 	public function checkAccess()
@@ -128,7 +128,7 @@ class FrontControllerCore extends Controller
 
 		if ($id_cart = (int)$this->recoverCart())
 			$this->context->cookie->id_cart = (int)$id_cart;
-			
+
 		if ($this->auth AND !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
@@ -147,7 +147,7 @@ class FrontControllerCore extends Controller
 
 			// Login information have changed, so we check if the cart rules still apply
 			CartRule::autoRemoveFromCart();
-			
+
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
 		}
 		elseif (isset($_GET['mylogout']))
@@ -219,7 +219,7 @@ class FrontControllerCore extends Controller
 				$cart->id_address_invoice = 0;
 			}
 		}
-		
+
 		$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY').'.UTF-8');
 		setlocale(LC_COLLATE, $locale);
 		setlocale(LC_CTYPE, $locale);
@@ -744,7 +744,7 @@ class FrontControllerCore extends Controller
 
 		return parent::addJS($js_uri);
 	}
-	
+
 	protected function recoverCart()
 	{
 		if (($id_cart = (int)Tools::getValue('recover_cart')) && Tools::getValue('token_cart') == md5(_COOKIE_KEY_.'recover_cart_'.$id_cart))
