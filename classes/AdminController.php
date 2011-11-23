@@ -1554,6 +1554,8 @@ class AdminControllerCore extends Controller
 		// @todo : change AdminTab to Helper
 		if ( isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
+		elseif ( isset($_LANGADM['helper'.$key]))
+			$str = $_LANGADM['helper'.$key];
 		elseif ( isset($_LANGADM['admintab'.$key]))
 			$str = $_LANGADM['admintab'.$key];
 		else
