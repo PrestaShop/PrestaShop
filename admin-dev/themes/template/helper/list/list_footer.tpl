@@ -28,7 +28,7 @@
 			{if $bulk_actions}
 				<p>
 					{foreach $bulk_actions as $key => $params}
-						<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text|escape:'htmlall':'UTF-8'}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm|escape:'htmlall':'UTF-8'}');"{/if} />
+						<input type="submit" class="button" name="submitBulk{$key}{$table}" value="{$params.text}" {if isset($params.confirm)}onclick="return confirm('{$params.confirm}');"{/if} />
 					{/foreach}
 				</p>
 			{/if}
