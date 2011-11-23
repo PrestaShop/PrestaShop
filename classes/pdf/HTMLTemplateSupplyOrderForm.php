@@ -85,7 +85,7 @@ class HTMLTemplateSupplyOrderForm extends HTMLTemplate
 	 */
     public function getFilename()
     {
-    	return ($this->l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf');
+    	return (self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf');
     }
 
     protected function getTaxOrderSummary()
@@ -122,8 +122,8 @@ class HTMLTemplateSupplyOrderForm extends HTMLTemplate
 		if (isset($this->address) && $this->address instanceof Address)
 			$shop_address = AddressFormat::generateAddress($this->address, array(), ' - ', ' ');
 
-		$free_text = $this->l('DE: Discount excluded ');
-		$free_text .= $this->l(' DI: Discount included');
+		$free_text = self::l('DE: Discount excluded ');
+		$free_text .= self::l(' DI: Discount included');
 
 		$this->smarty->assign(array(
 			'shop_address' => $shop_address,
