@@ -1047,16 +1047,36 @@ CREATE TABLE `PREFIX_orders` (
   INDEX `date_add`(`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_order_detail_tax` (
+CREATE TABLE `PREFIX_order_detail_tax` (
   `id_order_detail` int(11) NOT NULL,
   `id_tax` int(11) NOT NULL,
   `unit_amount` DECIMAL( 10,6 ) NOT NULL default '0.00',
   `total_amount` DECIMAL( 10, 6 ) NOT NULL default '0.00'
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE `PREFIX_order_invoice` (
+  `id_order_invoice` int(11) NOT NULL AUTO_INCREMENT,
+  `id_order` int(11) NOT NULL,
+  `number` int(11) NOT NULL,
+  `total_discount_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_discount_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_paid_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_paid_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_products` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_products_wt` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_shipping_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_shipping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_wrapping_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_wrapping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `date_add` datetime NOT NULL,
+  PRIMARY KEY (`id_order_invoice`),
+  KEY `id_order` (`id_order`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PREFIX_order_detail` (
   `id_order_detail` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
+  `id_order_invoice` int(11) default NULL,
   `product_id` int(10) unsigned NOT NULL,
   `product_attribute_id` int(10) unsigned default NULL,
   `product_name` varchar(255) NOT NULL,
@@ -1183,6 +1203,8 @@ CREATE TABLE `PREFIX_order_slip` (
   `id_customer` int(10) unsigned NOT NULL,
   `id_order` int(10) unsigned NOT NULL,
   `shipping_cost` tinyint(3) unsigned NOT NULL default '0',
+  `amount` DECIMAL(10,2) NOT NULL,
+  `shipping_cost_amount` DECIMAL(10,2) NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY  (`id_order_slip`),
@@ -1194,6 +1216,7 @@ CREATE TABLE `PREFIX_order_slip_detail` (
   `id_order_slip` int(10) unsigned NOT NULL,
   `id_order_detail` int(10) unsigned NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL default '0',
+  `amount` DECIMAL(10,2) NOT NULL,
   PRIMARY KEY  (`id_order_slip`,`id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1250,18 +1273,21 @@ CREATE TABLE `PREFIX_page_viewed` (
   PRIMARY KEY  (`id_page`, `id_date_range`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_payment_cc` (
-	`id_payment_cc` INT NOT NULL auto_increment,
+CREATE TABLE `PREFIX_order_payment` (
+	`id_order_payment` INT NOT NULL auto_increment,
+	`id_order_invoice` INT UNSIGNED NULL,
 	`id_order` INT UNSIGNED NULL,
 	`id_currency` INT UNSIGNED NOT NULL,
 	`amount` DECIMAL(10,2) NOT NULL,
+	`payment_method` varchar(255) NOT NULL,
+	`conversion_rate` decimal(13,6) NOT NULL DEFAULT 1,
 	`transaction_id` VARCHAR(254) NULL,
 	`card_number` VARCHAR(254) NULL,
 	`card_brand` VARCHAR(254) NULL,
 	`card_expiration` CHAR(7) NULL,
 	`card_holder` VARCHAR(254) NULL,
 	`date_add` DATETIME NOT NULL,
-	PRIMARY KEY (`id_payment_cc`),
+	PRIMARY KEY (`id_order_payment`),
 	KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -2245,3 +2271,17 @@ CREATE TABLE `PREFIX_accounting_product_zone_shop` (
   PRIMARY KEY (`id_accounting_product_zone_shop`),
   UNIQUE KEY `id_product` (`id_product`,`id_shop`,`id_zone`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_order_carrier` (
+  `id_order` int(11) unsigned NOT NULL,
+  `id_carrier` int(11) unsigned NOT NULL,
+  `id_order_invoice` int(11) unsigned DEFAULT NULL,
+  `weight` float DEFAULT NULL,
+  `shipping_cost_tax_excl` decimal(20,6) DEFAULT NULL,
+  `shipping_cost_tax_incl` decimal(20,6) DEFAULT NULL,
+  `tracking_number` int(11) unsigned DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  KEY `id_order` (`id_order`,`id_carrier`),
+  KEY `id_order_2` (`id_order`),
+  KEY `id_order_invoice` (`id_order_invoice`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

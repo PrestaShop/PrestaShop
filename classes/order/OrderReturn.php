@@ -143,10 +143,13 @@ class OrderReturnCore extends ObjectModel
 		($order_id ? ' AND `id_order` = '.(int)($order_id) : '').
 		($no_denied ? ' AND `state` != 4' : '').'
 		ORDER BY `date_add` DESC');
-		foreach ($data AS $k => $or)
+		foreach ($data as $k => $or)
 		{
 			$state = new OrderReturnState($or['state']);
 			$data[$k]['state_name'] = $state->name[$context->language->id];
+			$data[$k]['type'] = 'Return';
+			$data[$k]['tracking_number'] = $or['id_order_return'];
+			$data[$k]['can_edit'] = false;
 		}
 		return $data;
 	}

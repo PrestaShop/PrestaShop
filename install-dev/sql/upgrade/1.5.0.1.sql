@@ -239,6 +239,33 @@ ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT 
 ALTER TABLE `PREFIX_order_state` ADD COLUMN `shipped` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `delivery`;
 UPDATE `PREFIX_order_state` SET `shipped` = 1 WHERE id_order_states IN (4, 5);
 
+CREATE TABLE `PREFIX_order_invoice` (
+  `id_order_invoice` int(11) NOT NULL AUTO_INCREMENT,
+  `id_order` int(11) NOT NULL,
+  `number` int(11) NOT NULL,
+  `total_discount_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_discount_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_paid_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_paid_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_products` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_products_wt` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_shipping_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_shipping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_wrapping_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `total_wrapping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `date_add` datetime NOT NULL,
+  PRIMARY KEY (`id_order_invoice`),
+  KEY `id_order` (`id_order`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_order_detail` ADD `id_order_invoice` int(11) NULL AFTER `id_order`;
+
+ALTER TABLE `PREFIX_payment_cc` CHANGE `id_payment_cc` `id_order_payment` INT NOT NULL auto_increment;
+ALTER TABLE `PREFIX_payment_cc` ADD `id_order_invoice` varchar(255) NOT NULL AFTER `id_order_payment`;
+ALTER TABLE `PREFIX_payment_cc` ADD `payment_method` varchar(255) NOT NULL AFTER `amount`;
+ALTER TABLE `PREFIX_payment_cc` ADD `conversion_rate` decimal(13,6) NOT NULL DEFAULT 1 AFTER `payment_method`;
+
+RENAME TABLE `PREFIX_payment_cc` TO `PREFIX_order_payment`;
 
 ALTER TABLE `PREFIX_carrier`
 	ADD COLUMN `max_width` int(10) DEFAULT 0 AFTER `position`,
@@ -263,7 +290,6 @@ CREATE TABLE `PREFIX_product_carrier` (
 ALTER TABLE `PREFIX_customization` ADD COLUMN `id_address_delivery` int(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `id_product_attribute`,
   DROP PRIMARY KEY,
   ADD PRIMARY KEY  USING BTREE(`id_customization`, `id_cart`, `id_product`, `id_address_delivery`);
-
 
 CREATE TABLE `PREFIX_cart_rule` (
 	`id_cart_rule` int(10) unsigned NOT NULL auto_increment,
@@ -582,3 +608,21 @@ UPDATE `PREFIX_tab` SET `class_name` = 'AdminCmsContent' WHERE `class_name` = 'A
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminCms' WHERE `class_name` = 'AdminCMS';
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminCmsCategories' WHERE `class_name` = 'AdminCMSCategories';
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminPdf' WHERE `class_name` = 'AdminPDF';
+
+CREATE TABLE `PREFIX_order_carrier` (
+  `id_order` int(11) unsigned NOT NULL,
+  `id_carrier` int(11) unsigned NOT NULL,
+  `id_order_invoice` int(11) unsigned DEFAULT NULL,
+  `weight` float DEFAULT NULL,
+  `shipping_cost_tax_excl` decimal(20,6) DEFAULT NULL,
+  `shipping_cost_tax_incl` decimal(20,6) DEFAULT NULL,
+  `tracking_number` int(11) unsigned DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  KEY `id_order` (`id_order`,`id_carrier`),
+  KEY `id_order_2` (`id_order`),
+  KEY `id_order_invoice` (`id_order_invoice`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_order_slip` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER `shipping_cost`;
+ALTER TABLE `PREFIX_order_slip` ADD COLUMN `shipping_cost_amount` DECIMAL(10,2) NOT NULL AFTER `amount`;
+ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount` DECIMAL(10,2) NOT NULL AFTER `product_quantity`;

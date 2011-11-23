@@ -73,15 +73,15 @@ class CurrencyCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'currencies',
 	);
-	
+
 	/**
 	 * contains the sign to display before price, according to its format
-	 * @var string 
+	 * @var string
 	 */
 	public $prefix = null;
 	/**
 	 * contains the sign to display after price, according to its format
-	 * @var string 
+	 * @var string
 	 */
 	public $suffix = null;
 
@@ -198,7 +198,7 @@ class CurrencyCore extends ObjectModel
 	 *
 	 * @return array Currencies
 	 */
-	static public function getCurrencies($object = false, $active = 1, Shop $shop = null)
+	public static function getCurrencies($object = false, $active = 1, Shop $shop = null)
 	{
 		if (!$shop)
 			$shop = new Shop(Context::getContext()->shop->getID(true));
@@ -216,7 +216,7 @@ class CurrencyCore extends ObjectModel
 		return $tab;
 	}
 
-	static public function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
+	public static function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID();
@@ -228,7 +228,7 @@ class CurrencyCore extends ObjectModel
 		return Db::getInstance()->getRow($sql);
 	}
 
-	static public function getPaymentCurrencies($id_module, $id_shop = null)
+	public static function getPaymentCurrencies($id_module, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID();
@@ -244,7 +244,7 @@ class CurrencyCore extends ObjectModel
 		return Db::getInstance()->executeS($sql);
 	}
 
-	static public function checkPaymentCurrencies($id_module, $id_shop = null)
+	public static function checkPaymentCurrencies($id_module, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
@@ -275,7 +275,7 @@ class CurrencyCore extends ObjectModel
 		return $result['id_currency'];
 	}
 
-	static public function getIdByIsoCodeNum($iso_code)
+	public static function getIdByIsoCodeNum($iso_code)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `id_currency`
@@ -357,7 +357,7 @@ class CurrencyCore extends ObjectModel
 
 	/**
 	 * Get current currency
-	 * 
+	 *
 	 * @deprecated as of 1.5 use $context->currency instead
 	 * @return Currency
 	 */
