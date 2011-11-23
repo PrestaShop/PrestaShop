@@ -1288,13 +1288,15 @@ class AdminProductsControllerCore extends AdminController
 									$preview_url .= 'adtoken='.$token.'&ad='.$admin_dir;
 								}
 								$this->redirect_after = $preview_url;
-							} else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') || ($id_image && $id_image !== true)) // Save and stay on same form
-							// Save and stay on same form
+							}
+							else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') || ($id_image && $id_image !== true)) // Save and stay on same form
+							{// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 								$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
 
 							// Default behavior (save and back)
 							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
+							}
 						}
 					}
 					else
@@ -1595,8 +1597,6 @@ class AdminProductsControllerCore extends AdminController
 			if (empty($this->action))
 				$this->action = 'Informations';
 
-
-
 			if(method_exists($this, 'initForm'.$this->action))
 				$this->tpl_form = 'products/'.strtolower($this->action).'.tpl';
 
@@ -1649,7 +1649,7 @@ class AdminProductsControllerCore extends AdminController
 			if ($id_category = (int)Tools::getValue('id_category'))
 				self::$currentIndex .= '&id_category='.$id_category;
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
-	
+
 			if (!empty($this->_list))
 			{
 				$id_category = Tools::getValue('id_category', 1);
@@ -1660,19 +1660,19 @@ class AdminProductsControllerCore extends AdminController
 				$root_categ = Category::getRootCategory();
 				$children = $root_categ->getAllChildren();
 				$category_tree = array();
-		
+
 				// Add category "all products" to tree
 				$all_categ = new Category();
 				$all_categ->name = 'All products';
 				$all_categ->selected = $this->_category->id_category == $all_categ->id;
 				$all_categ->dashes = '';
 				$category_tree[] = $all_categ;
-		
+
 				// Add root category to tree
 				$root_categ->selected = $this->_category->id_category == $root_categ->id;
 				$root_categ->dashes = str_repeat('&nbsp;-&nbsp;',$root_categ->level_depth);
 				$category_tree[] = $root_categ;
-		
+
 				foreach ($children as $k => $categ)
 				{
 					$categ = new Category($categ['id_category'],$this->context->language->id);
@@ -1681,7 +1681,7 @@ class AdminProductsControllerCore extends AdminController
 					$category_tree[] = $categ;
 				}
 				$this->tpl_list_vars['category_tree'] = $category_tree;
-		
+
 				// used to build the new url when changing category
 				$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
 			}
@@ -1779,7 +1779,6 @@ class AdminProductsControllerCore extends AdminController
 		$content = '<div class="warn draft" style="'.($active ? 'display:none' : '').'">
 				<p>
 				<span style="float: left">
-				<img src="../img/admin/warn2.png" />
 				'.$this->l('Your product will be saved as draft').'
 				</span>
 				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>

@@ -138,7 +138,7 @@
 		{l s='Enabled'}</label>
 		<br class="clear" />
 		<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
-		<label for="active_off" class="t"><img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="float:left; padding:0px 5px 0px 5px" />{l s='Disabled'} {if !$product->active} (<a href="{$preview_url}" alt="" target="_blank">{l s='View product in shop'}</a>){/if}</label>
+		<label for="active_off" class="t"><img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="float:left; padding:0px 5px 0px 5px" />{l s='Disabled'} </label>
 	</td>
 </tr>
 	{if $feature_shop_active}

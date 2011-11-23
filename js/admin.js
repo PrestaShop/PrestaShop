@@ -865,7 +865,7 @@ function showOptions(show)
 function submitAddProductAndPreview()
 {
 	$('#fakeSubmitAddProductAndPreview').attr('name','submitAddProductAndPreview');
-	$('#product').submit();
+	$('#product_form').submit();
 }
 
 function submitAddcmsAndPreview()
