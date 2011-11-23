@@ -10,15 +10,23 @@ $relais = Db::getInstance()->getValue('SELECT c.id_carrier
  {
 ?>
 		<script type="text/javascript">
-		$("#form").submit(function()
+        $('input[name=processCarrier]').click(function()
+                                              {
+                                              if ($("#tntRCSelectedCode").val() == '')
+                                              {
+                                              alert("Vous n'avez pas choisi de relais colis");
+                                              return false;
+                                              }
+                                              });
+		/*$("#form").submit(function()
 		{
-			if ($("#tntRCSelectedCode").val() == '')
-			{
-				alert("Vous n'avez pas choisi de relais colis");
-				return false;
-			}
+                          if ($("#tntRCSelectedCode").val() == '')
+                          {
+                          //alert("Vous n'avez pas choisi de relais colis");
+                          return false;
+                          }
 		}
-		);
+		);*/
 		</script>
 		<script type="text/javascript" src="./modules/tntcarrier/relaisColis/js/jquery.js"></script>
 		<script type="text/javascript" src="./modules/tntcarrier/relaisColis/js/jquery-ui.js"></script>

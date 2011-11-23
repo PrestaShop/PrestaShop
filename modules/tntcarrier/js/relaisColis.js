@@ -148,7 +148,6 @@ function tntRCafficheRelais(jData) {
 			
 	tntRCjTable.append(tntRCligneBlanche6Col());
 	jMessage.append(tntRCjTable);
-	
     jMessage.append(tntRCchangerCodePostal());
 };
 
@@ -159,10 +158,10 @@ function tntB2CRelaisColisGetBodyMain() {
 			"<table>"+
 				"<tr>"+
 					"<td>" + tntRCMsgBodyInput + "</td>"+
-				 	"<td><input type='text' id='tntRCInputCP' class='tntRCInput' maxlength='5' size='5' value=''/></td>"+
+				 	"<td><input type='text' id='tntRCInputCP' class='tntRCInput' maxlength='3' size='3' value=''/></td>"+
 					"<td><a href='#' onclick='tntRCgetDepot();'><img class='tntRCButton' src='" + pathToImages + "bt-OK-2.jpg' onmouseover='this.src=\"" + pathToImages + "bt-OK-1.jpg\"' onmouseout='this.src=\"" + pathToImages + "bt-OK-2.jpg\"'></a></td>" + 
 				"</tr>"+
-			"</table>" +	 
+			"</table>" +
 		"</div>"+
 		"<div id='tntRCLoading' style='display:none;'>" + tntRCMsgBodyLoading + "</div>"+
 		"<div id='tntRCError' class='tntRCError' style='display:none;'></div>");			
@@ -181,7 +180,7 @@ function tntB2CRelaisColis() {
 	var tntRelaisColisB2C = $("#tntB2CRelaisColis");
 	tntRelaisColisB2C.html(
 		"<div id='tntRCblocEntete'>"+
-			"<div class='tntRCHeader'>"+ tntRCMsgHeaderTitle + "</div>"+
+			"<!--<div class='tntRCHeader'>"+ tntRCMsgHeaderTitle + "</div>-->"+
 			"<div class='tntRCSubHeader'>" + tntRCMsgSubHeaderTitle + "</div>"+
 		"</div>"+
 		"<div id='blocCodePostal' class='tntRCBody'>"+
@@ -308,7 +307,7 @@ function tntRCafficheCommunes(jData) {
 		tntRCligneBlanche6Col());
 	
 	blocCodePostal.html(tntRCjTable);	
-	
+	alert('lol');
 	// Bloc de saisie d'un nouveau code postal			
     blocCodePostal.append(tntRCchangerCodePostal());
 }
@@ -556,7 +555,7 @@ function tntRCchangerCodePostal(){
 			"<table>"+
 				"<tr>"+
 					"<td width='300px'>Vous pouvez choisir un autre code postal de livraison :</td>"+
-				 	"<td width='55px'><input type='text' id='tntRCInputCP' class='tntRCInput' maxlength='5' size='5' value='' /></td>"+
+				 	"<td width='55px'><input type='text' id='tntRCInputCP' class='tntRCInput' maxlength='3' size='3' value='' /></td>"+
 					"<td><a href='#' onclick='tntRCgetDepot();'><img class='tntRCButton' src='" + pathToImages + "bt-OK-2.jpg' onmouseover='this.src=\"" + pathToImages + "bt-OK-1.jpg\"' onmouseout='this.src=\"" + pathToImages + "bt-OK-2.jpg\"'></a></td>" + 
 				"</tr>"+
 			"</table>"+

@@ -4,7 +4,7 @@
 	{/if}
 	<table class="table" cellspacing="0" cellpadding="0">
 		<tr>
-			<th>{$lang.name}</th><th>{$lang.description}</th><th>{$lang.code}</th><th>{$lang.additionnalCharge}</th><th>{$lang.activated}</th><th></th>
+			<th>{l s='Name' mod='tntcarrier'}</th><th>{l s='Description' mod='tntcarrier'}</th><th>{l s='code' mod='tntcarrier'}</th><th>{l s='Additionnal Charge' mod='tntcarrier'}</th><th>{l s='Activated' mod='tntcarrier'}</th><th></th>
 		</tr>
 		<tr>
 			<td><input type="text" name="tnt_carrier_service_name" size="20" value="{$varServiceForm.name}"/></td>
@@ -14,7 +14,7 @@
 			<td><input type="radio" name="tnt_carrier_service_display" value="0" {if $varServiceForm.display == '1'} checked="checked"	{/if} /> <img src="../img/admin/disabled.gif" /><br/>
 				<input type="radio" name="tnt_carrier_service_display" value="1" {if $varServiceForm.display == '0'} checked="checked"	{/if} /> <img src="../img/admin/enabled.gif" />
 			</td>
-			<td><input class="button" name="submitSave" type="submit"></td>
+			<td><input class="button" name="submitSave" type="submit" value="{l s='save' mod='tntcarrier'}"></td>
 		</tr>
 	</table>
 </form>

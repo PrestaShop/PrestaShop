@@ -42,80 +42,87 @@ else
 	}
 	if (isset($follow))
 	{
-		//var_dump($follow->DepotInfo);
-		$v = $follow->DepotInfo;
-		if (!is_array($follow->DepotInfo))
-			echo "
-				<input type='hidden' id='tntRCSelectedCode' value='$v->pexCode'/>
-				<input type='hidden' id='tntRCSelectedNom' value='$v->name'/>
-				<input type='hidden' id='tntRCSelectedAdresse' value='$v->address1'/>
-				<input type='hidden' id='tntRCSelectedAdresse2' value='$v->address2'/>
-				<input type='hidden' id='tntRCSelectedCodePostal' value='$v->zipCode'/>
-				<input type='hidden' id='tntRCSelectedCommune' value='$v->city'/>";
-		else
-			echo "
-				<input type='hidden' id='tntRCSelectedCode' />
-				<input type='hidden' id='tntRCSelectedNom' />
-				<input type='hidden' id='tntRCSelectedAdresse' />
-				<input type='hidden' id='tntRCSelectedAdresse2' />
-				<input type='hidden' id='tntRCSelectedCodePostal' />
-				<input type='hidden' id='tntRCSelectedCommune' />";
-		echo "
-		<table width='480px' cellspacing='0' cellpadding='0' style='border:1px solid gray;'>
-			<tbody>
-			<tr height='8px'>
-			<td class='tntRCblanc' colspan='6'></td>
-			</tr>
-			<tr>
-			<td class='tntRCblanc' width='5px'></td>
-			<td class='tntRCgris'  colspan='2'>&nbsp;Agences TNT</td>";
-		if (is_array($follow->DepotInfo))
-			echo "<td class='tntRCgris'>Choix</td>";
-		else
-			echo "<td></td>";
-		echo "
-			<td class='tntRCblanc' width='5px'></td>
-			</tr>";
-			if (is_array($follow->DepotInfo))
-				foreach ($follow->DepotInfo as $key => $v)
-				{
-					echo"
-						<tr>
-						<td class='tntRCblanc' ></td>
-						<td class='tntRCblanc' ><img src='../modules/tntcarrier/img/logo-tnt-petit.jpg'></td>
-						<td class='tntRCrelaisColis'> $v->name $v->address1 $v->address2 <br/>$v->zipCode $v->city</td>
-						<td><input type='radio' name='depotTnt' value='$key' onclick='changeValueTntRC(\"$v->pexCode\", \"$v->name\", \"$v->address1\", \"$v->address2\", \"$v->zipCode\", \"$v->city\")'/></td>
-						<td class='tntRCblanc' ></td>
-						</tr>
-						<tr><td class='tntRCblanc'></td><td class='tntRCrelaisColis' colspan='2'>$v->message</td><td class='tntRCblanc' ></td></tr>
-						<tr id='tntRcDetail'>
-						<td class='tntRCblanc'></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td class='tntRCblanc'></td>
-						</tr>";
-				}
+		//var_dump($follow);
+		if (isset($follow->DepotInfo))
+		{	
+			$v = $follow->DepotInfo;
+			if (!is_array($follow->DepotInfo))
+				echo "
+					<input type='hidden' id='tntRCSelectedCode' value='$v->pexCode'/>
+					<input type='hidden' id='tntRCSelectedNom' value='$v->name'/>
+					<input type='hidden' id='tntRCSelectedAdresse' value='$v->address1'/>
+					<input type='hidden' id='tntRCSelectedAdresse2' value='$v->address2'/>
+					<input type='hidden' id='tntRCSelectedCodePostal' value='$v->zipCode'/>
+					<input type='hidden' id='tntRCSelectedCommune' value='$v->city'/>";
 			else
-				echo"
-						<tr>
-						<td class='tntRCblanc' ></td>
-						<td class='tntRCblanc' ><img src='../modules/tntcarrier/img/logo-tnt-petit.jpg'></td>
-						<td class='tntRCrelaisColis'> $v->name $v->address1 $v->address2 <br/>$v->zipCode $v->city</td>
-						<td></td>
-						<td class='tntRCblanc' ></td>
-						</tr>
-						<tr><td class='tntRCblanc'></td><td class='tntRCrelaisColis' colspan='2'>$v->message</td><td class='tntRCblanc' ></td></tr>
-						<tr id='tntRcDetail'>
-						<td class='tntRCblanc'></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td class='tntRCblanc'></td>
-						</tr>";
-		echo "
-		</table>
-		";
+				echo "
+					<input type='hidden' id='tntRCSelectedCode' />
+					<input type='hidden' id='tntRCSelectedNom' />
+					<input type='hidden' id='tntRCSelectedAdresse' />
+					<input type='hidden' id='tntRCSelectedAdresse2' />
+					<input type='hidden' id='tntRCSelectedCodePostal' />
+					<input type='hidden' id='tntRCSelectedCommune' />";
+			echo "
+				<table width='480px' cellspacing='0' cellpadding='0' style='border:1px solid gray;'>
+				<tbody>
+				<tr height='8px'>
+				<td class='tntRCblanc' colspan='6'></td>
+				</tr>
+				<tr>
+				<td class='tntRCblanc' width='5px'></td>
+				<td class='tntRCgris'  colspan='2'>&nbsp;Agences TNT</td>";
+			if (is_array($follow->DepotInfo))
+				echo "<td class='tntRCgris'>Choix</td>";
+			else
+				echo "<td></td>";
+			echo "
+				<td class='tntRCblanc' width='5px'></td>
+				</tr>";
+				if (is_array($follow->DepotInfo))
+					foreach ($follow->DepotInfo as $key => $v)
+					{
+						echo"
+							<tr>
+							<td class='tntRCblanc' ></td>
+							<td class='tntRCblanc' ><img src='../modules/tntcarrier/img/logo-tnt-petit.jpg'></td>
+							<td class='tntRCrelaisColis'> $v->name $v->address1 $v->address2 <br/>$v->zipCode $v->city</td>
+							<td><input type='radio' name='depotTnt' value='$key' onclick='changeValueTntRC(\"$v->pexCode\", \"$v->name\", \"$v->address1\", \"$v->address2\", \"$v->zipCode\", \"$v->city\")'/></td>
+							<td class='tntRCblanc' ></td>
+							</tr>
+							<tr><td class='tntRCblanc'></td><td class='tntRCrelaisColis' colspan='2'>$v->message</td><td class='tntRCblanc' ></td></tr>
+							<tr id='tntRcDetail'>
+							<td class='tntRCblanc'></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class='tntRCblanc'></td>
+							</tr>";
+					}
+				else
+					echo"
+							<tr>
+							<td class='tntRCblanc' ></td>
+							<td class='tntRCblanc' ><img src='../modules/tntcarrier/img/logo-tnt-petit.jpg'></td>
+							<td class='tntRCrelaisColis'> $v->name $v->address1 $v->address2 <br/>$v->zipCode $v->city</td>
+							<td></td>
+							<td class='tntRCblanc' ></td>
+							</tr>
+							<tr><td class='tntRCblanc'></td><td class='tntRCrelaisColis' colspan='2'>$v->message</td><td class='tntRCblanc' ></td></tr>
+							<tr id='tntRcDetail'>
+							<td class='tntRCblanc'></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class='tntRCblanc'></td>
+							</tr>";
+			echo "
+				</table>
+				<div style='margin-top:5px;text-align:center'>
+				<input class='button' type='button' value='Remplir les informations de l&rsquo;agence' onclick='callbackSelectionRelais();return false;' />
+				</div>";
+		}
+		else
+			echo "Aucun d&eacute;p&ocirc;t trouv&eacute;";
 	}
 }
 ?>
