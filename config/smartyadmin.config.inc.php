@@ -29,7 +29,6 @@ $smarty->template_dir = _PS_ADMIN_DIR_.'/themes/template';
 
 function smartyTranslate($params, &$smarty)
 {
-	global $_LANGADM;
 	$htmlentities = !isset($params['js']);
     $pdf = isset($params['pdf']);
 	$addslashes = isset($params['slashes']);
@@ -52,7 +51,7 @@ function smartyTranslate($params, &$smarty)
 	    $msg = $params['s'];
 	    if (is_array($lang_array) AND key_exists($key, $lang_array))
 		    $msg = $lang_array[$key];
-	    elseif (is_array($lang_array) AND key_exists(Tools::strtolower($key), $lang_array))
+	    elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
 		    $msg = $lang_array[Tools::strtolower($key)];
 
         return $msg;
