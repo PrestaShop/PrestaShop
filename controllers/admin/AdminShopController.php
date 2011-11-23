@@ -82,7 +82,20 @@ class AdminShopControllerCore extends AdminController
 		);
 		parent::__construct();
 	}
-
+	public function initContent()
+	{
+		$id_shop = ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP ? $this->context->shop->id : false);
+		$shops =  Shop::getShopWithoutUrls($id_shop);
+		if (count($shops))
+		{
+		 	$shop_url_configuration = '';
+			foreach ($shops as $shop)
+				$shop_url_configuration .= sprintf($this->l('No url is configured for shop: %s'), '<b>'.$shop['name'].'</b>').' <a href="'.$this->context->link->getAdminLink('AdminShopUrl').'&addshop_url&id_shop='.$shop['id_shop'].'">'.$this->l('click here').'</a><br />';
+			$this->content .= '<div class="warn">'.$shop_url_configuration.'</div>';
+		}
+		parent::initContent();		
+	}
+	
 	public function initList()
 	{
 		$this->addRowAction('edit');
