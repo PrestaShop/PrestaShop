@@ -268,7 +268,7 @@ $(document).ready(function(){
 	<div class="warn draft" >
 		<p>
 			<span style="float: left">
-			<img src="../img/admin/warn2.png" />{l s='Your product will be saved as draft'}</span>
+			{l s='Your product will be saved as draft'}</span>
 			<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >{l s='Save and preview'}</a></span>
 			<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			<br />

@@ -432,9 +432,9 @@ if (Tools::getValue('submitPublishProduct'))
 	if (Tools::getIsset('id_product'))
 	{
 		$id_product = (int)(Tools::getValue('id_product'));
-		$id_tab_catalog = (int)(Tab::getIdFromClassName('AdminCatalog'));
-		$token = Tools::getAdminToken('AdminCatalog'.(int)($id_tab_catalog).(int)$context->employee->id);
-		$bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminCatalog&id_product='.$id_product.'&updateproduct&token='.$token;
+		$id_tab_catalog = (int)(Tab::getIdFromClassName('AdminProducts'));
+		$token = Tools::getAdminToken('AdminProducts'.(int)($id_tab_catalog).(int)$context->employee->id);
+		$bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminProducts&id_product='.$id_product.'&updateproduct&token='.$token;
 
 		if (Tools::getValue('redirect'))
 			die($bo_product_url);
