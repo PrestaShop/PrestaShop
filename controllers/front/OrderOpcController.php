@@ -139,7 +139,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									'summary' => $this->context->cart->getSummaryDetails(),
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookTop(array()) : ''),
-									'carrier_list' => $this->_getCarrierList(),
+									'carrier_data' => $this->_getCarrierList(),
 									'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 									'no_address' => 0,
@@ -195,7 +195,8 @@ class OrderOpcControllerCore extends ParentOrderController
 											'summary' => $this->context->cart->getSummaryDetails(),
 											'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
-											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency))))
+											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency)))),
+											'carrier_data' => $this->_getCarrierList()
 										));
 										die(Tools::jsonEncode($result));
 									}
@@ -422,6 +423,28 @@ class OrderOpcControllerCore extends ParentOrderController
 	protected function _getCarrierList()
 	{
 		$address_delivery = new Address($this->context->cart->id_address_delivery);
+		
+		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+		$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, true);
+		if (!strpos($link_conditions, '?'))
+			$link_conditions .= '?content_only=1';
+		else
+			$link_conditions .= '&content_only=1';
+		
+		$this->context->smarty->assign(array(
+			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
+			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
+			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
+			'cms_id' => (int)(Configuration::get('PS_CONDITIONS_CMS_ID')),
+			'conditions' => (int)(Configuration::get('PS_CONDITIONS')),
+			'link_conditions' => $link_conditions,
+			'recyclable' => (int)($this->context->cart->recyclable),
+			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
+			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+			'delivery_option' => $this->context->cart->getDeliveryOption(),
+			'address_collection' => $this->context->cart->getAddressCollection(),
+			'opc' => true));
+		
 		if ($this->context->customer->id)
 			$groups = $this->context->customer->getGroups();
 		else
@@ -433,12 +456,14 @@ class OrderOpcControllerCore extends ParentOrderController
 		else
 		{
 			$carriers = Carrier::getCarriersForOrder((int)Address::getZoneById((int)($address_delivery->id)), $groups);
+			
 			$result = array(
 				'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array(
 					'carriers' => $carriers,
 					'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 					'delivery_option' => $this->context->cart->getDeliveryOption()
 				)),
+				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl'),
 				'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address_delivery))
 			);
 			return $result;
