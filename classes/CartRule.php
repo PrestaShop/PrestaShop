@@ -685,7 +685,7 @@ class CartRuleCore extends ObjectModel
 			)' : '').'
 		)
 		AND (
-			cr.reduction_product = 0
+			cr.reduction_product <= 0
 			OR cr.reduction_product IN (
 				SELECT id_product
 				FROM '._DB_PREFIX_.'cart_product
