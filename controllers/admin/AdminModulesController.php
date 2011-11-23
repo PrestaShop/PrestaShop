@@ -61,7 +61,7 @@ class AdminModulesControllerCore extends AdminController
 	private $addons_url = 'https://addons.prestashop.com/webservice/151/';
 	private $logged_on_addons = false;
 	private $cache_file_default_country_modules_list = '/config/default_country_modules_list.xml';
-	private $cache_file_customer_modules_list = '/config/default_customer_modules_list.xml';
+	private $cache_file_customer_modules_list = '/config/customer_modules_list.xml';
 
 	/*
 	** Admin Modules Controller Constructor
@@ -131,6 +131,11 @@ class AdminModulesControllerCore extends AdminController
 			$this->logged_on_addons = true;
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin('scrollTo');
+	}
 
 
 
@@ -189,7 +194,7 @@ class AdminModulesControllerCore extends AdminController
 		// If logged to Addons Webservices, refresh customer modules list every day
 		if ($this->logged_on_addons && $this->status != 'error')
 		{
-			if (!$this->isFresh($this->cache_file_customer_modules_list, 86400))
+			if (!$this->isFresh($this->cache_file_customer_modules_list, 60))
 			{
 				if ($this->refresh($this->cache_file_customer_modules_list, $this->addons_url.'listing/customer/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons))))
 					$this->status = 'refresh';
@@ -209,13 +214,19 @@ class AdminModulesControllerCore extends AdminController
 
 	public function ajaxProcessLogOnAddonsWebservices()
 	{
-		$content = Tools::file_get_contents($this->addons_url.'listing/customer/'.pSQL(trim(Tools::getValue('username_addons'))).'/'.pSQL(trim(Tools::getValue('password_addons'))));
+		$content = Tools::file_get_contents($this->addons_url.'check_customer/'.pSQL(trim(Tools::getValue('username_addons'))).'/'.pSQL(trim(Tools::getValue('password_addons'))));
 		$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
 		if (!$xml)
 			die('KO');
-		$this->context->cookie->username_addons = pSQL(trim(Tools::getValue('username_addons')));
-		$this->context->cookie->password_addons = pSQL(trim(Tools::getValue('password_addons')));
-		die('OK');
+		$result = strtoupper((string)$xml->msg);
+		if (!in_array($result, array('OK', 'KO')))
+			die ('KO');
+		if ($result == 'OK')
+		{
+			$this->context->cookie->username_addons = pSQL(trim(Tools::getValue('username_addons')));
+			$this->context->cookie->password_addons = pSQL(trim(Tools::getValue('password_addons')));
+		}
+		die($result);
 	}
 
 	public function ajaxProcessReloadModulesList()
@@ -383,7 +394,7 @@ class AdminModulesControllerCore extends AdminController
 				{
 					if ($module->uninstall())
 						if ($module->install())
-							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name));
 						else
 							$this->_errors[] = Tools::displayError('Cannot install module');
 					else
@@ -489,16 +500,17 @@ class AdminModulesControllerCore extends AdminController
 					// If Addons module, download and unzip it before installing it
 					if ($this->logged_on_addons && !is_dir('../modules/'.$name.'/'))
 					{
-						$file = _PS_ROOT_DIR_.'/config/default_customer_modules_list.xml';
-						if (file_exists($file))
-						{
-							$content = Tools::file_get_contents($file);
-							$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
-							foreach ($xml->module as $modaddons)
-								if ($name == $modaddons->name && isset($modaddons->id))
-									if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$this->name.'.zip'))
-										$this->extractArchive('../modules/'.$this->name.'.zip');
-						}
+						$filesList = array($this->cache_file_default_country_modules_list, $this->cache_file_customer_modules_list);
+						foreach ($filesList as $file)
+							if (file_exists(_PS_ROOT_DIR_.$file))
+							{
+								$content = Tools::file_get_contents(_PS_ROOT_DIR_.$file);
+								$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+								foreach ($xml->module as $modaddons)
+									if ($name == $modaddons->name && isset($modaddons->id))
+										if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
+											$this->extractArchive('../modules/'.$modaddons->name.'.zip');
+							}
 
 					}
 
@@ -599,7 +611,7 @@ class AdminModulesControllerCore extends AdminController
 			}
 		}
 		if ($return)
-			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name);
+			Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name));
 	}
 	
 	public function postProcess()
@@ -782,7 +794,7 @@ class AdminModulesControllerCore extends AdminController
 			$this->list_modules_categories[$k]['nb'] = 0;
 		
 		// Retrieve Modules List
-		$modules = Module::getModulesOnDisk(true);
+		$modules = Module::getModulesOnDisk(true, $this->logged_on_addons);
 		$this->initModulesList($modules);
 		$this->nb_modules_total = count($modules);
 
@@ -803,8 +815,8 @@ class AdminModulesControllerCore extends AdminController
 					$modules[$km]->logo = 'logo.png';
 				$modules[$km]->optionsHtml = $this->displayModuleOptions($module);
 				$modules[$km]->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
-				$modules[$km]->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'#anchor'.ucfirst($module->name);
-				$modules[$km]->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'#anchor'.ucfirst($module->name);
+				$modules[$km]->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
+				$modules[$km]->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'if(confirm(\''.addslashes($module->confirmUninstall).'\')) ').'document.location.href=\''.$modules[$km]->options['uninstall_url'].'\'' : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
 				if (Tools::getValue('module_name') == $module->name && (int)Tools::getValue('conf') > 0)
 					$modules[$km]->message = $this->_conf[(int)Tools::getValue('conf')];
