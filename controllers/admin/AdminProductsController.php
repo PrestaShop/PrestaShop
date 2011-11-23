@@ -1293,7 +1293,7 @@ class AdminProductsControllerCore extends AdminController
 								$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
 
 							// Default behavior (save and back)
-							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token).'&onredirigeici';
+							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
 						}
 					}
 					else
