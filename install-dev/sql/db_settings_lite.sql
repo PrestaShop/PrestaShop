@@ -959,7 +959,7 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (103, 'AdminAccountingManagement', 102, 1),
 (104, 'AdminAccountingExport', 102, 2),
 (105, 'AdminCmsCategories', -1, 0),
-(106, 'AdminCms', -1, 0);
+(106, 'AdminCms', -1, 0), (107, 'AdminLogin', -1 , 0);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 

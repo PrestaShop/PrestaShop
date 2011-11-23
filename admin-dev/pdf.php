@@ -30,7 +30,7 @@ define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 if (!Context::getContext()->employee->id)
-	Tools::redirectAdmin('login.php');
+	Tools::redirectAdmin('index.php?controller=AdminLogin');
 
 $functionArray = array(
 	'pdf' => 'generateInvoicePDF',

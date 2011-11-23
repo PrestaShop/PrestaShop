@@ -1611,14 +1611,19 @@ class AdminControllerCore extends Controller
 		// ob_start();
 		if (Tools::getValue('ajax'))
 			$this->ajax = '1';
-
+		
+		/* Server Params */
+		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+		$this->context->link = new Link($protocol_link, $protocol_content);
+		
 		$this->timerStart = microtime(true);
 
 		if (isset($_GET['logout']))
 			$this->context->employee->logout();
 
-		if (!isset($this->context->employee) || !$this->context->employee->isLoggedBack())
-			$this->redirect_after = 'login.php'.(!isset($_GET['logout']) ? '?redirect='.$_SERVER['REQUEST_URI'] : '');
+		if (get_class($this) != 'AdminLoginController' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack()))
+			$this->redirect_after = $this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '?redirect='.$_SERVER['REQUEST_URI'] : '');
 
 		// Set current index
 		$current_index = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
@@ -1627,11 +1632,7 @@ class AdminControllerCore extends Controller
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
 
-		/* Server Params */
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-		$link = new Link($protocol_link, $protocol_content);
-		$this->context->link = $link;
+
 		// @todo : put the definitions in Controller class
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
