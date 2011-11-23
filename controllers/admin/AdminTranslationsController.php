@@ -950,7 +950,7 @@ class AdminTranslationsControllerCore extends AdminController
 				
 				// @todo this is retrcompatible, but we should not leave this
 				if ( $prefix_key == 'Admin')
-					$prefix_key = 'AdminTab';
+					$prefix_key = 'AdminController';
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
 				fclose($fd);
@@ -1012,9 +1012,9 @@ class AdminTranslationsControllerCore extends AdminController
 				$prefix_key = 'Admin'.substr($prefix_key, 0, strpos($prefix_key, DIRECTORY_SEPARATOR));
 				
 				// @todo retrompatibility : we assume here than files directly in template/
-				// use the prefix "AdminTab (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
+				// use the prefix "AdminController" (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
 				if ( $prefix_key == 'Admin')
-					$prefix_key = 'AdminTab';
+					$prefix_key = 'AdminController';
 				// and helpers in helper
 					
 				$new_lang = array();
