@@ -73,10 +73,10 @@
 	{if !isset($logged_on_addons)}
 		<!--start addons login-->
 		<div class="filter-module" id="addons_login_div">
-			<p>{l s='You have already got an Add On customer account'}</p>
+			<p>{l s='You have a PrestaShop Addons account ?'}</p>
 			<form id="addons_login_form" method="post">
 				<label>{l s='Login Addons'} :</label> <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
-				<label>{l s= 'Password Addons'} :</label> <input type="text" value="" id="password_addons" autocomplete="off" class="ac_input">
+				<label>{l s= 'Password Addons'} :</label> <input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
 				<input type="submit" class="button" id="addons_login_button" value="{l s='Log in'}">
 				<span id="addons_loading" style="color:red"></span>
 			</form>

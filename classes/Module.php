@@ -588,7 +588,7 @@ abstract class ModuleCore
 	  * @param boolean $useConfig in order to use config.xml file in module dir
 	  * @return array Modules
 	  */
-	public static function getModulesOnDisk($useConfig = false)
+	public static function getModulesOnDisk($useConfig = false, $loggedOnAddons = false)
 	{
 		global $_MODULES;
 
@@ -737,52 +737,54 @@ abstract class ModuleCore
 
 
 		// Get Default Country Modules and customer module
-		$filesList = array(_PS_ROOT_DIR_.'/config/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/default_customer_modules_list.xml');
-		foreach ($filesList as $file)
-			if (file_exists($file))
-			{
-				$content = Tools::file_get_contents($file);
-				$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
-				foreach ($xml->module as $modaddons)
+		if ($loggedOnAddons)
+		{
+			$filesList = array(_PS_ROOT_DIR_.'/config/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/customer_modules_list.xml');
+			foreach ($filesList as $file)
+				if (file_exists($file))
 				{
-					$flagFound = 0;
-					foreach ($moduleList as $k => $m)
-						if ($m->name == $modaddons->name && !isset($m->available_on_addons))
-						{
-							$flagFound = 1;
-							if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
-								$moduleList[$k]->version_addons = $modaddons->version;
-						}
-					if ($flagFound == 0)
+					$content = Tools::file_get_contents($file);
+					$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+					foreach ($xml->module as $modaddons)
 					{
-						$item = new stdClass();
-						$item->id = 0;
-						$item->warning = '';
-						$item->name = strip_tags((string)$modaddons->name);
-						$item->version = strip_tags((string)$modaddons->version);
-						$item->tab = strip_tags((string)$modaddons->tab);
-						$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
-						$item->description = strip_tags((string)$modaddons->description);
-						$item->author = strip_tags((string)$modaddons->author);
-						$item->limited_countries = array();
-						$item->is_configurable = 0;
-						$item->need_instance = 0;
-						$item->available_on_addons = 1;
-						$item->active = 0;
-						if (!isset($modaddons->img) && isset($modaddons->id))
-							$modaddons->img = 'http://media.prestastore.com/img/pico/'.(int)$modaddons->id.'.jpg';
-						if (isset($modaddons->img))
+						$flagFound = 0;
+						foreach ($moduleList as $k => $m)
+							if ($m->name == $modaddons->name && !isset($m->available_on_addons))
+							{
+								$flagFound = 1;
+								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
+									$moduleList[$k]->version_addons = $modaddons->version;
+							}
+						if ($flagFound == 0)
 						{
-							if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-								copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
-							if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-								$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+							$item = new stdClass();
+							$item->id = 0;
+							$item->warning = '';
+							$item->name = strip_tags((string)$modaddons->name);
+							$item->version = strip_tags((string)$modaddons->version);
+							$item->tab = strip_tags((string)$modaddons->tab);
+							$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
+							$item->description = strip_tags((string)$modaddons->description);
+							$item->author = strip_tags((string)$modaddons->author);
+							$item->limited_countries = array();
+							$item->is_configurable = 0;
+							$item->need_instance = 0;
+							$item->available_on_addons = 1;
+							$item->active = 0;
+							if (!isset($modaddons->img) && isset($modaddons->id))
+								$modaddons->img = 'http://media.prestastore.com/img/pico/'.(int)$modaddons->id.'.jpg';
+							if (isset($modaddons->img))
+							{
+								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+									copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
+								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+							}
+							$moduleList[] = $item;
 						}
-						$moduleList[] = $item;
 					}
 				}
-			}
-
+		}
 
 		//echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
 
