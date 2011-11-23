@@ -49,6 +49,8 @@ class AdminProductsControllerCore extends AdminController
 		'Accounting'
 	);
 
+	protected $available_tabs_lang = array ();
+
 	protected $tabs_toolbar_save_buttons = array(
 		'Informations' => true,
 		'Images' => true,
@@ -91,6 +93,21 @@ class AdminProductsControllerCore extends AdminController
 				'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false),
 			'position' => array('title' => $this->l('Position'), 'width' => 70,'filter_key' => 'cp!position',
 				'align' => 'center', 'position' => 'position'),
+		);
+
+		// @since 1.5 : translations for tabs
+		$this->available_tabs_lang = array (
+			'Informations' => $this->l('Informations'),
+			'Images' => $this->l('Images'),
+			'Prices' => $this->l('Prices'),
+			'Combinations' => $this->l('Combinations'),
+			'Features' => $this->l('Features'),
+			'Customization' => $this->l('Customization'),
+			'Attachments' => $this->l('Attachments'),
+			'Quantities' => $this->l('Quantities'),
+			'Suppliers' => $this->l('Suppliers'),
+			'Warehouses' => $this->l('Warehouses'),
+			'Accounting' => $this->l('Accounting')
 		);
 
 		/* Join categories table */
@@ -1594,17 +1611,16 @@ class AdminProductsControllerCore extends AdminController
 				$action = $this->action;
 				if (empty($action) || !method_exists($this, 'initForm'.$action))
 					$action = 'Informations';
-				if(Tools::getValue('id_product'))
+				if (Tools::getValue('id_product'))
 				{
-					// i is used as producttab id
+					// i is used as product_tab id
 					$i = 0;
-					foreach($this->available_tabs as $product_tab)
+					foreach ($this->available_tabs as $product_tab)
 					{
 						$product_tabs[$product_tab] = array(
 							'id' => ++$i.'-'.$product_tab,
 							'selected' => (strtolower($product_tab) == strtolower($action)),
-							// @todo $this->l() instead of product_tab
-							'name' => $product_tab,
+							'name' => $this->available_tabs_lang[$product_tab],
 							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
 							);
 					}
