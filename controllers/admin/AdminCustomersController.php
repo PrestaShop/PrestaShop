@@ -369,6 +369,7 @@ class AdminCustomersControllerCore extends AdminController
 		if (!($customer = $this->loadObject()))
 			return;
 
+		$this->context->customer = $customer;
 		$gender = new Gender($customer->id_gender);
 		$gender_image = $gender->getImage();
 
@@ -433,6 +434,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_carts; $i++)
 		{
 			$cart = new Cart((int)$carts[$i]['id_cart']);
+			$this->context->cart = $cart;
 			$summary = $cart->getSummaryDetails();
 			$currency = new Currency((int)$carts[$i]['id_currency']);
 			$carrier = new Carrier((int)$carts[$i]['id_carrier']);
