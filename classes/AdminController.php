@@ -1523,8 +1523,9 @@ class AdminControllerCore extends Controller
 	{
 		// every admin translations should use this method
 		// @todo remove global keyword in translations files and use static
-		global $_LANGADM, $_ERRORS, $_FIELDS;
-		if (!is_array($_LANGADM) || !is_array($_ERRORS) || !is_array($_FIELDS))
+		global $_LANGADM;
+
+		if (!is_array($_LANGADM))
 		{
 			$iso = Context::getContext()->language->iso_code;
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
@@ -1540,18 +1541,12 @@ class AdminControllerCore extends Controller
 		$class = str_replace('_', '', $class);
 
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		//$currentClass = get_class($this);
 		if (false && Module::getModuleNameFromClass($class))
 		{
 			$string = str_replace('\'', '\\\'', $string);
 			return Module::findTranslation(Module::$classInModule[$class], $string, $class);
 		}
-		global $_LANGADM;
 
-		if (is_array($_LANGADM))
-			$_LANGADM = array_change_key_case($_LANGADM);
-		else
-			$_LANGADM = array();
 		$key = md5(str_replace('\'', '\\\'', $string));
 
 		// retrocomp :
@@ -1564,7 +1559,6 @@ class AdminControllerCore extends Controller
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
 			$str = $string;
-
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
