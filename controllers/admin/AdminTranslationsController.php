@@ -66,11 +66,14 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		$this->toolbar_btn['save'] = array(
+			'href' => self::$currentIndex.'&token='.$this->token,
+			'desc' => $this->l('Update translations')
+		);
 		$this->toolbar_btn['cancel'] = array(
 			'href' => self::$currentIndex.'&token='.$this->token,
 			'desc' => $this->l('Cancel')
 		);
-
 	}
 
 	public function initMain()
@@ -786,59 +789,22 @@ class AdminTranslationsControllerCore extends AdminController
 			<input type="submit" name="submitTranslations'.ucfirst($name).'AndStay" value="'.$this->l('Update and stay').'" class="button" />';
 	}
 
-	public function displayAutoTranslate()
+	/**
+	 * Init js variables for translation with google
+	 *
+	 * @return array of variables to assign to the smarty template
+	 */
+	public function initAutoTranslate()
 	{
+		$this->addJS('http://www.google.com/jsapi');
+		$this->addJS(_PS_JS_DIR_.'gg-translate.js');
+		$this->addJS(_PS_JS_DIR_.'admin-translations.js');
+
 		$language_code = Tools::htmlentitiesUTF8(Language::getLanguageCodeByIso(Tools::getValue('lang')));
-		return '
-		<input type="button" class="button" onclick="translateAll();" value="'.$this->l('Translate with Google (experimental)').'" />
-		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript">
-			var gg_translate = {
-				language_code : \''.$language_code.'\',
-				not_available : \''.addslashes(html_entity_decode($this->l('this language is not available on Google Translate API'), ENT_QUOTES, 'utf-8')).'\',
-				tooltip_title : \''.addslashes(html_entity_decode($this->l('Google translate suggests :'), ENT_QUOTES, 'utf-8')).'\'
-			};
-		</script>
-		<script type="text/javascript" src="../js/gg-translate.js"></script>
-		<script type="text/javascript">
-			var displayOnce = 0;
-			google.load("language", "1");
-			function translateAll() {
-				if (!ggIsTranslatable(gg_translate[\'language_code\']))
-					alert(\'"\'+gg_translate[\'language_code\']+\'" : \'+gg_translate[\'not_available\']);
-				else
-				{
-					$.each($(\'input[type="text"]\'), function() {
-						var tdinput = $(this);
-						if (tdinput.attr("value") == "" && tdinput.parent("td").prev().html()) {
-							google.language.translate(tdinput.parent("td").prev().html(), "en", gg_translate[\'language_code\'], function(result) {
-								if (!result.error)
-									tdinput.val(result.translation);
-								else if (displayOnce == 0)
-								{
-									displayOnce = 1;
-									alert(result.error.message);
-								}
-							});
-						}
-					});
-					$.each($("textarea"), function() {
-						var tdtextarea = $(this);
-						if (tdtextarea.html() == "" && tdtextarea.parent("td").prev().html()) {
-							google.language.translate(tdtextarea.parent("td").prev().html(), "en", gg_translate[\'language_code\'], function(result) {
-								if (!result.error)
-									tdtextarea.html(result.translation);
-								else if (displayOnce == 0)
-								{
-									displayOnce = 1;
-									alert(result.error.message);
-								}
-							});
-						}
-					});
-				}
-			}
-		</script>';
+		return array('language_code' => $language_code,
+					 'not_available' => addslashes(html_entity_decode($this->l('this language is not available on Google Translate API'), ENT_QUOTES, 'utf-8')),
+					 'tooltip_title' => addslashes(html_entity_decode($this->l('Google translate suggests :'), ENT_QUOTES, 'utf-8'))
+					);
 	}
 
 	public function displayLimitPostWarning($count)
@@ -891,8 +857,8 @@ class AdminTranslationsControllerCore extends AdminController
 						$new_lang[$key] = '';
 					}
 					else
-					{	
-						// Caution ! front has underscore between prefix key and md5, back has not 
+					{
+						// Caution ! front has underscore between prefix key and md5, back has not
 						if (isset($_LANG[$prefix_key.'_'.md5($key)]))
 							// @todo check if stripslashes is needed, it wasn't present in 1.4
 							$new_lang[$key] = stripslashes(html_entity_decode($_LANG[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
@@ -919,11 +885,13 @@ class AdminTranslationsControllerCore extends AdminController
 			'suoshin_exceeded' => $this->suhosin_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
-			'auto_translate' => $this->displayAutoTranslate(),
 			'tabsArray' => $tabs_array,
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'front'
 		);
+
+		// Add js variables needed for autotranslate
+		$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
@@ -947,7 +915,7 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				// -4 becomes -14 to remove the ending "Controller.php" from the filename
 				$prefix_key = basename(substr($tab, 0, -14));
-				
+
 				// @todo this is retrcompatible, but we should not leave this
 				if ( $prefix_key == 'Admin')
 					$prefix_key = 'AdminController';
@@ -958,7 +926,7 @@ class AdminTranslationsControllerCore extends AdminController
 				preg_match_all($regex, $content, $matches);
 				foreach ($matches[1] as $key)
 				{
-					// Caution ! front has underscore between prefix key and md5, back has not 
+					// Caution ! front has underscore between prefix key and md5, back has not
 					if (isset($_LANGADM[$prefix_key.md5($key)]))
 						$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($_LANGADM[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
 					else
@@ -984,7 +952,7 @@ class AdminTranslationsControllerCore extends AdminController
 			preg_match_all($regex, $content, $matches);
 			foreach ($matches[1] as $key)
 			{
-				// Caution ! front has underscore between prefix key and md5, back has not 
+				// Caution ! front has underscore between prefix key and md5, back has not
 				if (isset($_LANGADM[$prefix_key.md5($key)]))
 					$tabs_array[$prefix_key][$key] = stripslashes(html_entity_decode($_LANGADM[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
 				else
@@ -1006,17 +974,17 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				//$tpl = _PS_ADMIN_DIR_.'/themes/template/'.$template;
 				$tpl = $template;
-				
+
 				// get controller name instead of file name
 				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR, '', $tpl), true);
 				$prefix_key = 'Admin'.substr($prefix_key, 0, strpos($prefix_key, DIRECTORY_SEPARATOR));
-				
+
 				// @todo retrompatibility : we assume here than files directly in template/
 				// use the prefix "AdminController" (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
 				if ( $prefix_key == 'Admin')
 					$prefix_key = 'AdminController';
 				// and helpers in helper
-					
+
 				$new_lang = array();
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
@@ -1068,12 +1036,14 @@ class AdminTranslationsControllerCore extends AdminController
 			'suoshin_exceeded' => $this->suhosin_limit_exceed,
 			'url_submit' => self::$currentIndex.'&submitTranslationsBack=1&token='.$this->token,
 			'toggle_button' => $this->displayToggleButton(),
-			'auto_translate' => $this->displayAutoTranslate(),
 			'tabsArray' => $tabs_array,
 			'missing_translations' => $missing_translations,
 			'textarea_sized' => TEXTAREA_SIZED,
 			'type' => 'back'
 		);
+
+		// Add js variables needed for autotranslate
+		$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
@@ -1162,7 +1132,7 @@ class AdminTranslationsControllerCore extends AdminController
 					foreach ($rules['validate'] as $key => $value)
 						if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
 							// @todo check key : md5($key) was initially md5(addslashes($key))
-							$tabs_array[$prefix_key][$key] = html_entity_decode($_FIELDS[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');    
+							$tabs_array[$prefix_key][$key] = html_entity_decode($_FIELDS[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');
 						else
 						{
 							$tabs_array[$prefix_key][$key] = '';
@@ -1686,7 +1656,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		return $array_files;
 	}
-	
+
 	public function initFormModules($lang)
 	{
 		global $_MODULES;
@@ -1793,7 +1763,7 @@ class AdminTranslationsControllerCore extends AdminController
 	    		$tabs_array = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename), $regex, $_LANGPDF, $prefix_key, $tabs_array);
         }
 
-        // parse pdf template 
+        // parse pdf template
 		/* Search language tags (eg {l s='to translate'}) */
 		$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( pdf=\'true\')?\}/U';
         foreach (glob( _PS_THEME_DIR_.'/pdf/*.tpl') as $filename)
@@ -1801,10 +1771,10 @@ class AdminTranslationsControllerCore extends AdminController
 			preg_match_all($regex, file_get_contents($filename), $matches);
     		foreach ($matches[1] as $key)
 			{
-				// Caution ! front has underscore between prefix key and md5, back has not 
+				// Caution ! front has underscore between prefix key and md5, back has not
 				if (isset($_LANGPDF[$prefix_key.md5($key)]))
 					// @todo check key : md5($key) was initially md5(addslashes($key))
-					$tabs_array[$prefix_key][$key] = (html_entity_decode($_LANGPDF[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));    
+					$tabs_array[$prefix_key][$key] = (html_entity_decode($_LANGPDF[$prefix_key.md5($key)], ENT_COMPAT, 'UTF-8'));
 				else
 				{
 					$tabs_array[$prefix_key][$key] = '';
