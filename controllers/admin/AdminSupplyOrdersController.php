@@ -1078,7 +1078,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->tabAccess['edit'] === '1'))
 			$this->_errors[] = Tools::displayError($this->l('You do not have the required permission to edit an order.'));
 		// Global checks when add / update a supply order
-		if (Tools::isSubmit('submitAddsupply_order'))
+		if (Tools::isSubmit('submitAddsupply_order') || Tools::isSubmit('submitAddsupply_orderAndStay'))
 		{
 			$this->action = 'save';
 

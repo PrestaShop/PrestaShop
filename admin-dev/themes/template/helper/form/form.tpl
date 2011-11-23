@@ -77,13 +77,9 @@
 									<div class="translatable">
 										{foreach $languages as $language}
 											<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-											
 												{if $input.type == 'tags'}
 													{literal}
 													<script type="text/javascript">
-													
-													
-													
 														$().ready(function () {
 															var input_id = '{/literal}{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}{literal}';
 															$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='add tag'}{literal}'});
@@ -119,7 +115,6 @@
 												$({/literal}'#{$table}{literal}_form').submit( function() {
 													$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
 											    });
-
 											});
 										</script>
 										{/literal}
@@ -349,15 +344,15 @@
 {block name="after"}{/block}
 {if isset($tinymce) && $tinymce}
 	<script type="text/javascript">
-	
+
 	var iso = '{$iso}';
 	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
 	var ad = '{$ad}';
-	
+
 	$(document).ready(function(){
-	
+
 		tinySetup();
-	
+
 		{block name="autoload_tinyMCE"}
 			// change each by click to load only on click
 			$(".autoload_rte").each(function(e){
@@ -368,7 +363,7 @@
 					theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
 					theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
 					theme_advanced_buttons3 : "",
-					theme_advanced_buttons4 : "", 
+					theme_advanced_buttons4 : "",
 				});
 			})
 		{/block}
