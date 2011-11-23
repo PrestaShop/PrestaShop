@@ -1642,7 +1642,7 @@ class AdminControllerCore extends Controller
 		{
 			$this->display_header = false;
 			$this->display_footer = false;
-			$this->content_only = true;
+			$this->content_only = false;
 		}
 
 		// Change shop context ?
