@@ -901,12 +901,12 @@ $(document).ready(function()
 	{
 		var key = $(v).attr('name');
 		var len = key.length;
-		checkMultishopDefaultValue(v, key.substr(17, len - 18));
+		checkMultishopDefaultValue(v, key.substr(18, len - 20));
 	});
 });
 
 function checkMultishopDefaultValue(obj, key)
-{
+{console.log(key)
 	if ($(obj).attr('checked') || $('#'+key).hasClass('isInvisible'))
 	{
 		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
