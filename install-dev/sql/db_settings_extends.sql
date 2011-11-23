@@ -174,14 +174,18 @@ INSERT INTO `PREFIX_cart` (`id_cart`, `id_carrier`, `id_lang`, `id_address_deliv
 INSERT INTO `PREFIX_cart_product` (`id_cart`, `id_product`, `id_shop`, `id_product_attribute`, `quantity`, `date_add`) VALUES (1, 7, 1, 23, 1, NOW());
 INSERT INTO `PREFIX_cart_product` (`id_cart`, `id_product`, `id_shop`, `id_product_attribute`, `quantity`, `date_add`) VALUES (1, 9, 1, 0, 1, NOW());
 
-INSERT INTO `PREFIX_orders` (`id_order`, `reference`, `id_carrier`, `id_lang`, `id_customer`, `id_cart`, `id_currency`, `id_address_delivery`, `id_address_invoice`, `secure_key`, `payment`, `module`, `recyclable`, `gift`, `gift_message`, `shipping_number`, `total_discounts`, `total_paid`, `total_paid_real`, `total_products`, `total_products_wt`, `total_shipping`, `total_wrapping`, `invoice_number`, `delivery_number`, `invoice_date`, `delivery_date`, `date_add`, `date_upd`)
-	VALUES (1, 'XKBKNABJ', 2, 2, 1, 1, 1, 2, 2, '47ce86627c1f3c792a80773c5d2deaf8', 'Chèque', 'cheque', 0, 0, '', '', '0.00', '625.98', '625.98', '516.72', '618.00', '7.98', '0.00', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NOW(), NOW());
-INSERT INTO `PREFIX_order_detail` (`id_order_detail`, `id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_return`, `product_price`, `product_quantity_discount`, `product_ean13`, `product_reference`, `product_supplier_reference`, `product_weight`, `ecotax`, `download_hash`, `download_nb`, `download_deadline`, `tax_name`)
-	VALUES (1, 1, 7, 23, 'iPod touch - Capacité: 32Go', 1, 0, '392.140500', '0.000000', NULL, NULL, NULL, 0, '0.00', '', 0, '0000-00-00 00:00:00', '');
-INSERT INTO `PREFIX_order_detail` (`id_order_detail`, `id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_return`, `product_price`, `product_quantity_discount`, `product_ean13`, `product_reference`, `product_supplier_reference`, `product_weight`, `ecotax`, `download_hash`, `download_nb`, `download_deadline`, `tax_name`)
-	VALUES (2, 1, 9, 0, 'Écouteurs à isolation sonore Shure SE210', 1, 0, '124.581900', '0.000000', NULL, NULL, NULL, 0, '0.00', '', 0, '0000-00-00 00:00:00', '');
+INSERT INTO `PREFIX_orders` (`id_order`, `reference`, `id_carrier`, `id_lang`, `id_customer`, `id_cart`, `id_currency`, `id_address_delivery`, `id_address_invoice`, `secure_key`, `payment`, `module`, `recyclable`, `gift`, `gift_message`, `shipping_number`, `total_discounts`, `total_paid`, `total_paid_real`, `total_products`, `total_products_wt`, `total_shipping`, `total_wrapping`, `invoice_number`, `delivery_number`, `invoice_date`, `delivery_date`, `date_add`, `date_upd`, `total_paid_tax_incl`, `total_paid_tax_excl`, `total_shipping_tax_incl`, `total_shipping_tax_excl`, `carrier_tax_rate`)
+	VALUES (1, 'XKBKNABJ', 2, 2, 1, 1, 1, 2, 2, '47ce86627c1f3c792a80773c5d2deaf8', 'Chèque', 'cheque', 0, 0, '', '', '0.00', '625.98', '625.98', '516.72', '618.00', '7.98', '0.00', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', NOW(), NOW(), '626.37', '523.72', '8.37', '7.00', '19.600');
 
+INSERT INTO `PREFIX_order_detail` (`id_order_detail`, `id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_return`, `product_price`, `product_quantity_discount`, `product_ean13`, `product_reference`, `product_supplier_reference`, `product_weight`, `ecotax`, `download_hash`, `download_nb`, `download_deadline`, `tax_name`, `total_price_tax_incl`, `total_price_tax_excl`,  `unit_price_tax_incl`, `unit_price_tax_excl`)
+	VALUES (1, 1, 7, 23, 'iPod touch - Capacité: 32Go', 1, 0, '392.140500', '0.000000', NULL, NULL, NULL, 0, '0.00', '', 0, '0000-00-00 00:00:00', '', '469.000000', '392.140000', '469.000000', '392.140468');
+INSERT INTO `PREFIX_order_detail` (`id_order_detail`, `id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_return`, `product_price`, `product_quantity_discount`, `product_ean13`, `product_reference`, `product_supplier_reference`, `product_weight`, `ecotax`, `download_hash`, `download_nb`, `download_deadline`, `tax_name`, `total_price_tax_incl`, `total_price_tax_excl`,  `unit_price_tax_incl`, `unit_price_tax_excl`)
+	VALUES (2, 1, 9, 0, 'Écouteurs à isolation sonore Shure SE210', 1, 0, '124.581900', '0.000000', NULL, NULL, NULL, 0, '0.00', '', 0, '0000-00-00 00:00:00', '', '149.000000', '124.580000', '149.000000', '124.581940');
 INSERT INTO `PREFIX_order_history` (`id_order_history`, `id_employee`, `id_order`, `id_order_state`, `date_add`) VALUES (1, 0, 1, 1, NOW());
+
+INSERT INTO `PREFIX_order_detail_tax` (`id_order_detail`, `id_tax`, `unit_amount`, `total_amount`) VALUES
+(1, 1, '76.860000', '76.860000'),
+(2, 1, '24.420000', '24.420000');
 
 INSERT INTO `PREFIX_order_payment` (`id_order`, `id_currency`, `amount`, `payment_method`, `date_add`) VALUES (1, 1, '625.98', 'Chèque', NOW());
 
@@ -1181,7 +1185,7 @@ INSERT INTO `PREFIX_store` (`id_store`, `id_country`, `id_state`, `name`, `addre
 
 INSERT INTO `PREFIX_store_shop` (`id_store`, `id_shop`) (SELECT `id_store`, 1 FROM `PREFIX_store`);
 
-INSERT INTO `PREFIX_group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES 
+INSERT INTO `PREFIX_group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES
 ("1", "1", "1"),
 ("1", "2", "1"),
 ("1", "3", "1"),
@@ -1373,3 +1377,4 @@ INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_pr
 
 INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `date_add`) VALUES
 (1, 2, NOW());
+
