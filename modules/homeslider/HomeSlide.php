@@ -84,17 +84,17 @@ class HomeSlide extends ObjectModel
 		));
 	}
 
-	public	function __construct($id_slide = NULL, $id_lang = NULL, $id_shop = NULL, Context $context = NULL)
+	public	function __construct($id_slide = null, $id_lang = null, $id_shop = null, Context $context = null)
 	{
 		parent::__construct($id_slide, $id_lang, $id_shop);
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
 		$context = Context::getContext();
 		$id_shop = $context->shop->getID();
 
-		$res = parent::add($autodate, $nullValues);
+		$res = parent::add($autodate, $null_values);
 		$res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'homeslider` (`id_shop`, `id_slide`)
 			VALUES('.(int)$id_shop.', '.(int)$this->id.')'
