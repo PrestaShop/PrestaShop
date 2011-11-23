@@ -406,6 +406,18 @@ $(document).ready(function(){
 					<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
 				</td>
 			</tr>
+			<tr>
+				<td class="col-left">
+					<label>Carriers:</label>
+				</td>
+				<td class="padding-bottom:5px;">
+					<select name="carriers[]" multiple="multiple" size="4">
+						{foreach $carrier_list as $carrier}
+							<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
+						{/foreach}
+					</select>
+				</td>
+			</tr>
 		</table>
 		<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 			<tr>
@@ -418,20 +430,6 @@ $(document).ready(function(){
 				<td class="col-left"><label>{l s='Weight ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
 					<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_weight_unit}
-				</td>
-			</tr>
-		</table>
-		<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
-			<tr>
-				<td class="col-left" style="width:600px">
-					<label>Carriers:</label>
-				</td>
-				<td class="padding-bottom:5px;">
-					<select name="carriers[]" multiple="multiple" size="4">
-						{foreach $carrier_list as $carrier}
-							<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
-						{/foreach}
-					</select>
 				</td>
 			</tr>
 		</table>
