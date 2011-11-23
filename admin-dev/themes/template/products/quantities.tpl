@@ -23,14 +23,14 @@
 		<tbody>
 			<tr>
 				<td valign="top" style="vertical-align:top;">
-					<input {if $product->depends_on_stock == 1}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-					<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'}</label>
+					<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
+					<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
 					<br /><br />
 				</td>
 			</tr>
 			<tr>
 				<td valign="top" style="vertical-align:top;">
-					<input {if $product->depends_on_stock == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
+					<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
 					<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually, and manage my stock independently'}</label>
 					<br /><br />
 				</td>
