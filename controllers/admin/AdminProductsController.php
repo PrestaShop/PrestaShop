@@ -1811,13 +1811,14 @@ class AdminProductsControllerCore extends AdminController
 					);
 
 				// @TODO navigation
-				$this->toolbar_btn['preview'] = array(
-					'short' => 'Preview',
-					'href' => $this->getPreviewUrl($product),
-					'desc' => $this->l('prevdesc'),
-					'target' => true,
-					'class' => 'previewUrl'
-				);
+				if ($url_preview = $this->getPreviewUrl($product))
+					$this->toolbar_btn['preview'] = array(
+						'short' => 'Preview',
+						'href' => $url_preview,
+						'desc' => $this->l('prevdesc'),
+						'target' => true,
+						'class' => 'previewUrl'
+					);
 
 				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
 					$this->toolbar_btn['stats'] = array(
@@ -1911,6 +1912,9 @@ class AdminProductsControllerCore extends AdminController
 
 	public function getPreviewUrl(Product $product)
 	{
+		if (!(bool)$this->context->shop->virtual_uri)
+			return false;
+
 		$preview_url = $this->context->link->getProductLink(
 		$this->getFieldValue($product, 'id'),
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
