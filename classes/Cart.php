@@ -1333,7 +1333,7 @@ class CartCore extends ObjectModel
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
-				if (count($package['carrier_list']) == 1 && $package['carrier_list'][0] == 0)
+				if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
 					return array();
 				
 				$carriers_price[$id_address][$id_package] = array();
