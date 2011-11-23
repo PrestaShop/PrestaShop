@@ -61,7 +61,7 @@
 			<img src="{$categoryData['image']}"/>
 			{if isset($categoryData['title'])}{$categoryData['title']}{else}{l s='Options'}{/if}
 		</legend>
-	
+
 		{* Category description *}
 		{if (isset($categoryData['description']) && $categoryData['description'])}
 			<div class="optionsDescription">{$categoryData['description']}</div>
@@ -70,9 +70,9 @@
 		{if (isset($categoryData['info']) && $categoryData['info'])}
 			<p>{$categoryData['info']}</p>
 		{/if}
-	
+
 		{foreach $categoryData['fields'] AS $key => $field}
-			
+
 			{if $field['type'] == 'hidden'}
 				<input type="hidden" name="{$key}" value="{$field['value']}" />
 			{else}
@@ -93,7 +93,7 @@
 						</select>
 					{else if isset($input.empty_message)}
 						{$input.empty_message}
-					{/if}	
+					{/if}
 				{elseif $field['type'] == 'bool'}
 					<label class="t" for="{$key}_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" /></label>
 					<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
@@ -174,12 +174,12 @@
 							{/foreach}
 						</div>
 					{/if}
-					<br style="clear:both">	
+					<br style="clear:both">
 				{/if}
 				{if ($field['multishop_default'])}
 					<div class="preference_default_multishop">
 						<label>
-							<input type="checkbox" name="configUseDefault['{$key}']" value="1" {if $field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" /> {l s='Use default value'}
+							<input type="checkbox" name="configUseDefault[{$key}]" value="1" {if $field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" /> {l s='Use default value'}
 						</label>
 					</div>
 				{/if}
@@ -194,9 +194,9 @@
 		{/foreach}
 		{if isset($categoryData['submit'])}
 			<div class="margin-form">
-				<input type="submit" 
-						value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='   Save   '}{/if}" 
-						name="{if isset($categoryData['submit']['name'])}$categoryData['submit']['name']{else}submit{$category|ucfirst}{$table}{/if}" 
+				<input type="submit"
+						value="{if isset($categoryData['submit']['title'])}{$categoryData['submit']['title']}{else}{l s='   Save   '}{/if}"
+						name="{if isset($categoryData['submit']['name'])}$categoryData['submit']['name']{else}submit{$category|ucfirst}{$table}{/if}"
 						class="{if isset($categoryData['submit']['class'])}{$categoryData['submit']['class']}{else}button{/if}"
 						id="{$table}_form_submit_btn"
 				/>

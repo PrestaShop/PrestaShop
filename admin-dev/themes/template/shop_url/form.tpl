@@ -43,7 +43,7 @@
 		if (physical)
 		url += '/'+physical;
 		if (virtual)
-		url += '/'+virtual;
+			url += '/'+virtual+'/';
 		url = url.replace(/\/+/g, "/");
 		$('#final_url').val('http://'+url);
 	};
