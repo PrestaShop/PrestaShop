@@ -42,16 +42,16 @@ class AdminShopControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Shop'),
-				'width' => 130,
+				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'group_shop_name' => array(
 				'title' => $this->l('Group Shop'),
-				'width' => 70
+				'width' => 150
 			),
 			'category_name' => array(
 				'title' => $this->l('Category Root'),
-				'width' => 70
+				'width' => 150
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -59,7 +59,8 @@ class AdminShopControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
-				'filter_key' => 'active'
+				'filter_key' => 'active',
+				'width' => 50,
 			)
 		);
 
@@ -82,10 +83,10 @@ class AdminShopControllerCore extends AdminController
 		);
 		parent::__construct();
 	}
+
 	public function initContent()
 	{
-		$id_shop = ($this->context->shop->getContextType() == Shop::CONTEXT_SHOP ? $this->context->shop->id : false);
-		$shops =  Shop::getShopWithoutUrls($id_shop);
+		$shops =  Shop::getShopWithoutUrls();
 		if (count($shops))
 		{
 		 	$shop_url_configuration = '';
@@ -93,9 +94,9 @@ class AdminShopControllerCore extends AdminController
 				$shop_url_configuration .= sprintf($this->l('No url is configured for shop: %s'), '<b>'.$shop['name'].'</b>').' <a href="'.$this->context->link->getAdminLink('AdminShopUrl').'&addshop_url&id_shop='.$shop['id_shop'].'">'.$this->l('click here').'</a><br />';
 			$this->content .= '<div class="warn">'.$shop_url_configuration.'</div>';
 		}
-		parent::initContent();		
+		parent::initContent();
 	}
-	
+
 	public function initList()
 	{
 		$this->addRowAction('edit');

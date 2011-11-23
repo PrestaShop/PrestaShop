@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,7 +31,7 @@ class AdminContactControllerCore extends AdminController
 	{
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		
+
 		parent::__construct();
 
 		$temporyArrayFields = $this->_getDefaultFieldsContent();
@@ -40,7 +40,7 @@ class AdminContactControllerCore extends AdminController
 
 	private function _getDefaultFieldsContent()
 	{
-		$this->context = Context::getContext();		
+		$this->context = Context::getContext();
 		$countryList = array();
 		$countryList[] = array('id' => '0', 'name' => $this->l('Choose your country'));
 		foreach (Country::getCountries($this->context->language->id) AS $country)
@@ -49,7 +49,7 @@ class AdminContactControllerCore extends AdminController
 		$stateList[] = array('id' => '0', 'name' => $this->l('Choose your state (if applicable)'));
 		foreach (State::getStates($this->context->language->id) AS $state)
 			$stateList[] = array('id' => $state['id_state'], 'name' => $state['name']);
-			
+
 		$formFields = array(
 			'PS_SHOP_NAME' => array('title' => $this->l('Shop name:'), 'desc' => $this->l('Displayed in e-mails and page titles'), 'validation' => 'isGenericName', 'required' => true, 'size' => 30, 'type' => 'text'),
 			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop e-mail:'), 'desc' => $this->l('Displayed in e-mails sent to customers'), 'validation' => 'isEmail', 'required' => true, 'size' => 30, 'type' => 'text'),
@@ -77,10 +77,10 @@ class AdminContactControllerCore extends AdminController
 			'PS_SHOP_CODE' => 'postcode',
 			'PS_SHOP_COUNTRY_ID' => 'Country:name',
 			'PS_SHOP_PHONE' => 'phone');
-		
+
 		$fields = array();
 		$orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
-		
+
 		foreach($orderedFields as $lineFields)
 			if (($patterns = explode(' ', $lineFields)))
 				foreach($patterns as $pattern)
@@ -89,7 +89,7 @@ class AdminContactControllerCore extends AdminController
 		foreach($formFields as $key => $value)
 			if (!isset($fields[$key]))
 				$fields[$key] = $formFields[$key];
-				
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Contact details'),
