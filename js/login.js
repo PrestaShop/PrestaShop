@@ -1,46 +1,46 @@
-$(document).ready(function(){
-	if (document.getElementById('email'))
-		document.getElementById('email').focus();
+$(document).ready(function() {
+	if (document.getElementById('email')) document.getElementById('email').focus(); 
+	//$("#login").effect( "slide", { direction: "up" }, 1000 );
 });
 
-
-function displayForgotPassword()
-{
+function displayForgotPassword() {
 	$('#error').hide();
 	$("#login").flip({
-		direction:'tb',
-		color : '#FFF',
+		direction: 'tb',
+		color: '#FFF',
 		content: $('#forgot_password')
 	})
 }
-
-function doAjaxLogin()
-{
+function displayLogin() {
 	$('#error').hide();
-	$('#ajax-loader').fadeIn('slow', function () {
+	$('#login').revertFlip();
+	return false;
+}
+function doAjaxLogin() {
+	$('#error').hide();
+	$('#ajax-loader').fadeIn('slow', function() {
 		$.ajax({
-			type:"POST",
+			type: "POST",
 			url: "ajax-tab.php",
 			async: true,
 			dataType: "json",
-			data : {
+			data: {
 				ajax: "1",
 				token: "",
 				controller: "AdminLogin",
 				submitLogin: "1",
-				passwd : $('#passwd').val(),
-				email : $('#email').val()
-				},
-			success : function(jsonData)
-			{
-				if (jsonData.hasErrors)
-				{
+				passwd: $('#passwd').val(),
+				email: $('#email').val()
+			},
+			success: function(jsonData) {
+				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
-					$('#login').effect("shake", { times:3 }, 300);
-				}
-				else
-				{
-					window.location.href = jsonData.redirect;
+				} else {
+					$("#login").effect("slide", {
+						direction: "up"
+					}, 1000, function() {
+						window.location.href = jsonData.redirect;
+					});
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -50,34 +50,26 @@ function doAjaxLogin()
 			}
 		});
 	});
-	
 }
-
-function doAjaxForgot()
-{
+function doAjaxForgot() {
 	$('#error').hide();
-	$('#ajax-loader').fadeIn('slow', function () {
+	$('#ajax-loader').fadeIn('slow', function() {
 		$.ajax({
-			type:"POST",
+			type: "POST",
 			url: "ajax-tab.php",
 			async: true,
 			dataType: "json",
-			data : {
+			data: {
 				ajax: "1",
 				token: "",
 				controller: "AdminLogin",
 				submitForgot: "1",
 				email_forgot: $('#email_forgot').val()
-				},
-			success : function(jsonData)
-			{
-				if (jsonData.hasErrors)
-				{
+			},
+			success: function(jsonData) {
+				if (jsonData.hasErrors) {
 					displayErrors(jsonData.errors);
-					$('#login').effect("shake", { times:3 }, 300);
-				}
-				else
-				{
+				} else {
 					window.location.href = jsonData.redirect;
 				}
 			},
@@ -89,16 +81,14 @@ function doAjaxForgot()
 		});
 	});
 }
-
-function displayErrors(errors)
-{
-	str_errors = '<h3>'+(errors.length > 1 ? there_are : there_is )+' '+errors.length+' '+(errors.length > 1 ? label_errors : label_error )+'</h3><ol>';
-	for(error in errors)
-		//IE6 bug fix
-		if(error != 'indexOf')
-			str_errors += '<li>'+errors[error] + '</li>';
+function displayErrors(errors) {
+	str_errors = '<h3>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</h3><ol>';
+	for (error in errors) //IE6 bug fix
+	if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('#ajax-loader').fadeOut('slow');
-	$('#error').html(str_errors+'</ol>');
+	$('#error').html(str_errors + '</ol>');
 	$('#error').fadeIn();
+	$("#login").effect("shake", {
+		times: 4
+	}, 100);
 }
-
