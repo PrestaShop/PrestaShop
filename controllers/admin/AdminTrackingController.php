@@ -63,76 +63,6 @@ class AdminTrackingController extends AdminController
 		));
 	}
 
-	public function getObjects($type)
-	{
-		switch ($type)
-		{
-			case 'categories_empty':
-				$sql = '
-					SELECT id_category
-					FROM `'._DB_PREFIX_.'category`
-					WHERE id_category NOT IN (
-					  SELECT DISTINCT(id_category)
-					  FROM `'._DB_PREFIX_.'category_product`
-					)
-				';
-				break;
-			case 'products_disabled':
-				$sql = '
-					SELECT *
-					FROM `'._DB_PREFIX_.'product`
-					WHERE active = 0
-				';
-				$this->_list['message'] = $this->l('List of disabled products:');
-				break;
-
-			case 'products_nostock':
-				$sql = '
-					SELECT DISTINCT(id_product)
-					FROM `'._DB_PREFIX_.'product`
-					WHERE id_product IN (
-					  SELECT id_product
-					  FROM `'._DB_PREFIX_.'product`
-					  WHERE id_product NOT IN (
-						SELECT DISTINCT(id_product)
-						FROM `'._DB_PREFIX_.'product_attribute`
-					  )
-					  AND quantity <= 0
-					)
-				';
-				$this->_list['message'] = $this->l('List of out of stock products without attributes:');
-				break;
-
-			case 'attributes_nostock':
-				$sql = 'SELECT pa.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name, a.`id_attribute`,
-							m.`name` AS manufacturer_name, pl.`name` AS name, p.`weight` AS product_weight, p.`active` AS active
-						FROM `'._DB_PREFIX_.'product_attribute` pa
-						LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
-							ON pac.`id_product_attribute` = pa.`id_product_attribute`
-						LEFT JOIN `'._DB_PREFIX_.'attribute` a
-							ON a.`id_attribute` = pac.`id_attribute`
-						LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag
-							ON ag.`id_attribute_group` = a.`id_attribute_group`
-						LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
-							ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$this->context->language->id.')
-						LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
-							ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$this->context->language->id.')
-						LEFT JOIN `'._DB_PREFIX_.'product` p
-							ON (p.`id_product` = pa.`id_product`)
-						LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-							ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
-						'.Product::sqlStock('p', 'pa').'
-						LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
-							ON (p.`id_manufacturer` = m.`id_manufacturer`)
-						WHERE stock.quantity <= 0
-						ORDER BY pa.`id_product_attribute`';
-				$this->_list['message'] = $this->l('List of out of stock products with attributes:');
-				break;
-		}
-
-		return Db::getInstance()->executeS($sql);
-	}
-
 	public function getCustomListCategoriesEmpty()
 	{
 		$this->clearListOptions();
@@ -149,10 +79,10 @@ class AdminTrackingController extends AdminController
 		$this->addRowAction('view');
 
 		$this->fieldsDisplay = (array(
-			'id_category' => array('title' => $this->l('ID')),
+			'id_category' => array('title' => $this->l('ID'), 'width' => 50),
 			'name' => array('title' => $this->l('Name')),
 			'description' => array('title' => $this->l('Description')),
-			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
+			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		));
 
 		$this->_filter = ' AND a.id_category NOT IN (
@@ -160,7 +90,6 @@ class AdminTrackingController extends AdminController
 			FROM `'._DB_PREFIX_.'category_product` cp
 		)';
 
-		$this->getObjects('categories_empty');
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of empty categories:'));
 
 		return parent::initList();
@@ -177,29 +106,29 @@ class AdminTrackingController extends AdminController
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
 		$this->show_toolbar = false;
+
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
 		$this->fieldsDisplay = array(
-			'ID' => array('title' => $this->l('ID')),
-			'manufacturer' => array('title' => $this->l('Manufacturer')),
-			'reference' => array('title' => $this->l('Reference')),
+			'id_product' => array('title' => $this->l('ID'), 'width' => 50),
+			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
 			'name' => array('title' => $this->l('Name')),
-			'price' => array('title' => $this->l('Price')),
-			'tax' => array('title' => $this->l('Tax')),
-			'stock' => array('title' => $this->l('Stock')),
-			'weight' => array('title' => $this->l('Weight')),
-			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
+			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		);
 
 		$this->_filter = 'AND a.id_product IN (
-			SELECT id_product
-			FROM `'._DB_PREFIX_.'product`
-			WHERE id_product IN (
+			SELECT p.id_product
+			FROM `'._DB_PREFIX_.'product` p
+			'.Product::sqlStock('p').'
+			WHERE p.id_product IN (
 				SELECT DISTINCT(id_product)
 				FROM `'._DB_PREFIX_.'product_attribute`
 			)
-			AND quantity <= 0
+			AND stock.quantity <= 0
 		)';
 
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of out of stock products without attributes:'));
+		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes and without available quantities for sale:'));
 
 		return parent::initList();
 	}
@@ -216,29 +145,28 @@ class AdminTrackingController extends AdminController
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
 
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
 		$this->fieldsDisplay = array(
-			'ID' => array('title' => $this->l('ID')),
-			'manufacturer' => array('title' => $this->l('Manufacturer')),
-			'reference' => array('title' => $this->l('Reference')),
+			'id_product' => array('title' => $this->l('ID'), 'width' => 50),
+			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
 			'name' => array('title' => $this->l('Name')),
-			'price' => array('title' => $this->l('Price')),
-			'tax' => array('title' => $this->l('Tax')),
-			'stock' => array('title' => $this->l('Stock')),
-			'weight' => array('title' => $this->l('Weight')),
-			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status')
+			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		);
 
 		$this->_filter = 'AND a.id_product IN (
-			SELECT id_product
-			FROM `'._DB_PREFIX_.'product`
-			WHERE id_product NOT IN (
+			SELECT p.id_product
+			FROM `'._DB_PREFIX_.'product` p
+			'.Product::sqlStock('p').'
+			WHERE p.id_product NOT IN (
 				SELECT DISTINCT(id_product)
 				FROM `'._DB_PREFIX_.'product_attribute`
 			)
-			AND quantity <= 0
+			AND stock.quantity <= 0
 		)';
 
-		$this->tpl_list_vars = array('sub_title' => $this->l('List of out of stock products with attributes:'));
+		$this->tpl_list_vars = array('sub_title' => $this->l('List of products without attributes and without available quantities for sale:'));
 
 		return parent::initList();
 	}
@@ -258,12 +186,22 @@ class AdminTrackingController extends AdminController
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
 
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
+		$this->fieldsDisplay = array(
+			'id_product' => array('title' => $this->l('ID'), 'width' => 50),
+			'reference' => array('title' => $this->l('Reference'), 'width' => 150),
+			'name' => array('title' => $this->l('Name'))
+		);
+
 		return parent::initList();
 	}
 
 	public function clearListOptions()
 	{
 		$this->table = '';
+		$this->actions = array();
 		$this->lang = false;
 		$this->identifier = '';
 		$this->_defaultOrderBy = '';
