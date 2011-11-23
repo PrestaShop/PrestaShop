@@ -776,6 +776,9 @@ class AdminControllerCore extends Controller
 
 			foreach ($this->options as $category => $category_data)
 			{
+				if (!isset($category_data['fields']))
+					continue;
+
 				$fields = $category_data['fields'];
 
 				foreach ($fields as $field => $values)
@@ -2550,3 +2553,4 @@ EOF;
 		return $output;
 	}
 }
+
