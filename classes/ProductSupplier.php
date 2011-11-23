@@ -121,10 +121,10 @@ class ProductSupplierCore extends ObjectModel
 	 * For a given product, retrieves its suppliers
 	 *
 	 * @param int $id_product
-	 * @param int $id_lang
+	 * @param int $group_by_supplier
 	 * @return array
 	 */
-	public static function getSupplierCollection($id_product, $group_by_product = true)
+	public static function getSupplierCollection($id_product, $group_by_supplier = true)
 	{
 		// build query
 		$query = new DbQuery();
@@ -132,11 +132,28 @@ class ProductSupplierCore extends ObjectModel
 		$query->from('product_supplier ps');
 		$query->where('ps.id_product = '.(int)$id_product);
 
-		if ($group_by_product)
+		if ($group_by_supplier)
 			$query->groupBy('ps.id_supplier');
 
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		return ObjectModel::hydrateCollection('ProductSupplier', $results);
+	}
+
+	public function delete()
+	{
+		$res = parent::delete();
+
+		if ($res && $this->id_product_attribute == 0)
+		{
+			$items = self::getSupplierCollection($this->id_product, false);
+			foreach ($items as &$item)
+			{
+				if ($item->id_product_attribute > 0)
+					$item->delete();
+			}
+		}
+
+		return $res;
 	}
 }
