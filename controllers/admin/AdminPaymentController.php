@@ -27,46 +27,58 @@
 
 class AdminPaymentControllerCore extends AdminController
 {
-	public $paymentModules = array();
+	public $payment_modules = array();
 
 	public function __construct()
 	{
-		$shopID = Context::getContext()->shop->getID(true);
+		$shop_id = Context::getContext()->shop->getID(true);
 
-		/* Get all modules then select only payment ones*/
+		/* Get all modules then select only payment ones */
 		$modules = Module::getModulesOnDisk();
-		foreach ($modules AS $module)
 
+		foreach ($modules as $module)
 			if ($module->tab == 'payments_gateways')
 			{
 				if ($module->id)
 				{
-					if(!get_class($module) == 'SimpleXMLElement')
+					if (!get_class($module) == 'SimpleXMLElement')
 						$module->country = array();
-					$countries = DB::getInstance()->executeS('SELECT id_country FROM '._DB_PREFIX_.'module_country WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
+					$countries = DB::getInstance()->executeS('
+						SELECT id_country
+						FROM '._DB_PREFIX_.'module_country
+						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shop_id
+					);
 					foreach ($countries as $country)
 						$module->country[] = $country['id_country'];
 
-					if(!get_class($module) == 'SimpleXMLElement')
+					if (!get_class($module) == 'SimpleXMLElement')
 						$module->currency = array();
-					$currencies = DB::getInstance()->executeS('SELECT id_currency FROM '._DB_PREFIX_.'module_currency WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
+					$currencies = DB::getInstance()->executeS('
+						SELECT id_currency
+						FROM '._DB_PREFIX_.'module_currency
+						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shop_id
+					);
 					foreach ($currencies as $currency)
 						$module->currency[] = $currency['id_currency'];
 
-					if(!get_class($module) == 'SimpleXMLElement')
+					if (!get_class($module) == 'SimpleXMLElement')
 						$module->group = array();
-					$groups = DB::getInstance()->executeS('SELECT id_group FROM '._DB_PREFIX_.'module_group WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shopID);
+					$groups = DB::getInstance()->executeS('
+						SELECT id_group
+						FROM '._DB_PREFIX_.'module_group
+						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.$shop_id
+					);
 					foreach ($groups as $group)
 						$module->group[] = $group['id_group'];
 				}
 				else
 				{
-					$module->country = NULL;
-					$module->currency = NULL;
-					$module->group = NULL;
+					$module->country = null;
+					$module->currency = null;
+					$module->group = null;
 				}
 
-				$this->paymentModules[] = $module;
+				$this->payment_modules[] = $module;
 			}
 
 		parent::__construct();
@@ -76,36 +88,42 @@ class AdminPaymentControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitModulecountry'))
 			$this->saveRestrictions('country');
-		elseif (Tools::isSubmit('submitModulecurrency'))
+		else if (Tools::isSubmit('submitModulecurrency'))
 			$this->saveRestrictions('currency');
-		elseif (Tools::isSubmit('submitModulegroup'))
+		else if (Tools::isSubmit('submitModulegroup'))
 			$this->saveRestrictions('group');
 	}
 
 	private function saveRestrictions($type)
 	{
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'module_'.$type.' WHERE id_shop = '.Context::getContext()->shop->getID(true));
-		foreach ($this->paymentModules as $module)
-			if ($module->active AND isset($_POST[$module->name.'_'.$type.'']))
+		foreach ($this->payment_modules as $module)
+			if ($module->active && isset($_POST[$module->name.'_'.$type.'']))
 				foreach ($_POST[$module->name.'_'.$type.''] as $selected)
 					$values[] = '('.(int)$module->id.', '.Context::getContext()->shop->getID(true).', '.(int)$selected.')';
 
-		if (sizeof($values))
+		if (count($values))
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_'.$type.' (`id_module`, `id_shop`, `id_'.$type.'`) VALUES '.implode(',', $values));
 		Tools::redirectAdmin(self::$currentIndex.'&conf=4'.'&token='.$this->token);
 	}
 
 	public function initContent()
 	{
+		$this->display = 'view';
+		return parent::initContent();
+	}
+
+	public function initView()
+	{
 		// link to modules page
-		if (isset($this->paymentModules[0]))
-			$token_modules = Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id);
+		if (isset($this->payment_modules[0]))
+			$token_modules = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id);
 
 		$display_restrictions = false;
-		foreach ($this->paymentModules as $module)
+		foreach ($this->payment_modules as $module)
 			if ($module->active)
 			{
-				$display_restrictions= true;
+				$display_restrictions = true;
 				break;
 			}
 
@@ -130,7 +148,7 @@ class AdminPaymentControllerCore extends AdminController
 						  'name_id' => 'country',
 						  'identifier' => 'id_country',
 						  'icon' => 'world',
-					),
+					)
 				);
 
 		foreach ($lists as $key_list => $list)
@@ -139,12 +157,12 @@ class AdminPaymentControllerCore extends AdminController
 			foreach ($list['items'] as $key_item => $item)
 			{
 				$name_id = $list['name_id'];
-				foreach ($this->paymentModules as $key_module => $module)
+				foreach ($this->payment_modules as $key_module => $module)
 				{
 					if (isset($module->$name_id) && in_array($item['id_'.$name_id], $module->$name_id))
 						$list['items'][$key_item]['check_list'][$key_module] = 'checked';
 					else
-						$list['items'][$key_item]['check_list'][$key_module] =  'unchecked';
+						$list['items'][$key_item]['check_list'][$key_module] = 'unchecked';
 
 					// If is a country list and the country is limited, remove it from list
 					if ($name_id == 'country'
@@ -158,15 +176,18 @@ class AdminPaymentControllerCore extends AdminController
 			$lists[$key_list] = $list;
 		}
 
-		$this->context->smarty->assign(array(
-			'url_modules' => isset($token_modules) ? 'index.php?tab=AdminModules&token='.$token_modules.'&module_name='.$this->paymentModules[0]->name.'&tab_module=payments_gateways' : null,
+		$this->tpl_view_vars = array(
+			'url_modules' => isset($token_modules) ? 'index.php?tab=AdminModules&token='.$token_modules.'&&filterCategory=payments_gateways' : null,
 			'display_restrictions' => $display_restrictions,
 			'lists' => $lists,
 			'ps_base_uri' => __PS_BASE_URI__,
-			'payment_modules' => $this->paymentModules,
+			'payment_modules' => $this->payment_modules,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
-		));
+		);
 
+		$this->toolbar_title = $this->l('Paiement');
+		unset($this->toolbar_btn['cancel']);
+		return parent::initView();
 	}
 }
 
