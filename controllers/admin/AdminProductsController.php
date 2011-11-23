@@ -1912,7 +1912,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function getPreviewUrl(Product $product)
 	{
-		if (!(bool)$this->context->shop->virtual_uri)
+		$shop_url = new ShopUrl($this->context->shop->id);
+		if (!$shop_url->id && !empty($this->context->cookie->shopContext))
 			return false;
 
 		$preview_url = $this->context->link->getProductLink(
