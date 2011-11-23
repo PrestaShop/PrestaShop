@@ -71,7 +71,8 @@ class OrderOpcControllerCore extends ParentOrderController
 									$return = array(
 										'summary' => $this->context->cart->getSummaryDetails(),
 										'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
-										'HOOK_PAYMENT' => $this->_getPaymentMethods()
+										'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+										'carrier_data' => $this->_getCarrierList(),
 									);
 									die(Tools::jsonEncode($return));
 								}
@@ -236,7 +237,7 @@ class OrderOpcControllerCore extends ParentOrderController
 					}
 				}
 				else
-					throw new PrestashopException('Method is not defined'.Tools::isSubmit('method'));
+					throw new PrestashopException('Method is not defined');
 			}
 		}
 		elseif (Tools::isSubmit('ajax'))
