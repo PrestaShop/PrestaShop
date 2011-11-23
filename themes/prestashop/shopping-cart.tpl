@@ -393,14 +393,6 @@
 		{/foreach}
 		<p class="clear" />
 	{/if}
-	{* @todo Replace the $carrier by using delivery_option *}
-	{if $carrier->id AND !isset($virtualCart)}
-	<div id="order_carrier">
-		<h4>{l s='Carrier:'}</h4>
-		{if isset($carrierPicture)}<img src="{$img_ship_dir}{$carrier->id}.jpg" alt="{l s='Carrier'}" />{/if}
-		<span>{$carrier->name|escape:'htmlall':'UTF-8'}</span>
-	</div>
-	{/if}
 </div>
 {/if}
 <p class="cart_navigation">
