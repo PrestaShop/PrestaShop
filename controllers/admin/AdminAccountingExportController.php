@@ -58,7 +58,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->className = 'Accounting';
-	 	$this->context = Context::getContext();
+		
 	 	$this->pathAccountExportTpl = _PS_ADMIN_DIR_.'/themes/template/accounting_export/';
 	 	$this->content = '';
 	 	$this->downloadDir = _PS_ROOT_DIR_.'/download/';
