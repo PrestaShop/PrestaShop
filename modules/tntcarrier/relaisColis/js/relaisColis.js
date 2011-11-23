@@ -180,7 +180,7 @@ function tntB2CRelaisColis() {
 	var tntRelaisColisB2C = $("#tntB2CRelaisColis");
 	tntRelaisColisB2C.html(
 		"<div id='tntRCblocEntete'>"+
-			"<div class='tntRCHeader'>"+ tntRCMsgHeaderTitle + "</div>"+
+			
 			"<div class='tntRCSubHeader'>" + tntRCMsgSubHeaderTitle + "</div>"+
 			"<input type='hidden' id='tntRCSelectedCode' value=''/>"+
 			"<input type='hidden' id='tntRCSelectedNom' value=''/>"+

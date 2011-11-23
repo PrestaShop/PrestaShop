@@ -15,7 +15,6 @@
 				}
 			);
 		}
-	/**/
 	});
 </script>
 <div id="followPackage" style="clear:both">

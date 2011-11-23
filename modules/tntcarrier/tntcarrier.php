@@ -26,7 +26,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 
@@ -51,8 +51,10 @@ class TntCarrier extends CarrierModule
 			foreach($carriers as $carrier)
 				$id_carrier_list[] .= $carrier['id_carrier'];
 			
-			if (count($warning))
+			if (count($warning) > 1)
 				$this->warning .= implode(' , ',$warning).$this->l('must be configured to use this module correctly.').' ';
+            if (count($warning) == 1)
+				$this->warning .= implode(' , ',$warning).$this->l('has to be configured to use this module correctly.').' ';
 		}
 	}
 
@@ -221,7 +223,7 @@ class TntCarrier extends CarrierModule
 
 	public function getContent()
 	{
-		$this->_html .= '<h2><a href="http://www.tnt.fr/"><img src="'.$this->_path.'logo.gif" alt="' . $this->l('TNT Carrier').'" /></a></h2>';
+		$this->_html .= '<h2><a href="https://www.tnt.fr/public/utilisateurs/adminExt/new.do"><img src="'.$this->_path.'carrier.jpg" alt="' . $this->l('TNT Carrier').'" /></a></h2>';
 		if (!empty($_POST) AND Tools::isSubmit('submitSave'))
 		{
 			$this->_postValidation();
@@ -229,7 +231,7 @@ class TntCarrier extends CarrierModule
 				$this->_postProcess();
 			else
 				foreach ($this->_postErrors AS $err)
-					$this->_html .= '<div class="alert error"><img src="'._PS_IMG_.'admin/forbbiden.gif" alt="nok" />&nbsp;'.$err.'</div>';
+					$this->_html .= '<div class="error"><img src="'._PS_IMG_.'admin/forbbiden.gif" alt="nok" />&nbsp;'.$err.'</div>';
 		}
 		$this->_displayForm();
 		return $this->_html;
@@ -248,20 +250,6 @@ class TntCarrier extends CarrierModule
 		
 		$smarty->assign('glob', $globalVar);
 		
-		$lang = array(
-					'followParameters' => $this->l('The following parameters were provided to you by TNT'), 'registered' => $this->l('If you are not yet registered, click '), 'here' => $this->l('here'),
-					'accountSetting' => $this->l('Account settings'), 'shippingSetting' => $this->l('Shipping Settings'), 'serviceSetting' => $this->l('Service Settings'),
-					'accountTNT' => $this->l('Account TNT'), 'login' => $this->l('Login'), 'password' => $this->l('Password'), 'numberAccount' => $this->l('Number account'),
-					'fillDataInTheForm' => $this->l('Fill Data in the form'), 'shipping' => $this->l('Shipping'), 'collect' => $this->l('Would you like TNT to pick up your package ?'), 'noDeposit' => $this->l('No (Deposit)'), 
-					'yes' => $this->l('Yes'), 'chooseYourDepositoryLocation' => $this->l('Choose your depository location'), 'pexCode' => $this->l('Pex Code'), 'companyName' => $this->l('Company Name'),
-					'lastName' => $this->l('Last name'), 'firstName' => $this->l('First name'), 'address1' => $this->l('Address line 1'), 'address2' => $this->l('Address line 2'), 'zip' => $this->l('Zip / Postal Code'), 'city' => $this->l('Your City'), 
-					'email' => $this->l('Your Email Address'), 'phone' => $this->l('Your Phone Number'), 'closingTime' => $this->l('Your Closing Time'), 'saturdayDelivery' => $this->l('Saturday Delivery'), 'no' => $this->l('No'),
-					'labelFormatPrinting' => $this->l('Label Format for printing (This Label will have to be sticked on the package)'), 'a4printing' => $this->l('A4 printing'), 'withoutPrintingLogoTNT' => $this->l('without printing the logo TNT'), 'withReversePrint' => $this->l('with a reverse print'), 'withoutPrintingLogoTNTWithReversePrint' => $this->l('without printing the logo TNT and with a reverse print'),
-					'newService' => $this->l('New Service'), 'id' => $this->l('ID'), 'name' => $this->l('Name'), 'description' => $this->l('Description'), 'code' => $this->l('Code'), 'additionnalCharge' => $this->l('Additionnal charge (Euros)'), 'activated' => $this->l('Activated'), 'edit' => $this->l('edit'), 'delete' => $this->l('delete'), 'place' => $this->l('Place')
-					);
-		
-		$smarty->assign('lang', $lang);
-		
 		$this->_html .= '<fieldset>
 		<legend>'.$this->l('TNT Carrier Module Status').'</legend>';
 		
@@ -277,14 +265,23 @@ class TntCarrier extends CarrierModule
 			$alert['shipping'] = 1;
 		if ((Db::getInstance()->getValue('SELECT * FROM `'._DB_PREFIX_.'carrier` WHERE `external_module_name` = "'.$this->_moduleName.'" AND deleted = "0"')) < 1)
 			$alert['service'] = 1;
-		if (!count($alert))
-			$this->_html .= '<img src="'._PS_IMG_.'admin/module_install.png" /><strong>'.$this->l('TNT Carrier is configured and online!').'</strong>';
-		else
+		if (count($alert) < 3)
+        {
+			$this->_html .= '<img src="'._PS_IMG_.'admin/module_install.png" /><strong>'.$this->l('The following parameters are correctly configured and activated on your online store :').'</strong>';
+            $this->_html .= '<ul>';
+			$this->_html .= (!isset($alert['account']) ? '<li>'.$this->l('TNT account. (Account setting tab)').'</li>' : '');
+			$this->_html .= (!isset($alert['shipping']) ? '<li>'.$this->l('Shipping address. (Shipping settings tab)').'</li>' : '');
+			$this->_html .= (!isset($alert['service']) ? '<li>'.$this->l('Choice of specific TNT delivery mode you want to offer to your customers. (Service settings tab)').'</li>' : '');
+            $this->_html .= '</ul>';
+        }
+		if (count($alert) > 0)
 		{
-			$this->_html .= '<img src="'._PS_IMG_.'admin/warn2.png" /><strong>'.$this->l('TNT Carrier is not configured yet, please:').'</strong>';
-			$this->_html .= '<br />'.(isset($alert['account']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' '.$this->l('Make sure you have a tnt account.');
-			$this->_html .= '<br />'.(isset($alert['shipping']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' '.$this->l('Make sure you have a correct shipping address.');
-			$this->_html .= '<br />'.(isset($alert['service']) ? '<img src="'._PS_IMG_.'admin/warn2.png" />' : '<img src="'._PS_IMG_.'admin/module_install.png" />').' '.$this->l('Make sure services are activated after a bill.');
+			$this->_html .= '<img src="'._PS_IMG_.'admin/warn2.png" /><strong>'.$this->l('The following parameters have to be configured to be able to use correctly the TNT module :').'</strong>';
+            $this->_html .= '<ul>';
+			$this->_html .= (isset($alert['account']) ? '<li>'.$this->l('TNT account. (Account setting tab)').'</li>' : '');
+			$this->_html .= (isset($alert['shipping']) ? '<li>'.$this->l('Shipping address. (Shipping settings tab)').'</li>' : '');
+			$this->_html .= (isset($alert['service']) ? '<li>'.$this->l('Choice of specific TNT delivery mode you want to offer to your customers. (Service settings tab)').'</li>' : '');
+            $this->_html .= '</ul>';
 		}
 
 		$this->_html .= '</fieldset><div class="clear">&nbsp;</div>';
@@ -348,7 +345,7 @@ class TntCarrier extends CarrierModule
 		foreach ($serviceList as $k => $v)
 			{
 				$serviceList[$k]['optionId'] = Configuration::get('TNT_CARRIER_'.$v['option'].'_ID');
-				$serviceList[$k]['optionOvercost'] = Configuration::get('TNT_CARRIER_'.$v['option'].'_OVERCOST');
+				$serviceList[$k]['optionOvercost'] = (Configuration::get('TNT_CARRIER_'.$v['option'].'_OVERCOST') ? Configuration::get('TNT_CARRIER_'.$v['option'].'_OVERCOST') : '0');
 			}
 		
 		$var = array('serviceList' => $serviceList,
@@ -369,7 +366,7 @@ class TntCarrier extends CarrierModule
 		
 		$html = '
 		<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section='.$cat.'&action=new">
-		<img src="../img/admin/add.gif" alt="add"/> '.$this->l('New weight option').'</a></br><br/>
+		<img src="../img/admin/add.gif" alt="add"/> '.$this->l('Add additional charges depending on the package weight').'</a></br><br/>
 		<table class="table" cellspacing="0" cellpading="0">
 			<tr>
 				<th>'.$this->l('ID').'</th><th>'.$this->l('Weight Min').'</th><th>'.$this->l('Weight Max').'</th><th>'.$this->l('Additionnal charge (Euros)').'</th><th></th>
@@ -381,7 +378,7 @@ class TntCarrier extends CarrierModule
 			$html .= '<tr '.($irow++ % 2 ? 'class="alt_row"' : '').'>
 			<td>'.$v['id_'.$cat.''].'</td>
 			<td>'.$v[''.$cat.'_min'].'</td>
-			<td>'.$v[''.$cat.'_max'].'</td>
+			<td>'.((float)$v[''.$cat.'_max'] == 0 ? '&infin;' : $v[''.$cat.'_max']).'</td>
 			<td>'.$v['additionnal_charges'].'</td>
 			<td>
 			<a href="index.php?tab='.Tools::getValue('tab').'&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name').'&id_tab=3&section='.$cat.'&action=edit&'.$cat.'='.$v['id_'.$cat.''].'">
@@ -404,7 +401,7 @@ class TntCarrier extends CarrierModule
 		
 		$var = array(
 		'country' => $country,
-		'overcost' => Configuration::get('TNT_CARRIER_'.strtoupper($country).'_OVERCOST'),
+                     'overcost' => (Configuration::get('TNT_CARRIER_'.strtoupper($country).'_OVERCOST') ? Configuration::get('TNT_CARRIER_'.strtoupper($country).'_OVERCOST') : '0'),
 		'action' => Tools::getValue('action'),
 		'section' => Tools::getValue('section'),
 		'getCountry' => Tools::getValue('country'),
@@ -452,7 +449,7 @@ class TntCarrier extends CarrierModule
 		{
 			$info = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'tnt_carrier_'.$cat.'` WHERE `id_'.$cat.'` = "'.$id.'"');
 			$info_min = $info[0][$cat.'_min'];
-			$info_max = $info[0][$cat.'_max'];
+			$info_max = ((float)$info[0][$cat.'_max'] == 0 ? '': $info[0][$cat.'_max']);
 			$charge = $info[0]['additionnal_charges'];
 		}
 		
@@ -461,13 +458,13 @@ class TntCarrier extends CarrierModule
 			'.($id != null ? '<input type="hidden" name="'.$cat.'_id" value="'.$id.'"/>' : '').'
 			<table class="table" cellspacing="0" cellpadding="0">
 				<tr>
-					<th>'.$this->l('Weight min').'</th><th>'.$this->l('Weight max').'</th><th>'.$this->l('Additionnal charge').'</th><th></th>
+					<th>'.$this->l('Weight min').'</th><th>'.$this->l('Weight max (can be empty)').'</th><th>'.$this->l('Additionnal charge').'</th><th></th>
 				</tr>
 				<tr>
 					<td><input type="text" name="tnt_carrier_'.$cat.'_min" size="20" value="'.$info_min.'"/></td>
 					<td><input type="text" name="tnt_carrier_'.$cat.'_max" size="20" value="'.$info_max.'"/></td>
 					<td><input type="text" name="tnt_carrier_'.$cat.'_charge" size="10" value="'.$charge.'"/></td>
-					<td><input class="button" name="submitSave" type="submit"></td>
+					<td><input class="button" name="submitSave" type="submit" value="'.$this->l('save').'"></td>
 				</tr>
 			</table>
 		</form>';
@@ -511,7 +508,7 @@ class TntCarrier extends CarrierModule
 		$password = Tools::getValue('tnt_carrier_password');
 		$number = Tools::getValue('tnt_carrier_number_account');
 		if (!$login || !$password || !$number)
-			$this->_postErrors[] = $this->l("All the fields are required");
+			$this->_postErrors[] = $this->l('All the fields are required');
 		Configuration::updateValue('TNT_CARRIER_LOGIN', $login);
 		Configuration::updateValue('TNT_CARRIER_PASSWORD', $password);
 		Configuration::updateValue('TNT_CARRIER_NUMBER_ACCOUNT', $number);
@@ -519,7 +516,7 @@ class TntCarrier extends CarrierModule
 	
 	private function _postValidationShipping()
 	{
-		$collect = $email = Tools::getValue('tnt_carrier_shipping_collect');
+		$collect = '1';//Tools::getValue('tnt_carrier_shipping_collect');
 		$company = Tools::getValue('tnt_carrier_shipping_company');
 		$pex = Tools::getValue('tnt_carrier_shipping_pex');
 		$lname = Tools::getValue('tnt_carrier_shipping_last_name');
@@ -535,23 +532,25 @@ class TntCarrier extends CarrierModule
 		$print = Tools::getValue('tnt_carrier_print_sticker');
 		
 		if (!$collect && $pex == '')
-			$this->_postErrors[] = $this->l("The pex code is missing");
+			$this->_postErrors[] = $this->l('The pex code is missing');
 		if ($collect && $company == '')
-			$this->_postErrors[] = $this->l("Your company name is missing");
+			$this->_postErrors[] = $this->l('Company name is missing');
 		if ($collect && !$lname)
-			$this->_postErrors[] = $this->l("Your last name is missing");
+			$this->_postErrors[] = $this->l('Contact last name is missing');
 		if ($collect && !$fname)
-			$this->_postErrors[] = $this->l("Your first name is missing");
+			$this->_postErrors[] = $this->l('Contact first name is missing');
 		if (!$address1)
-			$this->_postErrors[] = $this->l("Your address is missing");
+			$this->_postErrors[] = $this->l('Address is missing');
+		if (isset($address2) && strlen($address2) >= 32)
+			$this->_postErrors[] = $this->l('Address line 2 must be under 32 characters');
 		if (!$postal_code)
-			$this->_postErrors[] = $this->l("Your zip code is missing");
+			$this->_postErrors[] = $this->l('Postal code is missing');
 		if (!$email)
-			$this->_postErrors[] = $this->l("Your email address is missing");
+			$this->_postErrors[] = $this->l('Contact email address is missing');
 		if (!$phone)
-			$this->_postErrors[] = $this->l("Your phone number is missing");
+			$this->_postErrors[] = $this->l('Contact phone number is missing');
 		if ($collect && $closing == '')
-			$this->_postErrors[] = $this->l("Your closing time is missing");
+			$this->_postErrors[] = $this->l('Company closing time is missing');
 		
 		Configuration::updateValue('TNT_CARRIER_SHIPPING_COLLECT', $collect);
 		Configuration::updateValue('TNT_CARRIER_SHIPPING_COMPANY', $company);
@@ -704,6 +703,11 @@ class TntCarrier extends CarrierModule
 		Configuration::updateValue('TNT_CARRIER_'.strtoupper($country).'_OVERCOST', $overcost);
 	}
 	
+    public function get_followup($shipping_number)
+	{
+		return false;
+	}
+    
 	/*
 	** Hook update carrier
 	**
@@ -823,6 +827,7 @@ class TntCarrier extends CarrierModule
 		$erreur = null;
 		$follow = array();
 		$carrierName = Db::getInstance()->ExecuteS('SELECT external_module_name FROM `'._DB_PREFIX_.'carrier` WHERE `id_carrier` = "'.(int)($id_carrier).'"');
+        
 		if ($carrierName != null && $carrierName[0]['external_module_name'] == $this->_moduleName && $shipping_number != '')
 		{
 			$pack = new PackageTnt($params['order']->id);
@@ -834,6 +839,10 @@ class TntCarrier extends CarrierModule
 	
 	public function hookupdateCarrier($params)
 	{
+        $option = Db::getInstance()->ExecuteS('SELECT option
+                                                   FROM `'._DB_PREFIX_.'tnt_carrier_option`
+                                                   WHERE id_carrier = "'.(int)$params['id_carrier'].'"');
+        Configuration::updateValue('TNT_CARRIER_'.$option[0]['option'].'_ID', (int)($params['carrier']->id));
 	}
 
 	/*
@@ -849,6 +858,8 @@ class TntCarrier extends CarrierModule
 	
 	public function getOrderShippingCost($params, $shipping_cost)
 	{	
+        if (!Tools::getValue('step'))
+            return false;
 		if ((int)(Tools::getValue('step')) > 2)
 			serviceCache::deleteServices($params->id);
 		$product = $params->getProducts();
@@ -857,6 +868,7 @@ class TntCarrier extends CarrierModule
 		$id_customer = $params->id_customer;
 		$date_exp = $params->date_upd;
 		$id_adress_delivery = $params->id_address_delivery;
+		$info = Db::getInstance()->ExecuteS('SELECT postcode, city, company FROM `'._DB_PREFIX_.'address` WHERE `id_address` = "'.(int)($id_adress_delivery).'"');
 		
 		foreach($product as $k => $v)
 				$weight += (float)($v['weight']);
@@ -867,7 +879,6 @@ class TntCarrier extends CarrierModule
 				return false;
 			if (!Configuration::get('TNT_CARRIER_SHIPPING_ADDRESS1') || !Configuration::get('TNT_CARRIER_SHIPPING_ZIPCODE') || !Configuration::get('TNT_CARRIER_SHIPPING_CITY'))
 				return false;
-			$info = Db::getInstance()->ExecuteS('SELECT postcode, city, company FROM `'._DB_PREFIX_.'address` WHERE `id_address` = "'.(int)($id_adress_delivery).'"');
 			
 			$serviceCache = new serviceCache($params->id, $info[0]['postcode']);
 			if (!$serviceCache->getFaisabilityAtThisTime())
@@ -902,18 +913,13 @@ class TntCarrier extends CarrierModule
 								$priceCarrier = Configuration::get('TNT_CARRIER_'.$v['code'].'_OVERCOST');
 					}
 		}
-		if (!isset($priceCarrier))
+        if (!isset($priceCarrier))
 			{
-				if (isset($params->id_carrier) && (int)($params->id_carrier) > 0)
-				{
-					if ($option = Db::getInstance()->ExecuteS('SELECT `option` FROM `'._DB_PREFIX_.'tnt_carrier_option` WHERE `id_carrier` = "'.(int)($params->id_carrier).'"'))
-						$priceCarrier = Configuration::get('TNT_CARRIER_'.$option[0]['option'].'_OVERCOST');
-				}
-				else
-					$priceCarrier = 0;
+				if ($option = Db::getInstance()->ExecuteS('SELECT `option` FROM `'._DB_PREFIX_.'tnt_carrier_option` WHERE `id_carrier` = "'.(int)($this->id_carrier).'"'))
+					$priceCarrier = Configuration::get('TNT_CARRIER_'.$option[0]['option'].'_OVERCOST');
 			}
-		
-		$weightLimit = Db::getInstance()->ExecuteS('SELECT additionnal_charges FROM `'._DB_PREFIX_.'tnt_carrier_weight` WHERE `weight_min` < "'.(float)($weight).'" AND `weight_max` > "'.(float)($weight).'"');
+		$zero = 0;
+		$weightLimit = Db::getInstance()->ExecuteS('SELECT additionnal_charges FROM `'._DB_PREFIX_.'tnt_carrier_weight` WHERE `weight_min` < "'.(float)($weight).'" AND (`weight_max` > "'.(float)($weight).'" OR `weight_max` = "'.(float)$zero.'")');
 		$currency = Db::getInstance()->ExecuteS('SELECT conversion_rate FROM `'._DB_PREFIX_.'currency` WHERE `id_currency` = "'.(int)($params->id_currency).'"');
 		if ($weightLimit != null)
 			$add += (float)($weightLimit[0]['additionnal_charges']);

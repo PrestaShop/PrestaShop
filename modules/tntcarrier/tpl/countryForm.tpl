@@ -3,7 +3,7 @@
 		<tr>
 			<td><input type="hidden" name="tnt_carrier_country" size="20" value="{$varCountryForm.country}"/>{$varCountryForm.country}</td>
 			<td><input type="text" name="tnt_carrier_{$varCountryForm.country}_overcost" size="20" value="{$varCountryForm.overcost}"/></td>
-			<td><input class="button" name="submitSave" type="submit"></td>
+			<td><input class="button" name="submitSave" type="submit" value="{l s='save' mod='tntcarrier'}"></td>
 		</tr>
 	</table>
 </form>
