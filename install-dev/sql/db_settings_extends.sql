@@ -180,7 +180,10 @@ INSERT INTO `PREFIX_order_detail` (`id_order_detail`, `id_order`, `product_id`, 
 	VALUES (1, 1, 7, 23, 'iPod touch - Capacité: 32Go', 1, 0, '392.140500', '0.000000', NULL, NULL, NULL, 0, '0.00', '', 0, '0000-00-00 00:00:00', '');
 INSERT INTO `PREFIX_order_detail` (`id_order_detail`, `id_order`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_return`, `product_price`, `product_quantity_discount`, `product_ean13`, `product_reference`, `product_supplier_reference`, `product_weight`, `ecotax`, `download_hash`, `download_nb`, `download_deadline`, `tax_name`)
 	VALUES (2, 1, 9, 0, 'Écouteurs à isolation sonore Shure SE210', 1, 0, '124.581900', '0.000000', NULL, NULL, NULL, 0, '0.00', '', 0, '0000-00-00 00:00:00', '');
+
 INSERT INTO `PREFIX_order_history` (`id_order_history`, `id_employee`, `id_order`, `id_order_state`, `date_add`) VALUES (1, 0, 1, 1, NOW());
+
+INSERT INTO `PREFIX_order_payment` (`id_order`, `id_currency`, `amount`, `payment_method`, `date_add`) VALUES (1, 1, '625.98', 'Chèque', NOW());
 
 INSERT INTO `PREFIX_manufacturer` (`id_manufacturer`, `name`, `date_add`, `date_upd`, `active`) VALUES (1, 'Apple Computer, Inc', NOW(), NOW(), 1);
 INSERT INTO `PREFIX_manufacturer` (`id_manufacturer`, `name`, `date_add`, `date_upd`, `active`) VALUES(2, 'Shure Incorporated', NOW(), NOW(), 1);
@@ -1367,3 +1370,6 @@ INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_pr
 (28, 6, 0, 1, 4, 0, 2),
 (29, 8, 0, 1, 8, 0, 2),
 (30, 9, 0, 1, 15, 0, 2);
+
+INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `date_add`) VALUES
+(1, 2, NOW());

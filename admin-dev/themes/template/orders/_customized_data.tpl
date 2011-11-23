@@ -47,6 +47,7 @@
 		{/if}
 		</td>
 		<td align="center" class="cancelCheck">--</td>
+		<td align="center" class="cancelQuantity">--</td>
 	</tr>
 	{foreach from=$product.customizedDatas key=customizationId item=customization}
 		<tr>

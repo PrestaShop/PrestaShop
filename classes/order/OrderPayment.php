@@ -20,22 +20,18 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 10336 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/**
- *
- * @deprecated 1.5.0.1
- * @see OrderPaymentCore
- *
- */
-class PaymentCCCore extends ObjectModel
+class OrderPaymentCore extends ObjectModel
 {
 	public $id_order;
 	public $id_currency;
 	public $amount;
+	public $payment_method;
+	public $conversion_rate;
 	public $transaction_id;
 	public $card_number;
 	public $card_brand;
@@ -43,14 +39,23 @@ class PaymentCCCore extends ObjectModel
 	public $card_holder;
 	public $date_add;
 
-	protected	$fieldsRequired = array('id_currency', 'amount');
+	protected	$fieldsRequired = array('id_order', 'id_currency', 'amount');
 	protected	$fieldsSize = array('transaction_id' => 254, 'card_number' => 254, 'card_brand' => 254, 'card_expiration' => 254, 'card_holder' => 254);
 	protected	$fieldsValidate = array(
-		'id_order' => 'isUnsignedId', 'id_currency' => 'isUnsignedId', 'amount' => 'isPrice',
-		'transaction_id' => 'isAnything', 'card_number' => 'isAnything', 'card_brand' => 'isAnything', 'card_expiration' => 'isAnything', 'card_holder' => 'isAnything');
+		'id_order' => 'isUnsignedId',
+		'id_currency' => 'isUnsignedId',
+		'amount' => 'isPrice',
+		'payment_method' => 'isName',
+		'conversion_rate' => 'isFloat',
+		'transaction_id' => 'isAnything',
+		'card_number' => 'isAnything',
+		'card_brand' => 'isAnything',
+		'card_expiration' => 'isAnything',
+		'card_holder' => 'isAnything'
+	);
 
-	protected 	$table = 'payment_cc';
-	protected 	$identifier = 'id_payment_cc';
+	protected 	$table = 'order_payment';
+	protected 	$identifier = 'id_order_payment';
 
 	public function getFields()
 	{
@@ -58,6 +63,7 @@ class PaymentCCCore extends ObjectModel
 		$fields['id_order'] = (int)($this->id_order);
 		$fields['id_currency'] = (int)($this->id_currency);
 		$fields['amount'] = (float)($this->amount);
+		$fields['payment_method'] = pSQL($this->payment_method);
 		$fields['transaction_id'] = pSQL($this->transaction_id);
 		$fields['card_number'] = pSQL($this->card_number);
 		$fields['card_brand'] = pSQL($this->card_brand);
@@ -81,13 +87,13 @@ class PaymentCCCore extends ObjectModel
 	* Get the detailed payment of an order
 	* @param int $id_order
 	* @return array
-	* @deprecated 1.5.0.1
-	* @see OrderPaymentCore
 	*/
 	public static function getByOrderId($id_order)
 	{
-		Tools::displayAsDeprecated();
-		return null;
+		return Db::getInstance()->ExecuteS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'payment_order`
+			WHERE `id_order` = '.(int)$id_order);
 	}
 }
 

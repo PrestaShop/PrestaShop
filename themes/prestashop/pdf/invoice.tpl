@@ -130,66 +130,66 @@
 			</table>
 
 			<table style="width: 100%">
-				{if (($order->total_paid_tax_incl - $order->total_paid_tax_excl) > 0)}
+				{if (($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl) > 0)}
 				<tr style="line-height:5px;">
 					<td style="width: 85%; text-align: right; font-weight: bold">{l s='Product Total (Tax Excl.)' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order->total_products}</td>
+					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
 				</tr>
 
 				<tr style="line-height:5px;">
 					<td style="width: 85%; text-align: right; font-weight: bold">{l s='Product Total (Tax Incl.)' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order->total_products_wt}</td>
+					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products_wt}</td>
 				</tr>
 				{else}
 				<tr style="line-height:5px;">
 					<td style="width: 85%; text-align: right; font-weight: bold">{l s='Product Total' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order->total_products}</td>
+					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
 				</tr>
 				{/if}
 
-				{if $order->total_discounts_tax_incl > 0}
+				{if $order_invoice->total_discount_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total Vouchers' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">-{displayPrice currency=$order->id_currency price=$order->total_discounts_tax_incl}</td>
+					<td style="width: 15%; text-align: right;">-{displayPrice currency=$order->id_currency price=$order_invoice->total_discount_tax_incl}</td>
 				</tr>
 				{/if}
 
-				{if $order->total_wrapping_tax_incl > 0}
+				{if $order_invoice->total_wrapping_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Wrapping Cost' pdf='true'}</td>
 					<td style="width: 15%; text-align: right;">
 					{if $tax_excluded_display}
-						{displayPrice currency=$order->id_currency price=$order->total_wrapping_tax_excl}
+						{displayPrice currency=$order->id_currency price=$order_invoice->total_wrapping_tax_excl}
 					{else}
-						{displayPrice currency=$order->id_currency price=$order->total_wrapping_tax_incl}
+						{displayPrice currency=$order->id_currency price=$order_invoice->total_wrapping_tax_incl}
 					{/if}
 					</td>
 				</tr>
 				{/if}
 
-				{if $order->total_shipping_tax_incl > 0}
+				{if $order_invoice->total_shipping_tax_incl > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Shipping Cost' pdf='true'}</td>
 					<td style="width: 15%; text-align: right;">
 					{if $tax_excluded_display}
-						{displayPrice currency=$order->id_currency price=$order->total_shipping_tax_excl}
+						{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}
 					{else}
-						{displayPrice currency=$order->id_currency price=$order->total_shipping_tax_incl}
+						{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_incl}
 					{/if}
 					</td>
 				</tr>
 				{/if}
 
-				{if ($order->total_paid_tax_incl - $order->total_paid_tax_excl) > 0}
+				{if ($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl) > 0}
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total Tax' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=($order->total_paid_tax_incl - $order->total_paid_tax_excl)}</td>
+					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl)}</td>
 				</tr>
 				{/if}
 
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order->total_paid_tax_incl}</td>
+					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
 				</tr>
 			</table>
 
