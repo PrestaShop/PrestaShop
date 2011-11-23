@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -35,7 +35,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->addRowAction('edit');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-	
+
 		$this->fieldsDisplay = array(
 			'id_cart_rule' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'name' => array('title' => $this->l('Code')),
@@ -45,10 +45,10 @@ class AdminCartRulesControllerCore extends AdminController
 			'date_to' => array('title' => $this->l('Until')),
 			'active' => array('title' => $this->l('Status'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
-		
+
 		parent::__construct();
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitAddcart_rule') || Tools::isSubmit('submitAddcart_ruleAndStay'))
@@ -57,7 +57,7 @@ class AdminCartRulesControllerCore extends AdminController
 			foreach (array('country', 'carrier', 'group', 'cart_rule', 'product') as $type)
 				if (!Tools::getValue($type.'_restriction'))
 					$_POST[$type.'_restriction'] = 0;
-					
+
 			// Idiot-proof control
 			if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to')))
 				$this->_errors[] = Tools::displayError('The voucher cannot end before it begins');
@@ -68,10 +68,10 @@ class AdminCartRulesControllerCore extends AdminController
 			if ((int)Tools::getValue('reduction_amount') < 0)
 				$this->_errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
 		}
-		
+
 		return parent::postProcess();
 	}
-	
+
 	public function afterUpdate($currentObject)
 	{
 		// All the associations are deleted for an update, then recreated when we call the "afterAdd" method
@@ -80,10 +80,10 @@ class AdminCartRulesControllerCore extends AdminController
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE `id_cart_rule` = '.(int)$id_cart_rule);
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_combination` WHERE `id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
-		
+
 		$this->afterAdd($currentObject);
 	}
-	
+
 	// TODO Move this function into CartRule
 	public function afterAdd($currentObject)
 	{
@@ -112,14 +112,14 @@ class AdminCartRulesControllerCore extends AdminController
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_cart_rule`, `quantity`, `type`)
 				VALUES ('.(int)$currentObject->id.', '.(int)Tools::getValue('product_rule_'.$id.'_quantity').', "'.pSQL(Tools::getValue('product_rule_'.$id.'_type')).'")');
 				$id_product_rule = Db::getInstance()->Insert_ID();
-				
+
 				$values = array();
 				foreach (Tools::getValue('product_rule_select_'.$id) as $id)
 					$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
 			}
 		}
-		
+
 		// If the new rule has no cart rule restriction, then it must be added to the white list of the other cart rules that have restrictions
 		if ($currentObject->cart_rule_restriction == 0)
 		{
@@ -151,7 +151,7 @@ class AdminCartRulesControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function getProductRuleDisplay($product_rule_id, $product_rule_type, $product_rule_quantity = 1, $selected = array())
 	{
 		Context::getContext()->smarty->assign(
@@ -161,7 +161,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'product_rule_quantity' => (int)$product_rule_quantity
 			)
 		);
-		
+
 		switch ($product_rule_type)
 		{
 			case 'attributes':
@@ -210,7 +210,7 @@ class AdminCartRulesControllerCore extends AdminController
 			default:
 				die;
 		}
-			
+
 		return Context::getContext()->smarty->fetch('cart_rules/product_rule.tpl');
 	}
 
@@ -218,7 +218,7 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('newProductRule'))
 			die ($this->getProductRuleDisplay(Tools::getValue('product_rule_id'), Tools::getValue('product_rule_type')));
-	
+
 		if (Tools::isSubmit('customerFilter'))
 		{
 			$q = trim(Tools::getValue('q'));
@@ -267,51 +267,71 @@ class AdminCartRulesControllerCore extends AdminController
 		}
 		return $productRulesArray;
 	}
-	
+
 	public function initForm()
 	{
+		$back = Tools::safeOutput(Tools::getValue('back', ''));
+		if (empty($back))
+			$back = self::$currentIndex.'&token='.$this->token;
+
+		$this->toolbar_btn['cancel'] = array(
+			'href' => $back,
+			'desc' => $this->l('Cancel')
+		);
+
 		// Todo: change for "Media" version
 		$this->addJs(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.js');
 		$this->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 		$this->addCss(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.css');
 		$this->addCss(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.css');
-	
-		$currentObject = $this->loadObject(true);
+
+		$current_object = $this->loadObject(true);
 
 		// All the filter are prefilled with the correct information
-		$customerFilter = '';
-		if (Validate::isUnsignedId($currentObject->id_customer) AND $customer = new Customer($currentObject->id_customer) AND Validate::isLoadedObject($customer))
-			$customerFilter = $customer->firstname.' '.$customer->lastname.' ('.$customer->email.')';
-		$giftProductFilter = '';
-		if (Validate::isUnsignedId($currentObject->gift_product) AND $product = new Product($currentObject->gift_product, false, Context::getContext()->language->id) AND Validate::isLoadedObject($product))
-			$giftProductFilter = trim($product->reference.' '.$product->name);
-		$reductionProductFilter = '';
-		if (Validate::isUnsignedId($currentObject->reduction_product) AND $product = new Product($currentObject->reduction_product, false, Context::getContext()->language->id) AND Validate::isLoadedObject($product))
-			$reductionProductFilter = trim($product->reference.' '.$product->name);
+		$customer_filter = '';
+		if (Validate::isUnsignedId($current_object->id_customer) AND
+			$customer = new Customer($current_object->id_customer) AND
+			Validate::isLoadedObject($customer))
+			$customer_filter = $customer->firstname.' '.$customer->lastname.' ('.$customer->email.')';
 
-		$product_rules = $this->getProductRulesDisplay($currentObject);
-		
+		$gift_product_filter = '';
+		if (Validate::isUnsignedId($current_object->gift_product) AND
+			$product = new Product($current_object->gift_product, false, Context::getContext()->language->id) AND
+			Validate::isLoadedObject($product))
+			$gift_product_filter = trim($product->reference.' '.$product->name);
+
+		$reduction_product_filter = '';
+		if (Validate::isUnsignedId($current_object->reduction_product) AND
+			$product = new Product($current_object->reduction_product, false, Context::getContext()->language->id) AND
+			Validate::isLoadedObject($product))
+			$reduction_product_filter = trim($product->reference.' '.$product->name);
+
+		$product_rules = $this->getProductRulesDisplay($current_object);
+
 		Context::getContext()->smarty->assign(
 			array(
+				'show_toolbar' => true,
+				'toolbar_btn' => $this->toolbar_btn,
+				'title' => $this->l('Payment : Cart Rules '),
 				'languages' => Language::getLanguages(),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 year')),
-				'customerFilter' => $customerFilter,
-				'giftProductFilter' => $giftProductFilter,
-				'reductionProductFilter' => $reductionProductFilter,
+				'customerFilter' => $customer_filter,
+				'giftProductFilter' => $gift_product_filter,
+				'reductionProductFilter' => $reduction_product_filter,
 				'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
 				'defaultLanguage' => Configuration::get('PS_LANG_DEFAULT'),
 				'currencies' => Currency::getCurrencies(),
-				'countries' => $currentObject->getAssociatedRestrictions('country', 1),
-				'carriers' => $currentObject->getAssociatedRestrictions('carrier', 1),
-				'groups' => $currentObject->getAssociatedRestrictions('group', 0),
-				'cart_rules' => $currentObject->getAssociatedRestrictions('cart_rule', 1),
+				'countries' => $current_object->getAssociatedRestrictions('country', 1),
+				'carriers' => $current_object->getAssociatedRestrictions('carrier', 1),
+				'groups' => $current_object->getAssociatedRestrictions('group', 0),
+				'cart_rules' => $current_object->getAssociatedRestrictions('cart_rule', 1),
 				'product_rules' => $product_rules,
 				'product_rules_counter' => count($product_rules),
 				'attribute_groups' => AttributeGroup::getAttributesGroups(Context::getContext()->language->id),
 				'currentIndex' => self::$currentIndex,
 				'currentToken' => $this->token,
-				'currentObject' => $currentObject,
+				'currentObject' => $current_object,
 				'currentTab' => $this
 			)
 		);
@@ -323,7 +343,7 @@ class AdminCartRulesControllerCore extends AdminController
 	}
 
 	public function displayAjaxSearchCartRuleVouchers()
-	{	
+	{
 		$found = false;
 		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)Context::getContext()->cookie->id_lang))
 			$found = true;
