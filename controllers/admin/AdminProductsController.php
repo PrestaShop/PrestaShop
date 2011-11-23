@@ -2183,6 +2183,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$error = '';
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+		$detail = array();
 
 		if (count($this->context->shop->getListOfID()) > 1)
 			$error = $this->l('Please select the shop you want to configure');
@@ -2190,7 +2191,6 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$zones = Zone::getZones();
 			$id_shop = $this->context->shop->getID();
-			$detail = array();
 
 			// Set default zone value to the shop	and sort it
 			foreach($zones as $zone)
