@@ -85,7 +85,7 @@ class ShopCore extends ObjectModel
 		'store' => array('type' => 'shop'),
 		'webservice_account' => array('type' => 'shop'),
 		'warehouse' => array('type' => 'shop'),
-		'stock_available' => array('type' => 'fk_shop'),
+		'stock_available' => array('type' => 'fk_shop', 'primary' => 'id_stock_available'),
 	);
 
 	protected $webserviceParameters = array(
@@ -167,8 +167,8 @@ class ShopCore extends ObjectModel
 			else
 				$table_name .= '_'.$row['type'];
 			$res &= Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.$table_name.'`
-				WHERE `'.$id.'`='.(int)$this->id
+				DELETE FROM `'.bqSQL(_DB_PREFIX_.$table_name).'`
+				WHERE `'.bqSQL($id).'`='.(int)$this->id
 			);
 		}
 
@@ -445,7 +445,7 @@ class ShopCore extends ObjectModel
 		{
 			$select .= ', es.id_employee';
 			$from .= 'LEFT JOIN '._DB_PREFIX_.'employee_shop es ON es.id_shop = s.id_shop';
-			$where .= 'AND es.id_employee = '.$employee->id;
+			$where .= 'AND es.id_employee = '.(int)$employee->id;
 		}
 
 		$sql = 'SELECT gs.*, s.*, gs.name AS group_name, s.name AS shop_name, s.active, su.domain, su.domain_ssl, su.physical_uri, su.virtual_uri'.$select.'
