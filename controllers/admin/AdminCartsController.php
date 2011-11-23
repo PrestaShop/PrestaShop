@@ -103,15 +103,18 @@ class AdminCartsController extends AdminController
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
+
 		$customer = new Customer($cart->id_customer);
+		$this->context->cart = $cart;
+		$this->context->customer = $customer;
 		$products = $cart->getProducts();
-		$customized_datas = Product::getAllCustomizedDatas((int)($cart->id));
+		$customized_datas = Product::getAllCustomizedDatas((int)$cart->id);
 		Product::addCustomizationPrice($products, $customized_datas);
 		$summary = $cart->getSummaryDetails();
 		$currency = new Currency($cart->id_currency);
 
 		/* Display order information */
-		$id_order = (int)(Order::getOrderByCartId($cart->id));
+		$id_order = (int)Order::getOrderByCartId($cart->id);
 		$order = new Order($id_order);
 
 		if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
@@ -119,7 +122,8 @@ class AdminCartsController extends AdminController
 			$total_products = $summary['total_products'];
 			$total_discounts = $summary['total_discounts_tax_exc'];
 			$total_wrapping = $summary['total_wrapping_tax_exc'];
-			$total_price = $summary['total_price_without_tax'];$total_shipping = $summary['total_shipping_tax_exc'];
+			$total_price = $summary['total_price_without_tax'];
+			$total_shipping = $summary['total_shipping_tax_exc'];
 		}
 		else
 		{
@@ -142,21 +146,22 @@ class AdminCartsController extends AdminController
 				$product['product_total'] = $product['total_wt'];
 			}
 			$image = array();
-			if (isset($product['id_product_attribute']) AND (int)($product['id_product_attribute']))
+			if (isset($product['id_product_attribute']) && (int)$product['id_product_attribute'])
 				$image = Db::getInstance()->getRow('SELECT id_image
 																FROM '._DB_PREFIX_.'product_attribute_image
-																WHERE id_product_attribute = '.(int)($product['id_product_attribute']));
+																WHERE id_product_attribute = '.(int)$product['id_product_attribute']);
 		 	if (!isset($image['id_image']))
 				$image = Db::getInstance()->getRow('SELECT id_image
 																FROM '._DB_PREFIX_.'image
-																WHERE id_product = '.(int)($product['id_product']).' AND cover = 1');
+																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
 
-			$productObj = new Product($product['id_product']);
+			$product_obj = new Product($product['id_product']);
 			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$order->id_shop);
 
-			$imageProduct = new Image($image['id_image']);
-			$product['image'] = (isset($image['id_image']) ? cacheImage(_PS_IMG_DIR_.'p/'.$imageProduct->getExistingImgPath().'.jpg', 'product_mini_'.(int)($product['id_product']).(isset($product['id_product_attribute']) ? '_'.(int)($product['id_product_attribute']) : '').'.jpg', 45, 'jpg') : '--');
+			$image_product = new Image($image['id_image']);
+			$product['image'] = (isset($image['id_image']) ? cacheImage(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
 		}
+
 		$this->tpl_view_vars = array(
 			'products' => $products,
 			'discounts' => $cart->getCartRules(),
@@ -202,11 +207,11 @@ class AdminCartsController extends AdminController
 
 		if (!$this->context->cart->id_address_invoice && isset($addresses[0]))
 			$this->context->cart->id_address_invoice = (int)$addresses[0]['id_address'];
-		elseif ($id_address_invoice)
+		else if ($id_address_invoice)
 			$this->context->cart->id_address_invoice = (int)$id_address_invoice;
 		if (!$this->context->cart->id_address_delivery && isset($addresses[0]))
 			$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
-		elseif ($id_address_delivery)
+		else if ($id_address_delivery)
 			$this->context->cart->id_address_delivery = (int)$id_address_delivery;
 		$this->context->cart->save();
 		$currency = new Currency((int)$this->context->cart->id_currency);
@@ -217,9 +222,9 @@ class AdminCartsController extends AdminController
 	public function ajaxProcessDeleteProduct()
 	{
 		$errors = array();
-		if (!$id_product = (int)Tools::getValue('id_product') OR !$id_product_attribute = (int)Tools::getValue('id_product_attribute'))
+		if (!$id_product = (int)Tools::getValue('id_product') || !$id_product_attribute = (int)Tools::getValue('id_product_attribute'))
 			$errors[] = Tools::displayError('Invalid product');
-		if (sizeof($errors))
+		if (count($errors))
 			die(Tools::jsonEncode($errors));
 
 		if ($this->context->cart->deleteProduct($id_product, $id_product_attribute))
@@ -233,19 +238,19 @@ class AdminCartsController extends AdminController
 			return;
 		if ($this->context->cart->OrderExists())
 			$errors[] = Tools::displayErrors('An order already placed with this cart');
-		elseif (!$id_product = (int)Tools::getValue('id_product') OR (!$product = new Product((int)$id_product, true, $this->context->language->id)))
+		else if (!$id_product = (int)Tools::getValue('id_product') OR (!$product = new Product((int)$id_product, true, $this->context->language->id)))
 			$errors[] = Tools::displayError('Invalid product');
-		elseif (!$qty = Tools::getValue('qty') OR $qty == 0)
+		else if (!$qty = Tools::getValue('qty') || $qty == 0)
 			$errors[] = Tools::displayError('Invalid quantity');
 		if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
 		{
-			if(!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
+			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
 				$errors[] = Tools::displayError('There is not enough product in stock');
 		}
 		else
-			if(!$product->checkQty((int)$qty))
+			if (!$product->checkQty((int)$qty))
 				$errors[] = Tools::displayError('There is not enough product in stock');
-		if (!$id_customization = (int)Tools::getValue('id_customization', 0) AND !$product->hasAllRequiredCustomizableFields())
+		if (!$id_customization = (int)Tools::getValue('id_customization', 0) && !$product->hasAllRequiredCustomizableFields())
 			$errors[] = Tools::displayError('Please fill in all required fields');
 		$this->context->cart->save();
 		if (!count($errors))
@@ -267,11 +272,11 @@ class AdminCartsController extends AdminController
 
 	public function ajaxProcessUpdateCarrier()
 	{
-		if(Validate::isBool(($recyclable = (int)Tools::getValue('recyclable'))))
+		if (Validate::isBool(($recyclable = (int)Tools::getValue('recyclable'))))
 			$this->context->cart->recyclable = $recyclable;
-		if(Validate::isBool(($gift = (int)Tools::getValue('gift'))))
+		if (Validate::isBool(($gift = (int)Tools::getValue('gift'))))
 			$this->context->cart->gift = $gift;
-		if(Validate::isMessage(($gift_message = pSQL(Tools::getValue('gift_message')))))
+		if (Validate::isMessage(($gift_message = pSQL(Tools::getValue('gift_message')))))
 			$this->context->cart->gift_message = $gift_message;
 		$this->context->cart->save();
 		echo Tools::jsonEncode($this->ajaxReturnVars());
@@ -304,9 +309,9 @@ class AdminCartsController extends AdminController
 			$errors[] = Tools::displayErrors('Invalid order');
 		$cart = Cart::getCartByOrderId($id_order);
 		$new_cart = $cart->duplicate();
-		if (!$new_cart OR !Validate::isLoadedObject($new_cart['cart']))
+		if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
 			$errors[] = Tools::displayError('The order cannot be renewed');
-		elseif (!$new_cart['success'])
+		else if (!$new_cart['success'])
 			$errors[] = Tools::displayError('The order cannot be renewed');
 		else
 		{
@@ -327,23 +332,27 @@ class AdminCartsController extends AdminController
 		$errors = array();
 		$customer = new Customer((int)$this->context->cart->id_customer);
 
-		if (!$id_cart_rule = Tools::getValue('id_cart_rule') OR !$cartRule = new CartRule((int)$id_cart_rule))
+		if (!$id_cart_rule = Tools::getValue('id_cart_rule') OR !$cart_rule = new CartRule((int)$id_cart_rule))
 			$errors[] = Tools::displayError('Invalid voucher');
-		elseif ($err = $cartRule->checkValidity($this->context))
+		else if ($err = $cart_rule->checkValidity($this->context))
 			$errors[] = $err;
-		if (!sizeof($errors))
-			if (!$this->context->cart->addCartRule((int)$cartRule->id))
+		if (!count($errors))
+			if (!$this->context->cart->addCartRule((int)$cart_rule->id))
 				$errors[] = Tools::displayError('Can\'t add the voucher');
 		echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
 	}
 
 	public function ajaxProcessUpdateAddresses()
 	{
-		if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) && $address_delivery = new Address((int)$id_address_delivery) && $address_delivery->id_customer = $this->context->cart->id_customer)
-			$this->context->cart->id_address_delivery =  (int)$address_delivery->id;
+		if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) &&
+			$address_delivery = new Address((int)$id_address_delivery) &&
+			$address_delivery->id_customer = $this->context->cart->id_customer)
+			$this->context->cart->id_address_delivery = (int)$address_delivery->id;
 
-		if (($id_address_invoice = (int)Tools::getValue('id_address_invoice')) && $address_invoice = new Address((int)$id_address_invoice) && $address_invoice->id_customer = $this->context->cart->id_customer)
-			$this->context->cart->id_address_invoice =  (int)$address_invoice->id;
+		if (($id_address_invoice = (int)Tools::getValue('id_address_invoice')) &&
+			$address_invoice = new Address((int)$id_address_invoice) &&
+			$address_invoice->id_customer = $this->context->cart->id_customer)
+			$this->context->cart->id_address_invoice = (int)$address_invoice->id;
 		$this->context->cart->save();
 
 		echo Tools::jsonEncode($this->ajaxReturnVars());
@@ -354,23 +363,41 @@ class AdminCartsController extends AdminController
 		$summary = $this->context->cart->getSummaryDetails();
 		$currency = new Currency((int)$this->context->cart->id_currency);
 		if (count($summary['products']))
-			foreach ($summary['products'] AS &$product)
+			foreach ($summary['products'] as &$product)
 			{
 				$product['price'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($product['price'], $currency), $currency));
 				$product['total'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($product['total'], $currency), $currency));
 				$product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small');
-				if(!isset($product['attributes_small']))
+				if (!isset($product['attributes_small']))
 					$product['attributes_small'] = '';
 			}
 		if (count($summary['discounts']))
-			foreach ($summary['discounts'] AS &$voucher)
+			foreach ($summary['discounts'] as &$voucher)
 				$voucher['value_real'] = Tools::displayPrice($voucher['value_real'], $currency);
-		$summary['total_products'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($summary['total_products'], $currency), $currency));
-		$summary['total_discounts_tax_exc'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($summary['total_discounts_tax_exc'], $currency), $currency));
-		$summary['total_shipping_tax_exc'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($summary['total_shipping_tax_exc'], $currency), $currency));
-		$summary['total_tax'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($summary['total_tax'], $currency), $currency));
-		$summary['total_price_without_tax'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($summary['total_price_without_tax'], $currency), $currency));
-		$summary['total_price'] = str_replace($currency->sign, '', Tools::displayPrice(Tools::convertPrice($summary['total_price'], $currency), $currency));
+		$summary['total_products'] = str_replace(
+			$currency->sign, '',
+			Tools::displayPrice(Tools::convertPrice($summary['total_products'], $currency), $currency)
+		);
+		$summary['total_discounts_tax_exc'] = str_replace(
+			$currency->sign, '',
+			Tools::displayPrice(Tools::convertPrice($summary['total_discounts_tax_exc'], $currency), $currency)
+		);
+		$summary['total_shipping_tax_exc'] = str_replace(
+			$currency->sign, '',
+			Tools::displayPrice(Tools::convertPrice($summary['total_shipping_tax_exc'], $currency), $currency)
+		);
+		$summary['total_tax'] = str_replace(
+			$currency->sign, '',
+			Tools::displayPrice(Tools::convertPrice($summary['total_tax'], $currency), $currency)
+		);
+		$summary['total_price_without_tax'] = str_replace(
+			$currency->sign, '',
+			Tools::displayPrice(Tools::convertPrice($summary['total_price_without_tax'], $currency), $currency)
+		);
+		$summary['total_price'] = str_replace(
+			$currency->sign, '',
+			Tools::displayPrice(Tools::convertPrice($summary['total_price'], $currency), $currency)
+		);
 
 		return $summary;
 	}
@@ -389,16 +416,16 @@ class AdminCartsController extends AdminController
 		$customer = new Customer((int)$id_customer);
 
 		if (count($carts))
-			foreach ($carts AS $key => &$cart)
+			foreach ($carts as $key => &$cart)
 			{
-				$cartObj = new Cart((int)$cart['id_cart']);
-				if (!Validate::isLoadedObject($cartObj) || $cartObj->OrderExists())
+				$cart_obj = new Cart((int)$cart['id_cart']);
+				if (!Validate::isLoadedObject($cart_obj) || $cart_obj->OrderExists())
 					unset($carts[$key]);
-				$currency = new Currency((int)($cart['id_currency']));
-				$cart['total_price'] = Tools::displayPrice(Tools::convertPrice($cartObj->getOrderTotal(), $currency), $currency);
+				$currency = new Currency((int)$cart['id_currency']);
+				$cart['total_price'] = Tools::displayPrice(Tools::convertPrice($cart_obj->getOrderTotal(), $currency), $currency);
 			}
 		if (count($orders))
-			foreach ($orders AS &$order)
+			foreach ($orders as &$order)
 				$order['total_paid_real'] = Tools::displayPrice(Tools::convertPrice($order['total_paid_real'], $currency), $currency);
 		if ($orders || $carts)
 			$to_return = array_merge($this->ajaxReturnVars(),
@@ -413,7 +440,6 @@ class AdminCartsController extends AdminController
 
 	public function ajaxReturnVars()
 	{
-
 		$id_cart = (int)$this->context->cart->id;
 		return array('summary' => $this->getCartSummary(),
 						'carriers' => $this->getAvailableCarriers(),
@@ -421,7 +447,11 @@ class AdminCartsController extends AdminController
 						'carriers' => $this->getAvailableCarriers(),
 						'addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang),
 						'id_cart' => $id_cart,
-						'link_order' => $this->context->link->getPageLink('order', false, (int)$this->context->cart->id_lang, 'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)));
+						'link_order' => $this->context->link->getPageLink(
+							'order', false,
+							(int)$this->context->cart->id_lang,
+							'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart))
+						);
 	}
 
 	public function displayAjaxGetSummary()
@@ -436,6 +466,9 @@ class AdminCartsController extends AdminController
 
 	public static function getOrderTotalUsingTaxCalculationMethod($id_cart)
 	{
+		$context = Context::getContext();
+		$context->cart = new Cart($id_cart);
+		$context->customer = new Customer($context->cart->id_customer);
 		return Cart::getTotalCart($id_cart, true);
 	}
 
