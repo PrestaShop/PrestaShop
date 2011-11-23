@@ -41,7 +41,7 @@
 		<ul class="tab">
 		{foreach $product_tabs key=numStep item=tab}
 			<li class="tab-row">
-				<a class="tab-page {if $tab.selected}selected{/if}" id="link-{$tab.id}" href="{$tab.href}">{$tab.name}</a>{*todo href when nojs*}
+				<a class="tab-page {if $tab.selected}selected{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>{*todo href when nojs*}
 			</li>
 		{/foreach}
 		</ul>
@@ -52,12 +52,18 @@
 function showSaveButtons()
 {
 	$('#desc-product-save').show();
+	$('#desc-product-cancel').show();
+	$('#desc-product-duplicate').show();
+	$('#desc-product-delete').show();
 	$('#desc-product-save-and-stay').show();
 }
 
 function hideSaveButtons()
 {
 	$('#desc-product-save').hide();
+	$('#desc-product-cancel').hide();
+	$('#desc-product-duplicate').hide();
+	$('#desc-product-delete').hide();
 	$('#desc-product-save-and-stay').hide();
 }
 
