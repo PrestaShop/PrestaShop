@@ -111,6 +111,17 @@ class AdminCountriesControllerCore extends AdminController
 
 		parent::__construct();
 	}
+	
+	/**
+	 * AdminController::setMedia() override
+	 * @see AdminController::setMedia()
+	 */
+	public function setMedia()
+	{
+		parent::setMedia();
+		
+		$this->addJqueryPlugin('fieldselection');
+	}
 
 	public function initList()
 	{
