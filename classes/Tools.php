@@ -463,7 +463,44 @@ class ToolsCore
 		return $price;
 	}
 
+	/**
+	 *
+	 * Convert amount from a currency to an other currency automatically
+	 * @param float $amount
+	 * @param Currency $currency_from if null we used the default currency
+	 * @param Currency $currency_to if null we used the default currency
+	 */
+	public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
+	{
+		if ($currency_from == $currency_to)
+			return $amount;
 
+		if ($currency_from === null)
+		{
+			$currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+			$default_currency = $currency_from;
+		}
+
+		if ($currency_to === null)
+		{
+			$currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+			$default_currency = $currency_to;
+		}
+
+		if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+			$amount *= $currency_to->conversion_rate;
+		else
+		{
+			if (!isset($default_currency))
+				$default_currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+			// Convert amount to default currency
+			$amount = Tools::ps_round($amount / $default_currency->conversion_rate, 2);
+			// Convert to new currency
+			$amount *= $currency_to->conversion_rate;
+		}
+		return Tools::ps_round($amount, 2);
+	}
 
 	/**
 	* Display date regarding to language preferences
