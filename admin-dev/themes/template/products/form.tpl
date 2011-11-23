@@ -135,15 +135,15 @@ $(document).ready(function(){
 		$("#product-tab-content-wait").hide();
 
 		var languages = new Array();
-		if (id == 3)
+		if (id == "4-Combinations")
 			populate_attrs();
-		if (id == 7)
+		if (id == '7-Attachments')
 		{
-			$("#addAttachment").click(function() {
-				return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
-			});
-			$("#removeAttachment").click(function() {
+			$("#addAttachment").live('click', function() {
 				return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
+			});
+			$("#removeAttachment").live('click', function() {
+				return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
 			});
 			$("#product").submit(function() {
 				$("#selectAttachment1 option").each(function(i) {
