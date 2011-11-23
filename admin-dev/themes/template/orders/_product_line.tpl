@@ -34,7 +34,7 @@
 {if ($product['product_quantity'] > $product['customizationQuantityTotal'])}
 <tr{if isset($product.image) && $product.image->id && isset($product.image_size)} height="{$product['image_size'][1] + 7}"{/if}>
 	<td align="center">{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
-	<td><a href="index.php?tab=AdminCatalog&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminCatalog'}">
+	<td><a href="index.php?controller=adminproducts&id_product={$product['product_id']}&updateproduct&token={getAdminToken tab='AdminProducts'}">
 		<span class="productName">{$product['product_name']}</span><br />
 		{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
 		{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}

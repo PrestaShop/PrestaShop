@@ -286,11 +286,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'hint' => array(
-						$this->l('Define the behavior if an address matches multiple rules:'),
-						'<b>'.$this->l('This Tax Only:').'</b> '.$this->l('Will apply only this tax'),
-						'<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% => 15%)'),
-						'<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 100€ + 10% => 110€ + 5% => 115.5€)')
+					'hint' =>
+						$this->l('Define the behavior if an address matches multiple rules:').'<br />
+						<b>'.$this->l('This Tax Only:').'</b> '.$this->l('Will apply only this tax').'<br />
+						<b>'.$this->l('Combine:').'</b> '.$this->l('Combine taxes (eg: 10% + 5% => 15%)').'<br />
+						<b>'.$this->l('One After Another:').'</b> '.$this->l('Apply taxes one after another (eg: 100€ + 10% => 110€ + 5% => 115.5€)'
 					)
 				),
 				array(

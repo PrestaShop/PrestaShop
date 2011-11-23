@@ -30,9 +30,21 @@ $(function() {
 });
 </script>
 
-{if isset($features) || isset($categories) || isset($products) || isset($customers)}
-	<h2>{l s='Search results'} :</h2>
+{if $show_toolbar}
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+				<div class="pageTitle">
+				<h3>
+					{block name=pageTitle}
+						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+					{/block}
+				</h3>
+				</div>
+		</div>
+	</div>
 {/if}
+
 {if isset($features)}
 	{if !$features}
 		<h3>{l s='No features matching your query'} : {$query}</h3>
