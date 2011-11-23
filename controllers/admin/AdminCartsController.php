@@ -183,179 +183,207 @@ class AdminCartsController extends AdminController
 
 	public function ajaxPreProcess()
 	{
-		$id_customer = (int)Tools::getValue('id_customer');
-		$customer = new Customer((int)$id_customer);
-		$this->context->customer = $customer;
-		$id_cart = (int)Tools::getValue('id_cart');
-		if (!$id_cart)
-			$id_cart = $customer->getLastCart();
-		$this->context->cart = new Cart((int)$id_cart);
-		if (!$this->context->cart->id_customer)
-			$this->context->cart->id_customer = $id_customer;
-		if ($this->context->cart->OrderExists())
-			return;
-		if (!$this->context->cart->id_shop)
-			$this->context->cart->id_shop = (int)$this->context->shop->id;
-		if (!$this->context->cart->id_lang)
-			$this->context->cart->id_lang = (($id_lang = (int)Tools::getValue('id_lang')) ? $id_lang : Configuration::get('PS_LANG_DEFAULT'));
-		if (!$this->context->cart->id_currency)
-			$this->context->cart->id_currency = (($id_currency = (int)Tools::getValue('id_currency')) ? $id_currency : Configuration::get('PS_CURRENCY_DEFAULT'));
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$id_customer = (int)Tools::getValue('id_customer');
+			$customer = new Customer((int)$id_customer);
+			$this->context->customer = $customer;
+			$id_cart = (int)Tools::getValue('id_cart');
+			if (!$id_cart)
+				$id_cart = $customer->getLastCart();
+			$this->context->cart = new Cart((int)$id_cart);
+			if (!$this->context->cart->id_customer)
+				$this->context->cart->id_customer = $id_customer;
+			if ($this->context->cart->OrderExists())
+				return;
+			if (!$this->context->cart->id_shop)
+				$this->context->cart->id_shop = (int)$this->context->shop->id;
+			if (!$this->context->cart->id_lang)
+				$this->context->cart->id_lang = (($id_lang = (int)Tools::getValue('id_lang')) ? $id_lang : Configuration::get('PS_LANG_DEFAULT'));
+			if (!$this->context->cart->id_currency)
+				$this->context->cart->id_currency = (($id_currency = (int)Tools::getValue('id_currency')) ? $id_currency : Configuration::get('PS_CURRENCY_DEFAULT'));
 
-		$addresses = $customer->getAddresses((int)$this->context->cart->id_lang);
-		$id_address_delivery = (int)Tools::getValue('id_address_delivery');
-		$id_address_invoice = (int)Tools::getValue('id_address_delivery');
+			$addresses = $customer->getAddresses((int)$this->context->cart->id_lang);
+			$id_address_delivery = (int)Tools::getValue('id_address_delivery');
+			$id_address_invoice = (int)Tools::getValue('id_address_delivery');
 
-		if (!$this->context->cart->id_address_invoice && isset($addresses[0]))
-			$this->context->cart->id_address_invoice = (int)$addresses[0]['id_address'];
-		else if ($id_address_invoice)
-			$this->context->cart->id_address_invoice = (int)$id_address_invoice;
-		if (!$this->context->cart->id_address_delivery && isset($addresses[0]))
-			$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
-		else if ($id_address_delivery)
-			$this->context->cart->id_address_delivery = (int)$id_address_delivery;
-		$this->context->cart->save();
-		$currency = new Currency((int)$this->context->cart->id_currency);
-		$this->context->currency = $currency;
-
+			if (!$this->context->cart->id_address_invoice && isset($addresses[0]))
+				$this->context->cart->id_address_invoice = (int)$addresses[0]['id_address'];
+			else if ($id_address_invoice)
+				$this->context->cart->id_address_invoice = (int)$id_address_invoice;
+			if (!$this->context->cart->id_address_delivery && isset($addresses[0]))
+				$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
+			else if ($id_address_delivery)
+				$this->context->cart->id_address_delivery = (int)$id_address_delivery;
+			$this->context->cart->save();
+			$currency = new Currency((int)$this->context->cart->id_currency);
+			$this->context->currency = $currency;
+		}
 	}
 
 	public function ajaxProcessDeleteProduct()
 	{
-		$errors = array();
-		if (!$id_product = (int)Tools::getValue('id_product') || !$id_product_attribute = (int)Tools::getValue('id_product_attribute'))
-			$errors[] = Tools::displayError('Invalid product');
-		if (count($errors))
-			die(Tools::jsonEncode($errors));
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$errors = array();
+			if (!$id_product = (int)Tools::getValue('id_product') || !$id_product_attribute = (int)Tools::getValue('id_product_attribute'))
+				$errors[] = Tools::displayError('Invalid product');
+			if (count($errors))
+				die(Tools::jsonEncode($errors));
 
-		if ($this->context->cart->deleteProduct($id_product, $id_product_attribute))
-			echo Tools::jsonEncode($this->ajaxReturnVars());
+			if ($this->context->cart->deleteProduct($id_product, $id_product_attribute))
+				echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
 	}
 
 	public function ajaxProcessUpdateQty()
 	{
-		$errors = array();
-		if (!$this->context->cart->id)
-			return;
-		if ($this->context->cart->OrderExists())
-			$errors[] = Tools::displayErrors('An order already placed with this cart');
-		else if (!$id_product = (int)Tools::getValue('id_product') OR (!$product = new Product((int)$id_product, true, $this->context->language->id)))
-			$errors[] = Tools::displayError('Invalid product');
-		else if (!$qty = Tools::getValue('qty') || $qty == 0)
-			$errors[] = Tools::displayError('Invalid quantity');
-		if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
+		if ($this->tabAccess['edit'] === '1')
 		{
-			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
-				$errors[] = Tools::displayError('There is not enough product in stock');
-		}
-		else
-			if (!$product->checkQty((int)$qty))
-				$errors[] = Tools::displayError('There is not enough product in stock');
-		if (!$id_customization = (int)Tools::getValue('id_customization', 0) && !$product->hasAllRequiredCustomizableFields())
-			$errors[] = Tools::displayError('Please fill in all required fields');
-		$this->context->cart->save();
-		if (!count($errors))
-		{
-			if ((int)$qty < 0)
+			$errors = array();
+			if (!$this->context->cart->id)
+				return;
+			if ($this->context->cart->OrderExists())
+				$errors[] = Tools::displayErrors('An order already placed with this cart');
+			else if (!$id_product = (int)Tools::getValue('id_product') OR (!$product = new Product((int)$id_product, true, $this->context->language->id)))
+				$errors[] = Tools::displayError('Invalid product');
+			else if (!$qty = Tools::getValue('qty') || $qty == 0)
+				$errors[] = Tools::displayError('Invalid quantity');
+			if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
 			{
-				$qty = str_replace('-', '', $qty);
-				$operator = 'down';
+				if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
+					$errors[] = Tools::displayError('There is not enough product in stock');
 			}
 			else
-				$operator = 'up';
-			if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, 0, $operator)))
-				$errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
+				if (!$product->checkQty((int)$qty))
+					$errors[] = Tools::displayError('There is not enough product in stock');
+			if (!$id_customization = (int)Tools::getValue('id_customization', 0) && !$product->hasAllRequiredCustomizableFields())
+				$errors[] = Tools::displayError('Please fill in all required fields');
+			$this->context->cart->save();
+			if (!count($errors))
+			{
+				if ((int)$qty < 0)
+				{
+					$qty = str_replace('-', '', $qty);
+					$operator = 'down';
+				}
+				else
+					$operator = 'up';
+				if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, 0, $operator)))
+					$errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
+			}
+
+			echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
 		}
-
-		echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
-
 	}
 
 	public function ajaxProcessUpdateCarrier()
 	{
-		if (Validate::isBool(($recyclable = (int)Tools::getValue('recyclable'))))
-			$this->context->cart->recyclable = $recyclable;
-		if (Validate::isBool(($gift = (int)Tools::getValue('gift'))))
-			$this->context->cart->gift = $gift;
-		if (Validate::isMessage(($gift_message = pSQL(Tools::getValue('gift_message')))))
-			$this->context->cart->gift_message = $gift_message;
-		$this->context->cart->save();
-		echo Tools::jsonEncode($this->ajaxReturnVars());
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (Validate::isBool(($recyclable = (int)Tools::getValue('recyclable'))))
+				$this->context->cart->recyclable = $recyclable;
+			if (Validate::isBool(($gift = (int)Tools::getValue('gift'))))
+				$this->context->cart->gift = $gift;
+			if (Validate::isMessage(($gift_message = pSQL(Tools::getValue('gift_message')))))
+				$this->context->cart->gift_message = $gift_message;
+			$this->context->cart->save();
+			echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
 	}
 
 	public function ajaxProcessUpdateCurrency()
 	{
-		$currency = new Currency((int)Tools::getValue('id_currency'));
-		if (Validate::isLoadedObject($currency) && !$currency->deleted && $currency->active)
+		if ($this->tabAccess['edit'] === '1')
 		{
-			$this->context->cart->id_currency = (int)$currency->id;
-			$this->context->cart->save();
+			$currency = new Currency((int)Tools::getValue('id_currency'));
+			if (Validate::isLoadedObject($currency) && !$currency->deleted && $currency->active)
+			{
+				$this->context->cart->id_currency = (int)$currency->id;
+				$this->context->cart->save();
+			}
+			echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
-		echo Tools::jsonEncode($this->ajaxReturnVars());
 	}
 	public function ajaxProcessUpdateLang()
 	{
-		$lang = new Language((int)Tools::getValue('id_lang'));
-		if (Validate::isLoadedObject($lang) && $lang->active)
+		if ($this->tabAccess['edit'] === '1')
 		{
-			$this->context->cart->id_lang = (int)$lang->id;
-			$this->context->cart->save();
+			$lang = new Language((int)Tools::getValue('id_lang'));
+			if (Validate::isLoadedObject($lang) && $lang->active)
+			{
+				$this->context->cart->id_lang = (int)$lang->id;
+				$this->context->cart->save();
+			}
+			echo Tools::jsonEncode($this->ajaxReturnVars());
 		}
-		echo Tools::jsonEncode($this->ajaxReturnVars());
 	}
 	public function ajaxProcessDuplicateOrder()
 	{
-		$errors = array();
-		if (!$id_order = Tools::getValue('id_order'))
-			$errors[] = Tools::displayErrors('Invalid order');
-		$cart = Cart::getCartByOrderId($id_order);
-		$new_cart = $cart->duplicate();
-		if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
-			$errors[] = Tools::displayError('The order cannot be renewed');
-		else if (!$new_cart['success'])
-			$errors[] = Tools::displayError('The order cannot be renewed');
-		else
+		if ($this->tabAccess['edit'] === '1')
 		{
-			$this->context->cart = $new_cart['cart'];
-			echo Tools::jsonEncode($this->ajaxReturnVars());
+			$errors = array();
+			if (!$id_order = Tools::getValue('id_order'))
+				$errors[] = Tools::displayErrors('Invalid order');
+			$cart = Cart::getCartByOrderId($id_order);
+			$new_cart = $cart->duplicate();
+			if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
+				$errors[] = Tools::displayError('The order cannot be renewed');
+			else if (!$new_cart['success'])
+				$errors[] = Tools::displayError('The order cannot be renewed');
+			else
+			{
+				$this->context->cart = $new_cart['cart'];
+				echo Tools::jsonEncode($this->ajaxReturnVars());
+			}
 		}
 
 	}
 
 	public function ajaxProcessDeleteVoucher()
 	{
-		if ($this->context->cart->removeCartRule((int)Tools::getValue('id_cart_rule')))
-			echo Tools::jsonEncode($this->ajaxReturnVars());
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if ($this->context->cart->removeCartRule((int)Tools::getValue('id_cart_rule')))
+				echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
 	}
 
 	public function ajaxProcessAddVoucher()
 	{
-		$errors = array();
-		$customer = new Customer((int)$this->context->cart->id_customer);
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$errors = array();
+			$customer = new Customer((int)$this->context->cart->id_customer);
 
-		if (!$id_cart_rule = Tools::getValue('id_cart_rule') OR !$cart_rule = new CartRule((int)$id_cart_rule))
-			$errors[] = Tools::displayError('Invalid voucher');
-		else if ($err = $cart_rule->checkValidity($this->context))
-			$errors[] = $err;
-		if (!count($errors))
-			if (!$this->context->cart->addCartRule((int)$cart_rule->id))
-				$errors[] = Tools::displayError('Can\'t add the voucher');
-		echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
+			if (!$id_cart_rule = Tools::getValue('id_cart_rule') OR !$cart_rule = new CartRule((int)$id_cart_rule))
+				$errors[] = Tools::displayError('Invalid voucher');
+			else if ($err = $cart_rule->checkValidity($this->context))
+				$errors[] = $err;
+			if (!count($errors))
+				if (!$this->context->cart->addCartRule((int)$cart_rule->id))
+					$errors[] = Tools::displayError('Can\'t add the voucher');
+			echo Tools::jsonEncode(array_merge($this->ajaxReturnVars(), array('errors' => $errors)));
+		}
 	}
 
 	public function ajaxProcessUpdateAddresses()
 	{
-		if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) &&
-			$address_delivery = new Address((int)$id_address_delivery) &&
-			$address_delivery->id_customer = $this->context->cart->id_customer)
-			$this->context->cart->id_address_delivery = (int)$address_delivery->id;
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) &&
+				$address_delivery = new Address((int)$id_address_delivery) &&
+				$address_delivery->id_customer = $this->context->cart->id_customer)
+				$this->context->cart->id_address_delivery = (int)$address_delivery->id;
 
-		if (($id_address_invoice = (int)Tools::getValue('id_address_invoice')) &&
-			$address_invoice = new Address((int)$id_address_invoice) &&
-			$address_invoice->id_customer = $this->context->cart->id_customer)
-			$this->context->cart->id_address_invoice = (int)$address_invoice->id;
-		$this->context->cart->save();
+			if (($id_address_invoice = (int)Tools::getValue('id_address_invoice')) &&
+				$address_invoice = new Address((int)$id_address_invoice) &&
+				$address_invoice->id_customer = $this->context->cart->id_customer)
+				$this->context->cart->id_address_invoice = (int)$address_invoice->id;
+			$this->context->cart->save();
 
-		echo Tools::jsonEncode($this->ajaxReturnVars());
+			echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
 	}
 
 	protected function getCartSummary()

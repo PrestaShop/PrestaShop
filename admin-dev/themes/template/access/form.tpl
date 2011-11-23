@@ -51,7 +51,7 @@
 			perfect_access_js_gestion(this, perm, id_tab, tabsize, tabnumber, table);
 			
 			$.ajax({
-				url: "ajax.php",
+				url: "{$link->getAdminLink('AdminAccess')}",
 				cache: false,
 				data : {
 					ajaxMode : '1',
@@ -59,7 +59,10 @@
 					id_profile: id_profile,
 					perm: perm,
 					enabled: enabled,
-					submitAddAccess: '1'
+					submitAddAccess: '1',
+					action: 'updateAccess',
+					ajax: '1',
+					token: '{getAdminToken tab='AdminAccess'}',
 				},
 				success : function(res,textStatus,jqXHR)
 				{
@@ -96,7 +99,7 @@
 				});
 
 			$.ajax({
-				url: "ajax.php",
+				url: "{$link->getAdminLink('AdminAccess')}",
 				cache: false,
 				data : {
 					ajaxMode: '1',
@@ -105,6 +108,9 @@
 					enabled: enabled,
 					id_profile: id_profile,
 					changeModuleAccess: '1',
+					action: 'updateModuleAccess',
+					ajax: '1',
+					token: '{getAdminToken tab='AdminAccess'}',
 				},
 				success : function(res,textStatus,jqXHR)
 				{
