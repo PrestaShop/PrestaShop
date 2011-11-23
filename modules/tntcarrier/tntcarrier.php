@@ -52,7 +52,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2';
+		$this->version = '1.2.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 
@@ -714,10 +714,10 @@ class TntCarrier extends CarrierModule
 		$charge = Tools::getValue('tnt_carrier_'.$cat.'_charge');
 		
 		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'tnt_carrier_'.$cat.'` 
-									SET `'.$cat.'_min` = "'.(float)($info_min).'",
-									`'.$cat.'_max` = "'.(float)($info_max).'",
+									SET `'.bqSQL($cat).'_min` = "'.(float)($info_min).'",
+									`'.bqSQL($cat).'_max` = "'.(float)($info_max).'",
 									`additionnal_charges` = "'.(float)$charge.'"
-									WHERE `id_'.$cat.'` = '.(int)($id).'');
+									WHERE `id_'.bqSQL($cat).'` = '.(int)($id).'');
 									
 		$this->_html .= $this->displayConfirmation($this->l('Service updated'));
 	}
