@@ -28,7 +28,7 @@
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
 			<li>
-				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}">
+				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}>
 					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>
 					<div>{$btn.desc}</div>
 				</a>
