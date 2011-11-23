@@ -25,12 +25,12 @@
 *}
 {if isset($json)}
 {
-	status:{$status},
-	conf:{$json},
-	informations:{$informations},
-	error:{$errors},
-	warnings:{$warnings},
-	content:{$page}
+	"status":"{$status}",
+	"confirmations" : {$confirmations},
+	"informations" : {$informations},
+	"error" : {$errors},
+	"warnings" : {$warnings},
+	"content" : {$page}
 }
 {else}
 
@@ -67,8 +67,8 @@
 
 	{if isset($confirmations) && count($confirmations) && $confirmations}
 		<div class="conf" style="display:block;">
-			{foreach $confirmations as $conf}
-				{$conf}<br />
+			{foreach $confirmations as $confirm}
+				{$confirm}<br />
 			{/foreach}
 		</div><br />
 	{/if}
