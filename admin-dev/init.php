@@ -37,7 +37,7 @@ if (isset($_GET['logout']))
 	$context->employee->logout();
 
 if (!isset($context->employee) || !$context->employee->isLoggedBack())
-	Tools::redirectAdmin('login.php?redirect='.$_SERVER['REQUEST_URI']);
+	Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
 
 // Set current index
 $currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');

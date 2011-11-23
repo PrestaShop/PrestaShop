@@ -30,7 +30,7 @@ define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 if (!Context::getContext()->employee->isLoggedBack())
-	Tools::redirectAdmin('login.php');
+	Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
 
 $tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminBackup'));
 
