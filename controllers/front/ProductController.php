@@ -87,7 +87,7 @@ class ProductControllerCore extends FrontController
 			 */
 			if (!$this->product->isAssociatedToShop()
 			|| ((!$this->product->active && ((Tools::getValue('adtoken') != Tools::encrypt('PreviewProduct'.$this->product->id))
-			|| !file_exists(dirname(__FILE__).'/../'.Tools::getValue('ad').'/ajax.php')))))
+			|| !file_exists(_PS_ROOT_DIR_.'/'.Tools::getValue('ad').'/ajax.php')))))
 			{
 				header('HTTP/1.1 404 page not found');
 				$this->errors[] = Tools::displayError('Product is no longer available.');
