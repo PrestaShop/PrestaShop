@@ -1006,7 +1006,7 @@ class AdminControllerCore extends Controller
 		{
 			$this->context->smarty->assign(array(
 				'json' => true,
-				'status' => $this->status, 
+				'status' => $this->status,
 			));
 		}
 		$this->layout = 'layout-ajax.tpl';
@@ -2060,7 +2060,7 @@ class AdminControllerCore extends Controller
 				if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
 					$this->_errors[] = $this->l('the field').
 						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
-						$this->l('is required ZZZ');
+						$this->l('is required');
 
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] as $field_lang)
