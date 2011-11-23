@@ -208,6 +208,14 @@ form#product_form, form#access_form, form#cart_rule_form {   background-color:#e
 .filter-module .select-filter { float:left;}
 .filter-module .button-filter { float:right;}
 
+/*FILTER STOCK*/
+.filter-stock { background-color:#ebedf4; border:1px solid #c2c4d9; margin-bottom:15px; padding:10px; display:block; min-height:25px;}
+.filter-stock #stock_cover {float:left; margin-right:30px;}
+.filter-stock #stock_instant_state {float:left; margin-right:30px;}
+.filter-stock label {width:auto;}
+.filter-stock .select-filter { float:left;}
+.filter-stock .button-filter { float:right;}
+
 /*ADDONS LOGIN*/
 #addons_login_div { background: #EBEDF4 url(lock.png) no-repeat scroll left 5px;}
 #addons_login_div form#addons_login_form { float:right;}
