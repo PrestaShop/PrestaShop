@@ -24,6 +24,304 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.1 - 10642 (2011-11-24)  #
+####################################
+
+	Added Features:
+
+	[+] Project : Vouchers are now replaced by cart rules
+	[+] Project : adding Features detachables in order to improve performance
+
+	[+] FO : Messages in order detail are now stored in the Customer Service (SAV)
+	[+] FO : add files for combination
+	[+] FO : add module-moduleName-pageName ID on body of module pages
+	[+] FO : don't send email if there's no file associated to the virtual product
+	[+] FO : new method Category::getAllChildren() (the return value is an array, but can evolve to a collection
+	[+] FO : you can access to a product combination with its own url (e.g: http://www.myshop.com/index.php?controller=product&id_product=1#disk-space=16go&color=yellow)
+
+	[+] BO : #PSFV-94 - AddonsAccount and AddonsCatalog
+	[+] BO : #PSFV-94 - AdminContact is now an AdminController
+	[+] BO : #PSFV-94 - AdminLocalization is now an AdminController
+	[+] BO : #PSFV-94 - AdminProduct form features
+	[+] BO : #PSFV-94 - AdminScenes is now an AdminController
+	[+] BO : #PSFV-94 - AdminSubdomains is now a Controller
+	[+] BO : #PSFV-94 - AdminThemes is now an AdminController
+	[+] BO : #PSFV-94 - AdminWebserviceController
+	[+] BO : #PSFV-94 - invalid token is now correctly handled. its uses initCursedPage
+	[+] BO : #PSFV-94 - new controller AdminTags, thanks again to Julien Breux \!
+	[+] BO : #PSFV-94 : new class AdminNotFoundControllerCore
+	[+] BO : #PSFV-94 AdminCounty is integrated to AdminTaxRules, thanks to Franck
+	[+] BO : #PSFV-94 AdminCustomerThreads is now a controller
+	[+] BO : #PSFV-94 AdminCustomerThreads is now a controller.
+	[+] BO : #PSFV-94 AdminGenerator is now a controller
+	[+] BO : Add Accounting Management
+	[+] BO : Add Multiple Ajax Upload Image on AdminProduct
+	[+] BO : Add translations for notifications messages
+	[+] BO : Allows to get more details on the notification (customer name, total paid real, etc...)
+	[+] BO : Back-office search use now AdminController.php
+	[+] BO : CB-30 - Customer receive an email when a voucher is created in BO
+	[+] BO : New AdminController system, including smarty backoffice, thanks to Raphael and Thomas
+	[+] BO : New module tab interface - #PSFV-94
+	[+] BO : Notification autorefresh can be deactivated
+	[+] BO : add SQL manager
+	[+] BO : add new feature, Order edition
+	[+] BO : added action button in autocomplete module list
+	[+] BO : added new input type tags
+	[+] BO : added ssl option for imap sync in SAV
+	[+] BO : adminTab Groups is now a convert to a AdminController
+	[+] BO : fixed bug on category tree view
+	[+] BO : if json, ajax-layout.tpl can generate json with conf, _errors, warnings, informations and page var
+	[+] BO : login and lost password is now in ajax and convert in AdminController
+	[+] BO : new backoffice style and icons
+	[+] BO : new javascript function doAdminAjax to simplify uses of ajax request (the prototype of this function can evolve before beta)
+	[+] BO : new method $link->getAdminLink($controller), to build admin url with token
+	[+] BO : new method initToolbar() available in AdminController
+	[+] BO : now AdminProducts and AdminCategories are separated from AdminCatalog
+	[+] BO : now Back-office has meta-title by controller
+	[+] BO : now tiny_mce can be loaded 'onclick' instead of 'onload'
+	[+] BO : now you can choose type of attribute group (select , color, radio)
+	[+] BO : now you can sync imap mailbox with the Customer Service (SAV)
+	[+] BO : you can now set detailed permissions for each module in the back end
+
+	[+] Classes : Helper::renderAdminCategorieTree() have new params "$use_search" to add a input search
+	[+] Classes : Helper::renderAdminCategorieTree() now use addJs to include treeView javascript
+	[+] Classes : Media::getJqueryPluginPath() - added new parameter $folder
+	[+] Classes : added new class Media => It contains all the method related to media like CSS, JS
+	[+] Classes : added new method Media::addJquery(), Media::addJqueryUI(), Media::addJqueryPlugin()
+
+	[+] MO : Added HomeSlider
+	[+] MO : Adding the favoriteproducts module - Part1
+	[+] MO : Adding the favoriteproducts module - Part2
+	[+] MO : Update Moneybookers to use the new system to store payment cc details
+	[+] MO : Update Ogone to use the new system to store payment cc details
+	[+] MO : Update Paypal to use the new system to store payment cc details
+	[+] MO : Uptdate module to store payment cc information
+	[+] MO : multi-shop allow the removal of a shop if it has no order and no customer
+
+	[+] PDF : TCPDF Library
+
+	Improved/changed features:
+
+	[*] PROJECT : New Module API (part 1)
+	[*] Project : Autoload is now able to load classes from /classes or /override subdirectories
+	[*] Project : Helper multiple select
+	[*] Project : OPC and Guest Checkout are now enabled by default
+	[*] Project : ObjectModel die2PrestashopException
+	[*] Project : US + CA TaxSystem
+	[*] Project : Version 2 of Smarty has been removed for using only version 3
+
+	[*] FO : $currency->prefix and $currency->suffix are now a convenient shortcut for displaying price
+	[*] FO : Add gender_type "neutral"
+	[*] FO : Create virtual products with no associated file
+	[*] FO : Hide the download link and download icon if the virtual product do not have files associated with it
+	[*] FO : Hide the download link if the virtual product do not have files associated with it
+	[*] FO : Register process enhancement
+	[*] FO : Shop cart visible on payment method choice
+	[*] FO : Update filename if product has combinations (and files associated to them)
+	[*] FO : Update filename if product has combinations (and files associated to them)
+	[*] FO : change the download link for files associated to product attributes
+	[*] FO : change the download link for files associated to product attributes
+	[*] FO : combination link from product page are now the same as the combination link from blocklayered
+	[*] FO : display initial price in the cart when a specific price is applied to a product
+	[*] FO : get the product attribute id for download link
+	[*] FO : improved tab in product page
+	[*] FO : when an user is created in one step account creation, he is redirected to the cart if the cart is not empty, or in the my-account page if not.
+
+	[*] BO : #PSFV-94 - // Refactoring AdminAddresses, form.tpl is now extendable
+	[*] BO : #PSFV-94 - added AdminAttributeGeneratorController
+	[*] BO : #PSFV-94 - added AdminAttributesGroupController
+	[*] BO : #PSFV-94 - added AdminBackupController and some changes to AdminController
+	[*] BO : #PSFV-94 - added AdminCMSContentController, AdminCMSController, AdminCMSCategoriesController
+	[*] BO : #PSFV-94 - added AdminContactsController, fix flags display for option lists
+	[*] BO : #PSFV-94 - added AdminCurrencuesController
+	[*] BO : #PSFV-94 - added AdminDbController
+	[*] BO : #PSFV-94 - added AdminEmailsController
+	[*] BO : #PSFV-94 - added AdminGeolocationController, added options.tpl override
+	[*] BO : #PSFV-94 - added AdminInvoicesController and missing geolocation template
+	[*] BO : #PSFV-94 - added AdminLogsController and changed initX() functions to return their result
+	[*] BO : #PSFV-94 - added AdminMetaController
+	[*] BO : #PSFV-94 - added AdminModulesPositionsController
+	[*] BO : #PSFV-94 - added AdminPPreferencesController
+	[*] BO : #PSFV-94 - added AdminPaymentController
+	[*] BO : #PSFV-94 - added AdminProfilesController
+	[*] BO : #PSFV-94 - added AdminRangePriceController
+	[*] BO : #PSFV-94 - added AdminRangeWeightController
+	[*] BO : #PSFV-94 - added AdminReferrersController
+	[*] BO : #PSFV-94 - added AdminReturnController
+	[*] BO : #PSFV-94 - added AdminSearchConfController
+	[*] BO : #PSFV-94 - added AdminShippingController
+	[*] BO : #PSFV-94 - added AdminSlipController
+	[*] BO : #PSFV-94 - added AdminSuppliersController
+	[*] BO : #PSFV-94 - added AdminTabsController
+	[*] BO : #PSFV-94 - added AdminTaxesController + HelperList improvements
+	[*] BO : #PSFV-94 - added AdminTranslationsController
+	[*] BO : #PSFV-94 - added AdminZonesController
+	[*] BO : #PSFV-94 - adminProducts > informations, toolbar and css (starting new design integration (thanks to vuThe)
+	[*] BO : #PSFV-94 - changes to helpers
+	[*] BO : #PSFV-94 - changes to helpers
+	[*] BO : #PSFV-94 - forms now correctly use admin.js::displayFlags function. attributeLang attribute is deprecated in forms
+	[*] BO : #PSFV-94 - improvement on admin css, new icon for toolbar
+	[*] BO : #PSFV-94 - more AdminImagesController refactoring
+	[*] BO : #PSFV-94 - new controller for AdminOrders
+	[*] BO : #PSFV-94 - remove AdminImages.php
+	[*] BO : Add Style Multiple Upload
+	[*] BO : Add reduction groups in the categories, and bug fix: reduction that is not an integer or a percentage (TD001 - TD002 - TD003)
+	[*] BO : Admin Modules now works in Ajax :)
+	[*] BO : AdminModules improved performance
+	[*] BO : AdminTaxRulesGroup country select size
+	[*] BO : Allows to get more details on the notification (customer name, total paid real, etc...)
+	[*] BO : Carriers are now sortable by position or price
+	[*] BO : Carriers can now be sorted ascending or descending
+	[*] BO : Features are now sortable.
+	[*] BO : Gender - Allow image resizing
+	[*] BO : Modules can now be authorized or not by client group
+	[*] BO : New module interface tab now accept logo.png
+	[*] BO : New module interface tab now all html is in tpl
+	[*] BO : New module interface tab now connected to PrestaShop Addons
+	[*] BO : Partial refund - part 3
+	[*] BO : Product attributes are now sortable.
+	[*] BO : Removed size limit for image upload (BL006, CC136)
+	[*] BO : Rights verification for multi-shop
+	[*] BO : Rights verification for multi-shop : delete info()
+	[*] BO : Shows more details for each notification
+	[*] BO : Shows more details for each notification
+	[*] BO : Taxes are no longer stored in the order details row
+	[*] BO : Taxes are now historized
+	[*] BO : Update Translation Error for Multiple Upload
+	[*] BO : You have now 3 new default groups. Unidentified group, guest group, and customer group.
+	[*] BO : add an available date when product is out of stock
+	[*] BO : added right of multi-shop
+	[*] BO : carriers are now sortable by position
+	[*] BO : change a number of character by short description(BL007)
+	[*] BO : change span.hint
+	[*] BO : groups attributes are now sortable
+	[*] BO : helper/options has now a block "after" to append anything you need
+	[*] BO : moved 2 javascript functions to display success or error on AdminAccess are now available everywhere (thanks to Loic)
+	[*] BO : now if you click on an AdminProduct sub tab (combinations, prices) already selected, this will reload it.
+	[*] BO : optimization Upgrader and Admin Home
+	[*] BO : optimized ConfigurationTest class
+	[*] BO : product images can now be dragged and dropped to change position (CC021)
+	[*] BO : refactoring AdminAccess
+	[*] BO : when a group is created, every category are linked to this group
+
+	[*] Classes : addJqueryUI automaticaly add css
+	[*] Classes : improve performances of "Feature detachable" feature
+
+	[*] CORE : AddressFormat, Add the possibility to doesn't specify a patternRules (avoid type) and fix empty content
+	[*] Core : Specific prices can now be applied to combinations
+
+	[*] MO : Review of the productcomments module - Part1
+	[*] MO : Review of the productcomments module - Part2
+	[*] MO : Review of the productcomments module - Part3
+	[*] MO : SendToAFriend - 1.5 Supported / Pop-in instead of form
+	[*] MO : blockcms - Customizable footer
+	[*] MO : blocknewsletter : double opt-in
+	[*] MO : crossseling - Added hookShopingCart (uses all products in the cart)
+	[*] MO : crossseling - the main title now depends on the number of products in the cart
+	[*] MO : homeSlider - Added french translation
+	[*] MO : homeSlider - Added translations/changed size of URL and removed description from the required fields
+	[*] MO : homeSlider/SendToAFriend - Sandrine CSS
+	[*] MO : homeSlider: CSS/Button & productComments: CSS
+	[*] MO : newsletter : filter on  active only
+	[*] MO : productComments - It's now possible to delete comments, beside moderation
+	[*] MO : sendToAFriend
+
+	[*] PDF : PDF is now rendered by TCPDF throught HTML template
+
+	[*] LO : CA Taxes
+	[*] LO : FR now has a Corse Zone defined
+
+	Fixed bugs:
+
+	[-] PROJECT : Hooks alias are now used in Hook::getIdByName
+	[-] Project : Autoload now handle weird syntax (eg. class Product{)
+	[-] Project : index file is now regenerated when a class is removed from the override directory
+
+	[-] Installer : Fix country_to_timezone in last step
+	[-] Installer : Removed AdminCounty
+	[-] Installer : fix demo product insertion
+	[-] Installer : fix missing default tax_name in demo products creation
+	[-] Installer : missing field in customer_message table
+
+	[-] FO : "It is not safe to rely on the system's timezone ..." due to cookie use before timezone init
+	[-] FO : #PSCFI-3680 deleted an extraneous slash for the path of blockstore.css
+	[-] FO : Applied the context to the cart in the ParentOrderController::_setDefaultCarrierSelection() method
+	[-] FO : BugFix - Ajax error on editing address durring ordering process
+	[-] FO : Notice if blocknewsletter has been removed
+	[-] FO : Notice undefined tax_rate
+	[-] FO : Order history does not display order details
+	[-] FO : Removed deprecated function Tax::getProductTaxRate
+	[-] FO : TaxRulesTaxManager cache not refreshed
+	[-] FO : URL for page "Forgot your password" is not correct
+	[-] FO : Undefined method getOutOfStock
+	[-] FO : Undefined variable price
+	[-] FO : add to cart broken TaxCalculator::getTaxesRate => getTotalRate
+	[-] FO : ajax request to send message in order detail now use index.php?controller=order-detail
+	[-] FO : fixed bug on Feature detachable with product pack feature
+	[-] FO : fixed bug on Manufacturer and Supplier controller, missing variable
+	[-] FO : fixed small js error
+	[-] FO : not check if context employee exist
+
+	[-] BO : #PSFV-66 - Bad warnings "Currency not set"
+	[-] BO : AdminModule Addons Icon now appear in AutoComplete Search
+	[-] BO : AdminModules - Fix on GetModulesOnDisk and general ergonomy
+	[-] BO : AdminModules fix on Addons Connection
+	[-] BO : BugFix - Not possible to save a carrier
+	[-] BO : Error JS in TinyMce Plugin
+	[-] BO : Fixed bug in __construct() related to context
+	[-] BO : John Doe cart's address are incorrect!
+	[-] BO : Load customer and cart in AdminOrderController init to fix a bug with CancelProduct
+	[-] BO : Missing add one after another type in admintaxrulesgroup
+	[-] BO : Partial refund - part 4
+	[-] BO : fixed ajax file-upload request
+	[-] BO : fixed bug in method displayDate() to the class Tools
+	[-] BO : fixed bug with Search:indexation when editing product (id_shop was missing)
+	[-] BO : now you can really delete image in BO
+	[-] BO : removing the call to the property _listSkipDelete
+
+	[-] Classes : Fixed bug on Feature detachables and Customizations
+	[-] Classes : fix bug PSCFI-3367 - incorrect admin rights for created image folders
+	[-] Classes : fix dispatcher for FO
+	[-] Classes : fixed bug with displayAsDeprecated functions when not called from a class
+	[-] Classes : fixed image folders rights
+	[-] Classes : fixed small bug on CCC
+	[-] Classes : fixed sql error on Combination class
+
+	[-] MO : Duplicate condition
+	[-] MO : FavoriteProducts - Fixed link
+	[-] MO : FavoriteProducts - now adds/removes correctly products
+	[-] MO : Fix potential bug on carts for module Ogone
+	[-] MO : Fixed bug PSCFI-3940
+	[-] MO : Fixed productsComparison
+	[-] MO : HomeSlider
+	[-] MO : HomeSlider
+	[-] MO : HomeSlider - Added PS_USE_SQL_SLAVE
+	[-] MO : Replace ps_ by _DB_PREFIX_
+	[-] MO : TNT Carrier (1.1)
+	[-] MO : TNT Carrier (1.2)
+	[-] MO : Tnt Carrier (1.2.1) - Small fix
+	[-] MO : fixed FATAL error on layered navigation module
+	[-] MO : productComments - Fixed deprecated function
+	[-] MO : productComments - Fixed guest comments
+	[-] MO : productComments fixed
+	[-] MO : statsnewsletter - SQL error
+	[-] MO : stock :  error declaration interface
+
+	[-] WS : Move classes to /webservice
+
+	[-] PDF : TCPDF cache directory is now in PS_CACHE_DIR
+
+	[-] LO : Incorrect tax for Newfoundland
+	[-] LO : Undefined field description
+
+	Deprecated methods:
+
+	[~] FO : usage of $customizedDatas var in order-detail.tpl is now deprecated use $product.customizedDatas
+
+	[~] Deprecated : All method related to CCC has been moved in class Media
+
+
+####################################
 #   v1.5.0.0 - 7536 (2011-07-06)  #
 ####################################
 
