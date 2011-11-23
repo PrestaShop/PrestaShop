@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 10575 $
+*  @version  Release: $Revision: 7310 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -216,22 +216,22 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$('.edit_shipping_number_link').click(function() {
-		$(this).parent().find('.shipping_number_show').hide();
-		$(this).parent().find('.shipping_number_edit').show();
+	$('#edit_shipping_number_link').click(function() {
+		$('#shipping_number_show').hide();
+		$('#shipping_number_edit').show();
 		
-		$(this).parent().find('.edit_shipping_number_link').hide();
-		$(this).parent().find('.cancel_shipping_number_link').show();
+		$('#edit_shipping_number_link').hide();
+		$('#cancel_shipping_number_link').show();
 		
 		return false;
 	});
 	
-	$('.cancel_shipping_number_link').click(function() {
-		$(this).parent().find('.shipping_number_show').show();
-		$(this).parent().find('.shipping_number_edit').hide();
+	$('#cancel_shipping_number_link').click(function() {
+		$('#shipping_number_show').show();
+		$('#shipping_number_edit').hide();
 		
-		$(this).parent().find('.edit_shipping_number_link').show();
-		$(this).parent().find('.cancel_shipping_number_link').hide();
+		$('#edit_shipping_number_link').show();
+		$('#cancel_shipping_number_link').hide();
 		
 		return false;
 	});
@@ -575,60 +575,3 @@ function closeAddProduct()
 	$('#add_product_product_stock').html('0');
 	current_product = null;
 }
-
-
-
-
-
-
-
-/* Refund system script */
-var flagRefund = '';
-
-$(document).ready(function() {
-	$('.standard_refund').click(function() {
-
-		$.scrollTo('#refundForm', 1200, {offset: -100});
-
-		if (flagRefund == 'standard')
-		{
-			flagRefund = '';
-			$('.partial_refund_fields').hide();
-			$('.standard_refund_fields').hide();
-		}
-		else
-		{
-			flagRefund = 'standard';
-			$('.partial_refund_fields').hide();
-			$('.standard_refund_fields').fadeIn();
-		}
-		
-		return false;
-	});
-
-	$('.partial_refund').click(function() {
-
-		$.scrollTo('#refundForm', 1200, {offset: -100});
-
-		if (flagRefund == 'partial')
-		{
-			flagRefund = '';
-			$('.partial_refund_fields').hide();
-			$('.standard_refund_fields').hide();
-		}
-		else
-		{
-			flagRefund = 'partial';
-			$('.standard_refund_fields').hide();
-			$('.partial_refund_fields').fadeIn();
-		}
-	
-		return false;
-	});
-});
-
-
-
-
-
-

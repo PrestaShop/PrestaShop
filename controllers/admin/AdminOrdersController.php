@@ -435,7 +435,7 @@ class AdminOrdersControllerCore extends AdminController
 							{
 								$reinjectableQuantity = (int)($orderDetail->product_quantity) - (int)($orderDetail->product_quantity_reinjected);
 								$quantityToReinject = $qtyCancelProduct > $reinjectableQuantity ? $reinjectableQuantity : $qtyCancelProduct;
-								// TODO (Denis) : fix reinject quantities 
+								// TODO (Denis) : fix reinject quantities
 								// if (!Product::reinjectQuantities($orderDetail, $quantityToReinject))
 								//	$this->_errors[] = Tools::displayError('Cannot re-stock product').' <span class="bold">'.$orderDetail->product_name.'</span>';
 								// else
@@ -598,13 +598,91 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+		elseif (Tools::isSubmit('submitChangeCurrency'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				$order = new Order(Tools::getValue('id_order'));
+				if (!Validate::isLoadedObject($order))
+					throw new PrestashopException('Con\'t load Order object');
+
+				if (Tools::getValue('new_currency') != $order->id_currency && !$order->valid)
+				{
+					$old_currency = new Currency($order->id_currency);
+					$currency = new Currency(Tools::getValue('new_currency'));
+					if (!Validate::isLoadedObject($currency))
+						throw new PrestashopException('Can\'t load Currency object');
+
+					// Update order detail amount
+					foreach($order->getOrderDetailList() as $row)
+					{
+						$order_detail = new OrderDetail($row['id_order_detail']);
+						$order_detail->product_price = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
+						$order_detail->reduction_amount = Tools::convertPriceFull($order_detail->reduction_amount, $old_currency, $currency);
+						$order_detail->unit_price_tax_incl = Tools::convertPriceFull($order_detail->unit_price_tax_incl, $old_currency, $currency);
+						$order_detail->unit_price_tax_excl = Tools::convertPriceFull($order_detail->unit_price_tax_excl, $old_currency, $currency);
+						$order_detail->total_price_tax_incl = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
+						$order_detail->total_price_tax_excl = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
+						$order_detail->group_reduction = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
+						$order_detail->product_quantity_discount = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
+
+						$order_detail->update();
+					}
+
+					// Update order payment amount
+					foreach($order->getOrderPaymentCollection() as $payment)
+					{
+						$payment->id_currency = (int)$currency->id;
+						$payment->amount = Tools::convertPriceFull((float)$payment->amount, $old_currency, $currency);
+						$payment->update();
+					}
+
+					$order_carrier = Db::getInstance()->executeS('
+						SELECT *
+						FROM `'._DB_PREFIX_.'order_carrier`
+						WHERE `id_order` = '.(int)$order->id);
+					// Update order carrier amount
+					Db::getInstance()->execute('
+						UPDATE `'._DB_PREFIX_.'order_carrier`
+						SET `shipping_cost_tax_excl` = '.(float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_excl'], $old_currency, $currency).',
+						`shipping_cost_tax_incl` = '.(float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_incl'], $old_currency, $currency).'
+						WHERE `id_order` = '.(int)$order->id);
+
+					// Update order amount
+					$order->total_discounts = Tools::convertPriceFull($order->total_discounts, $old_currency, $currency);
+					$order->total_discounts_tax_incl = Tools::convertPriceFull($order->total_discounts_tax_incl, $old_currency, $currency);
+					$order->total_discounts_tax_excl = Tools::convertPriceFull($order->total_discounts_tax_excl, $old_currency, $currency);
+					$order->total_paid = Tools::convertPriceFull($order->total_paid, $old_currency, $currency);
+					$order->total_paid_tax_incl = Tools::convertPriceFull($order->total_paid_tax_incl, $old_currency, $currency);
+					$order->total_paid_tax_excl = Tools::convertPriceFull($order->total_discounts_tax_excl, $old_currency, $currency);
+					$order->total_paid_real = Tools::convertPriceFull($order->total_paid_real, $old_currency, $currency);
+					$order->total_products = Tools::convertPriceFull($order->total_products, $old_currency, $currency);
+					$order->total_products_wt = Tools::convertPriceFull($order->total_products_wt, $old_currency, $currency);
+					$order->total_shipping = Tools::convertPriceFull($order->total_shipping, $old_currency, $currency);
+					$order->total_shipping_tax_incl = Tools::convertPriceFull($order->total_shipping_tax_incl, $old_currency, $currency);
+					$order->total_shipping_tax_excl = Tools::convertPriceFull($order->total_shipping_tax_excl, $old_currency, $currency);
+					$order->total_wrapping = Tools::convertPriceFull($order->total_wrapping, $old_currency, $currency);
+					$order->total_wrapping_tax_incl = Tools::convertPriceFull($order->total_wrapping_tax_incl, $old_currency, $currency);
+					$order->total_wrapping_tax_excl = Tools::convertPriceFull($order->total_wrapping_tax_excl, $old_currency, $currency);
+
+					// Update currency in order
+					$order->id_currency = $currency->id;
+
+					$order->update();
+				}
+				else
+					$this->_errors[] = Tools::displayError('You can\'t change the currency');
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 
 		parent::postProcess();
 	}
 
 	public function initView()
 	{
-		$order = $this->loadObject();
+		$order = new Order(Tools::getValue('id_order'));
 		if (!Validate::isLoadedObject($order))
 			throw new PrestashopException('object can\'t be loaded');
 
@@ -847,7 +925,7 @@ class AdminOrdersControllerCore extends AdminController
 			$cart_rule->add();
 
 			$cart->addCartRule($cart_rule->id);
-			//$order->addCartRule($cart_rule->id, $cart_rule->name, $cart_rule->getContextualValue(true));
+			$order->addCartRule($cart_rule->id, $cart_rule->name, $cart_rule->getContextualValue(true));
 		}
 
 		// If order is valid, we can create a new invoice or edit an existing invoice
