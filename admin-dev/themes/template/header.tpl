@@ -31,6 +31,11 @@
 		<title>{$meta_title} - PrestaShop&trade;</title>
 		{if $display_header}
 			<script type="text/javascript">
+				var class_name = '{$class_name}';
+				var iso_user = '{$iso_user}';
+				var country_iso_code = '{$country_iso_code}';
+				var _PS_VERSION_ = '{$smarty.const._PS_VERSION_}';
+				
 				var helpboxes = {$help_box};
 				var roundMode = {$round_mode};
 				{if isset($shop_context)}
@@ -72,22 +77,8 @@
 			<script type="text/javascript" src="{$js_uri}"></script>
 			{/foreach}
 		{/if}
-		{if $display_header}
-			<script type="text/javascript">
-				$(function() {
-					$.ajax({
-						type: 'POST',
-						url: 'ajax.php',
-						data: 'helpAccess=1&item={$class_name}&isoUser={$iso_user}&country={$country_iso_code}&version={$version}',
-						async : true,
-						success: function(msg) {
-							$("#help-button").html(msg);
-							$("#help-button").fadeIn("slow");
-						}
-					});
-				});
-			</script>
-		{/if}		<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
+	
+		<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
 		{if $display_header}
 			{$HOOK_HEADER}
 		{/if}
