@@ -112,11 +112,12 @@ input:focus, textarea:focus {
 /* ERROR */
 
 .error, #error {
-	margin: 0 30px 15px 30px;
+	margin: 0;
 	padding: 10px 15px;
 	border: 1px solid #EC9B9B;
 	background-color: #FAE2E3;
 	text-align: left;
+	border-radius:9px;
 }
 
 #error ol {

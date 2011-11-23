@@ -202,11 +202,21 @@ form#product_form, form#access_form, form#cart_rule_form {   background-color:#e
 
 
 /*FILTER MODULE*/
-.filter-module { background-color:#ebedf4; border:1px solid #c2c4d9; margin-top:10px; padding:10px; display:block; min-height:35px;}
+.filter-module { background-color:#ebedf4; border:1px solid #c2c4d9; margin-top:10px; padding:10px; display:block; min-height:25px;}
 .filter-module #filternameForm {float:left; margin-right:30px;}
 .filter-module label {width:auto;}
 .filter-module .select-filter { float:left;}
 .filter-module .button-filter { float:right;}
+
+/*ADDONS LOGIN*/
+#addons_login_div { background: #EBEDF4 url(lock.png) no-repeat scroll left 5px;}
+#addons_login_div form#addons_login_form { float:right;}
+#addons_login_div p {float:left; font-size:16px; color:#585A69; line-height:24px; text-shadow: 0 1px 0 #fff; margin:0; padding-left:25px;}
+#addons_login_div label {}
+#addons_login_div input { float:left; margin-right:10px;}
+#addons_login_div input#
+#addons_login_div input#username_addons { }
+
 
 /*SIDEBAR*/
 .sidebar { position:relative; float:left; width:220px; display:inline;}
@@ -241,8 +251,9 @@ form#product_form, form#access_form, form#cart_rule_form {   background-color:#e
 #moduleContainer .row-actions-module span a { font-size:12px;}
 #moduleContainer .button.uninstalled,
 #moduleContainer .button.installed { float:right; clear:both; margin-top:15px; font-size:12px;}
-
-
+#moduleContainer ul.listing-grid-module { position:relative; margin:0; padding:0;}
+#moduleContainer ul.listing-grid-module li { float:left; border:1px solid #ccc; width:400px; min-height:50px; margin:10px; padding:5px; border-radius:4px;}
+#moduleContainer ul.listing-grid-module li select { float:right;}
 /*FOOTER*/
 #footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
 #footer .footer_link, #footer .footer_link:hover {color:#D41958;}
