@@ -1227,7 +1227,7 @@ class OrderCore extends ObjectModel
 	{
 		// To generate a random reference, we first generate a random number
 		// This number is a rand concated with the current timestamp
-		return strtoupper(Tools::passwdGen(12)); // lol Max !
+		return strtoupper(Tools::passwdGen(9)); // lol Max !
 	}
 
 	public function orderContainProduct($id_product)
