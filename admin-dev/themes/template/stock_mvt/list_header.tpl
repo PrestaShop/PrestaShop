@@ -1,6 +1,7 @@
 {extends file="helper/list/list_header.tpl"}
-{block name=leadin}
-	{if count($list_warehouses) > 1}
+{block name=override_header}
+	{if count($list_warehouses) > 0}
+<div class="filter-stock">
 		<form type="get">
 			<label for="id_warehouse">{l s="Select a warehouse:"}</label>
 			<input type="hidden" name="controller" value="AdminStockMvt" />
@@ -12,4 +13,5 @@
 			</select>
 		</form>
 	{/if}
+</div>
 {/block}
