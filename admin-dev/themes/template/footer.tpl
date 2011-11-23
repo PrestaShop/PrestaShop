@@ -26,7 +26,7 @@
 
 					</div>
 				</div>
-{if $display_footer}
+		{if $display_footer}
 				{$HOOK_FOOTER}
 				<div id="footer">
 					<div style="float:left;margin-left:10px;padding-top:6px">
@@ -47,14 +47,6 @@
 		<div id="ajax_confirmation" style="display:none"></div>
 		{* ajaxBox allows*}
 		<div id="ajaxBox" style="display:none"></div>
-		<script>
-		function doAjaxAction(action, fromSelector)
-		{
-		}
-		</script>
-{/if}
-
-		<script type="text/javascript">
-		</script>
+		{/if}
 	</body>
 </html>
