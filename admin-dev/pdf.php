@@ -102,7 +102,7 @@ function generateOrderSlipPDF()
 	$order->products = OrderSlip::getOrdersSlipProducts($orderSlip->id, $order);
 	$tmp = NULL;
 
-   generatePDF($order, PDF::TEMPLATE_ORDER_SLIP);
+   generatePDF($orderSlip, PDF::TEMPLATE_ORDER_SLIP);
 }
 
 function generateDeliverySlipPDF()
