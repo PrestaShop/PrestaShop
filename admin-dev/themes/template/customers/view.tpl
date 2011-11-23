@@ -203,6 +203,7 @@
 				</table>
 			</div>
 		{/if}
+		<div class="clear">&nbsp;</</div>
 		{assign var=count_ko value=count($orders_ko)}
 		{if $count_ko}
 			<div style="float:left;margin-right:20px">
