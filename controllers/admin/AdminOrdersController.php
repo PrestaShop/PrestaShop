@@ -604,20 +604,23 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function ajaxProcessSendMailValidateOrder()
 	{
-		$errors = array();
-		$cart = new Cart((int)Tools::getValue('id_cart'));
-		if (Validate::isLoadedObject($cart))
+		if ($this->tabAccess['edit'] === '1')
 		{
-			$customer = new Customer((int)$cart->id_customer);
-			if (Validate::isLoadedObject($customer))
+			$errors = array();
+			$cart = new Cart((int)Tools::getValue('id_cart'));
+			if (Validate::isLoadedObject($cart))
 			{
-				$mailVars = array('{order_link}' => Context::getContext()->link->getPageLink('order', false, (int)$cart->id_lang, 'step=3&recover_cart='.(int)$cart->id.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.(int)$cart->id)),
- 																'{firstname}' => $customer->firstname,
-																'{lastname}' => $customer->lastname,);
-				if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order'), $mailVars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,_PS_MAIL_DIR_, true))
-					die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
+				$customer = new Customer((int)$cart->id_customer);
+				if (Validate::isLoadedObject($customer))
+				{
+					$mailVars = array('{order_link}' => Context::getContext()->link->getPageLink('order', false, (int)$cart->id_lang, 'step=3&recover_cart='.(int)$cart->id.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.(int)$cart->id)),
+	 																'{firstname}' => $customer->firstname,
+																	'{lastname}' => $customer->lastname,);
+					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order'), $mailVars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,_PS_MAIL_DIR_, true))
+						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
+				}
 			}
+			$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
 		}
-		$this->content = Tools::jsonEncode(array('errors' => true, 'result' => $this->l('Error in sending the email to your customer.')));
 	}
 }

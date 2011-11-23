@@ -69,7 +69,8 @@ class AdminAccessController extends AdminController
 			'admin_profile' => (int)_PS_ADMIN_PROFILE_,
 			'access_edit' => $this->tabAccess['edit'],
 			'perms' => array('view', 'add', 'edit', 'delete'),
-			'modules' => $modules
+			'modules' => $modules,
+			'link' => $this->context->link
 		);
 
 		return parent::initForm();
@@ -96,6 +97,99 @@ class AdminAccessController extends AdminController
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
+	}
+	
+	public function ajaxProcessUpdateAccess()
+	{
+		if ($this->tabAccess['edit'] != '1')
+			throw new PrestashopException(Tools::displayError('You do not have permission to edit here.'));
+			
+		if (Tools::isSubmit('submitAddAccess'))
+		{
+			$perm = Tools::getValue('perm');
+			if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all')))
+				throw new PrestashopException('permission not exists');
+
+			$enabled = (int)Tools::getValue('enabled');
+			$id_tab = (int)Tools::getValue('id_tab');
+			$id_profile = (int)Tools::getValue('id_profile');
+			$res = true;
+
+			if ($id_tab == -1 && $perm == 'all' && $enabled == 0)
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'access`
+					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
+					WHERE `id_profile` = '.(int)$id_profile.' AND `id_tab` != 31
+				');
+			else if ($id_tab == -1 && $perm == 'all')
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'access`
+					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
+					WHERE `id_profile` = '.(int)$id_profile
+				);
+			else if ($id_tab == -1)
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'access`
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+					WHERE `id_profile` = '.(int)$id_profile
+				);
+			else if ($perm == 'all')
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'access`
+					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
+					WHERE `id_tab` = '.(int)$id_tab.'
+						AND `id_profile` = '.(int)$id_profile
+				);
+			else
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'access`
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+					WHERE `id_tab` = '.(int)$id_tab.'
+						AND `id_profile` = '.(int)$id_profile
+				);
+			$res = $res?'ok':'error';
+			die($res);
+		}
+	}
+	
+	public function ajaxProcessUpdateModuleAccess()
+	{
+		if ($this->tabAccess['edit'] != '1')
+			throw new PrestashopException(Tools::displayError('You do not have permission to edit here.'));
+			/* Update Access Modules */
+	
+		if (Tools::isSubmit('changeModuleAccess'))
+		{
+			$perm = Tools::getValue('perm');
+			$enabled = (int)Tools::getValue('enabled');
+			$id_module = (int)Tools::getValue('id_module');
+			$id_profile = (int)Tools::getValue('id_profile');
+			$res = true;
+
+			if (!in_array($perm, array('view', 'configure')))
+				throw new PrestashopException('permission not exists');
+
+			if ($id_module == -1)
+			{
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'module_access`
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+					WHERE `id_profile` = '.(int)$id_profile
+				);
+			}
+			else
+			{
+				$res &= Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'module_access`
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+					WHERE `id_module` = '.(int)$id_module.'
+						AND `id_profile` = '.(int)$id_profile
+				);
+			}
+
+			$res = $res?'ok':'error';
+			die($res);
+		}
 	}
 
 	/**
