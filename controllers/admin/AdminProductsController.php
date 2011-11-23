@@ -1615,19 +1615,24 @@ class AdminProductsControllerCore extends AdminController
 				{
 					// i is used as product_tab id
 					$i = 0;
+					$advanced_stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+
 					foreach ($this->available_tabs as $product_tab)
 					{
-						$product_tabs[$product_tab] = array(
-							'id' => ++$i.'-'.$product_tab,
-							'selected' => (strtolower($product_tab) == strtolower($action)),
-							'name' => $this->available_tabs_lang[$product_tab],
-							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
+						if ($advanced_stock_management_active == 1 || ($advanced_stock_management_active == 0 && ($product_tab != 'Warehouses')))
+						{
+							$product_tabs[$product_tab] = array(
+								'id' => ++$i.'-'.$product_tab,
+								'selected' => (strtolower($product_tab) == strtolower($action)),
+								'name' => $this->available_tabs_lang[$product_tab],
+								'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
 							);
+						}
 					}
-						$this->tpl_form_vars['newproduct'] = 0;
+					$this->tpl_form_vars['newproduct'] = 0;
 				}
 				else
-						$this->tpl_form_vars['newproduct'] = 1;
+					$this->tpl_form_vars['newproduct'] = 1;
 
 				$this->tpl_form_vars['product_tabs'] = $product_tabs;
 				$this->tpl_form_vars['tabs_toolbar_save_buttons'] = $this->tabs_toolbar_save_buttons;
@@ -3136,22 +3141,12 @@ class AdminProductsControllerCore extends AdminController
 					'attribute_designation' => ''
 				);
 
-			// Get physical quantities & available quantities
-			$stock_manager = StockManagerFactory::getManager();
-			$total_quantity = 0;
-			$physical_quantity = array();
+			// Get available quantities
 			$available_quantity = array();
 			$product_designation = array();
 
 			foreach ($attributes as $attribute)
 			{
-				$physical_quantity[$attribute['id_product_attribute']] = (int)$stock_manager->getProductPhysicalQuantities(
-					(int)$obj->id,
-					(int)$attribute['id_product_attribute']
-				);
-
-				$total_quantity += $physical_quantity[$attribute['id_product_attribute']];
-
 				// Get available quantity for the current product attribute in the current shop
 				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$obj->id,
 																														$attribute['id_product_attribute']);
@@ -3162,9 +3157,8 @@ class AdminProductsControllerCore extends AdminController
 
 			$data->assign(array(
 				'attributes' => $attributes,
-				'total_quantity' => $total_quantity,
-				'physical_quantity' => $physical_quantity,
 				'available_quantity' => $available_quantity,
+				'stock_management_active' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 				'product_designation' => $product_designation,
 				'product' => $this->object,
 				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),

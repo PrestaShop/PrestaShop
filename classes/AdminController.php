@@ -1174,6 +1174,12 @@ class AdminControllerCore extends Controller
 		{
 			if (Tab::checkTabRights($tab['id_tab']) === true)
 			{
+				if ($tab['name'] == 'Stock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+				{
+					unset($tabs[$index]);
+					continue;
+				}
+
 				$img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
 				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
 				// retrocompatibility : change png to gif if icon not exists
