@@ -827,6 +827,7 @@ class AdminModulesControllerCore extends AdminController
 					'desc' => (string)$module->description,
 					'name' => (string)$module->name,
 					'author' => (string)$module->author,
+					'image' => (isset($module->image) ? (string)$module->image : ''),
 					'option' => $this->displayModuleOptions($module)
 				)).', ';
 			}
