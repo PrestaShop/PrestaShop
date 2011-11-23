@@ -230,7 +230,7 @@ class SupplierCore extends ObjectModel
 
 		$nb_days_new_product = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
-		$sql = 'SELECT p.*, sa.out_of_stock,
+		$sql = 'SELECT p.*, stock.out_of_stock,
 					pl.`description`,
 					pl.`description_short`,
 					pl.`link_rewrite`,
@@ -248,7 +248,7 @@ class SupplierCore extends ObjectModel
 					m.`name` AS manufacturer_name
 				FROM `'._DB_PREFIX_.'product` p
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
-					AND ps_id_product_attribute = 0)
+					AND ps.id_product_attribute = 0)
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`
@@ -264,8 +264,7 @@ class SupplierCore extends ObjectModel
 					AND tl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.`id_product` = p.`id_product`
-					AND sa.id_product_attribute = 0)
+				'.Product::sqlStock('p').'
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.
 					($active ? ' AND p.`active` = 1' : '').'
 					AND p.`id_product` IN (
