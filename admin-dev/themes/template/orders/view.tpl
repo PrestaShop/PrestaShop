@@ -266,8 +266,8 @@
 						<tr>
 							<td>{dateFormat date=$payment->date_add full=true}</td>
 							<td>{$payment->payment_method}</td>
-							<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 							<td>{$payment->transaction_id}</td>
+							<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
 							<td></td>
 						</tr>
 						{/foreach}
