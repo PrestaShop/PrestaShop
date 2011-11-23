@@ -2210,7 +2210,7 @@ class ProductCore extends ObjectModel
 	* Display price with right format and currency
 	*
 	* @param array $params Params
-	* @object $smarty Smarty object
+	* @param $smarty Smarty object
 	* @return string Price with right format and currency
 	*/
 	public static function convertPrice($params, &$smarty)
