@@ -1400,6 +1400,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'title' => $this->l('State'),
 					'width' => 100,
 					'align' => 'left',
+					'color' => 'color',
 					'havingFilter' => true
 				),
 			);
@@ -1433,7 +1434,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$helper->toolbar_fix = false;
 			$helper->shopLinkType = '';
 			$helper->identifier = $this->identifier;
-			$helper->colorOnBackground = true;
+			//$helper->colorOnBackground = true;
 			$helper->simple_header = true;
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
@@ -1549,6 +1550,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		die();
 	}
+
 	/**
 	 * @see AdminController::initView()
 	 */

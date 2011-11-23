@@ -944,9 +944,9 @@ class ProductCore extends ObjectModel
 			return false;
 
 		//Try to set available quantitiy if product quantity not depend on stock
-		$depend_on_stock = StockAvailable::dependsOnStock($this->id);
+		$depends_on_stock = StockAvailable::dependsOnStock($this->id);
 
-		if (!$depend_on_stock)
+		if (!$depends_on_stock)
 			if (!StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity))
 			{
 				$stock_available = new StockAvailable();
