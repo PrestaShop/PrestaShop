@@ -185,6 +185,8 @@ $(document).ready(function() {
 						{
 							addViewOrderDetailRow(data.view);
 							updateAmounts(data.order);
+							$('.standard_refund_fields').hide();
+							$('.partial_refund_fields').hide();
 						}
 						else
 							alert(data.error);
@@ -302,6 +304,9 @@ $(document).ready(function() {
 					element.parent().children('.edit_product_change_link').hide();
 					element.parent().children('input[name=submitProductChange]').show();
 					element.parent().children('.cancel_product_change_link').show();
+
+					$('.standard_refund_fields').hide();
+					$('.partial_refund_fields').hide();
 				}
 				else
 					alert(data.error);
@@ -366,6 +371,8 @@ $(document).ready(function() {
 					{
 						refreshProductLineView(element, data.view);
 						updateAmounts(data.order);
+						$('.standard_refund_fields').hide();
+						$('.partial_refund_fields').hide();
 					}
 					else
 						alert(data.error);
