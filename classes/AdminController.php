@@ -295,20 +295,20 @@ class AdminControllerCore extends Controller
 		$tabs = array_reverse($tabs);
 
 		$bread = '';
-		switch ($this->display)
+			switch ($this->display)
 		{
 			case 'edit':
-				array_pop($tabs);
-				$tabs[] = array('name' => sprintf($this->l('Edit %s'), $this->table));
+				$current_tab = array_pop($tabs);
+				$tabs[] = array('name' => sprintf($this->l('Edit %s'), $current_tab['name']));
 				break;
 			case 'add':
-				array_pop($tabs);
-				$tabs[] = array('name' => sprintf($this->l('Add %s'), $this->table));
-					break;
+				$current_tab = array_pop($tabs);
+				$tabs[] = array('name' => sprintf($this->l('Add %s'), $current_tab['name']));
+				break;
 			case 'view':
-				array_pop($tabs);
-				$tabs[] = array('name' => sprintf($this->l('View %s'), $this->table));
-					break;
+				$current_tab = array_pop($tabs);
+				$tabs[] = array('name' => sprintf($this->l('View %s'), $current_tab['name']));
+				break;
 		}
 		// note : this should use a tpl file
 		foreach ($tabs AS $key => $item)
@@ -1572,6 +1572,8 @@ class AdminControllerCore extends Controller
 		// @todo : change AdminTab to Helper
 		if ( isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
+		elseif ( isset($_LANGADM['admincontroller'.$key]))
+			$str = $_LANGADM['admincontroller'.$key];
 		elseif ( isset($_LANGADM['helper'.$key]))
 			$str = $_LANGADM['helper'.$key];
 		elseif ( isset($_LANGADM['admintab'.$key]))
@@ -1611,12 +1613,12 @@ class AdminControllerCore extends Controller
 		// ob_start();
 		if (Tools::getValue('ajax'))
 			$this->ajax = '1';
-		
+
 		/* Server Params */
 		$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 		$protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 		$this->context->link = new Link($protocol_link, $protocol_content);
-		
+
 		$this->timerStart = microtime(true);
 
 		if (isset($_GET['logout']))
