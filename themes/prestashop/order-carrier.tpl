@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+<div id="carrier_area">
 {if !$opc}
 	<script type="text/javascript">
 	//<![CDATA[
@@ -60,10 +60,10 @@
 <script type="text/javascript">
 {literal}
 // <![CDATA[
-    $('document').ready( function(){
+	$('document').ready( function(){
 		if ($('input#gift').is(':checked'))
 			$('p#gift_div').show();
-    });
+	});
 //]]>
 {/literal}
 </script>
@@ -240,3 +240,4 @@
 	</div>
 </div>
 {/if}
+</div>

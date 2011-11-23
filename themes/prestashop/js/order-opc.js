@@ -26,79 +26,12 @@
 
 function updateCarrierList(json)
 {
-	var carriers = json.carriers;
+	var html = json.carrier_block;
 	
-	/* contains all carrier available for this address */
-	if (!carriers || carriers.length == 0)
-	{
-		checkedCarrier = 0;
-		$('input[name=id_carrier]:checked').attr('checked', false);
-		$('#noCarrierWarning').show();
-		$('#extra_carrier').hide();
-		$('#recyclable_block').hide();
-		$('table#carrierTable:visible').hide();
-	}
-	else
-	{
-		checkedCarrier = json.checked;
-		var html = '';
-		for (i=0;i<carriers.length; i++)
-		{
-			var itemType = '';
-			
-			if (i == 0)
-				itemType = 'first_item ';
-			else if (i == carriers.length-1)
-				itemType = 'last_item ';
-			if (i % 2)
-				itemType = itemType + 'alternate_item';
-			else
-				itemType = itemType + 'item';
-			
-			var name = carriers[i].name;
-			if (carriers[i].img != '')
-				name = '<img src="'+carriers[i].img+'" alt="" />';
-				
-			if (carriers[i].is_module > 0 && !isLogged)
-				var extraHtml = 'disabled="disabled"';
-			else if (checkedCarrier == carriers[i].id_carrier)
-				var extraHtml = 'checked="checked"';
-			else
-				var extraHtml = '';
-			
-			if (carriers[i].price == 0)
-				var price = txtFree;
-			else
-			{
-			if (taxEnabled && displayPrice == 0)
-					var price = '<span class="price">'+formatCurrency(carriers[i].price, currencyFormat, currencySign, currencyBlank)+'</span>';
-			else
-					var price = '<span class="price">'+formatCurrency(carriers[i].price_tax_exc, currencyFormat, currencySign, currencyBlank)+'</span>';
-			}
-
-			html = html + 
-			'<tr class="'+itemType+'">'+
-				'<td class="carrier_action radio"><input type="radio" name="id_carrier" value="'+carriers[i].id_carrier+'" id="id_carrier'+carriers[i].id_carrier+'"  onclick="updateCarrierSelectionAndGift();" '+extraHtml+' /></td>'+
-				'<td class="carrier_name"><label for="id_carrier'+carriers[i].id_carrier+'">'+name+'</label></td>'+
-				'<td class="carrier_infos">'+(carriers[i].delay != null ? carriers[i].delay : '')+'</td>'+
-				'<td class="carrier_price">'+price;
-			if (carriers[i].price != 0)
-			{
-			if (taxEnabled && displayPrice == 0)
-				html = html + ' ' + txtWithTax;
-			else
-				html = html + ' ' + txtWithoutTax;
-			}
-			html = html + '</td>'+
-			'</tr>';
-		}
-		if (json.HOOK_EXTRACARRIER !== null && json.HOOK_EXTRACARRIER != undefined) html += json.HOOK_EXTRACARRIER;
-		$('#noCarrierWarning').hide();
-		$('#extra_carrier:hidden').show();
-		$('table#carrierTable tbody').html(html);
-		$('table#carrierTable:hidden').show();
-		$('#recyclable_block:hidden').show();
-	}
+	if (json.HOOK_EXTRACARRIER !== null && json.HOOK_EXTRACARRIER != undefined)
+		html += json.HOOK_EXTRACARRIER;
+	
+	$('#carrier_area').replaceWith(html);
 	
 	/* update hooks for carrier module */
 	$('#HOOK_BEFORECARRIER').html(json.HOOK_BEFORECARRIER);
@@ -139,7 +72,7 @@ function updateAddressSelection()
 			}
 			else
 			{
-				updateCarrierList(jsonData);
+				updateCarrierList(jsonData.carrier_data);
 				updatePaymentMethods(jsonData);
 				updateCartSummary(jsonData.summary);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
@@ -193,13 +126,14 @@ function updateCarrierSelectionAndGift()
 	var recyclablePackage = 0;
 	var gift = 0;
 	var giftMessage = '';
-	var idCarrier = 0;
 	
 	var delivery_option_radio = $('.delivery_option_radio');
 	var delivery_option_params = '&';
 	$.each(delivery_option_radio, function(i) {
 		delivery_option_params += $(delivery_option_radio[i]).attr('name') + '=' + $(delivery_option_radio[i]).val() + '&';
 	});
+	if (delivery_option_params == '&')
+		delivery_option_params = '&delivery_option=&'
 
 	if ($('input#recyclable:checked').length)
 		recyclablePackage = 1;
@@ -207,12 +141,6 @@ function updateCarrierSelectionAndGift()
 	{
 		gift = 1;
 		giftMessage = encodeURIComponent($('textarea#gift_message').val());
-	}
-	
-	if ($('input[name=id_carrier]:checked').length)
-	{
-		idCarrier = $('input[name=id_carrier]:checked').val();
-		checkedCarrier = idCarrier;
 	}
 	
 	$('#opc_payment_methods-overlay').fadeIn('slow');
@@ -390,7 +318,7 @@ function updateNewAccountToAddressBlock()
 				$('#opc_new_account').fadeIn('fast', function() {
 					updateCartSummary(json.summary);
 					updateAddressesDisplay(true);
-					updateCarrierList(json.carrier_list);
+					updateCarrierList(json.carrier_data);
 					updatePaymentMethods(json);
 					if ($('#gift-price').length == 1)
 						$('#gift-price').html(json.gift_price);
@@ -806,6 +734,6 @@ function multishippingMode(it)
 }
 
 $(document).ready(function() {
-	if (multishipping_mode)
+	if (typeof(multishipping_mode) != 'undefined' && multishipping_mode)
 		$('#multishipping_mode').click();
 });
