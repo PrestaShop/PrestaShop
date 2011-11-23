@@ -77,6 +77,11 @@ class AdminOrdersControllerCore extends AdminController
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = Shop::SHARE_ORDER;
 
+		// Save context (in order to apply cart rule)
+		$order = new Order((int)Tools::getValue('id_order'));
+		$this->context->cart = new Cart($order->id_cart);
+		$this->context->customer = new Customer($order->id_customer);
+
 		parent::__construct();
 	}
 
@@ -100,6 +105,11 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		if ($this->display == 'view')
 		{
+			$order = new Order((int)Tools::getValue('id_order'));
+			if ($order->hasBeenDelivered()) $type = $this->l('Return');
+			elseif ($order->hasBeenPaid()) $type = $this->l('Refund');
+			else $type = $this->l('Cancel');
+
 			$this->toolbar_btn['new'] = array(
 				'short' => 'Create',
 				'href' => '',
@@ -109,7 +119,7 @@ class AdminOrdersControllerCore extends AdminController
 			$this->toolbar_btn['standard_refund'] = array(
 				'short' => 'Create',
 				'href' => '',
-				'desc' => $this->l('Standard refund'),
+				'desc' => $type.' '.$this->l('refund'),
 				'class' => 'process-icon-new standard_refund'
 			);
 			$this->toolbar_btn['partial_refund'] = array(
