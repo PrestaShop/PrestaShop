@@ -30,21 +30,14 @@ class AdminAccountingManagementControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->className = 'Accounting';
-	 	$this->context = Context::getContext();
-	 	
+	 		 	
 		parent::__construct();
 	}
 	
-	/**
-	 * AdminController::init() override
-	 * @see AdminController::init()
-	 */
-	public function init()
+	public function initContent()
 	{
 		$shop = array();
 		$error = '';
-		
-		parent::init();
 		
 		if (count($this->context->shop->getListOfID()) > 1)
 			$error = $this->l('Please select the shop you want to configure');
@@ -75,12 +68,13 @@ class AdminAccountingManagementControllerCore extends AdminController
 		}
 		
 		$this->context->smarty->assign(array(
-			'shop' => $shop,
+			'shop_details' => $shop,
 			'error' => $error,
 			'toolbar_btn' => $this->toolbar_btn,
 			'title' => $this->l('Accounting Management'),
 			'table' => 'accounting'
 		));
+		parent::initContent();
 	}
 	
 	/**
