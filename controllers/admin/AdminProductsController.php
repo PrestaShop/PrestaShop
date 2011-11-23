@@ -2595,7 +2595,7 @@ class AdminProductsControllerCore extends AdminController
 			foreach ($attach1 as $attach)
 				$content .= '<option value="'.$attach['id_attachment'].'">'.$attach['name'].'</option>';
 			$content .= '	</select><br /><br />
-					<a href="#" id="addAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+					<a href="#" id="removeAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
 						'.$this->l('Remove').' &gt;&gt;
 					</a>
 				</td>
@@ -2605,7 +2605,7 @@ class AdminProductsControllerCore extends AdminController
 			foreach ($attach2 as $attach)
 				$content .= '<option value="'.$attach['id_attachment'].'">'.$attach['name'].'</option>';
 			$content .= '	</select><br /><br />
-					<a href="#" id="removeAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+					<a href="#" id="addAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
 						&lt;&lt; '.$this->l('Add').'
 					</a>
 				</div>
