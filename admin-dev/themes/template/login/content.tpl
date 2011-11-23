@@ -96,7 +96,7 @@
 					<img id="ajax-loader" src="../img/loader.gif" style="float:left;margin:2px 0 0 5px;display:none">
 				</span>
 			</div>
-			<div id="lost"><a href="#" onclick="$('#error').hide();$('#login').revertFlip();return false;">{l s='Back to login'}</a></div>
+			<div id="lost"><a href="#" onclick="displayLogin();return false;">{l s='Back to login'}</a></div>
 		</form>
 	</div>
 	<h2><a href="http://www.prestashop.com">&copy; Copyright by PrestaShop. all rights reserved.</a></h2>
