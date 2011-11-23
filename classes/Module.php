@@ -773,8 +773,6 @@ abstract class ModuleCore
 							$item->need_instance = 0;
 							$item->available_on_addons = 1;
 							$item->active = 0;
-							if (!isset($modaddons->img) && isset($modaddons->id))
-								$modaddons->img = 'http://media.prestastore.com/img/pico/'.(int)$modaddons->id.'.jpg';
 							if (isset($modaddons->img))
 							{
 								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))

@@ -72,7 +72,10 @@
 				matchContains: true,
 				highlightItem: true,
 				formatItem: function(row, i, max, term) {
-					return '<img src="../modules/'+row.name+'/logo.gif" style="float:left;margin:5px"><strong>'+row.displayName+'</strong>'+((row.author != '') ? ' ' + by + ' ' + truncate_author(row.author) : '') + '<br /><span style="font-size: 80%;">'+ row.desc +'</span><br/><div style="height:15px;padding-top:5px">'+ row.option +'</div>';
+					var image = '../modules/'+row.name+'/logo.gif';
+					if (row.image != '')
+						image = row.image;
+					return '<img src="'+image+'" style="float:left;margin:5px;width:16px;height:16px"><strong>'+row.displayName+'</strong>'+((row.author != '') ? ' ' + by + ' ' + truncate_author(row.author) : '') + '<br /><span style="font-size: 80%;">'+ row.desc +'</span><br/><div style="height:15px;padding-top:5px">'+ row.option +'</div>';
 				},
 				formatResult: function(row) {
 					return row.displayName;
