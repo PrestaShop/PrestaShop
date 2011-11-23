@@ -541,7 +541,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'title' => $this->l('Creation date'),
 				'width' => 150,
 				'align' => 'right',
-				'type' => 'datetime',
+				'type' => 'date',
 				'havingFilter' => true,
 				'filter_key' => 'a!date_add'
 			),
@@ -549,7 +549,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'title' => $this->l('Last modification date'),
 				'width' => 150,
 				'align' => 'right',
-				'type' => 'datetime',
+				'type' => 'date',
 				'havingFilter' => true,
 				'filter_key' => 'a!date_upd'
 			),
@@ -557,7 +557,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'title' => $this->l('Delivery date'),
 				'width' => 150,
 				'align' => 'right',
-				'type' => 'datetime',
+				'type' => 'date',
 				'havingFilter' => true,
 				'filter_key' => 'a!date_delivery_expected'
 			),

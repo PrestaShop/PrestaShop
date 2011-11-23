@@ -1975,7 +1975,7 @@ class AdminProductsControllerCore extends AdminController
 	*/
 	public function postProcessFormSuppliers()
 	{
-		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			// Get all available suppliers
 			$suppliers = Supplier::getSuppliers();
@@ -1995,9 +1995,12 @@ class AdminProductsControllerCore extends AdminController
 					$suppliers_to_associate[] = $supplier['id_supplier'];
 
 			// Delete already associated suppliers if needed
-			foreach ($associated_suppliers as &$associated_supplier)
+			foreach ($associated_suppliers as $key => &$associated_supplier)
 				if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate))
+				{
 					$associated_supplier->delete();
+					unset($associated_suppliers[$key]);
+				}
 
 			// Associate suppliers
 			foreach ($suppliers_to_associate as $id)
@@ -2014,6 +2017,8 @@ class AdminProductsControllerCore extends AdminController
 					$product_supplier->id_product_attribute = 0;
 					$product_supplier->id_supplier = $id;
 					$product_supplier->save();
+
+					$associated_suppliers[] = $product_supplier;
 				}
 			}
 
@@ -2026,17 +2031,6 @@ class AdminProductsControllerCore extends AdminController
 
 			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
 
-			$this->postProcessFormSupplierReferences();
-		}
-	}
-
-	/**
-	* Post traitment for supplier product references
-	*/
-	public function postProcessFormSupplierReferences()
-	{
-		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-		{
 			// Get all id_product_attribute
 			$attributes = $product->getAttributesResume($this->context->language->id);
 			if (empty($attributes))
@@ -2045,28 +2039,22 @@ class AdminProductsControllerCore extends AdminController
 					'attribute_designation' => ''
 				);
 
-			// get associated suppliers
-			$associated_suppliers = ProductSupplier::getSupplierCollection($product->id);
-
-			// Get already associated suppliers and force to retreive product declinaisons
-			$product_supplier_collection = ProductSupplier::getSupplierCollection($product->id, false);
-
 			// Manage references
 			foreach ($attributes as $attribute)
 				foreach ($associated_suppliers as $supplier)
-					if (Tools::isSubmit('supplier_reference_'.$attribute['id_product'].'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))
+					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))
 					{
-						$reference = Tools::getValue('supplier_reference_'.$attribute['id_product'].'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, '');
+						$reference = Tools::getValue('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, '');
 
 						if (!empty($reference))
 						{
-							$existing_reference = ProductSupplier::getProductSupplierReference($attribute['id_product'], $attribute['id_product_attribute'], $supplier->id_supplier);
+							$existing_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
 
-							if (empty($existing_reference))
+							if ($existing_id <= 0)
 							{
 								//create new record
 								$product_supplier_entity = new ProductSupplier();
-								$product_supplier_entity->id_product = $attribute['id_product'];
+								$product_supplier_entity->id_product = $product->id;
 								$product_supplier_entity->id_product_attribute = $attribute['id_product_attribute'];
 								$product_supplier_entity->id_supplier = $supplier->id_supplier;
 								$product_supplier_entity->product_supplier_reference = pSQL($reference);
@@ -2075,21 +2063,14 @@ class AdminProductsControllerCore extends AdminController
 							else
 							{
 								//update existing record
-								foreach ($product_supplier_collection as &$psc)
-									if ($psc->id_product == $attribute['id_product']
-										&& $psc->id_product_attribute == $attribute['id_product_attribute']
-										&& $psc->id_supplier == $supplier->id_supplier
-										)
-									{
-										$reference = pSQL($reference);
+								$product_supplier_entity = new ProductSupplier($existing_id);
+								$reference = pSQL($reference);
 
-										if ($reference != $psc->product_supplier_reference)
-										{
-											$psc->product_supplier_reference = pSQL($reference);
-											$psc->update();
-										}
-										break;
-									}
+								if ($product_supplier_entity->product_supplier_reference != $reference)
+								{
+									$product_supplier_entity->product_supplier_reference = pSQL($reference);
+									$product_supplier_entity->update();
+								}
 							}
 						}
 					}
@@ -3199,6 +3180,7 @@ class AdminProductsControllerCore extends AdminController
 			$attributes = $obj->getAttributesResume($this->context->language->id);
 			if (empty($attributes))
 				$attributes[] = array(
+					'id_product' => $this->object->id,
 					'id_product_attribute' => 0,
 					'attribute_designation' => ''
 				);
