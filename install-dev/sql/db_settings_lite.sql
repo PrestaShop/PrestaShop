@@ -1012,7 +1012,7 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 96, 'Entrepôts'),
 (2, 97, 'Gestion du stock'),
 (2, 98, 'Etat instantané du stock'),
-(2, 99, 'Couverture de stock'),
+(2, 99, 'Couverture du stock'),
 (2, 100, 'Commandes fournisseurs'),
 (2, 101, 'Générateur de combinaisons'),
 (2, 102, 'Comptabilité'),
