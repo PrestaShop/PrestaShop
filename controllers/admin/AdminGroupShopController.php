@@ -139,7 +139,7 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Enable or disable shop')
+					'desc' => $this->l('Enable or disable group shop')
 				)
 			),
 			'submit' => array(

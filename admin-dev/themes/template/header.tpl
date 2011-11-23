@@ -220,9 +220,9 @@
 		{if $display_header && $is_multishop && $shop_context != 'all'}
 			<div class="multishop_info">
 				{if $shop_context == 'group'}
-					{l s='You are configuring your store for group shop '}<b>{$group_shop->name}</b>
+					{l s='You are configuring your store for group shop'} <b>{$group_shop->name}</b>
 				{elseif $shop_context == 'shop'}
-					{l s='You are configuring your store for shop '}<b>{$shop->name}</b>
+					{l s='You are configuring your store for shop'} <b>{$shop->name}</b>
 				{/if}
 			</div>
 		{/if}

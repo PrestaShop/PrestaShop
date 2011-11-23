@@ -591,7 +591,8 @@ class CategoryCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)$this->id.
 					($active ? ' AND p.`active` = 1' : '').
-					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
+					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '').
+					' GROUP BY p.id_product';
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
@@ -638,7 +639,8 @@ class CategoryCore extends ObjectModel
 					AND sa.id_product_attribute = 0
 				WHERE cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND p.`active` = 1' : '')
-					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
+					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '').
+					' GROUP BY p.id_product';
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
@@ -713,7 +715,7 @@ class CategoryCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'category`
-			WHERE '.$this->nleft.' < nleft AND nright < '.$this->nright
+			WHERE '.(int)$this->nleft.' < nleft AND nright < '.(int)$this->nright
 		);
 	}
 
