@@ -1,3 +1,50 @@
+$(document).ready(function()
+{
+	var hints = $('.translatable span.hint');
+	if (youEditFieldFor)
+	{
+		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
+	}
+	var html = "";		
+	var nb_notifs = 0;
+	var wrapper_id = "";
+	var type = new Array();
+	
+	$(".notifs").live("click", function(){
+		// Add class "open_notifs" to the clicked notification, remove the class from other notificationqs
+		$('.notifs').removeClass('open_notifs');
+		$(this).addClass('open_notifs');
+		
+		wrapper_id = $(this).attr("id");
+		type = wrapper_id.split("s_notif")
+		$.post("ajax.php",
+			{
+				"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]
+			}, function(data) {
+			if(data)
+			{
+				if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
+				{
+					$(".notifs_wrapper").hide();
+					$("#" + wrapper_id + "_number_wrapper").hide();  
+					$("#" + wrapper_id + "_wrapper").show();  
+				}else
+				{
+					$("#" + wrapper_id + "_wrapper").hide();							
+				}
+			}				
+		});
+	});
+	
+	$("#main").click(function(){
+		$(".notifs_wrapper").hide();
+		$('.notifs').removeClass('open_notifs');
+	});
+
+	// call it once immediately, then use setTimeout if refresh is activated
+	getPush(autorefresh_notifications);
+});
+
 function getPush(refresh)
 {
 	$.post("ajax.php",{"getNotifications" : "1"}, function(data) {

@@ -29,36 +29,38 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="robots" content="NOFOLLOW, NOINDEX" />
 		<title>{$meta_title} - PrestaShop&trade;</title>
-		<script type="text/javascript">
-			var helpboxes = {$help_box};
-			var roundMode = {$round_mode};
-			{if isset($shop_context)}
-				{if $shop_context == 'all'}
-					var youEditFieldFor = "{l s='A modification of this field will be applied for all shops'}";
-				{elseif $shop_context == 'group'}
-					var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group '}<b>{$shop_name}</b>";
+		{if $display_header}
+			<script type="text/javascript">
+				var helpboxes = {$help_box};
+				var roundMode = {$round_mode};
+				{if isset($shop_context)}
+					{if $shop_context == 'all'}
+						var youEditFieldFor = "{l s='A modification of this field will be applied for all shops'}";
+					{elseif $shop_context == 'group'}
+						var youEditFieldFor = "{l s='A modification of this field will be applied for all shops of group '}<b>{$shop_name}</b>";
+					{else}
+						var youEditFieldFor = "{l s='A modification of this field will be applied for the shop '}<b>{$shop_name}</b>";
+					{/if}
 				{else}
-					var youEditFieldFor = "{l s='A modification of this field will be applied for the shop '}<b>{$shop_name}</b>";
+					var youEditFieldFor = '';
 				{/if}
-			{else}
-				var youEditFieldFor = '';
-			{/if}
-			
-			{* Notifications vars *}
-			var new_order_msg = '{l s='A new order has been made on your shop.'}';
-			var order_number_msg = '{l s='Order number : '}';
-			var total_msg = '{l s='Total : '}';
-			var from_msg = '{l s='From : '}';
-			var see_order_msg = '{l s='Click here to see that order'}';
-			var new_customer_msg = '{l s='A new customer registered on your shop.'}';
-			var customer_name_msg = '{l s='Customer name : '}';
-			var see_customer_msg = '{l s='Click here to see that customer'}';
-			var new_msg = '{l s='A new message posted on your shop.'}';
-			var excerpt_msg = '{l s='Excerpt : '}';
-			var see_msg = '{l s='Click here to see that message'}';
-			var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
-			var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
-		</script>
+				{* Notifications vars *}
+				var autorefresh_notifications = '{$autorefresh_notifications}';
+				var new_order_msg = '{l s='A new order has been made on your shop.'}';
+				var order_number_msg = '{l s='Order number : '}';
+				var total_msg = '{l s='Total : '}';
+				var from_msg = '{l s='From : '}';
+				var see_order_msg = '{l s='Click here to see that order'}';
+				var new_customer_msg = '{l s='A new customer registered on your shop.'}';
+				var customer_name_msg = '{l s='Customer name : '}';
+				var see_customer_msg = '{l s='Click here to see that customer'}';
+				var new_msg = '{l s='A new message posted on your shop.'}';
+				var excerpt_msg = '{l s='Excerpt : '}';
+				var see_msg = '{l s='Click here to see that message'}';
+				var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
+				var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
+			</script>
+		{/if}
 
 		{if isset($css_files)}
 			{foreach from=$css_files key=css_uri item=media}
@@ -70,23 +72,25 @@
 			<script type="text/javascript" src="{$js_uri}"></script>
 			{/foreach}
 		{/if}
-		<script type="text/javascript">
-			$(function() {
-				$.ajax({
-					type: 'POST',
-					url: 'ajax.php',
-					data: 'helpAccess=1&item={$class_name}&isoUser={$iso_user}&country={$country_iso_code}&version={$version}',
-					async : true,
-					success: function(msg) {
-						$("#help-button").html(msg);
-						$("#help-button").fadeIn("slow");
-					}
+		{if $display_header}
+			<script type="text/javascript">
+				$(function() {
+					$.ajax({
+						type: 'POST',
+						url: 'ajax.php',
+						data: 'helpAccess=1&item={$class_name}&isoUser={$iso_user}&country={$country_iso_code}&version={$version}',
+						async : true,
+						success: function(msg) {
+							$("#help-button").html(msg);
+							$("#help-button").fadeIn("slow");
+						}
+					});
 				});
-			});
-		</script>
-
-		<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
-		{$HOOK_HEADER}
+			</script>
+		{/if}		<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
+		{if $display_header}
+			{$HOOK_HEADER}
+		{/if}
 		<!--[if IE]>
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin-ie.css" />
 		<![endif]-->
@@ -95,56 +99,6 @@
 				color:{$brightness}
 			}
 		</style>
-
-
-<script type="text/javascript">
-$(document).ready(function()
-{
-	var hints = $('.translatable span.hint');
-	if (youEditFieldFor)
-	{
-		hints.html(hints.html() + '<br /><span class="red">' + youEditFieldFor + '</span>');
-	}
-	var html = "";		
-	var nb_notifs = 0;
-	var wrapper_id = "";
-	var type = new Array();
-	
-	$(".notifs").live("click", function(){
-		// Add class "open_notifs" to the clicked notification, remove the class from other notificationqs
-		$('.notifs').removeClass('open_notifs');
-		$(this).addClass('open_notifs');
-		
-		wrapper_id = $(this).attr("id");
-		type = wrapper_id.split("s_notif")
-		$.post("ajax.php",
-			{
-				"updateElementEmployee" : "1", "updateElementEmployeeType" : type[0]
-			}, function(data) {
-			if(data)
-			{
-				if(!$("#" + wrapper_id + "_wrapper").is(":visible"))
-				{
-					$(".notifs_wrapper").hide();
-					$("#" + wrapper_id + "_number_wrapper").hide();  
-					$("#" + wrapper_id + "_wrapper").show();  
-				}else
-				{
-					$("#" + wrapper_id + "_wrapper").hide();							
-				}
-			}				
-		});
-	});
-	
-	$("#main").click(function(){
-		$(".notifs_wrapper").hide();
-		$('.notifs').removeClass('open_notifs');
-	});
-
-	// call it once immediately, then use setTimeout if refresh is activated
-	getPush({$autorefresh_notifications});
-});
-</script>
 	</head>
 	<body {if $bo_color} style="background:{$bo_color}" {/if}>
 {if $display_header}
@@ -266,13 +220,13 @@ $(document).ready(function()
 {/if}
 <div id="main">
 	<div id="content">
-		{if $install_dir_exists}
+		{if $display_header && $install_dir_exists}
 			<div style="background-color: #FFEBCC;border: 1px solid #F90;line-height: 20px;margin: 0px 0px 10px;padding: 10px 20px;">
 				{l s='For security reasons, you must also:'}  {l s='delete the /install folder'}
 			</div>
 		{/if}
 		
-		{if $is_multishop && $shop_context != 'all'}
+		{if $display_header && $is_multishop && $shop_context != 'all'}
 			<div class="multishop_info">
 				{if $shop_context == 'group'}
 					{l s='You are configuring your store for group shop '}<b>{$group_shop->name}</b>
