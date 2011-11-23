@@ -203,7 +203,7 @@
 			</div>
 		{/if}
 		{if $required_fields}
-			<div class="small"><sup>*</sup> {l s ='Required field'}</div>
+			<div class="small"><sup>*</sup> {l s='Required field'}</div>
 		{/if}
 		{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
 		</fieldset><br />
