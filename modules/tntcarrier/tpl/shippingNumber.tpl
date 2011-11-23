@@ -37,7 +37,7 @@
 			{/if}
 			{/foreach}
 			</div>
-			{$var.lang_sticker} : <a style="color:blue" href="{$var.sticker}">{l s="PDF File"}</a><br/>
+			{$var.lang_sticker} : <a style="color:blue" href="{$var.sticker}">{l s='PDF File'}</a><br/>
 			{$var.lang_expedition} : {$var.date}<br/>{$var.place}
 			{/if}
 </fieldset>

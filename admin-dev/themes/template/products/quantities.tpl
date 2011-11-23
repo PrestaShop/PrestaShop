@@ -123,7 +123,7 @@
 		data.ajax = 1;
 		data.controller = "AdminProducts";
 		data.action = "productQuantity";
-		showAjaxMsg('{l s="Saving data..."}');
+		showAjaxMsg('{l s='Saving data...'}');
 		$.ajax({
 			type: "POST",
 			url: "ajax-tab.php",
@@ -134,14 +134,14 @@
 			{
 				if (msg.error)
 				{
-					showAjaxError('{l s="Error durring saving data"}');
+					showAjaxError('{l s='Error durring saving data'}');
 					return;
 				}
-				showAjaxSuccess('{l s="Data saved"}');
+				showAjaxSuccess('{l s='Data saved'}');
 			},
 			error: function(msg)
 			{
-				showAjaxError('{l s="Error durring saving data"}');
+				showAjaxError('{l s='Error durring saving data'}');
 			}
 		});
 	};

@@ -26,8 +26,9 @@
 <script>
 	function confirmProductAttached(productList)
 	{
+		var confirm_text = {l s='This attachment is used by the following products:'}
 		if (confirm('{$confirm}'))
-			return confirm('{l s="This attachment is used by the following products:"}' + {$product_list[$id]});
+			return confirm(confirm_text + {$product_list[$id]});
 		return false;
 	}
 </script>
