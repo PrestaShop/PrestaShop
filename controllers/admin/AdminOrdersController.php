@@ -106,9 +106,9 @@ class AdminOrdersControllerCore extends AdminController
 		if ($this->display == 'view')
 		{
 			$order = new Order((int)Tools::getValue('id_order'));
-			if ($order->hasBeenDelivered()) $type = $this->l('Return');
-			elseif ($order->hasBeenPaid()) $type = $this->l('Refund');
-			else $type = $this->l('Cancel');
+			if ($order->hasBeenDelivered()) $type = $this->l('Return products');
+			elseif ($order->hasBeenPaid()) $type = $this->l('Standard refund');
+			else $type = $this->l('Cancel products');
 
 			$this->toolbar_btn['new'] = array(
 				'short' => 'Create',
@@ -119,7 +119,7 @@ class AdminOrdersControllerCore extends AdminController
 			$this->toolbar_btn['standard_refund'] = array(
 				'short' => 'Create',
 				'href' => '',
-				'desc' => $type.' '.$this->l('refund'),
+				'desc' => $type,
 				'class' => 'process-icon-new standard_refund'
 			);
 			$this->toolbar_btn['partial_refund'] = array(
@@ -345,8 +345,10 @@ class AdminOrdersControllerCore extends AdminController
 					$order_detail_list[$id_order_detail] = $amount_detail;
 				}
 			$shipping_cost_amount = (float)(Tools::getValue('partialRefundShippingCost'));
+			if ($shipping_cost_amount > 0)
+				$amount += $shipping_cost_amount;
 
-			if ($shipping_cost_amount > 0 OR $amount > 0)
+			if ($amount > 0)
 			{
 				if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
 					$this->_errors[] = Tools::displayError('Cannot generate partial credit slip');
