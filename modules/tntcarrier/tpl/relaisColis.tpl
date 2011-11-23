@@ -1,21 +1,38 @@
 <script type="text/javascript">
+    $("input[name='id_carrier']").click(function() {
+    getAjaxRelais($("input[name='id_carrier']:checked").val());
+    });
+
 	function getAjaxRelais(id)
 	{
-		$("#relaisColisCarrier").load(
+       /* var parent = document.getElementById("id_carrier"+id).parentNode.parentNode.parentNode;
+
+        if (document.getElementById("tr_carrier_relais"))
+            {
+                var node = document.getElementById("tr_carrier_relais");
+                var father = node.parentNode;
+                father.removeChild(node);
+                return;
+            }
+        var tr = document.createElement("tr");
+        tr.innerHTML = "<td colspan='4' style='display:none' id='tr_carrier_relais'></td>";
+        
+        parent.insertBefore(tr, document.getElementById("id_carrier"+id).parentNode.parentNode.nextSibling);
+*/
+		$.get(
 			"./modules/tntcarrier/relaisColis/relaisColis.php?id_carrier="+id,
 			function(response, status, xhr) 
 			{
 				if (status == "error") 
-					$("#relaisColisCarrier").html(xhr.status + " " + xhr.statusText);
+					$("#tr_carrier_relais").html(xhr.status + " " + xhr.statusText);
+                if (status == 'success')
+                    $("#tr_carrier_relais").html(response);
 			}
 		);
-		$("#relaisColisCarrier").slideDown('slow');
+		$("#tr_carrier_relais").slideDown('slow');
 	}
 	
-	$("input[name='id_carrier']").click(function() {
-	getAjaxRelais($("input[name='id_carrier']:checked").val());
-	});
 </script>
-<div id="relaisColisCarrier" style="display:none">
+<div id="tr_carrier_relais" style="display:none">
 </div>
 <input type="hidden" id="cartRelaisColis" value="{$id_cart}" name="cartRelaisColis" />

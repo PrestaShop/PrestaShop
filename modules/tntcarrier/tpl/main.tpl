@@ -1,7 +1,7 @@
 <ul id="menuTab">
-	<li id="menuTab1" class="menuTabButton selected">{$lang.accountSetting}</li>
-	<li id="menuTab2" class="menuTabButton">{$lang.shippingSetting}</li>
-	<li id="menuTab3" class="menuTabButton">{$lang.serviceSetting}</li>
+	<li id="menuTab1" class="menuTabButton selected">{l s='Account settings' mod='tntcarrier'}</li>
+	<li id="menuTab2" class="menuTabButton">{l s='Shipping Settings' mod='tntcarrier'}</li>
+	<li id="menuTab3" class="menuTabButton">{l s='Service Settings' mod='tntcarrier'}</li>
 </ul>
 <div id="tabList">
 	<div id="menuTab1Sheet" class="tabItem selected">{$varMain.account}</div>
@@ -12,7 +12,7 @@
 <br />
 <style>
 	#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
-	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
+	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
 	#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
 	#tabList { clear: left; }
 	.tabItem { display: none; }

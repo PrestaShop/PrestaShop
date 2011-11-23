@@ -35,7 +35,7 @@
 <link rel="stylesheet" href="./modules/tntcarrier/relaisColis/css/tntB2CRelaisColis.css" type="text/css" />
 <div id="tntB2CRelaisColis" class="exemplePresentation">
 	<div id="tntRCblocEntete">
-		<div class="tntRCHeader">Mode de livraison</div>
+		<!--<div class="tntRCHeader">Mode de livraison</div>-->
 		<div class="tntRCSubHeader">
 			Choisissez le Relais Colis
 			<sup class="tntRCSup">&reg;</sup>
