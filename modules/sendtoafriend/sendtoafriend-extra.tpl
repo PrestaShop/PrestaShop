@@ -58,7 +58,8 @@ $('document').ready(function(){
 		else
 		{
 			$('#send_friend_form_error').show();
-			$('#send_friend_form_error').text('{/literal}{l s="You did not fill required fields" mod=sendtoafriend}{literal}');
+			var error_text = {/literal}{l s='You did not fill required fields' mod=sendtoafriend}{literal}
+			$('#send_friend_form_error').text(error_text);
 		}
 	});
 });

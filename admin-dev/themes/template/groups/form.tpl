@@ -72,13 +72,13 @@
 			{
 				$(elt).addClass('unselect_all').removeClass('select_all');
 				$('ul#sortable_module_'+$(elt).attr('id')).find('input[type="checkbox"]').removeAttr('checked');
-				$(elt).html('{l s="Select all"}');
+				$(elt).html('{l s='Select all'}');
 			}
 			else
 			{
 				$(elt).addClass('select_all').removeClass('unselect_all');
 				$('ul#sortable_module_'+$(elt).attr('id')).find('input[type="checkbox"]').attr('checked', 'checked');
-				$(elt).html('{l s="Unselect all"}');
+				$(elt).html('{l s='Unselect all'}');
 			}
 		}
 		
@@ -258,12 +258,12 @@
 				<tfoot>
 					<tr>
 						<td style="text-align:center">
-							<button style="width:100%;margin-top:5px" id="authorize_list" onclick="toogleCheck(this);return false;" class="button">{l s="Select all"}</button>
-							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="authorizeChecked();return false;" class="button">{l s="<< Unauthorize"}</button>
+							<button style="width:100%;margin-top:5px" id="authorize_list" onclick="toogleCheck(this);return false;" class="button">{l s='Select all'}</button>
+							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="authorizeChecked();return false;" class="button">{l s='<< Unauthorize'}</button>
 						</td>
 						<td style="text-align:center">
-							<button style="width:100%;margin-top:5px"id="unauthorize_list" onclick="toogleCheck(this);return false;" class="button">{l s="Select all"}</button>
-							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="unauthorizeChecked();return false;" class="button">{l s="<< Authorize"}</button>
+							<button style="width:100%;margin-top:5px"id="unauthorize_list" onclick="toogleCheck(this);return false;" class="button">{l s='Select all'}</button>
+							<button style="width:100%;margin-top:5px;margin-bottom:5px" onclick="unauthorizeChecked();return false;" class="button">{l s='<< Authorize'}</button>
 						</td>
 					</tr>
 				</tfoot>
