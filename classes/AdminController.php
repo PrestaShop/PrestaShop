@@ -1239,6 +1239,8 @@ class AdminControllerCore extends Controller
 			'quick_access' => $quick_access,
 			'multi_shop' => Shop::isFeatureActive(),
 			'shop_list' => (Shop::isFeatureActive() ? generateShopList() : null), //@TODO refacto
+			'shop' => $this->context->shop,
+			'group_shop' => $this->context->shop->getGroup(),
 			'tab' => $tab,
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
