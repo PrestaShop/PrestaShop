@@ -89,8 +89,8 @@ class AdminCartsController extends AdminController
 				'width' => 25,
 				'align' => 'center',
 				'type' => 'bool',
-				'filter_key' => 'guest',
-				'tmpTableFilter' => true,
+				'filter_key' => 'id_guest',
+				'havingFilter' => true,
 				'icon' => array(0 => 'blank.gif', 1 => 'tab-customers.gif')
 			)
 		);
