@@ -2919,6 +2919,9 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateCustomizationFields($oldProductId, $productId)
 	{
+		// If customization is not activated, return success
+		if (!Customization::isFeatureActive())
+			return true;
 		if (($customizations = self::_getCustomizationFieldsNLabels($oldProductId)) === false)
 			return false;
 		if (empty($customizations))
