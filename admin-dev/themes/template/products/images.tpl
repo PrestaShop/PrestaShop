@@ -230,17 +230,15 @@
 				$(this).attr("src", $(this).attr("src").replace("enabled", "forbbiden"));
 			});
 			$(this).attr("src", $(this).attr("src").replace("forbbiden", "enabled"));
-			$.ajax(
-			{
-				url : "ajax-tab.php",
-				data : {
+			doAdminAjax({
 				"action":"UpdateCover",
 				"id_image":id,
 				"id_product" : {/literal}{$id_product}{literal},
 				"token" : "{/literal}{$token}{literal}",
-				"tab" : "AdminProducts",
-				"ajax" : 1 },
-			});
+				"controller" : "AdminProducts",
+				"ajax" : 1 }
+			);
+			
 		});
 		
 		$('.image_shop').die().live('click', function()
@@ -250,32 +248,28 @@
 				active = true;
 			id = $(this).parent().parent().attr('id');
 			id_shop = $(this).attr("id").replace(id, "");
-			$.ajax(
+			doAdminAjax(
 			{
-				url : "ajax-tab.php",
-				data : {
 				"action":"UpdateProductImageShopAsso",
 				"id_image":id,
 				"id_shop": id_shop,
 				"active":active,
 				"token" : "{/literal}{$token}{literal}",
 				"tab" : "AdminProducts",
-				"ajax" : 1 },
+				"ajax" : 1 
 			});
 		});
 		
 		//function	
 		function updateImagePositon(json)
 		{
-			$.ajax(
-			{
-				url : "ajax-tab.php",
-				data : {
+			doAdminAjax(
+			 {
 				"action":"updateImagePosition",
 				"json":json,
 				"token" : "{/literal}{$token}{literal}",
 				"tab" : "AdminProducts",
-				"ajax" : 1 },
+				"ajax" : 1
 			});
 
 		}
