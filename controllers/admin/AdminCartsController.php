@@ -209,11 +209,11 @@ class AdminCartsController extends AdminController
 
 			if (!$this->context->cart->id_address_invoice && isset($addresses[0]))
 				$this->context->cart->id_address_invoice = (int)$addresses[0]['id_address'];
-			else if ($id_address_invoice)
+			elseif ($id_address_invoice)
 				$this->context->cart->id_address_invoice = (int)$id_address_invoice;
 			if (!$this->context->cart->id_address_delivery && isset($addresses[0]))
 				$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
-			else if ($id_address_delivery)
+			elseif ($id_address_delivery)
 				$this->context->cart->id_address_delivery = (int)$id_address_delivery;
 			$this->context->cart->save();
 			$currency = new Currency((int)$this->context->cart->id_currency);
@@ -226,7 +226,7 @@ class AdminCartsController extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$errors = array();
-			if (!$id_product = (int)Tools::getValue('id_product') || !$id_product_attribute = (int)Tools::getValue('id_product_attribute'))
+			if (!($id_product = (int)Tools::getValue('id_product')) || !($id_product_attribute = (int)Tools::getValue('id_product_attribute')))
 				$errors[] = Tools::displayError('Invalid product');
 			if (count($errors))
 				die(Tools::jsonEncode($errors));
@@ -245,9 +245,9 @@ class AdminCartsController extends AdminController
 				return;
 			if ($this->context->cart->OrderExists())
 				$errors[] = Tools::displayErrors('An order already placed with this cart');
-			else if (!$id_product = (int)Tools::getValue('id_product') OR (!$product = new Product((int)$id_product, true, $this->context->language->id)))
+			elseif (!($id_product = (int)Tools::getValue('id_product')) OR !($product = new Product((int)$id_product, true, $this->context->language->id)))
 				$errors[] = Tools::displayError('Invalid product');
-			else if (!$qty = Tools::getValue('qty') || $qty == 0)
+			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)
 				$errors[] = Tools::displayError('Invalid quantity');
 			if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0)
 			{
@@ -257,9 +257,10 @@ class AdminCartsController extends AdminController
 			else
 				if (!$product->checkQty((int)$qty))
 					$errors[] = Tools::displayError('There is not enough product in stock');
-			if (!$id_customization = (int)Tools::getValue('id_customization', 0) && !$product->hasAllRequiredCustomizableFields())
+			if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields())
 				$errors[] = Tools::displayError('Please fill in all required fields');
 			$this->context->cart->save();
+
 			if (!count($errors))
 			{
 				if ((int)$qty < 0)
@@ -269,6 +270,7 @@ class AdminCartsController extends AdminController
 				}
 				else
 					$operator = 'up';
+
 				if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int)$id_product_attribute, (int)$id_customization, 0, $operator)))
 					$errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
 			}
@@ -337,7 +339,6 @@ class AdminCartsController extends AdminController
 				echo Tools::jsonEncode($this->ajaxReturnVars());
 			}
 		}
-
 	}
 
 	public function ajaxProcessDeleteVoucher()
