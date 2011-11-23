@@ -75,7 +75,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 
 
 .number_wrapper {color: white;display: none;font-size: 13px;font-weight: bold;position: absolute; right: -8px;top: -10px;z-index: 101;padding: 2px 5px;}
-.number_wrapper span {background-color: #F03D25;display: block;padding: 0 2px;border-color: -moz-use-text-color #DD3822 #DD3822;border-radius: 2px 2px 2px 2px;border-right: 1px solid #DD3822;border-style: none solid solid;border-width: 0 0px;}
+.number_wrapper span {background-color: #F03D25; font-size:11px; display: block; padding: 1px 3px;border-color: -moz-use-text-color #DD3822 #DD3822;border-radius: 2px 2px 2px 2px;border-right: 1px solid #DD3822;border-style: none solid solid;border-width: 0 0px;}
 .notifs_wrapper {background: none repeat scroll 0 0 #FFFFFF; border: 1px solid #000; border-top:none;display: none; cursor:auto; position: absolute; top: 25px; left: -1px; width:300px; padding: 10px;color: black; z-index:9999;}
 .notifs_wrapper h3 {font-size: 14px;padding-bottom:8px;margin:0;border-bottom: 1px solid #E5E5E5;}
 .notifs_wrapper ul {padding:6px 0;margin:0;}
@@ -222,8 +222,7 @@ form#product_form, form#access_form, form#cart_rule_form {   background-color:#e
 #addons_login_div p {float:left; font-size:16px; color:#585A69; line-height:24px; text-shadow: 0 1px 0 #fff; margin:0; padding-left:25px;}
 #addons_login_div label {}
 #addons_login_div input { float:left; margin-right:10px;}
-#addons_login_div input#
-#addons_login_div input#username_addons { }
+#addons_login_div input#addons_login_button { margin-right: 0px; }
 
 
 /*SIDEBAR*/
@@ -260,8 +259,12 @@ form#product_form, form#access_form, form#cart_rule_form {   background-color:#e
 #moduleContainer .button.uninstalled,
 #moduleContainer .button.installed { float:right; clear:both; margin-top:15px; font-size:12px;}
 #moduleContainer ul.listing-grid-module { position:relative; margin:0; padding:0;}
-#moduleContainer ul.listing-grid-module li { float:left; border:1px solid #ccc; width:400px; min-height:50px; margin:10px; padding:5px; border-radius:4px;}
-#moduleContainer ul.listing-grid-module li select { float:right;}
+#moduleContainer ul.listing-grid-module li { float:left; border:1px solid #ccc; width:400px; min-height:30px; margin:10px; padding:5px; border-radius:4px;}
+#moduleContainer .moduleGridDesc { position:relative; display:block; height:30px;}
+#moduleContainer .moduleGridDesc h3 { color:#3A6EA7; margin:0;}
+#moduleContainer ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
+
+
 /*FOOTER*/
 #footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
 #footer .footer_link, #footer .footer_link:hover {color:#D41958;}
