@@ -1633,7 +1633,7 @@ class AdminControllerCore extends Controller
 			$url = parse_url($_SERVER['REQUEST_URI']);
 			$query = (isset($url['query'])) ? $url['query'] : '';
 			parse_str($query, $parse_query);
-			unset($parse_query['setShopContext']);
+			unset($parse_query['setShopContext'], $parse_query['conf']);
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query);
 		}
 		elseif (!Shop::isFeatureActive())
