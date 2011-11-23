@@ -531,17 +531,19 @@ $(document).ready(function(){
 			$(document).ready(function(){
 				if ($("#is_virtual_good").attr("checked"))
 				{
-					$("#virtual_good").show("slow");
-					$("#virtual_good_more").show("slow");
+					$("#virtual_good").show();
+					$("#virtual_good_more").show();
 				}
 
 				if ( $("input[name=is_virtual_file]:checked").val() == 1)
 				{
+					$("#virtual_good_more").show();
 					$("#virtual_good_attributes").show();
 					$("#is_virtual_file_product").show();
 				}
 				else
 				{
+					$("#virtual_good_more").hide();
 					$("#virtual_good_attributes").hide();
 					$("#is_virtual_file_product").hide();
 				}
@@ -549,11 +551,13 @@ $(document).ready(function(){
 				$("input[name=is_virtual_file]").live("change", function() {
 					if($(this).val() == "1")
 					{
+						$("#virtual_good_more").show();
 						$("#virtual_good_attributes").show();
 						$("#is_virtual_file_product").show();
 					}
 					else
 					{
+						$("#virtual_good_more").hide();
 						$("#virtual_good_attributes").hide();
 						$("#is_virtual_file_product").hide();
 					}

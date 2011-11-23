@@ -277,6 +277,7 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->setDeliveryOption(null);
 				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
+				$this->context->cart->secure_key = $customer->secure_key;
 				$this->context->cart->update();
 				// Add customer to the context
 				$this->context->customer = $customer;
