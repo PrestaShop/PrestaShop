@@ -140,13 +140,13 @@
 								<td>
 								{if $option.is_best_grade}
 									{if $option.is_best_price}
-									<div class="delivery_option_best delivery_option_icon">{l s="The best price and grade"}</div>
+									<div class="delivery_option_best delivery_option_icon">{l s='The best price and grade'}</div>
 									{else}
-									<div class="delivery_option_fast delivery_option_icon">{l s="The faster"}</div>
+									<div class="delivery_option_fast delivery_option_icon">{l s='The faster'}</div>
 									{/if}
 								{else}
 									{if $option.is_best_price}
-									<div class="delivery_option_best_price delivery_option_icon">{l s="The best price"}</div>
+									<div class="delivery_option_best_price delivery_option_icon">{l s='The best price'}</div>
 									{/if}
 								{/if}
 								</td>

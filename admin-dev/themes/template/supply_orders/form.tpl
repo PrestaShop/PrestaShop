@@ -150,7 +150,7 @@
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><a href="#" class="removeProductFromSupplyOrderLink" id="deletelink|'+product_infos.id+'">'+
-				'<img src="../img/admin/delete.gif" alt="{l s="Remove this product from the order"}" title="{l s="Remove this product from the order"}" />'+
+				'<img src="../img/admin/delete.gif" alt="{l s='Remove this product from the order'}" title="{l s='Remove this product from the order'}" />'+
 				'</a></td></tr>'
 			);
 
