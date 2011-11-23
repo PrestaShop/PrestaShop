@@ -214,7 +214,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`cart_rule_restriction` tinyint(1) unsigned NOT NULL default 0,
 	`product_restriction` tinyint(1) unsigned NOT NULL default 0,
 	`free_shipping` tinyint(1) NOT NULL default 0,
-	`reduction_percent` decimal(4,2) NOT NULL default 0,
+	`reduction_percent` decimal(5,2) NOT NULL default 0,
 	`reduction_amount` decimal(17,2) NOT NULL default 0,
 	`reduction_tax` tinyint(1) unsigned NOT NULL default 0,
 	`reduction_currency` int(10) unsigned NOT NULL default 0,
