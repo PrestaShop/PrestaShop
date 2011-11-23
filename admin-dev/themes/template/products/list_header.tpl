@@ -3,7 +3,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#go_to_categ').bind('change', function(){
-			var base_url = '{$base_url}';
+			var base_url = '{$currentIndex}';
 			if (this.value !== "")
 				location.href = base_url + '&id_category=' + parseInt(this.value);
 			else
