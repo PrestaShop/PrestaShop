@@ -218,7 +218,6 @@
 	</td>
 	</tr-->
 </table>
-<div class="clear"></div>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 {* [begin] pack product *}
 <table>
@@ -364,8 +363,6 @@ function delPackItem(id)
 {* [end] pack product *}
 
 {* [begin] specific / detailled information *}
-
-<div class="clear"></div>
 <script type="text/javascript">
 var newLabel = '{l s='New label'}';
 var choose_language = '{l s='Choose language:'}';
@@ -381,7 +378,7 @@ $(document).ready(function(){
 	});
 });
 </script>
-<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
+<div class="separation"></div>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
 <tr>
 	<td colspan="2">
@@ -390,10 +387,7 @@ $(document).ready(function(){
 		</p>
 		{* [begin] physical product infos *}
 		<div id="physical_good" class="toggleVirtualPhysicalProduct" {if $product->productDownload->id && $product->productDownload->active}style="display:none"{/if} >
-		<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
-		<tr><td><div class="separation"></div></td></tr>
-		</table>
-		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
+<div class="separation"></div>		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
 			<tr>
 				<td class="col-left"><label>{l s='Width ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
