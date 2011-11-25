@@ -1011,8 +1011,6 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
 		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
 
-
-		d($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 		// discount
 		$order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 		$order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
