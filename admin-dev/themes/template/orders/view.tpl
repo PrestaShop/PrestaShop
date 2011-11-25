@@ -106,7 +106,7 @@
 	<!-- Left column -->
 	<div style="width: 48%; float:left;">
 		<!-- Change status form -->
-		<form action="{$currentIndex}&viewOrder&token={$smarty.get.token}" method="post" style="text-align:center;">
+		<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" style="text-align:center;">
 			<select name="id_order_state">
 			{foreach from=$states item=state}
 				<option onclick="{if (!$currentState->shipped && $state['shipped'])}showWarehouseList(){else}hideWarehouseList(){/if}" value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
@@ -230,7 +230,7 @@
 			<legend><img src="../img/admin/details.gif" /> {l s='Payment'}</legend>
 
 			{if !$order->valid}
-			<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+			<form method="post" action="{$currentIndex}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 				<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
 				<label>{l s='Change order\'s currency to:'}</label>
 				<select name="new_currency">
@@ -250,7 +250,7 @@
 				{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 			</p>
 
-			<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+			<form method="post" action="{$currentIndex}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 				<table class="table" width="100%" cellspacing="0" cellpadding="0">
 					<thead>
 						<tr>
