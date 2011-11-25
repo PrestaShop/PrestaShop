@@ -96,6 +96,11 @@ abstract class ModuleCore
 	protected $context;
 
 	/**
+	 * @var Smarty_Data
+	 */
+	protected $smarty;
+
+	/**
 	 * Constructor
 	 *
 	 * @param string $name Module unique name
@@ -104,6 +109,7 @@ abstract class ModuleCore
 	public function __construct($name = null, Context $context = null)
 	{
 		$this->context = $context ? $context : Context::getContext();
+		$this->smarty = $this->context->smarty->createData($this->context->smarty);
 
 		if ($this->name == NULL)
 			$this->name = $this->id;
@@ -1192,17 +1198,27 @@ abstract class ModuleCore
 		return self::_isTemplateOverloadedStatic($this->name, $template);
 	}
 
-	public static function display($file, $template, $cacheId = NULL, $compileId = NULL)
+	public function display($file, $template, $cacheId = NULL, $compileId = NULL)
 	{
 		$context = Context::getContext();
 
-		$context->smarty->assign('module_dir', __PS_BASE_URI__.'modules/'.basename($file, '.php').'/');
 		if (($overloaded = self::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === NULL)
 			$result = Tools::displayError('No template found for module').' '.basename($file,'.php');
 		else
 		{
-			$context->smarty->assign('module_template_dir', ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/');
-			$result = $context->smarty->fetch(($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template, $cacheId, $compileId);
+			$this->smarty->assign(array(
+				'module_dir' =>				__PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
+				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/'
+			));
+
+			$smarty_subtemplate = $context->smarty->createTemplate(
+				($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template,
+				$cacheId,
+				$compileId,
+				$this->smarty
+			);
+
+			$result = $smarty_subtemplate->fetch();
 		}
 		return $result;
 	}
