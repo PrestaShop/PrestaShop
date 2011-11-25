@@ -74,15 +74,13 @@
 												{capture assign="name"}{strtolower($module_name)}_{strtolower($theme_name)}_{strtolower($template_name)}_{md5($key)}{/capture}
 												{if $key|strlen < $textarea_sized}
 													<input type="text" 
-														   style="width: 450px" 
-														   name="{$name|md5}" 
-														   value="{$value|regex_replace:'#"#':'&quot;'|stripslashes}" />
+														style="width: 450px" 
+														name="{$name|md5}" 
+														value="{$value|regex_replace:'#"#':'&quot;'|stripslashes}" />
 												{else}
 													<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
-															  style="width: 450px" 
-															  name="{$name|md5}">
-														{$value|regex_replace:'#"#':'&quot;'|stripslashes}
-													</textarea>
+														style="width: 450px" 
+														name="{$name|md5}">{$value|regex_replace:'#"#':'&quot;'|stripslashes}</textarea>
 												{/if}
 											</td>
 										</tr>

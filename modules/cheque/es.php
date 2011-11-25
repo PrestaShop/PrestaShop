@@ -42,6 +42,7 @@ $_MODULE['<{cheque}prestashop>payment_return_e4ee6e0eac588fe2611cc6fd195828af'] 
 $_MODULE['<{cheque}prestashop>payment_return_a35abd2d31d9e1da82599bc67e166506'] = 'por un valor de';
 $_MODULE['<{cheque}prestashop>payment_return_84cca8efe379645790938f55b701a1a4'] = 'a la orden de';
 $_MODULE['<{cheque}prestashop>payment_return_c5a6826dd3b059e32a3fa1ae029179de'] = 'enviar a';
+$_MODULE['<{cheque}prestashop>payment_return_dd765b42bd8a2631e8e7b9a9af1c590f'] = 'No se olvide añadir su pedido #';
 $_MODULE['<{cheque}prestashop>payment_return_13f4ac6dc75b5829499cb9cf8b733071'] = 'Le hemos enviado un email con los datos anteriores.';
 $_MODULE['<{cheque}prestashop>payment_return_ffd2478830ca2f519f7fe7ee259d4b96'] = 'Le enviaremos su pedido en cuanto recibamos el pago';
 $_MODULE['<{cheque}prestashop>payment_return_0db71da7150c27142eef9d22b843b4a9'] = 'Para cualquier duda o para más información, póngase en contacto con nuestro servicio ';
