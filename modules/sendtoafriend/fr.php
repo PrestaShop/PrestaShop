@@ -6,10 +6,10 @@ $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_2107f6398c37b4b9ee1e1b5
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_5d6103b662f41b07e10687f03aca8fdc'] = 'Destinataire';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_bb6aa0be8236a10e6d3b315ebd5f2547'] = 'Nom de votre ami';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_099bc8914b5be9e522a29e48cb3c01c4'] = 'Adresse email de votre ami';
+$_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'ou';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
-$_MODULE['<{sendtoafriend}prestashop>sendtoafriend-extra_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_2074615eb70699e55b1f9289c6c77c25'] = 'Module envoyer à un ami';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_3234e2609dd694d8763c390fe97eba04'] = 'Permet à vos clients d\'envoyer des liens à leurs amis';
 $_MODULE['<{sendtoafriend}prestashop>sendtoafriend_ajax_22c4733a9ceb239bf825a0cecd1cfaec'] = 'Un ami';

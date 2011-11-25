@@ -29,15 +29,6 @@ $_MODULE['<{tntcarrier}prestashop>tntcarrier_508ccf43328cac4c93d1de242d2ddffb'] 
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_43781db5c40ecc39fd718685594f0956'] = 'Enregistrer';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_31233b21c141d4a9d6aa01a02d1122ae'] = 'Tous les champs sont obligatoires';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_7671f3696ad03d80261fb2bbcf333b0e'] = 'Le code de pex est manquant';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_f7ccaf14e6a159fbf74c3574f24f6c98'] = 'Le nom de votre société est manquant';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_ed0e7964e931baea6fe213b85d47dcae'] = 'Votre nom de famille est manquant';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_bc76583af7e30c752071c4c22becb202'] = 'Votre prénom est manquant';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_a6940761269d856d96b9ab14cd2a6622'] = 'Votre adresse est manquante';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_9213e685b255732fa7505b6204aeaa79'] = 'Votre adresse ligne 2 doit être inférieur à 32 caractères';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_eb935b898b0fb568b9508bbc1a0fcc37'] = 'Votre code postal est manquant';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_d9f4b12b8eee0330f2085cd50f52211b'] = 'Votre adresse email est manquante';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_afaa05f3479edb1d285563be231f8552'] = 'Votre numéro de téléphone est manquant';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_450af965cc6328e0f4713a4bf9f8f705'] = 'Votre heure de fermeture est manquante';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_69d865b41dc0e6611be76776c4a9456d'] = 'Vous devez donner un nom au service';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_e71361626c48f42620b92cc81fd41ba2'] = 'Vous devez donner un code au service';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_d2f2575c30fa33e53905ae05bc02f281'] = 'Vous devez donner une description au service';
@@ -121,8 +112,6 @@ $_MODULE['<{tntcarrier}prestashop>shippingform_e9f79aa2b1f455a52497a126d9442582'
 $_MODULE['<{tntcarrier}prestashop>shippingform_3d4d4cac03e194ab20154382cd544e0f'] = 'Adresse ligne 2';
 $_MODULE['<{tntcarrier}prestashop>shippingform_25f75488c91cb6c3bab92672e479619f'] = 'Code postal';
 $_MODULE['<{tntcarrier}prestashop>shippingform_57d056ed0984166336b7879c2af3657f'] = 'Ville';
-$_MODULE['<{tntcarrier}prestashop>shippingform_f775ad1fbb08939178d4df9c457601f2'] = 'Votre adresse email';
-$_MODULE['<{tntcarrier}prestashop>shippingform_67c19a5276428fb9e49c557b1a3526d5'] = 'Votre numéro de téléphone';
 $_MODULE['<{tntcarrier}prestashop>shippingform_6222760252f52bb4dc70835d238d5484'] = 'Votre heure de clôture';
 $_MODULE['<{tntcarrier}prestashop>shippingform_cf67059a7bd51c3543def1ee4bdc4fe1'] = 'Livraison le samedi';
 $_MODULE['<{tntcarrier}prestashop>shippingform_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';

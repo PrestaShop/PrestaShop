@@ -8,10 +8,10 @@ $_MODULE['<{productcomments}prestashop>productcomments-extra_7966126831926ad29c5
 $_MODULE['<{productcomments}prestashop>productcomments-extra_b78a3223503896721cca1303f776159b'] = 'Titre';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_0be8406951cdfda82f00f79328cf4efc'] = 'Commentaire';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_a2ed44743411cf8b80e397448fce104c'] = 'Votre nom';
-$_MODULE['<{productcomments}prestashop>productcomments-extra_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_e81c4e4f2b7b93b481e13a8553c2ae1b'] = 'ou';
 $_MODULE['<{productcomments}prestashop>productcomments-extra_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
+$_MODULE['<{productcomments}prestashop>productcomments-extra_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{productcomments}prestashop>productcomments_b91c4e8b229a399a3bc911d352524a9b'] = 'Commentaires produits';
 $_MODULE['<{productcomments}prestashop>productcomments_9918811c511f3481c085e46c07ab5da8'] = 'Permet aux client de commenter les produits';
 $_MODULE['<{productcomments}prestashop>productcomments_f4d1ea475eaa85102e2b4e6d95da84bd'] = 'Confirmation';

@@ -31,6 +31,11 @@
 		<br /><br />- {l s='an amount of' mod='cheque'} <span class="price">{$total_to_pay}</span>
 		<br /><br />- {l s='payable to the order of' mod='cheque'} <span class="bold">{if $chequeName}{$chequeName}{else}___________{/if}</span>
 		<br /><br />- {l s='mail to' mod='cheque'} <span class="bold">{if $chequeAddress}{$chequeAddress}{else}___________{/if}</span>
+		{if !isset($reference)}
+			<br /><br />- {l s='Do not forget to insert your order number #' mod='cheque'} <span class="bold">{$id_order}</span>
+		{else}
+			<br /><br />- {l s='Do not forget to insert your order reference' mod='cheque'} <span class="bold">{$reference}</span>
+		{/if}
 		<br /><br />{l s='An e-mail has been sent to you with this information.' mod='cheque'}
 		<br /><br /><span class="bold">{l s='Your order will be sent as soon as we receive your payment.' mod='cheque'}</span>
 		<br /><br />{l s='For any questions or for further information, please contact our' mod='cheque'} <a href="{$link->getPageLink('contact', true)}">{l s='customer support' mod='cheque'}</a>.
