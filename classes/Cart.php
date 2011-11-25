@@ -65,7 +65,7 @@ class CartCore extends ObjectModel
 
 	/** @var string secure_key */
 	public $secure_key;
-	
+
 	/* @var integer Carrier ID */
 	public $id_carrier = 0;
 
@@ -167,7 +167,7 @@ class CartCore extends ObjectModel
 		}
 		else
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
-			
+
 	}
 
 	public function add($autodate = true, $nullValues = false)
@@ -282,7 +282,7 @@ class CartCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'cart_cart_rule` cd
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cd.`id_cart_rule` = cr.`id_cart_rule` AND crl.id_lang = '.(int)$this->id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cd.`id_cart_rule` = crl.`id_cart_rule` AND crl.id_lang = '.(int)$this->id_lang.')
 		WHERE `id_cart` = '.(int)$this->id);
 
 		foreach ($result as &$row)
@@ -1053,6 +1053,7 @@ class CartCore extends ObjectModel
 			$result = $this->getCartRules();
 			foreach (ObjectModel::hydrateCollection('CartRule', $result, Configuration::get('PS_LANG_DEFAULT')) AS $cartRule)
 				$order_total_discount += Tools::ps_round($cartRule->getContextualValue($withTaxes));
+
 			$order_total_discount = min(Tools::ps_round($order_total_discount), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
@@ -1096,7 +1097,7 @@ class CartCore extends ObjectModel
 		{
 			if ((int)$product['id_address_delivery'] == 0)
 				$product['id_address_delivery'] = (int)$this->id_address_delivery;
-			
+
 			if (!isset($warehouse_count_by_address[$product['id_address_delivery']]))
 				$warehouse_count_by_address[$product['id_address_delivery']] = array();
 
@@ -1140,7 +1141,7 @@ class CartCore extends ObjectModel
 				$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
 			}
 		}
-		
+
 		// If product from the cart are not in any warehouse, return false
 		//foreach ($warehouse_count_by_address as $warehouse_count)
 		//	if (empty($warehouse_count))
@@ -1485,7 +1486,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * Does the cart use multiple 
+	 * Does the cart use multiple
 	 */
 	public function isMultiAddressDelivery()
 	{
@@ -1493,10 +1494,10 @@ class CartCore extends ObjectModel
 		$sql->select('count(distinct id_address_delivery)');
 		$sql->from('cart_product as cp');
 		$sql->where('id_cart = '.(int)$this->id);
-		
+
 		return (boolean)(Db::getInstance()->getValue($sql) > 1);
 	}
-	
+
 	/**
 	 * Get all delivery addresses object for the current cart
 	 */
@@ -1524,13 +1525,13 @@ class CartCore extends ObjectModel
 			$this->id_carrier = 0;
 			return;
 		}
-		
+
 		if (count($delivery_option) == 1)
 			$this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);
-			
+
 		$this->delivery_option = serialize($delivery_option);
 	}
-	
+
 	private function getIdCarrierFromDeliveryOption($delivery_option)
 	{
 		$delivery_option_list = $this->getDeliveryOptionList();
@@ -1540,7 +1541,7 @@ class CartCore extends ObjectModel
 					return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
 		return 0;
 	}
-	
+
 	/**
 	* Get the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
 	* @return array delivery option
@@ -1586,7 +1587,7 @@ class CartCore extends ObjectModel
 			else
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
 		}
-		
+
 		return $total_shipping;
 	}
 
