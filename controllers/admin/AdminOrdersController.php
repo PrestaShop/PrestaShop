@@ -919,6 +919,7 @@ class AdminOrdersControllerCore extends AdminController
 			$cart_rule->reduction_product = $product->id;
 			$cart_rule->reduction_amount = $reduction_tax_incl;
 			$cart_rule->reduction_currency = $order->id_currency;
+			$cart_rule->reduction_tax = true;
 			$cart_rule->active = 1;
 			$cart_rule->add();
 
@@ -950,7 +951,7 @@ class AdminOrdersControllerCore extends AdminController
 					$cart_rule->add();
 
 					$cart->addCartRule($cart_rule->id);
-					//$order->addCartRule($cart_rule->id, $cart_rule->name, $cart_rule->getContextualValue(true));
+					$order->addCartRule($cart_rule->id, $cart_rule->name, $cart_rule->getContextualValue(true));
 				}
 				if (Tools::isSubmit('add_invoice'))
 					$invoice_informations = $_POST['add_invoice'];
@@ -959,6 +960,7 @@ class AdminOrdersControllerCore extends AdminController
 					Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
+
 				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH), 2);
 				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, Cart::BOTH), 2);
 				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -1008,6 +1010,13 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
 		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
 		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
+
+
+		d($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+		// discount
+		$order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+		$order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
+		$order->total_discounts_tax_incl += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 
 		// Save changes of order
 		$order->update();
@@ -1323,3 +1332,4 @@ class AdminOrdersControllerCore extends AdminController
 		return $products;
 	}
 }
+
