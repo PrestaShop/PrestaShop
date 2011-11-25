@@ -780,7 +780,7 @@ if ($lm->getIncludeTradFilename())
 					}
 
 						$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 3)));
-						$content = @file_get_contents('http://www.prestashop.com/partner/preactivation/partners.php?version=1.0', false, $stream_context);
+						$content = @file_get_contents('http://api.prestashop.com/partner/preactivation/partners.php?version=1.0', false, $stream_context);
 					if ($content && $content[0] == '<')
 					{
 						$result = simplexml_load_string($content);
@@ -1316,7 +1316,7 @@ if ($lm->getIncludeTradFilename())
 
 				<?php
 
-					if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
+					if (@fsockopen('features.prestashop.com', 80, $errno, $errst, 3))
 					{
 						echo '
 						<h2>'.lang('New features in PrestaShop v').INSTALL_VERSION.'</h2>
