@@ -91,7 +91,7 @@
 			}
 		</style>
 	</head>
-	<body {if $bo_color} style="background:{$bo_color}" {/if}>
+	<body{if $bo_color} style="background:{$bo_color}"{/if}>
 {if $display_header}
 	<div id="top_container">
 		<div id="container">
