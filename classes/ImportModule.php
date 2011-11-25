@@ -77,7 +77,7 @@ abstract class ImportModuleCore extends Module
 			return array_shift($result[0]);
 	}
 	
-	public static function getImportModulesOnDisk ()
+	public static function getImportModulesOnDisk()
 	{
 		$modules = Module::getModulesOnDisk(true);
 		foreach ($modules as $key => $module)

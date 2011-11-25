@@ -670,13 +670,13 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 5)));
 
 	// SCREENCAST
-	if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
+	if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3))
 		$result['screencast'] = 'OK';
 	else
 		$result['screencast'] = 'NOK';
 
 	// PREACTIVATION
-	$content = @file_get_contents($protocol.'://www.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&date_creation='._PS_CREATION_DATE_.'&v='._PS_VERSION_.'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+	$content = @file_get_contents($protocol.'://api.prestashop.com/partner/preactivation/preactivation-block.php?version=1.0&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&protocol='.$protocol.'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&date_creation='._PS_CREATION_DATE_.'&v='._PS_VERSION_.'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 	if (!$content)
 		$result['partner_preactivation'] = 'NOK';
 	else
@@ -702,7 +702,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	}
 
 	// PREACTIVATION PAYPAL WARNING
-	$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+	$content = @file_get_contents('https://api.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext()->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 	$content = explode('|', $content);
 	if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 		Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', $content[1]);
@@ -710,7 +710,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 		Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', '');
 
 	// DISCOVER PRESTASHOP
-	$content = @file_get_contents($protocol.'://www.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+	$content = @file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 	if (!$content)
 		$result['discover_prestashop'] = 'NOK';
 	else
@@ -722,9 +722,9 @@ if (Tools::isSubmit('getAdminHomeElement'))
 			$result['discover_prestashop'] = 'NOK';
 
 		if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
-			$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://www.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
+			$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://api.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
 
-		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			$result['discover_prestashop'] .= $content[1];

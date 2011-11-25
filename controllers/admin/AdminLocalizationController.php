@@ -99,7 +99,7 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
-			if (!$pack = @Tools::file_get_contents('http://www.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml') &&
+			if (!$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml') &&
 				!$pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml'))
 				$this->_errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
 			else if (!$selection = Tools::getValue('selection'))
@@ -128,7 +128,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$localizations_pack = false;
 		$this->tpl_option_vars['options_content'] = $this->initOptions();
 
-		$xml_localization = Tools::simplexml_load_file('http://www.prestashop.com/rss/localization.xml');
+		$xml_localization = Tools::simplexml_load_file('http://api.prestashop.com/rss/localization.xml');
 		if (!$xml_localization)
 		{
 			$localization_file = dirname(__FILE__).'/../../localization/localization.xml';

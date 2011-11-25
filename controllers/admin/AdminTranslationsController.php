@@ -31,7 +31,7 @@ define ('TEXTAREA_SIZED', 70);
 
 class AdminTranslationsControllerCore extends AdminController
 {
-	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
+	protected $link_lang_pack = 'http://api.prestashop.com/download/lang_packs/get_each_language_pack.php';
 	protected $total_expression = 0;
 	protected $all_iso_lang = array();
 	protected $modules_translations = array();
@@ -312,7 +312,7 @@ class AdminTranslationsControllerCore extends AdminController
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
 			if ($content = Tools::file_get_contents(
-				'http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
+				'http://api.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
 				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
