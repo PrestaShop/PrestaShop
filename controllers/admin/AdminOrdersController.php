@@ -634,12 +634,13 @@ class AdminOrdersControllerCore extends AdminController
 						$payment->amount = Tools::convertPriceFull((float)$payment->amount, $old_currency, $currency);
 						$payment->update();
 					}
-
-					$order_carrier = Db::getInstance()->executeS('
+					
+					$order_carrier = Db::getInstance()->getRow('
 						SELECT *
 						FROM `'._DB_PREFIX_.'order_carrier`
 						WHERE `id_order` = '.(int)$order->id);
-					// Update order carrier amount
+					
+					// Update order carrier amount					
 					Db::getInstance()->execute('
 						UPDATE `'._DB_PREFIX_.'order_carrier`
 						SET `shipping_cost_tax_excl` = '.(float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_excl'], $old_currency, $currency).',
