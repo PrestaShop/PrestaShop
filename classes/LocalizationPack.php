@@ -238,7 +238,7 @@ class LocalizationPackCore
 	{
 		if (isset($xml->currencies->currency))
 		{
-			if (!$feed = Tools::simplexml_load_file('http://www.prestashop.com/xml/currencies.xml') AND !$feed = @simplexml_load_file(dirname(__FILE__).'/../localization/currencies.xml'))
+			if (!$feed = Tools::simplexml_load_file('http://api.prestashop.com/xml/currencies.xml') AND !$feed = @simplexml_load_file(dirname(__FILE__).'/../localization/currencies.xml'))
 			{
 				$this->_errors[] = Tools::displayError('Cannot parse the currencies XML feed.');
 				return false;
@@ -301,11 +301,11 @@ class LocalizationPackCore
 				if ((in_array((string)$attributes['iso_code'], $native_iso_code) AND !$install_mode) OR !in_array((string)$attributes['iso_code'], $native_iso_code))
 					$errno = 0;
 					$errstr = '';
-					if(@fsockopen('www.prestashop.com', 80, $errno, $errstr, 10))
+					if(@fsockopen('api.prestashop.com', 80, $errno, $errstr, 10))
 					{
-						if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$attributes['iso_code'])))
+						if ($lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.$attributes['iso_code'])))
 						{
-							if ($content = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$attributes['iso_code'].'.gzip'))
+							if ($content = Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$attributes['iso_code'].'.gzip'))
 							{
 								$file = _PS_TRANSLATIONS_DIR_.$attributes['iso_code'].'.gzip';
 								if (file_put_contents($file, $content))

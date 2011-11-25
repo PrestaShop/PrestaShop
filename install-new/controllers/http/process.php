@@ -185,7 +185,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		foreach ($this->session->partners as $partner => $data)
 		{
 			/*$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 5)));
-			$url = 'http://www.prestashop.com/partner/preactivation/actions.php?version=1.0&partner='.addslashes($_GET['partner']);
+			$url = 'http://api.prestashop.com/partner/preactivation/actions.php?version=1.0&partner='.addslashes($_GET['partner']);
 
 			// Protect fields
 			foreach ($_GET as $key => $value)
