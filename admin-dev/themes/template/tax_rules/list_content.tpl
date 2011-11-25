@@ -99,6 +99,12 @@
 					{/if}
 				{elseif $key == 'rate'}
 					{$tr.$key|string_format:"%.2f"}%
+				{elseif $key == 'zipcode'}
+					{if $tr.$key == '0 - 0'}
+						--
+					{else}
+						{$tr.$key|escape:'htmlall':'UTF-8'}
+					{/if}
 				{else}
 					{$tr.$key|escape:'htmlall':'UTF-8'}
 				{/if}
