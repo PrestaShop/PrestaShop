@@ -82,10 +82,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$this->list_no_link = true;
 
 		$this->fieldsDisplay = array(
-			'id_tax_rule' => array(
-				'title' => $this->l('ID'),
-				'width' => 25
-			),
 			'country_name' => array(
 				'title' => $this->l('Country'),
 				'width' => 140
