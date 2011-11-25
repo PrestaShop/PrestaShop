@@ -177,7 +177,7 @@ class AdminOrdersControllerCore extends AdminController
 						$id_carrier = Tools::getValue('id_carrier');
 						Db::getInstance()->execute('
 							UPDATE `'._DB_PREFIX_.'order_carrier`
-							SET `tracking_number` = '.pSQL(Tools::getValue('tracking_number')).'
+							SET `tracking_number` = \''.pSQL(Tools::getValue('tracking_number')).'\'
 							WHERE `id_order` = '.(int)$order->id.
 							' AND `id_carrier` = '.(int)$id_carrier.
 							($id_order_invoice ? ' AND `id_order_invoice` = '.(int)$id_order_invoice : ''));
