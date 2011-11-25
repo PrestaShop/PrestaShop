@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -43,7 +43,7 @@ foreach (Module::getPaymentModules() as $module)
 	}
 if (!$authorized)
 	die(Tools::displayError('This payment method is not available.'));
-	
+
 $customer = new Customer((int)$cart->id_customer);
 
 if (!Validate::isLoadedObject($customer))
@@ -60,7 +60,7 @@ if (Tools::getValue('confirm'))
 }
 else
 {
-	/* or ask for confirmation */ 
+	/* or ask for confirmation */
 	$smarty->assign(array(
 		'total' => $cart->getOrderTotal(true, Cart::BOTH),
 		'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/cashondelivery/'
@@ -68,7 +68,7 @@ else
 
 	$smarty->assign('this_path', __PS_BASE_URI__.'modules/cashondelivery/');
 	$template = 'validation.tpl';
-	echo Module::display('cashondelivery', $template);
+	echo Module::displayTemplate('cashondelivery', $template);
 }
 
 include(dirname(__FILE__).'/../../footer.php');

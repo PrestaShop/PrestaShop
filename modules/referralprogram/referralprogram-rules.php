@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -44,7 +44,7 @@ if (file_exists($xmlFile))
 	}
 }
 
-echo Module::display(dirname(__FILE__).'/referralprogram', 'referralprogram-rules.tpl'); 
+echo Module::displayTemplate(dirname(__FILE__).'/referralprogram', 'referralprogram-rules.tpl');
 
 if (!Tools::getValue('width') AND !Tools::getValue('height'))
 	require_once(dirname(__FILE__).'/../../footer.php');
