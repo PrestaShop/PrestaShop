@@ -1587,7 +1587,7 @@ class ProductCore extends ObjectModel
 		}
 
 		$sql = new DbQuery();
-		$sql->select('p.*, sa.out_of_stock, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
+		$sql->select('p.*, stock.out_of_stock, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
 						i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
 						(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice');
@@ -1600,7 +1600,7 @@ class ProductCore extends ObjectModel
 		$sql->leftJoin('tax_rule tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = '.(int)$context->country->id.' AND tr.`id_state` = 0)');
 		$sql->leftJoin('tax t ON (t.`id_tax` = tr.`id_tax`)');
 		$sql->leftJoin('manufacturer m ON (m.`id_manufacturer` = p.`id_manufacturer`)');
-		$sql->leftJoin('stock_available sa ON (sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0)');
+		Product::sqlStock('p', 0, false, null, $sql);
 
 		$sql->where('p.`active` = 1');
 		$sql->where('DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0');
