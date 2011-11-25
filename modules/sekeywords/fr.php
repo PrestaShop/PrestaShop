@@ -15,9 +15,7 @@ $_MODULE['<{sekeywords}prestashop>sekeywords_03e0e9ef8b776b5f7bcc590e51bfa63b'] 
 $_MODULE['<{sekeywords}prestashop>sekeywords_7b48f6cc4a1dde7fca9597e717c2465f'] = 'Aucun mot clé';
 $_MODULE['<{sekeywords}prestashop>sekeywords_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{sekeywords}prestashop>sekeywords_39f040a1f174811285297763fcaada12'] = 'Identifier des mots de moteurs de recherche externes';
-$_MODULE['<{sekeywords}prestashop>sekeywords_f4e8acc0e0cfc0653d6354c3ef878d29'] = 'Il y a de nombreux moyens pour accéder à un site internet, mais l\'un des plus courants est de passer par un moteur de recherche. Identifier les mots clés qui amènent le plus de visiteurs est donc très important car cela vous permet de connaître les produits que vous devez mettre en avant afin d\'attirer toujours plus de visiteurs et donc de clients potentiels.';
 $_MODULE['<{sekeywords}prestashop>sekeywords_359f9e79e746fa9f684e5cda9e60ca2e'] = 'Comment ça marche ?';
-$_MODULE['<{sekeywords}prestashop>sekeywords_b20af255c34d0a4ace56863dbd8f0c90'] = 'Quand un visiteur accède à un site internet, le serveur connaît l\'adresse du site précédent. Ce module analyse l\'adresse et identifie les mots clés inclus. Actuellement, il gère les moteurs suivants :';
 $_MODULE['<{sekeywords}prestashop>sekeywords_be5d5d37542d75f93a87094459f76678'] = 'et';
 $_MODULE['<{sekeywords}prestashop>sekeywords_474c03326cba5cb2ce6c07ddf3e1e656'] = 'Bientôt il sera possible d\'ajouter dynamiquement de nouveaux moteurs de recherche à cette liste et ainsi contribuer au développement du module !';
 $_MODULE['<{sekeywords}prestashop>sekeywords_8d01ac22a68176ddd7067da99508751d'] = '10 premiers mots clés';

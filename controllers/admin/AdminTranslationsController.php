@@ -400,7 +400,7 @@ class AdminTranslationsControllerCore extends AdminController
 					if (array_key_exists($post_key, $_POST) && !empty($_POST[$post_key]) && !in_array($pattern, $array_check_duplicate))
 					{
 						$array_check_duplicate[] = $pattern;
-						$str_write .= '$_MODULE['.$pattern.'] = \''.pSQL($_POST[$post_key]).'\';'."\n";
+						$str_write .= '$_MODULE['.$pattern.'] = \''.pSQL(str_replace(array("\r\n", "\r", "\n"), ' ', $_POST[$post_key])).'\';'."\n";
 						$this->total_expression++;
 					}
 				}
@@ -1699,7 +1699,6 @@ class AdminTranslationsControllerCore extends AdminController
 				'suoshin_exceeded' => $this->suhosin_limit_exceed,
 				'url_submit' => self::$currentIndex.'&submitTranslationsModules=1&token='.$this->token,
 				'toggle_button' => $this->displayToggleButton(),
-				'auto_translate' => $this->displayAutoTranslate(),
 				'textarea_sized' => TEXTAREA_SIZED,
 				'type' => 'modules',
 				'modules_translations' => isset($this->modules_translations) ? $this->modules_translations : array()
@@ -1737,11 +1736,11 @@ class AdminTranslationsControllerCore extends AdminController
 		$missing_translations = array();
 		$str_output = '';
 
-        if (!Validate::isLangIsoCode($lang))
-            die('Invalid iso lang ('.$lang.')');
+		if (!Validate::isLangIsoCode($lang))
+			die('Invalid iso lang ('.$lang.')');
 
-        $i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
-        $i18n_file = $i18n_dir.$lang.'.php';
+		$i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
+		$i18n_file = $i18n_dir.$lang.'.php';
 		if (!file_exists($i18n_file))
 			if (!mkdir($i18n_dir, 0700))
 				die('Please create a "'.$lang.'" directory in '._PS_TRANSLATIONS_DIR_);
@@ -1758,20 +1757,20 @@ class AdminTranslationsControllerCore extends AdminController
 		$regex = '/self::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 		// need to parse PDF.php in order to find $regex and add this to $tabs_array
 		// this has to be done for the core class, and eventually for the override
-        foreach (glob(_PS_CLASS_DIR_.'pdf/'."*.php") as $filename)
-        {
-    		$tabs_array = $this->_parsePdfClass($filename, $regex, $_LANGPDF, $prefix_key, $tabs_array);
-	    	if (file_exists(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename)))
-	    		$tabs_array = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename), $regex, $_LANGPDF, $prefix_key, $tabs_array);
-        }
+		foreach (glob(_PS_CLASS_DIR_.'pdf/'."*.php") as $filename)
+		{
+			$tabs_array = $this->_parsePdfClass($filename, $regex, $_LANGPDF, $prefix_key, $tabs_array);
+			if (file_exists(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename)))
+				$tabs_array = $this->_parsePdfClass(_PS_ROOT_DIR_.'/override/classes/pdf/'.basename($filename), $regex, $_LANGPDF, $prefix_key, $tabs_array);
+		}
 
-        // parse pdf template
+		// parse pdf template
 		/* Search language tags (eg {l s='to translate'}) */
 		$regex = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( js=1)?( pdf=\'true\')?\}/U';
-        foreach (glob( _PS_THEME_DIR_.'/pdf/*.tpl') as $filename)
-        {
+		foreach (glob( _PS_THEME_DIR_.'/pdf/*.tpl') as $filename)
+		{
 			preg_match_all($regex, file_get_contents($filename), $matches);
-    		foreach ($matches[1] as $key)
+			foreach ($matches[1] as $key)
 			{
 				// Caution ! front has underscore between prefix key and md5, back has not
 				if (isset($_LANGPDF[$prefix_key.md5($key)]))
@@ -1786,7 +1785,7 @@ class AdminTranslationsControllerCore extends AdminController
 						$missing_translations[$prefix_key]++;
 				}
 			}
-        }
+		}
 
 		$count += isset($tabs_array[$prefix_key]) ? count($tabs_array[$prefix_key]) : 0;
 

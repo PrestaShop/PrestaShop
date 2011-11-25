@@ -716,7 +716,7 @@ class AdminOrdersControllerCore extends AdminController
 				$deliveryState = new State((int)($addressDelivery->id_state));
 		}
 
-		$this->toolbar_title = $this->l('Order #').sprintf('%06d', $order->id).' - '.$customer->firstname.' '.$customer->lastname;
+		$this->toolbar_title = $this->l('Order #').sprintf('%06d', $order->id).' ('.$order->reference.') - '.$customer->firstname.' '.$customer->lastname;
 
 		// Smarty assign
 		$this->tpl_view_vars = array(

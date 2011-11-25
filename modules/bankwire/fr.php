@@ -45,8 +45,9 @@ $_MODULE['<{bankwire}prestashop>payment_return_a35abd2d31d9e1da82599bc67e166506'
 $_MODULE['<{bankwire}prestashop>payment_return_c51326a2ac458845d579a82a92f111f0'] = 'à l\'ordre de';
 $_MODULE['<{bankwire}prestashop>payment_return_de6d813f05e3916a86b89bd8b1a8a489'] = 'suivant ces détails';
 $_MODULE['<{bankwire}prestashop>payment_return_619b26a60df1af3649d2e8920a7949cd'] = 'à cette banque';
-$_MODULE['<{bankwire}prestashop>payment_return_4fac1f51a5f4b3dd634800fe3d408a45'] = 'N\'oubliez pas d\'indiquer votre numéro de commande';
+$_MODULE['<{bankwire}prestashop>payment_return_dd765b42bd8a2631e8e7b9a9af1c590f'] = 'N\'oubliez pas d\'indiquer votre numéro de commande';
 $_MODULE['<{bankwire}prestashop>payment_return_4460fcb45ad7a6a61c95293eb611da12'] = 'dans le sujet de votre virement';
+$_MODULE['<{bankwire}prestashop>payment_return_08b63acd68117efc30b7072cbeedfb81'] = 'N\'oubliez pas d\'indiquer votre référence de commande';
 $_MODULE['<{bankwire}prestashop>payment_return_13f4ac6dc75b5829499cb9cf8b733071'] = 'Un email contenant ces informations vous a été envoyé.';
 $_MODULE['<{bankwire}prestashop>payment_return_c4457a9f2f20e39386008bbb2cd3a78f'] = 'Votre commande sera expédiée dès réception de votre virement.';
 $_MODULE['<{bankwire}prestashop>payment_return_0db71da7150c27142eef9d22b843b4a9'] = 'Pour toute question ou information complémentaire merci de contacter notre';
