@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -185,8 +185,8 @@ $smarty->assign(array(
 	'mails_exists' => (isset($mails_exists) ? $mails_exists : array())
 ));
 
-echo Module::display(dirname(__FILE__).'/referralprogram.php', 'referralprogram-program.tpl');
+echo Module::displayTemplate(dirname(__FILE__).'/referralprogram.php', 'referralprogram-program.tpl');
 
-include(dirname(__FILE__).'/../../footer.php'); 
+include(dirname(__FILE__).'/../../footer.php');
 
 

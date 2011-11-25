@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -35,14 +35,14 @@ require_once(dirname(__FILE__).'/FavoriteProduct.php');
 
 if (!Context::getContext()->customer->isLogged())
 	Tools::redirect('authentication.php?back=modules/favoriteproducts/favoriteproducts.php');
-	
+
 include(dirname(__FILE__).'/../../header.php');
 
 if ((int)Context::getContext()->customer->id)
-{	
+{
 	$smarty->assign('favoriteProducts', FavoriteProduct::getFavoriteProducts((int)Context::getContext()->customer->id, (int)Context::getContext()->language->id));
 
-	echo Module::display(dirname(__FILE__).'/favoriteproducts.php', 'favoriteproducts-account.tpl');
+	echo Module::displayTemplate(dirname(__FILE__).'/favoriteproducts.php', 'favoriteproducts-account.tpl');
 }
 
 include(dirname(__FILE__).'/../../footer.php');
