@@ -47,17 +47,12 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #header_infos #header_logout a span {color:#fff;}
 #header #header_infos #header_foaccess{ text-decoration:none; color:#fff;}
 #header #header_infos #header_foaccess a {color:#fff !important;}
-#header #header_search{ float:left; margin-top:15px; }
-#header #header_search #bo_query{float:left;background: none repeat scroll 0 0 #fff;  border-color: #666666 #CCCCCC #CCCCCC;
-    border-style:solid dotted solid solid;
-    border-width: 1px; color: #333; font: 13px Arial,sans-serif; padding: 4px 1px 4px 4px; width: 180px;
-    box-shadow: 0 1px 0 #444444;}
-#header #header_search #bo_search_type{float:left; margin:0; padding:3px 0 4px; vertical-align:middle;width:auto; border-color: #666666 #CCCCCC #CCCCCC;
-    border-style:solid solid solid none; height:25px;
-    border-width: 1px;}
-#header #header_search #bo_search_submit { border-color: #CCCCCC #BBBBBB; float:left; font-weight:normal; margin:0; padding: 4px 8px 3px;  cursor:pointer; text-shadow: 0 1px 0 #fff; border-bottom-left-radius: 0; border-left: 0 none; border-top-left-radius: 0; }
+#header #header_search{ float:left; margin-top:15px; position:relative;  }
+#header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 #fff;  border:1px solid #000; border-radius:4px;  padding: 5px 25px 5px 4px; width: 180px; box-shadow: 0 1px 0 #666;}
+#header #header_search #bo_search_type{ font-size:13px; float:left; margin:0 10px 0 0; padding:3px 0 4px; vertical-align:middle;width:auto; border-color: #666666 #CCCCCC #CCCCCC;border-style:solid solid solid none; height:27px; border-width: 1px;}
+#header #header_search #bo_search_submit { background: transparent url(icon-search.png) no-repeat scroll center; border:none; width:27px; height:27px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0;}
 #header #header_quick{float:right; display:block; margin-top:15px;}
-#header #header_quick #quick_select{margin:0; padding:3px 0 4px; vertical-align:middle;width:140px; height:25px;}
+#header #header_quick #quick_select{ font-size:13px; margin:0 10px 0 0; padding:3px 0 4px; vertical-align:middle;width:140px; height:27px;}
 #header #header_shoplist{ background-image:none; clear:both; float: right; color:#fff; margin-top:10px; margin-right:15px;}
 #header #header_shoplist span { float:left; padding:3px;}
 #header #header_myaccount{background:url(bg-lang.png) no-repeat;display:block;float:right;height:16px;margin:8px 1px 0 0;width:16px}
@@ -143,6 +138,10 @@ a.module_toggle_all{color: #268CCD;}
 .button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .processing {overflow: auto;}
 
+/*UI ACCORDEON*/
+.ui-accordion-header { background-color: #ccc; color:#000;}
+
+
 /*TABLE STATUS COMMANDE*/
 .table td span.color_field { font-size:11px; padding:2px 5px; border-radius:3px; text-transform:uppercase; color:#fff; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
 
@@ -152,8 +151,8 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .pageTitle h3 {font-size: 2em; font-weight: normal; line-height: 48px; margin: 0; padding: 0;}
 .toolbarBox ul.cc_button {float:right;margin:0;padding:0;}
 .toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center;}
-.toolbarBox a.toolbar_btn {   border-width: 1px;font-size:11px;cursor: pointer; display: block; float: left; padding: 1px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;;}
-.toolbarBox a.toolbar_btn:hover {}
+.toolbarBox a.toolbar_btn {   border:1px solid #f8f8f8; border-width: 1px;font-size:11px;cursor: pointer; display: block; float: left; padding: 3px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;}
+.toolbarBox a.toolbar_btn:hover { background-color:#fff; border:1px inset #ccc; border-radius:3px;}
 .toolbarBox .toolbar_btn span{ display: block;float: none;height: 32px;margin: 0 auto;width: 32px;}
 .toolbarBox .process-icon-delete { background-image: url(process-icon-delete.png);}
 .toolbarBox .process-icon-duplicate { background-image: url(process-icon-duplicate.png);}
@@ -186,8 +185,8 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 #productBox { position:relative; width:100%; float:left;}
 
 /*tab-pane*/
-form#product_form, form#access_form, form#cart_rule_form {   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px; margin-left:140px;}
-/*form.defaultForm{   background-color:#ebedf4; border:1px solid #ccced7; min-height:300px; padding: 5px 10px 10px;}*/
+form#product_form, form#access_form, form#cart_rule_form {   background-color:#ebedf4; border:1px solid #ccced7; min-height:350px; padding: 5px 10px 10px; margin-left:140px;}
+form#product_form h4 { font-size:18px; font-weight:normal;}
 .tab-row {}
 .tab-row .tab {background:#EFEFEF;width:100px;}
 .tab-row .tab-page.selected {}

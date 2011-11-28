@@ -1721,6 +1721,7 @@ p.preference_description{
     clear: both;
     text-align: left;
     width: 500px;
+    color:#7F7F7F;
 }
 
 .preference_default_multishop{
