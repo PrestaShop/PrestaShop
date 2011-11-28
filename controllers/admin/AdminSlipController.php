@@ -74,7 +74,7 @@ class AdminSlipControllerCore extends AdminController
 			),
 			'input' => array(
 				array(
-					'type' => 'text',
+					'type' => 'date',
 					'label' => $this->l('From:'),
 					'name' => 'date_from',
 					'size' => 20,
@@ -83,7 +83,7 @@ class AdminSlipControllerCore extends AdminController
 					'desc' => $this->l('Format: 2007-12-31 (inclusive)')
 				),
 				array(
-					'type' => 'text',
+					'type' => 'date',
 					'label' => $this->l('To:'),
 					'name' => 'date_to',
 					'size' => 20,
