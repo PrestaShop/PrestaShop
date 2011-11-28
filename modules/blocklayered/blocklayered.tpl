@@ -103,8 +103,13 @@ param_product_url = '#{$param_product_url}';
 							</div>
 							<script type="text/javascript">
 							{literal}
+								var filterRange = {/literal}{$filter.max}-{$filter.min}{literal};
+								var step = filterRange / 100;
+								if (step > 1)
+									step = parseInt(step);
 								addSlider('{/literal}{$filter.type}{literal}',{
 									range: true,
+									step: step,
 									min: {/literal}{$filter.min}{literal},
 									max: {/literal}{$filter.max}{literal},
 									values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
