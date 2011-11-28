@@ -72,6 +72,8 @@ class CartControllerCore extends FrontController
 				$this->processDeleteProductInCart();
 			else if(Tools::getIsset('changeAddressDelivery'))
 				$this->processChangeProductAddressDelivery();
+			else if(Tools::getIsset('allowSeperatedPackage'))
+				$this->processAllowSeperatedPackage();
 			else if(Tools::getIsset('duplicate'))
 				$this->processDuplicateProduct();
 
@@ -123,6 +125,16 @@ class CartControllerCore extends FrontController
 			$this->id_product_attribute,
 			$old_id_address_delivery,
 			$new_id_address_delivery);
+	}
+	
+	protected function processAllowSeperatedPackage()
+	{
+		if (Tools::getValue('value') === false)
+			die('{"error":true, "error_message": "No value setted"}');
+		
+		$this->context->cart->allow_seperated_package = (boolean)Tools::getValue('value');
+		$this->context->cart->update();
+		die('{"error":false}');
 	}
 
 	protected function processDuplicateProduct()
