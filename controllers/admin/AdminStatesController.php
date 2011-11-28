@@ -45,10 +45,35 @@ class AdminStatesControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldsDisplay = array(
-			'id_state' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 140, 'filter_key' => 'a!name'),
-			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 50),
-			'zone' => array('title' => $this->l('Zone'), 'width' => 100, 'filter_key' => 'z!name')
+			'id_state' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 140,
+				'filter_key' => 'a!name'
+			),
+			'iso_code' => array(
+				'title' => $this->l('ISO code'),
+				'align' => 'center',
+				'width' => 50
+			),
+			'zone' => array(
+				'title' => $this->l('Zone'),
+				'width' => 100,
+				'filter_key' => 'z!name'
+			),
+			'active' => array(
+				'title' => $this->l('Enabled'),
+				'width' => 70,
+				'active' => 'status',
+				'filter_key' => 'a!active',
+				'align' => 'center',
+				'type' => 'bool',
+				'orderby' => false
+			)
 		);
 
 		parent::__construct();
