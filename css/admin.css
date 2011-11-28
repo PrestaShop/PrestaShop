@@ -223,7 +223,7 @@ label {
 label.t {
 	float: none;
 	clear: none;
-	padding: 0px;
+	padding: 0 5px 0;
 	margin: 0px;
 	font-weight: normal;
 	font-size: 12px;

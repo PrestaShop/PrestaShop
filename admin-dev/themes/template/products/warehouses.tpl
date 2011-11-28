@@ -9,8 +9,8 @@
 
 {assign var=confirm value="Are you sure you want to delete entered product information?"}
 
-<a href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse" onclick="return confirm(' {$confirm} ')">
-	<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /> <b>{l s='Create new warehouse'}</b>
+<a class="button bt-icon" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse" onclick="return confirm(' {$confirm} ')">
+	<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
 </a>
 
 <div id="warehouse_accordion" style="margin-top:10px; display:block;">

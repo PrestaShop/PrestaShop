@@ -7,8 +7,8 @@
 <div class="separation"></div>
 <p>{l s='Please choose the suppliers associated to this product, and the default one.'}</p>
 {assign var=confirm value="Are you sure you want to delete entered product information?"}
-<a href="{$link->getAdminLink('AdminSuppliers')}&addsupplier" onclick="return confirm(' {$confirm} ')">
-	<img src="../img/admin/add.gif" alt="{l s='Create new supplier'}" title="{l s='Create new supplier'}" /> <b>{l s='Create new supplier'}</b>
+<a class="button bt-icon" href="{$link->getAdminLink('AdminSuppliers')}&addsupplier" onclick="return confirm(' {$confirm} ')">
+	<img src="../img/admin/add.gif" alt="{l s='Create new supplier'}" title="{l s='Create new supplier'}" /><span>{l s='Create new supplier'}</span>
 </a>
 <table cellpadding="5" style="width:100%">
 	<tbody>
@@ -45,7 +45,9 @@
 	{foreach from=$associated_suppliers item=supplier}
 	    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
 	    <div style="display:block;">
+
 			<table cellpadding="10" cellspacing="0" class="table">
+
 				<thead>
 					<tr>
 						<th>{l s='product name'}</th>
