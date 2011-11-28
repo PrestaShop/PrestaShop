@@ -43,11 +43,12 @@
 	);
 {/foreach}
 </script>
-<h4>{l s='Add or modify combinations for this product'}</h4> {l s='or go to'}
-		&nbsp;<a href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" />&nbsp;{l s='Product combinations generator'}</a>
+<h4>{l s='Add or modify combinations for this product'}</h4>
+<div class="separation"></div> {l s='or go to'}
+		&nbsp;<a class="button bt-icon" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a>
 <div class="separation"></div>
-<a href="#" onclick="$('#add_new_combination').slideToggle();return false;">
-	<img src="../img/admin/add.gif" alt="" />{l s='Add a new combination'}
+<a class="button bt-icon" href="#" onclick="$('#add_new_combination').slideToggle();return false;">
+	<img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new combination'}</span>
 </a>
 
 <div id="add_new_combination" style="display: none;">

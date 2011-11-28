@@ -1,7 +1,5 @@
-<table cellpadding="5">
-	<tr>
-		<td colspan="2">
-			<h4>{l s='Assign features to this product:'}</h4>
+<h4>{l s='Assign features to this product:'}</h4>
+<div class="separation"></div>
 			<ul>
 				<li>{l s='You can specify a value for each relevant feature regarding this product, empty fields will not be displayed.'}</li>
 				<li>{l s='You can either set a specific value, or select among existing pre-defined values you added previously.'}</li>
@@ -9,9 +7,7 @@
 		</td>
 	</tr>
 </table>
-<div class="separation"></div><br />
-
-
+<br />
 <table border="0" cellpadding="0" cellspacing="0" class="table" style="width:900px;">
 	<tr>
 		<th>{l s='Feature'}</td>
