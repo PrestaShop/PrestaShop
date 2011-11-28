@@ -77,7 +77,7 @@ class AdminStockMvtControllerCore extends AdminController
 				'title' =>	$this->l('Options'),
 				'fields' =>	array(
 					'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default reason when incrementing stock:'),
+						'title' => $this->l('Default label when incrementing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
@@ -85,7 +85,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
-						'title' => $this->l('Default reason when decrementing stock:'),
+						'title' => $this->l('Default label when decrementing stock:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -93,7 +93,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_CUSTOMER_ORDER_REASON' => array(
-						'title' => $this->l('Default reason when decrementing stock when a customer order is shipped:'),
+						'title' => $this->l('Default label when decrementing stock when a customer order is shipped:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_dec,
@@ -101,7 +101,7 @@ class AdminStockMvtControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_STOCK_MVT_SUPPLY_ORDER' => array(
-						'title' => $this->l('Default reason when incrementing stock when a supply order is received:'),
+						'title' => $this->l('Default label when incrementing stock when a supply order is received:'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'list' => $reasons_inc,
@@ -115,6 +115,8 @@ class AdminStockMvtControllerCore extends AdminController
 
 		$this->tpl_list_vars['list_warehouses'] = array();
 
+		$this->_where = ' AND a.deleted = 0';
+
 		parent::__construct();
 	}
 
@@ -124,11 +126,11 @@ class AdminStockMvtControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
-		$this->toolbar_title = $this->l('Stock : Add Stock movement reason');
+		$this->toolbar_title = $this->l('Stock : Add Stock movement label');
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Stock Movement Reason'),
+				'title' => $this->l('Stock Movement Label'),
 				'image' => '../img/admin/edit.gif'
 			),
 			'input' => array(
@@ -178,7 +180,7 @@ class AdminStockMvtControllerCore extends AdminController
 	public function initList()
 	{
 		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
-		$this->displayInformation($this->l('Also, it allows you to add and edit your own stock movement reasons.'));
+		$this->displayInformation($this->l('Also, it allows you to add and edit your own stock movement labels.'));
 
 		// access
 		if (!($this->tabAccess['add'] === '1'))
@@ -195,7 +197,7 @@ class AdminStockMvtControllerCore extends AdminController
 		$this->addRowActionSkipList('edit', array(1, 2, 3, 4, 5, 6, 7, 8));
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6, 7, 8));
 
-		$this->toolbar_title = $this->l('Stock : Stock movements reasons');
+		$this->toolbar_title = $this->l('Stock : Stock movements labels');
 		$first_list = parent::initList();
 
 		/*
@@ -232,22 +234,22 @@ class AdminStockMvtControllerCore extends AdminController
 		// redifine fields display
 		$this->fieldsDisplay = array(
 			'product_reference' => array(
-				'title' => $this->l('Product Reference'),
+				'title' => $this->l('Reference'),
 				'width' => 100,
 				'havingFilter' => true
 			),
 			'product_ean13' => array(
-				'title' => $this->l('Product EAN 13'),
+				'title' => $this->l('EAN 13'),
 				'width' => 75,
 				'havingFilter' => true
 			),
 			'product_upc' => array(
-				'title' => $this->l('Product UPC'),
+				'title' => $this->l('UPC'),
 				'width' => 75,
 				'havingFilter' => true
 			),
 			'product_name' => array(
-				'title' => $this->l('Product Name'),
+				'title' => $this->l('Name'),
 				'havingFilter' => true
 			),
 			'sign' => array(
@@ -279,7 +281,7 @@ class AdminStockMvtControllerCore extends AdminController
 				'filter_key' => 'a!price_te'
 			),
 			'reason' => array(
-				'title' => $this->l('Reason'),
+				'title' => $this->l('Label'),
 				'width' => 100,
 				'havingFilter' => true
 			),
@@ -298,6 +300,7 @@ class AdminStockMvtControllerCore extends AdminController
 		);
 
 		// make new query
+		unset ($this->_where);
 		$this->_select = '
 			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name,
 			CONCAT(a.employee_lastname, \' \', a.employee_firstname) AS employee,
