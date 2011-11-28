@@ -721,7 +721,7 @@ if (Tools::isSubmit('getAdminHomeElement'))
 		else
 			$result['discover_prestashop'] = 'NOK';
 
-		if (@fsockopen('www.prestashop.com', 80, $errno, $errst, 3))
+		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3))
 			$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://api.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
 
 		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
