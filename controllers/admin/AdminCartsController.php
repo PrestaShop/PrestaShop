@@ -244,7 +244,7 @@ class AdminCartsController extends AdminController
 			if (!$this->context->cart->id)
 				return;
 			if ($this->context->cart->OrderExists())
-				$errors[] = Tools::displayErrors('An order already placed with this cart');
+				$errors[] = Tools::displayError('An order already placed with this cart');
 			elseif (!($id_product = (int)Tools::getValue('id_product')) OR !($product = new Product((int)$id_product, true, $this->context->language->id)))
 				$errors[] = Tools::displayError('Invalid product');
 			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)
@@ -326,7 +326,7 @@ class AdminCartsController extends AdminController
 		{
 			$errors = array();
 			if (!$id_order = Tools::getValue('id_order'))
-				$errors[] = Tools::displayErrors('Invalid order');
+				$errors[] = Tools::displayError('Invalid order');
 			$cart = Cart::getCartByOrderId($id_order);
 			$new_cart = $cart->duplicate();
 			if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))

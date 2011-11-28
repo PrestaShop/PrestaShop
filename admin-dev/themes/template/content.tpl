@@ -24,4 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$content}
+{if isset($content)}
+	{$content}
+{/if}

@@ -233,10 +233,7 @@ class AdminControllerCore extends Controller
 
 	public function __construct()
 	{
-	// retro-compatibility : className for admin without controller
-	// This can be overriden in controllers (like for AdminCategories or AdminProducts
 		$controller = get_class($this);
-
 		// temporary fix for Token retrocompatibility
 		// This has to be done when url is built instead of here)
 		if (strpos($controller, 'Controller'))
@@ -389,8 +386,6 @@ class AdminControllerCore extends Controller
 			// set token
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
-			// Sub included tab postProcessing
-			$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 				return $this->{'process'.Tools::toCamelCase($this->action)}($token);
 			else if (method_exists($this, $this->action))
@@ -964,7 +959,6 @@ class AdminControllerCore extends Controller
 			return false;
 		}
 
-		$this->content = $this->displayErrors();
 		return $this->object;
 	}
 
@@ -988,13 +982,6 @@ class AdminControllerCore extends Controller
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * @TODO
-	 */
-	public function includeSubTab($methodname, $actions = array())
-	{
 	}
 
 	protected function filterToField($key, $filter)
@@ -1821,16 +1808,6 @@ class AdminControllerCore extends Controller
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 		));
-	}
-
-	/**
-	 * Display errors
-	 */
-	public function displayErrors()
-	{
-		// @TODO includesubtab
-		$content = $this->includeSubTab('displayErrors');
-		return $content;
 	}
 
 	/**
