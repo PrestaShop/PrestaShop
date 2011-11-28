@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -115,18 +115,7 @@ class AdminCatalogController extends AdminController
 			$this->adminProducts->ajaxProcess();
 		if (Tools::getValue('deleteImage'))
 			$this->adminProducts->ajaxProcess();
-			
-	}
 
-	public function displayErrors()
-	{
-		parent::displayErrors();
-		$this->adminProducts->displayErrors();
-		$this->adminCategories->displayErrors();
-		if (Validate::isLoadedObject($this->attributeGenerator))
-			$this->attributeGenerator->displayErrors();
-		if (Validate::isLoadedObject($this->imageResize))
-			$this->imageResize->displayErrors();
 	}
 
 	public function initContent()
@@ -154,12 +143,12 @@ class AdminCatalogController extends AdminController
 			// Cleaning links
 			$catBarIndex = self::$currentIndex;
 			foreach ($catalog_tabs AS $tab)
-				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway')) 
+				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway'))
 					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
-					
+
 			$this->context->smarty->assign('cat_bar',getPath($catBarIndex, $id_category, '', '', 'catalog', $home));
 		}
-		$this->content = ''; 
+		$this->content = '';
 		parent::initContent();
 	}
 }

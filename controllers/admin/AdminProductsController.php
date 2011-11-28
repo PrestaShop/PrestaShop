@@ -1773,24 +1773,6 @@ class AdminProductsControllerCore extends AdminController
 		return $content;
 	}
 
-	public function displayErrors()
-	{
-		if ($this->includeSubTab('displayErrors'))
-			;
-		else if ($nbErrors = sizeof($this->_errors))
-		{
-			$this->content .= '<div class="error">
-				<img src="../img/admin/error2.png" />
-				'.$nbErrors.' '.($nbErrors > 1 ? $this->l('errors') : $this->l('error')).'
-				<ol>';
-			foreach ($this->_errors as $error)
-				$this->content .= '<li>'.$error.'</li>';
-			$this->content .= '
-				</ol>
-			</div>';
-		}
-	}
-
 	private function _displayDraftWarning($active)
 	{
 		$content = '<div class="warn draft" style="'.($active ? 'display:none' : '').'">
@@ -3539,7 +3521,6 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
 
-		$this->displayErrors();
 		return $this->object;
 	}
 
