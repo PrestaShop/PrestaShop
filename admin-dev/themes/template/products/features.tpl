@@ -1,8 +1,8 @@
 <table cellpadding="5">
 	<tr>
 		<td colspan="2">
-			<b>{l s='Assign features to this product:'}</b><br />
-			<ul style="margin: 10px 0 0 20px;">
+			<h4>{l s='Assign features to this product:'}</h4>
+			<ul>
 				<li>{l s='You can specify a value for each relevant feature regarding this product, empty fields will not be displayed.'}</li>
 				<li>{l s='You can either set a specific value, or select among existing pre-defined values you added previously.'}</li>
 			</ul>

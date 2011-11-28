@@ -3,15 +3,7 @@
 	<p>{l s='It is also possible to specify for each product/product combinations the supplier reference according to previously associated suppliers.'}</p>
 </div>
 <br />
-<table cellpadding="5">
-	<tbody>
-		<tr>
-			<td colspan="2">
-				<b>{l s='Suppliers of the current product'}</b>
-			</td>
-		</tr>
-	</tbody>
-</table>
+				<h4>{l s='Suppliers of the current product'}</h4>
 <div class="separation"></div>
 <p>{l s='Please choose the suppliers associated to this product, and the default one.'}</p>
 {assign var=confirm value="Are you sure you want to delete entered product information?"}
@@ -21,8 +13,8 @@
 <table cellpadding="5" style="width:100%">
 	<tbody>
 		<tr>
-			<td valign="top" style="text-align:center;vertical-align:top;">
-				<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
+			<td valign="top" style="text-align:left;vertical-align:top;">
+				<table class="table" cellpadding="0" cellspacing="0" style="width:50%;">
 					<thead>
 						<tr>
 							<th>{l s='Selected'}</th>
@@ -45,15 +37,7 @@
 	</tbody>
 </table>
 <p>&nbsp;</p>
-<table cellpadding="5">
-	<tbody>
-		<tr>
-			<td colspan="2">
-				<b>{l s='Product reference(s)'}</b>
-			</td>
-		</tr>
-	</tbody>
-</table>
+				<h4>{l s='Product reference(s)'}</h4>
 <div class="separation"></div>
 <p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
 

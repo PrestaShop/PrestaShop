@@ -1,11 +1,6 @@
 <div class="tab-page" id="step2">
 	<h4 class="tab" >2. {l s='Images'} (<span id="countImage">{$countImages}</span>)</h4>
-	<table cellpadding="5">
-		<tr>
-			<td><b>{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}</b></td>
-		</tr>
-	</table>
-	<div class="separation"></div><br />
+	<h4>{if isset($id_image)}{l s='Edit this product image'}{else}{l s='Add a new image to this product'}{/if}</h4>	<div class="separation"></div><br />
 		<table cellpadding="5" style="width:100%">
 		<tr>
 			<td class="col-left"><label>{l s='File:'}</label></td>
@@ -17,7 +12,7 @@
 				</div>
 				<div id="progressBarImage" class="progressBarImage"></div>
 				<div id="showCounter" style="display:none;"><span id="imageUpload">0</span><span id="imageTotal">0</span></div>
-					<p class="float" style="clear: both;">
+					<p class="preference_description" style="clear: both;">
 						{l s='Format:'} JPG, GIF, PNG. {l s='Filesize:'} {$max_image_size / 1000}{l s='Kb max.'}
 					</p>
 			</td>

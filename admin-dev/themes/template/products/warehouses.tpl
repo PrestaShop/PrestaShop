@@ -3,16 +3,8 @@
 	<p>{l s='It is also possible to specify for each product/product combinations its location in each warehouse.'}</p>
 </div>
 <br />
-<table cellpadding="5">
-	<tbody>
-		<tr>
-			<td colspan="2">
-				<b>{l s='Product location in warehouses'}</b>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<div class="separation"></div>
+				<h4>{l s='Product location in warehouses'}</h4>
+			<div class="separation"></div>
 <p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
 
 {assign var=confirm value="Are you sure you want to delete entered product information?"}

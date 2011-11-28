@@ -5,15 +5,8 @@
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop.'}</p>
 	</div>
 	<br />
-	<table cellpadding="5">
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<b>{l s='Available quantities for sale'}</b>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+
+					<h4>{l s='Available quantities for sale'}</h4>
 	<div class="separation"></div>
 	<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
 	<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
@@ -36,11 +29,15 @@
 				</td>
 			</tr>
 			<tr>
-				<td valign="top" style="text-align:center;vertical-align:top;">
-					<table class="table" cellpadding="0" cellspacing="0" style="width:60%;margin-left:20%;">
+				<td valign="top" style="text-align:left;vertical-align:top;">
+					<table class="table" cellpadding="0" cellspacing="0" style="width:50%;">
+							<colgroup>
+								<col width="50"></col>
+								<col></col>
+							</colgroup>
 						<thead>
 							<tr>
-								<th style="width:200px;">{l s='Quantity'}</th>
+								<th>{l s='Quantity'}</th>
 								<th>{l s='Designation'}</th>
 							</tr>
 						</thead>

@@ -23,7 +23,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
+<h4>{l s='Accounting'}</h4>
+<div class="separation"></div>
 {if !empty($error)}
 	<div class="hint" style="display:block">{$error}</div>
 {else}
