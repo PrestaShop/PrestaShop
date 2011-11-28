@@ -1221,31 +1221,6 @@ abstract class ModuleCore
 		return $result;
 	}
 
-	public static function displayTemplate($file, $template, $cacheId = null, $compileId = null)
-	{
-		$context = Context::getContext();
-
-		if (($overloaded = self::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === NULL)
-			$result = Tools::displayError('No template found for module').' '.basename($file,'.php');
-		else
-		{
-			$context->smarty->assign(array(
-				'module_dir' =>				__PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
-				'module_template_dir' =>	($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/'
-			));
-
-			$smarty_subtemplate = $context->smarty->createTemplate(
-				($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template,
-				$cacheId,
-				$compileId,
-				$context->smarty
-			);
-
-			$result = $smarty_subtemplate->fetch();
-		}
-		return $result;
-	}
-
 	/**
 	 * Get realpath of a template of current module (check if template is overriden too)
 	 *
