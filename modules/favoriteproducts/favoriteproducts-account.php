@@ -32,6 +32,7 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 
 require_once(dirname(__FILE__).'/FavoriteProduct.php');
+require_once(dirname(__FILE__).'/favoriteproducts.php');
 
 if (!Context::getContext()->customer->isLogged())
 	Tools::redirect('authentication.php?back=modules/favoriteproducts/favoriteproducts.php');
@@ -42,7 +43,8 @@ if ((int)Context::getContext()->customer->id)
 {
 	$smarty->assign('favoriteProducts', FavoriteProduct::getFavoriteProducts((int)Context::getContext()->customer->id, (int)Context::getContext()->language->id));
 
-	echo Module::displayTemplate(dirname(__FILE__).'/favoriteproducts.php', 'favoriteproducts-account.tpl');
+	$favoriteproducts = new FavoriteProducts();
+	echo $favoriteproducts->display(dirname(__FILE__).'/favoriteproducts.php', 'favoriteproducts-account.tpl');
 }
 
 include(dirname(__FILE__).'/../../footer.php');

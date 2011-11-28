@@ -68,7 +68,7 @@ else
 
 	$smarty->assign('this_path', __PS_BASE_URI__.'modules/cashondelivery/');
 	$template = 'validation.tpl';
-	echo Module::displayTemplate('cashondelivery', $template);
+	echo $cashOnDelivery->display('cashondelivery', $template);
 }
 
 include(dirname(__FILE__).'/../../footer.php');

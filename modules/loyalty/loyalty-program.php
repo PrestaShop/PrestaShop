@@ -33,6 +33,7 @@ require_once(dirname(__FILE__).'/../../init.php');
 
 include_once(dirname(__FILE__).'/LoyaltyModule.php');
 include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
+include_once(dirname(__FILE__).'/loyalty.php');
 
 $context = Context::getContext();
 if (!$context->customer->isLogged())
@@ -159,6 +160,7 @@ $smarty->assign(array(
 	'minimalLoyalty' => (float)Configuration::get('PS_LOYALTY_MINIMAL'),
 	'categories' => $categoriesNames));
 
-echo Module::displayTemplate(dirname(__FILE__).'/loyalty.php', 'loyalty.tpl');
+$loyalty = new Loyalty();
+echo $loyalty->display(dirname(__FILE__).'/loyalty.php', 'loyalty.tpl');
 
 include(dirname(__FILE__).'/../../footer.php');
