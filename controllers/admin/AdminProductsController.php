@@ -2021,13 +2021,6 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 
-			// Manage defaut supplier for product
-			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
-			{
-				$product->id_supplier = $new_default_supplier;
-				$product->update();
-			}
-
 			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
 
 			// Get all id_product_attribute
@@ -2038,12 +2031,23 @@ class AdminProductsControllerCore extends AdminController
 					'attribute_designation' => ''
 				);
 
-			// Manage references
+			// Manage references and prices
 			foreach ($attributes as $attribute)
 				foreach ($associated_suppliers as $supplier)
-					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))
+					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
+						||
+						(
+							Tools::isSubmit('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
+							&&
+							Tools::isSubmit('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
+						)
+					)
 					{
-						$reference = Tools::getValue('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, '');
+						$reference = pSQL(Tools::getValue('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, ''));
+						$price = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, 0));
+						$id_currency = (int)Tools::getValue('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, 0);
+						if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
+							$this->_errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
 						if (!empty($reference))
 						{
@@ -2055,24 +2059,43 @@ class AdminProductsControllerCore extends AdminController
 								$product_supplier_entity = new ProductSupplier();
 								$product_supplier_entity->id_product = $product->id;
 								$product_supplier_entity->id_product_attribute = $attribute['id_product_attribute'];
-								$product_supplier_entity->id_supplier = $supplier->id_supplier;
-								$product_supplier_entity->product_supplier_reference = pSQL($reference);
+								$product_supplier_entity->id_supplier = (int)$supplier->id_supplier;
+								$product_supplier_entity->product_supplier_reference = $reference;
+								$product_supplier_entity->id_currency = $id_currency;
+								$product_supplier_entity->product_supplier_price_te = $price;
 								$product_supplier_entity->save();
 							}
 							else
 							{
 								//update existing record
 								$product_supplier_entity = new ProductSupplier($existing_id);
-								$reference = pSQL($reference);
 
-								if ($product_supplier_entity->product_supplier_reference != $reference)
+								if (
+									($product_supplier_entity->product_supplier_reference != $reference)
+									||
+									($product_supplier_entity->product_supplier_price_te != $price)
+									||
+									($product_supplier_entity->id_currency != $id_currency)
+								)
 								{
-									$product_supplier_entity->product_supplier_reference = pSQL($reference);
+									$product_supplier_entity->product_supplier_reference = $reference;
+									$product_supplier_entity->id_currency = $id_currency;
+									$product_supplier_entity->product_supplier_price_te = $price;
 									$product_supplier_entity->update();
 								}
 							}
+
+							if ($product->id_supplier == $supplier->id_supplier)
+								$product->wholesale_price = Tools::convertPrice($price, $id_currency);
 						}
 					}
+
+			// Manage defaut supplier for product
+			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
+			{
+				$product->id_supplier = $new_default_supplier;
+				$product->update();
+			}
 
 			$this->confirmations[] = $this->l('Supplier Reference(s) of the product have been updated');
 		}
@@ -3225,6 +3248,7 @@ class AdminProductsControllerCore extends AdminController
 				'associated_suppliers' => $associated_suppliers,
 				'associated_suppliers_collection' => $product_supplier_collection,
 				'product_designation' => $product_designation,
+				'currencies' => Currency::getCurrencies(),
 				'product' => $this->object,
 				'link' => $this->context->link,
 				'token' => $this->token
