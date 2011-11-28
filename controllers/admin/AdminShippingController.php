@@ -84,8 +84,7 @@ class AdminShippingControllerCore extends AdminController
 						),
 						'validation' => 'isBool'
 					),
-				),
-				'submit' => array()
+				)
 			),
 		);
 	}
