@@ -69,14 +69,6 @@ class AdminCmsContentControllerCore extends AdminController
 		return $result;
 	}
 
-
-	public function displayErrors()
-	{
-		parent::displayErrors();
-		$this->adminCMS->displayErrors();
-		$this->adminCMSCategories->displayErrors();
-	}
-
 	public function initContent()
 	{
 		$this->adminCMSCategories->token = $this->token;
