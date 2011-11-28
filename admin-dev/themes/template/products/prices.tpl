@@ -7,7 +7,7 @@ var product_prices = new Array();
 	product_prices['{$combination.id_product_attribute}'] = '{$combination.price}';
 {/foreach}
 </script>
-<a href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" />{l s='Add a new specific price'}</a>
+<a class="button bt-icon" href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>
 <br/>
 <div id="add_specific_price" style="display: none;">
 	<input type="hidden" name="sp_id_shop" value="0" />

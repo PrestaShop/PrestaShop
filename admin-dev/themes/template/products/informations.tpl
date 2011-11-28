@@ -133,12 +133,11 @@
 	<td class="col-left"><label>{l s='Status:' }</label></td>
 	<td style="padding-bottom:5px;">
 		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}"
-			title="{l s='Enabled'}" style="float:left; padding:0px 5px 0px 5px;" />
+		<label for="active_on" class="t">
 		{l s='Enabled'}</label>
 		<br class="clear" />
 		<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
-		<label for="active_off" class="t"><img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="float:left; padding:0px 5px 0px 5px" />{l s='Disabled'} </label>
+		<label for="active_off" class="t">{l s='Disabled'} </label>
 	</td>
 </tr>
 	{if $feature_shop_active}
@@ -168,13 +167,13 @@
 				});
 			});
 			</script>
-		<label for="available_for_order" class="t"><img src="../img/admin/products.gif" alt="{l s='available for order'}" title="{l s='available for order'}" style="float:left; padding:0px 5px 0px 5px" />{l s='available for order'}</label>
+		<label for="available_for_order" class="t">{l s='available for order'}</label>
 		<br class="clear" />
 		<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} />
-		<label for="show_price" class="t"><img src="../img/admin/gold.gif" alt="{l s='display price'}" title="{l s='show price'}" style="float:left; padding:0px 5px 0px 5px" />{l s='show price'}</label>
+		<label for="show_price" class="t">{l s='show price'}</label>
 		<br class="clear" />
 		<input style="float: left;" type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-		<label for="online_only" class="t"><img src="../img/admin/basket_error.png" alt="{l s='online only'}" title="{l s='online only'}" style="float:left; padding:0px 5px 0px 5px" />{l s='online only (not sold in store)'}</label>
+		<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
 		</td>
 	</tr>
 	<tr>
