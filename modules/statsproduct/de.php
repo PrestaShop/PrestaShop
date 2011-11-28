@@ -33,7 +33,6 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_6602bbeb2956c035fb4cb5e844a4861
 $_MODULE['<{statsproduct}prestashop>statsproduct_6c1a8292e4da90e1ef19ae9444226d8f'] = 'Anzahl der Käufe im Vergleich zur Anzahl der Aufrufe';
 $_MODULE['<{statsproduct}prestashop>statsproduct_1d0ba341c7847cbff109276485417a1c'] = 'Nach Auswahl einer Kategorie sowie eines verfügbaren Produkts in dieser Kategorie erscheinen einige Schaubilder. Diese können Sie analysieren.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6559cc601f073740b825a4fc9b76149b'] = 'Wenn Sie merken, dass ein Produkt erfolgreich ist, oft gekauft wird, aber auch selten angesehen wird, sollten Sie es weiter nach vorne in Ihren Webshop Front-Office setzen.';
-$_MODULE['<{statsproduct}prestashop>statsproduct_20b9641efab51dee7d27eed2b6773ef0'] = 'Wenn aber ein Produkt oft aufgerufen, aber nicht gekauft wurde, raten wir Ihnen, diese Produktinformationen Beschreibungen und Fotografien zu überprüfen oder zu ändern.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_e22269bb51f9f2394e148716babbafbb'] = 'Beliebtheit';
 $_MODULE['<{statsproduct}prestashop>statsproduct_5e9613e58f3bdbc89b1fef07274c0877'] = 'Besuche (x100)';
 $_MODULE['<{statsproduct}prestashop>statsproduct_287234a1ff35a314b5b6bc4e5828e745'] = 'Attribute';

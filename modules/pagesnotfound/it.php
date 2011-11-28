@@ -16,7 +16,6 @@ $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_190d2527535602ceed273f097040b
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_254b5e94768b90388cc7002d362351f0'] = 'Elimina TUTTE le pagine non trovate';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guida';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_3604249130acf7fda296e16edc996e5b'] = 'errori 404 ';
-$_MODULE['<{pagesnotfound}prestashop>pagesnotfound_1c4e115caef0bed8f5ca76da1909f967'] = 'Un errore 404 è un codice di errore HTTP che significa che il file richiesto dall\'utente non può essere trovato. Nel tuo caso significa che uno dei tuoi visitatori ha inserito un URL sbagliato nella barra degli indirizzi o che tu o un altro sito web ha un link morto da qualche parte. Quando è disponibile, il referente è mostrato in modo da poter trovare la pagina che contiene il link morti. Altrimenti in genere significa che si tratta di un accesso diretto, così forse qualcuno ha segnato un link che non esiste più.';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_a90083861c168ef985bf70763980aa60'] = 'Come individuare questi errori?';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_535ff57deda0b45d32cb37fd430accc8'] = 'Se il tuo provider supporta il file htaccess, è possibile crearlo nella directory principale di PrestaShop e inserirvi dentro la seguente riga:';
 $_MODULE['<{pagesnotfound}prestashop>pagesnotfound_9cfaa8e935f9e3e65b0959b15b070b15'] = 'Un utente che richiede una pagina che non esiste verrà reindirizzato alla pagina';
