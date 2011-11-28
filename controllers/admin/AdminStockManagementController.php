@@ -246,7 +246,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'select',
-							'label' => $this->l('Reason :'),
+							'label' => $this->l('Label :'),
 							'name' => 'id_stock_mvt_reason',
 							'required' => true,
 							'options' => array(
@@ -256,7 +256,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
-							'desc' => $this->l('Reason used in stock movements'),
+							'desc' => $this->l('Label used in stock movements'),
 						),
 					),
 					'submit' => array(
@@ -361,7 +361,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'select',
-							'label' => $this->l('Reason :'),
+							'label' => $this->l('Label :'),
 							'name' => 'id_stock_mvt_reason',
 							'required' => true,
 							'options' => array(
@@ -371,7 +371,7 @@ class AdminStockManagementControllerCore extends AdminController
 								'id' => 'id_stock_mvt_reason',
 								'name' => 'name'
 							),
-							'desc' => $this->l('Reason used in stock movements'),
+							'desc' => $this->l('Label used in stock movements'),
 						),
 					),
 					'submit' => array(

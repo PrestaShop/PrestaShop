@@ -30,7 +30,7 @@
 		<input type="hidden" name="controller" value="AdminStockCover" />
 		<input type="hidden" name="token" value="{$token}" />
 	{if count($stock_cover_periods) > 1}
-			<label for="coverage_period">{l s='Select a period and a warehouse:'}</label>
+			<label for="coverage_period">{l s='Filter by period/warehouse:'}</label>
 			<select name="coverage_period" onChange="$(this).parent().submit();">
 				{foreach from=$stock_cover_periods key=k item=i}
 					<option {if $i == $stock_cover_cur_period} selected="selected"{/if} value="{$i}">{$k}</option>
@@ -44,6 +44,6 @@
 				{/foreach}
 			</select>
 	{/if}
-	</form>"admin-dev/themes/template/supply_orders/view.tpl"
+	</form>
 </div>
 {/block}

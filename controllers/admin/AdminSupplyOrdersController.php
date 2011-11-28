@@ -153,28 +153,28 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		{
 			$this->fields_form = array(
 				'legend' => array(
-					'title' => $this->l('Supply Order State'),
+					'title' => $this->l('Supply Order Status'),
 					'image' => '../img/admin/edit.gif'
 				),
 				'input' => array(
 					array(
 						'type' => 'text',
 						'lang' => true,
-						'label' => $this->l('Name:'),
+						'label' => $this->l('Status:'),
 						'name' => 'name',
 						'size' => 50,
 						'required' => true
 					),
 					array(
 						'type' => 'color',
-						'label' => $this->l('Back office color:'),
+						'label' => $this->l('Color:'),
 						'name' => 'color',
 						'size' => 20,
-						'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+						'desc' => $this->l('Back office background will be displayed in this color. HTML colors only.'),
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('Is the order editable in this state?:'),
+						'label' => $this->l('Editable:'),
 						'name' => 'editable',
 						'required' => true,
 						'class' => 't',
@@ -191,12 +191,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'desc' => $this->l('You have to define if it is possible to edit the order in this state.
-										An editable order is an order not valid to send to the supplier.')
+						'desc' => $this->l('For this status, you have to define if it is possible to edit the order.
+											An editable order is an order not valid to send to the supplier.')
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('Is the delivery note function is available in this state?:'),
+						'label' => $this->l('Delivery note:'),
 						'name' => 'delivery_note',
 						'required' => true,
 						'class' => 't',
@@ -213,12 +213,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'desc' => $this->l('You have to define if it is possible to generate the delivery note of the order in this state.
-										The order has to be valid to use this function.')
+						'desc' => $this->l('For this status, you have to define if it is possible to generate the delivery note of the order.')
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('This state corresponds to a delivery state ?:'),
+						'label' => $this->l('Delivery state:'),
 						'name' => 'receipt_state',
 						'required' => true,
 						'class' => 't',
@@ -235,12 +234,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'desc' => $this->l('You have to define if this state correspond to a product receipt on this order (partial or complete).
-										This permit to know if the concerned products have to be added in stock.')
+						'desc' => $this->l('For this status, you have to define if products have been partially/completely received.
+											This allows to know if the products ordered have to be added to the corresponding warehouse.'),
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('This state corresponds to a product pending receipt ?:'),
+						'label' => $this->l('Pending receipt:'),
 						'name' => 'pending_receipt',
 						'required' => true,
 						'class' => 't',
@@ -257,7 +256,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('No')
 							)
 						),
-						'desc' => $this->l('You have to define if some products are pending receipt in this state.')
+						'desc' => $this->l('Does this status mean that you are waiting for the delivery ?')
 					),
 				),
 				'submit' => array(
@@ -267,10 +266,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			);
 
 			if (Tools::isSubmit('addsupply_order_state'))
-				$this->toolbar_title = $this->l('Stock : Add Supply order state');
+				$this->toolbar_title = $this->l('Stock : Add supply order status');
 			else
 			{
-				$this->toolbar_title = $this->l('Stock : Update Supply order state');
+				$this->toolbar_title = $this->l('Stock : Update Supply order status');
 
 				$id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
 
@@ -279,14 +278,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				{
 					$this->fields_form = array(
 						'legend' => array(
-							'title' => $this->l('Supply Order State'),
+							'title' => $this->l('Supply Order status'),
 							'image' => '../img/admin/edit.gif'
 						),
 						'input' => array(
 							array(
 								'type' => 'text',
 								'lang' => true,
-								'label' => $this->l('Name:'),
+								'label' => $this->l('Status:'),
 								'name' => 'name',
 								'size' => 50,
 								'required' => true
@@ -296,7 +295,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'label' => $this->l('Back office color:'),
 								'name' => 'color',
 								'size' => 20,
-								'desc' => $this->l('Back office background will be displayed in this color. HTML colors only (e.g.,').' "lightblue", "#CC6600")'
+								'desc' => $this->l('Back office background will be displayed in this color. HTML colors only'),
 							),
 						),
 						'submit' => array(
@@ -463,7 +462,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function initList()
 	{
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
-		$this->displayInformation($this->l('Also, it allows you to add and edit your own supply order states.'));
+		$this->displayInformation($this->l('Also, it allows you to add and edit your own supply order status.'));
 
 		// access
 		if (!($this->tabAccess['add'] === '1'))
@@ -479,7 +478,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
 
-		$this->toolbar_title = $this->l('Stock : Suppliers Orders States');
+		$this->toolbar_title = $this->l('Stock : Suppliers Orders status');
 		$first_list = parent::initList();
 
 		/*
@@ -517,28 +516,28 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// redifine fields display
 		$this->fieldsDisplay = array(
 			'reference' => array(
-				'title' => $this->l('Order Reference'),
-				'width' => 100,
+				'title' => $this->l('Reference'),
+				'width' => 130,
 				'havingFilter' => true
 			),
 			'supplier' => array(
 				'title' => $this->l('Supplier'),
-				'width' => 100,
+				'width' => 130,
 				'filter_key' => 's!name'
 			),
 			'warehouse' => array(
 				'title' => $this->l('Warehouse'),
-				'width' => 100,
+				'width' => 130,
 				'filter_key' => 'w!name'
 			),
 			'state' => array(
-				'title' => $this->l('State'),
+				'title' => $this->l('Status'),
 				'width' => 200,
 				'filter_key' => 'stl!name',
 				'color' => 'color',
 			),
 			'date_add' => array(
-				'title' => $this->l('Creation date'),
+				'title' => $this->l('Creation'),
 				'width' => 150,
 				'align' => 'right',
 				'type' => 'date',
@@ -546,7 +545,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'filter_key' => 'a!date_add'
 			),
 			'date_upd' => array(
-				'title' => $this->l('Last modification date'),
+				'title' => $this->l('Last modification'),
 				'width' => 150,
 				'align' => 'right',
 				'type' => 'date',
@@ -554,7 +553,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'filter_key' => 'a!date_upd'
 			),
 			'date_delivery_expected' => array(
-				'title' => $this->l('Delivery date'),
+				'title' => $this->l('Delivery (expected)'),
 				'width' => 150,
 				'align' => 'right',
 				'type' => 'date',
@@ -563,7 +562,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'id_pdf' => array(
 				'title' => $this->l('PDF'),
-				'width' => 50,
+				'width' => 80,
 				'callback' => 'printPDFIcons',
 				'orderby' => false,
 				'search' => false
@@ -639,7 +638,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// defines the fields of the form to display
 		$this->fields_form[]['form'] = array(
 			'legend' => array(
-				'title' => $this->l('Supply Order State'),
+				'title' => $this->l('Supply Order Status'),
 				'image' => '../img/admin/cms.gif'
 			),
 			'input' => array(
@@ -649,7 +648,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('New state of the order:'),
+					'label' => $this->l('New status of the order:'),
 					'name' => 'id_supply_order_state',
 					'required' => true,
 					'options' => array(
@@ -657,7 +656,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'id' => 'id_supply_order_state',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Choose the new state of your order')
+					'desc' => $this->l('Choose the new status of your order')
 				),
 			),
 			'submit' => array(
@@ -1056,7 +1055,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								$error_str .= '<li>'.$this->l('field ').$e.'</li>';
 							$error_str .= '</ul>';
 
-							$this->_errors[] = Tools::displayError($this->l('Please verify informations of the product: ').$entry->name.' '.$error_str);
+							$this->_errors[] = Tools::displayError($this->l('Please verify the informations of the product: ').$entry->name.' '.$error_str);
 						}
 						else
 							$entry->save();
@@ -1128,12 +1127,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			&& Tools::isSubmit('id_supply_order_state'))
 		{
 			if ($this->tabAccess['edit'] != '1')
-				$this->_errors[] = Tools::displayError($this->l('You do not have permissions to change order state.'));
+				$this->_errors[] = Tools::displayError($this->l('You do not have permissions to change order status.'));
 
 			// get state ID
 			$id_state = (int)Tools::getValue('id_supply_order_state', 0);
 			if ($id_state <= 0)
-				$this->_errors[] = Tools::displayError($this->l('The selected supply order state is not valid.'));
+				$this->_errors[] = Tools::displayError($this->l('The selected supply order status is not valid.'));
 
 			// get supply order ID
 			$id_supply_order = (int)Tools::getValue('id_supply_order', 0);
@@ -1162,7 +1161,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							// special case of validate state - check if there are products in the order and the required state is not an enclosed state
 							if ($supply_order->isEditable() && !$supply_order->hasEntries() && !$new_state->enclosed)
 								$this->_errors[] = Tools::displayError(
-									$this->l('It is not possible to change the state of this order because of no product are present in it')
+									$this->l('It is not possible to change the status of this order because you did not order any products')
 								);
 
 							if (!count($this->_errors))
@@ -1397,7 +1396,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'havingFilter' => true
 				),
 				'history_state_name' => array(
-					'title' => $this->l('State'),
+					'title' => $this->l('Status'),
 					'width' => 100,
 					'align' => 'left',
 					'color' => 'color',
