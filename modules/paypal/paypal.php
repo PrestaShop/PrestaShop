@@ -1318,7 +1318,7 @@ class PayPal extends PaymentModule
 	public function display($file, $template, $cacheId = NULL, $compileId = NULL)
 	{
 		if (substr(_PS_VERSION_, 0, 3) != '1.3')
-			return parent::displayTemplate($file, $template);
+			return parent::display($file, $template);
 
 		global $smarty;
 		$previousTemplate = $smarty->currentTemplate;
