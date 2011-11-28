@@ -46,10 +46,10 @@ class PrestashopStats
         if (self::$arr_ps_stats_url === NULL)
         {
             self::$arr_ps_stats_url = array();
-            self::$arr_ps_stats_url['actSubscription'] = 'http://www.prestashop.com/modules/tracker_twenga.php?act_subscription=1';
-            self::$arr_ps_stats_url['validateSubscription'] = 'http://www.prestashop.com/modules/tracker_twenga.php?validate_subscription=1';
-            self::$arr_ps_stats_url['cancelOrder'] = 'http://www.prestashop.com/modules/tracker_twenga.php?cancel_order=1';
-            self::$arr_ps_stats_url['validateOrder'] = 'http://www.prestashop.com/modules/tracker_twenga.php?validate_order=1';
+            self::$arr_ps_stats_url['actSubscription'] = 'http://api.prestashop.com/modules/tracker_twenga.php?act_subscription=1';
+            self::$arr_ps_stats_url['validateSubscription'] = 'http://api.prestashop.com/modules/tracker_twenga.php?validate_subscription=1';
+            self::$arr_ps_stats_url['cancelOrder'] = 'http://api.prestashop.com/modules/tracker_twenga.php?cancel_order=1';
+            self::$arr_ps_stats_url['validateOrder'] = 'http://api.prestashop.com/modules/tracker_twenga.php?validate_order=1';
             self::$site_url = $site_url;
         }
     }

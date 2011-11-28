@@ -274,7 +274,7 @@ class TrustedShopsRating extends AbsTrustedShops
 		}
 
 		if (!empty($params))
-			$dataSync = '<img src="http://www.prestashop.com/modules/'.self::$module_name.'.png'.$params.'" style="float:right" />';
+			$dataSync = '<img src="http://api.prestashop.com/modules/'.self::$module_name.'.png'.$params.'" style="float:right" />';
 		
 		$this->confirmations[] = $this->l('Settings updated').$dataSync;
 		return true;

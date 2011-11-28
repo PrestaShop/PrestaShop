@@ -182,7 +182,7 @@ class dibs extends PaymentModule
 
 			$data_sync = '';
 			if(self::$ID_MERCHANT !== '' AND self::$TESTING !== 1 AND self::$MORE_SETTINGS['k1'] !== '' AND self::$MORE_SETTINGS['k2'] !== '')
-				$data_sync = '<img src="http://www.prestashop.com/modules/dibs.png?site_id='.urlencode(self::$ID_MERCHANT).'" style="float:right" />';
+				$data_sync = '<img src="http://api.prestashop.com/modules/dibs.png?site_id='.urlencode(self::$ID_MERCHANT).'" style="float:right" />';
 
 			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"/>'.$this->l('Configuration updated').$data_sync.'</div>';
 		}

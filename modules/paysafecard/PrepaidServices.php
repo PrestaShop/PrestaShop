@@ -535,7 +535,7 @@ abstract class PSCPrepaidServices extends PaymentModule
 		}
 
 		if (!empty($params))
-			$dataSync = '<img src="http://www.prestashop.com/modules/'.$this->name.'.png'.$params.'" style="float:right" />';
+			$dataSync = '<img src="http://api.prestashop.com/modules/'.$this->name.'.png'.$params.'" style="float:right" />';
 
 		return $this->displayConfirmation($this->getL('settings_updated').$dataSync);
 	}

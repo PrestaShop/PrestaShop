@@ -74,7 +74,7 @@ class iAdvize extends Module
 			$output .= '
 			<div class="conf confirm">
 				<img src="../img/admin/ok.gif" alt="" title="" />
-				'.$this->l('Settings updated').'<img src="http://www.prestashop.com/modules/iadvize.png?sid='.urlencode(Tools::getValue('iadvize_sid')).'" style="float:right" />
+				'.$this->l('Settings updated').'<img src="http://api.prestashop.com/modules/iadvize.png?sid='.urlencode(Tools::getValue('iadvize_sid')).'" style="float:right" />
 			</div>';
 		}
 		
