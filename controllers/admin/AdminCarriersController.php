@@ -390,7 +390,7 @@ class AdminCarriersControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Maximium package deep:'),
-					'name' => 'max_deep',
+					'name' => 'max_depth',
 					'required' => false,
 					'size' => 10,
 					'desc' => $this->l('Maximum deep managed by this carrier. Set "0" or nothing, to ignore this field.')
