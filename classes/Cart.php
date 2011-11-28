@@ -2520,5 +2520,19 @@ class CartCore extends ObjectModel
 
 		return false;
 	}
+	
+	/**
+	 * Return false is some product from the cart are out of stock
+	 */
+	public function isAllProductsInStock()
+	{
+		foreach ($this->getProducts() as $product)
+		{
+			elog($product);
+			if (isset($product['out_of_stock']) && (int)$product['out_of_stock'])
+				return false;
+		}
+		return true;
+	}
 }
 
