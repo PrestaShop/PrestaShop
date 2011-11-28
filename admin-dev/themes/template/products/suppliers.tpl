@@ -45,25 +45,43 @@
 	{foreach from=$associated_suppliers item=supplier}
 	    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
 	    <div style="display:block;">
-			<table cellpadding="5" cellspacing="5" style="width:80%; margin-left:0;">
+			<table cellpadding="10" cellspacing="0" class="table">
 				<thead>
 					<tr>
 						<th>{l s='product name'}</th>
-						<th width="150">{l s='supplier reference'}</th>
+						<th width="150">{l s='Supplier reference'}</th>
+						<th width="150">{l s='Unit price tax excluded'}</th>
+						<th width="150">{l s='Unit price currency'}</th>
 					</tr>
 				</thead>
 				<tbody>
-				{foreach from=$attributes item=attribute}
+				{foreach $attributes AS $index => $attribute}
 					{assign var=reference value=''}
+					{assign var=price_te value=''}
+					{assign var=id_currency value=''}
 					{foreach from=$associated_suppliers_collection item=asc}
 						{if $asc->id_product == $attribute['id_product'] && $asc->id_product_attribute == $attribute['id_product_attribute'] && $asc->id_supplier == $supplier->id_supplier}
 							{assign var=reference value=$asc->product_supplier_reference}
+							{assign var=price_te value=Tools::ps_round($asc->product_supplier_price_te, 2)}
+							{assign var=id_currency value=$asc->id_currency}
 						{/if}
 					{/foreach}
-					<tr>
+					<tr {if $index is odd}class="alt_row"{/if}>
 						<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 						<td>
 							<input type="text" size="10" value="{$reference}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+						</td>
+						<td>
+							<input type="text" size="10" value="{$price_te}" name="product_price_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+						</td>
+						<td>
+							<select name="product_price_currency_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}">
+								{foreach $currencies AS $currency}
+									<option value="{$currency['id_currency']}"
+										{if $currency['id_currency'] == $id_currency}selected="selected"{/if}
+									>{$currency['name']}</option>
+								{/foreach}
+							</select>
 						</td>
 					</tr>
 				{/foreach}

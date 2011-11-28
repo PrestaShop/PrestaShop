@@ -2241,6 +2241,8 @@ CREATE TABLE `PREFIX_product_supplier` (
   `id_product_attribute` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `id_supplier` int(11) UNSIGNED NOT NULL,
   `product_supplier_reference` varchar(32) DEFAULT NULL,
+  `product_supplier_price_te` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `id_currency` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_product_supplier`),
   UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

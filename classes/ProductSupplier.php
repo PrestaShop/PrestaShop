@@ -49,6 +49,16 @@ class ProductSupplierCore extends ObjectModel
 	 * */
 	public $product_supplier_reference;
 
+	/**
+	 * @var integer the currency ID for unit price tax excluded
+	 * */
+	public $id_currency;
+
+	/**
+	 * @var string The unit price tax excluded of the product
+	 * */
+	public $product_supplier_price_te;
+
  	protected $fieldsRequired = array('id_product', 'id_product_attribute', 'id_supplier');
  	protected $fieldsSize = array('supplier_reference' => 32);
  	protected $fieldsValidate = array(
@@ -56,6 +66,8 @@ class ProductSupplierCore extends ObjectModel
  		'id_product' => 'isUnsignedId',
  		'id_product_attribute' => 'isUnsignedId',
  		'id_supplier' => 'isUnsignedId',
+ 		'product_supplier_price_te' => 'isPrice',
+ 		'id_currency' => 'isUnsignedId',
  	);
 
 	protected $table = 'product_supplier';
@@ -69,6 +81,8 @@ class ProductSupplierCore extends ObjectModel
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_supplier'] = (int)$this->id_supplier;
 		$fields['product_supplier_reference'] = pSQL($this->product_supplier_reference);
+		$fields['id_currency'] = (int)$this->id_currency;
+		$fields['product_supplier_price_te'] = pSQL($this->product_supplier_price_te);
 
 		return $fields;
 	}
@@ -86,6 +100,28 @@ class ProductSupplierCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('ps.product_supplier_reference');
+		$query->from('product_supplier ps');
+		$query->where('ps.id_product = '.(int)$id_product.'
+			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
+			AND ps.id_supplier = '.(int)$id_supplier
+		);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * For a given product and supplier, get the product unit price
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $id_supplier
+	 * @return array
+	 */
+	public static function getProductSupplierPrice($id_product, $id_product_attribute, $id_supplier)
+	{
+		// build query
+		$query = new DbQuery();
+		$query->select('ps.product_supplier_price_te');
 		$query->from('product_supplier ps');
 		$query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
