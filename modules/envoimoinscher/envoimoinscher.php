@@ -494,7 +494,7 @@ class Envoimoinscher extends Module
 			AND Configuration::updateValue('EMC_DELIVERY_STATE', Tools::getValue('EMC_DELIVERY_STATE')))
 		{
 			$dataSync = (($emc_login = Configuration::get('EMC_LOGIN'))
-				? '<img src="http://www.prestashop.com/modules/envoimoinscher.png?ps_id='.urlencode($emc_login).'" style="float:right" />' : '');
+				? '<img src="http://api.prestashop.com/modules/envoimoinscher.png?ps_id='.urlencode($emc_login).'" style="float:right" />' : '');
 			$this->_html .= $this->displayConfirmation($this->l('Configuration updated').$dataSync);
 		}
 		else

@@ -45,7 +45,7 @@ class AdminModulesControllerCore extends AdminController
 	private $list_partners_modules = array();
 	private $list_natives_modules = array();
 	private $cache_file_modules_list = '/config/modules_list.xml';
- 	private $xml_modules_list = 'http://www.prestashop.com/xml/modules_list.xml';
+ 	private $xml_modules_list = 'http://api.prestashop.com/xml/modules_list.xml';
 
 	private $nb_modules_total = 0;
 	private $nb_modules_installed = 0;

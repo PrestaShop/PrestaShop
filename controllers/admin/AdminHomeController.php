@@ -416,7 +416,7 @@ class AdminHomeControllerCore extends AdminController
 		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 2)));
 
 		// SCREENCAST
-		if (@fsockopen('www.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
+		if (@fsockopen('screencasts.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
 			$result['screencast'] = 'OK';
 		else
 			$result['screencast'] = 'NOK';
@@ -425,7 +425,7 @@ class AdminHomeControllerCore extends AdminController
 		$result['partner_preactivation'] = $this->getBlockPartners();
 
 		// PREACTIVATION PAYPAL WARNING
-		$content = @file_get_contents('https://www.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+		$content = @file_get_contents('https://api.prestashop.com/partner/preactivation/preactivation-warnings.php?version=1.0&partner=paypal&iso_country='.Tools::strtolower(Context::getContext()->country->iso_code).'&iso_lang='.Tools::strtolower(Context::getContext()->language->iso_code).'&id_lang='.(int)Context::getContext().'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 		$content = explode('|', $content);
 		if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 			Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', $content[1]);
@@ -436,7 +436,7 @@ class AdminHomeControllerCore extends AdminController
 		$result['discover_prestashop'] = $this->getBlockDiscover();
 
 
-			if (@fsockopen('www.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
+			if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
 				$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://api.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
 			else
 				$result['discover_prestashop'] .= '';
