@@ -28,9 +28,6 @@ $_MODULE['<{fianetfraud}prestashop>fianetfraud_ff18b8d27988b97ba1dd72120dd524ea'
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_ec51b543e5a38f6044c83f21dce2b23d'] = 'Zahlungs-Modul';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_7c9a3504dd4ce74b8021267ae1802968'] = 'Zahlungsart';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
-$_MODULE['<{fianetfraud}prestashop>fianetfraud_127469a6b4253ebb77adccc0dd48461e'] = 'Herr';
-$_MODULE['<{fianetfraud}prestashop>fianetfraud_7f2a1b59ac1ab6d2d892dbbf4f132c40'] = 'Frau';
-$_MODULE['<{fianetfraud}prestashop>fianetfraud_88183b946cc5f0e8c96b2e66e1c74a7e'] = 'Unbekannt';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_d13270d4831bb2a2723f0fb5b573807c'] = 'Fianet Bestätigung';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_e010021939a49b7cce07f0e546c1d54f'] = 'Detailansicht';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_b086843368d1c92d0a86cbee76b20b6f'] = 'Evaluate';

@@ -31,7 +31,6 @@ $_MODULE['<{authorizeaim}prestashop>authorizeaim_8c1279db4db86553e4b9682f78cf500
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_60a104dc50579d60cbc90158fada1dcf'] = 'CVV';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_6149e52c36edb9ee4494d5412e42eef2'] = 'die letzten drei Ziffern auf der Rückseite Ihrer Kreditkarte';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_40566b26dcc126bce704f2c1d622a6a3'] = 'Bestellung bestätigen';
-$_MODULE['<{authorizeaim}prestashop>authorizeaim_9286982d71addb45ad3a9472282f2c69'] = 'Ihre Kartennummer ist falsch';
 $_MODULE['<{authorizeaim}prestashop>hookorderconfirmation_2e2117b7c81aa9ea6931641ea2c6499f'] = 'Ihre Bestellung vom';
 $_MODULE['<{authorizeaim}prestashop>hookorderconfirmation_75fbf512d744977d62599cc3f0ae2bb4'] = ' ist abgeschlossen.';
 $_MODULE['<{authorizeaim}prestashop>hookorderconfirmation_30163d8fc3068e8297e7ab5bf32aec87'] = 'Ihre Bestellung wird so schnell wie möglich zugeschickt.';

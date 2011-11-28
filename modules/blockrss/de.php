@@ -9,7 +9,6 @@ $_MODULE['<{blockrss}prestashop>blockrss_6706b6d8ba45cc4f0eda0506ba1dc3c8'] = 'U
 $_MODULE['<{blockrss}prestashop>blockrss_36ed65ce17306e812fd68d9f634c0c57'] = 'Ungültiger Titel';
 $_MODULE['<{blockrss}prestashop>blockrss_1b3d34e25aef32a3c8daddfff856577f'] = 'Ungültige Anzahl von RSS-Feeds';
 $_MODULE['<{blockrss}prestashop>blockrss_e423bd72f5aa1be13216c5abbd3deb45'] = 'Sie haben eine Feed-URL auf Ihrer eigenen Website ausgewählt. Bitte wählen Sie eine andere URL';
-$_MODULE['<{blockrss}prestashop>blockrss_7a82db9ac04c55697040556e5cc9dc7c'] = 'Feed ist unreacheable, überprüfen Sie Ihre URL';
 $_MODULE['<{blockrss}prestashop>blockrss_1844ef1bfaa030dc8423c4645a43525c'] = 'Invalid Feed:';
 $_MODULE['<{blockrss}prestashop>blockrss_c888438d14855d7d96a2724ee9c306bd'] = 'Einstellungen aktualisiert';
 $_MODULE['<{blockrss}prestashop>blockrss_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';

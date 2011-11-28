@@ -9,7 +9,6 @@ $_MODULE['<{blockrss}prestashop>blockrss_6706b6d8ba45cc4f0eda0506ba1dc3c8'] = 'U
 $_MODULE['<{blockrss}prestashop>blockrss_36ed65ce17306e812fd68d9f634c0c57'] = 'Titolo non valido ';
 $_MODULE['<{blockrss}prestashop>blockrss_1b3d34e25aef32a3c8daddfff856577f'] = 'Numero non valido di feed';
 $_MODULE['<{blockrss}prestashop>blockrss_e423bd72f5aa1be13216c5abbd3deb45'] = 'È stata selezionata una URL del feed sul proprio sito web. Si prega di scegliere un altro URL';
-$_MODULE['<{blockrss}prestashop>blockrss_7a82db9ac04c55697040556e5cc9dc7c'] = 'L\'alimentazione è unreacheable, controllare l\'URL';
 $_MODULE['<{blockrss}prestashop>blockrss_1844ef1bfaa030dc8423c4645a43525c'] = 'Alimentazione non valida:';
 $_MODULE['<{blockrss}prestashop>blockrss_c888438d14855d7d96a2724ee9c306bd'] = 'Impostazioni aggiornate';
 $_MODULE['<{blockrss}prestashop>blockrss_f4f70727dc34561dfde1a3c529b6205c'] = 'Impostazioni';

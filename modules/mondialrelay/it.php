@@ -46,7 +46,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_c888438d14855d7d96a2724ee9c306b
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_07213a0161f52846ab198be103b5ab43'] = 'errori';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_cb5e100e5a9a3e7f6d1fd97512215282'] = 'errore';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_350c1cc4343826a89f08a33bb49c6d98'] = 'Configura del Modulo Mondial Relay';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_192a5439bcfb850e8885cd4b5e01ced4'] = 'Prova a disattivare la cache e mettere la compilazione forza su se avete problemi con il modulo dopo un aggiornamento';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_d21a9f93917604d5490ad529a7cf1ff9'] = 'Per creare un corriere Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6a2e6af5fff47adb3afd780b97d9b4b'] = 'Inserisci e salva le impostazioni dell\'account Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_94fbe32464fcfa902feed9f256439833'] = 'Creare un Carrier utilizzando il modulo \"aggiungi un vettore\" qui sotto';

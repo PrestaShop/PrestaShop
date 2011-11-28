@@ -33,7 +33,6 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_6602bbeb2956c035fb4cb5e844a4861
 $_MODULE['<{statsproduct}prestashop>statsproduct_6c1a8292e4da90e1ef19ae9444226d8f'] = 'Numero di acquisti rispetto al numero di visualizzazioni';
 $_MODULE['<{statsproduct}prestashop>statsproduct_1d0ba341c7847cbff109276485417a1c'] = 'Dopo aver scelto una categoria e selezionato un prodotto disponibile in questa categoria, appariranno dei grafici. Poi, potrai analizzarli.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6559cc601f073740b825a4fc9b76149b'] = 'Se noti che un prodotto ha successo, viene spesso acquistato ma visualizzato raramente, dovresti collocarlo in maniera più visibile nel tuo negozio';
-$_MODULE['<{statsproduct}prestashop>statsproduct_20b9641efab51dee7d27eed2b6773ef0'] = 'D\'altra parte, se un prodotto ha un sacco di visualizzazioni ma non è realmente acquistato: ti consigliamo di controllare o modificare le informazioni di questo prodotto, la descrizione e la fotografia.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_e22269bb51f9f2394e148716babbafbb'] = 'Popolarità';
 $_MODULE['<{statsproduct}prestashop>statsproduct_5e9613e58f3bdbc89b1fef07274c0877'] = 'Visite (x100)';
 $_MODULE['<{statsproduct}prestashop>statsproduct_287234a1ff35a314b5b6bc4e5828e745'] = 'Attributi';

@@ -15,9 +15,7 @@ $_MODULE['<{sekeywords}prestashop>sekeywords_03e0e9ef8b776b5f7bcc590e51bfa63b'] 
 $_MODULE['<{sekeywords}prestashop>sekeywords_7b48f6cc4a1dde7fca9597e717c2465f'] = 'Keine Keywords';
 $_MODULE['<{sekeywords}prestashop>sekeywords_6602bbeb2956c035fb4cb5e844a4861b'] = 'Erklärung';
 $_MODULE['<{sekeywords}prestashop>sekeywords_39f040a1f174811285297763fcaada12'] = 'Externe Suchmaschinen-Keywords identifizieren';
-$_MODULE['<{sekeywords}prestashop>sekeywords_f4e8acc0e0cfc0653d6354c3ef878d29'] = 'Es gibt viele Möglichkeiten, eine Webseite zu finden, aber eine der häufigsten ist es, sie mit einer Suchmaschine zu finden. Die Ermittlung der Keywords, die die meisten Besucher anlocken, ist daher von großer Bedeutung. Dadurch können Sie erkennen, welches Produkt Sie hervorheben müssen, um mehr Besucher und Kunden zu haben.';
 $_MODULE['<{sekeywords}prestashop>sekeywords_359f9e79e746fa9f684e5cda9e60ca2e'] = 'Wie funktioniert das?';
-$_MODULE['<{sekeywords}prestashop>sekeywords_b20af255c34d0a4ace56863dbd8f0c90'] = 'Wenn ein Besucher auf Ihre Webseite kommt, kennt der Server ihre davorige Seite. Dieses Modul analysiert diese URL und findet die in ihr enthaltenen Keywords. Derzeit verwaltet es die folgende Suchmaschinen:';
 $_MODULE['<{sekeywords}prestashop>sekeywords_be5d5d37542d75f93a87094459f76678'] = 'und';
 $_MODULE['<{sekeywords}prestashop>sekeywords_474c03326cba5cb2ce6c07ddf3e1e656'] = 'Bald wird es möglich sein, eine neue Suchmaschine dynamisch hinzufügen und zu diesem Modul beizutragen!';
 $_MODULE['<{sekeywords}prestashop>sekeywords_8d01ac22a68176ddd7067da99508751d'] = '10 erste Keywords';
