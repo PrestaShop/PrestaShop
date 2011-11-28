@@ -312,6 +312,10 @@
 		{/foreach}
 		</ul>
 	{/if}
+	<p>
+		<input type="checkbox" name="allow_seperated_package" id="allow_seperated_package" {if $cart->allow_seperated_package}checked="checked"{/if} />
+		<label for="allow_seperated_package">{l s="allow seperated package"}</label>
+	</p>
 	<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 		<fieldset>
 			<h4>{l s='Vouchers'}</h4>

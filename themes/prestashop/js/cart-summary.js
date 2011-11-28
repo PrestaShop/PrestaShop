@@ -623,4 +623,20 @@ $(document).ready(function() {
 		$(this).parent().parent().find('.delivery_option_carrier').hide();
 		$(this).parent().find('.delivery_option_carrier').show();
 	});
+	
+	$('#allow_seperated_package').live('click', function() {
+		$.ajax({
+			type: 'GET',
+			url: baseDir,
+			async: true,
+			cache: false,
+			data: 'controller=cart&ajax=true&allowSeperatedPackage&value='
+				+($(this).attr('checked') ? '1' : '0')
+				+'&token='+static_token,
+			success: function(jsonData)
+			{
+				getCarrierListAndUpdate();
+			}
+		});
+	});
 });
