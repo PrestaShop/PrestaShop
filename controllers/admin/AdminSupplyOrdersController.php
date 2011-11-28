@@ -33,69 +33,70 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-	 	$this->table = 'supply_order_state';
-	 	$this->className = 'SupplyOrderState';
-		$this->lang = true;
+	 	$this->table = 'supply_order';
+	 	$this->className = 'SupplyOrder';
+	 	$this->identifier = 'id_supply_order';
+	 	$this->lang = false;
+
+		$this->addRowAction('updatereceipt');
+		$this->addRowAction('changestate');
+		$this->addRowAction('edit');
+		$this->addRowAction('view');
+		$this->addRowAction('details');
+		$this->list_no_link = true;
 
 		$this->fieldsDisplay = array(
-			'name' => array(
-				'title' => $this->l('Name'),
+			'reference' => array(
+				'title' => $this->l('Reference'),
+				'width' => 130,
+				'havingFilter' => true
+			),
+			'supplier' => array(
+				'title' => $this->l('Supplier'),
+				'width' => 130,
+				'filter_key' => 's!name'
+			),
+			'warehouse' => array(
+				'title' => $this->l('Warehouse'),
+				'width' => 130,
+				'filter_key' => 'w!name'
+			),
+			'state' => array(
+				'title' => $this->l('Status'),
+				'width' => 200,
+				'filter_key' => 'stl!name',
 				'color' => 'color',
 			),
-			'editable' => array(
-				'title' => $this->l('Editable?'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
-				),
-				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+			'date_add' => array(
+				'title' => $this->l('Creation'),
+				'width' => 150,
+				'align' => 'right',
+				'type' => 'date',
+				'havingFilter' => true,
+				'filter_key' => 'a!date_add'
 			),
-			'delivery_note' => array(
-				'title' => $this->l('Delivery note available?'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
-				),
-				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+			'date_upd' => array(
+				'title' => $this->l('Last modification'),
+				'width' => 150,
+				'align' => 'right',
+				'type' => 'date',
+				'havingFilter' => true,
+				'filter_key' => 'a!date_upd'
 			),
-			'pending_receipt' => array(
-				'title' => $this->l('Is a pending receipt state?'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
-				),
-				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+			'date_delivery_expected' => array(
+				'title' => $this->l('Delivery (expected)'),
+				'width' => 150,
+				'align' => 'right',
+				'type' => 'date',
+				'havingFilter' => true,
+				'filter_key' => 'a!date_delivery_expected'
 			),
-			'receipt_state' => array(
-				'title' => $this->l('Is a delivery state?'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
-				),
-				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
-			),
-			'enclosed' => array(
-				'title' => $this->l('Is an enclosed order state?'),
-				'align' => 'center',
-				'icon' => array(
-					'1' => 'enabled.gif',
-					'0' => 'disabled.gif'
-				),
-				'type' => 'bool',
-				'width' => 170,
-				'orderby' => false
+			'id_pdf' => array(
+				'title' => $this->l('PDF'),
+				'width' => 80,
+				'callback' => 'printPDFIcons',
+				'orderby' => false,
+				'search' => false
 			),
 		);
 
@@ -146,169 +147,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	public function initForm()
 	{
-		if (Tools::isSubmit('addsupply_order_state') ||
-			Tools::isSubmit('updatesupply_order_state') ||
-			Tools::isSubmit('submitAddsupply_order_state') ||
-			Tools::isSubmit('submitUpdatesupply_order_state'))
-		{
-			$this->fields_form = array(
-				'legend' => array(
-					'title' => $this->l('Supply Order Status'),
-					'image' => '../img/admin/edit.gif'
-				),
-				'input' => array(
-					array(
-						'type' => 'text',
-						'lang' => true,
-						'label' => $this->l('Status:'),
-						'name' => 'name',
-						'size' => 50,
-						'required' => true
-					),
-					array(
-						'type' => 'color',
-						'label' => $this->l('Color:'),
-						'name' => 'color',
-						'size' => 20,
-						'desc' => $this->l('Back office background will be displayed in this color. HTML colors only.'),
-					),
-					array(
-						'type' => 'radio',
-						'label' => $this->l('Editable:'),
-						'name' => 'editable',
-						'required' => true,
-						'class' => 't',
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Yes')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('No')
-							)
-						),
-						'desc' => $this->l('For this status, you have to define if it is possible to edit the order.
-											An editable order is an order not valid to send to the supplier.')
-					),
-					array(
-						'type' => 'radio',
-						'label' => $this->l('Delivery note:'),
-						'name' => 'delivery_note',
-						'required' => true,
-						'class' => 't',
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Yes')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('No')
-							)
-						),
-						'desc' => $this->l('For this status, you have to define if it is possible to generate the delivery note of the order.')
-					),
-					array(
-						'type' => 'radio',
-						'label' => $this->l('Delivery state:'),
-						'name' => 'receipt_state',
-						'required' => true,
-						'class' => 't',
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Yes')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('No')
-							)
-						),
-						'desc' => $this->l('For this status, you have to define if products have been partially/completely received.
-											This allows to know if the products ordered have to be added to the corresponding warehouse.'),
-					),
-					array(
-						'type' => 'radio',
-						'label' => $this->l('Pending receipt:'),
-						'name' => 'pending_receipt',
-						'required' => true,
-						'class' => 't',
-						'is_bool' => true,
-						'values' => array(
-							array(
-								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Yes')
-							),
-							array(
-								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('No')
-							)
-						),
-						'desc' => $this->l('Does this status mean that you are waiting for the delivery ?')
-					),
-				),
-				'submit' => array(
-					'title' => $this->l('   Save   '),
-					'class' => 'button'
-				)
-			);
-
-			if (Tools::isSubmit('addsupply_order_state'))
-				$this->toolbar_title = $this->l('Stock : Add supply order status');
-			else
-			{
-				$this->toolbar_title = $this->l('Stock : Update Supply order status');
-
-				$id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
-
-				// only some fields are editable for initial states
-				if (in_array($id_supply_order_state, array(1, 2, 3, 4, 5, 6)))
-				{
-					$this->fields_form = array(
-						'legend' => array(
-							'title' => $this->l('Supply Order status'),
-							'image' => '../img/admin/edit.gif'
-						),
-						'input' => array(
-							array(
-								'type' => 'text',
-								'lang' => true,
-								'label' => $this->l('Status:'),
-								'name' => 'name',
-								'size' => 50,
-								'required' => true
-							),
-							array(
-								'type' => 'color',
-								'label' => $this->l('Back office color:'),
-								'name' => 'color',
-								'size' => 20,
-								'desc' => $this->l('Back office background will be displayed in this color. HTML colors only'),
-							),
-						),
-						'submit' => array(
-							'title' => $this->l('   Save   '),
-							'class' => 'button'
-						)
-					);
-				}
-			}
-
-			return parent::initForm();
-		}
-
 		if (Tools::isSubmit('addsupply_order') ||
 			Tools::isSubmit('updatesupply_order') ||
 			Tools::isSubmit('submitAddsupply_order') ||
@@ -462,114 +300,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function initList()
 	{
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
-		$this->displayInformation($this->l('Also, it allows you to add and edit your own supply order status.'));
 
 		// access
 		if (!($this->tabAccess['add'] === '1'))
 			unset($this->toolbar_btn['new']);
 
-		//no link on list rows
-		$this->list_no_link = true;
-
-		/*
-		 * Manage default list
-		 */
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
-		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
-
-		$this->toolbar_title = $this->l('Stock : Suppliers Orders status');
-		$first_list = parent::initList();
-
-		/*
-		 * Manage second list
-		 */
-		// reset actions, toolbar and query vars
-		$this->actions = array();
-		$this->list_skip_actions = array();
-		$this->toolbar_btn = array();
-		$this->toolbar_title = '';
-		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
-
-		// override table, land, className and identifier for the current controller
-	 	$this->table = 'supply_order';
-	 	$this->className = 'SupplyOrder';
-	 	$this->identifier = 'id_supply_order';
-	 	$this->lang = false;
-
-		$this->addRowAction('updatereceipt');
-		$this->addRowAction('changestate');
-		$this->addRowAction('edit');
-		$this->addRowAction('view');
-		$this->addRowAction('details');
-
-	 	// test if a filter is applied for this list
-		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
-			$this->filter = true;
-
-		// test if a filter reset request is required for this list
-		if (isset($_POST['submitReset'.$this->table]))
-			$this->action = 'reset_filters';
-		else
-			$this->action = '';
-
-		// redifine fields display
-		$this->fieldsDisplay = array(
-			'reference' => array(
-				'title' => $this->l('Reference'),
-				'width' => 130,
-				'havingFilter' => true
-			),
-			'supplier' => array(
-				'title' => $this->l('Supplier'),
-				'width' => 130,
-				'filter_key' => 's!name'
-			),
-			'warehouse' => array(
-				'title' => $this->l('Warehouse'),
-				'width' => 130,
-				'filter_key' => 'w!name'
-			),
-			'state' => array(
-				'title' => $this->l('Status'),
-				'width' => 200,
-				'filter_key' => 'stl!name',
-				'color' => 'color',
-			),
-			'date_add' => array(
-				'title' => $this->l('Creation'),
-				'width' => 150,
-				'align' => 'right',
-				'type' => 'date',
-				'havingFilter' => true,
-				'filter_key' => 'a!date_add'
-			),
-			'date_upd' => array(
-				'title' => $this->l('Last modification'),
-				'width' => 150,
-				'align' => 'right',
-				'type' => 'date',
-				'havingFilter' => true,
-				'filter_key' => 'a!date_upd'
-			),
-			'date_delivery_expected' => array(
-				'title' => $this->l('Delivery (expected)'),
-				'width' => 150,
-				'align' => 'right',
-				'type' => 'date',
-				'havingFilter' => true,
-				'filter_key' => 'a!date_delivery_expected'
-			),
-			'id_pdf' => array(
-				'title' => $this->l('PDF'),
-				'width' => 80,
-				'callback' => 'printPDFIcons',
-				'orderby' => false,
-				'search' => false
-			),
-		);
-
-		// make new query
+		// overrides query
 		$this->_select = '
 			s.name AS supplier,
 			w.name AS warehouse,
@@ -591,17 +327,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'supplier` s ON a.id_supplier = s.id_supplier
 						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
 
-		// init the toolbar according to the current list
-		$this->initToolbar();
-
-		// generate the second list
-		$second_list = parent::initList();
-
-		// reset all query vars
-		unset($this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
-
-		// return the two lists
-		return $second_list.$first_list;
+		return parent::initList();
 	}
 
 	/**
