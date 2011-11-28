@@ -1315,7 +1315,7 @@ class PayPal extends PaymentModule
 		return $domain;
 	}
 
-	public static function display($file, $template, $cacheId = NULL, $compileId = NULL)
+	public function display($file, $template, $cacheId = NULL, $compileId = NULL)
 	{
 		if (substr(_PS_VERSION_, 0, 3) != '1.3')
 			return parent::displayTemplate($file, $template);
