@@ -1,0 +1,552 @@
+<?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision$
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+/**
+ * @since 1.5.0
+ */
+class AdminStockConfigurationController extends AdminController
+{
+	/*
+	 * By default, we use StockMvtReason as the table / className
+	 */
+	public function __construct()
+	{
+		$this->context = Context::getContext();
+	 	$this->table = 'stock_mvt_reason';
+	 	$this->className = 'StockMvtReason';
+		$this->lang = true;
+
+		// defines fields
+		$this->fieldsDisplay = array(
+			'id_stock_mvt_reason' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 40,
+				'search' => false,
+			),
+			'sign' => array(
+				'title' => $this->l('Sign'),
+				'width' => 100,
+				'align' => 'center',
+				'type' => 'select',
+				'filter_key' => 'a!sign',
+				'list' => array(
+					'1' => $this->l('Increment'),
+					'-1' => $this->l('Decrement'),
+				),
+				'icon' => array(
+					-1 => 'remove_stock.png',
+					1 => 'add_stock.png'
+				),
+				'orderby' => false
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'filter_key' => 'b!name',
+				'width' => 250
+			),
+		);
+
+		// loads labels (incremenation)
+		$reasons_inc = StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+																	array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')), 1);
+		// loads labaels (decremenation)
+		$reasons_dec = StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
+																	array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')), -1);
+
+		// defines options for StockMvt
+		$this->options = array(
+			'general' => array(
+				'title' =>	$this->l('Options'),
+				'fields' =>	array(
+					'PS_STOCK_MVT_INC_REASON_DEFAULT' => array(
+						'title' => $this->l('Default label when incrementing stock:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_inc,
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'PS_STOCK_MVT_DEC_REASON_DEFAULT' => array(
+						'title' => $this->l('Default label when decrementing stock:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_dec,
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'PS_STOCK_CUSTOMER_ORDER_REASON' => array(
+						'title' => $this->l('Default label when decrementing stock when a customer order is shipped:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_dec,
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+					'PS_STOCK_MVT_SUPPLY_ORDER' => array(
+						'title' => $this->l('Default label when incrementing stock when a supply order is received:'),
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $reasons_inc,
+						'identifier' => 'id_stock_mvt_reason',
+						'visibility' => Shop::CONTEXT_ALL
+					),
+				),
+				'submit' => array(),
+			)
+		);
+
+		parent::__construct();
+	}
+
+	public function init()
+	{
+		// if we are managing the second list (i.e. supply order state)
+		if (Tools::isSubmit('addsupply_order_state') ||
+			Tools::isSubmit('updatesupply_order_state') ||
+			Tools::isSubmit('deletesupply_order_state'))
+		{
+			$this->table = 'supply_order_state';
+		 	$this->className = 'SupplyOrderState';
+		 	$this->identifier = 'id_supply_order_state';
+			$this->display = 'edit';
+		}
+		return parent::init();
+	}
+
+	/**
+	 * AdminController::initForm() override
+	 * @see AdminController::initForm()
+	 */
+	public function initForm()
+	{
+		// if we are managing StockMvtReason
+		if (Tools::isSubmit('addstock_mvt_reason') || Tools::isSubmit('updatestock_mvt_reason'))
+		{
+			$this->toolbar_title = $this->l('Stock : Add stock movement label');
+
+			$this->fields_form = array(
+				'legend' => array(
+					'title' => $this->l('Stock Movement Label'),
+					'image' => '../img/admin/edit.gif'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'lang' => true,
+						'label' => $this->l('Name:'),
+						'name' => 'name',
+						'size' => 50,
+						'required' => true
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Action:'),
+						'name' => 'sign',
+						'required' => true,
+						'options' => array(
+							'query' => array(
+								array(
+									'id' => '1',
+									'name' => $this->l('Increase stock')
+								),
+								array(
+									'id' => '-1',
+									'name' => $this->l('Decrease stock')
+								),
+							),
+							'id' => 'id',
+							'name' => 'name'
+						),
+						'desc' => $this->l('Select the corresponding action : increments or decrements stock.')
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('   Save   '),
+					'class' => 'button'
+				)
+			);
+		}
+		// else, if we are managing Supply Order State
+		else if (Tools::isSubmit('addsupply_order_state') ||
+				 Tools::isSubmit('updatesupply_order_state') ||
+				 Tools::isSubmit('submitAddsupply_order_state') ||
+				 Tools::isSubmit('submitUpdatesupply_order_state'))
+		{
+			$this->fields_form = array(
+					'legend' => array(
+						'title' => $this->l('Supply Order Status'),
+						'image' => '../img/admin/edit.gif'
+					),
+					'input' => array(
+						array(
+							'type' => 'text',
+							'lang' => true,
+							'label' => $this->l('Status:'),
+							'name' => 'name',
+							'size' => 50,
+							'required' => true
+						),
+						array(
+							'type' => 'color',
+							'label' => $this->l('Color:'),
+							'name' => 'color',
+							'size' => 20,
+							'desc' => $this->l('Back office background will be displayed in this color. HTML colors only.'),
+						),
+						array(
+							'type' => 'radio',
+							'label' => $this->l('Editable:'),
+							'name' => 'editable',
+							'required' => true,
+							'class' => 't',
+							'is_bool' => true,
+							'values' => array(
+								array(
+									'id' => 'active_on',
+									'value' => 1,
+									'label' => $this->l('Yes')
+								),
+								array(
+									'id' => 'active_off',
+									'value' => 0,
+									'label' => $this->l('No')
+								)
+							),
+							'desc' => $this->l('For this status, you have to define if it is possible to edit the order.
+												An editable order is an order not valid to send to the supplier.')
+						),
+						array(
+							'type' => 'radio',
+							'label' => $this->l('Delivery note:'),
+							'name' => 'delivery_note',
+							'required' => true,
+							'class' => 't',
+							'is_bool' => true,
+							'values' => array(
+								array(
+									'id' => 'active_on',
+									'value' => 1,
+									'label' => $this->l('Yes')
+								),
+								array(
+									'id' => 'active_off',
+									'value' => 0,
+									'label' => $this->l('No')
+								)
+							),
+							'desc' => $this->l('For this status, you have to define if it is possible to generate the delivery note of the order.')
+						),
+						array(
+							'type' => 'radio',
+							'label' => $this->l('Delivery state:'),
+							'name' => 'receipt_state',
+							'required' => true,
+							'class' => 't',
+							'is_bool' => true,
+							'values' => array(
+								array(
+									'id' => 'active_on',
+									'value' => 1,
+									'label' => $this->l('Yes')
+								),
+								array(
+									'id' => 'active_off',
+									'value' => 0,
+									'label' => $this->l('No')
+								)
+							),
+							'desc' => $this->l('For this status, you have to define if products have been partially/completely received.
+												This allows to know if the products ordered have to be added to the corresponding warehouse.'),
+						),
+						array(
+							'type' => 'radio',
+							'label' => $this->l('Pending receipt:'),
+							'name' => 'pending_receipt',
+							'required' => true,
+							'class' => 't',
+							'is_bool' => true,
+							'values' => array(
+								array(
+									'id' => 'active_on',
+									'value' => 1,
+									'label' => $this->l('Yes')
+								),
+								array(
+									'id' => 'active_off',
+									'value' => 0,
+									'label' => $this->l('No')
+								)
+							),
+							'desc' => $this->l('Does this status mean that you are waiting for the delivery ?')
+						),
+					),
+					'submit' => array(
+						'title' => $this->l('   Save   '),
+						'class' => 'button'
+					)
+				);
+
+				if (Tools::isSubmit('addsupply_order_state'))
+					$this->toolbar_title = $this->l('Stock : Add supply order status');
+				else
+				{
+					$this->toolbar_title = $this->l('Stock : Update Supply order status');
+
+					$id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
+
+					// only some fields are editable for initial states
+					if (in_array($id_supply_order_state, array(1, 2, 3, 4, 5, 6)))
+					{
+						$this->fields_form = array(
+							'legend' => array(
+								'title' => $this->l('Supply Order status'),
+								'image' => '../img/admin/edit.gif'
+							),
+							'input' => array(
+								array(
+									'type' => 'text',
+									'lang' => true,
+									'label' => $this->l('Status:'),
+									'name' => 'name',
+									'size' => 50,
+									'required' => true
+								),
+								array(
+									'type' => 'color',
+									'label' => $this->l('Back office color:'),
+									'name' => 'color',
+									'size' => 20,
+									'desc' => $this->l('Back office background will be displayed in this color. HTML colors only'),
+								),
+							),
+							'submit' => array(
+								'title' => $this->l('   Save   '),
+								'class' => 'button'
+							)
+						);
+					}
+
+					if (!($obj = new SupplyOrderState((int)$id_supply_order_state)))
+						return;
+
+					$this->fields_value = array(
+						'color' => $obj->color,
+						'editable' => $obj->editable,
+						'delivery_note' => $obj->delivery_note,
+						'receipt_state' => $obj->receipt_state,
+						'pending_receipt' => $obj->pending_receipt,
+					);
+					foreach ($this->getLanguages() as $language)
+							$this->fields_value['name'][$language['id_lang']] = $this->getFieldValue($obj, 'name', $language['id_lang']);
+				}
+		}
+
+		return parent::initForm();
+	}
+
+	/**
+	 * AdminController::initList() override
+	 * @see AdminController::initList()
+	 */
+	public function initList()
+	{
+		/**
+		 * General messages displayed for all lists
+		 */
+		$this->displayInformation($this->l('This interface allows you to configure your supply orders status and stock movements labels.').'<br />');
+
+		// Checks access
+		if (!($this->tabAccess['add'] === '1'))
+			unset($this->toolbar_btn['new']);
+
+		/**
+		 * First list
+		 * Stock Mvt Labels/Reasons
+		 */
+		$first_list = null;
+		$this->list_no_link = true;
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+		$this->addRowActionSkipList('edit', array(1, 2, 3, 4, 5, 6, 7, 8));
+		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6, 7, 8));
+		$this->_where = ' AND a.deleted = 0';
+
+		$this->toolbar_title = $this->l('Stock : Stock movements labels');
+		$first_list = parent::initList();
+
+		/**
+		 * Second list
+		 * Supply Order Status/State
+		 */
+		$second_list = null;
+		unset($this->_select, $this->_where, $this->_join, $this->_group, $this->_filterHaving, $this->_filter, $this->list_skip_actions['delete'], $this->list_skip_actions['edit']);
+
+		// generates the actual second list
+		$second_list = $this->initSupplyOrderStatusList();
+
+		// resets default table and className for options list management
+		$this->table = 'stock_mvt_reason';
+	 	$this->className = 'StockMvtReason';
+
+		// returns the final list
+		return $second_list.$first_list;
+	}
+
+	/*
+	 * Help function for AdminStockConfigurationController::initList()
+	 * @see AdminStockConfigurationController::initList()
+	 */
+	public function initSupplyOrderStatusList()
+	{
+		$this->table = 'supply_order_state';
+	 	$this->className = 'SupplyOrderState';
+	 	$this->identifier = 'id_supply_order_state';
+	 	$this->_defaultOrderBy = 'id_supply_order_state';
+		$this->lang = true;
+		$this->list_no_link = true;
+		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
+		$this->toolbar_title = $this->l('Stock : Supply Order status');
+		$this->initToolbar();
+
+		$this->fieldsDisplay = array(
+			'name' => array(
+				'title' => $this->l('Name'),
+				'color' => 'color',
+			),
+			'editable' => array(
+				'title' => $this->l('Editable?'),
+				'align' => 'center',
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
+				'type' => 'bool',
+				'width' => 170,
+				'orderby' => false
+			),
+			'delivery_note' => array(
+				'title' => $this->l('Delivery note available?'),
+				'align' => 'center',
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
+				'type' => 'bool',
+				'width' => 170,
+				'orderby' => false
+			),
+			'pending_receipt' => array(
+				'title' => $this->l('Is a pending receipt state?'),
+				'align' => 'center',
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
+				'type' => 'bool',
+				'width' => 170,
+				'orderby' => false
+			),
+			'receipt_state' => array(
+				'title' => $this->l('Is a delivery state?'),
+				'align' => 'center',
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
+				'type' => 'bool',
+				'width' => 170,
+				'orderby' => false
+			),
+			'enclosed' => array(
+				'title' => $this->l('Is an enclosed order state?'),
+				'align' => 'center',
+				'icon' => array(
+					'1' => 'enabled.gif',
+					'0' => 'disabled.gif'
+				),
+				'type' => 'bool',
+				'width' => 170,
+				'orderby' => false
+			),
+		);
+
+		return parent::initList();
+	}
+
+	/**
+	 * AdminController::postProcess() override
+	 * @see AdminController::postProcess()
+	 */
+	public function postProcess()
+	{
+		// StockMvtReason
+		if (Tools::isSubmit('delete'.$this->table))
+			$this->deleted = true;
+
+		// SupplyOrderState
+		if (Tools::isSubmit('submitAddsupply_order_state') ||
+			Tools::isSubmit('deletesupply_order_state') ||
+			Tools::isSubmit('submitUpdatesupply_order_state'))
+		{
+			if (Tools::isSubmit('deletesupply_order_state'))
+				$this->action = 'delete';
+			else
+				$this->action = 'save';
+			$this->table = 'supply_order_state';
+		 	$this->className = 'SupplyOrderState';
+		 	$this->identifier = 'id_supply_order_state';
+		 	$this->_defaultOrderBy = 'id_supply_order_state';
+		}
+
+		return parent::postProcess();
+	}
+
+	/**
+	 * AdminController::getList() override
+	 * @see AdminController::getList()
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		//If there is a field product_name in the list, check if this field is null and display standard message
+		foreach ($this->fieldsDisplay as $key => $value)
+			if ($key == 'product_name')
+			{
+				$nb_items = count($this->_list);
+
+				for ($i = 0; $i < $nb_items; ++$i)
+				{
+					$item = &$this->_list[$i];
+
+					if (empty($item['product_name']))
+						$item['product_name'] = $this->l('The name of this product is not available. Maybe it has been deleted from the system.');
+				}
+			}
+	}
+}
