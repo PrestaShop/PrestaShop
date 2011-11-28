@@ -17,13 +17,13 @@
 	{foreach from=$warehouses item=warehouse}
 	    <h3 style="margin-bottom:0;"><a href="#">{$warehouse['name']}</a></h3>
 	    <div style="display:block;">
-			<table cellpadding="5" cellspacing="5" style="width:80%; margin-left:0;">
+			<table cellpadding="10" cellspacing="0" class="table">
 				<tr>
 					<th width="100">{l s='In the warehouse?'}</th>
 					<th>{l s='product name'}</th>
 					<th width="150">{l s='location in the warehouse (optionnal)'}</th>
 				</tr>
-				{foreach from=$attributes item=attribute}
+				{foreach $attributes AS $index => $attribute}
 					{assign var=location value=''}
 					{assign var=selected value=''}
 					{foreach from=$associated_warehouses item=aw}
@@ -32,7 +32,7 @@
 							{assign var=selected value=true}
 						{/if}
 					{/foreach}
-					<tr>
+					<tr {if $index is odd}class="alt_row"{/if}>
 						<td><input type="checkbox"
 							name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
 							{if $selected == true}checked="checked"{/if}
