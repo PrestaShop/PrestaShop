@@ -83,7 +83,7 @@
 		</script>
 			<div class="separation"></div>
 			<br />
-<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
+<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 {* global information *}
 	<tr>
 		<td class="col-left"><label>{l s='Name:' }</label></td>
@@ -387,7 +387,7 @@ $(document).ready(function(){
 		</p>
 		{* [begin] physical product infos *}
 		<div id="physical_good" class="toggleVirtualPhysicalProduct" {if $product->productDownload->id && $product->productDownload->active}style="display:none"{/if} >
-<div class="separation"></div>		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
+<div class="separation"></div>		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 			<tr>
 				<td class="col-left"><label>{l s='Width ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
@@ -432,7 +432,7 @@ $(document).ready(function(){
 		{* [begin] virtual product *}
 		<div id="virtual_good" class="toggleVirtualPhysicalProduct" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
-			<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #E0D0B1;">
+			<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 				<tr><td>
 					<br/>{l s='Does this product has an associated file ?'}<br />
 					<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}
@@ -459,7 +459,7 @@ $(document).ready(function(){
 						{/if}
 						<p class="block">
 						{if !$product->productDownload->checkFile()}
-							<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
+							<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #CCCCCC">
 							<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize}</p>
 							{if $show_file_input}
 								<label id="virtual_product_file_label" for="virtual_product_file" class="t">{l s='Upload a file'}</label>
@@ -580,7 +580,7 @@ $(document).ready(function(){
 		<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
 		<td style="padding-bottom:5px;">
 			{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{$product->wholesale_price}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
-			<span style="margin-left:10px">{l s='The wholesale price at which you bought this product'}</span>
+			<p class="preference_description">{l s='The wholesale price at which you bought this product'}</p>
 		</td>
 	</tr>
 
@@ -588,7 +588,7 @@ $(document).ready(function(){
 		<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
 		<td style="padding-bottom:5px;">
 			{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
-			<span style="margin-left:2px">{l s='The pre-tax retail price to sell this product'}</span>
+			<p class="preference_description">{l s='The pre-tax retail price to sell this product'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -697,7 +697,7 @@ $(document).ready(function(){
 						<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
-							<p>{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
+							<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 						</td>
 					</tr>
 				{/if}
@@ -970,7 +970,7 @@ $(document).ready(function(){
 						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
 						</div>
 			{/foreach}
-				<p class="clear">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
+				<p class="preference_description">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
 					</td>
 				</tr>
 				

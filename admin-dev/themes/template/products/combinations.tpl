@@ -1,6 +1,3 @@
-<a href="#" onclick="$('#add_new_combination').slideToggle();return false;">
-	<img src="../img/admin/add.gif" alt="" />{l s='Add a new combination'}
-</a>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(\'#id_mvt_reason\').change(function(){
@@ -46,14 +43,12 @@
 	);
 {/foreach}
 </script>
-<table cellpadding="5">
-	<tr>
-		<td colspan="2"><b>{l s='Add or modify combinations for this product'}</b> {l s='or go to'}
+<h4>{l s='Add or modify combinations for this product'}</h4> {l s='or go to'}
 		&nbsp;<a href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" />&nbsp;{l s='Product combinations generator'}</a>
-		</td>
-	</tr>
-</table>
-<div class="separation"></div><br />
+<div class="separation"></div>
+<a href="#" onclick="$('#add_new_combination').slideToggle();return false;">
+	<img src="../img/admin/add.gif" alt="" />{l s='Add a new combination'}
+</a>
 
 <div id="add_new_combination" style="display: none;">
 <table cellpadding="5" style="width:100%">

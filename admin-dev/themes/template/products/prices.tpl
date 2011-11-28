@@ -1,10 +1,14 @@
-<script type="text/javascript">
+<div class="block_specific_prices_modifications">
+			<h4>{l s='Current specific prices'}</h4>
+			<div class="separation"></div>
+			<script type="text/javascript">
 var product_prices = new Array();
 {foreach from=$combinations item='combination'}
 	product_prices['{$combination.id_product_attribute}'] = '{$combination.price}';
 {/foreach}
 </script>
 <a href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" />{l s='Add a new specific price'}</a>
+<br/>
 <div id="add_specific_price" style="display: none;">
 	<input type="hidden" name="sp_id_shop" value="0" />
 	<label>{l s='For:'}</label>
@@ -102,9 +106,6 @@ var product_prices = new Array();
 						<input type="submit" name="submitPriceAddition" value="{l s='Add'}" class="button" />
 					</div>
 				</div>
-				<div class="separation"></div>
-		<div class="block_specific_prices_modifications">
-			<h4>{l s='Current specific prices'}</h4>
 		<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>

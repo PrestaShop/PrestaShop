@@ -2371,7 +2371,7 @@ class AdminProductsControllerCore extends AdminController
 		$content .= '
 		<div class="separation"></div>
 		<h4>'.$this->l('Priorities management').'</h4>
-		<div class="hint clear" style="display:block;">
+		<div class="hint" style="display:block;">
 				'.$this->l('Sometimes one customer could fit in multiple rules, priorities allows you to define which rule to apply.').'
 		</div>
 	<br />
@@ -2480,25 +2480,22 @@ class AdminProductsControllerCore extends AdminController
 		$hasTextLabels = (int)($this->getFieldValue($obj, 'text_fields'));
 
 		$content .= '
-			<table cellpadding="5">
-				<tr>
-					<td colspan="2"><b>'.$this->l('Add or modify customizable properties').'</b></td>
-				</tr>
-			</table>
+	<h4>'.$this->l('Add or modify customizable properties').'</h4>
+
 			<div class="separation"></div><br />
 			<table cellpadding="5" style="width:100%">
 				<tr>
 					<td style="width:150px;text-align:right;padding-right:10px;font-weight:bold;vertical-align:top;" valign="top">'.$this->l('File fields:').'</td>
 					<td style="padding-bottom:5px;">
 						<input type="text" name="uploadable_files" id="uploadable_files" size="4" value="'.((int)($this->getFieldValue($obj, 'uploadable_files')) ? (int)($this->getFieldValue($obj, 'uploadable_files')) : '0').'" />
-						<p>'.$this->l('Number of upload file fields displayed').'</p>
+						<p class="preference_description">'.$this->l('Number of upload file fields displayed').'</p>
 					</td>
 				</tr>
 				<tr>
 					<td style="width:150px;text-align:right;padding-right:10px;font-weight:bold;vertical-align:top;" valign="top">'.$this->l('Text fields:').'</td>
 					<td style="padding-bottom:5px;">
 						<input type="text" name="text_fields" id="text_fields" size="4" value="'.((int)($this->getFieldValue($obj, 'text_fields')) ? (int)($this->getFieldValue($obj, 'text_fields')) : '0').'" />
-						<p>'.$this->l('Number of text fields displayed').'</p>
+						<p class="preference_description">'.$this->l('Number of text fields displayed').'</p>
 					</td>
 				</tr>
 				<tr>
@@ -2556,6 +2553,8 @@ class AdminProductsControllerCore extends AdminController
 
 				$content .= '
 		'.($obj->id ? '<input type="hidden" name="id_'.$this->table.'" value="'.$obj->id.'" />' : '').'
+		<h4>'.$this->l('Attachment').'</h4>
+					<div class="separation"></div>
 			<fieldset><legend><img src="../img/t/AdminAttachments.gif" />'.$this->l('Attachment').'</legend>
 				<label>'.$this->l('Filename:').' </label>
 				<div class="margin-form">';
@@ -2578,7 +2577,7 @@ class AdminProductsControllerCore extends AdminController
 				<label>'.$this->l('File').'</label>
 				<div class="margin-form">
 					<p><input type="file" name="attachment_file" /></p>
-					<p>'.$this->l('Upload file from your computer').'</p>
+					<p class="preference_description">'.$this->l('Upload file from your computer').'</p>
 				</div>
 				<div class="clear">&nbsp;</div>
 				<div class="margin-form">
