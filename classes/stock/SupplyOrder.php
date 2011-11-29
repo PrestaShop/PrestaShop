@@ -115,6 +115,11 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	public $discount_value_te = 0;
 
+	/**
+	 * @var int Tells if this order is a template
+	 */
+	public $is_template = 0;
+
 	protected $fieldsRequired = array(
 		'id_supplier',
 		'supplier_name',
@@ -145,7 +150,8 @@ class SupplyOrderCore extends ObjectModel
 		'total_ti' => 'isPrice',
 		'total_tax' => 'isPrice',
 		'discount_rate' => 'isFloat',
-		'discount_value_te' => 'isPrice'
+		'discount_value_te' => 'isPrice',
+		'is_template' => 'isBool',
 	);
 
 	/**
@@ -179,6 +185,7 @@ class SupplyOrderCore extends ObjectModel
 		$fields['total_tax'] = (float)$this->total_tax;
 		$fields['discount_rate'] = (float)$this->discount_rate;
 		$fields['discount_value_te'] = (float)$this->discount_value_te;
+		$fields['is_template'] = (int)(bool)$this->is_template;
 
 		return $fields;
 	}

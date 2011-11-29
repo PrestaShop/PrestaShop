@@ -2152,6 +2152,7 @@ CREATE TABLE `PREFIX_supply_order` (
 `total_ti` DECIMAL(20,6) DEFAULT '0.000000',
 `discount_rate` DECIMAL(20,6) DEFAULT '0.000000',
 `discount_value_te` DECIMAL(20,6) DEFAULT '0.000000',
+`is_template` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id_supply_order`),
   KEY `id_supplier` (`id_supplier`),
   KEY `id_warehouse` (`id_warehouse`),
