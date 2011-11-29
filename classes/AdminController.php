@@ -358,6 +358,76 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * Set the filters used for the list display
+	 */
+	public function processFilter()
+	{
+		$filters = $this->context->cookie->getFamily($this->table.'Filter_');
+
+		foreach ($filters as $key => $value)
+		{
+			/* Extracting filters from $_POST on key filter_ */
+			if ($value != null && !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table)))
+			{
+				$key = Tools::substr($key, 7 + Tools::strlen($this->table));
+				/* Table alias could be specified using a ! eg. alias!field */
+				$tmp_tab = explode('!', $key);
+				$filter = count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0];
+
+				if ($field = $this->filterToField($key, $filter))
+				{
+					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
+					if (($type == 'date' || $type == 'datetime') && is_string($value))
+						$value = unserialize($value);
+					$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
+
+					// Assignement by reference
+					if (array_key_exists('tmpTableFilter', $field))
+						$sql_filter = & $this->_tmpTableFilter;
+					else if (array_key_exists('havingFilter', $field))
+						$sql_filter = & $this->_filterHaving;
+					else
+						$sql_filter = & $this->_filter;
+
+					/* Only for date filtering (from, to) */
+					if (is_array($value))
+					{
+						if (isset($value[0]) && !empty($value[0]))
+						{
+							if (!Validate::isDate($value[0]))
+								$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+							else
+								$sql_filter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+						}
+
+						if (isset($value[1]) && !empty($value[1]))
+						{
+							if (!Validate::isDate($value[1]))
+								$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+							else
+								$sql_filter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+						}
+					}
+					else
+					{
+						$sql_filter .= ' AND ';
+						$check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
+
+						if ($type == 'int' || $type == 'bool')
+							$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$value.' ';
+						else if ($type == 'decimal')
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$value.' ';
+						else if ($type == 'select')
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+						else
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * @todo uses redirectAdmin only if !$this->ajax
 	 */
 	public function postProcess()
@@ -372,9 +442,7 @@ class AdminControllerCore extends Controller
 			else if (method_exists($this, 'ajaxProcess'))
 				return $this->ajaxProcess();
 
-			// @TODO We should use a displayAjaxError
-			/*$this->displayErrors();
-			if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
+			/*if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
 				$this->{'displayAjax'.$action}();
 			else
 				$this->displayAjax();	*/
@@ -386,77 +454,15 @@ class AdminControllerCore extends Controller
 			// set token
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
+			// Process list filtering
+			if ($this->filter)
+				$this->processFilter();
+
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 				return $this->{'process'.Tools::toCamelCase($this->action)}($token);
 			else if (method_exists($this, $this->action))
 				return call_user_func(array($this, $this->action), $this->boxes);
 
-			// @todo put list filtering somewhere else
-			/* Manage list filtering */
-			if ($this->filter)
-			{
-				$_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
-
-				foreach ($_POST as $key => $value)
-				{
-					/* Extracting filters from $_POST on key filter_ */
-					if ($value != null && !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table)))
-					{
-						$key = Tools::substr($key, 7 + Tools::strlen($this->table));
-						/* Table alias could be specified using a ! eg. alias!field */
-						$tmp_tab = explode('!', $key);
-						$filter = count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0];
-
-						if ($field = $this->filterToField($key, $filter))
-						{
-							$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
-							if (($type == 'date' || $type == 'datetime') && is_string($value))
-								$value = unserialize($value);
-							$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
-							if (array_key_exists('tmpTableFilter', $field))
-								$sql_filter = & $this->_tmpTableFilter;
-							else if (array_key_exists('havingFilter', $field))
-								$sql_filter = & $this->_filterHaving;
-							else
-								$sql_filter = & $this->_filter;
-
-							/* Only for date filtering (from, to) */
-							if (is_array($value))
-							{
-								if (isset($value[0]) && !empty($value[0]))
-								{
-									if (!Validate::isDate($value[0]))
-										$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
-									else
-										$sql_filter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
-								}
-
-								if (isset($value[1]) && !empty($value[1]))
-								{
-									if (!Validate::isDate($value[1]))
-										$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
-									else
-										$sql_filter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
-								}
-							}
-							else
-							{
-								$sql_filter .= ' AND ';
-								$check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
-
-								if ($type == 'int' || $type == 'bool')
-									$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$value.' ';
-								else if ($type == 'decimal')
-									$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$value.' ';
-								else if ($type == 'select')
-									$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
-								else
-									$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -545,110 +551,96 @@ class AdminControllerCore extends Controller
 			/* Object update */
 			if (isset($id) && !empty($id))
 			{
-				if ($this->tabAccess['edit'] === '1' || (
-					$this->table == 'employee' &&
-					$this->context->employee->id == Tools::getValue('id_employee') &&
-					Tools::isSubmit('updateemployee')
-				))
+				$object = new $this->className($id);
+				if (Validate::isLoadedObject($object))
 				{
-					$object = new $this->className($id);
-					if (Validate::isLoadedObject($object))
+					/* Specific to objects which must not be deleted */
+					if ($this->deleted && $this->beforeDelete($object))
 					{
-						/* Specific to objects which must not be deleted */
-						if ($this->deleted && $this->beforeDelete($object))
-						{
-							// Create new one with old objet values
-							$object_new = new $this->className($object->id);
-							$object_new->id = null;
-							$object_new->date_add = '';
-							$object_new->date_upd = '';
+						// Create new one with old objet values
+						$object_new = new $this->className($object->id);
+						$object_new->id = null;
+						$object_new->date_add = '';
+						$object_new->date_upd = '';
 
-							// Update old object to deleted
-							$object->deleted = 1;
-							$object->update();
+						// Update old object to deleted
+						$object->deleted = 1;
+						$object->update();
 
-							// Update new object with post values
-							$this->copyFromPost($object_new, $this->table);
-							$result = $object_new->add();
-							if (Validate::isLoadedObject($object_new))
-								$this->afterDelete($object_new, $object->id);
-						}
-						else
-						{
-							$this->copyFromPost($object, $this->table);
-							$result = $object->update();
-							$this->afterUpdate($object);
-						}
-
-						if ($object->id)
-							$this->updateAssoShop($object->id);
-
-						if (!$result)
-						{
-							$this->_errors[] = Tools::displayError('An error occurred while updating object.').
-								' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
-						}
-						else if ($this->postImage($object->id) && !count($this->_errors))
-						{
-							$parent_id = (int)Tools::getValue('id_parent', 1);
-							// Specific back redirect
-							if ($back = Tools::getValue('back'))
-								$this->redirect_after = urldecode($back).'&conf=4';
-							// Specific scene feature
-							// @todo change stay_here submit name (not clear for redirect to scene ... )
-							if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
-								$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token;
-							// Save and stay on same form
-							// @todo on the to following if, we may prefer to avoid override redirect_after previous value
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token;
-							// Save and back to parent
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-								$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token;
-							// Default behavior (save and back)
-							if (empty($this->redirect_after))
-								$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token;
-						}
+						// Update new object with post values
+						$this->copyFromPost($object_new, $this->table);
+						$result = $object_new->add();
+						if (Validate::isLoadedObject($object_new))
+							$this->afterDelete($object_new, $object->id);
 					}
 					else
+					{
+						$this->copyFromPost($object, $this->table);
+						$result = $object->update();
+						$this->afterUpdate($object);
+					}
+
+					if ($object->id)
+						$this->updateAssoShop($object->id);
+
+					if (!$result)
+					{
 						$this->_errors[] = Tools::displayError('An error occurred while updating object.').
-							' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+							' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
+					}
+					else if ($this->postImage($object->id) && !count($this->_errors))
+					{
+						$parent_id = (int)Tools::getValue('id_parent', 1);
+						// Specific back redirect
+						if ($back = Tools::getValue('back'))
+							$this->redirect_after = urldecode($back).'&conf=4';
+						// Specific scene feature
+						// @todo change stay_here submit name (not clear for redirect to scene ... )
+						if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
+							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token;
+						// Save and stay on same form
+						// @todo on the to following if, we may prefer to avoid override redirect_after previous value
+						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token;
+						// Save and back to parent
+						if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token;
+						// Default behavior (save and back)
+						if (empty($this->redirect_after))
+							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token;
+					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+					$this->_errors[] = Tools::displayError('An error occurred while updating object.').
+						' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 
 			/* Object creation */
 			else
 			{
-				if ($this->tabAccess['add'] === '1')
+				$object = new $this->className();
+				$this->copyFromPost($object, $this->table);
+				if (!$object->add())
 				{
-					$object = new $this->className();
-					$this->copyFromPost($object, $this->table);
-					if (!$object->add())
-					{
-						$this->_errors[] = Tools::displayError('An error occurred while creating object.').
-							' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-					}
-					 /* voluntary do affectation here */
-					else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
-					{
-						$parent_id = (int)Tools::getValue('id_parent', 1);
-						$this->afterAdd($object);
-						$this->updateAssoShop($object->id);
-						// Save and stay on same form
-						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
-						// Save and back to parent
-						if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
-						// Default behavior (save and back)
-						if (empty($this->redirect_after))
-							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
-					}
+					$this->_errors[] = Tools::displayError('An error occurred while creating object.').
+						' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 				}
-				else
-					$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				 /* voluntary do affectation here */
+				else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
+				{
+					$parent_id = (int)Tools::getValue('id_parent', 1);
+					$this->afterAdd($object);
+					$this->updateAssoShop($object->id);
+					// Save and stay on same form
+					if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+						$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
+					// Save and back to parent
+					if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+						$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
+					// Default behavior (save and back)
+					if (empty($this->redirect_after))
+						$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
+				}
 			}
 		}
 
@@ -1597,7 +1589,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function init()
 	{
-		// ob_start();
+		parent::init();
+
 		if (Tools::getValue('ajax'))
 			$this->ajax = '1';
 
@@ -1620,12 +1613,6 @@ class AdminControllerCore extends Controller
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
 
-
-		// @todo : put the definitions in Controller class
-		if (!defined('_PS_BASE_URL_'))
-			define('_PS_BASE_URL_', Tools::getShopDomain(true));
-		if (!defined('_PS_BASE_URL_SSL_'))
-			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 		if ((int)Tools::getValue('liteDisplaying'))
 		{
 			$this->display_header = false;
@@ -1665,7 +1652,24 @@ class AdminControllerCore extends Controller
 
 		$this->context->shop = new Shop($shop_id);
 
-		/* Filter memorization */
+		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
+			$this->ajaxPreProcess();
+
+		$this->context->smarty->assign(array(
+			'table' => $this->table,
+			'current' => self::$currentIndex,
+			'token' => $this->token,
+		));
+
+		$this->initProcess();
+	}
+
+	/**
+	 * Retrieve GET and POST value and translate them to actions
+	 */
+	public function initProcess()
+	{
+		// Filter memorization
 		if (isset($_POST) && !empty($_POST) && isset($this->table))
 			foreach ($_POST as $key => $value)
 				if (is_array($this->table))
@@ -1687,7 +1691,7 @@ class AdminControllerCore extends Controller
 				else if (strncmp($key, $this->table.'OrderBy', 7) === 0 || strncmp($key, $this->table.'Orderway', 12) === 0)
 					$this->context->cookie->$key = $value;
 
-		/* Manage list filtering */
+		// Manage list filtering
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
 
@@ -1763,8 +1767,7 @@ class AdminControllerCore extends Controller
 		}
 		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
-			// @TODO move the employee condition to AdminEmployee
-			if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee')))
+			if ($this->tabAccess['edit'] === '1')
 				$this->display = 'edit';
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -1799,15 +1802,6 @@ class AdminControllerCore extends Controller
 			}
 		else if (!empty($this->options) && empty($this->fieldsDisplay))
 			$this->display = 'options';
-
-		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
-			$this->ajaxPreProcess();
-
-		$this->context->smarty->assign(array(
-			'table' => $this->table,
-			'current' => self::$currentIndex,
-			'token' => $this->token,
-		));
 	}
 
 	/**
@@ -2504,6 +2498,7 @@ EOF;
 	}
 
 	/**
+	  * @TODO delete method after AdminProducts cleanup
 	  * Display flags in forms for translations
 	  *
 	  * @param array $languages All languages available
@@ -2512,7 +2507,6 @@ EOF;
 	  * @param string $id Current div id]
 	  * @param boolean $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
 	  *
-		* @todo : delete return params :
 		* @param return define the return way : false for a display, true for a return
 		*
 		*	@return string
