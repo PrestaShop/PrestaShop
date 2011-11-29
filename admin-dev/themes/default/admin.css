@@ -229,6 +229,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 /*SIDEBAR*/
 .sidebar { position:relative; float:left; width:220px; display:inline;}
 .sidebar h3 { background-color:#ebedf4; font-weight:bold; display:block; padding:5px;}
+.sidebar.navigation h3 {margin:0;}
 .sidebar .subHeadline { font-weight:bold; float:right; margin-top:-28px; margin-right:5px;}
 .sidebar ul.categorieList {}
 .sidebar ul.categorieList li { border-top:1px solid #ccc; position:relative; line-height:20px;}
@@ -237,6 +238,15 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .sidebar ul.categorieList li div.categorieWidth { width:180px; margin-left:5px; overflow:hidden;}
 .sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
 .sidebar .categorieStatus { display:none;}
+
+/*STATCONTAINER*/
+#statsContainer {margin-left:220px; padding:0 0 0 20px;}
+#statsContainer #calendar {   background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; margin: 10px 0;min-height: 25px; padding: 10px;}
+#statsContainer #calendar input, #statsContainer #calendar p { float:left; margin-right:5px;}
+#statsContainer .blocStats { background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
+#statsContainer .blocStats h2 { font-weight:normal; margin:0;}
+#statsContainer .blocStats form { position:absolute; top:10px; right:5px;}
+
 
 /*MODULECONTAINER*/
 #moduleContainer { margin-left:220px; padding:13px 0 0 20px;}
