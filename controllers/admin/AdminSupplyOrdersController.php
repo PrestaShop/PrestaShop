@@ -807,7 +807,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$errors = $entry->validateController();
 
 						//get the product name displayed in the backoffice according to the employee language
-						$entry->name_displayed = Tools::getValue('input_name_'.$id, '');
+						$entry->name_displayed = Tools::getValue('input_name_displayed_'.$id, '');
 
 						// if there is a problem, handle error for the current product
 						if (count($errors) > 0)
