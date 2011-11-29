@@ -197,7 +197,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_supplier',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Select the supplier you are buying product from'),
+						'desc' => $this->l('Select the supplier you are buying product from.'),
 						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
@@ -222,7 +222,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_currency',
 							'name' => 'name'
 						),
-						'desc' => $this->l('The currency of the order'),
+						'desc' => $this->l('The currency of the order.'),
 						'hint' => $this->l('Be careful ! When changing this field, all products already added to the order will be removed.')
 					),
 					array(
@@ -235,7 +235,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							'id' => 'id_lang',
 							'name' => 'name'
 						),
-						'desc' => $this->l('The language of the order')
+						'desc' => $this->l('The language of the order.')
 					),
 					array(
 						'type' => 'date',
@@ -243,7 +243,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'date_delivery_expected',
 						'size' => 20,
 						'required' => true,
-						'desc' => $this->l('This is the expected delivery date for this order'),
+						'desc' => $this->l('This is the expected delivery date for this order.'),
 					),
 					array(
 						'type' => 'text',
@@ -252,6 +252,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'size' => 7,
 						'required' => true,
 						'desc' => $this->l('This is the global discount rate in percents for the order.'),
+					),
+					array(
+						'type' => 'text',
+						'label' => $this->l('Automatically load products:'),
+						'name' => 'load_products',
+						'size' => 7,
+						'required' => false,
+						'hint' => 'This will reset the order',
+						'desc' => $this->l('If specified, each product which quantity is less or equal to this value will be loaded.'),
 					),
 				),
 				'submit' => array(
@@ -828,6 +837,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if ($delivery_expected <= (new DateTime('yesterday')))
 				$this->_errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
 
+			$quantity_threshold = null;
+			if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
+				$quantity_threshold = (int)Tools::getValue('load_products');
+
 			if (!count($this->_errors))
 			{
 				// specify initial state
@@ -841,6 +854,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 				//specific discount check
 				$_POST['discount_rate'] = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('discount_rate', 0));
+
 			}
 
 			// manage each associated product
@@ -930,6 +944,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->postProcessUpdateReceipt();
 
 		parent::postProcess();
+
+		if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)
+			$this->loadProducts($quantity_threshold);
 	}
 
 	/**
@@ -1552,6 +1569,99 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			default:
 				parent::initToolbar();
+		}
+	}
+
+	/**
+	 * Overrides AdminController::afterAdd()
+	 * @see AdminController::afterAdd()
+	 * @param ObjectModel $object
+	 * @return bool
+	 */
+	public function afterAdd($object)
+	{
+		$this->object = $object;
+		return true;
+	}
+
+	/**
+	 * Loads products which quantity (hysical quantity) is equal or less than $threshold
+	 * @param int $threshold
+	 */
+	protected function loadProducts($threshold)
+	{
+		// if there is already an order
+		if (Tools::getValue('id_supply_order'))
+			$supply_order = new SupplyOrder((int)Tools::getValue('id_supply_order'));
+		else // else, we just created a new order
+			$supply_order = $this->object;
+
+		// if order is not valid, return;
+		if (!Validate::isLoadedObject($supply_order))
+			return;
+
+		// resets products if needed
+		if (Tools::getValue('id_supply_order'))
+			$supply_order->resetProducts();
+
+		// gets products which quantity is less or equal to $threshold
+		$query = new DbQuery();
+		$query->select('s.id_product,
+					    s.id_product_attribute,
+					    ps.product_supplier_reference as supplier_reference,
+					    ps.product_supplier_price_te as unit_price_te,
+					    ps.id_currency,
+					    IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
+						IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
+						IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc');
+		$query->from('stock s');
+		$query->innerJoin('product_supplier ps ON
+						   (
+						   	ps.id_product = s.id_product
+							AND
+							ps.id_product_attribute = s.id_product_attribute
+							AND
+							ps.id_supplier = '.(int)$supply_order->id_supplier.'
+						   )');
+		$query->leftJoin('product p ON (p.id_product = s.id_product)');
+		$query->leftJoin('product_attribute pa ON
+						  (
+						  	pa.id_product_attribute = s.id_product_attribute
+						  	AND
+						  	p.id_product = s.id_product
+						  )');
+		$query->where('s.physical_quantity <= '.(int)$threshold);
+
+		// gets items
+		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		// loads order currency
+		$order_currency = new Currency($supply_order->id_ref_currency);
+		if (!Validate::isLoadedObject($order_currency))
+			return;
+
+		foreach ($items as $item)
+		{
+			// loads product currency
+			$product_currency = new Currency($item['id_currency']);
+			if (!Validate::isLoadedObject($order_currency))
+				continue;
+
+			// sets supply_order_detail
+			$supply_order_detail = new SupplyOrderDetail();
+			$supply_order_detail->id_supply_order = $supply_order->id;
+			$supply_order_detail->id_currency = $order_currency->id;
+			$supply_order_detail->id_product = $item['id_product'];
+			$supply_order_detail->id_product_attribute = $item['id_product_attribute'];
+			$supply_order_detail->reference = $item['reference'];
+			$supply_order_detail->supplier_reference = $item['supplier_reference'];
+			$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
+			$supply_order_detail->ean13 = $item['ean13'];
+			$supply_order_detail->upc = $item['upc'];
+			$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
+			$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $order_currency, $product_currency);
+			$supply_order_detail->quantity_expected = (int)$threshold;
+			$supply_order_detail->save();
 		}
 	}
 }
