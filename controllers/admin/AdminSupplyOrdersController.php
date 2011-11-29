@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 9565 $
+*  @version  Release: $Revision: 10019 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -837,6 +837,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if ($delivery_expected <= (new DateTime('yesterday')))
 				$this->_errors[] = Tools::displayError($this->l('The date you specified cannot be in the past.'));
 
+			// gets threshold
 			$quantity_threshold = null;
 			if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
 				$quantity_threshold = (int)Tools::getValue('load_products');
@@ -945,6 +946,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		parent::postProcess();
 
+		// if the threshold is defined and we are saving the order
 		if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)
 			$this->loadProducts($quantity_threshold);
 	}
@@ -1604,7 +1606,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::getValue('id_supply_order'))
 			$supply_order->resetProducts();
 
-		// gets products which quantity is less or equal to $threshold
+		// gets products which quantity is less or equal than $threshold
 		$query = new DbQuery();
 		$query->select('s.id_product,
 					    s.id_product_attribute,
