@@ -159,6 +159,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if (Tools::isSubmit('updatesupply_order') || Tools::isSubmit('submitUpdatesupply_order'))
 				$this->toolbar_title = $this->l('Stock : Manage supply order');
 
+			if (Tools::isSubmit('mod') && Tools::getValue('mod') === 'template' || $this->object->is_template)
+				$this->toolbar_title .= ' '.$this->l('template');
+
 			$this->addJqueryUI('ui.datepicker');
 
 			//get warehouses list
@@ -268,6 +271,16 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				)
 			);
 
+			if (Tools::isSubmit('mod') && Tools::getValue('mod') === 'template' ||
+				$this->object->is_template)
+			{
+
+				$this->fields_form['input'][] = array(
+					'type' => 'hidden',
+					'name' => 'is_template'
+				);
+			}
+
 			//specific discount display
 			$this->object->discount_rate = Tools::ps_round($this->object->discount_rate, 4);
 
@@ -336,7 +349,36 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'supplier` s ON a.id_supplier = s.id_supplier
 						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
 
-		return parent::initList();
+		$this->_where = ' AND a.is_template = 0';
+		$first_list = parent::initList();
+
+		// second list : templates
+		$second_list = null;
+
+		// unsets actions
+		$this->actions = array();
+		// adds actions
+		$this->addRowAction('delete');
+		$this->addRowAction('view');
+		$this->addRowAction('edit');
+		$this->addRowAction('createsupplyorder');
+		// unsets some fields
+		unset($this->fieldsDisplay['state'], $this->fieldsDisplay['date_upd'], $this->fieldsDisplay['id_pdf'], $this->fieldsDisplay['date_delivery_expected']);
+		// adds filter, to gets only templates
+		unset($this->_where);
+		$this->_where = ' AND a.is_template = 1';
+
+		// re-defines toolbar & buttons
+		$this->toolbar_title = $this->l('Stock : Supply orders templates');
+		$this->initToolbar();
+		$this->toolbar_btn['new'] = array(
+			'href' => self::$currentIndex.'&amp;add'.$this->table.'&mod=template&amp;token='.$this->token,
+			'desc' => $this->l('Add new template')
+		);
+		// inits list
+		$second_list = parent::initList();
+
+		return $first_list.$second_list;
 	}
 
 	/**
@@ -941,8 +983,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			}
 		}
 
+		// updates receipt
 		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessUpdateReceipt();
+
+		// use template to create a supply order
+		if (Tools::isSubmit('create_supply_order') && Tools::isSubmit('id_supply_order'))
+			$this->postProcessCopyFromTemplate();
 
 		parent::postProcess();
 
@@ -1027,9 +1074,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 						// then, converts the newly calculated price from the default currency to the needed currency
 						$price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency,
-																								  $warehouse->id_currency,
-																								  true),
-																			  6);
+																	 $warehouse->id_currency,
+																	 true),
+												 6);
 					}
 
 					$manager = StockManagerFactory::getManager();
@@ -1102,6 +1149,27 @@ class AdminSupplyOrdersControllerCore extends AdminController
         ));
 
         return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supply_order_change_state.tpl');
+    }
+
+    /**
+	 * Display state action link
+	 * @param string $token the token to add to the link
+	 * @param int $id the identifier to add to the link
+	 * @return string
+	 */
+    public function displayCreateSupplyOrderLink($token = null, $id)
+    {
+        if (!array_key_exists('CreateSupplyOrder', self::$cache_lang))
+            self::$cache_lang['CreateSupplyOrder'] = $this->l('Use this template to create a supply order');
+
+        $this->context->smarty->assign(array(
+            'href' => self::$currentIndex.
+            	'&'.$this->identifier.'='.$id.
+            	'&create_supply_order&token='.($token != null ? $token : $this->token),
+            'action' => self::$cache_lang['CreateSupplyOrder'],
+        ));
+
+        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supply_order_create_from_template.tpl');
     }
 
 	/**
@@ -1300,8 +1368,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	public function initView()
 	{
-		$this->displayInformation($this->l('This interface allows you to display detailed informations on your order.').'<br />');
-
 		$this->show_toolbar = true;
 		$this->toolbar_fix = false;
 		$this->table = 'supply_order_detail';
@@ -1320,6 +1386,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		if (Validate::isLoadedObject($supply_order))
 		{
+			if (!$supply_order->is_template)
+				$this->displayInformation($this->l('This interface allows you to display detailed informations on your order.').'<br />');
+			else
+				$this->displayInformation($this->l('This interface allows you to display detailed informations on your template of order.').'<br />');
+
 			$lang_id = (int)$supply_order->id_lang;
 
 			// just in case..
@@ -1338,8 +1409,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$warehouse = new Warehouse($supply_order->id_warehouse);
 
 			// sets toolbar title with order reference
-			$this->toolbar_title = sprintf($this->l('Details on supply order #%s'), $supply_order->reference);
-
+			if (!$supply_order->is_template)
+				$this->toolbar_title = sprintf($this->l('Details on supply order #%s'), $supply_order->reference);
+			else
+				$this->toolbar_title = sprintf($this->l('Details on supply order template #%s'), $supply_order->reference);
 			// re-defines fieldsDisplay
 			$this->fieldsDisplay = array(
 				'supplier_reference' => array(
@@ -1479,6 +1552,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			// renders list
 			$helper = new HelperList();
 			$this->setHelperDisplay($helper);
+			$helper->actions = array();
 			$helper->show_toolbar = false;
 
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
@@ -1499,6 +1573,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'supply_order_total_tax' => Tools::displayPrice($supply_order->total_tax, $currency),
 				'supply_order_total_ti' => Tools::displayPrice($supply_order->total_ti, $currency),
 				'supply_order_currency' => $currency,
+				'is_template' => $supply_order->is_template,
 			);
 		}
 
@@ -1568,7 +1643,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'href' => '#',
 					'desc' => $this->l('Save and stay')
 				);
-
 			default:
 				parent::initToolbar();
 		}
@@ -1665,5 +1739,51 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$supply_order_detail->quantity_expected = (int)$threshold;
 			$supply_order_detail->save();
 		}
+	}
+
+	/**
+	 * Overrides AdminController::beforeAdd()
+	 * @see AdminController::beforeAdd()
+	 * @param ObjectModel $object
+	 */
+	public function beforeAdd($object)
+	{
+		if (Tools::isSubmit('is_template'));
+			$object->is_template = 1;
+		return true;
+	}
+
+	/**
+	 * Helper function for AdminSupplyOrdersController::postProcess()
+	 * @see AdminSupplyOrdersController::postProcess()
+	 */
+	protected function postProcessCopyFromTemplate()
+	{
+		// gets SupplyOrder and checks if it is valid
+		$id_supply_order = (int)Tools::getValue('id_supply_order');
+		$supply_order = new SupplyOrder($id_supply_order);
+		if (!Validate::isLoadedObject($supply_order))
+			$this->_errors[] = Tools::displayError($this->l('Could not copy this template.'));
+
+		// gets SupplyOrderDetail
+		$entries = $supply_order->getEntriesCollection($supply_order->id_lang);
+
+		// updates SupplyOrder so that it is not a template anymore
+		$supply_order->is_template = 0;
+		$supply_order->id = (int)0;
+		$supply_order->save();
+
+		// copies SupplyOrderDetail
+		foreach ($entries as $entry)
+		{
+			$entry->id_supply_order = $supply_order->id;
+			$entry->id = (int)0;
+			$entry->save();
+		}
+
+		// redirect when done
+		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+		$redirect = self::$currentIndex.'&token='.$token;
+		$this->redirect_after = $redirect.'&conf=19';
 	}
 }

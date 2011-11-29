@@ -28,7 +28,7 @@
 {block name="override_tpl"}
 	<div style="margin-top: 20px;">
 		<fieldset>
-			<legend>{l s='General informations'}</legend>
+			<legend>{if isset($is_template)} {l s='Template'} {/if}{l s='General informations'}</legend>
 			<table style="width: 400px;" classe="table">
 				<tr>
 					<td>{l s='Creation date:'}</td>
@@ -64,14 +64,14 @@
 
 	<div style="margin-top: 20px;">
 		<fieldset>
-			<legend>{l s='Products'}</legend>
+			<legend>{if isset($is_template)} {l s='Template'} {/if}{l s='Products'}</legend>
 			{$supply_order_detail_content}
 		</fieldset>
 	</div>
 
 	<div style="margin-top: 20px;">
 		<fieldset>
-			<legend>{l s='Summary'}</legend>
+			<legend>{if isset($is_template)} {l s='Template'} {/if}{l s='Summary'}</legend>
 			<table style="width: 400px;" classe="table">
 				<tr>
 					<th>{l s='Designation'}</th>
