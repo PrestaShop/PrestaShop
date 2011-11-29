@@ -71,6 +71,11 @@ abstract class CacheCore
 	);
 
 	/**
+	 * @var array Store local cache
+	 */
+	protected static $local = array();
+
+	/**
 	 * Cache a data
 	 *
 	 * @param string $key
@@ -290,5 +295,25 @@ abstract class CacheCore
 			if (strpos($query, $find))
 				return true;
 		return false;
+	}
+
+	public static function store($key, $value)
+	{
+		Cache::$local[$key] = $value;
+	}
+
+	public static function retrieve($key)
+	{
+		return isset(Cache::$local[$key]) ? Cache::$local[$key] : null;
+	}
+
+	public static function isStored($key)
+	{
+		return isset(Cache::$local[$key]);
+	}
+
+	public static function clean($key)
+	{
+		unset(Cache::$local[$key]);
 	}
 }
