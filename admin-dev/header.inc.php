@@ -220,7 +220,7 @@ echo '		var html = "";
 						</div>';
 				}
 	echo		'</div><span id="employee_links">
-				<a href="index.php?controller=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" class="employee" alt="">'.translate('My preferences').'</a>
+				<a href="index.php?controller=AdminEmployees&id_employee='.(int)Context::getContext()->employee->id.'&updateemployee&token='.Tools::getAdminTokenLite('AdminEmployees').'" class="employee">'.translate('My preferences').'</a>
 				<span class="separator"></span>
 				<span class="employee_name">
 				'.Tools::substr(Context::getContext()->employee->firstname, 0, 1).'.&nbsp;'.htmlentities(Context::getContext()->employee->lastname, ENT_COMPAT, 'UTF-8').'
