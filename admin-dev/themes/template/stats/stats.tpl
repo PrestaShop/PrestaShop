@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div style="margin-left:280px;">
+<div>
 	{if $module_name}
 		{if $module_instance && $module_instance->active}
 			{$hook}
@@ -35,5 +35,7 @@
 		<h3 class="space">{l s='Please select a module in the left column.'}</h3>
 	{/if}
 </div>
-<div class="clear"></div>
+</div>
+</div>
+
 

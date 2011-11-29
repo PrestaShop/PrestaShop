@@ -133,7 +133,8 @@
 	<td class="col-left"><label>{l s='Status:' }</label></td>
 	<td style="padding-bottom:5px;">
 		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-		<label for="active_on" class="t">
+		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}"
+			title="{l s='Enabled'}" style="float:left; padding:0px 5px 0px 5px;" />
 		{l s='Enabled'}</label>
 		<br class="clear" />
 		<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
@@ -201,6 +202,21 @@
 	</a>
 	</td>
 	</tr>
+	<!--tr>
+	<td class="col-left"><label>{l s='Supplier:' }</label></td>
+	<td style="padding-bottom:5px;">
+	<select name="id_supplier" id="id_supplier">
+	<option value="0">-- {l s='Choose (optional)'} --</option>
+	{if $product->id_supplier}
+	<option value="{$product->id_supplier}" selected="selected">{$product->supplier_name}</option>
+	{/if}
+	<option disabled="disabled">----------</option>
+	</select>&nbsp;&nbsp;&nbsp;
+	<a href="{$link->getAdminLink('AdminSuppliers')}&addsupplier" onclick="return confirm('{l s='Are you sure you want to delete entered product information?' js=1}">
+	<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
+	</a>
+	</td>
+	</tr-->
 </table>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 {* [begin] pack product *}
@@ -560,13 +576,13 @@ $(document).ready(function(){
  </tr>
 
 	{* @todo : prices related has to be moved in price subtab *}
-	<!--tr>
+	<tr>
 		<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
 		<td style="padding-bottom:5px;">
 			{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{$product->wholesale_price}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
 			<p class="preference_description">{l s='The wholesale price at which you bought this product'}</p>
 		</td>
-	</tr-->
+	</tr>
 
 	<tr>
 		<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
@@ -957,7 +973,7 @@ $(document).ready(function(){
 				<p class="preference_description">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
 					</td>
 				</tr>
-
+				
 				<tr>
 					<td class="col-left"><label>{l s='Accessories:'}<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i></label></td>
 					<td style="padding-bottom:5px;">
@@ -973,7 +989,7 @@ $(document).ready(function(){
 var formProduct;
 var accessories = new Array();
 </script>
-
+						
 						<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
 							<p class="clear">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}</p>
 							<input type="text" value="" id="product_autocomplete_input" />
@@ -1019,7 +1035,7 @@ var accessories = new Array();
 		<br />
 		</div>
 
-
+		
 			<script type="text/javascript">
 					toggleVirtualProduct(getE('is_virtual_good'));
 					unitPriceWithTax('unit');
