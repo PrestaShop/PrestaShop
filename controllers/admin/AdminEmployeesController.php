@@ -338,6 +338,18 @@ class AdminEmployeesControllerCore extends AdminController
 		}
 		return parent::postProcess();
 	}
+
+	public function initProcess()
+	{
+		// If employee is editing its own entry, its ok
+		if ($this->tabAccess['edit'] !== '1'
+			&& $this->table == 'employee'
+			&& $this->context->employee->id == Tools::getValue('id_employee')
+			&& Tools::isSubmit('updateemployee'))
+			$this->tabAccess['edit'] = 1;
+
+		parent::initProcess();
+	}
 }
 
 
