@@ -1158,31 +1158,44 @@ class BlockLayered extends Module
 					foreach ($_POST['categoryBox'] as $idc)
 						$filterValues['categories'][] = (int)$idc;
 	
-					$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position) VALUES ';
+					$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position, filter_show_limit, filter_type) VALUES ';
 					foreach ($_POST['categoryBox'] as $id_category_layered)
 					{
 						$n = 0;
 						foreach ($_POST as $key => $value)
 							if (substr($key, 0, 17) == 'layered_selection' && $value == 'on')
 							{
-								$filterValues[$key] = $value;
+								$type = 0;
+								$limit = 0;
+								if (Tools::getValue($key.'_filter_type'))
+									$type = Tools::getValue($key.'_filter_type');
+								if (Tools::getValue($key.'_filter_show_limit'))
+									$limit = Tools::getValue($key.'_filter_show_limit');
+								
+								$filterValues[$key] = array(
+									'filter_type' => (int)$type,
+									'filter_show_limit' => (int)$limit
+								);
 								$n++;
+								
 								if ($key == 'layered_selection_stock')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'quantity\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'quantity\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if ($key == 'layered_selection_subcategories')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'category\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'category\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if ($key == 'layered_selection_condition')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'condition\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'condition\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if ($key == 'layered_selection_weight_slider')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'weight\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'weight\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if ($key == 'layered_selection_price_slider')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'price\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'price\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if ($key == 'layered_selection_manufacturer')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'manufacturer\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'manufacturer\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if (substr($key, 0, 21) == 'layered_selection_ag_')
-									$sqlToInsert .= '('.(int)$id_category_layered.','.(int)str_replace('layered_selection_ag_', '', $key).',\'id_attribute_group\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.','.(int)str_replace('layered_selection_ag_', '', $key).',
+										\'id_attribute_group\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 								else if (substr($key, 0, 23) == 'layered_selection_feat_')
-									$sqlToInsert .= '('.(int)$id_category_layered.','.(int)str_replace('layered_selection_feat_', '', $key).',\'id_feature\','.(int)$n.'),';
+									$sqlToInsert .= '('.(int)$id_category_layered.','.(int)str_replace('layered_selection_feat_', '', $key).',
+										\'id_feature\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
 							}
 					}
 					
@@ -1198,8 +1211,8 @@ class BlockLayered extends Module
 					
 					Db::getInstance()->AutoExecute(_DB_PREFIX_.'layered_filter', $valuesToInsert, 'INSERT');
 					
-					echo '<div class="conf"><img src="../img/admin/ok2.png" alt="" />
-					'.$this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
+					echo '<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').
+					$this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
 					((isset($_POST['id_layered_filter']) && $_POST['id_layered_filter']) ? $this->l('was updated successfully.') : $this->l('was added successfully.')).'</div>';
 				}
 			}
@@ -1211,8 +1224,8 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', Tools::getValue('ps_layered_full_tree'));
 			
 			$html .= '
-			<div class="conf">
-				<img src="../img/admin/ok2.png" alt="" /> '.$this->l('Settings saved successfully').'
+			<div class="conf">'.
+			(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').$this->l('Settings saved successfully').'
 			</div>';
 		}
 		else if (isset($_GET['deleteFilterTemplate']))
@@ -1227,8 +1240,8 @@ class BlockLayered extends Module
 				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$_GET['id_layered_filter'].' LIMIT 1');
 				
 				$html .= '
-				<div class="conf">
-					<img src="../img/admin/ok2.png" alt="" /> '.$this->l('Filters template deleted, categories updated (reverted to default Filters template).').'
+				<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'
+					'.$this->l('Filters template deleted, categories updated (reverted to default Filters template).').'
 				</div>';
 			}
 			else
@@ -1242,10 +1255,10 @@ class BlockLayered extends Module
 		
 		$html .= '
 		<div id="ajax-message-ok" class="conf ajax-message" style="display: none">
-			<img alt="" src="../img/admin/ok2.png"><span class="message"></span>
+			'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'<span class="message"></span>
 		</div>
 		<div id="ajax-message-ko" class="error ajax-message" style="display: none">
-			<img src="../img/admin/error2.png" alt="" /><span class="message"></span>
+			'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'<span class="message"></span>
 		</div>
 		<h2>'.$this->l('Layered navigation').'</h2>
 		<fieldset class="width4">
@@ -1471,11 +1484,13 @@ class BlockLayered extends Module
 				ul#selected_filters li, #layered_container_right ul li { width: 326px; font-size: 11px; padding: 8px 9px 7px 20px; height: 14px; margin-bottom: 5px; }
 				ul#selected_filters li span.ui-icon { position: absolute; margin-top: -2px; margin-left: -18px; }
 				#layered_container_right ul li span { display: none; }
-				#layered_container_right ul li { padding-left: 8px; }
-				#layered_container_left ul li { cursor: move; }
+				#layered_container_right ul li { padding-left: 8px; position: relative; }
+				#layered_container_left ul li { cursor: move; position: relative; }
 				#layered-cat-counter { display: none; }
 				#layered-step-2, #layered-step-3 { display: none; }
 				#table-filter-templates tr th, #table-filter-templates tr td { text-align: center; }
+				.filter_type { width: 70px; position: absolute; right: 53px; top: 5px;}
+				.filter_show_limit { position: absolute; width: 40px; right: 5px; top: 5px; }
 			</style>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" onsubmit="return checkForm();">';
 			
@@ -1499,10 +1514,33 @@ class BlockLayered extends Module
 						<li>'.$this->l('Press "Save this selection" or close the window to save').'</li>
 					</ol>';
 
-			$trads = array();
 			$selectedCat = array();
-			foreach (Helper::$translationsKeysForAdminCategorieTree as $key)
-				$trads[$key] = $this->l($key);
+			// Translations are not automatic for the moment ;)
+			$trads = array(
+				 'Home' => $this->l('Home'),
+				 'selected' => $this->l('selected'),
+				 'Collapse All' => $this->l('Collapse All'),
+				 'Expand All' => $this->l('Expand All'),
+				 'Check All' => $this->l('Check All'),
+				 'Uncheck All'  => $this->l('Uncheck All'),
+				 'search'  => $this->l('Search a category')
+			);
+			
+			if (version_compare(_PS_VERSION_,'1.5','>'))
+			{
+				$this->context->controller->addJQueryPlugin('fancybox');
+				$this->context->controller->addJQueryUI('ui.sortable');
+				$this->context->controller->addJQueryUI('ui.draggable');
+				$this->context->controller->addJQueryUI('effects.transfer');
+			}
+			else
+			{
+				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+				<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
+				<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
+				
+			}
+			
 			$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
 			
 			$html .= '
@@ -1525,9 +1563,6 @@ class BlockLayered extends Module
 				</div>
 				<div class="clear"></div>
 				<hr size="1" noshade />
-				<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
-				<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
-				<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />
 				<script type="text/javascript">
 					
 					function updLayCounters()
@@ -1629,7 +1664,7 @@ class BlockLayered extends Module
 							else
 							{
 								$(this).parent().css(\'background\', \'url("../img/jquery-ui/ui-bg_glass_100_f6f6f6_1x400.png") repeat-x scroll 50% 50% #F6F6F6\');
-								$(this).effect(\'transfer\', { to: $(\'#layered_container_right ul#all_filters\') }, 300, function() {									
+								$(this).effect(\'transfer\', { to: $(\'#layered_container_right ul#all_filters\') }, 300, function() {
 									$(this).parent().removeClass(\'layered_left\');
 									$(this).parent().addClass(\'layered_right\');
 									$(this).parent().appendTo(\'ul#all_filters\');
@@ -1654,7 +1689,7 @@ class BlockLayered extends Module
 								updElements(0, 0);
 							},
 							\'onComplete\': function() {
-								if($(\'#categories-treeview li#1\').attr(\'cleaned\'))
+							/*	if($(\'#categories-treeview li#1\').attr(\'cleaned\'))
 									return;
 								if($(\'#categories-treeview li#1\').attr(\'cleaned\', true))
 								$(\'#categories-treeview li#1\').removeClass(\'static\');
@@ -1666,7 +1701,7 @@ class BlockLayered extends Module
 								$(\'.hitarea\').click(function(it)
 								{
 									$(this).parent().find(\'> .category_label\').click();
-								});
+								});*/
 							}
 						});
 
@@ -2072,7 +2107,7 @@ class BlockLayered extends Module
 		$parent = new Category((int)$id_parent);
 		
 		/* Get the filters for the current category */
-		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM '._DB_PREFIX_.'layered_category WHERE id_category = '.(int)$id_parent.'
+		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_category WHERE id_category = '.(int)$id_parent.'
 		GROUP BY `type`, id_value ORDER BY position ASC');
 		// Remove all empty selected filters
 		foreach ($selectedFilters as $key => $value)
@@ -2238,8 +2273,19 @@ class BlockLayered extends Module
 			switch ($filter['type'])
 			{
 				case 'price':
-					$priceArray = array('type_lite' => 'price', 'type' => 'price', 'id_key' => 0, 'name' => $this->l('Price'),
-					'slider' => true, 'max' => '0', 'min' => null, 'values' => array ('1' => 0), 'unit' => $currency->sign);
+					$priceArray = array(
+						'type_lite' => 'price',
+						'type' => 'price',
+						'id_key' => 0,
+						'name' => $this->l('Price'),
+						'slider' => true,
+						'max' => '0',
+						'min' => null,
+						'values' => array ('1' => 0),
+						'unit' => $currency->sign,
+						'filter_show_limit' => $filter['filter_show_limit'],
+						'filter_type' => $filter['filter_type']
+					);
 					if (isset($products) && $products)
 						foreach ($products as $product)
 						{
@@ -2274,8 +2320,19 @@ class BlockLayered extends Module
 					break;
 
 				case 'weight':
-					$weightArray = array('type_lite' => 'weight', 'type' => 'weight', 'id_key' => 0, 'name' => $this->l('Weight'), 'slider' => true,
-					'max' => '0', 'min' => null, 'values' => array ('1' => 0), 'unit' => Configuration::get('PS_WEIGHT_UNIT'));
+					$weightArray = array(
+						'type_lite' => 'weight',
+						'type' => 'weight',
+						'id_key' => 0,
+						'name' => $this->l('Weight'),
+						'slider' => true,
+						'max' => '0',
+						'min' => null,
+						'values' => array ('1' => 0),
+						'unit' => Configuration::get('PS_WEIGHT_UNIT'),
+						'filter_show_limit' => $filter['filter_show_limit'],
+						'filter_type' => $filter['filter_type']
+					);
 					if (isset($products) && $products)
 						foreach ($products as $product)
 						{
@@ -2309,8 +2366,12 @@ class BlockLayered extends Module
 					break;
 
 				case 'condition':
-					$conditionArray = array('new' => array('name' => $this->l('New'), 'nbr' => 0), 
-					'used' => array('name' => $this->l('Used'), 'nbr' => 0), 'refurbished' => array('name' => $this->l('Refurbished'), 'nbr' => 0));
+					$conditionArray = array(
+						'new' => array('name' => $this->l('New'),'nbr' => 0), 
+						'used' => array('name' => $this->l('Used'), 'nbr' => 0),
+						'refurbished' => array('name' => $this->l('Refurbished'),
+						'nbr' => 0)
+					);
 					if (isset($products) && $products)
 						foreach ($products as $product)
 							if (isset($selectedFilters['condition']) && in_array($product['condition'], $selectedFilters['condition']))
@@ -2322,18 +2383,37 @@ class BlockLayered extends Module
 						foreach ($products as $product)
 							if (isset($conditionArray[$product['condition']]))
 								$conditionArray[$product['condition']]['nbr']++;
-						$filterBlocks[] = array('type_lite' => 'condition', 'type' => 'condition', 'id_key' => 0, 'name' => $this->l('Condition'), 'values' => $conditionArray);
+					$filterBlocks[] = array(
+						'type_lite' => 'condition',
+						'type' => 'condition',
+						'id_key' => 0,
+						'name' => $this->l('Condition'),
+						'values' => $conditionArray,
+						'filter_show_limit' => $filter['filter_show_limit'],
+						'filter_type' => $filter['filter_type']
+					);
 					break;
 				
 				case 'quantity':
-					$quantityArray = array (0 => array('name' => $this->l('Not available'), 'nbr' => 0), 1 => array('name' => $this->l('In stock'), 'nbr' => 0));
+					$quantityArray = array (
+						0 => array('name' => $this->l('Not available'), 'nbr' => 0),
+						1 => array('name' => $this->l('In stock'),
+						'nbr' => 0));
 					foreach ($quantityArray as $key => $quantity)
 						if (isset($selectedFilters['quantity']) && in_array($key, $selectedFilters['quantity']))
 							$quantityArray[$key]['checked'] = true;
 					if (isset($products) && $products)
 						foreach ($products as $product)
 							$quantityArray[(int)($product['quantity'] > 0)]['nbr']++;
-					$filterBlocks[] = array('type_lite' => 'quantity', 'type' => 'quantity', 'id_key' => 0, 'name' => $this->l('Availability'), 'values' => $quantityArray);
+					$filterBlocks[] = array(
+						'type_lite' => 'quantity',
+						'type' => 'quantity',
+						'id_key' => 0,
+						'name' => $this->l('Availability'),
+						'values' => $quantityArray,
+						'filter_show_limit' => $filter['filter_show_limit'],
+						'filter_type' => $filter['filter_type']
+					);
 					break;
 
 				case 'manufacturer':
@@ -2346,7 +2426,15 @@ class BlockLayered extends Module
 								if (isset($selectedFilters['manufacturer']) && in_array((int)$manufacturer['id_manufacturer'], $selectedFilters['manufacturer']))
 									$manufaturersArray[$manufacturer['id_manufacturer']]['checked'] = true;
 							}
-						$filterBlocks[] = array('type_lite' => 'manufacturer', 'type' => 'manufacturer', 'id_key' => 0, 'name' => $this->l('Manufacturer'), 'values' => $manufaturersArray);
+						$filterBlocks[] = array(
+							'type_lite' => 'manufacturer',
+							'type' => 'manufacturer',
+							'id_key' => 0,
+							'name' => $this->l('Manufacturer'),
+							'values' => $manufaturersArray,
+							'filter_show_limit' => $filter['filter_show_limit'],
+							'filter_type' => $filter['filter_type']
+						);
 					}
 					break;
 
@@ -2357,14 +2445,27 @@ class BlockLayered extends Module
 						foreach ($products as $attributes)
 						{
 							if (!isset($attributesArray[$attributes['id_attribute_group']]))
-								$attributesArray[$attributes['id_attribute_group']] = array ('type_lite' => 'id_attribute_group',
-								'type' => 'id_attribute_group', 'id_key' => (int)$attributes['id_attribute_group'],
-								'name' =>  $attributes['attribute_group_name'], 'is_color_group' => (bool)$attributes['is_color_group'], 'values' => array(),
-								'url_name' => $attributes['name_url_name'], 'meta_title' => $attributes['name_meta_title']);
+								$attributesArray[$attributes['id_attribute_group']] = array (
+									'type_lite' => 'id_attribute_group',
+									'type' => 'id_attribute_group',
+									'id_key' => (int)$attributes['id_attribute_group'],
+									'name' =>  $attributes['attribute_group_name'],
+									'is_color_group' => (bool)$attributes['is_color_group'],
+									'values' => array(),
+									'url_name' => $attributes['name_url_name'],
+									'meta_title' => $attributes['name_meta_title'],
+									'filter_show_limit' => $filter['filter_show_limit'],
+									'filter_type' => $filter['filter_type']
+								);
 							
 							$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']] = array(
-							'color' => $attributes['color'], 'name' => $attributes['attribute_name'], 'nbr' => (int)$attributes['nbr'],
-							'url_name' => $attributes['value_url_name'], 'meta_title' => $attributes['value_meta_title']);
+								'color' => $attributes['color'],
+								'name' => $attributes['attribute_name'],
+								'nbr' => (int)$attributes['nbr'],
+								'url_name' => $attributes['value_url_name'],
+								'meta_title' => $attributes['value_meta_title']
+							);
+							
 							if (isset($selectedFilters['id_attribute_group'][$attributes['id_attribute']]))
 								$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']]['checked'] = true;
 						}
@@ -2378,12 +2479,25 @@ class BlockLayered extends Module
 						foreach ($products as $feature)
 						{
 							if (!isset($featureArray[$feature['id_feature']]))
-								$featureArray[$feature['id_feature']] = array('type_lite' => 'id_feature', 'type' => 'id_feature',
-								'id_key' => (int)$feature['id_feature'], 'values' => array(), 'name' => $feature['feature_name'],
-								'url_name' => $feature['name_url_name'], 'meta_title' => $feature['name_meta_title']);
+								$featureArray[$feature['id_feature']] = array(
+									'type_lite' => 'id_feature',
+									'type' => 'id_feature',
+									'id_key' => (int)$feature['id_feature'],
+									'values' => array(),
+									'name' => $feature['feature_name'],
+									'url_name' => $feature['name_url_name'],
+									'meta_title' => $feature['name_meta_title'],
+									'filter_show_limit' => $filter['filter_show_limit'],
+									'filter_type' => $filter['filter_type']
+								);
 
-							$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']] = array('nbr' => (int)$feature['nbr'], 'name' => $feature['value'],
-							'url_name' => $feature['value_url_name'], 'meta_title' => $feature['value_meta_title']);
+							$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']] = array(
+								'nbr' => (int)$feature['nbr'],
+								'name' => $feature['value'],
+								'url_name' => $feature['value_url_name'],
+								'meta_title' => $feature['value_meta_title']
+							);
+							
 							if (isset($selectedFilters['id_feature'][$feature['id_feature_value']]))
 								$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']]['checked'] = true;
 						}
@@ -2397,11 +2511,22 @@ class BlockLayered extends Module
 					{
 						foreach ($products as $category)
 						{
-							$tmpArray[$category['id_category']] = array('name' => $category['name'], 'nbr' => (int)$category['count_products']);
+							$tmpArray[$category['id_category']] = array(
+								'name' => $category['name'],
+								'nbr' => (int)$category['count_products']
+							);
+							
 							if (isset($selectedFilters['category']) && in_array($category['id_category'], $selectedFilters['category']))
 								$tmpArray[$category['id_category']]['checked'] = true;
 						}
-						$filterBlocks[] = array ('type_lite' => 'category', 'type' => 'category', 'id_key' => 0, 'name' => $this->l('Categories'), 'values' => $tmpArray);
+						$filterBlocks[] = array (
+							'type_lite' => 'category',
+							'type' => 'category',
+							'id_key' => 0, 'name' => $this->l('Categories'),
+							'values' => $tmpArray,
+							'filter_show_limit' => $filter['filter_show_limit'],
+							'filter_type' => $filter['filter_type']
+						);
 					}
 					break;
 				
@@ -2750,7 +2875,7 @@ class BlockLayered extends Module
 		LEFT JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature = fl.id_feature)
 		'.(count($categoryBox) ? '
 		LEFT JOIN '._DB_PREFIX_.'feature_product fp ON (fp.id_feature = fv.id_feature)
-		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = fp.id_product)' : '').'		
+		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = fp.id_product)' : '').'
 		WHERE (fv.custom IS NULL OR fv.custom = 0) AND fl.id_lang = '.(int)$cookie->id_lang.
 		(count($categoryBox) ? ' AND cp.id_category IN ('.implode(',', $categoryBox).')' : '').'
 		GROUP BY fl.id_feature');
@@ -2768,17 +2893,58 @@ class BlockLayered extends Module
 					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_subcategories" name="layered_selection_subcategories" />
 					<span class="position"></span>'.$this->l('Sub-categories filter').'
+					
+					<select class="filter_show_limit" name="layered_selection_subcategories_filter_show_limit">
+						<option value="0">'.$this->l('No limit').'</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+					</select>
+					<select class="filter_type" name="layered_selection_subcategories_filter_type">
+						<option value="0">'.$this->l('Allow multiple filter value').'</option>
+						<option value="1">'.$this->l('One filter value').'</option>
+						<option value="2">'.$this->l('Select').'</option>
+					</select>
 				</li>
 			</ul>
 			<ul>
 				<li class="ui-state-default layered_right">
 					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-					<input type="checkbox" id="layered_selection_stock" name="layered_selection_stock" /> <span class="position"></span>'.$this->l('Product stock filter').'</li></ul>
+					<input type="checkbox" id="layered_selection_stock" name="layered_selection_stock" /> <span class="position"></span>'.$this->l('Product stock filter').'
+					
+					<select class="filter_show_limit" name="layered_selection_stock_filter_show_limit">
+						<option value="0">'.$this->l('No limit').'</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+					</select>
+					<select class="filter_type" name="layered_selection_stock_filter_type">
+						<option value="0">'.$this->l('Allow multiple filter value').'</option>
+						<option value="1">'.$this->l('One filter value').'</option>
+						<option value="2">'.$this->l('Select').'</option>
+					</select>
+				</li>
+			</ul>
 			<ul>
 				<li class="ui-state-default layered_right">
 					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_condition" name="layered_selection_condition" />
 					<span class="position"></span>'.$this->l('Product condition filter').'
+					
+					<select class="filter_show_limit" name="layered_selection_condition_filter_show_limit">
+						<option value="0">'.$this->l('No limit').'</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+					</select>
+					<select class="filter_type" name="layered_selection_condition_filter_type">
+						<option value="0">'.$this->l('Allow multiple filter value').'</option>
+						<option value="1">'.$this->l('One filter value').'</option>
+						<option value="2">'.$this->l('Select').'</option>
+					</select>
 				</li>
 			</ul>
 			<ul>
@@ -2786,6 +2952,19 @@ class BlockLayered extends Module
 					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_manufacturer" name="layered_selection_manufacturer" />
 					<span class="position"></span>'.$this->l('Product manufacturer filter').'
+					
+					<select class="filter_show_limit" name="layered_selection_manufacturer_filter_show_limit">
+						<option value="0">'.$this->l('No limit').'</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+					</select>
+					<select class="filter_type" name="layered_selection_manufacturer_filter_type">
+						<option value="0">'.$this->l('Allow multiple filter value').'</option>
+						<option value="1">'.$this->l('One filter value').'</option>
+						<option value="2">'.$this->l('Select').'</option>
+					</select>
 				</li>
 			</ul>
 			<ul>
@@ -2793,6 +2972,19 @@ class BlockLayered extends Module
 					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_weight_slider" name="layered_selection_weight_slider" />
 					<span class="position"></span>'.$this->l('Product weight filter (slider)').'
+					
+					<select class="filter_show_limit" name="layered_selection_weight_slider_filter_show_limit">
+						<option value="0">'.$this->l('No limit').'</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+					</select>
+					<select class="filter_type" name="layered_selection_weight_slider_filter_type">
+						<option value="0">'.$this->l('Slider').'</option>
+						<option value="1">'.$this->l('inputs').'</option>
+						<option value="2">'.$this->l('list').'</option>
+					</select>
 				</li>
 			</ul>
 			<ul>
@@ -2800,6 +2992,19 @@ class BlockLayered extends Module
 					<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
 					<input type="checkbox" id="layered_selection_price_slider" name="layered_selection_price_slider" />
 					<span class="position"></span>'.$this->l('Product price filter (slider)').'
+				
+					<select class="filter_show_limit" name="layered_selection_price_slider_filter_show_limit">
+						<option value="0">'.$this->l('No limit').'</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+					</select>
+					<select class="filter_type" name="layered_selection_price_slider_filter_type">
+						<option value="0">'.$this->l('Slider').'</option>
+						<option value="1">'.$this->l('inputs').'</option>
+						<option value="2">'.$this->l('list').'</option>
+					</select>
 				</li>
 			</ul>';
 			
@@ -2814,6 +3019,19 @@ class BlockLayered extends Module
 						<span class="position"></span>
 						'.$this->l('Attribute group:').' '.$attributeGroup['name'].' ('.(int)$attributeGroup['n'].' '.($attributeGroup['n'] > 1 ? $this->l('attributes') : $this->l('attribute')).')'.
 						($attributeGroup['is_color_group'] ? ' <img src="../img/admin/color_swatch.png" alt="" title="'.$this->l('This group will allow user to select a color').'" />' : '').'
+					
+						<select class="filter_show_limit" name="layered_selection_ag_'.(int)$attributeGroup['id_attribute_group'].'_filter_show_limit">
+							<option value="0">'.$this->l('No limit').'</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="20">20</option>
+						</select>
+						<select class="filter_type" name="layered_selection_ag_'.(int)$attributeGroup['id_attribute_group'].'_filter_type">
+							<option value="0">'.$this->l('Allow multiple filter value').'</option>
+							<option value="1">'.$this->l('One filter value').'</option>
+							<option value="2">'.$this->l('Select').'</option>
+						</select>
 					</li>';
 				$html .= '</ul>';
 			}
@@ -2828,6 +3046,19 @@ class BlockLayered extends Module
 						<input type="checkbox" id="layered_selection_feat_'.(int)$feature['id_feature'].'" name="layered_selection_feat_'.(int)$feature['id_feature'].'" />
 						<span class="position"></span>
 						'.$this->l('Feature:').' '.$feature['name'].' ('.(int)$feature['n'].' '.($feature['n'] > 1 ? $this->l('values') : $this->l('value')).')
+					
+						<select class="filter_show_limit" name="layered_selection_feat_'.(int)$feature['id_feature'].'_filter_show_limit">
+							<option value="0">'.$this->l('No limit').'</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="20">20</option>
+						</select>
+						<select class="filter_type" name="layered_selection_feat_'.(int)$feature['id_feature'].'_filter_type">
+							<option value="0">'.$this->l('Allow multiple filter value').'</option>
+							<option value="1">'.$this->l('One filter value').'</option>
+							<option value="2">'.$this->l('Select').'</option>
+						</select>
 					</li>';
 				$html .= '</ul>';
 			}
@@ -2844,10 +3075,16 @@ class BlockLayered extends Module
 				{
 					$(\'#selected_filters li\').remove();
 			';
-				
 			foreach ($layeredValues as $key => $layeredValue)
 				if ($key != 'categories')
-					$html .= '$(\'#'.$key.'\').click();'."\n";
+				{
+					$html .= '
+						$(\'#'.$key.'\').click();
+						$(\'select[name='.$key.'_filter_type]\').val('.$layeredValue['filter_type'].');
+						$(\'select[name='.$key.'_filter_show_limit]\').val('.$layeredValue['filter_show_limit'].');
+						';
+					
+				}
 			
 			if (isset($layeredValues['categories']) && count($layeredValues['categories']))
 			{
@@ -2960,6 +3197,9 @@ class BlockLayered extends Module
 		`id_value` INT(10) UNSIGNED NULL DEFAULT \'0\',
 		`type` ENUM(\'category\',\'id_feature\',\'id_attribute_group\',\'quantity\',\'condition\',\'manufacturer\',\'weight\',\'price\') NOT NULL,
 		`position` INT(10) UNSIGNED NOT NULL,
+		`filter_type` int(10) UNSIGNED NOT NULL DEFAULT 0,
+		`filter_show_limit` int(10) UNSIGNED NOT NULL DEFAULT 0;
+		
 		PRIMARY KEY (`id_layered_category`),
 		KEY `id_category` (`id_category`,`type`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;'); /* MyISAM + latin1 = Smaller/faster */
