@@ -620,6 +620,7 @@ class AdminControllerCore extends Controller
 			{
 				$object = new $this->className();
 				$this->copyFromPost($object, $this->table);
+				$this->beforeAdd($object);
 				if (!$object->add())
 				{
 					$this->_errors[] = Tools::displayError('An error occurred while creating object.').
@@ -2532,6 +2533,17 @@ EOF;
 			return $output;
 
 		return $output;
+	}
+
+	/**
+	 * Called before Add
+	 *
+	 * @param object $object Object
+	 * @return boolean
+	 */
+	protected function beforeAdd($object)
+	{
+		return true;
 	}
 }
 
