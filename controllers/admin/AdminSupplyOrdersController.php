@@ -1162,10 +1162,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
         if (!array_key_exists('CreateSupplyOrder', self::$cache_lang))
             self::$cache_lang['CreateSupplyOrder'] = $this->l('Use this template to create a supply order');
 
+        if (!array_key_exists('CreateSupplyOrderConfirm', self::$cache_lang))
+            self::$cache_lang['CreateSupplyOrderConfirm'] = $this->l('Are you sure you want to use this template?');
+
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.
             	'&'.$this->identifier.'='.$id.
             	'&create_supply_order&token='.($token != null ? $token : $this->token),
+        	'confirm' => self::$cache_lang['CreateSupplyOrderConfirm'],
             'action' => self::$cache_lang['CreateSupplyOrder'],
         ));
 
