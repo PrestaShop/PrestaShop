@@ -23,25 +23,22 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-	<fieldset style="width:230px">
-		<legend>
-			<img src="../img/admin/navigation.png" /> {l s='Navigation'}
-		</legend>
+<div id="container">
+	<div class="sidebar navigation">
+	<h3>{l s='Navigation'}</h3>
+		<ul class="categorieList">
 		{if count($modules)}
 			{foreach $modules as $module}
 				{if $module_instance[$module.name]}
-					<h4>
-						<img src="../modules/{$module.name}/logo.gif" />
+					<li>
 						<a href="{$current}&token={$token}&module={$module.name}">{$module_instance[$module.name]->displayName}</a>
-					</h4>
+					</li>
 				{/if}
 			{/foreach}
 		{else}
 			{l s='No module installed'}
 		{/if}
-	</fieldset>
-	<div class="clear space">&nbsp;</div>
-</div>
+		</ul>
+	</div>
 
 
