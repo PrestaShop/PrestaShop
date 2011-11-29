@@ -63,7 +63,7 @@ if ($tmp = strpos($_SERVER['REQUEST_URI'], '?'))
 	$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
-define('INSTALL_VERSION', '1.5.0.1');
+define('INSTALL_VERSION', '1.5.0.2');
 define('PS_INSTALLATION_IN_PROGRESS', true);
 require_once(INSTALL_PATH.'/classes/ToolsInstall.php');
 define('SETTINGS_FILE', INSTALL_PATH.'/../config/settings.inc.php');
