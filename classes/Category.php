@@ -939,7 +939,6 @@ class CategoryCore extends ObjectModel
 		return isset($row['id_category']);
 	}
 
-
 	public function cleanGroups()
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)$this->id);
@@ -1005,10 +1004,15 @@ class CategoryCore extends ObjectModel
 		return false;
 	}
 
+	/**
+	 * Update customer groups associated to the object
+	 *
+	 * @param array $list groups
+	 */
 	public function updateGroup($list)
 	{
 		$this->cleanGroups();
-		if ($list && count($list))
+		if ($list && !empty($list))
 			$this->addGroups($list);
 		else
 			$this->addGroups(array(1));

@@ -27,12 +27,19 @@
 
 class AdminCustomersControllerCore extends AdminController
 {
+	protected $delete_mode;
+
 	public function __construct()
 	{
 	 	$this->table = 'customer';
 		$this->className = 'Customer';
 	 	$this->lang = false;
 		$this->deleted = true;
+
+		$this->addRowAction('edit');
+		$this->addRowAction('view');
+		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->context = Context::getContext();
 
@@ -142,14 +149,41 @@ class AdminCustomersControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function initContent()
+	{
+		if ($this->action == 'select_delete')
+			$this->context->smarty->assign(array(
+				'delete_form' => true,
+				'url_delete' => htmlentities($_SERVER['REQUEST_URI']),
+				'boxes' => $this->boxes,
+			));
+		parent::initContent();
+	}
+
+	public function initProcess()
+	{
+		$this->id_object = Tools::getValue('id_'.$this->table);
+		if (Tools::isSubmit('submitGuestToCustomer') && $this->id_object)
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'guest_to_customer';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		elseif (Tools::isSubmit('changeNewsletterVal') && $this->id_object)
+			$this->action = 'change_newsletter_val';
+		elseif (Tools::isSubmit('changeOptinVal') && $this->id_object)
+			$this->action = 'change_optin_val';
+
+		parent::initProcess();
+		// When deleting, first display a form to select the type of deletion
+		if ($this->action == 'delete' || $this->action == 'bulkdelete')
+			if (Tools::getValue('deleteMode') == 'real' || Tools::getValue('deleteMode') == 'deleted')
+				$this->delete_mode = Tools::getValue('deleteMode');
+			else
+				$this->action = 'select_delete';
+	}
+
 	public function initList()
 	{
-		$this->addRowAction('edit');
-		$this->addRowAction('view');
-		$this->addRowAction('delete');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-		
 		$this->_select = '(YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5)) AS `age`, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
@@ -546,211 +580,132 @@ class AdminCustomersControllerCore extends AdminController
 		return parent::initView();
 	}
 
-	public function postProcess()
+	public function processDelete($token)
 	{
-		/**
-		 * Todo : Where it's used?
-		 */
-		if (Tools::isSubmit('submitDel'.$this->table) || Tools::isSubmit('delete'.$this->table))
+		if ($this->delete_mode == 'real')
 		{
-			$delete_form = '
-			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">
-				<fieldset><legend>'.$this->l('How do you want to delete your customer(s)?').'</legend>
-					'.$this->l('You have two ways to delete a customer, please choose what you want to do.').'
-					<p>
-						<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-						<label for="deleteMode_real" style="float:none">'.
-							$this->l('I want to delete my customer(s) for real, all data will be removed from the database.
-								A customer with the same e-mail address will be able to register again.').'
-						</label>
-					</p>
-					<p>
-						<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
-						<label for="deleteMode_deleted" style="float:none">'.
-							$this->l('I don\'t want my customer(s) to register again.
-								The customer(s) will be removed from this list but all data will be kept in the database.').'
-						</label>
-					</p>';
-			foreach ($_POST as $key => $value)
-				if (is_array($value))
-					foreach ($value as $val)
-						$delete_form .= '<input type="hidden" name="'.htmlentities($key).'[]" value="'.htmlentities($val).'" />';
-				else
-					$delete_form .= '<input type="hidden" name="'.htmlentities($key).'" value="'.htmlentities($value).'" />';
-			$delete_form .= '	<br /><input type="submit" class="button" value="'.$this->l('   Delete   ').'" />
-				</fieldset>
-			</form>
-			<div class="clear">&nbsp;</div>';
+			$this->deleted = false;
+			Discount::deleteByIdCustomer((int)Tools::getValue('id_customer'));
+		}
+		elseif ($this->delete_mode == 'deleted')
+			$this->deleted = true;
+		else
+		{
+			$this->_errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+			return;
 		}
 
-		if (Tools::getValue('submitAdd'.$this->table))
-		{
-			/* Checking fields validity */
-			$this->validateRules();
-			if (!count($this->_errors))
-			{
-				$id = (int)Tools::getValue('id_'.$this->table);
-				$group_list = Tools::getValue('groupBox');
+		parent::processDelete($token);
+	}
 
-				//Update Object
-				if (isset($id) && !empty($id))
+	public function processBulkDelete($token)
+	{
+		if ($this->delete_mode == 'real')
+		{
+			$this->deleted = false;
+			foreach (Tools::getValue('customerBox') as $id_customer)
+				Discount::deleteByIdCustomer((int)$id_customer);
+		}
+		elseif ($this->delete_mode == 'deleted')
+			$this->deleted = true;
+		else
+		{
+			$this->_errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+			return;
+		}
+
+		parent::processBulkDelete($token);
+	}
+
+	public function processSave($token)
+	{
+		// Check that the new email is not already in use
+		// Case add
+		if (!$this->id_object)
+		{
+			$customer_email = strval(Tools::getValue('email'));
+			$customer = new Customer();
+			$customer->getByEmail($customer_email);
+			if ($customer->id)
+				$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+		}
+		// Case update
+		else
+		{
+			$object = new $this->className($this->id_object);
+			if (Validate::isLoadedObject($object))
+			{
+				$customer_email = strval(Tools::getValue('email'));
+
+				// check if e-mail already used
+				if ($customer_email != $object->email)
 				{
-					if ($this->tabAccess['edit'] !== '1')
-						$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-					else
-					{
-						$object = new $this->className($id);
-						if (Validate::isLoadedObject($object))
-						{
-							$customer_email = strval(Tools::getValue('email'));
-
-							// check if e-mail already used
-							if ($customer_email != $object->email)
-							{
-								$customer = new Customer();
-								$customer->getByEmail($customer_email);
-								if ($customer->id)
-									$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
-							}
-
-							if (!is_array($group_list) || count($group_list) == 0)
-								$this->_errors[] = Tools::displayError('Customer must be in at least one group.');
-							else
-								if (!in_array(Tools::getValue('id_default_group'), $group_list))
-									$this->_errors[] = Tools::displayError('Default customer group must be selected in group box.');
-
-							// Updating customer's group
-							if (!count($this->_errors))
-							{
-								$object->cleanGroups();
-								if (is_array($group_list) && count($group_list) > 0)
-									$object->addGroups($group_list);
-							}
-						}
-						else
-							$this->_errors[] = Tools::displayError('An error occurred while loading object.').'
-								<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-					}
+					$customer = new Customer();
+					$customer->getByEmail($customer_email);
+					if ($customer->id)
+						$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 				}
-
-				//Create Object
-				else
-				{
-					if ($this->tabAccess['add'] === '1')
-					{
-						$object = new $this->className();
-						$this->copyFromPost($object, $this->table);
-						$shop = new Shop((int)$object->id_shop);
-						$object->id_group_shop = (int)$shop->id_group_shop;
-						if (!$object->add())
-							$this->_errors[] = Tools::displayError('An error occurred while creating object.').'
-								<b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-						else if (($_POST[$this->identifier] = $object->id /* voluntary */) &&
-									$this->postImage($object->id) && !count($this->_errors) &&
-									$this->_redirect)
-						{
-							// Add Associated groups
-							$group_list = Tools::getValue('groupBox');
-							if (is_array($group_list) && count($group_list) > 0)
-								$object->addGroups($group_list);
-							$parent_id = (int)Tools::getValue('id_parent', 1);
-							// Save and stay on same form
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$this->token);
-							// Save and back to parent
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-								Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$this->token);
-							// Default behavior (save and back)
-							Tools::redirectAdmin(self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$this->token);
-						}
-					}
-					else
-						$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-				}
-			}
-		}
-		else if (Tools::isSubmit('delete'.$this->table) && $this->tabAccess['delete'] === '1')
-		{
-			switch (Tools::getValue('deleteMode'))
-			{
-				case 'real':
-					$this->deleted = false;
-					Discount::deleteByIdCustomer((int)Tools::getValue('id_customer'));
-					break;
-				case 'deleted':
-					$this->deleted = true;
-					break;
-				default:
-					echo $delete_form;
-					if (isset($_POST['delete'.$this->table]))
-						unset($_POST['delete'.$this->table]);
-					if (isset($_GET['delete'.$this->table]))
-						unset($_GET['delete'.$this->table]);
-					break;
-			}
-		}
-		else if (Tools::isSubmit('submitDel'.$this->table) && $this->tabAccess['delete'] === '1')
-		{
-			switch (Tools::getValue('deleteMode'))
-			{
-				case 'real':
-					$this->deleted = false;
-					foreach (Tools::getValue('customerBox') as $id_customer)
-						Discount::deleteByIdCustomer((int)$id_customer);
-					break;
-				case 'deleted':
-					$this->deleted = true;
-					break;
-				default:
-					echo $delete_form;
-					if (isset($_POST['submitDel'.$this->table]))
-						unset($_POST['submitDel'.$this->table]);
-					if (isset($_GET['submitDel'.$this->table]))
-						unset($_GET['submitDel'.$this->table]);
-					break;
-			}
-		}
-		else if (Tools::isSubmit('submitGuestToCustomer') && Tools::getValue('id_customer'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$customer = new Customer((int)Tools::getValue('id_customer'));
-				if (!Validate::isLoadedObject($customer))
-					$this->_errors[] = Tools::displayError('This customer does not exist.');
-				if (Customer::customerExists($customer->email))
-					$this->_errors[] = Tools::displayError('This customer already exist as non-guest.');
-				else if ($customer->transformToCustomer(Tools::getValue('id_lang', Configuration::get('PS_LANG_DEFAULT'))))
-					Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('changeNewsletterVal') && Tools::getValue('id_customer'))
-		{
-			$id_customer = (int)Tools::getValue('id_customer');
-			$customer = new Customer($id_customer);
-			if (!Validate::isLoadedObject($customer))
-				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
-			if (!$update)
-				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-		}
-		else if (Tools::isSubmit('changeOptinVal') && Tools::getValue('id_customer'))
-		{
-			$id_customer = (int)Tools::getValue('id_customer');
-			$customer = new Customer($id_customer);
-			if (!Validate::isLoadedObject($customer))
-				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
-			if (!$update)
-				$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
-			Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+				$this->_errors[] = Tools::displayError('An error occurred while loading object.').'
+					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
 
-		return parent::postProcess();
+		// Check that default group is selected
+		if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox')))
+			$this->_errors[] = $this->_errors[] = Tools::displayError('Default customer group must be selected in group box.');
+
+		parent::processSave($token);
+	}
+
+	/**
+	 * Transform a guest account into a registered customer account
+	 *
+	 * @param string $token
+	 */
+	public function processGuestToCustomer($token)
+	{
+		$customer = new Customer((int)Tools::getValue('id_customer'));
+		if (!Validate::isLoadedObject($customer))
+			$this->_errors[] = Tools::displayError('This customer does not exist.');
+		if (Customer::customerExists($customer->email))
+			$this->_errors[] = Tools::displayError('This customer already exist as non-guest.');
+		else if ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id)))
+			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
+		else
+			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+	}
+
+	/**
+	 * Toggle the newsletter flag
+	 *
+	 * @param string $token
+	 */
+	public function processChangeNewsletterVal($token)
+	{
+		$customer = new Customer($this->id_object);
+		if (!Validate::isLoadedObject($customer))
+			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
+		if (!$update)
+			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+	}
+
+	/**
+	 * Toggle newsletter optin flag
+	 *
+	 * @param string $token
+	 */
+	public function processChangeOptinVal($token)
+	{
+		$customer = new Customer($this->id_object);
+		if (!Validate::isLoadedObject($customer))
+			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
+		if (!$update)
+			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = null)
@@ -760,11 +715,6 @@ class AdminCustomersControllerCore extends AdminController
 			!Tools::getValue($this->table.'Orderby') ? 'date_add' : null,
 			!Tools::getValue($this->table.'Orderway') ? 'DESC' : null
 		);
-	}
-
-	public function beforeDelete($object)
-	{
-		return $object->isUsed();
 	}
 
 	public static function printNewsIcon($id_customer, $tr)

@@ -1090,7 +1090,7 @@ class CartCore extends ObjectModel
 		static $cache = false;
 		if ($cache !== false && !$flush)
 			return $cache;
-		
+
 		$product_list = $this->getProducts();
 		// Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
 		// Determine the best warehouse to determine the packages
@@ -1331,7 +1331,7 @@ class CartCore extends ObjectModel
 		static $cache = false;
 		if ($cache !== false && !$flush)
 			return $cache;
-		
+
 		$delivery_option_list = array();
 		$carriers_price = array();
 		$carrier_collection = array();
@@ -1559,7 +1559,7 @@ class CartCore extends ObjectModel
 	public function getDeliveryOption($default_country = null)
 	{
 		$delivery_option_list = $this->getDeliveryOptionList($default_country);
-		
+
 		// The delivery option was selected
 		if (isset($this->delivery_option) && $this->delivery_option != '')
 		{
@@ -1574,7 +1574,7 @@ class CartCore extends ObjectModel
 			if ($validated)
 				return $delivery_option;
 		}
-		
+
 		// No delivery option selected or delivery option selected is not valid, get the better for all options
 		$delivery_option = array();
 		foreach ($delivery_option_list as $id_address => $options)
@@ -2028,6 +2028,12 @@ class CartCore extends ObjectModel
 		return self::$_isVirtualCart[$this->id];
 	}
 
+	/**
+	 * Build cart object from provided id_order
+	 *
+	 * @param int $id_order
+	 * @return Cart|bool
+	 */
 	public static function getCartByOrderId($id_order)
 	{
 		if ($id_cart = self::getCartIdByOrderId($id_order))
