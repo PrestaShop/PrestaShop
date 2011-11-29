@@ -45,9 +45,19 @@ $(document).ready(function()
 	});
 	
 	// Click on checkbox
-	$('#layered_form input[type=checkbox]').live('click', function()
+	$('#layered_form input, #layered_form select').live('change', function()
 	{
 		reloadContent();
+	});
+
+	$('.radio').live('click', function() {
+		var name = $(this).attr('name');
+		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
+			if ($(item).hasClass('on') && $(item).attr('name') != name) {
+				$(item).click();
+			}
+		});
+		return true;
 	});
 	
 	// Click on label
@@ -58,13 +68,45 @@ $(document).ready(function()
 				$(this).parent().parent().find('input').click();
 				reloadContent();
 			}
-				
 			return false;
 		}
 	});
+	
+	layered_hidden_list = {};
+	$('.hide-action').live('click', function() {
+		if (typeof(layered_hidden_list[$(this).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').attr('id')] == false)
+		{
+			layered_hidden_list[$(this).parent().find('ul').attr('id')] = true;
+		}
+		else
+		{
+			layered_hidden_list[$(this).parent().find('ul').attr('id')] = false;
+		}
+		hideFilterValueAction(this);
+	});
+	$('.hide-action').each(function() {
+		hideFilterValueAction(this);
+	});
+	
 	paginationButton();
 	initLayered();
 });
+	
+function hideFilterValueAction(it)
+{
+	if (typeof(layered_hidden_list[$(it).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(it).parent().find('ul').attr('id')] == false)
+	{
+		$(it).parent().find('.hiddable').hide();
+		$(it).parent().find('.hide-action.less').hide();
+		$(it).parent().find('.hide-action.more').show();
+	}
+	else
+	{
+		$(it).parent().find('.hiddable').show();
+		$(it).parent().find('.hide-action.less').show();
+		$(it).parent().find('.hide-action.more').hide();
+	}
+}
 
 function addSlider(type, data, unit)
 {
@@ -198,6 +240,10 @@ function reloadContent(params_plus)
 			data += '&'+$(this).attr('id')+'='+sliderStart+'_'+sliderStop;
 	});
 	
+	$('#layered_form .select option:checked').each( function () {
+		data += '&'+$(this).attr('id') + '=' + $(this).val();
+	});
+	
 	if ($('#selectPrductSort').length)
 	{
 		var splitData = $('#selectPrductSort').val().split(':');
@@ -281,6 +327,10 @@ function reloadContent(params_plus)
 			if(slideUp)
 				$.scrollTo('#product_list', 400);
 			updateProductUrl();
+			
+			$('.hide-action').each(function() {
+				hideFilterValueAction(this);
+			});
 		}
 	});
 	ajaxQueries.push(ajaxQuery);
