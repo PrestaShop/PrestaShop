@@ -108,6 +108,7 @@ class CustomerCore extends ObjectModel
 	public $id_guest;
 
 	protected $tables = array ('customer');
+	public $groupBox;
 
  	protected $fieldsRequired = array('lastname', 'passwd', 'firstname', 'email');
  	protected $fieldsSize = array('lastname' => 32, 'passwd' => 32, 'firstname' => 32, 'email' => 128, 'note' => 65000);
@@ -125,7 +126,8 @@ class CustomerCore extends ObjectModel
 		'note' => 'isCleanHtml',
 		'is_guest' => 'isBool',
 		'id_shop' => 'isUnsignedId',
-		'id_group_shop' => 'isUnsignedId'
+		'id_group_shop' => 'isUnsignedId',
+ 		'groupBox' => 'isArrayWithIds'
  	);
 
 	protected $webserviceParameters = array(
@@ -189,14 +191,13 @@ class CustomerCore extends ObjectModel
 				$this->id_default_group = 2;
 			else
 				$this->id_default_group = 3;
+
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 			return false;
-	 	if (!parent::add($autodate, $null_values))
-			return false;
-
-		$row = array('id_customer' => (int)$this->id, 'id_group' => (int)$this->id_default_group);
-		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'customer_group', $row, 'INSERT');
+	 	$success = parent::add($autodate, $null_values);
+		$this->updateGroup($this->groupBox);
+		return $success;
 	}
 
 	public function update($nullValues = false)
@@ -204,6 +205,7 @@ class CustomerCore extends ObjectModel
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		if ($this->newsletter && !$this->newsletter_date_add)
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
+		$this->updateGroup($this->groupBox);
 	 	return parent::update(true);
 	}
 
@@ -419,7 +421,7 @@ class CustomerCore extends ObjectModel
 					)'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
-	
+
 	/**
 	  * Search for customers by ip address
 	  *
@@ -499,6 +501,20 @@ class CustomerCore extends ObjectModel
 		return isset($row['id_customer']);
 	}
 
+	/**
+	 * Update customer groups associated to the object
+	 *
+	 * @param array $list groups
+	 */
+	public function updateGroup($list)
+	{
+		$this->cleanGroups();
+		if ($list && !empty($list))
+			$this->addGroups($list);
+		else
+			$this->addGroups(array($this->id_default_group));
+	}
+
 	public function cleanGroups()
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
@@ -508,19 +524,8 @@ class CustomerCore extends ObjectModel
 	{
 		foreach ($groups as $group)
 		{
-			$groups_customers = $this->getGroups();
-			if (count($groups_customers) == 0)
-			{
-				$row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
-				Db::getInstance()->AutoExecute(_DB_PREFIX_.'customer_group', $row, 'INSERT');
-			}
-			else
-				foreach ($groups_customers as $group_customers)
-					if ($group_customers != $group)
-					{
-						$row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
-						Db::getInstance()->AutoExecute(_DB_PREFIX_.'customer_group', $row, 'INSERT');
-					}
+			$row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
+			Db::getInstance()->AutoExecute(_DB_PREFIX_.'customer_group', $row, 'INSERT');
 		}
 	}
 
@@ -547,8 +552,12 @@ class CustomerCore extends ObjectModel
 		return self::getGroupsStatic((int)$this->id);
 	}
 
+	/**
+	 * @deprecated since 1.5
+	 */
 	public function isUsed()
 	{
+		Tools::displayAsDeprecated();
 		return false;
 	}
 
