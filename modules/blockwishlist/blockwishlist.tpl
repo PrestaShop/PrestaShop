@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,7 +26,7 @@
 
 <div id="wishlist_block" class="block account">
 	<h4>
-		<a href="{$base_dir_ssl}/modules/blockwishlist/mywishlist.php">{l s='Wishlist' mod='blockwishlist'}</a>
+		<a href="{$base_dir_ssl}modules/blockwishlist/mywishlist.php">{l s='Wishlist' mod='blockwishlist'}</a>
 	</h4>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
