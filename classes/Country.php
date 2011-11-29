@@ -214,7 +214,7 @@ class CountryCore extends ObjectModel
 	*/
 	public static function getNameById($id_lang, $id_country)
 	{
-		$key = $id_country.'_'.$id_lang;
+		$key = 'country_getNameById_'.$id_country.'_'.$id_lang;
 		if (!Cache::isStored($key))
 			Cache::store($key, Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `name`
