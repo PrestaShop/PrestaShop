@@ -1752,8 +1752,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	public function beforeAdd($object)
 	{
-		if (Tools::isSubmit('is_template'));
+		if (Tools::isSubmit('is_template'))
 			$object->is_template = 1;
+
 		return true;
 	}
 
