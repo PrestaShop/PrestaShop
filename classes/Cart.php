@@ -2528,7 +2528,6 @@ class CartCore extends ObjectModel
 	{
 		foreach ($this->getProducts() as $product)
 		{
-			elog($product);
 			if (isset($product['out_of_stock']) && (int)$product['out_of_stock'])
 				return false;
 		}
