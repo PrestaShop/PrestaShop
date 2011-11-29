@@ -35,7 +35,6 @@ class AdminCountriesControllerCore extends AdminController
 		$this->deleted = false;
 
 		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 
 		$this->requiredDatabase = true;
 
@@ -111,7 +110,7 @@ class AdminCountriesControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	
+
 	/**
 	 * AdminController::setMedia() override
 	 * @see AdminController::setMedia()
@@ -119,7 +118,7 @@ class AdminCountriesControllerCore extends AdminController
 	public function setMedia()
 	{
 		parent::setMedia();
-		
+
 		$this->addJqueryPlugin('fieldselection');
 	}
 
@@ -358,48 +357,43 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function postProcess()
 	{
-			if (isset($_GET['delete'.$this->table]) || Tools::getValue('submitDel'.$this->table))
-			$this->_errors[] = Tools::displayError('You cannot delete a country. If you do not want it available for customers, please disable it.');
-		else
+		if (Tools::getValue('submitAdd'.$this->table))
 		{
-			if (Tools::getValue('submitAdd'.$this->table))
+			$id_country = Tools::getValue('id_country');
+			$tmp_addr_format = new AddressFormat($id_country);
+
+			$save_status = false;
+
+			$is_new = is_null($tmp_addr_format->id_country);
+			if ($is_new)
 			{
-				$id_country = Tools::getValue('id_country');
-				$tmp_addr_format = new AddressFormat($id_country);
-
-				$save_status = false;
-
-				$is_new = is_null($tmp_addr_format->id_country);
-				if ($is_new)
-				{
-					$tmp_addr_format = new AddressFormat();
-					$tmp_addr_format->id_country = $id_country;
-				}
-
-				$object = new $this->className();
-				$this->updateAssoShop($object->id);
-
-				$tmp_addr_format->format = Tools::getValue('address_layout');
-
-				if (strlen($tmp_addr_format->format) > 0)
-				{
-					if ($tmp_addr_format->checkFormatFields())
-						$save_status = ($is_new) ? $tmp_addr_format->save(): $tmp_addr_format->update();
-					else
-					{
-						$error_list = $tmp_addr_format->getErrorList();
-						foreach ($error_list as $num_error => $error)
-							$this->_errors[] = $error;
-					}
-
-					if (!$save_status)
-						$this->_errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
-				}
-				unset($tmp_addr_format);
+				$tmp_addr_format = new AddressFormat();
+				$tmp_addr_format->id_country = $id_country;
 			}
 
-			return parent::postProcess();
+			$object = new $this->className();
+			$this->updateAssoShop($object->id);
+
+			$tmp_addr_format->format = Tools::getValue('address_layout');
+
+			if (strlen($tmp_addr_format->format) > 0)
+			{
+				if ($tmp_addr_format->checkFormatFields())
+					$save_status = ($is_new) ? $tmp_addr_format->save(): $tmp_addr_format->update();
+				else
+				{
+					$error_list = $tmp_addr_format->getErrorList();
+					foreach ($error_list as $num_error => $error)
+						$this->_errors[] = $error;
+				}
+
+				if (!$save_status)
+					$this->_errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
+			}
+			unset($tmp_addr_format);
 		}
+
+		return parent::postProcess();
 	}
 
 	private function displayValidFields()
