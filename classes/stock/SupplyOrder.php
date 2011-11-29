@@ -199,7 +199,7 @@ class SupplyOrderCore extends ObjectModel
 
 		$res = parent::update($null_values);
 
-		if ($res)
+		if ($res && !$this->is_template)
 			$this->addHistory();
 
 		return $res;
@@ -214,7 +214,7 @@ class SupplyOrderCore extends ObjectModel
 
 		$res = parent::add($autodate, $null_values);
 
-		if ($res)
+		if ($res && !$this->is_template)
 			$this->addHistory();
 
 		return $res;
