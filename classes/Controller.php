@@ -59,7 +59,7 @@ abstract class ControllerCore
 	 * @var string check if footer will be displayed
 	 */
 	protected $display_footer;
-	
+
 	/**
 	 * @var string check if only content will be displayed
 	 */
@@ -81,7 +81,13 @@ abstract class ControllerCore
 	/**
 	 * Initialize the page
 	 */
-	abstract public function init();
+	public function init()
+	{
+		if (!defined('_PS_BASE_URL_'))
+			define('_PS_BASE_URL_', Tools::getShopDomain(true));
+		if (!defined('_PS_BASE_URL_SSL_'))
+			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+	}
 
 	/**
 	 * Do the page treatment : post process, ajax process, etc.
@@ -148,7 +154,7 @@ abstract class ControllerCore
 				$this->setMedia();
 				$this->initHeader();
 			}
-	
+
 			$this->initContent();
 
 			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
@@ -200,7 +206,7 @@ abstract class ControllerCore
 	abstract public function initContent();
 
 	/**
-	 * Assign smarty variables when access is forbidden 
+	 * Assign smarty variables when access is forbidden
 	 */
 	abstract public function initCursedPage();
 
