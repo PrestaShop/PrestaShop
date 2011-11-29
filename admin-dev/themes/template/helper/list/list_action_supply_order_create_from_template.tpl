@@ -23,5 +23,5 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}">
+<a href="{$href}" onclick="return confirm('{$confirm}');">
 <img src="../img/admin/copy_files.gif" alt="{$action}" title="{$action}" /></a>
