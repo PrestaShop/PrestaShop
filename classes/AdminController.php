@@ -231,6 +231,9 @@ class AdminControllerCore extends Controller
 	/** @var instanciation of the class associated with the AdminController */
 	protected $object;
 
+	/** @var current object ID */
+	protected $id_object;
+
 	public function __construct()
 	{
 		$controller = get_class($this);
@@ -1696,6 +1699,8 @@ class AdminControllerCore extends Controller
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
 
+		$this->id_object = (int)Tools::getValue('id_'.$this->table);
+
 		/* Delete object image */
 		if (isset($_GET['deleteImage']))
 		{
@@ -1733,7 +1738,7 @@ class AdminControllerCore extends Controller
 		else if (Tools::getValue('submitAdd'.$this->table) || Tools::getValue('submitAdd'.$this->table.'AndStay'))
 		{
 			// case 1: updating existing entry
-			if ((int)(Tools::getValue('id_'.$this->table)))
+			if ($this->id_object)
 			{
 				if ($this->tabAccess['edit'] === '1')
 				{
@@ -1794,7 +1799,7 @@ class AdminControllerCore extends Controller
 		else if (is_array($this->bulk_actions))
 			foreach ($this->bulk_actions as $bulk_action => $params)
 			{
-				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table))
+				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
 				{
 					$this->action = 'bulk'.$bulk_action;
 					$this->boxes = Tools::getValue($this->table.'Box');

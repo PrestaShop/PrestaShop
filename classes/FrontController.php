@@ -86,6 +86,8 @@ class FrontControllerCore extends Controller
 			return;
 		self::$initialized = true;
 
+		parent::init();
+
 		// For compatibility with globals, DEPRECATED as of version 1.5
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
@@ -241,11 +243,6 @@ class FrontControllerCore extends Controller
 		/* Breadcrumb */
 		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
 		$this->context->smarty->assign('navigationPipe', $navigationPipe);
-
-		if (!defined('_PS_BASE_URL_'))
-			define('_PS_BASE_URL_', Tools::getShopDomain(true));
-		if (!defined('_PS_BASE_URL_SSL_'))
-			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 		// Automatically redirect to the canonical URL if needed
 		if (isset($this->php_self) && !empty($this->php_self) && !Tools::getValue('ajax'))
