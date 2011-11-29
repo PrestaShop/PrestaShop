@@ -148,6 +148,15 @@ class FrontController extends FrontControllerCore
 		return 'style="color:green"';
 	}
 
+	private function getObjectModelColor($n)
+	{
+		if ($n > 50)
+			return 'style="color:red"';
+		if ($n > 10)
+			return 'style="color:orange"';
+		return 'style="color:green"';
+	}
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -348,6 +357,7 @@ class FrontController extends FrontControllerCore
 				<li><a href="#stopwatch">Go to Stopwatch</a></li>
 				<li><a href="#doubles">Go to Doubles</a></li>
 				<li><a href="#tables">Go to Tables</a></li>
+				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">Go to ObjectModels</a></li>' : '').'
 			</ul>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px">
@@ -370,5 +380,25 @@ class FrontController extends FrontControllerCore
 		foreach ($tables as $table => $nb)
 			echo $hr.'<b '.$this->getTableColor($nb).'>'.$nb.'</b> '.$table;
 		echo '</div>';
+
+		if (isset(ObjectModel::$debug_list))
+		{
+			echo '<div class="rte" style="text-align:left;padding:8px">
+			<h3><a name="objectModels">ObjectModel instances</a></h3>';
+			$list = ObjectModel::$debug_list;
+			uasort($list, create_function('$a,$b', 'return (count($a) < count($b)) ? 1 : -1;'));
+			$i = 0;
+			foreach ($list as $class => $info)
+			{
+				echo $hr.'<b '.$this->getObjectModelColor(count($info)).'>'.count($info).'</b> ';
+				echo '<a href="#" onclick="$(\'#object_model_'.$i.'\').css(\'display\', $(\'#object_model_'.$i.'\').css(\'display\') == \'none\' ? \'block\' : \'none\'); return false">'.$class.'</a>';
+				echo '<div id="object_model_'.$i.'" style="display: none">';
+				foreach ($info as $trace)
+					echo ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/').' ['.$trace['line'].']<br />';
+				echo '</div>';
+				$i++;
+			}
+			echo '</div>';
+		}
 	}
 }
