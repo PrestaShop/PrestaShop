@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -81,8 +81,7 @@ function developpementErrorHandler($errno, $errstr, $errfile, $errline)
 	return true;
 }
 
-
-class FrontController extends FrontControllerCore
+abstract class Controller extends ControllerCore
 {
 	public $_memory = array();
 	public $_time = array();
@@ -170,9 +169,6 @@ class FrontController extends FrontControllerCore
 		$this->_memory = array_fill(0, 10, 0);
 		$this->_time = array_fill(0, 10, 0);
 
-		// Usually set in the parent constructor, but here I need it to evaluate init()
-		$useSSL = $this->ssl;
-
 		if (!self::$_footer)
 			return;
 
@@ -222,7 +218,7 @@ class FrontController extends FrontControllerCore
 		if ($this->ajax && method_exists($this, 'displayAjax'))
 			$this->displayAjax();
 		else
-			$this->display();
+			$this->displayDebug();
 	}
 
 	function ini_get_display_errors()
@@ -251,11 +247,11 @@ class FrontController extends FrontControllerCore
 		return $size;
 	}
 
-	public function display()
+	public function displayDebug()
 	{
 		global $start_time;
 
-		parent::display();
+		$this->display();
 
 		if (self::$_footer)
 			parent::displayFooter();
@@ -402,3 +398,4 @@ class FrontController extends FrontControllerCore
 		}
 	}
 }
+
