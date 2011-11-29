@@ -656,6 +656,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// renders list
 		$helper = new HelperList();
 		$this->setHelperDisplay($helper);
+		$helper->actions = array('details');
 		$helper->override_folder = 'supply_orders_receipt_history/';
 
 		$helper->currentIndex = self::$currentIndex.$action;
