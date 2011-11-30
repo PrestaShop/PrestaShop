@@ -28,7 +28,11 @@
 {if $nbr_filterBlocks != 0}
 <script type="text/javascript">
 current_friendly_url = '#{$current_friendly_url}';
+{if version_compare($smarty.const._PS_VERSION_,'1.5','>')}
 param_product_url = '#{$param_product_url}';
+{else}
+param_product_url = '';
+{/if}
 </script>
 <div id="layered_block_left" class="block">
 	<h4>{l s='Catalog' mod='blocklayered'}</h4>
