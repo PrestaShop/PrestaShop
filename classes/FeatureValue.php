@@ -49,7 +49,7 @@ class FeatureValueCore extends ObjectModel
 	protected $table = 'feature_value';
 	protected $identifier = 'id_feature_value';
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_feature_values',
 		'objectNodeName' => 'product_feature_value',
 		'fields' => array(
