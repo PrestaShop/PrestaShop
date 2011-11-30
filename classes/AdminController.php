@@ -1555,13 +1555,13 @@ class AdminControllerCore extends Controller
 		// retrocomp :
 		// if value is not set, try with "AdminTab" as prefix.
 		// @todo : change AdminTab to Helper
-		if ( isset($_LANGADM[$class.$key]))
+		if (isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
-		else if ( isset($_LANGADM['admincontroller'.$key]))
+		else if (isset($_LANGADM['admincontroller'.$key]))
 			$str = $_LANGADM['admincontroller'.$key];
-		else if ( isset($_LANGADM['helper'.$key]))
+		else if (isset($_LANGADM['helper'.$key]))
 			$str = $_LANGADM['helper'.$key];
-		else if ( isset($_LANGADM['admintab'.$key]))
+		else if (isset($_LANGADM['admintab'.$key]))
 			$str = $_LANGADM['admintab'.$key];
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
