@@ -44,6 +44,8 @@ class AdminBackupControllerCore extends AdminController
 			'filesize' => array('title' => $this->l('File size'))
 		);
 
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Backup options'),
@@ -73,7 +75,6 @@ class AdminBackupControllerCore extends AdminController
 	{
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		return parent::renderList();
 	}

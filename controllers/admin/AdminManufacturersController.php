@@ -132,8 +132,6 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->addRowAction('editaddresses');
 		$this->addRowAction('delete');
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-
 	 	// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
@@ -660,20 +658,6 @@ class AdminManufacturersControllerCore extends AdminController
 			$this->action = 'save';
 		else if (Tools::isSubmit('deleteaddress'))
 			$this->action = 'delete';
-		else if (is_array($this->bulk_actions))
-		{
-			foreach ($this->bulk_actions as $bulk_action => $params)
-			{
-				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table))
-				{
-					$this->action = 'bulk'.$bulk_action;
-					$this->boxes = Tools::getValue($this->table.'Box');
-					break;
-				}
-			}
-			if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
-				$this->ajaxPreProcess();
-		}
 	}
 
 	public function postProcess()

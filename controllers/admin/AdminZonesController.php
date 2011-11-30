@@ -55,6 +55,8 @@ class AdminZonesControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		parent::__construct();
 	}
 
@@ -62,8 +64,6 @@ class AdminZonesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		return parent::renderList();
 	}

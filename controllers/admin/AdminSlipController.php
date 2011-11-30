@@ -50,6 +50,7 @@ class AdminSlipControllerCore extends AdminController
 				'align' => 'right'
  			)
  		);
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->optionTitle = $this->l('Slip');
 
@@ -60,7 +61,6 @@ class AdminSlipControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 	 	$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		return parent::renderList();
 	}

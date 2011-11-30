@@ -42,6 +42,7 @@ class AdminRequestSqlControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'width' => 300),
 			'sql' => array('title' => $this->l('Request'), 'width' => 500)
 		);
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -64,7 +65,6 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 	 	return parent::renderList();
 	}

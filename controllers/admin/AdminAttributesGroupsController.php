@@ -53,6 +53,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		parent::__construct();
 	}
 
@@ -65,8 +67,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('details');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		return parent::renderList();
 	}
@@ -116,8 +116,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
-
-	 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 			// override attributes
 			$this->display = 'list';
