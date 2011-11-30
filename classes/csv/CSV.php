@@ -1,0 +1,111 @@
+<?php
+/*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision$
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
+/**
+ * Simple class to output CSV data
+ * @since 1.5
+ */
+class CSVCore
+{
+	public $filename;
+    public $objects;
+    public $delimiter;
+
+    /**
+     * Loads objects, filename and optionnaly a delimiter.
+     * @param Array|object $objects : Assumed to be an Array of objects or an object
+     * @param string $filename : used later to save the file
+     * @param string $delimiter Optional : delimiter used
+     */
+	public function __construct(&$objects, $filename, $delimiter = ';')
+	{
+		$this->filename = $filename;
+		$this->delimiter = $delimiter;
+
+		$this->objects = $objects;
+		if (!is_array($objects))
+			$this->objects = array($objects);
+	}
+
+	/**
+	 * Main function
+	 * Adds headers
+	 * Outputs
+	 */
+	public function export()
+	{
+		$this->headers();
+
+		$current_object_name = '';
+		foreach ($this->objects as $object)
+		{
+			$vars = get_object_vars($object);
+
+			// ouputs keys if needed
+			if (get_class($object) != $current_object_name)
+			{
+				$this->output(array_keys($vars));
+				$current_object_name = get_class($object);
+			}
+
+			// outputs values
+			$this->output($vars);
+			unset($vars);
+		}
+	}
+
+	/**
+	 * Wraps data and echoes
+	 * Uses defined delimiter
+	 */
+	public function output($data)
+	{
+    	$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
+        echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
+	}
+
+	/**
+	 * Escapes data
+	 * @param string $data
+	 * @return string $data
+	 */
+    public function wrap($data)
+    {
+        $data = preg_replace('/"(.+)"/', '""$1""', $data);
+        return sprintf('"%s"', $data);
+    }
+
+    /**
+     * Adds headers
+     */
+    public function headers()
+    {
+        header('Content-Type: application/csv');
+        header("Content-disposition: attachment; filename={$this->filename}.csv");
+    }
+}
+
