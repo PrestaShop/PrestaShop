@@ -56,7 +56,7 @@ class AdminCartsController extends AdminController
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
-				'width' => 80,
+				'width' => 'auto',
 				'filter_key' => 'c!lastname'
 			),
 			'total' => array(

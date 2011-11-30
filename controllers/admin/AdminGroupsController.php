@@ -51,7 +51,7 @@ class AdminGroupsController extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_group' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'filter_key' => 'b!name'),
+			'name' => array('title' => $this->l('Name'), 'width' => 80, 'filter_key' => 'b!name'),
 			'reduction' => array('title' => $this->l('Discount'), 'width' => 50, 'align' => 'right'),
 			'nb' => array('title' => $this->l('Members'), 'width' => 25, 'align' => 'center'),
 			'date_add' => array('title' => $this->l('Creation date'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
