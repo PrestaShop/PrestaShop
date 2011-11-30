@@ -40,7 +40,6 @@ class AdminStockMvtControllerCore extends AdminController
 
 		$this->list_no_link = true;
 		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
-		$this->displayInformation($this->l('Also, it allows you to add and edit your own stock movement labels.'));
 
 		$this->fieldsDisplay = array(
 			'product_reference' => array(

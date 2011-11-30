@@ -213,6 +213,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .filter-stock { background-color:#ebedf4; border:1px solid #c2c4d9; margin-bottom:15px; padding:10px; display:block; min-height:25px;}
 .filter-stock #stock_cover {float:left; margin-right:30px;}
 .filter-stock #stock_instant_state {float:left; margin-right:30px;}
+.filter-stock #supply_orders {float:left; margin-right:30px;}
 .filter-stock label {width:auto;}
 .filter-stock .select-filter { float:left;}
 .filter-stock .button-filter { float:right;}
