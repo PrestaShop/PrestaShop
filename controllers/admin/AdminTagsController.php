@@ -55,6 +55,8 @@ class AdminTagsControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		parent::__construct();
 	}
 
@@ -62,11 +64,6 @@ class AdminTagsControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 	 	$this->addRowAction('delete');
-
-	 	$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'),
-			'confirm' => $this->l('Delete selected items?'))
-		);
 
 		$this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
 		$this->_join = '

@@ -68,6 +68,8 @@ class AdminStoresControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Parameters'),
@@ -116,8 +118,6 @@ class AdminStoresControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_select = 'cl.`name` country, st.`name` state';
 		$this->_join = '

@@ -58,6 +58,8 @@ class AdminFeaturesControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		parent::__construct();
 	}
 
@@ -70,8 +72,6 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('details');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 	 	// Added specific button in toolbar
 	 	$this->toolbar_btn['newAttributes'] = array(
@@ -107,8 +107,6 @@ class AdminFeaturesControllerCore extends AdminController
 			// Action for list
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
-
-	 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 			if (!Validate::isLoadedObject($obj = new FeatureValue((int)$id)))
 				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');

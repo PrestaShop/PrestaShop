@@ -83,13 +83,13 @@ class AdminShopUrlControllerCore extends AdminController
 				'width' => 50,
 			),
 		);
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
 
 	public function renderList()
 	{
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->addRowActionSkipList('delete', array(1));
 
 		$this->addRowAction('edit');
