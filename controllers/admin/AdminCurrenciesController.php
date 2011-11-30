@@ -45,6 +45,8 @@ class AdminCurrenciesControllerCore extends AdminController
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Currencies options'),
@@ -86,7 +88,6 @@ class AdminCurrenciesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_where = 'AND a.`deleted` = 0';
 

@@ -90,6 +90,9 @@ class AdminLanguagesControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+	 	$this->specificConfirmDelete = $this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?', __CLASS__, true, false);
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Languages options'),
@@ -114,9 +117,6 @@ class AdminLanguagesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-	 	$this->specificConfirmDelete = $this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?', __CLASS__, true, false);
 
 		$this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
 		return parent::renderList();

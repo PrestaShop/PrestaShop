@@ -80,6 +80,8 @@ class AdminCategoriesControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+
 		if ($id_category = Tools::getvalue('id_category'))
 			$this->_category = new Category($id_category);
 		else
@@ -101,8 +103,6 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->addRowAction('add');
 		$this->addRowAction('view');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_filter .= ' AND `id_parent` = '.(int)$this->_category->id.' ';
 		$this->_select = 'position ';

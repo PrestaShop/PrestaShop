@@ -64,6 +64,8 @@ class AdminShopControllerCore extends AdminController
 			)
 		);
 
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
+
 		$this->options = array(
 			'general' => array(
 				'title' =>	$this->l('Shops options'),
@@ -101,8 +103,6 @@ class AdminShopControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 		$this->_select = 'gs.name group_shop_name, cl.name category_name';
 	 	$this->_join = '
