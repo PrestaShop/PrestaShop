@@ -26,19 +26,14 @@
 {extends file="../helper/form/form.tpl"}
 
 {block name="label"}
-	{if $input.type == 'select' && $input.name == 'country[]'}
-		<div id="add_new_tax_rule" style="display:none">
-			<label>{$input.label} </label>
-	{else}
-		{if isset($input.label)}
-			<label
-				{if $input.name == 'states[]'}
-					 id="state-label" style="display: none;"
-				{elseif $input.name == 'zipcode'}
-					 id="zipcode-label"
-				{/if}
-				>{$input.label} </label>
-		{/if}
+	{if isset($input.label)}
+		<label
+			{if $input.name == 'states[]'}
+				 id="state-label" style="display: none;"
+			{elseif $input.name == 'zipcode'}
+				 id="zipcode-label"
+			{/if}
+			>{$input.label} </label>
 	{/if}
 {/block}
 
@@ -50,27 +45,17 @@
 	>
 {/block}
 
-{block name="end_field_block"}
-	{if $input.type == 'submit'}
-			</div>
-		</div>
-	{else}
-		</div>
-	{/if}
-{/block}
-
 {block name="script"}
 		$(document).ready(function() {
 			$('#country').click(function() {
 				populateStates($(this).val(), '');
 			});
 
+			$('#tax_rule_form').hide();
 			$('#desc-tax_rules_group-new').click(function() {
 				initForm();
-				$('#add_new_tax_rule').show();
+				$('#tax_rule_form').slideToggle();
 				return false;
-			}, function() {
-				$('#add_new_tax_rule').hide();
 			});
 		});
 	
@@ -118,7 +103,7 @@
 		        dataType: 'json',
 				data: 'ajaxStates=1&ajaxUpdateTaxRule=1&id_tax_rule='+id_tax_rule,
 				success: function(data){
-					$('#add_new_tax_rule').show();
+					$('#tax_rule_form').show();
 					$('#id_tax_rule').val(data.id);
 					$('#country').val(data.id_country);
 					$('#state').val(data.id_state);
