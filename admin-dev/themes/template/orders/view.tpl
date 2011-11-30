@@ -560,27 +560,27 @@
 					<table class="table" width="300px;" cellspacing="0" cellpadding="0">
 						<tr id="total_products">
 							<td width="150px;"><b>{l s='Products'}</b></td>
-							<td align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
+							<td class="amount" align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
 							<td><b>{l s='Discounts'}</b></td>
-							<td align="right">-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</td>
+							<td class="amount" align="right">-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
 							<td><b>{l s='Wrapping'}</b></td>
-							<td align="right">{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</td>
+							<td class="amount" align="right">{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_shipping">
 							<td><b>{l s='Shipping'}</b></td>
-							<td align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
+							<td class="amount" align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
 						</tr>
 						<tr style="font-size: 20px" id="total_order">
 							<td style="font-size: 20px">{l s='Total'}</td>
-							<td style="font-size: 20px" align="right">
+							<td class="amount" style="font-size: 20px" align="right">
 								{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}
 							</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>

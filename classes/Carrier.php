@@ -563,8 +563,8 @@ class CarrierCore extends ObjectModel
 			}
 
 			$row['name'] = (strval($row['name']) != '0' ? $row['name'] : Configuration::get('PS_SHOP_NAME'));
-			$row['price'] = ($shipping_method == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier']));
-			$row['price_tax_exc'] = ($shipping_method == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getOrderShippingCost((int)$row['id_carrier'], false));
+			$row['price'] = ($shipping_method == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier']));
+			$row['price_tax_exc'] = ($shipping_method == Carrier::SHIPPING_METHOD_FREE ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], false));
 			$row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)$row['id_carrier']).'.jpg' ? _THEME_SHIP_DIR_.(int)$row['id_carrier'].'.jpg' : '';
 
 			// If price is false, then the carrier is unavailable (carrier module)

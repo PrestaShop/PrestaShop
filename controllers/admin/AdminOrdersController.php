@@ -980,15 +980,15 @@ class AdminOrdersControllerCore extends AdminController
 				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, Cart::BOTH), 2);
 				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
-				$order_invoice->total_shipping_tax_excl = (float)$cart->getOrderShippingCost(null, false);
-				$order_invoice->total_shipping_tax_incl = (float)$cart->getOrderShippingCost();
+				$order_invoice->total_shipping_tax_excl = (float)$cart->getPackageShippingCost(null, false);
+				$order_invoice->total_shipping_tax_incl = (float)$cart->getPackageShippingCost();
 				$order_invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order_invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 
 				// Update current order field, only shipping because other field is updated later
-				$order->total_shipping += (float)$cart->getOrderShippingCost();
-				$order->total_shipping_tax_excl += (float)$cart->getOrderShippingCost(null, false);
-				$order->total_shipping_tax_incl += (float)$cart->getOrderShippingCost(null, $use_taxes);
+				$order->total_shipping += (float)$cart->getPackageShippingCost();
+				$order->total_shipping_tax_excl += (float)$cart->getPackageShippingCost(null, false);
+				$order->total_shipping_tax_incl += (float)$cart->getPackageShippingCost(null, $use_taxes);
 
 				$order->total_wrapping += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
@@ -997,7 +997,7 @@ class AdminOrdersControllerCore extends AdminController
 				// Adding an entry in order_carrier table
 				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES
-				('.(int)$order->id.', '.(int)$order->id_carrier.', '.(int)$order_invoice->id.', '.(float)$cart->getTotalWeight().', '.(float)$cart->getOrderShippingCost(null, false).', '.(float)$cart->getOrderShippingCost(null, $use_taxes).', NOW())');
+				('.(int)$order->id.', '.(int)$order->id_carrier.', '.(int)$order_invoice->id.', '.(float)$cart->getTotalWeight().', '.(float)$cart->getPackageShippingCost(null, false).', '.(float)$cart->getPackageShippingCost(null, $use_taxes).', NOW())');
 			}
 			// Update current invoice
 			else
@@ -1006,8 +1006,8 @@ class AdminOrdersControllerCore extends AdminController
 				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
 				$order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
-				$order_invoice->total_shipping_tax_excl += (float)$cart->getOrderShippingCost(null, false);
-				$order_invoice->total_shipping_tax_incl += (float)$cart->getOrderShippingCost(null, $use_taxes);
+				$order_invoice->total_shipping_tax_excl += (float)$cart->getPackageShippingCost(null, false);
+				$order_invoice->total_shipping_tax_incl += (float)$cart->getPackageShippingCost(null, $use_taxes);
 				$order_invoice->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order_invoice->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order_invoice->update();
@@ -1283,7 +1283,7 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('Can\'t edit this Order Detail for this order')
 			)));
 
-		if ($order_invoice->id_order != Tools::getValue('id_order'))
+		if (!empty($order_invoice) && $order_invoice->id_order != Tools::getValue('id_order'))
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Can\'t use this invoice for this order')
