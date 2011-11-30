@@ -993,45 +993,51 @@ class OrderCore extends ObjectModel
 		');
 	}
 
+	/**
+	 * This method allows to generate first invoice of the current order
+	 */
 	public function setInvoice()
 	{
-		$order_invoice = new OrderInvoice();
-		$order_invoice->id_order = $this->id;
-		$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER');
-		// If invoice start number has been set, you clean the value of this configuration
-		if ($order_invoice->number)
-			Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
-		else
-			$order_invoice->number = self::getLastInvoiceNumber() + 1;
+		if (!$this->hasInvoice())
+		{
+			$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER');
+			// If invoice start number has been set, you clean the value of this configuration
+			if ($order_invoice->number)
+				Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
+			else
+				$order_invoice->number = self::getLastInvoiceNumber() + 1;
 
-		$order_invoice->total_discount_tax_excl = $this->total_discount_tax_excl;
-		$order_invoice->total_discount_tax_incl = $this->total_discount_tax_incl;
-		$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
-		$order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
-		$order_invoice->total_products = $this->total_products;
-		$order_invoice->total_products_wt = $this->total_products_wt;
-		$order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
-		$order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
-		$order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
-		$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
+			$order_invoice->total_discount_tax_excl = $this->total_discount_tax_excl;
+			$order_invoice->total_discount_tax_incl = $this->total_discount_tax_incl;
+			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
+			$order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
+			$order_invoice->total_products = $this->total_products;
+			$order_invoice->total_products_wt = $this->total_products_wt;
+			$order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
+			$order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
+			$order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
+			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
-		// Save Order invoice
-		$order_invoice->add();
+			// Save Order invoice
+			$order_invoice->add();
 
-		// Update order_carrier
-		Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'order_carrier`
-			SET `id_order_invoice` = '.(int)$order_invoice->id.'
-			WHERE `id_order` = '.(int)$order_invoice->id_order);
+			// Update order_carrier
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'order_carrier`
+				SET `id_order_invoice` = '.(int)$order_invoice->id.'
+				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
-		// Update order detail
-		Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'order_detail`
-			SET `id_order_invoice` = '.(int)$order_invoice->id.'
-			WHERE `id_order` = '.(int)$order_invoice->id_order);
+			// Update order detail
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'order_detail`
+				SET `id_order_invoice` = '.(int)$order_invoice->id.'
+				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
-		$this->invoice_date = $res['invoice_date'];
-		$this->invoice_number = $res['invoice_number'];
+			$this->invoice_date = $res['invoice_date'];
+			$this->invoice_number = $res['invoice_number'];
+		}
 	}
 
 	public function setDelivery()
@@ -1518,6 +1524,19 @@ class OrderCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_detail`
 		WHERE `id_order` = '.(int)$this->id
 		);
+	}
+
+	/**
+	 *
+	 * Has invoice return true if this order has already an invoice
+	 * @return bool
+	 */
+	public function hasInvoice()
+	{
+		return Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` =  '.(int)$this->id);
 	}
 }
 

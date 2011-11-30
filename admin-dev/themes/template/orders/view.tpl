@@ -76,7 +76,7 @@
 	<div style="float: right; margin: -40px 40px 10px 0;">{$HOOK_INVOICE}</div><br class="clear" />';
 	{/if}
 
-	<fieldset style="width:100%; margin-bottom: 10px;">
+	<fieldset style="width:98%; margin-bottom: 10px;">
 		<div style="width:50%; float: left;">
 			{if (count($invoices_collection))}
 			<a href="pdf.php?id_order={$order->id}&pdf"><img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}</a>
@@ -103,383 +103,391 @@
 		<div class="clear"></div>
 	</fieldset>
 
-	<!-- Left column -->
-	<div style="width: 48%; float:left;">
-		<!-- Change status form -->
-		<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" style="text-align:center;">
-			<select name="id_order_state">
-			{foreach from=$states item=state}
-				<option onclick="{if (!$currentState->shipped && $state['shipped'])}showWarehouseList(){else}hideWarehouseList(){/if}" value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
-			{/foreach}
-			</select>
-			<select name="id_warehouse" id="warehouse">
-			{foreach from=$warehouse_list item=warehouse}
-				<option value="{$warehouse['id_warehouse']}">{$warehouse['name']}</option>
-			{/foreach}
-			</select>
-			<input type="hidden" name="id_order" value="{$order->id}" />
-			<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
-		</form>
-		<br />
-
-		<!-- History of status -->
-		<table cellspacing="0" cellpadding="0" class="table" style="width: 100%;">
-		{foreach from=$history item=row key=key}
-			{if ($key == 0)}
-			<tr>
-				<th>{dateFormat date=$row['date_add'] full=true}</th>
-				<th><img src="../img/os/{$row['id_order_state']}.gif" /></th>
-				<th>{$row['ostate_name']|stripslashes}</th>
-				<th>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</th>
-			</tr>
-			{else}
-			<tr class="{if ($key % 2)}alt_row{/if}">
-				<td>{dateFormat date=$row['date_add'] full=true}</td>
-				<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
-				<td>{$row['ostate_name']|stripslashes}</td>
-				<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
-			</tr>
-			{/if}
-		{/foreach}
-		</table>
-
-		{if $customer->id}
-		<!-- Customer informations -->
-		<br />
-		<fieldset style="width: 100%;">
-			<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
-			<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
-			(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
-			{if ($customer->isGuest())}
-				{l s='This order has been placed by a'} <b>{l s='guest'}</b>
-				{if (!Customer::customerExists($customer->email))}
-				<form method="POST" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
-					<input type="hidden" name="id_lang" value="{$order->id_lang}" />
-					<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer'}" /></p>
-					{l s='This feature will generate a random password and send an e-mail to the customer'}
-				</form>
-				{else}
-					<div><b style="color:red;">{l s='A registered customer account exists with the same email address'}</b></div>
-				{/if}
-			{else}
-				{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
-				{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
-				{l s='Total paid since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
-		</fieldset>
-			{/if}
-		{/if}
-
-		<!-- Sources block -->
-		{if (sizeof($sources))}
-		<br />
-		<fieldset style="width: 100%;">
-			<legend><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</legend>
-			<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll; width: 360px;"{/if}>
-			{foreach from=$sources item=source}
-				<li>
-					{dateFormat date=$source['date_add'] full=true}<br />
-					<b>{l s='From:'}</b> <a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a><br />
-					<b>{l s='To:'}</b> {$source['request_uri']}<br />
-					{if $source['keywords']}<b>{l s='Keywords:'}</b> {$source['keywords']}<br />{/if}<br />
-				</li>
-			{/foreach}
-			</ul>
-		</fieldset>
-		{/if}
-
-		<!-- Admin order hook -->
-		{if $HOOK_ADMIN_ORDER}
-			{$HOOK_ADMIN_ORDER}
-		{/if}
-	</div>
-	<!-- END Left column -->
-
-	<!-- Right column -->
-	<div style="width: 48%; float:right;">
-		<!-- Documents block -->
-		<fieldset style="width: 100%">
-			<legend><img src="../img/admin/details.gif" /> {l s='Documents'}</legend>
-
-			<table class="table" width="100%;" cellspacing="0" cellpadding="0">
-				<thead>
-					<tr>
-						<th style="width:20%">Date</th>
-						<th>Document</th>
-						<th style="width:20%">Number</th>
-					</tr>
-				</thead>
-				<tbody>
-					{foreach from=$order->getDocuments() item=document}
-					<tr>
-						<td>{dateFormat date=$document->date_add}</td>
-						<td>Invoice</td>
-						<td><a href="pdf.php?pdf&id_order_invoice={$document->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->number}</a></td>
-					</tr>
-					{foreachelse}
-					<tr>
-						<td colspan="3">{l s='No document is available'}</td>
-					</tr>
-					{/foreach}
-				</tbody>
-			</table>
-		</fieldset>
-		<br />
-
-		<!-- Payments block -->
-		<fieldset style="width: 100%;">
-			<legend><img src="../img/admin/details.gif" /> {l s='Payment'}</legend>
-
-			{if !$order->valid}
-			<form method="post" action="{$currentIndex}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-				<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
-				<label>{l s='Change order\'s currency to:'}</label>
-				<select name="new_currency">
-					{foreach from=$currencies item=currency_change}
-						{if $currency_change['id_currency'] != $order->id_currency}
-						<option value="{$currency_change['id_currency']}">{$currency_change['name']} - {$currency_change['sign']}</option>
-						{/if}
-					{/foreach}
+	<div style="width: 98%">
+		<!-- Left column -->
+		<div style="width: 48%; float:left;">
+			<!-- Change status form -->
+			<form action="{$currentIndex}&viewOrder&token={$smarty.get.token}" method="post" style="text-align:center;">
+				<select name="id_order_state">
+				{foreach from=$states item=state}
+					<option onclick="{if (!$currentState->shipped && $state['shipped'])}showWarehouseList(){else}hideWarehouseList(){/if}" value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
+				{/foreach}
 				</select>
-				<input type="submit" class="button" name="submitChangeCurrency" value="{l s='Change'}" />
+				<select name="id_warehouse" id="warehouse">
+				{foreach from=$warehouse_list item=warehouse}
+					<option value="{$warehouse['id_warehouse']}">{$warehouse['name']}</option>
+				{/foreach}
+				</select>
+				<input type="hidden" name="id_order" value="{$order->id}" />
+				<input type="submit" name="submitState" value="{l s='Add'}" class="button" />
 			</form>
-			<hr />
+			<br />
+
+			<!-- History of status -->
+			<table cellspacing="0" cellpadding="0" class="table" style="width: 100%;">
+			{foreach from=$history item=row key=key}
+				{if ($key == 0)}
+				<tr>
+					<th>{dateFormat date=$row['date_add'] full=true}</th>
+					<th><img src="../img/os/{$row['id_order_state']}.gif" /></th>
+					<th>{$row['ostate_name']|stripslashes}</th>
+					<th>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</th>
+				</tr>
+				{else}
+				<tr class="{if ($key % 2)}alt_row{/if}">
+					<td>{dateFormat date=$row['date_add'] full=true}</td>
+					<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
+					<td>{$row['ostate_name']|stripslashes}</td>
+					<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
+				</tr>
+				{/if}
+			{/foreach}
+			</table>
+
+			{if $customer->id}
+			<!-- Customer informations -->
+			<br />
+			<fieldset style="width: 100%;">
+				<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
+				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
+				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
+				{if ($customer->isGuest())}
+					{l s='This order has been placed by a'} <b>{l s='guest'}</b>
+					{if (!Customer::customerExists($customer->email))}
+					<form method="POST" action="index.php?tab=AdminCustomers&id_customer={$customer->id}&token={getAdminToken tab='AdminCustomers'}">
+						<input type="hidden" name="id_lang" value="{$order->id_lang}" />
+						<p class="center"><input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to customer'}" /></p>
+						{l s='This feature will generate a random password and send an e-mail to the customer'}
+					</form>
+					{else}
+						<div><b style="color:red;">{l s='A registered customer account exists with the same email address'}</b></div>
+					{/if}
+				{else}
+					{l s='Account registered:'} <b>{dateFormat date=$customer->date_add full=true}</b><br />
+					{l s='Valid orders placed:'} <b>{$customerStats['nb_orders']}</b><br />
+					{l s='Total paid since registration:'} <b>{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</b><br />
+			</fieldset>
+				{/if}
 			{/if}
 
-			<p class="error" style="{if $order->total_paid_tax_incl == $total_paid}display: none;{/if}">
-				{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
-				{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
-			</p>
+			<!-- Sources block -->
+			{if (sizeof($sources))}
+			<br />
+			<fieldset style="width: 100%;">
+				<legend><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</legend>
+				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll; width: 360px;"{/if}>
+				{foreach from=$sources item=source}
+					<li>
+						{dateFormat date=$source['date_add'] full=true}<br />
+						<b>{l s='From:'}</b> <a href="{$source['http_referer']}">{parse_url($source['http_referer'], $smarty.const.PHP_URL_HOST)|regex_replace:'/^www./':''}</a><br />
+						<b>{l s='To:'}</b> {$source['request_uri']}<br />
+						{if $source['keywords']}<b>{l s='Keywords:'}</b> {$source['keywords']}<br />{/if}<br />
+					</li>
+				{/foreach}
+				</ul>
+			</fieldset>
+			{/if}
 
-			<form method="post" action="{$currentIndex}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
-				<table class="table" width="100%" cellspacing="0" cellpadding="0">
+			<!-- Admin order hook -->
+			{if $HOOK_ADMIN_ORDER}
+				{$HOOK_ADMIN_ORDER}
+			{/if}
+		</div>
+		<!-- END Left column -->
+
+		<!-- Right column -->
+		<div style="width: 48%; float:right;">
+			<!-- Documents block -->
+			<fieldset style="width: 100%">
+				<legend><img src="../img/admin/details.gif" /> {l s='Documents'}</legend>
+
+				<table class="table" width="100%;" cellspacing="0" cellpadding="0">
 					<thead>
 						<tr>
-							<th style="width:28%">{l s='Date'}</th>
-							<th>{l s='Payment method'}</th>
-							<th style="width:15%">{l s='Transaction ID'}</th>
-							<th style="width:25%">{l s='Amount'}</th>
-							<th style="width:10%">&nbsp;</th>
+							<th style="width:20%">Date</th>
+							<th>Document</th>
+							<th style="width:20%">Number</th>
 						</tr>
 					</thead>
 					<tbody>
-						{foreach from=$order->getOrderPaymentCollection() item=payment}
+						{foreach from=$order->getDocuments() item=document}
 						<tr>
-							<td>{dateFormat date=$payment->date_add full=true}</td>
-							<td>{$payment->payment_method}</td>
-							<td>{$payment->transaction_id}</td>
-							<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
-							<td></td>
+							<td>{dateFormat date=$document->date_add}</td>
+							<td>Invoice</td>
+							<td><a href="pdf.php?pdf&id_order_invoice={$document->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->number}</a></td>
+						</tr>
+						{foreachelse}
+						<tr>
+							<td colspan="3" class="center">
+								<h3>{l s='No document is available'}</h3>
+								<p><a class="button" href="{$currentIndex}&viewOrder&submitGenerateInvoice&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
+							</td>
 						</tr>
 						{/foreach}
-						<tr>
-							<td><input type="text" name="payment_date" class="datepicker" size="17" value="{dateFormat date=date('Y-m-d H:i:s') full=true}" /></td>
-							<td>
-								<select name="payment_method">
-								{foreach from=PaymentModule::getInstalledPaymentModules() item=payment_method}
-									{assign var=payment_name value=Module::getInstanceByName($payment_method.name)->displayName}
-									<option value="{$payment_name}">{$payment_name}</option>
-								{/foreach}
-								</select>
-							</td>
-							<td>
-								<input type="text" name="payment_transaction_id" value="" />
-							</td>
-							<td>
-								<input type="text" name="payment_amount" size="5" value="" />
-								<select name="payment_currency">
-								{foreach from=$currencies item=current_currency}
-									<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
-								{/foreach}
-								</select>
-							</td>
-							<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
-						</tr>
 					</tbody>
 				</table>
-			</form>
-		</fieldset>
-		<br />
+			</fieldset>
+			<br />
 
-		<!-- Shipping block -->
-		<fieldset style="width: 100%">
-			<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
+			<!-- Payments block -->
+			<fieldset style="width: 100%;">
+				<legend><img src="../img/admin/details.gif" /> {l s='Payment'}</legend>
 
-			<div class="clear" style="float: left; margin-right: 10px;">
-				<span class="bold">{l s='Recycled package:'}</span>
-				{if $order->recyclable}
-				<img src="../img/admin/enabled.gif" />
-				{else}
-				<img src="../img/admin/disabled.gif" />
+				{if !$order->valid}
+				<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+					<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
+					<label>{l s='Change order\'s currency to:'}</label>
+					<select name="new_currency">
+						{foreach from=$currencies item=currency_change}
+							{if $currency_change['id_currency'] != $order->id_currency}
+							<option value="{$currency_change['id_currency']}">{$currency_change['name']} - {$currency_change['sign']}</option>
+							{/if}
+						{/foreach}
+					</select>
+					<input type="submit" class="button" name="submitChangeCurrency" value="{l s='Change'}" />
+				</form>
+				<hr />
 				{/if}
-			</div>
-			<div style="float: left;">
-				<span class="bold">{l s='Gift wrapping:'}</span>
-				{if $order->gift}
-				<img src="../img/admin/enabled.gif" />
-				</div>
-				<div style="clear: left; margin: 0px 42px 0px 42px; padding-top: 2px;">
-					{if $order->gift_message}
-					<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>{l s='Message:'}</b><br />{$order->gift_message|nl2br}</div>
+
+				<p class="error" style="{if $order->total_paid_tax_incl == $total_paid}display: none;{/if}">
+					{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
+					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
+				</p>
+
+				<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+					<table class="table" width="100%" cellspacing="0" cellpadding="0">
+						<thead>
+							<tr>
+								<th style="width:28%">{l s='Date'}</th>
+								<th>{l s='Payment method'}</th>
+								<th style="width:15%">{l s='Transaction ID'}</th>
+								<th style="width:25%">{l s='Amount'}</th>
+								<th style="width:10%">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							{foreach from=$order->getOrderPaymentCollection() item=payment}
+							<tr>
+								<td>{dateFormat date=$payment->date_add full=true}</td>
+								<td>{$payment->payment_method}</td>
+								<td>{$payment->transaction_id}</td>
+								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
+								<td></td>
+							</tr>
+							{/foreach}
+							<tr>
+								<td><input type="text" name="payment_date" class="datepicker" size="17" value="{dateFormat date=date('Y-m-d H:i:s') full=true}" /></td>
+								<td>
+									<select name="payment_method">
+									{foreach from=PaymentModule::getInstalledPaymentModules() item=payment_method}
+										{assign var=payment_name value=Module::getInstanceByName($payment_method.name)->displayName}
+										<option value="{$payment_name}">{$payment_name}</option>
+									{/foreach}
+									</select>
+								</td>
+								<td>
+									<input type="text" name="payment_transaction_id" value="" />
+								</td>
+								<td>
+									<input type="text" name="payment_amount" size="5" value="" />
+									<select name="payment_currency">
+									{foreach from=$currencies item=current_currency}
+										<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
+									{/foreach}
+									</select>
+								</td>
+								<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</fieldset>
+			<br />
+
+			<!-- Shipping block -->
+			<fieldset style="width: 100%">
+				<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
+
+				<div class="clear" style="float: left; margin-right: 10px;">
+					<span class="bold">{l s='Recycled package:'}</span>
+					{if $order->recyclable}
+					<img src="../img/admin/enabled.gif" />
+					{else}
+					<img src="../img/admin/disabled.gif" />
 					{/if}
-				{else}
-				<img src="../img/admin/disabled.gif" />
+				</div>
+				<div style="float: left;">
+					<span class="bold">{l s='Gift wrapping:'}</span>
+					{if $order->gift}
+					<img src="../img/admin/enabled.gif" />
+					</div>
+					<div style="clear: left; margin: 0px 42px 0px 42px; padding-top: 2px;">
+						{if $order->gift_message}
+						<div style="border: 1px dashed #999; padding: 5px; margin-top: 8px;"><b>{l s='Message:'}</b><br />{$order->gift_message|nl2br}</div>
+						{/if}
+					{else}
+					<img src="../img/admin/disabled.gif" />
+					{/if}
+				</div>
+				<div class="clear" style="margin-bottom: 10px;"></div>
+
+				<table class="table" width="100%" cellspacing="0" cellpadding="0">
+					<thead>
+						<tr>
+							<th style="width:30%">{l s='Date:'}</th>
+							<th>{l s='Type'}</th>
+							<th style="width:20%">{l s='Carrier'}</th>
+							<th>{l s='Weight'}</th>
+							<th style="width:15%">{l s='Shipping cost'}</th>
+							<th style="width:30%">{l s='Tracking number'}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{foreach from=$order->getShipping() item=line}
+						<tr>
+							<td>{$line.date_add}</td>
+							<td>{$line.type}</td>
+							<td>{$line.state_name}</td>
+							<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
+							<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
+							<td>
+								<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+								{if $line.can_edit}
+								<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+									<span class="shipping_number_edit" style="display:none;">
+										<input type="text" name="tracking_number" value="{$line.tracking_number}" />
+										<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
+									</span>
+									<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
+									<a href="#" class="cancel_shipping_number_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
+								</form>
+								{/if}
+							</td>
+						</tr>
+						{/foreach}
+					</tbody>
+				</table>
+
+				{if $carrierModuleCall}
+					{$carrierModuleCall}
 				{/if}
-			</div>
-			<div class="clear" style="margin-bottom: 10px;"></div>
+			</fieldset>
+			<br />
 
-			<table class="table" width="100%" cellspacing="0" cellpadding="0">
-				<thead>
-					<tr>
-						<th style="width:30%">{l s='Date:'}</th>
-						<th>{l s='Type'}</th>
-						<th style="width:20%">{l s='Carrier'}</th>
-						<th>{l s='Weight'}</th>
-						<th style="width:15%">{l s='Shipping cost'}</th>
-						<th style="width:30%">{l s='Tracking number'}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{foreach from=$order->getShipping() item=line}
-					<tr>
-						<td>{$line.date_add}</td>
-						<td>{$line.type}</td>
-						<td>{$line.state_name}</td>
-						<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
-						<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
-						<td>
-							<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
-							{if $line.can_edit}
-							<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
-								<span class="shipping_number_edit" style="display:none;">
-									<input type="text" name="tracking_number" value="{$line.tracking_number}" />
-									<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
-								</span>
-								<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
-								<a href="#" class="cancel_shipping_number_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
-							</form>
-							{/if}
-						</td>
-					</tr>
-					{/foreach}
-				</tbody>
-			</table>
+			<!-- Return block -->
+			<fieldset style="width: 100%">
+				<legend><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</legend>
 
-			{if $carrierModuleCall}
-				{$carrierModuleCall}
-			{/if}
-		</fieldset>
+				{if $order->getReturn()|count > 0}
+				<table class="table" width="100%" cellspacing="0" cellpadding="0">
+					<thead>
+						<tr>
+							<th style="width:30%">Date</th>
+							<th>Type</th>
+							<th style="width:20%">Carrier</th>
+							<th style="width:30%">Tracking number</th>
+						</tr>
+					</thead>
+					<tbody>
+						{foreach from=$order->getReturn() item=line}
+						<tr>
+							<td>{$line.date_add}</td>
+							<td>{$line.type}</td>
+							<td>{$line.state_name}</td>
+							<td>
+								<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+								{if $line.can_edit}
+								<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
+									<span class="shipping_number_edit" style="display:none;">
+										<input type="text" name="tracking_number" value="{$line.tracking_number}" />
+										<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
+									</span>
+									<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
+									<a href="#" class="cancel_shipping_number_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
+								</form>
+								{/if}
+							</td>
+						</tr>
+						{/foreach}
+					</tbody>
+				</table>
+				{else}
+				{l s='No merchandise returns yet.'}
+				{/if}
 
-		<!-- Return block -->
-		<fieldset style="width: 100%">
-			<legend><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</legend>
-
-			{if $order->getReturn()|count > 0}
-			<table class="table" width="100%" cellspacing="0" cellpadding="0">
-				<thead>
-					<tr>
-						<th style="width:30%">Date</th>
-						<th>Type</th>
-						<th style="width:20%">Carrier</th>
-						<th style="width:30%">Tracking number</th>
-					</tr>
-				</thead>
-				<tbody>
-					{foreach from=$order->getReturn() item=line}
-					<tr>
-						<td>{$line.date_add}</td>
-						<td>{$line.type}</td>
-						<td>{$line.state_name}</td>
-						<td>
-							<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
-							{if $line.can_edit}
-							<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|escape:'htmlall':'UTF-8'}{else}0{/if}&id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'htmlall':'UTF-8'}{else}0{/if}">
-								<span class="shipping_number_edit" style="display:none;">
-									<input type="text" name="tracking_number" value="{$line.tracking_number}" />
-									<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
-								</span>
-								<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>
-								<a href="#" class="cancel_shipping_number_link" style="display: none;"><img src="../img/admin/disabled.gif" alt="{l s='Cancel'}" /></a>
-							</form>
-							{/if}
-						</td>
-					</tr>
-					{/foreach}
-				</tbody>
-			</table>
-			{else}
-			{l s='No merchandise returns yet.'}
-			{/if}
-
-			{if $carrierModuleCall}
-				{$carrierModuleCall}
-			{/if}
-		</fieldset>
+				{if $carrierModuleCall}
+					{$carrierModuleCall}
+				{/if}
+			</fieldset>
+		</div>
+		<!-- END Right column -->
+		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
-	<!-- END Right column -->
-	<div class="clear" style="margin-bottom: 10px;"></div>
 
-	<!-- Addresses -->
-	<div style="width: 48%; float:left;"></contact>
-		<!-- Shipping address -->
-		<fieldset style="width: 100%;">
-			<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
+	<div style="width: 98%">
+		<!-- Addresses -->
+		<div style="width: 48%; float:left;"></contact>
+			<!-- Shipping address -->
+			<fieldset style="width: 100%;">
+				<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
 
-			{if $can_edit}
-			<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
-				<div style="margin-bottom:5px;border-bottom:1px solid black;">
-					<p style="text-align:center;">
-						<select name="id_address">
-							{foreach from=$customer_addresses item=address}
-							<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-							{/foreach}
-						</select>
-						<input class="button" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
-					</p>
+				{if $can_edit}
+				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
+					<div style="margin-bottom:5px;border-bottom:1px solid black;">
+						<p style="text-align:center;">
+							<select name="id_address">
+								{foreach from=$customer_addresses item=address}
+								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
+								{/foreach}
+							</select>
+							<input class="button" type="submit" name="submitAddressShipping" value="{l s='Change'}" />
+						</p>
+					</div>
+				</form>
+				{/if}
+
+				<div style="float: right">
+					<a href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI}"><img src="../img/admin/edit.gif" /></a>
+					<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
 				</div>
-			</form>
-			{/if}
 
-			<div style="float: right">
-				<a href="?tab=AdminAddresses&id_address={$addresses.delivery->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=1{/if}&token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI}"><img src="../img/admin/edit.gif" /></a>
-				<a href="http://maps.google.com/maps?f=q&hl={$iso_code_lang}&geocode=&q={$addresses.delivery->address1} {$addresses.delivery->postcode} {$addresses.delivery->city} {if ($addresses.delivery->id_state)} {$addresses.deliveryState->name}{/if}" target="_blank"><img src="../img/admin/google.gif" alt="" class="middle" /></a>
-			</div>
+				{displayAddressDetail address=$addresses.delivery newLine='<br />'}
+				{if $addresses.delivery->other}<hr />{$addresses.delivery->other}<br />{/if}
+			</fieldset>
+		</div>
 
-			{displayAddressDetail address=$addresses.delivery newLine='<br />'}
-			{if $addresses.delivery->other}<hr />{$addresses.delivery->other}<br />{/if}
-		</fieldset>
-	</div>
+		<div style="width: 48%; float:right;"></contact>
+			<!-- Invoice address -->
+			<fieldset style="width: 100%;">
+				<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
 
-	<div style="width: 48%; float:right;"></contact>
-		<!-- Invoice address -->
-		<fieldset style="width: 100%;">
-			<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
+				{if $can_edit}
+				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
+					<div style="margin-bottom:5px;border-bottom:1px solid black;">
+						<p style="text-align:center;">
+							<select name="id_address">
+								{foreach from=$customer_addresses item=address}
+								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
+								{/foreach}
+							</select>
+							<input class="button" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
+						</p>
+					</div>
+				</form>
+				{/if}
 
-			{if $can_edit}
-			<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
-				<div style="margin-bottom:5px;border-bottom:1px solid black;">
-					<p style="text-align:center;">
-						<select name="id_address">
-							{foreach from=$customer_addresses item=address}
-							<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
-							{/foreach}
-						</select>
-						<input class="button" type="submit" name="submitAddressInvoice" value="{l s='Change'}" />
-					</p>
+				<div style="float: right">
+					<a href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI}&token={getAdminToken tab='AdminAddresses'}"><img src="../img/admin/edit.gif" /></a>
 				</div>
-			</form>
-			{/if}
 
-			<div style="float: right">
-				<a href="?tab=AdminAddresses&id_address={$addresses.invoice->id}&addaddress&realedit=1&id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&address_type=2{/if}&back={$smarty.server.REQUEST_URI}&token={getAdminToken tab='AdminAddresses'}"><img src="../img/admin/edit.gif" /></a>
-			</div>
-
-			{displayAddressDetail address=$addresses.invoice newLine='<br />'}
-			{if $addresses.invoice->other}<hr />{$addresses.invoice->other}<br />{/if}
-		</fieldset>
+				{displayAddressDetail address=$addresses.invoice newLine='<br />'}
+				{if $addresses.invoice->other}<hr />{$addresses.invoice->other}<br />{/if}
+			</fieldset>
+		</div>
+		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
-	<div class="clear" style="margin-bottom: 10px;"></div>
 
-	<form action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
+	<form style="width: 98%" action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
 			<legend><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Products'}</legend>
@@ -551,28 +559,28 @@
 				<div style="float:right;">
 					<table class="table" width="300px;" cellspacing="0" cellpadding="0">
 						<tr id="total_products">
-							<td width="150px;">{l s='Products'}</td>
+							<td width="150px;"><b>{l s='Products'}</b></td>
 							<td align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
-							<td>{l s='Discounts'}</td>
+							<td><b>{l s='Discounts'}</b></td>
 							<td align="right">-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
-							<td>{l s='Wrapping'}</td>
+							<td><b>{l s='Wrapping'}</b></td>
 							<td align="right">{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
 						</tr>
 						<tr id="total_shipping">
-							<td>{l s='Shipping'}</td>
+							<td><b>{l s='Shipping'}</b></td>
 							<td align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
 						</tr>
 						<tr style="font-size: 20px" id="total_order">
-							<td>{l s='Total'}</td>
-							<td align="right">
+							<td style="font-size: 20px">{l s='Total'}</td>
+							<td style="font-size: 20px" align="right">
 								{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}
 							</td>
 							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
