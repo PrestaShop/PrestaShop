@@ -66,6 +66,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 0);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', 1);
+			Configuration::updateValue('PS_LAYERED_FILTER_PRICE_USETAX', 1);
 			
 			$this->rebuildLayeredStructure();
 			$this->rebuildLayeredCache();
@@ -97,6 +98,7 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_SHOW_QTIES');
 		Configuration::deleteByName('PS_LAYERED_FULL_TREE');
 		Configuration::deleteByName('PS_LAYERED_INDEXED');
+		Configuration::deleteByName('PS_LAYERED_FILTER_PRICE_USETAX');
 		
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
@@ -116,9 +118,13 @@ class BlockLayered extends Module
 		
 		Db::getInstance()->Execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_price_index` (
-		`id_product` INT  NOT NULL, `id_currency` INT NOT NULL,
-		`price_min` INT NOT NULL, `price_max` INT NOT NULL,
-		PRIMARY KEY (`id_product`, `id_currency`), INDEX `id_currency` (`id_currency`),
+			`id_product` INT  NOT NULL,
+			`id_currency` INT NOT NULL,
+			`id_shop` INT NOT NULL,
+			`price_min` INT NOT NULL,
+			`price_max` INT NOT NULL,
+		PRIMARY KEY (`id_product`, `id_currency`, `id_shop`),
+		INDEX `id_currency` (`id_currency`),
 		INDEX `price_min` (`price_min`), INDEX `price_max` (`price_max`)) ENGINE = '._MYSQL_ENGINE_);
 	}
 	
@@ -924,58 +930,56 @@ class BlockLayered extends Module
 				$groups = array();
 		}
 		
-		static $currencyList = null;
-		if (is_null($currencyList))
-			$currencyList = Currency::getCurrencies();
-		
-		$minPrice = array();
-		$maxPrice = array();
-		
-		if ($smart)
-			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'layered_price_index` WHERE `id_product` = '.(int)$idProduct);
-		
-		$maxTaxRate = Db::getInstance()->getValue('
-		SELECT max(t.rate) max_rate
-		FROM `'._DB_PREFIX_.'product` p
-		LEFT JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (trg.id_tax_rules_group = p.id_tax_rules_group)
-		LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.id_tax_rules_group = trg.id_tax_rules_group)
-		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.id_tax = tr.id_tax AND t.active = 1)
-		WHERE id_product = '.(int)$idProduct.'
-		GROUP BY id_product');
-		
-		$productMinPrices = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT id_shop, id_currency, id_country, id_group, from_quantity
-		FROM `'._DB_PREFIX_.'specific_price`
-		WHERE id_product = '.(int)$idProduct);
-		
-		// Get min price
-		foreach ($currencyList as $currency)
+		$shop_list = array();
+		if (version_compare(_PS_VERSION_,'1.5','>'))
 		{
-			$price = Product::priceCalculation(null, (int)$idProduct, null, null, null, null,
-				$currency['id_currency'], null, null, false, true, false, true, true,
-				$specificPriceOutput, true);
-			
-			if (!isset($maxPrice[$currency['id_currency']]))
-				$maxPrice[$currency['id_currency']] = 0;
-			if (!isset($minPrice[$currency['id_currency']]))
-				$minPrice[$currency['id_currency']] = null;
-			if ($price > $maxPrice[$currency['id_currency']])
-				$maxPrice[$currency['id_currency']] = $price;
-			if ($price == 0)
-				continue;
-			if (is_null($minPrice[$currency['id_currency']]) || $price < $minPrice[$currency['id_currency']])
-				$minPrice[$currency['id_currency']] = $price;
+			$shop_list = Shop::getShops(false, null, $get_as_list_id = true);
+		}
+		else {
+			$shop_list[] = 0;
 		}
 		
-		foreach ($productMinPrices as $specificPrice)
+		foreach ($shop_list as $id_shop)
+		{
+			static $currencyList = null;
+			
+			if (is_null($currencyList))
+			{
+				if (version_compare(_PS_VERSION_,'1.5','>'))
+					$currencyList = Currency::getCurrencies(false, 1, new Shop($id_shop));
+				else
+					$currencyList = Currency::getCurrencies(false, 1);
+			}
+			
+			$minPrice = array();
+			$maxPrice = array();
+			
+			if ($smart)
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'layered_price_index` WHERE `id_product` = '.(int)$idProduct.' AND `id_shop` = '.(int)$id_shop);
+			
+			if (Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX'))
+				$maxTaxRate = Db::getInstance()->getValue('
+					SELECT max(t.rate) max_rate
+					FROM `'._DB_PREFIX_.'product` p
+					LEFT JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (trg.id_tax_rules_group = p.id_tax_rules_group)
+					LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.id_tax_rules_group = trg.id_tax_rules_group)
+					LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.id_tax = tr.id_tax AND t.active = 1)
+					WHERE id_product = '.(int)$idProduct.'
+					GROUP BY id_product');
+			else
+				$maxTaxRate = 0;
+			
+			$productMinPrices = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT id_shop, id_currency, id_country, id_group, from_quantity
+			FROM `'._DB_PREFIX_.'specific_price`
+			WHERE id_product = '.(int)$idProduct);
+			
+			// Get min price
 			foreach ($currencyList as $currency)
 			{
-				if ($specificPrice['id_currency'] && $specificPrice['id_currency'] != $currency['id_currency'])
-					continue;
-				$price = Product::priceCalculation((($specificPrice['id_shop'] == 0) ? null : (int)$specificPrice['id_shop']), (int)$idProduct,
-					null, (($specificPrice['id_country'] == 0) ? null : $specificPrice['id_country']), null, null,
-					$currency['id_currency'], (($specificPrice['id_group'] == 0) ? null : $specificPrice['id_group']),
-					$specificPrice['from_quantity'], false, true, false, true, true, $specificPriceOutput, true);
+				$price = Product::priceCalculation($id_shop, (int)$idProduct, null, null, null, null,
+					$currency['id_currency'], null, null, false, true, false, true, true,
+					$specificPriceOutput, true);
 				
 				if (!isset($maxPrice[$currency['id_currency']]))
 					$maxPrice[$currency['id_currency']] = 0;
@@ -988,34 +992,60 @@ class BlockLayered extends Module
 				if (is_null($minPrice[$currency['id_currency']]) || $price < $minPrice[$currency['id_currency']])
 					$minPrice[$currency['id_currency']] = $price;
 			}
-		
-		foreach ($groups as $group)
+			
+			foreach ($productMinPrices as $specificPrice)
+				foreach ($currencyList as $currency)
+				{
+					if ($specificPrice['id_currency'] && $specificPrice['id_currency'] != $currency['id_currency'])
+						continue;
+					$price = Product::priceCalculation((($specificPrice['id_shop'] == 0) ? null : (int)$specificPrice['id_shop']), (int)$idProduct,
+						null, (($specificPrice['id_country'] == 0) ? null : $specificPrice['id_country']), null, null,
+						$currency['id_currency'], (($specificPrice['id_group'] == 0) ? null : $specificPrice['id_group']),
+						$specificPrice['from_quantity'], false, true, false, true, true, $specificPriceOutput, true);
+					
+					if (!isset($maxPrice[$currency['id_currency']]))
+						$maxPrice[$currency['id_currency']] = 0;
+					if (!isset($minPrice[$currency['id_currency']]))
+						$minPrice[$currency['id_currency']] = null;
+					if ($price > $maxPrice[$currency['id_currency']])
+						$maxPrice[$currency['id_currency']] = $price;
+					if ($price == 0)
+						continue;
+					if (is_null($minPrice[$currency['id_currency']]) || $price < $minPrice[$currency['id_currency']])
+						$minPrice[$currency['id_currency']] = $price;
+				}
+			
+			foreach ($groups as $group)
+				foreach ($currencyList as $currency)
+				{
+					$price = Product::priceCalculation(null, (int)$idProduct, null, null, null, null, (int)$currency['id_currency'], (int)$group['id_group'],
+						null, false, true, false, true, true, $specificPriceOutput, true);
+					
+					if (!isset($maxPrice[$currency['id_currency']]))
+						$maxPrice[$currency['id_currency']] = 0;
+					if (!isset($minPrice[$currency['id_currency']]))
+						$minPrice[$currency['id_currency']] = null;
+					if ($price > $maxPrice[$currency['id_currency']])
+						$maxPrice[$currency['id_currency']] = $price;
+					if ($price == 0)
+						continue;
+					if (is_null($minPrice[$currency['id_currency']]) || $price < $minPrice[$currency['id_currency']])
+						$minPrice[$currency['id_currency']] = $price;
+				}
+			
+			$values = array();
 			foreach ($currencyList as $currency)
-			{
-				$price = Product::priceCalculation(null, (int)$idProduct, null, null, null, null, (int)$currency['id_currency'], (int)$group['id_group'],
-					null, false, true, false, true, true, $specificPriceOutput, true);
-				
-				if (!isset($maxPrice[$currency['id_currency']]))
-					$maxPrice[$currency['id_currency']] = 0;
-				if (!isset($minPrice[$currency['id_currency']]))
-					$minPrice[$currency['id_currency']] = null;
-				if ($price > $maxPrice[$currency['id_currency']])
-					$maxPrice[$currency['id_currency']] = $price;
-				if ($price == 0)
-					continue;
-				if (is_null($minPrice[$currency['id_currency']]) || $price < $minPrice[$currency['id_currency']])
-					$minPrice[$currency['id_currency']] = $price;
-			}
-		
-		$values = array();
-		foreach ($currencyList as $currency)
-			$values[] = '('.(int)$idProduct.', '.(int)$currency['id_currency'].',
-			'.(int)$minPrice[$currency['id_currency']].', '.(int)($maxPrice[$currency['id_currency']] * (100 + $maxTaxRate) / 100).')';
-		
-		Db::getInstance()->Execute('
-			INSERT INTO `'._DB_PREFIX_.'layered_price_index` (id_product, id_currency, price_min, price_max)
-			VALUES '.implode(',', $values).'
-			ON DUPLICATE KEY UPDATE id_product = id_product # avoid duplicate keys');
+				$values[] = '('.(int)$idProduct.',
+					'.(int)$currency['id_currency'].',
+					'.$id_shop.',
+					'.(int)$minPrice[$currency['id_currency']].',
+					'.(int)($maxPrice[$currency['id_currency']] * (100 + $maxTaxRate) / 100).')';
+			
+			Db::getInstance()->Execute('
+				INSERT INTO `'._DB_PREFIX_.'layered_price_index` (id_product, id_currency, id_shop, price_min, price_max)
+				VALUES '.implode(',', $values).'
+				ON DUPLICATE KEY UPDATE id_product = id_product # avoid duplicate keys');
+		}
 	}
 
 	public function hookLeftColumn($params)
@@ -1222,6 +1252,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', Tools::getValue('ps_layered_hide_0_values'));
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', Tools::getValue('ps_layered_show_qties'));
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', Tools::getValue('ps_layered_full_tree'));
+			Configuration::updateValue('PS_LAYERED_FILTER_PRICE_USETAX', Tools::getValue('ps_layered_filter_price_usetax'));
 			
 			$html .= '
 			<div class="conf">'.
@@ -1784,6 +1815,15 @@ class BlockLayered extends Module
 							'.$this->l('No').' <input type="radio" name="ps_layered_full_tree" value="0" '.(!Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
 						</td>
 					</tr>
+					<tr>
+						<td style="text-align: right;">'.$this->l('Use tax to filter price').'</td>
+						<td>
+							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
+							'.$this->l('Yes').' <input type="radio" name="ps_layered_filter_price_usetax" value="1" '.(Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? 'checked="checked"' : '').' />
+							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
+							'.$this->l('No').' <input type="radio" name="ps_layered_filter_price_usetax" value="0" '.(!Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX') ? 'checked="checked"' : '').' />
+						</td>
+					</tr>
 				</table>
 				<p style="text-align: center;"><input type="submit" class="button" name="submitLayeredSettings" value="'.$this->l('Save configuration').'" /></p>
 			</form>
@@ -1968,7 +2008,14 @@ class BlockLayered extends Module
 				case 'quantity':
 					if (count($selectedFilters['quantity']) == 2)
 						break;
-					$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '=' : '>').' 0';
+					if (version_compare(_PS_VERSION_,'1.5','>'))
+					{
+						$queryFiltersWhere .= ' AND sa.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0 ';
+						$queryFiltersFrom .= 'LEFT JOIN stock_available sa ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
+					}
+					else
+						$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0 ';
+						//$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0';
 				break;
 
 				case 'manufacturer':
@@ -2053,7 +2100,7 @@ class BlockLayered extends Module
 		while ($product = DB::getInstance()->nextRow($allProductsOut))
 			if (isset($priceFilter) && $priceFilter)
 			{
-				$price = (int)Product::getPriceStatic($product['id_product']); // Cast to int because we don't care about cents
+				$price = (int)Product::getPriceStatic($product['id_product'], Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX')); // Cast to int because we don't care about cents
 				if ($price < $priceFilter['min'] || $price > $priceFilter['max'])
 					continue;
 				$productIdList[] = (int)$product['id_product'];
@@ -2115,7 +2162,7 @@ class BlockLayered extends Module
 			{
 				case 'price':
 				case 'weight':
-					if ($value[0] == '' && $value[1] == '' || $value[0] == 0 && $value[1] == 0)
+					if ($value[0] == '' && $value[1] == '')
 						unset($selectedFilters[$key]);
 					break;
 				default:
@@ -2135,15 +2182,20 @@ class BlockLayered extends Module
 				case 'weight':
 				case 'condition':
 				case 'quantity':
-					$sqlQuery['select'] = '
-					SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`quantity`, p.`weight`
-					';
+					
+					if (version_compare(_PS_VERSION_,'1.5','>'))
+						$sqlQuery['select'] = 'SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, sa.`quantity`, p.`weight` ';
+					else
+						$sqlQuery['select'] = 'SELECT p.`id_product`, p.`condition`, p.`id_manufacturer`, p.`quantity`, p.`weight` ';
 					$sqlQuery['from'] = '
 					FROM '._DB_PREFIX_.'product p ';
 					$sqlQuery['join'] = '
 					INNER JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
 					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND
 					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).') ';
+					if (version_compare(_PS_VERSION_,'1.5','>'))
+						$sqlQuery['join'] .= 'LEFT JOIN '._DB_PREFIX_.'stock_available sa
+							ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)$this->context->shop->getID(true).') ';
 					$sqlQuery['where'] = 'WHERE p.`active` = 1 ';
 					$sqlQuery['group'] = ' GROUP BY p.id_product ';
 					break;
@@ -2258,7 +2310,7 @@ class BlockLayered extends Module
 			$products = false;
 			if (!empty($sqlQuery['from']))
 				$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlQuery['select']."\n".$sqlQuery['from']."\n".$sqlQuery['join']."\n".$sqlQuery['where']."\n".$sqlQuery['group']);
-			
+
 			foreach ($filters as $filterTmp)
 			{
 				$methodName = 'filterProductsBy'.ucfirst($filterTmp['type']);
@@ -2742,7 +2794,7 @@ class BlockLayered extends Module
 			if (isset($filterValue) && $filterValue && isset($product['price_min']) && isset($product['id_product'])
 			&& ((int)$filterValue[0] > $product['price_min'] || (int)$filterValue[1] < $product['price_max']))
 			{
-				$price = Product::getPriceStatic($product['id_product']);
+				$price = Product::getPriceStatic($product['id_product'], Configuration::get('PS_LAYERED_FILTER_PRICE_USETAX'));
 				if ($price < $filterValue[0] || $price > $filterValue[1])
 					continue;
 				unset($productCollection[$key]);
@@ -2805,9 +2857,18 @@ class BlockLayered extends Module
 	{
 		if (count($filterValue) == 2 || empty($filterValue))
 			return array();
-		$queryFilters = ' AND p.quantity '.(!$filterValue[0] ? '=' : '>').' 0 ';
 		
-		return array('where' => $queryFilters);
+		$queryFiltersJoin = '';
+		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+		{
+			$queryFilters = ' AND sav.quantity '.(!$filterValue[0] ? '>=' : '>').' 0 ';
+			$queryFiltersJoin = 'LEFT JOIN stock_available sav ON (sav.id_product = p.id_product AND sav.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
+		}
+		else
+			$queryFilters = ' AND p.quantity '.(!$filterValue[0] ? '>=' : '>').' 0 ';
+			
+		return array('where' => $queryFilters, 'join' => $queryFiltersJoin);
 	}
 	
 	private static function getManufacturerFilterSubQuery($filterValue, $ignoreJoin)
@@ -2902,9 +2963,9 @@ class BlockLayered extends Module
 						<option value="20">20</option>
 					</select>
 					<select class="filter_type" name="layered_selection_subcategories_filter_type">
-						<option value="0">'.$this->l('Allow multiple filter value').'</option>
-						<option value="1">'.$this->l('One filter value').'</option>
-						<option value="2">'.$this->l('Select').'</option>
+						<option value="0">'.$this->l('Checkbox').'</option>
+						<option value="1">'.$this->l('Radio button').'</option>
+						<option value="2">'.$this->l('Drop-down list').'</option>
 					</select>
 				</li>
 			</ul>
@@ -2921,9 +2982,9 @@ class BlockLayered extends Module
 						<option value="20">20</option>
 					</select>
 					<select class="filter_type" name="layered_selection_stock_filter_type">
-						<option value="0">'.$this->l('Allow multiple filter value').'</option>
-						<option value="1">'.$this->l('One filter value').'</option>
-						<option value="2">'.$this->l('Select').'</option>
+						<option value="0">'.$this->l('Checkbox').'</option>
+						<option value="1">'.$this->l('Radio button').'</option>
+						<option value="2">'.$this->l('Drop-down list').'</option>
 					</select>
 				</li>
 			</ul>
@@ -2941,9 +3002,9 @@ class BlockLayered extends Module
 						<option value="20">20</option>
 					</select>
 					<select class="filter_type" name="layered_selection_condition_filter_type">
-						<option value="0">'.$this->l('Allow multiple filter value').'</option>
-						<option value="1">'.$this->l('One filter value').'</option>
-						<option value="2">'.$this->l('Select').'</option>
+						<option value="0">'.$this->l('Checkbox').'</option>
+						<option value="1">'.$this->l('Radio button').'</option>
+						<option value="2">'.$this->l('Drop-down list').'</option>
 					</select>
 				</li>
 			</ul>
@@ -2961,9 +3022,9 @@ class BlockLayered extends Module
 						<option value="20">20</option>
 					</select>
 					<select class="filter_type" name="layered_selection_manufacturer_filter_type">
-						<option value="0">'.$this->l('Allow multiple filter value').'</option>
-						<option value="1">'.$this->l('One filter value').'</option>
-						<option value="2">'.$this->l('Select').'</option>
+						<option value="0">'.$this->l('Checkbox').'</option>
+						<option value="1">'.$this->l('Radio button').'</option>
+						<option value="2">'.$this->l('Drop-down list').'</option>
 					</select>
 				</li>
 			</ul>
@@ -2982,8 +3043,8 @@ class BlockLayered extends Module
 					</select>
 					<select class="filter_type" name="layered_selection_weight_slider_filter_type">
 						<option value="0">'.$this->l('Slider').'</option>
-						<option value="1">'.$this->l('inputs').'</option>
-						<option value="2">'.$this->l('list').'</option>
+						<option value="1">'.$this->l('Inputs area').'</option>
+						<option value="2">'.$this->l('List of values').'</option>
 					</select>
 				</li>
 			</ul>
@@ -3002,8 +3063,8 @@ class BlockLayered extends Module
 					</select>
 					<select class="filter_type" name="layered_selection_price_slider_filter_type">
 						<option value="0">'.$this->l('Slider').'</option>
-						<option value="1">'.$this->l('inputs').'</option>
-						<option value="2">'.$this->l('list').'</option>
+						<option value="1">'.$this->l('Inputs area').'</option>
+						<option value="2">'.$this->l('List of values').'</option>
 					</select>
 				</li>
 			</ul>';
@@ -3028,9 +3089,9 @@ class BlockLayered extends Module
 							<option value="20">20</option>
 						</select>
 						<select class="filter_type" name="layered_selection_ag_'.(int)$attributeGroup['id_attribute_group'].'_filter_type">
-							<option value="0">'.$this->l('Allow multiple filter value').'</option>
-							<option value="1">'.$this->l('One filter value').'</option>
-							<option value="2">'.$this->l('Select').'</option>
+							<option value="0">'.$this->l('Checkbox').'</option>
+							<option value="1">'.$this->l('Radio button').'</option>
+							<option value="2">'.$this->l('Drop-down list').'</option>
 						</select>
 					</li>';
 				$html .= '</ul>';
@@ -3055,9 +3116,9 @@ class BlockLayered extends Module
 							<option value="20">20</option>
 						</select>
 						<select class="filter_type" name="layered_selection_feat_'.(int)$feature['id_feature'].'_filter_type">
-							<option value="0">'.$this->l('Allow multiple filter value').'</option>
-							<option value="1">'.$this->l('One filter value').'</option>
-							<option value="2">'.$this->l('Select').'</option>
+							<option value="0">'.$this->l('Checkbox').'</option>
+							<option value="1">'.$this->l('Radio button').'</option>
+							<option value="2">'.$this->l('Drop-down list').'</option>
 						</select>
 					</li>';
 				$html .= '</ul>';
