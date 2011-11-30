@@ -31,7 +31,6 @@ class AdminFeaturesControllerCore extends AdminController
 	 	$this->table = 'feature';
 		$this->className = 'Feature';
 	 	$this->lang = true;
-	 	$this->_defaultOrderBy = 'position';
 
 		$this->fieldsDisplay = array(
 			'id_feature' => array(
@@ -72,6 +71,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('details');
+	 	$this->_defaultOrderBy = 'position';
 
 	 	// Added specific button in toolbar
 	 	$this->toolbar_btn['newAttributes'] = array(
@@ -108,7 +108,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
 
-			if (!Validate::isLoadedObject($obj = new FeatureValue((int)$id)))
+			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
 				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			$this->fieldsDisplay = array(
@@ -125,7 +125,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$this->_where = sprintf('AND `id_feature` = %d', (int)$id);
 
 			// get list and force no limit clause in the request
-			$this->getList($this->context->language->id, null);
+			$this->getList($this->context->language->id);
 
 			// Render list
 			$helper = new HelperList();
