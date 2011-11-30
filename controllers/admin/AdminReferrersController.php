@@ -143,6 +143,12 @@ class AdminReferrersControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->context->controller->addJqueryUI('ui.datepicker');
+	}
+
 	public function renderList()
 	{
 		// Display list Referrers:
