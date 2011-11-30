@@ -106,8 +106,8 @@ class AdminDbControllerCore extends AdminController
 
 		$this->display = 'options';
 		$this->initToolbar();
-		$this->content .= $this->initOptions();
-		$this->content .= $this->initForm();
+		$this->content .= $this->renderOptions();
+		$this->content .= $this->renderForm();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
@@ -115,7 +115,7 @@ class AdminDbControllerCore extends AdminController
 		));
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$engines = array();
 		$tab_engines = $this->getEngines();
@@ -158,7 +158,7 @@ class AdminDbControllerCore extends AdminController
 
 		$this->show_toolbar = false;
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/*
@@ -168,7 +168,7 @@ class AdminDbControllerCore extends AdminController
 			For all issues, check the config/settings.inc.php file.');
 
 		$this->initToolbar();
-		$this->content .= $this->initOptions();
+		$this->content .= $this->renderOptions();
 
 		$table_status = $this->getTablesStatus();
 		foreach ($table_status as $key => $table)

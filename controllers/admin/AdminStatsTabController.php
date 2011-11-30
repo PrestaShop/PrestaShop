@@ -43,7 +43,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
-			$this->content .= $this->initView();
+			$this->content .= $this->renderView();
 		}
 		
 		$this->content .= $this->displayMenu();

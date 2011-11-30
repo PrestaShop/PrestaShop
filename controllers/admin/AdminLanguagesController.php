@@ -110,7 +110,7 @@ class AdminLanguagesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -119,10 +119,10 @@ class AdminLanguagesControllerCore extends AdminController
 	 	$this->specificConfirmDelete = $this->l('When you delete a language, ALL RELATED TRANSLATIONS IN THE DATABASE WILL BE DELETED, are you sure you want to delete this language?', __CLASS__, true, false);
 
 		$this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -290,7 +290,7 @@ class AdminLanguagesControllerCore extends AdminController
 
 		$this->addJS(_PS_JS_DIR_.'checkLangPack.js');
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

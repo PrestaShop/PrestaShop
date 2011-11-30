@@ -139,10 +139,10 @@ class AdminStockConfigurationController extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		// if we are managing StockMvtReason
 		if (Tools::isSubmit('addstock_mvt_reason') || Tools::isSubmit('updatestock_mvt_reason'))
@@ -366,14 +366,14 @@ class AdminStockConfigurationController extends AdminController
 				}
 		}
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		/**
 		 * General messages displayed for all lists
@@ -397,7 +397,7 @@ class AdminStockConfigurationController extends AdminController
 		$this->_where = ' AND a.deleted = 0';
 
 		$this->toolbar_title = $this->l('Stock : Stock movements labels');
-		$first_list = parent::initList();
+		$first_list = parent::renderList();
 
 		/**
 		 * Second list
@@ -418,8 +418,8 @@ class AdminStockConfigurationController extends AdminController
 	}
 
 	/*
-	 * Help function for AdminStockConfigurationController::initList()
-	 * @see AdminStockConfigurationController::initList()
+	 * Help function for AdminStockConfigurationController::renderList()
+	 * @see AdminStockConfigurationController::renderList()
 	 */
 	public function initSupplyOrderStatusList()
 	{
@@ -495,7 +495,7 @@ class AdminStockConfigurationController extends AdminController
 			),
 		);
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**

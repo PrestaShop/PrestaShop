@@ -444,7 +444,7 @@ class AdminPerformanceController extends AdminController
 		$this->tpl_form_vars['servers'] = CacheMemcache::getMemcachedServers();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
@@ -457,7 +457,7 @@ class AdminPerformanceController extends AdminController
 		// Activate multiple fieldset
 		$this->multiple_fieldsets = true;
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initContent()
@@ -477,7 +477,7 @@ class AdminPerformanceController extends AdminController
 
 		$this->initToolbar();
 		$this->display = '';
-		$this->content .= $this->initForm();
+		$this->content .= $this->renderForm();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

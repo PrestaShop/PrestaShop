@@ -153,10 +153,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		if (Tools::isSubmit('addsupply_order') ||
 			Tools::isSubmit('updatesupply_order') ||
@@ -295,7 +295,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			//specific discount display
 			$this->object->discount_rate = Tools::ps_round($this->object->discount_rate, 4);
 
-			return parent::initForm();
+			return parent::renderForm();
 		}
 
 	}
@@ -327,10 +327,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
 		$this->displayInformation($this->l('Also, you can create templates that you can later use to generate actual orders.').'<br />');
@@ -368,11 +368,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
 
 		$this->_where = ' AND a.is_template = 0';
+
 		if ($this->getCurrentWarehouse() != -1)
 			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
 		if ($this->getFilterStatus() != 0)
 			$this->_where .= ' AND st.enclosed != 1';
-		$first_list = parent::initList();
+		$first_list = parent::renderList();
 
 		// second list : templates
 		$second_list = null;
@@ -403,7 +404,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'desc' => $this->l('Add new template')
 		);
 		// inits list
-		$second_list = parent::initList();
+		$second_list = parent::renderList();
 
 		return $first_list.$second_list;
 	}
@@ -1396,9 +1397,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	}
 
 	/**
-	 * @see AdminController::initView()
+	 * @see AdminController::renderView()
 	 */
-	public function initView()
+	public function renderView()
 	{
 		$this->show_toolbar = true;
 		$this->toolbar_fix = false;
@@ -1609,7 +1610,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			);
 		}
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	/**

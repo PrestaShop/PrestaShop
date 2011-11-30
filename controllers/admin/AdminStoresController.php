@@ -112,7 +112,7 @@ class AdminStoresControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -127,10 +127,10 @@ class AdminStoresControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'state` st
 				ON (st.`id_state` = a.`id_state`)';
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -292,7 +292,7 @@ class AdminStoresControllerCore extends AdminController
 			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

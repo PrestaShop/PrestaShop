@@ -123,10 +123,10 @@ class AdminLocalizationControllerCore extends AdminController
 		parent::postProcess();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$localizations_pack = false;
-		$this->tpl_option_vars['options_content'] = $this->initOptions();
+		$this->tpl_option_vars['options_content'] = $this->renderOptions();
 
 		$xml_localization = Tools::simplexml_load_file('http://api.prestashop.com/rss/localization.xml');
 		if (!$xml_localization)
@@ -216,19 +216,19 @@ class AdminLocalizationControllerCore extends AdminController
 		);
 
 		$this->show_toolbar = false;
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initContent()
 	{
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
-		$this->content .= $this->initOptions();
+		$this->content .= $this->renderOptions();
 
 		if (!$this->loadObject(true))
 			return;
 
-		$this->content .= $this->initForm();
+		$this->content .= $this->renderForm();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

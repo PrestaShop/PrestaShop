@@ -57,7 +57,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -95,7 +95,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 			'date_to' => date('Y-m-d')
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()
@@ -121,9 +121,9 @@ class AdminDeliverySlipControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->content .= $this->initForm().'<br />';
+		$this->content .= $this->renderForm().'<br />';
 		$this->show_toolbar = false;
-		$this->content .= $this->initOptions();
+		$this->content .= $this->renderOptions();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

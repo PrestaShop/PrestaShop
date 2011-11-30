@@ -117,7 +117,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->toolbar_fix = false;
 		$this->base_tpl_view = 'main.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	/**
@@ -895,7 +895,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function initFormBack($lang)
@@ -1049,7 +1049,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function initFormErrors($lang)
@@ -1105,7 +1105,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_errors.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function initFormFields($lang)
@@ -1170,7 +1170,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	/**
@@ -1520,7 +1520,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_mails.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	protected static function getSubjectMail($directory, $subject_mail)
@@ -1706,7 +1706,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 			$this->initToolbar();
 			$this->base_tpl_view = 'translation_modules.tpl';
-			return parent::initView();
+			return parent::renderView();
 		}
 	}
 
@@ -1806,7 +1806,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	/**

@@ -95,7 +95,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addJqueryPlugin('tagify');
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -113,7 +113,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->tpl_list_vars['categories_tree'] = $categories_tree;
 		$this->tpl_list_vars['categories_name'] = $categories_name;
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
@@ -131,10 +131,10 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$this->initToolbar();
-		return $this->initList();
+		return $this->renderList();
 	}
 
 	public function initToolbar()
@@ -166,7 +166,7 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::initToolbar();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
@@ -315,7 +315,7 @@ class AdminCategoriesControllerCore extends AdminController
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids)));
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

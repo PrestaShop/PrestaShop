@@ -99,14 +99,14 @@ class AdminStatusesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-	 	$list_orders_status = parent::initList();
+	 	$list_orders_status = parent::renderList();
 
 	 	// Added new list
 
@@ -150,7 +150,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->postProcess();
 
 		$this->toolbar_title = $this->l('Return statuses');
-		$list_orders_returns_status = parent::initList();
+		$list_orders_returns_status = parent::renderList();
 
 		return $list_orders_status.$list_orders_returns_status;
 	}
@@ -176,7 +176,7 @@ class AdminStatusesControllerCore extends AdminController
         return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/manufacturers/list_action_edit_adresses.tpl');
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'tinymce' => true,
@@ -314,7 +314,7 @@ class AdminStatusesControllerCore extends AdminController
 			'shipped_on' => $this->getFieldValue($obj, 'shipped')
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initFormStatus()
