@@ -98,7 +98,7 @@
 	<td class="partial_refund_fields" style="text-align:right;background-color:rgb(232, 237, 194);display:none"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</td>
 	{if $can_edit}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
-		{if $order->hasBeenPaid()}
+		{if sizeof($invoices_collection)}
 		<select name="product_invoice" class="edit_product_invoice">
 			{foreach from=$invoices_collection item=invoice}
 			<option value="{$invoice->id}" {if $invoice->id == $product['id_order_invoice']}selected="selected"{/if}>#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>

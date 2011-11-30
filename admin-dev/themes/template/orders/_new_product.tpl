@@ -16,7 +16,7 @@
 	<td style="display:none;" align="center" class="productQuantity" id="add_product_product_stock">0</td>
 	<td style="display:none;" align="center" id="add_product_product_total">{displayPrice price=0 currency=$currency->id}</td>
 	<td style="display:none;" align="center" colspan="2">
-		{if $order->valid}
+		{if sizeof($invoices_collection)}
 		<select name="add_product[invoice]" id="add_product_product_invoice" disabled="disabled">
 			<optgroup label="{l s='Existing'}">
 				{foreach from=$invoices_collection item=invoice}
