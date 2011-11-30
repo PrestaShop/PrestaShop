@@ -295,26 +295,28 @@ class AdminControllerCore extends Controller
 		$tabs = array_reverse($tabs);
 
 		$bread = '';
-			switch ($this->display)
+		switch ($this->display)
 		{
 			case 'edit':
 				$current_tab = array_pop($tabs);
 				$tabs[] = array('name' => sprintf($this->l('Edit %s'), $current_tab['name']));
 				break;
+
 			case 'add':
 				$current_tab = array_pop($tabs);
 				$tabs[] = array('name' => sprintf($this->l('Add %s'), $current_tab['name']));
 				break;
+
 			case 'view':
 				$current_tab = array_pop($tabs);
 				$tabs[] = array('name' => sprintf($this->l('View %s'), $current_tab['name']));
 				break;
 		}
 		// note : this should use a tpl file
-		foreach ($tabs AS $key => $item)
+		foreach ($tabs as $key => $item)
 			$bread .= '<span class="breadcrumb item-'.$key.' ">'.$item['name'].'</span> : ';
 
-		$bread = rtrim($bread,  ': ');
+		$bread = rtrim($bread, ': ');
 
 		$this->toolbar_title = $bread;
 	}
@@ -349,12 +351,12 @@ class AdminControllerCore extends Controller
 	{
 		$this->json = true;
 		$item = Tools::getValue('item');
-		$isoUser = Tools::getValue('isoUser');
+		$iso_user = Tools::getValue('isoUser');
 		$country = Tools::getValue('country');
 		$version = Tools::getValue('version');
 
-		if (isset($item) && isset($isoUser) && isset($country))
-			$this->content = HelpAccess::getHelp($item, $isoUser, $country, $version);
+		if (isset($item) && isset($iso_user) && isset($country))
+			$this->content = HelpAccess::getHelp($item, $iso_user, $country, $version);
 		else
 			$this->content = 'none';
 		$this->display = 'content';
@@ -1555,11 +1557,11 @@ class AdminControllerCore extends Controller
 		// @todo : change AdminTab to Helper
 		if ( isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
-		elseif ( isset($_LANGADM['admincontroller'.$key]))
+		else if ( isset($_LANGADM['admincontroller'.$key]))
 			$str = $_LANGADM['admincontroller'.$key];
-		elseif ( isset($_LANGADM['helper'.$key]))
+		else if ( isset($_LANGADM['helper'.$key]))
 			$str = $_LANGADM['helper'.$key];
-		elseif ( isset($_LANGADM['admintab'.$key]))
+		else if ( isset($_LANGADM['admintab'.$key]))
 			$str = $_LANGADM['admintab'.$key];
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
@@ -2210,11 +2212,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected static function getAssoShop($table, $id_object = false)
 	{
-		$shopAsso = Shop::getAssoTables();
-		$groupShopAsso = GroupShop::getAssoTables();
-		if (isset($shopAsso[$table]) && $shopAsso[$table]['type'] == 'shop')
+		$shop_asso = Shop::getAssoTables();
+		$group_shop_asso = GroupShop::getAssoTables();
+		if (isset($shop_asso[$table]) && $shop_asso[$table]['type'] == 'shop')
 			$type = 'shop';
-		else if (isset($groupShopAsso[$table]) && $groupShopAsso[$table]['type'] == 'group_shop')
+		else if (isset($group_shop_asso[$table]) && $group_shop_asso[$table]['type'] == 'group_shop')
 			$type = 'group_shop';
 		else
 			return;
@@ -2373,25 +2375,43 @@ EOF;
 		$html .= '<div class="assoShop">';
 		$html .= '<table class="table" cellpadding="0" cellspacing="0" width="100%">
 					<tr><th>'.$this->l('Shop').'</th></tr>';
-		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
-		foreach (Shop::getTree() as $groupID => $groupData)
+		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'>
+					<td>
+						<label class="t">
+							<input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'
+						</label>
+					</td>
+				</tr>';
+		foreach (Shop::getTree() as $group_id => $group_data)
 		{
-			$groupChecked = ($type == 'group_shop' && ((isset($assos[$groupID]) && in_array($this->object->id, $assos[$groupID])) || !$this->object->id));
+			$group_checked = ($type == 'group_shop' && ((isset($assos[$group_id]) && in_array($this->object->id, $assos[$group_id])) || !$this->object->id));
 			$html .= '<tr'.(($type == 'shop') ? ' class="alt_row"' : '').'>';
-			$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" /><label class="t"><input class="input_group_shop" type="checkbox" name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->object->id.'_'.$groupID.'" value="'.$groupID.'" '.($groupChecked ? 'checked="checked"' : '').' /> '.$groupData['name'].'</label></td>';
+			$html .= '<td>
+						<img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" />
+						<label class="t">
+							<input class="input_group_shop" type="checkbox" 
+								name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->object->id.'_'.$group_id.'" value="'.$group_id.'" '.
+								($group_checked ? 'checked="checked"' : '').' /> '.
+							$group_data['name'].'
+						</label>
+					</td>';
 			$html .= '</tr>';
 
 			if ($type == 'shop')
 			{
-				$total = count($groupData['shops']);
+				$total = count($group_data['shops']);
 				$j = 0;
-				foreach ($groupData['shops'] as $shopID => $shopData)
+				foreach ($group_data['shops'] as $shop_id => $shop_data)
 				{
-					$checked = ((isset($assos[$shopID]) && in_array($this->object->id, $assos[$shopID])) || !$this->object->id);
+					$checked = ((isset($assos[$shop_id]) && in_array($this->object->id, $assos[$shop_id])) || !$this->object->id);
 					$html .= '<tr>';
-					$html .= '<td><img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" /><label class="child">';
-					$html .= '<input class="input_shop" type="checkbox" value="'.$groupID.'" name="checkBoxShopAsso_'.$this->table.'_'.$this->object->id.'_'.$shopID.'" id="checkedBox_'.$shopID.'" '.($checked ? 'checked="checked"' : '').' /> ';
-					$html .= $shopData['name'].'</label></td>';
+					$html .= '<td>
+								<img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" />
+								<label class="child">';
+					$html .= '<input class="input_shop" type="checkbox" value="'.$group_id.'" 
+									name="checkBoxShopAsso_'.$this->table.'_'.$this->object->id.'_'.$shop_id.'" id="checkedBox_'.$shop_id.'" '.
+									($checked ? 'checked="checked"' : '').' /> ';
+					$html .= $shop_data['name'].'</label></td>';
 					$html .= '</tr>';
 					$j++;
 				}
@@ -2529,9 +2549,11 @@ EOF;
 			'.$this->l('Choose language:').'<br /><br />';
 		foreach ($languages as $language)
 			if ($use_vars_instead_of_ids)
-				$output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
+				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" 
+								onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
 			else
-			$output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', \''.$ids.'\', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
+				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" 
+								onclick="changeLanguage(\''.$id.'\', \''.$ids.'\', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
 		$output .= '</div>';
 
 		if ($return)
