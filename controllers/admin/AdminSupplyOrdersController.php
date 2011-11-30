@@ -97,10 +97,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'havingFilter' => true,
 				'filter_key' => 'a!date_delivery_expected'
 			),
-			'id_pdf' => array(
-				'title' => $this->l('PDF'),
+			'id_export' => array(
+				'title' => $this->l('Export'),
 				'width' => 80,
-				'callback' => 'printPDFIcons',
+				'callback' => 'printExportIcons',
 				'orderby' => false,
 				'search' => false
 			),
@@ -356,7 +356,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			st.receipt_state,
 			st.pending_receipt,
 			st.color AS color,
-			a.id_supply_order as id_pdf';
+			a.id_supply_order as id_export';
 
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'supply_order_state_lang` stl ON
 						(
@@ -1619,7 +1619,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 * @param string $tr
 	 * @return string $content
 	 */
-	public function printPDFIcons($id_supply_order, $tr)
+	public function printExportIcons($id_supply_order, $tr)
 	{
 		$supply_order = new SupplyOrder((int)$id_supply_order);
 
@@ -1636,6 +1636,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		else
 			$content .= '-';
 		$content .= '</span>';
+
+		$content .= '<span style="width:20px">';
+		if ($supply_order_state->enclosed == true && $supply_order_state->receipt_state == true)
+			$content .= '<a href="csv.php?id_supply_order='.(int)$supply_order->id.'"><img src="../img/admin/excel_file.png" alt="csv" /></a>';
+		else
+			$content .= '-';
+		$content .= '</span>';
+
 
 		return $content;
 	}
@@ -1713,7 +1721,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::getValue('id_supply_order'))
 			$supply_order->resetProducts();
 
-		// gets products which quantity is less or equal than $threshold
+		// gets products
 		$query = new DbQuery();
 		$query->select('s.id_product,
 					    s.id_product_attribute,
@@ -1732,6 +1740,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 							AND
 							ps.id_supplier = '.(int)$supply_order->id_supplier.'
 						   )');
+		$query->innerJoin('warehouse_product_location wpl ON
+						   (
+						   	wpl.id_product = s.id_product
+							AND
+							wpl.id_product_attribute = s.id_product_attribute
+							AND
+							wpl.id_warehouse = '.(int)$supply_order->id_warehouse.'
+						   )');
 		$query->leftJoin('product p ON (p.id_product = s.id_product)');
 		$query->leftJoin('product_attribute pa ON
 						  (
@@ -1739,7 +1755,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						  	AND
 						  	p.id_product = s.id_product
 						  )');
-		$query->where('s.physical_quantity <= '.(int)$threshold);
 
 		// gets items
 		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -1749,28 +1764,31 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (!Validate::isLoadedObject($order_currency))
 			return;
 
+		$manager = StockManagerFactory::getManager();
 		foreach ($items as $item)
 		{
-			// loads product currency
-			$product_currency = new Currency($item['id_currency']);
-			if (!Validate::isLoadedObject($order_currency))
-				continue;
-
-			// sets supply_order_detail
-			$supply_order_detail = new SupplyOrderDetail();
-			$supply_order_detail->id_supply_order = $supply_order->id;
-			$supply_order_detail->id_currency = $order_currency->id;
-			$supply_order_detail->id_product = $item['id_product'];
-			$supply_order_detail->id_product_attribute = $item['id_product_attribute'];
-			$supply_order_detail->reference = $item['reference'];
-			$supply_order_detail->supplier_reference = $item['supplier_reference'];
-			$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
-			$supply_order_detail->ean13 = $item['ean13'];
-			$supply_order_detail->upc = $item['upc'];
-			$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
-			$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $order_currency, $product_currency);
-			$supply_order_detail->quantity_expected = (int)$threshold;
-			$supply_order_detail->save();
+			if ($manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true) < $threshold)
+			{
+				$product_currency = new Currency($item['id_currency']);
+				if (!Validate::isLoadedObject($order_currency))
+				{
+					// sets supply_order_detail
+					$supply_order_detail = new SupplyOrderDetail();
+					$supply_order_detail->id_supply_order = $supply_order->id;
+					$supply_order_detail->id_currency = $order_currency->id;
+					$supply_order_detail->id_product = $item['id_product'];
+					$supply_order_detail->id_product_attribute = $item['id_product_attribute'];
+					$supply_order_detail->reference = $item['reference'];
+					$supply_order_detail->supplier_reference = $item['supplier_reference'];
+					$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
+					$supply_order_detail->ean13 = $item['ean13'];
+					$supply_order_detail->upc = $item['upc'];
+					$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
+					$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $order_currency, $product_currency);
+					$supply_order_detail->quantity_expected = (int)$threshold;
+					$supply_order_detail->save();
+				}
+			}
 		}
 	}
 
