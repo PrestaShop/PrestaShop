@@ -68,7 +68,7 @@ class AdminGroupsController extends AdminController
 		$this->addJqueryUi('ui.sortable');
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$this->context = Context::getContext();
 		if (!($group = $this->loadObject(true)))
@@ -80,7 +80,7 @@ class AdminGroupsController extends AdminController
 			'categorieReductions' => $this->formatCategoryDiscountList($group->id)
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	protected function initCustomersList($group)
@@ -116,7 +116,7 @@ class AdminGroupsController extends AdminController
 		return $helper->generateList($customer_list, $customer_fields_display);
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		if (!($group = $this->loadObject(true)))
 			return;
@@ -194,7 +194,7 @@ class AdminGroupsController extends AdminController
 		);
 		$this->tpl_form_vars['categoryTreeView'] = Helper::renderAdminCategorieTree($trads, array(), 'id_category', true);
 
-		return parent::initForm();
+		return parent::renderForm();
 
 	}
 

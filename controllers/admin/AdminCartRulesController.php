@@ -268,7 +268,7 @@ class AdminCartRulesControllerCore extends AdminController
 		return $productRulesArray;
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$back = Tools::safeOutput(Tools::getValue('back', ''));
 		if (empty($back))
@@ -339,7 +339,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->content .= Context::getContext()->smarty->fetch('cart_rules/form.tpl');
 
 		$this->addJqueryUI('ui.datepicker');
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function displayAjaxSearchCartRuleVouchers()

@@ -58,17 +58,17 @@ class AdminZonesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -123,7 +123,7 @@ class AdminZonesControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 }
 

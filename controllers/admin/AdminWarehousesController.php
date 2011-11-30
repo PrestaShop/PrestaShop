@@ -76,10 +76,10 @@ class AdminWarehousesControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		// Checks access
 		if (!($this->tabAccess['add'] === '1'))
@@ -117,14 +117,14 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation,
 											the number of products and quantities stored.'));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		// loads current warehouse
 		if (!($obj = $this->loadObject(true)))
@@ -361,7 +361,7 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->fields_value['ids_shops[]'] = $ids_shop;
 		$this->fields_value['ids_carriers[]'] = $carriers;
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/**
@@ -444,9 +444,9 @@ class AdminWarehousesControllerCore extends AdminController
 	}
 
 	/**
-	 * @see AdminController::initView()
+	 * @see AdminController::renderView()
 	 */
-	public function initView()
+	public function renderView()
 	{
 		$this->displayInformation($this->l('This interface allows you to display detailed informations on your warehouse.').'<br />');
 
@@ -460,7 +460,7 @@ class AdminWarehousesControllerCore extends AdminController
 		if (!Validate::isLoadedObject($warehouse) ||
 			!Validate::isLoadedObject($employee) ||
 			!Validate::isLoadedObject($currency))
-			return parent::initView();
+			return parent::renderView();
 
 		$this->tpl_view_vars = array(
 			'warehouse' => $warehouse,
@@ -473,6 +473,6 @@ class AdminWarehousesControllerCore extends AdminController
 			'warehouse_quantities' => $warehouse->getQuantitiesofProducts(),
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 }

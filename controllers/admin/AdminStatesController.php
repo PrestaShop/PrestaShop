@@ -79,15 +79,15 @@ class AdminStatesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->_select = 'z.`name` AS zone';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
 
-	 	return parent::initList();
+	 	return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -168,7 +168,7 @@ class AdminStatesControllerCore extends AdminController
 			)
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

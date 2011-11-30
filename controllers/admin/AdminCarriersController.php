@@ -147,7 +147,7 @@ class AdminCarriersControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->displayInformation(
 			'&nbsp;<b>'.$this->l('How to create a new carrier?').'</b>
@@ -178,10 +178,10 @@ class AdminCarriersControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier';
 		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -442,7 +442,7 @@ class AdminCarriersControllerCore extends AdminController
 
 		$this->getFieldsValues($obj);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

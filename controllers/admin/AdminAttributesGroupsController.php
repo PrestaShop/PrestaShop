@@ -57,10 +57,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -68,7 +68,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**
@@ -154,10 +154,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		$group_type = array(
 			array(
@@ -232,7 +232,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initFormAttributes()
@@ -341,7 +341,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'imageTextureUrl' => Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteImage=1'
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/**
@@ -377,7 +377,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			if (!($this->object = $this->loadObject(true)))
 				return;
-			$this->content .= $this->initForm();
+			$this->content .= $this->renderForm();
 		}
 		else if ($this->display == 'editAttributes')
 		{
@@ -388,8 +388,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		else if ($this->display != 'view' && !$this->ajax)
 		{
-			$this->content .= $this->initList();
-			$this->content .= $this->initOptions();
+			$this->content .= $this->renderList();
+			$this->content .= $this->renderOptions();
 		}
 
 		$this->context->smarty->assign(array(

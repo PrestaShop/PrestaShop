@@ -129,11 +129,11 @@ class AdminGeolocationControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function initOptions()
+	public function renderOptions()
 	{
 		$this->tpl_option_vars = array('allowed_countries' => explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')));
 
-		return parent::initOptions();
+		return parent::renderOptions();
 	}
 
 	public function initContent()

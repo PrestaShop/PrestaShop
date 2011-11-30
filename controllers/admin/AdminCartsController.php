@@ -99,7 +99,7 @@ class AdminCartsController extends AdminController
 		parent::__construct();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		if (!($cart = $this->loadObject(true)))
 			return;
@@ -178,7 +178,7 @@ class AdminCartsController extends AdminController
 			'customized_datas' => $customized_datas
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function ajaxPreProcess()

@@ -116,7 +116,7 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::initContent();
 	}
 
-	public function initView()
+	public function renderView()
 	{	
 		// link to modules page
 		if (isset($this->payment_modules[0]))
@@ -192,7 +192,7 @@ class AdminPaymentControllerCore extends AdminController
 
 		$this->toolbar_title = $this->l('Paiement');
 		unset($this->toolbar_btn['cancel']);
-		return parent::initView();
+		return parent::renderView();
 	}
 }
 

@@ -144,10 +144,10 @@ class AdminStockCoverControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('details');
 
@@ -172,7 +172,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
 					  						this interface gives you an idea of when one product will run out of stock.'));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**

@@ -115,7 +115,7 @@ class AdminTaxesControllerCore extends AdminController
 		return $tpl_enable->fetch();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -180,7 +180,7 @@ class AdminTaxesControllerCore extends AdminController
 			)
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

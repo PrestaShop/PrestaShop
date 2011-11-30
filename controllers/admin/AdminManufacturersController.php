@@ -115,7 +115,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 	 	$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
 
-		$this->content .= parent::initList();
+		$this->content .= parent::renderList();
 	}
 
 	public function initListManufacturerAddresses()
@@ -200,11 +200,11 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->postProcess();
 
 		$this->initToolbar();
-		$this->content .= parent::initList();
+		$this->content .= parent::renderList();
 
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->initListManufacturer();
 		$this->initListManufacturerAddresses();
@@ -231,7 +231,7 @@ class AdminManufacturersControllerCore extends AdminController
         return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'tinymce' => true,
@@ -359,7 +359,7 @@ class AdminManufacturersControllerCore extends AdminController
 			)), ENT_COMPAT, 'UTF-8');
 		}
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initFormAddress()
@@ -562,7 +562,7 @@ class AdminManufacturersControllerCore extends AdminController
 		}
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		if (!($manufacturer = $this->loadObject()))
 			return;
@@ -610,7 +610,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function initContent()
@@ -623,19 +623,19 @@ class AdminManufacturersControllerCore extends AdminController
 		{
 			if (!$this->loadObject(true))
 				return;
-			$this->content .= $this->initForm();
+			$this->content .= $this->renderForm();
 		}
 		else if ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
-			$this->content .= $this->initView();
+			$this->content .= $this->renderView();
 		}
 		else if (!$this->ajax)
 		{
-			$this->content .= $this->initList();
-			$this->content .= $this->initOptions();
+			$this->content .= $this->renderList();
+			$this->content .= $this->renderOptions();
 		}
 
 		$this->context->smarty->assign(array(

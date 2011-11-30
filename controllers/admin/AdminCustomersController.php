@@ -182,7 +182,7 @@ class AdminCustomersControllerCore extends AdminController
 				$this->action = 'select_delete';
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->_select = '(YEAR(CURRENT_DATE)-YEAR(`birthday`)) - (RIGHT(CURRENT_DATE, 5) < RIGHT(birthday, 5)) AS `age`, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
@@ -192,10 +192,10 @@ class AdminCustomersControllerCore extends AdminController
 			LIMIT 1
 		) as connect';
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -395,10 +395,10 @@ class AdminCustomersControllerCore extends AdminController
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], in_array($group['id_group'], $customer_groups_ids));
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		if (!($customer = $this->loadObject()))
 			return;
@@ -577,7 +577,7 @@ class AdminCustomersControllerCore extends AdminController
 			'show_toolbar' => true
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function processDelete($token)

@@ -87,7 +87,7 @@ class AdminShopUrlControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 		$this->addRowActionSkipList('delete', array(1));
@@ -98,10 +98,10 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->_select = 's.name AS shop_name, CONCAT(a.physical_uri, a.virtual_uri) AS uri';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 
-	 	return parent::initList();
+	 	return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -232,7 +232,7 @@ class AdminShopUrlControllerCore extends AdminController
 			'physical_uri' => Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

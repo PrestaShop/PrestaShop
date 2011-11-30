@@ -96,16 +96,16 @@ class AdminEmployeesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
  		$this->_select = 'pl.`name` AS profile';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '.(int)$this->context->language->id.')';
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -262,7 +262,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$this->fields_value['passwd'] = false;
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	protected function _childValidation()

@@ -141,7 +141,7 @@ class AdminReferrersControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		// Display list Referrers:
 		$this->addRowAction('view');
@@ -166,10 +166,10 @@ class AdminReferrersControllerCore extends AdminController
 			'settings_form' => $this->displaySettings()
 		);
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$uri = Tools::getHttpHost(true, true).__PS_BASE_URI__;
 
@@ -342,7 +342,7 @@ class AdminReferrersControllerCore extends AdminController
 
 		$this->tpl_form_vars = array('uri' => $uri);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function displayCalendar($action = null, $table = null, $identifier = null, $id = null)
@@ -397,7 +397,7 @@ class AdminReferrersControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$referrer = new Referrer((int)Tools::getValue('id_referrer'));
 
@@ -424,7 +424,7 @@ class AdminReferrersControllerCore extends AdminController
 			'id_lang' => (int)$this->context->language->id
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 }
 

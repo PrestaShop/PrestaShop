@@ -98,10 +98,10 @@ class AdminStockInstantStateControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		// query
 		$this->_select = '
@@ -130,7 +130,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		// displays help information
 		$this->displayInformation($this->l('This interface allows you to display detailed informations on your stock, per warehouse.'));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**

@@ -66,7 +66,7 @@ class AdminGroupShopControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -207,7 +207,7 @@ class AdminGroupShopControllerCore extends AdminController
 		if (isset($this->fields_import_form))
 			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

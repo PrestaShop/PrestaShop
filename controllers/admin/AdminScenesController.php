@@ -99,7 +99,7 @@ class AdminScenesControllerCore extends AdminController
 		return true;
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->initFieldsForm();
 		$content = '';
@@ -113,7 +113,7 @@ class AdminScenesControllerCore extends AdminController
 		$products = $obj->getProducts(true, $this->context->language->id, false, $this->context);
 		$this->tpl_form_vars['products'] = $obj->getProducts(true, $this->context->language->id, false, $this->context);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initFieldsForm()

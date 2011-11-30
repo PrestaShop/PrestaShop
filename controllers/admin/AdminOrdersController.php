@@ -83,9 +83,9 @@ class AdminOrdersControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
-		parent::initForm();
+		parent::renderForm();
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
 		$cart = new Cart((int)Tools::getValue('id_cart'));
 		$this->context->smarty->assign(array(
@@ -679,7 +679,7 @@ class AdminOrdersControllerCore extends AdminController
 		parent::postProcess();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$order = new Order(Tools::getValue('id_order'));
 		if (!Validate::isLoadedObject($order))
@@ -759,7 +759,7 @@ class AdminOrdersControllerCore extends AdminController
 			'HOOK_ADMIN_ORDER' => Hook::exec('adminOrder', array('id_order' => $order->id))
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function ajaxProcessSearchCustomers()

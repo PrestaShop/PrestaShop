@@ -50,7 +50,7 @@ class AdminRangePriceControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$currency = $this->context->currency;
 		$carriers = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
@@ -103,7 +103,7 @@ class AdminRangePriceControllerCore extends AdminController
 			)
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)

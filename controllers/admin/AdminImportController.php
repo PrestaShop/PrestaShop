@@ -343,7 +343,7 @@ class AdminImportController extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		if (!is_writable(_PS_ADMIN_DIR_.'/import/'))
 			$this->displayWarning($this->l('directory import on admin directory must be writable (CHMOD 755 / 777)'));
@@ -380,10 +380,10 @@ class AdminImportController extends AdminController
 			'available_fields' => $this->getAvailableFields()
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$this->addJS(_PS_JS_DIR_.'adminImport.js');
 
@@ -421,7 +421,7 @@ class AdminImportController extends AdminController
 			'data' => $data
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function initToolbar()
@@ -500,9 +500,9 @@ class AdminImportController extends AdminController
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		if ($this->display == 'import')
-			$this->content .= $this->initView();
+			$this->content .= $this->renderView();
 		else
-			$this->content .= $this->initForm();
+			$this->content .= $this->renderForm();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

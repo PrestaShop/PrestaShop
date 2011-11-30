@@ -100,7 +100,7 @@ class AdminMetaControllerCore extends AdminController
 		);
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
 		$pages = array();
@@ -172,7 +172,7 @@ class AdminMetaControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

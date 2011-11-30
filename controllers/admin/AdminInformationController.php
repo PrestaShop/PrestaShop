@@ -33,7 +33,7 @@ class AdminInformationControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$this->tpl_view_vars = array(
 			'version' => array(
@@ -62,7 +62,7 @@ class AdminInformationControllerCore extends AdminController
 
 		$this->toolbar_title = $this->l('Tools : Informations');
 		unset($this->toolbar_btn['cancel']);
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	/**

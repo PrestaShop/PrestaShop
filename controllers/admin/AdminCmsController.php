@@ -58,7 +58,7 @@ class AdminCmsControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->display = 'edit';
 		$this->toolbar_btn['save-and-preview'] = array(
@@ -170,10 +170,10 @@ class AdminCmsControllerCore extends AdminController
 			'active' => $this->object->active
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->toolbar_title = $this->l('Pages in this category');
 		$this->toolbar_btn['new'] = array(
@@ -181,7 +181,7 @@ class AdminCmsControllerCore extends AdminController
 			'desc' => $this->l('Add new')
 		);
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	public function displayList($token = NULL)

@@ -72,10 +72,10 @@ class AdminTabsControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		$tabs = Tab::getTabs($this->context->language->id, 0);
 
@@ -144,14 +144,14 @@ class AdminTabsControllerCore extends AdminController
 			)
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -160,7 +160,7 @@ class AdminTabsControllerCore extends AdminController
 		$this->_where = 'AND a.`id_parent` = 0';
 		$this->_orderBy = 'position';
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**

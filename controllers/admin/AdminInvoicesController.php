@@ -113,7 +113,7 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->tpl_form_vars = array('style' => 'float:left;');
 		$this->table = 'invoice_date';
 		$this->toolbar_title = $this->l('Print PDF invoices');
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initFormByStatus()
@@ -167,7 +167,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->table = 'invoice_status';
 		$this->show_toolbar = false;
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initContent()
@@ -177,7 +177,7 @@ class AdminInvoicesControllerCore extends AdminController
 		$this->content .= $this->initFormByDate();
 		$this->content .= $this->initFormByStatus();
 		$this->table = 'invoice';
-		$this->content .= $this->initOptions();
+		$this->content .= $this->renderOptions();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

@@ -62,14 +62,14 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	public function initRulesList($id_group)
@@ -130,10 +130,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->show_toolbar = false;
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -182,7 +182,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		if (!isset($obj->id))
 		{
 			$this->no_back = false;
-			$content = parent::initForm();
+			$content = parent::renderForm();
 		}
 		else
 		{
@@ -191,7 +191,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'href' => '#',
 				'desc' => $this->l('Add new tax rule')
 			);
-			$content = parent::initForm();
+			$content = parent::renderForm();
 			$this->tpl_folder = 'tax_rules/';
 			$content .= $this->initRuleForm();
 

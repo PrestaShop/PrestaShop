@@ -41,10 +41,10 @@ class AdminAccessController extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		$current_profile = (int)$this->getCurrentProfileId();
 		$profiles = Profile::getProfiles($this->context->language->id);
@@ -83,7 +83,7 @@ class AdminAccessController extends AdminController
 			'link' => $this->context->link
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/**
@@ -101,7 +101,7 @@ class AdminAccessController extends AdminController
 		if (!$this->loadObject(true))
 			return;
 
-		$this->content .= $this->initForm();
+		$this->content .= $this->renderForm();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
