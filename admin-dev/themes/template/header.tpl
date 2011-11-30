@@ -83,7 +83,7 @@
 			{$HOOK_HEADER}
 		{/if}
 		<!--[if IE]>
-		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin-ie.css" />
+		<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
 		<![endif]-->
 		<style type="text/css">
 			div#header_infos, div#header_infos a#header_shopname, div#header_infos a#header_logout, div#header_infos a#header_foaccess {

@@ -51,13 +51,13 @@ function getPush(refresh)
 		if (data)
 		{
 			json = jQuery.parseJSON(data);
-			
+
 			// Add orders notifications to the list
 			html = "";
 			nb_notifs = 0;
 			$.each(json.order, function(property, value) {
 				html += "<li>" + new_order_msg + "<br />" + order_number_msg + "<strong>#" + parseInt(value.id_order) + "</strong><br />" + total_msg + "<strong>" + value.total_paid_real + "</strong><br />" + from_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_order_msg + "</a></li>";
-			});						
+			});
 			if (html != "")
 			{
 				$("#list_orders_notif").prev("p").hide();
@@ -69,7 +69,7 @@ function getPush(refresh)
 			else
 			{
 				$("#orders_notif_number_wrapper").hide();
-			}	
+			}
 			
 			// Add customers notifications to the list
 			html = "";
@@ -89,16 +89,16 @@ function getPush(refresh)
 			{
 				$("#customers_notif_number_wrapper").hide();
 			}
-			
+
 			// Add messages notifications to the list
 			html = "";
 			nb_notifs = 0;
 			$.each(json.message, function(property, value) {
-				html += "<li>" + new_msg + "<br />" + from_msg + "<strong>" + value.customer_name + "</strong><br />" + excerpt_msg + "<strong>" + value.message_customer + "</strong><br /><a href=\"index.php?tab=AdminOrders&token='.Tools::getAdminTokenLite('AdminOrders').'&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_msg + "</a></li>";
+				html += "<li>" + new_msg + "<br />" + from_msg + "<strong>" + value.customer_name + "</strong><br />" + excerpt_msg + "<strong>" + value.message_customer + "</strong><br /><a href=\"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_msg + "</a></li>";
 			});
 			if (html != "")
 			{
-				$("#list_messages_notif").prev("p").hide();	
+				$("#list_messages_notif").prev("p").hide();
 				$("#list_messages_notif").empty().append(html);
 				nb_notifs = $("#list_messages_notif li").length;
 				$("#messages_notif_value").text(nb_notifs);
@@ -113,4 +113,3 @@ function getPush(refresh)
 			setTimeout("getPush(1)",60000);
 	});
 }
-
