@@ -634,13 +634,13 @@ class AdminOrdersControllerCore extends AdminController
 						$payment->amount = Tools::convertPriceFull((float)$payment->amount, $old_currency, $currency);
 						$payment->update();
 					}
-					
+
 					$order_carrier = Db::getInstance()->getRow('
 						SELECT *
 						FROM `'._DB_PREFIX_.'order_carrier`
 						WHERE `id_order` = '.(int)$order->id);
-					
-					// Update order carrier amount					
+
+					// Update order carrier amount
 					Db::getInstance()->execute('
 						UPDATE `'._DB_PREFIX_.'order_carrier`
 						SET `shipping_cost_tax_excl` = '.(float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_excl'], $old_currency, $currency).',
@@ -674,6 +674,20 @@ class AdminOrdersControllerCore extends AdminController
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		elseif (Tools::isSubmit('submitGenerateInvoice'))
+		{
+			$order = new Order(Tools::getValue('id_order'));
+			if (!Validate::isLoadedObject($order))
+				throw new PrestashopException('Order can\'t be loaded');
+
+			if ($order->hasInvoice())
+				$this->_errors[] = Tools::displayError('This order has already invoice');
+			else
+			{
+				$order->setInvoice();
+				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+			}
 		}
 
 		parent::postProcess();

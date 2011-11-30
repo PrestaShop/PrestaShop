@@ -225,7 +225,7 @@ class OrderInvoiceCore extends ObjectModel
 
 		if ($row['reduction_amount'] != 0)
 		{
-			if ($this->_taxCalculationMethod == PS_TAX_EXC)
+			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
 				$row['product_price'] = ($row['product_price'] - ($tax_calculator->removeTaxes($row['reduction_amount'])));
 			else
 				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['reduction_amount']), 2);
@@ -233,7 +233,7 @@ class OrderInvoiceCore extends ObjectModel
 
 		if ($row['group_reduction'] > 0)
 		{
-			if ($this->_taxCalculationMethod == PS_TAX_EXC)
+			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
 				$row['product_price'] = $row['product_price'] * $group_reduction;
 			else
 				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2);
