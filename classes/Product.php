@@ -943,21 +943,7 @@ class ProductCore extends ObjectModel
 		if (!$id_product_attribute)
 			return false;
 
-		//Try to set available quantitiy if product quantity not depend on stock
-		$depends_on_stock = StockAvailable::dependsOnStock($this->id);
-
-		if (!$depends_on_stock)
-			if (!StockAvailable::updateQuantity($this->id, $id_product_attribute, $quantity))
-			{
-				$stock_available = new StockAvailable();
-				$stock_available->id_product = (int)$this->id;
-				$stock_available->id_product_attribute = (int)$id_product_attribute;
-				$stock_available->id_shop = (int)$context->shop->getID();
-				$stock_available->quantity = (int)$quantity;
-				$stock_available->out_of_stock = StockAvailable::outOfStock($this->id);
-				$stock_available->depends_on_stock = 0;
-				$stock_available->save();
-			}
+		StockAvailable::setQuantity($this->id, $id_product_attribute, $quantity);
 
 		//Try to set the default supplier reference
 		if ($this->id_supplier > 0 && $supplier_reference != null)

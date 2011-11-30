@@ -2040,12 +2040,29 @@ class AdminProductsControllerCore extends AdminController
 							Tools::isSubmit('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
 							&&
 							Tools::isSubmit('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
-						)
-					)
+						))
 					{
-						$reference = pSQL(Tools::getValue('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, ''));
-						$price = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, 0));
-						$id_currency = (int)Tools::getValue('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier, 0);
+						$reference = pSQL(
+							Tools::getValue(
+								'supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
+								''
+							)
+						);
+
+						$price = (float)str_replace(
+							array(' ', ','),
+							array('', '.'),
+							Tools::getValue(
+								'product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
+								0
+							)
+						);
+
+						$id_currency = (int)Tools::getValue(
+							'product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
+							0
+						);
+
 						if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
 							$this->_errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
@@ -2070,13 +2087,11 @@ class AdminProductsControllerCore extends AdminController
 								//update existing record
 								$product_supplier_entity = new ProductSupplier($existing_id);
 
-								if (
-									($product_supplier_entity->product_supplier_reference != $reference)
+								if (($product_supplier_entity->product_supplier_reference != $reference)
 									||
 									($product_supplier_entity->product_supplier_price_te != $price)
 									||
-									($product_supplier_entity->id_currency != $id_currency)
-								)
+									($product_supplier_entity->id_currency != $id_currency))
 								{
 									$product_supplier_entity->product_supplier_reference = $reference;
 									$product_supplier_entity->id_currency = $id_currency;
@@ -3172,7 +3187,31 @@ class AdminProductsControllerCore extends AdminController
 																														$attribute['id_product_attribute']);
 
 				// Get all product designation
-				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+				$product_designation[$attribute['id_product_attribute']] = rtrim(
+					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
+					' - '
+				);
+			}
+
+			$show_quantities = true;
+			$shop_context = $this->context->shop();
+			$group_shop = $this->context->shop->getGroup();
+
+			// if we are in all shops context, it's not possible to manage quantities at this level
+			if ($shop_context == Shop::CONTEXT_ALL)
+				$show_quantities = false;
+			// if we are in group shop context
+			else if ($shop_context == Shop::CONTEXT_GROUP)
+			{
+				// if quantities are not shared between shops of the group, it's not possible to manage them at group level
+				if (!$group_shop->share_stock)
+					$show_quantities = false;
+			}
+			// if we are in shop context
+			else {
+				// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
+				if ($group_shop->share_stock)
+					$show_quantities = false;
 			}
 
 			$data->assign(array(
@@ -3181,6 +3220,7 @@ class AdminProductsControllerCore extends AdminController
 				'stock_management_active' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 				'product_designation' => $product_designation,
 				'product' => $this->object,
+				'show_quantities' => $show_quantities,
 				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 				'token' => $this->token
 			));
@@ -3209,7 +3249,10 @@ class AdminProductsControllerCore extends AdminController
 			$product_designation = array();
 
 			foreach ($attributes as $attribute)
-				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+				$product_designation[$attribute['id_product_attribute']] = rtrim(
+					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
+					' - '
+				);
 
 			// Get all available suppliers
 			$suppliers = Supplier::getSuppliers();
@@ -3277,7 +3320,10 @@ class AdminProductsControllerCore extends AdminController
 			$product_designation = array();
 
 			foreach ($attributes as $attribute)
-				$product_designation[$attribute['id_product_attribute']] = rtrim($obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'], ' - ');
+				$product_designation[$attribute['id_product_attribute']] = rtrim(
+					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
+					' - '
+				);
 
 			// Get all available warehouses
 			$warehouses = Warehouse::getWarehouses(true);
@@ -3346,11 +3392,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessProductQuantity()
 	{
-		if(!Tools::getValue('actionQty'))
+		if (!Tools::getValue('actionQty'))
 			return Tools::jsonEncode(array('error' => 'Undefined action'));
 
-		$product = new Product((int)(Tools::getValue('id_product')));
-		switch(Tools::getValue('actionQty'))
+		$product = new Product((int)Tools::getValue('id_product'));
+		switch (Tools::getValue('actionQty'))
 		{
 			case 'depends_on_stock':
 				if (Tools::getValue('value') === false)
@@ -3375,16 +3421,10 @@ class AdminProductsControllerCore extends AdminController
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if (Tools::getValue('id_product_attribute') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
-				// @todo : Product class should handle that
-				$stock_available = new StockAvailable(StockAvailable::getStockAvailableIdByProductId($product->id, (int)Tools::getValue('id_product_attribute')));
-				if (!$stock_available->id)
-				{
-					$stock_available->id_product = $product->id;
-					$stock_available->id_shop = Context::getContext()->shop->getID(true);
-					$stock_available->id_product_attribute = Tools::getValue('id_product_attribute');
-				}
-				$stock_available->quantity = (int)Tools::getValue('value');
-				$stock_available->save();
+
+				$id_shop = (int)Context::getContext()->shop->getID(true);
+
+				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'), $id_shop);
 				break;
 		}
 		die(Tools::jsonEncode(array('error' => false)));
