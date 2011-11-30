@@ -60,7 +60,7 @@ class AdminGendersController extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 150,
+				'width' => 'auto',
 				'filter_key' => 'b!name'
 			),
 			'type' => array(
@@ -82,7 +82,8 @@ class AdminGendersController extends AdminController
 				'align' => 'center',
 				'image' => 'genders',
 				'orderby' => false,
-				'search' => false
+				'search' => false,
+				'width' => 40
 			)
 		);
 
