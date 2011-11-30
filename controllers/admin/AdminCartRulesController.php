@@ -274,9 +274,9 @@ class AdminCartRulesControllerCore extends AdminController
 		if (empty($back))
 			$back = self::$currentIndex.'&token='.$this->token;
 
-		$this->toolbar_btn['cancel'] = array(
-			'href' => $back,
-			'desc' => $this->l('Cancel')
+		$this->toolbar_btn['save-and-stay'] = array(
+			'href' => '#',
+			'desc' => $this->l('Save and Stay')
 		);
 
 		// Todo: change for "Media" version
@@ -312,6 +312,7 @@ class AdminCartRulesControllerCore extends AdminController
 			array(
 				'show_toolbar' => true,
 				'toolbar_btn' => $this->toolbar_btn,
+				'toolbar_fix' => $this->toolbar_fix,
 				'title' => $this->l('Payment : Cart Rules '),
 				'languages' => Language::getLanguages(),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),

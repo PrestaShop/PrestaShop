@@ -242,7 +242,8 @@ class CategoryCore extends ObjectModel
 			$id_lang = _USER_ID_LANG_;
 
 		$children = array();
-		if (($max_depth == 0 || $current_depth < $max_depth) && $subcats = $this->getSubCategories($id_lang, true) && count($subcats))
+		$subcats = $this->getSubCategories($id_lang, true);
+		if (($max_depth == 0 || $current_depth < $max_depth) && $subcats && count($subcats))
 			foreach ($subcats as &$subcat)
 			{
 				if (!$subcat['id_category'])

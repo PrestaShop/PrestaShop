@@ -1,3 +1,19 @@
+{if $show_toolbar}
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+				<div class="pageTitle">
+				<h3>
+					{block name=pageTitle}
+						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+					{/block}
+				</h3>
+				</div>
+		</div>
+	</div>
+	<div class="leadin">{block name="leadin"}{/block}</div>
+{/if}
+
 <div>
  	<div class="productTabs">
 		<ul class="tab">
@@ -33,8 +49,8 @@
 	</div>
 	<div class="separation"></div>
 	<div style="text-align:center">
-		<input type="submit" value="{l s='Save'}" class="button" name="submitAddcart_rule" />
-		<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" />
+		<input type="submit" value="{l s='Save'}" class="button" name="submitAddcart_rule" id="{$table}_form_submit_btn" />
+		<!--<input type="submit" value="{l s='Save and stay'}" class="button" name="submitAddcart_ruleAndStay" id="" />-->
 	</div>
 </form>
 <script type="text/javascript">
