@@ -344,7 +344,7 @@ class OrderCore extends ObjectModel
 		$cart->update();
 
 		/* Update order */
-		$shippingDiff = $this->total_shipping - $cart->getOrderShippingCost();
+		$shippingDiff = $this->total_shipping - $cart->getPackageShippingCost();
 		$this->total_products -= $productPriceWithoutTax;
 
 		// After upgrading from old version

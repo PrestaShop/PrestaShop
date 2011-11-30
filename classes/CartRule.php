@@ -174,12 +174,12 @@ class CartRuleCore extends ObjectModel
 		INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`)
 		(SELECT '.(int)$id_cart_rule_destination.', IF(id_cart_rule_1 != '.(int)$id_cart_rule_source.', id_cart_rule_1, id_cart_rule_2) FROM `'._DB_PREFIX_.'cart_rule_combination`
 		WHERE `id_cart_rule_1` = '.(int)$id_cart_rule_source.' OR `id_cart_rule_2` = '.(int)$id_cart_rule_source.')');
-		
+
 		// Todo : should be changed soon, be must be copied too
 		// Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_cart_rule` = '.(int)$this->id);
 		// Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
 	}
-	
+
 	public static function getIdByCode($code)
 	{
 		if (!Validate::isDiscountName($code))
@@ -452,7 +452,7 @@ class CartRuleCore extends ObjectModel
 		if ($this->free_shipping)
 		{
 			if (!$this->carrier_restriction)
-				$reductionValue += $context->cart->getOrderShippingCost($context->cart->id_carrier, $useTax = true, $context->country);
+				$reductionValue += $context->cart->getPackageShippingCost($context->cart->id_carrier, $useTax = true, $context->country);
 			elseif ($context->cart->id_carrier)
 			{
 				$id_cart_rule = (int)Db::getInstance()->getValue('
@@ -461,7 +461,7 @@ class CartRuleCore extends ObjectModel
 				WHERE crc.id_cart_rule = '.(int)$this->id.'
 				AND crc.id_carrier = '.(int)$context->cart->id_carrier);
 				if ($id_cart_rule)
-					$reductionValue += $context->cart->getOrderShippingCost($context->cart->id_carrier, $useTax, $context->country);
+					$reductionValue += $context->cart->getPackageShippingCost($context->cart->id_carrier, $useTax, $context->country);
 			}
 		}
 
@@ -492,7 +492,7 @@ class CartRuleCore extends ObjectModel
 			}
 		}
 
-		// Discount (¤)
+		// Discount (ï¿½)
 		if ($this->reduction_amount)
 		{
 			$reduction_amount = $this->reduction_amount;
@@ -529,7 +529,7 @@ class CartRuleCore extends ObjectModel
 								$reductionValue += $reduction_amount * (1 + $product_vat_rate);
 						}
 				}
-				// Discount (¤) on the whole order
+				// Discount (ï¿½) on the whole order
 				elseif ($this->reduction_product == 0)
 				{
 					$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);

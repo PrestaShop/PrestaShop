@@ -275,8 +275,8 @@ class CartCore extends ObjectModel
 
 		$total_products_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-		$shipping_ti = $this->getOrderShippingCost();
-		$shipping_te = $this->getOrderShippingCost(NULL, false);
+		$shipping_ti = $this->getPackageShippingCost();
+		$shipping_te = $this->getPackageShippingCost(NULL, false);
 
 		$result = Db::getInstance()->executeS('
 		SELECT *
@@ -1630,6 +1630,7 @@ class CartCore extends ObjectModel
 	 */
 	public function getOrderShippingCost($id_carrier = null, $useTax = true, Country $default_country = null, $product_list = null)
 	{
+		Tools::displayAsDeprecated();
 		return $this->getPackageShippingCost($id_carrier, $useTax, $default_country, $product_list);
 	}
 
@@ -2526,7 +2527,7 @@ class CartCore extends ObjectModel
 
 		return false;
 	}
-	
+
 	/**
 	 * Return false is some product from the cart are out of stock
 	 */
