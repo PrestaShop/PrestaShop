@@ -77,7 +77,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	 	$this->table = 'tax_rule';
 	 	$this->identifier = 'id_tax_rule';
 	 	$this->lang = false;
-		$this->simple_header = true;
+		$this->list_simple_header = true;
 		$this->toolbar_btn = null;
 		$this->list_no_link = true;
 
