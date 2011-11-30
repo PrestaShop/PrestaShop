@@ -47,13 +47,15 @@ param_product_url = '';
 						{foreach from=$filter_values key=filter_key item=filter_value name=f_values}
 							{foreach from=$filters item=filter}
 								{if $filter.type == $filter_type && isset($filter.values)}
-									{if isset($filter.slider) && $smarty.foreach.f_values.first}
-										<li>
-											<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}">x</a>
-											{$filter.name|escape:html:'UTF-8'}{l s=':'} 
-											{$filter.values[0]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'} - 
-											{$filter.values[1]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'}
-										</li>
+									{if isset($filter.slider)}
+										{if $smarty.foreach.f_values.first}
+											<li>
+												<a href="#" rel="layered_{$filter.type}_slider" title="{l s='Cancel' mod='blocklayered'}">x</a>
+												{$filter.name|escape:html:'UTF-8'}{l s=':'} 
+												{$filter.values[0]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'} - 
+												{$filter.values[1]|escape:html:'UTF-8'}{$filter.unit|escape:html:'UTF-8'}
+											</li>
+										{/if}
 									{else}
 										{foreach from=$filter.values key=id_value item=value}
 											{if $id_value == $filter_key && !is_numeric($filter_value) && ($filter.type eq 'id_attribute_group' || $filter.type eq 'id_feature') || $id_value == $filter_value && $filter.type neq 'id_attribute_group' && $filter.type neq 'id_feature'}
@@ -85,7 +87,7 @@ param_product_url = '';
 						{if !isset($filter.slider)}
 							{if $filter.filter_type == 0}
 								{foreach from=$filter.values key=id_value item=value}
-									<li class="nomargin {if $value@index > $filter.filter_show_limit}hiddable{/if}">
+									<li class="nomargin {if $value@index >= $filter.filter_show_limit}hiddable{/if}">
 										{if isset($filter.is_color_group) && $filter.is_color_group}
 											<input class="color-option {if isset($value.checked) && $value.checked}on{/if}" type="button" name="layered_{$filter.type_lite}_{$id_value}" rel="{$id_value}_{$filter.id_key}" id="layered_id_attribute_group_{$id_value}" {if !$value.nbr} value="X" disabled="disabled"{/if} style="background: {if isset($value.color)}{if file_exists($smarty.const._PS_ROOT_DIR_|cat:"/img/co/$id_value.jpg")}url(img/co/{$id_value}.jpg){else}{$value.color}{/if}{else}#CCC{/if};" />
 											{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
@@ -103,7 +105,7 @@ param_product_url = '';
 								{/foreach}
 							{else if $filter.filter_type == 1}
 								{foreach from=$filter.values key=id_value item=value}
-									<li class="nomargin">
+									<li class="nomargin {if $value@index >= $filter.filter_show_limit}hiddable{/if}">
 										{if isset($filter.is_color_group) && $filter.is_color_group}
 											<input class="radio color-option {if isset($value.checked) && $value.checked}on{/if}" type="button" name="layered_{$filter.type_lite}_{$id_value}" rel="{$id_value}_{$filter.id_key}" id="layered_id_attribute_group_{$id_value}" {if !$value.nbr} value="X" disabled="disabled"{/if} style="background: {if isset($value.color)}{if file_exists($smarty.const._PS_ROOT_DIR_|cat:"/img/co/$id_value.jpg")}url(img/co/{$id_value}.jpg){else}{$value.color}{/if}{else}#CCC{/if};"/>
 											{if isset($value.checked) && $value.checked}<input type="hidden" name="layered_{$filter.type_lite}_{$id_value}" value="{$id_value}" />{/if}
