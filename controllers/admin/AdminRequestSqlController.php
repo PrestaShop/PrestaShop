@@ -60,18 +60,11 @@ class AdminRequestSqlControllerCore extends AdminController
 			</ul>
 		');
 
+		$this->addRowAction('export');
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array(
-	 		'delete' => array(
-	 			'text' => $this->l('Delete selected'),
-	 			'confirm' => $this->l('Delete selected items?')
-	 		),
-	 		'export' => array(
-	 			'text' => $this->l('Export selected')
-	 		)
-	 	);
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 	 	return parent::renderList();
 	}
@@ -105,7 +98,31 @@ class AdminRequestSqlControllerCore extends AdminController
 			)
 		);
 
+		$request = new RequestSql();
+		$this->tpl_form_vars = array('tables' => $request->getTables());
+
 		return parent::renderForm();
+	}
+
+	/**
+	 * method call when ajax request is made with the details row action
+	 * @see AdminController::postProcess()
+	 */
+	public function ajaxProcess()
+	{
+		if ($table = Tools::GetValue('table'))
+		{
+			$request_sql = new RequestSql();
+			$attributes = $request_sql->getAttributesByTable($table);
+			foreach ($attributes as $key => $attribute)
+			{
+				unset($attributes[$key]['Null']);
+				unset($attributes[$key]['Key']);
+				unset($attributes[$key]['Default']);
+				unset($attributes[$key]['Extra']);
+			}
+			die(Tools::jsonEncode($attributes));
+		}
 	}
 
 	public function renderView()
@@ -149,12 +166,68 @@ class AdminRequestSqlControllerCore extends AdminController
 		}
 	}
 
-	public function bulkexport($boxes)
+	/**
+	 * Display export action link
+	 */
+	public function displayExportLink($token = null, $id)
 	{
-		if (!$boxes || count($boxes) > 1)
-			$this->_errors[] = Tools::DisplayError('You must select a query to export the results.');
+		$tpl = $this->context->smarty->createTemplate('request_sql/list_action_export.tpl');
 
-		$id = (int)$boxes[0];
+		$tpl->assign(array(
+			'href' => self::$currentIndex.'&token='.$this->token.'&'.$this->identifier.'='.$id.'&export'.$this->table.'=1',
+			'action' => $this->l('Export')
+		));
+
+		return $tpl->fetch();
+	}
+
+	public function initProcess()
+	{
+		parent::initProcess();
+		if (Tools::getValue('export'.$this->table))
+		{
+			$this->display = 'export';
+			$this->action = 'export';
+		}
+	}
+
+	public function initContent()
+	{
+		// toolbar (save, cancel, new, ..)
+		$this->initToolbar();
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			if (!$this->loadObject(true))
+				return;
+
+			$this->content .= $this->renderForm();
+		}
+		else if ($this->display == 'view')
+		{
+			// Some controllers use the view action without an object
+			if ($this->className)
+				$this->loadObject(true);
+			$this->content .= $this->renderView();
+		}
+		else if ($this->display == 'export')
+		{
+			$this->generateExport();
+		}
+		else if (!$this->ajax)
+		{
+			$this->content .= $this->renderList();
+			$this->content .= $this->renderOptions();
+		}
+
+		$this->context->smarty->assign(array(
+			'content' => $this->content,
+			'url_post' => self::$currentIndex.'&token='.$this->token,
+		));
+	}
+
+	public function generateExport()
+	{
+		$id = Tools::getValue($this->identifier);
 
 		$file = 'request_sql_'.$id.'.csv';
 		if ($csv = fopen(_PS_ADMIN_DIR_.'/export/'.$file, 'w'))
@@ -183,7 +256,7 @@ class AdminRequestSqlControllerCore extends AdminController
 					{
 						header('Content-type: text/csv');
 						header('Cache-Control: no-store, no-cache');
-						header('Content-Disposition: attachment; filename="$file"');
+						header('Content-Disposition: attachment; filename="'.$file.'"');
 						header('Content-Length: '.$filesize);
 						readfile(_PS_ADMIN_DIR_.'/export/'.$file);
 						die();

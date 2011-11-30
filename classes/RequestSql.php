@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -138,14 +138,13 @@ class RequestSqlCore extends ObjectModel
 			if (!$this->checkedLimit($tab['LIMIT']))
 				return false;
 		}
-
 		if (empty($this->_errors))
 			if (!Db::getInstance()->executeS($sql))
 				return false;
 		return true;
 	}
 
-	public function showTables()
+	public function getTables()
 	{
 		$results = Db::getInstance()->executeS('SHOW TABLES');
 		foreach ($results as $result)
@@ -154,6 +153,11 @@ class RequestSqlCore extends ObjectModel
 			$tables[] = $result[$key[0]];
 		}
 		return $tables;
+	}
+
+	public function getAttributesByTable($table)
+	{
+		return Db::getInstance()->executeS(sprintf('DESCRIBE `%s`', $table));
 	}
 
 	public function cutJoin($attrs, $from)
@@ -223,7 +227,7 @@ class RequestSqlCore extends ObjectModel
 	{
 		if (is_array($table) && (count($table) == 1))
 			$table = $table[0];
-		$attributs = Db::getInstance()->executeS(sprintf('DESCRIBE `%s`', $table));
+		$attributs = $this->getAttributesByTable($table);
 		foreach ($attributs as $attribut)
 			if ($attribut['Field'] == trim($attr))
 				return true;
@@ -258,7 +262,7 @@ class RequestSqlCore extends ObjectModel
 		for ($i = 0; $i < $nb; $i++)
 		{
 			$table = $from[$i];
-			if (!in_array(str_replace('`', '', $table['table']), $this->showTables()))
+			if (!in_array(str_replace('`', '', $table['table']), $this->getTables()))
 			{
 				$this->error_sql['checkedFrom']['table'] = $table['table'];
 				return false;
