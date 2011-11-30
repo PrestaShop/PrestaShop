@@ -1839,9 +1839,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	}
 
 	/**
-	 * Gets the current warehouse used
+	 * Gets the current filter used
 	 *
-	 * @return int id_warehouse
+	 * @return int status
 	 */
 	private function getFilterStatus()
 	{
