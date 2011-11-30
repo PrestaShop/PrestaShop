@@ -190,9 +190,9 @@ class MetaCore extends ObjectModel
 			SELECT id_meta
 			FROM `'._DB_PREFIX_.'meta_lang`
 			WHERE url_rewrite = \''.pSQL($url_rewrite).'\' AND id_lang = '.(int)($id_lang).'
+			AND id_shop = '.Context::getContext()->shop->getID(true).'
 		)
-		AND id_lang = '.(int)($new_id_lang).'
-		AND id_shop = '.Context::getContext()->shop->getID(true));
+		AND id_lang = '.(int)($new_id_lang));
 	}
 }
 
