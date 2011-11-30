@@ -418,7 +418,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		return $output;
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$content = '';
 		$this->toolbar_title = $this->l('Customer Threads');
@@ -613,7 +613,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$content .= '</div><div class="clear">&nbsp;</div>';
 		
 		$this->content =  $content;
-		return parent::initView();
+		return parent::renderView();
 	}
 	
 	private function displayButton($content)
@@ -627,7 +627,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	}
 
 	
-	public function initOptions()
+	public function renderOptions()
 	{
 		if (Configuration::get('PS_SAV_IMAP_URL')
 		&& Configuration::get('PS_SAV_IMAP_PORT')
@@ -637,7 +637,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		else
 			$this->tpl_option_vars['use_sync'] = false;
 
-		return parent::initOptions();
+		return parent::renderOptions();
 	}
 	
 	

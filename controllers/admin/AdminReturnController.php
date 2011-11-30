@@ -57,7 +57,7 @@ class AdminReturnControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -151,7 +151,7 @@ class AdminReturnControllerCore extends AdminController
 			'quantityDisplayed' => $quantityDisplayed,
 			'id_order_return' => $this->object->id,
 		);
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initToolbar()

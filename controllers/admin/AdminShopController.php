@@ -97,7 +97,7 @@ class AdminShopControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -112,7 +112,7 @@ class AdminShopControllerCore extends AdminController
 	 			ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')';
 	 	$this->_group = 'GROUP BY a.id_shop';
 
-	 	return parent::initList();
+	 	return parent::renderList();
 	}
 
 	public function postProcess()
@@ -159,7 +159,7 @@ class AdminShopControllerCore extends AdminController
 		$this->addRowActionSkipList('delete', $shop_delete_list);
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -329,6 +329,6 @@ class AdminShopControllerCore extends AdminController
 		if (isset($this->fields_import_form))
 			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 }

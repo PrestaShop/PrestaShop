@@ -58,7 +58,7 @@ class AdminAddressesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->_select = 'cl.`name` as country';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON
@@ -69,10 +69,10 @@ class AdminAddressesControllerCore extends AdminController
 		foreach ($countries AS $country)
 			$this->countriesArray[$country['id_country']] = $country['name'];
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -273,7 +273,7 @@ class AdminAddressesControllerCore extends AdminController
 		// merge address format with the rest of the form
 		array_splice($this->fields_form['input'], 3, 0, $temp_fields);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

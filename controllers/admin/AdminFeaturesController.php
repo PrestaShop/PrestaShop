@@ -62,10 +62,10 @@ class AdminFeaturesControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -84,7 +84,7 @@ class AdminFeaturesControllerCore extends AdminController
 			'desc' => $this->l('Add new feature')
 		);
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**
@@ -151,10 +151,10 @@ class AdminFeaturesControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		$this->toolbar_title = $this->l('Add a new feature');
 		$this->fields_form = array(
@@ -190,7 +190,7 @@ class AdminFeaturesControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	/**
@@ -224,8 +224,8 @@ class AdminFeaturesControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
 	public function initFormFeatureValue()
 	{
@@ -314,14 +314,14 @@ class AdminFeaturesControllerCore extends AdminController
 			{
 				if (!$this->loadObject(true))
 					return;
-				$this->content .= $this->initForm();
+				$this->content .= $this->renderForm();
 			}
 			else if ($this->display == 'view')
 			{
 				// Some controllers use the view action without an object
 				if ($this->className)
 					$this->loadObject(true);
-				$this->content .= $this->initView();
+				$this->content .= $this->renderView();
 			}
 			else if ($this->display == 'editFeatureValue')
 			{
@@ -332,8 +332,8 @@ class AdminFeaturesControllerCore extends AdminController
 			}
 			else if (!$this->ajax)
 			{
-				$this->content .= $this->initList();
-				$this->content .= $this->initOptions();
+				$this->content .= $this->renderList();
+				$this->content .= $this->renderOptions();
 			}
 		}
 		else

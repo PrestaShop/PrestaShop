@@ -79,10 +79,10 @@ class AdminStockManagementControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('details');
 		$this->addRowAction('addstock');
@@ -103,14 +103,14 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->displayInformation($this->l('Through this interface, you can add and delete products for a given warehouse.'));
 		$this->displayInformation($this->l('Also, you can transfer products between warehouses, or within one warehouse.'));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**
-	 * AdminController::initForm() override
-	 * @see AdminController::initForm()
+	 * AdminController::renderForm() override
+	 * @see AdminController::renderForm()
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		$id_product = (int)Tools::getValue('id_product');
 		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
@@ -967,7 +967,7 @@ class AdminStockManagementControllerCore extends AdminController
 				if ($product_is_valid === true && $is_pack == false && $is_virtual == false)
 				{
 					// init form
-					$this->initForm();
+					$this->renderForm();
 					$this->getlanguages();
 
 					$helper = new HelperForm();

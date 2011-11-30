@@ -89,7 +89,7 @@ class AdminGendersController extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -166,7 +166,7 @@ class AdminGendersController extends AdminController
 			'image' => $obj->getImage()
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function displayGenderType($value, $tr)

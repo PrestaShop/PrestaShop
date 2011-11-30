@@ -54,10 +54,10 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->initToolbar();
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**
@@ -174,7 +174,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		parent::postProcess(true);
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->display = 'edit';
 		$this->initToolbar();
@@ -273,6 +273,6 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			)
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 }

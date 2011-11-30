@@ -225,13 +225,13 @@ class AdminSearchControllerCore extends AdminController
 		$this->toolbar_title = $this->l('Search results');
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$this->tpl_view_vars['query'] = $this->query;
 		$this->tpl_view_vars['show_toolbar'] = true;
 
 		if (sizeof($this->_errors))
-			return parent::initView();
+			return parent::renderView();
 		else
 		{
 			$helper = new HelperList();
@@ -274,7 +274,7 @@ class AdminSearchControllerCore extends AdminController
 				}
 				$this->tpl_view_vars['customers'] =  $view;
 			}
-			return parent::initView();
+			return parent::renderView();
 		}
 	}
 }

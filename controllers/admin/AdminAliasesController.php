@@ -53,7 +53,7 @@ class AdminAliasesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -89,7 +89,7 @@ class AdminAliasesControllerCore extends AdminController
 
 		$this->fields_value = array('alias' => $this->object->getAliases());
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

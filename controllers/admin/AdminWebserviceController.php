@@ -79,7 +79,7 @@ class AdminWebserviceControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -158,7 +158,7 @@ class AdminWebserviceControllerCore extends AdminController
 			'permissions' => $permissions
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function initContent()
@@ -220,7 +220,7 @@ class AdminWebserviceControllerCore extends AdminController
 				!$instance->useNormalPermissionBehaviour())
 				unset($this->_list[$k]);
 
-		$this->initList();
+		$this->renderList();
 	}
 
 }

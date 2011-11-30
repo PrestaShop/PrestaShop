@@ -46,7 +46,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->displayWarning($this->l('When saving the query, only the request type "SELECT" are allowed.'));
 		$this->displayInformation('
@@ -73,10 +73,10 @@ class AdminRequestSqlControllerCore extends AdminController
 	 		)
 	 	);
 
-	 	return parent::initList();
+	 	return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -105,10 +105,10 @@ class AdminRequestSqlControllerCore extends AdminController
 			)
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -133,7 +133,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		$this->tpl_view_vars = array(
 			'view' => $view
 		);
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function _childValidation()

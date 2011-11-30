@@ -1292,19 +1292,19 @@ class AdminControllerCore extends Controller
 			if (!$this->loadObject(true))
 				return;
 
-			$this->content .= $this->initForm();
+			$this->content .= $this->renderForm();
 		}
 		else if ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
-			$this->content .= $this->initView();
+			$this->content .= $this->renderView();
 		}
 		else if (!$this->ajax)
 		{
-			$this->content .= $this->initList();
-			$this->content .= $this->initOptions();
+			$this->content .= $this->renderList();
+			$this->content .= $this->renderOptions();
 		}
 
 		$this->context->smarty->assign(array(
@@ -1344,9 +1344,9 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Function used to initialise the list to display for this controller
+	 * Function used to render the list to display for this controller
 	 */
-	public function initList()
+	public function renderList()
 	{
 		if (!($this->fieldsDisplay && is_array($this->fieldsDisplay)))
 			return false;
@@ -1376,9 +1376,9 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Override to init display of the view page
+	 * Override to render the view page
 	 */
-	public function initView()
+	public function renderView()
 	{
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
@@ -1391,9 +1391,9 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Function used to initialise the form to display for this controller
+	 * Function used to render the form for this controller
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		if (Tools::getValue('submitFormAjax'))
 			$this->content .= $this->context->smarty->fetch($this->context->smarty->template_dir[0].'form_submit_ajax.tpl');
@@ -1422,9 +1422,9 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Function used to initialise the options to display for this controller
+	 * Function used to render the options for this controller
 	 */
-	public function initOptions()
+	public function renderOptions()
 	{
 		if ($this->options && is_array($this->options))
 		{

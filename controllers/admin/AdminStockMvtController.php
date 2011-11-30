@@ -112,10 +112,10 @@ class AdminStockMvtControllerCore extends AdminController
 	}
 
 	/**
-	 * AdminController::initList() override
-	 * @see AdminController::initList()
+	 * AdminController::renderList() override
+	 * @see AdminController::renderList()
 	 */
-	public function initList()
+	public function renderList()
 	{
 		// removes toolbar btn
 		$this->toolbar_btn = array();
@@ -162,7 +162,7 @@ class AdminStockMvtControllerCore extends AdminController
 		array_unshift($warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 		$this->tpl_list_vars['list_warehouses'] = $warehouses;
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	/**

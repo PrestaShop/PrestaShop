@@ -1708,11 +1708,11 @@ class AdminProductsControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		if (!Tools::getValue('id_category'))
 			unset($this->fieldsDisplay['position']);
-		return parent::initList();
+		return parent::renderList();
 	}
 
 	public function ajaxProcessProductManufacturers()
@@ -1865,7 +1865,7 @@ class AdminProductsControllerCore extends AdminController
 	 *
 	 * @return void
 	 */
-	public function initForm()
+	public function renderForm()
 	{
 		if(!method_exists($this, 'initForm'.$this->action))
 			return "";
@@ -1905,7 +1905,7 @@ class AdminProductsControllerCore extends AdminController
 				else
 					return $this->tpl_form_vars['custom_form'];
 		}
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function getPreviewUrl(Product $product)

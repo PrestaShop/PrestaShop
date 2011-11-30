@@ -82,7 +82,7 @@ class AdminCurrenciesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -90,10 +90,10 @@ class AdminCurrenciesControllerCore extends AdminController
 
 		$this->_where = 'AND a.`deleted` = 0';
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -247,7 +247,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()

@@ -56,16 +56,16 @@ class AdminSlipControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function initList()
+	public function renderList()
 	{
 		$this->addRowAction('edit');
 	 	$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		return parent::initList();
+		return parent::renderList();
 	}
 
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -105,7 +105,7 @@ class AdminSlipControllerCore extends AdminController
 		);
 
 		$this->show_toolbar = false;
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
 	public function postProcess()
@@ -132,8 +132,8 @@ class AdminSlipControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->initToolbar();
-		$this->content .= $this->initList();
-		$this->content .= $this->initForm();
+		$this->content .= $this->renderList();
+		$this->content .= $this->renderForm();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

@@ -61,7 +61,7 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addJqueryPlugin('tagify');
 	}
 	
-	public function initForm()
+	public function renderForm()
 	{
 		$this->fields_form = array(
 			'legend' => array(
@@ -158,10 +158,10 @@ class AdminSuppliersControllerCore extends AdminController
 			'size' => $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false
 		);
 
-		return parent::initForm();
+		return parent::renderForm();
 	}
 
-	public function initView()
+	public function renderView()
 	{
 		$products = $this->object->getProductsLite($this->context->language->id);
 		$total_product = count($products);
@@ -203,7 +203,7 @@ class AdminSuppliersControllerCore extends AdminController
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 		);
 
-		return parent::initView();
+		return parent::renderView();
 	}
 
 	public function afterImageUpload()
