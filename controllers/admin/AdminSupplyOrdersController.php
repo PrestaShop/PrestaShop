@@ -30,6 +30,12 @@
  */
 class AdminSupplyOrdersControllerCore extends AdminController
 {
+
+	/*
+	 * @var array List of warehouses
+	 */
+	private $warehouses;
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();
@@ -99,6 +105,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false
 			),
 		);
+
+		// gets the list of warehouses available
+		$this->warehouses = Warehouse::getWarehouses(true);
+		// gets the final list of warehouses
+		array_unshift($this->warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 
 		parent::__construct();
 	}
@@ -322,6 +333,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function initList()
 	{
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
+		$this->displayInformation($this->l('Also, you can create templates that you can later use to generate actual orders.').'<br />');
+
+		// assigns warehouses
+		$this->tpl_list_vars['warehouses'] = $this->warehouses;
+		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouse();
+		$this->tpl_list_vars['filter_status'] = $this->getFilterStatus();
+
 
 		// access
 		if (!($this->tabAccess['add'] === '1'))
@@ -350,10 +368,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
 
 		$this->_where = ' AND a.is_template = 0';
+		if ($this->getCurrentWarehouse() != -1)
+			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
+		if ($this->getFilterStatus() != 0)
+			$this->_where .= ' AND st.enclosed != 1';
 		$first_list = parent::initList();
 
 		// second list : templates
 		$second_list = null;
+		unset($this->tpl_list_vars['warehouses']);
+		unset($this->tpl_list_vars['current_warehouse']);
+		unset($this->tpl_list_vars['filter_status']);
 
 		// unsets actions
 		$this->actions = array();
@@ -367,6 +392,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// adds filter, to gets only templates
 		unset($this->_where);
 		$this->_where = ' AND a.is_template = 1';
+		if ($this->getCurrentWarehouse() != -1)
+			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentWarehouse();
 
 		// re-defines toolbar & buttons
 		$this->toolbar_title = $this->l('Stock : Supply orders templates');
@@ -1791,5 +1818,39 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 		$redirect = self::$currentIndex.'&token='.$token;
 		$this->redirect_after = $redirect.'&conf=19';
+	}
+
+	/**
+	 * Gets the current warehouse used
+	 *
+	 * @return int id_warehouse
+	 */
+	private function getCurrentWarehouse()
+	{
+		static $warehouse = 0;
+
+		if ($warehouse == 0)
+		{
+			$warehouse = -1; // all warehouses
+			if ((int)Tools::getValue('id_warehouse'))
+				$warehouse = (int)Tools::getValue('id_warehouse');
+		}
+		return $warehouse;
+	}
+
+	/**
+	 * Gets the current warehouse used
+	 *
+	 * @return int id_warehouse
+	 */
+	private function getFilterStatus()
+	{
+		static $status = 0;
+
+		$status = 0;
+		if (Tools::getValue('filter_status') === 'on')
+			$status = 1;
+
+		return $status;
 	}
 }
