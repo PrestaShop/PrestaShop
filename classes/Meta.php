@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -33,11 +33,11 @@ class MetaCore extends ObjectModel
 	public 		$description;
 	public 		$keywords;
 	public 		$url_rewrite;
-	
+
  	protected 	$fieldsRequired = array('page');
  	protected 	$fieldsSize = array('page' => 64);
  	protected 	$fieldsValidate = array('page' => 'isFileName');
-	
+
 	protected	$fieldsRequiredLang = array();
 	protected	$fieldsSizeLang = array('title' => 128, 'description' => 255, 'keywords' => 255, 'url_rewrite' => 255);
 	protected	$fieldsValidateLang = array('title' => 'isGenericName', 'description' => 'isGenericName', 'keywords' => 'isGenericName', 'url_rewrite' => 'isLinkRewrite');
@@ -45,25 +45,25 @@ class MetaCore extends ObjectModel
 	protected	$langMultiShop = true;
 	protected 	$table = 'meta';
 	protected 	$identifier = 'id_meta';
-		
+
 	public function getFields()
 	{
 		$this->validateFields();
 		return array('page' => pSQL($this->page));
 	}
-	
+
 	public function getTranslationsFieldsChild()
 	{
 		$this->validateFieldsLang();
 		return $this->getTranslationsFields(array('title', 'description', 'keywords', 'url_rewrite'));
 	}
-	
+
 	public static function getPages($excludeFilled = false, $addPage = false)
 	{
 		$selectedPages = array();
 		if (!$files = scandir(_PS_ROOT_DIR_.'/controllers'))
 			die(Tools::displayError('Cannot scan root directory'));
-		
+
 		// Exclude pages forbidden
 		$exludePages = array('category', 'changecurrency', 'cms', 'footer', 'header',
 		'pagination', 'product', 'product-sort', 'statistics');
@@ -86,7 +86,7 @@ class MetaCore extends ObjectModel
 		}
 		return $selectedPages;
 	}
-	
+
 	public static function getMetas()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -107,7 +107,7 @@ class MetaCore extends ObjectModel
 					.$shop->addSqlRestrictionOnLang('ml').
 				'ORDER BY page ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-		
+
 	}
 
 	static public function getMetaByPage($page, $id_lang, Context $context = null)
@@ -127,8 +127,8 @@ class MetaCore extends ObjectModel
 	public function update($nullValues = false)
 	{
 		if (!parent::update($nullValues))
-			return false;			
-									
+			return false;
+
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 									(int)Configuration::get('PS_REWRITING_SETTINGS'),
 									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
@@ -140,7 +140,7 @@ class MetaCore extends ObjectModel
 	public function add($autodate = true, $nullValues = false)
 	{
 		if (!parent::add($autodate, $nullValues));
-		
+
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 									(int)Configuration::get('PS_REWRITING_SETTINGS'),
 									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
@@ -148,12 +148,12 @@ class MetaCore extends ObjectModel
 									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 									);
 	}
-	
+
 	public function delete()
 	{
 		if (!parent::delete())
 			return false;
-		
+
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
 								(int)Configuration::get('PS_REWRITING_SETTINGS'),
 								(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
@@ -161,7 +161,7 @@ class MetaCore extends ObjectModel
 								(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 								);
 	}
-	
+
 	public function deleteSelection($selection)
 	{
 		if (!is_array($selection) OR !Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
@@ -172,10 +172,10 @@ class MetaCore extends ObjectModel
 			$this->id = (int)($id);
 			$result = $result AND $this->delete();
 		}
-		
+
 		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)Configuration::get('PS_REWRITING_SETTINGS'),		
-									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'), 
+									(int)Configuration::get('PS_REWRITING_SETTINGS'),
+									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
 									'',
 									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
 									);
@@ -191,7 +191,8 @@ class MetaCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'meta_lang`
 			WHERE url_rewrite = \''.pSQL($url_rewrite).'\' AND id_lang = '.(int)($id_lang).'
 		)
-		AND id_lang = '.(int)($new_id_lang));
+		AND id_lang = '.(int)($new_id_lang).'
+		AND id_shop = '.Context::getContext()->shop->getID(true));
 	}
 }
 
