@@ -33,6 +33,7 @@ class GroupShopCore extends ObjectModel
 	public $name;
 	public $active;
 	public $share_customer;
+	public $share_stock;
 	public $share_order;
 	public $deleted;
 
@@ -41,6 +42,7 @@ class GroupShopCore extends ObjectModel
  					'active' => 'isBool',
  					'share_customer' => 'isBool',
  					'share_order' => 'isBool',
+ 					'share_stock' => 'isBool',
  					'name' => 'isGenericName',
  				);
 	protected $table = 'group_shop';
@@ -63,7 +65,8 @@ class GroupShopCore extends ObjectModel
 
 		$fields['name'] = pSQL($this->name);
 		$fields['share_customer'] = (int)$this->share_customer;
-		$fields['share_order'] = ($fields['share_customer']) ? (int)$this->share_order : false;
+		$fields['share_stock'] = (int)$this->share_stock;
+		$fields['share_order'] = ($fields['share_customer'] && $fields['share_stock']) ? (int)$this->share_order : false;
 		$fields['active'] = (int)$this->active;
 		$fields['deleted'] = (int)$this->deleted;
 		return $fields;

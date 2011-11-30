@@ -27,14 +27,34 @@
 
 {block name=script}
 
+	function toggleShareOrders() {
+
+		var disabled_customer = ($('#share_customer_on').attr('checked')) ? false : true;
+		var disabled_stock = ($('#share_stock_on').attr('checked')) ? false : true;
+
+		if (disabled_customer || disabled_stock)
+		{
+			$("input[name=share_order]").each(function(i) {
+	            $(this).attr('disabled', 'disabled');
+	        });
+
+			$('#share_order_off').attr('checked', true);
+		}
+		else
+		{
+			$('input[name=share_order]').attr('disabled', '');
+		}
+	}
+
 	$(document).ready(function() {
-		$('input[name=share_order]').attr('disabled', true);
+		toggleShareOrders();
 		$('input[name=share_customer]').click(function()
 		{
-			var disabled = ($('input[name=share_customer]').attr('checked')) ? false : true;
-			$('input[name=share_order]').attr('disabled', disabled);
-			if (disabled)
-				$('#share_order_off').attr('checked', true);
+			toggleShareOrders();
+		});
+		$('input[name=share_stock]').click(function()
+		{
+			toggleShareOrders();
 		});
 
 		$('#useImportData').click(function() {

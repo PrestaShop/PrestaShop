@@ -2,90 +2,102 @@
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
 		<p>{l s='You can manually specify the quantities for the product / each product combinations, or choose to automatically determine these quantities based on your stock.'}</p>
-		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop.'}</p>
+		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
 	</div>
 	<br />
 
-					<h4>{l s='Available quantities for sale'}</h4>
+	<h4>{l s='Available quantities for sale'}</h4>
 	<div class="separation"></div>
-	<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
-	<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
-	<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
 
-	<table cellpadding="5" style="width:100%">
-		<tbody>
-			<tr>
-				<td valign="top" style="vertical-align:top;">
-					<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-					<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
-					<br /><br />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" style="vertical-align:top;">
-					<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
-					<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually, and manage my stock independently'}</label>
-					<br /><br />
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" style="text-align:left;vertical-align:top;">
-					<table class="table" cellpadding="0" cellspacing="0" style="width:50%;">
-							<colgroup>
-								<col width="50"></col>
-								<col></col>
-							</colgroup>
-						<thead>
-							<tr>
-								<th>{l s='Quantity'}</th>
-								<th>{l s='Designation'}</th>
-							</tr>
-						</thead>
-						<tbody>
-						{foreach from=$attributes item=attribute}
-							<tr>
-								<td  class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
-									<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
-									<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]}"/>
-								</td>
-								<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-							</tr>
-						{/foreach}
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr id="when_out_of_stock">
-				<td>
-					<table style="margin-top: 15px;">
-						<tbody>
-							<tr>
-								<td class="col-left"><label>{l s='When out of stock:'}</label></td>
-								<td style="padding-bottom:5px;">
-									<input {if $product->out_of_stock == 0}checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
-									<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">{l s='Deny orders'}</label>
-									<br>
-									<input {if $product->out_of_stock == 1} 'checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
-									<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">{l s='Allow orders'}</label>
-									<br>
-									<input {if $product->out_of_stock == 2} 'checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
-									<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
-										Default:
-										<i>Deny orders</i>
-										{assign var=confirm value="Are you sure you want to delete entered product information?"}
-										<a onclick="return confirm(' {$confirm} ');"
-											href="index.php?tab=AdminPPreferences&token={$token_preferences}">
-												{l s='as set in Preferences'}
-										</a>
-									</label>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	{if $show_quantities == true}
+		<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
+		<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
+		<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
+
+		<table cellpadding="5" style="width:100%">
+			<tbody>
+				<tr>
+					<td valign="top" style="vertical-align:top;">
+						<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
+						<br /><br />
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" style="vertical-align:top;">
+						<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually, and manage my stock independently'}</label>
+						<br /><br />
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" style="text-align:left;vertical-align:top;">
+						<table class="table" cellpadding="0" cellspacing="0" style="width:50%;">
+								<colgroup>
+									<col width="50"></col>
+									<col></col>
+								</colgroup>
+							<thead>
+								<tr>
+									<th>{l s='Quantity'}</th>
+									<th>{l s='Designation'}</th>
+								</tr>
+							</thead>
+							<tbody>
+							{foreach from=$attributes item=attribute}
+								<tr>
+									<td  class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
+										<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
+										<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]}"/>
+									</td>
+									<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+								</tr>
+							{/foreach}
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr id="when_out_of_stock">
+					<td>
+						<table style="margin-top: 15px;">
+							<tbody>
+								<tr>
+									<td class="col-left"><label>{l s='When out of stock:'}</label></td>
+									<td style="padding-bottom:5px;">
+										<input {if $product->out_of_stock == 0}checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
+										<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">{l s='Deny orders'}</label>
+										<br>
+										<input {if $product->out_of_stock == 1} 'checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
+										<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">{l s='Allow orders'}</label>
+										<br>
+										<input {if $product->out_of_stock == 2} 'checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
+										<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
+											Default:
+											<i>Deny orders</i>
+											{assign var=confirm value="Are you sure you want to delete entered product information?"}
+											<a onclick="return confirm(' {$confirm} ');"
+												href="index.php?tab=AdminPPreferences&token={$token_preferences}">
+													{l s='as set in Preferences'}
+											</a>
+										</label>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	{else}
+		<div class="warn">
+			<p>{l s='It is not possible to manage quantities when : '}</p>
+			<ul>
+				<li>{l s='You are managing all shops.'}</li>
+				<li>{l s='You are managing a group of shops where quantities are not shared between all shops of this group.'}</li>
+				<li>{l s='You are managing a shop witch is in a group where quantities are shared between all shops of this group.'}</li>
+			</ul>
+		</div>
+	{/if}
 
 <script type="text/javascript">
 	var showAjaxError = function(msg)
@@ -165,7 +177,7 @@
 			$('.available_quantity input').trigger('change');
 	});
 
-	$('.available_quantity').find('input').change(function(e)
+	$('.available_quantity').find('input').blur(function(e)
 	{
 		ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );
 	});
