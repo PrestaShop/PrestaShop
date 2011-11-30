@@ -51,7 +51,7 @@ class AdminGroupsController extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_group' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 80, 'filter_key' => 'b!name'),
+			'name' => array('title' => $this->l('Name'), 'width' => 'auto', 'filter_key' => 'b!name'),
 			'reduction' => array('title' => $this->l('Discount'), 'width' => 50, 'align' => 'right'),
 			'nb' => array('title' => $this->l('Members'), 'width' => 25, 'align' => 'center'),
 			'date_add' => array('title' => $this->l('Creation date'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
@@ -76,14 +76,14 @@ class AdminGroupsController extends AdminController
 
 		$this->tpl_view_vars = array(
 			'group' => $group,
-			'customerList' => $this->initCustomersList($group),
+			'customerList' => $this->renderCustomersList($group),
 			'categorieReductions' => $this->formatCategoryDiscountList($group->id)
 		);
 
 		return parent::renderView();
 	}
 
-	protected function initCustomersList($group)
+	protected function renderCustomersList($group)
 	{
 		$genders = array(0 => $this->l('?'));
 		foreach (Gender::getGenders() as $gender)
@@ -275,26 +275,16 @@ class AdminGroupsController extends AdminController
 		return array('unauth_modules' => $unauth_modules, 'auth_modules' => $auth_modules);
 	}
 
-	public function postProcess()
+	public function processSave($token)
 	{
-		if (Tools::isSubmit('submitAddgroup'))
-		{
-			if ($this->tabAccess['add'] === '1')
-			{
-				if (!$this->validateDiscount(Tools::getValue('reduction')))
-					$this->_errors[] = Tools::displayError('Discount value is incorrect (must be a percentage)');
-				else
-				{
-					$this->updateCategoryReduction();
-					$this->updateRestrictions();
-					parent::postProcess();
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
+		if (!$this->validateDiscount(Tools::getValue('reduction')))
+			$this->_errors[] = Tools::displayError('Discount value is incorrect (must be a percentage)');
 		else
-			parent::postProcess();
+		{
+			$this->updateCategoryReduction();
+			$this->updateRestrictions();
+			parent::processSave($token);
+		}
 	}
 
 	protected function validateDiscount($reduction)
