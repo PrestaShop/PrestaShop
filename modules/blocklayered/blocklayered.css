@@ -112,3 +112,9 @@
 	margin-left: 2px;
 	vertical-align: middle;
 }
+.layered_price_range {
+	margin-left: 7px;
+}
+.layered_price_range_unit {
+	margin-right: 7px;
+}
