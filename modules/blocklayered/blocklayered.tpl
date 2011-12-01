@@ -131,35 +131,64 @@ param_product_url = '';
 								</select>
 							{/if}
 						{else}
-							<label for="{$filter.type}">{l s='Range:' mod='blocklayered'}</label> <span id="layered_{$filter.type}_range"></span>
-							<div style="margin: 6px 0 6px 6px; width: 93%;">
-								<div style="margin-top:5px;" class="layered_slider" id="layered_{$filter.type}_slider"></div>
-							</div>
-							<script type="text/javascript">
-							{literal}
-								var filterRange = {/literal}{$filter.max}-{$filter.min}{literal};
-								var step = filterRange / 100;
-								if (step > 1)
-									step = parseInt(step);
-								addSlider('{/literal}{$filter.type}{literal}',{
-									range: true,
-									step: step,
-									min: {/literal}{$filter.min}{literal},
-									max: {/literal}{$filter.max}{literal},
-									values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
-									slide: function( event, ui ) {
-										$('#layered_{/literal}{$filter.type}{literal}_range').html(ui.values[ 0 ] + '{/literal}{$filter.unit}{literal}' + ' - ' + ui.values[ 1 ] + '{/literal}{$filter.unit}{literal}');
-									},
-									stop: function () {
-										reloadContent();
-									}
-								}, '{/literal}{$filter.unit}{literal}');
-								$(document).ready(function()
-								{
-									$('.layered_{/literal}{$filter.type}{literal}').show();
-								});
-							{/literal}
-							</script>
+							{if $filter.filter_type == 0}
+								<label for="{$filter.type}">{l s='Range:' mod='blocklayered'}</label> <span id="layered_{$filter.type}_range"></span>
+								<div style="margin: 6px 0 6px 6px; width: 93%;">
+									<div style="margin-top:5px;" class="layered_slider" id="layered_{$filter.type}_slider"></div>
+								</div>
+								<script type="text/javascript">
+								{literal}
+									var filterRange = {/literal}{$filter.max}-{$filter.min}{literal};
+									var step = filterRange / 100;
+									if (step > 1)
+										step = parseInt(step);
+									addSlider('{/literal}{$filter.type}{literal}',{
+										range: true,
+										step: step,
+										min: {/literal}{$filter.min}{literal},
+										max: {/literal}{$filter.max}{literal},
+										values: [ {/literal}{$filter.values[0]}{literal}, {/literal}{$filter.values[1]}{literal}],
+										slide: function( event, ui ) {
+											$('#layered_{/literal}{$filter.type}{literal}_range').html(ui.values[ 0 ] + '{/literal}{$filter.unit}{literal}' + ' - ' + ui.values[ 1 ] + '{/literal}{$filter.unit}{literal}');
+										},
+										stop: function () {
+											reloadContent();
+										}
+									}, '{/literal}{$filter.unit}{literal}');
+								{/literal}
+								</script>
+							{else if $filter.filter_type == 1}
+								<li>
+									{l s='From' mod='blocklayered'} <input class="layered_{$filter.type}_range" id="layered_{$filter.type}_range_min" type="text" value="{$filter.values[0]}" style="width:30px;"/>
+									<span class="layered_price_range_unit">{$filter.unit}</span>
+									{l s='to' mod='blocklayered'} <input class="layered_{$filter.type}_range" id="layered_{$filter.type}_range_max" type="text" value="{$filter.values[1]}" style="width:40px;"/>
+									<span class="layered_price_range_unit">{$filter.unit}</span>
+									<script type="text/javascript">
+									{literal}
+										$('#layered_{/literal}{$filter.type}{literal}_range_min').attr('limitValue', {/literal}{$filter.min}{literal});
+										$('#layered_{/literal}{$filter.type}{literal}_range_max').attr('limitValue', {/literal}{$filter.max}{literal});
+									{/literal}
+									</script>
+								</li>
+							{else}
+								{foreach $filter.list_of_values as $values}
+									<li onclick="$('#layered_{$filter.type}_range_min').val({$values[0]});$('#layered_{$filter.type}_range_max').val({$values[1]});reloadContent();" style="{if $filter.values[1] == $values[1] && $filter.values[0] == $values[0]}font-weight: bold;{/if}">
+										- {l s='From' mod='blocklayered'} {$values[0]} {$filter.unit} {l s='to' mod='blocklayered'} {$values[1]} {$filter.unit}
+									</li>
+								{/foreach}
+								<li style="display: none;">
+									<input class="layered_{$filter.type}_range" id="layered_{$filter.type}_range_min" type="hidden" value="{$filter.values[0]}" style="width:30px;"/>
+									<input class="layered_{$filter.type}_range" id="layered_{$filter.type}_range_max" type="hidden" value="{$filter.values[1]}" style="width:40px;"/>
+								</li>
+							{/if}
+								<script type="text/javascript">
+								{literal}
+									$(document).ready(function()
+									{
+										$('.layered_{/literal}{$filter.type}{literal}').show();
+									});
+								{/literal}
+								</script>
 						{/if}
 						</ul>
 						{if count($filter.values) > $filter.filter_show_limit && $filter.filter_show_limit > 0 && $filter.filter_type != 2}
