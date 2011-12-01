@@ -2361,6 +2361,20 @@ class BlockLayered extends Module
 						
 					if ($priceArray['max'] != $priceArray['min'] && $priceArray['min'] != null)
 					{
+						if ($filter['filter_type'] == 2)
+						{
+							$priceArray['list_of_values'] = array();
+							$nbr_of_value = $filter['filter_show_limit'];
+							if ($nbr_of_value < 2)
+								$nbr_of_value = 4;
+							$delta = ($priceArray['max'] - $priceArray['min']) / $nbr_of_value;
+							$current_step = $priceArray['min'];
+							for ($i = 0; $i < $nbr_of_value; $i++)
+								$priceArray['list_of_values'][] = array(
+									(int)($priceArray['min'] + $i * $delta),
+									(int)($priceArray['min'] + ($i + 1) * $delta)
+								);
+						}
 						if (isset($selectedFilters['price']) && isset($selectedFilters['price'][0])
 						&& isset($selectedFilters['price'][1]))
 						{
