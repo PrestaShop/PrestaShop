@@ -147,8 +147,6 @@ class OrderCore extends ObjectModel
 	 */
 	public $reference;
 
-	/** @var int Id warehouse */
-	public $id_warehouse;
 
 	protected $tables = array ('orders');
 
@@ -163,7 +161,6 @@ class OrderCore extends ObjectModel
 		'id_lang' => 'isUnsignedId',
 		'id_customer' => 'isUnsignedId',
 		'id_carrier' => 'isUnsignedId',
-		'id_warehouse' => 'isUnsignedId',
 		'secure_key' => 'isMd5',
 		'payment' => 'isGenericName',
 		'recyclable' => 'isBool',
@@ -280,7 +277,6 @@ class OrderCore extends ObjectModel
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
 		$fields['reference'] = pSQL($this->reference);
-		$fields['id_warehouse'] = pSQL($this->id_warehouse);
 
 		return $fields;
 	}
