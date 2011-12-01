@@ -231,6 +231,7 @@ class SupplierCore extends ObjectModel
 		$nb_days_new_product = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
 		$sql = 'SELECT p.*, stock.out_of_stock,
+					stock.quantity as quantity,
 					pl.`description`,
 					pl.`description_short`,
 					pl.`link_rewrite`,

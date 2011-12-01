@@ -171,11 +171,13 @@ class AttributeCore extends ObjectModel
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		$sql = 'SELECT quantity
+		$result = StockAvailable::getQuantityAvailableByProduct(null, (int)$id_product_attribute, $shop->getID());
+
+		/*$sql = 'SELECT quantity
 				FROM '._DB_PREFIX_.'stock_available
 				WHERE id_product_attribute = '.(int)$id_product_attribute
 				.$shop->addSqlRestriction();
-		$result = (int)Db::getInstance()->getValue($sql);
+		$result = (int)Db::getInstance()->getValue($sql);*/
 
 		return ($result && $qty <= $result);
 	}
@@ -191,6 +193,9 @@ class AttributeCore extends ObjectModel
 	{
 		Tools::displayAsDeprecated();
 
+		return StockAvailable::getQuantityAvailableByProduct($id_product);
+
+		/*
 		$row = Db::getInstance()->getRow('
 			SELECT SUM(quantity) as quantity
 			FROM `'._DB_PREFIX_.'product_attribute`
@@ -200,6 +205,7 @@ class AttributeCore extends ObjectModel
 		if ($row['quantity'] !== null)
 			return (int)$row['quantity'];
 		return false;
+		*/
 	}
 
 	/**

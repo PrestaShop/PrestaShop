@@ -43,7 +43,13 @@ class NewProductsControllerCore extends FrontController
 	{
 		$this->productSort();
 
-		$nbProducts = (int)Product::getNewProducts($this->context->language->id, (isset($this->p) ? (int)($this->p) - 1 : null), (isset($this->n) ? (int)($this->n) : null), true);
+		$nbProducts = (int)Product::getNewProducts(
+			$this->context->language->id,
+			(isset($this->p) ? (int)($this->p) - 1 : null),
+			(isset($this->n) ? (int)($this->n) : null),
+			true
+		);
+
 		$this->pagination($nbProducts);
 
 		$this->context->smarty->assign(array(

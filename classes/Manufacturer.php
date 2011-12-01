@@ -298,7 +298,7 @@ class ManufacturerCore extends ObjectModel
 			return (int)count($result);
 		}
 
-		$sql = 'SELECT p.*, sa.out_of_stock, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
+		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
 				pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name,
 				tl.`name` AS tax_name, t.`rate`, DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
 				INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
@@ -324,8 +324,7 @@ class ManufacturerCore extends ObjectModel
 					ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `'._DB_PREFIX_.'stock_available` sa
-					ON (sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0)
+				'.Product::sqlStock('p', 0).'
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.($active ? '
 					AND p.`active` = 1' : '').'
 					AND p.`id_product` IN (
@@ -398,16 +397,16 @@ class ManufacturerCore extends ObjectModel
 		foreach ($id_addresses as $id)
 			$ids[] = (int)$id['id'];
 		$result1 = (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'address` 
-			SET id_manufacturer = 0 
-			WHERE id_manufacturer = '.(int)$this->id.' 
+			UPDATE `'._DB_PREFIX_.'address`
+			SET id_manufacturer = 0
+			WHERE id_manufacturer = '.(int)$this->id.'
 			AND deleted = 0') !== false);
 		$result2 = true;
 		if (count($ids))
 			$result2 = (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'address` 
-			SET id_customer = 0, id_supplier = 0, id_manufacturer = '.(int)$this->id.' 
-			WHERE id_address IN('.implode(',', $ids).') 
+			UPDATE `'._DB_PREFIX_.'address`
+			SET id_customer = 0, id_supplier = 0, id_manufacturer = '.(int)$this->id.'
+			WHERE id_address IN('.implode(',', $ids).')
 			AND deleted = 0') !== false);
 		return ($result1 && $result2);
 	}
