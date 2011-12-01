@@ -155,7 +155,7 @@ class StatsProduct extends ModuleGraph
 			if (!Tools::getValue('exportType'))
 				$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '42'));
 
-		$this->html = '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
+		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
 		if ($id_product = (int)Tools::getValue('id_product'))
 		{
 			if (Tools::getValue('export'))
@@ -181,7 +181,7 @@ class StatsProduct extends ModuleGraph
 			if ($totalBought)
 			{
 				$sales = $this->getSales($id_product, $this->context->language->id);
-				$this->html .= '<br class="clear" />
+				$this->html .= '
 				<h3>'.$this->l('Sales').'</h3>
 				<div style="overflow-y: scroll; height: '.min(400, (count($sales) + 1) * 32).'px;">
 				<table class="table" border="0" cellspacing="0" cellspacing="0">
@@ -250,11 +250,9 @@ class StatsProduct extends ModuleGraph
 					</select>
 				</form>
 			</div>
-			<div class="clear space"></div>
-			'.$this->l('Click on a product to access its statistics.').'
-			<div class="clear space"></div>
+						'.$this->l('Click on a product to access its statistics.').'
 			<h2>'.$this->l('Products available').'</h2>
-			<div style="overflow-y: scroll; height: 600px;">
+			<div>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 			<thead>
 				<tr>
@@ -278,8 +276,8 @@ class StatsProduct extends ModuleGraph
 				<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a><br />';
 		}
 
-		$this->html .= '</fieldset><br />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		$this->html .= '</div><br />
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
 		<h2>'.$this->l('Number of purchases compared to number of viewings').'</h2>
 			<p>
 				'.$this->l('After choosing a category and selecting a product, informational graphs will appear. Then, you will be able to analyze them.').'
@@ -290,7 +288,7 @@ class StatsProduct extends ModuleGraph
 					</li>
 				</ul>
 			</p>
-		</fieldset>';
+		</div>';
 		return $this->html;
 	}
 

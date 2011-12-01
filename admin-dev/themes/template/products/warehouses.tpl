@@ -1,10 +1,9 @@
-<div class="hint" style="display:block; position:'auto';">
+<h4>{l s='Product location in warehouses'}</h4>
+			<div class="separation"></div>
+			<div class="hint" style="display:block; position:'auto';">
 	<p>{l s='This interface allows you to specify in which warehouses the product is stocked.'}</p>
 	<p>{l s='It is also possible to specify for each product/product combinations its location in each warehouse.'}</p>
 </div>
-<br />
-				<h4>{l s='Product location in warehouses'}</h4>
-			<div class="separation"></div>
 <p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
 
 {assign var=confirm value="Are you sure you want to delete entered product information?"}

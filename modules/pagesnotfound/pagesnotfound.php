@@ -107,7 +107,7 @@ class Pagesnotfound extends Module
 			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found have been deleted.').'</div>';
 		}
 
-		$this->_html .= '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
+		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
 			$this->_html .= '<div class="warning warn">'.$this->l('You <b>must</b> use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
 
@@ -136,17 +136,17 @@ class Pagesnotfound extends Module
 		else
 			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('No pages registered').'</div>';
 
-		$this->_html .= '</fieldset>';
+		$this->_html .= '</div>';
 		if (count($pages))
 			$this->_html .= '<div class="clear">&nbsp;</div>
-			<fieldset><legend><img src="../img/admin/delete.gif" /> '.$this->l('Empty database').'</legend>
+			<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Empty database').'</h2>
 				<form action="'.Tools::htmlEntitiesUtf8($_SERVER['REQUEST_URI']).'" method="post">
 					<input type="submit" class="button" name="submitDeletePNF" value="'.$this->l('Empty ALL pages not found in this period').'">
 					<input type="submit" class="button" name="submitTruncatePNF" value="'.$this->l('Empty ALL pages not found').'">
 				</form>	
-			</fieldset>';
+			</div>';
 		$this->_html .= '<br />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('404 errors').'</h2>
 			<p>'.$this->l('A 404 error is an HTTP error code which means that the file requested by the user cannot be found. 
 				In your case it means that one of your visitors entered a wrong URL in the address bar or that you or another website has a dead link. 
@@ -157,7 +157,7 @@ class Pagesnotfound extends Module
 				<i>ErrorDocument 404 '.__PS_BASE_URI__.'404.php</i>. '.
 				$this->l('A user requesting a page which doesn\'t exist will be redirected to the page.').' <i>'.__PS_BASE_URI__.'404.php</i>. '.
 				$this->l('This module logs the accesses to this page: the page requested, the referrer and the number of times that it occurred.').'</p><br />
-		</fieldset>';
+		</div>';
 
 		return $this->_html;
 	}

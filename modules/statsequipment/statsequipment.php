@@ -122,7 +122,7 @@ class StatsEquipment extends ModuleGraph
 
 		$equipment = $this->getEquipment();
 		$this->html = '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
 			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of web browsers used by your customers.').'</p>
 			'.$this->engine(array('type' => 'pie', 'option' => 'wb')).'<br /><br />
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
@@ -139,9 +139,9 @@ class StatsEquipment extends ModuleGraph
 				$this->html .= '</table>';
 			}
 			$this->html .= '
-		</fieldset>
+		</div>
 		<br />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<div class="blocStats"><h2 class="icon-guide"> '.$this->l('Guide').'</h2>
 		<h2>'.$this->l('Ensure that your website is accessible to all.').'</h2>
 			<p>
 				'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. 
@@ -150,7 +150,7 @@ class StatsEquipment extends ModuleGraph
 					That is why it is a good idea to keep tabs on the percentage of users for each type of software before adding or changing something that only a limited number of users will be able to access.').'
 			</p><br />
 			
-		</fieldset>';
+		</div>';
 		return $this->html;
 	}
 
