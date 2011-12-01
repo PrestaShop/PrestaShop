@@ -358,7 +358,7 @@ class CartCore extends ObjectModel
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`,
 						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, sa.`out_of_stock`,
-						p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
+						sa.`quantity` quantity_available, p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery');
 
 		// Build FROM
@@ -372,10 +372,13 @@ class CartCore extends ObjectModel
 										AND tr.`id_state` = 0
 										AND tr.`zipcode_from` = 0');
 		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
-		$sql->leftJoin('stock_available sa ON sa.`id_product` = p.`id_product` AND sa.id_product_attribute = 0');
 		$sql->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang);
 		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl'));
-
+		
+		$sql->leftJoin('stock_available sa ON cp.`id_product` = sa.`id_product`
+			AND cp.`id_product_attribute` = sa.`id_product_attribute`'.
+			Context::getContext()->shop->addSqlRestriction(false, 'sa'));
+		
 		// @todo test if everything is ok, then refactorise call of this method
 		Product::sqlStock('cp', 'cp', false, null, $sql);
 
@@ -2530,13 +2533,13 @@ class CartCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0
-	 * @return bool false is some product from the cart are out of stock
+	 * @return bool false is some products from the cart are out of stock
 	 */
 	public function isAllProductsInStock()
 	{
 		foreach ($this->getProducts() as $product)
 		{
-			if (isset($product['out_of_stock']) && (int)$product['out_of_stock'])
+			if ((int)$product['quantity_available'] <= 0)
 				return false;
 		}
 		return true;
