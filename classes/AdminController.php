@@ -677,7 +677,7 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Change object statuts (active, inactive)
+	 * Change object status (active, inactive)
 	 *
 	 * @param string $token
 	 */
