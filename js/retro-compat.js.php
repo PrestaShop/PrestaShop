@@ -39,7 +39,7 @@ $plugins = array(
 				'jquery.jqzoom.js' => 
 					array('new_file' => $plugins_folder.'jquery.jqzoom.js', 'name' => 'jqzoom'),
 				'jquery.serialScroll-1.2.2-min.js' => 
-					array('new_file' => $plugins_folder.'jquery.serialScroll.js', 'name' => 'erialScroll'),
+					array('new_file' => $plugins_folder.'jquery.serialScroll.js', 'name' => 'serialScroll'),
 				'ifxtransfer.js' => 
 					array('new_file' => $plugins_folder.'jquery.ifxtransfer.js', 'name' => 'ifxtransfer'),
 				'jquery.autocomplete.js' => 
