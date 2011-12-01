@@ -105,8 +105,8 @@ class SEKeywords extends ModuleGraph
 			$this->csvExport(array('type' => 'pie'));
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$total = count($result);
-		$this->html = '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'<div class="clear">&nbsp;</div>';
+		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'';
 		if ($result && $total)
 		{
 			$table = '
@@ -124,20 +124,20 @@ class SEKeywords extends ModuleGraph
 			}
 			$table .= '</tbody></table></div>';
 			$this->html .= '<div>'.$this->engine(array('type' => 'pie')).'</div>
-			<br class="clear" />
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br class="clear" />
+			<br/>
+			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br/>
 			<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">
 				'.$this->l('Filter by keyword').' <input type="text" name="SEK_FILTER_KW" value="'.Tools::htmlentitiesUTF8(Configuration::get('SEK_FILTER_KW')).'" />
 				'.$this->l('and min occurrences').' <input type="text" name="SEK_MIN_OCCURENCES" value="'.(int)Configuration::get('SEK_MIN_OCCURENCES').'" />
 				<input type="submit" class="button" name="submitSEK" value="'.$this->l('   Apply   ').'" />
 			</form>
-			<br class="clear" />'.$table;
+			<br/>'.$table;
 		}
 		else
 			$this->html .= '<p><strong>'.$this->l('No keywords').'</strong></p>';
 
-		$this->html .= '</fieldset><br class="clear" />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		$this->html .= '</div><br/>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Identify external search engines\' keywords').'</h2>
 			<p>'.$this->l('One of the most common ways of finding a website through a search engine.
 				Identifying the most popular keywords entered by your new visitors allows you to see which products you should put in front if you want to attract more visitors and potential customers.').'
@@ -146,7 +146,7 @@ class SEKeywords extends ModuleGraph
 			<p>'.$this->l('When a visitor comes to your website, the server notes their previous location. This module parses the URL and finds the keywords in it. 
 				Currently, it manages the following search engines:').'<b> Google, AOL, Yandex, Ask, NHL, Yahoo, Baidu, Lycos, Exalead, Live, Voila</b> '.$this->l('and').' <b>Altavista</b>. '.
 				$this->l('Soon it will be possible to dynamically add new search engines and contribute to this module.').'</p><br />
-		</fieldset>';
+		</div>';
 		return $this->html;
 	}
 

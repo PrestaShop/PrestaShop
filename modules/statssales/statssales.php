@@ -67,7 +67,7 @@ class StatsSales extends ModuleGraph
 			$this->csvExport(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country')));
 			
 		$this->_html = '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right; margin-left: 10px;">
 				<select name="id_country">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
@@ -91,15 +91,15 @@ class StatsSales extends ModuleGraph
 			</p><br />
 			'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
-		</fieldset>
+		</div >
 		<br />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		<div class="blocStats"><h2 class="icon-guide">'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Various order statuses').'</h2>
 			<p>
 				'.$this->l('In your back-office, you can find the following order statuses : Awaiting check payment, Payment accepted, Preparation in progress, Shipping, Delivered, Cancelled, Refund, Payment error, Out of stock, and Awaiting bank wire payment.').'<br />
 				'.$this->l('Statuses cannot be removed from the back-office, but you have the option to add more.').'
 			</p>
-		</fieldset>';
+		</div >';
 		return $this->_html;
 	}
 

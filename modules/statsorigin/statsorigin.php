@@ -84,14 +84,13 @@ class StatsOrigin extends ModuleGraph
 		if (Tools::getValue('export'))
 			if (Tools::getValue('exportType') == 'top')
 				$this->csvExport(array('type' => 'pie'));
-		$this->_html = '<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Origin').'</legend>';
+		$this->_html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Origin').'</h2>';
 		if (count($websites))
 		{
 			$this->_html .= '
 			<p><img src="../img/admin/down.gif" />'.$this->l('Here is the percentage of the 10 most popular referrer websites by which visitors went through to get to your shop.').'</p>
 			<div>'.$this->engine(array('type' => 'pie')).'</div>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
-			<div style="overflow-y: scroll; height: 600px;">
 			
 			<table class="table " border="0" cellspacing="0" cellspacing="0">
 				<tr>
@@ -106,8 +105,8 @@ class StatsOrigin extends ModuleGraph
 		}
 		else
 			$this->_html .= '<p><strong>'.$this->l('Direct links only').'</strong></p>';
-		$this->_html .= '</fieldset><br />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		$this->_html .= '</div><br />
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
 		<h2>'.$this->l('What is a referrer website?').'</h2>
 			<p>
 				'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
@@ -118,7 +117,7 @@ class StatsOrigin extends ModuleGraph
 					<li class="bullet">'.$this->l('A partner with whom you made a link exchange in order to bring in sales or attract new customers').'</li>
 				</ul>
 			</p>
-		</fieldset>';
+		</div>';
 		return $this->_html;
 	}
 

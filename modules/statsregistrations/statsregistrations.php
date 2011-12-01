@@ -109,7 +109,7 @@ class StatsRegistrations extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 0, 'type' => 'line'));
 		$this->_html = '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
 			<p>
 				'.$this->l('Visitors who have stopped at the registering step:').' '.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'<br />
 				'.$this->l('Visitors who have placed an order directly after registration:').' '.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'
@@ -117,8 +117,8 @@ class StatsRegistrations extends ModuleGraph
 			<p>'.$this->l('Total customer accounts:').' '.$totalRegistrations.'</p>
 			<div>'.$this->engine(array('type' => 'line')).'</div>
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
-		</fieldset><br />
-		<fieldset><legend><img src="../img/admin/comment.gif" /> '.$this->l('Guide').'</legend>
+		</div><br />
+		<div class="blocStats"><h2 class="icon-guide">'.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Number of customer accounts created').'</h2>
 			<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.').'</p>
 			<br /><h3>'.$this->l('How to act on the registrations\' evolution?').'</h3>
@@ -132,7 +132,7 @@ class StatsRegistrations extends ModuleGraph
 					<li>'.$this->l('Design and user-friendliness are more important than ever: an ill-chosen or hard-to-follow graphical theme can turn off visitors. You should strike the right balance between an innovative design and letting visitors move around easily. Proper spelling and clarity also inspire more customer confidence in your shop.').'</li>
 				</ul>
 			</p><br />
-		</fieldset>';
+		</div>';
 		return $this->_html;
 	}
 	

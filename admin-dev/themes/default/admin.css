@@ -244,8 +244,17 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 
 /*STATCONTAINER*/
 #statsContainer {margin-left:220px; padding:0 0 0 20px;}
-#statsContainer #calendar {   background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; margin: 10px 0;min-height: 25px; padding: 10px;}
-#statsContainer #calendar input, #statsContainer #calendar p { float:left; margin-right:5px;}
+#statsContainer #calendar {   background-color: #EEEEEE;border-top: 1px solid #CCCCCC; display: block; margin: 10px 0;min-height: 25px; padding: 5px;}
+#statsContainer #calendar form { float:right;}
+#statsContainer #calendar input, #statsContainer #calendar p { float:left;}
+#statsContainer #calendar input.submitDateDay { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
+#statsContainer #calendar input.submitDateMonth { border-radius:0px;}
+#statsContainer #calendar input.submitDateYear { border-top-left-radius: 0px; border-bottom-left-radius:0px; border-left:none; margin-right:10px;}
+#statsContainer #calendar input.submitDateDayPrev { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
+#statsContainer #calendar input.submitDateMonthPrev { border-radius:0px;}
+#statsContainer #calendar input.submitDateYearPrev { border-top-left-radius: 0px; border-bottom-left-radius:0px; border-left:none; margin-right:10px;}
+#statsContainer #calendar p { margin:2px;}
+#statsContainer #calendar p span { float:left; display:block; padding:3px;}
 #statsContainer .blocStats { background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
 #statsContainer .blocStats h2 { font-weight:normal; margin:0;}
 #statsContainer .blocStats form { position:absolute; top:10px; right:5px;}

@@ -67,7 +67,7 @@ class StatsCarrier extends ModuleGraph
 		if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
 		$this->_html = '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right;">
 				<select name="id_order_state">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';
@@ -78,7 +78,7 @@ class StatsCarrier extends ModuleGraph
 			</form>
 			<p><img src="../img/admin/down.gif" />'.$this->l('This graph represents the carrier distribution for your orders. You can also limit it to orders in one state.').'</p>
 			'.($result['total'] ? $this->engine(array('type' => 'pie', 'option' => Tools::getValue('id_order_state'))).'<br /><br /> <a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>' : $this->l('No valid orders for this period.')).'
-		</fieldset>';
+		</div>';
 		return $this->_html;
 	}
 

@@ -1,10 +1,9 @@
+<h4>{l s='Suppliers of the current product'}</h4>
+<div class="separation"></div>
 <div class="hint" style="display:block; position:'auto';">
 	<p>{l s='This interface allows you to specify the suppliers of the current product and eventually its combinations.'}</p>
 	<p>{l s='It is also possible to specify for each product/product combinations the supplier reference according to previously associated suppliers.'}</p>
 </div>
-<br />
-				<h4>{l s='Suppliers of the current product'}</h4>
-<div class="separation"></div>
 <p>{l s='Please choose the suppliers associated to this product, and the default one.'}</p>
 {assign var=confirm value="Are you sure you want to delete entered product information?"}
 <a class="button bt-icon" href="{$link->getAdminLink('AdminSuppliers')}&addsupplier" onclick="return confirm(' {$confirm} ')">

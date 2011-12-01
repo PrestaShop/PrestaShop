@@ -27,16 +27,16 @@
 <div id="statsContainer">
 	<div id="calendar">
 				<form action="{$current}&token={$token}{if $action && $table}&{$action}{$table}{/if}{if $identifier && $id}&{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form">
-					<input type="submit" name="submitDateDay" class="button" value="{$translations.Day}">
-					<input type="submit" name="submitDateMonth" class="button" value="{$translations.Month}">
-					<input type="submit" name="submitDateYear" class="button" value="{$translations.Year}">
-					<input type="submit" name="submitDateDayPrev" class="button" value="{$translations.Day}-1">
-					<input type="submit" name="submitDateMonthPrev" class="button" value="{$translations.Month}-1">
-					<input type="submit" name="submitDateYearPrev" class="button" value="{$translations.Year}-1">
-					<p>{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}
+					<input type="submit" name="submitDateDay" class="button submitDateDay" value="{$translations.Day}">
+					<input type="submit" name="submitDateMonth" class="button submitDateMonth" value="{$translations.Month}">
+					<input type="submit" name="submitDateYear" class="button submitDateYear" value="{$translations.Year}">
+					<input type="submit" name="submitDateDayPrev" class="button submitDateDayPrev" value="{$translations.Day}-1">
+					<input type="submit" name="submitDateMonthPrev" class="button submitDateMonthPrev" value="{$translations.Month}-1">
+					<input type="submit" name="submitDateYearPrev" class="button submitDateYearPrev" value="{$translations.Year}-1">
+					<p><span>{if isset($translations.From)}{$translations.From}{else}{l s='From:'}{/if}</span>
 						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom}" class="datepicker">
 					</p>
-					<p>{if isset($translations.To)}{$translations.To}{else}{l s='From:'}{/if}
+					<p><span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='From:'}</span>{/if}</span>
 						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo}" class="datepicker">
 					</p>
 					<input type="submit" name="submitDatePicker" id="submitDatePicker" class="button" value="{if isset($translations.Save)}{$translations.Save}{else}{l s='   Save   '}{/if}" />
