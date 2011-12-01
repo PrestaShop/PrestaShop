@@ -2038,7 +2038,7 @@ class BlockLayered extends Module
 				case 'price':
 					if (isset($selectedFilters['price']))
 					{
-						if ($selectedFilters['price'][0] != 0 || $selectedFilters['price'][1] != 0)
+						if ($selectedFilters['price'][0] !== '' || $selectedFilters['price'][1] !== '')
 						{
 							$priceFilter = array();
 							$priceFilter['min'] = (float)($selectedFilters['price'][0]);
@@ -2162,7 +2162,7 @@ class BlockLayered extends Module
 			{
 				case 'price':
 				case 'weight':
-					if ($value[0] == '' && $value[1] == '')
+					if ($value[0] === '' && $value[1] === '')
 						unset($selectedFilters[$key]);
 					break;
 				default:
