@@ -237,12 +237,16 @@ function openCloseFilter()
 	});
 }
 
-function reloadContent(params_plus)
-{
+function stopAjaxQuery() {
 	for(i = 0; i < ajaxQueries.length; i++)
 		ajaxQueries[i].abort();
 	ajaxQueries = new Array();
+}
 
+function reloadContent(params_plus)
+{
+	stopAjaxQuery();
+	
 	if (!ajaxLoaderOn)
 	{
 		$('#product_list').prepend($('#layered_ajax_loader').html());
