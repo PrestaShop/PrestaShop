@@ -166,59 +166,73 @@ abstract class Controller extends ControllerCore
 		ini_set('display_errors', 'on');
 		error_reporting(E_ALL | E_STRICT);
 
-		$this->_memory = array_fill(0, 10, 0);
-		$this->_time = array_fill(0, 10, 0);
-
 		if (!self::$_footer)
 			return;
 
-		$this->_memory[-3] = memory_get_usage();
-		$this->_time[-3] = microtime(true);
-		$this->init();
-		$this->_memory[-2] = memory_get_usage();
-		$this->_time[-2] = microtime(true);
+		$this->_memory['config'] = memory_get_usage();
+		$this->_time['config'] = microtime(true);
+
 		parent::__construct();
-		$this->_memory[-1] = memory_get_usage();
-		$this->_time[-1] = microtime(true);
+		$this->_memory['constructor'] = memory_get_usage();
+		$this->_time['constructor'] = microtime(true);
 	}
 
 	public function run()
 	{
-		$this->_memory[0] = memory_get_usage();
-		$this->_time[0] = microtime(true);
 		$this->init();
+		$this->_memory['init'] = memory_get_usage();
+		$this->_time['init'] = microtime(true);
 
-		$this->_memory[1] = memory_get_usage();
-		$this->_time[1] = microtime(true);
-		if ($this->ajax && method_exists($this, 'ajaxProcess'))
-			$this->ajaxProcess();
-		else
-			$this->postProcess();
-
-		$this->_memory[2] = memory_get_usage();
-		$this->_time[2] = microtime(true);
-		if ($this->display_header)
+		if ($this->checkAccess())
 		{
-			$this->setMedia();
-			$this->initHeader();
+			$this->_memory['checkAccess'] = memory_get_usage();
+			$this->_time['checkAccess'] = microtime(true);
+
+			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
+				$this->setMedia();
+			$this->_memory['setMedia'] = memory_get_usage();
+			$this->_time['setMedia'] = microtime(true);
+
+			// postProcess handles ajaxProcess
+			$this->postProcess();
+			$this->_memory['postProcess'] = memory_get_usage();
+			$this->_time['postProcess'] = microtime(true);
+
+			if (!empty($this->redirect_after))
+				$this->redirect();
+
+			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
+				$this->initHeader();
+			$this->_memory['initHeader'] = memory_get_usage();
+			$this->_time['initHeader'] = microtime(true);
+
+			$this->initContent();
+			$this->_memory['initContent'] = memory_get_usage();
+			$this->_time['initContent'] = microtime(true);
+
+			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
+				$this->initFooter();
+			$this->_memory['initFooter'] = memory_get_usage();
+			$this->_time['initFooter'] = microtime(true);
+
+			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
+			// then using displayAjax[action]
+			if ($this->ajax)
+			{
+				$action = Tools::getValue('action');
+				if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
+					$this->{'displayAjax'.$action}();
+				elseif (method_exists($this, 'displayAjax'))
+					$this->displayAjax();
+			}
+			else
+				$this->displayDebug();
 		}
-
-		$this->_memory[3] = memory_get_usage();
-		$this->_time[3] = microtime(true);
-		$this->initContent();
-
-
-		$this->_memory[4] = memory_get_usage();
-		$this->_time[4] = microtime(true);
-		if ($this->display_footer)
-			$this->initFooter();
-
-		$this->_memory[5] = memory_get_usage();
-		$this->_time[5] = microtime(true);
-		if ($this->ajax && method_exists($this, 'displayAjax'))
-			$this->displayAjax();
 		else
+		{
+			$this->initCursedPage();
 			$this->displayDebug();
+		}
 	}
 
 	function ini_get_display_errors()
@@ -252,15 +266,11 @@ abstract class Controller extends ControllerCore
 		global $start_time;
 
 		$this->display();
-
-		if (self::$_footer)
-			parent::displayFooter();
+		$this->_memory['display'] = memory_get_usage();
+		$this->_time['display'] = microtime(true);
 
 		if (!$this->ini_get_display_errors())
 			return;
-
-		$this->_memory[6] = memory_get_usage();
-		$this->_time[6] = microtime(true);
 
 		$hr = '<hr style="color:#F5F5F5;margin:2px" />';
 
@@ -291,20 +301,16 @@ abstract class Controller extends ControllerCore
 
 		echo '<br /><br />
 		<div class="rte" style="text-align:left;padding:8px;float:left">
-			<b>Load time</b>: '.$this->displayLoadTimeColor($this->_time[6] - $start_time, true).'';
+			<b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'';
 		if (self::$_footer)
-			echo '
-			<ul>
-				<li>Config: '.$this->displayLoadTimeColor($this->_time[-3] - $start_time).'</li>
-				<li>Init: '.$this->displayLoadTimeColor(($this->_time[-2] - $this->_time[-3])).'</li>
-				<li>Constructor: '.$this->displayLoadTimeColor(($this->_time[-1] - $this->_time[-2])).'</li>
-				<li>preProcess: '.$this->displayLoadTimeColor(($this->_time[1] - $this->_time[0])).'</li>
-				<li>setMedia: '.$this->displayLoadTimeColor(($this->_time[2] - $this->_time[1])).'</li>
-				<li>displayHeader: '.$this->displayLoadTimeColor(($this->_time[3] - $this->_time[2])).'</li>
-				<li>process: '.$this->displayLoadTimeColor(($this->_time[4] - $this->_time[3])).'</li>
-				<li>displayContent: '.$this->displayLoadTimeColor(($this->_time[5] - $this->_time[4])).'</li>
-				<li>displayFooter: '.$this->displayLoadTimeColor(($this->_time[6] - $this->_time[5])).'</li>
-			</ul>';
+			echo '<ul>';
+			$last_time = $start_time;
+			foreach ($this->_time as $k => $time)
+			{
+				echo '<li>'.$k.': '.$this->displayLoadTimeColor($time - $last_time).'</li>';
+				$last_time = $time;
+			}
+			echo '</ul>';
 		echo '</div>
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
 			<b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).'
@@ -316,17 +322,16 @@ abstract class Controller extends ControllerCore
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
 			<b>Memory peak usage</b>: '.$this->displayMemoryColor(memory_get_peak_usage()).'';
 		if (self::$_footer)
-			echo '
-			<ul>
-				<li>Config: '.$this->displayMemoryColor($this->_memory[-3]).'</li>
-				<li>Init: '.$this->displayMemoryColor(($this->_memory[-2] - $this->_memory[-3])).'</li>
-				<li>Constructor: '.$this->displayMemoryColor(($this->_memory[-1] - $this->_memory[-2])).'</li>
-				<li>preProcess: '.$this->displayMemoryColor(($this->_memory[1] - $this->_memory[0])).'</li>
-				<li>setMedia: '.$this->displayMemoryColor(($this->_memory[2] - $this->_memory[1])).'</li>
-				<li>displayHeader: '.$this->displayMemoryColor(($this->_memory[3] - $this->_memory[2])).'</li>
-				<li>process: '.$this->displayMemoryColor(($this->_memory[4] - $this->_memory[3])).'</li>
-				<li>displayContent: '.$this->displayMemoryColor(($this->_memory[5] - $this->_memory[4])).'</li><li>displayFooter: '.$this->displayMemoryColor(($this->_memory[6] - $this->_memory[5])).'</li>
-			</ul>';
+		{
+			echo '<ul>';
+			$last_memory = 0;
+			foreach ($this->_memory as $k => $memory)
+			{
+				echo '<li>'.$k.': '.$this->displayMemoryColor($memory - $last_memory).'</li>';
+				$last_memory = $memory;
+			}
+			echo '</ul>';
+		}
 		echo '</div>';
 
 		echo '
