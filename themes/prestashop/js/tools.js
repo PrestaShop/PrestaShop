@@ -231,7 +231,6 @@ $(document).ready(function() {
 			fnChecked.call(this);
 		else if(fnUnchecked)
 			fnUnchecked.call(this);
-		console.log('fff');
 		
 		if (!$(this).attr('eventCheckboxChange'))
 		{
