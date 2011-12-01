@@ -147,11 +147,12 @@ class AdminInvoicesControllerCore extends AdminController
 			SELECT COUNT(*) as nbOrders, (
 				SELECT oh.id_order_state
 				FROM '._DB_PREFIX_.'order_history oh
-				WHERE oh.id_order = o.id_order
+				WHERE oh.id_order = oi.id_order
 				ORDER BY oh.date_add DESC, oh.id_order_history DESC
 				LIMIT 1
 			) id_order_state
-			FROM '._DB_PREFIX_.'orders o
+			FROM '._DB_PREFIX_.'order_invoice oi
+			LEFT JOIN '._DB_PREFIX_.'orders o ON (oi.id_order = o.id_order)
 			WHERE o.id_shop IN('.implode(', ', $this->context->shop->getListOfID()).')
 			GROUP BY id_order_state
 		');
@@ -204,13 +205,17 @@ class AdminInvoicesControllerCore extends AdminController
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
 				$this->_errors[] = $this->l('Invalid from date');
+
 			if (!Validate::isDate(Tools::getValue('date_to')))
 				$this->_errors[] = $this->l('Invalid end date');
+
 			if (!count($this->_errors))
 			{
-				$orders = Order::getOrdersIdInvoiceByDate(Tools::getValue('date_from'), Tools::getValue('date_to'), null, 'invoice');
-				if (count($orders))
+				$order_invoice_list = OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
+
+				if (count($order_invoice_list))
 					Tools::redirectAdmin('pdf.php?invoices&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
+
 				$this->_errors[] = $this->l('No invoice found for this period');
 			}
 		}
@@ -223,6 +228,7 @@ class AdminInvoicesControllerCore extends AdminController
 				foreach ($status_array as $id_order_state)
 					if (count($orders = Order::getOrderIdsByStatus((int)$id_order_state)))
 						Tools::redirectAdmin('pdf.php?invoices2&id_order_state='.implode('-', $status_array).'&token='.$this->token);
+
 				$this->_errors[] = $this->l('No invoice found for this status');
 			}
 		}

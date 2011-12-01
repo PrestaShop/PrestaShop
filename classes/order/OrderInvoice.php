@@ -384,4 +384,26 @@ class OrderInvoiceCore extends ObjectModel
 		AND `id_order_invoice` = '.(int)$this->id
 		);
 	}
+
+    /**
+     * Returns all the order invoice that match the date interval
+     *
+     * @since 1.5.0.2
+     * @static
+     * @param $date_from
+     * @param $date_to
+     * @return array collection of OrderInvoice
+     */
+    public static function getByDateInterval($date_from, $date_to)
+    {
+        $order_invoice_list = Db::getInstance()->ExecuteS('SELECT oi.*
+                                FROM `'._DB_PREFIX_.'order_invoice` oi
+                                LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+                                WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
+                                AND oi.date_add >= \''.pSQL($date_from).'\'
+                                '.Context::getContext()->shop->addSqlRestriction().
+                                ' ORDER BY oi.date_add ASC');
+
+        return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
+    }
 }
