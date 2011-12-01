@@ -3422,9 +3422,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('id_product_attribute') === false)
 					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
 
-				$id_shop = (int)Context::getContext()->shop->getID(true);
-
-				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'), $id_shop);
+				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
 				break;
 		}
 		die(Tools::jsonEncode(array('error' => false)));

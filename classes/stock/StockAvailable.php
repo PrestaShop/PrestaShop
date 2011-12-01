@@ -109,7 +109,7 @@ class StockAvailableCore extends ObjectModel
 		if (!is_null($id_product_attribute))
 			$query->where('id_product_attribute = '.(int)$id_product_attribute);
 
-		$query = self::addSqlShopRestriction($query, $id_shop);
+		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
@@ -134,7 +134,7 @@ class StockAvailableCore extends ObjectModel
 		foreach ($ids_warehouse as $id_shop => $warehouses)
 		{
 			// first, checks if the product depends on stock for the given shop $id_shop
-			if (self::dependsOnStock($id_product, $id_shop))
+			if (StockAvailable::dependsOnStock($id_product, $id_shop))
 			{
 				// init quantity
 				$product_quantity = 0;
@@ -153,7 +153,7 @@ class StockAvailableCore extends ObjectModel
 						'data' => array('quantity' => $quantity),
 						'type' => 'UPDATE',
 						'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
-						self::addSqlShopRestriction(null, $id_shop)
+						StockAvailable::addSqlShopRestriction(null, $id_shop)
 					);
 					Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
 
@@ -167,7 +167,7 @@ class StockAvailableCore extends ObjectModel
 					'data' => array('quantity' => $product_quantity),
 					'type' => 'UPDATE',
 					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0'.
-					self::addSqlShopRestriction(null, $id_shop)
+					StockAvailable::addSqlShopRestriction(null, $id_shop)
 				);
 				Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
 			}
@@ -186,7 +186,7 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
-		$existing_id = self::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
+		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
 
 		if ($existing_id > 0)
 		{
@@ -195,7 +195,7 @@ class StockAvailableCore extends ObjectModel
 				array('depends_on_stock' => (int)(bool)$depends_on_stock),
 				'UPDATE',
 				'id_product = '.(int)$id_product.
-				self::addSqlShopRestriction(null, $id_shop)
+				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
 		else
@@ -206,7 +206,7 @@ class StockAvailableCore extends ObjectModel
 				'id_product_attribute' => 0
 			);
 
-			self::addSqlShopParams($params, $id_shop);
+			StockAvailable::addSqlShopParams($params, $id_shop);
 
 			Db::getInstance()->autoExecute(
 				_DB_PREFIX_.'stock_available',
@@ -232,7 +232,7 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
-		$existing_id = self::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
+		$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, 0, (int)$id_shop);
 
 		if ($existing_id > 0)
 		{
@@ -241,7 +241,7 @@ class StockAvailableCore extends ObjectModel
 				array('out_of_stock' => (int)$out_of_stock),
 				'UPDATE',
 				'id_product = '.(int)$id_product.
-				self::addSqlShopRestriction(null, $id_shop)
+				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
 		else
@@ -252,7 +252,7 @@ class StockAvailableCore extends ObjectModel
 				'id_product_attribute' => 0
 			);
 
-			self::addSqlShopParams($params, $id_shop);
+			StockAvailable::addSqlShopParams($params, $id_shop);
 
 			Db::getInstance()->autoExecute(
 				_DB_PREFIX_.'stock_available',
@@ -270,7 +270,7 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $id_shop Optional : gets context by default
 	 * @return int Quantity
 	 */
-	public static function getQuantityAvailableByProduct($id_product, $id_product_attribute = null, $id_shop = null)
+	public static function getQuantityAvailableByProduct($id_product = null, $id_product_attribute = null, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
@@ -282,10 +282,14 @@ class StockAvailableCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('quantity');
 		$query->from('stock_available');
-		$query->where('id_product = '.(int)$id_product);
+
+		// if null, it's a product without attributes
+		if (!is_null($id_product))
+			$query->where('id_product = '.(int)$id_product);
+
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);
 
-		$query = self::addSqlShopRestriction($query, $id_shop);
+		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
@@ -331,7 +335,7 @@ class StockAvailableCore extends ObjectModel
 			FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$this->id_product.'
 			AND id_product_attribute <> 0 '.
-			self::addSqlShopRestriction(null, $this->id_shop).'
+			StockAvailable::addSqlShopRestriction(null, $this->id_shop).'
 			'
 		);
 
@@ -350,7 +354,7 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
 	{
-		$id_stock_available = self::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
+		$id_stock_available = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
 
 		if (!$id_stock_available)
 			return false;
@@ -362,7 +366,7 @@ class StockAvailableCore extends ObjectModel
 			foreach ($products_pack as $product_pack)
 			{
 				$pack_id_product_attribute = Product::getDefaultAttribute($tab_product_pack['id_product'], 1);
-				self::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
+				StockAvailable::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
 			}
 		}
 
@@ -382,18 +386,18 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null)
 	{
-		$depends_on_stock = self::dependsOnStock($id_product);
+		$context = Context::getContext();
+
+		// if there is no $id_shop, gets the context one
+		if (is_null($id_shop))
+			$id_shop = (int)$context->shop->getID(true);
+
+		$depends_on_stock = StockAvailable::dependsOnStock($id_product);
 
 		//Try to set available quantitiy if product does not depend on physical stock
 		if (!$depends_on_stock)
 		{
-			$id_stock_available = (int)self::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-
-			$context = Context::getContext();
-
-			// if there is no $id_shop, gets the context one
-			if (is_null($id_shop))
-				$id_shop = (int)$context->shop->getID(true);
+			$id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
 
 			if ($id_stock_available)
 			{
@@ -403,7 +407,7 @@ class StockAvailableCore extends ObjectModel
 			}
 			else
 			{
-				$out_of_stock = self::outOfStock($id_product, $id_shop);
+				$out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
 
 				$stock_available = new StockAvailable();
 				$stock_available->out_of_stock = (int)$out_of_stock;
@@ -443,12 +447,39 @@ class StockAvailableCore extends ObjectModel
 	 */
 	public static function removeProductFromStockAvailable($id_product, $id_product_attribute = null, $id_shop = null)
 	{
-		Db::getInstance()->execute('
+		return Db::getInstance()->execute('
 			DELETE FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$id_product.
 			($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
-			self::addSqlShopRestriction(null, $id_shop)
+			StockAvailable::addSqlShopRestriction(null, $id_shop)
 		);
+	}
+
+	/**
+	 * Removes all product quantities from all a group of shops
+	 * If stocks are shared, remoe all old available quantities for all shops of the group
+	 * Else remove all available quantities for the current group
+	 *
+	 * @param GroupShop $group_shop the GroupShop object
+	 */
+	public static function resetProductFromStockAvailableByGroupShop($group_shop)
+	{
+		if ($group_shop->share_stock)
+		{
+			$id_shops_list = implode(', ', Shop::getIdShopsByIdGroupShop($group_shop->id));
+
+			return Db::getInstance()->execute('
+				DELETE FROM '._DB_PREFIX_.'stock_available
+				WHERE id_shop IN ('.$id_shops_list.')'
+			);
+		}
+		else
+		{
+			return Db::getInstance()->execute('
+				DELETE FROM '._DB_PREFIX_.'stock_available
+				WHERE id_group_shop = '.$group_shop->id
+			);
+		}
 	}
 
 	/**
@@ -469,7 +500,7 @@ class StockAvailableCore extends ObjectModel
 		$query->where('id_product = '.(int)$id_product);
 		$query->where('id_product_attribute = 0');
 
-		$query = self::addSqlShopRestriction($query, $id_shop);
+		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
@@ -492,7 +523,7 @@ class StockAvailableCore extends ObjectModel
 		$query->where('id_product = '.(int)$id_product);
 		$query->where('id_product_attribute = 0');
 
-		$query = self::addSqlShopRestriction($query, $id_shop);
+		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
@@ -506,14 +537,17 @@ class StockAvailableCore extends ObjectModel
 	 *
 	 * @return mixed the DbQuery object or the sql restriction string
 	 */
-	protected static function addSqlShopRestriction(DbQuery $sql = null, $id_shop = null, $alias = null)
+	public static function addSqlShopRestriction(DbQuery $sql = null, $id_shop = null, $alias = null)
 	{
 		$context = Context::getContext();
 		$group_ok = false;
 
+		if (!empty($alias))
+			$alias .= '.';
+
 		// if there is no $id_shop, gets the context one
 		if (is_null($id_shop))
-			$id_shop = $context->shop->getID(true);
+			$id_shop = $context->shop->getID();
 
 		// if we are in group_shop context
 		$group_shop = $context->shop->getGroup();
@@ -521,15 +555,15 @@ class StockAvailableCore extends ObjectModel
 		// if quantities are shared between shops of the group
 		if ($group_shop->share_stock)
 		{
-			if ($sql)
+			if (is_object($sql))
 			{
-				$sql->where($alias.'id_group_shop = '.(int)$group_shop->id);
-				$sql->where($alias.'id_shop = 0');
+				$sql->where(pSQL($alias).'id_group_shop = '.(int)$group_shop->id);
+				$sql->where(pSQL($alias).'id_shop = 0');
 			}
 			else
 			{
-				$sql = ' AND '.$alias.'id_group_shop = '.(int)$group_shop->id.' ';
-				$sql = ' AND '.$alias.'id_shop = 0 ';
+				$sql = ' AND '.pSQL($alias).'id_group_shop = '.(int)$group_shop->id.' ';
+				$sql .= ' AND '.pSQL($alias).'id_shop = 0 ';
 			}
 
 			$group_ok = true;
@@ -537,10 +571,12 @@ class StockAvailableCore extends ObjectModel
 
 		// if no group specific restriction, set simple shop restriction
 		if (!$group_ok)
-			if ($sql)
-				$sql->where($alias.'id_shop = '.(int)$id_shop);
+		{
+			if (is_object($sql))
+				$sql->where(pSQL($alias).'id_shop = '.(int)$id_shop);
 			else
-				$sql = ' AND '.$alias.'id_shop = '.(int)$id_shop.' ';
+				$sql = ' AND '.pSQL($alias).'id_shop = '.(int)$id_shop.' ';
+		}
 
 		return $sql;
 	}
@@ -552,7 +588,7 @@ class StockAvailableCore extends ObjectModel
 	 * @param int $id_shop Optional : The shop ID
 	 *
 	 */
-	protected static function addSqlShopParams(&$params, $id_shop = null)
+	public static function addSqlShopParams(&$params, $id_shop = null)
 	{
 		$context = Context::getContext();
 		$group_ok = false;

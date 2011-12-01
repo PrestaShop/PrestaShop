@@ -178,6 +178,15 @@
 			$('.available_quantity input').trigger('change');
 	});
 
+	// bind enter key event on search field
+	$('.available_quantity').find('input').bind('keypress', function(e) {
+		var code = (e.keyCode ? e.keyCode : e.which);
+		if(code == 13) { //Enter keycode
+			e.stopPropagation();//Stop event propagation
+			return false;
+		}
+	});
+
 	$('.available_quantity').find('input').blur(function(e)
 	{
 		ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );

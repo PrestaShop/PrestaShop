@@ -139,7 +139,8 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Share available quantities to sale between shops of this group')
+					'desc' => $this->l('Share available quantities to sale between shops of this group'),
+					'h' => $this->l('When changing this option, all product available quantities for the current groupof shop will be reseted to 0.')
 				),
 				array(
 					'type' => 'radio',
@@ -252,12 +253,18 @@ class AdminGroupShopControllerCore extends AdminController
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
+
+		//Reset available quantitites
+		StockAvailable::resetProductFromStockAvailableByGroupShop($new_group_shop);
 	}
 
 	public function afterUpdate($new_group_shop)
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
+
+		//Reset available quantitites
+		StockAvailable::resetProductFromStockAvailableByGroupShop($new_group_shop);
 	}
 }
 
