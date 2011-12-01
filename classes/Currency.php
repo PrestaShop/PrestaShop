@@ -201,7 +201,7 @@ class CurrencyCore extends ObjectModel
 	public static function getCurrencies($object = false, $active = 1, Shop $shop = null)
 	{
 		if (!$shop)
-			$shop = new Shop(Context::getContext()->shop->getID(true));
+			$shop = Context::getContext()->shop;
 
 		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'currency` c
