@@ -116,15 +116,12 @@ function generateDeliverySlipPDF()
 
 function generateInvoicesPDF()
 {
-	$id_orders_list = Order::getOrdersIdInvoiceByDate($_GET['date_from'], $_GET['date_to'], NULL, 'invoice');
+	$id_orders_list = OrderInvoice::getByDateInterval($_GET['date_from'], $_GET['date_to'], NULL, 'invoice');
+
 	if (!is_array($id_orders_list))
 		die (Tools::displayError('No invoices found'));
 
-    $orders = array();
-    foreach ($id_orders_list as $id_order)
-        $orders[] = new Order((int)$id_order);
-
-    generatePDF($orders, PDF::TEMPLATE_INVOICE);
+ 	 generateOrderInvoicesPDF($id_orders_list);
 }
 
 function generateInvoicesPDF2()
@@ -134,11 +131,19 @@ function generateInvoicesPDF2()
 		if (is_array($id_orders = Order::getOrderIdsByStatus((int)$id_order_state)))
 			$id_orders_list = array_merge($id_orders_list, $id_orders);
 
-    $orders = array();
-    foreach ($id_orders_list as $id_order)
-        $orders[] = new Order((int)$id_order);
+ 	 generateOrderInvoicesPDF($id_orders_list);
+}
 
-    generatePDF($orders, PDF::TEMPLATE_INVOICE);
+function generateOrderInvoicesPDF($id_orders_list)
+{
+    $orders_invoices = array();
+    foreach ($id_orders_list as $id_order)
+    {
+			$order = new Order((int)$id_order);
+			$orders_invoices = array_merge($orders_invoices, $order->getInvoicesCollection());
+	 }
+
+    generatePDF($orders_invoices, PDF::TEMPLATE_INVOICE);
 }
 
 function generateOrderSlipsPDF()
