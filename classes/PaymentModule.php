@@ -147,7 +147,6 @@ abstract class PaymentModuleCore extends Module
 						$order->id_address_delivery = (int)$id_address;
 						$order->id_currency = $id_currency;
 						$order->id_lang = (int)($cart->id_lang);
-						$order->id_warehouse = $package_list[$id_address][$id_package]['id_warehouse'];
 						$order->id_cart = (int)($cart->id);
 						$order->reference = $reference;
 
@@ -203,7 +202,7 @@ abstract class PaymentModuleCore extends Module
 
 						// Insert new Order detail list using cart for the current order
 						$order_detail = new OrderDetail(null, null, $this->context);
-						$order_detail->createList($order, $cart, $id_order_state, $product_list);
+						$order_detail->createList($order, $cart, $id_order_state, $product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
 						$order_detail_list[] = $order_detail;
 
 						// Adding an entry in order_carrier table

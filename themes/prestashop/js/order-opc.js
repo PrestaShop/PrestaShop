@@ -740,5 +740,4 @@ $(document).ready(function() {
 	// If the multishipping mode is on, check the box "I want to specify a delivery address for each products I order.".
 	if (typeof(multishipping_mode) != 'undefined' && multishipping_mode)
 		$('#multishipping_mode_checkbox').click()
-	
 });
