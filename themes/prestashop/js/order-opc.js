@@ -666,12 +666,13 @@ $(function() {
 
 function multishippingMode(it)
 {
-	if (!$(it).hasClass('on'))
+	if ($(it).attr('checked'))
 	{
 		$('#address_delivery').hide();
 		$('#address_invoice').removeClass('alternate_item').addClass('item');
-		$(it).addClass('on');
-		$('#link_multishipping_form').show();
+		$('#multishipping_mode_box').addClass('on');
+		
+		$('#link_multishipping_form').click(function() {return false;});
 		
 		$('#link_multishipping_form').fancybox({
 			'transitionIn': 'elastic',
@@ -709,13 +710,12 @@ function multishippingMode(it)
 	{
 		$('#address_delivery').show();
 		$('#address_invoice').removeClass('item').addClass('alternate_item');
-		$(it).removeClass('on');
-		$('#link_multishipping_form').hide();
+		$('#multishipping_mode_box').removeClass('on');
 		
 		// Disable multi address shipping
 		$.ajax({
 			url: orderOpcUrl,
-			async: false,
+			async: true,
 			cache: false,
 			data: 'ajax=true&method=noMultiAddressDelivery',
 		});
@@ -723,7 +723,7 @@ function multishippingMode(it)
 		// Reload the cart
 		$.ajax({
 			url: orderOpcUrl,
-			async: false,
+			async: true,
 			cache: false,
 			data: 'ajax=true&method=cartReload',
 			dataType : 'html',
@@ -735,6 +735,10 @@ function multishippingMode(it)
 }
 
 $(document).ready(function() {
+	// If the multishipping mode is off assure us the checkbox "I want to specify a delivery address for each products I order." is unchecked.
+	$('#multishipping_mode_checkbox').attr('checked', false);
+	// If the multishipping mode is on, check the box "I want to specify a delivery address for each products I order.".
 	if (typeof(multishipping_mode) != 'undefined' && multishipping_mode)
-		$('#multishipping_mode').click();
+		$('#multishipping_mode_checkbox').click()
+	
 });
