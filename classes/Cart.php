@@ -896,7 +896,7 @@ class CartCore extends ObjectModel
 	 * @param integer $id_customization
 	 * @return boolean result
 	 */
-	protected	function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
+	protected function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
 	{
 		$result = true;
 		$customization = Db::getInstance()->getRow('SELECT *
@@ -1145,11 +1145,6 @@ class CartCore extends ObjectModel
 				$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
 			}
 		}
-
-		// If product from the cart are not in any warehouse, return false
-		//foreach ($warehouse_count_by_address as $warehouse_count)
-		//	if (empty($warehouse_count))
-		//		return false;
 
 		arsort($warehouse_count_by_address);
 
@@ -1794,9 +1789,7 @@ class CartCore extends ObjectModel
 		$free_fees_price = 0;
 		if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
 			$free_fees_price = Tools::convertPrice((float)($configuration['PS_SHIPPING_FREE_PRICE']), Currency::getCurrencyInstance((int)($this->id_currency)));
-		// $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
-		// if ($orderTotalwithDiscounts >= (float)($free_fees_price) AND (float)($free_fees_price) > 0)
-			// return $shipping_cost;
+
 		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT']) && $this->getTotalWeight() >= (float)($configuration['PS_SHIPPING_FREE_WEIGHT']) && (float)($configuration['PS_SHIPPING_FREE_WEIGHT']) > 0)
 			return $shipping_cost;
 
@@ -1996,15 +1989,15 @@ class CartCore extends ObjectModel
 					AND o.`id_cart` IS NULL
 					'.Context::getContext()->shop->addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
-	 	if (!$id_cart = Db::getInstance()->getValue($sql))
-	 		return false;
-	 	return $id_cart;
+		if (!$id_cart = Db::getInstance()->getValue($sql))
+			return false;
+		return $id_cart;
 	}
 
 	/**
 	* Check if cart contains only virtual products
+	* 
 	* @return boolean true if is a virtual cart or false
-	*
 	*/
 	public function isVirtualCart($strict = false)
 	{
@@ -2051,11 +2044,16 @@ class CartCore extends ObjectModel
 		return $result['id_cart'];
 	}
 
-	/*
-	* Add customer's text
-	*
-	* @return bool Always true
-	*/
+	/**
+	 * Add customer's text
+	 *
+	 * @params int $id_product
+	 * @params int $index
+	 * @params int $type
+	 * @params string $textValue
+	 * 
+	 * @return bool Always true
+	 */
 	public function addTextFieldToProduct($id_product, $index, $type, $textValue)
 	{
 		$textValue = str_replace(array("\n", "\r"), '', nl2br($textValue));
@@ -2064,21 +2062,23 @@ class CartCore extends ObjectModel
 		return $this->_addCustomization($id_product, 0, $index, $type, $textValue, 0);
 	}
 
-	/*
-	* Add customer's pictures
-	*
-	* @return bool Always true
-	*/
+	/**
+	 * Add customer's pictures
+	 *
+	 * @return bool Always true
+	 */
 	public function addPictureToProduct($id_product, $index, $type, $file)
 	{
 		return $this->_addCustomization($id_product, 0, $index, $type, $file, 0);
 	}
 
-	/*
-	* Remove a customer's customization
-	*
-	* @return bool
-	*/
+	/**
+	 * Remove a customer's customization
+	 *
+	 * @param int $id_product
+	 * @param int $index
+	 * @return bool
+	 */
 	public function deleteCustomizationToProduct($id_product, $index)
 	{
 		$result = true;
@@ -2529,7 +2529,8 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * Return false is some product from the cart are out of stock
+	 * @since 1.5.0
+	 * @return bool false is some product from the cart are out of stock
 	 */
 	public function isAllProductsInStock()
 	{
