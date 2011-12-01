@@ -404,7 +404,9 @@
 <p class="cart_navigation">
 	{if !$opc}
 		<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}" class="exclusive" title="{l s='Next'}">{l s='Next'} &raquo;</a>
-		<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}&amp;multi-shipping=1" class="multishipping-button exclusive" title="{l s='Multi-shipping'}">{l s='Multi-shipping'} &raquo;</a>
+		{if {Configuration::get('PS_ALLOW_MULTISHIPPING')}}
+			<a href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}&amp;multi-shipping=1" class="multishipping-button exclusive" title="{l s='Multi-shipping'}">{l s='Multi-shipping'} &raquo;</a>
+		{/if}
 	{/if}
 	<a href="{if (isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order.php')) || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}', {else}{$smarty.server.HTTP_REFERER|escape:'htmlall':'UTF-8'|secureReferrer}{/if}" class="button_large" title="{l s='Continue shopping'}">&laquo; {l s='Continue shopping'}</a>
 </p>
