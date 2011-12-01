@@ -117,6 +117,9 @@ class CartControllerCore extends FrontController
 
 	protected function processChangeProductAddressDelivery()
 	{
+		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
+			return;
+		
 		$old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
 		$new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
 
@@ -129,6 +132,9 @@ class CartControllerCore extends FrontController
 	
 	protected function processAllowSeperatedPackage()
 	{
+		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
+			return;
+		
 		if (Tools::getValue('value') === false)
 			die('{"error":true, "error_message": "No value setted"}');
 		
@@ -139,6 +145,9 @@ class CartControllerCore extends FrontController
 
 	protected function processDuplicateProduct()
 	{
+		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
+			return;
+		
 		if (
 			!$this->context->cart->duplicateProduct(
 				$this->id_product,

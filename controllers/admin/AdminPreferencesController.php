@@ -165,6 +165,13 @@ class AdminPreferencesControllerCore extends AdminController
 					'list' => $order_process_type,
 					'identifier' => 'value'
 				),
+				'PS_ALLOW_MULTISHIPPING' => array(
+					'title' => $this->l('Allow multi-shipping'),
+					'desc' => $this->l('Allow the customer to ship is order to multiple addressed or in to deliver the products "in stock" first. This option will transform the customer cart in one or more orders.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool'
+				),
 				'PS_REGISTRATION_PROCESS_TYPE' => array(
 					'title' => $this->l('Registration process type'),
 					'desc' => $this->l('The "Only account creation" step register process allows the customer to register faster, and create his address later.'),
