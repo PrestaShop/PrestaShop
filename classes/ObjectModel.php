@@ -37,11 +37,17 @@ abstract class ObjectModelCore
 
 	private $getShopFromContext = true;
 
-	/** @var string SQL Table name */
-	protected $table = null;
+	/**
+	 * @var string SQL This property shouldn't be overloaded anymore in class, use static $definition['table'] property instead
+	 * @deprecated
+	 */
+	protected $table;
 
-	/** @var string SQL Table identifier */
-	protected $identifier = null;
+	/**
+	 * @var string SQL This property shouldn't be overloaded anymore in class, use static $definition['primary'] property instead
+	 * @deprecated
+	 */
+	protected $identifier;
 
 	/** @var array Required fields for admin panel forms */
  	protected $fieldsRequired = array();
@@ -81,6 +87,12 @@ abstract class ObjectModelCore
 	protected $image_format = 'jpg';
 
 	/**
+	 * @var array Contain object definition
+	 * @since 1.5.0
+	 */
+	public static $definition = array();
+
+	/**
 	 * Returns object validation rules (fields validity)
 	 *
 	 * @param string $className Child class name for static use (optional)
@@ -114,6 +126,15 @@ abstract class ObjectModelCore
 	 */
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
+		// For retrocompatibility, we continue to use $this->table and $this->identifier property.
+		// When all objects will implement $definition static in 1.6, we will remove it.
+		$definition = self::getDefinition($this);
+		if (isset($definition['table']))
+			$this->table = $definition['table'];
+		if (isset($definition['primary']))
+			$this->identifier = $definition['primary'];
+
+
 		if (!is_null($id_lang))
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
@@ -127,7 +148,7 @@ abstract class ObjectModelCore
 			$this->id_shop = Context::getContext()->shop->getID(true);
 
 	 	if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException(Tools::displayError());
+			throw new PrestashopException('Identifier or table format not valid');
 
 		if ($id)
 		{
@@ -1056,5 +1077,14 @@ abstract class ObjectModelCore
 			$collection[] = $obj;
 		}
 		return $collection;
+	}
+
+	public static function getDefinition($class, $field = null)
+	{
+		$reflection = new ReflectionClass($class);
+		$definition = $reflection->getStaticPropertyValue('definition');
+		if ($field)
+			return isset($definition[$field]) ? $definition[$field] : null;
+		return $definition;
 	}
 }
