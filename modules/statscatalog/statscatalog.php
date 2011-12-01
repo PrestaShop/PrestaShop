@@ -169,12 +169,12 @@ class StatsCatalog extends Module
 
 		$html = '
 		<script type="text/javascript" language="javascript">$(\'#calendar\').slideToggle();</script>
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
-			<label>
-				'.$this->l('Choose a category').'
-			</label>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
 			<div class="margin-form">
 				<form action="" method="post" id="categoriesForm">
+				<label>
+				'.$this->l('Choose a category').'
+				</label>
 					<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
 						<option value="0">'.$this->l('All').'</option>';
 		foreach ($categories as $category)
@@ -185,7 +185,6 @@ class StatsCatalog extends Module
 					</select>
 				</form>
 			</div>
-			<div class="clear space"></div>
 			<table>
 				'.$this->returnLine($this->l('Products available:'), (int)$total).'
 				'.$this->returnLine($this->l('Average price (base price):'), Tools::displayPrice($averagePrice, $this->context->currency)).'
@@ -203,12 +202,12 @@ class StatsCatalog extends Module
 				<span style="color:red;font-weight:bold">*</span> 
 				'.$this->l('Average conversion rate for the product page. It is possible to purchase a product without viewing the product page, so this rate can be greater than 1.').'
 			</div>
-		</fieldset>';
+		</div>';
 
 		if (count($productsNB) && count($productsNB) < 50)
 		{
 			$html .= '<br />
-			<fieldset><legend><img src="../modules/'.$this->name.'/basket_delete.png" /> '.$this->l('Products never purchased').'</legend>
+			<div class="blocStats"><h2 class="icon-basket_delete.png"> '.$this->l('Products never purchased').'</h2>
 				<table cellpadding="0" cellspacing="0" class="table">
 					<tr><th>'.$this->l('ID').'</th><th>'.$this->l('Name').'</th><th>'.$this->l('Edit / View').'</th></tr>';
 			foreach ($productsNB as $product)
@@ -223,7 +222,7 @@ class StatsCatalog extends Module
 					</tr>';
 			$html .= '
 				</table>
-			</fieldset>';
+			</div>';
 		}
 		return $html;
 	}

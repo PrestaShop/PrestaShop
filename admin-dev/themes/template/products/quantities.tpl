@@ -1,13 +1,14 @@
-
+<h4>{l s='Available quantities for sale'}</h4>
+	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
 		<p>{l s='You can manually specify the quantities for the product / each product combinations, or choose to automatically determine these quantities based on your stock.'}</p>
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
 	</div>
 	<br />
-
 	<h4>{l s='Available quantities for sale'}</h4>
 	<div class="separation"></div>
+
 
 	{if $show_quantities == true}
 		<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>

@@ -98,7 +98,7 @@ class StatsSearch extends ModuleGraph
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$this->_html = '
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>';
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
 		$table = '<div style="overflow-y: scroll; height: 600px;">
 		<table class="table" border="0" cellspacing="0" cellspacing="0">
 		<thead>
@@ -125,8 +125,8 @@ class StatsSearch extends ModuleGraph
 									<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
 									<br class="clear" />'.$table;
 		else
-			$this->_html .= '<p><strong>'.$this->l('No keywords searched more than once found.').'</strong></p>';
-		$this->_html .= '</fieldset>';
+			$this->_html .= '<p>'.$this->l('No keywords searched more than once found.').'</p>';
+		$this->_html .= '</div>';
 		return $this->_html;
 	}
 

@@ -84,7 +84,7 @@ class StatsStock extends Module
 
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Stock value').'</legend>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Stock value').'</h2>
 		<form action="'.$ru.'" method="post">
 			<input type="hidden" name="submitCategory" value="1" />
 			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">
@@ -139,7 +139,7 @@ class StatsStock extends Module
 					<td>'.Tools::displayPrice($rollup['stockvalue'], $currency).'</td>
 				</tr>
 			</table>
-			<p>* '.$this->l('Average price when the product has attributes.').'</p></fieldset>';
+			<p>* '.$this->l('Average price when the product has attributes.').'</p></div>';
 
 			return $this->html;
 		}
