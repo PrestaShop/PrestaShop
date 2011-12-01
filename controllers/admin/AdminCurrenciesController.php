@@ -251,46 +251,70 @@ class AdminCurrenciesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function postProcess()
+	/**
+	 * @see AdminController::processDelete()
+	 * @param $token
+	 */
+	public function processDelete($token)
 	{
-		if ($this->action == 'delete')
+		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
-			if (Validate::isLoadedObject($object = $this->loadObject()))
-			{
-				if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-					$this->_errors[] = $this->l('You can\'t delete the default currency');
-				else if ($object->delete())
-					Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
-				else
-					$this->_errors[] = Tools::displayError('An error occurred during deletion.');
-			}
+			if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+				$this->_errors[] = $this->l('You can\'t delete the default currency');
+			else if ($object->delete())
+				Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
 			else
-				$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' 
-					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-		}
-		else if ($this->action == 'status')
-		{
-			if (Validate::isLoadedObject($object = $this->loadObject()))
-			{
-				if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-					$this->_errors[] = $this->l('You can\'t disable the default currency');
-				else if ($object->toggleStatus())
-					Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
-						(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating status.');
-			}
-			else
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' 
-					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-		}
-		else if (Tools::isSubmit('submitExchangesRates'))
-		{
-			if (!$this->_errors[] = Currency::refreshCurrencies())
-				Tools::redirectAdmin(self::$currentIndex.'&conf=6'.'&token='.$this->token);
+				$this->_errors[] = Tools::displayError('An error occurred during deletion.');
 		}
 		else
-			parent::postProcess();
+			$this->_errors[] = Tools::displayError('An error occurred while deleting object.').'
+				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+	}
+
+	/**
+	 * @see AdminController::processStatus()
+	 * @param $token
+	 */
+	public function processStatus($token)
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+				$this->_errors[] = $this->l('You can\'t disable the default currency');
+			else if ($object->toggleStatus())
+				Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
+					(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
+			else
+				$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+		}
+		else
+			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').'
+				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+	}
+
+	/**
+	 * Update currency exchange rates
+	 * @param $token
+	 */
+	public function processExchangeRates($token)
+	{
+		if (!$this->_errors[] = Currency::refreshCurrencies())
+			Tools::redirectAdmin(self::$currentIndex . '&conf=6' . '&token=' . $this->token);
+	}
+
+	/**
+	 * @see AdminController::initProcess()
+	 */
+	public function initProcess()
+	{
+		if (Tools::isSubmit('submitExchangesRates'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'exchangeRates';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		parent::initProcess();
 	}
 
 	public function updateOptionPsCurrencyDefault($value)
