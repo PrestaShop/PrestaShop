@@ -41,8 +41,11 @@ class GenderCore extends ObjectModel
 	protected $fieldsSizeLang = array('name' => 20);
 	protected $fieldsValidateLang = array('name' => 'isString');
 
-	protected $table = 'gender';
-	protected $identifier = 'id_gender';
+	public static $definition = array(
+		'table' => 'gender',
+		'primary' => 'id_gender',
+		'multilang' => true,
+	);
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
@@ -77,12 +80,8 @@ class GenderCore extends ObjectModel
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
 
-		$sql = 'SELECT g.*, gl.*
-				FROM '._DB_PREFIX_.'gender g
-				LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON g.id_gender = gl.id_gender AND gl.id_lang = '.(int)$id_lang;
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
-		return ObjectModel::hydrateCollection('Gender', $results, $id_lang);
+		$genders = new Collection('Gender', $id_lang);
+		return $genders;
 	}
 
 	public function getImage($use_unknown = false)
