@@ -597,7 +597,7 @@ class CategoryCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`,
+		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity, pa.`id_product_attribute`, pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, i.`id_image`,
 					il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`, cl.`name` AS category_default,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
