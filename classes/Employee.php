@@ -122,6 +122,19 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
+	 * Return list of employees
+	 */
+	public static function getEmployees()
+	{
+		return Db::getInstance()->executeS('
+			SELECT `id_employee`, `firstname`, `lastname`
+			FROM `'._DB_PREFIX_.'employee`
+			WHERE `active` = 1
+			ORDER BY `lastname` ASC
+		');
+	}
+
+	/**
 	  * Return employee instance from its e-mail (optionnaly check password)
 	  *
 	  * @param string $email e-mail

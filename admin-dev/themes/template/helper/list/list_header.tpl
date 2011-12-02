@@ -25,7 +25,6 @@
 *}
 
 {if !$simple_header}
-	<link href="../css/admin.css" rel="stylesheet" type="text/css" />
 
 	<script type="text/javascript">
 		$(document).ready(function() {
