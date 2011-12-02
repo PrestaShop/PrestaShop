@@ -483,7 +483,7 @@ class Blocknewsletter extends Module
  	 	return $this->display(__FILE__, 'blocknewsletter.tpl');
 	}
 
-	public function hookHeader($params)
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blocknewsletter.css', 'all');
 	}
