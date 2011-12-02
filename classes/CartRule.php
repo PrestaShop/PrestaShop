@@ -452,16 +452,17 @@ class CartRuleCore extends ObjectModel
 		if ($this->free_shipping)
 		{
 			if (!$this->carrier_restriction)
-				$reductionValue += $context->cart->getPackageShippingCost($context->cart->id_carrier, $useTax = true, $context->country);
-			elseif ($context->cart->id_carrier)
+				$reductionValue += $context->cart->getTotalShippingCost(null, $useTax = true, $context->country);
+			else
 			{
-				$id_cart_rule = (int)Db::getInstance()->getValue('
-				SELECT crc.id_cart_rule
-				FROM '._DB_PREFIX_.'cart_rule_carrier crc
-				WHERE crc.id_cart_rule = '.(int)$this->id.'
-				AND crc.id_carrier = '.(int)$context->cart->id_carrier);
-				if ($id_cart_rule)
-					$reductionValue += $context->cart->getPackageShippingCost($context->cart->id_carrier, $useTax, $context->country);
+				foreach ((int)Db::getInstance()->executeS('
+					SELECT crc.id_cart_rule, crc.id_carrier
+					FROM '._DB_PREFIX_.'cart_rule_carrier crc
+					WHERE crc.id_cart_rule = '.(int)$this->id.'
+					AND crc.id_carrier = '.(int)$context->cart->id_carrier)
+					as $cart_rule
+				)
+					$reductionValue += $context->cart->getCarrierCost($cart_rule['id_carrier'], $useTax, $context->country);
 			}
 		}
 

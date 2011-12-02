@@ -318,7 +318,36 @@ class OrderCore extends ObjectModel
 		}
 		return $this->_deleteProduct($orderDetail, (int)($quantity));
 	}
-
+	
+	/**
+	 * This function return products of the orders
+	 * It's similar to Order::getProducts but witrh similar outputs of Cart::getProducts
+	 * 
+	 * @return array
+	 */
+	public function getCartProducts()
+	{
+		$product_id_list = array();
+		foreach ($this->getProducts() as $product)
+			$product_id_list[] = $this->id_address_delivery.'_'
+				.$product['product_id'].'_'
+				.$product['product_attribute_id'].'_'
+				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
+		
+		$product_list = array();
+		foreach ($cart->getProducts() as $product)
+		{
+			$key = $this->id_address_delivery.'_'
+				.$product['id_product'].'_'
+				.$product['id_product_attribute'].'_'
+				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
+			
+			if (in_array($key, $product_id_list))
+				$product_list[] = $product;
+		}
+		return $product_list;
+	}
+	
 	/* DOES delete the product */
 	protected function _deleteProduct($orderDetail, $quantity)
 	{
@@ -340,7 +369,7 @@ class OrderCore extends ObjectModel
 		$cart->update();
 
 		/* Update order */
-		$shippingDiff = $this->total_shipping - $cart->getPackageShippingCost();
+		$shippingDiff = $this->total_shipping - $cart->getPackageShippingCost($this->id_carrier, true, null, $this->getCartProducts());
 		$this->total_products -= $productPriceWithoutTax;
 
 		// After upgrading from old version

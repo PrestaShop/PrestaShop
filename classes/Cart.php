@@ -275,8 +275,8 @@ class CartCore extends ObjectModel
 
 		$total_products_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-		$shipping_ti = $this->getPackageShippingCost();
-		$shipping_te = $this->getPackageShippingCost(NULL, false);
+		$shipping_ti = $this->getTotalShippingCost();
+		$shipping_te = $this->getTotalShippingCost(null, false);
 
 		$result = Db::getInstance()->executeS('
 		SELECT *
@@ -358,7 +358,7 @@ class CartCore extends ObjectModel
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`,
 						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,
-						sa.`quantity` quantity_available, p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
+						stock.`quantity` quantity_available, p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery');
 
 		// Build FROM
@@ -374,10 +374,6 @@ class CartCore extends ObjectModel
 		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
 		$sql->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang);
 		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl'));
-		
-		$sql->leftJoin('stock_available sa ON cp.`id_product` = sa.`id_product`
-			AND cp.`id_product_attribute` = sa.`id_product_attribute`'.
-			Context::getContext()->shop->addSqlRestriction(false, 'sa'));
 		
 		// @todo test if everything is ok, then refactorise call of this method
 		Product::sqlStock('cp', 'cp', false, null, $sql);
@@ -1008,24 +1004,41 @@ class CartCore extends ObjectModel
 			$withTaxes = false;
 		foreach ($products AS $product)
 		{
+			if (isset($product['id_product']))
+				$id_product = (int)$product['id_product'];
+			else if (isset($product['product_id']))
+				$id_product = (int)$product['product_id'];
+			else
+				$id_product = (int)$product['id'];
+				
+			if (isset($product['id_product_attribute']))
+				$id_product_attribute = (int)$product['id_product_attribute'];
+			else
+				$id_product_attribute = (int)$product['product_attribute_id'];
+				
+			if (isset($product['cart_quantity']))
+				$cart_quantity = (int)$product['cart_quantity'];
+			else
+				$cart_quantity = (int)$product['product_quantity'];
+				
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				// Here taxes are computed only once the quantity has been applied to the product price
-				$price = Product::getPriceStatic((int)$product['id_product'], false, (int)$product['id_product_attribute'], 2, NULL, false, true, $product['cart_quantity'], false, (int)$this->id_customer ? (int)$this->id_customer : NULL, (int)$this->id, ($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+				$price = Product::getPriceStatic($id_product, false, $id_product_attribute, 2, NULL, false, true, $product['cart_quantity'], false, (int)$this->id_customer ? (int)$this->id_customer : NULL, (int)$this->id, ($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
 				$total_ecotax = $product['ecotax'] * (int)$product['cart_quantity'];
 				$total_price = $price * (int)$product['cart_quantity'];
 
 				if ($withTaxes)
 				{
-					$total_price = ($total_price - $total_ecotax) * (1 + (float)(Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100);
+					$total_price = ($total_price - $total_ecotax) * (1 + (float)(Tax::getProductTaxRate($id_product, (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100);
 					$total_ecotax = $total_ecotax * (1 + Tax::getProductEcotaxRate((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) / 100);
 					$total_price = Tools::ps_round($total_price + $total_ecotax, 2);
 				}
 			}
 			else
 			{
-				$price = Product::getPriceStatic((int)($product['id_product']), true, (int)($product['id_product_attribute']), 2, NULL, false, true, $product['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
+				$price = Product::getPriceStatic($id_product, true, $id_product_attribute, 2, NULL, false, true, $product['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
 				$total_price = Tools::ps_round($price, 2) * (int)($product['cart_quantity']);
 				if (!$withTaxes)
 					$total_price = Tools::ps_round($total_price / (1 + ((float)(Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100)), 2);
@@ -1493,7 +1506,8 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * Does the cart use multiple
+	 * Does the cart use multiple address
+	 * @return boolean
 	 */
 	public function isMultiAddressDelivery()
 	{
@@ -1611,6 +1625,40 @@ class CartCore extends ObjectModel
 
 		return $total_shipping;
 	}
+	/**
+	* Return shipping total of a specific carriers for the cart
+	*
+	* @param int $id_carrier 
+	* @param array $delivery_option Array of the delivery option for each address
+	* @param booleal $useTax
+	* @param Country $default_country
+	* @return float Shipping total
+	*/
+	public function getCarrierCost($id_carrier, $useTax = true, Country $default_country = null, $delivery_option = null)
+	{
+		if (is_null($delivery_option))
+			$delivery_option = $this->getDeliveryOption($default_country);
+
+		$total_shipping = 0;
+		$delivery_option_list = $this->getDeliveryOptionList();
+		
+		
+		foreach ($delivery_option as $id_address => $key)
+		{
+			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
+				continue;
+			if (isset($delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]))
+			{
+				if ($useTax)
+					$total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['total_price_with_tax'];
+				else
+					$total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['total_price_without_tax'];
+			}
+		}
+
+		return $total_shipping;
+	}
+	
 
 	/**
 	 * Return shipping total

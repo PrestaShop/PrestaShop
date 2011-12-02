@@ -980,15 +980,16 @@ class AdminOrdersControllerCore extends AdminController
 				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, Cart::BOTH), 2);
 				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
-				$order_invoice->total_shipping_tax_excl = (float)$cart->getPackageShippingCost(null, false);
-				$order_invoice->total_shipping_tax_incl = (float)$cart->getPackageShippingCost();
+				$order_invoice->total_shipping_tax_excl = (float)$cart->getTotalShippingCost(null, false);
+				$order_invoice->total_shipping_tax_incl = (float)$cart->getTotalShippingCost();
+				
 				$order_invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order_invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 
 				// Update current order field, only shipping because other field is updated later
-				$order->total_shipping += (float)$cart->getPackageShippingCost();
-				$order->total_shipping_tax_excl += (float)$cart->getPackageShippingCost(null, false);
-				$order->total_shipping_tax_incl += (float)$cart->getPackageShippingCost(null, $use_taxes);
+				$order->total_shipping += $order_invoice->total_shipping_tax_incl;
+				$order->total_shipping_tax_excl += $order_invoice->total_shipping_tax_excl;
+				$order->total_shipping_tax_incl += ($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl;
 
 				$order->total_wrapping += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
@@ -997,7 +998,13 @@ class AdminOrdersControllerCore extends AdminController
 				// Adding an entry in order_carrier table
 				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES
-				('.(int)$order->id.', '.(int)$order->id_carrier.', '.(int)$order_invoice->id.', '.(float)$cart->getTotalWeight().', '.(float)$cart->getPackageShippingCost(null, false).', '.(float)$cart->getPackageShippingCost(null, $use_taxes).', NOW())');
+				('.(int)$order->id.',
+					'.(int)$order->id_carrier.',
+					'.(int)$order_invoice->id.',
+					'.(float)$cart->getTotalWeight().',
+					'.$order_invoice->total_shipping_tax_excl.',
+					'.(($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl).',
+					NOW())');
 			}
 			// Update current invoice
 			else
@@ -1006,8 +1013,8 @@ class AdminOrdersControllerCore extends AdminController
 				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
 				$order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
-				$order_invoice->total_shipping_tax_excl += (float)$cart->getPackageShippingCost(null, false);
-				$order_invoice->total_shipping_tax_incl += (float)$cart->getPackageShippingCost(null, $use_taxes);
+				$order_invoice->total_shipping_tax_excl += (float)$cart->getTotalShippingCost(null, false);
+				$order_invoice->total_shipping_tax_incl += (float)$cart->getTotalShippingCost(null, $use_taxes);
 				$order_invoice->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order_invoice->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order_invoice->update();
@@ -1015,11 +1022,11 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		// Create Order detail information
-	 	$order_detail = new OrderDetail();
-	 	$order_detail->createList($order, $cart, OrderHistory::getLastOrderState($order->id), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes);
+		$order_detail = new OrderDetail();
+		$order_detail->createList($order, $cart, OrderHistory::getLastOrderState($order->id), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes);
 
-	 	// update totals amount of order
-	 	$order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+		// update totals amount of order
+		$order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 		$order->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 
 		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
@@ -1039,19 +1046,19 @@ class AdminOrdersControllerCore extends AdminController
 		$product = $products[max(array_keys($products))];
 
 		// Assign to smarty informations in order to show the new product line
-	 	$this->context->smarty->assign(array(
-	 		'product' => $product,
-	 		'order' => $order,
-	 		'currency' => new Currency($order->id_currency),
-	 		'can_edit' => $this->tabAccess['edit'],
-	 		'invoices_collection' => $order->getInvoicesCollection()
-	 	));
+		$this->context->smarty->assign(array(
+			'product' => $product,
+			'order' => $order,
+			'currency' => new Currency($order->id_currency),
+			'can_edit' => $this->tabAccess['edit'],
+			'invoices_collection' => $order->getInvoicesCollection()
+		));
 
-	 	die(Tools::jsonEncode(array(
+		die(Tools::jsonEncode(array(
 			'result' => true,
 			'view' => $this->context->smarty->fetch('orders/_product_line.tpl'),
-	 		'can_edit' => $this->tabAccess['add'],
-	 		'order' => $order
+			'can_edit' => $this->tabAccess['add'],
+			'order' => $order
 		)));
 	}
 
@@ -1174,25 +1181,25 @@ class AdminOrdersControllerCore extends AdminController
 		$product = $products[$order_detail->id];
 
 		// Assign to smarty informations in order to show the new product line
-	 	$this->context->smarty->assign(array(
-	 		'product' => $product,
-	 		'order' => $order,
-	 		'currency' => new Currency($order->id_currency),
-	 		'can_edit' => $this->tabAccess['edit']
-	 	));
+		$this->context->smarty->assign(array(
+			'product' => $product,
+			'order' => $order,
+			'currency' => new Currency($order->id_currency),
+			'can_edit' => $this->tabAccess['edit']
+		));
 
-	 	if (!$res)
-	 		die(Tools::jsonEncode(array(
+		if (!$res)
+			die(Tools::jsonEncode(array(
 				'result' => $res,
-	 			'error' => Tools::displayError('Error occured on edition of this product line')
+				'error' => Tools::displayError('Error occured on edition of this product line')
 			)));
 
-	 	die(Tools::jsonEncode(array(
+		die(Tools::jsonEncode(array(
 			'result' => $res,
 			'view' => $this->context->smarty->fetch('orders/_product_line.tpl'),
-	 		'can_edit' => $this->tabAccess['add'],
-	 		'invoices_collection' => $order->getInvoicesCollection(),
-	 		'order' => $order
+			'can_edit' => $this->tabAccess['add'],
+			'invoices_collection' => $order->getInvoicesCollection(),
+			'order' => $order
 		)));
 	}
 
@@ -1252,14 +1259,14 @@ class AdminOrdersControllerCore extends AdminController
 		$res &= $order_detail->delete();
 
 		if (!$res)
-	 		die(Tools::jsonEncode(array(
+			die(Tools::jsonEncode(array(
 				'result' => $res,
-	 			'error' => Tools::displayError('Error occured on deletion of this product line')
+				'error' => Tools::displayError('Error occured on deletion of this product line')
 			)));
 
 		die(Tools::jsonEncode(array(
 			'result' => $res,
-	 		'order' => $order
+			'order' => $order
 		)));
 	}
 
