@@ -171,5 +171,9 @@ input:focus, textarea:focus {
 }
 
 .center {
+	font-size:20px;
+	font-weight: normal;
 	text-align: center;
 }
+
+#login form span { font-weight:normal;}

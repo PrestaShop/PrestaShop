@@ -105,7 +105,7 @@ class SEKeywords extends ModuleGraph
 			$this->csvExport(array('type' => 'pie'));
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$total = count($result);
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'';
 		if ($result && $total)
 		{
@@ -137,7 +137,7 @@ class SEKeywords extends ModuleGraph
 			$this->html .= '<p><strong>'.$this->l('No keywords').'</strong></p>';
 
 		$this->html .= '</div><br/>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Identify external search engines\' keywords').'</h2>
 			<p>'.$this->l('One of the most common ways of finding a website through a search engine.
 				Identifying the most popular keywords entered by your new visitors allows you to see which products you should put in front if you want to attract more visitors and potential customers.').'

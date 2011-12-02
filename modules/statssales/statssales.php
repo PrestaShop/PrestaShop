@@ -79,21 +79,21 @@ class StatsSales extends ModuleGraph
 			<p><img src="../img/admin/down.gif" />
 				'.$this->l('These graphs represent the evolution of your orders and sales turnover for a given period. This tool allows for quick overview of the viability of your shop. You can also keep watch on the difference between time periods (like the holiday season). Only valid orders are included in these two graphs.').'
 			</p>
-			<p>'.$this->l('Orders placed:').' '.(int)($totals['orderCount']).'</p>
-			<p>'.$this->l('Products bought:').' '.(int)($totals['products']).'</p>
+			<p>'.$this->l('Orders placed:').' <span class="totalStats">'.(int)($totals['orderCount']).'</span></p>
+			<p>'.$this->l('Products bought:').' <span class="totalStats">'.(int)($totals['products']).'</span></p>
 			<div>'.$this->engine(array('type' => 'line', 'option' => '1-'.(int)Tools::getValue('id_country'), 'layers' => 2)).'</div>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
-			<p>'.$this->l('Sales:').' '.Tools::displayPrice($totals['orderSum'], $currency).'</p>
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
+			<h4>'.$this->l('Sales:').' '.Tools::displayPrice($totals['orderSum'], $currency).'</h4>
 			<div>'.$this->engine(array('type' => 'line', 'option' => '2-'.(int)Tools::getValue('id_country'))).'</div>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2"><img src="../img/admin/asterisk.gif" alt="" />'.$this->l('CSV Export').'</a></p>
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=2"><span>'.$this->l('CSV Export').'</span></a></p>
 			<p class="space"><img src="../img/admin/down.gif" />
 				'.$this->l('You can see the order state distribution below.').'
 			</p><br />
 			'.($totals['orderCount'] ? $this->engine(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country'))) : $this->l('No orders for this period.')).'</center>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=3"><span>'.$this->l('CSV Export').'</span></a></p>
 		</div >
 		<br />
-		<div class="blocStats"><h2 class="icon-guide">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Various order statuses').'</h2>
 			<p>
 				'.$this->l('In your back-office, you can find the following order statuses : Awaiting check payment, Payment accepted, Preparation in progress, Shipping, Delivered, Cancelled, Refund, Payment error, Out of stock, and Awaiting bank wire payment.').'<br />

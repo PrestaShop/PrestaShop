@@ -89,8 +89,8 @@ class StatsOrigin extends ModuleGraph
 		{
 			$this->_html .= '
 			<p><img src="../img/admin/down.gif" />'.$this->l('Here is the percentage of the 10 most popular referrer websites by which visitors went through to get to your shop.').'</p>
-			<div>'.$this->engine(array('type' => 'pie')).'</div>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
+			<div>'.$this->engine(array('type' => 'pie')).'</div><br />
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=top"><span>'.$this->l('CSV Export').'</span></a></p><br />
 			
 			<table class="table " border="0" cellspacing="0" cellspacing="0">
 				<tr>
@@ -106,7 +106,7 @@ class StatsOrigin extends ModuleGraph
 		else
 			$this->_html .= '<p><strong>'.$this->l('Direct links only').'</strong></p>';
 		$this->_html .= '</div><br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 		<h2>'.$this->l('What is a referrer website?').'</h2>
 			<p>
 				'.$this->l('When visiting a webpage, the referrer is the URL of the previous webpage from which a link was followed.').'<br />
