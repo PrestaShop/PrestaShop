@@ -8,16 +8,23 @@
 	line-height:18px
 }
 	
-#product_comments_block_extra a {text-decoration: none;}
+#product_comments_block_extra a {
+    padding-left: 10px;
+	text-decoration: none;
+	background: url(img/bg_li.png) no-repeat scroll 1px 45% #fff;
+
+}
 
 #product_comments_block_extra a:hover {text-decoration: underline}
 
+#product_comments_block_extra .comments_note {margin-bottom:5px}
 #product_comments_block_extra .comments_note span,
 #product_comments_block_extra .star_content {float:left}
+#product_comments_block_extra .star_content {margin-top:2px}
 
 #product_comments_block_extra div.star {background: url(img/star.gif) no-repeat scroll 0 0 transparent}
 
-#product_comments_block_extra div.star_on {background: url(img/star.gif) no-repeat scroll 0 -16px transparent}
+#product_comments_block_extra div.star_on {background: url(img/star.gif) no-repeat scroll 0 -12px transparent}
 
 #product_comments_block_extra .comments_advices {clear:both;}
 
@@ -159,7 +166,7 @@
 #product_comments_block_tab div.star_on {
 	background: url(img/star.gif) no-repeat 0 0 transparent
 }
-#product_comments_block_tab div.star_on {background-position: 0 -16px}
+#product_comments_block_tab div.star_on {background-position: 0 -12px}
 #product_comments_block_tab .comment_author_infos {clear:both}
 #product_comments_block_tab .comment_author_infos em {color:#999}
 

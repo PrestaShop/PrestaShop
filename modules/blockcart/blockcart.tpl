@@ -142,7 +142,7 @@ var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' 
 		{/if}
 		<p id="cart-buttons">
 			{if $blockcart_order_process == 'order'}<a href="{$link->getPageLink("$blockcart_order_process.php", true)}" class="button_small" title="{l s='Cart' mod='blockcart'}">{l s='Cart' mod='blockcart'}</a>{/if}
-			<a href="{$link->getPageLink("$blockcart_order_process.php", true)}{if $blockcart_order_process == 'order'}?step=1{/if}" id="button_order_cart" class="exclusive{if $blockcart_order_process == 'order-opc'}_large{/if}" title="{l s='Check out' mod='blockcart'}"><span></span>{l s='Check out' mod='blockcart'}</a>
+			<a href="{$link->getPageLink("$blockcart_order_process.php", true)}" id="button_order_cart" class="exclusive{if $blockcart_order_process == 'order-opc'}_large{/if}" title="{l s='Check out' mod='blockcart'}"><span></span>{l s='Check out' mod='blockcart'}</a>
 		</p>
 	</div>
 	</div>
