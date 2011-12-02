@@ -1,5 +1,5 @@
 <div class="block_specific_prices_modifications">
-			<h4>{l s='Current specific prices'}</h4>
+			<h4>{l s='Product price'}</h4>
 			<div class="separation"></div>
 			<script type="text/javascript">
 var product_prices = new Array();
