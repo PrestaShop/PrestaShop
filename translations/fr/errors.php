@@ -139,7 +139,7 @@ $_ERRORS['fa34b95ede8be673990788953c98d666'] = 'Erreur - La template mail suivan
 $_ERRORS['a84ef667c075cd620781f25c135c73e7'] = 'Code d\'erreur:';
 $_ERRORS['3ed308de66927376b1d3c19fdcaa0edc'] = 'Erreur lors de la copie de l\'image:';
 $_ERRORS['4e0ac45de6bd848503ffa98ff6247f2f'] = 'Suppression d\'erreur';
-$_ERRORS['db0275528fda19c75f79d296ded0c6e7'] = 'Erreur dans la fichier de configuration:';
+$_ERRORS['db0275528fda19c75f79d296ded0c6e7'] = 'Erreur dans le fichier de configuration:';
 $_ERRORS['532359f98c7e5174eb0e436045cdea56'] = 'Erreur dans la suppression du serveur Memcache';
 $_ERRORS['f42d9667c9c87750858f145c466c4875'] = 'Erreur dans le chargement de Reverso';
 $_ERRORS['66f24b4cb390959a74fae0280bf8cdec'] = 'Erreur dans la mise à jour les champs requis ';
@@ -469,3 +469,4 @@ $_ERRORS['5e5fe82e71c8495982731e4c43e7ecef'] = 'ni une table ni un identifiant :
 $_ERRORS['db5bf82f326c6332a2c3dc1b0dd4598e'] = 'a été re-écrit comme';
 
 ?>
+
