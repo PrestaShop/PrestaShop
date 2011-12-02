@@ -27,13 +27,11 @@
 {literal}
 $('document').ready(function(){
 	$('#send_friend_button').fancybox({
-		'hideOnContentClick': false,
-		'onClosed': function(){
-		},
+		'hideOnContentClick': false
 	});
 
 	$('#sendEmail').click(function(){
-		console.log('aaa');
+		//console.log('aaa');
 		var datas = [];
 		$('#fancybox-content').find('input').each(function(index){
 			var o = {}
@@ -42,8 +40,8 @@ $('document').ready(function(){
 			if (o.value != '')
 				datas.push(o);
 		});
-	console.log(datas.length);
-	console.log(datas);
+	//console.log(datas.length);
+	//console.log(datas);
 		if (datas.length >= 3)
 		{
 			$.ajax({

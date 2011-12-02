@@ -1,5 +1,12 @@
 /* module blockwishlist */
 
+/* lnk on detail product page */
+#wishlist_button {
+	padding:2px 0 2px 20px;
+	background:url(img/icon/add.png) no-repeat 0 0 transparent
+}
+
+
 /* bt add */
 .add_wishlist_button a {padding:5px 7px 5px 18px}
 .add_wishlist_button a span {

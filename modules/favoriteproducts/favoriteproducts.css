@@ -48,7 +48,7 @@
 
 #usefull_link_block li#favoriteproducts_block_extra_remove {
 	padding-left:20px;
-	background:url(img/add_favorite.gif) no-repeat 0 0;
+	background:url(img/del_favorite.gif) no-repeat 0 0;
 	cursor: pointer;
 }
 
