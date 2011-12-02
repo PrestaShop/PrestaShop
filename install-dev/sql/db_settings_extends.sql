@@ -1543,9 +1543,9 @@ INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `date_add`) VALUES
 (1, 2, NOW());
 
 
-/* new thme, need to be checked */
+/* new theme, need to be checked */
 
-REPLACE INTO `ps_configuration` (id_group_shop, id_shop, name, value) VALUES
+REPLACE INTO `PREFIX_configuration` (id_group_shop, id_shop, name, value) VALUES
 	(NULL, NULL, 'PS_CONDITIONS','1'),
 	(NULL, NULL, 'PS_PRODUCTS_PER_PAGE','10'),
 	(NULL, NULL, 'PS_PRODUCTS_ORDER_WAY','0'),
