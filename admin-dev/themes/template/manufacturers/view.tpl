@@ -29,10 +29,10 @@
 {block name="override_tpl"}
 
 	<h2>{$manufacturer->name}</h2>
-	
+
 	<h3>{l s='Total addresses:'} {count($addresses)}</h3>
 	<hr />
-	
+
 	{if !count($addresses)}
 		{l s='No address for this manufacturer'}
 	{else}
@@ -61,7 +61,7 @@
 		{/foreach}
 	{/if}
 	<br /><br />
-	
+
 	<h3>{l s='Total products:'} {count($products)}</h3>
 	{foreach $products AS $product}
 		<hr />
@@ -70,7 +70,7 @@
 				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
 				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
 			</div>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:990px;">
+			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:80%;margin-left:10%;">
 				<tr>
 					<th>{$product->name}</th>
 					{if !empty($product->reference)}<th width="150">{l s='Ref:'} {$product->reference}</th>{/if}
@@ -85,13 +85,13 @@
 				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
 			</div>
 			<h3><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></h3>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:990px;">
+			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:80%;margin-left:10%;">
 				<tr>
 					<th>{l s='Attribute name'}</th>
 					<th width="80">{l s='Reference'}</th>
 					<th width="80">{l s='EAN13'}</th>
 					<th width="80">{l s='UPC'}</th>
-					{if $stock_management}<th class="right" width="40">{l s='Quantity'}</th>{/if}
+					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right" width="150">{l s='Available Quantity'}</th>{/if}
 				</tr>
 				{foreach $product->combinaison AS $id_product_attribute => $product_attribute}
 					<tr {if $id_product_attribute %2}class="alt_row"{/if} >
@@ -99,7 +99,7 @@
 						<td>{$product_attribute.reference}</td>
 						<td>{$product_attribute.ean13}</td>
 						<td>{$product_attribute.upc}</td>
-						{if $stock_management}<td class="right">{$product_attribute.quantity}</td>{/if}
+						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
 					</tr>
 				{/foreach}
 			</table>

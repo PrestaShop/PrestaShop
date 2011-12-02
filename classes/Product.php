@@ -571,7 +571,7 @@ class ProductCore extends ObjectModel
 				FROM '._DB_PREFIX_.'product_attribute pa'
 				.($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 				' WHERE pa.default_on = 1 '
-				.($minimum_quantity > 0 ? ' AND stock.quantity >= '.(int)$minimum_quantity : '').
+				.($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= '.(int)$minimum_quantity : '').
 				' AND pa.id_product = '.(int)$id_product;
 		$result = Db::getInstance()->getValue($sql);
 
@@ -581,7 +581,7 @@ class ProductCore extends ObjectModel
 					FROM '._DB_PREFIX_.'product_attribute pa'
 					.($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 					' WHERE pa.id_product = '.(int)$id_product
-					.($minimum_quantity > 0 ? ' AND stock.quantity >= '.(int)$minimum_quantity : '');
+					.($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= '.(int)$minimum_quantity : '');
 			$result = Db::getInstance()->getValue($sql);
 		}
 
@@ -1632,7 +1632,7 @@ class ProductCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		$sql = 'SELECT pa.*, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',
-					al.`name` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation, stock.quantity
+					al.`name` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation, IFNULL(stock.quantity, 0)
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
@@ -1656,7 +1656,7 @@ class ProductCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		$sql = 'SELECT pa.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
-					a.`id_attribute`, pa.`unit_price_impact`, stock.quantity
+					a.`id_attribute`, pa.`unit_price_impact`, IFNULL(stock.quantity, 0) as quantity
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
@@ -1775,7 +1775,7 @@ class ProductCore extends ObjectModel
 
 		$sql = new DbQuery();
 		$sql->select(
-			'p.*, stock.out_of_stock, stock.quantity as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
+			'p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 			DATEDIFF(
 				p.`date_add`,
@@ -1972,7 +1972,7 @@ class ProductCore extends ObjectModel
 			return (int)$result['nb'];
 		}
 
-		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity, pl.`description`, pl.`description_short`,
+		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
 					pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 					pl.`name`, i.`id_image`, il.`legend`, t.`rate`, m.`name` AS manufacturer_name,
 					DATEDIFF(
@@ -2766,7 +2766,7 @@ class ProductCore extends ObjectModel
 			return array();
 		$sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
 					a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, pa.`id_product_attribute`,
-					stock.quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`,
+					IFNULL(stock.quantity, 0) as quantity, pa.`price`, pa.`ecotax`, pa.`weight`, pa.`default_on`, pa.`reference`, pa.`unit_price_impact`,
 					pa.`minimal_quantity`, pa.`available_date`, ag.`group_type`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				'.Product::sqlStock('pa', 'pa').'
@@ -2838,7 +2838,7 @@ class ProductCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
+		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
 					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, p.`ean13`, p.`upc`,
 					i.`id_image`, il.`legend`, t.`rate`, m.`name` as manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(

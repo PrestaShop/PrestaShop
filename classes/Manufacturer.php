@@ -335,7 +335,7 @@ class ManufacturerCore extends ObjectModel
 			return (int)count($result);
 		}
 
-		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity, pa.`id_product_attribute`,
+		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pa.`id_product_attribute`,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
 					pl.`meta_title`, pl.`name`, i.`id_image`, il.`legend`, m.`name` AS manufacturer_name, tl.`name` AS tax_name, t.`rate`,
 					DATEDIFF(

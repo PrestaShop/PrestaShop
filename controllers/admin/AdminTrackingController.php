@@ -125,7 +125,7 @@ class AdminTrackingController extends AdminController
 				SELECT DISTINCT(id_product)
 				FROM `'._DB_PREFIX_.'product_attribute`
 			)
-			AND stock.quantity <= 0
+			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of products with attributes and without available quantities for sale:'));
@@ -163,7 +163,7 @@ class AdminTrackingController extends AdminController
 				SELECT DISTINCT(id_product)
 				FROM `'._DB_PREFIX_.'product_attribute`
 			)
-			AND stock.quantity <= 0
+			AND IFNULL(stock.quantity, 0) <= 0
 		)';
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of products without attributes and without available quantities for sale:'));

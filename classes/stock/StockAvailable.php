@@ -540,7 +540,6 @@ class StockAvailableCore extends ObjectModel
 	public static function addSqlShopRestriction(DbQuery $sql = null, $id_shop = null, $alias = null)
 	{
 		$context = Context::getContext();
-		$group_ok = false;
 
 		if (!empty($alias))
 			$alias .= '.';
@@ -565,12 +564,17 @@ class StockAvailableCore extends ObjectModel
 				$sql = ' AND '.pSQL($alias).'id_group_shop = '.(int)$group_shop->id.' ';
 				$sql .= ' AND '.pSQL($alias).'id_shop = 0 ';
 			}
-
-			$group_ok = true;
 		}
-
+		// else if we are in group context
+		else if ($context->shop() == Shop::CONTEXT_GROUP)
+		{
+			if (is_object($sql))
+				$sql->where(pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $group_shop->id, true)).')');
+			else
+				$sql = ' AND '.pSQL($alias).'id_shop IN ('.implode(', ', Shop::getShops(true, $group_shop->id, true)).') ';
+		}
 		// if no group specific restriction, set simple shop restriction
-		if (!$group_ok)
+		else
 		{
 			if (is_object($sql))
 				$sql->where(pSQL($alias).'id_shop = '.(int)$id_shop);

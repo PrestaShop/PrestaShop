@@ -53,14 +53,14 @@ class AdminSuppliersControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addJqueryUi('ui.widget');
 		$this->addJqueryPlugin('tagify');
 	}
-	
+
 	public function renderForm()
 	{
 		$this->fields_form = array(
@@ -201,6 +201,7 @@ class AdminSuppliersControllerCore extends AdminController
 			'supplier' => $this->object,
 			'products' => $products,
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
+			'shopContext' => Context::getContext()->shop(),
 		);
 
 		return parent::renderView();

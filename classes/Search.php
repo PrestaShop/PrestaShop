@@ -263,7 +263,7 @@ class SearchCore
 			return $db->executeS($sql);
 		}
 
-		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity,
+		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 				tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.',
 				DATEDIFF(
@@ -600,7 +600,7 @@ class SearchCore
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT DISTINCT p.*, stock.out_of_stock, stock.quantity as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
+		$sql = 'SELECT DISTINCT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
 					tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
