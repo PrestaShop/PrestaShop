@@ -89,7 +89,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -606,6 +606,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'addresses' => $addresses,
 			'products' => $products,
 			'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
+			'shopContext' => Context::getContext()->shop(),
 		);
 
 		return parent::renderView();
