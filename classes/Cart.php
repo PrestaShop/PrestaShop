@@ -1359,6 +1359,8 @@ class CartCore extends ObjectModel
 		$warehouse_count_by_address = array();
 		$warehouse_carrier_list = array();
 
+		$stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+
 		foreach ($product_list as &$product)
 		{
 			if ((int)$product['id_address_delivery'] == 0)
@@ -1369,32 +1371,41 @@ class CartCore extends ObjectModel
 
 			$product['warehouse_list'] = array();
 
-			$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
-			// Does the product is in stock ?
-			// If yes, get only warehouse where the product is in stock
-			$warehouse_in_stock = array();
-			$manager = StockManagerFactory::getManager();
-
-			foreach ($warehouse_list as $key => $warehouse)
+			if ($stock_management_active)
 			{
-				$product_real_quantities = $manager->getProductRealQuantities(
-					$product['id_product'],
-					$product['id_product_attribute'],
-					array($warehouse['id_warehouse']),
-					true
-				);
+				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
+				// Does the product is in stock ?
+				// If yes, get only warehouse where the product is in stock
+				$warehouse_in_stock = array();
+				$manager = StockManagerFactory::getManager();
 
-				if ($product_real_quantities > 0)
-					$warehouse_in_stock[] = $warehouse;
-			}
+				foreach ($warehouse_list as $key => $warehouse)
+				{
+					$product_real_quantities = $manager->getProductRealQuantities(
+						$product['id_product'],
+						$product['id_product_attribute'],
+						array($warehouse['id_warehouse']),
+						true
+					);
 
-			if (!empty($warehouse_in_stock))
-			{
-				$warehouse = $warehouse_in_stock;
-				$product['in_stock'] = true;
+					if ($product_real_quantities > 0)
+						$warehouse_in_stock[] = $warehouse;
+				}
+
+				if (!empty($warehouse_in_stock))
+				{
+					$warehouse_list = $warehouse_in_stock;
+					$product['in_stock'] = true;
+				}
+				else
+					$product['in_stock'] = false;
 			}
 			else
-				$product['in_stock'] = false;
+			{
+				//simulate default warehouse
+				$warehouse_list = array(0);
+				$product['in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']) > 0;
+			}
 
 			foreach ($warehouse_list as $warehouse)
 			{
@@ -1901,7 +1912,7 @@ class CartCore extends ObjectModel
 	/**
 	* Return shipping total of a specific carriers for the cart
 	*
-	* @param int $id_carrier 
+	* @param int $id_carrier
 	* @param array $delivery_option Array of the delivery option for each address
 	* @param booleal $useTax
 	* @param Country $default_country
@@ -1914,8 +1925,8 @@ class CartCore extends ObjectModel
 
 		$total_shipping = 0;
 		$delivery_option_list = $this->getDeliveryOptionList();
-		
-		
+
+
 		foreach ($delivery_option as $id_address => $key)
 		{
 			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
@@ -1931,7 +1942,7 @@ class CartCore extends ObjectModel
 
 		return $total_shipping;
 	}
-	
+
 
 	/**
 	 * Return shipping total

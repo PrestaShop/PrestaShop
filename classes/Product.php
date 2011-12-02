@@ -654,13 +654,16 @@ class ProductCore extends ObjectModel
 		 * - physical stock for this product
 		 * - supply order(s) for this product
 		 */
-		$stock_manager = StockManagerFactory::getManager();
-		$physical_quantity = $stock_manager->getProductPhysicalQuantities($this->id, 0);
-		$real_quantity = $stock_manager->getProductRealQuantities($this->id, 0);
-		if ($physical_quantity > 0)
-			return false;
-		if ($real_quantity > $physical_quantity)
-			return false;
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$stock_manager = StockManagerFactory::getManager();
+			$physical_quantity = $stock_manager->getProductPhysicalQuantities($this->id, 0);
+			$real_quantity = $stock_manager->getProductRealQuantities($this->id, 0);
+			if ($physical_quantity > 0)
+				return false;
+			if ($real_quantity > $physical_quantity)
+				return false;
+		}
 
 		/*
 		 * @since 1.5.0
