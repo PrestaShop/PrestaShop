@@ -230,7 +230,8 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 (64, 25, 1),
 (64, 40, 1),
 (64, 96, 1),
-/* block */
+/* blocknewsletter */
+(65, 9, 24),
 (65, 6, 8),
 /* blocksupplier */
 (66, 7, 9),
