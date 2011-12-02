@@ -14,10 +14,10 @@
 
 #newsletter_block_left input.inputNew {
 	position: relative;
-   top: -1px;
+	top: -1px;
 	padding:0 5px;
-	height:21px;
-	width:150px;
+	height:20px;
+	width:145px;
 	border:1px solid #ccc;
 	border-right:none;
 	-moz-border-radius-topleft: 3px;
@@ -32,6 +32,9 @@
 *:first-child+html #newsletter_block_left input.inputNew {position:static;}/* hack ie 7 */
 
 #newsletter_block_left input.button_mini {
+	position:relative;
+	left:-2px;
+ 	width: 24px;
 	height:23px;
 	width:24px;
 	border:0;
