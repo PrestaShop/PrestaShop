@@ -201,17 +201,17 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 
 		$genders = Gender::getGenders();
-		$total_genders = count($genders);
 		$list_genders = array();
-		for ($i = 0; $i < $total_genders; $i++)
+		foreach ($genders as $key => $gender)
 		{
-			$list_genders[$i]['id'] = 'gender_'.$genders[$i]->id;
-			$list_genders[$i]['value'] = $genders[$i]->id;
-			$list_genders[$i]['label'] = $genders[$i]->name;
+			$list_genders[$key]['id'] = 'gender_'.$gender->id;
+			$list_genders[$key]['value'] = $gender->id;
+			$list_genders[$key]['label'] = $gender->name;
 		}
-		$list_genders[$i]['id'] = 'gender_unknown';
-		$list_genders[$i]['value'] = 0;
-		$list_genders[$i]['label'] = $this->l('Unknown');
+		$key++;
+		$list_genders[$key]['id'] = 'gender_unknown';
+		$list_genders[$key]['value'] = 0;
+		$list_genders[$key]['label'] = $this->l('Unknown');
 
 		$years = Tools::dateYears();
 		$months = Tools::dateMonths();
