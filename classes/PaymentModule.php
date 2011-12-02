@@ -296,9 +296,9 @@ abstract class PaymentModuleCore extends Module
 
 					$cartRulesList = '';
 					$result = $cart->getCartRules();
-					$cartRules = ObjectModel::hydrateCollection('CartRule', $result, (int)$order->id_lang);
-					foreach ($cartRules as $cartRule)
+					foreach ($result as $cart_rule)
 					{
+						$cartRule = $cart_rule['obj'];
 						$value = $cartRule->getContextualValue(true);
 						// Todo : has not been tested because order processing wasn't functionnal
 						if ($value > $order->total_products_wt && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0)

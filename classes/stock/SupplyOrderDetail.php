@@ -187,15 +187,10 @@ class SupplyOrderDetailCore extends ObjectModel
 		'price_with_order_discount_te' => 'isPrice',
 	);
 
-	/**
-	 * @var string Database table name
-	 */
-	protected $table = 'supply_order_detail';
-
-	/**
-	 * @var string Database ID name
-	 */
-	protected $identifier = 'id_supply_order_detail';
+	public static $definition = array(
+		'table' => 'supply_order_detail',
+		'primary' => 'id_supply_order_detail',
+	);
 
 	/**
 	 * @see ObjectModel::getFields()

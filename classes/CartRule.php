@@ -57,8 +57,10 @@ class CartRuleCore extends ObjectModel
 	public $date_add;
 	public $date_upd;
 
-	protected $table = 'cart_rule';
-	protected $identifier = 'id_cart_rule';
+	public static $definition = array(
+		'table' => 'cart_rule',
+		'identifier' => 'id_cart_rule',
+	);
 
  	protected $fieldsRequired = array('date_from', 'date_to');
  	protected $fieldsSize = array('code' => 254, 'description' => 65534);
@@ -244,10 +246,10 @@ class CartRuleCore extends ObjectModel
 	public static function deleteByIdCustomer($id_customer)
 	{
 		$return = true;
-		$result = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_rule` WHERE `id_customer` = '.(int)$id_customer);
-		$cartRules = ObjectModel::hydrateCollection('CartRule', $result);
-		foreach ($cartRules as $cartRule)
-			$return &= $cartRule->delete();
+		$cart_rules = new Collection('CartRule');
+		$cart_rules->where('a.id_customer = '.(int)$id_customer);
+		foreach ($cart_rules as $cart_rule)
+			$return &= $cart_rule->delete();
 		return $return;
 	}
 
@@ -636,13 +638,11 @@ class CartRuleCore extends ObjectModel
 		$errors = array();
 		if (!$context)
 			$context = Context::getContext();
-		$result = $context->cart->getCartRules();
-		$cartRules = ObjectModel::hydrateCollection('CartRule', $result);
-		foreach ($cartRules as $cartRule)
+		foreach ($context->cart->getCartRules() as $cart_rule)
 		{
-			if ($error = $cartRule->checkValidity($context, true))
+			if ($error = $cart_rule['obj']->checkValidity($context, true))
 			{
-				$context->cart->removeCartRule($cartRule->id);
+				$context->cart->removeCartRule($cart_rule['obj']->id);
 				$context->cart->update();
 				$errors[] = $error;
 			}

@@ -297,22 +297,13 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * Retrieves the product entries collection for the current order
 	 *
-	 * @return array
+	 * @return Collection
 	 */
-	public function getEntriesCollection($id_lang = null)
+	public function getEntriesCollection()
 	{
-		if ($id_lang == null)
-			$id_lang = Context::getContext()->language->id;
-
-		// build query
-		$query = new DbQuery();
-		$query->select('s.*');
-		$query->from('supply_order_detail s');
-		$query->where('s.id_supply_order = '.(int)$this->id);
-
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-		return ObjectModel::hydrateCollection('SupplyOrderDetail', $results);
+		$details = new Collection('SupplyOrderDetail');
+		$details->where('a.id_supply_order = '.(int)$this->id);
+		return $details;
 	}
 
 

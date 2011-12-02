@@ -82,8 +82,10 @@ class StockCore extends ObjectModel
 		'price_te' => 'isPrice',
 	);
 
-	protected $table = 'stock';
-	protected $identifier = 'id_stock';
+	public static $definition = array(
+		'table' => 'stock',
+		'identifier' => 'id_stock',
+	);
 
 	public function getFields()
 	{
