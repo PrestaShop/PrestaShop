@@ -204,7 +204,6 @@ class BankWire extends PaymentModule
 
 		$state = $params['objOrder']->getCurrentState();
 		if ($state == Configuration::get('PS_OS_BANKWIRE') OR $state == Configuration::get('PS_OS_OUTOFSTOCK'))
-		{
 			$this->context->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'bankwireDetails' => Tools::nl2br($this->details),
@@ -213,9 +212,6 @@ class BankWire extends PaymentModule
 				'status' => 'ok',
 				'id_order' => $params['objOrder']->id
 			));
-			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
-				$this->context->smarty->assign('reference', $params['objOrder']->reference);
-		}
 		else
 			$this->context->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'payment_return.tpl');

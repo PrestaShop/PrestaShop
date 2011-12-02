@@ -19,40 +19,66 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block languages module -->
 <div id="languages_block_top">
-	<ul id="first-languages">
+	<div id="countries">
+	{* @todo fix display current languages, removing the first foreach loop *}
+{foreach from=$languages key=k item=language name="languages"}
+	{if $language.iso_code == $lang_iso}
+		<p class="selected_language">
+		{if $language.iso_code != $lang_iso}
+			{assign var=indice_lang value=$language.id_lang}
+			{if isset($lang_rewrite_urls.$indice_lang)}
+				<a href="{$lang_rewrite_urls.$indice_lang}" title="{$language.name}">
+			{else}
+				<a href="{$link->getLanguageLink($language.id_lang, $language.name)}" title="{$language.name}">
+			{/if}
+		{/if}
+			<img src="{$img_lang_dir}{$language.id_lang}.jpg" alt="{$language.iso_code}" width="16" height="11" />
+			{if $language.iso_code != $lang_iso}
+				</a>
+			{/if}
+		</p>
+	{/if}
+{/foreach}
+		<ul id="first-languages" class="countries_ul">
 		{foreach from=$languages key=k item=language name="languages"}
 			<li {if $language.iso_code == $lang_iso}class="selected_language"{/if}>
-				{if $language.iso_code != $lang_iso}
-				    {assign var=indice_lang value=$language.id_lang}
-					{if isset($blocklanguages_lang_rewrite_urls.$indice_lang)}
-						<a href="{$blocklanguages_lang_rewrite_urls.$indice_lang}" title="{$language.name}">
-					{else}
-						<a href="{$link->getLanguageLink($language.id_lang)}" title="{$language.name}">
-					{/if}
+			{if $language.iso_code != $lang_iso}
+				{assign var=indice_lang value=$language.id_lang}
+				{if isset($lang_rewrite_urls.$indice_lang)}
+					<a href="{$blocklanguages_lang_rewrite_urls.$indice_lang}" title="{$language.name}">
+				{else}
+					<a href="{$link->getLanguageLink($language.id_lang)}" title="{$language.name}">
 
 				{/if}
+			{/if}
 					<img src="{$img_lang_dir}{$language.id_lang}.jpg" alt="{$language.iso_code}" width="16" height="11" />
-				{if $language.iso_code != $lang_iso}
-					</a>
-				{/if}
+			{if $language.iso_code != $lang_iso}
+				</a>
+			{/if}
 			</li>
 		{/foreach}
-	</ul>
+		</ul>
+	</div>
 </div>
+
 <script type="text/javascript">
-	$('ul#first-languages li:not(.selected_language)').css('opacity', 0.3);
-	$('ul#first-languages li:not(.selected_language)').hover(function(){ldelim}
-		$(this).css('opacity', 1);
-	{rdelim}, function(){ldelim}
-		$(this).css('opacity', 0.3);
-	{rdelim});
+$(document).ready(function () {
+	$("#countries").mouseover(function(){
+		$(this).addClass("countries_hover");
+		$(".countries_ul").addClass("countries_ul_hover");
+	});
+	$("#countries").mouseout(function(){
+		$(this).removeClass("countries_hover");
+		$(".countries_ul").removeClass("countries_ul_hover");
+	});
+
+});
 </script>
 <!-- /Block languages module -->
-

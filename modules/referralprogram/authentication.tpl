@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,9 +27,9 @@
 <!-- MODULE ReferralProgram -->
 <fieldset class="account_creation">
 	<h3>{l s='Referral program' mod='referralprogram'}</h3>
-	<p>
+	<p class="text">
 		<label for="referralprogram">{l s='E-mail address of your sponsor' mod='referralprogram'}</label>
-		<input type="text" size="52" maxlength="128" class="text" id="referralprogram" name="referralprogram" value="{if isset($smarty.post.referralprogram)}{$smarty.post.referralprogram|escape:'htmlall':'UTF-8'}{/if}" />
+		<input type="text" size="52" maxlength="128" id="referralprogram" name="referralprogram" value="{if isset($smarty.post.referralprogram)}{$smarty.post.referralprogram|escape:'htmlall':'UTF-8'}{/if}" />
 	</p>
 </fieldset>
 <!-- END : MODULE ReferralProgram -->

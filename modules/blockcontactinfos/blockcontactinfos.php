@@ -1,13 +1,13 @@
 <?php
 /*
-* 2007-2011 PrestaShop
+* 2007-2010 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
-* This source file is subject to the Academic Free License (AFL 3.0)
+* This source file is subject to the Open Software License (OSL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
+* http://opensource.org/licenses/osl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author Prestashop SA <contact@prestashop.com>
+*  @copyright  2007-2010 Prestashop SA
+*  @version  Release: $Revision: 1.4 $
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -50,7 +50,8 @@ class blockcontactinfos extends Module
 		return (parent::install() 
 				AND Configuration::updateValue('blockcontactinfos_company', Configuration::get('PS_SHOP_NAME')) 
 				AND Configuration::updateValue('blockcontactinfos_address', '') AND Configuration::updateValue('blockcontactinfos_phone', '') 
-				AND Configuration::updateValue('blockcontactinfos_email', Configuration::get('PS_SHOP_EMAIL')) AND $this->registerHook('footer'));
+				AND Configuration::updateValue('blockcontactinfos_email', Configuration::get('PS_SHOP_EMAIL')) 
+				AND $this->registerHook('header') AND $this->registerHook('footer'));
 	}
 	
 	public function uninstall()
@@ -77,23 +78,32 @@ class blockcontactinfos extends Module
 		$content = '
 		<h2>'.$this->displayName.'</h2>
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset>	
+			<fieldset class="width2">	
 				<p><label for="company">'.$this->l('Company name').' :</label>
 				<input type="text" id="company" name="company" value="'.Configuration::get('blockcontactinfos_company').'" /></p>
 				<p><label for="address">'.$this->l('Address').' :</label>
-				<textarea id="address" name="address" cols="60" rows="4">'.Configuration::get('blockcontactinfos_address').'</textarea></p>
+				<textarea id="address" name="address">'.Configuration::get('blockcontactinfos_address').'</textarea></p>
 				<p><label for="phone">'.$this->l('Phone number').' :</label>
 				<input type="text" id="phone" name="phone" value="'.Configuration::get('blockcontactinfos_phone').'" /></p>
 				<p><label for="email">'.$this->l('Email').' :</label>
 				<input type="text" id="email" name="email" value="'.Configuration::get('blockcontactinfos_email').'" />	</p>
-				<div class="margin-form">
-					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
-				</div>
+				<div class="clear">&nbsp;</div>
+				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
 			</fieldset>
 		</form>
-		';
+		<div class="clear">&nbsp;</div>
+		<fieldset>
+			<legend>Addons</legend>
+			'.$this->l('This module has been developped by PrestaShop and can only be sold through').' <a href="http://addons.prestashop.com">addons.prestashop.com</a>.<br />
+			'.$this->l('Please report all bugs to').' <a href="mailto:addons@prestashop.com">addons@prestashop.com</a> '.$this->l('or using our').' <a href="http://addons.prestashop.com/contact-form.php">'.$this->l('contact form').'</a>.
+		</fieldset>';
 		
 		return $content;
+	}
+	
+	public function hookHeader()
+	{
+		$this->context->controller->addCSS(($this->_path).'blockcontactinfos.css', 'all');
 	}
 	
 	public function hookFooter($params)
@@ -101,10 +111,10 @@ class blockcontactinfos extends Module
 		global $smarty;
 		
 		$smarty->assign(array(
-			'company' => Configuration::get('blockcontactinfos_company'),
-			'address' => Configuration::get('blockcontactinfos_address'),
-			'phone' => Configuration::get('blockcontactinfos_phone'),
-			'email' => Configuration::get('blockcontactinfos_email')
+			'blockcontactinfos_company' => Configuration::get('blockcontactinfos_company'),
+			'blockcontactinfos_address' => Configuration::get('blockcontactinfos_address'),
+			'blockcontactinfos_phone' => Configuration::get('blockcontactinfos_phone'),
+			'blockcontactinfos_email' => Configuration::get('blockcontactinfos_email')
 		));
 		return $this->display(__FILE__, 'blockcontactinfos.tpl');
 	}

@@ -1,0 +1,33 @@
+/* block myaccount */
+.myaccount ul {margin-bottom:10px}
+.myaccount li {border-bottom: 1px solid #eee}
+.myaccount li a {
+   display: block;
+   padding: 7px 11px 5px 22px;
+   color: #333;
+}
+.myaccount p.logout {
+	padding-bottom:0;
+	font-weight:bold;
+	text-align:right
+}
+
+
+/* block myaccount in footer */
+#footer .myaccount {padding:15px 10px;}
+#footer .myaccount h4 {background: none;}
+#footer .myaccount .logout {display:none;}
+#footer .myaccount h4 {
+	padding:0 0 10px 0;
+	background:#333
+}
+#footer .myaccount ul {margin-bottom:0}
+#footer .myaccount li {border-bottom:none}
+#footer .myaccount li a {
+   display: block;
+	padding:0;
+   color: #fff;
+   background: none
+}
+#footer .myaccount li.lnk_wishlist img {display:none
+}

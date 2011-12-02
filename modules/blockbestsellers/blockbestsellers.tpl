@@ -30,15 +30,21 @@
 	<div class="block_content">
 	{if $best_sellers|@count > 0}
 		<ul class="product_images">
-			<li><a href="{$best_sellers.0.link}" title="{$best_sellers.0.legend|escape:'htmlall':'UTF-8'}"><img src="{$link->getImageLink($best_sellers.0.link_rewrite, $best_sellers.0.id_image, 'medium')}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$best_sellers.0.legend|escape:'htmlall':'UTF-8'}" /></a></li>
-			{if $best_sellers|@count > 1}<li><a href="{$best_sellers.1.link}" title="{$best_sellers.1.legend|escape:'htmlall':'UTF-8'}"><img src="{$link->getImageLink($best_sellers.1.link_rewrite, $best_sellers.1.id_image, 'medium')}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$best_sellers.1.legend|escape:'htmlall':'UTF-8'}" /></a></li>{/if}
-		</ul>
-		<dl>
-		{foreach from=$best_sellers item=product name=myLoop}
-			<dt class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}"><a href="{$product.link}" title="{$product.name|escape:'htmlall':'UTF-8'}">{$product.name|strip_tags:'UTF-8'|escape:'htmlall':'UTF-8'}</a></dt>
+			{foreach from=$best_sellers item=product name=myLoop}
+			<li class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if} clearfix">
+				<a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}" class="content_img clearfix">
+					<span class="number">{$smarty.foreach.myLoop.iteration}</span>
+					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'small')}" height="{$smallSize.height}" width="{$smallSize.width}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" />
+				
+				</a>
+				<p><a href="{$product.link}" title="{$product.legend|escape:'htmlall':'UTF-8'}">
+					{$product.name|strip_tags:'UTF-8'|escape:'htmlall':'UTF-8'}<br />
+					<span class="price">{$product.price}</span>
+				</a></p>
+			</li>
 		{/foreach}
-		</dl>
-		<p><a href="{$link->getPageLink('best-sales')}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">{l s='All best sellers' mod='blockbestsellers'}</a></p>
+		</ul>
+		<p class="lnk"><a href="{$link->getPageLink('best-sales')}" title="{l s='All best sellers' mod='blockbestsellers'}" class="button_large">&raquo; {l s='All best sellers' mod='blockbestsellers'}</a></p>
 	{else}
 		<p>{l s='No best sellers at this time' mod='blockbestsellers'}</p>
 	{/if}

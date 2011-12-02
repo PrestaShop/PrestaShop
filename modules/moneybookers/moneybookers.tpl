@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop
+* 2007-2011 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if $display_mode == 0}
 	<form action="https://www.moneybookers.com/app/payment.pl" method="post">
-	<p class="payment_module" style="display: block; text-decoration: none;">
+	<p class="payment_module">
 		<input type="hidden" name="pay_to_email" value="{$pay_to_email}" />
 		<input type="hidden" name="recipient_description" value="{$recipient_description}" />
 		<input type="hidden" name="transaction_id" value="{$transaction_id}" />
@@ -49,7 +49,7 @@
 		{if isset($state) && !empty($state)}<input type="hidden" name="state" value="{$state}" />{/if}
 		<input type="hidden" name="country" value="{$country}" />
 		<input type="hidden" name="amount" value="{$amount}" />
-		<input type="hidden" name="currency" value="{$mb_currency}" />
+		<input type="hidden" name="currency" value="{$currency}" />
 		<input type="hidden" name="amount2_description" value="{if isset($amount2_description)}{$amount2_description}{/if}" />
 		<input type="hidden" name="amount2" value="{if isset($amount2)}{$amount2}{/if}" />
 		<input type="hidden" name="amount3_description" value="{if isset($amount3_description)}{$amount3_description}{/if}" />
@@ -73,7 +73,7 @@
 {else}
 	{foreach from=$inter item=i}
 	<form action="https://www.moneybookers.com/app/payment.pl" method="post">
-	<p class="payment_module" style="display: block; text-decoration: none; height: 50px;">
+	<p class="payment_module">
 		<input type="hidden" name="pay_to_email" value="{$pay_to_email}" />
 		<input type="hidden" name="recipient_description" value="{$recipient_description}" />
 		<input type="hidden" name="transaction_id" value="{$transaction_id}" />
@@ -115,7 +115,7 @@
 	{/foreach}
 	{foreach from=$local item=i}
 	<form action="https://www.moneybookers.com/app/payment.pl" method="post">
-	<p class="payment_module" style="display: block; text-decoration: none; height: 50px;">
+	<p class="payment_module">
 		<input type="hidden" name="pay_to_email" value="{$pay_to_email}" />
 		<input type="hidden" name="recipient_description" value="{$recipient_description}" />
 		<input type="hidden" name="transaction_id" value="{$transaction_id}" />

@@ -93,6 +93,7 @@ class BlockCart extends Module
 			'wrapping_cost' => Tools::displayPrice($wrappingCost, $currency),
 			'product_total' => Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::BOTH_WITHOUT_SHIPPING), $currency),
 			'total' => Tools::displayPrice($totalToPay, $currency),
+			'id_carrier' => (int)($params['cart']->id_carrier),
 			'order_process' => Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc' : 'order',
 			'ajax_allowed' => (int)(Configuration::get('PS_BLOCK_CART_AJAX')) == 1 ? true : false
 		));

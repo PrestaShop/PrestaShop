@@ -1,99 +1,46 @@
-#fancybox-wrap {width:585px !important}
-#fancybox-content {
-	width:585px !important;
-	border-width:0 !important
+/* ************************************************************************************************
+		PAGE SEND TO FRIEND
+************************************************************************************************ */
+#sendfriendpage form.std fieldset {
+	margin:0 0 20px 0;
+	padding: 10px 15px;
+	background: none repeat scroll 0 0 #eee
 }
 
-#send_friend_form {
-	width:585px;
-	color: #333;
-	text-align: left;
-	background-color: #fff
+#sendfriendpage .product {}
+#sendfriendpage .product .img_link {float:left}
+#sendfriendpage .product .img_link img {
+	margin:0 10px 0 0;
+	border:1px solid #ccc;
 }
-#send_friend_form .title {
-	padding:10px;
-	font-size: 13px;
-	color: #fff;
-	text-transform: uppercase;
-	background: #333
-}
-
-#send_friend_form .product {padding:15px}
-#send_friend_form .product img {
+#sendfriendpage .product .product_desc {
 	float:left;
+	width:200px;
+	font-weight:bold;
+	font-size:12px;
+	color:#000;
+}
+
+#sendfriendpage #send_friend_form_content {margin-top:40px}
+#sendfriendpage #send_friend_form_content .text {
+   padding-bottom: 10px
+}
+#sendfriendpage #send_friend_form_content .text label {
+   display: inline-block;
+   padding: 6px 15px;
+   width: 180px;
+   font-size: 12px;
+   text-align: right
+}
+#sendfriendpage #send_friend_form_content .text input {
+   padding: 0 5px;
+   height: 22px;
+   width: 260px;
    border: 1px solid #ccc;
-}
-#send_friend_form .product .product_desc {
-	float:left;
-	margin-left:15px;
-	width:300px;
-	line-height:18px;
-	color:#666
-}
-#send_friend_form .product .product_desc .product_name {
-	padding-bottom:5px;
-	font-size:13px;
-	color:#000
-}
-
-.send_friend_form_content {
-	padding:15px;
-	background:#f8f8f8
-}
-.send_friend_form_content .intro_form {
-	padding-bottom: 10px;
-   font-weight: bold;
    font-size: 12px
 }
-
-
-#send_friend_form .form_container {
-	clear:both;
-	margin-top:20px
-}
-#send_friend_form p.text {
-	margin-bottom:0;
-	padding-bottom:0
-}
-#send_friend_form p.text label, #send_friend_form  p.textarea label {
-   display: block;
-	margin:12px 0 4px 0;
-   font-weight: bold;
-   font-size: 12px;
-}
-#send_friend_form p.text input {
-   padding: 0 5px;
-   height: 28px;
-   width: 540px;
-   border: 1px solid #ccc;
-   background: url(../img/bg_input.png) repeat-x scroll 0 0 #fff;
-}
-
-#send_friend_form .submit {
-	padding:0;
-	font-size:13px;
+#sendfriendpage #send_friend_form_content .submit {
+	margin:0 20px 0 0;
+	padding:5px 0;
 	text-align:right
-}
-#send_friend_form button {
-	cursor: pointer;
-   cursor: pointer;
-   display: inline-block;
-   padding: 4px 7px 3px 7px;
-   border: 1px solid #CC9900;
-   border-radius: 3px 3px 3px 3px;
-   font-weight: bold;
-   color: #000;
-	background: url(../img/bg_bt.gif) repeat-x scroll 0 0 #F4B61B
-}
-#send_friend_form .submit .txt_required {
-	float:left;
-	font-size:12px;
-	font-style:italic;
-	color:#666
-}
-#send_friend_form_error {
-	color:red;
-	font-size:13px;
-	text-align:left;
-	display:hidden;
 }
