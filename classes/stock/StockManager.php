@@ -210,7 +210,8 @@ class StockManagerCore implements StockManagerInterface
 			$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($products_pack as $product_pack)
 			{
-				$pack_id_product_attribute = Product::getDefaultAttribute($id_product_attribute, 1); //@TODO is there a better way to retrieve the product attribute assciated to the pack ?
+				//@TODO is there a better way to retrieve the product attribute assciated to the pack ?
+				$pack_id_product_attribute = Product::getDefaultAttribute($id_product_attribute, 1);
 				$this->removeProduct($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $quantity, $warehouse, $id_order);
 			}
 		}
