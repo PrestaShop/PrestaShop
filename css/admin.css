@@ -1858,25 +1858,92 @@ ul.connectedSortable
 ul.connectedSortable li.module_list {
 	margin: 0 5px 5px 5px;
 	padding: 5px;
-	font-size: 1.2em;
-	border: 1px solid #CCC;
-	background: #F6F6F6;
-	font-weight: bold;
-	color: #1C94C4;
-	outline: none;
-}
-/* Accounting css */
-.formAccountingExport {
-	display: none;
+	font-size:1.2em;
+	border:1px solid #CCC;
+	background:#F6F6F6;
+	font-weight:bold;
+	color:#1C94C4;
+	outline:none;
 }
 
+/* Accounting css */
+.formAccountingExport {
+	display:none;
+}
 .input-error
 {
 	color:#D8000C;
 	font-size:12px;
 	font-weight:normal;
-	margin: 0 0 10px 0;
-	line-height: 20px;
-	padding: 10px 15px;
+	margin:0 0 10px 0;
+	line-height:20px;
+	padding:10px 15px;
 	display:none;
 }
+
+/* Customer Thread */
+#CustomerThreadContacts{
+	float:left;
+	border:0;
+}
+#CustomerThreadContacts div {
+	background-color:#EFEFEF;
+	float:left;
+	margin:0 10px 10px 0;
+	border:1px solid #CFCFCF;
+}
+#CustomerThreadContacts p {
+	overflow:hidden;
+	line-height:15px;
+	height:45px;
+	margin:0;
+	padding:0 5px;
+}
+#CustomerThreadContacts h3 {
+	overflow:hidden;
+	line-height:25px;
+	color:#812143;
+	height:25px;
+	margin:0;
+}
+#CustomerThreadContacts a {
+	padding:0 5px;
+	display:block;
+	height:23px;
+	line-height:23px;
+	border:0;
+}
+#CustomerThreadContacts h4 {
+	margin:0;
+	line-height:23px;
+	height:23px;
+	border:0;
+	padding:0 5px;
+}
+#CustomerThreadContacts div#CustomerService {
+	width:300px;
+	background:none;
+	border:none;
+}
+#CustomerThreadContacts div#CustomerService table.table {
+	width:300px;
+}
+#CustomerThreadContacts div#CustomerService table.table thead{
+	margin:0;
+	line-height:23px;
+	height:23px;
+	border:0;
+	padding:0 5px;
+	font-weight:bold;
+	text-align:center;
+}
+#CustomerThreadContacts div#MeaningStatus{
+	width:300px
+}
+#ChangeStatus{
+	position:absolute;
+	margin:20px 20px 0 0;
+	right:10px;
+}
+
+

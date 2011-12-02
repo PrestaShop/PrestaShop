@@ -27,34 +27,34 @@
 
 class ContactCore extends ObjectModel
 {
-	public 		$id;
+	public $id;
 
 	/** @var string Name */
-	public 		$name;
+	public $name;
 
 	/** @var string e-mail */
-	public 		$email;
+	public $email;
 
 	/** @var string Detailed description */
-	public 		$description;
+	public $description;
 
-	public 		$customer_service;
+	public $customer_service;
 
- 	protected 	$fieldsRequired = array();
- 	protected 	$fieldsSize = array('email' => 128);
- 	protected 	$fieldsValidate = array('email' => 'isEmail', 'customer_service' => 'isBool');
- 	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 32);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
+ 	protected $fieldsRequired = array();
+ 	protected $fieldsSize = array('email' => 128);
+ 	protected $fieldsValidate = array('email' => 'isEmail', 'customer_service' => 'isBool');
+ 	protected $fieldsRequiredLang = array('name');
+ 	protected $fieldsSizeLang = array('name' => 32);
+ 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
 
-	protected 	$table = 'contact';
-	protected 	$identifier = 'id_contact';
+	protected $table = 'contact';
+	protected $identifier = 'id_contact';
 
 	public function getFields()
 	{
 		$this->validateFields();
 		$fields['email'] = pSQL($this->email);
-		$fields['customer_service'] = (int)($this->customer_service);
+		$fields['customer_service'] = (int)$this->customer_service;
 		return $fields;
 	}
 
@@ -76,7 +76,7 @@ class ContactCore extends ObjectModel
 	  * @param Context
 	  * @return array Contacts
 	  */
-	static public function getContacts($id_lang, Shop $shop = null)
+	public static function getContacts($id_lang, Shop $shop = null)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -88,6 +88,21 @@ class ContactCore extends ObjectModel
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				ORDER BY `name` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+	}
+
+	/**
+	 * Return available categories contacts
+	 * @return array Contacts
+	 */
+	public static function getCategoriesContacts()
+	{
+		return Db::getInstance()->executeS('
+			SELECT cl.*
+			FROM '._DB_PREFIX_.'contact ct
+			LEFT JOIN '._DB_PREFIX_.'contact_lang cl
+				ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)Context::getContext()->language->id.')
+			WHERE ct.customer_service = 1
+		');
 	}
 }
 
