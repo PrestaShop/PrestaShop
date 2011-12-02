@@ -107,7 +107,7 @@ class Pagesnotfound extends Module
 			$this->_html .= '<div class="conf confirm"><img src="../img/admin/ok.gif" /> '.$this->l('Pages not found have been deleted.').'</div>';
 		}
 
-		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
+		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
 			$this->_html .= '<div class="warning warn">'.$this->l('You <b>must</b> use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
 
@@ -146,7 +146,7 @@ class Pagesnotfound extends Module
 				</form>	
 			</div>';
 		$this->_html .= '<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('404 errors').'</h2>
 			<p>'.$this->l('A 404 error is an HTTP error code which means that the file requested by the user cannot be found. 
 				In your case it means that one of your visitors entered a wrong URL in the address bar or that you or another website has a dead link. 

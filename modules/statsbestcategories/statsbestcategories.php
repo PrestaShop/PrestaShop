@@ -111,7 +111,7 @@ class StatsBestCategories extends ModuleGrid
 		$this->_html = '
 		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
 			'.$this->engine($engineParams).'
-			<br /><a href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a>
+			<br /><a class="button export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a>
 		</div>';
 		return $this->_html;
 	}

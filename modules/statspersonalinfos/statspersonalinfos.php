@@ -73,20 +73,20 @@ class StatsPersonalInfos extends ModuleGraph
 			$this->html .= '
 				<p><img src="../img/admin/down.gif" />'.$this->l('Gender distribution allows you to determine the percentage of men and women among your customers.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'gender')).'</div><br />
-				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=gender"><span>'.$this->l('CSV Export').'</span></a></p>
 				<br class="clear" /><br />
 				<p><img src="../img/admin/down.gif" />'.$this->l('Age ranges allows you to determine in which age range your customers are.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'age')).'</div><br />
-				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
+				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=age"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
 				<p><img src="../img/admin/down.gif" />'.$this->l('Country distribution allows you to determine in which part of the world your customers are shopping from.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'country')).'</div><br />
-				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
+				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=country"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
 				<p><img src="../img/admin/down.gif" />'.$this->l('Currency ranges allows you to determine which currencies your customers are using.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'currency')).'</div><br />
-				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=currency"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br /><br />
+				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=currency"><span>'.$this->l('CSV Export').'</span></a></p><br /><br />
 				<p><img src="../img/admin/down.gif" />'.$this->l('Language distribution allows you to determine the general languages your customers are using on your shop.').'</p>
 				<div>'.$this->engine(array('type' => 'pie', 'option' => 'language')).'</div><br />
-				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=language"><span>'.$this->l('CSV Export').'</span></a></p>
 			</center>';
 		}
 		else

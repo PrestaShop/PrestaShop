@@ -168,6 +168,7 @@ class StatsCheckUp extends Module
 			table.checkup td {padding:5px 10px}
 			table.checkup2 td {text-align:right}
 		</style>
+		<div class="blocStats">
 		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post" class="checkup">
 			<table class="table checkup" border="0" cellspacing="0" cellspacing="0">
 				<tr>
@@ -190,7 +191,9 @@ class StatsCheckUp extends Module
 			$this->html .= '</table>
 			<div><input type="submit" name="submitCheckup" class="button" value="'.$this->l('   Save   ').'" /></div>
 		</form>
+		</div>
 		<br />
+		<div class="blocStats">
 		<form action="'.AdminController::$currentIndex.'&token='.Tools::safeOutput(Tools::getValue('token')).'&module='.$this->name.'" method="post">
 			'.$this->l('Order by').'
 			<select name="submitCheckupOrder" onchange="this.form.submit();" style="width:100px">
@@ -298,6 +301,7 @@ class StatsCheckUp extends Module
 				<td>'.$arrayColors[$totals['average']].'</td>
 			</tr>
 		</table>
+		</div>
 		<div class="clear">&nbsp;</div>';
 
 		return $this->html;
