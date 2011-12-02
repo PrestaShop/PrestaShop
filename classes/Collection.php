@@ -30,7 +30,7 @@
  *
  * @since 1.5.0
  */
-class CollectionCore implements Iterator
+class CollectionCore implements Iterator, Countable
 {
 	/**
 	 * @var string Object class name
@@ -63,6 +63,11 @@ class CollectionCore implements Iterator
 	protected $iterator = 0;
 
 	/**
+	 * @var bool Is current collection already hydrated
+	 */
+	protected $is_hydrated = false;
+
+	/**
 	 * @param string $classname
 	 * @param int $id_lang
 	 */
@@ -79,7 +84,7 @@ class CollectionCore implements Iterator
 		$this->query->select('a.*');
 		$this->query->from($this->definition['table'].' a');
 
-		// If multilang, create assciation to lang table
+		// If multilang, create association to lang table
 		if (isset($this->definition['multilang']) && $this->definition['multilang'])
 		{
 			$this->query->select('b.*');
@@ -108,6 +113,7 @@ class CollectionCore implements Iterator
 	public function orderBy($str)
 	{
 		$this->query->orderBy($str);
+		return $this;
 	}
 
 	/**
@@ -119,6 +125,7 @@ class CollectionCore implements Iterator
 	public function groupBy($str)
 	{
 		$this->query->groupBy($str);
+		return $this;
 	}
 
 	/**
@@ -129,10 +136,14 @@ class CollectionCore implements Iterator
 	 */
 	public function getAll($display_query = false)
 	{
+		if ($this->is_hydrated)
+			return $this;
+		$this->is_hydrated = true;
+
 		if ($display_query)
 			echo $this->query.'<br />';
 
-		$this->results = Db::getInstance()->executeS($this->query);
+		$this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
 		$this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
 
 		return $this;
@@ -177,5 +188,16 @@ class CollectionCore implements Iterator
 	public function next()
 	{
 		$this->iterator++;
+	}
+
+	/**
+	 * Get total of results
+	 *
+	 * @return int
+	 */
+	public function count()
+	{
+		$this->getAll();
+		return count($this->results);
 	}
 }

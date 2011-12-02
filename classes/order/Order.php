@@ -1316,15 +1316,13 @@ class OrderCore extends ObjectModel
 	/**
 	 * This method allows to get all Order Payment for the current order
 	 * @since 1.5.0.1
-	 * @return array Collection of Order Payment
+	 * @return Collection of Order Payment
 	 */
 	public function getOrderPaymentCollection()
 	{
-		$order_payment = Db::getInstance()->ExecuteS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'order_payment`
-			WHERE `id_order` = '.(int)$this->id);
-		return ObjectModel::hydrateCollection('OrderPayment', $order_payment);
+		$order_payments = new Collection('OrderPayment');
+		$order_payments->where('id_order = '.(int)$this->id);
+		return $order_payments;
 	}
 
 	/**
@@ -1402,15 +1400,13 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all invoices for the current order
 	 * @since 1.5.0.1
-	 * @return array Collection of Order invoice
+	 * @return Collection of Order invoice
 	 */
 	public function getInvoicesCollection()
 	{
-		$invoices = Db::getInstance()->ExecuteS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'order_invoice`
-			WHERE `id_order` = '.(int)$this->id);
-		return ObjectModel::hydrateCollection('OrderInvoice', $invoices);
+		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices->where('id_order = '.(int)$this->id);
+		return $order_invoices;
 	}
 
 	/**

@@ -70,8 +70,10 @@ class ProductSupplierCore extends ObjectModel
  		'id_currency' => 'isUnsignedId',
  	);
 
-	protected $table = 'product_supplier';
-	protected $identifier = 'id_product_supplier';
+	public static $definition = array(
+		'table' => 'product_supplier',
+		'primary' => 'id_product_supplier',
+	);
 
 	public function getFields()
 	{
@@ -158,22 +160,15 @@ class ProductSupplierCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param int $group_by_supplier
-	 * @return array
+	 * @return Collection
 	 */
 	public static function getSupplierCollection($id_product, $group_by_supplier = true)
 	{
-		// build query
-		$query = new DbQuery();
-		$query->select('*');
-		$query->from('product_supplier ps');
-		$query->where('ps.id_product = '.(int)$id_product);
+		$suppliers = new Collection('ProductSupplier');
+		$suppliers->where('a.id_product = '.(int)$id_product);
+		$suppliers->groupBy('a.id_supplier');
 
-		if ($group_by_supplier)
-			$query->groupBy('ps.id_supplier');
-
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-		return ObjectModel::hydrateCollection('ProductSupplier', $results);
+		return $suppliers;
 	}
 
 	public function delete()

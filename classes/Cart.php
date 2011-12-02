@@ -312,14 +312,16 @@ class CartCore extends ObjectModel
 
 		foreach ($result as &$row)
 		{
-			$cart_rule = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
-			$row['value_real'] = $cart_rule->getContextualValue(true);
-			$row['value_tax_exc'] = $cart_rule->getContextualValue(false);
+			$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
+			$row['value_real'] = $row['obj']->getContextualValue(true);
+			$row['value_tax_exc'] = $row['obj']->getContextualValue(false);
 
 			// Retro compatibility < 1.5.0.2
 			$row['id_discount'] = $row['id_cart_rule'];
 			$row['description'] = $row['name'];
 		}
+
+		$results = $this->getCartRule();
 
 		return $result;
 	}
@@ -1305,8 +1307,8 @@ class CartCore extends ObjectModel
 		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
 		{
 			$result = $this->getCartRules();
-			foreach (ObjectModel::hydrateCollection('CartRule', $result, Configuration::get('PS_LANG_DEFAULT')) as $cart_rule)
-				$order_total_discount += Tools::ps_round($cart_rule->getContextualValue($with_taxes));
+			foreach ($result as $row)
+				$order_total_discount += Tools::ps_round($row['obj']->getContextualValue($with_taxes));
 
 			$order_total_discount = min(Tools::ps_round($order_total_discount), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;

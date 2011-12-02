@@ -58,8 +58,10 @@ class WarehouseProductLocationCore extends ObjectModel
  		'id_warehouse' => 'isUnsignedId',
  	);
 
-	protected $table = 'warehouse_product_location';
-	protected $identifier = 'id_warehouse_product_location';
+	public static $definition = array(
+		'table' => 'warehouse_product_location',
+		'primary' => 'id_warehouse_product_location',
+	);
 
 	public function getFields()
 	{
@@ -122,18 +124,12 @@ class WarehouseProductLocationCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param int $id_lang
-	 * @return array
+	 * @return Collection
 	 */
 	public static function getCollection($id_product)
 	{
-		// build query
-		$query = new DbQuery();
-		$query->select('*');
-		$query->from('warehouse_product_location wpl');
-		$query->where('wpl.id_product = '.(int)$id_product);
-
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-		return ObjectModel::hydrateCollection('WarehouseProductLocation', $results);
+		$collection = new Collection('WarehouseProductLocation');
+		$collection->where('a.id_product = '.(int)$id_product);
+		return $collection;
 	}
 }

@@ -54,8 +54,10 @@ class OrderPaymentCore extends ObjectModel
 		'card_holder' => 'isAnything'
 	);
 
-	protected 	$table = 'order_payment';
-	protected 	$identifier = 'id_order_payment';
+	public static $definition = array(
+		'table' => 'order_payment',
+		'primary' => 'id_order_payment',
+	);
 
 	public function getFields()
 	{
