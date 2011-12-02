@@ -85,10 +85,19 @@ class CartCore extends ObjectModel
 	protected static $_isVirtualCart = array();
 
 	protected $fieldsRequired = array('id_currency', 'id_lang');
-	protected $fieldsValidate = array('id_address_delivery' => 'isUnsignedId', 'id_carrier' => 'isUnsignedId', 'id_address_invoice' => 'isUnsignedId',
-		'id_currency' => 'isUnsignedId', 'id_customer' => 'isUnsignedId', 'id_guest' => 'isUnsignedId', 'id_lang' => 'isUnsignedId',
-		'recyclable' => 'isBool', 'gift' => 'isBool', 'gift_message' => 'isMessage',
-		'allow_seperated_package' => 'isBool');
+	protected $fieldsValidate = array(
+		'id_address_delivery' => 'isUnsignedId',
+		'id_carrier' => 'isUnsignedId',
+		'id_address_invoice' => 'isUnsignedId',
+		'id_currency' => 'isUnsignedId',
+		'id_customer' => 'isUnsignedId',
+		'id_guest' => 'isUnsignedId',
+		'id_lang' => 'isUnsignedId',
+		'recyclable' => 'isBool',
+		'gift' => 'isBool',
+		'gift_message' => 'isMessage',
+		'allow_seperated_package' => 'isBool'
+	);
 
 	protected $_products = null;
 	protected static $_totalWeight = array();
@@ -133,15 +142,15 @@ class CartCore extends ObjectModel
 		$fields['id_group_shop'] = (int)$this->id_group_shop;
 		$fields['id_shop'] = (int)$this->id_shop;
 
-		$fields['id_address_delivery'] = (int)($this->id_address_delivery);
-		$fields['id_address_invoice'] = (int)($this->id_address_invoice);
-		$fields['id_currency'] = (int)($this->id_currency);
-		$fields['id_customer'] = (int)($this->id_customer);
-		$fields['id_carrier'] = (int)($this->id_carrier);
-		$fields['id_guest'] = (int)($this->id_guest);
-		$fields['id_lang'] = (int)($this->id_lang);
-		$fields['recyclable'] = (int)($this->recyclable);
-		$fields['gift'] = (int)($this->gift);
+		$fields['id_address_delivery'] = (int)$this->id_address_delivery;
+		$fields['id_address_invoice'] = (int)$this->id_address_invoice;
+		$fields['id_currency'] = (int)$this->id_currency;
+		$fields['id_customer'] = (int)$this->id_customer;
+		$fields['id_carrier'] = (int)$this->id_carrier;
+		$fields['id_guest'] = (int)$this->id_guest;
+		$fields['id_lang'] = (int)$this->id_lang;
+		$fields['recyclable'] = (int)$this->recyclable;
+		$fields['gift'] = (int)$this->gift;
 		$fields['secure_key'] = pSQL($this->secure_key);
 		$fields['gift_message'] = pSQL($this->gift_message);
 		$fields['date_add'] = pSQL($this->date_add);
@@ -152,14 +161,15 @@ class CartCore extends ObjectModel
 		return $fields;
 	}
 
-	public function __construct($id = NULL, $id_lang = NULL)
+	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
 		if ($this->id_customer)
 		{
-			$customer = new Customer((int)($this->id_customer));
-			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)($customer->id_default_group));
-			if ((!$this->secure_key OR $this->secure_key == '-1') AND $customer->secure_key)
+			$customer = new Customer((int)$this->id_customer);
+			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
+
+			if ((!$this->secure_key || $this->secure_key == '-1') && $customer->secure_key)
 			{
 				$this->secure_key = $customer->secure_key;
 				$this->save();
@@ -170,24 +180,29 @@ class CartCore extends ObjectModel
 
 	}
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
 		if (!$this->id_lang)
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+
 		$return = parent::add($autodate);
 		Hook::exec('cart');
+
 		return $return;
 	}
 
-	public function update($nullValues = false)
+	public function update($null_values = false)
 	{
 		if (isset(self::$_nbProducts[$this->id]))
 			unset(self::$_nbProducts[$this->id]);
+
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
-		$this->_products = NULL;
+
+		$this->_products = null;
 		$return = parent::update();
 		Hook::exec('cart');
+
 		return $return;
 	}
 
@@ -196,32 +211,35 @@ class CartCore extends ObjectModel
 		if ($this->OrderExists()) //NOT delete a cart which is associated with an order
 			return false;
 
-		$uploadedFiles = Db::getInstance()->executeS('
-		SELECT cd.`value`
-		FROM `'._DB_PREFIX_.'customized_data` cd
-		INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
-		WHERE cd.`type`= 0 AND c.`id_cart`='.(int)$this->id);
+		$uploaded_files = Db::getInstance()->executeS('
+			SELECT cd.`value`
+			FROM `'._DB_PREFIX_.'customized_data` cd
+			INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
+			WHERE cd.`type`= 0 AND c.`id_cart`='.(int)$this->id
+		);
 
-		foreach ($uploadedFiles as $mustUnlink)
+		foreach ($uploaded_files as $must_unlink)
 		{
-			unlink(_PS_UPLOAD_DIR_.$mustUnlink['value'].'_small');
-			unlink(_PS_UPLOAD_DIR_.$mustUnlink['value']);
+			unlink(_PS_UPLOAD_DIR_.$must_unlink['value'].'_small');
+			unlink(_PS_UPLOAD_DIR_.$must_unlink['value']);
 		}
 
 		Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'customized_data`
-		WHERE `id_customization` IN (
-			SELECT `id_customization`
-			FROM `'._DB_PREFIX_.'customization`
-			WHERE `id_cart`='.(int)$this->id.'
-		)');
+			DELETE FROM `'._DB_PREFIX_.'customized_data`
+			WHERE `id_customization` IN (
+				SELECT `id_customization`
+				FROM `'._DB_PREFIX_.'customization`
+				WHERE `id_cart`='.(int)$this->id.'
+			)'
+		);
 
 		Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'customization`
-		WHERE `id_cart` = '.(int)$this->id);
+			DELETE FROM `'._DB_PREFIX_.'customization`
+			WHERE `id_cart` = '.(int)$this->id
+		);
 
-		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)($this->id))
-		 OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)($this->id)))
+		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)$this->id)
+		 || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id))
 			return false;
 
 		return parent::delete();
@@ -229,7 +247,7 @@ class CartCore extends ObjectModel
 
 	public static function getTaxesAverageUsed($id_cart)
 	{
-		$cart = new Cart((int)($id_cart));
+		$cart = new Cart((int)$id_cart);
 		if (!Validate::isLoadedObject($cart))
 			die(Tools::displayError());
 
@@ -237,20 +255,23 @@ class CartCore extends ObjectModel
 			return 0;
 
 		$products = $cart->getProducts();
-		$totalProducts_moy = 0;
-		$ratioTax = 0;
+		$total_products_moy = 0;
+		$ratio_tax = 0;
 
-		if (!sizeof($products))
+		if (!count($products))
 			return 0;
 
-		foreach ($products AS $product)
+		foreach ($products as $product)
 		{
-			$totalProducts_moy += $product['total_wt'];
-			$ratioTax += $product['total_wt'] * Tax::getProductTaxRate((int)$product['id_product'], (int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			$total_products_moy += $product['total_wt'];
+			$ratio_tax += $product['total_wt'] * Tax::getProductTaxRate(
+				(int)$product['id_product'],
+				(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}
+			);
 		}
 
-		if ($totalProducts_moy > 0)
-			return $ratioTax / $totalProducts_moy;
+		if ($total_products_moy > 0)
+			return $ratio_tax / $total_products_moy;
 
 		return 0;
 	}
@@ -279,17 +300,21 @@ class CartCore extends ObjectModel
 		$shipping_te = $this->getTotalShippingCost(null, false);
 
 		$result = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'cart_cart_rule` cd
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cd.`id_cart_rule` = crl.`id_cart_rule` AND crl.id_lang = '.(int)$this->id_lang.')
-		WHERE `id_cart` = '.(int)$this->id);
+			SELECT *
+			FROM `'._DB_PREFIX_.'cart_cart_rule` cd
+			LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
+			LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
+				cd.`id_cart_rule` = crl.`id_cart_rule`
+				AND crl.id_lang = '.(int)$this->id_lang.'
+			)
+			WHERE `id_cart` = '.(int)$this->id
+		);
 
 		foreach ($result as &$row)
 		{
-			$cartRule = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
-			$row['value_real'] = $cartRule->getContextualValue(true);
-			$row['value_tax_exc'] = $cartRule->getContextualValue(false);
+			$cart_rule = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
+			$row['value_real'] = $cart_rule->getContextualValue(true);
+			$row['value_tax_exc'] = $cart_rule->getContextualValue(false);
 
 			// Retro compatibility < 1.5.0.2
 			$row['id_discount'] = $row['id_cart_rule'];
@@ -299,16 +324,17 @@ class CartCore extends ObjectModel
 		return $result;
 	}
 
-	// Todo: see uses and change name
 	public function getDiscountsCustomer($id_cart_rule)
 	{
+		// Todo: see uses and change name
 		if (!CartRule::isFeatureActive())
 			return 0;
 
 		return Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'cart_cart_rule`
-			WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id);
+			WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id
+		);
 	}
 
 	public function getLastProduct()
@@ -316,13 +342,19 @@ class CartCore extends ObjectModel
 		$sql = '
 			SELECT `id_product`, `id_product_attribute`, id_shop
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE `id_cart` = '.(int)($this->id).'
+			WHERE `id_cart` = '.(int)$this->id.'
 			ORDER BY `date_add` DESC';
+
 		$result = Db::getInstance()->getRow($sql);
-		if ($result AND isset($result['id_product']) AND $result['id_product'])
+		if ($result && isset($result['id_product']) && $result['id_product'])
 			foreach ($this->getProducts() as $product)
-			if ($result['id_product'] == $product['id_product'] && (!$result['id_product_attribute'] || $result['id_product_attribute'] == $product['id_product_attribute']))
+			if ($result['id_product'] == $product['id_product']
+				&& (
+					!$result['id_product_attribute']
+					|| $result['id_product_attribute'] == $product['id_product_attribute']
+				))
 				return $product;
+
 		return false;
 	}
 
@@ -336,7 +368,7 @@ class CartCore extends ObjectModel
 		if (!$this->id)
 			return array();
 		// Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
-		if ($this->_products !== NULL AND !$refresh)
+		if ($this->_products !== null && !$refresh)
 		{
 			// Return product row with specified ID if it exists
 			if (is_int($id_product))
@@ -348,6 +380,7 @@ class CartCore extends ObjectModel
 			}
 			return $this->_products;
 		}
+
 		if (!$id_country)
 			$id_country = Context::getContext()->country->id;
 
@@ -356,9 +389,10 @@ class CartCore extends ObjectModel
 
 		// Build SELECT
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
-						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`, p.`id_manufacturer`,
-						p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,
-						stock.`quantity` quantity_available, p.`active`, p.`date_add`, p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
+						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`,
+						p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`,
+						p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
+						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery');
 
 		// Build FROM
@@ -366,15 +400,26 @@ class CartCore extends ObjectModel
 
 		// Build JOIN
 		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
-		$sql->leftJoin('product_lang pl ON p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl'));
-		$sql->leftJoin('tax_rule tr ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-										AND tr.`id_country` = '.(int)$id_country.'
-										AND tr.`id_state` = 0
-										AND tr.`zipcode_from` = 0');
+		$sql->leftJoin('product_lang pl
+			ON p.`id_product` = pl.`id_product`
+			AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl')
+		);
+		$sql->leftJoin('tax_rule tr
+			ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+			AND tr.`id_country` = '.(int)$id_country.'
+			AND tr.`id_state` = 0
+			AND tr.`zipcode_from` = 0'
+		);
 		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
-		$sql->leftJoin('tax_lang tl ON t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$this->id_lang);
-		$sql->leftJoin('category_lang cl ON p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl'));
-		
+		$sql->leftJoin('tax_lang tl
+			ON t.`id_tax` = tl.`id_tax`
+			AND tl.`id_lang` = '.(int)$this->id_lang
+		);
+		$sql->leftJoin('category_lang cl
+			ON p.`id_category_default` = cl.`id_category`
+			AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl')
+		);
+
 		// @todo test if everything is ok, then refactorise call of this method
 		Product::sqlStock('cp', 'cp', false, null, $sql);
 
@@ -398,77 +443,148 @@ class CartCore extends ObjectModel
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->select('pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr,
-							IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
-							IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
-							(p.`weight`+ pa.`weight`) weight_attribute,
-							IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13, IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
-							pai.`id_image` as pai_id_image, il.`legend` as pai_legend, IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity, pa.`ecotax` AS ecotax_attr');
+			$sql->select(
+				'pa.`price` AS price_attribute, pa.`ecotax` AS ecotax_attr,
+				IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
+				IF (IFNULL(pa.`supplier_reference`, \'\') = \'\', p.`supplier_reference`, pa.`supplier_reference`) AS supplier_reference,
+				(p.`weight`+ pa.`weight`) weight_attribute,
+				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
+				IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
+				pai.`id_image` as pai_id_image, il.`legend` as pai_legend,
+				IFNULL(pa.`minimal_quantity`, p.`minimal_quantity`) as minimal_quantity,
+				pa.`ecotax` AS ecotax_attr'
+			);
 
 			$sql->leftJoin('product_attribute pa ON pa.`id_product_attribute` = cp.`id_product_attribute`');
 			$sql->leftJoin('product_attribute_image pai ON pai.`id_product_attribute` = pa.`id_product_attribute`');
 			$sql->leftJoin('image_lang il ON il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
 		else
-			$sql->select('p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`, p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity');
+			$sql->select(
+				'p.`reference` AS reference, p.`supplier_reference` AS supplier_reference, p.`ean13`,
+				p.`upc` AS upc, p.`minimal_quantity` AS minimal_quantity'
+			);
 
 		$result = Db::getInstance()->executeS($sql);
 
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
-		$productsIds = array();
-		$paIds = array();
+		$products_ids = array();
+		$pa_ids = array();
 		foreach ($result as $row)
 		{
-			$productsIds[] = $row['id_product'];
-			$paIds[] = $row['id_product_attribute'];
+			$products_ids[] = $row['id_product'];
+			$pa_ids[] = $row['id_product_attribute'];
 		}
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
-		Product::cacheProductsFeatures($productsIds);
-		self::cacheSomeAttributesLists($paIds, $this->id_lang);
+		Product::cacheProductsFeatures($products_ids);
+		self::cacheSomeAttributesLists($pa_ids, $this->id_lang);
 
 		$this->_products = array();
 		if (empty($result))
 			return array();
-		foreach ($result AS $row)
+
+		foreach ($result as $row)
 		{
 			if (isset($row['ecotax_attr']) && $row['ecotax_attr'] > 0)
-				$row['ecotax'] = (float)($row['ecotax_attr']);
-			$row['stock_quantity'] = (int)($row['quantity']);
+				$row['ecotax'] = (float)$row['ecotax_attr'];
+
+			$row['stock_quantity'] = (int)$row['quantity'];
 			// for compatibility with 1.2 themes
-			$row['quantity'] = (int)($row['cart_quantity']);
+			$row['quantity'] = (int)$row['cart_quantity'];
+
 			if (isset($row['id_product_attribute']) && (int)$row['id_product_attribute'] && isset($row['weight_attribute']))
 				$row['weight'] = (float)$row['weight_attribute'];
+
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
-				$row['price'] = Product::getPriceStatic((int)$row['id_product'], false, isset($row['id_product_attribute']) ? (int)($row['id_product_attribute']) : NULL, 2, NULL, false, true, (int)($row['cart_quantity']), false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL), $specificPriceOutput); // Here taxes are computed only once the quantity has been applied to the product price
-				$row['price_wt'] = Product::getPriceStatic((int)$row['id_product'], true, isset($row['id_product_attribute']) ? (int)($row['id_product_attribute']) : NULL, 2, NULL, false, true, (int)($row['cart_quantity']), false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
-				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+				$row['price'] = Product::getPriceStatic(
+					(int)$row['id_product'],
+					false,
+					isset($row['id_product_attribute']) ? (int)$row['id_product_attribute'] : null,
+					2,
+					null,
+					false,
+					true,
+					(int)$row['cart_quantity'],
+					false,
+					((int)$this->id_customer ? (int)$this->id_customer : null),
+					(int)$this->id,
+					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null),
+					$specific_price_output
+				); // Here taxes are computed only once the quantity has been applied to the product price
 
-				$row['total_wt'] = Tools::ps_round($row['price'] * (float)$row['cart_quantity'] * (1 + (float)($tax_rate) / 100), 2);
-				$row['total'] = $row['price'] * (int)($row['cart_quantity']);
+				$row['price_wt'] = Product::getPriceStatic(
+					(int)$row['id_product'],
+					true,
+					isset($row['id_product_attribute']) ? (int)$row['id_product_attribute'] : null,
+					2,
+					null,
+					false,
+					true,
+					(int)$row['cart_quantity'],
+					false,
+					((int)$this->id_customer ? (int)$this->id_customer : null),
+					(int)$this->id,
+					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null)
+				);
+
+				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+
+				$row['total_wt'] = Tools::ps_round($row['price'] * (float)$row['cart_quantity'] * (1 + (float)$tax_rate / 100), 2);
+				$row['total'] = $row['price'] * (int)$row['cart_quantity'];
 			}
 			else
 			{
-				$row['price'] = Product::getPriceStatic((int)$row['id_product'], false, (int)$row['id_product_attribute'], 6, NULL, false, true, $row['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL), $specificPriceOutput);
-				$row['price_wt'] = Product::getPriceStatic((int)$row['id_product'], true, (int)$row['id_product_attribute'], 2, NULL, false, true, $row['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
+				$row['price'] = Product::getPriceStatic(
+					(int)$row['id_product'],
+					false,
+					(int)$row['id_product_attribute'],
+					6,
+					null,
+					false,
+					true,
+					$row['cart_quantity'],
+					false,
+					((int)$this->id_customer ? (int)$this->id_customer : null),
+					(int)$this->id,
+					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null),
+					$specific_price_output
+				);
+
+				$row['price_wt'] = Product::getPriceStatic(
+					(int)$row['id_product'],
+					true,
+					(int)$row['id_product_attribute'],
+					2,
+					null,
+					false,
+					true,
+					$row['cart_quantity'],
+					false,
+					((int)$this->id_customer ? (int)$this->id_customer : null),
+					(int)$this->id,
+					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null)
+				);
 
 				// In case when you use QuantityDiscount, getPriceStatic() can be return more of 2 decimals
 				$row['price_wt'] = Tools::ps_round($row['price_wt'], 2);
-				$row['total_wt'] = $row['price_wt'] * (int)($row['cart_quantity']);
-				$row['total'] = Tools::ps_round($row['price'] * (int)($row['cart_quantity']), 2);
+				$row['total_wt'] = $row['price_wt'] * (int)$row['cart_quantity'];
+				$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], 2);
 			}
 
-			if (!isset($row['pai_id_image']) OR $row['pai_id_image'] == 0)
+			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
 			{
 				$row2 = Db::getInstance()->getRow('
-				SELECT i.`id_image`, il.`legend`
-				FROM `'._DB_PREFIX_.'image` i
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-					WHERE i.`id_product` = '.(int)$row['id_product'].' AND i.`cover` = 1');
+					SELECT i.`id_image`, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+					WHERE i.`id_product` = '.(int)$row['id_product'].' AND i.`cover` = 1'
+				);
+
 				if (!$row2)
 					$row2 = array('id_image' => false, 'legend' => false);
-					else
-				$row = array_merge($row, $row2);
+				else
+					$row = array_merge($row, $row2);
 			}
 			else
 			{
@@ -476,11 +592,12 @@ class CartCore extends ObjectModel
 				$row['legend'] = $row['pai_legend'];
 			}
 
-			$row['reduction_applies'] = ($specificPriceOutput AND (float)$specificPriceOutput['reduction']);
-			$row['quantity_discount_applies'] = ($specificPriceOutput AND $row['cart_quantity'] >= (int)$specificPriceOutput['from_quantity']);
-			$row['id_image'] = Product::defineProductImage($row,$this->id_lang);
+			$row['reduction_applies'] = ($specific_price_output && (float)$specific_price_output['reduction']);
+			$row['quantity_discount_applies'] = ($specific_price_output && $row['cart_quantity'] >= (int)$specific_price_output['from_quantity']);
+			$row['id_image'] = Product::defineProductImage($row, $this->id_lang);
 			$row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
 			$row['features'] = Product::getFeaturesStatic((int)$row['id_product']);
+
 			if (array_key_exists($row['id_product_attribute'].'-'.$this->id_lang, self::$_attributesLists))
 				$row = array_merge($row, self::$_attributesLists[$row['id_product_attribute'].'-'.$this->id_lang]);
 
@@ -490,29 +607,39 @@ class CartCore extends ObjectModel
 		return $this->_products;
 	}
 
-	public static function cacheSomeAttributesLists($ipaList, $id_lang)
+	public static function cacheSomeAttributesLists($ipa_list, $id_lang)
 	{
 		if (!Combination::isFeatureActive())
 			return;
-		$paImplode = array();
-		foreach ($ipaList as $id_product_attribute)
-			if ((int)$id_product_attribute AND !array_key_exists($id_product_attribute.'-'.$id_lang, self::$_attributesLists))
+
+		$pa_implode = array();
+
+		foreach ($ipa_list as $id_product_attribute)
+			if ((int)$id_product_attribute && !array_key_exists($id_product_attribute.'-'.$id_lang, self::$_attributesLists))
 			{
-				$paImplode[] = (int)$id_product_attribute;
+				$pa_implode[] = (int)$id_product_attribute;
 				self::$_attributesLists[(int)$id_product_attribute.'-'.$id_lang] = array('attributes' => '', 'attributes_small' => '');
 			}
-		if (!count($paImplode))
+
+		if (!count($pa_implode))
 			return;
 
 		$result = Db::getInstance()->executeS('
-		SELECT pac.`id_product_attribute`, agl.`public_name` AS public_group_name, al.`name` AS attribute_name
-		FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-		LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-		LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-		WHERE pac.`id_product_attribute` IN ('.implode($paImplode, ',').')
-		ORDER BY agl.`public_name` ASC');
+			SELECT pac.`id_product_attribute`, agl.`public_name` AS public_group_name, al.`name` AS attribute_name
+			FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+				a.`id_attribute` = al.`id_attribute`
+				AND al.`id_lang` = '.(int)$id_lang.'
+			)
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (
+				ag.`id_attribute_group` = agl.`id_attribute_group`
+				AND agl.`id_lang` = '.(int)$id_lang.'
+			)
+			WHERE pac.`id_product_attribute` IN ('.implode($pa_implode, ',').')
+			ORDER BY agl.`public_name` ASC'
+		);
 
 		foreach ($result as $row)
 		{
@@ -520,10 +647,17 @@ class CartCore extends ObjectModel
 			self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes_small'] .= $row['attribute_name'].', ';
 		}
 
-		foreach ($paImplode as $id_product_attribute)
+		foreach ($pa_implode as $id_product_attribute)
 		{
-			self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes'] = rtrim(self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes'], ', ');
-			self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes_small'] = rtrim(self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes_small'], ', ');
+			self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes'] = rtrim(
+				self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes'],
+				', '
+			);
+
+			self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes_small'] = rtrim(
+				self::$_attributesLists[$id_product_attribute.'-'.$id_lang]['attributes_small'],
+				', '
+			);
 		}
 	}
 
@@ -536,18 +670,22 @@ class CartCore extends ObjectModel
 	{
 		if (!$this->id)
 			return 0;
+
 		return self::getNbProducts($this->id);
 	}
 
 	public static function getNbProducts($id)
 	{
 		// Must be strictly compared to NULL, or else an empty cart will bypass the cache and add dozens of queries
-		if (isset(self::$_nbProducts[$id]) && self::$_nbProducts[$id] !== NULL)
+		if (isset(self::$_nbProducts[$id]) && self::$_nbProducts[$id] !== null)
 			return self::$_nbProducts[$id];
-		self::$_nbProducts[$id] = (int)(Db::getInstance()->getValue('
+
+		self::$_nbProducts[$id] = (int)Db::getInstance()->getValue('
 			SELECT SUM(`quantity`)
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE `id_cart` = '.(int)($id)));
+			WHERE `id_cart` = '.(int)$id
+		);
+
 		return self::$_nbProducts[$id];
 	}
 
@@ -562,17 +700,37 @@ class CartCore extends ObjectModel
 
 	public function addCartRule($id_cart_rule)
 	{
-		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_cart_rule', array('id_cart_rule' => (int)$id_cart_rule, 'id_cart' => (int)$this->id), 'INSERT');
+		return Db::getInstance()->AutoExecute(
+			_DB_PREFIX_.'cart_cart_rule',
+			array(
+				'id_cart_rule' => (int)$id_cart_rule,
+				'id_cart' => (int)$this->id
+			),
+			'INSERT'
+		);
 	}
 
 	public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = false, $id_address_delivery = 0)
 	{
-		return Db::getInstance()->getRow('
-		SELECT cp.`quantity`
-		FROM `'._DB_PREFIX_.'cart_product` cp
-		'.($id_customization ? 'LEFT JOIN `'._DB_PREFIX_.'customization` c ON (c.`id_product` = cp.`id_product` AND c.`id_product_attribute` = cp.`id_product_attribute`)' : '').'
-		WHERE cp.`id_product` = '.(int)$id_product.' AND cp.`id_product_attribute` = '.(int)$id_product_attribute.' AND cp.`id_cart` = '.(int)$this->id.
-		($id_customization ? ' AND c.`id_customization` = '.(int)$id_customization : '').' AND cp.`id_address_delivery` = '.(int)$id_address_delivery);
+		$sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
+
+		if ($id_customization)
+			$sql .= '
+				LEFT JOIN `'._DB_PREFIX_.'customization` c ON (
+					c.`id_product` = cp.`id_product`
+					AND c.`id_product_attribute` = cp.`id_product_attribute`
+				)';
+
+		$sql .= '
+			WHERE cp.`id_product` = '.(int)$id_product.'
+			AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
+			AND cp.`id_cart` = '.(int)$this->id.'
+			AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
+
+		if ($id_customization)
+			$sql .= ' AND c.`id_customization` = '.(int)$id_customization;
+
+		return Db::getInstance()->getRow($sql);
 	}
 
 	/**
@@ -583,10 +741,12 @@ class CartCore extends ObjectModel
 	 * @param integer $id_product_attribute Attribute ID if needed
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
-	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false, $id_address_delivery = 0, $operator = 'up', Shop $shop = null)
+	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
+		$id_address_delivery = 0, $operator = 'up', Shop $shop = null)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
+
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;
@@ -594,19 +754,22 @@ class CartCore extends ObjectModel
 
 		/* If we have a product combination, the minimal quantity is set with the one of this combination */
 		if (!empty($id_product_attribute))
-			$minimalQuantity = (int)Attribute::getAttributeMinimalQty($id_product_attribute);
+			$minimal_quantity = (int)Attribute::getAttributeMinimalQty($id_product_attribute);
 		else
-			$minimalQuantity = (int)$product->minimal_quantity;
+			$minimal_quantity = (int)$product->minimal_quantity;
 
 		if (!Validate::isLoadedObject($product))
 			die(Tools::displayError());
+
 		if (isset(self::$_nbProducts[$this->id]))
 			unset(self::$_nbProducts[$this->id]);
+
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
+
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-		elseif (!$product->available_for_order OR Configuration::get('PS_CATALOG_MODE'))
+		else if (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
 			return false;
 		else
 		{
@@ -622,40 +785,41 @@ class CartCore extends ObjectModel
 							FROM '._DB_PREFIX_.'product p
 							'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 							WHERE p.id_product = '.$id_product;
+
 					$result2 = Db::getInstance()->getRow($sql);
-					$productQty = (int)$result2['quantity'];
-					$newQty = (int)$result['quantity'] + (int)$quantity;
+					$product_qty = (int)$result2['quantity'];
+					$new_qty = (int)$result['quantity'] + (int)$quantity;
 					$qty = '+ '.(int)$quantity;
 
 					if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
-						if ($newQty > $productQty)
+						if ($new_qty > $product_qty)
 							return false;
 				}
-				elseif ($operator == 'down')
+				else if ($operator == 'down')
 				{
 					$qty = '- '.(int)$quantity;
-					$newQty = (int)$result['quantity'] - (int)$quantity;
-					if ($newQty < $minimalQuantity AND $minimalQuantity > 1)
+					$new_qty = (int)$result['quantity'] - (int)$quantity;
+					if ($new_qty < $minimal_quantity && $minimal_quantity > 1)
 						return -1;
 				}
 				else
 					return false;
 
 				/* Delete product from cart */
-				if ($newQty <= 0)
+				if ($new_qty <= 0)
 					return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
-				elseif ($newQty < $minimalQuantity)
+				else if ($new_qty < $minimal_quantity)
 					return -1;
 				else
 					Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'cart_product`
-					SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
-					WHERE `id_product` = '.(int)$id_product.
-					(!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-					AND `id_cart` = '.(int)$this->id.' AND `id_address_delivery` = '.(int)$id_address_delivery.'
-					LIMIT 1');
+						UPDATE `'._DB_PREFIX_.'cart_product`
+						SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
+						WHERE `id_product` = '.(int)$id_product.
+						(!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+						AND `id_cart` = '.(int)$this->id.' AND `id_address_delivery` = '.(int)$id_address_delivery.'
+						LIMIT 1'
+					);
 			}
-
 			/* Add product to the cart */
 			else
 			{
@@ -663,15 +827,17 @@ class CartCore extends ObjectModel
 						FROM '._DB_PREFIX_.'product p
 						'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 						WHERE p.id_product = '.$id_product;
+
 				$result2 = Db::getInstance()->getRow($sql);
+
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
 					if ((int)$quantity > $result2['quantity'])
 						return false;
 
-				if ((int)$quantity < $minimalQuantity)
+				if ((int)$quantity < $minimal_quantity)
 					return -1;
 
-				$resultAdd = Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_product', array(
+				$result_add = Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_product', array(
 					'id_product' => 			(int)$id_product,
 					'id_product_attribute' => 	(int)$id_product_attribute,
 					'id_cart' => 				(int)$this->id,
@@ -680,10 +846,12 @@ class CartCore extends ObjectModel
 					'quantity' => 				(int)$quantity,
 					'date_add' => 				date('Y-m-d H:i:s')
 				), 'INSERT');
-				if (!$resultAdd)
+
+				if (!$result_add)
 					return false;
 			}
 		}
+
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
 		$this->update(true);
@@ -712,7 +880,7 @@ class CartCore extends ObjectModel
 				{
 					Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'customization`
-					SET `quantity` = '.(int)($quantity).',
+					SET `quantity` = '.(int)$quantity.',
 						`id_product_attribute` = '.(int)$id_product_attribute.',
 						`in_cart` = 1
 					WHERE `id_customization` = '.(int)$field['id_customization']);
@@ -721,22 +889,25 @@ class CartCore extends ObjectModel
 		}
 
 		/* Deletion */
-		if (!empty($id_customization) AND (int)($quantity) < 1)
+		if (!empty($id_customization) && (int)$quantity < 1)
 			return $this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute);
+
 		/* Quantity update */
 		if (!empty($id_customization))
 		{
 			$result = Db::getInstance()->getRow('SELECT `quantity` FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)$id_customization);
-			if ($result AND Db::getInstance()->NumRows())
+			if ($result && Db::getInstance()->NumRows())
 			{
-				if ($operator == 'down' AND (int)($result['quantity']) - (int)($quantity) < 1)
+				if ($operator == 'down' && (int)$result['quantity'] - (int)$quantity < 1)
 					return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `id_customization` = '.(int)$id_customization);
+
 				return Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'customization`
-					SET `quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)($quantity).'
-					WHERE `id_customization` = '.(int)($id_customization));
+					SET `quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)$quantity.'
+					WHERE `id_customization` = '.(int)$id_customization);
 			}
 		}
+
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
 		$this->update(true);
@@ -762,12 +933,13 @@ class CartCore extends ObjectModel
 			ON cu.`id_customization` = cd.`id_customization`
 			WHERE cu.id_cart = '.(int)$this->id.'
 			AND cu.id_product = '.(int)$id_product.'
-			AND in_cart = 0');
+			AND in_cart = 0'
+		);
 
 		if ($exising_customization)
 		{
 			// If the customization field is alreay filled, delete it
-			foreach($exising_customization as $customization)
+			foreach ($exising_customization as $customization)
 			{
 				if ($customization['type'] == $type && $customization['index'] == $index)
 				{
@@ -788,11 +960,15 @@ class CartCore extends ObjectModel
 		}
 		else
 		{
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`) VALUES ('.(int)($this->id).', '.(int)($id_product).', '.(int)($id_product_attribute).', '.(int)($quantity).')');
+			Db::getInstance()->execute(
+				'INSERT INTO `'._DB_PREFIX_.'customization` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`)
+				VALUES ('.(int)$this->id.', '.(int)$id_product.', '.(int)$id_product_attribute.', '.(int)$quantity.')'
+			);
 			$id_customization = Db::getInstance()->Insert_ID();
 		}
 
-		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`) VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSql($field).'\')';
+		$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
+			VALUES ('.(int)$id_customization.', '.(int)$type.', '.(int)$index.', \''.pSql($field).'\')';
 
 		if (!Db::getInstance()->execute($query))
 			return false;
@@ -820,7 +996,11 @@ class CartCore extends ObjectModel
 
 	public function removeCartRule($id_cart_rule)
 	{
-		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id.' LIMIT 1');
+		return Db::getInstance()->Execute(
+			'DELETE FROM `'._DB_PREFIX_.'cart_cart_rule`
+			WHERE `id_cart_rule` = '.(int)$id_cart_rule.'
+			AND `id_cart` = '.(int)$this->id.' LIMIT 1'
+		);
 	}
 
 	/**
@@ -831,59 +1011,79 @@ class CartCore extends ObjectModel
 	 * @param integer $id_customization Customization id
 	 * @return boolean result
 	 */
-	public	function deleteProduct($id_product, $id_product_attribute = NULL, $id_customization = NULL, $id_address_delivery = 0)
+	public	function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
 	{
 		if (isset(self::$_nbProducts[$this->id]))
 			unset(self::$_nbProducts[$this->id]);
+
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
+
 		if ((int)$id_customization)
 		{
-			$productTotalQuantity = (int)Db::getInstance()->getValue('SELECT `quantity`
+			$product_total_quantity = (int)Db::getInstance()->getValue(
+				'SELECT `quantity`
 				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
-			$customizationQuantity = (int)Db::getInstance()->getValue('SELECT `quantity`
+				WHERE `id_product` = '.(int)$id_product.'
+				AND `id_product_attribute` = '.(int)$id_product_attribute
+			);
+
+			$customization_quantity = (int)Db::getInstance()->getValue(
+				'SELECT `quantity`
 				FROM `'._DB_PREFIX_.'customization`
 				WHERE `id_cart` = '.(int)$this->id.'
-					AND `id_product` = '.(int)$id_product.'
-					AND `id_product_attribute` = '.(int)$id_product_attribute.'
-					AND `id_address_delivery` = '.(int)$id_address_delivery);
+				AND `id_product` = '.(int)$id_product.'
+				AND `id_product_attribute` = '.(int)$id_product_attribute.'
+				AND `id_address_delivery` = '.(int)$id_address_delivery
+			);
+
 			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute))
 				return false;
+
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
-			return ($customizationQuantity == $productTotalQuantity && $this->deleteProduct((int)$id_product, $id_product_attribute, null));
+			return ($customization_quantity == $product_total_quantity && $this->deleteProduct((int)$id_product, $id_product_attribute, null));
 		}
 
 		/* Get customization quantity */
-		if (($result = Db::getInstance()->getRow('
+		$result = Db::getInstance()->getRow('
 			SELECT SUM(`quantity`) AS \'quantity\'
 			FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_cart` = '.(int)$this->id.'
 			AND `id_product` = '.(int)$id_product.'
-			AND `id_product_attribute` = '.(int)$id_product_attribute)
-		) === false)
+			AND `id_product_attribute` = '.(int)$id_product_attribute
+		);
+
+		if ($result === false)
 			return false;
 
 		/* If the product still possesses customization it does not have to be deleted */
-		if (Db::getInstance()->NumRows() AND (int)($result['quantity']))
+		if (Db::getInstance()->NumRows() && (int)$result['quantity'])
 			return Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cart_product`
-				SET `quantity` = '.(int)($result['quantity']).'
-				WHERE `id_cart` = '.(int)($this->id).'
-				AND `id_product` = '.(int)($id_product).
-				($id_product_attribute != NULL ? ' AND `id_product_attribute` = '.(int)($id_product_attribute) : ''));
+				SET `quantity` = '.(int)$result['quantity'].'
+				WHERE `id_cart` = '.(int)$this->id.'
+				AND `id_product` = '.(int)$id_product.
+				($id_product_attribute != null ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '')
+			);
 
 		/* Product deletion */
-		if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_product` = '.
-		(int)($id_product).(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)($id_product_attribute) : '').
-		' AND `id_cart` = '.(int)($this->id).' AND `id_address_delivery` = '.(int)$id_address_delivery))
+		$result = Db::getInstance()->execute(
+			'DELETE FROM `'._DB_PREFIX_.'cart_product`
+			WHERE `id_product` = '.(int)$id_product.
+			(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+			AND `id_cart` = '.(int)$this->id.'
+			AND `id_address_delivery` = '.(int)$id_address_delivery
+		);
+
+		if ($result)
 		{
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
 			/* Update cart */
 			return $this->update(true);
 		}
+
 		return false;
 	}
 
@@ -899,36 +1099,40 @@ class CartCore extends ObjectModel
 		$result = true;
 		$customization = Db::getInstance()->getRow('SELECT *
 			FROM `'._DB_PREFIX_.'customization`
-			WHERE `id_customization` = '.(int)($id_customization));
+			WHERE `id_customization` = '.(int)$id_customization);
 
 		if ($customization)
 		{
-			$custData = Db::getInstance()->getRow('SELECT *
+			$cust_data = Db::getInstance()->getRow('SELECT *
 				FROM `'._DB_PREFIX_.'customized_data`
-				WHERE `id_customization` = '.(int)($id_customization));
+				WHERE `id_customization` = '.(int)$id_customization);
 
 			// Delete customization picture if necessary
-			if (isset($custData['type']) and $custData['type'] == 0)
-				$result &= (@unlink(_PS_UPLOAD_DIR_.$custData['value']) && @unlink(_PS_UPLOAD_DIR_.$custData['value'].'_small'));
+			if (isset($cust_data['type']) && $cust_data['type'] == 0)
+				$result &= (@unlink(_PS_UPLOAD_DIR_.$cust_data['value']) && @unlink(_PS_UPLOAD_DIR_.$cust_data['value'].'_small'));
 
-			$result &= Db::getInstance()->execute('DELETE
-				FROM `'._DB_PREFIX_.'customized_data`
-				WHERE `id_customization` = '.(int)($id_customization));
+			$result &= Db::getInstance()->execute(
+				'DELETE FROM `'._DB_PREFIX_.'customized_data`
+				WHERE `id_customization` = '.(int)$id_customization
+			);
 
-			if($result)
-				$result &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'cart_product`
-					SET `quantity` = `quantity` - '.(int)($customization['quantity']).'
-					WHERE `id_cart` = '.(int)($this->id).'
-					AND `id_product` = '.(int)($id_product).((int)($id_product_attribute) ? '
-					AND `id_product_attribute` = '.(int)($id_product_attribute) : '').'
-					AND `id_address_delivery` = '.(int)$id_address_delivery);
+			if ($result)
+				$result &= Db::getInstance()->execute(
+					'UPDATE `'._DB_PREFIX_.'cart_product`
+					SET `quantity` = `quantity` - '.(int)$customization['quantity'].'
+					WHERE `id_cart` = '.(int)$this->id.'
+					AND `id_product` = '.(int)$id_product.
+					((int)$id_product_attribute ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+					AND `id_address_delivery` = '.(int)$id_address_delivery
+				);
 
 			if (!$result)
 				return false;
 
-			return Db::getInstance()->execute('DELETE
-				FROM `'._DB_PREFIX_.'customization`
-				WHERE `id_customization` = '.(int)($id_customization));
+			return Db::getInstance()->execute(
+				'DELETE FROM `'._DB_PREFIX_.'customization`
+				WHERE `id_customization` = '.(int)$id_customization
+			);
 		}
 
 		return true;
@@ -939,8 +1143,9 @@ class CartCore extends ObjectModel
 		$cart = new Cart($id_cart);
 		if (!Validate::isLoadedObject($cart))
 			die(Tools::displayError());
+
 		$with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
-		return Tools::displayPrice($cart->getOrderTotal($with_taxes), Currency::getCurrencyInstance((int)($cart->id_currency)), false);
+		return Tools::displayPrice($cart->getOrderTotal($with_taxes), Currency::getCurrencyInstance((int)$cart->id_currency), false);
 	}
 
 
@@ -965,30 +1170,43 @@ class CartCore extends ObjectModel
 	* @param integer $type Total type
 	* @return float Order total
 	*/
-	public function getOrderTotal($withTaxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null)
+	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null)
 	{
 		if (!$this->id)
 			return 0;
+
 		$type = (int)$type;
-		if (!in_array($type, array(Cart::ONLY_PRODUCTS, Cart::ONLY_DISCOUNTS, Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_SHIPPING, Cart::ONLY_WRAPPING, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)))
+		$array_type = array(
+			Cart::ONLY_PRODUCTS,
+			Cart::ONLY_DISCOUNTS,
+			Cart::BOTH,
+			Cart::BOTH_WITHOUT_SHIPPING,
+			Cart::ONLY_SHIPPING,
+			Cart::ONLY_WRAPPING,
+			Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
+		);
+
+		if (!in_array($type, $array_type))
 			die(Tools::displayError());
 
 		// if cart rules are not used
 		if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive())
 			return 0;
+
 		// no shipping cost if is a cart with only virtuals products
 		$virtual = $this->isVirtualCart();
-		if ($virtual AND $type ==  Cart::ONLY_SHIPPING)
+		if ($virtual && $type == Cart::ONLY_SHIPPING)
 			return 0;
-		if ($virtual AND $type == Cart::BOTH)
+
+		if ($virtual && $type == Cart::BOTH)
 			$type = Cart::BOTH_WITHOUT_SHIPPING;
 
-		if ($type != Cart::BOTH_WITHOUT_SHIPPING AND $type != Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
+		if ($type != Cart::BOTH_WITHOUT_SHIPPING && $type != Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
 		{
 			if (is_null($products) && is_null($id_carrier))
-				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$withTaxes);
+				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
 			else
-				$shipping_fees = $this->getPackageShippingCost($id_carrier, (int)($withTaxes), null, $products);
+				$shipping_fees = $this->getPackageShippingCost($id_carrier, (int)$with_taxes, null, $products);
 		}
 		else
 			$shipping_fees = 0;
@@ -1001,8 +1219,9 @@ class CartCore extends ObjectModel
 
 		$order_total = 0;
 		if (Tax::excludeTaxeOption())
-			$withTaxes = false;
-		foreach ($products AS $product)
+			$with_taxes = false;
+
+		foreach ($products as $product)
 		{
 			if (isset($product['id_product']))
 				$id_product = (int)$product['id_product'];
@@ -1024,50 +1243,87 @@ class CartCore extends ObjectModel
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				// Here taxes are computed only once the quantity has been applied to the product price
-				$price = Product::getPriceStatic($id_product, false, $id_product_attribute, 2, NULL, false, true, $product['cart_quantity'], false, (int)$this->id_customer ? (int)$this->id_customer : NULL, (int)$this->id, ($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+				$price = Product::getPriceStatic(
+					$id_product,
+					false,
+					$id_product_attribute,
+					2,
+					null,
+					false,
+					true,
+					$product['cart_quantity'],
+					false,
+					(int)$this->id_customer ? (int)$this->id_customer : null,
+					(int)$this->id,
+					$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}
+				);
 
 				$total_ecotax = $product['ecotax'] * (int)$product['cart_quantity'];
 				$total_price = $price * (int)$product['cart_quantity'];
 
-				if ($withTaxes)
+				if ($with_taxes)
 				{
-					$total_price = ($total_price - $total_ecotax) * (1 + (float)(Tax::getProductTaxRate($id_product, (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100);
-					$total_ecotax = $total_ecotax * (1 + Tax::getProductEcotaxRate((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) / 100);
+					$product_tax_rate = (float)Tax::getProductTaxRate($id_product, (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+					$product_eco_tax_rate = Tax::getProductEcotaxRate((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+
+					$total_price = ($total_price - $total_ecotax) * (1 + $product_tax_rate / 100);
+					$total_ecotax = $total_ecotax * (1 + $product_eco_tax_rate / 100);
 					$total_price = Tools::ps_round($total_price + $total_ecotax, 2);
 				}
 			}
 			else
 			{
-				$price = Product::getPriceStatic($id_product, true, $id_product_attribute, 2, NULL, false, true, $product['cart_quantity'], false, ((int)($this->id_customer) ? (int)($this->id_customer) : NULL), (int)($this->id), ((int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) ? (int)($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) : NULL));
-				$total_price = Tools::ps_round($price, 2) * (int)($product['cart_quantity']);
-				if (!$withTaxes)
-					$total_price = Tools::ps_round($total_price / (1 + ((float)(Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')})) / 100)), 2);
+				$price = Product::getPriceStatic(
+					$id_product,
+					true,
+					$id_product_attribute,
+					2,
+					null,
+					false,
+					true,
+					$product['cart_quantity'],
+					false,
+					((int)$this->id_customer ? (int)$this->id_customer : null),
+					(int)$this->id,
+					((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null)
+				);
+
+				$total_price = Tools::ps_round($price, 2) * (int)$product['cart_quantity'];
+
+				if (!$with_taxes)
+				{
+					$product_tax_rate = (float)Tax::getProductTaxRate($id_product, (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+					$total_price = Tools::ps_round($total_price / (1 + ($product_tax_rate / 100)), 2);
+				}
 			}
 			$order_total += $total_price;
 		}
+
 		$order_total_products = $order_total;
+
 		// Todo: consider optimizations
 		if ($type == Cart::ONLY_DISCOUNTS)
 			$order_total = 0;
+
 		// Wrapping Fees
 		$wrapping_fees = 0;
 		if ($this->gift)
 		{
 			$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
-			if ($withTaxes)
+			if ($with_taxes)
 			{
 				$wrapping_fees_tax = new Tax(Configuration::get('PS_GIFT_WRAPPING_TAX'));
 				$wrapping_fees *= 1 + ((float)$wrapping_fees_tax->rate / 100);
 			}
-			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)($this->id_currency)));
+			$wrapping_fees = Tools::convertPrice(Tools::ps_round($wrapping_fees, 2), Currency::getCurrencyInstance((int)$this->id_currency));
 		}
 
 		$order_total_discount = 0;
 		if ($type != Cart::ONLY_PRODUCTS && CartRule::isFeatureActive())
 		{
 			$result = $this->getCartRules();
-			foreach (ObjectModel::hydrateCollection('CartRule', $result, Configuration::get('PS_LANG_DEFAULT')) AS $cartRule)
-				$order_total_discount += Tools::ps_round($cartRule->getContextualValue($withTaxes));
+			foreach (ObjectModel::hydrateCollection('CartRule', $result, Configuration::get('PS_LANG_DEFAULT')) as $cart_rule)
+				$order_total_discount += Tools::ps_round($cart_rule->getContextualValue($with_taxes));
 
 			$order_total_discount = min(Tools::ps_round($order_total_discount), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
@@ -1075,14 +1331,19 @@ class CartCore extends ObjectModel
 
 		if ($type == Cart::ONLY_SHIPPING)
 			return $shipping_fees;
+
 		if ($type == Cart::ONLY_WRAPPING)
 			return $wrapping_fees;
+
 		if ($type == Cart::BOTH)
 			$order_total += $shipping_fees + $wrapping_fees;
-		if ($order_total < 0 AND $type != Cart::ONLY_DISCOUNTS)
+
+		if ($order_total < 0 && $type != Cart::ONLY_DISCOUNTS)
 			return 0;
+
 		if ($type == Cart::ONLY_DISCOUNTS)
 			return $order_total_discount;
+
 		return Tools::ps_round((float)$order_total, 2);
 	}
 
@@ -1112,6 +1373,7 @@ class CartCore extends ObjectModel
 		// For that we count the number of time we can use a warehouse for a specific delivery address
 		$warehouse_count_by_address = array();
 		$warehouse_carrier_list = array();
+
 		foreach ($product_list as &$product)
 		{
 			if ((int)$product['id_address_delivery'] == 0)
@@ -1130,14 +1392,17 @@ class CartCore extends ObjectModel
 
 			foreach ($warehouse_list as $key => $warehouse)
 			{
-				if ($manager->getProductRealQuantities(
+				$product_real_quantities = $manager->getProductRealQuantities(
 					$product['id_product'],
 					$product['id_product_attribute'],
 					array($warehouse['id_warehouse']),
-					true) > 0
-				)
+					true
+				);
+
+				if ($product_real_quantities > 0)
 					$warehouse_in_stock[] = $warehouse;
 			}
+
 			if (!empty($warehouse_in_stock))
 			{
 				$warehouse = $warehouse_in_stock;
@@ -1157,6 +1422,7 @@ class CartCore extends ObjectModel
 				$product['warehouse_list'][] = $warehouse['id_warehouse'];
 				if (!isset($warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]))
 					$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']] = 0;
+
 				$warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
 			}
 		}
@@ -1243,7 +1509,6 @@ class CartCore extends ObjectModel
 					'out_of_stock' => array(),
 				);
 
-
 			foreach ($products_in_stock_list as $key => $warehouse_list)
 			{
 				if (!isset($package_list[$id_address_delivery][$key]))
@@ -1279,8 +1544,10 @@ class CartCore extends ObjectModel
 									);
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'] =
 									array_intersect($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['carrier_list'], $data['carrier_list']);
+
 								$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'] =
 									array_merge($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]['product_list'], $data['product_list']);
+
 								break;
 							}
 						}
@@ -1305,6 +1572,7 @@ class CartCore extends ObjectModel
 							'id_warehouse' => $id_warehouse,
 						);
 		}
+
 		$cache = $final_package_list;
 		return $final_package_list;
 	}
@@ -1346,14 +1614,15 @@ class CartCore extends ObjectModel
 		$carriers_price = array();
 		$carrier_collection = array();
 		$package_list = $this->getPackageList();
+
 		foreach ($package_list as $id_address => $packages)
 		{
 			$delivery_option_list[$id_address] = array();
 			$carriers_price[$id_address] = array();
-
 			$common_carriers = array();
 			$best_price_carriers = array();
 			$best_grade_carriers = array();
+
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
@@ -1367,10 +1636,12 @@ class CartCore extends ObjectModel
 					$common_carriers = $package['carrier_list'];
 				else
 					array_intersect($common_carriers, $package['carrier_list']);
+
 				$best_price = null;
 				$best_price_carrier = null;
 				$best_grade = null;
 				$best_grade_carrier = null;
+
 				foreach ($package['carrier_list'] as $id_carrier)
 				{
 					if (!isset($carriers_instance[$id_carrier]))
@@ -1392,14 +1663,15 @@ class CartCore extends ObjectModel
 						$best_grade = $grade;
 						$best_grade_carrier = $id_carrier;
 					}
-
 				}
+
 				$best_price_carriers[$id_package] = $best_price_carrier;
 				$best_grade_carriers[$id_package] = $best_grade_carrier;
 			}
 
 			$best_price_carrier = array();
 			$key = '';
+
 			foreach ($best_price_carriers as $id_package => $id_carrier)
 			{
 				$key .= $id_carrier.',';
@@ -1414,6 +1686,7 @@ class CartCore extends ObjectModel
 				$best_price_carrier[$id_carrier]['package_list'][] = $id_package;
 				$best_price_carrier[$id_carrier]['instance'] = $carriers_instance[$id_carrier];
 			}
+
 			$delivery_option_list[$id_address][$key] = array(
 				'carrier_list' => $best_price_carrier,
 				'is_best_price' => true,
@@ -1423,6 +1696,7 @@ class CartCore extends ObjectModel
 
 			$best_grade_carrier = array();
 			$key = '';
+
 			foreach ($best_grade_carriers as $id_package => $id_carrier)
 			{
 				$key .= $id_carrier.',';
@@ -1437,12 +1711,14 @@ class CartCore extends ObjectModel
 				$best_grade_carrier[$id_carrier]['package_list'][] = $id_package;
 				$best_grade_carrier[$id_carrier]['instance'] = $carriers_instance[$id_carrier];
 			}
+
 			if (!isset($delivery_option_list[$id_address][$key]))
 				$delivery_option_list[$id_address][$key] = array(
 					'carrier_list' => $best_grade_carrier,
 					'is_best_price' => false,
 					'unique_carrier' => false
 				);
+
 			$delivery_option_list[$id_address][$key]['is_best_grade'] = true;
 
 			foreach ($common_carriers as $id_carrier)
@@ -1454,6 +1730,7 @@ class CartCore extends ObjectModel
 				$total_price_without_tax = 0;
 				$price_with_tax = 0;
 				$price_without_tax = 0;
+
 				foreach ($packages as $id_package => $package)
 				{
 					$key .= $id_carrier.',';
@@ -1461,6 +1738,7 @@ class CartCore extends ObjectModel
 					$price_without_tax += $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'];
 					$package_list[] = $id_package;
 				}
+
 				if (!isset($delivery_option_list[$id_address][$key]))
 					$delivery_option_list[$id_address][$key] = array(
 						'is_best_price' => false,
@@ -1478,6 +1756,7 @@ class CartCore extends ObjectModel
 				else
 					$delivery_option_list[$id_address][$key]['unique_carrier'] = true;
 			}
+
 			foreach ($delivery_option_list as $id_address => $delivery_option)
 				foreach ($delivery_option as $key => $value)
 				{
@@ -1501,6 +1780,7 @@ class CartCore extends ObjectModel
 					$delivery_option_list[$id_address][$key]['total_price_without_tax'] = $total_price_without_tax;
 				}
 		}
+
 		$cache = $delivery_option_list;
 		return $delivery_option_list;
 	}
@@ -1516,7 +1796,7 @@ class CartCore extends ObjectModel
 		$sql->from('cart_product as cp');
 		$sql->where('id_cart = '.(int)$this->id);
 
-		return (boolean)(Db::getInstance()->getValue($sql) > 1);
+		return Db::getInstance()->getValue($sql) > 1;
 	}
 
 	/**
@@ -1525,13 +1805,18 @@ class CartCore extends ObjectModel
 	public function getAddressCollection()
 	{
 		$collection = array();
-		$result = Db::getInstance()->executeS('SELECT DISTINCT `id_address_delivery`
+		$result = Db::getInstance()->executeS(
+			'SELECT DISTINCT `id_address_delivery`
 			FROM `'._DB_PREFIX_.'cart_product`
-			WHERE id_cart = '.(int)$this->id);
+			WHERE id_cart = '.(int)$this->id
+		);
+
 		$result[] = array('id_address_delivery' => (int)$this->id_address_delivery);
+
 		foreach ($result as $row)
 			if ((int)$row['id_address_delivery'] != 0)
 				$collection[(int)$row['id_address_delivery']] = new Address((int)$row['id_address_delivery']);
+
 		return $collection;
 	}
 
@@ -1560,6 +1845,7 @@ class CartCore extends ObjectModel
 			if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value]))
 				if (count($delivery_option_list[$key][$value]['carrier_list']) == 1)
 					return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
+
 		return 0;
 	}
 
@@ -1582,6 +1868,7 @@ class CartCore extends ObjectModel
 					$validated = false;
 					break;
 				}
+
 			if ($validated)
 				return $delivery_option;
 		}
@@ -1595,6 +1882,7 @@ class CartCore extends ObjectModel
 					$delivery_option[$id_address] = $key;
 					break;
 				}
+
 		return $delivery_option;
 	}
 
@@ -1602,11 +1890,11 @@ class CartCore extends ObjectModel
 	* Return shipping total for the cart
 	*
 	* @param array $delivery_option Array of the delivery option for each address
-	* @param booleal $useTax
+	* @param booleal $use_tax
 	* @param Country $default_country
 	* @return float Shipping total
 	*/
-	public function getTotalShippingCost($delivery_option = null, $useTax = true, Country $default_country = null)
+	public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
 	{
 		if (is_null($delivery_option))
 			$delivery_option = $this->getDeliveryOption($default_country);
@@ -1617,7 +1905,7 @@ class CartCore extends ObjectModel
 		{
 			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
 				continue;
-			if ($useTax)
+			if ($use_tax)
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
 			else
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
@@ -1665,7 +1953,7 @@ class CartCore extends ObjectModel
 	 * This function is dépreciate, use getTotalShippingCost or getPackageShippingCost
 	 *
 	 * @param integer $id_carrier Carrier ID (default : current carrier)
-	 * @param booleal $useTax
+	 * @param booleal $use_tax
 	 * @param Country $default_country
 	 * @param Array $product_list
 	 * @param array $product_list List of product concerned by the shipping. If null, all the product of the cart are used to calculate the shipping cost
@@ -1673,24 +1961,24 @@ class CartCore extends ObjectModel
 	 *
 	 * @return float Shipping total
 	 */
-	public function getOrderShippingCost($id_carrier = null, $useTax = true, Country $default_country = null, $product_list = null)
+	public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
 	{
 		Tools::displayAsDeprecated();
-		return $this->getPackageShippingCost($id_carrier, $useTax, $default_country, $product_list);
+		return $this->getPackageShippingCost($id_carrier, $use_tax, $default_country, $product_list);
 	}
 
 	/**
 	 * Return package shipping cost
 	 *
 	 * @param integer $id_carrier Carrier ID (default : current carrier)
-	 * @param booleal $useTax
+	 * @param booleal $use_tax
 	 * @param Country $default_country
 	 * @param Array $product_list
 	 * @param array $product_list List of product concerned by the shipping. If null, all the product of the cart are used to calculate the shipping cost
 	 *
 	 * @return float Shipping total
 	 */
-	public function getPackageShippingCost($id_carrier = null, $useTax = true, Country $default_country = null, $product_list = null)
+	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
 	{
 		if ($this->isVirtualCart())
 			return 0;
@@ -1737,18 +2025,25 @@ class CartCore extends ObjectModel
 		$shipping_cost = 0;
 
 		// If no product added, return 0
-		if ($order_total <= 0 && ((!(int)(self::getNbProducts($this->id) && is_null($product_list))) || (count($product_list) && !is_null($product_list))))
+		if ($order_total <= 0
+			&& (
+				!(self::getNbProducts($this->id) && is_null($product_list))
+				||
+				(count($product_list) && !is_null($product_list))
+		))
 			return $shipping_cost;
 
 		// Get id zone
 		if (isset($this->id_address_delivery)
-			AND $this->id_address_delivery
-			AND Customer::customerHasAddress($this->id_customer, $this->id_address_delivery))
-			$id_zone = Address::getZoneById((int)($this->id_address_delivery));
+			&& $this->id_address_delivery
+			&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
+		))
+			$id_zone = Address::getZoneById((int)$this->id_address_delivery);
 		else
 		{
 			if (!Validate::isLoadedObject($default_country))
 				$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+
 			$id_zone = (int)$default_country->id_zone;
 		}
 
@@ -1756,26 +2051,26 @@ class CartCore extends ObjectModel
 			$id_carrier = '';
 
 		if (empty($id_carrier) && $this->isCarrierInRange(Configuration::get('PS_CARRIER_DEFAULT'), $id_zone))
-			$id_carrier = (int)(Configuration::get('PS_CARRIER_DEFAULT'));
+			$id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
 
 		if (empty($id_carrier))
 		{
-			if ((int)($this->id_customer))
+			if ((int)$this->id_customer)
 			{
-				$customer = new Customer((int)($this->id_customer));
-				$result = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true, false, (int)($id_zone), $customer->getGroups());
+				$customer = new Customer((int)$this->id_customer);
+				$result = Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, (int)$id_zone, $customer->getGroups());
 				unset($customer);
 			}
 			else
-				$result = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true, false, (int)($id_zone));
+				$result = Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, (int)$id_zone);
 
-			foreach ($result AS $k => $row)
+			foreach ($result as $k => $row)
 			{
 				if ($row['id_carrier'] == Configuration::get('PS_CARRIER_DEFAULT'))
 					continue;
 
 				if (!isset(self::$_carriers[$row['id_carrier']]))
-					self::$_carriers[$row['id_carrier']] = new Carrier((int)($row['id_carrier']));
+					self::$_carriers[$row['id_carrier']] = new Carrier((int)$row['id_carrier']);
 
 				$carrier = self::$_carriers[$row['id_carrier']];
 
@@ -1784,33 +2079,49 @@ class CartCore extends ObjectModel
 				|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false))
 				{
 					unset($result[$k]);
-					continue ;
+					continue;
 				}
 
 				// If out-of-range behavior carrier is set on "Desactivate carrier"
 				if ($row['range_behavior'])
 				{
+					$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight(
+						$row['id_carrier'],
+						$this->getTotalWeight(),
+						$id_zone
+					);
+
+					$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice(
+						$row['id_carrier'],
+						$this->getOrderTotal(
+							true,
+							Cart::BOTH_WITHOUT_SHIPPING
+						),
+						$id_zone,
+						(int)$this->id_currency
+					);
+
 					// Get only carriers that have a range compatible with cart
-					if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), $id_zone)))
-					|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, (int)($this->id_currency)))))
+					if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
+					|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && !$check_delivery_price_by_price))
 					{
 						unset($result[$k]);
-						continue ;
+						continue;
 					}
 				}
 
 				if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
 					$shipping = $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
 				else
-					$shipping = $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)($this->id_currency));
+					$shipping = $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
 
-				if (!isset($minShippingPrice))
-					$minShippingPrice = $shipping;
+				if (!isset($min_shipping_price))
+					$min_shipping_price = $shipping;
 
-				if ($shipping <= $minShippingPrice)
-					{
-						$id_carrier = (int)($row['id_carrier']);
-					$minShippingPrice = $shipping;
+				if ($shipping <= $min_shipping_price)
+				{
+					$id_carrier = (int)$row['id_carrier'];
+					$min_shipping_price = $shipping;
 				}
 			}
 		}
@@ -1820,9 +2131,12 @@ class CartCore extends ObjectModel
 
 		if (!isset(self::$_carriers[$id_carrier]))
 			self::$_carriers[$id_carrier] = new Carrier($id_carrier, Configuration::get('PS_LANG_DEFAULT'));
+
 		$carrier = self::$_carriers[$id_carrier];
+
 		if (!Validate::isLoadedObject($carrier))
 			die(Tools::displayError('Fatal error: "no default carrier"'));
+
 		if (!$carrier->active)
 			return $shipping_cost;
 
@@ -1831,41 +2145,72 @@ class CartCore extends ObjectModel
 			return 0;
 
 		// Select carrier tax
-		if ($useTax AND !Tax::excludeTaxeOption())
-			 $carrierTax = $carrier->getTaxesRate(new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+		if ($use_tax && !Tax::excludeTaxeOption())
+			 $carrier_tax = $carrier->getTaxesRate(new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-		$configuration = Configuration::getMultiple(array('PS_SHIPPING_FREE_PRICE', 'PS_SHIPPING_HANDLING', 'PS_SHIPPING_METHOD', 'PS_SHIPPING_FREE_WEIGHT'));
+		$configuration = Configuration::getMultiple(
+			array(
+				'PS_SHIPPING_FREE_PRICE',
+				'PS_SHIPPING_HANDLING',
+				'PS_SHIPPING_METHOD',
+				'PS_SHIPPING_FREE_WEIGHT'
+			)
+		);
+
 		// Free fees
 		$free_fees_price = 0;
 		if (isset($configuration['PS_SHIPPING_FREE_PRICE']))
-			$free_fees_price = Tools::convertPrice((float)($configuration['PS_SHIPPING_FREE_PRICE']), Currency::getCurrencyInstance((int)($this->id_currency)));
+			$free_fees_price = Tools::convertPrice(
+				(float)$configuration['PS_SHIPPING_FREE_PRICE'],
+				Currency::getCurrencyInstance((int)$this->id_currency)
+			);
 
-		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT']) && $this->getTotalWeight() >= (float)($configuration['PS_SHIPPING_FREE_WEIGHT']) && (float)($configuration['PS_SHIPPING_FREE_WEIGHT']) > 0)
+		if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
+			&& $this->getTotalWeight() >= (float)$configuration['PS_SHIPPING_FREE_WEIGHT']
+			&& (float)$configuration['PS_SHIPPING_FREE_WEIGHT'] > 0)
 			return $shipping_cost;
 
 		// Get shipping cost using correct method
 		if ($carrier->range_behavior)
 		{
 			// Get id zone
-			if (
-				isset($this->id_address_delivery)
-				AND $this->id_address_delivery
-				AND Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)
-			)
-				$id_zone = Address::getZoneById((int)($this->id_address_delivery));
+			if (isset($this->id_address_delivery)
+				&& $this->id_address_delivery
+				&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery))
+				$id_zone = Address::getZoneById((int)$this->id_address_delivery);
 			else
 				$id_zone = (int)$default_country->id_zone;
-			if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && (!Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), $id_zone)))
-				|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE
-				&& (!Carrier::checkDeliveryPriceByPrice($carrier->id, $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, (int)($this->id_currency))))
-			)
+
+			$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight(
+				$carrier->id,
+				$this->getTotalWeight(),
+				$id_zone
+			);
+
+			$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice(
+				$carrier->id,
+				$this->getOrderTotal(
+					true,
+					Cart::BOTH_WITHOUT_SHIPPING
+				),
+				$id_zone,
+				(int)$this->id_currency
+			);
+
+			if ((
+					$carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT
+					&& !$check_delivery_price_by_weight
+				) || (
+					$carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE
+					&& !$check_delivery_price_by_price
+			))
 				$shipping_cost += 0;
 			else
 			{
 				if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
 					$shipping_cost += $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
 				else // by price
-					$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)($this->id_currency));
+					$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
 			}
 		}
 		else
@@ -1873,25 +2218,25 @@ class CartCore extends ObjectModel
 			if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
 				$shipping_cost += $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
 			else
-				$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)($this->id_currency));
+				$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
 
 		}
 		// Adding handling charges
-		if (isset($configuration['PS_SHIPPING_HANDLING']) AND $carrier->shipping_handling)
-			$shipping_cost += (float)($configuration['PS_SHIPPING_HANDLING']);
+		if (isset($configuration['PS_SHIPPING_HANDLING']) && $carrier->shipping_handling)
+			$shipping_cost += (float)$configuration['PS_SHIPPING_HANDLING'];
 
 		// TODO : $products does not exists
 		// Additional Shipping Cost per product
 		// foreach($products AS $product)
 			// $shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
 
-		$shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)($this->id_currency)));
+		$shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)$this->id_currency));
 
 		//get external shipping cost from module
 		if ($carrier->shipping_external)
 		{
-			$moduleName = $carrier->external_module_name;
-			$module = Module::getInstanceByName($moduleName);
+			$module_name = $carrier->external_module_name;
+			$module = Module::getInstanceByName($module_name);
 
 			if (Validate::isLoadedObject($module))
 			{
@@ -1914,10 +2259,10 @@ class CartCore extends ObjectModel
 		}
 
 		// Apply tax
-		if (isset($carrierTax))
-			$shipping_cost *= 1 + ($carrierTax / 100);
+		if (isset($carrier_tax))
+			$shipping_cost *= 1 + ($carrier_tax / 100);
 
-		return (float)(Tools::ps_round((float)($shipping_cost), 2));
+		return (float)Tools::ps_round((float)$shipping_cost, 2);
 	}
 
 	/**
@@ -1926,10 +2271,10 @@ class CartCore extends ObjectModel
 	*/
 	public function getTotalWeight($products = null)
 	{
-		if(!is_null($products))
+		if (!is_null($products))
 		{
 			$total_weight = 0;
-			foreach($products as $product)
+			foreach ($products as $product)
 			{
 				if (is_null($product['weight_attribute']))
 					$total_weight += $product['weight'] * $product['cart_quantity'];
@@ -1948,7 +2293,7 @@ class CartCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (cp.`id_product_attribute` = pa.`id_product_attribute`)
 				WHERE (cp.`id_product_attribute` IS NOT NULL AND cp.`id_product_attribute` != 0)
-				AND cp.`id_cart` = '.(int)($this->id));
+				AND cp.`id_cart` = '.(int)$this->id);
 			else
 				$weight_product_with_attribute = 0;
 
@@ -1957,21 +2302,23 @@ class CartCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'cart_product` cp
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
 			WHERE (cp.`id_product_attribute` IS NULL OR cp.`id_product_attribute` = 0)
-			AND cp.`id_cart` = '.(int)($this->id));
+			AND cp.`id_cart` = '.(int)$this->id);
 
 			self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute, 3);
 		}
+
 		return self::$_totalWeight[$this->id];
 	}
 
 	/**
 	 * @deprecated 1.5.0.1
 	 */
-	public function checkDiscountValidity($obj, $discounts, $order_total, $products, $checkCartDiscount = false)
+	public function checkDiscountValidity($obj, $discounts, $order_total, $products, $check_cart_discount = false)
 	{
 		Tools::displayAsDeprecated();
 		$context = Context::getContext()->cloneContext();
 		$context->cart = $this;
+
 		return $obj->checkValidity($context);
 	}
 
@@ -1985,12 +2332,12 @@ class CartCore extends ObjectModel
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		$delivery = new Address((int)($this->id_address_delivery));
-		$invoice = new Address((int)($this->id_address_invoice));
+		$delivery = new Address((int)$this->id_address_delivery);
+		$invoice = new Address((int)$this->id_address_invoice);
 
 		// New layout system with personalization fields
-		$formattedAddresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
-		$formattedAddresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);
+		$formatted_addresses['invoice'] = AddressFormat::getFormattedLayoutData($invoice);
+		$formatted_addresses['delivery'] = AddressFormat::getFormattedLayoutData($delivery);
 
 		$total_tax = $this->getOrderTotal() - $this->getOrderTotal(false);
 
@@ -2002,7 +2349,7 @@ class CartCore extends ObjectModel
 			'delivery_state' => State::getNameById($delivery->id_state),
 			'invoice' => $invoice,
 			'invoice_state' => State::getNameById($invoice->id_state),
-			'formattedAddresses' => $formattedAddresses,
+			'formattedAddresses' => $formatted_addresses,
 			'products' => $this->getProducts(false),
 			'discounts' => $this->getCartRules(),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
@@ -2024,9 +2371,15 @@ class CartCore extends ObjectModel
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return false;
-		foreach ($this->getProducts() AS $product)
-			if (!$product['active'] OR (!$product['allow_oosp'] AND $product['stock_quantity'] < $product['cart_quantity']) OR !$product['available_for_order'])
+
+		foreach ($this->getProducts() as $product)
+			if (!$product['active']
+				|| (
+					!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']
+				)
+				|| !$product['available_for_order'])
 				return false;
+
 		return true;
 	}
 
@@ -2035,18 +2388,20 @@ class CartCore extends ObjectModel
 		$sql = 'SELECT c.`id_cart`
 				FROM '._DB_PREFIX_.'cart c
 				LEFT JOIN '._DB_PREFIX_.'orders o ON (c.`id_cart` = o.`id_cart`)
-				WHERE c.`id_customer` = '.(int)($id_customer).'
+				WHERE c.`id_customer` = '.(int)$id_customer.'
 					AND o.`id_cart` IS NULL
 					'.Context::getContext()->shop->addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
+
 		if (!$id_cart = Db::getInstance()->getValue($sql))
 			return false;
+
 		return $id_cart;
 	}
 
 	/**
 	* Check if cart contains only virtual products
-	* 
+	*
 	* @return boolean true if is a virtual cart or false
 	*/
 	public function isVirtualCart($strict = false)
@@ -2057,16 +2412,16 @@ class CartCore extends ObjectModel
 		if (!isset(self::$_isVirtualCart[$this->id]))
 		{
 			$products = $this->getProducts();
-			if (!sizeof($products))
+			if (!count($products))
 				return false;
 
 			$is_virtual = 1;
-			foreach ($products AS $product)
+			foreach ($products as $product)
 			{
 				if (empty($product['is_virtual']))
 					$is_virtual = 0;
 			}
-			self::$_isVirtualCart[$this->id] = (int) $is_virtual;
+			self::$_isVirtualCart[$this->id] = (int)$is_virtual;
 		}
 
 		return self::$_isVirtualCart[$this->id];
@@ -2081,7 +2436,7 @@ class CartCore extends ObjectModel
 	public static function getCartByOrderId($id_order)
 	{
 		if ($id_cart = self::getCartIdByOrderId($id_order))
-			return new Cart((int)($id_cart));
+			return new Cart((int)$id_cart);
 
 		return false;
 	}
@@ -2089,7 +2444,7 @@ class CartCore extends ObjectModel
 	public static function getCartIdByOrderId($id_order)
 	{
 		$result = Db::getInstance()->getRow('SELECT `id_cart` FROM '._DB_PREFIX_.'orders WHERE `id_order` = '.(int)$id_order);
-		if (!$result OR empty($result) OR !key_exists('id_cart', $result))
+		if (!$result || empty($result) || !key_exists('id_cart', $result))
 			return false;
 		return $result['id_cart'];
 	}
@@ -2101,15 +2456,15 @@ class CartCore extends ObjectModel
 	 * @params int $index
 	 * @params int $type
 	 * @params string $textValue
-	 * 
+	 *
 	 * @return bool Always true
 	 */
-	public function addTextFieldToProduct($id_product, $index, $type, $textValue)
+	public function addTextFieldToProduct($id_product, $index, $type, $text_value)
 	{
-		$textValue = str_replace(array("\n", "\r"), '', nl2br($textValue));
-		$textValue = str_replace('\\', '\\\\', $textValue);
-		$textValue = str_replace('\'', '\\\'', $textValue);
-		return $this->_addCustomization($id_product, 0, $index, $type, $textValue, 0);
+		$text_value = str_replace(array("\n", "\r"), '', nl2br($text_value));
+		$text_value = str_replace('\\', '\\\\', $text_value);
+		$text_value = str_replace('\'', '\\\'', $text_value);
+		return $this->_addCustomization($id_product, 0, $index, $type, $text_value, 0);
 	}
 
 	/**
@@ -2133,23 +2488,23 @@ class CartCore extends ObjectModel
 	{
 		$result = true;
 
-		$custData = Db::getInstance()->getRow('
-		SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `'._DB_PREFIX_.'customization` cu
-		LEFT JOIN `'._DB_PREFIX_.'customized_data` cd
-		ON cu.`id_customization` = cd.`id_customization`
-		WHERE cu.`id_cart` = '.(int)$this->id.'
-		AND cu.`id_product` = '.(int)$id_product.'
-		AND `index` = '.(int)$index.'
-		AND `in_cart` = 0'
+		$cust_data = Db::getInstance()->getRow('
+			SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `'._DB_PREFIX_.'customization` cu
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd
+			ON cu.`id_customization` = cd.`id_customization`
+			WHERE cu.`id_cart` = '.(int)$this->id.'
+			AND cu.`id_product` = '.(int)$id_product.'
+			AND `index` = '.(int)$index.'
+			AND `in_cart` = 0'
 		);
 
 		// Delete customization picture if necessary
-		if ($custData['type'] == 0)
-			$result &= (@unlink(_PS_UPLOAD_DIR_.$custData['value']) && @unlink(_PS_UPLOAD_DIR_.$custData['value'].'_small'));
+		if ($cust_data['type'] == 0)
+			$result &= (@unlink(_PS_UPLOAD_DIR_.$cust_data['value']) && @unlink(_PS_UPLOAD_DIR_.$cust_data['value'].'_small'));
 
 		$result &= Db::getInstance()->execute('DELETE
 			FROM `'._DB_PREFIX_.'customized_data`
-			WHERE `id_customization` = '.(int)$custData['id_customization'].'
+			WHERE `id_customization` = '.(int)$cust_data['id_customization'].'
 			AND `index` = '.(int)$index
 		);
 		return $result;
@@ -2167,6 +2522,7 @@ class CartCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return array();
+
 		$result = Db::getInstance()->executeS('
 			SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity
 			FROM `'._DB_PREFIX_.'customization` cu
@@ -2185,7 +2541,7 @@ class CartCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM '._DB_PREFIX_.'cart c
-			WHERE c.`id_customer` = '.(int)($id_customer).'
+			WHERE c.`id_customer` = '.(int)$id_customer.'
 			ORDER BY c.`date_add` DESC');
 		return $result;
 	}
@@ -2199,59 +2555,75 @@ class CartCore extends ObjectModel
 	{
 		if (!Validate::isLoadedObject($this))
 			return false;
+
 		$cart = new Cart($this->id);
-		$cart->id = NULL;
+		$cart->id = null;
 		$cart->id_shop = $this->id_shop;
 		$cart->id_group_shop = $this->id_group_shop;
-
 		$cart->add();
 
 		if (!Validate::isLoadedObject($cart))
 			return false;
+
 		$success = true;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
-		foreach ($products AS $product)
-			$success &= $cart->updateQty($product['quantity'], (int)$product['id_product'], (int)$product['id_product_attribute'], NULL, (int)$product['id_address_delivery'], 'up', new Shop($cart->id_shop));
+		foreach ($products as $product)
+			$success &= $cart->updateQty(
+				$product['quantity'],
+				(int)$product['id_product'],
+				(int)$product['id_product_attribute'],
+				null,
+				(int)$product['id_address_delivery'],
+				'up',
+				new Shop($cart->id_shop)
+			);
 
 		// Customized products
 		$customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM '._DB_PREFIX_.'customization c
-		LEFT JOIN '._DB_PREFIX_.'customized_data cd ON cd.id_customization = c.id_customization
-		WHERE c.id_cart = '.(int)$this->id);
+			SELECT *
+			FROM '._DB_PREFIX_.'customization c
+			LEFT JOIN '._DB_PREFIX_.'customized_data cd ON cd.id_customization = c.id_customization
+			WHERE c.id_cart = '.(int)$this->id
+		);
 
 		// Get datas from customization table
-		$customsById = array();
-		foreach ($customs AS $custom)
+		$customs_by_id = array();
+		foreach ($customs as $custom)
 		{
-			if(!isset($customsById[$custom['id_customization']]))
-				$customsById[$custom['id_customization']] = array('id_product_attribute' => $custom['id_product_attribute'],
-				'id_product' => $custom['id_product'], 'quantity' => $custom['quantity']);
+			if (!isset($customs_by_id[$custom['id_customization']]))
+				$customs_by_id[$custom['id_customization']] = array(
+					'id_product_attribute' => $custom['id_product_attribute'],
+					'id_product' => $custom['id_product'],
+					'quantity' => $custom['quantity']
+				);
 		}
 
 		// Insert new customizations
 		$custom_ids = array();
-		foreach($customsById as $customizationId => $val)
+		foreach ($customs_by_id as $customization_id => $val)
 		{
 			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, quantity)
-			VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$val['quantity'].')');
-			$custom_ids[$customizationId] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
+				VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$val['quantity'].')'
+			);
+			$custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
 		}
 
 		// Insert customized_data
-		if (sizeof($customs))
+		if (count($customs))
 		{
 			$first = true;
 			$sql_custom_data = 'INSERT INTO '._DB_PREFIX_.'customized_data (`id_customization`, `type`, `index`, `value`) VALUES ';
-			foreach ($customs AS $custom)
+			foreach ($customs as $custom)
 			{
-				if(!$first)
+				if (!$first)
 					$sql_custom_data .= ',';
 				else
 					$first = false;
-				$sql_custom_data .= '('.(int)$custom_ids[$custom['id_customization']].', '.(int)$custom['type'].', '.(int)$custom['index'].', \''.pSQL($custom['value']).'\')';
+
+				$sql_custom_data .= '('.(int)$custom_ids[$custom['id_customization']].', '.(int)$custom['type'].', '.
+					(int)$custom['index'].', \''.pSQL($custom['value']).'\')';
 			}
 			Db::getInstance()->execute($sql_custom_data);
 		}
@@ -2261,9 +2633,11 @@ class CartCore extends ObjectModel
 
 	public function getWsCartRows()
 	{
-		$query = 'SELECT id_product, id_product_attribute, quantity
-		FROM `'._DB_PREFIX_.'cart_product`
-		WHERE id_cart = '.(int)$this->id;
+		$query = '
+			SELECT id_product, id_product_attribute, quantity
+			FROM `'._DB_PREFIX_.'cart_product`
+			WHERE id_cart = '.(int)$this->id;
+
 		$result = Db::getInstance()->executeS($query);
 		return $result;
 	}
@@ -2273,10 +2647,14 @@ class CartCore extends ObjectModel
 		if ($this->deleteAssociations())
 		{
 			$query = 'INSERT INTO `'._DB_PREFIX_.'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `quantity`, `date_add`) VALUES ';
+
 			foreach ($values as $value)
-				$query .= '('.(int)$this->id.', '.(int)$value['id_product'].', '.(isset($value['id_product_attribute']) ? (int)$value['id_product_attribute'] : 'NULL').', '.(int)$value['quantity'].', NOW()),';
+				$query .= '('.(int)$this->id.', '.(int)$value['id_product'].', '.
+					(isset($value['id_product_attribute']) ? (int)$value['id_product_attribute'] : 'NULL').', '.(int)$value['quantity'].', NOW()),';
+
 			Db::getInstance()->execute(rtrim($query, ','));
 		}
+
 		return true;
 	}
 
@@ -2298,6 +2676,7 @@ class CartCore extends ObjectModel
 		$sql->where('id_address_delivery = '.(int)$old_id_address_delivery);
 		$sql->where('id_cart = '.(int)$this->id);
 		$result = Db::getInstance()->getValue($sql);
+
 		if ($result == 0)
 			return false;
 
@@ -2343,7 +2722,8 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
-	public function duplicateProduct($id_product, $id_product_attribute, $id_address_delivery, $new_id_address_delivery, $quantity = 1, $keep_quantity = false)
+	public function duplicateProduct($id_product, $id_product_attribute, $id_address_delivery,
+		$new_id_address_delivery, $quantity = 1, $keep_quantity = false)
 	{
 		// Check address is linked with the customer
 		if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery))
@@ -2358,6 +2738,7 @@ class CartCore extends ObjectModel
 		$sql->where('id_address_delivery = '.(int)$new_id_address_delivery);
 		$sql->where('id_cart = '.(int)$this->id);
 		$result = Db::getInstance()->getValue($sql);
+
 		if ($result > 0)
 			return false;
 
@@ -2372,6 +2753,7 @@ class CartCore extends ObjectModel
 				'.(int)$quantity.',
 				NOW(),
 				'.(int)$new_id_address_delivery.')';
+
 		Db::getInstance()->execute($sql);
 
 		if (!$keep_quantity)
@@ -2400,7 +2782,8 @@ class CartCore extends ObjectModel
 		{
 
 			// Duplicate customization
-			$sql = 'INSERT INTO '._DB_PREFIX_.'customization(`id_product_attribute`, `id_address_delivery`, `id_cart`, `id_product`, `quantity`, `in_cart`)
+			$sql = 'INSERT INTO '._DB_PREFIX_.'customization
+				(`id_product_attribute`, `id_address_delivery`, `id_cart`, `id_product`, `quantity`, `in_cart`)
 				VALUES (
 					'.$customization['id_product_attribute'].',
 					'.$new_id_address_delivery.',
@@ -2411,7 +2794,11 @@ class CartCore extends ObjectModel
 			Db::getInstance()->execute($sql);
 
 			$sql = 'INSERT INTO '._DB_PREFIX_.'customized_data(`id_customization`, `type`, `index`, `value`)
-				(SELECT '.(int)Db::getInstance()->Insert_ID().' `id_customization`, `type`, `index`, `value` FROM customized_data WHERE id_customization = '.$customization['id_customization'].')';
+				(
+					SELECT '.(int)Db::getInstance()->Insert_ID().' `id_customization`, `type`, `index`, `value`
+					FROM customized_data
+					WHERE id_customization = '.$customization['id_customization'].'
+				)';
 			Db::getInstance()->execute($sql);
 		}
 
@@ -2419,7 +2806,7 @@ class CartCore extends ObjectModel
 		if ($customization_count > 0)
 		{
 			$sql = 'UPDATE '._DB_PREFIX_.'cart_product
-				SET `quantity` = `quantity` = '.(int)($customization_count * $quantity).'
+				SET `quantity` = `quantity` = '.(int)$customization_count * $quantity.'
 				WHERE id_cart = '.(int)$this->id.'
 				AND id_product = '.(int)$id_product.'
 				AND id_shop = '.(int)$this->id_shop.'
@@ -2442,6 +2829,7 @@ class CartCore extends ObjectModel
 					AND `id_shop` = '.(int)$this->id_shop.'
 				GROUP BY id_product, id_product_attribute
 				HAVING count > 1';
+
 		foreach (Db::getInstance()->executeS($sql) as $product)
 		{
 			$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
@@ -2466,7 +2854,6 @@ class CartCore extends ObjectModel
 				)';
 				Db::getInstance()->execute($sql);
 
-
 		// upgradng address delivery
 		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 			SET `id_address_delivery` =
@@ -2477,7 +2864,9 @@ class CartCore extends ObjectModel
 					AND `id_shop` = '.(int)$this->id_shop.'
 			)
 			WHERE `id_cart` = '.(int)$this->id.' AND `id_shop` = '.(int)$this->id_shop;
+
 		Db::getInstance()->execute($sql);
+
 		$sql = 'UPDATE `'._DB_PREFIX_.'customization`
 			SET `id_address_delivery` =
 			(
@@ -2487,6 +2876,7 @@ class CartCore extends ObjectModel
 					AND `id_shop` = '.(int)$this->id_shop.'
 			)
 			WHERE `id_cart` = '.(int)$this->id;
+
 		Db::getInstance()->execute($sql);
 	}
 
@@ -2531,7 +2921,7 @@ class CartCore extends ObjectModel
 	{
 		return (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_cart` = '.(int)($this->id)) !== false);
+				WHERE `id_cart` = '.(int)$this->id) !== false);
 	}
 
 	/**
@@ -2562,17 +2952,31 @@ class CartCore extends ObjectModel
 	public function isCarrierInRange($id_carrier, $id_zone)
 	{
 		$carrier = new Carrier((int)$id_carrier, Configuration::get('PS_LANG_DEFAULT'));
-		$shippingMethod = $carrier->getShippingMethod();
+		$shipping_method = $carrier->get_shipping_method();
 		if (!$carrier->range_behavior)
 			return true;
 
-		if ($shippingMethod == Carrier::SHIPPING_METHOD_FREE)
+		if ($shipping_method == Carrier::SHIPPING_METHOD_FREE)
 			return true;
-		if ($shippingMethod == Carrier::SHIPPING_METHOD_WEIGHT
-		AND (Carrier::checkDeliveryPriceByWeight((int)$id_carrier, $this->getTotalWeight(), $id_zone)))
+
+		$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight(
+			(int)$id_carrier,
+			$this->getTotalWeight(),
+			$id_zone
+		);
+		if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $check_delivery_price_by_weight)
 			return true;
-		if ($shippingMethod == Carrier::SHIPPING_METHOD_PRICE
-			AND (Carrier::checkDeliveryPriceByPrice((int)$id_carrier, $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, (int)$this->id_currency)))
+
+		$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice(
+			(int)$id_carrier,
+			$this->getOrderTotal(
+				true,
+				Cart::BOTH_WITHOUT_SHIPPING
+			),
+			$id_zone,
+			(int)$this->id_currency
+		);
+		if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $check_delivery_price_by_price)
 			return true;
 
 		return false;
@@ -2592,4 +2996,3 @@ class CartCore extends ObjectModel
 		return true;
 	}
 }
-
