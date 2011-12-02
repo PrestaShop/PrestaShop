@@ -1000,4 +1000,21 @@ $(document).ready(function(){
 		if(!isArrowKey(e))
 			return copyMeta2friendlyURL()
 	});
+
+	// Adding a button to top
+	var scroll = $('#scrollTop a');
+	var view = $(window);
+
+	scroll.click(function(){
+		$.scrollTo('#top_container', 1200, { offset: -100 });
+	});
+
+	view.bind("scroll", function(e) {
+		var heightView = view.height();
+		var btnPlace = scroll.offset().top;
+		if (heightView < btnPlace)
+			scroll.show();
+		else
+			scroll.hide();
+	});
 });
