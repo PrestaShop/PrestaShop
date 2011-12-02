@@ -391,7 +391,7 @@ class CartCore extends ObjectModel
 		$sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, pl.`name`, p.`is_virtual`,
 						pl.`description_short`, pl.`available_now`, pl.`available_later`, p.`id_product`, p.`id_category_default`, p.`id_supplier`,
 						p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`,
-						p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
+						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
 						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, stock.quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery');
 
@@ -1011,7 +1011,7 @@ class CartCore extends ObjectModel
 	 * @param integer $id_customization Customization id
 	 * @return boolean result
 	 */
-	public	function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
+	public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
 	{
 		if (isset(self::$_nbProducts[$this->id]))
 			unset(self::$_nbProducts[$this->id]);
@@ -1223,30 +1223,13 @@ class CartCore extends ObjectModel
 
 		foreach ($products as $product)
 		{
-			if (isset($product['id_product']))
-				$id_product = (int)$product['id_product'];
-			else if (isset($product['product_id']))
-				$id_product = (int)$product['product_id'];
-			else
-				$id_product = (int)$product['id'];
-				
-			if (isset($product['id_product_attribute']))
-				$id_product_attribute = (int)$product['id_product_attribute'];
-			else
-				$id_product_attribute = (int)$product['product_attribute_id'];
-				
-			if (isset($product['cart_quantity']))
-				$cart_quantity = (int)$product['cart_quantity'];
-			else
-				$cart_quantity = (int)$product['product_quantity'];
-				
 			if ($this->_taxCalculationMethod == PS_TAX_EXC)
 			{
 				// Here taxes are computed only once the quantity has been applied to the product price
 				$price = Product::getPriceStatic(
-					$id_product,
+					(int)$product['id_product'],
 					false,
-					$id_product_attribute,
+					(int)$product['id_product_attribute'],
 					2,
 					null,
 					false,
@@ -1263,7 +1246,7 @@ class CartCore extends ObjectModel
 
 				if ($with_taxes)
 				{
-					$product_tax_rate = (float)Tax::getProductTaxRate($id_product, (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 					$product_eco_tax_rate = Tax::getProductEcotaxRate((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 					$total_price = ($total_price - $total_ecotax) * (1 + $product_tax_rate / 100);
@@ -1274,9 +1257,9 @@ class CartCore extends ObjectModel
 			else
 			{
 				$price = Product::getPriceStatic(
-					$id_product,
+					(int)$product['id_product'],
 					true,
-					$id_product_attribute,
+					(int)$product['id_product_attribute'],
 					2,
 					null,
 					false,
@@ -1292,7 +1275,7 @@ class CartCore extends ObjectModel
 
 				if (!$with_taxes)
 				{
-					$product_tax_rate = (float)Tax::getProductTaxRate($id_product, (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+					$product_tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product'], (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 					$total_price = Tools::ps_round($total_price / (1 + ($product_tax_rate / 100)), 2);
 				}
 			}
@@ -2952,7 +2935,7 @@ class CartCore extends ObjectModel
 	public function isCarrierInRange($id_carrier, $id_zone)
 	{
 		$carrier = new Carrier((int)$id_carrier, Configuration::get('PS_LANG_DEFAULT'));
-		$shipping_method = $carrier->get_shipping_method();
+		$shipping_method = $carrier->getShippingMethod();
 		if (!$carrier->range_behavior)
 			return true;
 
