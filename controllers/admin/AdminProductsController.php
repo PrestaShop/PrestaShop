@@ -2241,6 +2241,23 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 
 		if ($this->object->id)
 		{
+			$product = $this->object;
+			// prices part
+			$data->assign('link', $this->context->link);
+			$data->assign('currency', $currency = $this->context->currency);
+			$data->assign('tax_rules_groups', TaxRulesGroup::getTaxRulesGroups(true));
+			$data->assign('taxesRatesByGroup', TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id));
+			$data->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
+			$data->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
+
+			$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+			if ($product->unit_price_ratio != 0)
+				$data->assign('unit_price', Tools::ps_round($product->price)/$product->unit_price_ratio);
+			else
+				$data->assign('unit_price', 0);
+
+			$data->assign('ps_tax', Configuration::get('PS_TAX'));
+
 			$shops = Shop::getShops();
 			$countries = Country::getCountries($this->context->language->id);
 			$groups = Group::getGroups($this->context->language->id);
@@ -2724,8 +2741,6 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 			$product->{'product_download'} = new ProductDownload($id_product_download);
 
 		$this->displayInitInformationAndAttachment();
-		// @todo price.js is used in information .. for now
-		$this->addJs(_PS_JS_DIR_.'price.js');
 
 		// @todo handle is_virtual with the value of the product
 		$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
@@ -2779,20 +2794,6 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 			$data->assign('error_product_download', $error);
 		}
 
-		// prices part
-		$data->assign('currency', $currency = $this->context->currency);
-		$data->assign('tax_rules_groups', TaxRulesGroup::getTaxRulesGroups(true));
-		$data->assign('taxesRatesByGroup', TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id));
-		$data->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
-		$data->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
-
-		$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-		if ($product->unit_price_ratio != 0)
-			$data->assign('unit_price', Tools::ps_round($product->price)/$product->unit_price_ratio);
-		else
-			$data->assign('unit_price', 0);
-
-		$data->assign('ps_tax', Configuration::get('PS_TAX'));
 		$data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
 		$data->assign('has_attribute', $has_attribute);
 		// Check if product has combination, to display the available date only for the product or for each combination
