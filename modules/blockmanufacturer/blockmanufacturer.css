@@ -1,0 +1,16 @@
+/* Block manufacturer */
+.blockmanufacturer li {border-bottom:1px dotted #ccc}
+.blockmanufacturer li.last {	border:none;}
+	.blockmanufacturer li a {
+		display:block;
+		padding:7px 11px 5px 22px;
+		color:#333;
+		background:url(img/arrow_right_2.png) no-repeat 10px 10px transparent
+	}
+
+
+.blockmanufacturer form {margin-top:10px;}
+.blockmanufacturer p {
+	padding:0;
+	text-align:center
+}

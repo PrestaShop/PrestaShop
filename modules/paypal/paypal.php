@@ -916,7 +916,7 @@ class PayPal extends PaymentModule
 					$method = 'Paypal Integrale';
 				else
 					$method = '';
-				$this->_html = $this->displayConfirmation($this->l('Settings updated').'<img src="http://api.prestashop.com/modules/paypal.png?email='.urlencode(Tools::getValue('email_paypal')).'&mode='.(Tools::getValue('sandbox_mode') ? 0 : 1).'&method='.urlencode($method).'" style="float:right" />');
+				$this->_html = $this->displayConfirmation($this->l('Settings updated').'<img src="http://www.prestashop.com/modules/paypal.png?email='.urlencode(Tools::getValue('email_paypal')).'&mode='.(Tools::getValue('sandbox_mode') ? 0 : 1).'&method='.urlencode($method).'" style="float:right" />');
 			}
 			else
 			{
@@ -1315,7 +1315,7 @@ class PayPal extends PaymentModule
 		return $domain;
 	}
 
-	public function display($file, $template, $cacheId = NULL, $compileId = NULL)
+	public static function display($file, $template, $cacheId = NULL, $compileId = NULL)
 	{
 		if (substr(_PS_VERSION_, 0, 3) != '1.3')
 			return parent::display($file, $template);

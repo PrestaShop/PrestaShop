@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7077 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,25 +30,25 @@
 	<div class="block_content">
 
 {if $blockspecials_special}
-		<ul class="products">
+		<ul class="products clearfix">
 			<li class="product_image">
-				<a href="{$blockspecials_special.link}"><img src="{$link->getImageLink($blockspecials_special.link_rewrite, $blockspecials_special.id_image, 'medium')}" alt="{$blockspecials_special.legend|escape:html:'UTF-8'}" height="{$blockspecials_mediumSize.height}" width="{$blockspecials_mediumSize.width}" title="{$blockspecials_special.name|escape:html:'UTF-8'}" /></a>
+				<a href="{$blockspecials_special.link}"><img src="{$link->getImageLink($blockspecials_special.link_rewrite, $blockspecials_special.id_image, 'medium')}" alt="{$blockspecials_special.legend|escape:html:'UTF-8'}" height="{$mediumSize.height}" width="{$mediumSize.width}" title="{$blockspecials_special.name|escape:html:'UTF-8'}" /></a>
 			</li>
 			<li>
-
-				<h5><a href="{$blockspecials_special.link}" title="{$blockspecials_special.name|escape:html:'UTF-8'}">{$blockspecials_special.name|escape:html:'UTF-8'}</a></h5>
-				<span class="price-discount">{if !$priceDisplay}{displayWtPrice p=$blockspecials_special.price_without_reduction}{else}{displayWtPrice p=$blockspecials_priceWithoutReduction_tax_excl}{/if}</span>
+				
     			{if $blockspecials_special.specific_prices}
         			{assign var='specific_prices' value=$blockspecials_special.specific_prices}
         			{if $specific_prices.reduction_type == 'percentage' && ($specific_prices.from == $specific_prices.to OR ($smarty.now|date_format:'%Y-%m-%d %H:%M:%S' <= $specific_prices.to && $smarty.now|date_format:'%Y-%m-%d %H:%M:%S' >= $specific_prices.from))}
-	        			<span class="reduction">(-{$specific_prices.reduction*100|floatval}%)</span>
-	            	{/if}
-	            {/if}
+	        			<span class="reduction"><span>-{$specific_prices.reduction*100|floatval}%</span></span>
+					{/if}
+				{/if}
+				<h5><a href="{$blockspecials_special.link}" title="{$blockspecials_special.name|escape:html:'UTF-8'}">{$blockspecials_special.name|escape:html:'UTF-8'}</a></h5>
+				<span class="price-discount">{if !$priceDisplay}{displayWtPrice p=$blockspecials_special.price_without_reduction}{else}{displayWtPrice p=$priceWithoutReduction_tax_excl}{/if}</span>
 				<span class="price">{if !$priceDisplay}{displayWtPrice p=$blockspecials_special.price}{else}{displayWtPrice p=$blockspecials_special.price_tax_exc}{/if}</span>
 			</li>
 		</ul>
 		<p>
-			<a href="{$link->getPageLink('prices-drop')}" title="{l s='All specials' mod='blockspecials'}" class="button_large">{l s='All specials' mod='blockspecials'}</a>
+			<a href="{$link->getPageLink('prices-drop')}" title="{l s='All specials' mod='blockspecials'}">&raquo; {l s='All specials' mod='blockspecials'}</a>
 		</p>
 {else}
 		<p>{l s='No specials at this time' mod='blockspecials'}</p>
@@ -56,4 +56,3 @@
 	</div>
 </div>
 <!-- /MODULE Block specials -->
-

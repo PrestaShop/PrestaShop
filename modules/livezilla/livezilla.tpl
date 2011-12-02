@@ -19,18 +19,16 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div style="margin:10px 0">
+<div id="livezilla_lnk">
 {if isset($LIVEZILLA_SCRIPT)}
 	{$LIVEZILLA_SCRIPT}
 {elseif isset($LIVEZILLA_URL)}
-	<a href="javascript:void(window.open('{$LIVEZILLA_URL}chat.php','','width=590,height=610,left=0,top=0,resizable=yes,menubar=no,location=no,status=yes,scrollbars=yes'))">
-		<img src="{$LIVEZILLA_URL}image.php?id=01" width="191" height="69" border="0" alt="{l s='LiveZilla Live Help'}" />
-	</a>
+	<a href="javascript:void(window.open('{$LIVEZILLA_URL}chat.php','','width=590,height=610,left=0,top=0,resizable=yes,menubar=no,location=no,status=yes,scrollbars=yes'))">&raquo; {l s='LiveZilla Live Help'}</a>
 	<noscript>
 		<div>
 			<a href="{$LIVEZILLA_URL}chat.php" target="_blank">Start Live Help Chat</a>

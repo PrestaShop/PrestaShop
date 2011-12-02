@@ -49,9 +49,9 @@ class CashTicket extends PrepaidServices
 
 	protected $certificat_dir;
 
-	protected $register_url = array('en' => 'http://api.prestashop.com/partner/url.php?to=http://www.cash-ticket.com/uk',
-	                                'fr' => 'http://api.prestashop.com/partner/url.php?to=http://www.cash-ticket.com/fr',
-	                                'es' => 'http://api.prestashop.com/partner/url.php?to=http://www.cash-ticket.com/es');
+	protected $register_url = array('en' => 'http://www.prestashop.com/partner/url.php?to=http://www.cash-ticket.com/uk',
+	                                'fr' => 'http://www.prestashop.com/partner/url.php?to=http://www.cash-ticket.com/fr',
+	                                'es' => 'http://www.prestashop.com/partner/url.php?to=http://www.cash-ticket.com/es');
 
 	public function __construct()
 	{

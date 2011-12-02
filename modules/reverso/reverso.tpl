@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,11 +29,10 @@
 	var unknown_number = '{l s='We can\'t find this number'}';
 </script>
 <script type="text/javascript" src="{$module_dir}js/reverso.js"></script>
-<fieldset class="account_creation">
-	
-	<p class="text">
-		<label for="reverso_form">{l s='Automatically fill this form with your phone number' mod='reverso'}*</label>
+<fieldset class="account_creation reversoform">
+	<p class="text required">
+		<label for="reverso_form">{l s='Automatically fill this form with your phone number' mod='reverso'} <sup>*</sup></label>
 		<input type="text" name="reverso_form" autocomplete="off" id="reverso_form" class="text" value="" maxlength="10" />
-		<span style="text-align:right;font-style:italic;font-size:7pt;">*reversoform powered</span>
 	</p>
+	<p class="infos-sup">* reversoform powered</p>
 </fieldset>

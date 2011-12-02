@@ -535,7 +535,7 @@ class Secuvad extends Module
 				Configuration::updateValue('SECUVAD_MODE',Tools::getValue('secuvad_mode'));
 				Configuration::updateValue('SECUVAD_ID',Tools::getValue('secuvad_id'));	
 				Configuration::updateValue('SECUVAD_ACTIVATION', 1);
-				$this->_html .= $this->displayConfirmation($this->l('Settings are updated').'<img src="http://api.prestashop.com/modules/secuvad.png?id='.urlencode(Tools::getValue('secuvad_id')).'&login='.urlencode(Tools::getValue('secuvad_login')).'&mode='.(Tools::getValue('secuvad_mode') == 'TEST' ? 0 : 1).'" style="float:right" />');
+				$this->_html .= $this->displayConfirmation($this->l('Settings are updated').'<img src="http://www.prestashop.com/modules/secuvad.png?id='.urlencode(Tools::getValue('secuvad_id')).'&login='.urlencode(Tools::getValue('secuvad_login')).'&mode='.(Tools::getValue('secuvad_mode') == 'TEST' ? 0 : 1).'" style="float:right" />');
 			}
 			else
 				$this->_html .= $this->displayError(implode('<br />', $errors));

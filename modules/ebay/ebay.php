@@ -598,7 +598,7 @@ class Ebay extends Module
 
 		// Displaying Information from Prestashop
 		$stream_context = @stream_context_create(array('http' => array('method'=>"GET", 'timeout' => 2)));
-		$prestashopContent = @file_get_contents('http://api.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
+		$prestashopContent = @file_get_contents('http://www.prestashop.com/partner/modules/ebay.php?version='.$this->version.'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&registered='.($alert['registration'] == 1 ? 'no' : 'yes').'&url='.urlencode($_SERVER['HTTP_HOST']).'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)$this->context->language->id.'&email='.urlencode(Configuration::get('PS_SHOP_EMAIL')).'&security='.md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_), false, $stream_context);
 		if (!Validate::isCleanHtml($prestashopContent))
 			$prestashopContent = '';
 

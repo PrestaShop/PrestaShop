@@ -1,0 +1,5 @@
+#social_block {padding:15px 10px;}
+#social_block li {padding-left:22px !important;}
+#social_block li.facebook {background:url(img/sprite_pict_social_block.png) no-repeat 0 6px;}
+#social_block li.twitter {background:url(img/sprite_pict_social_block.png) no-repeat 0 -26px;}
+#social_block li.rss {background:url(img/sprite_pict_social_block.png) no-repeat 0 -56px;}

@@ -115,7 +115,7 @@ class Reverso extends Module
 		if (!empty($_POST))
 		{
 			if ($this->_postProcess())
-				$this->_html .= $this->displayConfirmation($this->l('Settings are updated').'<img src="http://api.prestashop.com/modules/reverso.png?serial='.urlencode(Tools::getValue('reverso_serial')).'" style="float:right" />');
+				$this->_html .= $this->displayConfirmation($this->l('Settings are updated').'<img src="http://www.prestashop.com/modules/reverso.png?serial='.urlencode(Tools::getValue('reverso_serial')).'" style="float:right" />');
 		}
 		else
 			$this->_html .= '<br />';

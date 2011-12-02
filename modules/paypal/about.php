@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop
+* 2007-2011 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -32,8 +32,6 @@ include(dirname(__FILE__).'/../../header.php');
 
 $smarty->assign('iso_code', Tools::strtolower(Context::getContext()->language->iso_code));
 
-require_once _PS_MODULE_DIR_.'paypal/paypal.php';
-$paypal = new PayPal();
-echo $paypal->display(dirname(__FILE__).'/paypal', 'about.tpl');
+echo Module::display(dirname(__FILE__).'/paypal', 'about.tpl'); 
 
 include(dirname(__FILE__).'/../../footer.php');

@@ -87,7 +87,7 @@ class BlockCategories extends Module
 				Configuration::updateValue('BLOCK_CATEG_NBR_COLUMN_FOOTER', $nbrColumns);
 				Configuration::updateValue('BLOCK_CATEG_SORT_WAY', Tools::getValue('BLOCK_CATEG_SORT_WAY'));
 				Configuration::updateValue('BLOCK_CATEG_SORT', Tools::getValue('BLOCK_CATEG_SORT'));
-
+				
 				$this->_clearBlockcategoriesCache();
 				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
 			}
@@ -121,7 +121,7 @@ class BlockCategories extends Module
 					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_on" value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
 					<label class="t" for="sort_on"> <img src="../modules/'.$this->name.'/sort_number.png" alt="'.$this->l('Enabled').'" title="'.$this->l('By position').'" />'.$this->l('By position').'</label>
 					<input type="radio" name="BLOCK_CATEG_SORT" id="sort_off" value="1" '.(Tools::getValue('BLOCK_CATEG_SORT', Configuration::get('BLOCK_CATEG_SORT')) ? 'checked="checked" ' : '').'/>
-					<label class="t" for="sort_off"> <img src="../modules/'.$this->name.'/sort_alphabet.png" alt="'.$this->l('Disabled').'" title="'.$this->l('By name').'" />'.$this->l('By name').'</label> -
+					<label class="t" for="sort_off"> <img src="../modules/'.$this->name.'/sort_alphabet.png" alt="'.$this->l('Disabled').'" title="'.$this->l('By name').'" />'.$this->l('By name').'</label> - 
 					<select name="BLOCK_CATEG_SORT_WAY">
 						<option value="0" '.(!Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Ascending').'</option>
 						<option value="1" '.(Tools::getValue('BLOCK_CATEG_SORT_WAY', Configuration::get('BLOCK_CATEG_SORT_WAY')) ? 'selected="selected" ' : '').'>'.$this->l('Descending').'</option>

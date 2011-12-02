@@ -19,11 +19,11 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE Loyalty -->
-<li><a href="{$base_dir_ssl}modules/loyalty/loyalty-program.php" title="{l s='My loyalty points' mod='loyalty'}"><img src="{$module_template_dir}loyalty.gif" alt="{l s='My loyalty points' mod='loyalty'}" class="icon" /></a><a href="{$base_dir_ssl}modules/loyalty/loyalty-program.php" title="{l s='My loyalty points' mod='loyalty'}">{l s='My loyalty points' mod='loyalty'}</a></li>
+<li class="loyalty"><a href="{$base_dir_ssl}modules/loyalty/loyalty-program.php" title="{l s='My loyalty points' mod='loyalty'}"><img src="{$module_template_dir}images/loyalty.gif" alt="{l s='My loyalty points' mod='loyalty'}" class="icon" /> {l s='My loyalty points' mod='loyalty'}</a></li>
 <!-- END : MODULE Loyalty -->

@@ -84,7 +84,7 @@ class Criteo extends Module
 	{
     	return '
     	<fieldset>
-    		'.($this->_postProcess() ? $this->displayConfirmation($this->l('Settings are updated').'<img src="http://api.prestashop.com/modules/criteo.png?normal_id='.urlencode(Tools::getValue('id_criteo_normal')).'&conversion_id='.Tools::getValue('id_criteo_conversion').'" style="float:right" />') : '').'
+    		'.($this->_postProcess() ? $this->displayConfirmation($this->l('Settings are updated').'<img src="http://www.prestashop.com/modules/criteo.png?normal_id='.urlencode(Tools::getValue('id_criteo_normal')).'&conversion_id='.Tools::getValue('id_criteo_conversion').'" style="float:right" />') : '').'
         	<legend><img src="'.$this->_path.'logo.gif" alt="" title=""/> '.$this->l('Criteo Export').'</legend>
             	<form method="post" action="" name="criteoForm">
          			<label for="id_normal_criteo">'.$this->l('Criteo normal identifier').' :</label>

@@ -24,4 +24,4 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p class="buttons_bottom_block"><a href="#" id="wishlist_button" class="button" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;">{l s='Add to my wishlist' mod='blockwishlist'}</a></p>
+<p class="buttons_bottom_block"><a href="#" id="wishlist_button" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;">&raquo; {l s='Add to my wishlist' mod='blockwishlist'}</a></p>

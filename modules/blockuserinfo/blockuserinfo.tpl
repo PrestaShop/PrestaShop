@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop
+* 2007-2011 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,22 +19,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 7465 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block user information module HEADER -->
 <div id="header_user">
-	<p id="header_user_info">
-		{l s='Welcome' mod='blockuserinfo'},
-		{if $blockuserinfo_logged}
-			<span>{$blockuserinfo_firstName} {$blockuserinfo_lastName}</span>
-			(<a href="{$link->getPageLink('index', true, NULL, "mylogout")}" title="{l s='Log me out' mod='blockuserinfo'}">{l s='Log out' mod='blockuserinfo'}</a>)
-		{else}
-			<a href="{$link->getPageLink('my-account', true)}">{l s='Log in' mod='blockuserinfo'}</a>
-		{/if}
-	</p>
 	<ul id="header_nav">
 		{if !$PS_CATALOG_MODE}
 		<li id="shopping_cart">
@@ -58,5 +49,14 @@
 		{/if}
 		<li id="your_account"><a href="{$link->getPageLink('my-account', true)}" title="{l s='Your Account' mod='blockuserinfo'}">{l s='Your Account' mod='blockuserinfo'}</a></li>
 	</ul>
+	<p id="header_user_info">
+		{l s='Welcome' mod='blockuserinfo'}
+		{if $logged}
+			<span>{$cookie->customer_firstname} {$cookie->customer_lastname}</span>
+			<a href="{$link->getPageLink('index', true, NULL, "mylogout")}" title="{l s='Log me out' mod='blockuserinfo'}" class="logout">{l s='Log out' mod='blockuserinfo'}</a>
+		{else}
+			<a href="{$link->getPageLink('my-account', true)}" class="login">{l s='Log in' mod='blockuserinfo'}</a>
+		{/if}
+	</p>
 </div>
 <!-- /Block user information module HEADER -->
