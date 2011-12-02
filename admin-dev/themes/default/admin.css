@@ -10,6 +10,7 @@ h6  { font-size:1em; }
 
 /*LIST*/
 ul,ol {list-style:none; margin: 0; padding: 0;}
+ul li {color:#585A69;}
 
 /*FORM*/
 label {color:#585a69;text-shadow:0 1px 0#fff;}
@@ -32,6 +33,8 @@ select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disab
 input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .button:hover{border:1px solid #939393;}
 .button:active{border:1px solid #939393;}
+.button.export-csv span{ background: transparent url(export-csv.png) no-repeat scroll left top; padding:1px 0 1px 20px}
+
 
 #top_container{margin:0;padding:0}
 
@@ -112,7 +115,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table tr th{ background-color: #F1F1F1; text-shadow:0 1px 0 #fff; padding:4px 6px;
 	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;}
-.table tr td{border-bottom:1px solid #ccc;color:#333;font-size:11px;padding: 2px 4px 2px 6px}
+.table tr td{border-bottom:1px solid #ccc;color:#333;font-size:11px;padding: 4px 4px 4px 6px;}
 .table tr:hover td{background:#fff1b5}
 .table tr.filter:hover td{background:#F1F9FF}
 .table tr.action_details td{background:#FAFAFA;}
@@ -237,7 +240,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .sidebar ul.categorieList {}
 .sidebar ul.categorieList li { border-top:1px solid #ccc; position:relative; line-height:20px;}
 .sidebar ul.categorieList li:first-child { border-top:none;}
-.sidebar ul.categorieList li a {color:#3a6ea7;}
+.sidebar ul.categorieList li a {color:#3a6ea7; padding-left:5px;}
 .sidebar ul.categorieList li div.categorieWidth { width:180px; margin-left:5px; overflow:hidden;}
 .sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
 .sidebar .categorieStatus { display:none;}
@@ -245,7 +248,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 /*STATCONTAINER*/
 #statsContainer {margin-left:220px; padding:0 0 0 20px;}
 #statsContainer #calendar {   background-color: #EEEEEE;border-top: 1px solid #CCCCCC; display: block; margin: 10px 0;min-height: 25px; padding: 5px;}
-#statsContainer #calendar form { float:right;}
+#statsContainer #calendar form {float:left;}
 #statsContainer #calendar input, #statsContainer #calendar p { float:left;}
 #statsContainer #calendar input.submitDateDay { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
 #statsContainer #calendar input.submitDateMonth { border-radius:0px;}
@@ -257,7 +260,27 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #statsContainer #calendar p span { float:left; display:block; padding:3px;}
 #statsContainer .blocStats { background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
 #statsContainer .blocStats h2 { font-weight:normal; margin:0;}
+#statsContainer .blocStats h2.icon-statsproduct span,
+#statsContainer .blocStats h2.icon-statsforecast span,
+#statsContainer .blocStats h2.icon-pagesnotfound span,
+#statsContainer .blocStats h2.icon-sekeywords span,
+#statsContainer .blocStats h2.icon-guide span,
+#statsContainer .blocStats h2.icon-statsequipment span,
+#statsContainer .blocStats h2.icon-statsvisits span { background: transparent url(icon-sprites-title.png) no-repeat scroll left top; width:16px; height:16px; padding-right:18px;}
+
+#statsContainer .blocStats h2.icon-statsproduct span { background-position :2px 2px;}
+#statsContainer .blocStats h2.icon-statsforecast span { background-position :-18px 2px;}
+#statsContainer .blocStats h2.icon-guide span { background-position :-36px 2px;}
+#statsContainer .blocStats h2.icon-pagesnotfound span { background-position :-72px 2px;}
+#statsContainer .blocStats h2.icon-sekeywords span { background-position :-90px 2px;}
+#statsContainer .blocStats h2.icon-statsequipment span { background-position :-108px 2px;}
+#statsContainer .blocStats h2.icon-statsvisits span { background-position :-126px 2px;}
+
 #statsContainer .blocStats form { position:absolute; top:10px; right:5px;}
+#statsContainer .blocStats form.checkup { position:relative; top:0; left:0;}
+#statsContainer .totalStats { font-size:16px; font-weight:bold;}
+
+
 
 
 /*MODULECONTAINER*/
