@@ -85,20 +85,26 @@ class AttributeCore extends ObjectModel
 
 	public function delete()
 	{
-		if (($result = Db::getInstance()->executeS('
+		$result = Db::getInstance()->executeS('
 			SELECT `id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute_combination`
-			WHERE `'.$this->identifier.'` = '.(int)$this->id)) === false)
+			WHERE `'.$this->identifier.'` = '.(int)$this->id
+		);
+
+		if ($result === false)
 			return false;
+
 		$combination_ids = array();
 		if (Db::getInstance()->numRows())
 		{
 			foreach ($result as $row)
 				$combination_ids[] = (int)$row['id_product_attribute'];
+
 			if (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
 				WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
 				return false;
+
 			if (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'product_attribute`
 				WHERE `id_product_attribute` IN ('.implode(', ', $combination_ids).')') === false)
@@ -111,14 +117,17 @@ class AttributeCore extends ObjectModel
 		$return = parent::delete();
 		if ($return)
 			Hook::exec('afterDeleteAttribute', array('id_attribute' => $this->id));
+
 		return $return;
 	}
 
 	public function update($null_values = false)
 	{
 		$return = parent::update($null_values);
+
 		if ($return)
 			Hook::exec('afterSaveAttribute', array('id_attribute' => $this->id));
+
 		return $return;
 	}
 
@@ -128,8 +137,10 @@ class AttributeCore extends ObjectModel
 			$this->position = Attribute::getHigherPosition($this->id_attribute_group) + 1;
 
 		$return = parent::add($autodate, $null_values);
+
 		if ($return)
 			Hook::exec('afterSaveAttribute', array('id_attribute' => $this->id));
+
 		return $return;
 	}
 
@@ -144,6 +155,7 @@ class AttributeCore extends ObjectModel
 	{
 		if (!Combination::isFeatureActive())
 			return array();
+
 		return Db::getInstance()->executeS('
 			SELECT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
 			FROM `'._DB_PREFIX_.'attribute_group` ag
@@ -173,12 +185,6 @@ class AttributeCore extends ObjectModel
 
 		$result = StockAvailable::getQuantityAvailableByProduct(null, (int)$id_product_attribute, $shop->getID());
 
-		/*$sql = 'SELECT quantity
-				FROM '._DB_PREFIX_.'stock_available
-				WHERE id_product_attribute = '.(int)$id_product_attribute
-				.$shop->addSqlRestriction();
-		$result = (int)Db::getInstance()->getValue($sql);*/
-
 		return ($result && $qty <= $result);
 	}
 
@@ -194,18 +200,6 @@ class AttributeCore extends ObjectModel
 		Tools::displayAsDeprecated();
 
 		return StockAvailable::getQuantityAvailableByProduct($id_product);
-
-		/*
-		$row = Db::getInstance()->getRow('
-			SELECT SUM(quantity) as quantity
-			FROM `'._DB_PREFIX_.'product_attribute`
-			WHERE `id_product` = '.(int)$id_product
-		);
-
-		if ($row['quantity'] !== null)
-			return (int)$row['quantity'];
-		return false;
-		*/
 	}
 
 	/**
@@ -227,6 +221,7 @@ class AttributeCore extends ObjectModel
 			$arr['quantity'] = (int)$qty;
 			return true;
 		}
+
 		return false;
 	}
 
@@ -247,6 +242,7 @@ class AttributeCore extends ObjectModel
 				WHERE `id_attribute` = '.(int)$this->id.')
 			AND group_type = \'color\''))
 			return false;
+
 		return Db::getInstance()->numRows();
 	}
 
@@ -267,6 +263,7 @@ class AttributeCore extends ObjectModel
 
 		if ($minimal_quantity > 1)
 			return (int)$minimal_quantity;
+
 		return false;
 	}
 
@@ -292,29 +289,28 @@ class AttributeCore extends ObjectModel
 
 		if (!isset($moved_attribute) || !isset($position))
 			return false;
-p('
-			UPDATE `'._DB_PREFIX_.'attribute`
-			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-			WHERE `position`
-			'.($way
-				? '> '.(int)$moved_attribute['position'].' AND `position` <= '.(int)$position
-				: '< '.(int)$moved_attribute['position'].' AND `position` >= '.(int)$position).'
-			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']);
+
 		// < and > statements rather than BETWEEN operator
 		// since BETWEEN is treated differently according to databases
-		return (Db::getInstance()->execute('
+
+		$res1 = Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
 				? '> '.(int)$moved_attribute['position'].' AND `position` <= '.(int)$position
 				: '< '.(int)$moved_attribute['position'].' AND `position` >= '.(int)$position).'
-			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group'])
-		&& Db::getInstance()->execute('
+			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']
+		);
+
+		$res2 = Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'attribute`
 			SET `position` = '.(int)$position.'
 			WHERE `id_attribute` = '.(int)$moved_attribute['id_attribute'].'
-			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']));
+			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']
+		);
+
+		return ($res1 && $res2);
 	}
 
 	/**
@@ -330,24 +326,27 @@ p('
 		$return = true;
 
 		$sql = '
-		SELECT `id_attribute`
-		FROM `'._DB_PREFIX_.'attribute`
-		WHERE `id_attribute_group` = '.(int)$id_attribute_group;
+			SELECT `id_attribute`
+			FROM `'._DB_PREFIX_.'attribute`
+			WHERE `id_attribute_group` = '.(int)$id_attribute_group;
+
 		// when delete, you must use $use_last_attribute
 		if ($use_last_attribute)
-			$sql .= '
-			AND `id_attribute` != '.(int)$this->id;
-		$sql .= '
-		ORDER BY `position`';
+			$sql .= 'AND `id_attribute` != '.(int)$this->id;
+
+		$sql .= 'ORDER BY `position`';
+
 		$result = Db::getInstance()->executeS($sql);
 
 		$i = 0;
 		foreach ($result as $value)
 			$return = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'attribute`
-			SET `position` = '.(int)$i++.'
-			WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
-			AND `id_attribute` = '.(int)$value['id_attribute']);
+				UPDATE `'._DB_PREFIX_.'attribute`
+				SET `position` = '.(int)$i++.'
+				WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
+				AND `id_attribute` = '.(int)$value['id_attribute']
+			);
+
 		return $return;
 	}
 
@@ -364,8 +363,9 @@ p('
 		$sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'attribute`
 				WHERE id_attribute_group = '.(int)$id_attribute_group;
+
 		$position = DB::getInstance()->getValue($sql);
+
 		return (is_numeric($position)) ? $position : -1;
 	}
 }
-
