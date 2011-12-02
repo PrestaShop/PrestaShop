@@ -122,13 +122,13 @@ class StatsEquipment extends ModuleGraph
 
 		$equipment = $this->getEquipment();
 		$this->html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of web browsers used by your customers.').'</p>
 			'.$this->engine(array('type' => 'pie', 'option' => 'wb')).'<br /><br />
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=browser"><span>'.$this->l('CSV Export').'</span></a></p>
 			<p><img src="../img/admin/down.gif" />'.$this->l('Determine the percentage of operating systems used by your customers.').'</p>
 			'.$this->engine(array('type' => 'pie', 'option' => 'os')).'
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=os"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>';
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=os"><span>'.$this->l('CSV Export').'</span></a></p>';
 
 			if ($equipment)
 			{
@@ -141,7 +141,7 @@ class StatsEquipment extends ModuleGraph
 			$this->html .= '
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-guide"> '.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 		<h2>'.$this->l('Ensure that your website is accessible to all.').'</h2>
 			<p>
 				'.$this->l('When managing Websites, it is important to keep track of software used by visitors in order to be sure that the site displays the same way for everyone. 

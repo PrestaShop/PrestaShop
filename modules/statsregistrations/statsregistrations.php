@@ -109,16 +109,17 @@ class StatsRegistrations extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 0, 'type' => 'line'));
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
-			<p>
-				'.$this->l('Visitors who have stopped at the registering step:').' '.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'<br />
-				'.$this->l('Visitors who have placed an order directly after registration:').' '.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'
-			</p>
-			<p>'.$this->l('Total customer accounts:').' '.$totalRegistrations.'</p>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
+		<ul>
+			<li>
+				'.$this->l('Visitors who have stopped at the registering step:').' <span class="totalStats">'.(int)($totalBlocked).($totalRegistrations ? ' ('.number_format(100*$totalBlocked/($totalRegistrations+$totalBlocked), 2).'%)' : '').'</span><li/>
+				'.$this->l('Visitors who have placed an order directly after registration:').' <span class="totalStats">'.(int)($totalBuyers).($totalRegistrations ? ' ('.number_format(100*$totalBuyers/($totalRegistrations), 2).'%)' : '').'</span>
+			<li>'.$this->l('Total customer accounts:').' <span class="totalStats">'.$totalRegistrations.'</span></li>
+			</ul>
 			<div>'.$this->engine(array('type' => 'line')).'</div>
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
 		</div><br />
-		<div class="blocStats"><h2 class="icon-guide">'.$this->l('Guide').'</legend>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</legend>
 			<h2>'.$this->l('Number of customer accounts created').'</h2>
 			<p>'.$this->l('The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.').'</p>
 			<br /><h3>'.$this->l('How to act on the registrations\' evolution?').'</h3>

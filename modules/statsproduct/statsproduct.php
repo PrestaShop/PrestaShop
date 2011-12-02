@@ -155,7 +155,7 @@ class StatsProduct extends ModuleGraph
 			if (!Tools::getValue('exportType'))
 				$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => '42'));
 
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
+		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		if ($id_product = (int)Tools::getValue('id_product'))
 		{
 			if (Tools::getValue('export'))
@@ -239,9 +239,9 @@ class StatsProduct extends ModuleGraph
 		{
 			$categories = Category::getCategories((int)$this->context->language->id, true, false);
 			$this->html .= '
-			<label>'.$this->l('Choose a category').'</label>
 			<div class="margin-form">
 				<form action="" method="post" id="categoriesForm">
+				<label>'.$this->l('Choose a category').'</label>
 					<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
 						<option value="0">'.$this->l('All').'</option>';
 			foreach ($categories as $category)
@@ -273,11 +273,11 @@ class StatsProduct extends ModuleGraph
 				</tr>';
 
 			$this->html .= '</tbody></table><br /></div><br />
-				<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a><br />';
+				<a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a><br />';
 		}
 
 		$this->html .= '</div><br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 		<h2>'.$this->l('Number of purchases compared to number of viewings').'</h2>
 			<p>
 				'.$this->l('After choosing a category and selecting a product, informational graphs will appear. Then, you will be able to analyze them.').'

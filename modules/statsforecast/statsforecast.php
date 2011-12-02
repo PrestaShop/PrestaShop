@@ -128,7 +128,7 @@ class StatsForecast extends Module
 			$dataTable[$row['fix_date']] = $row;
 
 		$this->_html .= '<div>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<p>'.$this->l('All amounts are without taxes.').'</p>
 			<form id="granularity" action="'.$ru.'#granularity" method="post">
 				<input type="hidden" name="submitGranularity" value="1" />

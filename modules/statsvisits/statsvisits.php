@@ -85,18 +85,18 @@ class StatsVisits extends ModuleGraph
 		if (Tools::getValue('export'))
 			$this->csvExport(array('layers' => 2, 'type' => 'line', 'option' => 3));
 		$this->html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<p>
 				<img src="../img/admin/down.gif" />'.$this->l('A visit corresponds to an internet user coming to your shop. Until the end of their session, only one visit is counted.').'
 				'.$this->l('A visitor is an unknown person, who has not registered or logged on, surfing on your shop. A visitor can come and visit your shop many times.').'
 			</p>
 			<div style="margin-top:20px"></div>
-			<p>'.$this->l('Total visits:').' '.$totalVisits.'</p>
-			<p>'.$this->l('Total visitors:').' '.$totalGuests.'</p>
-			'.($totalVisits ? $this->engine($graphParams).'<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>' : '').'
+			<p>'.$this->l('Total visits:').' <span class="totalStats">'.$totalVisits.'</span></p>
+			<p>'.$this->l('Total visitors:').' <span class="totalStats">'.$totalGuests.'</span></p>
+			'.($totalVisits ? $this->engine($graphParams).'<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>' : '').'
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-guide">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 				<h2>'.$this->l('Determine the interest of a visit').'</h2>
 				'.$this->l('The visitors\' evolution graph strongly resembles the visits\' graph, but provides additional information:').'<br />
 				<ul>
