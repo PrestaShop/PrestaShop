@@ -55,7 +55,7 @@ class BlockPermanentLinks extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*/
-	function hookDisplayTop($params)
+	function hookTop($params)
 	{
 		return $this->display(__FILE__, 'blockpermanentlinks-header.tpl');
 	}
@@ -75,13 +75,13 @@ class BlockPermanentLinks extends Module
 	{
 		return $this->hookLeftColumn($params);
 	}
-
-	function hookDisplayFooter($params)
+	
+	function hookFooter($params)
 	{
 		return $this->display(__FILE__, 'blockpermanentlinks-footer.tpl');
 	}
 	
-	function hookDisplayHeader($params)
+	function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockpermanentlinks.css', 'all');
 	}

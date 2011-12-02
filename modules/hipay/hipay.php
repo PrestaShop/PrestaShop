@@ -385,7 +385,7 @@ class Hipay extends PaymentModule
 			}
 
 			$i = 1;
-			$dataSync = 'http://www.prestashop.com/modules/hipay.png?mode='.($this->prod ? 'prod' : 'test');
+			$dataSync = 'http://api.prestashop.com/modules/hipay.png?mode='.($this->prod ? 'prod' : 'test');
 			foreach ($accounts as $account => $null)
 				$dataSync .= '&account'.($i++).'='.urlencode($account);
 
@@ -612,7 +612,7 @@ class Hipay extends PaymentModule
 		if (!is_array($this->arrayCategories))
 		{
 			$this->arrayCategories = array();
-			if ($xml = simplexml_load_string(file_get_contents('https://www.prestashop.com/partner/hipay/ws.php?site='.$hipaySiteId.'&accountId='.$hipayAccountId.($prod ? '&prod' : ''))))
+			if ($xml = simplexml_load_string(file_get_contents('https://api.prestashop.com/partner/hipay/ws.php?site='.$hipaySiteId.'&accountId='.$hipayAccountId.($prod ? '&prod' : ''))))
 			{
 				foreach ($xml->children() as $categoriesList)
 					foreach ($categoriesList->children() as $category)

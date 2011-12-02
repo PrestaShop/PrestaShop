@@ -34,13 +34,17 @@ class VatNumber extends TaxManagerModule
 	{
 		$this->name = 'vatnumber';
 		$this->tab = 'billing_invoicing';
-		$this->version = 1.0;
+		$this->version = 1.2;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		$this->tax_manager_class = 'VATNumberTaxManager';
 
 		parent::__construct();
+		$id_country = (int)Configuration::get('VATNUMBER_COUNTRY');
+
+		if ($id_country == 0)
+			$this->warning = $this->l('No default country set.');
 
 		$this->displayName = $this->l('European VAT number');
 		$this->description = $this->l('Enable entering of the VAT intra-community number when creating the address (You must fill in the company field to allow keyboarding VAT number)');

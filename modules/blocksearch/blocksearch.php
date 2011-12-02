@@ -54,10 +54,7 @@ class BlockSearch extends Module
 	public function hookHeader($params)
 	{
 		if (Configuration::get('PS_SEARCH_AJAX'))
-		{
-			$this->context->controller->addCSS(_PS_CSS_DIR_.'jquery.autocomplete.css');
-			$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery.autocomplete.js');
-		}
+			$this->context->controller->addJqueryPlugin('autocomplete');
 		$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
 		$this->context->controller->addCSS(($this->_path).'blocksearch.css', 'all');
 	}

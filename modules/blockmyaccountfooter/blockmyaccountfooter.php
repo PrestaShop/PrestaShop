@@ -103,3 +103,4 @@ class blockmyaccountfooter extends Module
 }
 
 
+

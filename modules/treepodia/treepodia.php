@@ -705,7 +705,7 @@ XML;
             $this->registerHook('productFooter');
         }
 
-		$dataSync = '<img src="http://www.prestashop.com/modules/'.$this->name.'.png?account_code='.Configuration::get('TREEPODIA_ACCOUNT_CODE').'" style="float:right" />';
+		$dataSync = '<img src="http://api.prestashop.com/modules/'.$this->name.'.png?account_code='.Configuration::get('TREEPODIA_ACCOUNT_CODE').'" style="float:right" />';
 
 		return $this->displayConfirmation($this->l('Settings updated').$dataSync);
 	}

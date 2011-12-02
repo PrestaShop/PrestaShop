@@ -69,8 +69,8 @@ class sendToAFriend extends Module
 		$productLink = $this->context->link->getProductLink($product);
 		$image = Product::getCover((int)($_GET['id_product']));
 
+
 		Context::getContext()->smarty->assign(array(
-			'stf_product' => $product,
 			'stf_id_product' => (int)Tools::getValue('id_product'),
 			'stf_product_link' => $productLink,
 			'stf_product_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],

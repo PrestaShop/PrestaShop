@@ -23,11 +23,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 <!-- MODULE Block reinsurance -->
 <div id="reinsurance_block" class="clearfix">
-	<ul class="width{$nb_blocks}">	
-		{foreach from=$reinssurances item=reinssurance}
-				<li>{if $reinssurance.filename}<img src="{$module_dir}img/{$reinssurance.filename}" alt="{$reinssurance.text}" />{/if} <span>{$reinssurance.text}</span></li>
+	<ul class="width{$nbblocks}">	
+		{foreach from=$infos item=info}
+			<li><img src="{$module_dir}img/{$info.filename}.jpg" alt="{$info.text}" /> <span>{$info.text}</span></li>
 		{/foreach}
 	</ul>
 </div>
