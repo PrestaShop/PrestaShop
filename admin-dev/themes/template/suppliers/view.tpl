@@ -51,7 +51,7 @@
 				<th width="80">{l s='Reference'}</th>
 				<th width="80">{l s='EAN13'}</th>
 				<th width="80">{l s='UPC'}</th>
-				{if $stock_management}<th class="right" width="150">{l s='Available Quantity'}</th>{/if}
+				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right" width="150">{l s='Available Quantity'}</th>{/if}
 			</tr>
 			{foreach $product->combinaison AS $id_product_attribute => $product_attribute}
 				<tr {if $id_product_attribute %2}class="alt_row"{/if} >
@@ -59,7 +59,7 @@
 					<td>{$product_attribute.reference}</td>
 					<td>{$product_attribute.ean13}</td>
 					<td>{$product_attribute.upc}</td>
-					{if $stock_management}<td class="right">{$product_attribute.quantity}</td>{/if}
+					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
 				</tr>
 			{/foreach}
 		</table>

@@ -78,7 +78,7 @@ class ProductSaleCore
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sqlGroups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 
-		$sql = 'SELECT p.*, stock.out_of_stock, stock.quantity as quantity,
+		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					i.`id_image`, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
