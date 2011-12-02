@@ -69,8 +69,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	}
 	
 	/**
-	 * Init the available fields by export type with associated translation 
-	 *
+	 * Init the available fields by export type with associated translation
 	 */
 	private function initExportFieldList()
 	{
@@ -109,8 +108,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	}
 	
 	/**
-	 * Init the block Menu 
-	 *
+	 * Init the block Menu
 	 */
 	private function initMenu()
 	{
@@ -194,7 +192,7 @@ class AdminAccountingExportControllerCore extends AdminController
 			
 			Configuration::updateValue('ACCOUNTING_CLIENT_PREFIX_EXPORT', $this->clientPrefix);
 			// Depends of the number of order and the range dates
-			// Switch to ajax if any problem with time occured 
+			// Switch to ajax if there is any problems with time
 			ini_set('max_execution_time', 0);
 			
 			switch($this->exportSelected)
@@ -247,28 +245,28 @@ class AdminAccountingExportControllerCore extends AdminController
 	}
 	
 	/**
-	 * Start the reconciliation export type 
-	 *
+	 * Start the reconciliation export type
 	 */
 	private function runReconciliationExport()
 	{
 		$query = '
 			SELECT
-				CONCAT(\''.Configuration::get('PS_INVOICE_PREFIX').'\', LPAD(o.`invoice_number`, 6, 0)) AS invoice_number,
+				CONCAT(\''.Configuration::get('PS_INVOICE_PREFIX').'\', LPAD(oi.`number`, 6, "0")) AS invoice_number,
 				CASE 
  					WHEN (a.`company` != "" AND a.`company` IS NOT NULL) THEN a.`company`
 					ELSE  a.`lastname`
 				END AS wording,
 				o.`total_paid_real`,
-				o.`invoice_date`,
+				oi.`date_add` as invoice_date,
 				pcc.`transaction_id`,
-				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(c.`id_customer`, 6, 0)) AS account_client
+				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(c.`id_customer`, 6, "0")) AS account_client
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
-				LEFT JOIN `'._DB_PREFIX_.'payment_cc` pcc ON pcc.`id_order` = o.`id_order`
+				LEFT JOIN `'._DB_PREFIX_.'order_payment` pcc ON pcc.`id_order` = o.`id_order`
+				LEFT JOIN `'._DB_PREFIX_.'order_invoice` oi ON oi.`id_order` = o.`id_order`
 				WHERE o.`valid` = 1
-				AND o.`invoice_date` 
+				AND oi.`date_add`
 					BETWEEN \''.pSQL($this->date['begin']).'\' 
 					AND \''.pSQL($this->date['end']).'\'';
 		
@@ -291,8 +289,8 @@ class AdminAccountingExportControllerCore extends AdminController
 		$line[1] = Tools::getValue('journal'); 
 		$line[2] = ''; // account number
 		$line[3] = $row['invoice_number'];
-		$line[4] = 0.00; // Credit TTC
-		$line[5] = 0.00; // Debit HT (used for tax too)
+		$line[4] = 0.00; // Credit TTC (Total for first csv line, 0 for others)
+		$line[5] = 0.00; // Debit HT (0 For the first line, used for tax too)
 		$line[6] = $row['transaction_id'];
 		$line[7] = $row['payment_type'];
 		$line[8] = $row['currency_code'];
@@ -303,18 +301,18 @@ class AdminAccountingExportControllerCore extends AdminController
 		{
 			case 0:
 				$line[2] = $row['account_client'];
-				$line[4] = 'Wait Franck Commit';
+				$line[4] = $row['total_price_tax_incl'];
 				break;
 			case 1:
 				$line[2] = !empty($row['account']) ? $row['account'] : 
 					Configuration::get('default_account_number', NULL, NULL, $row['id_shop']);
 				// Force an empty string if Configuration send false
-				$line[2] = empty($line[2]) ? '' : $linep[2];
+				$line[2] = empty($line[2]) ? '' : $line[2];
 				$line[5] = $row['product_price_ht'];
 				break;
 			case 2:
 				$line[2] = $row['tax_accounting_account_number'];
-				$line[5] = 'Wait Franck Commit';
+				$line[5] = $row['tax_total_amount'];
 				break;
 		}
 		return $line;
@@ -375,44 +373,46 @@ class AdminAccountingExportControllerCore extends AdminController
 		$query = '
 			SELECT 
 				od.`id_order`,
-				o.`invoice_date`,
+				oi.`date_add` as invoice_date,
 				CASE 
  					WHEN (acc_pzs.`account_number` != "" AND acc_pzs.`account_number` IS NOT NULL) THEN acc_pzs.`account_number`
  					WHEN (acc_zs.`account_number` != "" AND acc_zs.`account_number` IS NOT NULL) THEN acc_zs.`account_number`
  					ELSE  ""
 				END AS account,
-				CONCAT(\''.Configuration::get('PS_INVOICE_PREFIX').'\', LPAD(o.`invoice_number`, 6, "0")) AS invoice_number,
-				o.`total_paid_real`,
+				CONCAT(\''.Configuration::get('PS_INVOICE_PREFIX').'\', LPAD(oi.`number`, 6, "0")) AS invoice_number,
+				od.`total_price_tax_incl`,
 				od.`product_price` AS product_price_ht,
 				pcc.`transaction_id`,
 				o.`payment` AS payment_type,
-				currency.`iso_code` as currency_code,
-				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(customer.`id_customer`, 6, 0)) AS account_client,
+				currency.`iso_code` AS currency_code,
+				CONCAT(\''.pSQL($this->clientPrefix).'\', LPAD(customer.`id_customer`, 6, "0")) AS account_client,
 				CASE 
  					WHEN (a.`company` != "" AND a.`company` IS NOT NULL) THEN a.`company`
 					ELSE  a.`lastname`
 				END AS wording,
 				t.account_number AS tax_accounting_account_number,
 				t.id_tax,
-				o.id_shop
+				o.id_shop,
+				odt.total_amount AS tax_total_amount
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` customer ON customer.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
-				LEFT JOIN `'._DB_PREFIX_.'payment_cc` pcc ON pcc.`id_order` = o.`id_order`
+				LEFT JOIN `'._DB_PREFIX_.'order_payment` pcc ON pcc.`id_order` = o.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON od.`id_order` = o.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'currency` currency ON currency.`id_currency` = o.`id_currency`
 				LEFT JOIN `'._DB_PREFIX_.'order_detail_tax` odt ON odt.`id_order_detail` = od.`id_order_detail`
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON t.`id_tax` = odt.`id_tax`
 				LEFT JOIN `'._DB_PREFIX_.'country` country ON country.`id_country` = a.`id_country`
-				LEFT JOIN `'._DB_PREFIX_.'accounting_product_zone_shop` acc_pzs 
+				LEFT JOIN `'._DB_PREFIX_.'accounting_product_zone_shop` acc_pzs
 					ON (acc_pzs.`id_shop` = o.`id_shop`
 					AND acc_pzs.`id_zone` = country.`id_zone`
 					AND acc_pzs.`id_product` = od.`product_id`)
 				LEFT JOIN `'._DB_PREFIX_.'accounting_zone_shop` acc_zs 
 					ON (acc_zs.`id_shop` = o.`id_shop`
 					AND acc_zs.`id_zone` = country.`id_zone`)
+				LEFT JOIN `'._DB_PREFIX_.'order_invoice` oi ON oi.id_order = o.id_order
 				WHERE o.`valid` = 1
-				AND o.`invoice_date` 
+				AND oi.`date_add`
 					BETWEEN \''.pSQL($this->date['begin']).'\' 
 					AND \''.pSQL($this->date['end']).'\'
 				ORDER BY o.`id_order` ASC';
@@ -432,7 +432,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		header('Content-length: ' . filesize($path)); 
 		header('Content-Disposition: attachment; filename="'.$fileName.'"');
 		
-		// Flush data unproper data page before reading the file
+		// Flush buffered data before reading the file
 		ob_clean();
     flush();
     

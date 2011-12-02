@@ -31,7 +31,7 @@
  * @see OrderPaymentCore
  *
  */
-class PaymentCCCore extends ObjectModel
+class PaymentCCCore extends OrderPayment
 {
 	public $id_order;
 	public $id_currency;
@@ -52,29 +52,24 @@ class PaymentCCCore extends ObjectModel
 	protected 	$table = 'payment_cc';
 	protected 	$identifier = 'id_payment_cc';
 
+	/**
+	 * @deprecated 1.5.0.2
+	 * @see OrderPaymentCore
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['id_currency'] = (int)($this->id_currency);
-		$fields['amount'] = (float)($this->amount);
-		$fields['transaction_id'] = pSQL($this->transaction_id);
-		$fields['card_number'] = pSQL($this->card_number);
-		$fields['card_brand'] = pSQL($this->card_brand);
-		$fields['card_expiration'] = pSQL($this->card_expiration);
-		$fields['card_holder'] = pSQL($this->card_holder);
-		$fields['date_add'] = pSQL($this->date_add);
-		return $fields;
+		Tools::displayAsDeprecated();
+		return parent::getFields();
 	}
 
+	/**
+	 * @deprecated 1.5.0.2
+	 * @see OrderPaymentCore
+	 */
 	public function add($autodate = true, $nullValues = false)
 	{
-		if (parent::add($autodate, $nullValues))
-		{
-			Hook::exec('paymentCCAdded', array('paymentCC' => $this));
-			return true;
-		}
-		return false;
+		Tools::displayAsDeprecated();
+		return parent::add($autodate, $nullValues);
 	}
 
 	/**
@@ -87,7 +82,6 @@ class PaymentCCCore extends ObjectModel
 	public static function getByOrderId($id_order)
 	{
 		Tools::displayAsDeprecated();
-		return null;
+		return OrderPayment::getByOrderId($id_order);
 	}
 }
-
