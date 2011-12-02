@@ -422,6 +422,7 @@ $(function(){ldelim}
 		</p>
 		{/if}
 	</fieldset>
+	{if isset($PS_REGISTRATION_PROCESS_TYPE) && $PS_REGISTRATION_PROCESS_TYPE}
 	<fieldset class="account_creation">
 		<h3>{l s='Your address'}</h3>
 		{foreach from=$dlv_all_fields item=field_name}
@@ -527,6 +528,7 @@ $(function(){ldelim}
 			<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 		</p>
 	</fieldset>
+	{/if}
 	{$HOOK_CREATE_ACCOUNT_FORM}
 	<p class="cart_navigation required submit">
 		<input type="hidden" name="email_create" value="1" />
