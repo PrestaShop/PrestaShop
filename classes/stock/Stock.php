@@ -90,6 +90,7 @@ class StockCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
+
 		$fields['id_warehouse'] = (int)$this->id_warehouse;
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
@@ -99,6 +100,7 @@ class StockCore extends ObjectModel
 		$fields['physical_quantity'] = (int)$this->physical_quantity;
 		$fields['usable_quantity'] = (int)$this->usable_quantity;
 		$fields['price_te'] = (float)round($this->price_te, 6);
+
 		return $fields;
 	}
 
