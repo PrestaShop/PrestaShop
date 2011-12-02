@@ -222,6 +222,7 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 (59, 21, 6),
 /* blockcontact */
 (60, 6, 7),
+(60, 9, 24),
 /* blockreinsurance */
 (62, 21, 1),
 /* favoriteproducts */

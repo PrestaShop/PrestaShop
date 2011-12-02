@@ -44,7 +44,7 @@ class blockcontact extends Module
 	
 	public function install()
 	{
-		return (parent::install() AND Configuration::updateValue('blockcontact_telnumber', '') AND Configuration::updateValue('blockcontact_email', '') AND $this->registerHook('rightColumn'));
+		return (parent::install() AND Configuration::updateValue('blockcontact_telnumber', '') AND Configuration::updateValue('blockcontact_email', '') AND $this->registerHook('displayRightColumn') && $this->registerHook('displayHeader'));
 	}
 	
 	public function uninstall()
@@ -80,8 +80,13 @@ class blockcontact extends Module
 		</form>
 		';
 	}
+
+	public function hookDisplayHeader()
+	{
+		$this->context->controller->addCSS(($this->_path).'blockcontact.css', 'all');
+	}
 	
-	public function hookRightColumn()
+	public function hookDisplayRightColumn()
 	{
 		global $smarty;
 
