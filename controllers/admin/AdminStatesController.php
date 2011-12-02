@@ -42,7 +42,12 @@ class AdminStatesControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array(
+									'text' => $this->l('Delete selected'),
+									'confirm' => $this->l('Delete selected items?')),
+								'affectzone' => array(
+									'text' => $this->l('Affect a new zone'))
+								);
 
 		$this->fieldsDisplay = array(
 			'id_state' => array(
@@ -84,6 +89,7 @@ class AdminStatesControllerCore extends AdminController
 		$this->_select = 'z.`name` AS zone';
 	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
 
+				$this->tpl_list_vars['zones'] = Zone::getZones();
 	 	return parent::renderList();
 	}
 
