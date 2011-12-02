@@ -48,5 +48,6 @@
 		{* ajaxBox allows*}
 		<div id="ajaxBox" style="display:none"></div>
 		{/if}
+		<div id="scrollTop"><a href="#top"></a></div>
 	</body>
 </html>

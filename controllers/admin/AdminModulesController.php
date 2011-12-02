@@ -131,15 +131,6 @@ class AdminModulesControllerCore extends AdminController
 			$this->logged_on_addons = true;
 	}
 
-	public function setMedia()
-	{
-		parent::setMedia();
-		$this->addJqueryPlugin('scrollTo');
-	}
-
-
-
-
 	/*
 	** Ajax Request Methods
 	**
