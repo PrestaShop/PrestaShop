@@ -171,25 +171,25 @@ class AdminProductsControllerCore extends AdminController
 		$_POST['depth'] = empty($_POST['depth']) ? '0' : str_replace(',', '.', $_POST['depth']);
 		$_POST['weight'] = empty($_POST['weight']) ? '0' : str_replace(',', '.', $_POST['weight']);
 		if ($_POST['unit_price'] != null)
-			$object->unit_price = str_replace(',', '.', $_POST['unit_price']);
-		if (array_key_exists('ecotax', $_POST) && $_POST['ecotax'] != null)
-			$object->ecotax = str_replace(',', '.', $_POST['ecotax']);
-		$object->available_for_order = (int)Tools::isSubmit('available_for_order');
-		$object->show_price = $object->available_for_order ? 1 : (int)Tools::isSubmit('show_price');
-		$object->on_sale = Tools::isSubmit('on_sale');
-		$object->online_only = Tools::isSubmit('online_only');
-	}
+		$object->unit_price = str_replace(',', '.', $_POST['unit_price']);
+	if (array_key_exists('ecotax', $_POST) && $_POST['ecotax'] != null)
+		$object->ecotax = str_replace(',', '.', $_POST['ecotax']);
+	$object->available_for_order = (int)Tools::isSubmit('available_for_order');
+	$object->show_price = $object->available_for_order ? 1 : (int)Tools::isSubmit('show_price');
+	$object->on_sale = Tools::isSubmit('on_sale');
+	$object->online_only = Tools::isSubmit('online_only');
+}
 
-	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
+public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
+{
+	$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
+	$orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
+	if ($orderByPriceFinal == 'price_final')
 	{
-		$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
-		$orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
-		if ($orderByPriceFinal == 'price_final')
-		{
-			$orderBy = 'id_'.$this->table;
-			$orderWay = 'ASC';
-		}
-		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
+		$orderBy = 'id_'.$this->table;
+		$orderWay = 'ASC';
+	}
+	parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
 
 		/* update product quantity with attributes ...*/
 		$nb = count($this->_list);
@@ -2645,6 +2645,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
 		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
 		$this->tpl_form_vars['tinymce'] = true;
+		$this->addJS(_PS_JS_DIR_.'admin-products.js');
 		$this->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
 		$this->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 
