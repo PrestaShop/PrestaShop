@@ -612,22 +612,17 @@ class StockManagerCore implements StockManagerInterface
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
-	 * @return array
+	 * @return Collection
 	 */
 	protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
 	{
-		// build query
-		$query = new DbQuery();
-		$query->select('s.id_stock, s.physical_quantity, s.usable_quantity, s.price_te, s.id_product, s.id_product_attribute, s.id_warehouse');
-		$query->from('stock s');
-		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		$stocks = new Collection('Stock');
+		$stocks->where('a.id_product = '.(int)$id_product.' AND a.id_product_attribute = '.(int)$id_product_attribute);
 		if ($id_warehouse)
-			$query->where('s.id_warehouse = '.(int)$id_warehouse);
+			$stocks->where('a.id_warehouse = '.(int)$id_warehouse);
 		if ($price_te)
-			$query->where('s.price_te = '.(float)$price_te);
+			$stocks->where('a.price_te = '.(float)$price_te);
 
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-		return ObjectModel::hydrateCollection('Stock', $results);
+		return $stocks;
 	}
 }

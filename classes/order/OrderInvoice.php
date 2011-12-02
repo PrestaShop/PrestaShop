@@ -69,8 +69,10 @@ class OrderInvoiceCore extends ObjectModel
 	protected $fieldsRequired = array('id_order', 'number');
 	protected $fieldsValidate = array('id_order' => 'isUnsignedId', 'number' => 'isUnsignedId');
 
-	protected $table = 'order_invoice';
-	protected $identifier = 'id_order_invoice';
+	public static $definition = array(
+		'table' => 'order_invoice',
+		'identifier' => 'id_order_invoice',
+	);
 
 	public function getFields()
 	{
