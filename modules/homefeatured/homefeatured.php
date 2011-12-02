@@ -90,7 +90,12 @@ class HomeFeatured extends Module
 		return $output;
 	}
 
-	function hookHome($params)
+	public function hookDisplayHeader($params)
+	{
+		$this->context->controller->addCss($this->_path.'homefeatured.css');
+	}
+
+	public function hookDisplayHome($params)
 	{
 		$category = new Category(Context::getContext()->shop->getCategory(), Configuration::get('PS_LANG_DEFAULT'));
 		$nb = (int)(Configuration::get('HOME_FEATURED_NBR'));
