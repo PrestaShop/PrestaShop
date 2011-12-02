@@ -160,8 +160,8 @@ class Autoload
 				else if (substr($file, -4) == '.php')
 				{
 			 		$content = file_get_contents($this->root_dir.$path.$file);
-			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php')
-			 					.'(Core)?)(\s+(extends|implements)\s+[a-z][a-z0-9_]*)?\s*\{#i';
+			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(Core)?)'
+			 					.'(\s+extends\s+[a-z][a-z0-9_]*)?(\s+implements\s+[a-z][a-z0-9_]*(\s*,\s*[a-z][a-z0-9_]*)*)?\s*\{#i';
 			 		if (preg_match($pattern, $content, $m))
 			 		{
 			 			$classes[$m['classname']] = $path.$file;
