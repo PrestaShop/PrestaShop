@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -33,6 +33,7 @@ require_once(dirname(__FILE__).'/../../init.php');
 
 include_once(dirname(__FILE__).'/LoyaltyModule.php');
 include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
+include_once(dirname(__FILE__).'/loyalty.php');
 
 $context = Context::getContext();
 if (!$context->customer->isLogged())
@@ -59,20 +60,20 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 	$cartRule->reduction_amount = LoyaltyModule::getVoucherValue((int)$customerPoints);
 	$cartRule->quantity = 1;
 	$cartRule->quantity_per_user = 1;
-	
-	/* If merchandise returns are allowed, the voucher musn't be usable before this max return date */	
+
+	/* If merchandise returns are allowed, the voucher musn't be usable before this max return date */
 	$dateFrom = Db::getInstance()->getValue('
 	SELECT UNIX_TIMESTAMP(date_add) n
-	FROM '._DB_PREFIX_.'loyalty 
+	FROM '._DB_PREFIX_.'loyalty
 	WHERE id_cart_rule = 0 AND id_customer = '.(int)$cookie->id_customer.'
 	ORDER BY date_add DESC');
-	
+
 	if (Configuration::get('PS_ORDER_RETURN'))
 		$dateFrom += 60 * 60 * 24 * (int)Configuration::get('PS_ORDER_RETURN_NB_DAYS');
 
 	$cartRule->date_from = date('Y-m-d H:i:s', $dateFrom);
 	$cartRule->date_to = date('Y-m-d H:i:s', $dateFrom + 31536000); // + 1 year
-	
+
 	$cartRule->minimum_amount = (float)Configuration::get('PS_LOYALTY_MINIMAL');
 	$cartRule->active = 1;
 
@@ -84,13 +85,13 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 
 	$languages = Language::getLanguages(true);
 	$default_text = Configuration::get('PS_LOYALTY_VOUCHER_DETAILS', (int)Configuration::get('PS_LANG_DEFAULT'));
-	
+
 	foreach ($languages AS $language)
 	{
 		$text = Configuration::get('PS_LOYALTY_VOUCHER_DETAILS', (int)$language['id_lang']);
 		$cartRule->name[(int)$language['id_lang']] = $text ? strval($text) : strval($default_text);
 	}
-	
+
 	if (is_array($categories) AND sizeof($categories))
 		$cartRule->add(true, false, $categories);
 	else
@@ -152,13 +153,14 @@ else
 		$categoriesNames = Tools::truncate(implode(', ', $categoriesNames), 100).'.';
 	else
 		$categoriesNames = null;
-}	
+}
 $smarty->assign(array(
 	'nbDiscounts' => (int)$nbDiscounts,
 	'discounts' => $discounts,
 	'minimalLoyalty' => (float)Configuration::get('PS_LOYALTY_MINIMAL'),
 	'categories' => $categoriesNames));
 
-echo Module::display(dirname(__FILE__).'/loyalty.php', 'loyalty.tpl');
+$loyalty = new Loyalty();
+echo $loyalty->display(dirname(__FILE__).'/loyalty.php', 'loyalty.tpl');
 
 include(dirname(__FILE__).'/../../footer.php');
