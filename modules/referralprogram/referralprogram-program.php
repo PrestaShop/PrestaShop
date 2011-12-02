@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -31,6 +31,7 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 
 include_once(dirname(__FILE__).'/ReferralProgramModule.php');
+include_once(dirname(__FILE__).'/referralprogram.php');
 
 $context = Context::getContext();
 if (!$context->customer->isLogged())
@@ -185,8 +186,9 @@ $smarty->assign(array(
 	'mails_exists' => (isset($mails_exists) ? $mails_exists : array())
 ));
 
-echo Module::display(dirname(__FILE__).'/referralprogram.php', 'referralprogram-program.tpl');
+$referralprogram = new ReferralProgram();
+echo $referralprogram->display(dirname(__FILE__).'/referralprogram.php', 'referralprogram-program.tpl');
 
-include(dirname(__FILE__).'/../../footer.php'); 
+include(dirname(__FILE__).'/../../footer.php');
 
 

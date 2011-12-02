@@ -422,7 +422,7 @@ class Dejala extends CarrierModule
 				$method = Tools::getValue('method');
 				$output .= '<div class="conf confirm">
 				<img src="../img/admin/ok.gif" alt="" title="" />
-				'.$this->l('Settings updated').(($method == 'signin' OR $method == 'register' OR $method == 'golive') ? '<img src="http://www.prestashop.com/modules/dejala.png?pspid='.urlencode($this->dejalaConfig->login).'&mode='.($this->dejalaConfig->mode == 'TEST' ? 0 : 1).'" style="float:right" />' : '').'
+				'.$this->l('Settings updated').(($method == 'signin' OR $method == 'register' OR $method == 'golive') ? '<img src="http://api.prestashop.com/modules/dejala.png?pspid='.urlencode($this->dejalaConfig->login).'&mode='.($this->dejalaConfig->mode == 'TEST' ? 0 : 1).'" style="float:right" />' : '').'
 				</div>';
 			}
 		}

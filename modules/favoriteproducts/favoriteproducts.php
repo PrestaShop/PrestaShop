@@ -48,7 +48,6 @@ class FavoriteProducts extends Module
 	{
 			if (!parent::install()
 				OR !$this->registerHook('myAccountBlock')
-				OR !$this->registerHook('customerAccount')
 				OR !$this->registerHook('extraLeft')
 				OR !$this->registerHook('header'))
 					return false;
