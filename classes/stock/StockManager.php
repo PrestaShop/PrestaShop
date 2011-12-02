@@ -207,10 +207,10 @@ class StockManagerCore implements StockManagerInterface
 		// Special case of a pack
 		if (Pack::isPack($id_product))
 		{
-			$products_pack = Pack::getItems((int)$product['id_product'], (int)Configuration::get('PS_LANG_DEFAULT'));
+			$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($products_pack as $product_pack)
 			{
-				$pack_id_product_attribute = Product::getDefaultAttribute($tab_product_pack['id_product'], 1); //@TODO is there a better way to retrieve the product attribute assciated to the pack ?
+				$pack_id_product_attribute = Product::getDefaultAttribute($id_product_attribute, 1); //@TODO is there a better way to retrieve the product attribute assciated to the pack ?
 				$this->removeProduct($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $quantity, $warehouse, $id_order);
 			}
 		}

@@ -94,7 +94,10 @@ class OrderHistoryCore extends ObjectModel
 
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))
 						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity']);
-					else if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0) // The product is removed from the physical stock. $id_warehouse is needed
+					// If order is shipped for the first time and
+					// if we use advanced stock management system, decrement stock preperly.
+					// The product is removed from the physical stock. $id_warehouse is needed
+					else if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 					{
 						$manager = StockManagerFactory::getManager();
 						$warehouse = new Warehouse($id_warehouse);
