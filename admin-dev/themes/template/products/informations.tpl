@@ -1,88 +1,30 @@
-<div class="" id="step1">
-			<h4 class="tab">1. {l s='Info.'}</h4>
-			<script type="text/javascript">
-				$(document).ready(function() {
-					updateCurrentText();
-					updateFriendlyURL();
-					$.ajax({
-						url: "ajax-tab.php",
-						cache: false,
-						dataType: "json",
-						data: {
-							ajaxProductManufacturers:"1",
-							ajax : '1',
-							token : "{$token}",
-							controller : "AdminProducts",
-							action : "productManufacturers",
-						},
-						success: function(j) {
-							var options = $("select#id_manufacturer").html();
-							if (j)
-							for (var i = 0; i < j.length; i++)
-								options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-							$("select#id_manufacturer").replaceWith("<select id=\"id_manufacturer\">"+options+"</select>");
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown)
-						{
-							$("select#id_manufacturer").replaceWith("<p id=\"id_manufacturer\">[TECHNICAL ERROR] ajaxProductManufacturers: "+textStatus+"</p>");
-						}
+<div id="step1">
+	<h4 class="tab">1. {l s='Info.'}</h4>
+	<h4>{l s='Product global information'}</h4>
+	<script type="text/javascript">
+		var token = '{$token}';
+		var id_product = {$product->id};
 
-					});
-					/*$.ajax({
-						url: "ajax-tab.php",
-						cache: false,
-						dataType: "json",
-						data: {
-							ajaxProductSuppliers:"1",
-							ajax : '1',
-							token : "{$token}",
-							controller : "AdminProducts",
-							action : "productSuppliers",
-						},
-						success: function(j) {
-							var options = $("select#id_supplier").html();
-							if (j)
-							for (var i = 0; i < j.length; i++)
-								options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-							$("select#id_supplier").replaceWith("<select id=\"id_supplier\">"+options+"</select>");
-						},
-						error: function(XMLHttpRequest, textStatus, errorThrown)
-						{
-							$("select#id_supplier").replaceWith("<p id=\"id_supplier\">[TECHNICAL ERROR] ajaxProductSuppliers : "+textStatus+"</p>");
-						}
-
-					});*/
-					if ($('#available_for_order').is(':checked')){
-						$('#show_price').attr('checked', 'checked');
-						$('#show_price').attr('disabled', 'disabled');
-					}
-					else {
-						$('#show_price').attr('disabled', '');
-					}
-				});
-			</script>
-			<h4>{l s='Product global information'}</h4>
-		<script type="text/javascript">
-			{$combinationImagesJs}
-			$(document).ready(function(){
-				$('#id_mvt_reason').change(function(){
-					updateMvtStatus($(this).val());
-				});
+		{$combinationImagesJs}
+		$(document).ready(function(){
+			$('#id_mvt_reason').change(function(){
 				updateMvtStatus($(this).val());
 			});
-			function updateMvtStatus(id_mvt_reason)
-			{
-				if (id_mvt_reason == -1)
-					return $('#mvt_sign').hide();
-				if ($('#id_mvt_reason option:selected').attr('rel') == -1)
-					$('#mvt_sign').html('<img src="../img/admin/arrow_down.png" /> {l s='Decrease your stock'}');
-				else
-					$('#mvt_sign').html('<img src="../img/admin/arrow_up.png" /> {l s='Increase your stock'}');
-				$('#mvt_sign').show();
-			}
-		</script>
-			<div class="separation"></div>
-			<br />
+			updateMvtStatus($(this).val());
+		});
+		function updateMvtStatus(id_mvt_reason)
+		{
+			if (id_mvt_reason == -1)
+				return $('#mvt_sign').hide();
+			if ($('#id_mvt_reason option:selected').attr('rel') == -1)
+				$('#mvt_sign').html('<img src="../img/admin/arrow_down.png" /> {l s='Decrease your stock'}');
+			else
+				$('#mvt_sign').html('<img src="../img/admin/arrow_up.png" /> {l s='Increase your stock'}');
+			$('#mvt_sign').show();
+		}
+	</script>
+		<div class="separation"></div>
+		<br />
 <table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 {* global information *}
 	<tr>
@@ -107,13 +49,6 @@
 							<span class="hint" name="help_box">{l s='Special characters allowed:' }.-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
 					</tr>
-					<!--tr>
-						<td class="col-left"><label>{l s='Supplier Reference:' }</label></td>
-						<td style="padding-bottom:5px;">
-							<input size="55" type="text" name="supplier_reference" value="{$product->supplier_reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
-							<span class="hint" name="help_box">{l s='Special characters allowed:' } .-_#\<span class="hint-pointer">&nbsp;</span></span>
-						</td>
-					</tr-->
 					<tr>
 						<td class="col-left"><label>{l s='EAN13 or JAN:' }</label></td>
 						<td style="padding-bottom:5px;">
@@ -202,24 +137,13 @@
 	</a>
 	</td>
 	</tr>
-	<!--tr>
-	<td class="col-left"><label>{l s='Supplier:' }</label></td>
-	<td style="padding-bottom:5px;">
-	<select name="id_supplier" id="id_supplier">
-	<option value="0">-- {l s='Choose (optional)'} --</option>
-	{if $product->id_supplier}
-	<option value="{$product->id_supplier}" selected="selected">{$product->supplier_name}</option>
-	{/if}
-	<option disabled="disabled">----------</option>
-	</select>&nbsp;&nbsp;&nbsp;
-	<a href="{$link->getAdminLink('AdminSuppliers')}&addsupplier" onclick="return confirm('{l s='Are you sure you want to delete entered product information?' js=1}">
-	<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
-	</a>
-	</td>
-	</tr-->
 </table>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 {* [begin] pack product *}
+<script type='text/javascript'>
+	var msg_select_one = '{l s='Thanks to select at least one product.'}';
+	var msg_set_quantity = '{l s='Thanks to set a quantity to add a product.'}';
+</script>
 <table>
 	<tr>
 		<td>
@@ -248,121 +172,7 @@
 		</div>
 	</tr>
 </table>
-<script language="javascript">
-function addPackItem()
-{
-	if ($('#curPackItemId').val() == '' || $('#curPackItemName').val() == '')
-	{
-		alert('{l s='Thanks to select at least one product.'}');
-		return false;
-	}
-	else if ($('#curPackItemId').val() == '' || $('#curPackItemQty').val() == '')
-	{
-		alert('{l s='Thanks to set a quantity to add a product.'}');
-		return false;
-	}
 
-	var lineDisplay = $('#curPackItemQty').val()+ 'x ' +$('#curPackItemName').val();
-
-	var divContent = $('#divPackItems').html();
-	divContent += lineDisplay;
-	divContent += '<span onclick="delPackItem(' + $('#curPackItemId').val() + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
-
-	// QTYxID-QTYxID
-	var line = $('#curPackItemQty').val()+ 'x' +$('#curPackItemId').val();
-
-
-	$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
-	$('#divPackItems').html(divContent);
-		$('#namePackItems').val($('#namePackItems').val() + lineDisplay + 'Â¤');
-
-	$('#curPackItemId').val('');
-	$('#curPackItemName').val('');
-
-	$('#curPackItemName').setOptions({
-		extraParams: {
-			excludeIds :  getSelectedIds()
-		}
-	});
-}
-function delPackItem(id)
-{
-	var reg = new RegExp('-', 'g');
-	var regx = new RegExp('x', 'g');
-
-	var div = getE('divPackItems');
-	var input = getE('inputPackItems');
-	var name = getE('namePackItems');
-	var select = getE('curPackItemId');
-	var select_quantity = getE('curPackItemQty');
-
-	var inputCut = input.value.split(reg);
-	var nameCut = name.value.split(new RegExp('¤', 'g'));
-
-	input.value = '';
-	name.value = '';
-	div.innerHTML = '';
-
-	for (var i = 0; i < inputCut.length; ++i)
-		if (inputCut[i])
-		{
-			var inputQty = inputCut[i].split(regx);
-			if (inputQty[1] != id)
-			{
-				input.value += inputCut[i] + '-';
-				name.value += nameCut[i] + '¤';
-				div.innerHTML += nameCut[i] + ' <span onclick="delPackItem(' + inputQty[1] + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
-			}
-		}
-
-	$('#curPackItemName').setOptions({
-		extraParams: {
-			excludeIds :  getSelectedIds()
-		}
-	});
-}
-
-	/* function autocomplete */
-	urlToCall = null;
-	function getSelectedIds()
-	{
-		// input lines QTY x ID-
-		var ids = {$product->id}+',';
-		ids += $('#inputPackItems').val().replace(/\\d+x/g, '').replace(/\-/g,',');
-		ids = ids.replace(/\,$/,'');
-		return ids;
-	}
-
-	$(function() {
-		$('#curPackItemName')
-			.autocomplete('ajax_products_list.php', {
-				delay: 100,
-				minChars: 1,
-				autoFill: true,
-				max:20,
-				matchContains: true,
-				mustMatch:true,
-				scroll:false,
-				cacheLength:0,
-				{* param multipleSeparator:'||' ajouté à cause de bug dans lib autocomplete *}
-				multipleSeparator:'||',
-				formatItem: function(item) {
-					return item[1]+' - '+item[0];
-				}
-			}).result(function(event, item){
-				$('#curPackItemId').val(item[1]);
-			});
-			$('#curPackItemName').setOptions({
-				extraParams: {
-					excludeIds : getSelectedIds(), excludeVirtuals : 1
-				}
-			});
-
-	});
-</script>
-{* [end] pack product *}
-
-{* [begin] specific / detailled information *}
 <script type="text/javascript">
 var newLabel = '{l s='New label'}';
 var choose_language = '{l s='Choose language:'}';
@@ -371,12 +181,6 @@ var customizationUploadableFileNumber = '{$product->uploadable_files}';
 var customizationTextFieldNumber = '{$product->text_fields}';
 var uploadableFileLabel = 0;
 var textFieldLabel = 0;
-$(document).ready(function(){
-	$("#is_virtual_good").change(function(e)
-	{
-		$(".toggleVirtualPhysicalProduct").toggle();
-	});
-});
 </script>
 <div class="separation"></div>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
@@ -387,7 +191,8 @@ $(document).ready(function(){
 		</p>
 		{* [begin] physical product infos *}
 		<div id="physical_good" class="toggleVirtualPhysicalProduct" {if $product->productDownload->id && $product->productDownload->active}style="display:none"{/if} >
-<div class="separation"></div>		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
+		<div class="separation"></div>
+		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 			<tr>
 				<td class="col-left"><label>{l s='Width ( package ) :' }</label></td>
 				<td style="padding-bottom:5px;">
@@ -521,54 +326,6 @@ $(document).ready(function(){
 				</td></tr>
 			</table>
 		</div>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				if ($("#is_virtual_good").attr("checked"))
-				{
-					$("#virtual_good").show();
-					$("#virtual_good_more").show();
-				}
-
-				if ( $("input[name=is_virtual_file]:checked").val() == 1)
-				{
-					$("#virtual_good_more").show();
-					$("#virtual_good_attributes").show();
-					$("#is_virtual_file_product").show();
-				}
-				else
-				{
-					$("#virtual_good_more").hide();
-					$("#virtual_good_attributes").hide();
-					$("#is_virtual_file_product").hide();
-				}
-
-				$("input[name=is_virtual_file]").live("change", function() {
-					if($(this).val() == "1")
-					{
-						$("#virtual_good_more").show();
-						$("#virtual_good_attributes").show();
-						$("#is_virtual_file_product").show();
-					}
-					else
-					{
-						$("#virtual_good_more").hide();
-						$("#virtual_good_attributes").hide();
-						$("#is_virtual_file_product").hide();
-					}
-				});
-
-				$("input[name=is_virtual_good]").live("change", function() {
-					if($(this).attr("checked"))
-					{
-						$("#is_virtual").val(1);
-					}
-					else
-					{
-						$("#is_virtual").val(0);
-					}
-				});
-			});
-		</script>
 	</td>
 </tr>
 <tr>
@@ -1040,12 +797,3 @@ var accessories = new Array();
 					toggleVirtualProduct(getE('is_virtual_good'));
 					unitPriceWithTax('unit');
 			</script>
-
-
-<script type="text/javascript">
-	var iso = '{$iso_tiny_mce}';
-	var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
-	var ad = '{$ad}';
-</script>
-<script type="text/javascript" src="../js/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="../js/tinymce.inc.js"></script>
