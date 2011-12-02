@@ -64,7 +64,7 @@ class AdminCartsController extends AdminController
 				'callback' => 'getOrderTotalUsingTaxCalculationMethod',
 				'orderby' => false,
 				'search' => false,
-				'width' => 50,
+				'width' => 80,
 				'align' => 'right',
 				'prefix' => '<b>',
 				'suffix' => '</b>',
@@ -72,14 +72,14 @@ class AdminCartsController extends AdminController
 			),
 			'carrier' => array(
 				'title' => $this->l('Carrier'),
-				'width' => 25,
+				'width' => 50,
 				'align' => 'center',
 				'callback' => 'replaceZeroByShopName',
 				'filter_key' => 'ca!name'
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'width' => 90,
+				'width' => 120,
 				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'

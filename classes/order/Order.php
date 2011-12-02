@@ -604,6 +604,19 @@ class OrderCore extends ObjectModel
 		return $resultArray;
 	}
 
+	public static function getIdOrderProduct($id_customer, $id_product)
+	{
+		return (int)Db::getInstance()->getValue('
+			SELECT o.id_order
+			FROM '._DB_PREFIX_.'orders o
+			LEFT JOIN '._DB_PREFIX_.'order_detail od
+				ON o.id_order = od.id_order
+			WHERE o.id_customer = '.(int)$id_customer.'
+				AND od.product_id = '.(int)$id_product.'
+			ORDER BY o.date_add DESC
+		');
+	}
+
 	protected function setProductCustomizedDatas(&$product, $customized_datas)
 	{
 		$product['customizedDatas'] = null;
