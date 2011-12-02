@@ -1,0 +1,26 @@
+/* Block editorial */
+.editorial_block { margin-bottom: 2em }
+.editorial_block .rte { background: transparent none repeat scroll 0 0 }
+.editorial_block h1 {
+	margin:40px 0 10px 0;
+	padding: 0;
+	background: none;
+}
+.editorial_block h2 {
+	padding:0 0 10px 0;
+	font-size: 12px;
+	line-height: 1.2em;
+	color: #666;
+	text-transform: none;
+	background: none;
+}
+#editorial_block_center p { padding-left: 0 }
+#editorial_block_center .rte p {color:#666 }
+
+#editorial_block_center p#editorial_image_legend {
+   margin: 0 0 10px;
+   padding:0;
+	color: #666;
+   font-size: 10px;
+}
+

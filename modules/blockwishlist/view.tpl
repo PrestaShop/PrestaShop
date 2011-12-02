@@ -87,11 +87,10 @@
 		</li>
 	</div>
 	</ul>
-		<div class="clear">&nbsp;</div>
 	{/foreach}
 	<p class="clear" />
 </div>
 {else}
-	{l s='No products' mod='blockwishlist'}
+	<p class="warning">{l s='No products' mod='blockwishlist'}</p>
 {/if}
 </div>

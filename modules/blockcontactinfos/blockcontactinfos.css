@@ -1,0 +1,10 @@
+#block_contact_infos {padding:15px 10px;}
+#block_contact_infos li {
+	padding:0;
+	line-height: 20px;
+}
+#block_contact_infos li  strong {
+	font-weight:normal;
+	font-size:13px;
+}
+#block_contact_infos li  pre {font: 11px/20px Arial,Verdana,sans-serif;}

@@ -1,0 +1,91 @@
+div.addresses {
+   position:relative;
+   padding:15px;
+   border:1px solid #ccc;
+	font-size:12px;
+   background:#f8f8f8
+}
+
+ul.address {
+   list-style-type:none;
+   float:left;
+   position:relative;
+   width:345px !important
+}
+#address_delivery {margin-right:35px;}
+#address_invoice {margin-right:0}
+#delivery_address {margin-right:65px;}
+
+ul.address li {
+	padding:0 15px;
+	font-weight:bold;
+	line-height:18px;
+	text-transform:uppercase
+}
+
+ul.address li.address_title {
+   height: 29px;
+   font-weight: bold;
+   line-height:29px;
+   color:#fff;
+   background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+}
+
+ul.address li.address_firstname,
+ul.address li.address_company {
+	margin-top:8px
+}
+
+ul.address  li.address_update {
+	margin-top:20px
+}
+ul.address  li.address_update,
+ul.address li.address_delete {
+	font-size:11px;
+   text-transform:none
+}
+
+.address_add {
+   padding:20px 0
+}
+
+.address_delivery select {
+	border:1px solid #ccc;
+	width:200px
+}
+
+
+/* PAGE ADRESSES ******************************************************************************* */
+.addresses ul.address {
+   list-style-type:none;
+   float:left;
+   position:relative;
+	margin:30px 30px 0 0;
+   width:345px !important
+}
+.addresses ul.address.alternate_item,
+.addresses ul.address.last_item {margin-right:0}
+.addresses ul.address li {
+	padding:0 15px;
+	font-weight:bold;
+	line-height:18px;
+	text-transform:uppercase
+}
+.addresses ul.address .address_title {
+	margin-bottom:5px;
+	height: 29px;
+   font-weight: bold;
+   line-height:29px;
+   color:#fff;
+   background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+}
+.addresses ul.address .address_update {margin-top:20px}
+.addresses ul.address .address_update,
+.addresses ul.address .address_delete {
+	font-size:11px;
+   text-transform:none
+}
+
+
+
+

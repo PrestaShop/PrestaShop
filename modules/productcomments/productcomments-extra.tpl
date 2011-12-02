@@ -75,7 +75,26 @@
 			$.ajax({
 				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
 				post: "POST",
-				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},{/literal}{literal}
+				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
+				dataType: "json",
+				success: function(result){
+					$.fancybox.close();
+	 		 	}
+			});
+		});
+		
+		$('#submitNewMessage').click(function(){
+			var datas = [];
+			$('#fancybox-content').find('input, textarea, select').each(function(index){
+				var o = {}
+				o.key = $(this).attr('name');
+				o.value = $(this).val();
+				datas.push(o);
+			});
+			$.ajax({
+				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				post: "POST",
+				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
 				dataType: "json",
 				success: function(result){
 					$.fancybox.close();
@@ -123,22 +142,22 @@
 				
 				<div class="new_comment_form_content">
 					<p class="intro_form">{l s='Write your review' mod='productcomments'}</p>
-				{if $criterions|@count > 0}
-					<div class="grade_content clearfix">
-					{section loop=$criterions name=i start=0 step=1}
-						<span>
-							<input type="hidden" name="id_product_comment_criterion_{$smarty.section.i.iteration}" value="{$criterions[i].id_product_comment_criterion|intval}" />
-							{$criterions[i].name|escape:'html':'UTF-8'}:&nbsp;
-						</span>
-						<div class="star_content">
-							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" id="{$smarty.section.i.iteration}_grade" value="1" />
-							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="2" />
-							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="3" checked="checked" />
-							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="4" />
-							<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="5" />
+					{if $criterions|@count > 0}
+						<div class="grade_content clearfix">
+						{section loop=$criterions name=i start=0 step=1}
+							<span>
+								<input type="hidden" name="id_product_comment_criterion_{$smarty.section.i.iteration}" value="{$criterions[i].id_product_comment_criterion|intval}" />
+								{$criterions[i].name|escape:'html':'UTF-8'}:&nbsp;
+							</span>
+							<div class="star_content">
+								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" id="{$smarty.section.i.iteration}_grade" value="1" />
+								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="2" />
+								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="3" checked="checked" />
+								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="4" />
+								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="5" />
+							</div>
+						{/section}
 						</div>
-					{/section}
-					</div>
 					{/if}
 					<div class="form_contenair">
 						<p class="text">

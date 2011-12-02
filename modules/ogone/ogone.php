@@ -67,7 +67,7 @@ class Ogone extends PaymentModule
 			Configuration::updateValue('OGONE_SHA_OUT', Tools::getValue('OGONE_SHA_OUT'));
 			Configuration::updateValue('OGONE_MODE', (int)Tools::getValue('OGONE_MODE'));
 			$dataSync = (($pspid = Configuration::get('OGONE_PSPID'))
-				? '<img src="http://api.prestashop.com/modules/ogone.png?pspid='.urlencode($pspid).'&mode='.(int)Tools::getValue('OGONE_MODE').'" style="float:right" />'
+				? '<img src="http://www.prestashop.com/modules/ogone.png?pspid='.urlencode($pspid).'&mode='.(int)Tools::getValue('OGONE_MODE').'" style="float:right" />'
 				: ''
 			);
 			echo $this->displayConfirmation($this->l('Configuration updated').$dataSync);

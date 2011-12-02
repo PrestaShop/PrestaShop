@@ -1,0 +1,14 @@
+/* Block RSS */
+#rss_block_left p {
+	margin:0;
+	padding:10px;
+}
+
+#rss_block_left li {border-bottom:1px dotted #ccc}
+#rss_block_left li.last {	border:none;}
+	#rss_block_left li a {
+		display:block;
+		padding:7px 11px 5px 22px;
+		color:#333;
+		background:url(img/arrow_right_2.png) no-repeat 10px 10px transparent
+	}

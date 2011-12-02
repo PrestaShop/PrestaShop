@@ -194,7 +194,7 @@ class Fianetfraud extends Module
 		if (!$error)
 		{
 			$dataSync = ((($site_id = Configuration::get('SAC_SITEID')) AND Configuration::get('SAC_PRODUCTION'))
-				? '<img src="http://api.prestashop.com/modules/fianetfraud.png?site_id='.urlencode($site_id).'" style="float:right" />'
+				? '<img src="http://www.prestashop.com/modules/fianetfraud.png?site_id='.urlencode($site_id).'" style="float:right" />'
 				: ''
 			);
 			$this->_html .= '<div class="conf confirm">'.$this->l('Settings are updated').$dataSync.'</div>';

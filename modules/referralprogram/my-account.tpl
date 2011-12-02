@@ -19,11 +19,11 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- MODULE ReferralProgram -->
-<li><a href="{$base_dir_ssl}modules/referralprogram/referralprogram-program.php" title="{l s='Referral program' mod='referralprogram'}"><img src="{$module_template_dir}referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" /></a><a href="{$base_dir_ssl}modules/referralprogram/referralprogram-program.php" title="{l s='Referral program' mod='referralprogram'}">{l s='Referral program' mod='referralprogram'}</a></li>
+<li class="referralprogram"><a href="{$base_dir_ssl}modules/referralprogram/referralprogram-program.php" title="{l s='Referral program' mod='referralprogram'}"><img src="{$module_template_dir}images/referralprogram.gif" alt="{l s='Referral program' mod='referralprogram'}" class="icon" /> {l s='Referral program' mod='referralprogram'}</a></li>
 <!-- END : MODULE ReferralProgram -->

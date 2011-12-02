@@ -24,4 +24,4 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li><a href="{$base_dir_ssl}modules/favoriteproducts/favoriteproducts-account.php" title="{l s='My favorite products' mod='favoriteproducts'}">{l s='My favorite products' mod='favoriteproducts'}</a></li>
+<li class="favoriteproducts"><a href="{$base_dir_ssl}modules/favoriteproducts/favoriteproducts-account.php" title="{l s='My favorite products' mod='favoriteproducts'}">{l s='My favorite products' mod='favoriteproducts'}</a></li>

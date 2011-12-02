@@ -56,5 +56,5 @@
 	<p class="required">
 		<input type="checkbox" value="1" id="customer_privacy" name="customer_privacy" style="float:left;margin: 15px;" />				
 	</p>
-	<label for="customer_privacy" style="float:left;width:80%;text-align:left;cursor:pointer">{$privacy_message}</label>		
+	<label for="customer_privacy">{$privacy_message}</label>		
 </fieldset>

@@ -57,22 +57,183 @@ INSERT INTO `PREFIX_module` (`id_module`, `name`, `active`) VALUES (1, 'homefeat
 (34, 'graphvisifire', 1),(35, 'graphxmlswfcharts', 1),(36, 'graphgooglechart', 1),(37, 'graphartichow', 1),(39, 'gridhtml', 1),(40, 'statsbestcustomers', 1),
 (41, 'statsorigin', 1),(42, 'pagesnotfound', 1),(43, 'sekeywords', 1),(44, 'statsproduct', 1),(45, 'statsbestproducts', 1),(46, 'statsbestcategories', 1),
 (47, 'statsbestvouchers', 1),(48, 'statsbestsuppliers', 1),(49, 'statscarrier', 1),(50, 'statsnewsletter', 1),(51, 'statssearch', 1),(52, 'statscheckup', 1),(53, 'statsstock', 1),
-(54, 'blockstore', 1),(55, 'statsforecast', 1);
+(54, 'blockstore', 1),(55, 'statsforecast', 1), 
+/* new themes : modules to add */
+(56, 'blocktopmenu', 1),
+(57, 'blocksharefb', 1),
+(58, 'blocksocial', 1),
+(59, 'blockcontactinfos', 1),
+(60, 'blockcontact', 1),
+(61, 'blockmyaccountfooter', 1),
+(62, 'blockreinsurance', 1),
+(63, 'blockcustomerprivacy', 1),
+(64, 'favoriteproducts', 1),
+
+(65, 'blocknewsletter', 1),
+(66, 'blocksupplier', 1),
+(67, 'feeder', 1);
 
 INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 1, `id_module`, 1, 1 FROM `PREFIX_module`);
 
 INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module`);
 
-INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
-	('myAccountBlock', 'My account block', 'Display extra informations inside the "my account" block', 1);
 
-INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES (3, 1, 1),(6, 1, 2),(4, 1, 3),(4, 4, 3),(8, 2, 1),(3, 4, 1),(6, 4, 2),(9, 6, 1),(16, 6, 2),(8, 6, 3),
-(20, 6, 4),(12, 6, 5),(54, 6, 6),(15, 7, 1),(21, 7, 2),(10, 7, 3),(24, 7, 4),(14, 7, 5),(12, 7, 6),(7, 7, 7),(17, 7, 8),(5, 8, 1),(1, 8, 2),(11, 14, 1),(13, 14, 2),(18, 14, 3),
-(19, 14, 4),(22, 14, 5),(8, 19, 1),(12, 21, 1),(25, 11, 1),(25, 21, 2),(26, 32, 1),(27, 32, 2),(28, 32, 3),(30, 32, 4),(31, 32, 5),(32, 32, 6),(33, 32, 7),(34, 33, 1),
-(35, 33, 2),(36, 33, 3),(37, 33, 4),(39, 37, 1),(40, 32, 8),(41, 32, 9),(42, 32, 10),(43, 32, 11),(42, 14, 6),(43, 14, 7),(44, 32, 12),(45, 32, 13),(46, 32, 15),
-(47, 32, 14),(48, 32, 16),(49, 32, 17),(55, 32, 22),(50, 32, 18),(51, 32, 19),(51, 45, 1),(25, 25, 1),(41, 20, 2),(52, 32, 20),(53, 32, 21),(17, 9, 2),(18, 9, 3),(24, 9, 4),(9, 9, 5),
-(15, 9, 6),(5, 9, 7),(8, 9, 8),(10, 9, 9),(20, 9, 10),(11, 9, 11),(16, 9, 12),(22, 9, 13),(13, 9, 14),(14, 9, 15),(12, 9, 16),(7, 9, 17),(21, 9, 18),(10, 60, 1),(10, 61, 1),(10, 62, 1),
-(54, 9, 19),(10,66,1),(19,9,20);
+/* 
+ * rightcolumn=6, leftcolumn=7, home=8, header=9, top=14, 
+ */
+ 
+
+ 
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES 
+/* homefeatured */
+(1, 8, 2),
+(1, 9, 23),
+/* cheque */
+(3, 1, 1),
+(3, 4, 1),
+/* moneybooker */
+(4, 1, 3),
+(4, 4, 3),
+/* editorial */
+(5, 8, 1),
+(5, 9, 7),
+/* bankwire */
+(6, 1, 2),
+(6, 4, 2),
+/* blockadvertising */
+(7, 7, 7),
+(7, 9, 17),
+
+
+/* blockcart */
+(9, 9, 5),
+(9, 14, 7),
+
+/* blockcategories */
+(10, 7, 3),
+(10, 9, 9),
+(10, 21, 2),
+(10, 60, 1),
+(10, 61, 1),
+(10, 62, 1),
+(10, 66, 1),
+/* blockcurrencies */
+(11, 9, 11),
+(11, 14, 2),
+
+/* blockcms */
+(12, 6, 5),
+(12, 7, 6),
+(12, 9, 16),
+(12, 21, 4),
+/* blocklanguages */
+(13, 9, 14),
+(13, 14, 1),
+/* blockmanufacturer */
+(14, 7, 5),
+(14, 9, 15),
+/* blockmyaccount */
+(15, 9, 6),
+(15, 21, 3),
+/* blocknewproducts */
+(16, 6, 2),
+(16, 9, 12),
+/* blockpaymentlogo */
+(17, 7, 8),
+(17, 9, 2),
+/* blockpermanentlinks */
+(18, 9, 3),
+(18, 14, 3),
+/* blocksearch */
+(19, 9 ,20),
+(19, 14, 4),
+/* blockspecials */
+(20, 6, 4),
+(20, 9, 10),
+/* blocktags */
+(21, 7, 2),
+(21, 9, 18),
+/* blockuserinfo */
+(22, 9, 13),
+(22, 14, 5),
+/* blockviewed */
+(24, 7, 4),
+(24, 9, 4),
+/* statsdata */
+(25, 11, 1),
+(25, 21, 7),
+(25, 25, 1),
+/* stats (bo) */
+(26, 32, 1),
+(27, 32, 2),
+(28, 32, 3),
+(30, 32, 4),
+(31, 32, 5),
+(32, 32, 6),
+(33, 32, 7),
+/* graphs engine */
+(34, 33, 1),
+(35, 33, 2),
+(36, 33, 3),
+(37, 33, 4),
+/* gridhtml (bo) */
+(39, 37, 1),
+/* statsbestcustomer  (bo)*/
+(40, 32, 8),
+/* statsorigin */
+(41, 20, 2),
+(41, 32, 9),
+/* pagesnotfound */
+(42, 14, 8),
+(42, 32, 10),
+/* sekeywords */
+(43, 14, 7),
+(43, 32, 11),
+/* statsproduct */
+(44, 32, 12),
+(45, 32, 13),
+(46, 32, 15),
+(47, 32, 14),
+(48, 32, 16),
+(49, 32, 17),
+(50, 32, 18),
+(51, 32, 19),
+/* statsearch */
+(51, 45, 1),
+/* statscheckup (bo) */
+(52, 32, 20),
+/* statstock(bo) */
+(53, 32, 21),
+/* blockstore */
+(54, 6, 6),
+(54, 9, 19),
+/* statsforecast */
+(55, 32, 22),
+/* blocktopmenu */
+(56, 9, 22),
+(56, 14, 6),
+/* blocksharefb */
+(57, 21, 7),
+/* blocksocial */
+(58, 9, 5),
+(58, 21, 5),
+/* blockcontactinfos */
+(59, 9, 21),
+(59, 21, 6),
+/* blockcontact */
+(60, 6, 7),
+/* blockreinsurance */
+(62, 21, 1),
+/* favoriteproducts */
+(64, 9, 22),
+(64, 25, 1),
+(64, 40, 1),
+(64, 96, 1),
+/* block */
+(65, 6, 8),
+/* blocksupplier */
+(66, 7, 9),
+(67, 7, 10);
 
 CREATE TABLE `PREFIX_pagenotfound` (
   `id_pagenotfound` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1380,4 +1541,102 @@ INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_pr
 
 INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `date_add`) VALUES
 (1, 2, NOW());
+
+
+/* new thme, need to be checked */
+
+REPLACE INTO `ps_configuration` (id_group_shop, id_shop, name, value) VALUES
+	(NULL, NULL, 'PS_CONDITIONS','1'),
+	(NULL, NULL, 'PS_PRODUCTS_PER_PAGE','10'),
+	(NULL, NULL, 'PS_PRODUCTS_ORDER_WAY','0'),
+	(NULL, NULL, 'PS_PRODUCTS_ORDER_BY','4'),
+	(NULL, NULL, 'PS_DISPLAY_QTIES','1'),
+	(NULL, NULL, 'PS_NB_DAYS_NEW_PRODUCT','20'),
+	(NULL, NULL, 'PS_BLOCK_CART_AJAX','1'),
+	(NULL, NULL, 'PS_PRODUCT_PICTURE_MAX_SIZE','131072'),
+	(NULL, NULL, 'PS_PRODUCT_PICTURE_WIDTH','64'),
+	(NULL, NULL, 'PS_PRODUCT_PICTURE_HEIGHT','64'),
+	(NULL, NULL, 'PS_SEARCH_MINWORDLEN','3'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_PNAME','6'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_REF','10'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_SHORTDESC','1'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_DESC','1'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_CNAME','3'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_MNAME','3'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_TAG','4'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_ATTRIBUTE','2'),
+	(NULL, NULL, 'PS_SEARCH_WEIGHT_FEATURE','2'),
+	(NULL, NULL, 'PS_SEARCH_AJAX','1'),
+	(NULL, NULL, 'PS_DISPLAY_JQZOOM','0'),
+	(NULL, NULL, 'PS_BLOCK_BESTSELLERS_DISPLAY','0'),
+	(NULL, NULL, 'PS_BLOCK_NEWPRODUCTS_DISPLAY','0'),
+	(NULL, NULL, 'PS_BLOCK_SPECIALS_DISPLAY','0'),
+	(NULL, NULL, 'PS_TAX_DISPLAY','0'),
+	(NULL, NULL, 'PS_STORES_DISPLAY_CMS','1'),
+	(NULL, NULL, 'PS_STORES_DISPLAY_FOOTER','1'),
+	(NULL, NULL, 'SHOP_LOGO_WIDTH','224'),
+	(NULL, NULL, 'SHOP_LOGO_HEIGHT','73'),
+	(NULL, NULL, 'EDITORIAL_IMAGE_WIDTH','530'),
+	(NULL, NULL, 'EDITORIAL_IMAGE_HEIGHT','228'),
+	(NULL, NULL, 'PS_DISPLAY_SUPPLIERS','1'),
+	(NULL, NULL, 'PS_LEGACY_IMAGES','1'),
+	(NULL, NULL, 'PS_IMAGE_QUALITY','jpg'),
+	(NULL, NULL, 'PS_PNG_QUALITY','7'),
+	(NULL, NULL, 'PS_JPEG_QUALITY','90'),
+	(NULL, NULL, 'PRODUCTS_VIEWED_NBR','2'),
+	(NULL, NULL, 'BLOCK_CATEG_DHTML','1'),
+	(NULL, NULL, 'BLOCK_CATEG_MAX_DEPTH','3'),
+	(NULL, NULL, 'MANUFACTURER_DISPLAY_FORM','1'),
+	(NULL, NULL, 'MANUFACTURER_DISPLAY_TEXT','1'),
+	(NULL, NULL, 'MANUFACTURER_DISPLAY_TEXT_NB','5'),
+	(NULL, NULL, 'NEW_PRODUCTS_NBR','5'),
+	(NULL, NULL, 'BLOCKTAGS_NBR','10'),
+	(NULL, NULL, 'FOOTER_CMS','0_3|0_4'),
+	(NULL, NULL, 'FOOTER_BLOCK_ACTIVATION','0_3|0_4'),
+	(NULL, NULL, 'FOOTER_POWEREDBY','1'),
+	(NULL, NULL, 'BLOCKADVERT_LINK','0'),
+	(NULL, NULL, 'BLOCKSTORE_IMG','store.jpg'),
+	(NULL, NULL, 'BLOCKADVERT_IMG_EXT','jpg'),
+	(NULL, NULL, 'MOD_BLOCKTOPMENU_ITEMS','CAT2,CAT3,CAT4'),
+	(NULL, NULL, 'MOD_BLOCKTOPMENU_SEARCH',''),
+	(NULL, NULL, 'blocksocial_facebook','www.facebook.com/prestashop'),
+	(NULL, NULL, 'blocksocial_twitter','www.twitter.com/prestashop'),
+	(NULL, NULL, 'blocksocial_rss','RSS'),
+	(NULL, NULL, 'blockcontactinfos_company','Prestashop'),
+	(NULL, NULL, 'blockcontactinfos_address','41, boulevard des capucines, 75002 Paris, France'),
+	(NULL, NULL, 'blockcontactinfos_phone','+33 (0)1.40.18.30.04'),
+	(NULL, NULL, 'blockcontactinfos_email','pub@prestashop.com'),
+	(NULL, NULL, 'blockcontact_telnumber','+33 (0)1.40.18.30.04'),
+	(NULL, NULL, 'blockcontact_email','pub@prestashop.com'),
+	(NULL, NULL, 'SUPPLIER_DISPLAY_TEXT','1'),
+	(NULL, NULL, 'SUPPLIER_DISPLAY_TEXT_NB','5'),
+	(NULL, NULL, 'SUPPLIER_DISPLAY_FORM','1'),
+	(NULL, NULL, 'BLOCK_CATEG_NBR_COLUMN_FOOTER','1'),
+	(NULL, NULL, 'UPGRADER_BACKUPDB_FILENAME',''),
+	(NULL, NULL, 'UPGRADER_BACKUPFILES_FILENAME',''),
+	(NULL, NULL, 'blockreinsurance_nbblocks','5');
+
+
+CREATE TABLE IF NOT EXISTS `PREFIX_reinsurance` (
+	`id_reinsurance` INT UNSIGNED NOT NULL,
+	`filename` VARCHAR(100) NOT NULL,
+	PRIMARY KEY (`id_reinsurance`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_reinsurance_lang` (
+	`id_reinsurance` INT UNSIGNED NOT NULL,
+	`id_lang` INT UNSIGNED NOT NULL,
+	`text` VARCHAR(300) NOT NULL,
+	PRIMARY KEY (`id_reinsurance`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_favorite_product` (
+	`id_favorite_product` int(10) unsigned NOT NULL auto_increment,
+	`id_product` int(10) unsigned NOT NULL,
+	`id_customer` int(10) unsigned NOT NULL,
+	`id_shop` int(10) unsigned NOT NULL,
+	`date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+	PRIMARY KEY (`id_favorite_product`))
+ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop
+* 2007-2011 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,26 +19,46 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- Block currencies module -->
+<script type="text/javascript">
+$(document).ready(function () {
+	$("#setCurrency").mouseover(function(){
+		$(this).addClass("countries_hover");
+		$(".currencies_ul").addClass("currencies_ul_hover");
+	});
+	$("#setCurrency").mouseout(function(){
+		$(this).removeClass("countries_hover");
+		$(".currencies_ul").removeClass("currencies_ul_hover");
+	});
+
+	$('ul#first-currencies li:not(.selected)').css('opacity', 0.3);
+	$('ul#first-currencies li:not(.selected)').hover(function(){
+		$(this).css('opacity', 1);
+	}, function(){
+		$(this).css('opacity', 0.3);
+	});
+});
+</script>
+
 <div id="currencies_block_top">
 	<form id="setCurrency" action="{$request_uri}" method="post">
-		<ul>
+		<p>
+			<input type="hidden" name="id_currency" id="id_currency" value=""/>
+			<input type="hidden" name="SubmitCurrency" value="" />
+			{l s='Currency' mod='blockcurrencies'} : {$blockcurrencies_sign}
+		</p>
+		<ul id="first-currencies" class="currencies_ul">
 			{foreach from=$currencies key=k item=f_currency}
 				<li {if $cookie->id_currency == $f_currency.id_currency}class="selected"{/if}>
 					<a href="javascript:setCurrency({$f_currency.id_currency});" title="{$f_currency.name}">{$f_currency.sign}</a>
 				</li>
 			{/foreach}
 		</ul>
-		<p>
-				<input type="hidden" name="id_currency" id="id_currency" value=""/>
-				<input type="hidden" name="SubmitCurrency" value="" />
-			{l s='Currency' mod='blockcurrencies'}
-		</p>
 	</form>
 </div>
 <!-- /Block currencies module -->

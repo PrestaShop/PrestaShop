@@ -37,7 +37,7 @@ class BlockSpecials extends Module
     {
         $this->name = 'blockspecials';
         $this->tab = 'pricing_promotion';
-        $this->version = '0.8';
+        $this->version = 0.8;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -90,8 +90,8 @@ class BlockSpecials extends Module
 		if (!$special = Product::getRandomSpecial((int)$params['cookie']->id_lang) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
 			return;
 
-		$this->templateAssign(array(
-			'special' => $special,
+		$this->context->smarty->assign(array(
+			'blockspecials_special' => $special,
 			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
 			'mediumSize' => Image::getSize('medium'),
 		));

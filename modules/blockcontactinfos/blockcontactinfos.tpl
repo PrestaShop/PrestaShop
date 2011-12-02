@@ -28,10 +28,10 @@
 <div id="block_contact_infos">
 	<h4>{l s='Contact us' mod='blockcontactinfos'}</h4>
 	<ul>
-		{if $company != ''}<li><strong>{$company}</strong></li>{/if}
-		{if $address != ''}<li><pre>{$address}</pre></li>{/if}
-		{if $phone != ''}<li>{l s='Tel:'} {$phone}</li>{/if}
-		{if $email != ''}<li>{l s='Email:'} <a href="mailto:{$email}">{$email}</a></li>{/if}
+		{if $blockcontactinfos_company != ''}<li><strong>{$blockcontactinfos_company}</strong></li>{/if}
+		{if $blockcontactinfos_address != ''}<li><pre>{$blockcontactinfos_address}</pre></li>{/if}
+		{if $blockcontactinfos_phone != ''}<li>{l s='Tel:'} {$blockcontactinfos_phone}</li>{/if}
+		{if $blockcontactinfos_email != ''}<li>{l s='Email:'} {mailto address=$blockcontactinfos_email encode="hex"}</li>{/if}
 	</ul>
 </div>
 <!-- /MODULE Block contact infos -->

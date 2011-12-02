@@ -173,7 +173,8 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
 (92, 'actionAttributePostProcess', 'On post-process in admin feature value', 'On post-process in admin feature value', 0, 0),
 (93, 'actionAttributeDelete', 'On deleting attribute feature value', 'On deleting attribute feature value', 0, 0),
 (94, 'actionAttributeSave', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0),
-(95, 'actionTaxManager', 'Tax Manager Factory', '' , 0, 0);
+(95, 'actionTaxManager', 'Tax Manager Factory', '' , 0, 0),
+(96, 'myAccountBlock', 'My account block', 'Display extra informations inside the "my account" block', 1, 0);
 
 INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES
 (1, 'PS_LANG_DEFAULT', '1', NOW(), NOW()),
@@ -904,11 +905,11 @@ INSERT INTO `PREFIX_currency_shop` (`id_currency`, `id_shop`) VALUES (1,1), (2,1
 
 INSERT INTO `PREFIX_image_type` (`id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`, `stores`) VALUES
 (1, 'small', 45, 45, 1, 1, 1, 1, 0, 0),
-(2, 'medium', 80, 80, 1, 1, 1, 1, 0, 1),
-(3, 'large', 300, 300, 1, 1, 1, 1, 0, 0),
+(2, 'medium', 58, 58, 1, 1, 1, 1, 0, 1),
+(3, 'large', 264, 264, 1, 1, 1, 1, 0, 0),
 (4, 'thickbox', 600, 600, 1, 0, 0, 0, 0, 0),
 (5, 'category', 500, 150, 0, 1, 0, 0, 0, 0),
-(6, 'home', 129, 129, 1, 0, 0, 0, 0, 0),
+(6, 'home', 124, 124, 1, 0, 0, 0, 0, 0),
 (7, 'large_scene', 556, 200, 0, 0, 0, 0, 1, 0),
 (8, 'thumb_scene', 161, 58, 0, 0, 0, 0, 1, 0);
 
@@ -1523,7 +1524,7 @@ phone' where `id_country`=21;
 INSERT INTO `PREFIX_group_shop` (`id_group_shop`, `name`, `active`, `deleted`, `share_stock`, `share_customer`, `share_order`) VALUES (1, 'Default', 1, 0, 0, 0, 0);
 INSERT INTO `PREFIX_shop` (`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`) VALUES (1, 1, 'Default', 1, 1, 1, 0);
 
-INSERT INTO `PREFIX_theme` (`id_theme`, `name`) VALUES (1, 'prestashop');
+INSERT INTO `PREFIX_theme` (`id_theme`, `name`) VALUES (1, 'default');
 
 UPDATE `PREFIX_address_format` set `format`= 'firstname lastname
 company

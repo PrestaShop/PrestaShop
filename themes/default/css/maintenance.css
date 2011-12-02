@@ -1,0 +1,12 @@
+#maintenance {
+	margin:0 auto;
+	width:940px;
+	font:normal 30px Arial, Verdana, sans-serif;
+	color:#333;
+}
+#maintenance #message {
+	margin:0 20px;
+	padding:50px 310px 0 0;
+	height:360px;
+	background:url(../img/bg_maintenance.png) no-repeat 100% 0 #fff
+}
