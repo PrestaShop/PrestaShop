@@ -591,6 +591,7 @@ class HelperListCore extends Helper
 			'shop_link_type' => $this->shopLinkType,
 			'has_actions' => !empty($this->actions),
 			'has_bulk_actions' => !empty($this->bulk_actions),
+			'bulk_actions' => $this->bulk_actions,
 			'table_id' => isset($table_id) ? $table_id : null,
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,

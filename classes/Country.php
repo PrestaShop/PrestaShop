@@ -336,4 +336,18 @@ class CountryCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'country`
 			WHERE `id_country` = '.(int)$id_country);
 	}
+
+	/**
+	 * @param $ids_countries
+	 * @param $id_zone
+	 * @return bool
+	 */
+	public function affectZoneToSelection($ids_countries, $id_zone)
+	{
+		// cast every array values to int (security)
+		$ids_countries = array_map('intval', $ids_countries);
+		return Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'country` SET `id_zone` = '.(int)$id_zone.' WHERE `id_country` IN ('.implode(',', $ids_countries).')
+		');
+	}
 }
