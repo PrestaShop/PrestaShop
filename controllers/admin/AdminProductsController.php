@@ -1994,7 +1994,7 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 					$suppliers_to_associate[] = $supplier['id_supplier'];
 
 			// Delete already associated suppliers if needed
-			foreach ($associated_suppliers as $key => &$associated_supplier)
+			foreach ($associated_suppliers as $key => $associated_supplier)
 				if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate))
 				{
 					$associated_supplier->delete();
@@ -3266,7 +3266,7 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 				$supplier['is_selected'] = false;
 				$supplier['is_default'] = false;
 
-				foreach ($associated_suppliers as &$associated_supplier)
+				foreach ($associated_suppliers as $associated_supplier)
 					if ($associated_supplier->id_supplier == $supplier['id_supplier'])
 					{
 						$associated_supplier->name = $supplier['name'];

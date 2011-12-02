@@ -166,7 +166,9 @@ class ProductSupplierCore extends ObjectModel
 	{
 		$suppliers = new Collection('ProductSupplier');
 		$suppliers->where('a.id_product = '.(int)$id_product);
-		$suppliers->groupBy('a.id_supplier');
+
+		if ($group_by_supplier)
+			$suppliers->groupBy('a.id_supplier');
 
 		return $suppliers;
 	}

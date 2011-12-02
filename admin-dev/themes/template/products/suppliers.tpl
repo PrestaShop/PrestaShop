@@ -49,7 +49,7 @@
 
 				<thead>
 					<tr>
-						<th>{l s='product name'}</th>
+						<th>{l s='Product name'}</th>
 						<th width="150">{l s='Supplier reference'}</th>
 						<th width="150">{l s='Unit price tax excluded'}</th>
 						<th width="150">{l s='Unit price currency'}</th>
