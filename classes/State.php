@@ -200,5 +200,19 @@ class StateCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'state`
 		WHERE `id_state` = '.(int)($id_state));
 	}
+
+		/**
+		 * @param $ids_states
+		 * @param $id_zone
+		 * @return bool
+		 */
+		public function affectZoneToSelection($ids_states, $id_zone)
+		{
+			// cast every array values to int (security)
+			$ids_states = array_map('intval', $ids_states);
+			return Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int)$id_zone.' WHERE `id_state` IN ('.implode(',', $ids_states).')
+			');
+		}
 }
 

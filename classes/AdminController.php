@@ -263,6 +263,7 @@ class AdminControllerCore extends Controller
 			25 => $this->l('Images successfully moved'),
 			26 => $this->l('Cover selection saved'),
 			27 => $this->l('Image shop association modified'),
+			28 => $this->l('Zone affected to the selection successfully'),
 		);
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
 		if (!$this->_defaultOrderBy) $this->_defaultOrderBy = $this->identifier;
@@ -324,6 +325,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Check rights to view the current tab
 	 *
+	 * @param bool $disable
 	 * @return boolean
 	 */
 	public function viewAccess($disable = false)
@@ -1808,6 +1810,12 @@ class AdminControllerCore extends Controller
 					$this->boxes = Tools::getValue($this->table.'Box');
 					break;
 				}
+				else if(Tools::isSubmit('submitBulk'))
+				{
+					$this->action = 'bulk'.Tools::getValue('select_submitBulk');
+					$this->boxes = Tools::getValue($this->table.'Box');
+					break;
+				}
 			}
 		else if (!empty($this->options) && empty($this->fieldsDisplay))
 			$this->display = 'options';
@@ -2520,6 +2528,23 @@ EOF;
 		}
 		else
 			$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+
+		return $result;
+	}
+
+	protected function processBulkaffectzone($token)
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$object = new $this->className();
+			$result = $object->affectZoneToSelection(Tools::getValue($this->table.'Box'), Tools::getValue('zone_to_affect'));
+
+			if ($result)
+				$this->redirect_after = self::$currentIndex.'&conf=28&token='.$token;
+			$this->_errors[] = Tools::displayError('An error occurred while affecting a zone to the selection.');
+		}
+		else
+			$this->_errors[] = Tools::displayError('You must select at least one element to affect a new zone.');
 
 		return $result;
 	}

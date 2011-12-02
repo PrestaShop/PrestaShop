@@ -996,3 +996,15 @@ if (Tools::isSubmit('ajaxUpdateTaxRule'))
 	die(Tools::jsonEncode($output));
 }
 
+if (Tools::isSubmit('getZones'))
+{
+	$zones = Zone::getZones();
+	$html = '<select id="zone_to_affect" name="zone_to_affect">';
+	foreach ($zones as $z)
+	{
+		$html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
+	}
+	$html .= '</select>';
+	$array = array('hasError' => false, 'errors' => '', 'data' => $html);
+	die(Tools::jsonEncode($html));
+}
