@@ -139,7 +139,6 @@ class AdminOrdersControllerCore extends AdminController
 			$this->addJS(_PS_JS_DIR_.'admin_order.js');
 			$this->addJS(_PS_JS_DIR_.'tools.js');
 			$this->addJqueryPlugin('autocomplete');
-			$this->addJqueryPlugin('scrollTo');
 		}
 	}
 

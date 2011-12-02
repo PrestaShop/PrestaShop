@@ -1946,4 +1946,20 @@ ul.connectedSortable li.module_list {
 	right:10px;
 }
 
+/* ScrollTop */
+div#scrollTop a{
+	display:none;
+	background:url('../img/admin/scroll_top.png');
+	width:80px;
+	height:80px;
+	position:fixed;
+	bottom:30px;
+	right:30px;
+	border-radius:10px;
+	opacity:0.2;
+}
+div#scrollTop a:hover{
+	opacity:0.8;
+}
+
 
