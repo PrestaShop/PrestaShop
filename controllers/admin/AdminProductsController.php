@@ -2648,17 +2648,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
 		$this->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 
-
 		$currency = $this->context->currency;
-
 		$data->assign('languages',$languages);
 		$this->object = $product;
 		$this->display = 'edit';
 		$content = '';
-
 		$has_attribute = $product->hasAttributes();
-		// @FIXME Stock, need to use StockManagerFactory
-		$qty = 0;
 		$cover = Product::getCover($product->id);
 		$this->_applyTaxToEcotax($product);
 
