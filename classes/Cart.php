@@ -321,7 +321,8 @@ class CartCore extends ObjectModel
 			$row['description'] = $row['name'];
 		}
 
-		$results = $this->getCartRule();
+		// TODO Clean the following line, this line generate bug because getCartRule method not exists
+		//$results = $this->getCartRule();
 
 		return $result;
 	}
@@ -825,7 +826,7 @@ class CartCore extends ObjectModel
 			/* Add product to the cart */
 			else
 			{
-				$sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0)
+				$sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 						FROM '._DB_PREFIX_.'product p
 						'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
 						WHERE p.id_product = '.$id_product;
