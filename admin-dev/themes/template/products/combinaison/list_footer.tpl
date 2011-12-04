@@ -19,10 +19,32 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 9197 $
+*  @version  Release: $Revision: 10634 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}" title="{$action}">
-	<img src="../img/admin/add_stock.png" alt="{$action}" />
-</a>
+
+{extends file="helper/list/list_footer.tpl"}
+
+{block name="after"}
+
+	<div class="hint clear" style="display:block">
+		<ul>
+			<li>{l s='The row in blue is the default combination.'}</li>
+			<li>{l s='A default combination must be designated for each product.'}</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript">
+		var impact = getE('attribute_price_impact');
+		var impact2 = getE('attribute_weight_impact');
+
+		var s_attr_group = $('#span_new_group');
+		var s_attr_name = $('#span_new_attr');
+		var s_impact = $('#span_impact');
+		var s_impact2 = $('#span_weight_impact');
+
+		init_elems();
+	</script>
+
+{/block}
