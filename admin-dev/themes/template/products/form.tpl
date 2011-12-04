@@ -23,17 +23,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="helper/form/form.tpl"}
-{block name="script"}</script>
-	<link href="../css/fileuploader.css" rel="stylesheet" type="text/css">
-	<script src="../js/fileuploader.js" type="text/javascript"></script>
-	<script src="../js/jquery/ui/jquery.ui.core.min.js" type="text/javascript"></script>
-	<script src="../js/jquery/ui/jquery.ui.widget.min.js" type="text/javascript"></script>
-	<script src="../js/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="../js/admin.js"></script>
-	<script type="text/javascript">
-{/block}
 
+{extends file="helper/form/form.tpl"}
 
 {block name="defaultForm"}
 <div>
