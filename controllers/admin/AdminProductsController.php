@@ -70,9 +70,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
-		$this->addRowAction('edit');
-		$this->addRowAction('duplicate');
-		$this->addRowAction('delete');
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->imageType = 'jpg';
@@ -172,24 +169,24 @@ class AdminProductsControllerCore extends AdminController
 		$_POST['weight'] = empty($_POST['weight']) ? '0' : str_replace(',', '.', $_POST['weight']);
 		if ($_POST['unit_price'] != null)
 		$object->unit_price = str_replace(',', '.', $_POST['unit_price']);
-	if (array_key_exists('ecotax', $_POST) && $_POST['ecotax'] != null)
-		$object->ecotax = str_replace(',', '.', $_POST['ecotax']);
-	$object->available_for_order = (int)Tools::isSubmit('available_for_order');
-	$object->show_price = $object->available_for_order ? 1 : (int)Tools::isSubmit('show_price');
-	$object->on_sale = Tools::isSubmit('on_sale');
-	$object->online_only = Tools::isSubmit('online_only');
-}
-
-public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
-{
-	$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
-	$orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
-	if ($orderByPriceFinal == 'price_final')
-	{
-		$orderBy = 'id_'.$this->table;
-		$orderWay = 'ASC';
+		if (array_key_exists('ecotax', $_POST) && $_POST['ecotax'] != null)
+			$object->ecotax = str_replace(',', '.', $_POST['ecotax']);
+		$object->available_for_order = (int)Tools::isSubmit('available_for_order');
+		$object->show_price = $object->available_for_order ? 1 : (int)Tools::isSubmit('show_price');
+		$object->on_sale = Tools::isSubmit('on_sale');
+		$object->online_only = Tools::isSubmit('online_only');
 	}
-	parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
+	
+	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
+	{
+		$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
+		$orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
+		if ($orderByPriceFinal == 'price_final')
+		{
+			$orderBy = 'id_'.$this->table;
+			$orderWay = 'ASC';
+		}
+		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $id_lang_shop);
 
 		/* update product quantity with attributes ...*/
 		$nb = count($this->_list);
@@ -650,41 +647,6 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 				}
 			}
 		}
-		else if (Tools::isSubmit('deleteProductAttribute'))
-		{
-			if (!Combination::isFeatureActive())
-				return;
-			if ($this->tabAccess['delete'] === '1')
-			{
-				if (($id_product = (int)(Tools::getValue('id_product'))) && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
-				{
-					$product->deleteAttributeCombinaison(Tools::getValue('id_product_attribute'));
-
-					$id_product_download = ProductDownload::getIdFromIdAttribute((int) $id_product, (int) Tools::getValue('id_product_attribute'));
-					if ($id_product_download)
-					{
-						$productDownload = new ProductDownload((int) $id_product_download);
-						$this->deleteDownloadProduct((int) $id_product_download);
-						$productDownload->deleteFile();
-					}
-					$product->checkDefaultAttributes();
-					$product->updateQuantityProductWithAttributeQuantity();
-					if (!$product->hasAttributes())
-					{
-						$product->cache_default_attribute = 0;
-						$product->update();
-					}
-					else
-						Product::updateDefaultAttribute($id_product);
-
-					$this->redirect_after = self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token);
-				}
-				else
-					$this->_errors[] = Tools::displayError('Cannot delete attribute');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
 		else if (Tools::isSubmit('deleteAllProductAttributes'))
 		{
 			if (!Combination::isFeatureActive())
@@ -707,19 +669,6 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-		else if (Tools::isSubmit('defaultProductAttribute'))
-		{
-			if (!Combination::isFeatureActive())
-				return;
-			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-			{
-				$product->deleteDefaultAttributes();
-				$product->setDefaultAttribute((int)(Tools::getValue('id_product_attribute')));
-				$this->redirect_after = self::$currentIndex.'&add'.$this->table.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&tabs=3&id_product='.$product->id.'&token='.($token ? $token : $this->token);
-			}
-			else
-				$this->_errors[] = Tools::displayError('Cannot make default attribute');
 		}
 
 		/* Product features management */
@@ -978,6 +927,96 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 		}
 		else
 			die(Tools::jsonEncode($result));
+	}
+
+	public function ajaxProcessDeleteProductAttribute()
+	{
+		if (!Combination::isFeatureActive())
+			return;
+
+		if ($this->tabAccess['delete'] === '1')
+		{
+			$id_product = (int)Tools::getValue('id_product');
+			$id_product_attribute = (int)Tools::getValue('id_product_attribute');
+			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
+			{
+				$product->deleteAttributeCombinaison($id_product_attribute);
+
+				$id_product_download = (int)ProductDownload::getIdFromIdAttribute($id_product, $id_product_attribute);
+				if ($id_product_download)
+				{
+					$productDownload = new ProductDownload($id_product_download);
+					$this->deleteDownloadProduct($id_product_download);
+					$productDownload->deleteFile();
+				}
+				$product->checkDefaultAttributes();
+				$product->updateQuantityProductWithAttributeQuantity();
+				if (!$product->hasAttributes())
+				{
+					$product->cache_default_attribute = 0;
+					$product->update();
+				}
+				else
+					Product::updateDefaultAttribute($id_product);
+
+				$json = array(
+					'status' => 'ok',
+					'message'=> $this->_conf[1]
+				);
+			}
+			else
+				$json = array(
+					'status' => 'error',
+					'message'=> $this->l('Cannot delete attribute')
+				);
+		}
+		else
+			$json = array(
+				'status' => 'error',
+				'message'=> $this->l('You do not have permission to delete here.')
+			);
+
+		die(Tools::jsonEncode($json));
+	}
+
+	public function ajaxProcessDefaultProductAttribute()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (!Combination::isFeatureActive())
+				return;
+	
+			if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+			{
+				$product->deleteDefaultAttributes();
+				$product->setDefaultAttribute((int)Tools::getValue('id_product_attribute'));
+				$json = array(
+					'status' => 'ok',
+					'message'=> $this->_conf[4]
+				);
+			}
+			else
+				$json = array(
+					'status' => 'error',
+					'message'=> $this->l('Cannot make default attribute')
+				);
+	
+			die(Tools::jsonEncode($json));
+		}
+	}
+
+	public function ajaxProcessEditProductAttribute()
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$id_product = (int)Tools::getValue('id_product');
+			$id_product_attribute = (int)Tools::getValue('id_product_attribute');
+			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
+			{
+				$combinaisons = $product->getAttributeCombinaisonsById($id_product_attribute, $this->context->language->id);
+				die(Tools::jsonEncode($combinaisons));
+			}
+		}
 	}
 
 	public function ajaxPreProcess()
@@ -1710,6 +1749,10 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 
 	public function renderList()
 	{
+		$this->addRowAction('edit');
+		$this->addRowAction('duplicate');
+		$this->addRowAction('delete');
+
 		if (!Tools::getValue('id_category'))
 			unset($this->fieldsDisplay['position']);
 		return parent::renderList();
@@ -1793,14 +1836,14 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 		if ($this->display == 'edit' || $this->display == 'add')
 			if ($product = $this->loadObject(true))
 			{
-				if ($this->tabAccess['delete'])
+				if ($this->tabAccess['delete']  && $this->display != 'add')
 					$this->toolbar_btn['delete'] = array(
 						'short' => 'Delete',
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct',
 						'desc' => $this->l('Delete this product'),
 						'confirm' => 1);
 
-				if ($this->tabAccess['add'])
+				if ($this->tabAccess['add'] && $this->display != 'add')
 					$this->toolbar_btn['duplicate'] = array(
 						'short' => 'Duplicate',
 						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
@@ -1818,7 +1861,7 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 						'class' => 'previewUrl'
 					);
 
-				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php'))
+				if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php') && $this->display != 'add')
 					$this->toolbar_btn['stats'] = array(
 					'short' => 'Statistics',
 					'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id,
@@ -2662,9 +2705,6 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
 		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
 		$this->tpl_form_vars['tinymce'] = true;
-		$this->addJS(_PS_JS_DIR_.'admin-products.js');
-		$this->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
-		$this->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 
 		$currency = $this->context->currency;
 		$data->assign('languages',$languages);
@@ -2950,16 +2990,15 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 			return;
 		}
 
-		$smarty = $this->context->smarty;
-		$content = '';
+		$data = $this->context->smarty->createData();
 
 		$attributeJs = array();
 		$attributes = Attribute::getAttributes($this->context->language->id, true);
 		foreach ($attributes as $k => $attribute)
 			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
 		$currency = $this->context->currency;
-		$smarty->assign('attributeJs', $attributeJs);
-		$smarty->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
+		$data->assign('attributeJs', $attributeJs);
+		$data->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
 		$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
 		$product->productDownload = new ProductDownload();
@@ -2967,40 +3006,206 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 		if (!empty($id_product_download))
 			$product->productDownload = new ProductDownload($id_product_download);
 
-	//	$smarty->assign('productDownload', $productDownload);
-		$smarty->assign('currency', $currency);
+	//	$data->assign('productDownload', $productDownload);
+		$data->assign('currency', $currency);
 
 		$images = Image::getImages($this->context->language->id, $product->id);
 		if ($product->id)
 		{
-			$smarty->assign('tax_exclude_option', Tax::excludeTaxeOption());
-			$smarty->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
+			$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
+			$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
 
-			$smarty->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-			$smarty->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
+			$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+			$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
 
-			$smarty->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
-			$smarty->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
-			$smarty->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
-			$smarty->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00');
+			$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
+			$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
+			$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
+			$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00');
 		  // date picker include
 
 
 			$i = 0;
-			$smarty->assign('imageType', ImageType::getByNameNType('small', 'products'));
-			$smarty->assign('imageWidth', (isset($imageType['width']) ? (int)($imageType['width']) : 64) + 25);
+			$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
+			$data->assign('imageWidth', (isset($imageType['width']) ? (int)($imageType['width']) : 64) + 25);
 			foreach ($images as $k => $image)
 			{
 				$images[$k]['obj'] = new Image($image['id_image']);
 				++$i;
 			}
-			$smarty->assign('images', $images);
-			$content .= '
-		<div>
+			$data->assign('images', $images);
+		}
+		else
+			$content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
+
+		// @todo
+		$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
+		$data->assign($this->tpl_form_vars);
+		$data->assign(array(
+			'list' => $this->renderListAttributes($id_product_download, $product, $currency),
+			'product' => $product,
+			'id_category' => $product->id_category_default,
+			'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator')
+		));
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
+	public function renderListAttributes($id_product_download, $product, $currency)
+	{
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->addRowAction('edit');
+		$this->addRowAction('default');
+		$this->addRowAction('delete');
+
+		$color_by_default = '#BDE5F8';
+
+		$this->fieldsDisplay = array(
+			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'center', 'width' => 70),
+			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'center', 'width' => 70),
+			'weight' => array('title' => $this->l('Weight'), 'align' => 'center', 'width' => 70),
+			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 70),
+			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 70),
+			'upc' => array('title' => $this->l('UPC'), 'align' => 'center', 'width' => 70)
+		);
+		
+		if ($id_product_download && !empty($productDownload->display_filename))
+		{
+			$this->fieldsDisplay['Filename'] = array('title' => $this->l('Filename'), 'align' => 'center', 'width' => 70);
+			$this->fieldsDisplay['nb_downloadable'] = array('title' => $this->l('Number of downloads'), 'align' => 'center', 'width' => 70);
+			$this->fieldsDisplay['date_expiration'] = array('title' => $this->l('Number of days'), 'align' => 'center', 'width' => 70);
+			$this->fieldsDisplay['is_shareable'] = array('title' => $this->l('Share'), 'align' => 'center', 'width' => 70);
+		}
+
+		if ($product->id)
+		{
+			/* Build attributes combinaisons */
+			$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
+			$groups = array();
+			$combArray = array();
+			if (is_array($combinaisons))
+			{
+				$combinationImages = $product->getCombinationImages($this->context->language->id);
+				foreach ($combinaisons as $k => $combinaison)
+				{
+					if ($currency->format % 2 != 0)
+						$price = $currency->sign.' '.$combinaison['price'];
+					else
+						$price = $combinaison['price'].' '.$currency->sign;
+
+					$combArray[$combinaison['id_product_attribute']]['id_combinaison_attribute'] = $product->id.'||'.$combinaison['id_product_attribute'];
+					$combArray[$combinaison['id_product_attribute']]['id_product_attribute'] = $combinaison['id_product_attribute'];
+					$combArray[$combinaison['id_product_attribute']]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+					$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
+					$combArray[$combinaison['id_product_attribute']]['price'] = $price;
+					$combArray[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'].Configuration::get('PS_WEIGHT_UNIT');
+					$combArray[$combinaison['id_product_attribute']]['unit_impact'] = $combinaison['unit_price_impact'];
+					$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
+					$combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
+					$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
+					$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
+					$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
+					$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
+					/*$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
+					$combArray[$combinaison['id_product_attribute']]['ecotax'] = $combinaison['ecotax'];*/
+					if ($combinaison['is_color_group'])
+						$groups[$combinaison['id_attribute_group']] = $combinaison['group_name'];
+				}
+			}
+	
+			$irow = 0;
+			if (isset($combArray))
+			{
+				foreach ($combArray as $id_product_attribute => $product_attribute)
+				{
+					$list = '';
+					$jsList = '';
+	
+					/* In order to keep the same attributes order */
+					asort($product_attribute['attributes']);
+	
+					foreach ($product_attribute['attributes'] as $attribute)
+					{
+						$list .= addslashes(htmlspecialchars($attribute[0])).' - '.addslashes(htmlspecialchars($attribute[1])).', ';
+						$jsList .= '\''.addslashes(htmlspecialchars($attribute[0])).' : '.addslashes(htmlspecialchars($attribute[1])).'\', \''.$attribute[2].'\', ';
+					}
+					$list = rtrim($list, ', ');
+					$jsList = rtrim($jsList, ', ');
+					$combArray[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
+					$combArray[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
+					$combArray[$id_product_attribute]['attributes'] = $list;
+					if ($product_attribute['default_on'])
+					{
+						$this->list_skip_actions['default'][] = $product_attribute['id_combinaison_attribute'];
+						$combArray[$id_product_attribute]['color']= $color_by_default;
+					}
+
+					$id_product_download = $product->productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
+					if ($id_product_download)
+						$product->productDownload = new ProductDownload($id_product_download);
+	
+					$available_date_attribute = substr($product->productDownload->date_expiration, 0, -9);
+	
+					if ($available_date_attribute == '0000-00-00')
+						$available_date_attribute = '';
+			
+					if ($id_product_download && !empty($product->productDownload->display_filename))
+					{
+						if ($product->productDownload->is_shareable == 1)
+							$is_shareable = $this->l('Yes');
+						else
+							$is_shareable = $this->l('No');
+
+						$combArray[$id_product_attribute]['link'] = $product->productDownload->getHtmlLink(false, true);
+						$combArray[$id_product_attribute]['nb_downloadable'] = $product->productDownload->nb_downloadable;
+						$combArray[$id_product_attribute]['is_shareable'] = $is_shareable;
+					}
+	
+					$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
+	
+					if ($product->productDownload->id && file_exists($exists_file))
+						$filename = $product->productDownload->filename;
+					else
+						$filename = '';
+
+					//$combArray[$id_product_attribute]['productDownload'] = $product->productDownload;
+					$combArray[$id_product_attribute]['id_product_download'] = $id_product_download;
+					$combArray[$id_product_attribute]['date_expiration'] = $available_date_attribute;
+					$combArray[$id_product_attribute]['filename'] = $filename;
+				}
+			}
+		}
+
+		foreach ($this->actions_available as $action)
+		{
+			if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
+				$this->actions[] = $action;
+		}
+
+		$helper = new HelperList();
+		$helper->identifier = 'id_combinaison_attribute';
+		$helper->token = $this->token;
+		$helper->currentIndex = self::$currentIndex;
+		$helper->no_link = true;
+		$helper->simple_header = true;
+		$helper->show_toolbar = false;
+		$helper->shopLinkType = $this->shopLinkType;
+		$helper->actions = $this->actions;
+		$helper->list_skip_actions = $this->list_skip_actions;
+		$helper->colorOnBackground = true;
+		$helper->override_folder = $this->tpl_folder.'combinaison/';
+
+		return $helper->generateList($combArray, $this->fieldsDisplay);
+
+		$content = '';
+		$content .= '
 		<table>
-		  <tr><td colspan="2"><div class="separation"></div></td></tr>
-		  <tr>
-			  <td colspan="2">
+			<tr>
+			  	<td colspan="2">
+			  		<div class="separation"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
 					<br />
 					<table border="0" cellpadding="0" cellspacing="0" class="table">
 						<tr>
@@ -3022,141 +3227,131 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 
 							$content .= '<th class="center">'.$this->l('Actions').'</th>
 						</tr>';
-			if ($product->id)
-			{
-				/* Build attributes combinaisons */
-				$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
-				$groups = array();
-				if (is_array($combinaisons))
-				{
-					$combinationImages = $product->getCombinationImages($this->context->language->id);
-					foreach ($combinaisons as $k => $combinaison)
-					{
-						$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
-						$combArray[$combinaison['id_product_attribute']]['price'] = $combinaison['price'];
-						$combArray[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
-						$combArray[$combinaison['id_product_attribute']]['unit_impact'] = $combinaison['unit_price_impact'];
-						$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
-						$combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
-						$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
-						$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
-						$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
-						$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
-						$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
-						$combArray[$combinaison['id_product_attribute']]['ecotax'] = $combinaison['ecotax'];
-						$combArray[$combinaison['id_product_attribute']]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
-						if ($combinaison['is_color_group'])
-							$groups[$combinaison['id_attribute_group']] = $combinaison['group_name'];
-					}
-				}
-				$irow = 0;
-				if (isset($combArray))
-				{
-					foreach ($combArray as $id_product_attribute => $product_attribute)
-					{
-						$list = '';
-						$jsList = '';
 
-						/* In order to keep the same attributes order */
-						asort($product_attribute['attributes']);
-
-						foreach ($product_attribute['attributes'] as $attribute)
+						if ($product->id)
 						{
-							$list .= addslashes(htmlspecialchars($attribute[0])).' - '.addslashes(htmlspecialchars($attribute[1])).', ';
-							$jsList .= '\''.addslashes(htmlspecialchars($attribute[0])).' : '.addslashes(htmlspecialchars($attribute[1])).'\', \''.$attribute[2].'\', ';
-						}
-						$list = rtrim($list, ', ');
-						$jsList = rtrim($jsList, ', ');
-						$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
-						$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
-
-						$id_product_download = $product->productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
-						if ($id_product_download)
-							$product->productDownload = new ProductDownload($id_product_download);
-
-						$available_date_attribute = substr($product->productDownload->date_expiration, 0, -9);
-
-						if ($available_date_attribute == '0000-00-00')
-							$available_date_attribute = '';
-
-						if ($product->productDownload->is_shareable == 1)
-							$is_shareable = $this->l('Yes');
-						else
-							$is_shareable = $this->l('No');
-
-						$content .= '
-						<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
-							<td>'.stripslashes($list).'</td>
-							<td class="right">'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').$product_attribute['price'].($currency->format % 2 == 0 ? ' '.$currency->sign : '').'</td>
-							<td class="right">'.$product_attribute['weight'].Configuration::get('PS_WEIGHT_UNIT').'</td>
-							<td class="right">'.$product_attribute['reference'].'</td>
-							<td class="right">'.$product_attribute['ean13'].'</td>
-							<td class="right">'.$product_attribute['upc'].'</td>';
-
-							if ($id_product_download && !empty($product->productDownload->display_filename))
+							/* Build attributes combinaisons */
+							$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
+							$groups = array();
+							if (is_array($combinaisons))
 							{
-								$content .= '<td class="right">'.$product->productDownload->getHtmlLink(false, true).'</td>
-								<td class="center">'.$product->productDownload->nb_downloadable.'</td>
-								<td class="center">'.$product->productDownload->nb_downloadable.'</td>
-								<td class="right">'.$is_shareable.'</td>';
+								$combinationImages = $product->getCombinationImages($this->context->language->id);
+								foreach ($combinaisons as $k => $combinaison)
+								{
+									$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
+									$combArray[$combinaison['id_product_attribute']]['price'] = $combinaison['price'];
+									$combArray[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
+									$combArray[$combinaison['id_product_attribute']]['unit_impact'] = $combinaison['unit_price_impact'];
+									$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
+									$combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
+									$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
+									$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
+									$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
+									$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
+									$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
+									$combArray[$combinaison['id_product_attribute']]['ecotax'] = $combinaison['ecotax'];
+									$combArray[$combinaison['id_product_attribute']]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+									if ($combinaison['is_color_group'])
+										$groups[$combinaison['id_attribute_group']] = $combinaison['group_name'];
+								}
 							}
 
-							$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-
-							if ($product->productDownload->id && file_exists($exists_file))
-								$filename = $product->productDownload->filename;
+							$irow = 0;
+							if (isset($combArray))
+							{
+								foreach ($combArray as $id_product_attribute => $product_attribute)
+								{
+									$list = '';
+									$jsList = '';
+			
+									/* In order to keep the same attributes order */
+									asort($product_attribute['attributes']);
+			
+									foreach ($product_attribute['attributes'] as $attribute)
+									{
+										$list .= addslashes(htmlspecialchars($attribute[0])).' - '.addslashes(htmlspecialchars($attribute[1])).', ';
+										$jsList .= '\''.addslashes(htmlspecialchars($attribute[0])).' : '.addslashes(htmlspecialchars($attribute[1])).'\', \''.$attribute[2].'\', ';
+									}
+									$list = rtrim($list, ', ');
+									$jsList = rtrim($jsList, ', ');
+									$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
+									$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
+			
+									$id_product_download = $product->productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
+									if ($id_product_download)
+										$product->productDownload = new ProductDownload($id_product_download);
+			
+									$available_date_attribute = substr($product->productDownload->date_expiration, 0, -9);
+			
+									if ($available_date_attribute == '0000-00-00')
+										$available_date_attribute = '';
+			
+									if ($product->productDownload->is_shareable == 1)
+										$is_shareable = $this->l('Yes');
+									else
+										$is_shareable = $this->l('No');
+			
+									$content .= '
+									<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
+										<td>'.stripslashes($list).'</td>
+										<td class="right">'.($currency->format % 2 != 0 ? $currency->sign.' ' : '').$product_attribute['price'].($currency->format % 2 == 0 ? ' '.$currency->sign : '').'</td>
+										<td class="right">'.$product_attribute['weight'].Configuration::get('PS_WEIGHT_UNIT').'</td>
+										<td class="right">'.$product_attribute['reference'].'</td>
+										<td class="right">'.$product_attribute['ean13'].'</td>
+										<td class="right">'.$product_attribute['upc'].'</td>';
+			
+										if ($id_product_download && !empty($product->productDownload->display_filename))
+										{
+											$content .= '<td class="right">'.$product->productDownload->getHtmlLink(false, true).'</td>
+											<td class="center">'.$product->productDownload->nb_downloadable.'</td>
+											<td class="center">'.$product->productDownload->nb_downloadable.'</td>
+											<td class="right">'.$is_shareable.'</td>';
+										}
+			
+										$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
+			
+										if ($product->productDownload->id && file_exists($exists_file))
+											$filename = $product->productDownload->filename;
+										else
+											$filename = '';
+										// @todo : a better way to "fillCombinaison" maybe ?
+										$content .= '<td class="center">
+										<a style="cursor: pointer;">
+										<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
+										onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['ean13'].'\',
+										\'0\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
+										\''.$product->productDownload->display_filename.'\', \''.$filename.'\', \''.$product->productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$product->productDownload->nb_days_accessible.'\',  \''.$product->productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
+										'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
+										<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
+										<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
+										<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /></a></td>
+									</tr>';
+								}
+								$content .= '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$product->id.'&token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
+							}
 							else
-								$filename = '';
-							// @todo : a better way to "fillCombinaison" maybe ?
-							$content .= '<td class="center">
-							<a style="cursor: pointer;">
-							<img src="../img/admin/edit.gif" alt="'.$this->l('Modify this combination').'"
-							onclick="javascript:fillCombinaison(\''.$product_attribute['wholesale_price'].'\', \''.$product_attribute['price'].'\', \''.$product_attribute['weight'].'\', \''.$product_attribute['unit_impact'].'\', \''.$product_attribute['reference'].'\', \''.$product_attribute['ean13'].'\',
-							\'0\', \''.($attrImage ? $attrImage->id : 0).'\', Array('.$jsList.'), \''.$id_product_attribute.'\', \''.$product_attribute['default_on'].'\', \''.$product_attribute['ecotax'].'\', \''.$product_attribute['upc'].'\', \''.$product_attribute['minimal_quantity'].'\', \''.$available_date.'\',
-							\''.$product->productDownload->display_filename.'\', \''.$filename.'\', \''.$product->productDownload->nb_downloadable.'\', \''.$available_date_attribute.'\',  \''.$product->productDownload->nb_days_accessible.'\',  \''.$product->productDownload->is_shareable.'\'); calcImpactPriceTI();" /></a>&nbsp;
-							'.(!$product_attribute['default_on'] ? '<a href="'.self::$currentIndex.'&defaultProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).$this->context->employee->id).'">
-							<img src="../img/admin/asterisk.gif" alt="'.$this->l('Make this the default combination').'" title="'.$this->l('Make this combination the default one').'"></a>' : '').'
-							<a href="'.self::$currentIndex.'&deleteProductAttribute&id_product_attribute='.$id_product_attribute.'&id_product='.$product->id.'&'.(Tools::isSubmit('id_category') ? 'id_category='.(int)(Tools::getValue('id_category')).'&' : '&').'token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');">
-							<img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /></a></td>
-						</tr>';
-					}
-					$content .= '<tr><td colspan="7" align="center"><a href="'.self::$currentIndex.'&deleteAllProductAttributes&id_product='.$product->id.'&token='.Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id).'" onclick="return confirm(\''.$this->l('Are you sure?', __CLASS__, true, false).'\');"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this combination').'" /> '.$this->l('Delete all combinations').'</a></td></tr>';
-				}
-				else
-					$content .= '<tr><td colspan="7" align="center"><i>'.$this->l('No combination yet').'.</i></td></tr>';
-			}
-			$content .= '
-						</table>
-						<br />'.$this->l('The row in blue is the default combination.').'
-						<br />
-						'.$this->l('A default combination must be designated for each product.').'
-						</td>
-						</tr>
-					</table>
-					<script type="text/javascript">
-						var impact = getE(\'attribute_price_impact\');
-						var impact2 = getE(\'attribute_weight_impact\');
-
-						var s_attr_group = $(\'#span_new_group\');
-						var s_attr_name = $(\'#span_new_attr\');
-						var s_impact = $(\'#span_impact\');
-						var s_impact2 = $(\'#span_weight_impact\');
-
-						init_elems();
-					</script>';
-				}
-				else
-					$content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
-		// @todo
-		$smarty->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
-		$this->context->smarty->assign($this->tpl_form_vars);
-		$this->context->smarty->assign(array(
-			'content' => $content,
-			'product' => $product,
-			'id_category' => $product->id_category_default,
-			'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator')
-		));
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->fetch('products/combinations.tpl');
+								$content .= '<tr><td colspan="7" align="center"><i>'.$this->l('No combination yet').'.</i></td></tr>';
+						}
+						$content .= '
+									</table>
+									<br />'.$this->l('The row in blue is the default combination.').'
+									<br />
+									'.$this->l('A default combination must be designated for each product.').'
+									</td>
+									</tr>
+								</table>
+								<script type="text/javascript">
+									var impact = getE(\'attribute_price_impact\');
+									var impact2 = getE(\'attribute_weight_impact\');
+			
+									var s_attr_group = $(\'#span_new_group\');
+									var s_attr_name = $(\'#span_new_attr\');
+									var s_impact = $(\'#span_impact\');
+									var s_impact2 = $(\'#span_weight_impact\');
+			
+									init_elems();
+								</script>';
+		return $content;
 	}
 
 	public function initFormQuantities($obj)
@@ -3588,5 +3783,25 @@ public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0,
 		$this->addJqueryPlugin('thickbox');
 		$this->addJqueryPlugin('ajaxfileupload');
 		$this->addJqueryPlugin('date');
+	}
+
+	public function setMedia()
+	{
+		parent::setMedia();
+
+		$this->addjQueryPlugin('fileuploader');
+
+		$this->addJqueryUI(array(
+			'ui.core',
+			'ui.widget',
+			'ui.progressbar'
+		));
+
+		$this->addJS(array(
+			_PS_JS_DIR_.'admin-products.js',
+			_PS_JS_DIR_.'price.js',
+			_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
+			_PS_JS_DIR_.'tinymce.inc.js'
+		));
 	}
 }

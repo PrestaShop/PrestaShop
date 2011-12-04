@@ -123,6 +123,6 @@ $(document).ready(function() {
 	});
 });
 </script>
-<a href="#" id="details_{$id}">
-	<img src="../img/admin/more.png" alt="{$action}" title="{$action}" />
+<a class="pointer" id="details_{$id}" title="{$action}">
+	<img src="../img/admin/more.png" alt="{$action}" />
 </a>

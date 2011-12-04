@@ -37,3 +37,5 @@
 </table>
 <input type="hidden" name="token" value="{$token}" />
 </form>
+
+{block name="after"}{/block}

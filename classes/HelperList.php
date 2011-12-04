@@ -432,7 +432,7 @@ class HelperListCore extends Helper
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Edit'],
-			'id' => (int)$id
+			'id' => $id
 		));
 
 		return $tpl->fetch();
@@ -455,6 +455,24 @@ class HelperListCore extends Helper
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$id.' ? '),
 			'action' => self::$cache_lang['Delete'],
+			'id' => $id,
+		)));
+
+		return $tpl->fetch();
+	}
+
+	/**
+	 * Display delete action link
+	 */
+	protected function displayDefaultLink($token = null, $id)
+	{
+		$tpl = $this->createTemplate('list_action_default.tpl');
+		if (!array_key_exists('Default', self::$cache_lang))
+			self::$cache_lang['Default'] = $this->l('Default');
+
+		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'action' => self::$cache_lang['Default'],
 			'id' => $id,
 		)));
 
