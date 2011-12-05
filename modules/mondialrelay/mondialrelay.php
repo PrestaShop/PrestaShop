@@ -537,9 +537,16 @@ class MondialRelay extends Module
 		WHERE s.`id_cart` = '.$params['order']->id_cart);
 		if ((!$res) OR ($res['MR_Selected_Num'] == 'LD1') OR ($res['MR_Selected_Num'] == 'LDS'))
 			return '';
-		$this->context->smarty->assign('mr_addr', $res['MR_Selected_LgAdr1'].($res['MR_Selected_LgAdr1'] ? ' - ' : '').$res['MR_Selected_LgAdr2'].($res['MR_Selected_LgAdr2'] ? ' - ' : '').$res['MR_Selected_LgAdr3'].($res['MR_Selected_LgAdr3'] ? ' - ' : '').$res['MR_Selected_LgAdr4'].($res['MR_Selected_LgAdr4'] ? ' - ' : '').$res['MR_Selected_CP'].' '.$res['MR_Selected_Ville'].' - '.$res['MR_Selected_Pays']);
-		$smarty->assign('mr_url', $res['url_suivi']);
-		return $this->display(__FILE__, 'orderDetail.tpl');
+		$this->context->smarty->assign(
+			array(
+				'mr_addr' => $res['MR_Selected_LgAdr1'].
+					($res['MR_Selected_LgAdr1'] ? ' - ' : '').$res['MR_Selected_LgAdr2'].
+					($res['MR_Selected_LgAdr2'] ? ' - ' : '').$res['MR_Selected_LgAdr3'].
+					($res['MR_Selected_LgAdr3'] ? ' - ' : '').$res['MR_Selected_LgAdr4'].
+					($res['MR_Selected_LgAdr4'] ? ' - ' : '').$res['MR_Selected_CP'].' '.
+					$res['MR_Selected_Ville'].' - '.$res['MR_Selected_Pays'],
+				'mr_url' => $res['url_suivi']));
+		return $this->context->smarty->fetch(__FILE__, 'orderDetail.tpl');
 	}
 
 	/*
@@ -643,11 +650,11 @@ class MondialRelay extends Module
 	 	}
 
 	 	$preSelectedRelay = $this->getRelayPointSelected($params['cart']->id);
-		$smarty->assign(array(
+		$this->context->smarty->assign(array(
 			'carriersextra' => $carriersList,
 			'preSelectedRelay' => isset($preSelectedRelay['MR_selected_num']) ? $preSelectedRelay['MR_selected_num'] : ''));
 		
-		return $this->display(__FILE__, 'mondialrelay.tpl');
+		return $this->context->smarty->fetch(__FILE__, 'mondialrelay.tpl');
 	}
 
 	public function getContent()
@@ -676,9 +683,9 @@ class MondialRelay extends Module
 		$this->_html .= '<h2>'.$this->l('Configure Mondial Relay Rate Module').'</h2>
 
 		<div class="MR_warn">
-			<a style="color:#383838;text-decoration:underline" href="index.php?tab=AdminPerformance&token='.Tools::getAdminToken('AdminPerformance'.(int)(Tab::getIdFromClassName('AdminPerformance')).(int)($cookie->id_employee)).'">
+			<a style="color:#383838;text-decoration:underline" href="index.php?tab=AdminPerformance&token='.Tools::getAdminToken('AdminPerformance'.(int)(Tab::getIdFromClassName('AdminPerformance')).(int)($this->context->cookie->id_employee)).'">
 					'.$this->l('Try to turn off the cache and put the force compilation to on').'
-					</a> '.$this->l('if you have any problems with the module after an update').'.
+					</a> '.$this->l('if you have any problems with the module after an update').'
 		</div>
 		<div class="MR_hint">
 			'.$this->l('Have a look to the following HOW-TO to help you to configure the Mondial Relay module').'
