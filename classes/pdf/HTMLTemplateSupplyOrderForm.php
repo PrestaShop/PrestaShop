@@ -28,7 +28,7 @@
 /**
  * @since 1.5
  */
-class HTMLTemplateSupplyOrderForm extends HTMLTemplate
+class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 {
 	public $supply_order;
 	public $warehouse;

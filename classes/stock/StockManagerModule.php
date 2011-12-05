@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-abstract class StockManagerModule extends Module
+abstract class StockManagerModuleCore extends Module
 {
 	public $stock_manager_class;
 
