@@ -59,7 +59,7 @@ function getTickets(detailedExpeditionList)
 		},
 		error: function(xhr, ajaxOptions, thrownError)
 		{
-            displayBackGenerateSubmitButton();
+			displayBackGenerateSubmitButton();
 		}
 	});
 }
@@ -192,7 +192,7 @@ function generateTicketsAjax()
 		error: function(xhr, ajaxOptions, thrownError)
 		{
 			display_generate_button = true;
-            displayBackGenerateSubmitButton();
+			displayBackGenerateSubmitButton();
 		}
 	});
 	delete(order_id_list);
@@ -440,7 +440,7 @@ function PS_MRCarrierSelectedProcess(carrierSelected, id_carrier, MRLivraisonTyp
 		
 		// Won't have any relay points
 		PS_MRSelectedRelayPoint['relayPointNum'] = -1;
-}
+	}
 }
 
 /*
@@ -512,8 +512,8 @@ function PS_MRDisplayRelayPoint(json, blockContent, carrier_id)
 		numberDisplayed = 0;
 		
 		// Disable Gmap for IE user
-		if (!$.browser.msie)
-		PS_MRCreateGmap(carrier_id);
+	//	if (!$.browser.msie)
+			PS_MRCreateGmap(carrier_id);
 		blockContent.fadeOut('fast', function()
 		{
 			$(this).children('td').html('');
@@ -530,26 +530,26 @@ function PS_MRDisplayRelayPoint(json, blockContent, carrier_id)
 					var classSelection = (PS_MRPreSelectedRelay == json.success[relayPoint].Num) ?
 						'PS_MRFloatRelayPointSelected' : 'PS_MRFloatRelayPointSelecteIt';
 					
-					$('<div class="PS_MRRelayPointInfo clearfix" id="' + contentBlockid + '"> \
-						<img src="' + _PS_MR_MODULE_DIR_ + 'logo_hd.png" /> \
-						<p><b>' + json.success[relayPoint].LgAdr1 + '</b><br /> ' +  json.success[relayPoint].LgAdr3
+					$('<div class="PS_MRRelayPointInfo clearfix" id="' + contentBlockid + '">'
+						+ '<img src="' + _PS_MR_MODULE_DIR_ + 'logo_hd.png" />'
+						+ '<p><b>' + json.success[relayPoint].LgAdr1 + '</b><br /> ' +  json.success[relayPoint].LgAdr3
 						+ ' - ' + json.success[relayPoint].CP + ' - ' + json.success[relayPoint].Ville
-						+ ' ' + json.success[relayPoint].Pays + '</p> \
-						<div class="' + classSelection + '"> \
-							<a class="PS_MRSelectRelayPointButton">' + BtTranslation  + '</a> \
-						</div> \
+						+ ' ' + json.success[relayPoint].Pays + '</p>'
+						+ '<div class="' + classSelection + '">'
+						+	'<a class="PS_MRSelectRelayPointButton">' + BtTranslation + '</a>'
+						+ '</div> \
 					</div>').appendTo($(this).children('td'));
 					
 					// Store all the object content to prevent an ajax request
 					relayPointDataContainers[json.success[relayPoint].Num] = json.success[relayPoint];
 					++numberDisplayed;
 					// Display popup for IE user
-					if (!$.browser.msie)
-					PS_MRAddGMapMarker(carrier_id, json.success[relayPoint].Num, contentBlockid);
-					else
+					//if (!$.browser.msie)
+						PS_MRAddGMapMarker(carrier_id, json.success[relayPoint].Num, contentBlockid);
+				/*	else
 						$('#' + contentBlockid).children('p').click(function() {
 							PS_MROpenPopupDetail(json.success[relayPoint].permaLinkDetail);
-						});
+						});*/
 				}
 			}
 			PS_MRHandleSelectedRelayPoint();
@@ -693,15 +693,15 @@ function PS_MRGmapPlaceViewOnMarker($map, marker, relayNum)
 			{
         PS_MRDisplayClickedGmapWindow(marker, relayNum, $map);
         
-        // Make dancing markers in Firefox will use the CPU to 100 %
-        if (!$.browser.mozilla)
-				(function(m)
-				{
-      		setTimeout(function() 
-      		{
-          	m.setAnimation(google.maps.Animation.BOUNCE);
-        	}, 200);
-    		})(marker);
+        // Make dancing markers in Firefox / IE  will use the CPU to 50 to 100 % about
+        if (!$.browser.msie && !$.browser.mozilla)
+					(function(m)
+					{
+	      		setTimeout(function() 
+	      		{
+	          	m.setAnimation(google.maps.Animation.BOUNCE);
+	        	}, 200);
+	    		})(marker);
 			//	marker.setAnimation(google.maps.Animation.BOUNCE);
 			}
 	});
@@ -722,11 +722,11 @@ function PS_MRStopDancingMarkers(currentMarkerList)
 ** Display the Gmap of the selected relay point 
 */
 function PS_MRDisplayGmap(contentBlockid, $map)
-{	
-	tab = contentBlockid.split('_');
-	relayPointNumber = tab[1];
-	id_carrier = tab[2];
-	
+{
+	var tab = contentBlockid.split('_');
+	var relayPointNumber = tab[1];
+	var id_carrier = tab[2];
+
 	// Stop the dancing marker of the current carrier
 	PS_MRStopDancingMarkers(markerList[id_carrier]);
 	if ($('#PS_MRGmap_' + id_carrier).css('display') == 'none')
@@ -903,7 +903,7 @@ $(document).ready(function()
 	$('#PS_MRDisplayPersonalizedOptions').click(function()
 	{
 		$('#PS_MRAdvancedSettings').toggle('fast');
-});
+	});
 });
 
 

@@ -286,8 +286,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		$this->_fields['list']['Expe_Pays']['value'] = Country::getIsoById(Configuration::get('PS_SHOP_COUNTRY_ID'));
 		else
 			$this->_fields['list']['Expe_Pays']['value'] = substr(Configuration::get('PS_SHOP_COUNTRY'), 0, 2);
-
-		$this->_fields['list']['Expe_Tel1']['value'] = str_replace(array('.', ' ', '-'), '', Configuration::get('PS_SHOP_PHONE'));
+		$this->_fields['list']['Expe_Tel1']['value'] = str_replace(array('.', ' ', '-', '_'), '', Configuration::get('PS_SHOP_PHONE'));
 		$this->_fields['list']['Expe_Mail']['value'] = Configuration::get('PS_SHOP_EMAIL');
 		$this->_fields['list']['NbColis']['value'] = 1;
 		$this->_fields['list']['CRT_Valeur']['value'] = 0;
@@ -331,15 +330,15 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$tmp['NDossier']['value'] = $orderDetail['id_order'];
 				$tmp['NClient']['value'] = $orderDetail['id_customer'];
 				$tmp['Dest_Langage']['value'] = 'FR'; //Language::getIsoById($orderDetail['id_lang']);
-				$tmp['Dest_Ad1']['value'] = $deliveriesAddress->firstname.' '.$deliveriesAddress->lastname;
-				$tmp['Dest_Ad2']['value'] = $deliveriesAddress->address2;
-				$tmp['Dest_Ad3']['value'] = $deliveriesAddress->address1;
+				$tmp['Dest_Ad1']['value'] = substr($deliveriesAddress->firstname.' '.$deliveriesAddress->lastname, 0, 32);;
+				$tmp['Dest_Ad2']['value'] = substr($deliveriesAddress->address2, 0, 32);
+				$tmp['Dest_Ad3']['value'] = substr($deliveriesAddress->address1, 0, 32);
 				$tmp['Dest_Ville']['value'] = $deliveriesAddress->city;
 				$tmp['Dest_CP']['value'] = $deliveriesAddress->postcode;
 				$tmp['Dest_CP']['params']['id_country'] = $deliveriesAddress->id_country;
 				$tmp['Dest_Pays']['value'] = $destIsoCode;
-				$tmp['Dest_Tel1']['value'] = $deliveriesAddress->phone;
-				$tmp['Dest_Tel2']['value'] = $deliveriesAddress->phone_mobile;
+				$tmp['Dest_Tel1']['value'] = str_replace(array('.', ' ', '-', '_'), '', $deliveriesAddress->phone);
+				$tmp['Dest_Tel2']['value'] = str_replace(array('.', ' ', '-', '_'), '', $deliveriesAddress->phone_mobile);
 				$tmp['Dest_Mail']['value'] = $customer->email;
 				$tmp['Assurance']['value'] = $orderDetail['mr_ModeAss'];
 				if ($orderDetail['MR_Selected_Num'] != 'LD1' && $orderDetail['MR_Selected_Num'] != 'LDS')
