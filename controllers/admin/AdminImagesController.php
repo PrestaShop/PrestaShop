@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminImagesController extends AdminController
+class AdminImagesControllerCore extends AdminController
 {
 	private $start_time = 0;
 	private $max_execution_time = 7200;

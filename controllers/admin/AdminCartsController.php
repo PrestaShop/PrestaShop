@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminCartsController extends AdminController
+class AdminCartsControllerCore extends AdminController
 {
 	public function __construct()
 	{

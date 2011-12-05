@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
-include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
 define ('TEXTAREA_SIZED', 70);
 
 class AdminTranslationsControllerCore extends AdminController
@@ -49,6 +47,10 @@ class AdminTranslationsControllerCore extends AdminController
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
+		include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
+
 		self::$tpl_regexp = '/\{l s=\''._PS_TRANS_PATTERN_.'\'( mod=\'.+\')?( js=1)?\}/U';
 		// added ? after spaces because some peoples forget them. see PSCFI-2501
 		self::$php_regexp = '/->l\(\''._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';

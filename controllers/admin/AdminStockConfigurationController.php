@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class AdminStockConfigurationController extends AdminController
+class AdminStockConfigurationControllerCore extends AdminController
 {
 	/*
 	 * By default, we use StockMvtReason as the table / className

@@ -35,7 +35,7 @@ class PdfOrderReturnControllerCore extends FrontController
 		if (!$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 
-		if (isset(Tools::getValue('id_order_return')) && Validate::isUnsignedId(Tools::getValue('id_order_return')))
+		if (Tools::getValue('id_order_return') && Validate::isUnsignedId(Tools::getValue('id_order_return')))
 			$this->orderReturn = new OrderReturn(Tools::getValue('id_order_return'));
 
 		if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn))

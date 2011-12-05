@@ -25,9 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
-include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
-
 class AdminModulesControllerCore extends AdminController
 {
 
@@ -74,6 +71,8 @@ class AdminModulesControllerCore extends AdminController
 	public function __construct()
 	{
 		parent::__construct();
+
+		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 
 		// Set the modules categories
 		$this->list_modules_categories['administration']['name'] = $this->l('Administration');
