@@ -84,7 +84,7 @@ class StatsOrigin extends ModuleGraph
 		if (Tools::getValue('export'))
 			if (Tools::getValue('exportType') == 'top')
 				$this->csvExport(array('type' => 'pie'));
-		$this->_html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Origin').'</h2>';
+		$this->_html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Origin').'</h2>';
 		if (count($websites))
 		{
 			$this->_html .= '
