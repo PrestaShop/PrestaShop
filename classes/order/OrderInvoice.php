@@ -71,7 +71,7 @@ class OrderInvoiceCore extends ObjectModel
 
 	public static $definition = array(
 		'table' => 'order_invoice',
-		'identifier' => 'id_order_invoice',
+		'primary' => 'id_order_invoice',
 	);
 
 	public function getFields()

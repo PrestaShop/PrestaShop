@@ -84,7 +84,7 @@ class StockCore extends ObjectModel
 
 	public static $definition = array(
 		'table' => 'stock',
-		'identifier' => 'id_stock',
+		'primary' => 'id_stock',
 	);
 
 	public function getFields()
