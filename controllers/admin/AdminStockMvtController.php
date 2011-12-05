@@ -228,7 +228,7 @@ class AdminStockMvtControllerCore extends AdminController
 	{
 		$this->toolbar_btn['export-csv'] = array(
 			'short' => 'Export this list as CSV',
-			'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv',
+			'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv&amp;id_warehouse='.(int)$this->getCurrentWarehouseId(),
 			'desc' => $this->l('Export (CSV)'),
 		);
 		parent::initToolbar();
@@ -244,8 +244,8 @@ class AdminStockMvtControllerCore extends AdminController
 			return;
 
 		// header
-		if ($this->getCurrentWarehouseId() != -1)
-			$filename = $this->l('stock_mvt').'_'.Warehouse::getWarehouseNameById($this->getCurrentWarehouseId()).'.csv';
+		if (Tools::getValue('id_warehouse') != -1)
+			$filename = $this->l('stock_mvt').'_'.Warehouse::getWarehouseNameById((int)Tools::getValue('id_warehouse')).'.csv';
 		else
 			$filename = $this->l('stock_mvt').'.csv';
 		header('Content-type: text/csv');
