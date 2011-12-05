@@ -1642,3 +1642,15 @@ CREATE TABLE `PREFIX_favorite_product` (
 	PRIMARY KEY (`id_favorite_product`))
 ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_newsletter` (
+	`id` int(6) NOT NULL AUTO_INCREMENT,
+	`id_shop` INTEGER UNSIGNED NOT NULL DEFAULT 1,
+	`id_group_shop` INTEGER UNSIGNED NOT NULL DEFAULT 1,
+	`email` varchar(255) NOT NULL,
+	`newsletter_date_add` DATETIME NULL,
+	`ip_registration_newsletter` varchar(15) NOT NULL,
+	`http_referer` VARCHAR(255) NULL,
+	`active` TINYINT(1) NOT NULL DEFAULT 0,
+	PRIMARY KEY(`id`)
+) ENGINE=ENGINE_TYPE default CHARSET=utf8;
+
