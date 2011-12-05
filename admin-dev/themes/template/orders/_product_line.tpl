@@ -59,7 +59,7 @@
 	</td>
 	{if ($order->hasBeenPaid())}<td align="center" class="productQuantity">{$product['product_quantity_refunded']}</td>{/if}
 	{if ($order->hasBeenDelivered())}<td align="center" class="productQuantity">{$product['product_quantity_return']}</td>{/if}
-	<td align="center" class="productQuantity product_stock">{StockManagerFactory::getManager()->getProductRealQuantities($product['product_id'], $product['product_attribute_id'], null, true)}</td>
+	<td align="center" class="productQuantity product_stock">{$product['current_stock']}</td>
 	<td align="center" class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>
