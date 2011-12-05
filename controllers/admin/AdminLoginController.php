@@ -194,7 +194,7 @@ class AdminLoginControllerCore extends AdminController
 							'{passwd}' => $pwd
 							);
 							
-				if (Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'password', Mail::l('Your new admin password'), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+				if (Mail::Send((int)Configuration::get('PS_LANG_DEFAULT'), 'password', Mail::l('Your new admin password', (int)Configuration::get('PS_LANG_DEFAULT')), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 					die(Tools::jsonEncode(array('hasErrors' => false, 'confirm' => $this->l('Your password has been e-mailed to you'))));
 				else
 					die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => array(Tools::displayError('An error occurred during your password change.')))));

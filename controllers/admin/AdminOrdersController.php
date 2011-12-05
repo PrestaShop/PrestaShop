@@ -195,7 +195,7 @@ class AdminOrdersControllerCore extends AdminController
 							'{lastname}' => $customer->lastname,
 							'{id_order}' => (int)$order->id
 						);
-						@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit'), $templateVars,
+						@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,
 							_PS_MAIL_DIR_, true);
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
@@ -317,8 +317,8 @@ class AdminOrdersControllerCore extends AdminController
 									'{id_order}' => $order->id,
 									'{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $cm->message : Tools::nl2br($cm->message))
 								);
-								if (@Mail::Send((int)($order->id_lang), 'order_merchant_comment',
-									Mail::l('New message regarding your order'), $varsTpl, $customer->email,
+								if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
+									Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
 									$customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL, _PS_MAIL_DIR_, true))
 									Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
 							}
@@ -501,7 +501,7 @@ class AdminOrdersControllerCore extends AdminController
 							$currency = $this->context->currency;
 							$params['{voucher_amount}'] = Tools::displayPrice($voucher->value, $currency, false);
 							$params['{voucher_num}'] = $voucher->name;
-							@Mail::Send((int)($order->id_lang), 'voucher', Mail::l('New voucher regarding your order'),
+							@Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order', (int)$order->id_lang),
 							$params, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL,
 							NULL, _PS_MAIL_DIR_, true);
 						}
@@ -854,7 +854,7 @@ class AdminOrdersControllerCore extends AdminController
 					$mailVars = array('{order_link}' => Context::getContext()->link->getPageLink('order', false, (int)$cart->id_lang, 'step=3&recover_cart='.(int)$cart->id.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.(int)$cart->id)),
 	 																'{firstname}' => $customer->firstname,
 																	'{lastname}' => $customer->lastname,);
-					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order'), $mailVars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,_PS_MAIL_DIR_, true))
+					if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,_PS_MAIL_DIR_, true))
 						die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The mail was sent to your customer.'))));
 				}
 			}

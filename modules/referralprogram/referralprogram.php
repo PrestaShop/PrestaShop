@@ -479,7 +479,7 @@ class ReferralProgram extends Module
 						Mail::Send(
 							(int)$cookie->id_lang,
 							'referralprogram-voucher',
-							Mail::l('Congratulations!'),
+							Mail::l('Congratulations!', (int)$cookie->id_lang),
 							$data,
 							$newCustomer->email,
 							$newCustomer->firstname.' '.$newCustomer->lastname,
@@ -614,7 +614,7 @@ class ReferralProgram extends Module
 			$currency = new Currency((int)$order->id_currency);
 			$discount_display = ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, $currency);
 			$data = array('{sponsored_firstname}' => $customer->firstname, '{sponsored_lastname}' => $customer->lastname, '{discount_display}' => $discount_display, '{discount_name}' => $cartRule->code);
-			Mail::Send((int)$order->id_lang, 'referralprogram-congratulations', Mail::l('Congratulations!'), $data, $sponsor->email, $sponsor->firstname.' '.$sponsor->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
+			Mail::Send((int)$order->id_lang, 'referralprogram-congratulations', Mail::l('Congratulations!', (int)$order->id_lang), $data, $sponsor->email, $sponsor->firstname.' '.$sponsor->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			return true;
 		}
 		return false;

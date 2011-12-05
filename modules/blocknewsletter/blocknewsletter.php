@@ -429,7 +429,7 @@ class Blocknewsletter extends Module
  	 */
 	protected function sendVoucher($email, $code)
 	{
-		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher'), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher', $this->context->language->id), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 
 	/**
@@ -439,7 +439,7 @@ class Blocknewsletter extends Module
 	 */
 	protected function sendConfirmationEmail($email)
 	{
-		return	Mail::Send($this->context->language->id, 'newsletter_conf', Mail::l('Newsletter confirmation'), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return	Mail::Send($this->context->language->id, 'newsletter_conf', Mail::l('Newsletter confirmation', $this->context->language->id), array(), pSQL($email), null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 
 	/**
@@ -451,7 +451,7 @@ class Blocknewsletter extends Module
 	protected function sendVerificationEmail($email, $token)
 	{
 		$verif_url = Tools::getShopDomain(true)._MODULE_DIR_.$this->name.'/verification.php?token='.$token;
-		return Mail::Send($this->context->language->id, 'newsletter_verif', Mail::l('Email verification'), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
+		return Mail::Send($this->context->language->id, 'newsletter_verif', Mail::l('Email verification', $this->context->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 
 	public function hookDisplayRightColumn($params)
