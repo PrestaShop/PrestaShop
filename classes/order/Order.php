@@ -321,11 +321,11 @@ class OrderCore extends ObjectModel
 		}
 		return $this->_deleteProduct($orderDetail, (int)($quantity));
 	}
-	
+
 	/**
 	 * This function return products of the orders
 	 * It's similar to Order::getProducts but witrh similar outputs of Cart::getProducts
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getCartProducts()
@@ -336,7 +336,7 @@ class OrderCore extends ObjectModel
 				.$product['product_id'].'_'
 				.$product['product_attribute_id'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
-		
+
 		$product_list = array();
 		foreach ($cart->getProducts() as $product)
 		{
@@ -344,13 +344,13 @@ class OrderCore extends ObjectModel
 				.$product['id_product'].'_'
 				.$product['id_product_attribute'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
-			
+
 			if (in_array($key, $product_id_list))
 				$product_list[] = $product;
 		}
 		return $product_list;
 	}
-	
+
 	/* DOES delete the product */
 	protected function _deleteProduct($orderDetail, $quantity)
 	{
@@ -632,11 +632,18 @@ class OrderCore extends ObjectModel
 	/**
 	 *
 	 * This method allow to add stock information on a product detail
+	 *
+	 * If advanced stock management is active, get physical stock of this product in the warehouse associated to the ptoduct for the current order
+	 * Else get the available quantity of the product in fucntion of the shop associated to the order
+	 *
 	 * @param array &$product
 	 */
 	protected function setProductCurrentStock(&$product)
 	{
-		$product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$product['id_warehouse'] > 0)
+			$product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], (int)$product['id_warehouse'], true);
+		else
+			$product['current_stock'] = '--';
 	}
 
 	/**
