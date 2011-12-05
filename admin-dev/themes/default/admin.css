@@ -177,6 +177,8 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-new-module { background-image: url(process-icon-new-module.png);}
 .toolbarBox .process-icon-new-module-addon { background-image: url(process-icon-new-module-addon.png);}
 .toolbarBox .process-icon-save-and-preview { background-image: url(process-icon-preview.png);}
+.toolbarBox .process-icon-export-csv-orders { background-image: url(process-icon-export-csv.png);}
+.toolbarBox .process-icon-export-csv-details { background-image: url(process-icon-export-csv-details.png);}
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
@@ -230,7 +232,6 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #addons_login_div label {}
 #addons_login_div input { float:left; margin-right:10px;}
 #addons_login_div input#addons_login_button { margin-right: 0px; }
-
 
 /*SIDEBAR*/
 .sidebar { position:relative; float:left; width:220px; display:inline;}
@@ -315,13 +316,9 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #statsContainer .blocStats h2.icon-currency span { background-position : -90px -36px;}
 #statsContainer .blocStats h2.icon-language span { background-position : -106px -36px;}
 #statsContainer .blocStats h2.icon-attribute span { background-position : -126px -36px;}
-
-
 #statsContainer .blocStats form { position:absolute; top:10px; right:5px;}
 #statsContainer .blocStats form.checkup { position:relative; top:0; left:0;}
 #statsContainer .totalStats { font-size:16px; font-weight:bold;}
-
-
 
 /*MODULECONTAINER*/
 #moduleContainer { margin-left:220px; padding:13px 0 0 20px;}
@@ -350,6 +347,19 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #moduleContainer .moduleGridDesc h3 { color:#3A6EA7; margin:0;}
 #moduleContainer ul.listing-grid-module li select { position:absolute; top:0; right:0px; }
 
+/*MODULE POSITION*/
+.blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}
+.blocLiveEdit h2 { margin:0; padding: 0 10px;}
+.blocLiveEdit p { padding: 0 10px;}
+.blocLiveEdit a.button {Êfloat: left; margin:10px; display: inline-block;}
+
+
+#modulePosition { width:100%; float:left; clear:left; margin-right:270px;}
+#modulePosition .table tr th { height:40px;}
+#modulePosition form{ margin-right:270px;}
+#modulePosition .lab_modules_positions h3 { color:#3A6EA7; margin:0 0 0 10px; float:left;}
+#modulePosition .lab_modules_positions p { font-family:Georgia; font-style: italic; font-size:12px; padding-left:40px;}
+#modulePosition .lab_modules_positions span { font-size:12px; padding-left:5px;}
 
 /*FOOTER*/
 #footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
