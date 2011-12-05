@@ -345,6 +345,18 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (!($this->tabAccess['add'] === '1'))
 			unset($this->toolbar_btn['new']);
 
+		$this->toolbar_btn['export-csv-orders'] = array(
+			'short' => 'Export Orders',
+			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders',
+			'desc' => $this->l('Export Orders (CSV)'),
+		);
+
+		$this->toolbar_btn['export-csv-details'] = array(
+			'short' => 'Export Orders Details',
+			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details',
+			'desc' => $this->l('Export Orders Details (CSV)'),
+		);
+
 		// overrides query
 		$this->_select = '
 			s.name AS supplier,
@@ -375,6 +387,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_where .= ' AND st.enclosed != 1';
 		$first_list = parent::renderList();
 
+		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
+		{
+			$this->renderCSV();
+			die;
+		}
+
 		// second list : templates
 		$second_list = null;
 		unset($this->tpl_list_vars['warehouses']);
@@ -383,6 +401,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// unsets actions
 		$this->actions = array();
+		unset($this->toolbar_btn['export-csv-orders']);
+		unset($this->toolbar_btn['export-csv-details']);
 		// adds actions
 		$this->addRowAction('delete');
 		$this->addRowAction('view');
@@ -1027,6 +1047,70 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->loadProducts($quantity_threshold);
 	}
 
+	protected function renderCSV()
+	{
+		// exports orders
+		if (Tools::isSubmit('csv_orders'))
+		{
+			$ids = array();
+			foreach ($this->_list as $entry)
+				$ids[] = $entry['id_supply_order'];
+
+			$orders = new Collection('SupplyOrder', $id_lang = (int)Context::getContext()->language->id);
+			$orders->where('is_template = 0');
+			$orders->where('id_supply_order IN('.implode(', ', $ids).')');
+			$orders->getAll();
+			$csv = new CSV($orders, $this->l('supply_orders'));
+    		$csv->export();
+		}
+		// exports details for all orders
+		else if (Tools::isSubmit('csv_orders_details'))
+		{
+			// header
+			header('Content-type: text/csv');
+			header('Cache-Control: no-store, no-cache');
+        	header('Content-disposition: attachment; filename="'.$this->l('supply_orders_details').'.csv"');
+
+        	// echoes details
+			$ids = array();
+			foreach ($this->_list as $entry)
+				$ids[] = $entry['id_supply_order'];
+
+			// for each supply order
+			$keys = array('id_supply_order', 'id_product', 'id_product_attribute', 'reference', 'supplier_reference', 'ean13', 'upc', 'name',
+						  'unit_price_te', 'quantity_expected', 'quantity_received', 'price_te', 'discount_rate', 'discount_value_te',
+						  'price_with_discount_te', 'tax_rate', 'tax_value', 'price_ti', 'tax_value_with_order_discount',
+						  'price_with_order_discount_te');
+			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $keys)));
+
+			foreach ($ids as $id)
+			{
+				$query = new DbQuery();
+				$query->select(implode(',', $keys));
+				$query->from('supply_order_detail');
+				$query->where('id_supply_order = '.(int)$id);
+				$query->orderBy('id_supply_order_detail DESC');
+				$resource = Db::getInstance()->execute($query);
+				// gets details
+				while ($row = Db::getInstance()->nextRow($resource))
+       				 echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row)));
+			}
+
+		}
+		// exports details for the given order
+		else if (Tools::isSubmit('csv_order_details') && Tools::getValue('id_supply_order'))
+		{
+			$supply_order = new SupplyOrder((int)Tools::getValue('id_supply_order'));
+			if (Validate::isLoadedObject($supply_order))
+			{
+				$details = $supply_order->getEntriesCollection();
+				$details->getAll();
+    			$csv = new CSV($details, $this->l('supply_order').'_'.$supply_order->reference.'_details');
+    			$csv->export();
+			}
+		}
+	}
+
 	/**
 	 * Helper function for AdminSupplyOrdersController::postProcess()
 	 *
@@ -1632,14 +1716,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		$content = '<span style="width:20px; margin-right:5px;">';
 		if ($supply_order_state->editable == false)
-			$content .= '<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'"><img src="../img/admin/pdf.gif" alt="invoice" /></a>';
+			$content .= '<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'" title="Export as PDF"><img src="../img/admin/pdf.gif" alt="invoice" /></a>';
 		else
 			$content .= '-';
 		$content .= '</span>';
 
 		$content .= '<span style="width:20px">';
 		if ($supply_order_state->enclosed == true && $supply_order_state->receipt_state == true)
-			$content .= '<a href="csv.php?id_supply_order='.(int)$supply_order->id.'"><img src="../img/admin/excel_file.png" alt="csv" /></a>';
+			$content .= '<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&amp;id_supply_order='.(int)$supply_order->id.'&csv_order_details" title="Export as CSV"><img src="../img/admin/excel_file.png" alt="" /></a>';
 		else
 			$content .= '-';
 		$content .= '</span>';

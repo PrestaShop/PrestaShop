@@ -154,9 +154,12 @@ class SupplyOrderCore extends ObjectModel
 		'is_template' => 'isBool',
 	);
 
+	/**
+	 * @var array Defition used by the Collection object
+	 */
 	public static $definition = array(
-		'table' => 'supply_order',
-		'primary' => 'id_supply_order',
+    	'table' => 'supply_order',
+    	'primary' => 'id_supply_order',
 	);
 
 	public function getFields()
