@@ -229,7 +229,7 @@ abstract class ObjectModelCore
 			throw new PrestashopException('not table or identifier : '.$this->table);
 
 		/* Hook */
-		Hook::exec('actionObject'.get_class($this).'AddBefore');
+		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
 
 		/* Automatically fill dates */
 		if ($autodate AND key_exists('date_add', $this))
@@ -285,7 +285,7 @@ abstract class ObjectModelCore
 		}
 
 		/* Hook */
-		Hook::exec('actionObject'.get_class($this).'AddAfter');
+		Hook::exec('actionObject'.get_class($this).'AddAfter', array('object' => $this));
 
 		return $result;
 	}
@@ -301,7 +301,7 @@ abstract class ObjectModelCore
 			throw new PrestashopException('wrong identifier or table:'.$this->identifier.', table: '.$this->table);
 
 		/* Hook */
-		Hook::exec('actionObject'.get_class($this).'UpdateBefore');
+		Hook::exec('actionObject'.get_class($this).'UpdateBefore', array('object' => $this));
 
 		$this->clearCache();
 		/* Automatically fill dates */
@@ -360,7 +360,7 @@ abstract class ObjectModelCore
 		}
 
 		/* Hook */
-		Hook::exec('actionObject'.get_class($this).'UpdateAfter');
+		Hook::exec('actionObject'.get_class($this).'UpdateAfter', array('object' => $this));
 
 		return $result;
 	}
@@ -376,7 +376,7 @@ abstract class ObjectModelCore
 			throw new PrestashopException('wrong identifier or table:'.$this->identifier.', table: '.$this->table);
 
 		/* Hook */
-		Hook::exec('actionObject'.get_class($this).'DeleteBefore');
+		Hook::exec('actionObject'.get_class($this).'DeleteBefore', array('object' => $this));
 
 		$this->clearCache();
 
@@ -398,7 +398,7 @@ abstract class ObjectModelCore
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->table.'_group_shop` WHERE `'.$this->identifier.'`='.(int)$this->id);
 
 		/* Hook */
-		Hook::exec('actionObject'.get_class($this).'DeleteAfter');
+		Hook::exec('actionObject'.get_class($this).'DeleteAfter', array('object' => $this));
 
 		return $result;
 	}
