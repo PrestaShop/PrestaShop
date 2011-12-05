@@ -58,6 +58,7 @@ smartyRegisterFunction($smarty, 'function', 'm', 'smartyMaxWords'); // unused
 smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate');
+smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
 
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
 smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
@@ -142,4 +143,10 @@ function smartyRegisterFunction($smarty, $type, $function, $params)
 	if (!in_array($type, array('function', 'modifier')))
 		return false;
 	$smarty->registerPlugin($type, $function, $params);
+}
+
+function smartyHook($params, &$smarty)
+{
+	if (isset($params['h']) && !empty($params['h']))
+		return Hook::exec($params['h']);
 }
