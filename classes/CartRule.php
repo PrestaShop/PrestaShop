@@ -59,11 +59,8 @@ class CartRuleCore extends ObjectModel
 
 	public static $definition = array(
 		'table' => 'cart_rule',
-		'identifier' => 'id_cart_rule',
+		'primary' => 'id_cart_rule',
 	);
-
-	protected $table = 'cart_rule';
-	protected $identifier = 'id_cart_rule';
 
  	protected $fieldsRequired = array('date_from', 'date_to');
  	protected $fieldsSize = array('code' => 254, 'description' => 65534);
