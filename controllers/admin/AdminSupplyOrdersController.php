@@ -340,13 +340,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouse();
 		$this->tpl_list_vars['filter_status'] = $this->getFilterStatus();
 
-
-		// access
-		if (!($this->tabAccess['add'] === '1'))
-			unset($this->toolbar_btn['new']);
-
-		unset($this->toolbar_btn['new']);
-
+		// adds export csv buttons
 		$this->toolbar_btn['export-csv-orders'] = array(
 			'short' => 'Export Orders',
 			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders',
@@ -359,10 +353,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'desc' => $this->l('Export Orders Details (CSV)'),
 		);
 
-		$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-			'desc' => $this->l('Add new')
-		);
+		// access
+		unset($this->toolbar_btn['new']);
+		if ($this->tabAccess['add'] === '1')
+		{
+			$this->toolbar_btn['new'] = array(
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+				'desc' => $this->l('Add new')
+			);
+		}
 
 		// overrides query
 		$this->_select = '
