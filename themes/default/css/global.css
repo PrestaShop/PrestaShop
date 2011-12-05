@@ -547,6 +547,12 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li {padding:7px 0}
 #footer li a {color:#fff}
 
+#footer .myaccount {padding: 15px 10px;}
+#footer .myaccount h4 {
+	padding:0 0 10px 0;
+	background:none;
+}
+
 /* ************************************************************************************************
       PRODUCT PAGE
 ************************************************************************************************ */

@@ -151,10 +151,11 @@ span.view_scroll_spacer {
 	padding:1px;
 	border:1px solid #ccc
 }
+.attribute_list #color_to_pick_list li.selected{border:1px solid #000}
 .attribute_list #color_to_pick_list a.color_pick{
 	display:block;
 	height:15px;
-	width:15px
+	width:15px;
 }
 
 .product_attributes {
@@ -198,6 +199,8 @@ span.view_scroll_spacer {
 /* prices */
 .content_prices {
 	margin-top:10px;
+	padding-top:10px;
+	border-top:1px solid #ccc;
 	text-align:right
 }
 #buy_block p.price {padding:0}
