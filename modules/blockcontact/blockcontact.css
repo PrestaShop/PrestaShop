@@ -1,7 +1,7 @@
 /* block CONTACT ******************************************************************************* */
 #contact_block .block_content {
 	padding:10px 0 15px 0;
-   background: url(img/block_contact_bg.jpg) no-repeat left 50px transparent
+   background: url(images/block_contact_bg.jpg) no-repeat left 50px transparent
 }
 
 #contact_block p {
@@ -13,7 +13,7 @@
    margin:0 0 0 60px;
    padding-left: 26px;
    font: bold 12px/20px Arial,Verdana,sans-serif;
-   background: url(img/block_contact_pict_tel.png) no-repeat 0 0 transparent
+   background: url(images/block_contact_pict_tel.png) no-repeat 0 0 transparent
 }
 #contact_block a {
    display:block;
@@ -26,6 +26,6 @@
 	-moz-border-radius:3px;
 	-webkit-border-radius:3px;
    border-radius:3px;
-   background:url(img/bloc_contact_a_bg.png) repeat-x 0 0 #000
+   background:url(images/bloc_contact_a_bg.png) repeat-x 0 0 #000
 }
 #contact_block a:hover {text-decoration:none}

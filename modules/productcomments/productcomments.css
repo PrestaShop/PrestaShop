@@ -93,7 +93,8 @@
 	clear:both;
 	margin-top:20px
 }
-#new_comment_form p.text {
+#new_comment_form p.text
+#new_comment_form p.textarea {
 	margin-bottom:0;
 	padding-bottom:0
 }
@@ -119,6 +120,7 @@
 }
 
 #new_comment_form .submit {
+	margin-top:20px;
 	padding:0;
 	font-size:13px;
 	text-align:right
@@ -172,6 +174,7 @@
 
 #product_comments_block_tab div.comment div.comment_details {
 	float: left;
+	overflow:hidden;
 	width: 360px
 }
 #product_comments_block_tab div.comment_details h4 {padding-bottom:10px}
