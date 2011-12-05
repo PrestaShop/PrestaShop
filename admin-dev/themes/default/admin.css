@@ -165,9 +165,9 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-duplicate { background-image: url(process-icon-duplicate.png);}
 .toolbarBox .process-icon-preview { background-image: url(process-icon-preview.png);}
 .toolbarBox .process-icon-stats { background-image: url(process-icon-stats.png);}
-.toolbarBox .process-icon-cancel { background-image: url(process-icon-cancel.png);}
-.toolbarBox .process-icon-new, .toolbarBox .process-icon-newAttributes{ background-image: url(process-icon-new.png);}
-.toolbarBox .process-icon-save, .toolbarBox .process-icon-save-settings { background-image: url(process-icon-save.png);}
+.toolbarBox .process-icon-cancel, .toolbarBox .toolbar-cancel { background-image: url(process-icon-cancel.png);}
+.toolbarBox .process-icon-new, .toolbarBox .toolbar-new{ background-image: url(process-icon-new.png);}
+.toolbarBox .process-icon-save { background-image: url(process-icon-save.png);}
 .toolbarBox .process-icon-save-and-stay { background-image: url(process-icon-save-and-stay.png);}
 .toolbarBox .process-icon-edit { background-image: url(process-icon-edit.png);}
 .toolbarBox .process-icon-back { background-image: url(process-icon-back.png);}
