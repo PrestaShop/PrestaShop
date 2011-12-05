@@ -282,7 +282,7 @@ class StockAvailableCore extends ObjectModel
 			$id_product_attribute = 0;
 
 		$query = new DbQuery();
-		$query->select('quantity');
+		$query->select('SUM(quantity)');
 		$query->from('stock_available');
 
 		// if null, it's a product without attributes
@@ -468,12 +468,17 @@ class StockAvailableCore extends ObjectModel
 	{
 		if ($group_shop->share_stock)
 		{
-			$id_shops_list = implode(', ', Shop::getIdShopsByIdGroupShop($group_shop->id));
+			$shop_list = Shop::getIdShopsByIdGroupShop($group_shop->id);
 
-			return Db::getInstance()->execute('
-				DELETE FROM '._DB_PREFIX_.'stock_available
-				WHERE id_shop IN ('.$id_shops_list.')'
-			);
+			if (count($shop_list) > 0)
+			{
+				$id_shops_list = implode(', ', $shop_list);
+
+				return Db::getInstance()->execute('
+					DELETE FROM '._DB_PREFIX_.'stock_available
+					WHERE id_shop IN ('.$id_shops_list.')'
+				);
+			}
 		}
 		else
 		{

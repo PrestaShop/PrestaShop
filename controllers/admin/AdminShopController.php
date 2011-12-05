@@ -284,7 +284,7 @@ class AdminShopControllerCore extends AdminController
 			'product' => $this->l('Products'),
 			'product_lang' => $this->l('Products lang'),
 			'scene' => $this->l('Scenes'),
-			'stock_available' => $this->l('Stock'),
+			'stock_available' => $this->l('Available quantities for sale'),
 			'store' => $this->l('Stores'),
 			'warehouse' => $this->l('Warehouse'),
 		);

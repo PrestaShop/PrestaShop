@@ -826,13 +826,13 @@ class ShopCore extends ObjectModel
 			if ($tables_import && !isset($tables_import[$table_name]))
 				continue;
 
-			// Special case for stock if current shop is in a share stock group
-			/*if ($table_name == 'stock')
+			// Special case for stock_available if current shop is in a share stock group
+			if ($table_name == 'stock_available')
 			{
 				$group = new GroupShop($this->id_group_shop);
 				if ($group->share_stock && $group->haveShops())
 					continue;
-			}*/
+			}
 
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_shop')

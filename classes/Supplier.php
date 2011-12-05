@@ -294,12 +294,20 @@ class SupplierCore extends ObjectModel
 
 	public function getProductsLite($id_lang)
 	{
-		return Db::getInstance()->executeS('
+		$sql = '
 			SELECT p.`id_product`,  pl.`name`
 			FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
-			WHERE p.`id_supplier` = '.(int)$this->id
-		);
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+				p.`id_product` = pl.`id_product`
+				AND pl.`id_lang` = '.(int)$id_lang.'
+			)
+			INNER JOIN `'._DB_PREFIX_.'product_supplier` ps ON (
+				ps.`id_product` = p.`id_product`
+				AND ps.`id_supplier` = '.(int)$this->id.'
+			)
+			GROUP BY p.`id_product`';
+
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/*
