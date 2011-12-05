@@ -6,6 +6,7 @@
  */
 
 .bx-window {margin-bottom:20px;}
+.bx-wrapper {height:300px}
  
 /*next button*/
 .bx-next {
@@ -35,14 +36,28 @@
 }
 
 /*pager links*/
+.bx-pager {
+   position: absolute;
+   bottom: 20px;
+	bottom:40px !ie;/* hack ie7 */
+	right: 15px;
+	padding-top: 7px;
+	font-size:11px;
+	color:#666;
+	text-align:center;
+}
 .bx-pager a {
+	display:inline-block;
 	zoom:1;
 	margin-right: 5px;
-	padding: 4px 7px 3px 7px;
-	font-weight: bold;
+	padding:4px 0 0 1px;
+	height:16px;/* 19 */
+	width:18px;/* 19 */
+	font-weight:bold;
 	font-size: 11px;
-	color: #fff;
-	background: url(gray_pager.png) no-repeat 0 -20px;
+	color:#000;
+	text-decoration:none;
+	background:url(gray_pager.png) no-repeat 0 -20px;
 }
 
 /*auto start button*/
@@ -71,19 +86,9 @@
 /*pager links hover and active states*/
 .bx-pager .pager-active,
 .bx-pager a:hover {
+	color:#fff;
+	text-decoration:none;
 	background-position: 0 0;
-}
-
-/*pager wrapper*/
-.bx-pager {
-	float:left;
-   	position: absolute;
-   	bottom: 20px;
-	left: 15px;
-	padding-top: 7px;
-	font-size:11px;
-	color:#666;
-	text-align:center;
 }
 
 /*captions*/
@@ -104,14 +109,3 @@
 	color: #666;
 	font-size: 12px;
 }
-
-
-
-
-
-
-
-
-
-
-
