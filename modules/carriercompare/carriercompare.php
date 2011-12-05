@@ -30,11 +30,14 @@ if (!defined('_PS_VERSION_'))
 
 class CarrierCompare extends Module
 {
+	public $template_directory = '';
+	public $smarty;
+	
 	public function __construct()
 	{
 		$this->name = 'carriercompare';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -42,6 +45,19 @@ class CarrierCompare extends Module
 
 		$this->displayName = $this->l('Shipping Estimation');
 		$this->description = $this->l('Module to compare carrier possibilities before using  the checkout process');
+		$this->template_directory = dirname(__FILE__).'/template/';
+		$this->initRetroCompatibilityVar();
+	}
+	
+	// Retro-compatibiliy 1.4/1.5
+	private function initRetroCompatibilityVar()
+	{			
+		if (class_exists('Context'))
+			$smarty = Context::getContext()->smarty;
+		else
+			global $smarty;
+		
+		$this->smarty = $smarty;
 	}
 
 	public function install()
@@ -49,6 +65,29 @@ class CarrierCompare extends Module
 		if (!parent::install() OR !$this->registerHook('shoppingCart') OR !$this->registerHook('header'))
 			return false;
 		return true;
+	}
+	
+	public function getContent()
+	{
+		if (!empty($_POST))
+			$this->postProcess();
+		
+		$this->smarty->assign('refresh_method', Configuration::get('SE_RERESH_METHOD'));
+		return $this->smarty->fetch($this->template_directory .'configuration.tpl');
+	}
+	
+	public function postProcess()
+	{
+		$errors = array();
+		
+		if (Tools::isSubmit('setGlobalConfiguration'))
+		{
+			$method = (int)Tools::getValue('refresh_method');
+			Configuration::updateValue('SE_RERESH_METHOD', $method);
+		}
+		
+		$this->smarty->assign(array(
+			'display_error' => count($errors) ? $errors : false));
 	}
 
 	public function hookHeader($params)
@@ -66,9 +105,21 @@ class CarrierCompare extends Module
 	{
 		if (!$this->isModuleAvailable())
 			return;
-
-		$this->context->smarty->assign(array(
-			'countries' => Country::getCountries($this->context->language->id),
+		
+		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) 
+			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		
+		$endURL = __PS_BASE_URI__.'modules/carriercompare/';
+	
+		if (method_exists('Tools', 'getShopDomainSsl'))
+			$moduleURL = $protocol.Tools::getShopDomainSsl().$endURL;
+		else
+			$moduleURL = $protocol.$_SERVER['HTTP_HOST'].$endURL;		
+		
+		$refresh_method = Configuration::get('SE_RERESH_METHOD');
+		
+		$this->smarty->assign(array(
+			'countries' => Country::getCountries((int)$cookie->id_lang),
 			'id_carrier' => ($params['cart']->id_carrier ? $params['cart']->id_carrier : Configuration::get('PS_CARRIER_DEFAULT')),
 			'id_country' => (isset($this->context->customer->geoloc_id_country) ? $this->context->customer->geoloc_id_country : Configuration::get('PS_COUNTRY_DEFAULT')),
 			'id_state' => (isset($this->context->customer->geoloc_id_state) ? $this->context->customer->geoloc_id_state : 0),
@@ -76,10 +127,12 @@ class CarrierCompare extends Module
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
-			'currencyBlank' => $this->context->currency->blank
+			'currencyBlank' => $this->context->currency->blank,
+			'new_base_dir' => $moduleURL,
+			'refresh_method' => ($refresh_method === false) ? 0 : $refresh_method
 		));
 
-		return $this->display(__FILE__, 'carriercompare.tpl');
+		return $this->smarty->fetch($this->template_directory.'carriercompare.tpl');
 	}
 
 	/*
@@ -110,15 +163,17 @@ class CarrierCompare extends Module
 			$id_zone = State::getIdZone($id_state);
 		if (!$id_zone)
 			$id_zone = Country::getIdZone($id_country);
+		
+		// Need to set the infos for carrier module !
+		$this->context->cookie->id_country = $id_country;
+		$this->context->cookie->id_state = $id_state;
+		$this->context->cookie->postcode = $zipcode;
 
 		$carriers = Carrier::getCarriersForOrder((int)$id_zone);
-
-		return (count($carriers) ? $carriers : array());
+		
+		return (sizeof($carriers) ? $carriers : array());
 	}
 
-	/**
-	 * @todo this function must be modified - id_carrier is now delivery_option
-	 */
 	public function saveSelection($id_country, $id_state, $zipcode, $id_carrier)
 	{
 		$errors = array();
@@ -191,7 +246,7 @@ class CarrierCompare extends Module
 		 * This module is only available on standard order process because
 		 * on One Page Checkout the carrier list is already available.
 		 */
-		if ($fileName != 'order.php')
+		if (!in_array($fileName, array('order.php', 'cart.php')))
 			return false;
 		/**
 		 * If visitor is logged, the module isn't available on Front office,
