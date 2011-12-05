@@ -101,7 +101,7 @@ class HomeFeatured extends Module
 		$nb = (int)(Configuration::get('HOME_FEATURED_NBR'));
 		$products = $category->getProducts($params['cookie']->id_lang, 1, ($nb ? $nb : 10));
 
-		$this->templateAssign(array(
+		$this->smarty->assign(array(
 			'products' => $products,
 			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'homeSize' => Image::getSize('home'),

@@ -26,24 +26,24 @@
 
 <!-- Block manufacturers module -->
 <div id="manufacturers_block_left" class="block blockmanufacturer">
-	<h4>{if $blockmanufacturer_display_link_manufacturer}<a href="{$link->getPageLink('manufacturer')}" title="{l s='Manufacturers' mod='blockmanufacturer'}">{/if}{l s='Manufacturers' mod='blockmanufacturer'}{if $blockmanufacturer_display_link_manufacturer}</a>{/if}</h4>
+	<h4>{if $display_link_manufacturer}<a href="{$link->getPageLink('manufacturer')}" title="{l s='Manufacturers' mod='blockmanufacturer'}">{/if}{l s='Manufacturers' mod='blockmanufacturer'}{if $display_link_manufacturer}</a>{/if}</h4>
 	<div class="block_content">
-{if $blockmanufacturer_manufacturers}
-	{if $blockmanufacturer_text_list}
+{if $manufacturers}
+	{if $text_list}
 	<ul class="bullet">
-	{foreach from=$blockmanufacturer_manufacturers item=manufacturer name=manufacturer_list}
-		{if $smarty.foreach.manufacturer_list.iteration <= $blockmanufacturer_text_list_nb}
+	{foreach from=$manufacturers item=manufacturer name=manufacturer_list}
+		{if $smarty.foreach.manufacturer_list.iteration <= $text_list_nb}
 		<li class="{if $smarty.foreach.manufacturer_list.last}last_item{elseif $smarty.foreach.manufacturer_list.first}first_item{else}item{/if}"><a href="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)}" title="{l s='More about' mod='blockmanufacturer'} {$manufacturer.name}">{$manufacturer.name|escape:'htmlall':'UTF-8'}</a></li>
 		{/if}
 	{/foreach}
 	</ul>
 	{/if}
-	{if $blockmanufacturer_form_list}
+	{if $form_list}
 		<form action="{$smarty.server.SCRIPT_NAME}" method="get">
 			<p>
 				<select id="manufacturer_list" onchange="autoUrl('manufacturer_list', '');">
 					<option value="0">{l s='All manufacturers' mod='blockmanufacturer'}</option>
-				{foreach from=$blockmanufacturer_manufacturers item=manufacturer}
+				{foreach from=$manufacturers item=manufacturer}
 					<option value="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)}">{$manufacturer.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 				</select>

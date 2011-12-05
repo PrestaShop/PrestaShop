@@ -92,7 +92,7 @@ class BlockLanguages extends Module
 				}
 			}
 			if (count($default_rewrite))
-				$this->templateAssign('lang_rewrite_urls', $default_rewrite);
+				$this->smarty->assign('lang_rewrite_urls', $default_rewrite);
 		}
 
 		return $this->display(__FILE__, 'blocklanguages.tpl');

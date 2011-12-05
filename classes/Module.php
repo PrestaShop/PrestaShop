@@ -1237,24 +1237,6 @@ abstract class ModuleCore
 		return ($overloaded ? _PS_THEME_DIR_.'modules/'.$this->name : _PS_MODULE_DIR_.$this->name).'/'.$template;
 	}
 
-	/**
-	 * Assign a smarty vars (same syntax as smarty->assign) but prefix all keys with module name
-	 *
-	 * @since 1.5.0
-	 * @param string $key Variable key (can be an array)
-	 * @param mixed $value Variable value
-	 */
-	public function templateAssign($key, $value = null)
-	{
-		if (is_array($key))
-		{
-			foreach ($key as $k => $v)
-				$this->context->smarty->assign($this->name.'_'.$k, $v);
-		}
-		else
-			$this->context->smarty->assign($this->name.'_'.$key, $value);
-	}
-
 	protected function _getApplicableTemplateDir($template)
 	{
 		return $this->_isTemplateOverloaded($template) ? _PS_THEME_DIR_ : _PS_MODULE_DIR_.$this->name.'/';
