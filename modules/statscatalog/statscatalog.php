@@ -169,7 +169,7 @@ class StatsCatalog extends Module
 
 		$html = '
 		<script type="text/javascript" language="javascript">$(\'#calendar\').slideToggle();</script>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<div class="margin-form">
 				<form action="" method="post" id="categoriesForm">
 				<label>
@@ -207,7 +207,7 @@ class StatsCatalog extends Module
 		if (count($productsNB) && count($productsNB) < 50)
 		{
 			$html .= '<br />
-			<div class="blocStats"><h2 class="icon-basket_delete.png"> '.$this->l('Products never purchased').'</h2>
+			<div class="blocStats"><h2 class="icon-basket-delete"><span></span>'.$this->l('Products never purchased').'</h2>
 				<table cellpadding="0" cellspacing="0" class="table">
 					<tr><th>'.$this->l('ID').'</th><th>'.$this->l('Name').'</th><th>'.$this->l('Edit / View').'</th></tr>';
 			foreach ($productsNB as $product)

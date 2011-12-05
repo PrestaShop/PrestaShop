@@ -304,7 +304,7 @@ class StatsForecast extends Module
 		$orders = Db::getInstance()->getValue($sql);
 
 		$this->_html .= '<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Conversion').'</h2>
+		<div class="blocStats"><h2 class="icon-conversion"><span></span>'.$this->l('Conversion').'</h2>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Visitors').'<br />'.$visitors.'</span>
 			<span style="float:left;text-align:center;margin-right:10px">
 				<img src="../modules/'.$this->name.'/next.png"><br />'.round(100 * $customers / max(1, $visitors)).' %<br />
@@ -346,7 +346,7 @@ class StatsForecast extends Module
 
 		$this->_html .= '
 		<br />';
-		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Payment distibution').'</h2>
+		$this->_html .= '<div class="blocStats"><h2 class="icon-payment"><span></span>'.$this->l('Payment distibution').'</h2>
 			<form id="cat" action="'.$ru.'#payment" method="post" >
 				<input type="hidden" name="submitIdZone" value="1" />
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
@@ -369,7 +369,7 @@ class StatsForecast extends Module
 			</table>
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Category distribution').'</h2>
+		<div class="blocStats"><h2 class="icon-category"><span></span>'.$this->l('Category distribution').'</h2>
 			<form id="cat" action="'.$ru.'#cat" method="post" >
 				<input type="hidden" name="submitIdZone" value="1" />
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
@@ -394,7 +394,7 @@ class StatsForecast extends Module
 			</table>
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Language distribution').'</h2>
+		<div class="blocStats"><h2 class="icon-language"><span></span>'.$this->l('Language distribution').'</h2>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 				<tr><th>'.$this->l('Customers').'</th><th>'.$this->l('Sales').'</th><th>'.$this->l('%').'</th><th colspan="2">'.$this->l('Growth').'</th></tr>';
 		foreach ($ca['lang'] as $ophone => $amount)
@@ -413,7 +413,7 @@ class StatsForecast extends Module
 			</table>
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Zone distribution').'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Zone distribution').'</h2>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 				<tr><th>'.$this->l('Zone').'</th><th>'.$this->l('Count').'</th><th>'.$this->l('Total').'</th><th>'.$this->l('% Count').'</th><th>'.$this->l('% Sales').'</th></tr>';
 		foreach ($ca['zones'] as $zone)
@@ -429,7 +429,7 @@ class StatsForecast extends Module
 			</table>
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Currency distribution').'</h2>
+		<div class="blocStats"><h2 class="icon-currency"><span></span>'.$this->l('Currency distribution').'</h2>
 			<form id="cat" action="'.$ru.'#currencies" method="post" >
 				<input type="hidden" name="submitIdZone" value="1" />
 				'.$this->l('Zone:').' <select name="stats_id_zone" onchange="this.form.submit();">
@@ -453,7 +453,7 @@ class StatsForecast extends Module
 			</table>
 		</div>
 		<br />
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Attribute distribution').'</h2>
+		<div class="blocStats"><h2 class="icon-attribute"><span></span>'.$this->l('Attribute distribution').'</h2>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">
 				<tr><th>'.$this->l('Group').'</th><th>'.$this->l('Attribute').'</th><th>'.$this->l('Count').'</th></tr>';
 		foreach ($ca['attributes'] as $attribut)

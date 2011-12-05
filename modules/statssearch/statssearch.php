@@ -98,7 +98,7 @@ class StatsSearch extends ModuleGraph
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		$table = '<div style="overflow-y: scroll; height: 600px;">
 		<table class="table" border="0" cellspacing="0" cellspacing="0">
 		<thead>

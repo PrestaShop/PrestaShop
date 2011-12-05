@@ -137,9 +137,9 @@ class StatsBestProducts extends ModuleGrid
 			$this->csvExport($engineParams);
 
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			'.$this->engine($engineParams).'
-			<p><a href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
+			<p><a class="button export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
 		</fieldset>';
 		return $this->_html;
 	}
