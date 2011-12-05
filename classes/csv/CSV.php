@@ -27,28 +27,26 @@
 
 /**
  * Simple class to output CSV data
+ * Uses CollectionCore
  * @since 1.5
  */
 class CSVCore
 {
 	public $filename;
-    public $objects;
+    public $collection;
     public $delimiter;
 
     /**
      * Loads objects, filename and optionnaly a delimiter.
-     * @param Array|object $objects : Assumed to be an Array of objects or an object
+     * @param Collection|Array : colletion of objects / array (of non-objects)
      * @param string $filename : used later to save the file
      * @param string $delimiter Optional : delimiter used
      */
-	public function __construct(&$objects, $filename, $delimiter = ';')
+	public function __construct(&$collection, $filename, $delimiter = ';')
 	{
 		$this->filename = $filename;
 		$this->delimiter = $delimiter;
-
-		$this->objects = $objects;
-		if (!is_array($objects))
-			$this->objects = array($objects);
+		$this->collection = $collection;
 	}
 
 	/**
@@ -60,16 +58,15 @@ class CSVCore
 	{
 		$this->headers();
 
-		$current_object_name = '';
-		foreach ($this->objects as $object)
+		$header_line = false;
+
+		foreach ($this->collection as $object)
 		{
 			$vars = get_object_vars($object);
-
-			// ouputs keys if needed
-			if (get_class($object) != $current_object_name)
+			if (!$header_line)
 			{
 				$this->output(array_keys($vars));
-				$current_object_name = get_class($object);
+				$header_line = true;
 			}
 
 			// outputs values
@@ -93,9 +90,9 @@ class CSVCore
 	 * @param string $data
 	 * @return string $data
 	 */
-    public function wrap($data)
+    public static function wrap($data)
     {
-        $data = preg_replace('/"(.+)"/', '""$1""', $data);
+    	$data = Tools::safeOutput($data, '";');
         return sprintf('"%s"', $data);
     }
 
@@ -104,8 +101,9 @@ class CSVCore
      */
     public function headers()
     {
-        header('Content-Type: application/csv');
-        header("Content-disposition: attachment; filename={$this->filename}.csv");
+        header('Content-type: text/csv');
+		header('Cache-Control: no-store, no-cache');
+        header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
     }
 }
 
