@@ -24,39 +24,65 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+var ajaxQueries = new Array();
+
+function resetAjaxQueries()
+{
+	for (i = 0; i < ajaxQueries.length; ++i)
+		ajaxQueries[i].abort();
+		
+	ajaxQueries = new Array();
+}
+
+function displayWaitingAjax(type, message)
+{
+	
+	$('#SE_AjaxDisplay').find('p').html(message);
+	$('#SE_AjaxDisplay').css('display', type);
+}
+
 function updateStateByIdCountry()
 {
-	$.ajax({
+	$('#id_state').children().remove();
+	$('#availableCarriers').slideUp('fast');
+	$('#states').slideUp('fast');
+	displayWaitingAjax('block', SE_RefreshStateTS);
+	
+	var query = $.ajax({
 		type: 'POST',
 		url: baseDir + 'modules/carriercompare/ajax.php',
 		data: 'method=getStates&id_country=' + $('#id_country').val(),
 		dataType: 'json',
 		success: function(json) {
-			$('#id_state').children().remove();
-			$('#states').slideUp('slow');
 			if (json.length)
 			{
 				for (state in json)
 				{
 					$('#id_state').append('<option value=\''+json[state].id_state+'\' '+(id_state == json[state].id_state ? 'selected="selected"' : '')+'>'+json[state].name+'</option>');
 				}
-				$('#states').slideDown('slow');
+				$('#states').slideDown('fast');
 			}
+			if (SE_RefreshMethod == 0)
+				updateCarriersList();
+			displayWaitingAjax('none', '');
 		}
 	});
+	ajaxQueries.push(query);
 }
 
 function updateCarriersList()
 {
-	$.ajax({
+	$('#carriers_list').children().remove();
+	$('#availableCarriers').slideUp('fast');
+	$('#noCarrier').slideUp('fast');
+	displayWaitingAjax('block', SE_RetrievingInfoTS);
+	
+	var query = $.ajax({
 		type: 'POST',
 		url: baseDir + 'modules/carriercompare/ajax.php',
 		data: 'method=getCarriers&id_country=' + $('#id_country').val() + '&id_state=' + $('#id_state').val() + '&zipcode=' + $('#zipcode').val(),
 		dataType: 'json',
 		success: function(json) {
-			$('#carriers_list').children().remove();
-			$('#availableCarriers').slideUp('slow');
-			$('#noCarrier').slideUp('slow');
 			if (json.length)
 			{
 				for (carrier in json)
@@ -70,7 +96,7 @@ function updateCarriersList()
 							(json[carrier].img ? '<img src="'+json[carrier].img+'" alt="'+json[carrier].name+'" />' : json[carrier].name)+
 							'</label>'+
 						'</td>'+
-						'<td class="carrier_infos">'+json[carrier].delay+'</td>'+
+						'<td class="carrier_infos">'+((json[carrier].delay != null) ? json[carrier].delay : '') +'</td>'+
 						'<td class="carrier_price">';
 					
 					if (json[carrier].price)
@@ -85,54 +111,77 @@ function updateCarriersList()
 							'</tr>';
 					$('#carriers_list').append(html);
 				}
-				$('#availableCarriers').slideDown('slow');
+				$('#availableCarriers').slideDown('fast');
 			}
 			else
-				$('#noCarrier').slideDown('slow');
+				$('#noCarrier').slideDown('fast');
+			displayWaitingAjax('none', '');
 		}
 	});
+	ajaxQueries.push(query);
 }
 
 function saveSelection()
 {
-	$.ajax({
+	$('#carriercompare_errors_list').children().remove();
+	$('#carriercompare_errors').slideUp('fast');
+	displayWaitingAjax('block', SE_RedirectTS);
+	$('#carriercompare_submit').attr('disabled', true);
+	
+	var query = $.ajax({
 		type: 'POST',
 		url: baseDir + 'modules/carriercompare/ajax.php',
 		data: 'method=saveSelection&' + $('#compare_shipping_form').serialize(),
 		dataType: 'json',
 		success: function(json) {
-			$('#carriercompare_errors_list').children().remove();
-			$('#carriercompare_errors').slideUp('slow');
 			if (json.length)
 			{
 				for (error in json)
-				{
 					$('#carriercompare_errors_list').append('<li>'+json[error]+'</li>');
-				}
-				$('#carriercompare_errors').slideDown('slow');
+				$('#carriercompare_errors').slideDown('fast');
+				displayWaitingAjax('none', '');
+				$('#carriercompare_submit').removeAttr('disabled');
 			}
 			else
 			{
-				$('#carriercompare_submit').fadeOut('slow');
-				document.location.href = document.location.href;
+				$('.SE_SubmitRefreshCard').fadeOut('fast');
+				location.reload(true);
 			}
 		}
 	});
+	ajaxQueries.push(query);
 	return false;
 }
 
-$(document).ready(function() {
-	$('#id_country').change(function(){
+function PS_SE_HandleEvent()
+{
+	$(document).ready(function() {
+		$('#id_country').change(function() {
+			resetAjaxQueries();
+			updateStateByIdCountry();
+		});
+		
+		if (SE_RefreshMethod == 0)
+		{
+			$('#id_state,#zipcode').change(function() {
+				resetAjaxQueries();
+				updateCarriersList();
+			});
+			$('#zipcode').keyup(function() {
+				resetAjaxQueries();
+				updateCarriersList();
+			});
+		}
+		
+		$('#update_carriers_list').click(function() {
+			updateCarriersList();
+		});
+		
+		$('#carriercompare_submit').click(function() {
+			resetAjaxQueries();
+			saveSelection();
+			return false;
+		});
 		updateStateByIdCountry();
-		updateCarriersList();
 	});
-	$('#id_state').change(function(){
-		updateCarriersList();
-	});
-	$('#carriercompare_submit').click(function(){
-		saveSelection();
-		return false;
-	});
-	updateStateByIdCountry();
-	updateCarriersList();
-});
+}
