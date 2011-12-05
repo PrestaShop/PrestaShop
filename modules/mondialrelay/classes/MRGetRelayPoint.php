@@ -151,7 +151,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 				}
 			}
 			$concatenationValue .= $this->_webServiceKey;
-			$this->_fields['list']['Security']['value'	] = strtoupper(md5($concatenationValue));	
+			$this->_fields['list']['Security']['value'] = strtoupper(md5($concatenationValue));	
 	}
 
 	/*
@@ -238,7 +238,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
  				}
  				if ($totalEmptyFields == count($relayPoint))
  					unset($result[$num]);
- 				}
+ 			}
  			if (!count($result))
  				$errors[] = $this->_mondialRelay->l('MondialRelay can\'t find any relay point near your address. Maybe your address isn\'t properly filled ?');
  			else

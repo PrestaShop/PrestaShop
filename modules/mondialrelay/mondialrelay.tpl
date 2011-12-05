@@ -26,27 +26,10 @@
 
 {$jQueryOverload}
 
-<link href="{$new_base_dir}/style.css" rel="stylesheet" type="text/css" media="all" />
 <script type="text/javascript">
 	// Global JS Value
-	var _PS_MR_MODULE_DIR_ = "{$new_base_dir}";
-	var mrtoken = "{$MRToken}";
-	var PS_MROPC = {$one_page_checkout};
-	var PS_MRTranslationList = new Array();
-	var PS_MRCarrierMethodList =  new Array();
-	var PS_MRSelectedRelayPoint = {literal}{{/literal}'carrier_id': 0, 'relayPointNum': 0{literal}}{/literal};
 	var PS_MRPreSelectedRelay = '{$preSelectedRelay}';
-
-	PS_MRTranslationList['Select'] = "{l s='Select' mod='mondialrelay'}";
-	PS_MRTranslationList['Selected'] = "{l s='Selected' mod='mondialrelay'}";
-	PS_MRTranslationList['errorSelection'] = "{l s='Please choose a relay point' mod='mondialrelay'}";
-	PS_MRTranslationList['openingRelay'] = "{l s='Opening hours' mod='mondialrelay'}";
-	PS_MRTranslationList['moreDetails'] = "{l s='More details' mod='mondialrelay'}";
 </script>
-
-<script type="text/javascript" src="{$new_base_dir}mondialrelay.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript" src="{$new_base_dir}js/gmap.js"></script>
 
 <script type="text/javascript">
 

@@ -194,7 +194,7 @@ class MondialRelay extends Module
 				!$this->registerHook('updateCarrier') ||
 				!$this->registerHook('newOrder') ||
 				!$this->registerHook('BackOfficeHeader') ||
-				!$this->registerHook('paymentTop')))
+				!$this->registerHook('header')))
 			return false;
 
 		if (_PS_VERSION_ >= '1.4' &&
@@ -438,7 +438,6 @@ class MondialRelay extends Module
 					var mrtoken = "'.self::$MRBackToken.'";
 				</script>';
 		return $ret;
-		return $ret;
 	}
 
 	private function _postValidation()
@@ -486,7 +485,7 @@ class MondialRelay extends Module
 			if (!preg_match('#^[0-9A-Z_\-\'., /]{2,32}$#', strtoupper($addr1), $match))
 				$this->_postErrors[] = $this->l('The Main address submited hasn\'t a good format');
 		}*/
-		}
+	}
 
 	private function _postProcess()
 	{
@@ -544,13 +543,6 @@ class MondialRelay extends Module
 	}
 
 	/*
-	** No need anymore
-	*/
-	public function hookProcessCarrier($params)
-	{
-	}
-
-	/*
 	** Update the carrier id to use the new one if changed
 	*/
 	public function hookupdateCarrier($params)
@@ -599,7 +591,24 @@ class MondialRelay extends Module
 			$carriers = array();
 		return $carriers;
 	}
-
+	
+	/*
+	** Added to be used properly with OPC 
+	*/
+	public function hookHeader($params)
+	{
+		if (in_array(basename($_SERVER['SCRIPT_NAME']), array('order-opc.php', 'order.php')))
+		{
+			$$this->context->smarty->assign(array(
+				'one_page_checkout' => (Configuration::get('PS_ORDER_PROCESS_TYPE') ? Configuration::get('PS_ORDER_PROCESS_TYPE') : 0),
+				'new_base_dir' => self::$moduleURL,
+				'MRToken' => self::$MRFrontToken,
+				'jQueryOverload' => self::getJqueryCompatibility(false)));
+			return $this->display(__FILE__, 'header.tpl');
+		}
+		return '';
+	}
+	
 	public function hookextraCarrier($params)
 	{
 		global $nbcarriers;
@@ -634,15 +643,10 @@ class MondialRelay extends Module
 	 	}
 
 	 	$preSelectedRelay = $this->getRelayPointSelected($params['cart']->id);
-		$this->context->smarty->assign(array(
-			'one_page_checkout' => (Configuration::get('PS_ORDER_PROCESS_TYPE') ? Configuration::get('PS_ORDER_PROCESS_TYPE') : 0),
-			'new_base_dir' => self::$moduleURL,
-			'MRToken' => self::$MRFrontToken,
+		$smarty->assign(array(
 			'carriersextra' => $carriersList,
-			'preSelectedRelay' => isset($preSelectedRelay['MR_selected_num']) ? $preSelectedRelay['MR_selected_num'] : '',
-			'jQueryOverload' => self::getJqueryCompatibility(false)
-		));
-
+			'preSelectedRelay' => isset($preSelectedRelay['MR_selected_num']) ? $preSelectedRelay['MR_selected_num'] : ''));
+		
 		return $this->display(__FILE__, 'mondialrelay.tpl');
 	}
 
@@ -1131,9 +1135,10 @@ class MondialRelay extends Module
 	  $query = 'SELECT url_suivi
 	  	FROM '._DB_PREFIX_ .'mr_selected
 	  	WHERE id_mr_selected=\''.(int)($shipping_number).'\';';
-
+	  	  
 		$settings = Db::getInstance()->executeS($query);
-
+		if(!isset($settings[0]['url_suivi']))
+			return null;
 		return $settings[0]['url_suivi'];
 	}
 
@@ -1180,10 +1185,11 @@ class MondialRelay extends Module
 			LEFT JOIN `'._DB_PREFIX_.'customer` c
 			ON (c.`id_customer` = o.`id_customer`)
 			WHERE (
-				SELECT moh.`id_order_state`
-				FROM `'._DB_PREFIX_.'order_history` moh
-				WHERE moh.`id_order` = o.`id_order`
-				ORDER BY moh.`date_add` DESC LIMIT 1) = '.(int)($id_order_state);
+				SELECT moh.`id_order_state` 
+				FROM `'._DB_PREFIX_.'order_history` moh 
+				WHERE moh.`id_order` = o.`id_order` 
+				ORDER BY moh.`date_add` DESC LIMIT 1) = '.(int)($id_order_state).'
+			AND ca.`external_module_name` = "mondialrelay"'; 
 	}
 
 	public static function ordersSQLQuery1_3($id_order_state)
@@ -1211,10 +1217,11 @@ class MondialRelay extends Module
 			LEFT JOIN `'._DB_PREFIX_.'customer` c
 			ON (c.`id_customer` = o.`id_customer`)
 			WHERE (
-				SELECT moh.`id_order_state`
-				FROM `'._DB_PREFIX_.'order_history` moh
-				WHERE moh.`id_order` = o.`id_order`
-				ORDER BY moh.`date_add` DESC LIMIT 1) = '.(int)($id_order_state);
+				SELECT moh.`id_order_state` 
+				FROM `'._DB_PREFIX_.'order_history` moh 
+				WHERE moh.`id_order` = o.`id_order` 
+				ORDER BY moh.`date_add` DESC LIMIT 1) = '.(int)($id_order_state).'
+			AND ca.`name` = "mondialrelay"';
 	}
 
 	public static function getBaseOrdersSQLQuery($id_order_state)
