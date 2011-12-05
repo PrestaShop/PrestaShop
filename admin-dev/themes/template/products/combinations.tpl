@@ -73,11 +73,9 @@
 <div class="separation"></div> {l s='or go to'}
 		&nbsp;<a class="button bt-icon" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a>
 <div class="separation"></div>
-<a class="button bt-icon" href="#" onclick="$('#add_new_combination').slideToggle();return false;">
-	<img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new combination'}</span>
-</a>
 
 <div id="add_new_combination" style="display: none;">
+	<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 	<table cellpadding="5" style="width:100%">
 		<tr>
 			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
@@ -324,7 +322,7 @@
 			<td style="width:150px">&nbsp;</td>
 			<td style="padding-bottom:5px;">
 				<span style="float: left;">
-					<input type="submit" name="submitProductAttribute" id="submitProductAttribute" value="{l s='Add this combination'}" class="button" onclick="attr_selectall(); this.form.action += '&addproduct&tabs=3';" />
+					<input type="submit" name="submitProductAttribute" id="submitProductAttribute" value="{l s='Add this combination'}" class="button" onclick="attr_selectall(); this.form.action += '&addproduct&tabs=3';" add="{l s='Add this combination'}" update="{l s='Update this combination'}" />
 				</span>
 				<span id="ResetSpan" style="float: left; margin-left: 8px; display: none;">
 					<input type="reset" name="ResetBtn" id="ResetBtn" onclick="init_elems(); getE('submitProductAttribute').value ='{l s='Add this attributes group'}';getE('id_product_attribute').value = 0; $('#ResetSpan').slideToggle();" class="button" value="{l s='Cancel modification'}" />

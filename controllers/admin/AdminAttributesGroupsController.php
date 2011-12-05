@@ -426,7 +426,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				);
 				$this->toolbar_btn['newAttributes'] = array(
 					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-					'desc' => $this->l('Add new Attributes')
+					'desc' => $this->l('Add new Attributes'),
+					'class' => 'toolbar-new'
 				);
 		}
 	}

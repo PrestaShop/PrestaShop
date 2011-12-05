@@ -28,18 +28,18 @@
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
 			<li>
-				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" href="{$btn.href}" title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}>
+				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}>
 					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>
 					<div>{$btn.desc}</div>
 				</a>
 			</li>
 			{if isset($ps_help_context) && $ps_help_context}
-			<li class="help-context" style="display:none">
-				<a id="desc-{$table}-help" class="toolbar_btn" href="#" title="{l s='Help'}">
-					<span class="process-icon-help"></span>
-					<div>{l s='Help'}</div>
-				</a>
-			</li>
+				<li class="help-context" style="display:none">
+					<a id="desc-{$table}-help" class="toolbar_btn" href="#" title="{l s='Help'}">
+						<span class="process-icon-help"></span>
+						<div>{l s='Help'}</div>
+					</a>
+				</li>
 			{/if}
 		{/foreach}
 	</ul>

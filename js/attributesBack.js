@@ -220,9 +220,9 @@ function check_unit_impact()
 
 function init_elems()
 {
-	$('#stock_mvt_attribute').hide();
+	/*$('#stock_mvt_attribute').hide();
 	$('#initial_stock_attribute').show();
-	$('#attr_qty_stock').hide();
+	$('#attr_qty_stock').hide();*/
 	var elem = getE('product_att_list');
 
 	if (elem.length)
@@ -235,10 +235,12 @@ function init_elems()
 	getE('attribute_unit_impact').selectedIndex = 0;
 	$('#span_unit_impact').hide();
 	$('#unity_third').html($('#unity_second').html());
-	if ($('#unity').get(0).value.length > 0)
-		$('#tr_unit_impact').show();
-	else
-		$('#tr_unit_impact').hide();
+
+	if ($('#unity').is())
+		if ($('#unity').get(0).value.length > 0)
+			$('#tr_unit_impact').show();
+		else
+			$('#tr_unit_impact').hide();
 	try
 	{
 		if (impact.options[impact.selectedIndex].value == 0)
