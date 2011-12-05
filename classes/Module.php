@@ -1294,7 +1294,8 @@ abstract class ModuleCore
 	 */
 	public function isHookableOn($hook_name)
 	{
-		return is_callable(array($this, 'hook'.ucfirst($hook_name)));
+		$hook_retro = Db::getInstance()->getValue('SELECT `alias` FROM `'._DB_PREFIX_.'hook_alias` where `name` = \''.pSQL($hook_name).'\'');
+		return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($hook_retro))));
 	}
 
 	public function getPermission($variable, $employee = null)
