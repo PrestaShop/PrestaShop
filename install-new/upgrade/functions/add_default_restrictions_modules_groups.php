@@ -33,15 +33,19 @@ function add_default_restrictions_modules_groups()
 	$modules = Db::getInstance()->executeS('
 		SELECT m.*
 		FROM `'._DB_PREFIX_.'module` m');
+	$shops = Db::getInstance()->executeS('
+		SELECT `id_shop`
+		FROM `'._DB_PREFIX_.'shop`');
 	foreach ($groups as $group)
 	{
 		if (!is_array($modules))
 			return false;
 		else
 		{
-			$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 			foreach ($modules as $mod)
-				$sql .= '("'.(int)$group['id_group'].'", "'.(int)$mod['id_module'].'", "1"),';
+				foreach ($shops as $s)
+				$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
 			Db::getInstance()->execute($sql);

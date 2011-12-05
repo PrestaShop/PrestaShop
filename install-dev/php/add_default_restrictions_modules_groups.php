@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 10056 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,15 +33,19 @@ function add_default_restrictions_modules_groups()
 	$modules = Db::getInstance()->executeS('
 		SELECT m.*
 		FROM `'._DB_PREFIX_.'module` m');
+	$shops = Db::getInstance()->executeS('
+		SELECT `id_shop`
+		FROM `'._DB_PREFIX_.'shop`');
 	foreach ($groups as $group)
 	{
 		if (!is_array($modules))
 			return false;
 		else
 		{
-			$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 			foreach ($modules as $mod)
-				$sql .= '("'.(int)$group['id_group'].'", "'.(int)$mod['id_module'].'", "1"),';
+				foreach ($shops as $s)
+				$sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
 			Db::getInstance()->execute($sql);
