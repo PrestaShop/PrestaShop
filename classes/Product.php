@@ -190,8 +190,6 @@ class ProductCore extends ObjectModel
 
 	public $isFullyLoaded = false;
 
-	protected $langMultiShop = true;
-
 	public $cache_is_pack;
 	public $cache_has_attachments;
 	public $is_virtual;
@@ -265,6 +263,7 @@ class ProductCore extends ObjectModel
 		'table' => 'product',
 		'primary' => 'id_product',
 		'multilang' => true,
+		'multishop' => true,
 	);
 
 	protected $webserviceParameters = array(

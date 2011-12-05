@@ -70,8 +70,6 @@ abstract class ObjectModelCore
  	/** @var array Multilingual fields validity functions for admin panel forms */
  	protected $fieldsValidateLang = array();
 
- 	protected $langMultiShop = false;
-
 	/** @var array tables */
  	protected $tables = array();
 
@@ -91,6 +89,11 @@ abstract class ObjectModelCore
 	 * @since 1.5.0
 	 */
 	public static $definition = array();
+
+	/**
+	 * @var array Contain current object definition
+	 */
+	protected $def;
 
 	/**
 	 * Returns object validation rules (fields validity)
@@ -128,23 +131,23 @@ abstract class ObjectModelCore
 	{
 		// For retrocompatibility, we continue to use $this->table and $this->identifier property.
 		// When all objects will implement $definition static in 1.6, we will remove it.
-		$definition = self::getDefinition($this);
-		if (isset($definition['table']))
-			$this->table = $definition['table'];
-		if (isset($definition['primary']))
-			$this->identifier = $definition['primary'];
+		$this->def = self::getDefinition($this);
+		if (isset($this->def['table']))
+			$this->table = $this->def['table'];
+		if (isset($this->def['primary']))
+			$this->identifier = $this->def['primary'];
 
 
 		if (!is_null($id_lang))
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
-		if ($id_shop && $this->langMultiShop)
+		if ($id_shop && $this->isLangMultishop())
 		{
 			$this->id_shop = (int)$id_shop;
 			$this->getShopFromContext = false;
 		}
 
-		if ($this->langMultiShop && !$this->id_shop)
+		if ($this->isLangMultishop() && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->getID(true);
 
 	 	if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table))
@@ -326,7 +329,7 @@ abstract class ObjectModelCore
 							throw new PrestashopException('key '.$key.' is not a valid table or identifier');
 
 					// If this table is linked to multishop system, update / insert for all shops from context
-					if ($this->langMultiShop)
+					if ($this->isLangMultishop())
 					{
 						$listShops = ($this->id_shop && !$this->getShopFromContext) ? array($this->id_shop) : Context::getContext()->shop->getListOfID();
 						foreach ($listShops as $shop)
@@ -469,7 +472,7 @@ abstract class ObjectModelCore
 	{
 		$fields[$id_language]['id_lang'] = $id_language;
 		$fields[$id_language][$this->identifier] = (int)($this->id);
-		if ($this->id_shop AND $this->langMultiShop)
+		if ($this->id_shop && $this->isLangMultishop())
 			$fields[$id_language]['id_shop'] = (int)$this->id_shop;
 		foreach ($fieldsArray as $k => $field)
 		{
@@ -908,7 +911,7 @@ abstract class ObjectModelCore
 
 	public function isLangMultishop()
 	{
-		return (int)$this->langMultiShop;
+		return isset($this->def['multishop']) && $this->def['multishop'] && isset($this->def['multilang']) && $this->def['multilang'];
 	}
 
 	/**
