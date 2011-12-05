@@ -52,7 +52,7 @@ if ($context->customer->isLogged())
 		$toName = strval(Configuration::get('PS_SHOP_NAME'));
 		$customer = $context->customer;
 		if (Validate::isLoadedObject($customer))
-			Mail::Send($context->language->id, 'wishlist', Mail::l('Message from ').$customer->lastname.' '.$customer->firstname,
+			Mail::Send($context->language->id, 'wishlist', Mail::l('Message from ', $context->language->id).$customer->lastname.' '.$customer->firstname,
 			array(
 			'{lastname}' => $customer->lastname, 
 			'{firstname}' => $customer->firstname, 

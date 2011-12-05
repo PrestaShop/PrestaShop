@@ -66,7 +66,7 @@ if (Tools::getValue('action') == 'sendToMyFriend' AND
 		/* Email sending */
 		if (!Mail::Send((int)Context::getContext()->cookie->id_lang,
 				'send_to_a_friend',
-				Mail::l('A friend sent you a link to').' '.$product->name,
+				Mail::l('A friend sent you a link to', (int)Context::getContext()->cookie->id_lang).' '.$product->name,
 				$templateVars, $friendMail,
 				NULL,
 				(Context::getContext()->cookie->email ? Context::getContext()->cookie->email : NULL),

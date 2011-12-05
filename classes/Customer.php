@@ -644,7 +644,7 @@ class CustomerCore extends ObjectModel
 			Mail::Send(
 				(int)$id_lang,
 				'guest_to_customer',
-				Mail::l('Your guest account has been transformed to customer account'),
+				Mail::l('Your guest account has been transformed to customer account', (int)$id_lang),
 				$vars,
 				$this->email,
 				$this->firstname.' '.$this->lastname

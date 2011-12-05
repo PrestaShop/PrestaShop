@@ -103,7 +103,7 @@ if (Tools::isSubmit('submitSponsorFriends') AND Tools::getValue('friendsEmail') 
 							'{firstname_friend}' => $friendFirstName,
 							'{link}' => 'authentication.php?create_account=1&sponsor='.urlencode($cipherTool->encrypt($referralprogram->id.'|'.$referralprogram->email.'|')),
 							'{discount}' => $discount);
-						Mail::Send((int)($cookie->id_lang), 'referralprogram-invitation', Mail::l('Referral Program'), $vars, $friendEmail, $friendFirstName.' '.$friendLastName, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
+						Mail::Send((int)$cookie->id_lang, 'referralprogram-invitation', Mail::l('Referral Program', (int)$cookie->id_lang), $vars, $friendEmail, $friendFirstName.' '.$friendLastName, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 						$invitation_sent = true;
 						$nbInvitation++;
 						$activeTab = 'pending';
@@ -151,7 +151,7 @@ if (Tools::isSubmit('revive'))
 				'{discount}' => $discount
 			);
 			$referralprogram->save();
-			Mail::Send((int)($cookie->id_lang), 'referralprogram-invitation', Mail::l('Referral Program'), $vars, $referralprogram->email, $referralprogram->firstname.' '.$referralprogram->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
+			Mail::Send((int)$cookie->id_lang, 'referralprogram-invitation', Mail::l('Referral Program', (int)$cookie->id_lang), $vars, $referralprogram->email, $referralprogram->firstname.' '.$referralprogram->lastname, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/mails/');
 			$revive_sent = true;
 			$nbRevive++;
 		}
