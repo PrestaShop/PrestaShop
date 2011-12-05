@@ -73,6 +73,11 @@ class BlockMyAccount extends Module
 	{
 		return $this->hookLeftColumn($params);
 	}
+	
+	public function hookFooter($params)
+	{
+		return $this->hookLeftColumn($params);
+	}
 
 	private function addMyAccountBlockHook()
 	{
