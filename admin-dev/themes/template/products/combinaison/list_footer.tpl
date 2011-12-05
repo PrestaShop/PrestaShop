@@ -44,9 +44,6 @@
 		var s_impact = $('#span_impact');
 		var s_impact2 = $('#span_weight_impact');
 
-		$('#desc-product-newCombinaison').attr('add', '{l s='Add a new combination'}');
-		$('#desc-product-newCombinaison').attr('cancel', '{l s='Cancel the combination'}');
-
 		init_elems();
 	</script>
 

@@ -1013,6 +1013,18 @@ class AdminProductsControllerCore extends AdminController
 			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 			{
 				$combinaisons = $product->getAttributeCombinaisonsById($id_product_attribute, $this->context->language->id);
+				foreach ($combinaisons as $key => $combinaison)
+					$combinaisons[$key]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+
+				foreach ($combinaisons as $key => $combinaison)
+				{
+					$jsList = '';
+					asort($combinaison['attributes']);
+					foreach ($combinaison['attributes'] AS $attribute)
+						$jsList .= '\''.addslashes(htmlspecialchars($combinaison['group_name'])).' : '.addslashes(htmlspecialchars($combinaison['attribute_name'])).'\', \''.$combinaison['id_attribute'].'\', ';
+					$combinaisons[$key]['list_attributes'] = rtrim($jsList, ', ');
+				}
+
 				die(Tools::jsonEncode($combinaisons));
 			}
 		}
@@ -2914,6 +2926,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('product', $product);
 		$data->assign('last_content', $content);
 		$data->assign('token', $this->token);
+		$data->assign('currency', $currency);
 		$data->assign($this->tpl_form_vars);
 		$data->assign('link', $this->context->link);
 		$this->tpl_form_vars['product'] = $product;
