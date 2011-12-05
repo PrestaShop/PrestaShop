@@ -1633,18 +1633,35 @@ class ProductCore extends ObjectModel
 	{
 		if (!Combination::isFeatureActive())
 			return array();
+
 		$sql = 'SELECT pa.*, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',
-					al.`name` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation, IFNULL(stock.quantity, 0)
+					al.`name` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-				'.Product::sqlStock('pa', 'pa').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				GROUP BY pa.`id_product_attribute`';
-		return Db::getInstance()->executeS($sql);
+
+		$res = Db::getInstance()->executeS($sql);
+
+		//Get quantity of each variations
+		foreach ($res as $key => $row)
+		{
+			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
+
+			if (!Cache::isStored($cache_key))
+				Cache::store(
+					$cache_key,
+					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+				);
+
+			$res[$key]['quantity'] = Cache::retrieve($cache_key);
+		}
+
+		return $res;
 	}
 
 	/**
@@ -1657,18 +1674,35 @@ class ProductCore extends ObjectModel
 	{
 		if (!Combination::isFeatureActive())
 			return array();
+
 		$sql = 'SELECT pa.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
-					a.`id_attribute`, pa.`unit_price_impact`, IFNULL(stock.quantity, 0) as quantity
+					a.`id_attribute`, pa.`unit_price_impact`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-				'.Product::sqlStock('pa', 'pa').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				ORDER BY pa.`id_product_attribute`';
-		return Db::getInstance()->executeS($sql);
+
+		$res = Db::getInstance()->executeS($sql);
+
+		//Get quantity of each variations
+		foreach ($res as $key => $row)
+		{
+			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
+
+			if (!Cache::isStored($cache_key))
+				Cache::store(
+					$cache_key,
+					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+				);
+
+			$res[$key]['quantity'] = Cache::retrieve($cache_key);
+		}
+
+		return $res;
 	}
 
 	/**
@@ -1683,18 +1717,34 @@ class ProductCore extends ObjectModel
 		if (!Combination::isFeatureActive())
 			return array();
 		$sql = 'SELECT pa.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
-					a.`id_attribute`, pa.`unit_price_impact`, IFNULL(stock.quantity, 0) as quantity
+					a.`id_attribute`, pa.`unit_price_impact`
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-				'.Product::sqlStock('pa', 'pa').'
 				WHERE pa.`id_product` = '.(int)$this->id.'
 				AND pa.`id_product_attribute` = '.(int)$id_product_attribute.'
 				ORDER BY pa.`id_product_attribute`';
-		return Db::getInstance()->executeS($sql);
+
+		$res = Db::getInstance()->executeS($sql);
+
+		//Get quantity of each variations
+		foreach ($res as $key => $row)
+		{
+			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
+
+			if (!Cache::isStored($cache_key))
+				Cache::store(
+					$cache_key,
+					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+				);
+
+			$res[$key]['quantity'] = Cache::retrieve($cache_key);
+		}
+
+		return $res;
 	}
 
 	public function getCombinationImages($id_lang)
