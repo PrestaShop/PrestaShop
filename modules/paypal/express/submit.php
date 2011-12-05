@@ -179,7 +179,7 @@ function submitAccount()
 					$errors[] = Tools::displayError('an error occurred while creating your address');
 				else
 				{
-					if (Mail::Send($context->language->id, 'account', Mail::l('Welcome!'),
+					if (Mail::Send($context->language->id, 'account', Mail::l('Welcome!', $context->language->id),
 					array('{firstname}' => $customer->firstname, '{lastname}' => $customer->lastname, '{email}' => $customer->email, '{passwd}' => Tools::getValue('passwd')), $customer->email, $customer->firstname.' '.$customer->lastname))
 						$context->smarty->assign('confirmation', 1);
 					$context->cookie->id_customer = (int)($customer->id);

@@ -648,7 +648,7 @@ class PayPal extends PaymentModule
 		$this->context->smarty->assign('logs', $log);
 		$data = array('{logs}' => implode('<br />', $log));
 		if ($send)
-			Mail::Send($this->context->language->id, 'error_reporting', Mail::l('Error reporting from your PayPal module'), $data, Configuration::get('PS_SHOP_EMAIL'), NULL, NULL, NULL, NULL, NULL, _PS_MODULE_DIR_.$this->name.'/mails/');
+			Mail::Send($this->context->language->id, 'error_reporting', Mail::l('Error reporting from your PayPal module', $this->context->language->id), $data, Configuration::get('PS_SHOP_EMAIL'), NULL, NULL, NULL, NULL, NULL, _PS_MODULE_DIR_.$this->name.'/mails/');
 		echo $this->display(__FILE__, 'error.tpl');
 		include_once(dirname(__FILE__).'/../../footer.php');
 		die;

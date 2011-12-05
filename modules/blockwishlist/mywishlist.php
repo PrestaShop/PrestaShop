@@ -64,7 +64,7 @@ if ($context->customer->isLogged())
 				srand($s * $us);
 				$wishlist->token = strtoupper(substr(sha1(uniqid(rand(), true)._COOKIE_KEY_.$context->customer->id), 0, 16));
 				$wishlist->add();
-				Mail::Send($context->language->id, 'wishlink', Mail::l('Your wishlist\'s link'), 
+				Mail::Send($context->language->id, 'wishlink', Mail::l('Your wishlist\'s link', $context->language->id), 
 					array(
 					'{wishlist}' => $wishlist->name,
 					'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist->token),

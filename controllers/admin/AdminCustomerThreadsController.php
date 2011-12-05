@@ -295,7 +295,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					if (Mail::Send(
 						$this->context->language->id,
 						'forward_msg',
-						Mail::l('Fwd: Customer message'),
+						Mail::l('Fwd: Customer message', $this->context->language->id),
 						$params,
 						$employee->email,
 						$employee->firstname.' '.$employee->lastname,
@@ -317,7 +317,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					if (Mail::Send(
 						(int)$cookie->id_lang,
 						'forward_msg',
-						Mail::l('Fwd: Customer message'),
+						Mail::l('Fwd: Customer message', (int)$cookie->id_lang),
 						$params, $email, null,
 						$current_employee->email, $current_employee->firstname.' '.$current_employee->lastname,
 						null, null, _PS_MAIL_DIR_, true))
@@ -359,7 +359,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					if (Mail::Send(
 						$ct->id_lang,
 						'reply_msg',
-						Mail::l('An answer to your message is available').' #ct'.$ct->id.'#tc'.$ct->token,
+						Mail::l('An answer to your message is available', $ct->id_lang).' #ct'.$ct->id.'#tc'.$ct->token,
 						$params, Tools::getValue('msg_email'), null, null, null, $file_attachment, null,
 						_PS_MAIL_DIR_, true))
 					{

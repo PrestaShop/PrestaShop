@@ -92,7 +92,7 @@ class	LoggerCore extends ObjectModel
 			Mail::Send(
 				(int)Configuration::get('PS_LANG_DEFAULT'),
 				'log_alert',
-				Mail::l('Log: You have a new alert from your shop'),
+				Mail::l('Log: You have a new alert from your shop', (int)Configuration::get('PS_LANG_DEFAULT')),
 				array(),
 				Configuration::get('PS_SHOP_EMAIL')
 			);

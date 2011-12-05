@@ -317,7 +317,7 @@ abstract class PaymentModuleCore extends Module
 								$params['{firstname}'] = $customer->firstname;
 								$params['{lastname}'] = $customer->lastname;
 								$params['{id_order}'] = $order->id;
-								Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order #').$order->id, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
+								Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order #', (int)$order->id_lang).$order->id, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
 							}
 						}
 
