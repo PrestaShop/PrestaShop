@@ -131,20 +131,21 @@
 	</div>
 	<div style="display: none;">
 		<div id="new_comment_form">
-				<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
-				<div class="product clearfix">
-					<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
-					<div class="product_desc">
-						<p class="product_name"><strong>{$product->name}</strong></p>
-						{$product->description_short}
-					</div>
+			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
+			<div class="product clearfix">
+				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
+				<div class="product_desc">
+					<p class="product_name"><strong>{$product->name}</strong></p>
+					{$product->description_short}
 				</div>
-				
-				<div class="new_comment_form_content">
-					<p class="intro_form">{l s='Write your review' mod='productcomments'}</p>
-					{if $criterions|@count > 0}
-						<div class="grade_content clearfix">
-						{section loop=$criterions name=i start=0 step=1}
+			</div>
+			
+			<div class="new_comment_form_content">
+				<p class="intro_form">{l s='Write your review' mod='productcomments'}</p>
+				{if $criterions|@count > 0}
+					<ul class="grade_content clearfix">
+					{section loop=$criterions name=i start=0 step=1}
+						<li>
 							<span>
 								<input type="hidden" name="id_product_comment_criterion_{$smarty.section.i.iteration}" value="{$criterions[i].id_product_comment_criterion|intval}" />
 								{$criterions[i].name|escape:'html':'UTF-8'}:&nbsp;
@@ -156,32 +157,33 @@
 								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="4" />
 								<input class="star" type="radio" name="{$smarty.section.i.iteration}_grade" value="5" />
 							</div>
-						{/section}
-						</div>
+						</li>
+					{/section}
+					</ul>
+				{/if}
+				<div class="form_contenair">
+					<p class="text">
+						<label for="comment_title">{l s='Title' mod='productcomments'} <sup>*</sup>:</label>
+						<input id="commentTitle" name="title" type="text" value=""/>
+					</p>
+					<p class="textarea">
+						<label for="content">{l s='Comment' mod='productcomments'} <sup>*</sup>:</label>
+						<textarea id="commentContent" name="content"></textarea>
+					</p>
+					{if $allow_guests == true && $logged == 0}
+					<p class="text">
+						<label>{l s='Your name:' mod='productcomments'} <sup>*</sup>:</label>
+						<input id="commentCustomerName" name="customer_name" type="text" value=""/>
+					</p>
 					{/if}
-					<div class="form_contenair">
-						<p class="text">
-							<label for="comment_title">{l s='Title' mod='productcomments'} <sup>*</sup>:</label>
-							<input id="commentTitle" name="title" type="text" value=""/>
-						</p>
-						<p class="textarea">
-							<label for="content">{l s='Comment' mod='productcomments'} <sup>*</sup>:</label>
-							<textarea id="commentContent" name="content"></textarea>
-						</p>
-						{if $allow_guests == true && $logged == 0}
-						<p class="text">
-							<label>{l s='Your name:' mod='productcomments'} <sup>*</sup>:</label>
-							<input id="commentCustomerName" name="customer_name" type="text" value=""/>
-						</p>
-						{/if}
-						<p class="submit">
-							<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
-							<button id="submitMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
-							{l s='or' mod='productcomments'}&nbsp;<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='productcomments'}</a>
-						</p>
-						<p class="txt_required">* {l s='Required fields' mod='productcomments'}</p>
-					</div>
-				</div><!-- /end new_comment_form_content -->
+					<p class="submit">
+						<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
+						<a href="#" onclick="$.fancybox.close();">{l s='Cancel' mod='productcomments'}</a>&nbsp;
+						{l s='or' mod='productcomments'}&nbsp;&nbsp;<button id="submitMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>
+					</p>
+					<p class="txt_required">* {l s='Required fields' mod='productcomments'}</p>
+				</div>
+			</div><!-- /end new_comment_form_content -->
 		</div>
 	</div>
 </div>
