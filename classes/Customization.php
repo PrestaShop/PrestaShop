@@ -81,8 +81,8 @@ class CustomizationCore
 		$in_values  = '';
 		foreach($ids_customizations as $key => $id_customization)
 		{
-			if ($key > 0) $in_values += ',';
-			$in_values += (int)($id_customization);
+			if ($key > 0) $in_values .= ',';
+			$in_values .= (int)($id_customization);
 		}
 
 		if (!empty($in_values))
