@@ -108,12 +108,13 @@ class AdminOrdersControllerCore extends AdminController
 			elseif ($order->hasBeenPaid()) $type = $this->l('Standard refund');
 			else $type = $this->l('Cancel products');
 
-			$this->toolbar_btn['new'] = array(
-				'short' => 'Create',
-				'href' => '',
-				'desc' => $this->l('Add a product'),
-				'class' => 'add_product'
-			);
+			if (!$order->hasBeenDelivered())
+				$this->toolbar_btn['new'] = array(
+					'short' => 'Create',
+					'href' => '',
+					'desc' => $this->l('Add a product'),
+					'class' => 'add_product'
+				);
 			$this->toolbar_btn['standard_refund'] = array(
 				'short' => 'Create',
 				'href' => '',
@@ -981,7 +982,7 @@ class AdminOrdersControllerCore extends AdminController
 				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_shipping_tax_excl = (float)$cart->getTotalShippingCost(null, false);
 				$order_invoice->total_shipping_tax_incl = (float)$cart->getTotalShippingCost();
-				
+
 				$order_invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order_invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 
@@ -1098,11 +1099,12 @@ class AdminOrdersControllerCore extends AdminController
 		// Return value
 		$res = true;
 
+		$order = new Order(Tools::getValue('id_order'));
 		$order_detail = new OrderDetail(Tools::getValue('product_id_order_detail'));
 		if (Tools::isSubmit('product_invoice'))
 			$order_invoice = new OrderInvoice(Tools::getValue('product_invoice'));
 
-		$this->doEditProductValidation($order_detail, isset($order_invoice) ? $order_invoice : null);
+		$this->doEditProductValidation($order_detail, $order, isset($order_invoice) ? $order_invoice : null);
 
 		$product_price_tax_incl = Tools::ps_round(Tools::getValue('product_price_tax_incl'), 2);
 		$product_price_tax_excl = Tools::ps_round(Tools::getValue('product_price_tax_excl'), 2);
@@ -1269,7 +1271,7 @@ class AdminOrdersControllerCore extends AdminController
 		)));
 	}
 
-	protected function doEditProductValidation(OrderDetail $order_detail, OrderInvoice $order_invoice = null)
+	protected function doEditProductValidation(OrderDetail $order_detail, Order $order, OrderInvoice $order_invoice = null)
 	{
 		if (!Validate::isLoadedObject($order_detail))
 			die(Tools::jsonEncode(array(
@@ -1283,10 +1285,23 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('Can\'t load Invoice object')
 			)));
 
-		if ($order_detail->id_order != Tools::getValue('id_order'))
+		if (!Validate::isLoadedObject($order))
+			die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('Can\'t load Order object')
+			)));
+
+		if ($order_detail->id_order != $order->id_order)
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Can\'t edit this Order Detail for this order')
+			)));
+
+		// We can't edit a delivered order
+		if ($order->hasBeenDelivered())
+			die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('Can\'t edit an delivered order')
 			)));
 
 		if (!empty($order_invoice) && $order_invoice->id_order != Tools::getValue('id_order'))
@@ -1330,6 +1345,13 @@ class AdminOrdersControllerCore extends AdminController
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Can\'t delete this Order Detail for this order')
+			)));
+
+		// We can't edit a delivered order
+		if ($order->hasBeenDelivered())
+			die(Tools::jsonEncode(array(
+				'result' => false,
+				'error' => Tools::displayError('Can\'t edit an delivered order')
 			)));
 	}
 
