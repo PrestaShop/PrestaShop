@@ -55,7 +55,7 @@ class StatsPersonalInfos extends ModuleGraph
 
 	public function hookAdminStatsModules($params)
 	{
-		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>';
+		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		if (count(Customer::getCustomers()))
 		{
 			if (Tools::getValue('export'))
@@ -93,7 +93,7 @@ class StatsPersonalInfos extends ModuleGraph
 			$this->html .= '<p>'.$this->l('No customers registered yet.').'</p>';
 		$this->html .= '
 		</div><br />
-		<div class="blocStats"><h2 class="icon-guide">'.$this->l('Guide').'</h2>
+		<div class="blocStats"><h2 class="icon-guide"><span></span>'.$this->l('Guide').'</h2>
 			<h2>'.$this->l('Target your audience').'</h2>
 			<p>
 				'.$this->l('In order for each message to have an impact, you need to know to whom it should be addressed.').'

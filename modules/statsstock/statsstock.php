@@ -84,7 +84,7 @@ class StatsStock extends Module
 
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->l('Stock value').'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Stock value').'</h2>
 		<form action="'.$ru.'" method="post">
 			<input type="hidden" name="submitCategory" value="1" />
 			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">

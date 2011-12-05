@@ -67,7 +67,7 @@ class StatsCarrier extends ModuleGraph
 		if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'pie', 'option' => Tools::getValue('id_order_state')));
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+			<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right;">
 				<select name="id_order_state">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';

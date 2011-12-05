@@ -67,7 +67,7 @@ class StatsSales extends ModuleGraph
 			$this->csvExport(array('type' => 'pie', 'option' => '3-'.(int)Tools::getValue('id_country')));
 			
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" style="float: right; margin-left: 10px;">
 				<select name="id_country">
 					<option value="0"'.((!Tools::getValue('id_order_state')) ? ' selected="selected"' : '').'>'.$this->l('All').'</option>';

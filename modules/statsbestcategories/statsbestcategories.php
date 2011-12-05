@@ -109,7 +109,7 @@ class StatsBestCategories extends ModuleGrid
 			$this->csvExport($engineParams);
 
 		$this->_html = '
-		<div class="blocStats"><h2 class="icon-'.$this->name.'">'.$this->displayName.'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
 			'.$this->engine($engineParams).'
 			<br /><a class="button export-csv" href="'.htmlentities($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a>
 		</div>';

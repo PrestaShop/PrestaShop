@@ -261,25 +261,65 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #statsContainer .blocStats { background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
 #statsContainer .blocStats h2 { font-weight:normal; margin:0;}
 #statsContainer .blocStats h2.icon-statsproduct span,
+#statsContainer .blocStats h2.icon-statsbestsuppliers span,
 #statsContainer .blocStats h2.icon-statsforecast span,
 #statsContainer .blocStats h2.icon-pagesnotfound span,
 #statsContainer .blocStats h2.icon-sekeywords span,
 #statsContainer .blocStats h2.icon-guide span,
 #statsContainer .blocStats h2.icon-statsequipment span,
-#statsContainer .blocStats h2.icon-statsvisits span { background: transparent url(icon-sprites-title.png) no-repeat scroll left top; width:16px; height:16px; padding-right:18px;}
+#statsContainer .blocStats h2.icon-statsvisits span,
+#statsContainer .blocStats h2.icon-statssales span,
+#statsContainer .blocStats h2.icon-statsregistrations span,
+#statsContainer .blocStats h2.icon-statspersonalinfos span,
+#statsContainer .blocStats h2.icon-statscatalog span,
+#statsContainer .blocStats h2.icon-basket-delete span,
+#statsContainer .blocStats h2.icon-statsbestcustomers span,
+#statsContainer .blocStats h2.icon-statsorigin span,
+#statsContainer .blocStats h2.icon-statsbestproducts span,
+#statsContainer .blocStats h2.icon-statsbestvouchers span,
+#statsContainer .blocStats h2.icon-statsbestcategories span,
+#statsContainer .blocStats h2.icon-statscarrier span,
+#statsContainer .blocStats h2.icon-statssearch span,
+#statsContainer .blocStats h2.icon-statsstock span,
+#statsContainer .blocStats h2.icon-conversion span,
+#statsContainer .blocStats h2.icon-payment span,
+#statsContainer .blocStats h2.icon-category span,
+#statsContainer .blocStats h2.icon-currency span,
+#statsContainer .blocStats h2.icon-language span,
+#statsContainer .blocStats h2.icon-attribute span { background: transparent url(icon-sprites-title.png) no-repeat scroll left top; width:16px; height:16px; padding-right:18px; margin-right:3px;}
 
 #statsContainer .blocStats h2.icon-statsproduct span { background-position :2px 2px;}
 #statsContainer .blocStats h2.icon-statsforecast span { background-position :-18px 2px;}
 #statsContainer .blocStats h2.icon-guide span { background-position :-36px 2px;}
+#statsContainer .blocStats h2.icon-statsbestsuppliers span { background-position :-54px 2px;}
 #statsContainer .blocStats h2.icon-pagesnotfound span { background-position :-72px 2px;}
 #statsContainer .blocStats h2.icon-sekeywords span { background-position :-90px 2px;}
 #statsContainer .blocStats h2.icon-statsequipment span { background-position :-108px 2px;}
 #statsContainer .blocStats h2.icon-statsvisits span { background-position :-126px 2px;}
+#statsContainer .blocStats h2.icon-statsregistrations span { background-position :-147px 2px;}
+#statsContainer .blocStats h2.icon-statssales span { background-position : 0 -16px;}
+#statsContainer .blocStats h2.icon-statspersonalinfos span { background-position : -18px -16px;}
+#statsContainer .blocStats h2.icon-statscatalog span { background-position : -36px -16px;}
+#statsContainer .blocStats h2.icon-category span { background-position : -36px -16px;}
+#statsContainer .blocStats h2.icon-basket-delete span { background-position : -54px -16px;}
+#statsContainer .blocStats h2.icon-statsbestcustomers span { background-position : -72px -16px;}
+#statsContainer .blocStats h2.icon-statsorigin span { background-position : -90px -16px;}
+#statsContainer .blocStats h2.icon-statsbestproducts span { background-position : -108px -16px;}
+#statsContainer .blocStats h2.icon-statsbestvouchers span { background-position : -126px -16px;}
+#statsContainer .blocStats h2.icon-statsbestcategories span { background-position : -147px -17px;}
+#statsContainer .blocStats h2.icon-statscarrier span { background-position : 2px -36px;}
+#statsContainer .blocStats h2.icon-statssearch span { background-position : -18px -36px;}
+#statsContainer .blocStats h2.icon-statsstock span { background-position : -36px -36px;}
+#statsContainer .blocStats h2.icon-conversion span { background-position : -54px -36px;}
+#statsContainer .blocStats h2.icon-payment span { background-position : -72px -36px;}
+#statsContainer .blocStats h2.icon-currency span { background-position : -90px -36px;}
+#statsContainer .blocStats h2.icon-language span { background-position : -106px -36px;}
+#statsContainer .blocStats h2.icon-attribute span { background-position : -126px -36px;}
+
 
 #statsContainer .blocStats form { position:absolute; top:10px; right:5px;}
 #statsContainer .blocStats form.checkup { position:relative; top:0; left:0;}
 #statsContainer .totalStats { font-size:16px; font-weight:bold;}
-
 
 
 
