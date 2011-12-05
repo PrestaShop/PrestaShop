@@ -295,7 +295,7 @@ abstract class DbCore
 			$sql = $type.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
 			if ($limit)
 				$sql .= ' LIMIT '.(int)$limit;
-			return $this->q($sql, $use_cache);
+			return (bool)$this->q($sql, $use_cache);
 		}
 		else if ($type == 'UPDATE')
 		{
@@ -315,7 +315,7 @@ abstract class DbCore
 				$sql .= ' WHERE '.$where;
 			if ($limit)
 				$sql .= ' LIMIT '.(int)$limit;
-			return $this->q($sql, $use_cache);
+			return (bool)$this->q($sql, $use_cache);
 		}
 		else
 			throw new PrestashopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
