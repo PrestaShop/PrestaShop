@@ -653,7 +653,7 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->_errors = array_unique($this->_errors);
-		if (count($this->_errors) > 0);
+		if (count($this->_errors) > 0)
 			return;
 
 		return $object;
