@@ -1796,10 +1796,10 @@ FileETag INode MTime Size
 		}
 	}
 
-    /**
-     * @desc extract a zip file to the given directory
-     * @return bool success
-     */
+	/**
+	 * @desc extract a zip file to the given directory
+	 * @return bool success
+	 */
 	public static function ZipExtract($fromFile, $toDir)
 	{
 		if (!file_exists($toDir))
@@ -1828,6 +1828,9 @@ FileETag INode MTime Size
 	 *
 	 * @param string $type by|way
 	 * @param string $value If no index given, use default order from admin -> pref -> products
+	 * @param bool|\bool(false)|string $prefix
+	 *
+	 * @return string Order by sql clause
 	 */
 	public static function getProductsOrder($type, $value = null, $prefix = false)
 	{
