@@ -350,6 +350,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='items in stock'}</span>
 			</p>
 			{/if}
+			
 			<!-- Out of stock hook -->
 			<p id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
 				{$HOOK_PRODUCT_OOS}
@@ -377,9 +378,9 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<p class="our_price_display">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					<span id="our_price_display">{convertPrice price=$productPrice}</span>
-						<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
-							{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-						{/if}-->
+					<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
+						{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
+					{/if}-->
 				{/if}
 				</p>
 				

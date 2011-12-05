@@ -66,7 +66,6 @@ $(document).ready(function()
 				<option value="quantity:desc" {if $orderby eq 'quantity' AND $orderway eq 'desc'}selected="selected"{/if}>{l s='In-stock first'}</option>
 			{/if}
 		</select>
-		<label for="selectPrductSort">{l s='Sort by'}</label>
 	</p>
 </form>
 <!-- /Sort products -->

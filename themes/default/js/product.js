@@ -306,7 +306,7 @@ function updateDisplay()
 			if (selectedCombination['specific_price'].reduction_type == 'percentage')
 			{
 				$('#reduction_amount').hide();
-				$('#reduction_percent_display').html('-' + selectedCombination['specific_price'].reduction*100 + '%');
+				$('#reduction_percent_display').html('-' + parseFloat(selectedCombination['specific_price'].reduction_percent) + '%');
 				$('#reduction_percent').show();
 			} else if (selectedCombination['specific_price'].reduction_type == 'amount') {		
 				$('#reduction_percent').hide();
@@ -584,11 +584,11 @@ function checkMinimalQuantity(minimal_quantity)
 function colorPickerClick(elt)
 {
 	id_attribute = $(elt).attr('id').replace('color_', '');
-	$('.color_pick').removeClass('selected');
+	$('.color_pick').parent().removeClass('selected');
 	$(elt).fadeTo('fast', 1, function(){
 								$(this).fadeTo('slow', 0, function(){
 									$(this).fadeTo('slow', 1, function(){
-										$(this).addClass('selected');
+										$(this).parent().addClass('selected');
 										});
 									});
 								});

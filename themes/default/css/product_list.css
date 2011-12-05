@@ -102,6 +102,11 @@ ul#product_list {
 		text-transform: uppercase;
 		background: none repeat scroll 0 0 #9B0000
 	}
+	#product_list li .online_only {
+		position:absolute;
+		top:20px;
+		right:0;
+	}
 	#product_list li .content_price {
 		margin:26px 0 15px 0;
 	}
