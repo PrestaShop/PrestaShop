@@ -1580,6 +1580,7 @@ class CartCore extends ObjectModel
 	/**
 	 * Get all deliveries options available for the current cart
 	 * @param Country $default_country
+	 * @param boolean $flush Force flushing cache
 	 *
 	 * @return array array(
 	 *                   0 => array( // First address
@@ -1598,8 +1599,9 @@ class CartCore extends ObjectModel
 	 *                           ),
 	 *                           is_best_grade => true, // Does this option have the biggest grade (quick shipping) for this shipping address
 	 *                           is_best_price => true, // Does this option have the lower price for this shipping address
-	 *                           price_with_tax => 12.5,
-	 *                           price_without_tax => 12.5,
+	 *                           unique_carrier => true, // Does this option use a unique carrier
+	 *                           total_price_with_tax => 12.5,
+	 *                           total_price_without_tax => 12.5,
 	 *                       ),
 	 *                   ),
 	 *               );
@@ -1783,6 +1785,101 @@ class CartCore extends ObjectModel
 
 		$cache = $delivery_option_list;
 		return $delivery_option_list;
+	}
+	
+	/**
+	 * Get all deliveries options available for the current cart formated like Carriers::getCarriersForOrder
+	 * This method was wrote for retrocompatibility with 1.4 theme
+	 * New theme need to use Cart::getDeliveryOptionList() to generate carriers option in the checkout process
+	 * 
+	 * @since 1.5.0
+	 * 
+	 * @param Country $default_country
+	 * @param boolean $flush Force flushing cache
+	 * 
+	 */
+	public function simulateCarriersOutput(Country $default_country = null, $flush = false)
+	{
+		static $cache = false;
+		if ($cache !== false && !$flush)
+			return $cache;
+		
+		$delivery_option_list = $this->getDeliveryOptionList($default_country, $flush);
+		
+		// This method cannot work if there is multiple address delivery
+		if (count($delivery_option_list) > 1 || empty($delivery_option_list))
+			return array();
+		
+		$carriers = array();
+		foreach (reset($delivery_option_list) as $key => $option)
+		{
+			$price = $option['total_price_with_tax'];
+			$price_tax_exc = $option['total_price_without_tax'];
+			
+			if ($option['unique_carrier'])
+			{
+				$carrier = reset($option['carrier_list']);
+				$name = $carrier['instance']->name;
+				$img = $carrier['logo'];
+				$delay = $carrier['instance']->delay;
+			}
+			else
+			{
+				$nameList = array();
+				foreach ($option['carrier_list'] as $carrier)
+					$nameList[] = $carrier['instance']->name;
+				$name = join(' -' , $nameList);
+				$img = ''; // No images if multiple carriers
+				$delay = '';
+			}
+			$carriers[] = array(
+				'name' => $name,
+				'img' => $img,
+				'delay' => $delay[Context::getContext()->language->id],
+				'price' => $price,
+				'price_tax_exc' => $price_tax_exc,
+				'id_carrier' => self::intifier($key), // Need to translate to an integer for retrocompatibility reason, in 1.4 template we used intval
+				'is_module' => false,
+			);
+		}
+		return $carriers;
+	}
+	
+	public function simulateCarrierSelectedOutput()
+	{
+		$delivery_option = $this->getDeliveryOption();
+		
+		if (count($delivery_option) > 1 || empty($delivery_option))
+			return 0;
+		
+		return self::intifier(reset($delivery_option));
+	}
+	
+	/**
+	 * Translate a string option_delivery identifier ('24,3,') in a int (3240002000)
+	 * 
+	 * The  option_delivery identifier is a list of integers separated by a ','.
+	 * This method replace the delimiter by a sequence of '0'.
+	 * The size of this sequence is fixed by the first digit of the return
+	 * 
+	 * @return int
+	 */
+	public static function intifier($string, $delimiter = ',')
+	{
+		$elm = explode($delimiter, $string);
+		$max = max($elm);
+		return strlen($max).join(str_repeat('0', strlen($max)+1), $elm);
+	}
+	
+	/**
+	 * Translate a int option_delivery identifier (3240002000) in a string ('24,3,')
+	 */
+	public static function desintifier($int, $delimiter = ',')
+	{
+		$delimiter_len = $int[0];
+		$int = substr($int, 1);
+		$elm = explode(str_repeat('0',$delimiter_len+1), $int);
+		return join($delimiter, $elm);
 	}
 
 	/**

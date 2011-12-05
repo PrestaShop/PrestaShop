@@ -224,3 +224,18 @@ function resizeAddressesBox(nameBox)
 	});
 	$(nameBox).height(maxHeight);
 }
+
+$(document).ready(function() {
+	$.fn.checkboxChange = function(fnChecked, fnUnchecked) {
+		if ($(this).attr('checked') && fnChecked)
+			fnChecked.call(this);
+		else if(fnUnchecked)
+			fnUnchecked.call(this);
+		
+		if (!$(this).attr('eventCheckboxChange'))
+		{
+			$(this).live('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked) });
+			$(this).attr('eventCheckboxChange', true);
+		}
+	}
+});

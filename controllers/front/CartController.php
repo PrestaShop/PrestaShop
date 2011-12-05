@@ -268,8 +268,7 @@ class CartControllerCore extends FrontController
 				if ($this->context->cart->id_address_delivery)
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
 				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
-				$result['carriers'] = Carrier::getCarriersForOrder(Country::getIdZone($id_country), $groups);
-				//$result['checked'] = Carrier::getDefaultCarrierSelection($result['carriers'], (int)$this->cart->id_carrier);
+
 				$result['HOOK_EXTRACARRIER'] = Hook::exec('extraCarrier', array('address' => (isset($deliveryAddress) && (int)$deliveryAddress->id) ? $deliveryAddress : null));
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
