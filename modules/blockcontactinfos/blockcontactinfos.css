@@ -1,6 +1,6 @@
 #block_contact_infos {padding:15px 10px;}
 #block_contact_infos li {
-	padding:0;
+	padding:0 !important;
 	line-height: 20px;
 }
 #block_contact_infos li  strong {

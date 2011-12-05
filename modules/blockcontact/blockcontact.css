@@ -1,7 +1,7 @@
 /* block CONTACT ******************************************************************************* */
 #contact_block .block_content {
 	padding:10px 0 15px 0;
-   background: url(images/block_contact_bg.jpg) no-repeat left 50px transparent
+   background: url(images/block_contact_bg.jpg) no-repeat left bottom transparent
 }
 
 #contact_block p {
