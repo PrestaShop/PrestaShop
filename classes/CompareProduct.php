@@ -27,19 +27,19 @@
 
 class CompareProductCore extends ObjectModel
 {
-	public		$id_compare;
+	public $id_compare;
 
-	public 		$id_customer;
+	public $id_customer;
 
-	public 		$date_add;
+	public $date_add;
 
-	public 		$date_upd;
+	public $date_upd;
 
-	protected 	$fieldRequired = array(
+	protected $fieldRequired = array(
 		'id_compare',
 		'id_customer');
 
-	protected 	$fieldsValidate = array(
+	protected $fieldsValidate = array(
 		'id_compare' => 'isUnsignedInt',
 		'id_customer' => 'isUnsignedInt'
 	);
@@ -89,7 +89,7 @@ class CompareProductCore extends ObjectModel
 			if ($sql)
 			{
 				$id_compare = Db::getInstance()->getValue('SELECT MAX(`id_compare`) FROM `'._DB_PREFIX_.'compare`');
-				$cookie->id_compare = $id_compare;
+				Context::getContext()->cookie->id_compare = $id_compare;
 			}
 		}
 		return Db::getInstance()->execute('
