@@ -67,8 +67,10 @@ class DeliveryCore extends ObjectModel
 		'price' => 'isPrice'
 	);
 
-	protected $table = 'delivery';
-	protected $identifier = 'id_delivery';
+	public static $definition = array(
+		'table' => 'delivery',
+		'primary' => 'id_delivery',
+	);
 
 	protected $webserviceParameters = array(
 			'objectsNodeName' => 'deliveries',

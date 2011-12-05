@@ -81,8 +81,10 @@ class CombinationCore extends ObjectModel
 		'available_date' => 'isDateFormat',
 	);
 
-	protected $table = 'product_attribute';
-	protected $identifier = 'id_product_attribute';
+	public static $definition = array(
+		'table' => 'product_attribute',
+		'primary' => 'id_product_attribute',
+	);
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'combination',

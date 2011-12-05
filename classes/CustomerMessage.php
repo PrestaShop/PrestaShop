@@ -37,8 +37,10 @@ class CustomerMessageCore extends ObjectModel
 	public $private;
 	public $date_add;
 
-	protected $table = 'customer_message';
-	protected $identifier = 'id_customer_message';
+	public static $definition = array(
+		'table' => 'customer_message',
+		'primary' => 'id_customer_message',
+	);
 
 	protected $fieldsRequired = array('message');
 	protected $fieldsSize = array('message' => 65000);

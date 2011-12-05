@@ -45,8 +45,11 @@ class GroupShopCore extends ObjectModel
  					'share_stock' => 'isBool',
  					'name' => 'isGenericName',
  				);
-	protected $table = 'group_shop';
-	protected $identifier = 'id_group_shop';
+
+	public static $definition = array(
+		'table' => 'group_shop',
+		'primary' => 'id_group_shop',
+	);
 
 	private	static $assoTables = array(
 		'attribute_group' => array('type' => 'group_shop'),

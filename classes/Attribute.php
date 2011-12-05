@@ -42,8 +42,12 @@ class AttributeCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 64);
  	protected $fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected $table = 'attribute';
-	protected $identifier = 'id_attribute';
+	public static $definition = array(
+		'table' => 'attribute',
+		'primary' => 'id_attribute',
+		'multilang' => true,
+	);
+
 	protected	$image_dir = _PS_COL_IMG_DIR_;
 
 	protected $webserviceParameters = array(

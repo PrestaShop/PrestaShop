@@ -68,8 +68,11 @@ class OrderStateCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 64, 'template' => 64);
  	protected $fieldsValidateLang = array('name' => 'isGenericName', 'template' => 'isTplName');
 
-	protected $table = 'order_state';
-	protected $identifier = 'id_order_state';
+	public static $definition = array(
+		'table' => 'order_state',
+		'primary' => 'id_order_state',
+		'multilang' => true,
+	);
 
 	protected $webserviceParameters = array(
 		'fields' => array(

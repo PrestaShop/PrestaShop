@@ -73,8 +73,10 @@ class EmployeeCore extends ObjectModel
 		'passwd' => 'isPasswdAdmin', 'active' => 'isBool', 'id_profile' => 'isInt', 'bo_color' => 'isColor', 'bo_theme' => 'isGenericName',
 		'bo_show_screencast' => 'isBool');
 
-	protected $table = 'employee';
-	protected $identifier = 'id_employee';
+	public static $definition = array(
+		'table' => 'employee',
+		'primary' => 'id_employee',
+	);
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

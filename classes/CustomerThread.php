@@ -40,8 +40,10 @@ class CustomerThreadCore extends ObjectModel
 	public $date_add;
 	public $date_upd;
 
-	protected $table = 'customer_thread';
-	protected $identifier = 'id_customer_thread';
+	public static $definition = array(
+		'table' => 'customer_thread',
+		'primary' => 'id_customer_thread',
+	);
 
 	protected $fieldsRequired = array('id_lang', 'id_contact', 'token');
 	protected $fieldsSize = array('email' => 254);

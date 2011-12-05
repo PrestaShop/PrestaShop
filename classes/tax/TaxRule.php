@@ -46,8 +46,10 @@ class TaxRuleCore extends ObjectModel
 	 											   'behavior' => 'isUnsignedInt',
 	 											   'description' => 'isString');
 
-	protected $table = 'tax_rule';
-	protected $identifier = 'id_tax_rule';
+	public static $definition = array(
+		'table' => 'tax_rule',
+		'primary' => 'id_tax_rule',
+	);
 
 	public function getFields()
 	{

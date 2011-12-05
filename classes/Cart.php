@@ -105,8 +105,11 @@ class CartCore extends ObjectModel
 	protected static $_carriers = null;
 	protected static $_taxes_rate = null;
 	protected static $_attributesLists = array();
-	protected $table = 'cart';
-	protected $identifier = 'id_cart';
+
+	public static $definition = array(
+		'table' => 'cart',
+		'primary' => 'id_cart',
+	);
 
 	protected $webserviceParameters = array(
 		'fields' => array(

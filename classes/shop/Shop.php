@@ -54,8 +54,11 @@ class ShopCore extends ObjectModel
  		'active' => 'isBool',
 		'name' => 'isGenericName',
  	);
-	protected $table = 'shop';
-	protected $identifier = 'id_shop';
+
+	public static $definition = array(
+		'table' => 'shop',
+		'primary' => 'id_shop',
+	);
 
 	/** @var array List of shops cached */
 	protected static $shops;

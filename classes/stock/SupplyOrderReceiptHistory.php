@@ -82,15 +82,10 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
 		'date_add' => 'isDate'
 	);
 
-	/**
-	 * @var string Database table name
-	 */
-	protected $table = 'supply_order_receipt_history';
-
-	/**
-	 * @var string Database ID name
-	 */
-	protected $identifier = 'id_supply_order_receipt_history';
+	public static $definition = array(
+		'table' => 'supply_order_receipt_history',
+		'primary' => 'id_supply_order_receipt_history',
+	);
 
 	public function getFields()
 	{

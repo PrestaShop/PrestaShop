@@ -261,8 +261,11 @@ class ProductCore extends ObjectModel
 		'meta_title' => 'isGenericName', 'link_rewrite' => 'isLinkRewrite', 'name' => 'isCatalogName',
 		'description' => 'isString', 'description_short' => 'isString', 'available_now' => 'isGenericName', 'available_later' => 'IsGenericName');
 
-	protected $table = 'product';
-	protected $identifier = 'id_product';
+	public static $definition = array(
+		'table' => 'product',
+		'primary' => 'id_product',
+		'multilang' => true,
+	);
 
 	protected $webserviceParameters = array(
 		'objectMethods' => array(

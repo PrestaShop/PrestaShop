@@ -35,8 +35,10 @@ class PageCore extends ObjectModel
 	protected $fieldsRequired = array ('id_page_type');
 	protected $fieldsValidate = array ('id_page_type' => 'isUnsignedId', 'id_object' => 'isUnsignedId');
 
-	protected $table = 'page';
-	protected $identifier = 'id_page';
+	public static $definition = array(
+		'table' => 'page',
+		'primary' => 'id_page',
+	);
 
 	public function getFields()
 	{

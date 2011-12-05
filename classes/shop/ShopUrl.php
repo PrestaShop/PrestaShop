@@ -42,8 +42,10 @@ class ShopUrlCore extends ObjectModel
 	protected $fieldsSize = array('domain' => 255, 'physical_uri' => 64, 'virtual_uri' => 64);
 	protected $fieldsValidate = array('active' => 'isBool');
 
-	protected $table = 'shop_url';
-	protected $identifier = 'id_shop_url';
+	public static $definition = array(
+		'table' => 'shop_url',
+		'primary' => 'id_shop_url',
+	);
 
 	public function getFields()
 	{
