@@ -155,7 +155,8 @@ class SupplyOrderCore extends ObjectModel
 	);
 
 	/**
-	 * @var array Defition used by the Collection object
+	 * @var array Contains object definition
+	 * @see ObjectModel::definition
 	 */
 	public static $definition = array(
     	'table' => 'supply_order',
