@@ -1026,13 +1026,12 @@ p.cart_navigation .button_large { float: left }
 p.cart_navigation .exclusive,
 p.cart_navigation .exclusive_large,
 p.cart_navigation .exclusive_large_disabled { float: right }
-p.cart_navigation .multishipping-button { margin-right: 10px }
 p.cart_navigation_extra {
 	text-align: center;
 	width: auto
 }
 
-
+p.cart_navigation .multishipping-button { margin-right: 10px }
 .address-form-multishipping { padding: 10px 0px; }
 #multishipping_mode_box {
 	border: 1px solid #D0D3D8;
