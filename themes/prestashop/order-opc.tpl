@@ -26,7 +26,7 @@
 
 {if $PS_CATALOG_MODE}
 	{capture name=path}{l s='Your shopping cart'}{/capture}
-	{include file="$tpl_dir./breadcrumb.tpl"}
+	{include file="./breadcrumb.tpl"}
 	<h2 id="cart_title">{l s='Your shopping cart'}</h2>
 	<p class="warning">{l s='This store has not accepted your new order.'}</p>
 {else}
@@ -79,25 +79,25 @@
 </script>
 	{if $productNumber}
 		<!-- Shopping Cart -->
-		{include file="$tpl_dir./shopping-cart.tpl"}
+		{include file="./shopping-cart.tpl"}
 		<!-- End Shopping Cart -->
 		{if $isLogged AND !$isGuest}
-			{include file="$tpl_dir./order-address.tpl"}
+			{include file="./order-address.tpl"}
 		{else}
 			<!-- Create account / Guest account / Login block -->
-			{include file="$tpl_dir./order-opc-new-account.tpl"}
+			{include file="./order-opc-new-account.tpl"}
 			<!-- END Create account / Guest account / Login block -->
 		{/if}
 		<!-- Carrier -->
-		{include file="$tpl_dir./order-carrier.tpl"}
+		{include file="./order-carrier.tpl"}
 		<!-- END Carrier -->
 	
 		<!-- Payment -->
-		{include file="$tpl_dir./order-payment.tpl"}
+		{include file="./order-payment.tpl"}
 		<!-- END Payment -->
 	{else}
 		{capture name=path}{l s='Your shopping cart'}{/capture}
-		{include file="$tpl_dir./breadcrumb.tpl"}
+		{include file="./breadcrumb.tpl"}
 		<h2>{l s='Your shopping cart'}</h2>
 		<p class="warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
