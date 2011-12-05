@@ -216,9 +216,25 @@ class ParentOrderControllerCore extends FrontController
 		}
 		else
 			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-
-		if (Tools::getIsset('delivery_option') && $this->validateDeliveryOption(Tools::getValue('delivery_option')))
-			$this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
+		
+		if (Tools::getIsset('delivery_option'))
+		{
+			if ($this->validateDeliveryOption(Tools::getValue('delivery_option')))
+				$this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
+		}
+		elseif (Tools::getIsset('id_carrier'))
+		{
+			// For retrocompatibility reason, try to transform carrier to an delivery option list
+			$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+			if (count($delivery_option_list) == 1)
+			{
+				$delivery_option = reset($delivery_option_list);
+				$key = Cart::desintifier(Tools::getValue('id_carrier'));
+				foreach ($delivery_option_list as $id_address => $options)
+					if (isset($options[$key]))
+						$this->context->cart->setDeliveryOption(array($id_address => $key));
+			}
+		}
 
 		Hook::exec('processCarrier', array('cart' => $this->context->cart));
 
@@ -377,17 +393,20 @@ class ParentOrderControllerCore extends FrontController
 	{
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
-		$carriers = Carrier::getCarriersForOrder($id_zone, $this->context->customer->getGroups());
+		$carriers = $this->context->cart->simulateCarriersOutput();
 		
 		$this->context->smarty->assign(array(
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+			'carriers' => $carriers,
+			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 			'delivery_option' => $this->context->cart->getDeliveryOption()
 		));
 		$this->context->smarty->assign(array(
 			'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address)),
 			'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array(
 				'carriers' => $carriers,
+				'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 				'delivery_option' => $this->context->cart->getDeliveryOption()
 			))
