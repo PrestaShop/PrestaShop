@@ -74,8 +74,6 @@ class CategoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	protected $langMultiShop = true;
-
 	public $groupBox;
 
 	protected static $_links = array();
@@ -107,6 +105,7 @@ class CategoryCore extends ObjectModel
 		'table' => 'category',
 		'primary' => 'id_category',
 		'multilang' => true,
+		'multishop' => true,
 	);
 
 	/** @var string id_image is the category ID when an image exists and 'default' otherwise */
