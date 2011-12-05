@@ -68,10 +68,9 @@ abstract class ModuleCore
 
 	protected $_errors = false;
 
-	public static $definition = array(
-		'table' => 'module',
-		'primary' => 'id_module',
-	);
+	protected $table = 'module';
+
+	protected $identifier = 'id_module';
 
 	public static $_db;
 
