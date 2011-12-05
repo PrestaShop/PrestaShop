@@ -44,10 +44,10 @@ class CompareProductCore extends ObjectModel
 		'id_customer' => 'isUnsignedInt'
 	);
 
-	protected $table = 'compare';
-
-	protected $identifier = 'id_compare';
-
+	public static $definition = array(
+		'table' => 'compare',
+		'primary' => 'id_compare',
+	);
 
 	/**
 	 * Get all comapare products of the customer

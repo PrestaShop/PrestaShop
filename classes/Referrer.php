@@ -73,8 +73,10 @@ class ReferrerCore extends ObjectModel
 		'click_fee' => 'isFloat'
 	);
 
-	protected $table = 'referrer';
-	protected $identifier = 'id_referrer';
+	public static $definition = array(
+		'table' => 'referrer',
+		'primary' => 'id_referrer',
+	);
 
 	protected static $_join = '(r.http_referer_like IS NULL OR r.http_referer_like = \'\' OR cs.http_referer LIKE r.http_referer_like)
 			AND (r.request_uri_like IS NULL OR r.request_uri_like = \'\' OR cs.request_uri LIKE r.request_uri_like)

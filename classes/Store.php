@@ -84,8 +84,10 @@ class StoreCore extends ObjectModel
 	'city' => 'isCityName', 'latitude' => 'isCoordinate', 'longitude' => 'isCoordinate', 'hours' => 'isSerializedArray', 'phone' => 'isPhoneNumber', 'fax' => 'isPhoneNumber',
 	'note' => 'isCleanHtml', 'email' => 'isEmail', 'active' => 'isBool');
 
-	protected 	$table = 'store';
-	protected 	$identifier = 'id_store';
+	public static $definition = array(
+		'table' => 'store',
+		'primary' => 'id_store',
+	);
 	
 	protected	$webserviceParameters = array(
 		'fields' => array(

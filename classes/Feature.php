@@ -38,8 +38,10 @@ class FeatureCore extends ObjectModel
 		'position' => 'isInt'
 	);
 
-	protected $table = 'feature';
-	protected $identifier = 'id_feature';
+	public static $definition = array(
+		'table' => 'feature',
+		'primary' => 'id_feature',
+	);
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_features',

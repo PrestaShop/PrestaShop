@@ -154,15 +154,10 @@ class SupplyOrderCore extends ObjectModel
 		'is_template' => 'isBool',
 	);
 
-	/**
-	 * @var string Database table name
-	 */
-	protected $table = 'supply_order';
-
-	/**
-	 * @var string Database ID name
-	 */
-	protected $identifier = 'id_supply_order';
+	public static $definition = array(
+		'table' => 'supply_order',
+		'primary' => 'id_supply_order',
+	);
 
 	public function getFields()
 	{

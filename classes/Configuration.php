@@ -48,8 +48,11 @@ class ConfigurationCore extends ObjectModel
 	protected	$fieldsSize = array('name' => 32);
 	protected	$fieldsValidate = array('name' => 'isConfigName', 'id_group_shop' => 'isUnsignedId', 'id_shop' => 'isUnsignedId');
 
-	protected	$table = 'configuration';
-	protected 	$identifier = 'id_configuration';
+	public static $definition = array(
+		'table' => 'configuration',
+		'primary' => 'id_configuration',
+		'multilang' => true,
+	);
 
 	/** @var array Configuration cache */
 	protected static $_CONF;

@@ -78,7 +78,9 @@ class CollectionCore implements Iterator, Countable
 
 		$this->definition = ObjectModel::getDefinition($this->classname);
 		if (!isset($this->definition['table']))
-			throw new PrestashopException('Miss table in definition');
+			throw new PrestashopException('Miss table in definition for class '.$this->classname);
+		else if (!isset($this->definition['primary']))
+			throw new PrestashopException('Miss primary in definition for class '.$this->classname);
 
 		$this->query = new DbQuery();
 		$this->query->select('a.*');

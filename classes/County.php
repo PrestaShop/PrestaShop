@@ -40,8 +40,10 @@ class CountyCore extends ObjectModel
 	protected 	$fieldsSize = array('name' => 64);
 	protected 	$fieldsValidate = array('name' => 'isGenericName', 'id_state' => 'isUnsignedId', 'active' => 'isBool');
 
-	protected 	$table = 'county';
-	protected 	$identifier = 'id_county';
+	public static $definition = array(
+		'table' => 'county',
+		'primary' => 'id_county',
+	);
 
 	private static $_cache_get_counties = array();
 	private static $_cache_county_zipcode = array();

@@ -53,8 +53,10 @@ class ConnectionCore extends ObjectModel
 										 'ip_address' => 'isInt', 'http_referer' => 'isAbsoluteUrl');
 
 	/* MySQL does not allow 'connection' for a table name */
-	protected 	$table = 'connections';
-	protected 	$identifier = 'id_connections';
+	public static $definition = array(
+		'table' => 'connections',
+		'primary' => 'id_connections',
+	);
 
 	public function getFields()
 	{

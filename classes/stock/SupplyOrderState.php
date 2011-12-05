@@ -78,15 +78,11 @@ class SupplyOrderStateCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 128);
  	protected $fieldsValidateLang = array('name' => 'isGenericName');
 
-	/**
-	 * @var string Database table name
-	 */
-	protected $table = 'supply_order_state';
-
-	/**
-	 * @var string Database ID name
-	 */
-	protected $identifier = 'id_supply_order_state';
+	public static $definition = array(
+		'table' => 'supply_order_state',
+		'primary' => 'id_supply_order_state',
+		'multilang' => true,
+	);
 
 	/**
 	 * @see ObjectModel::getFields()

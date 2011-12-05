@@ -42,8 +42,11 @@ class SceneCore extends ObjectModel
 	/** @var array Products */
 	public 		$products;
 
-	protected 	$table = 'scene';
-	protected 	$identifier = 'id_scene';
+	public static $definition = array(
+		'table' => 'scene',
+		'primary' => 'id_scene',
+		'multilang' => true,
+	);
 
  	protected 	$fieldsRequired = array('active');
  	protected 	$fieldsValidate = array('active' => 'isBool', 'zones' => 'isSceneZones', 'categories' => 'isArrayWithIds');

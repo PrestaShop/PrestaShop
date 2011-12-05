@@ -38,8 +38,10 @@ class ZoneCore extends ObjectModel
  	protected $fieldsSize = array('name' => 64);
  	protected $fieldsValidate = array('name' => 'isGenericName', 'active' => 'isBool');
 
-	protected $table = 'zone';
-	protected $identifier = 'id_zone';
+	public static $definition = array(
+		'table' => 'zone',
+		'primary' => 'id_zone',
+	);
 
 	protected $webserviceParameters = array();
 

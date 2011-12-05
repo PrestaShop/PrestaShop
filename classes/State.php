@@ -46,8 +46,10 @@ class StateCore extends ObjectModel
  	protected 	$fieldsSize = array('iso_code' => 4, 'name' => 32);
  	protected 	$fieldsValidate = array('id_country' => 'isUnsignedId', 'id_zone' => 'isUnsignedId', 'iso_code' => 'isStateIsoCode', 'name' => 'isGenericName', 'active' => 'isBool');
 
-	protected 	$table = 'state';
-	protected 	$identifier = 'id_state';
+	public static $definition = array(
+		'table' => 'state',
+		'primary' => 'id_state',
+	);
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

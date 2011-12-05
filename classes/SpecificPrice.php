@@ -43,8 +43,10 @@ class SpecificPriceCore extends ObjectModel
  	protected 	$fieldsRequired = array('id_product', 'id_shop', 'id_currency', 'id_country', 'id_group', 'price', 'from_quantity', 'reduction', 'reduction_type', 'from', 'to');
  	protected 	$fieldsValidate = array('id_group_shop' => 'isUnsignedId', 'id_product' => 'isUnsignedId', 'id_product_attribute' => 'isUnsignedId', 'id_shop' => 'isUnsignedId', 'id_country' => 'isUnsignedId', 'id_group' => 'isUnsignedId', 'price' => 'isPrice', 'from_quantity' => 'isUnsignedInt', 'reduction' => 'isPrice', 'reduction_type' => 'isReductionType', 'from' => 'isDateFormat', 'to' => 'isDateFormat');
 
-	protected 	$table = 'specific_price';
-	protected 	$identifier = 'id_specific_price';
+	public static $definition = array(
+		'table' => 'specific_price',
+		'primary' => 'id_specific_price',
+	);
 
 	protected static $_specificPriceCache = array();
 	protected static $_cache_priorities = array();

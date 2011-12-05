@@ -38,8 +38,10 @@ class ConnectionsSourceCore extends ObjectModel
 	protected	$fieldsRequired = array('id_connections', 'date_add');
 	protected	$fieldsValidate = array('id_connections' => 'isUnsignedId', 'http_referer' => 'isAbsoluteUrl', 'request_uri' => 'isUrl', 'keywords' => 'isMessage');
 
-	protected 	$table = 'connections_source';
-	protected 	$identifier = 'id_connections_source';
+	public static $definition = array(
+		'table' => 'connections_source',
+		'primary' => 'id_connections_source',
+	);
 	
 	public function getFields()
 	{

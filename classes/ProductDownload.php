@@ -86,8 +86,10 @@ class ProductDownloadCore extends ObjectModel
 		'is_shareable' => 'isUnsignedInt'
 	);
 
-	protected $table = 'product_download';
-	protected $identifier = 'id_product_download';
+	public static $definition = array(
+		'table' => 'product_download',
+		'primary' => 'id_product_download',
+	);
 
 	/**
 	 * Build a virtual product

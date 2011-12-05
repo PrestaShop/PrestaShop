@@ -45,8 +45,12 @@ class StockMvtReasonCore extends ObjectModel
 	/** @var boolean True if the movement reason has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
-	protected $table = 'stock_mvt_reason';
-	protected $identifier = 'id_stock_mvt_reason';
+	public static $definition = array(
+		'table' => 'stock_mvt_reason',
+		'primary' => 'id_stock_mvt_reason',
+		'multilang' => true,
+	);
+
  	protected $fieldsRequiredLang = array('name');
  	protected $fieldsSizeLang = array('name' => 255);
  	protected $fieldsValidateLang = array('name' => 'isGenericName');

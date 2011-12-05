@@ -174,8 +174,10 @@ class OrderDetailCore extends ObjectModel
 		'total_price_tax_excl' => 'isPrice'
 	);
 
-	protected 	$table = 'order_detail';
-	protected 	$identifier = 'id_order_detail';
+	public static $definition = array(
+		'table' => 'order_detail',
+		'primary' => 'id_order_detail',
+	);
 
 	protected	$webserviceParameters = array(
 	'fields' => array (

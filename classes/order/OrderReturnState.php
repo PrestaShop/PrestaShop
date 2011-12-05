@@ -38,8 +38,11 @@ class OrderReturnStateCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 64);
  	protected $fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected $table = 'order_return_state';
-	protected $identifier = 'id_order_return_state';
+	public static $definition = array(
+		'table' => 'order_return_state',
+		'primary' => 'id_order_return_state',
+		'multilang' => true,
+	);
 
 	public function getFields()
 	{

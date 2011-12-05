@@ -31,8 +31,11 @@ class ThemeCore extends ObjectModel
 
 	protected $fieldsSize = array('name' => 64);
  	protected $fieldsValidate = array('name' => 'isGenericName');
-	protected $table = 'theme';
-	protected $identifier = 'id_theme';
+
+	public static $definition = array(
+		'table' => 'theme',
+		'primary' => 'id_theme',
+	);
 
 	public function getFields()
 	{

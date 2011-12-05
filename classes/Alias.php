@@ -35,8 +35,10 @@ class AliasCore extends ObjectModel
  	protected 	$fieldsSize = array('alias' => 255, 'search' => 255);
  	protected 	$fieldsValidate = array('search' => 'isValidSearch', 'alias' => 'isValidSearch', 'active' => 'isBool');
 
-	protected 	$table = 'alias';
-	protected 	$identifier = 'id_alias';
+	public static $definition = array(
+		'table' => 'alias',
+		'primary' => 'id_alias',
+	);
 
 	function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{

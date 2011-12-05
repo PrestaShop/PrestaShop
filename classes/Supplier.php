@@ -70,8 +70,11 @@ class SupplierCore extends ObjectModel
 		'meta_keywords' => 'isGenericName'
 	);
 
-	protected $table = 'supplier';
-	protected $identifier = 'id_supplier';
+	public static $definition = array(
+		'table' => 'supplier',
+		'primary' => 'id_supplier',
+		'multilang' => true,
+	);
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

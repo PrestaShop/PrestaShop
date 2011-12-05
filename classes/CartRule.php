@@ -59,7 +59,8 @@ class CartRuleCore extends ObjectModel
 
 	public static $definition = array(
 		'table' => 'cart_rule',
-		'primary' => 'id_cart_rule',
+		'identifier' => 'id_cart_rule',
+		'multilang' => true,
 	);
 
  	protected $fieldsRequired = array('date_from', 'date_to');

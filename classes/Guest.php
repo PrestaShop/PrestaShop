@@ -60,9 +60,10 @@ class GuestCore extends ObjectModel
 		'accept_language' => 'isGenericName'
 	);
 
-	protected 	$table = 'guest';
-	protected 	$identifier = 'id_guest';
-	
+	public static $definition = array(
+		'table' => 'guest',
+		'primary' => 'id_guest',
+	);
 	
 	protected	$webserviceParameters = array(
 		'fields' => array(

@@ -81,8 +81,11 @@ class CMSCategoryCore extends ObjectModel
  	protected 	$fieldsValidateLang = array('name' => 'isCatalogName', 'link_rewrite' => 'isLinkRewrite', 'description' => 'isCleanHtml',
 											'meta_title' => 'isGenericName', 'meta_description' => 'isGenericName', 'meta_keywords' => 'isGenericName');
 
-	protected 	$table = 'cms_category';
-	protected 	$identifier = 'id_cms_category';
+	public static $definition = array(
+		'table' => 'cms_category',
+		'primary' => 'id_cms_category',
+		'multilang' => true,
+	);
 
 	public function __construct($id_cms_category = NULL, $id_lang = NULL)
 	{
