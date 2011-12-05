@@ -132,7 +132,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		 	$this->identifier = 'id_supply_order';
 		 	$this->lang = false;
 
-			$this->action = 'new';
+		 	$this->action = 'new';
 			$this->display = 'add';
 
 			if (Tools::isSubmit('updatesupply_order'))
@@ -345,6 +345,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (!($this->tabAccess['add'] === '1'))
 			unset($this->toolbar_btn['new']);
 
+		unset($this->toolbar_btn['new']);
+
 		$this->toolbar_btn['export-csv-orders'] = array(
 			'short' => 'Export Orders',
 			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders',
@@ -355,6 +357,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'short' => 'Export Orders Details',
 			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details',
 			'desc' => $this->l('Export Orders Details (CSV)'),
+		);
+
+		$this->toolbar_btn['new'] = array(
+			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+			'desc' => $this->l('Add new')
 		);
 
 		// overrides query
@@ -1680,9 +1687,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'supply_order_warehouse' => (Validate::isLoadedObject($warehouse) ? $warehouse->name : ''),
 				'supply_order_reference' => $supply_order->reference,
 				'supply_order_supplier_name' => $supply_order->supplier_name,
-				'supply_order_creation_date' => Tools::displayDate($supply_order->date_add, $lang_id, true),
-				'supply_order_last_update' => Tools::displayDate($supply_order->date_upd, $lang_id, true),
-				'supply_order_expected' => Tools::displayDate($supply_order->date_delivery_expected, $lang_id, true),
+				'supply_order_creation_date' => Tools::displayDate($supply_order->date_add, $lang_id, false),
+				'supply_order_last_update' => Tools::displayDate($supply_order->date_upd, $lang_id, false),
+				'supply_order_expected' => Tools::displayDate($supply_order->date_delivery_expected, $lang_id, false),
 				'supply_order_discount_rate' => Tools::ps_round($supply_order->discount_rate, 2),
 				'supply_order_total_te' => Tools::displayPrice($supply_order->total_te, $currency),
 				'supply_order_discount_value_te' => Tools::displayPrice($supply_order->discount_value_te, $currency),
