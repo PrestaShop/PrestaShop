@@ -491,7 +491,7 @@ class MailAlerts extends Module
 		)
 			die (Tools::displayError());
 
-		$sql = 'SELECT ma.`id_product`, stock.quantity AS product_quantity, pl.`name`, ma.`id_product_attribute`
+		$sql = 'SELECT ma.`id_product`, IFNULL(stock.quantity, 0) as product_quantity, pl.`name`, ma.`id_product_attribute`
 				FROM `'._DB_PREFIX_.'mailalert_customer_oos` ma
 				JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = ma.`id_product`
 				JOIN `'._DB_PREFIX_.'product_lang` pl ON pl.`id_product` = ma.`id_product` AND pl.`id_lang` = '.$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'

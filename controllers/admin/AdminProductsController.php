@@ -176,7 +176,7 @@ class AdminProductsControllerCore extends AdminController
 		$object->on_sale = Tools::isSubmit('on_sale');
 		$object->online_only = Tools::isSubmit('online_only');
 	}
-	
+
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
 	{
 		$orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
@@ -1898,7 +1898,7 @@ class AdminProductsControllerCore extends AdminController
 						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
 						'desc' => $this->l('Create'),
 					);
-	
+
 					$this->toolbar_btn['newCombinaison'] = array(
 						'short' => 'Add a new combination',
 						'desc' => $this->l('Add a new combination'),
@@ -1920,7 +1920,7 @@ class AdminProductsControllerCore extends AdminController
 						'desc' => $this->l('Save and stay'),
 					);
 				}
-					
+
 			}
 		parent::initToolbar();
 		$this->context->smarty->assign('toolbar_fix', 1);
@@ -2125,6 +2125,7 @@ class AdminProductsControllerCore extends AdminController
 								0
 							)
 						);
+						$price = Tools::ps_round($price, 6);
 
 						$id_currency = (int)Tools::getValue(
 							'product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
@@ -3093,7 +3094,7 @@ class AdminProductsControllerCore extends AdminController
 			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 70),
 			'upc' => array('title' => $this->l('UPC'), 'align' => 'center', 'width' => 70)
 		);
-		
+
 		if ($id_product_download && !empty($product_download->display_filename))
 		{
 			$this->fieldsDisplay['Filename'] = array('title' => $this->l('Filename'), 'align' => 'center', 'width' => 70);
@@ -3137,7 +3138,7 @@ class AdminProductsControllerCore extends AdminController
 						$groups[$combinaison['id_attribute_group']] = $combinaison['group_name'];
 				}
 			}
-	
+
 			$irow = 0;
 			if (isset($combArray))
 			{
@@ -3145,10 +3146,10 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$list = '';
 					$jsList = '';
-	
+
 					/* In order to keep the same attributes order */
 					asort($product_attribute['attributes']);
-	
+
 					foreach ($product_attribute['attributes'] as $attribute)
 					{
 						$list .= addslashes(htmlspecialchars($attribute[0])).' - '.addslashes(htmlspecialchars($attribute[1])).', ';
@@ -3168,12 +3169,12 @@ class AdminProductsControllerCore extends AdminController
 					$id_product_download = $product->productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
 					if ($id_product_download)
 						$product->productDownload = new ProductDownload($id_product_download);
-	
+
 					$available_date_attribute = substr($product->productDownload->date_expiration, 0, -9);
-	
+
 					if ($available_date_attribute == '0000-00-00')
 						$available_date_attribute = '';
-			
+
 					if ($id_product_download && !empty($product->productDownload->display_filename))
 					{
 						if ($product->productDownload->is_shareable == 1)
@@ -3185,9 +3186,9 @@ class AdminProductsControllerCore extends AdminController
 						$combArray[$id_product_attribute]['nb_downloadable'] = $product->productDownload->nb_downloadable;
 						$combArray[$id_product_attribute]['is_shareable'] = $is_shareable;
 					}
-	
+
 					$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-	
+
 					if ($product->productDownload->id && file_exists($exists_file))
 						$filename = $product->productDownload->filename;
 					else
@@ -3289,10 +3290,10 @@ class AdminProductsControllerCore extends AdminController
 								{
 									$list = '';
 									$jsList = '';
-			
+
 									/* In order to keep the same attributes order */
 									asort($product_attribute['attributes']);
-			
+
 									foreach ($product_attribute['attributes'] as $attribute)
 									{
 										$list .= addslashes(htmlspecialchars($attribute[0])).' - '.addslashes(htmlspecialchars($attribute[1])).', ';
@@ -3302,21 +3303,21 @@ class AdminProductsControllerCore extends AdminController
 									$jsList = rtrim($jsList, ', ');
 									$attrImage = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
 									$available_date = ($product_attribute['available_date'] != 0) ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
-			
+
 									$id_product_download = $product->productDownload->getIdFromIdAttribute((int) $product->id, (int) $id_product_attribute);
 									if ($id_product_download)
 										$product->productDownload = new ProductDownload($id_product_download);
-			
+
 									$available_date_attribute = substr($product->productDownload->date_expiration, 0, -9);
-			
+
 									if ($available_date_attribute == '0000-00-00')
 										$available_date_attribute = '';
-			
+
 									if ($product->productDownload->is_shareable == 1)
 										$is_shareable = $this->l('Yes');
 									else
 										$is_shareable = $this->l('No');
-			
+
 									$content .= '
 									<tr'.($irow++ % 2 ? ' class="alt_row"' : '').($product_attribute['default_on'] ? ' style="background-color:#D1EAEF"' : '').'>
 										<td>'.stripslashes($list).'</td>
@@ -3325,7 +3326,7 @@ class AdminProductsControllerCore extends AdminController
 										<td class="right">'.$product_attribute['reference'].'</td>
 										<td class="right">'.$product_attribute['ean13'].'</td>
 										<td class="right">'.$product_attribute['upc'].'</td>';
-			
+
 										if ($id_product_download && !empty($product->productDownload->display_filename))
 										{
 											$content .= '<td class="right">'.$product->productDownload->getHtmlLink(false, true).'</td>
@@ -3333,9 +3334,9 @@ class AdminProductsControllerCore extends AdminController
 											<td class="center">'.$product->productDownload->nb_downloadable.'</td>
 											<td class="right">'.$is_shareable.'</td>';
 										}
-			
+
 										$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-			
+
 										if ($product->productDownload->id && file_exists($exists_file))
 											$filename = $product->productDownload->filename;
 										else
@@ -3369,12 +3370,12 @@ class AdminProductsControllerCore extends AdminController
 								<script type="text/javascript">
 									var impact = getE(\'attribute_price_impact\');
 									var impact2 = getE(\'attribute_weight_impact\');
-			
+
 									var s_attr_group = $(\'#span_new_group\');
 									var s_attr_name = $(\'#span_new_attr\');
 									var s_impact = $(\'#span_impact\');
 									var s_impact2 = $(\'#span_weight_impact\');
-			
+
 									init_elems();
 								</script>';
 		return $content;

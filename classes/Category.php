@@ -641,6 +641,7 @@ class CategoryCore extends ObjectModel
 					.($active ? ' AND p.`active` = 1' : '')
 					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '').
 					' GROUP BY p.id_product';
+
 		if ($random === true)
 		{
 			$sql .= ' ORDER BY RAND()';
