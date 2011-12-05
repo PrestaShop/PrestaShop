@@ -320,6 +320,11 @@ select optgroup option {
 	width: 350px;
 }
 
+.lab_modules_positions img {
+	float:left;
+}
+
+
 /* STRUCTURE */
 
 #container {
@@ -428,13 +433,13 @@ select optgroup option {
 
 #unhook_button_position_bottom {
 	overflow: hidden;
-	width: 600px;
+	width: 100%;
 	padding-top: 10px;
 }
 
 #unhook_button_position_top {
 	overflow: hidden;
-	width: 600px;
+	width: 100%;
 }
 
 #content .conf, #content .warn, #content .error {

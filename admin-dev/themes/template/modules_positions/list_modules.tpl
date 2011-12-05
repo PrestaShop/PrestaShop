@@ -59,16 +59,17 @@
 	<label class="t" for="hook_position">{l s='Display non-positionable hook'}</label>
 </form>
 
-<fieldset style="width:250px;float:right"><legend>{l s='Live edit'}</legend>
+<div>
+
+<div id="modulePosition">
+<div class="blocLiveEdit"><h2>{l s='Live edit'}</h2>
 {if $live_edit}
 	<p>{l s='You have to select a shop to use live edit'}</p>
 {else}
 	<p>{l s='By clicking here you will be redirected to the front office of your shop to move and delete modules directly.'}</p>
-		<br>
 		<a href="{$url_live_edit}" target="_blank" class="button">{l s='Run LiveEdit'}</a>
 {/if}
-</fieldset>
-
+</div>
 <form method="post" action="{$url_submit}">
 <div id="unhook_button_position_top">
 	<input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
@@ -78,7 +79,7 @@
 {/if}
 {foreach $hooks as $hook}
 	<a name="{$hook['name']}"/>
-	<table cellpadding="0" cellspacing="0" class="table width3 space {if $hook['module_count'] >= 2} tableDnD{/if}" id="{$hook['id_hook']}">
+	<table cellpadding="0" cellspacing="0" class="table widthfull space {if $hook['module_count'] >= 2} tableDnD{/if}" id="{$hook['id_hook']}">
 	<tr class="nodrag nodrop"><th colspan="4">{$hook['title']} - <span style="color: red">{$hook['module_count']}</span> {if $hook['module_count'] > 1}{l s='modules'}{else}{l s='module'}{/if}
 	{if $hook['module_count'] && $can_move}
 		<input type="checkbox" id="Ghook{$hook['id_hook']}" class="floatr" style="margin-right: 2px;" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
@@ -102,13 +103,13 @@
 						</a>
 					{/if}
 				</td>
-				<td style="padding-left: 10px;"><label class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
+				<td style="padding-left: 10px;"><div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
 			{else}
-				<td style="padding-left: 10px;" colspan="3"><label class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
+				<td style="padding-left: 10px;" colspan="3"><div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}">
 			{/if}
-			<img src="../modules/{$module['instance']->name}/logo.gif" alt="{$module['instance']->name|stripslashes}" /> <strong>{$module['instance']->displayName|stripslashes}</strong>
-				{if $module['instance']->version} v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}{/if}<br />{$module['instance']->description}
-			</label></td>
+			<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" /> <h3>{$module['instance']->displayName|stripslashes}</h3>
+				<span>{if $module['instance']->version}v{if $module['instance']->version|intval == $module['instance']->version}{sprintf('%.1f', $module['instance']->version)}{else}{$module['instance']->version|floatval}{/if}{/if}</span><p>{$module['instance']->description}</p>
+			</div></td>
 				<td width="60">
 					<a href="{$current}&id_module={$module['instance']->id}&id_hook={$hook['id_hook']}&editGraft{if $display_key}&show_modules={$display_key}{/if}&token={$token}">
 						<img src="../img/admin/edit.gif" border="0" alt="{l s='Edit'}" title="{l s='Edit'}" />
@@ -125,4 +126,8 @@
 	{/if}
 	</table>
 {/foreach}
-<div id="unhook_button_position_bottom"><input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div></form>
+<div id="unhook_button_position_bottom"><input class="button floatr" type="submit" name="unhookform" value="{l s='Unhook the selection'}"/></div>
+
+</div>
+</div>
+</form>
