@@ -594,8 +594,7 @@ class CategoryCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
 					WHERE cp.`id_category` = '.(int)$this->id.
 					($active ? ' AND p.`active` = 1' : '').
-					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '').
-					' GROUP BY p.id_product';
+					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
