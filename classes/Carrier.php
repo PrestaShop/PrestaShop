@@ -110,8 +110,6 @@ class CarrierCore extends ObjectModel
 	/** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
 	public $grade;
 
-	protected $langMultiShop = true;
-
 	protected $fieldsRequired = array('name', 'active');
 	protected $fieldsSize = array('name' => 64, 'grade' => 1);
 	protected $fieldsValidate = array('id_tax_rules_group' => 'isInt', 'name' => 'isCarrierName', 'active' => 'isBool',
@@ -126,6 +124,7 @@ class CarrierCore extends ObjectModel
 		'table' => 'carrier',
 		'primary' => 'id_carrier',
 		'multilang' => true,
+		'multishop' => true,
 	);
 
 	protected static $price_by_weight = array();
