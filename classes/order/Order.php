@@ -1059,8 +1059,8 @@ class OrderCore extends ObjectModel
 			else
 				$order_invoice->number = self::getLastInvoiceNumber() + 1;
 
-			$order_invoice->total_discount_tax_excl = $this->total_discount_tax_excl;
-			$order_invoice->total_discount_tax_incl = $this->total_discount_tax_incl;
+			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
+			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
 			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
 			$order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
 			$order_invoice->total_products = $this->total_products;
@@ -1085,8 +1085,9 @@ class OrderCore extends ObjectModel
 				SET `id_order_invoice` = '.(int)$order_invoice->id.'
 				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
-			$this->invoice_date = $res['invoice_date'];
-			$this->invoice_number = $res['invoice_number'];
+			$this->invoice_date = $order_invoice->date_add;
+			$this->invoice_number = $order_invoice->number;
+			$this->update();
 		}
 	}
 
