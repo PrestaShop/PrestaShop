@@ -41,7 +41,9 @@ function removeButtonCombinaison(item)
 	$('.process-icon-newCombinaison').removeClass('toolbar-new');
 	$('.process-icon-newCombinaison').addClass('toolbar-cancel');
 	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
-	$('#desc-product-newCombinaison div').html($('#desc-product-newCombinaison').attr('cancel'));
+	$('#desc-product-newCombinaison div').html($('#ResetBtn').val());
+	$('id_product_attribute').val(0);
+	init_elems();
 	posC = false;
 }
 
@@ -51,7 +53,7 @@ function addButtonCombinaison(item)
 	$('.process-icon-newCombinaison').removeClass('toolbar-cancel');
 	$('.process-icon-newCombinaison').addClass('toolbar-new');
 	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
-	$('#desc-product-newCombinaison div').html($('#desc-product-newCombinaison').attr('add'));
+	$('#desc-product-newCombinaison div').html($('#submitProductAttribute').val());
 	posC = true;
 }
 
@@ -135,37 +137,68 @@ function editProductAttribute(ids, token)
 		context: this,
 		async: false,
 		success: function(data) {
-			console.log(data[0]);
-			console.log(data[1]);
 			$('#add_new_combination').show();
+			$('#attribute_quantity').show();
 			$('#product_att_list').html('');
+			removeButtonCombinaison('update');
+			$.scrollTo('#add_new_combination', 1200, { offset: -100 });
+
+			var wholesale_price = Math.abs(data[0]['wholesale_price']);
+			var price = Math.abs(data[0]['price']);
+			var weight = Math.abs(data[0]['weight']);
+			var unit_impact = Math.abs(data[0]['unit_price_impact']);
+			var reference = data[0]['reference'];
+			var ean = data[0]['ean13'];
+			var quantity = data[0]['quantity'];
+			var image = false;
+			var old_attr = Array(data[0]['list_attributes']);
+
+			var product_att_list = '';
 			for(i=0;i<data.length;i++)
 			{
-				// update values of fields
-				$('#id_product_attribute').val(data[i]['id_product_attribute']);
-				$('#product_att_list').append('<option value='+data[i]['id_attribute']+' groupid='+data[i]['id_attribute_group']+'>'+data[i]['group_name']+' : '+data[i]['attribute_name']+'</option>');
-				$('#attribute_reference').val(data[i]['reference']);
-				$('#attribute_ean13').val(data[i]['ean13']);
-				$('#attribute_upc').val(data[i]['upc']);
-				$('#attribute_wholesale_price').val(Math.abs(data[i]['wholesale_price']));
-				$('#attribute_price').val(Math.abs(data[i]['price']));
-				$('#attribute_priceTI').val(data[i]['attribute_reference']);
-				$('#attribute_weight').val(Math.abs(data[i]['weight']));
-				$('#attribute_unity').val(Math.abs(data[i]['unit_price_impact']));
-				if ($('#attribute_ecotax').length != 0)
-					$('#attribute_ecotax').val(data[i]['ecotax']);
-				$('#minimal_quantity').val(data[i]['minimal_quantity']);
-				$('#attribute_quantity').html(data[i]['quantity']);
-				$('#attribute_minimal_quantity').val(data[i]['minimal_quantity']);
-				$('#available_date').val(data[i]['available_date']);
-
-				if (data[i]['default_on'] == 1)
-					$('#attribute_default').checked = true;
-				else
-					$('#attribute_default').checked = false;
-				removeButtonCombinaison('update');
-				$.scrollTo('#add_new_combination', 1200, { offset: -100 });
+				product_att_list += data[i]['group_name']+' : ';
+				product_att_list += data[i]['attribute_name']+', ';
+				product_att_list += data[i]['id_attribute']+', ';
 			}
+
+			var old_attr = Array(product_att_list.substr(0, (product_att_list.length-2)));
+			var id_product_attribute = data[0]['id_product_attribute'];
+			var default_attribute = data[0]['default_on'];
+			var eco_tax = data[0]['ecotax'];
+			var upc = data[0]['upc'];
+			var minimal_quantity = data[0]['minimal_quantity'];
+			var available_date = data[0]['available_date'];
+			var virtual_product_name_attribute = null;
+			var virtual_product_filename_attribute = null;
+			var virtual_product_nb_downloable = null;
+			var virtual_product_expiration_date_attribute = null;
+			var virtual_product_nb_days = null;
+			var is_shareable = null;
+
+			fillCombinaison(
+				wholesale_price,
+				price,
+				weight,
+				unit_impact,
+				reference,
+				ean,
+				quantity,
+				image,
+				old_attr,
+				id_product_attribute,
+				default_attribute,
+				eco_tax,
+				upc,
+				minimal_quantity,
+				available_date,
+				virtual_product_name_attribute,
+				virtual_product_filename_attribute,
+				virtual_product_nb_downloable,
+				virtual_product_expiration_date_attribute,
+				virtual_product_nb_days,
+				is_shareable
+			);
+			calcImpactPriceTI();
 		}
 	});
 }
