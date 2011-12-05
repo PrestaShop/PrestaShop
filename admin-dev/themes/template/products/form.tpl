@@ -68,6 +68,7 @@ var tabs_toolbar_save_buttons = [];
 {/foreach}
 
 $(document).ready(function(){
+	$('#desc-product-newCombinaison').hide();
 	{* submenu binding *}
 	$(".tab-page").click(function(e){
 		e.preventDefault();
@@ -127,7 +128,11 @@ $(document).ready(function(){
 
 		var languages = new Array();
 		if (id == "4-Combinations")
+		{
+			$('#desc-product-new').hide();
+			$('#desc-product-newCombinaison').show();
 			populate_attrs();
+		}
 		if (id == '7-Attachments')
 		{
 			$("#addAttachment").live('click', function() {

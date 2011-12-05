@@ -23,6 +23,38 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/* Combinaition */
+
+var posC = true;
+$(document).ready(function() {
+	$('#desc-product-newCombinaison').click(function() {
+		if (posC == true)
+			removeButtonCombinaison('add');
+		else
+			addButtonCombinaison('add');
+	});
+});
+
+function removeButtonCombinaison(item)
+{
+	$('#add_new_combination').show();
+	$('.process-icon-newCombinaison').removeClass('toolbar-new');
+	$('.process-icon-newCombinaison').addClass('toolbar-cancel');
+	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
+	$('#desc-product-newCombinaison div').html($('#desc-product-newCombinaison').attr('cancel'));
+	posC = false;
+}
+
+function addButtonCombinaison(item)
+{
+	$('#add_new_combination').hide();
+	$('.process-icon-newCombinaison').removeClass('toolbar-cancel');
+	$('.process-icon-newCombinaison').addClass('toolbar-new');
+	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
+	$('#desc-product-newCombinaison div').html($('#desc-product-newCombinaison').attr('add'));
+	posC = true;
+}
+
 function deleteProductAttribute(ids, token, parent)
 {
 	var id = ids.split('||');
@@ -103,11 +135,14 @@ function editProductAttribute(ids, token)
 		context: this,
 		async: false,
 		success: function(data) {
-			$('#add_new_combination').show();
 			console.log(data[0]);
 			console.log(data[1]);
+			$('#add_new_combination').show();
+			$('#product_att_list').html('');
 			for(i=0;i<data.length;i++)
 			{
+				// update values of fields
+				$('#id_product_attribute').val(data[i]['id_product_attribute']);
 				$('#product_att_list').append('<option value='+data[i]['id_attribute']+' groupid='+data[i]['id_attribute_group']+'>'+data[i]['group_name']+' : '+data[i]['attribute_name']+'</option>');
 				$('#attribute_reference').val(data[i]['reference']);
 				$('#attribute_ean13').val(data[i]['ean13']);
@@ -120,6 +155,7 @@ function editProductAttribute(ids, token)
 				if ($('#attribute_ecotax').length != 0)
 					$('#attribute_ecotax').val(data[i]['ecotax']);
 				$('#minimal_quantity').val(data[i]['minimal_quantity']);
+				$('#attribute_quantity').html(data[i]['quantity']);
 				$('#attribute_minimal_quantity').val(data[i]['minimal_quantity']);
 				$('#available_date').val(data[i]['available_date']);
 
@@ -127,10 +163,13 @@ function editProductAttribute(ids, token)
 					$('#attribute_default').checked = true;
 				else
 					$('#attribute_default').checked = false;
+				removeButtonCombinaison('update');
+				$.scrollTo('#add_new_combination', 1200, { offset: -100 });
 			}
 		}
 	});
 }
+/* END Combinaition */
 
 function addPackItem()
 {
