@@ -207,8 +207,8 @@ class HookCore extends ObjectModel
 						ON hm.`id_module` = m.`id_module`';
 			if (isset($context->customer) && $context->customer->isLogged())
 				$sql .= '
-					LEFT JOIN `'._DB_PREFIX_.'group_module_restriction` gmr
-						ON gmr.`id_module` = m.`id_module`';
+					LEFT JOIN `'._DB_PREFIX_.'module_group` mg
+						ON mg.`id_module` = m.`id_module`';
 			$sql .= '
 					LEFT JOIN `'._DB_PREFIX_.'hook` h
 						ON hm.`id_hook` = h.`id_hook`
@@ -216,7 +216,7 @@ class HookCore extends ObjectModel
 						AND hm.id_shop IN('.implode(', ', $list).')';
 			if (isset($context->customer) && $context->customer->isLogged())
 				$sql .= '
-						AND (gmr.`authorized` = 1 AND gmr.`id_group` IN('.implode(', ', $groups).'))';
+						AND (mg.`id_group` IN('.implode(', ', $groups).'))';
 			$sql .= '
 					GROUP BY hm.id_hook, hm.id_module
 					ORDER BY hm.`position`';
