@@ -37,10 +37,10 @@ class MRTools
 	{
 		if (function_exists('iconv'))
 		{
-		$currentLocale = setlocale(LC_ALL, NULL);
-		setlocale(LC_ALL, 'en_US.UTF8');
-		$cleanedString = iconv('UTF-8','ASCII//TRANSLIT', $string);
-		setLocale(LC_ALL, $currentLocale);
+			$currentLocale = setlocale(LC_ALL, NULL);
+			setlocale(LC_ALL, 'en_US.UTF8');
+			$cleanedString = iconv('UTF-8','ASCII//TRANSLIT', $string);
+			setLocale(LC_ALL, $currentLocale);	
 		}
 		else
 			$cleanedString = strtr($string,
