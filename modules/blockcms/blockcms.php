@@ -791,7 +791,7 @@ class BlockCms extends Module
 	public function displayBlockCMS($column)
 	{
 		$cms_titles = self::getCMStitles($column);
-		$this->templateAssign(array(
+		$this->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
 		));
@@ -814,7 +814,7 @@ class BlockCms extends Module
 		if (Configuration::get('FOOTER_BLOCK_ACTIVATION'))
 		{
 			$cms_titles = self::getCMStitlesFooter();
-			$this->templateAssign(array(
+			$this->smarty->assign(array(
 				'block' => 0,
 				'cmslinks' => $cms_titles,
 				'display_stores_footer' => Configuration::get('PS_STORES_DISPLAY_FOOTER'),

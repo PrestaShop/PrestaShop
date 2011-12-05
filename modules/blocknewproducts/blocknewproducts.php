@@ -100,7 +100,7 @@ class BlockNewProducts extends Module
 		if (!$newProducts AND !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
 
-		$this->templateAssign(array(
+		$this->smarty->assign(array(
 			'new_products' => $newProducts,
 			'mediumSize' => Image::getSize('medium'),
 		));

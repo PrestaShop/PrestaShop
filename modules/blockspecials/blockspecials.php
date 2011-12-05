@@ -90,7 +90,7 @@ class BlockSpecials extends Module
 		if (!$special = Product::getRandomSpecial((int)$params['cookie']->id_lang) AND !Configuration::get('PS_BLOCK_SPECIALS_DISPLAY'))
 			return;
 
-		$this->templateAssign(array(
+		$this->smarty->assign(array(
 			'special' => $special,
 			'priceWithoutReduction_tax_excl' => Tools::ps_round($special['price_without_reduction'], 2),
 			'mediumSize' => Image::getSize('medium'),
