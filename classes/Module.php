@@ -187,7 +187,7 @@ abstract class ModuleCore
 			AND a.`view` = 0
 		)');
 		// Adding Restrictions for client groups
-		Group::addRestrictionsForModule($this->id);
+		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
 
 		return true;
 	}
@@ -918,21 +918,14 @@ abstract class ModuleCore
 				INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module`)
 				INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group` AND cg.`id_customer` = '.(int)$context->customer->id.')
 				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`';
-		if (isset($context->customer))
-			$sql .= '
-				LEFT JOIN `'._DB_PREFIX_.'group_module_restriction` gmr ON gmr.`id_module` = m.`id_module`';
-		$sql .= '
+				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \''.pSQL($hookPayment).'\'
 					AND mc.id_country = '.(int)($billing->id_country).'
 					AND mc.id_shop = '.(int)$context->shop->getID(true).'
 					AND mg.id_shop = '.(int)$context->shop->getID(true).'
 					AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
-					AND hm.id_shop IN('.implode(', ', $list).')';
-		if (isset($context->customer))
-			$sql .= '
-					AND (gmr.`authorized` = 1 AND gmr.`id_group` IN('.implode(', ', $groups).'))';
-		$sql .= '
+					AND hm.id_shop IN('.implode(', ', $list).')
+					AND (mg.`id_group` IN('.implode(', ', $groups).'))
 				GROUP BY hm.id_hook, hm.id_module
 				ORDER BY hm.`position`, m.`name` DESC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1311,11 +1304,9 @@ abstract class ModuleCore
 	public static function getAuthorizedModules($group_id)
 	{
 		return Db::getInstance()->executeS('
-			SELECT m.id_module, m.name FROM `'._DB_PREFIX_.'group_module_restriction` gmr
-			LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = gmr.`id_module`)
-			WHERE gmr.`id_group` = '.(int) $group_id.'
-			AND gmr.`authorized` = 1
-		');
+			SELECT m.id_module, m.name FROM `'._DB_PREFIX_.'module_group` mg
+			LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
+			WHERE mg.`id_group` = '.(int) $group_id);
 	}
 
 	/**

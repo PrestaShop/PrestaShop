@@ -327,16 +327,13 @@ class AdminGroupsController extends AdminController
 	protected function updateRestrictions()
 	{
 		$id_group = Tools::getValue('id_group');
-		$unauth_modules = Tools::getValue('modulesBoxUnauth');
 		$auth_modules = Tools::getValue('modulesBoxAuth');
 		$return = true;
 		if ($id_group)
 			Group::truncateModulesRestrictions((int)$id_group);
-
+		$shops = Shop::getShops(true, null, true);
 		if (is_array($auth_modules))
-			$return &= Group::addModulesRestrictions($id_group, $auth_modules, 1);
-		if (is_array($unauth_modules))
-			$return &= Group::addModulesRestrictions($id_group, $unauth_modules, 0);
+			$return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
 		return $return;
 	}
 

@@ -236,7 +236,7 @@ class GroupCore extends ObjectModel
 	public static function truncateModulesRestrictions($id_group)
 	{
 		return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'group_module_restriction`
+		DELETE FROM `'._DB_PREFIX_.'module_group`
 		WHERE `id_group` = '.(int)$id_group);
 	}
 
@@ -248,27 +248,32 @@ class GroupCore extends ObjectModel
 	public static function truncateRestrictionsByModule($id_module)
 	{
 		return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'group_module_restriction`
+		DELETE FROM `'._DB_PREFIX_.'module_group`
 		WHERE `id_module` = '.(int)$id_module);
 	}
 
 	/**
 	 * Adding restrictions modules to the group with id $id_group
-	 * @param integer id_group
-	 * @param array modules
-	 * @param integer authorized
+	 * @param $id_group
+	 * @param $modules
+	 * @param array $shops
+	 * @return bool
+	 * @internal param \id_group $integer
+	 * @internal param \modules $array
+	 * @internal param \authorized $integer
 	 */
-	public static function addModulesRestrictions($id_group, $modules, $authorized)
+	public static function addModulesRestrictions($id_group, $modules, $shops = array(1))
 	{
-		if (!is_array($modules) AND !empty($modules))
+		if (!is_array($modules) && !empty($modules))
 			return false;
 		else
 		{
 			//delete all record for this group
-			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_module_restriction` WHERE `id_group` = '.(int)$id_group.' AND `authorized` = '.(int)$authorized);
-			$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 			foreach ($modules as $mod)
-				$sql .= '("'.(int)$id_group.'", "'.(int)$mod.'", "'.(int)$authorized.'"),';
+				foreach ($shops as $s)
+					$sql .= '("'.(int)$mod.'", "'.(int)$s.'", "'.(int)$id_group.'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
 			Db::getInstance()->execute($sql);
@@ -279,13 +284,15 @@ class GroupCore extends ObjectModel
 	 * Add restrictions for a new module
 	 * We authorize every groups to the new module
 	 * @param integer id_module
+	 * @param array $shops
 	 */
-	public static function addRestrictionsForModule($id_module)
+	public static function addRestrictionsForModule($id_module, $shops = array(1))
 	{
 		$groups = Group::getGroups(Context::getContext()->language->id);
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'group_module_restriction` (`id_group`, `id_module`, `authorized`) VALUES ';
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 		foreach ($groups as $g)
-			$sql .= '("'.(int)$g['id_group'].'", "'.(int)$id_module.'", "1"),';
+			foreach ($shops as $s)
+				$sql .= '("'.(int)$id_module.'", "'.(int)$s.'", "'.(int)$g['id_group'].'"),';
 		// removing last comma to avoid SQL error
 		$sql = substr($sql, 0, strlen($sql) - 1);
 		Db::getInstance()->execute($sql);
