@@ -1734,9 +1734,8 @@ class AdminProductsControllerCore extends AdminController
 				$root_categ->dashes = str_repeat('&nbsp;-&nbsp;',$root_categ->level_depth);
 				$category_tree[] = $root_categ;
 
-				foreach ($children as $k => $categ)
+				foreach ($children as $categ)
 				{
-					$categ = new Category($categ['id_category'],$this->context->language->id);
 					$categ->selected = $this->_category->id_category == $categ->id;
 					$categ->dashes = str_repeat('&nbsp;-&nbsp;',$categ->level_depth);
 					$category_tree[] = $categ;
