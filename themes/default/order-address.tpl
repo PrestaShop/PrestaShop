@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
+*  @version  Release: $Revision: 7471 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -67,7 +67,6 @@
 <script type="text/javascript">
 // <![CDATA[
 	{if !$opc}
-	var baseDir = '{$base_dir_ssl}';
 	var orderProcess = 'order';
 	var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
 	var currencyRate = '{$currencyRate|floatval}';
@@ -161,32 +160,44 @@
 {if !$opc}<h1>{l s='Addresses'}</h1>{else}<h2><span>1</span> {l s='Addresses'}</h2>{/if}
 
 {if !$opc}
-{assign var='current_step' value='address'}
-{include file="$tpl_dir./order-steps.tpl"}
-{include file="$tpl_dir./errors.tpl"}
-
-<div class="address-form-multishipping">
-	<a href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')}" title="{l s='Multi-shipping'}" class="button exclusive">
-		{l s='Multi-shipping'}
-	</a>
-</div>
+	{assign var='current_step' value='address'}
+	{include file="$tpl_dir./order-steps.tpl"}
+	{include file="$tpl_dir./errors.tpl"}
+	
+	{if !$multi_shipping && {Configuration::get('PS_ALLOW_MULTISHIPPING')}}
+		<div class="button_multishipping_mode" id="multishipping_mode_box">
+			<div class="title">{l s='Multi-shipping'}</div>
+			<div class="description">
+				<a href="{$link->getPageLink('order', true, NULL, 'step=1&multi-shipping=1')}"/>
+					{l s='Specify a delivery address for each products ordered.'}
+				</a>
+			</div>
+		</div>
+	{/if}
 <form action="{$link->getPageLink($back_order_page, true)}" method="post">
 {else}
-<div class="address-form-multishipping">
-	<a href="#" id="multishipping_mode" title="{l s='Multi-shipping'}" class="button exclusive" onclick="multishippingMode(this); return false;">
-		{l s='Multi-shipping'}
-	</a>
-	<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery addresses'}" class="button exclusive" style="display:none">
-		{l s='Choose the delivery addresses'}
-	</a>
-	<script type="text/javascript">
-		{if $is_multi_address_delivery}
-		var multishipping_mode = true;
-		{else}
-		var multishipping_mode = false;
-		{/if}
-	</script>
-</div>
+	{if {Configuration::get('PS_ALLOW_MULTISHIPPING')}}
+		<div class="address-form-multishipping">
+			<div class="button_multishipping_mode" id="multishipping_mode_box">
+				<div class="title">{l s='Multi-shipping'}</div>
+				<div class="description">
+					<input type="checkbox" id="multishipping_mode_checkbox" onchange="multishippingMode(this); return false;"/><label for="multishipping_mode_checkbox">{l s='I want to specify a delivery address for each products I order.'}</label>
+				</div>
+				<div class="description_off">
+					<a href="{$link->getPageLink('order-opc', true, NULL, 'ajax=1&multi-shipping=1&method=multishipping')}" id="link_multishipping_form" title="{l s='Choose the delivery addresses'}">
+						{l s='Specify a delivery address for each products.'}
+					</a>
+				</div>
+			</div>
+			<script type="text/javascript">
+				{if $is_multi_address_delivery}
+				var multishipping_mode = true;
+				{else}
+				var multishipping_mode = false;
+				{/if}
+			</script>
+		</div>
+	{/if}
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
