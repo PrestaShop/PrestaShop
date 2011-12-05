@@ -127,13 +127,13 @@ $(document).ready(function(){
 		$("#product-tab-content-wait").hide();
 
 		var languages = new Array();
-		if (id == "4-Combinations")
+		if (btn_name == "Combinations")
 		{
 			$('#desc-product-new').hide();
 			$('#desc-product-newCombinaison').show();
 			populate_attrs();
 		}
-		if (id == '7-Attachments')
+		else if (btn_name == 'Attachments')
 		{
 			$("#addAttachment").live('click', function() {
 				return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
