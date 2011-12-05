@@ -173,16 +173,25 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		<!-- product img-->
 		<div id="image-block">
 		{if $have_image}
-			<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large')}"
-				{if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
+			{if $have_image && !$jqZoomEnabled}
+			<span id="view_full_size">
+				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<span class="span_link">{l s='View full size'}</span>
+			</span>
+			{/if}
 		{else}
-			<img src="{$img_prod_dir}{$lang_iso}-default-large.jpg" id="bigpic" alt="" title="{$cover.legend|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
+			{if $have_image && !$jqZoomEnabled}
+			<span id="view_full_size">
+				<img src="{$img_prod_dir}{$lang_iso}-default-large.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
+				<span class="span_link">{l s='View full size'}</span>
+			</span>
+			{/if}
 		{/if}
 		</div>
 
 		{if isset($images) && count($images) > 0}
 		<!-- thumbnails -->
-		<div id="views_block" {if isset($images) && count($images) < 2}class="hidden"{/if}>
+		<div id="views_block" class="clearfix {if isset($images) && count($images) < 2}hidden{/if}">
 		{if isset($images) && count($images) > 3}<span class="view_scroll_spacer"><a id="view_scroll_left" class="hidden" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Previous'}</a></span>{/if}
 		<div id="thumbs_list">
 			<ul id="thumbs_list_frame">
@@ -207,7 +216,6 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{if $HOOK_EXTRA_LEFT}{$HOOK_EXTRA_LEFT}{/if}
 			<li class="print"><a href="javascript:print();">{l s='Print'}</a></li>
 			{if $have_image && !$jqZoomEnabled}
-			<li><span id="view_full_size" class="span_link">{l s='View full size'}</span></li>
 			{/if}
 		</ul>
 	</div>
@@ -235,6 +243,20 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{/if}
 		</div>
 		{/if}
+		
+		{*{if isset($colors) && $colors}
+		<!-- colors -->
+		<div id="color_picker">
+			<p>{l s='Pick a color:' js=1}</p>
+			<div class="clear"></div>
+			<ul id="color_to_pick_list" class="clearfix">
+			{foreach from=$colors key='id_attribute' item='color'}
+				<li><a id="color_{$id_attribute|intval}" class="color_pick" style="background: {$color.value};" onclick="updateColorSelect({$id_attribute|intval});$('#wrapResetImages').show('slow');" title="{$color.name}">{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}<img src="{$img_col_dir}{$id_attribute}.jpg" alt="{$color.name}" width="20" height="20" />{/if}</a></li>
+			{/foreach}
+			</ul>
+			<div class="clear"></div>
+		</div>
+		{/if}*}
 
 		{if ($product->show_price AND !isset($restricted_country_mode)) OR isset($groups) OR $product->reference OR (isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS)}
 		<!-- add to cart form-->
@@ -297,11 +319,13 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<label for="product_reference">{l s='Reference :'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 			</p>
+			
 			<!-- quantity wanted -->
 			<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<label>{l s='Quantity :'}</label>
 				<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" size="2" maxlength="3" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
 			</p>
+			
 			<!-- minimal quantity wanted -->
 			<p id="minimal_quantity_wanted_p"{if $product->minimal_quantity <= 1 OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>{l s='You must add '}<b id="minimal_quantity_label">{$product->minimal_quantity}</b>{l s=' as a minimum quantity to buy this product.'}</p>
 			{if $product->minimal_quantity > 1}
@@ -381,9 +405,9 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					{if $productPriceWithoutRedution > $productPrice}
 						<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
-							<!-- {if $tax_enabled && $display_tax_label == 1}
-								{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-							{/if} -->
+						<!-- {if $tax_enabled && $display_tax_label == 1}
+							{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
+						{/if} -->
 					{/if}
 				{/if}
 				</span>
@@ -391,24 +415,26 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{/if}
 			{if $packItems|@count}
 				<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
-			<br class="clear" />
-		{/if}
-		{if $product->ecotax != 0}
-			<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
-				{if $product->specificPrice AND $product->specificPrice.reduction}
-				<br />{l s='(not impacted by the discount)'}
-				{/if}
-			</p>
-		{/if}
-		{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
-			 {math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
-			<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
-		{/if}
-		{*close if for show price*}
-		{/if}
+				<br class="clear" />
+			{/if}
+			{if $product->ecotax != 0}
+				<p class="price-ecotax">{l s='include'} <span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span> {l s='for green tax'}
+					{if $product->specificPrice AND $product->specificPrice.reduction}
+					<br />{l s='(not impacted by the discount)'}
+					{/if}
+				</p>
+			{/if}
+			{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
+				 {math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
+				<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'htmlall':'UTF-8'}</p>
+			{/if}
+			{*close if for show price*}
+			{/if}
 
-			<p{if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
+			<p{if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><span></span><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
+			
 			{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}
+			
 			<div class="clear"></div>
 		</div>
 		</form>
