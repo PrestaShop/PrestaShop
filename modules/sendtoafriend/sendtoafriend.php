@@ -72,6 +72,7 @@ class sendToAFriend extends Module
 
 		Context::getContext()->smarty->assign(array(
 			'stf_id_product' => (int)Tools::getValue('id_product'),
+			'stf_product' => new Product((int)Tools::getValue('id_product'), false, $this->context->language->id),
 			'stf_product_link' => $productLink,
 			'stf_product_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
 			'stf_secure_key' => $this->secure_key,
