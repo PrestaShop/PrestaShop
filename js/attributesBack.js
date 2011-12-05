@@ -220,9 +220,6 @@ function check_unit_impact()
 
 function init_elems()
 {
-	/*$('#stock_mvt_attribute').hide();
-	$('#initial_stock_attribute').show();
-	$('#attr_qty_stock').hide();*/
 	var elem = getE('product_att_list');
 
 	if (elem.length)

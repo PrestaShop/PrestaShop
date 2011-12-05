@@ -75,7 +75,6 @@
 <div class="separation"></div>
 
 <div id="add_new_combination" style="display: none;">
-	<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 	<table cellpadding="5" style="width:100%">
 		<tr>
 			<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
