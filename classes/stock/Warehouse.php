@@ -431,4 +431,19 @@ class WarehouseCore extends ObjectModel
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
+
+	/**
+	 * For a given $id_warehouse, returns its name
+	 * @param int $id_warehouse
+	 * @return string name
+	 */
+	public static function getWarehouseNameById($id_warehouse)
+	{
+		$query = new DbQuery();
+		$query->select('name');
+		$query->from('warehouse');
+		$query->where('id_warehouse = '.(int)$id_warehouse);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
 }

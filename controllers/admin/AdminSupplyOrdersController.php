@@ -1053,6 +1053,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->loadProducts($quantity_threshold);
 	}
 
+	/**
+	 * Exports CSV
+	 */
 	protected function renderCSV()
 	{
 		// exports orders
@@ -1813,38 +1816,37 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// gets products
 		$query = new DbQuery();
-		$query->select('s.id_product,
-					    s.id_product_attribute,
+		$query->select('ps.id_product,
+					    ps.id_product_attribute,
 					    ps.product_supplier_reference as supplier_reference,
 					    ps.product_supplier_price_te as unit_price_te,
 					    ps.id_currency,
 					    IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
 						IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
 						IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc');
-		$query->from('stock s');
-		$query->innerJoin('product_supplier ps ON
-						   (
-						   	ps.id_product = s.id_product
-							AND
-							ps.id_product_attribute = s.id_product_attribute
-							AND
-							ps.id_supplier = '.(int)$supply_order->id_supplier.'
-						   )');
+		$query->from('product_supplier ps');
+		$query->leftJoin('stock s ON
+						  (
+						  	s.id_product = ps.id_product
+						  	AND
+						  	s.id_product_attribute = ps.id_product_attribute
+						  )');
 		$query->innerJoin('warehouse_product_location wpl ON
 						   (
-						   	wpl.id_product = s.id_product
+						   	wpl.id_product = ps.id_product
 							AND
-							wpl.id_product_attribute = s.id_product_attribute
+							wpl.id_product_attribute = ps.id_product_attribute
 							AND
 							wpl.id_warehouse = '.(int)$supply_order->id_warehouse.'
 						   )');
-		$query->leftJoin('product p ON (p.id_product = s.id_product)');
+		$query->leftJoin('product p ON (p.id_product = ps.id_product)');
 		$query->leftJoin('product_attribute pa ON
 						  (
-						  	pa.id_product_attribute = s.id_product_attribute
+						  	pa.id_product_attribute = ps.id_product_attribute
 						  	AND
-						  	p.id_product = s.id_product
+						  	p.id_product = ps.id_product
 						  )');
+		$query->where('ps.id_supplier = '.(int)$supply_order->id_supplier);
 
 		// gets items
 		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -1857,10 +1859,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$manager = StockManagerFactory::getManager();
 		foreach ($items as $item)
 		{
-			if ($manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true) < $threshold)
+			if ($manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true) <= $threshold)
 			{
 				$product_currency = new Currency($item['id_currency']);
-				if (!Validate::isLoadedObject($order_currency))
+				if (Validate::isLoadedObject($product_currency))
 				{
 					// sets supply_order_detail
 					$supply_order_detail = new SupplyOrderDetail();

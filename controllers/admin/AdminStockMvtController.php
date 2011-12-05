@@ -162,7 +162,20 @@ class AdminStockMvtControllerCore extends AdminController
 		array_unshift($warehouses, array('id_warehouse' => -1, 'name' => $this->l('All Warehouses')));
 		$this->tpl_list_vars['list_warehouses'] = $warehouses;
 
-		return parent::renderList();
+		// sets toolbar
+		$this->initToolbar();
+
+		// renders list
+		$list = parent::renderList();
+
+		// if export requested
+		if (Tools::isSubmit('csv'))
+		{
+			$this->renderCSV();
+			die;
+		}
+
+		return $list;
 	}
 
 	/**
@@ -207,4 +220,52 @@ class AdminStockMvtControllerCore extends AdminController
 				}
 			}
 	}
+
+	/**
+	 * @see AdminController::initToolbar();
+	 */
+	public function initToolbar()
+	{
+		$this->toolbar_btn['export-csv'] = array(
+			'short' => 'Export this list as CSV',
+			'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv',
+			'desc' => $this->l('Export (CSV)'),
+		);
+		parent::initToolbar();
+		unset($this->toolbar_btn['new']);
+	}
+
+	/**
+	 * Exports CSV
+	 */
+	public function renderCSV()
+	{
+		if (!$this->_list)
+			return;
+
+		// header
+		if ($this->getCurrentWarehouseId() != -1)
+			$filename = $this->l('stock_mvt').'_'.Warehouse::getWarehouseNameById($this->getCurrentWarehouseId()).'.csv';
+		else
+			$filename = $this->l('stock_mvt').'.csv';
+		header('Content-type: text/csv');
+		header('Cache-Control: no-store, no-cache');
+        header('Content-disposition: attachment; filename="'.$filename);
+
+		// puts keys
+		$keys = array('id_order', 'id_supply_order', 'firstname', 'lastname', 'quantity',
+					  'date', 'sign', 'price_te', 'product_name', 'label', 'reference', 'ean13', 'upc');
+		echo sprintf("%s\n", implode(';', $keys));
+
+		// puts rows
+		foreach ($this->_list as $row)
+		{
+			// unsets not needed keys
+			unset($row['id_stock_mvt'], $row['id_stock'], $row['id_stock_mvt_reason'],
+				  $row['id_employee'], $row['last_wa'], $row['current_wa'], $row['referer'], $row['id_currency'], $row['employee']);
+			// puts one row
+			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row)));
+		}
+	}
+
 }
