@@ -175,10 +175,17 @@ class HookCore extends ObjectModel
 		if ((!empty($id_module) && !Validate::isUnsignedId($id_module)) || !Validate::isHookName($hook_name))
 			die(Tools::displayError());
 
+		if (!Hook::getIdByName($hook_name))
+			return false;
+
 		self::preloadHookAlias();
 		$hook_name_retro = strtolower($hook_name);
 		if (isset(self::$preloadHookAlias[$hook_name]))
 			$hook_name = self::$preloadHookAlias[$hook_name];
+		if (strtolower($hook_name) == strtolower($hook_name_retro))
+			foreach (self::$preloadHookAlias as $alias => $new)
+				if (strtolower($hook_name_retro) == strtolower($new))
+					$hook_name_retro = $alias;
 
 		$live_edit = false;
 		if (!isset($hookArgs['cookie']) || !$hookArgs['cookie'])
