@@ -47,8 +47,11 @@ class ContactCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 32);
  	protected $fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
 
-	protected $table = 'contact';
-	protected $identifier = 'id_contact';
+	public static $definition = array(
+		'table' => 'contact',
+		'primary' => 'id_contact',
+		'multilang' => true,
+	);
 
 	public function getFields()
 	{

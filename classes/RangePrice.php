@@ -34,8 +34,10 @@ class RangePriceCore extends ObjectModel
  	protected 	$fieldsRequired = array('id_carrier', 'delimiter1', 'delimiter2');
  	protected 	$fieldsValidate = array('id_carrier' => 'isInt', 'delimiter1' => 'isUnsignedFloat', 'delimiter2' => 'isUnsignedFloat');
 
-	protected 	$table = 'range_price';
-	protected 	$identifier = 'id_range_price';
+	public static $definition = array(
+		'table' => 'range_price',
+		'primary' => 'id_range_price',
+	);
 
 	protected	$webserviceParameters = array(
 			'objectsNodeName' => 'price_ranges',

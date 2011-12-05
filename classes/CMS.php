@@ -42,8 +42,11 @@ class CMSCore extends ObjectModel
 	protected $fieldsSizeLang = array('meta_description' => 255, 'meta_keywords' => 255, 'meta_title' => 128, 'link_rewrite' => 128, 'content' => 3999999999999);
 	protected $fieldsValidateLang = array('meta_description' => 'isGenericName', 'meta_keywords' => 'isGenericName', 'meta_title' => 'isGenericName', 'link_rewrite' => 'isLinkRewrite', 'content' => 'isString');
 
-	protected $table = 'cms';
-	protected $identifier = 'id_cms';
+	public static $definition = array(
+		'table' => 'cms',
+		'primary' => 'id_cms',
+		'multilang' => true,
+	);
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'content',

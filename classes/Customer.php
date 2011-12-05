@@ -142,8 +142,10 @@ class CustomerCore extends ObjectModel
 		),
 	);
 
-	protected $table = 'customer';
-	protected $identifier = 'id_customer';
+	public static $definition = array(
+		'table' => 'customer',
+		'primary' => 'id_customer',
+	);
 
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();

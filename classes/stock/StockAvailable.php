@@ -74,8 +74,10 @@ class StockAvailableCore extends ObjectModel
 		'out_of_stock' => 'isInt'
 	);
 
-	protected $table = 'stock_available';
-	protected $identifier = 'id_stock_available';
+	public static $definition = array(
+		'table' => 'stock_available',
+		'primary' => 'id_stock_available',
+	);
 
 	public function getFields()
 	{

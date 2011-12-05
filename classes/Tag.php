@@ -36,8 +36,10 @@ class TagCore extends ObjectModel
  	protected $fieldsRequired = array('id_lang', 'name');
  	protected $fieldsValidate = array('id_lang' => 'isUnsignedId', 'name' => 'isGenericName');
 
-	protected $table = 'tag';
-	protected $identifier = 'id_tag';
+	public static $definition = array(
+		'table' => 'tag',
+		'primary' => 'id_tag',
+	);
 
 	protected $webserviceParameters = array(
 	'fields' => array(

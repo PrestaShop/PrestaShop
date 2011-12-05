@@ -55,8 +55,10 @@ class LanguageCore extends ObjectModel
 	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'language_code' => 'isLanguageCode',
 	'active' => 'isBool', 'is_rtl' => 'isBool', 'date_format_lite' => 'isPhpDateFormat', 'date_format_full' => 'isPhpDateFormat');
 
-	protected 	$table = 'lang';
-	protected 	$identifier = 'id_lang';
+	public static $definition = array(
+		'table' => 'lang',
+		'primary' => 'id_lang',
+	);
 
 	/** @var array Languages cache */
 	protected static $_checkedLangs;

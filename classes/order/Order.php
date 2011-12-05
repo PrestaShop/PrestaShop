@@ -223,8 +223,11 @@ class OrderCore extends ObjectModel
 	);
 
 	/* MySQL does not allow 'order' for a table name */
-	protected $table = 'orders';
-	protected $identifier = 'id_order';
+	public static $definition = array(
+		'table' => 'orders',
+		'primary' => 'id_order',
+	);
+
 	protected $_taxCalculationMethod = PS_TAX_EXC;
 
 	protected static $_historyCache = array();

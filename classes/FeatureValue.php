@@ -46,8 +46,11 @@ class FeatureValueCore extends ObjectModel
  	protected $fieldsSizeLang = array('value' => 255);
  	protected $fieldsValidateLang = array('value' => 'isGenericName');
 
-	protected $table = 'feature_value';
-	protected $identifier = 'id_feature_value';
+	public static $definition = array(
+		'table' => 'feature_value',
+		'primary' => 'id_feature_value',
+		'multilang' => true,
+	);
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_feature_values',

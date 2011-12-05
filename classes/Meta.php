@@ -43,8 +43,12 @@ class MetaCore extends ObjectModel
 	protected	$fieldsValidateLang = array('title' => 'isGenericName', 'description' => 'isGenericName', 'keywords' => 'isGenericName', 'url_rewrite' => 'isLinkRewrite');
 
 	protected	$langMultiShop = true;
-	protected 	$table = 'meta';
-	protected 	$identifier = 'id_meta';
+
+	public static $definition = array(
+		'table' => 'meta',
+		'primary' => 'id_meta',
+		'multilang' => true,
+	);
 
 	public function getFields()
 	{

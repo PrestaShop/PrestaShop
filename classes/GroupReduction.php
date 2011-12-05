@@ -34,8 +34,10 @@ class GroupReductionCore extends ObjectModel
  	protected $fieldsRequired = array('id_group', 'id_category', 'reduction');
  	protected $fieldsValidate = array('id_group' => 'isUnsignedId', 'id_category' => 'isUnsignedId', 'reduction' => 'isPrice');
 
-	protected $table = 'group_reduction';
-	protected $identifier = 'id_group_reduction';
+	public static $definition = array(
+		'table' => 'group_reduction',
+		'primary' => 'id_group_reduction',
+	);
 
 	protected static $reduction_cache = array();
 

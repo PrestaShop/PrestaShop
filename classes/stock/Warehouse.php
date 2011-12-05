@@ -83,8 +83,10 @@ class WarehouseCore extends ObjectModel
 		'id_currency' => 'isUnsignedId'
 	);
 
-	protected $table = 'warehouse';
-	protected $identifier = 'id_warehouse';
+	public static $definition = array(
+		'table' => 'warehouse',
+		'primary' => 'id_warehouse',
+	);
 
 	public function getFields()
 	{

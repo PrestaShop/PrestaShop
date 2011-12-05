@@ -33,8 +33,10 @@ class DateRangeCore extends ObjectModel
 	protected	$fieldsRequired = array ('time_start', 'time_end');	
 	protected	$fieldsValidate = array ('time_start' => 'isDate', 'time_end' => 'isDate');
 
-	protected 	$table = 'date_range';
-	protected 	$identifier = 'id_date_range';
+	public static $definition = array(
+		'table' => 'date_range',
+		'primary' => 'id_date_range',
+	);
 	
 	public function getFields()
 	{

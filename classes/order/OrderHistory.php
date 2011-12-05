@@ -47,8 +47,10 @@ class OrderHistoryCore extends ObjectModel
 	protected	$fieldsRequired = array('id_order', 'id_order_state');
 	protected	$fieldsValidate = array('id_order' => 'isUnsignedId', 'id_order_state' => 'isUnsignedId', 'id_employee' => 'isUnsignedId');
 
-	protected 	$table = 'order_history';
-	protected 	$identifier = 'id_order_history';
+	public static $definition = array(
+		'table' => 'order_history',
+		'primary' => 'id_order_history',
+	);
 
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'order_histories',

@@ -42,8 +42,11 @@ class AttributeGroupCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 64, 'public_name' => 64);
  	protected $fieldsValidateLang = array('name' => 'isGenericName', 'public_name' => 'isGenericName', 'position' => 'isInt');
 
-	protected $table = 'attribute_group';
-	protected $identifier = 'id_attribute_group';
+	public static $definition = array(
+		'table' => 'attribute_group',
+		'primary' => 'id_attribute_group',
+		'multilang' => true,
+	);
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_options',

@@ -122,8 +122,10 @@ class StockMvtCore extends ObjectModel
 	 */
 	public $quantity;
 
-	protected $table = 'stock_mvt';
-	protected $identifier = 'id_stock_mvt';
+	public static $definition = array(
+		'table' => 'stock_mvt',
+		'primary' => 'id_stock_mvt',
+	);
 
  	protected $fieldsRequired = array(
  		'date_add',

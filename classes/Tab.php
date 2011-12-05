@@ -53,8 +53,11 @@ class TabCore extends ObjectModel
 	protected $fieldsSizeLang = array('name' => 32);
 	protected $fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected $table = 'tab';
-	protected $identifier = 'id_tab';
+	public static $definition = array(
+		'table' => 'tab',
+		'primary' => 'id_tab',
+		'multilang' => true,
+	);
 
 	protected static $_getIdFromClassName = null;
 

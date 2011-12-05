@@ -81,8 +81,13 @@ class ManufacturerCore extends ObjectModel
 		'meta_description' => 'isGenericName',
 		'meta_keywords' => 'isGenericName'
 	);
-	protected $table = 'manufacturer';
-	protected $identifier = 'id_manufacturer';
+
+	public static $definition = array(
+		'table' => 'manufacturer',
+		'primary' => 'id_manufacturer',
+		'multilang' => true,
+	);
+
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'active' => array(),

@@ -44,8 +44,11 @@ class OrderMessageCore extends ObjectModel
 	protected $fieldsSizeLang = array('name' => 128, 'message' => 1200);
 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'message' => 'isMessage');
 
-	protected $table = 'order_message';
-	protected $identifier = 'id_order_message';
+	public static $definition = array(
+		'table' => 'order_message',
+		'primary' => 'id_order_message',
+		'multilang' => true,
+	);
 
 	protected $webserviceParameters = array(
 			'fields' => array(

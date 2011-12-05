@@ -76,15 +76,10 @@ class SupplyOrderHistoryCore extends ObjectModel
 		'date_add' => 'isDate'
 	);
 
-	/**
-	 * @var string Database table name
-	 */
-	protected $table = 'supply_order_history';
-
-	/**
-	 * @var string Database ID name
-	 */
-	protected $identifier = 'id_supply_order_history';
+	public static $definition = array(
+		'table' => 'supply_order_history',
+		'primary' => 'id_supply_order_history',
+	);
 
 	public function getFields()
 	{

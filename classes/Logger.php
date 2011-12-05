@@ -56,8 +56,10 @@ class	LoggerCore extends ObjectModel
 	protected $fieldsValidate = array('id_log' => 'isUnsignedId', 'severity' => 'isInt', 'error_code' => 'isUnsignedInt',
 	'message' => 'isMessage', 'object_id' => 'isUnsignedInt', 'object_type' => 'isName');
 
-	protected $table = 'log';
-	protected $identifier = 'id_log';
+	public static $definition = array(
+		'table' => 'log',
+		'primary' => 'id_log',
+	);
 
 	protected static $is_present = array();
 

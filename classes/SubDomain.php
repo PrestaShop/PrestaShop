@@ -33,8 +33,10 @@ class SubDomainCore extends ObjectModel
 	protected $fieldsSize = array('name' => 16);
 	protected $fieldsValidate = array('name' => 'isSubDomainName');
 
-	protected $table = 'subdomain';
-	protected $identifier = 'id_subdomain';
+	public static $definition = array(
+		'table' => 'subdomain',
+		'primary' => 'id_subdomain',
+	);
 
 	public function getFields()
 	{

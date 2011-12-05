@@ -70,8 +70,10 @@ class ImageTypeCore extends ObjectModel
 	);
 	protected $fieldsSize = array('name' => 16);
 
-	protected $table = 'image_type';
-	protected $identifier = 'id_image_type';
+	public static $definition = array(
+		'table' => 'image_type',
+		'primary' => 'id_image_type',
+	);
 
 	/**
 	 * @var array Image types cache

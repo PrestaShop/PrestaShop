@@ -56,8 +56,10 @@ class MessageCore extends ObjectModel
 		'message' => 'isCleanHtml', 'id_cart' => 'isUnsignedId', 'id_order' => 'isUnsignedId',
 		'id_customer' => 'isUnsignedId', 'id_employee' => 'isUnsignedId', 'private' => 'isBool');
 
-	protected 	$table = 'message';
-	protected 	$identifier = 'id_message';
+	public static $definition = array(
+		'table' => 'message',
+		'primary' => 'id_message',
+	);
 
 	public function getFields()
 	{

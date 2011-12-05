@@ -103,8 +103,11 @@ class CategoryCore extends ObjectModel
  		'meta_keywords' => 'isGenericName'
  	);
 
-	protected $table = 'category';
-	protected $identifier = 'id_category';
+	public static $definition = array(
+		'table' => 'category',
+		'primary' => 'id_category',
+		'multilang' => true,
+	);
 
 	/** @var string id_image is the category ID when an image exists and 'default' otherwise */
 	public $id_image = 'default';
@@ -703,18 +706,20 @@ class CategoryCore extends ObjectModel
 		ORDER BY `position` ASC');
 	}
 
-	/** return an array of all children of the current category
+	/**
+	 * Return an array of all children of the current category
 	 *
-	 * @return array rows of table category
-	 * @todo return hydrateCollection
+	 * @param int $id_lang
+	 * @return Collection
 	 */
-	public function getAllChildren()
+	public function getAllChildren($id_lang = null)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'category`
-			WHERE '.(int)$this->nleft.' < nleft AND nright < '.(int)$this->nright
-		);
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+
+		$categories = new Collection('Category', $id_lang);
+		$categories->where((int)$this->nleft.' < nleft AND nright < '.(int)$this->nright);
+		return $categories;
 	}
 
 	/**

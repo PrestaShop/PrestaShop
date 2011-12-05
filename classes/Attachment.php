@@ -44,8 +44,11 @@ class AttachmentCore extends ObjectModel
 	protected $fieldsSizeLang = array('name' => 32);
 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
 
-	protected $table = 'attachment';
-	protected $identifier = 'id_attachment';
+	public static $definition = array(
+		'table' => 'attachment',
+		'primary' => 'id_attachment',
+		'multilang' => true,
+	);
 
 	public function getFields()
 	{

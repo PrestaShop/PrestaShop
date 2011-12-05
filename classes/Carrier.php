@@ -122,8 +122,11 @@ class CarrierCore extends ObjectModel
 	protected $fieldsSizeLang = array('delay' => 128);
 	protected $fieldsValidateLang = array('delay' => 'isGenericName');
 
-	protected $table = 'carrier';
-	protected $identifier = 'id_carrier';
+	public static $definition = array(
+		'table' => 'carrier',
+		'primary' => 'id_carrier',
+		'multilang' => true,
+	);
 
 	protected static $price_by_weight = array();
 	protected static $price_by_weight2 = array();

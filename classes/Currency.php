@@ -64,8 +64,11 @@ class CurrencyCore extends ObjectModel
  	protected $fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'iso_code_num' => 'isNumericIsoCode', 'blank' => 'isInt', 'sign' => 'isGenericName',
 		'format' => 'isUnsignedId', 'decimals' => 'isBool', 'conversion_rate' => 'isFloat', 'deleted' => 'isBool', 'active' => 'isBool');
 
-	protected $table = 'currency';
-	protected $identifier = 'id_currency';
+	public static $definition = array(
+		'table' => 'currency',
+		'primary' => 'id_currency',
+		'multilang' => true,
+	);
 
 	/** @var array Currency cache */
 	static protected $currencies = array();

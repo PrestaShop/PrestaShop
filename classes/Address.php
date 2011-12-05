@@ -107,8 +107,11 @@ class AddressCore extends ObjectModel
 										'city' => 'isCityName', 'other' => 'isMessage',
 										'phone' => 'isPhoneNumber', 'phone_mobile' => 'isPhoneNumber', 'deleted' => 'isBool', 'dni' => 'isDniLite');
 
-	protected $table = 'address';
-	protected $identifier = 'id_address';
+	public static $definition = array(
+		'table' => 'address',
+		'primary' => 'id_address',
+	);
+
 	protected $_includeVars = array('addressType' => 'table');
 	protected $_includeContainer = false;
 

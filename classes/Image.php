@@ -67,8 +67,11 @@ class ImageCore extends ObjectModel
 	protected $fieldsSizeLang = array('legend' => 128);
 	protected $fieldsValidateLang = array('legend' => 'isGenericName');
 
-	protected $table = 'image';
-	protected $identifier = 'id_image';
+	public static $definition = array(
+		'table' => 'image',
+		'primary' => 'id_image',
+		'multilang' => true,
+	);
 
 	protected static $_cacheGetSize = array();
 

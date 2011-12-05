@@ -93,8 +93,11 @@ class CountryCore extends ObjectModel
 		),
 	);
 
-	protected $table = 'country';
-	protected $identifier = 'id_country';
+	public static $definition = array(
+		'table' => 'country',
+		'primary' => 'id_country',
+		'multilang' => true,
+	);
 
 	public function getFields()
 	{

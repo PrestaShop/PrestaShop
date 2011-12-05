@@ -43,8 +43,11 @@ class QuickAccessCore extends ObjectModel
  	protected $fieldsSizeLang = array('name' => 32);
  	protected $fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected $table = 'quick_access';
-	protected $identifier = 'id_quick_access';
+	public static $definition = array(
+		'table' => 'quick_access',
+		'primary' => 'id_quick_access',
+		'multilang' => true,
+	);
 
 	public function getFields()
 	{

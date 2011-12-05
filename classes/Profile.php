@@ -34,8 +34,11 @@ class ProfileCore extends ObjectModel
  	protected 	$fieldsSizeLang = array('name' => 32);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected 	$table = 'profile';
-	protected 	$identifier = 'id_profile';
+	public static $definition = array(
+		'table' => 'profile',
+		'primary' => 'id_profile',
+		'multilang' => true,
+	);
 		
 	public function getFields()
 	{

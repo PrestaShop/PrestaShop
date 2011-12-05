@@ -49,8 +49,10 @@ class TaxCore extends ObjectModel
  	protected 	$fieldsSizeLang = array('name' => 32);
  	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected 	$table = 'tax';
-	protected 	$identifier = 'id_tax';
+	public static $definition = array(
+		'table' => 'tax',
+		'primary' => 'id_tax',
+	);
 
 	protected static $_product_country_tax = array();
 	protected static $_product_tax_via_rules = array();

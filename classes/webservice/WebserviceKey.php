@@ -40,9 +40,10 @@ class WebserviceKeyCore extends ObjectModel
  	protected $fieldsSize = array('key' => 32);
  	protected $fieldsValidate = array('active' => 'isBool');
 
-	protected $table = 'webservice_account';
-	protected $identifier = 'id_webservice_account';
-
+	public static $definition = array(
+		'table' => 'webservice_account',
+		'primary' => 'id_webservice_account',
+	);
 
 	public function add($autodate = true, $nullValues = false)
 	{

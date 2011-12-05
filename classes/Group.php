@@ -54,8 +54,11 @@ class GroupCore extends ObjectModel
 	protected	$fieldsSizeLang = array('name' => 32);
 	protected	$fieldsValidateLang = array('name' => 'isGenericName');
 
-	protected $table = 'group';
-	protected $identifier = 'id_group';
+	public static $definition = array(
+		'table' => 'group',
+		'primary' => 'id_group',
+		'multilang' => true,
+	);
 
 	protected static $cache_reduction = array();
 	protected static $group_price_display_method = array();
