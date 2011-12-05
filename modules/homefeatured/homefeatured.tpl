@@ -27,17 +27,17 @@
 <!-- MODULE Home Featured Products -->
 <div id="featured-products_block_center" class="block products_block clearfix">
 	<h4>{l s='Featured products' mod='homefeatured'}</h4>
-	{if isset($homefeatured_products) AND $homefeatured_products}
+	{if isset($products) AND $products}
 		<div class="block_content">
 			{assign var='liHeight' value=250}
 			{assign var='nbItemsPerLine' value=4}
-			{assign var='nbLi' value=$homefeatured_products|@count}
+			{assign var='nbLi' value=$products|@count}
 			{math equation="nbLi/nbItemsPerLine" nbLi=$nbLi nbItemsPerLine=$nbItemsPerLine assign=nbLines}
 			{math equation="nbLines*liHeight" nbLines=$nbLines|ceil liHeight=$liHeight assign=ulHeight}
 			<ul style="height:{$ulHeight}px;">
-			{foreach from=$homefeatured_products item=product name=homeFeaturedProducts}
+			{foreach from=$products item=product name=homeFeaturedProducts}
 				<li class="ajax_block_product {if $smarty.foreach.homeFeaturedProducts.first}first_item{elseif $smarty.foreach.homeFeaturedProducts.last}last_item{else}item{/if} {if $smarty.foreach.homeFeaturedProducts.iteration%$nbItemsPerLine == 0}last_item_of_line{elseif $smarty.foreach.homeFeaturedProducts.iteration%$nbItemsPerLine == 1} {/if} {if $smarty.foreach.homeFeaturedProducts.iteration > ($smarty.foreach.homeFeaturedProducts.total - ($smarty.foreach.homeFeaturedProducts.total % $nbItemsPerLine))}last_line{/if}">
-					<a href="{$product.link}" title="{$product.name|escape:html:'UTF-8'}" class="product_image"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home')}" height="{$homefeatured_homeSize.height}" width="{$homefeatured_homeSize.width}" alt="{$product.name|escape:html:'UTF-8'}" />{if isset($product.new) && $product.new == 1}<span class="new">{l s='New'}</span>{/if}</a>
+					<a href="{$product.link}" title="{$product.name|escape:html:'UTF-8'}" class="product_image"><img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home')}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product.name|escape:html:'UTF-8'}" />{if isset($product.new) && $product.new == 1}<span class="new">{l s='New'}</span>{/if}</a>
 					<h5><a href="{$product.link}" title="{$product.name|truncate:50:'...'|escape:'htmlall':'UTF-8'}">{$product.name|truncate:35:'...'|escape:'htmlall':'UTF-8'}</a></h5>
 					<div class="product_desc"><a href="{$product.link}" title="{l s='More' mod='homefeatured'}">{$product.description_short|strip_tags|truncate:65:'...'}</a></div>
 					<div>

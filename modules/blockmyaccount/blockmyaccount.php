@@ -61,7 +61,7 @@ class BlockMyAccount extends Module
 		if (!$this->context->customer->isLogged())
 			return false;
 
-		$this->templateAssign(array(
+		$this->smarty->assign(array(
 			'voucherAllowed' => (int)Configuration::get('PS_VOUCHERS'),
 			'returnAllowed' => (int)Configuration::get('PS_ORDER_RETURN'),
 			'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('myAccountBlock'),
