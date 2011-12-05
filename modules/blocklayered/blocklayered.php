@@ -1099,7 +1099,7 @@ class BlockLayered extends Module
 			$this->context->controller->addJS(($this->_path).'blocklayered.js');
 			$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js');
 			$this->context->controller->addJQueryUI('ui.slider');
-			$this->context->controller->addCSS(($this->_path).'blocklayered.css', 'all');
+			$this->context->controller->addCSS(($this->_path).'blocklayered-15.css', 'all');
 			$this->context->controller->addJQueryPlugin('scrollTo');
 		}
 		else
@@ -1557,21 +1557,6 @@ class BlockLayered extends Module
 				 'search'  => $this->l('Search a category')
 			);
 			
-			if (version_compare(_PS_VERSION_,'1.5','>'))
-			{
-				$this->context->controller->addJQueryPlugin('fancybox');
-				$this->context->controller->addJQueryUI('ui.sortable');
-				$this->context->controller->addJQueryUI('ui.draggable');
-				$this->context->controller->addJQueryUI('effects.transfer');
-			}
-			else
-			{
-				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
-				<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
-				<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
-				
-			}
-			
 			$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
 			
 			$html .= '
@@ -1593,8 +1578,24 @@ class BlockLayered extends Module
 					</div>
 				</div>
 				<div class="clear"></div>
-				<hr size="1" noshade />
-				<script type="text/javascript">
+				<hr size="1" noshade />';
+				
+			if (version_compare(_PS_VERSION_,'1.5','>'))
+			{
+				$this->context->controller->addJQueryPlugin('fancybox');
+				$this->context->controller->addJQueryUI('ui.sortable');
+				$this->context->controller->addJQueryUI('ui.draggable');
+				$this->context->controller->addJQueryUI('effects.transfer');
+			}
+			else
+			{
+				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+					<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
+					<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
+				
+			}
+			
+			$html .= '<script type="text/javascript">
 					
 					function updLayCounters()
 					{
@@ -1720,7 +1721,8 @@ class BlockLayered extends Module
 								updElements(0, 0);
 							},
 							\'onComplete\': function() {
-							/*	if($(\'#categories-treeview li#1\').attr(\'cleaned\'))
+							'.(version_compare(_PS_VERSION_,'1.5','<') ? '
+								if($(\'#categories-treeview li#1\').attr(\'cleaned\'))
 									return;
 								if($(\'#categories-treeview li#1\').attr(\'cleaned\', true))
 								$(\'#categories-treeview li#1\').removeClass(\'static\');
@@ -1729,10 +1731,10 @@ class BlockLayered extends Module
 								$(\'#categories-treeview li#1\').
 									removeClass(\'collapsable lastCollapsable\').
 									addClass(\'last static\');
-								$(\'.hitarea\').click(function(it)
+								$(\'.hitarea\').live(\'click\', function(it)
 								{
 									$(this).parent().find(\'> .category_label\').click();
-								});*/
+								});' : '').'
 							}
 						});
 
@@ -3273,8 +3275,7 @@ class BlockLayered extends Module
 		`type` ENUM(\'category\',\'id_feature\',\'id_attribute_group\',\'quantity\',\'condition\',\'manufacturer\',\'weight\',\'price\') NOT NULL,
 		`position` INT(10) UNSIGNED NOT NULL,
 		`filter_type` int(10) UNSIGNED NOT NULL DEFAULT 0,
-		`filter_show_limit` int(10) UNSIGNED NOT NULL DEFAULT 0;
-		
+		`filter_show_limit` int(10) UNSIGNED NOT NULL DEFAULT 0,
 		PRIMARY KEY (`id_layered_category`),
 		KEY `id_category` (`id_category`,`type`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;'); /* MyISAM + latin1 = Smaller/faster */
