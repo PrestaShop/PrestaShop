@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(_PS_ADMIN_DIR_.'/../classes/AdminTab.php');
-
 class AdminCurrenciesControllerCore extends AdminController
 {
 	public function __construct()

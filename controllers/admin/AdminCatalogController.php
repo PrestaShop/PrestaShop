@@ -26,7 +26,7 @@
 */
 
 
-class AdminCatalogController extends AdminController
+class AdminCatalogControllerCore extends AdminController
 {
 	/** @var object AdminCategories() instance */
 	//private $adminCategories;

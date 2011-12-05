@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminAccessController extends AdminController
+class AdminAccessControllerCore extends AdminController
 {
 	/* Black list of id_tab that do not have access */
 	public $accesses_black_list = array(107);

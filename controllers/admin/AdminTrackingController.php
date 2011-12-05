@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminTrackingController extends AdminController
+class AdminTrackingControllerCore extends AdminController
 {
 	public function postprocess()
 	{

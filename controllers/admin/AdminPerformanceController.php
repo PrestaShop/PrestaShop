@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class AdminPerformanceController extends AdminController
+class AdminPerformanceControllerCore extends AdminController
 {
 	public function initFieldsetSmarty()
 	{
