@@ -2213,7 +2213,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				foreach ($warehouses as $warehouse)
 				{
-					$key = $warehouse['id_warehouse'].'_'.$attribute['id_product'].'_'.$attribute['id_product_attribute'];
+					$key = $warehouse['id_warehouse'].'_'.$product->id.'_'.$attribute['id_product_attribute'];
 
 					// get elements to manage
 					if (Tools::isSubmit('check_warehouse_'.$key))
