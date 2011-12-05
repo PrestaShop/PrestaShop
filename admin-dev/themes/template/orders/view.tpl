@@ -493,7 +493,7 @@
 			<legend><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Products'}</legend>
 			<div style="float:left;width: 100%;">
 				{if $can_edit}
-				<div style="float: left;"><a href="#" class="add_product"><img src="../img/admin/add.gif" alt="{l s='Add a product'}" /> {l s='Add a product'}</a></div>
+				{if !$order->hasBeenDelivered()}<div style="float: left;"><a href="#" class="add_product"><img src="../img/admin/add.gif" alt="{l s='Add a product'}" /> {l s='Add a product'}</a></div>{/if}
 				<div style="float: right; margin-right: 10px" id="refundForm">
 				<!--
 					<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Proceed a standard refund'}" /> {l s='Proceed a standard refund'}</a>
@@ -526,9 +526,11 @@
 						<th style="width: 8%;text-align:right;display:none" class="partial_refund_fields">
 							{l s='Partial refund'}
 						</th>
+						{if !$order->hasBeenDelivered()}
 						<th style="width: 8%;text-align:center;">
 							{l s='Action'}
 						</th>
+						{/if}
 					</tr>
 
 					{foreach from=$products item=product key=k}
