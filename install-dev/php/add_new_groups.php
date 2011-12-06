@@ -40,7 +40,9 @@ function add_new_groups($french, $standard)
 	Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'group_lang` (`id_group`, `id_lang`, `name`) VALUES '.$sql);
 	// we add the different id_group in the configuration
 	if (strtolower($standard) == 'unidentified')
-		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd) VALUES (NULL, "PS_UNIDENTIFIED_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_UNIDENTIFIED_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
 	else if (strtolower($standard) == 'guest')
-		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd) VALUES (NULL, "PS_GUEST_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_GUEST_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
+	else if (strtolower($standard) == 'test')
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_TEST", "'.(int)$last_id.'", NOW(), NOW())');
 }
