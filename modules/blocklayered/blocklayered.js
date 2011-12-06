@@ -252,6 +252,8 @@ function openCloseFilter()
 }
 
 function stopAjaxQuery() {
+	if (typeof(ajaxQueries) == 'undefined')
+		ajaxQueries = new Array();
 	for(i = 0; i < ajaxQueries.length; i++)
 		ajaxQueries[i].abort();
 	ajaxQueries = new Array();
