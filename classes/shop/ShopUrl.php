@@ -80,13 +80,18 @@ class ShopUrlCore extends ObjectModel
 		return $url.$this->physical_uri.$this->virtual_uri;
 	}
 
+	/**
+	 * Get list of shop urls
+	 *
+	 * @param bool $id_shop
+	 * @return Collection
+	 */
 	public static function getShopUrls($id_shop = false)
 	{
-		$sql = 'SELECT *
-				FROM '._DB_PREFIX_.'shop_url
-				WHERE 1
-					'.($id_shop ? ' AND id_shop = '.(int)$id_shop : '');
-		return Db::getInstance()->executeS($sql);
+		$urls = new Collection('ShopUrl');
+		if ($id_shop)
+			$urls->where('id_shop = '.(int)$id_shop);
+		return $urls;
 	}
 
 	public function setMain()
