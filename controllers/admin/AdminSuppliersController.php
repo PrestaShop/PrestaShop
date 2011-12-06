@@ -63,12 +63,20 @@ class AdminSuppliersControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		// loads current warehouse
+		if (!($obj = $this->loadObject(true)))
+			return;
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
 				'image' => '../img/admin/suppliers.gif'
 			),
 			'input' => array(
+				array(
+					'type' => 'hidden',
+					'name' => 'id_address',
+				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Name:'),
@@ -202,6 +210,28 @@ class AdminSuppliersControllerCore extends AdminController
 			)
 		);
 
+		// loads current address for this supplier - if possible
+		$address = null;
+		if ($obj->id_address > 0)
+			$address = new Address($obj->id_address);
+		// force specific fields values (address)
+		if ($address != null)
+		{
+			$this->fields_value = array(
+				'id_address' => $address->id,
+				'phone' => $address->phone,
+				'address' => $address->address1,
+				'address2' => $address->address2,
+				'postcode' => $address->postcode,
+				'city' => $address->city,
+				'id_country' => $address->id_country,
+				'id_state' => $address->id_state,
+			);
+		}
+		else
+			$this->fields_value['id_address'] = 0;
+
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -212,12 +242,10 @@ class AdminSuppliersControllerCore extends AdminController
 			);
 		}
 
-		// Set logo image
+		// set logo image
 		$image = cacheImage(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg', $this->table.'_'.(int)$this->object->id.'.'.$this->imageType, 350, $this->imageType, true);
-		$this->fields_value = array(
-			'image' => $image ? $image : false,
-			'size' => $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false
-		);
+		$this->fields_value['image'] = $image ? $image : false;
+		$this->fields_value['size'] = $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false;
 
 		return parent::renderForm();
 	}
