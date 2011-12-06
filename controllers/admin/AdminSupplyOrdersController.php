@@ -1191,6 +1191,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						return;
 					}
 
+					$price = $supply_order_detail->unit_price_te;
 					// converts the unit price to the warehouse currency if needed
 					if ($supply_order->id_currency != $warehouse->id_currency)
 					{
