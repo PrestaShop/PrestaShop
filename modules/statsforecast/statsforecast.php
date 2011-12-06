@@ -122,7 +122,7 @@ class StatsForecast extends Module
 					'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY '.$dateFromGInvoice.'
 				ORDER BY fix_date';
-		$result = $db->executeS($sql, false);
+		$result = $db->query($sql);
 
 		while ($row = $db->nextRow($result))
 			$dataTable[$row['fix_date']] = $row;
@@ -159,7 +159,7 @@ class StatsForecast extends Module
 				WHERE c.date_add BETWEEN '.ModuleGraph::getDateBetween().'
 				'.$this->sqlShopRestriction(false, 'c').'
 				GROUP BY '.$dateFromGAdd;
-		$visits = Db::getInstance()->executeS($sql, false);
+		$visits = Db::getInstance()->query($sql);
 		while ($row = $db->nextRow($visits))
 			$visitArray[$row['fix_date']] = $row['visits'];
 
@@ -172,7 +172,7 @@ class StatsForecast extends Module
 					AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween()
 					.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
 				GROUP BY '.$dateFromGInvoice;
-		$discounts = Db::getInstance()->executeS($sql, false);
+		$discounts = Db::getInstance()->query($sql);
 		while ($row = $db->nextRow($discounts))
 			$discountArray[$row['fix_date']] = $row['total'];*/
 

@@ -362,14 +362,14 @@ abstract class DbCore
 	 * @param bool $use_cache Use cache or not
 	 * @return bool
 	 */
-	public function delete($table, $where = false, $limit = false, $use_cache = 1)
+	public function delete($table, $where = false, $limit = false, $use_cache = true)
 	{
 		$this->result = false;
 		$sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
 		$res = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
-		return $res;
+		return (bool)$res;
 	}
 
 	/**
@@ -377,30 +377,30 @@ abstract class DbCore
 	 *
 	 * @param string $sql
 	 * @param bool $use_cache
-	 * @return mixed
+	 * @return bool
 	 */
-	public function execute($sql, $use_cache = 1)
+	public function execute($sql, $use_cache = true)
 	{
 		$sql = (string)$sql;
 		$this->result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
-		return $this->result;
+		return (bool)$this->result;
 	}
 
 	/**
 	 * ExecuteS return the result of $sql as array
 	 *
 	 * @param string $sql query to execute
-	 * @param boolean $array return an array instead of a mysql_result object
+	 * @param boolean $array return an array instead of a mysql_result object (deprecated since 1.5.0, use query method instead)
 	 * @param int $use_cache if query has been already executed, use its result
 	 * @return array or result object
 	 */
-	public function executeS($sql, $array = true, $use_cache = 1)
+	public function executeS($sql, $array = true, $use_cache = true)
 	{
 		$sql = (string)$sql;
 
-		// This methode must be used only with queries which display results
+		// This method must be used only with queries which display results
 		if (!preg_match('#^\s*(select|show|explain|describe)\s#i', $sql))
 		{
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
@@ -441,7 +441,7 @@ abstract class DbCore
 	 * @param int $use_cache find it in cache first
 	 * @return array associative array of (field=>value)
 	 */
-	public function getRow($sql, $use_cache = 1)
+	public function getRow($sql, $use_cache = true)
 	{
 		$sql = (string)$sql;
 		$sql .= ' LIMIT 1';
@@ -471,7 +471,7 @@ abstract class DbCore
 	 * @param int $use_cache
 	 * @return void
 	 */
-	public function getValue($sql, $use_cache = 1)
+	public function getValue($sql, $use_cache = true)
 	{
 		$sql = (string)$sql;
 		if (!$result = $this->getRow($sql, $use_cache))
@@ -504,7 +504,7 @@ abstract class DbCore
 	 * @param string $sql
 	 * @param bool $use_cache
 	 */
-	protected function q($sql, $use_cache = 1)
+	protected function q($sql, $use_cache = true)
 	{
 		global $webservice_call;
 
