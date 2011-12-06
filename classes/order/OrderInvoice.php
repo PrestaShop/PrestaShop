@@ -260,7 +260,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * This method returns true if at least one order details uses the
 	 * One After Another tax computation method.
 	 *
-	 * @since 1.5.0.1
+	 * @since 1.5
 	 * @return boolean
 	 */
 	public function useOneAfterAnotherTaxComputationMethod()
@@ -279,7 +279,7 @@ class OrderInvoiceCore extends ObjectModel
 	/**
 	 * Returns the correct product taxes breakdown.
 	 *
-	 * @since 1.5.0.1
+	 * @since 1.5
 	 * @return array
 	 */
 	public function getProductTaxesBreakdown()
@@ -340,7 +340,7 @@ class OrderInvoiceCore extends ObjectModel
 	/**
 	 * Returns the shipping taxes breakdown
 	 *
-	 * @since 1.5.0.1
+	 * @since 1.5
 	 * @return array
 	 */
 	public function getShippingTaxesBreakdown($order)
@@ -362,7 +362,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * Returns the wrapping taxes breakdown
 	 * @todo
 
-	 * @since 1.5.0.1
+	 * @since 1.5
 	 * @return array
 	 */
 	public function getWrappingTaxesBreakdown()
@@ -374,7 +374,7 @@ class OrderInvoiceCore extends ObjectModel
 	/**
 	 * Returns the ecotax taxes breakdown
 	 *
-	 * @since 1.5.0.1
+	 * @since 1.5
 	 * @return array
 	 */
 	public function getEcoTaxTaxesBreakdown()
@@ -390,7 +390,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Returns all the order invoice that match the date interval
      *
-     * @since 1.5.0.2
+     * @since 1.5
      * @static
      * @param $date_from
      * @param $date_to
@@ -407,5 +407,34 @@ class OrderInvoiceCore extends ObjectModel
                                 ' ORDER BY oi.date_add ASC');
 
         return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
+    }
+
+
+    /**
+     * @since 1.5
+     * @static
+     * @param $id_order_invoice
+     */
+    public static function getCarrier($id_order_invoice)
+    {
+        $carrier = false;
+        if ($id_carrier = OrderInvoice::getCarrierId($id_order_invoice))
+            $carrier = new Carrier((int)$id_carrier);
+
+        return $carrier;
+    }
+
+    /**
+     * @since 1.5
+     * @static
+     * @param $id_order_invoice
+     */
+    public static function getCarrierId($id_order_invoice)
+    {
+        $sql = 'SELECT `id_carrier`
+                FROM `'._DB_PREFIX_.'order_carrier`
+                WHERE `id_order_invoice` = '.(int)$id_order_invoice;
+
+        return Db::getInstance()->getValue($sql);
     }
 }
