@@ -53,6 +53,18 @@
 			<tr>
 				<td style="font-size: 13pt; font-weight: bold">{$supply_order->supplier_name}</td>
 			</tr>
+			<tr>
+				<td style="font-size: 13pt; font-weight: bold">{$address_supplier->address1}</td>
+			</tr>
+			{* if the address has two parts *}
+			{if !empty($address_supplier->address2)}
+			<tr>
+				<td style="font-size: 13pt; font-weight: bold">{$address_supplier->address2}</td>
+			</tr>
+			{/if}
+			<tr>
+				<td style="font-size: 13pt; font-weight: bold">{$address_supplier->postcode} {$address_supplier->city}</td>
+			</tr>
 		</table>
 	</div>
 	<!-- / SUPPLIER ADDRESS -->
@@ -153,6 +165,4 @@
 		</table>
 	</div>
 	<!-- / TOTAL -->
-
-	
 </div>
