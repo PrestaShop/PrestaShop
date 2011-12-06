@@ -2044,6 +2044,8 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
+			$update_product = false;
+
 			// Get all available suppliers
 			$suppliers = Supplier::getSuppliers();
 
@@ -2087,6 +2089,13 @@ class AdminProductsControllerCore extends AdminController
 
 					$associated_suppliers[] = $product_supplier;
 				}
+			}
+
+			// Manage defaut supplier for product
+			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
+			{
+				$product->id_supplier = $new_default_supplier;
+				$update_product = true;
 			}
 
 			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
@@ -2169,17 +2178,32 @@ class AdminProductsControllerCore extends AdminController
 								}
 							}
 
+							// Retro-compatibility code
 							if ($product->id_supplier == $supplier->id_supplier)
-								$product->wholesale_price = Tools::convertPrice($price, $id_currency);
+							{
+								if ((int)$attribute['id_product_attribute'] > 0)
+								{
+									Db::getInstance()->execute('
+										UPDATE '._DB_PREFIX_.'product_attribute
+										SET supplier_reference = '.$reference.',
+										wholesale_price = '.Tools::convertPrice($price, $id_currency).'
+										WHERE id_product = '.(int)$product->id.'
+										AND id_product_attribute = '.(int)$attribute['id_product_attribute'].'
+										LIMIT 1
+									');
+								}
+								else
+								{
+									$product->wholesale_price = Tools::convertPrice($price, $id_currency); //converted in the default currency
+									$product->supplier_reference = $reference;
+									$update_product = true;
+								}
+							}
 						}
 					}
 
-			// Manage defaut supplier for product
-			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
-			{
-				$product->id_supplier = $new_default_supplier;
+			if ($update_product)
 				$product->update();
-			}
 
 			$this->confirmations[] = $this->l('Supplier Reference(s) of the product have been updated');
 		}

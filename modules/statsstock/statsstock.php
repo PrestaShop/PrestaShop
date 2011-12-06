@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -24,7 +24,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
- 
+
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -42,7 +42,7 @@ class StatsStock extends Module
 
 		parent::__construct();
 
-		$this->displayName = $this->l('Stock stats');
+		$this->displayName = $this->l('Available quantities stats');
 		$this->description = '';
 	}
 
@@ -66,25 +66,24 @@ class StatsStock extends Module
 					FROM '._DB_PREFIX_.'product_attribute pa WHERE p.id_product = pa.id_product
 					AND wholesale_price != 0
 				), p.wholesale_price) as wholesale_price,
-				IFNULL((
-					SELECT SUM(pa.quantity)
-					FROM '._DB_PREFIX_.'product_attribute pa WHERE p.id_product = pa.id_product
-				), p.quantity) as quantity,
-				IFNULL((
-					SELECT SUM(IF(pa.wholesale_price > 0, pa.wholesale_price, p.wholesale_price) * pa.quantity)
-					FROM '._DB_PREFIX_.'product_attribute pa WHERE p.id_product = pa.id_product
-				), p.wholesale_price * p.quantity) as stockvalue
+				IFNULL(stock.quantity, 0) as quantity
 				FROM '._DB_PREFIX_.'product p
 				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				INNER JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
+				'.Product::sqlStock('p', 0).'
 				WHERE 1 = 1
 				'.$filter;
 		$products = Db::getInstance()->executeS($sql);
 
+		foreach ($products as $key => $p)
+		{
+			$products[$key]['stockvalue'] = $p['wholesale_price'] * $p['quantity'];
+		}
+
 		$this->html .= '
 		<script type="text/javascript">$(\'#calendar\').slideToggle();</script>
-		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Stock value').'</h2>
+		<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->l('Available quantities for sale valuation').'</h2>
 		<form action="'.$ru.'" method="post">
 			<input type="hidden" name="submitCategory" value="1" />
 			'.$this->l('Category').' : <select name="statsstock_id_category" onchange="this.form.submit();">
@@ -107,7 +106,7 @@ class StatsStock extends Module
 				<th>'.$this->l('ID').'</th>
 				<th>'.$this->l('Ref.').'</th>
 				<th style="width:350px">'.$this->l('Item').'</th>
-				<th>'.$this->l('Stock').'</th>
+				<th>'.$this->l('Available quantity for sale').'</th>
 				<th>'.$this->l('Price*').'</th>
 				<th>'.$this->l('Value').'</th>
 			</tr>';
@@ -128,7 +127,7 @@ class StatsStock extends Module
 			$this->html .= '
 				<tr>
 					<th colspan="3"></th>
-					<th>'.$this->l('Total stock').'</th>
+					<th>'.$this->l('Total quantities').'</th>
 					<th>'.$this->l('Avg price').'</th>
 					<th>'.$this->l('Total value').'</th>
 				</tr>
@@ -139,7 +138,7 @@ class StatsStock extends Module
 					<td>'.Tools::displayPrice($rollup['stockvalue'], $currency).'</td>
 				</tr>
 			</table>
-			<p>* '.$this->l('Average price when the product has attributes.').'</p></div>';
+			<p>* '.$this->l('Correspond to the default wholesale price according to the default supplier for the product. An average price is used when the product has attributes.').'</p></div>';
 
 			return $this->html;
 		}

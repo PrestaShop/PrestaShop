@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -103,9 +103,9 @@ class StatsBestProducts extends ModuleGrid
 			),
 			array(
 				'id' => 'quantity',
-				'header' => $this->l('Stock'),
+				'header' => $this->l('Available Quantity for sale'),
 				'dataIndex' => 'quantity',
-				'width' => 50,
+				'width' => 150,
 				'align' => 'right'
 			)
 		);
@@ -149,8 +149,9 @@ class StatsBestProducts extends ModuleGrid
 		$dateBetween = $this->getDate();
 		$arrayDateBetween = explode(' AND ', $dateBetween);
 
-		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS p.reference, p.id_product, pl.name, ROUND(AVG(od.product_price / o.conversion_rate), 2) as avgPriceSold, 
-				IFNULL((SELECT SUM(pa.quantity) FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.id_product = p.id_product GROUP BY pa.id_product), p.quantity) as quantity,
+		$this->_query = 'SELECT SQL_CALC_FOUND_ROWS p.reference, p.id_product, pl.name,
+				ROUND(AVG(od.product_price / o.conversion_rate), 2) as avgPriceSold,
+				IFNULL(stock.quantity, 0) as quantity,
 				IFNULL(SUM(od.product_quantity), 0) AS totalQuantitySold,
 				ROUND(IFNULL(IFNULL(SUM(od.product_quantity), 0) / (1 + LEAST(TO_DAYS('.$arrayDateBetween[1].'), TO_DAYS(NOW())) - GREATEST(TO_DAYS('.$arrayDateBetween[0].'), TO_DAYS(p.date_add))), 0), 2) as averageQuantitySold,
 				ROUND(IFNULL(SUM((od.product_price * od.product_quantity) / o.conversion_rate), 0), 2) AS totalPriceSold,
@@ -168,6 +169,7 @@ class StatsBestProducts extends ModuleGrid
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->getLang().$this->context->shop->addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'order_detail od ON od.product_id = p.id_product
 				LEFT JOIN '._DB_PREFIX_.'orders o ON od.id_order = o.id_order
+				'.Product::sqlStock('p', 0).'
 				WHERE p.active = 1
 					AND o.valid = 1
 					AND o.invoice_date BETWEEN '.$dateBetween.'
