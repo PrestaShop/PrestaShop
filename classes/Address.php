@@ -27,14 +27,20 @@
 
 class AddressCore extends ObjectModel
 {
-	/** @var integer Customer id which address belongs */
+	/** @var integer Customer id which address belongs to */
 	public $id_customer = null;
 
-	/** @var integer Manufacturer id which address belongs */
+	/** @var integer Manufacturer id which address belongs to */
 	public $id_manufacturer = null;
 
-	/** @var integer Supplier id which address belongs */
+	/** @var integer Supplier id which address belongs to */
 	public $id_supplier = null;
+
+	/**
+	 * @since 1.5.0
+	 * @var int Warehouse id which address belongs to
+	 */
+	public $id_warehouse = null;
 
 	/** @var integer Country id */
 	public $id_country;
@@ -101,7 +107,8 @@ class AddressCore extends ObjectModel
 									'address1' => 128, 'address2' => 128, 'postcode' => 12, 'city' => 64,
 									'other' => 300, 'phone' => 16, 'phone_mobile' => 16, 'dni' => 16);
 	protected $fieldsValidate = array('id_customer' => 'isNullOrUnsignedId', 'id_manufacturer' => 'isNullOrUnsignedId',
-										'id_supplier' => 'isNullOrUnsignedId', 'id_country' => 'isUnsignedId', 'id_state' => 'isNullOrUnsignedId',
+										'id_supplier' => 'isNullOrUnsignedId', 'id_warehouse' => 'isNullOrUnsignedId',
+										'id_country' => 'isUnsignedId', 'id_state' => 'isNullOrUnsignedId',
 										'alias' => 'isGenericName', 'company' => 'isGenericName', 'lastname' => 'isName','vat_number' => 'isGenericName',
 										'firstname' => 'isName', 'address1' => 'isAddress', 'address2' => 'isAddress', 'postcode'=>'isPostCode',
 										'city' => 'isCityName', 'other' => 'isMessage',
@@ -121,6 +128,7 @@ class AddressCore extends ObjectModel
 			'id_customer' => array('xlink_resource'=> 'customers'),
 			'id_manufacturer' => array('xlink_resource'=> 'manufacturers'),
 			'id_supplier' => array('xlink_resource'=> 'suppliers'),
+			'id_warehouse' => array('xlink_resource'=> 'warehouse'),
 			'id_country' => array('xlink_resource'=> 'countries'),
 			'id_state' => array('xlink_resource'=> 'states'),
 		),
@@ -177,9 +185,6 @@ class AddressCore extends ObjectModel
 		return $out;
 	}
 
-
-
-
 	public function getFields()
 	{
 		$this->validateFields();
@@ -188,6 +193,7 @@ class AddressCore extends ObjectModel
 		$fields['id_customer'] = is_null($this->id_customer) ? 0 : (int)$this->id_customer;
 		$fields['id_manufacturer'] = is_null($this->id_manufacturer) ? 0 : (int)$this->id_manufacturer;
 		$fields['id_supplier'] = is_null($this->id_supplier) ? 0 : (int)$this->id_supplier;
+		$fields['id_warehouse'] = is_null($this->id_warehouse) ? 0 : (int)$this->id_warehouse;
 		$fields['id_country'] = (int)$this->id_country;
 		$fields['id_state'] = (int)$this->id_state;
 		$fields['alias'] = pSQL($this->alias);
@@ -249,7 +255,7 @@ class AddressCore extends ObjectModel
 	 */
 	public static function isCountryActiveById($id_address)
 	{
-		if (!$result = Db::getInstance()->getRow('
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT c.`active`
 		FROM `'._DB_PREFIX_.'address` a
 		LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
@@ -265,7 +271,7 @@ class AddressCore extends ObjectModel
 	 */
 	public function isUsed()
 	{
-		$result = Db::getInstance()->getRow('
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT COUNT(`id_order`) AS used
 		FROM `'._DB_PREFIX_.'orders`
 		WHERE `id_address_delivery` = '.(int)$this->id.'
@@ -293,7 +299,7 @@ class AddressCore extends ObjectModel
 	*/
 	public static function addressExists($id_address)
 	{
-		$row = Db::getInstance()->getRow('
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `id_address`
 		FROM '._DB_PREFIX_.'address a
 		WHERE a.`id_address` = '.(int)$id_address);
@@ -303,7 +309,7 @@ class AddressCore extends ObjectModel
 
 	public static function getFirstCustomerAddressId($id_customer, $active = true)
 	{
-		return Db::getInstance()->getValue('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
 			WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
@@ -335,6 +341,21 @@ class AddressCore extends ObjectModel
 		}
 
 		return $address;
+	}
+
+	/**
+	 * Returns id_address for a given id_supplier
+	 * @since 1.5.0
+	 * @param int $id_supplier
+	 * @return int $id_address
+	 */
+	public static function getAddressIdBySupplierId($id_supplier)
+	{
+		$query = new DbQuery();
+		$query->select('id_address');
+		$query->from('address');
+		$query->where('id_supplier = '.(int)$id_supplier);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }
 

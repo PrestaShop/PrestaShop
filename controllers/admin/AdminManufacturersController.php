@@ -190,7 +190,7 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->_join .= '
 	 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 	 			ON (a.`id_manufacturer` = m.`id_manufacturer`)';
-	 	$this->_where = 'AND a.`id_customer` = 0';
+	 	$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0';
 
 	 	$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses:'));
 

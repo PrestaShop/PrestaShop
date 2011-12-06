@@ -440,7 +440,12 @@ class AdminWarehousesControllerCore extends AdminController
 			else if (SupplyOrder::warehouseHasPendingOrders($obj->id))
 				$this->_errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
 			else
+			{
+				$address = new Address($obj->id_address);
+				$address->deleted = 1;
+				$address->save();
 				return parent::postProcess();
+			}
 	}
 
 	/**
@@ -474,5 +479,19 @@ class AdminWarehousesControllerCore extends AdminController
 		);
 
 		return parent::renderView();
+	}
+
+	/**
+	 * @see AdminController::afterAdd()
+	 */
+	public function afterAdd($object)
+	{
+		$address = new Address($object->id_address);
+		if (Validate::isLoadedObject($address))
+		{
+			$address->id_warehouse = $object->id_address;
+			$address->save();
+		}
+		return true;
 	}
 }

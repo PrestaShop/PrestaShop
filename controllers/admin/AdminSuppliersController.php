@@ -87,6 +87,67 @@ class AdminSuppliersControllerCore extends AdminController
 					'desc' => $this->l('Will appear in supplier list')
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('Phone:'),
+					'name' => 'phone',
+					'size' => 15,
+					'maxlength' => 16,
+					'desc' => $this->l('Phone number of this supplier')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Adress:'),
+					'name' => 'address',
+					'size' => 100,
+					'maxlength' => 128,
+					'required' => true
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Adress:').' (2)',
+					'name' => 'address2',
+					'size' => 100,
+					'maxlength' => 128,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Postcode/ Zip Code:'),
+					'name' => 'postcode',
+					'size' => 10,
+					'maxlength' => 12,
+					'required' => true,
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('City:'),
+					'name' => 'city',
+					'size' => 20,
+					'maxlength' => 32,
+					'required' => true,
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('Country:'),
+					'name' => 'id_country',
+					'required' => true,
+					'options' => array(
+						'query' => Country::getCountries($this->context->language->id, false),
+						'id' => 'id_country',
+						'name' => 'name'
+					),
+					'desc' => $this->l('Country where the state, region or city is located')
+				),
+				array(
+					'type' => 'select',
+					'label' => $this->l('State'),
+					'name' => 'id_state',
+					'required' => true,
+					'options' => array(
+						'id' => 'id_state',
+						'name' => 'name'
+					)
+				),
+				array(
 					'type' => 'file',
 					'label' => $this->l('Logo:'),
 					'name' => 'logo',
@@ -210,16 +271,101 @@ class AdminSuppliersControllerCore extends AdminController
 	public function afterImageUpload()
 	{
 		/* Generate image with differents size */
-		if (($id_supplier = (int)(Tools::getValue('id_supplier'))) AND isset($_FILES) AND count($_FILES) AND file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg'))
+		if (($id_supplier = (int)Tools::getValue('id_supplier')) AND
+			 isset($_FILES) AND count($_FILES) AND file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg'))
 		{
-			$imagesTypes = ImageType::getImagesTypes('suppliers');
-			foreach ($imagesTypes AS $k => $imageType)
+			$images_types = ImageType::getImagesTypes('suppliers');
+			foreach ($images_types as $k => $image_type)
 			{
 				$file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
-				imageResize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height']));
+				imageResize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']);
 			}
 		}
 	}
-}
 
+	/**
+	 * AdminController::postProcess() override
+	 * @see AdminController::postProcess()
+	 */
+	public function postProcess()
+	{
+		// checks access
+		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
+		{
+			$this->_errors[] = Tools::displayError('You do not have the required permissions to add suppliers.');
+			return parent::postProcess();
+		}
+
+		if (Tools::isSubmit('submitAdd'.$this->table))
+		{
+			if (!($obj = $this->loadObject(true)))
+				return;
+
+			// updates/creates address if it does not exist
+			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
+				$address = new Address((int)Tools::getValue('id_address')); // updates address
+			else
+				$address = new Address(); // creates address
+
+			$address->alias = Tools::getValue('name', null);
+			$address->lastname = 'supplier'; // skip problem with numeric characters in supplier name
+			$address->firstname = 'supplier'; // skip problem with numeric characters in supplier name
+			$address->address1 = Tools::getValue('address', null);
+			$address->address2 = Tools::getValue('address2', null);
+			$address->postcode = Tools::getValue('postcode', null);
+			$address->phone = Tools::getValue('phone', null);
+			$address->id_country = Tools::getValue('id_country', null);
+			$address->id_state = Tools::getValue('id_state', null);
+			$address->city = Tools::getValue('city', null);
+
+			$validation = $address->validateController();
+
+			// checks address validity
+			if (count($validation) > 0)
+			{
+				foreach ($validation as $item)
+					$this->_errors[] = $item;
+				$this->_errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+			}
+			else
+			{
+				if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+					$address->update();
+				else
+				{
+					$address->save();
+					$_POST['id_address'] = $address->id;
+				}
+			}
+			return parent::postProcess();
+		}
+		else if (Tools::isSubmit('delete'.$this->table))
+			if (!($obj = $this->loadObject(true)))
+				return;
+			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
+				$this->_errors[] = $this->l('It is not possible to delete a supplier if there is/are pending supply order(s).');
+			else
+			{
+				$address = new Address($obj->id_address);
+				$address->deleted = 1;
+				$address->save();
+				return parent::postProcess();
+			}
+	}
+
+	/**
+	 * @see AdminController::afterAdd()
+	 */
+	public function afterAdd($object)
+	{
+		$address = new Address($object->id_address);
+		if (Validate::isLoadedObject($address))
+		{
+			$address->id_supplier = $object->id_address;
+			$address->save();
+		}
+		return true;
+	}
+
+}
 

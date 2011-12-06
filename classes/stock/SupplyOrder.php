@@ -418,4 +418,26 @@ class SupplyOrderCore extends ObjectModel
 		return ($res > 0);
 	}
 
+	/**
+	 * For a given $id_supplier, tells if it has pending supply orders
+	 *
+	 * @param int $id_supplier
+	 * @return bool
+	 */
+	public static function supplierHasPendingOrders($id_supplier)
+	{
+		if (!$id_supplier)
+			return false;
+
+		$query = new DbQuery();
+		$query->select('COUNT(so.id_supply_order) as supply_orders');
+		$query->from('supply_order so');
+		$query->leftJoin('supply_order_state sos ON (so.id_supply_order_state = sos.id_supply_order_state)');
+		$query->where('sos.enclosed != 1');
+		$query->where('so.id_supplier = '.(int)$id_supplier);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		return ($res > 0);
+	}
+
 }
