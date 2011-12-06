@@ -646,4 +646,15 @@ $(document).ready(function() {
 	});
 	
 	$('#gift').checkboxChange(function() { $('#gift_div').show('slow'); }, function() { $('#gift_div').hide('slow'); });
+	
+	$('#enable-multishipping').checkboxChange(
+		function() {
+			$('.standard-checkout').hide(0);
+			$('.multishipping-checkout').show(0);
+		},
+		function() {
+			$('.standard-checkout').show(0);
+			$('.multishipping-checkout').hide(0);
+		}
+	);
 });
