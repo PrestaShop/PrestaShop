@@ -57,10 +57,10 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('home') && $this->registerHook('backOfficeTop') && $this->registerHook('header'))
+		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('backOfficeTop') && $this->registerHook('displayHeader'))
 		{
 			/* Sets up configuration */
-			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '550');
+			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
 			$res &= Configuration::updateValue('HOMESLIDER_HEIGHT', '300');
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '1300');
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '7700');
@@ -90,7 +90,7 @@ class HomeSlider extends Module
 	protected function createTables()
 	{
 		/* Slides */
-		$res = Db::getInstance()->execute('
+		$res = (bool)Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
 				`id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
@@ -650,14 +650,14 @@ class HomeSlider extends Module
 					   hss.`active`,
 					   hssl.`title`,
 					   hssl.`url`,
-					   hssl.`legend`
+					   hssl.`legend`,
+					   hssl.`description`
 			FROM '._DB_PREFIX_.'homeslider hs
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_slide = hss.id_slide)
 			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hssl.id_slide = hs.id_slide)
-			WHERE id_shop = '.(int)$id_shop.' OR id_shop = 0
+			WHERE (id_shop = '.(int)$id_shop.' OR id_shop = 1)
 			AND hssl.id_lang = '.(int)$id_lang.
 			($active ? ' AND hss.`active` = 1' : ' ').'
-			GROUP BY hs.id_slide
 			ORDER BY hss.position');
 	}
 

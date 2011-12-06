@@ -48,9 +48,9 @@ class BlockSupplier extends Module
 	{
 		if (!parent::install())
 			return false;
-		if (!$this->registerHook('leftColumn'))
+		if (!$this->registerHook('displayLeftColumn'))
 			return false;
-		if (!$this->registerHook('header'))
+		if (!$this->registerHook('displayHeader'))
 			return false;
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT', true);
 		Configuration::updateValue('SUPPLIER_DISPLAY_TEXT_NB', 5);
