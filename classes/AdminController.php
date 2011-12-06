@@ -80,6 +80,7 @@ class AdminControllerCore extends Controller
 	public $tpl_view_vars = array();
 
 	public $base_tpl_view = null;
+	public $base_tpl_form = null;
 
 	/** @var bool if you want more fieldsets in the form */
 	public $multiple_fieldsets = false;
@@ -1430,6 +1431,7 @@ class AdminControllerCore extends Controller
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $this->getFieldsValue($this->object);
 			$helper->tpl_vars = $this->tpl_form_vars;
+			!is_null($this->base_tpl_form) ? $helper->base_tpl = $this->base_tpl_form : '';
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))
@@ -2014,7 +2016,7 @@ class AdminControllerCore extends Controller
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
 					if (empty($this->fields_value[$input['name']]))
-						if ($input['type'] == 'group_shop' || $input['type'] == 'shop')
+						if (isset($input['type']) && ($input['type'] == 'group_shop' || $input['type'] == 'shop'))
 						{
 							if ($obj->id)
 							{

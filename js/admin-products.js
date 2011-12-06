@@ -23,37 +23,37 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/* Combinaition */
+/* Combination */
 
 var posC = true;
 $(document).ready(function() {
-	$('#desc-product-newCombinaison').click(function() {
+	$('#desc-product-newCombination').click(function() {
 		if (posC == true)
-			removeButtonCombinaison('add');
+			removeButtonCombination('add');
 		else
-			addButtonCombinaison('add');
+			addButtonCombination('add');
 	});
 });
 
-function removeButtonCombinaison(item)
+function removeButtonCombination(item)
 {
 	$('#add_new_combination').show();
-	$('.process-icon-newCombinaison').removeClass('toolbar-new');
-	$('.process-icon-newCombinaison').addClass('toolbar-cancel');
+	$('.process-icon-newCombination').removeClass('toolbar-new');
+	$('.process-icon-newCombination').addClass('toolbar-cancel');
 	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
-	$('#desc-product-newCombinaison div').html($('#ResetBtn').val());
+	$('#desc-product-newCombination div').html($('#ResetBtn').val());
 	$('id_product_attribute').val(0);
 	init_elems();
 	posC = false;
 }
 
-function addButtonCombinaison(item)
+function addButtonCombination(item)
 {
 	$('#add_new_combination').hide();
-	$('.process-icon-newCombinaison').removeClass('toolbar-cancel');
-	$('.process-icon-newCombinaison').addClass('toolbar-new');
+	$('.process-icon-newCombination').removeClass('toolbar-cancel');
+	$('.process-icon-newCombination').addClass('toolbar-new');
 	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
-	$('#desc-product-newCombinaison div').html($('#submitProductAttribute').val());
+	$('#desc-product-newCombination div').html($('#submitProductAttribute').val());
 	posC = true;
 }
 
@@ -140,7 +140,7 @@ function editProductAttribute(ids, token)
 			$('#add_new_combination').show();
 			$('#attribute_quantity').show();
 			$('#product_att_list').html('');
-			removeButtonCombinaison('update');
+			removeButtonCombination('update');
 			$.scrollTo('#add_new_combination', 1200, { offset: -100 });
 
 			var wholesale_price = Math.abs(data[0]['wholesale_price']);
@@ -202,7 +202,7 @@ function editProductAttribute(ids, token)
 		}
 	});
 }
-/* END Combinaition */
+/* END Combination */
 
 function addPackItem()
 {

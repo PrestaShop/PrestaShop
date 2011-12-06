@@ -363,7 +363,7 @@ class AdminProductsControllerCore extends AdminController
 					$product->active = 0;
 					if ($product->add()
 					&& Category::duplicateProductCategories($id_product_old, $product->id)
-					&& ($combinationImages = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+					&& ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
 					&& GroupReduction::duplicateReduction($id_product_old, $product->id)
 					&& Product::duplicateAccessories($id_product_old, $product->id)
 					&& Product::duplicateFeatures($id_product_old, $product->id)
@@ -377,7 +377,7 @@ class AdminProductsControllerCore extends AdminController
 						if ($product->hasAttributes())
 							Product::updateDefaultAttribute($product->id);
 
-						if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combinationImages))
+						if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combination_images))
 							$this->_errors[] = Tools::displayError('An error occurred while copying images.');
 						else
 						{
@@ -1899,7 +1899,7 @@ class AdminProductsControllerCore extends AdminController
 						'desc' => $this->l('Create'),
 					);
 
-					$this->toolbar_btn['newCombinaison'] = array(
+					$this->toolbar_btn['newCombination'] = array(
 						'short' => 'Add a new combination',
 						'desc' => $this->l('Add a new combination'),
 						'class' => 'toolbar-new'
@@ -1943,7 +1943,7 @@ class AdminProductsControllerCore extends AdminController
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
-		$this->fields_form = array("pouet"=>"eh oui");
+		$this->fields_form = array('');
 		$this->addJs(_PS_JS_DIR_.'attributesBack.js');
 		$this->display = 'edit';
 		$this->addJqueryUI('ui.datepicker');
@@ -2649,7 +2649,7 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	public function initFormAttachments($obj, $languages, $defaultLanguage)
-	{
+	{		
 		$content = '';
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -2720,6 +2720,7 @@ class AdminProductsControllerCore extends AdminController
 		<div class="clear">&nbsp;</div>
 		<input type="submit" name="submitAttachments" id="submitAttachments" value="'.$this->l('Update attachments').'" class="button" />';
 		$this->tpl_form_vars['custom_form'] = $content;
+	
 	}
 
 	public function initFormInformations($product, $languages, $defaultLanguage)
@@ -2908,8 +2909,8 @@ class AdminProductsControllerCore extends AdminController
 			if ($postAccessories = Tools::getValue('inputAccessories'))
 			{
 				$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
-				foreach ($postAccessoriesTab as $accessoryId)
-					if (!$this->haveThisAccessory($accessoryId, $accessories) && $accessory = Product::getAccessoryById($accessoryId))
+				foreach ($postAccessoriesTab as $accessory_id)
+					if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
 						$accessories[] = $accessory;
 			}
 			$data->assign('accessories', $accessories);
@@ -2921,7 +2922,7 @@ class AdminProductsControllerCore extends AdminController
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
 		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
-		$data->assign('ad', dirname($_SERVER["PHP_SELF"]));
+		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
 		$categoryBox = Tools::getValue('categoryBox', array());
 		$data->assign('product', $product);
@@ -3111,7 +3112,7 @@ class AdminProductsControllerCore extends AdminController
 			$combArray = array();
 			if (is_array($combinaisons))
 			{
-				$combinationImages = $product->getCombinationImages($this->context->language->id);
+				$combination_images = $product->getCombinationImages($this->context->language->id);
 				foreach ($combinaisons as $k => $combinaison)
 				{
 					if ($currency->format % 2 != 0)
@@ -3129,7 +3130,7 @@ class AdminProductsControllerCore extends AdminController
 					$combArray[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
 					$combArray[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 					$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
-					$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
+					$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combination_images[$combinaison['id_product_attribute']][0]['id_image']) ? $combination_images[$combinaison['id_product_attribute']][0]['id_image'] : 0;
 					$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
 					$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
 					/*$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
@@ -3262,7 +3263,7 @@ class AdminProductsControllerCore extends AdminController
 							$groups = array();
 							if (is_array($combinaisons))
 							{
-								$combinationImages = $product->getCombinationImages($this->context->language->id);
+								$combination_images = $product->getCombinationImages($this->context->language->id);
 								foreach ($combinaisons as $k => $combinaison)
 								{
 									$combArray[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
@@ -3274,7 +3275,7 @@ class AdminProductsControllerCore extends AdminController
 									$combArray[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 									$combArray[$combinaison['id_product_attribute']]['minimal_quantity'] = $combinaison['minimal_quantity'];
 									$combArray[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
-									$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combinationImages[$combinaison['id_product_attribute']][0]['id_image']) ? $combinationImages[$combinaison['id_product_attribute']][0]['id_image'] : 0;
+									$combArray[$combinaison['id_product_attribute']]['id_image'] = isset($combination_images[$combinaison['id_product_attribute']][0]['id_image']) ? $combination_images[$combinaison['id_product_attribute']][0]['id_image'] : 0;
 									$combArray[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
 									$combArray[$combinaison['id_product_attribute']]['ecotax'] = $combinaison['ecotax'];
 									$combArray[$combinaison['id_product_attribute']]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
@@ -3699,20 +3700,20 @@ class AdminProductsControllerCore extends AdminController
 		$content = 'var combination_images = new Array();';
 		if (!$allCombinationImages = $obj->getCombinationImages($this->context->language->id))
 			return $content;
-		foreach ($allCombinationImages as $id_product_attribute => $combinationImages)
+		foreach ($allCombinationImages as $id_product_attribute => $combination_images)
 		{
 			$i = 0;
-			$content .= 'combination_images['.(int)($id_product_attribute).'] = new Array();';
-			foreach ($combinationImages as $combinationImage)
-				$content .= 'combination_images['.(int)($id_product_attribute).']['.$i++.'] = '.(int)($combinationImage['id_image']).';';
+			$content .= 'combination_images['.(int)$id_product_attribute.'] = new Array();';
+			foreach ($combination_images as $combination_image)
+				$content .= 'combination_images['.(int)$id_product_attribute.']['.$i++.'] = '.(int)$combination_image['id_image'].';';
 		}
 		return $content;
 	}
 
-	public function haveThisAccessory($accessoryId, $accessories)
+	public function haveThisAccessory($accessory_id, $accessories)
 	{
 		foreach ($accessories as $accessory)
-			if ((int)($accessory['id_product']) == (int)($accessoryId))
+			if ((int)$accessory['id_product'] == (int)$accessory_id)
 				return true;
 		return false;
 	}
@@ -3723,19 +3724,19 @@ class AdminProductsControllerCore extends AdminController
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
 		$input_pack_items = '';
-		if(Tools::getValue('inputPackItems'))
+		if (Tools::getValue('inputPackItems'))
 			$input_pack_items = Tools::getValue('inputPackItems');
 		else
-			foreach ($product->packItems as $packItem)
-				$input_pack_items .= $packItem->pack_quantity.'x'.$packItem->id.'-';
+			foreach ($product->packItems as $pack_item)
+				$input_pack_items .= $pack_item->pack_quantity.'x'.$pack_item->id.'-';
 		$this->tpl_form_vars['input_pack_items'] = $input_pack_items;
 
 		$input_namepack_items = '';
 		if (Tools::getValue('namePackItems'))
 			$input_namepack_items = Tools::getValue('namePackItems');
 		else
-			foreach ($product->packItems as $packItem)
-				$input_namepack_items.= $packItem->pack_quantity.' x '.$packItem->name.'¤';
+			foreach ($product->packItems as $pack_item)
+				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 
@@ -3749,14 +3750,14 @@ class AdminProductsControllerCore extends AdminController
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));
 			// lines is an array of string with format : QTYxID
-			if(count($lines))
+			if (count($lines))
 				foreach ($lines as $line)
 					if (!empty($line))
 					{
 						list($qty, $item_id) = explode('x', $line);
 						if ($qty > 0 && isset($item_id))
 						{
-							if (!Pack::addItem((int)($product->id), (int)($item_id), (int)($qty)))
+							if (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
 							return false;
 						}
 					}
@@ -3786,7 +3787,8 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	protected function loadObject($opt = false)
 	{
-		if ($id = (int)(Tools::getValue($this->identifier)) AND Validate::isUnsignedId($id))
+		$id = (int)Tools::getValue($this->identifier);
+		if ($id && Validate::isUnsignedId($id))
 		{
 			if (!$this->object)
 				$this->object = new $this->className($id);
@@ -3816,19 +3818,25 @@ class AdminProductsControllerCore extends AdminController
 	{
 		parent::setMedia();
 
-		$this->addjQueryPlugin('fileuploader');
-
-		$this->addJqueryUI(array(
-			'ui.core',
-			'ui.widget',
-			'ui.progressbar'
-		));
-
-		$this->addJS(array(
-			_PS_JS_DIR_.'admin-products.js',
-			_PS_JS_DIR_.'price.js',
-			_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
-			_PS_JS_DIR_.'tinymce.inc.js'
-		));
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			$this->addjQueryPlugin(array(
+				'fileuploader',
+				'autocomplete'
+			));
+	
+			$this->addJqueryUI(array(
+				'ui.core',
+				'ui.widget',
+				'ui.progressbar'
+			));
+	
+			$this->addJS(array(
+				_PS_JS_DIR_.'admin-products.js',
+				_PS_JS_DIR_.'price.js',
+				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
+				_PS_JS_DIR_.'tinymce.inc.js'
+			));
+		}
 	}
 }
