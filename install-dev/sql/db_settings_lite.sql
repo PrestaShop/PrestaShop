@@ -329,7 +329,7 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (152, 'PS_CARRIER_DEFAULT_SORT', '0', NOW(), NOW()),
 (153, 'PS_STOCK_MVT_INC_REASON_DEFAULT', '1', NOW(), NOW()),
 (154, 'PS_STOCK_MVT_DEC_REASON_DEFAULT', '2', NOW(), NOW()),
-(155, 'PS_ADVANCED_STOCK_MANAGEMENT', '1', NOW(), NOW()),
+(155, 'PS_ADVANCED_STOCK_MANAGEMENT', '0', NOW(), NOW()),
 (156, 'PS_ADMINREFRESH_NOTIFICATION', '1', NOW(), NOW()),
 (157, 'PS_STOCK_MVT_TRANSFER_TO', '7', NOW(), NOW()),
 (158, 'PS_STOCK_MVT_TRANSFER_FROM', '6', NOW(), NOW()),
@@ -1504,12 +1504,6 @@ INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `n
 (8, 3, 'Supply Order'),
 (8, 4, 'Supply Order'),
 (8, 5, 'Supply Order');
-
-INSERT INTO `PREFIX_warehouse` (`id_warehouse`, `id_currency`, `id_address`, `id_employee`, `reference`, `name`, `management_type`) VALUES
-(1, 1, 0, 1, 'default_warehouse', 'default warehouse', 'WA');
-
-INSERT INTO `PREFIX_warehouse_shop` (`id_warehouse`, `id_shop`) VALUES
-(1, 1);
 
 INSERT INTO `PREFIX_address_format` (`id_country`, `format`)
 (SELECT `id_country` as id_country, 'firstname lastname\ncompany\nvat_number\naddress1\naddress2\npostcode city\nCountry:name\nphone' as format FROM `PREFIX_country`);
