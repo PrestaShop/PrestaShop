@@ -46,7 +46,8 @@
 	text-transform: uppercase;
 	background: #333
 }
-
+#new_comment_form ul.grade_content {list-style-type:none}
+#new_comment_form .grade_content li {width:50%}
 #new_comment_form .product {padding:15px}
 #new_comment_form .product img {
 	float:left;
@@ -71,7 +72,7 @@
 #new_comment_form .grade_content span {
 	display:inline-block;
 	padding:0 10px;
-	width:85px;/* 105 */
+	width:150px;/* 160 */
 	font-weight:bold
 }
 #new_comment_form .grade_content .cancel {margin-right:5px}
