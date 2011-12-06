@@ -109,7 +109,7 @@ class DbPDOCore extends Db
 	public function getMsgError($query = false)
 	{
 		$error = $this->link->errorInfo();
-		return $error[2];
+		return ($error[0] == '00000') ? '' : $error[2];
 	}
 
 	/**
@@ -118,7 +118,7 @@ class DbPDOCore extends Db
 	public function getNumberError()
 	{
 		$error = $this->link->errorInfo();
-		return $error[1];
+		return isset($error[1]) ? $error[1] : 0;
 	}
 
 	/**
