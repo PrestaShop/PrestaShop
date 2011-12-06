@@ -501,6 +501,7 @@ class AuthControllerCore extends FrontController
 						{
 							if (!$customer->is_guest)
 							{
+								$this->context->customer = $customer;
 								$customer->cleanGroups();
 								// we add the guest customer in the default customer group
 								$customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
