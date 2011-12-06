@@ -25,6 +25,73 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+class FileUploaderCore
+{
+
+	private $allowedExtensions = array();
+	private $sizeLimit = 10485760;
+	private $file;
+
+	function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760)
+	{
+		$allowedExtensions = array_map("strtolower", $allowedExtensions);
+
+		$this->allowedExtensions = $allowedExtensions;
+		$this->sizeLimit = $sizeLimit;
+
+		if (isset($_GET['qqfile']))
+			$this->file = new qqUploadedFileXhr();
+		else
+			$this->file = false;
+	}
+
+
+	private function toBytes($str)
+	{
+		$val = trim($str);
+		$last = strtolower($str[strlen($str)-1]);
+		switch($last) {
+			case 'g': $val *= 1024;
+			case 'm': $val *= 1024;
+			case 'k': $val *= 1024;
+		}
+		return $val;
+	}
+
+	/**
+	 * Returns array('success'=>true) or array('error'=>'error message')
+	 */
+	function handleUpload()
+	{
+		if (!$this->file){
+			return array('error' => Tools::displayError('No files were uploaded.'));
+		}
+
+		$size = $this->file->getSize();
+
+		if ($size == 0) {
+			return array('error' => Tools::displayError('File is empty'));
+		}
+
+		if ($size > $this->sizeLimit) {
+			return array('error' => Tools::displayError('File is too large'));
+		}
+
+		$pathinfo = pathinfo($this->file->getName());
+		$filename = $pathinfo['filename'];
+		$these = implode(', ', $this->allowedExtensions);
+		if (!isset($pathinfo['extension']))
+			return array('error' => Tools::displayError('File has an invalid extension, it should be one of '). $these . '.');
+		$ext = $pathinfo['extension'];
+		if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions))
+			return array('error' => Tools::displayError('File has an invalid extension, it should be one of '). $these . '.');
+
+
+		return $this->file->save();
+
+	}
+}
+
 /**
  * Handle file uploads via XMLHttpRequest
  */
@@ -113,71 +180,4 @@ class qqUploadedFileXhr
 		else 
 			throw new Exception('Getting content length is not supported.');     
 	}   
-}
-
-class FileUploaderCore
-{
-
-    private $allowedExtensions = array();
-    private $sizeLimit = 10485760;
-    private $file;
-
-    function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760)
-    {        
-        $allowedExtensions = array_map("strtolower", $allowedExtensions);
-            
-        $this->allowedExtensions = $allowedExtensions;        
-        $this->sizeLimit = $sizeLimit; 
-
-        if (isset($_GET['qqfile'])) 
-            $this->file = new qqUploadedFileXhr();
-        else 
-            $this->file = false; 
-    }
-    
-    
-    private function toBytes($str)
-    {
-        $val = trim($str);
-        $last = strtolower($str[strlen($str)-1]);
-        switch($last) {
-            case 'g': $val *= 1024;
-            case 'm': $val *= 1024;
-            case 'k': $val *= 1024;        
-        }
-        return $val;
-    }
-    
-    /**
-     * Returns array('success'=>true) or array('error'=>'error message')
-     */
-    function handleUpload()
-    {
-        if (!$this->file){
-            return array('error' => Tools::displayError('No files were uploaded.'));
-        }
-        
-        $size = $this->file->getSize();
-        
-        if ($size == 0) {
-            return array('error' => Tools::displayError('File is empty'));
-        }
-        
-        if ($size > $this->sizeLimit) {
-            return array('error' => Tools::displayError('File is too large'));
-        }
-        
-        $pathinfo = pathinfo($this->file->getName());
-        $filename = $pathinfo['filename'];
-        $these = implode(', ', $this->allowedExtensions);
-        if (!isset($pathinfo['extension']))
-			return array('error' => Tools::displayError('File has an invalid extension, it should be one of '). $these . '.');
-		$ext = $pathinfo['extension'];
-        if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions))
-            return array('error' => Tools::displayError('File has an invalid extension, it should be one of '). $these . '.');
-        
-        
-       return $this->file->save();
-		
-    }    
 }
