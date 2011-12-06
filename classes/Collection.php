@@ -30,7 +30,7 @@
  *
  * @since 1.5.0
  */
-class CollectionCore implements Iterator, Countable
+class CollectionCore implements Iterator, ArrayAccess, Countable
 {
 	/**
 	 * @var string Object class name
@@ -201,5 +201,41 @@ class CollectionCore implements Iterator, Countable
 	{
 		$this->getAll();
 		return count($this->results);
+	}
+
+	/**
+	 * Check if a result exist
+	 *
+	 * @param $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset)
+	{
+		$this->getAll();
+		return isset($this->results[$offset]);
+	}
+
+	/**
+	 * Get a result by offset
+	 *
+	 * @param $offset
+	 * @return ObjectModel
+	 */
+	public function offsetGet($offset)
+	{
+		$this->getAll();
+		if (!isset($this->results[$offset]))
+			throw new PrestashopException('Unknown offset '.$offset.' for collection '.$this->classname);
+		return $this->results[$offset];
+	}
+
+	public function offsetSet($offset, $value)
+	{
+		throw new PrestashopException('It is forbidden to override a result in a collection');
+	}
+
+	public function offsetUnset($offset)
+	{
+		throw new PrestashopException('It is forbidden to unset a result in a collection');
 	}
 }
