@@ -88,7 +88,7 @@ class StockManagerCore implements StockManagerInterface
 				$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
 
 				// if this product is already in stock
-				if ($stock_collection->count() > 0)
+				if (count($stock_collection) > 0)
 				{
 					$stock_exists = true;
 
@@ -128,7 +128,7 @@ class StockManagerCore implements StockManagerInterface
 				$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id, $price_te);
 
 				// if this product is already in stock
-				if ($stock_collection->count() > 0)
+				if (count($stock_collection) > 0)
 				{
 					$stock_exists = true;
 
@@ -234,7 +234,7 @@ class StockManagerCore implements StockManagerInterface
 			$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
 
 			// check if the collection is loaded
-			if ($stock_collection->count() <= 0)
+			if (count($stock_collection) <= 0)
 				return $return;
 
 			$stock_history_qty_available = array();
