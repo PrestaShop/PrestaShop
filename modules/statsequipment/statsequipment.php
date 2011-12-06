@@ -63,7 +63,7 @@ class StatsEquipment extends ModuleGraph
 				LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_guest` = c.`id_guest`
 				WHERE c.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.$this->sqlShopRestriction(false, 'c');
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, false);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
 
 		$calcArray = array(
 			'jsOK' => 0,

@@ -294,7 +294,7 @@ class StockManagerCore implements StockManagerInterface
 						if ($left_quantity_to_check <= 0)
 							continue;
 
-						$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
+						$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
 							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
 								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
 							FROM `'._DB_PREFIX_.'stock_mvt` sm

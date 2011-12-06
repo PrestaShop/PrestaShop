@@ -1102,7 +1102,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$query->from('supply_order_detail');
 				$query->where('id_supply_order = '.(int)$id);
 				$query->orderBy('id_supply_order_detail DESC');
-				$resource = Db::getInstance()->execute($query);
+				$resource = Db::getInstance()->query($query);
 				// gets details
 				while ($row = Db::getInstance()->nextRow($resource))
        				 echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row)));

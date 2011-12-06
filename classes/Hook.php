@@ -220,11 +220,11 @@ class HookCore extends ObjectModel
 			$sql .= '
 					GROUP BY hm.id_hook, hm.id_module
 					ORDER BY hm.`position`';
-			$result = $db->executeS($sql, false);
+			$results = $db->executeS($sql);
 			self::$_hookModulesCache = array();
 
-			if ($result)
-				while ($row = $db->nextRow())
+			if ($results)
+				foreach ($results as $row)
 				{
 					$row['hook'] = strtolower($row['hook']);
 					if (!isset(self::$_hookModulesCache[$row['hook']]))
