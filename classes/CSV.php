@@ -38,11 +38,11 @@ class CSVCore
 
     /**
      * Loads objects, filename and optionnaly a delimiter.
-     * @param Collection|Array : colletion of objects / array (of non-objects)
+     * @param Collection $collection collection of objects / array (of non-objects)
      * @param string $filename : used later to save the file
      * @param string $delimiter Optional : delimiter used
      */
-	public function __construct(&$collection, $filename, $delimiter = ';')
+	public function __construct($collection, $filename, $delimiter = ';')
 	{
 		$this->filename = $filename;
 		$this->delimiter = $delimiter;
