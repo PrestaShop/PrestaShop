@@ -63,7 +63,7 @@ class OrderControllerCore extends ParentOrderController
 		}
 
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
-			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step));
+			Tools::redirect('index.php?controller=authentication&back='.urlencode('order.php&step='.$this->step.'&multi-shipping='.(int)Tools::getValue('multi-shipping')).'&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 
 		if (Tools::getValue('multi-shipping') == 1)
 			$this->context->smarty->assign('multi_shipping', true);

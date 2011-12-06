@@ -116,6 +116,11 @@ class AuthControllerCore extends FrontController
 		if (Tools::getValue('create_account'))
 			$this->context->smarty->assign('email_create', 1);
 
+		if (Tools::getValue('multi-shipping') == 1)
+			$this->context->smarty->assign('multi_shipping', true);
+		else
+			$this->context->smarty->assign('multi_shipping', false);
+		
 		$this->assignAddressFormat();
 
 		// Call a hook to display more information on form
@@ -296,6 +301,7 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
 				$this->context->cart->secure_key = $customer->secure_key;
 				$this->context->cart->update();
+				
 				// Add customer to the context
 				$this->context->customer = $customer;
 
@@ -307,7 +313,7 @@ class AuthControllerCore extends FrontController
 				if (!$this->ajax)
 				{
 					if ($back = Tools::getValue('back'))
-						Tools::redirect($back);
+						Tools::redirect(html_entity_decode($back));
 					Tools::redirect('index.php?controller=my-account');
 				}
 			}
@@ -404,7 +410,7 @@ class AuthControllerCore extends FrontController
 						}
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
-							Tools::redirect('index.php?controller=order');
+							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 						// else : redirection to the account
 						else
 							Tools::redirect('index.php?controller=my-account');
@@ -545,7 +551,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect('index.php?controller=my-account');
 							// redirection: if cart is not empty : redirection to the cart
 							if (count($this->context->cart->getProducts(true)) > 0)
-								Tools::redirect('index.php?controller=order');
+								Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
 							// else : redirection to the account
 							else
 								Tools::redirect('index.php?controller=my-account');
