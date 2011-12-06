@@ -35,11 +35,24 @@ class ToolsCore
 	* Random password generator
 	*
 	* @param integer $length Desired length (optional)
+	* @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC)
 	* @return string Password
 	*/
-	public static function passwdGen($length = 8)
+	public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
 	{
-		$str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		switch ($flag)
+		{
+			case 'NUMERIC': 
+				$str = '0123456789';
+				break;
+			case 'NO_NUMERIC':
+				$str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				break;
+			default:
+				$str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				break;
+		}
+		
 		for ($i = 0, $passwd = ''; $i < $length; $i++)
 			$passwd .= self::substr($str, mt_rand(0, self::strlen($str) - 1), 1);
 		return $passwd;
