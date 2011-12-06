@@ -43,8 +43,6 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
-		$this->assignHookData();
-
 		$this->smarty->assign(array(
 			'logo_path' => $this->getLogo(),
 			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
@@ -94,15 +92,18 @@ abstract class HTMLTemplateCore
     }
 
 	/**
-	 * Returns the HTML content of the template's footer
-	 */
-	public function assignHookData()
+	* Assign hook data
+	*
+	* @param $object generally the object used in the constructor
+	*/
+	public function assignHookData($object)
 	{
-		$data = array('title' => 'cool',
-							'delivery' => array('date' => '25/11/11', 'delay' => '3'));
+		$template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
+		$hook_name = 'displayPDF'.$template;
 
-		foreach ($data as $key => $value)
-			$this->smarty->assign($key, $value);
+		$this->smarty->assign(array(
+			'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object))
+		));
 	}
 
 	/**

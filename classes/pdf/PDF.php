@@ -54,7 +54,6 @@ class PDFCore
 
 	public function render()
 	{
-
 		$render =  false;
 		$this->pdf_renderer->setFontForLang('fr');
 		foreach ($this->objects as $object)
@@ -69,6 +68,8 @@ class PDFCore
                 if (count($this->objects) > 1)
                     $this->filename = $template->getBulkFilename();
             }
+			
+			$template->assignHookData($object);
 
 			$this->pdf_renderer->createHeader($template->getHeader());
 			$this->pdf_renderer->createFooter($template->getFooter());
@@ -89,12 +90,12 @@ class PDFCore
         $class = false;
         $classname = 'HTMLTemplate'.$this->template;
 
-			if (class_exists($classname))
-			{
-				$class = new $classname($object, $this->smarty);
-				if (!($class instanceof HTMLTemplate))
-					throw new PrestashopException('Invalid class. It should be an instance of HTMLTemplate');
-			}
+		if (class_exists($classname))
+		{
+			$class = new $classname($object, $this->smarty);
+			if (!($class instanceof HTMLTemplate))
+				throw new PrestashopException('Invalid class. It should be an instance of HTMLTemplate');
+		}
 
         return $class;
     }
