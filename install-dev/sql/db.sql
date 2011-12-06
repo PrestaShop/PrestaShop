@@ -47,7 +47,7 @@ CREATE TABLE `PREFIX_address` (
   KEY `id_state` (`id_state`),
   KEY `id_manufacturer` (`id_manufacturer`),
   KEY `id_supplier` (`id_supplier`),
-  KEY `id_warehouse` (`id_warehouse`),
+  KEY `id_warehouse` (`id_warehouse`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_alias` (
