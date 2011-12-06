@@ -33,6 +33,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	public $supply_order;
 	public $warehouse;
 	public $address_warehouse;
+	public $address_supplier;
 	public $context;
 
 	public function __construct(SupplyOrder $supply_order, $smarty)
@@ -42,6 +43,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
         $this->context = Context::getContext();
         $this->warehouse = new Warehouse($supply_order->id_warehouse);
         $this->address_warehouse = new Address($this->warehouse->id_address);
+        $this->address_supplier = new Address(Address::getAddressIdBySupplierId($supply_order->id_supplier));
 
    		// header informations
 		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
@@ -64,6 +66,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$this->smarty->assign(array(
 			'warehouse' => $this->warehouse,
 			'address_warehouse' => $this->address_warehouse,
+			'address_supplier' => $this->address_supplier,
 			'supply_order' => $this->supply_order,
 			'supply_order_details' => $supply_order_details,
 			'tax_order_summary' => $tax_order_summary,
