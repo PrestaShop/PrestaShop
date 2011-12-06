@@ -442,7 +442,7 @@ ul.step li#step_end {background:url(../img/step_end.gif) no-repeat center bottom
 	text-indent: -999em;
 	cursor: pointer
 }
-.cancel, .cancel a { background: url(../../../modules/productcomments/img/delete.gif) no-repeat 0 -16px }
+.cancel, .cancel a { background: url(../../../modules/productcomments/img/delete.gif) no-repeat 0 -16px !important }
 .star, .star a { background: url(../../../modules/productcomments/img/star.gif) no-repeat 0 0 }
 .cancel a, .star a {
 	display: block;
@@ -619,7 +619,7 @@ ul.idTabs li {
 /* step 1 - cart ******************************************************************************* */
 .cart_last_product {display:none}
 
-p.cart_navigation .multishipping-button { margin-right: 10px }
+/*p.cart_navigation .multishipping-button { margin-right: 10px }*/
 
 #order-detail-content {margin-bottom:20px}
 
@@ -640,6 +640,8 @@ table#cart_summary  td {
 	vertical-align:top
 }
 table#cart_summary  td.cart_delete {border-right:none}
+table#cart_summary  .last_item  td {border-bottom:1px solid #999}
+
 
 table#cart_summary tr:nth-child(odd),
 table#cart_summary tr.cart_total_delivery,
@@ -663,7 +665,8 @@ table#cart_summary  .cart_unit {width:130px}
 table#cart_summary  .cart_quantity {width:130px}
 .cart_quantity .cart_quantity_input {
 	float:left;
-   width: 20px;
+	margin-left: 5px;
+	width: 20px;
 	border:1px solid #fff
 }
 .cart_quantity #cart_quantity_button {
@@ -780,6 +783,8 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	font-weight:bold
 }
 
+.order_delivery .first_item {margin-right:35px;}
+
 /* step 2 - authentification ******************************************************************* */
 #create-account_form, #authentication #login_form {
    clear: none;
@@ -844,14 +849,13 @@ table#cart_summary .cart_total_price td.cart_voucher {
 }
 .lost_password a {color:#666}
 
-
 #ordermsg p {padding-bottom:0}
 #ordermsg p.txt {
 	float:left;
 	margin-right:25px;
 	width:220px
 }
-#ordermsg .textarea {float:right}
+/*#ordermsg .textarea {float:right}*/
 #ordermsg .textarea textarea {
 	height:90px;
 	width:475px;
@@ -907,6 +911,74 @@ table#cart_summary .cart_total_price td.cart_voucher {
 
 
 /* step 4 - paiement ************************************************************************** */
+
+/* #################### CSS MAXENCE  ######################## 
+#order .delivery_options_address, #orderopc .delivery_options_address {
+width: 541px;
+margin-left: 7px;
+}
+*/
+#order .delivery_options_address h3, #orderopc .delivery_options_address h3 {
+/*background: url("../img/table_header.gif") no-repeat;
+color: #374853;
+font-weight: bold;
+height: 14px;
+padding: 5px 10px;
+margin: 10px 0 0 0;*/
+    padding: 6px 11px;
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 0 1px 0 #000;
+    text-transform: uppercase;
+	background: none repeat scroll 0 0 #383838;
+}
+#order .delivery_option_radio, #orderopc .delivery_option_radio {
+	float: left;
+	margin: 12px;
+}
+#order .delivery_option label, #orderopc .delivery_option label {
+	display: block;
+	padding-bottom: 5px;
+}
+#order .delivery_option label > table.resume, #orderopc .delivery_option label > table.resume {
+	height: 40px;
+	width: 685px;
+}
+#order .delivery_option.item, #orderopc .delivery_option.item {
+	background: #fafafa;
+}
+#order .delivery_option.alternate_item, #orderopc .delivery_option.alternate_item {
+	border-top: 1px solid #bdc2c9;
+	background: #f1f2f4;
+}
+#order .delivery_option label > table.resume td, #orderopc .delivery_option label > table.resume td {
+	padding: 0 8px;
+}
+#order .delivery_option label > table.resume td + td, #order .delivery_option_carrier label > table.resume td + td, #orderopc .delivery_option label > table.resume td + td {
+	width: 280px;
+}
+#order .delivery_option label > table.resume td + td + td, #order .delivery_option_carrier label > table.resume td + td + td, #orderopc .delivery_option label > table.resume td + td + td {
+	width: 100px;
+	text-align: right;
+}
+#order .delivery_options_address .delivery_option_logo, #order .delivery_option_carrier .delivery_option_logo, #orderopc .delivery_options_address .delivery_option_logo {
+	padding-left:10px;
+	width: 190px;
+}
+#order .delivery_options_address .delivery_option_logo img, #orderopc .delivery_options_address .delivery_option_logo img { height: 40px; }
+#orderopc .delivery_option_carrier {
+	margin: 5px 20px;
+	padding: 5px;
+	width: 500px;
+	border: 1px solid #bdc2c9;
+	background: white;
+}
+#order .delivery_option_carrier {
+	margin: 0 0 0 45px;
+	width: 585px;
+	background: white;
+}
+
 .order_carrier_content {
 	padding:15px;
    border:1px solid #ccc;
@@ -1611,16 +1683,18 @@ form#sendComment h3 {font-size:14px;}
 }
 
 .star {
+	position: relative;
+	top:2px;
 	float: left;
-	width: 17px;
-	height: 15px;
+	height: 12px;
+	width: 12px;
 	overflow: hidden;
 	text-indent: -999em;
 	cursor: pointer
 }
 .star, .star a { background: url(../../../modules/productcomments/img/star.gif) no-repeat 0 0 }
-div.star_on a { background-position: 0 -16px }
-div.star_hover a, div.star a:hover { background-position: 0 -32px }
+div.star_on a { background-position: 0 -12px }
+div.star_hover a, div.star a:hover { background-position: 0 -12px }
 
 
 /* ************************************************************************************************
