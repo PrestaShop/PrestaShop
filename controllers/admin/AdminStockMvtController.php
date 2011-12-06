@@ -226,7 +226,7 @@ class AdminStockMvtControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		$this->toolbar_btn['export-csv'] = array(
+		$this->toolbar_btn['export-stock-mvt-csv'] = array(
 			'short' => 'Export this list as CSV',
 			'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv&amp;id_warehouse='.(int)$this->getCurrentWarehouseId(),
 			'desc' => $this->l('Export (CSV)'),
