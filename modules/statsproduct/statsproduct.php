@@ -99,15 +99,16 @@ class StatsProduct extends ModuleGraph
 
 	private function getProducts($id_lang)
 	{
-		$sql = 'SELECT p.`id_product`, p.reference, pl.`name`, IFNULL(
-					(SELECT SUM(pa.quantity) FROM '._DB_PREFIX_.'product_attribute pa WHERE pa.id_product = p.id_product), p.quantity) as quantity
+		$sql = 'SELECT p.`id_product`, p.reference, pl.`name`, IFNULL(stock.quantity, 0) as quantity
 				FROM `'._DB_PREFIX_.'product` p
+				'.Product::sqlStock('p', 0).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.`id_product` = pl.`id_product`'.$this->context->shop->addSqlRestrictionOnLang('pl').'
 				'.$this->context->shop->addSqlAssociation('product', 'p').'
 				'.(Tools::getValue('id_category') ? 'LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`' : '').'
 				WHERE pl.`id_lang` = '.(int)$id_lang.'
 					'.(Tools::getValue('id_category') ? 'AND cp.id_category = '.(int)Tools::getValue('id_category') : '').'
 				ORDER BY pl.`name`';
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
@@ -258,7 +259,7 @@ class StatsProduct extends ModuleGraph
 				<tr>
 					<th>'.$this->l('Ref.').'</th>
 					<th>'.$this->l('Name').'</th>
-					<th>'.$this->l('Stock').'</th>
+					<th>'.$this->l('Available Quantity for sale').'</th>
 				</tr>
 			</thead><tbody>';
 
@@ -283,7 +284,7 @@ class StatsProduct extends ModuleGraph
 				'.$this->l('After choosing a category and selecting a product, informational graphs will appear. Then, you will be able to analyze them.').'
 				<ul>
 					<li class="bullet">'.$this->l('If you notice that a product is successful and often purchased, but viewed infrequently, you should put it more prominently on your webshop front-office.').'</li>
-					<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased, 
+					<li class="bullet">'.$this->l('On the other hand, if a product has many viewings but is not often purchased,
 						we advise you to check or modify this product\'s information, description and photography again.').'
 					</li>
 				</ul>

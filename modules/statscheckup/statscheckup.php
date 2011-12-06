@@ -110,7 +110,7 @@ class StatsCheckUp extends Module
 			1 => '<img src="../modules/'.$this->name.'/orange.png" alt="'.$this->l('average').'" />',
 			2 => '<img src="../modules/'.$this->name.'/green.png" alt="'.$this->l('good').'" />'
 		);
-		$tokenProducts = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)Context::getContext()->employee->id);
+		$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)Context::getContext()->employee->id);
 		$divisor = 4;
 		$totals = array('products' => 0, 'active' => 0, 'images' => 0, 'sales' => 0, 'stock' => 0);
 		foreach ($languages as $language)
@@ -138,12 +138,10 @@ class StatsCheckUp extends Module
 					WHERE od.product_id = p.id_product
 						AND o.invoice_date BETWEEN '.ModuleGraph::getDateBetween().'
 						'.$this->sqlShopRestriction(Shop::SHARE_ORDER, 'o').'
-				) as nbSales, IFNULL((
-					SELECT SUM(pa.quantity)
-					FROM '._DB_PREFIX_.'product_attribute pa
-					WHERE pa.id_product = p.id_product
-				), p.quantity) as stock
+				) as nbSales,
+				IFNULL(stock.quantity, 0) as stock
 				FROM '._DB_PREFIX_.'product p
+				'.Product::sqlStock('p', 0).'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl
 					ON (p.id_product = pl.id_product AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').')
 				'.$this->context->shop->addSqlAssociation('product', 'p').'
@@ -157,7 +155,7 @@ class StatsCheckUp extends Module
 			'DESCRIPTIONS' => array('name' => $this->l('Descriptions'), 'text' => $this->l('chars (without HTML)')),
 			'IMAGES' => array('name' => $this->l('Images'), 'text' => $this->l('images')),
 			'SALES' => array('name' => $this->l('Sales'), 'text' => $this->l('orders / month')),
-			'STOCK' => array('name' => $this->l('Stock'), 'text' => $this->l('items'))
+			'STOCK' => array('name' => $this->l('Available quantities for sale'), 'text' => $this->l('items'))
 		);
 
 		$this->html = '
@@ -213,7 +211,7 @@ class StatsCheckUp extends Module
 		$this->html .= '
 				<th>'.$this->l('Images').'</th>
 				<th>'.$this->l('Sales').'</th>
-				<th>'.$this->l('Stock').'</th>
+				<th>'.$this->l('Available quantities for sale').'</th>
 				<th>'.$this->l('Global').'</th>
 			</tr>';
 		foreach ($result as $row)
@@ -246,7 +244,7 @@ class StatsCheckUp extends Module
 
 			$this->html .= '<tr>
 				<td>'.$row['id_product'].'</td>
-				<td style="text-align:left"><a href="index.php?tab=AdminCatalog&updateproduct&id_product='.$row['id_product'].'&token='.$tokenProducts.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
+				<td style="text-align:left"><a href="index.php?tab=AdminProducts&updateproduct&id_product='.$row['id_product'].'&token='.$tokenProducts.'">'.Tools::substr($row['name'], 0, 42).'</a></td>
 				<td>'.$arrayColors[$scores['active']].'</td>';
 			foreach ($languages as $language)
 				if (isset($row['desclength_'.$language['iso_code']]))
@@ -286,7 +284,7 @@ class StatsCheckUp extends Module
 		$this->html .= '
 				<th>'.$this->l('Images').'</th>
 				<th>'.$this->l('Sales').'</th>
-				<th>'.$this->l('Stock').'</th>
+				<th>'.$this->l('Available quantities for sale').'</th>
 				<th>'.$this->l('Global').'</th>
 			</tr>
 			<tr>
