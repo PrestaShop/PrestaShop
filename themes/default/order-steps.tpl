@@ -28,6 +28,11 @@
 {capture name="url_back"}
 {if isset($back) && $back}back={$back}{/if}
 {/capture}
+
+{if !isset($multi_shipping)}
+	{assign var='multi_shipping' value='0'}
+{/if}
+
 {if !$opc}
 <!-- Steps -->
 <ul class="step" id="order_step">
