@@ -133,6 +133,20 @@ class ToolsCore
 	}
 
 	/**
+	 * getShopProtocol return the available protocol for the current shop in use
+	 * SSL if Configuration is set on and available for the server
+	 * @static
+	 * @return String
+	 */
+	public static function getShopProtocol()
+	{
+		$id_shop = Context::getContext()->shop()->id;
+		$protocol = (Configuration::get('PS_SSL_ENABLED', null, null, $id_shop) || (!empty($_SERVER['HTTPS'])
+			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+		return $protocol;
+	}
+
+	/**
 	 * getProtocol return the set protocol according to configuration (http[s])
 	 * @param Boolean true if require ssl
 	 * @return String (http|https)
