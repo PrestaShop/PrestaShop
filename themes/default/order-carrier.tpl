@@ -127,7 +127,6 @@
 											{/if}
 										{/foreach}
 									{else}
-										{$carrier.instance->name}
 									{/if}
 								</td>
 								<td>
