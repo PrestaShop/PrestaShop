@@ -167,7 +167,7 @@ class AdminProductsControllerCore extends AdminController
 		$_POST['height'] = empty($_POST['height']) ? '0' : str_replace(',', '.', $_POST['height']);
 		$_POST['depth'] = empty($_POST['depth']) ? '0' : str_replace(',', '.', $_POST['depth']);
 		$_POST['weight'] = empty($_POST['weight']) ? '0' : str_replace(',', '.', $_POST['weight']);
-		if ($_POST['unit_price'] != null)
+		if (Tools::getIsset('unit_price') != null)
 		$object->unit_price = str_replace(',', '.', $_POST['unit_price']);
 		if (array_key_exists('ecotax', $_POST) && $_POST['ecotax'] != null)
 			$object->ecotax = str_replace(',', '.', $_POST['ecotax']);
