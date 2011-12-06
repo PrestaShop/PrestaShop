@@ -3,7 +3,7 @@
 	<h4>{l s='Product global information'}</h4>
 	<script type="text/javascript">
 		var token = '{$token}';
-		var id_product = {$product->id};
+		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
 
 		{$combinationImagesJs}
 		$(document).ready(function(){
