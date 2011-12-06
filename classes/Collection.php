@@ -229,13 +229,31 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 		return $this->results[$offset];
 	}
 
+	/**
+	 * Add an element in the collection
+	 *
+	 * @param $offset
+	 * @param $value
+	 */
 	public function offsetSet($offset, $value)
 	{
-		throw new PrestashopException('It is forbidden to override a result in a collection');
+		if (!$value instanceof $this->classname)
+			throw new PrestashopException('You cannot add an element which is not an instance of '.$this->classname);
+
+		$this->getAll();
+		if (is_null($offset))
+			$this->results[] = $value;
+		else
+			$this->results[$offset] = $value;
 	}
 
+	/**
+	 * Delete an element from the collection
+	 * 
+	 * @param $offset
+	 */
 	public function offsetUnset($offset)
 	{
-		throw new PrestashopException('It is forbidden to unset a result in a collection');
+		unset($this->results[$offset]);
 	}
 }
