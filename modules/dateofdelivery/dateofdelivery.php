@@ -36,7 +36,7 @@ class DateOfDelivery extends Module
 	{
 		$this->name = 'dateofdelivery';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		
@@ -48,8 +48,11 @@ class DateOfDelivery extends Module
 	
 	public function install()
 	{	
-		if (!parent::install() OR !$this->registerHook('beforeCarrier') OR !$this->registerHook('orderDetailDisplayed'))
-			return false;
+		if (!parent::install()
+            OR !$this->registerHook('beforeCarrier')
+            OR !$this->registerHook('orderDetailDisplayed')
+            OR !$this->registerHook('displayPDFInvoice'))
+			    return false;
 		
 		if (!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'dateofdelivery_carrier_rule` (
@@ -137,6 +140,34 @@ class DateOfDelivery extends Module
 		
 		return $this->display(__FILE__, 'orderDetail.tpl');
 	}
+
+    /**
+     * Displays the delivery dates on the invoice
+     *
+     * @param $params contains an instance of OrderInvoice
+     * @return string
+     *
+     */
+    public function hookDisplayPDFInvoice($params)
+    {
+        $order_invoice = $params['object'];
+        if (!($order_invoice instanceof OrderInvoice))
+            return;
+
+        $order = new Order((int)$order_invoice->id_order);
+
+        $oos = false; // For out of stock management
+        foreach ($order->getProducts() as $product)
+            if ($product['product_quantity_in_stock'] < 1)
+                $oos = true;
+
+        $id_carrier = (int)OrderInvoice::getCarrierId($order_invoice->id);
+        $return = '';
+        if ($datesDelivery = $this->_getDatesOfDelivery($id_carrier, $oos, $order_invoice->date_add))
+            $return = $this->l('Approximate date of delivery is between').' '.$datesDelivery[0].' '.$this->l('and').' '.$datesDelivery[1];
+
+        return $return;
+    }
 
 	private function _postProcess()
 	{
@@ -428,7 +459,14 @@ class DateOfDelivery extends Module
 		WHERE `id_carrier` = '.(int)($id_carrier).'
 		'.((int)$id_carrier_rule != 0 ? 'AND `id_carrier_rule` != '.(int)($id_carrier_rule) : ''));
 	}
-	
+
+    /**
+     * @param $id_carrier
+     * @param bool $product_oos
+     * @param null $date
+     *
+     * @return array|bool returns the min & max delivery date
+     */
 	private function _getDatesOfDelivery($id_carrier, $product_oos = false, $date = null)
 	{
 		if (!(int)($id_carrier))
@@ -466,7 +504,7 @@ class DateOfDelivery extends Module
 		}
 		if (!$carrier_rule['delivery_sunday'] AND date('l', $date_maximal_time) == 'Sunday')
 			$date_maximal_time += 24 * 3600;
-		
+
 		/*
 		$this->l('Sunday');
 		$this->l('Monday');

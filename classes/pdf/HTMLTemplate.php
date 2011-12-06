@@ -101,9 +101,15 @@ abstract class HTMLTemplateCore
 		$template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
 		$hook_name = 'displayPDF'.$template;
 
+//        p('='.Hook::exec($hook_name, array('object' => $object)));
+
 		$this->smarty->assign(array(
-			'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object))
+			'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
+            'kikoo' => 'lol'
 		));
+
+
+
 	}
 
 	/**
