@@ -1586,12 +1586,14 @@ class BlockLayered extends Module
 				$this->context->controller->addJQueryUI('ui.sortable');
 				$this->context->controller->addJQueryUI('ui.draggable');
 				$this->context->controller->addJQueryUI('effects.transfer');
+				$id_lang = Context::getContext()->cookie->id_lang;
 			}
 			else
 			{
 				$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
 					<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
 					<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
+				$id_lang = (int)$cookie->id_lang;
 				
 			}
 			
@@ -1642,7 +1644,7 @@ class BlockLayered extends Module
 						{
 							type: \'GET\',
 							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php\',
-							data: \'layered_token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&\'
+							data: \'layered_token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&id_lang='.$id_lang.'&\'
 								+(all ? \'\' : $(\'input[name="categoryBox[]"]\').serialize()+\'&\')
 								+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter) : \'\'),
 							success: function(result)
