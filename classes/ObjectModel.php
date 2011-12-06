@@ -864,7 +864,7 @@ abstract class ObjectModelCore
 		}
 
 		if (!empty($sql))
-			return Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
+			return (bool)Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
 		return true;
 	}
 
