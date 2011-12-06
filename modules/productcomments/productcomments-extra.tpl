@@ -145,7 +145,7 @@
 				{if $criterions|@count > 0}
 					<ul class="grade_content clearfix">
 					{section loop=$criterions name=i start=0 step=1}
-						<li>
+						<li class="clearfix">
 							<span>
 								<input type="hidden" name="id_product_comment_criterion_{$smarty.section.i.iteration}" value="{$criterions[i].id_product_comment_criterion|intval}" />
 								{$criterions[i].name|escape:'html':'UTF-8'}:&nbsp;

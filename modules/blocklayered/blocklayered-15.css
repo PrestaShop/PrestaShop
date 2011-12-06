@@ -22,6 +22,16 @@
 	float: right;
 	padding-right: 5px;
 }
+#layered_block_left span.layered_close a,
+#layered_block_left span.layered_close a {
+	display:block;
+	height:13px;
+	width:13px;
+	text-decoration: none;
+	text-indent:-5000px;
+	background:url(img/icon/less.gif) no-repeat 2px 2px;
+}
+
 #layered_block_left .layered_subtitle {
 	display: inline-block;
 	font-weight: bold;
