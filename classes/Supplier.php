@@ -59,9 +59,15 @@ class SupplierCore extends ObjectModel
 	/** @var boolean active */
 	public $active;
 
+	/**
+	 * @since 1.5.0
+	 * @var int address
+	 * */
+	public $id_address;
+
  	protected $fieldsRequired = array('name');
  	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('name' => 'isCatalogName');
+ 	protected $fieldsValidate = array('name' => 'isCatalogName', 'id_address' => 'isUnsignedId');
 	protected $fieldsSizeLang = array('meta_title' => 128, 'meta_description' => 255, 'meta_keywords' => 255);
 	protected $fieldsValidateLang = array(
 		'description' => 'isGenericName',
@@ -104,6 +110,7 @@ class SupplierCore extends ObjectModel
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
 		$fields['active'] = (int)$this->active;
+		$fields['id_address'] = (int)$this->id_address;
 		return $fields;
 	}
 
