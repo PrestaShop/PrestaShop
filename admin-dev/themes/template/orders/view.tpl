@@ -672,7 +672,7 @@
 		{foreach from=$messages item=message}
 			<div style="overflow:auto; width:400px;" {if $message['is_new_for_me']}class="new_message"{/if}>
 			{if ($message['is_new_for_me'])}
-				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.get.REQUEST_URI}&token={$smarty.get.token}&messageReaded={$message['id_message']}"><img src="../img/admin/enabled.gif" alt="" /></a>
+				<a class="new_message" title="{l s='Mark this message as \'viewed\''}" href="{$smarty.server.REQUEST_URI}&token={$smarty.get.token}&messageReaded={$message['id_message']}"><img src="../img/admin/enabled.gif" alt="" /></a>
 			{/if}
 			{l s='At'} <i>{dateFormat date=$message['date_add']}
 			</i> {l s='from'} <b>{if ($message['elastname'])}{$message['efirstname']} {$message['elastname']}{else}{$message['cfirstname']} {$message['clastname']}{/if}</b>
