@@ -300,9 +300,9 @@ function updateDisplay()
 		var tax = (taxRate / 100) + 1;
 
 		var display_specific_price;
-		if (selectedCombination['specific_price'])
+		if (selectedCombination.specific_price)
 		{
-			display_specific_price = selectedCombination['specific_price'].price;
+			display_specific_price = selectedCombination.specific_price['price'];
 			if (selectedCombination['specific_price'].reduction_type == 'percentage')
 			{
 				$('#reduction_amount').hide();
@@ -318,25 +318,24 @@ function updateDisplay()
 		}
 		else
 		{
-			display_specific_price = specific_price;
-			if (display_specific_price)
-			{
-				if (product_specific_price.reduction_type == 'percentage')
-				{
-					$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction*100);			
-					$('#reduction_percent').show();
-				}
-				else
-					$('#reduction_percent').hide();
-				if (productPriceWithoutRedution < productPrice)
-					$('#old_price_display,#old_price_display_taxes').show();
-			}
+			display_specific_price = product_specific_price['price'];
+			if (product_specific_price['reduction_type'] == 'percentage')
+				$('#reduction_percent_display').html(product_specific_price['specific_price'].reduction_percent);
 		}
 		
-		if (display_specific_price)
-			$('#discount_reduced_price,#old_price,#not_impacted_by_discount, #old_price_display, #old_price_display_taxes').show();
+		if (product_specific_price['reduction_type'] != '' || selectedCombination['specific_price'].reduction_type != '')
+			$('#discount_reduced_price,#old_price').show();
 		else
-			$('#discount_reduced_price,#old_price,#not_impacted_by_discount,#old_price_display,#old_price_display_taxes').hide();
+			$('#discount_reduced_price,#old_price').hide();
+		
+		if (product_specific_price['reduction_type'] == 'percentage' || selectedCombination['specific_price'].reduction_type == 'percentage')
+			$('#reduction_percent').show();
+		else
+			$('#reduction_percent').hide();
+		if (display_specific_price)
+			$('#not_impacted_by_discount').show();
+		else
+			$('#not_impacted_by_discount').hide();
 					
 		var taxExclPrice = (display_specific_price ? (specific_currency ? display_specific_price : display_specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
 
@@ -357,10 +356,18 @@ function updateDisplay()
 		}
 
 		var reduction = 0;
-		if (reduction_price || reduction_percent)
+		if (selectedCombination['specific_price'].reduction_price || selectedCombination['specific_price'].reduction_percent)
 		{
-			reduction = productPrice * (parseFloat(reduction_percent) / 100) + reduction_price;
-			if (reduction_price && (displayPrice || noTaxForThisProduct))
+			selectedCombination['specific_price'].reduction_price = (specific_currency ? selectedCombination['specific_price'].reduction_price : selectedCombination['specific_price'].reduction_price * currencyRate);
+			reduction = productPrice * (parseFloat(selectedCombination['specific_price'].reduction_percent) / 100) + selectedCombination['specific_price'].reduction_price;
+			if (selectedCombination['specific_price'].reduction_price && (displayPrice || noTaxForThisProduct))
+				reduction = ps_round(reduction / tax, 6);
+		}
+		else if (product_specific_price.reduction_price || product_specific_price.reduction_percent)
+		{
+			product_specific_price.reduction_price = (specific_currency ? product_specific_price.reduction_price : product_specific_price.reduction_price * currencyRate);
+			reduction = productPrice * (parseFloat(product_specific_price.reduction_percent) / 100) + product_specific_price.reduction_price;
+			if (product_specific_price.reduction_price && (displayPrice || noTaxForThisProduct))
 				reduction = ps_round(reduction / tax, 6);
 		}
 
@@ -383,7 +390,10 @@ function updateDisplay()
 			$('#our_price_display').text(formatCurrency(0, currencyFormat, currencySign, currencyBlank));
 
 		$('#old_price_display').text(formatCurrency(productPriceWithoutReduction, currencyFormat, currencySign, currencyBlank));
-
+		if (productPriceWithoutReduction > productPrice)
+			$('#old_price,#old_price_display,#old_price_display_taxes').show();
+		else
+			$('#old_price,#old_price_display,#old_price_display_taxes').hide();
 		/* Special feature: "Display product price tax excluded on product page" */
 		if (!noTaxForThisProduct)
 			var productPricePretaxed = productPrice / tax;
@@ -615,8 +625,8 @@ function getProductAttribute()
 	for (i in attributesCombinations)
 		for (a in tab_attributes)
 			if (attributesCombinations[i]['id_attribute'] == tab_attributes[a])
-				request += '&'+attributesCombinations[i]['group']+'='+attributesCombinations[i]['attribute'];
-	request = request.replace(request.substring(0, 1), '#');
+				request += '/'+attributesCombinations[i]['group']+'-'+attributesCombinations[i]['attribute'];
+	request = request.replace(request.substring(0, 1), '#/');
 	url = window.location+'';
 
 	// redirection
@@ -626,37 +636,60 @@ function getProductAttribute()
 }
 
 $(document).ready(function(){
-	url = window.location+'';
-	// if we need to load a specific combination
-	if (url.indexOf('#') != -1)
-	{
-		// get the params to fill
-		params = url.substring(url.indexOf('#') + 1, url.length);
-		tabParams = params.split('&');
-		tabValues = new Array();
-		for (i in tabParams)
-			tabValues.push(tabParams[i].split('='));
-		product_id = $('#product_page_product_id').val();
-		// fill html with values
-		$('.color_pick').removeClass('selected');
-		count = 0;
-		for (z in tabValues)
-			for (a in attributesCombinations)
-				if (attributesCombinations[a]['group'] == tabValues[z][0]
-					&& attributesCombinations[a]['attribute'] == tabValues[z][1])
-				{
-					count++;
-					// add class 'selected' to the selected color
-					$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
-					$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', 'checked');
-					$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
-					$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
-				}
-		// find combination
-		if (count == tabValues.length)
-			findCombination();
-		// no combination found = removing attributes from url
-		else
-			window.location = url.substring(0, url.indexOf('#'));
-	}
+	original_url = window.location+'';
+	first_url_check = true;
+	checkUrl();
+	initLocationChange();
 });
+
+function initLocationChange(time)
+{
+	if(!time) time = 500;
+	setInterval(checkUrl, time);
+}
+
+function checkUrl()
+{
+	if (original_url != window.location || first_url_check)
+	{
+		first_url_check = false;
+		url = window.location+'';
+		// if we need to load a specific combination
+		if (url.indexOf('#/') != -1)
+		{
+			// get the params to fill from a "normal" url
+			params = url.substring(url.indexOf('#') + 1, url.length);
+			tabParams = params.split('/');
+			tabValues = new Array();
+			if (tabParams[0] == '')
+				tabParams.shift();
+			for (i in tabParams)
+				tabValues.push(tabParams[i].split('-'));
+			product_id = $('#product_page_product_id').val();
+			// fill html with values
+			$('.color_pick').removeClass('selected');
+			count = 0;
+			for (z in tabValues)
+				for (a in attributesCombinations)
+					if (attributesCombinations[a]['group'] == tabValues[z][0]
+						&& attributesCombinations[a]['attribute'] == tabValues[z][1])
+					{
+						count++;
+						// add class 'selected' to the selected color
+						$('#color_'+attributesCombinations[a]['id_attribute']).addClass('selected');
+						$('input:radio[value='+attributesCombinations[a]['id_attribute']+']').attr('checked', 'checked');
+						$('input:hidden[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+						$('select[name=group_'+attributesCombinations[a]['id_attribute_group']+']').val(attributesCombinations[a]['id_attribute']);
+					}
+			// find combination
+			if (count > 0)
+			{
+				findCombination();
+				original_url = window.location+'';
+			}
+			// no combination found = removing attributes from url
+			else
+				window.location = url.substring(0, url.indexOf('#'));
+		}
+	}
+}
