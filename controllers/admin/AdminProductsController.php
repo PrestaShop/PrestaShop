@@ -2022,6 +2022,14 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
+			// Get all id_product_attribute
+			$attributes = $product->getAttributesResume($this->context->language->id);
+			if (empty($attributes))
+				$attributes[] = array(
+					'id_product_attribute' => 0,
+					'attribute_designation' => ''
+				);
+
 			// Get all available suppliers
 			$suppliers = Supplier::getSuppliers();
 
@@ -2044,7 +2052,7 @@ class AdminProductsControllerCore extends AdminController
 				if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate))
 				{
 					$associated_supplier->delete();
-					unset($associated_suppliers[$key]);
+					unset($associated_supplier);
 				}
 
 			// Associate suppliers
@@ -2068,14 +2076,6 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
-
-			// Get all id_product_attribute
-			$attributes = $product->getAttributesResume($this->context->language->id);
-			if (empty($attributes))
-				$attributes[] = array(
-					'id_product_attribute' => 0,
-					'attribute_designation' => ''
-				);
 
 			// Manage references and prices
 			foreach ($attributes as $attribute)
@@ -2148,7 +2148,37 @@ class AdminProductsControllerCore extends AdminController
 							}
 
 							if ($product->id_supplier == $supplier->id_supplier)
-								$product->wholesale_price = Tools::convertPrice($price, $id_currency);
+							{
+								if ((int)$attribute['id_product_attribute'] > 0)
+								{
+									Db::getInstance()->execute('
+										UPDATE '._DB_PREFIX_.'product_attribute
+										SET supplier_reference = "'.$reference.'",
+										wholesale_price = '.(float)Tools::convertPrice($price, $id_currency).'
+										WHERE id_product = '.(int)$product->id.'
+										AND id_product_attribute = '.(int)$attribute['id_product_attribute'].'
+										LIMIT 1
+									');
+								}
+								else
+								{
+									$product->wholesale_price = Tools::convertPrice($price, $id_currency); //converted in the default currency
+									$product->supplier_reference = $reference;
+									$update_product = true;
+								}
+							}
+						}
+					}
+					else
+					{
+						//int attribute with default values if possible
+						if ((int)$attribute['id_product_attribute'] > 0)
+						{
+							$product_supplier = new ProductSupplier();
+							$product_supplier->id_product = $product->id;
+							$product_supplier->id_product_attribute = (int)$attribute['id_product_attribute'];
+							$product_supplier->id_supplier = $supplier->id_supplier;
+							$product_supplier->save();
 						}
 					}
 

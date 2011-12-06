@@ -103,7 +103,7 @@ class StatsBestProducts extends ModuleGrid
 			),
 			array(
 				'id' => 'quantity',
-				'header' => $this->l('Available Quantity for sale'),
+				'header' => $this->l('Available quantity for sale'),
 				'dataIndex' => 'quantity',
 				'width' => 150,
 				'align' => 'right'
