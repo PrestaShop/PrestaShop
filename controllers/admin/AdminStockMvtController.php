@@ -203,6 +203,9 @@ class AdminStockMvtControllerCore extends AdminController
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		if (Tools::isSubmit('csv'))
+			$limit = false;
+
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		//If there is a field product_name in the list, check if this field is null and display standard message
@@ -253,18 +256,22 @@ class AdminStockMvtControllerCore extends AdminController
         header('Content-disposition: attachment; filename="'.$filename);
 
 		// puts keys
-		$keys = array('id_order', 'id_supply_order', 'firstname', 'lastname', 'quantity',
-					  'date', 'sign', 'price_te', 'product_name', 'label', 'reference', 'ean13', 'upc');
+		$keys = array('id_order', 'id_supply_order', 'emloyee_firstname', 'employee_lastname', 'physical_quantity',
+					  'date_add', 'sign', 'price_te', 'product_name', 'label', 'product_reference', 'product_ean13', 'product_upc');
 		echo sprintf("%s\n", implode(';', $keys));
+
 
 		// puts rows
 		foreach ($this->_list as $row)
 		{
-			// unsets not needed keys
-			unset($row['id_stock_mvt'], $row['id_stock'], $row['id_stock_mvt_reason'],
-				  $row['id_employee'], $row['last_wa'], $row['current_wa'], $row['referer'], $row['id_currency'], $row['employee']);
+			$row_csv = array($row['id_order'], $row['id_supply_order'], $row['employee_firstname'],
+							 $row['employee_lastname'], $row['physical_quantity'], $row['date_add'],
+							 $row['sign'], $row['price_te'], $row['product_name'],
+							 $row['reason'], $row['product_reference'], $row['product_ean13'], $row['product_upc']
+			);
+
 			// puts one row
-			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row)));
+			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row_csv)));
 		}
 	}
 
