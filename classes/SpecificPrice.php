@@ -286,7 +286,7 @@ class SpecificPriceCore extends ObjectModel
 		if (!self::isFeatureActive())
 			return array();
 
-		$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)$id_shop.') AND
@@ -301,9 +301,9 @@ class SpecificPriceCore extends ObjectModel
 					)
 					AND
 					`reduction` > 0
-		', false);
+		');
 		$ids_product = array();
-		while ($row = DB::getInstance()->nextRow($resource))
+		foreach ($results as $row)
 			$ids_product[] = (int)$row['id_product'];
 		return $ids_product;
 	}

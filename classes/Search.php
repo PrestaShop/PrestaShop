@@ -219,16 +219,15 @@ class SearchCore
 						SELECT id_group FROM '._DB_PREFIX_.'customer_group
 						WHERE id_customer = '.(int)$id_customer.'
 					)');
-		$result = $db->executeS($sql, false);
+		$results = $db->executeS($sql);
 
 		$eligibleProducts = array();
-		while ($row = $db->nextRow($result))
+		foreach ($results as $row)
 			$eligibleProducts[] = $row['id_product'];
 		foreach ($intersectArray as $query)
 		{
-			$result = $db->executeS($query, false);
 			$eligibleProducts2 = array();
-			while ($row = $db->nextRow($result))
+			foreach ($db->executeS($query) as $row)
 				$eligibleProducts2[] = $row['id_product'];
 
 			$eligibleProducts = array_intersect($eligibleProducts, $eligibleProducts2);
@@ -418,19 +417,18 @@ class SearchCore
 			'features' => Configuration::get('PS_SEARCH_WEIGHT_FEATURE')
 		);
 
-		// Those are kind of global variables required to save the processed data in the database every X occurences, in order to avoid overloading MySQL
+		// Those are kind of global variables required to save the processed data in the database every X occurrences, in order to avoid overloading MySQL
 		$countWords = 0;
 		$countProducts = 0;
 		$queryArray3 = array();
 		$productsArray = array();
 
 		// Every indexed words are cached into a PHP array
-		$wordIdsByWord = array();
 		$wordIds = Db::getInstance()->executeS('
-		SELECT id_word, word, id_lang, id_shop
-		FROM '._DB_PREFIX_.'search_word', false);
+			SELECT id_word, word, id_lang, id_shop
+			FROM '._DB_PREFIX_.'search_word');
 		$wordIdsByWord = array();
-		while ($wordId = $db->nextRow($wordIds))
+		foreach ($wordIds as $wordId)
 		{
 			if (!isset($wordIdsByWord[$wordId['id_shop']][$wordId['id_lang']]))
 				$wordIdsByWord[$wordId['id_shop']][$wordId['id_lang']] = array();

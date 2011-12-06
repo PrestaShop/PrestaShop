@@ -3226,16 +3226,15 @@ class ProductCore extends ObjectModel
 		$sql = 'SELECT `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`
 				FROM `'._DB_PREFIX_.'product_download`
 				WHERE `id_product` = '.(int)$id_product_old;
-		$resource = Db::getInstance()->execute($sql);
-
-		if (!Db::getInstance()->NumRows())
+		$results = Db::getInstance()->executeS($sql);
+		if (!$results)
 			return true;
 
 		$query = 'INSERT INTO `'._DB_PREFIX_.'product_download`
 			(`id_product`, `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`)
 			VALUES';
 
-		while ($row = Db::getInstance()->nextRow($resource))
+		foreach ($results as $row)
 			$query .= ' ('.(int)$id_product_new.', \''.pSQL($row['display_filename']).'\', \''.pSQL($row['filename']).
 				'\', \''.pSQL($row['date_add']).'\', \''.pSQL($row['date_expiration']).'\', '.(int)$row['nb_days_accessible'].
 				', '.(int)$row['nb_downloadable'].', '.(int)$row['active'].'), '.(int)$row['is_shareable'].'),';

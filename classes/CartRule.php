@@ -260,12 +260,12 @@ class CartRuleCore extends ObjectModel
 			return array();
 
 		$productRules = array();
-		$result = Db::getInstance()->ExecuteS('
+		$results = Db::getInstance()->ExecuteS('
 		SELECT *
 		FROM '._DB_PREFIX_.'cart_rule_product_rule pr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_product_rule_value prv ON pr.id_product_rule = prv.id_product_rule
 		WHERE pr.id_cart_rule = '.(int)$this->id, false);
-		while ($row = Db::getInstance()->nextRow($result))
+		foreach ($results as $row)
 		{
 			if (!isset($productRules[$row['id_product_rule']]))
 				$productRules[$row['id_product_rule']] = array('quantity' => $row['quantity'], 'type' => $row['type'], 'values' => array());
