@@ -83,7 +83,7 @@ class StockMvtCore extends ObjectModel
 	 * @since 1.5.0
 	 * @var int Used when the movement is due to a supplier order
 	 */
-	public $id_supplier_order = null;
+	public $id_supply_order = null;
 
 	/**
 	 * @since 1.5.0
@@ -146,6 +146,7 @@ class StockMvtCore extends ObjectModel
  		'physical_quantity' => 'isUnsignedInt',
  	 	'id_stock_mvt_reason' => 'isUnsignedId',
  		'id_order' => 'isUnsignedId',
+ 		'id_supply_order' => 'isUnsignedId',
  		'sign' => 'isInt',
  		'last_wa' => 'isPrice',
  		'current_wa' => 'isPrice',
@@ -175,6 +176,7 @@ class StockMvtCore extends ObjectModel
 		$fields['physical_quantity'] = (int)$this->physical_quantity;
 		$fields['id_stock_mvt_reason'] = (int)$this->id_stock_mvt_reason;
 		$fields['id_order'] = (int)$this->id_order;
+		$fields['id_supply_order'] = (int)$this->id_supply_order;
 		$fields['sign'] = (int)$this->sign;
 		$fields['last_wa'] = (float)Tools::ps_round($this->last_wa, 6);
 		$fields['current_wa'] = (float)Tools::ps_round($this->current_wa, 6);
