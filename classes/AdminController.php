@@ -1190,6 +1190,7 @@ class AdminControllerCore extends Controller
 
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
+		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
 			if (Tab::checkTabRights($tab['id_tab']) === true)
@@ -1214,7 +1215,7 @@ class AdminControllerCore extends Controller
 				if (!file_exists(dirname(_PS_ROOT_DIR_).$img))
 					$img = str_replace('png', 'gif', $img);
 				// tab[class_name] does not contains the "Controller" suffix
-				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || (Tab::getCurrentParentId() == $tab['id_tab']);
+				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
 				$tabs[$index]['img'] = $img;
 				$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
@@ -1679,7 +1680,9 @@ class AdminControllerCore extends Controller
 		else
 			Employee::getEmployeeShopAccess((int)$this->context->employee->id);
 
-		$this->context->shop = new Shop($shop_id);
+		// Replace existing shop if necessary
+		if ($this->context->shop->id != $shop_id)
+			$this->context->shop = new Shop($shop_id);
 
 		if ($this->ajax && method_exists($this, 'ajaxPreprocess'))
 			$this->ajaxPreProcess();
