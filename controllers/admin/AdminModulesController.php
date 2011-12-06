@@ -263,7 +263,9 @@ class AdminModulesControllerCore extends AdminController
 		$success = false;
 		if (substr($file, -4) == '.zip')
 		{
-			if (!Tools::ZipExtract($file, _PS_MODULE_DIR_))
+			if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
+				$success = true;
+			else
 				$this->_errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
 		}
 		else
@@ -400,10 +402,6 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessDownload()
 	{
-		// Check the flag
-		if (Tools::getValue('enable') === false)
-			return false;
-
 	 	// PrestaShop demo mode
 		if (_PS_MODE_DEMO_)
 		{
