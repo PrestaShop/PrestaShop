@@ -49,7 +49,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 	('BLOCKADVERT_LINK', 0, NOW(), NOW()),
 	('BLOCKSTORE_IMG', 'store.jpg', NOW(), NOW());
 
-INSERT INTO `PREFIX_module` (`id_module`, `name`, `active`) VALUES (1, 'homefeatured', 1),(2, 'gsitemap', 1),(3, 'cheque', 1),(4, 'moneybookers', 1),(5, 'editorial', 1),
+INSERT INTO `PREFIX_module` (`id_module`, `name`, `active`) VALUES (1, 'homefeatured', 1),(2, 'gsitemap', 1),(3, 'cheque', 1),(4, 'moneybookers', 1),(5, 'homeslider', 1),
 (6, 'bankwire', 1),(7, 'blockadvertising', 1),(8, 'blockbestsellers', 1),(9, 'blockcart', 1),(10, 'blockcategories', 1),(11, 'blockcurrencies', 1),(12, 'blockcms', 1),
 (13, 'blocklanguages', 1),(14, 'blockmanufacturer', 1),(15, 'blockmyaccount', 1),(16, 'blocknewproducts', 1),(17, 'blockpaymentlogo', 1),(18, 'blockpermanentlinks', 1),
 (19, 'blocksearch', 1),(20, 'blockspecials', 1),(21, 'blocktags', 1),(22, 'blockuserinfo', 1),(24, 'blockviewed', 1),(25, 'statsdata', 1),
@@ -81,7 +81,6 @@ INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1
 /* 
  * rightcolumn=6, leftcolumn=7, home=8, header=9, top=14, 
  */
- 
 
  
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES 
@@ -94,7 +93,7 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 /* moneybooker */
 (4, 1, 3),
 (4, 4, 3),
-/* editorial */
+/* homeslider */
 (5, 8, 1),
 (5, 9, 7),
 /* bankwire */
@@ -234,8 +233,8 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 (65, 9, 24),
 (65, 6, 8),
 /* blocksupplier */
-(66, 7, 9),
-(67, 7, 10);
+(66, 7, 5),
+(67, 9, 25);
 
 CREATE TABLE `PREFIX_pagenotfound` (
   `id_pagenotfound` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -292,30 +291,6 @@ CREATE TABLE `PREFIX_cms_block_lang` (
 	`name` varchar(40) NOT NULL default '',
 	PRIMARY KEY (`id_cms_block`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_editorial` (
-	`id_editorial` int(10) unsigned NOT NULL auto_increment,
-	`body_home_logo_link` varchar(255) NOT NULL,
-	PRIMARY KEY (`id_editorial`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-CREATE TABLE `PREFIX_editorial_lang` (
-	`id_editorial` int(10) unsigned NOT NULL,
-	`id_lang` int(10) unsigned NOT NULL,
-	`body_title` varchar(255) NOT NULL,
-	`body_subheading` varchar(255) NOT NULL,
-	`body_paragraph` text NOT NULL,
-	`body_logo_subheading` varchar(255) NOT NULL,
-	PRIMARY KEY (`id_editorial`, `id_lang`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
-
-INSERT INTO `PREFIX_editorial` (`id_editorial`, `body_home_logo_link`) VALUES (1, 'http://www.prestashop.com');
-INSERT INTO `PREFIX_editorial_lang` (`id_editorial`, `id_lang`, `body_title`, `body_subheading`, `body_paragraph`, `body_logo_subheading`) VALUES
-(1, 1, 'Lorem ipsum dolor sit amet', 'Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>', 'Excepteur sint prestashop cupidatat non proident'),
-(1, 2, 'Lorem ipsum dolor sit amet', 'Excepteur sint occaecat cupidatat non proident', '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>', 'Lorem ipsum presta shop amet'),
-(1, 3, 'Lorem ipsum dolor sit amet', 'Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>', 'Excepteur sint prestashop cupidatat non proident'),
-(1, 4, 'Lorem ipsum dolor sit amet', 'Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>', 'Excepteur sint prestashop cupidatat non proident'),
-(1, 5, 'Lorem ipsum dolor sit amet', 'Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua', '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>', 'Excepteur sint prestashop cupidatat non proident');
 
 INSERT INTO `PREFIX_range_price` (`id_range_price`, `id_carrier`, `delimiter1`, `delimiter2`) VALUES (1, 2, 0, 10000);
 INSERT INTO `PREFIX_range_weight` (`id_range_weight`, `id_carrier`, `delimiter1`, `delimiter2`) VALUES (1, 2, 0, 10000);
@@ -1649,4 +1624,67 @@ CREATE TABLE IF NOT EXISTS `PREFIX_newsletter` (
 	`active` TINYINT(1) NOT NULL DEFAULT 0,
 	PRIMARY KEY(`id`)
 ) ENGINE=ENGINE_TYPE default CHARSET=utf8;
+
+			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider` (
+				`id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
+				`id_shop` int(10) unsigned NOT NULL,
+				PRIMARY KEY (`id_slide`, `id_shop`)
+			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
+
+			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider_slides` (
+			  `id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `position` int(10) unsigned NOT NULL DEFAULT '0',
+			  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+			  PRIMARY KEY (`id_slide`)
+			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
+			
+			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider_slides_lang` (
+			  `id_slide` int(10) unsigned NOT NULL,
+			  `id_lang` int(10) unsigned NOT NULL,
+			  `title` varchar(255) NOT NULL,
+			  `description` text NOT NULL,
+			  `legend` varchar(255) NOT NULL,
+			  `url` varchar(255) NOT NULL,
+			  `image` varchar(255) NOT NULL,
+			  PRIMARY KEY (`id_slide`,`id_lang`)
+			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
+
+INSERT INTO `PREFIX_configuration` (name, value)
+VALUES 
+("HOMESLIDER_WIDTH", "535"),
+("HOMESLIDER_HEIGHT", "300"),
+("HOMESLIDER_SPEED", "1300"),
+("HOMESLIDER_PAUSE", "7700");
+
+INSERT INTO `PREFIX_homeslider` (id_slide, id_shop) VALUES (1, 1),(2, 1), (3, 1), (4, 1), (5, 1);
+
+INSERT INTO `PREFIX_homeslider_slides` (id_slide, position, active) 
+VALUES (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1);
+
+INSERT INTO `PREFIX_homeslider_slides_lang` (id_slide, id_lang, title, description, legend, url, image) VALUES
+(1, 1, "Add Ons", "improve your e-commerce site by adding new features", "addons", "http://addons.prestashop.com", "sample-1.jpg"),
+(2, 1, "PrestaBox", "Your e-shop ready to use open in 10 minutes", "prestabox", "http://www.prestabox.com", "sample-2.jpg"),
+(3, 1, "Support", "contact PrestaShop Support team to help you in installing or configuring your software", "support", "http://support.prestashop.com", "sample-3.jpg"),
+(4, 1, "PHP.net", "", "PrestaShop use PHP, the open-source technology", "http://www.php.net", "sample-4.jpg"),
+(5, 1, "Smarty.net", "PrestaShop use the template engine Smarty (V3)", "Smarty", "http://www.smarty.net", "sample-5.jpg"),
+(1, 2, "Add Ons", "improve your e-commerce site by adding new features", "addons", "http://addons.prestashop.com", "sample-1.jpg"),
+(2, 2, "PrestaBox", "Your e-shop ready to use open in 10 minutes", "prestabox", "http://www.prestabox.com", "sample-2.jpg"),
+(3, 2, "Support", "contact PrestaShop Support team to help you in installing or configuring your software", "support", "http://support.prestashop.com", "sample-3.jpg"),
+(4, 2, "PHP.net", "", "PrestaShop use PHP, the open-source technology", "http://www.php.net", "sample-4.jpg"),
+(5, 2, "Smarty.net", "PrestaShop use the template engine Smarty (V3)", "Smarty", "http://www.smarty.net", "sample-5.jpg"),
+(1, 3, "Add Ons", "improve your e-commerce site by adding new features", "addons", "http://addons.prestashop.com", "sample-1.jpg"),
+(2, 3, "PrestaBox", "Your e-shop ready to use open in 10 minutes", "prestabox", "http://www.prestabox.com", "sample-2.jpg"),
+(3, 3, "Support", "contact PrestaShop Support team to help you in installing or configuring your software", "support", "http://support.prestashop.com", "sample-3.jpg"),
+(4, 3, "PHP.net", "", "PrestaShop use PHP, the open-source technology", "http://www.php.net", "sample-4.jpg"),
+(5, 3, "Smarty.net", "PrestaShop use the template engine Smarty (V3)", "Smarty", "http://www.smarty.net", "sample-5.jpg"),
+(1, 4, "Add Ons", "improve your e-commerce site by adding new features", "addons", "http://addons.prestashop.com", "sample-1.jpg"),
+(2, 4, "PrestaBox", "Your e-shop ready to use open in 10 minutes", "prestabox", "http://www.prestabox.com", "sample-2.jpg"),
+(3, 4, "Support", "contact PrestaShop Support team to help you in installing or configuring your software", "support", "http://support.prestashop.com", "sample-3.jpg"),
+(4, 4, "PHP.net", "", "PrestaShop use PHP, the open-source technology", "http://www.php.net", "sample-4.jpg"),
+(5, 4, "Smarty.net", "PrestaShop use the template engine Smarty (V3)", "Smarty", "http://www.smarty.net", "sample-5.jpg"),
+(1, 5, "Add Ons", "improve your e-commerce site by adding new features", "addons", "http://addons.prestashop.com", "sample-1.jpg"),
+(2, 5, "PrestaBox", "Your e-shop ready to use open in 10 minutes", "prestabox", "http://www.prestabox.com", "sample-2.jpg"),
+(3, 5, "Support", "contact PrestaShop Support team to help you in installing or configuring your software", "support", "http://support.prestashop.com", "sample-3.jpg"),
+(4, 5, "PHP.net", "", "PrestaShop use PHP, the open-source technology", "http://www.php.net", "sample-4.jpg"),
+(5, 5, "Smarty.net", "PrestaShop use the template engine Smarty (V3)", "Smarty", "http://www.smarty.net", "sample-5.jpg");
 
