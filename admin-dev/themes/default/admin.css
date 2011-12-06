@@ -177,8 +177,11 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-new-module { background-image: url(process-icon-new-module.png);}
 .toolbarBox .process-icon-new-module-addon { background-image: url(process-icon-new-module-addon.png);}
 .toolbarBox .process-icon-save-and-preview { background-image: url(process-icon-preview.png);}
+.toolbarBox .process-icon-export-stock-state-quantities-csv { background-image: url(process-icon-export-csv.png);}
+.toolbarBox .process-icon-export-stock-state-prices-csv { background-image: url(process-icon-export-csv-details.png);}
 .toolbarBox .process-icon-export-csv-orders { background-image: url(process-icon-export-csv.png);}
 .toolbarBox .process-icon-export-csv-details { background-image: url(process-icon-export-csv-details.png);}
+.toolbarBox .process-icon-export-stock-mvt-csv { background-image: url(process-icon-export-csv.png);}
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
@@ -351,7 +354,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}
 .blocLiveEdit h2 { margin:0; padding: 0 10px;}
 .blocLiveEdit p { padding: 0 10px;}
-.blocLiveEdit a.button {Êfloat: left; margin:10px; display: inline-block;}
+.blocLiveEdit a.button {ï¿½float: left; margin:10px; display: inline-block;}
 
 
 #modulePosition { width:100%; float:left; clear:left; margin-right:270px;}

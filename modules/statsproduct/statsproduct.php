@@ -259,7 +259,7 @@ class StatsProduct extends ModuleGraph
 				<tr>
 					<th>'.$this->l('Ref.').'</th>
 					<th>'.$this->l('Name').'</th>
-					<th>'.$this->l('Available Quantity for sale').'</th>
+					<th>'.$this->l('Available quantity for sale').'</th>
 				</tr>
 			</thead><tbody>';
 

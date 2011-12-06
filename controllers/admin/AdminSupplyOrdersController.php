@@ -1865,25 +1865,27 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		{
 			if ($manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true) <= $threshold)
 			{
+				// sets supply_order_detail
+				$supply_order_detail = new SupplyOrderDetail();
+				$supply_order_detail->id_supply_order = $supply_order->id;
+				$supply_order_detail->id_currency = $order_currency->id;
+				$supply_order_detail->id_product = $item['id_product'];
+				$supply_order_detail->id_product_attribute = $item['id_product_attribute'];
+				$supply_order_detail->reference = $item['reference'];
+				$supply_order_detail->supplier_reference = $item['supplier_reference'];
+				$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
+				$supply_order_detail->ean13 = $item['ean13'];
+				$supply_order_detail->upc = $item['upc'];
+				$supply_order_detail->quantity_expected = (int)$threshold;
+				$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
+
 				$product_currency = new Currency($item['id_currency']);
 				if (Validate::isLoadedObject($product_currency))
-				{
-					// sets supply_order_detail
-					$supply_order_detail = new SupplyOrderDetail();
-					$supply_order_detail->id_supply_order = $supply_order->id;
-					$supply_order_detail->id_currency = $order_currency->id;
-					$supply_order_detail->id_product = $item['id_product'];
-					$supply_order_detail->id_product_attribute = $item['id_product_attribute'];
-					$supply_order_detail->reference = $item['reference'];
-					$supply_order_detail->supplier_reference = $item['supplier_reference'];
-					$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
-					$supply_order_detail->ean13 = $item['ean13'];
-					$supply_order_detail->upc = $item['upc'];
-					$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
 					$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $order_currency, $product_currency);
-					$supply_order_detail->quantity_expected = (int)$threshold;
-					$supply_order_detail->save();
-				}
+				else
+					$supply_order_detail->unit_price_te = 0;
+
+				$supply_order_detail->save();
 			}
 		}
 	}
