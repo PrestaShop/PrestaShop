@@ -1621,10 +1621,11 @@ class CartCore extends ObjectModel
 		{
 			$delivery_option_list[$id_address] = array();
 			$carriers_price[$id_address] = array();
-			$common_carriers = array();
+			$common_carriers = null;
 			$best_price_carriers = array();
 			$best_grade_carriers = array();
-
+			$carriers_instance = array();
+			
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
@@ -1632,12 +1633,11 @@ class CartCore extends ObjectModel
 					return array();
 
 				$carriers_price[$id_address][$id_package] = array();
-				$carriers_instance = array();
 
-				if (empty($common_carriers))
+				if (is_null($common_carriers))
 					$common_carriers = $package['carrier_list'];
 				else
-					array_intersect($common_carriers, $package['carrier_list']);
+					$common_carriers = array_intersect($common_carriers, $package['carrier_list']);
 
 				$best_price = null;
 				$best_price_carrier = null;
@@ -1822,6 +1822,7 @@ class CartCore extends ObjectModel
 				$name = $carrier['instance']->name;
 				$img = $carrier['logo'];
 				$delay = $carrier['instance']->delay;
+				$delay = isset($delay[Context::getContext()->language->id]) ? $delay[Context::getContext()->language->id] : $delay[(int)Configuration::get('PS_LANG_DEFAULT')];
 			}
 			else
 			{
@@ -1835,7 +1836,7 @@ class CartCore extends ObjectModel
 			$carriers[] = array(
 				'name' => $name,
 				'img' => $img,
-				'delay' => $delay[Context::getContext()->language->id],
+				'delay' => $delay,
 				'price' => $price,
 				'price_tax_exc' => $price_tax_exc,
 				'id_carrier' => self::intifier($key), // Need to translate to an integer for retrocompatibility reason, in 1.4 template we used intval
