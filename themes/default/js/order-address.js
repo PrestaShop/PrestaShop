@@ -60,7 +60,7 @@ function updateAddressesDisplay(first_view)
 	else
 	{
 		$('#address_invoice_form:hidden').show('fast');
-		if ($('select#id_address_invoice').val())
+		if ($('#id_address_invoice').val())
 			updateAddressDisplay('invoice');
 		else
 		{
@@ -82,20 +82,23 @@ function updateAddressDisplay(addressType)
 	if (formatedAddressFieldsValuesList.length <= 0)
 		return false;
 
-	var idAddress = $('select#id_address_' + addressType + '').val();
+	var idAddress = $('#id_address_' + addressType + '').val();
 	buildAddressBlock(idAddress, addressType, $('#address_'+ addressType));
 
 	// change update link
 	var link = $('ul#address_' + addressType + ' li.address_update a').attr('href');
 	var expression = /id_address=\d+/;
-	link = link.replace(expression, 'id_address='+idAddress);
-	$('ul#address_' + addressType + ' li.address_update a').attr('href', link);
+	if (link)
+	{
+		link = link.replace(expression, 'id_address='+idAddress);
+		$('ul#address_' + addressType + ' li.address_update a').attr('href', link);
+	}
 }
 
 function updateAddresses()
 {
-	var idAddress_delivery = $('select#id_address_delivery').val();
-	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length == 1 ? idAddress_delivery : $('select#id_address_invoice').val();
+	var idAddress_delivery = $('#id_address_delivery').val();
+	var idAddress_invoice = $('input[type=checkbox]#addressesAreEquals:checked').length == 1 ? idAddress_delivery : $('#id_address_invoice').val();
    
    $.ajax({
            type: 'POST',
