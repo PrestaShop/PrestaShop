@@ -185,7 +185,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	public function initToolbar()
 	{
 		$this->toolbar_btn['back'] = array(
-			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product'),
+			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&action=Combinations',
 			'desc' => $this->l('Back to product')
 		);
 	}

@@ -67,7 +67,6 @@
 
 {if $generate}
 	<div class="module_confirmation conf confirm">
-		<img src="../img/admin/ok.gif" alt="" title="" style="margin-right:5px; float:left;" />
 		{$combinations_size} {l s='product(s) successfully created.'}
 	</div>
 {/if}
