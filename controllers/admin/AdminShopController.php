@@ -194,16 +194,25 @@ class AdminShopControllerCore extends AdminController
 			);
 		}
 		else
+		{
+			$options = array();
+			foreach (GroupShop::getGroupShops() as $group)
+				$options[] = array(
+					'id_group_shop' =>	$group->id,
+					'name' =>			$group->name,
+				);
+
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Group Shop:'),
 				'name' => 'id_group_shop',
 				'options' => array(
-					'query' => GroupShop::getGroupShops(),
+					'query' => $options,
 					'id' => 'id_group_shop',
 					'name' => 'name'
 				)
 			);
+		}
 
 		$categories = Category::getCategories($this->context->language->id, false, false);
 		$this->fields_form['input'][] = array(

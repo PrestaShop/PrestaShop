@@ -77,11 +77,11 @@ class GroupShopCore extends ObjectModel
 
 	public static function getGroupShops($active = true)
 	{
-		return Db::getInstance()->executeS('
-			SELECT *
-			FROM '._DB_PREFIX_.'group_shop
-			WHERE `deleted`= 0 AND `active`='.(int)$active
-		);
+		$groups = new Collection('GroupShop');
+		$groups->where('deleted = 0');
+		if ($active)
+			$groups->where('active = 1');
+		return $groups;
 	}
 
 	public function delete()
