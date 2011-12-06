@@ -1956,8 +1956,8 @@ ul.connectedSortable li.module_list {
 div#scrollTop a{
 	display:none;
 	background:url('../img/admin/scroll_top.png');
-	width:80px;
-	height:80px;
+	width:40px;
+	height:40px;
 	position:fixed;
 	bottom:30px;
 	right:30px;
