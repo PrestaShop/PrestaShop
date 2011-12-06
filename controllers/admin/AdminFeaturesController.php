@@ -94,7 +94,7 @@ class AdminFeaturesControllerCore extends AdminController
 	public function ajaxProcess()
 	{
 		// test if an id is submit
-		if (($id = Tools::getValue('id')) && Tools::isSubmit('id'))
+		if (($id = Tools::getValue('id')))
 		{
 			$this->table = 'feature_value';
 			$this->className = 'FeatureValue';
@@ -374,12 +374,18 @@ class AdminFeaturesControllerCore extends AdminController
 				$id = (int)Tools::getValue('id_feature_value');
 				$feature_value = new FeatureValue($id);
 				$feature_value->value = array();
+
+				if (!Tools::getValue('value_'.$this->context->language->id))
+					$this->_errors[] = Tools::displayError('The value is required for the default language.');
+
 				$languages = Language::getLanguages(false);
 					foreach ($languages as $language)
 						$feature_value->value[$language['id_lang']] = Tools::getValue('value_'.$language['id_lang']);
 				$feature_value->id_feature = Tools::getValue('id_feature');
 
-				if (isset($id) && !empty($id))
+				if (count($this->_errors) > 0)
+					return false;
+				else if (isset($id) && !empty($id))
 				{
 					// Update
 					if (!$feature_value->update())
