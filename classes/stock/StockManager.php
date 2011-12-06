@@ -88,12 +88,12 @@ class StockManagerCore implements StockManagerInterface
 				$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
 
 				// if this product is already in stock
-				if (count($stock_collection) > 0)
+				if ($stock_collection->count() > 0)
 				{
 					$stock_exists = true;
 
 					// for a warehouse using WA, there is one and only one stock for a given product
-					$stock = $stock_collection[0];
+					$stock = $stock_collection->current();
 
 					// calculates WA price
 					$last_wa = $stock->price_te;
@@ -128,12 +128,12 @@ class StockManagerCore implements StockManagerInterface
 				$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id, $price_te);
 
 				// if this product is already in stock
-				if (count($stock_collection) > 0)
+				if ($stock_collection->count() > 0)
 				{
 					$stock_exists = true;
 
 					// there is one and only one stock for a given product in a warehouse and at the current unit price
-					$stock = $stock_collection[0];
+					$stock = $stock_collection->current();
 
 					$stock_params = array(
 						'physical_quantity' => ($stock->physical_quantity + $quantity),
@@ -234,7 +234,7 @@ class StockManagerCore implements StockManagerInterface
 			$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
 
 			// check if the collection is loaded
-			if (count($stock_collection) <= 0)
+			if ($stock_collection->count() <= 0)
 				return $return;
 
 			$stock_history_qty_available = array();
@@ -249,7 +249,7 @@ class StockManagerCore implements StockManagerInterface
 				// case CUMP mode
 				case 'WA':
 					// There is one and only one stock for a given product in a warehouse in this mode
-					$stock = $stock_collection[0];
+					$stock = $stock_collection->current();
 
 					$mvt_params = array(
 						'id_stock' => $stock->id,
