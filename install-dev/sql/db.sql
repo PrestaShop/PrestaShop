@@ -23,6 +23,7 @@ CREATE TABLE `PREFIX_address` (
   `id_customer` int(10) unsigned NOT NULL default '0',
   `id_manufacturer` int(10) unsigned NOT NULL default '0',
   `id_supplier` int(10) unsigned NOT NULL default '0',
+  `id_warehouse` int(10) unsigned NOT NULL default '0',
   `alias` varchar(32) NOT NULL,
   `company` varchar(32) default NULL,
   `lastname` varchar(32) NOT NULL,
@@ -45,7 +46,8 @@ CREATE TABLE `PREFIX_address` (
   KEY `id_country` (`id_country`),
   KEY `id_state` (`id_state`),
   KEY `id_manufacturer` (`id_manufacturer`),
-  KEY `id_supplier` (`id_supplier`)
+  KEY `id_supplier` (`id_supplier`),
+  KEY `id_warehouse` (`id_warehouse`),
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_alias` (
@@ -1611,6 +1613,7 @@ CREATE TABLE `PREFIX_subdomain` (
 
 CREATE TABLE `PREFIX_supplier` (
   `id_supplier` int(10) unsigned NOT NULL auto_increment,
+  `id_address` int(10) unsigned NOT NULL,
   `name` varchar(64) NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
