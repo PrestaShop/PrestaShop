@@ -254,10 +254,12 @@ class CookieCore
 		{
 			/* Decrypt cookie content */
 			$content = $this->_cipherTool->decrypt($_COOKIE[$this->_name]);
-
+			//printf("\$content = %s<br />", $content);
+			
 			/* Get cookie checksum */
 			$checksum = crc32($this->_iv.substr($content, 0, strrpos($content, '¤') + 2));
-
+			//printf("\$checksum = %s<br />", $checksum);
+			
 			/* Unserialize cookie content */
 			$tmpTab = explode('¤', $content);
 			foreach ($tmpTab as $keyAndValue)
@@ -269,7 +271,8 @@ class CookieCore
 			/* Blowfish fix */
 			if (isset($this->_content['checksum']))
 				$this->_content['checksum'] = (int)($this->_content['checksum']);
-
+			//printf("\$this->_content['checksum'] = %s<br />", $this->_content['checksum']);
+			//die();
 			/* Check if cookie has not been modified */
 			if (!isset($this->_content['checksum']) || $this->_content['checksum'] != $checksum)
 				$this->logout();
