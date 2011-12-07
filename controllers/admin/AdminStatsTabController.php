@@ -47,6 +47,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		}
 		
 		$this->content .= $this->displayMenu();
+		$this->content .= $this->displayEngines();
 		$this->content .= $this->displayCalendar();
 		$this->content .= $this->displayStats();
 
