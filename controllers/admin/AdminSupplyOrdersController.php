@@ -343,19 +343,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouse();
 		$this->tpl_list_vars['filter_status'] = $this->getFilterStatus();
 
-		// adds export csv buttons
-		$this->toolbar_btn['export-csv-orders'] = array(
-			'short' => 'Export Orders',
-			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders',
-			'desc' => $this->l('Export Orders (CSV)'),
-		);
-
-		$this->toolbar_btn['export-csv-details'] = array(
-			'short' => 'Export Orders Details',
-			'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details',
-			'desc' => $this->l('Export Orders Details (CSV)'),
-		);
-
 		// access
 		unset($this->toolbar_btn['new']);
 		if ($this->tabAccess['add'] === '1')
@@ -395,6 +382,22 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if ($this->getFilterStatus() != 0)
 			$this->_where .= ' AND st.enclosed != 1';
 		$first_list = parent::renderList();
+
+		if (count($this->_list) > 0)
+		{
+			// adds export csv buttons
+			$this->toolbar_btn['export-csv-orders'] = array(
+				'short' => 'Export Orders',
+				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders',
+				'desc' => $this->l('Export Orders (CSV)'),
+			);
+
+			$this->toolbar_btn['export-csv-details'] = array(
+				'short' => 'Export Orders Details',
+				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details',
+				'desc' => $this->l('Export Orders Details (CSV)'),
+			);
+		}
 
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
 		{
@@ -1068,6 +1071,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			foreach ($this->_list as $entry)
 				$ids[] = $entry['id_supply_order'];
 
+			if (count($ids) <= 0)
+				return;
+
 			$orders = new Collection('SupplyOrder', $id_lang = (int)Context::getContext()->language->id);
 			$orders->where('is_template = 0');
 			$orders->where('id_supply_order IN('.implode(', ', $ids).')');
@@ -1087,6 +1093,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$ids = array();
 			foreach ($this->_list as $entry)
 				$ids[] = $entry['id_supply_order'];
+
+			if (count($ids) <= 0)
+				return;
 
 			// for each supply order
 			$keys = array('id_supply_order', 'id_product', 'id_product_attribute', 'reference', 'supplier_reference', 'ean13', 'upc', 'name',
