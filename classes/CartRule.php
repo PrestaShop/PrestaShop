@@ -59,7 +59,7 @@ class CartRuleCore extends ObjectModel
 
 	public static $definition = array(
 		'table' => 'cart_rule',
-		'identifier' => 'id_cart_rule',
+		'primary' => 'id_cart_rule',
 		'multilang' => true,
 	);
 
