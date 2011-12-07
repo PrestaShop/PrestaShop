@@ -336,8 +336,8 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #moduleContainer .moduleDesc .metadata dl dt, .moduleDesc .metadata dl dd { float:left; margin:0; padding:0;}
 #moduleContainer .moduleDesc .metadata dl dd { padding-right:10px;}
 #moduleContainer .moduleDesc .metadata dl dt { font-weight:bold; padding-right:5px;}
-#moduleContainer .moduleDesc p.desc { color:#666; font-size:12px; display:block; clear:both;}
-#moduleContainer .setup  {background-color:#6db300; font-size:10px; color:#fff; text-transform:uppercase; position:relative; left:10px; padding:0px 4px; display: inline-block; border-radius:3px;}
+#moduleContainer .moduleDesc p.desc { color:#666; font-family: Georgia; font-style: italic;  font-size:12px; display:block; clear:both;}
+#moduleContainer .setup  {background-color:#6db300;font-size:10px; color:#fff; text-transform:uppercase; position:relative; left:10px; padding:0px 4px; display: inline-block; border-radius:3px;}
 #moduleContainer .setup.non-install { background-color:#ec7000;}
 #moduleContainer .setup.off{ background-color:#ccc;}
 #moduleContainer .row-actions-module span { padding-right:5px;}
@@ -352,7 +352,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 
 /*MODULE POSITION*/
 .blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}
-.blocLiveEdit h2 { margin:0; padding: 0 10px;}
+.blocLiveEdit h2 { background: transparent url(live_edit.png) no-repeat scroll 10px 10px; height: 40px; line-height: 50px;margin: 0; padding: 0 10px; text-indent: 40px;}
 .blocLiveEdit p { padding: 0 10px;}
 .blocLiveEdit a.button {�float: left; margin:10px; display: inline-block;}
 
@@ -363,6 +363,8 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #modulePosition .lab_modules_positions h3 { color:#3A6EA7; margin:0 0 0 10px; float:left;}
 #modulePosition .lab_modules_positions p { font-family:Georgia; font-style: italic; font-size:12px; padding-left:40px;}
 #modulePosition .lab_modules_positions span { font-size:12px; padding-left:5px;}
+
+select#show_modules { font-size:12px;}
 
 /*FOOTER*/
 #footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
