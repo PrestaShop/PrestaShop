@@ -677,7 +677,6 @@ class ProductCore extends ObjectModel
 			return false;
 
 		Hook::exec('deleteProduct', array('product' => $this));
-
 		if (!parent::delete() ||
 			!$this->deleteCategories(true) ||
 			!$this->deleteImages() ||
@@ -888,17 +887,18 @@ class ProductCore extends ObjectModel
 	public function deleteImages()
 	{
 		$result = Db::getInstance()->executeS('
-		SELECT `id_image`
-		FROM `'._DB_PREFIX_.'image`
-		WHERE `id_product` = '.(int)$this->id);
+			SELECT `id_image`
+			FROM `'._DB_PREFIX_.'image`
+			WHERE `id_product` = '.(int)$this->id
+		);
 
 		$status = true;
 		if ($result)
-		foreach ($result as $row)
-		{
-			$image = new Image($row['id_image']);
-			$status &= $image->delete();
-		}
+			foreach ($result as $row)
+			{
+				$image = new Image($row['id_image']);
+				$status &= $image->delete();
+			}
 		return $status;
 	}
 
