@@ -151,7 +151,7 @@ abstract class ObjectModelCore
 			$this->id_shop = Context::getContext()->shop->getID(true);
 
 	 	if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException('Identifier or table format not valid');
+			throw new PrestashopException('Identifier or table format not valid for class '.get_class($this));
 
 		if ($id)
 		{
