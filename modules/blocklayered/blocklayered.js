@@ -240,11 +240,13 @@ function openCloseFilter()
 		{
 			$('#'+$(this).attr('rel')).show();
 			$(this).html('v');
+			$(this).parent().removeClass('closed');
 		}
 		else
 		{
 			$('#'+$(this).attr('rel')).hide();
 			$(this).html('&lt;');
+			$(this).parent().addClass('closed');
 		}
 		
 		e.preventDefault();

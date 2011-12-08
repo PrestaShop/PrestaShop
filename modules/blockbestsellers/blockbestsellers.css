@@ -31,6 +31,7 @@
 #best-sellers_block_right li p {
 	float:left;
 	margin-left:7px;
+	padding:0;
 	width:125px;
 	font-weight:bold;
 	font-size:12px

@@ -60,7 +60,7 @@ ul.sf-menu li.sfHover li ul {
 }
 ul.sf-menu li li:hover ul,
 ul.sf-menu li li.sfHover ul {
-	left:			10em; /* match ul width */
+	left:			9.7em; /* match ul width */
 	top:			0;
 }
 ul.sf-menu li li:hover li ul,
@@ -94,7 +94,7 @@ ul.sf-menu li li li.sfHover ul {
 	background: rgba(113, 113, 113, 0.9);
 }
 .sf-menu li li li {
-	background:		#ebebed;
+	background:	rgba(113, 113, 113, 0.9);
 }
 .sf-menu a:focus, .sf-menu a:hover, .sf-menu a:active {
   background: transparent url(../img/bg_blocktopmenu_li_hover.png) repeat-x 0 0;
