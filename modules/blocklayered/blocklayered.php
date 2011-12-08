@@ -3341,7 +3341,7 @@ class BlockLayered extends Module
 		while ($row = $db->nextRow($features))
 			$featuresById[(int)$row['id_feature_value']] = (int)$row['id_feature'];
 
-		$result = $db->query('
+		$result = self::query('
 		SELECT p.id_product, GROUP_CONCAT(DISTINCT fv.id_feature_value) features, GROUP_CONCAT(DISTINCT cp.id_category) categories, GROUP_CONCAT(DISTINCT pac.id_attribute) attributes
 		FROM '._DB_PREFIX_.'product p
 		LEFT JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
