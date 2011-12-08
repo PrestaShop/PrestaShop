@@ -909,6 +909,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
+		$this->is_editing_order = false;
+
 		// Checks access
 		if (Tools::isSubmit('submitAddsupply_order') && !($this->tabAccess['add'] === '1'))
 			$this->_errors[] = Tools::displayError($this->l('You do not have the required permission to add a supply order.'));
@@ -918,6 +920,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('submitAddsupply_order') || Tools::isSubmit('submitAddsupply_orderAndStay'))
 		{
 			$this->action = 'save';
+			$this->is_editing_order = true;
 
 			// get supplier ID
 			$id_supplier = (int)Tools::getValue('id_supplier', 0);
@@ -1052,7 +1055,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('create_supply_order') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessCopyFromTemplate();
 
-		parent::postProcess();
+		if ( (!count($this->_errors) && $this->is_editing_order) || !$this->is_editing_order)
+			parent::postProcess();
 
 		// if the threshold is defined and we are saving the order
 		if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)

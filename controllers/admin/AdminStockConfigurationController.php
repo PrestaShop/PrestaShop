@@ -126,7 +126,8 @@ class AdminStockConfigurationControllerCore extends AdminController
 	public function init()
 	{
 		// if we are managing the second list (i.e. supply order state)
-		if (Tools::isSubmit('addsupply_order_state') ||
+		if (Tools::isSubmit('submitAddsupply_order_state') ||
+			Tools::isSubmit('addsupply_order_state') ||
 			Tools::isSubmit('updatesupply_order_state') ||
 			Tools::isSubmit('deletesupply_order_state'))
 		{
@@ -135,7 +136,9 @@ class AdminStockConfigurationControllerCore extends AdminController
 		 	$this->identifier = 'id_supply_order_state';
 			$this->display = 'edit';
 		}
-		return parent::init();
+		parent::init();
+		p($this->display);
+		p($this->action);
 	}
 
 	/**
@@ -145,7 +148,10 @@ class AdminStockConfigurationControllerCore extends AdminController
 	public function renderForm()
 	{
 		// if we are managing StockMvtReason
-		if (Tools::isSubmit('addstock_mvt_reason') || Tools::isSubmit('updatestock_mvt_reason'))
+		if (Tools::isSubmit('addstock_mvt_reason') ||
+			Tools::isSubmit('updatestock_mvt_reason') ||
+			Tools::isSubmit('submitAddstock_mvt_reason') ||
+			Tools::isSubmit('submitUpdatestock_mvt_reason'))
 		{
 			$this->toolbar_title = $this->l('Stock : Add stock movement label');
 
@@ -504,10 +510,6 @@ class AdminStockConfigurationControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-		// StockMvtReason
-		if (Tools::isSubmit('delete'.$this->table))
-			$this->deleted = true;
-
 		// SupplyOrderState
 		if (Tools::isSubmit('submitAddsupply_order_state') ||
 			Tools::isSubmit('deletesupply_order_state') ||
@@ -522,6 +524,9 @@ class AdminStockConfigurationControllerCore extends AdminController
 		 	$this->identifier = 'id_supply_order_state';
 		 	$this->_defaultOrderBy = 'id_supply_order_state';
 		}
+		// StockMvtReason
+		else if (Tools::isSubmit('delete'.$this->table))
+			$this->deleted = true;
 
 		return parent::postProcess();
 	}
