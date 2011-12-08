@@ -64,9 +64,9 @@ class AdminShippingControllerCore extends AdminController
 						'validation' => 'isUnsignedFloat'),
 				),
 				'description' =>
-					'<ul style="font-size:11px;color:#7F7F7F;line-height:20px;margin-left:20px;">
-						<li style="list-style-type: disc;">'.$this->l('If you set these parameters to 0, they will be disabled').'</li>
-						<li style="list-style-type: disc;">'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
+					'<ul>
+						<li>'.$this->l('If you set these parameters to 0, they will be disabled').'</li>
+						<li>'.$this->l('Coupons are not taken into account when calculating free shipping').'</li>
 					</ul>',
 				'submit' => array()
 			),

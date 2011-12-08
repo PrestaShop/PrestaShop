@@ -81,5 +81,5 @@
 		{/if}
 {/block}
 
-{block name="other_fieldsets"}<div class="clear">&nbsp;</div>{/block}
+{block name="after"}<div style="clear:both">&nbsp;</div>{/block}
 
