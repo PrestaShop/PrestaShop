@@ -223,7 +223,7 @@ class AdminOrdersControllerCore extends AdminController
 					$history = new OrderHistory();
 					$history->id_order = (int)$id_order;
 					$history->id_employee = (int)$this->context->employee->id;
-					if (!(int)Tools::getValue('id_warehouse'))
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !(int)Tools::getValue('id_warehouse'))
 						$this->_errors[] = Tools::displayError('An error occurred while changing the status.');
 					else
 					{
@@ -1004,7 +1004,15 @@ class AdminOrdersControllerCore extends AdminController
 				$order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order_invoice->add();
-				// Adding an entry in order_carrier table
+				$order_carrier = new OrderCarrier();
+				$order_carrier->id_order = (int)$order->id;
+				$order_carrier->id_carrier = (int)$order->id_carrier;
+				$order_carrier->id_order_invoice = (int)$order_invoice->id;
+				$order_carrier->weight = (float)$cart->getTotalWeight();
+				$order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
+				$order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
+				$order_carrier->add();
+				/*// Adding an entry in order_carrier table
 				Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES
 				('.(int)$order->id.',
@@ -1013,7 +1021,7 @@ class AdminOrdersControllerCore extends AdminController
 					'.(float)$cart->getTotalWeight().',
 					'.$order_invoice->total_shipping_tax_excl.',
 					'.(($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl).',
-					NOW())');
+					NOW())');*/
 			}
 			// Update current invoice
 			else
