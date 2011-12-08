@@ -127,6 +127,7 @@ form .simulate-disable-input{
 	color:#666666;
 	font-size:12px;
 }
+
 .block-mail {
 	margin:0 0 20px 0;
 }
@@ -465,7 +466,7 @@ select optgroup option {
 	min-height:32px;
 }
 #content .conf img, #content .warn img, #content .error img {
-	margin:-4px 5px 0 0;
+	margin:0 5px 0 0;
 }
 
 #content .error  {
@@ -504,7 +505,7 @@ select optgroup option {
 	background: #FEEFB3 url(../img/admin/icon-attention.png) no-repeat scroll 6px 6px;
 	border: 1px solid #9e6014;
 	color:#9e6014;
-	padding: 5px 5px 5px 40px;
+	padding: 10px 5px 5px 40px;
 	border-radius:3px;
 	min-height:32px;
 }
@@ -805,15 +806,22 @@ tr.deleted td {
 	margin-top: 4px;
 	margin-bottom: 2px;
 	border: 1px solid #00529B;
-	padding: 5px 5px 5px 40px;
+	padding:15px 5px 15px 40px;
 	color: #00529B;
 	background: #BDE5F8 url(../img/admin/icon-info.png) no-repeat 6px 5px;
 	border-radius:3px;
 	min-height:32px;
 }
-
+.hint p {
+	color: #00529B;
+}
 div.hint {
 	position: relative;
+}
+
+div.hint ul li {
+	color: #00529B;
+	padding-left: 5px;
 }
 
 table tr th .hint {
@@ -1714,12 +1722,17 @@ fieldset .optionsDescription{
     border: 1px solid #00529B;
     color: #00529B;
     font-family: Arial,Verdana,Helvetica,sans-serif;
-    font-size: 0.85em;
+    font-size: 12px;
     margin-bottom: 15px;
-    padding: 5px 5px 5px 40px;
+    padding: 10px 5px 5px 40px;
 	border-radius:3px;
 	min-height:32px;
-	line-height:32px;
+}
+
+fieldset .optionsDescription ul li {
+    color: #00529B;
+    margin:0;
+    padding:0;
 }
 
 p.preference_description{

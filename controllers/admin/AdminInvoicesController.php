@@ -110,7 +110,6 @@ class AdminInvoicesControllerCore extends AdminController
 			'date_to' => date('Y-m-d')
 		);
 
-		$this->tpl_form_vars = array('style' => 'float:left;');
 		$this->table = 'invoice_date';
 		$this->toolbar_title = $this->l('Print PDF invoices');
 		return parent::renderForm();
@@ -163,7 +162,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'statusStats' => $status_stats,
-			'style' => 'margin-left:400px'
+			'style' => ''
 		);
 
 		$this->table = 'invoice_status';
