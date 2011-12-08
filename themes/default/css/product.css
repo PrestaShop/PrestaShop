@@ -133,6 +133,9 @@ span.view_scroll_spacer {
 	text-align:right
 }
 
+/* short description pack */
+.short_description_pack {display:none;}
+
 /* color_picker */
 #pb-left-column #color_picker p {
 	padding-bottom:5px;
@@ -322,6 +325,8 @@ span.view_scroll_spacer {
 #send_friend_form .form_container p.txt_required {
 	padding-bottom:0;
 	color:#666
+
+/* SEND TO FRIEND (pop-in) ##################################################################### */
 }
 #send_friend_form .form_container .text {padding-bottom:10px}
 #send_friend_form .form_container .text label {
@@ -345,3 +350,40 @@ span.view_scroll_spacer {
 	text-align:right
 }
 
+/* PACK ##################################################################### */
+#blockpack {
+	margin-top:20px;
+    padding-top:20px;
+	border-top:1px dotted #999
+}
+
+/* PERSONNALISATION ##################################################################### */
+.customization_block {}
+.customization_block p.infoCustomizable {
+	margin:10px 0 20px;
+    padding:0 0 0 20px;
+	background:url(../img/icon/infos.gif) no-repeat 0 0 transparent
+}
+
+ul#uploadable_files,
+ul#text_fields {list-style-type:none}
+.customizableProductsFile,
+.customizableProductsText{
+	margin-bottom:20px;
+	padding-bottom:10px;
+	border-bottom:1px dotted #ccc;
+}
+.customizationUploadLine {padding-bottom:10px}
+.customizationUploadLine label {
+	display:inline-block;
+	width:150px;
+	vertical-align:top
+}
+.customizationUploadLine textarea {
+	height:50px;
+	width:300px;
+	border:1px solid #ccc
+}
+#customizedDatas {
+	float:right;
+}

@@ -113,8 +113,8 @@
 				{/foreach}
 				</li>
 			{/foreach}
-			<li class="address_update"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id|intval}")}" title="{l s='Update'}">{l s='Update'}</a></li>
-			<li class="address_delete"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id|intval}&amp;delete")}" onclick="return confirm('{l s='Are you sure?'}');" title="{l s='Delete'}">{l s='Delete'}</a></li>
+			<li class="address_update"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id|intval}")}" title="{l s='Update'}">&raquo; {l s='Update'}</a></li>
+			<li class="address_delete"><a href="{$link->getPageLink('address', true, NULL, "id_address={$address.object.id|intval}&amp;delete")}" onclick="return confirm('{l s='Are you sure?'}');" title="{l s='Delete'}">&raquo; {l s='Delete'}</a></li>
 		</ul>
 	{/foreach}
 	</div>

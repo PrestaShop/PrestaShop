@@ -34,6 +34,7 @@
 				<th class="cart_ref item">{l s='Ref.'}</th>
 				<th class="cart_quantity item">{l s='Qty'}</th>
 				<th class="shipping_address last_item">{l s='Shipping address'}</th>
+				<th class="delete">{l s=''}</th>
 			</tr>
 		</thead>
 		<tbody>
