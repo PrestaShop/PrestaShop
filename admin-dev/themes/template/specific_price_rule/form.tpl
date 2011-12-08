@@ -201,7 +201,6 @@ $(document).ready(function() {
 			{if $condition.type == 'attribute'}
 				$('#id_attribute_group option[value="{$condition.id_attribute_group}"]').attr('selected', 'selected');
 				$('#id_attribute_{$condition.id_attribute_group} option[value="{$condition.value}"]').attr('selected', 'selected');
-				console.log('#id_attribute_{$condition.id_attribute_group} option[value="{$condition.value}"]');
 			{elseif $condition.type == 'feature'}
 				$('#id_feature[value="{$condition.id_feature}"]').attr('selected', 'selected');
 				$('#id_feature_{$condition.id_feature} option[value="{$condition.value}"]').attr('selected', 'selected');
