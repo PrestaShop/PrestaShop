@@ -110,22 +110,24 @@ class AdminStockCoverControllerCore extends AdminController
 			$id_product = (int)Tools::getValue('id');
 			$period = (Tools::getValue('period') ? (int)Tools::getValue('period') : 7);
 			$warehouse = Tools::getValue('id_warehouse', -1);
+			$where_warehouse = '';
+			if ($warehouse != -1)
+				$where_warehouse = ' AND s.id_warehouse = '.(int)$warehouse;
 
 			$query = new DbQuery();
 			$query->select('pa.id_product_attribute as id, pa.id_product, stock_view.reference, stock_view.ean13,
 							stock_view.upc, stock_view.usable_quantity as stock');
-			$query->from('product_attribute pa
-						  INNER JOIN
+			$query->from('product_attribute pa');
+			$query->join('INNER JOIN
 						  (
 						  	SELECT SUM(s.usable_quantity) as usable_quantity, s.id_product_attribute, s.reference, s.ean13, s.upc
 						   	FROM '._DB_PREFIX_.'stock s
-						   	WHERE s.id_product = '.($id_product).'
+						   	WHERE s.id_product = '.($id_product).
+							$where_warehouse.'
 						   	GROUP BY s.id_product_attribute
 						   )
 						   stock_view ON (stock_view.id_product_attribute = pa.id_product_attribute)');
 			$query->where('pa.id_product = '.$id_product);
-			if ($warehouse != -1)
-				$query->where('s.id_warehouse = '.(int)$warehouse);
 			$query->groupBy('pa.id_product_attribute');
 
 			$datas = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
