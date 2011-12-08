@@ -222,6 +222,7 @@ var product_prices = new Array();
 		<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
+					<th class="cell border" style="width: 12%;">{l s='Rule'}</th>
 					<th class="cell border" style="width: 12%;">{l s='Combination'}</th>
 					<th class="cell border" style="width: 12%;">{l s='Shop'}</th>
 					<th class="cell border" style="width: 12%;">{l s='Currency'}</th>
@@ -237,7 +238,6 @@ var product_prices = new Array();
 			</thead>
 			<tbody>
 				{$specificPriceModificationForm}
-
 					<script type="text/javascript">
 						calcPriceTI();
 						unitPriceWithTax('unit');

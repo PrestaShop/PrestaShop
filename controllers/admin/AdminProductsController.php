@@ -2458,8 +2458,13 @@ class AdminProductsControllerCore extends AdminController
 				}
 				else
 					$attributes_name = $this->l('All combinations');
+
+				$rule = new SpecificPriceRule((int)$specificPrice['id_specific_price_rule']);
+				$rule_name = ($rule->id ? $rule->name : '--');
+				
 				$content .= '
 				<tr '.($i%2 ? 'class="alt_row"' : '').'>
+					<td class="cell border">'.$rule_name.'</td>
 					<td class="cell border">'.$attributes_name.'</td>
 					<td class="cell border">'.($specificPrice['id_shop'] ? $shops[$specificPrice['id_shop']]['name'] : $this->l('All shops')).'</td>
 					<td class="cell border">'.($specificPrice['id_currency'] ? $currencies[$specificPrice['id_currency']]['name'] : $this->l('All currencies')).'</td>
@@ -2470,7 +2475,7 @@ class AdminProductsControllerCore extends AdminController
 					<td class="cell border">'.$period.'</td>
 					<td class="cell border">'.$specificPrice['from_quantity'].'</th>
 					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specificPrice, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border"><a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td>
+					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 				</tr>';
 				$i++;
 			}

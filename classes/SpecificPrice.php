@@ -28,6 +28,7 @@
 class SpecificPriceCore extends ObjectModel
 {
 	public	$id_product;
+	public	$id_specific_price_rule = 0;
 	public	$id_product_attribute;
 	public	$id_shop;
 	public	$id_currency;
@@ -54,6 +55,7 @@ class SpecificPriceCore extends ObjectModel
 	public function getFields()
 	{
 		$this->validateFields();
+		$fields['id_specific_price_rule'] =  (int)$this->id_specific_price_rule;
 		$fields['id_product'] = (int)$this->id_product;
 		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
 		$fields['id_shop'] = (int)$this->id_shop;
