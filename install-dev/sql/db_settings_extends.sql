@@ -365,7 +365,7 @@ INSERT INTO `PREFIX_product` (`id_product`, `indexed`, `id_supplier`, `id_manufa
 (8, 1, 0, 0, 1, 3, 0, 1, '0', 0.00, 0, 25.041806, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW(), '0000-00-00'),
 (9, 1, 2, 2, 1, 3, 0, 1, '0', 0.00, 0, 124.581940, 0.000000, '', NULL, 0, 2, 0, 0, 0, 0, 1, NOW(), NOW(), '0000-00-00');
 
-INSERT INTO `ps_product_supplier` (`id_product_supplier`, `id_product`, `id_product_attribute`, `id_supplier`, `product_supplier_reference`, `product_supplier_price_te`, `id_currency`) VALUES
+INSERT INTO `PREFIX_product_supplier` (`id_product_supplier`, `id_product`, `id_product_attribute`, `id_supplier`, `product_supplier_reference`, `product_supplier_price_te`, `id_currency`) VALUES
 (1, 1, 0, 1, '', '0.000000', 0),
 (2, 1, 25, 1, '', '0.000000', 0),
 (3, 1, 26, 1, '', '0.000000', 0),
@@ -1510,7 +1510,7 @@ INSERT INTO `PREFIX_module_group` (`id_group`, `id_module`) VALUES
 ("3", "54"),
 ("3", "55");
 
-INSERT INTO `ps_stock_available` (`id_stock_available`, `id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`) VALUES
+INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`) VALUES
 (1, 1, 25, 1, 0, 10, 0, 0),
 (2, 1, 0, 1, 0, 160, 0, 0),
 (3, 1, 26, 1, 0, 10, 0, 0),
