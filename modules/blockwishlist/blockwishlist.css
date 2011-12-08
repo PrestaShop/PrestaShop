@@ -97,17 +97,20 @@
 	text-align:right
 }
 
-#mywishlist td.wishlist_delete {text-align:center}
+#mywishlist td.wishlist_delete {
+	text-align:center;
+	border-right: 1px solid #999
+}
 #mywishlist td.wishlist_delete a {
-   display:inline-block;
-   font-size:8px;
-   padding:1px 2px;
+	display:inline-block;
+	font-size:8px;
+	padding:1px 2px;
 	-moz-border-radius:3px;
 	-webkit-border-radius:3px;
-   border-radius:3px;
-   color:#666;
-   text-shadow:0 1px 0 #fff;
-   text-transform:uppercase;
+	border-radius:3px;
+	color:#666;
+	text-shadow:0 1px 0 #fff;
+	text-transform:uppercase;
 	background: none repeat scroll 0 0 #ccc;
 }
 
