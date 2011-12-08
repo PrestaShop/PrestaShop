@@ -82,25 +82,6 @@
 			</tr>
 		</thead>
 		<tfoot>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			<tr class="cart_total_voucher" {if $total_discounts == 0}style="display: none;"{/if}>
 				<td colspan="6">
 				{if $use_taxes}
@@ -355,7 +336,7 @@
 {/if}
 
 {if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
-<div class="order_delivery">
+<div class="order_delivery clearfix">
 	{if !isset($formattedAddresses)}
 	{if $delivery->id}
 	<ul id="delivery_address" class="address item">

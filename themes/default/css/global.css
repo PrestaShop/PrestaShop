@@ -202,9 +202,11 @@ input.button_small, input.button_small_disabled, input.exclusive_small, input.ex
 	/*width: 60px;
 	background-image: url('../img/button-small.png')*/
 }
-input.button, input.button_disabled, input.exclusive, input.exclusive_disabled, a.button, a.exclusive, span.button, span.exclusive {
-	/*width: 120px;
-	background-image: url('../img/button-medium.png')*/
+input.button_disabled, input.exclusive_disabled, span.exclusive {
+	border:1px solid #ccc;
+	color:#999;
+	background:url(../img/bg_bt_2.gif) repeat-x 0 0 #f4b61b;
+	cursor:default;
 }
 input.button_large, input.button_large_disabled, input.exclusive_large, input.exclusive_large_disabled, a.button_large, a.exclusive_large, span.button_large, span.exclusive_large, span.exclusive_large_disabled {
 	/*width: 180px;
@@ -552,6 +554,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	padding:0 0 10px 0;
 	background:none;
 }
+#footer .myaccount .lnk_wishlist img {display:none}
 
 /* ************************************************************************************************
       PRODUCT PAGE
@@ -695,7 +698,8 @@ table#cart_summary  .cart_delete {
 .cart_total_tax {display:none}
 
 .cart_total_delivery #total_shipping,
-.cart_total_price #total_price {
+.cart_total_price #total_price,
+.cart_total_price #total_product {
 	border-right:none
 }
 
@@ -954,29 +958,30 @@ margin: 10px 0 0 0;*/
 #order .delivery_option label > table.resume td, #orderopc .delivery_option label > table.resume td {
 	padding: 0 8px;
 }
-#order .delivery_option label > table.resume td + td, #order .delivery_option_carrier label > table.resume td + td, #orderopc .delivery_option label > table.resume td + td {
-	width: 280px;
+#order .delivery_option label > table.resume td + td, #orderopc .delivery_option label > table.resume td + td {
+	width: 300px;
 }
-#order .delivery_option label > table.resume td + td + td, #order .delivery_option_carrier label > table.resume td + td + td, #orderopc .delivery_option label > table.resume td + td + td {
+#order .delivery_option label > table.resume td + td + td, #orderopc .delivery_option label > table.resume td + td + td {
 	width: 100px;
 	text-align: right;
 }
+#order .delivery_option_carrier td {width:200px}
+#order .delivery_option_carrier td + td {width:280px;}
+#order .delivery_option_carrier td + td + td {width:200px}
 #order .delivery_options_address .delivery_option_logo, #order .delivery_option_carrier .delivery_option_logo, #orderopc .delivery_options_address .delivery_option_logo {
 	padding-left:10px;
-	width: 190px;
+	width: 160px;
 }
 #order .delivery_options_address .delivery_option_logo img, #orderopc .delivery_options_address .delivery_option_logo img { height: 40px; }
 #orderopc .delivery_option_carrier {
-	margin: 5px 20px;
+	margin: 0 0 0 45px;
 	padding: 5px;
-	width: 500px;
-	border: 1px solid #bdc2c9;
+	width: 680px;
 	background: white;
 }
-#order .delivery_option_carrier {
-	margin: 0 0 0 45px;
-	width: 585px;
-	background: white;
+#order .delivery_option_carrier .first_item {
+	padding:0 0 0 5px;
+	background:url(../img/arrow_right_2.png) no-repeat 0 2px
 }
 
 .order_carrier_content {
@@ -1078,45 +1083,59 @@ a.iframe {font-weight:bold}
 /* ************************************************************************************************
       PAGE ORDER-OPC
 ************************************************************************************************ */
-#order-opc #left_column {display:none}
-#order-opc #center_column{width:757px}
+#orderopc #left_column {display:none}
+#orderopc #center_column{width:757px}
 
 
-#order-opc h2 {}
-#order-opc h2 span {
+#orderopc h2 {}
+#orderopc h2 span {
 	display:inline-block;
 	padding:5px 7px;
 	color:#fff;
 	background:#333;
 }
 
-#order-opc #login_form fieldset {
+#orderopc #login_form fieldset {
 	background: none repeat scroll 0 0 #FFFFE0;
     border: 1px solid #E6DB55;
     font-size: 13px;
     margin: 0 0 10px;
     padding: 10px;
 }
-#order-opc #login_form fieldset p {padding:0}
-#order-opc #login_form fieldset p a {padding:0}
+#orderopc #login_form fieldset p {padding:0}
+#orderopc #login_form fieldset p a {padding:0}
 
-#order-opc #new_account_form p.submit {
+#orderopc #new_account_form p.submit {
 	margin-right: 120px;
 	text-align:right
 }
-#order-opc #new_account_form p.opc-required {margin-left:20px}
+#orderopc #new_account_form p.opc-required {margin-left:20px}
 
-#order-opc .addresses {margin-bottom:20px}
+#orderopc .addresses {margin-bottom:20px}
 
-#order-opc #opc_delivery_methods h3 {margin-top:20px;}
-#order-opc #opc_delivery_methods textarea {
+#orderopc #opc_delivery_methods h3 {margin-top:20px;}
+#orderopc #opc_delivery_methods textarea {
 	height:60px;
 	width:755px;
 	border:1px solid #ccc
 }
 
-#order-opc #opc_payment_methods {margin-bottom:20px}
-#order-opc #opc_payment_methods #opc_payment_methods-content p{margin:0}
+#orderopc #opc_payment_methods {margin-bottom:20px}
+#orderopc #opc_payment_methods #opc_payment_methods-content p{margin:0}
+
+#orderopc .delivery_option_carrier td {width:200px}
+#orderopc .delivery_option_carrier td + td {width:280px;}
+#orderopc .delivery_option_carrier td + td + td {width:200px}
+#orderopc .delivery_option_carrier {
+	margin: 0 0 0 45px;
+	padding: 5px;
+	width: 680px;
+	background: white;
+}
+#orderopc .delivery_option_carrier .first_item {
+	padding:0 0 0 5px;
+	background:url(../img/arrow_right_2.png) no-repeat 0 2px
+}
 
 
 /* ************************************************************************************************

@@ -156,7 +156,6 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		<input type="submit" value="{l s='Publish'}" class="exclusive" onclick="submitPublishProduct('{$base_dir}{$smarty.get.ad}', 0)"/>
 		<input type="submit" value="{l s='Back'}" class="exclusive" onclick="submitPublishProduct('{$base_dir}{$smarty.get.ad}', 1)"/>
 		</p>
-		<div class="clear" ></div>
 		<p id="admin-action-result"></p>
 		</p>
 	</div>
@@ -233,13 +232,15 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<p class="buttons_bottom_block"><a href="javascript:{ldelim}{rdelim}" class="button">{l s='More details'}</a></p>
 			{/if}
 			{if $packItems|@count > 0}
+			<div class="short_description_pack">
 				<h3>{l s='Pack content'}</h3>
 				{foreach from=$packItems item=packItem}
-					<div class="pack_content">
-						{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)}">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
-						<p>{$packItem.description_short}</p>
-					</div>
+				<div class="pack_content">
+					{$packItem.pack_quantity} x <a href="{$link->getProductLink($packItem.id_product, $packItem.link_rewrite, $packItem.category)}">{$packItem.name|escape:'htmlall':'UTF-8'}</a>
+					<p>{$packItem.description_short}</p>
+				</div>
 				{/foreach}
+			</div>
 			{/if}
 		</div>
 		{/if}
@@ -332,7 +333,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			<script type="text/javascript">
 				checkMinimalQuantity();
 			</script>
-				{/if}
+			{/if}
 
 			<!-- availability -->
 			<p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
@@ -357,10 +358,6 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			</p>
 
 			<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties OR $product->quantity <= 0) OR $allow_oosp OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
-
-			{if $product->online_only}
-				<p class="online_only">{l s='Online only'}</p>
-			{/if}
 		</div>
 
 		<div class="content_prices clearfix">
@@ -432,7 +429,11 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{*close if for show price*}
 			{/if}
 
-			<p{if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><span></span><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
+			{if $product->online_only}
+				<p class="online_only">{l s='Online only'}</p>
+			{/if}
+			
+			<p{if (!$allow_oosp && $product->quantity > 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><span></span><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
 			
 			{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}
 			
@@ -446,8 +447,8 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 
 {if isset($quantity_discounts) && $quantity_discounts}
 <!-- quantity discount -->
-<ul class="idTabs">
-	<li><a style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
+<ul class="idTabs clearfix">
+	<li><a href="#" style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
 </ul>
 <div id="quantityDiscount">
 	<table class="std">
@@ -548,53 +549,60 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 
 <!-- Customizable products -->
 {if isset($product) && $product->customizable}
-	<ul class="idTabs">
-		<li><a style="cursor: pointer">{l s='Product customization'}</a></li>
+	<ul class="idTabs clearfix">
+		<li><a href="#">{l s='Product customization'}</a></li>
 	</ul>
 	<div class="customization_block">
-		<form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data" id="customizationForm">
-			<p>
-				<img src="{$img_dir}icon/infos.gif" alt="Informations" />
+		<form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data" id="customizationForm" class="clearfix">
+			<p class="infoCustomizable">
 				{l s='After saving your customized product, remember to add it to your cart.'}
 				{if $product->uploadable_files}<br />{l s='Allowed file formats are: GIF, JPG, PNG'}{/if}
 			</p>
 			{if $product->uploadable_files|intval}
-			<h2>{l s='Pictures'}</h2>
-			<ul id="uploadable_files">
-				{counter start=0 assign='customizationField'}
-				{foreach from=$customizationFields item='field' name='customizationFields'}
-					{if $field.type == 0}
-						<li class="customizationUploadLine{if $field.required} required{/if}">{assign var='key' value='pictures_'|cat:$product->id|cat:'_'|cat:$field.id_customization_field}
-							{if isset($pictures.$key)}<div class="customizationUploadBrowse">
+			<div class="customizableProductsFile">
+				<h3>{l s='Pictures'}</h3>
+				<ul id="uploadable_files" class="clearfix">
+					{counter start=0 assign='customizationField'}
+					{foreach from=$customizationFields item='field' name='customizationFields'}
+						{if $field.type == 0}
+							<li class="customizationUploadLine{if $field.required} required{/if}">{assign var='key' value='pictures_'|cat:$product->id|cat:'_'|cat:$field.id_customization_field}
+								{if isset($pictures.$key)}
+								<div class="customizationUploadBrowse">
 									<img src="{$pic_dir}{$pictures.$key}_small" alt="" />
 									<a href="{$link->getProductDeletePictureLink($product, $field.id_customization_field)}" title="{l s='Delete'}" >
 										<img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="customization_delete_icon" width="11" height="13" />
 									</a>
-								</div>{/if}
-							<div class="customizationUploadBrowse"><input type="file" name="file{$field.id_customization_field}" id="img{$customizationField}" class="customization_block_input {if isset($pictures.$key)}filled{/if}" />{if $field.required}<sup>*</sup>{/if}
-							<div class="customizationUploadBrowseDescription">{if !empty($field.name)}{$field.name}{else}{l s='Please select an image file from your hard drive'}{/if}</div></div>
-						</li>
-						{counter}
-					{/if}
-				{/foreach}
-			</ul>
+								</div>
+								{/if}
+								<div class="customizationUploadBrowse">
+									<label class="customizationUploadBrowseDescription">{if !empty($field.name)}{$field.name}{else}{l s='Please select an image file from your hard drive'}{/if}{if $field.required}<sup>*</sup>{/if}</label>
+									<input type="file" name="file{$field.id_customization_field}" id="img{$customizationField}" class="customization_block_input {if isset($pictures.$key)}filled{/if}" />
+								</div>
+							</li>
+							{counter}
+						{/if}
+					{/foreach}
+				</ul>
+			</div>
 			{/if}
-			<div class="clear"></div>
 			{if $product->text_fields|intval}
-			<h2>{l s='Texts'}</h2>
-			<ul id="text_fields">
+			<div class="customizableProductsText">
+				<h3>{l s='Texts'}</h3>
+				<ul id="text_fields">
 				{counter start=0 assign='customizationField'}
 				{foreach from=$customizationFields item='field' name='customizationFields'}
 					{if $field.type == 1}
-						<li class="customizationUploadLine{if $field.required} required{/if}">{assign var='key' value='textFields_'|cat:$product->id|cat:'_'|cat:$field.id_customization_field}
-							{if !empty($field.name)}{$field.name}{/if}{if $field.required}<sup>*</sup>{/if}<textarea type="text" name="textField{$field.id_customization_field}" id="textField{$customizationField}" rows="1" cols="40" class="customization_block_input" />{if isset($textFields.$key)}{$textFields.$key|stripslashes}{/if}</textarea>
-						</li>
-						{counter}
+					<li class="customizationUploadLine{if $field.required} required{/if}">
+						<label for ="textField{$customizationField}">{assign var='key' value='textFields_'|cat:$product->id|cat:'_'|cat:$field.id_customization_field} {if !empty($field.name)}{$field.name}{/if}{if $field.required}<sup>*</sup>{/if}</label>
+						<textarea type="text" name="textField{$field.id_customization_field}" id="textField{$customizationField}" rows="1" cols="40" class="customization_block_input" />{if isset($textFields.$key)}{$textFields.$key|stripslashes}{/if}</textarea>
+					</li>
+					{counter}
 					{/if}
 				{/foreach}
-			</ul>
+				</ul>
+			</div>
 			{/if}
-			<p style="clear: left;" id="customizedDatas">
+			<p id="customizedDatas">
 				<input type="hidden" name="quantityBackup" id="quantityBackup" value="" />
 				<input type="hidden" name="submitCustomizedDatas" value="1" />
 				<input type="button" class="button" value="{l s='Save'}" onclick="javascript:saveCustomization()" />
@@ -606,7 +614,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 {/if}
 
 {if isset($packItems) && $packItems|@count > 0}
-	<div>
+	<div id="blockpack">
 		<h2>{l s='Pack content'}</h2>
 		{include file="$tpl_dir./product-list.tpl" products=$packItems}
 	</div>
