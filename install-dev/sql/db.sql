@@ -2276,15 +2276,17 @@ CREATE TABLE `PREFIX_accounting_product_zone_shop` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_order_carrier` (
+  `id_order_carrier` int(11) NOT NULL AUTO_INCREMENT,
   `id_order` int(11) unsigned NOT NULL,
   `id_carrier` int(11) unsigned NOT NULL,
   `id_order_invoice` int(11) unsigned DEFAULT NULL,
   `weight` float DEFAULT NULL,
   `shipping_cost_tax_excl` decimal(20,6) DEFAULT NULL,
   `shipping_cost_tax_incl` decimal(20,6) DEFAULT NULL,
-  `tracking_number` int(11) unsigned DEFAULT NULL,
+  `tracking_number` varchar(64) DEFAULT NULL,
   `date_add` datetime NOT NULL,
-  KEY `id_order` (`id_order`,`id_carrier`),
-  KEY `id_order_2` (`id_order`),
+  PRIMARY KEY (`id_order_carrier`),
+  KEY `id_order` (`id_order`),
+  KEY `id_carrier` (`id_carrier`),
   KEY `id_order_invoice` (`id_order_invoice`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
