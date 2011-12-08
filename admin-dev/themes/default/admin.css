@@ -118,6 +118,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table tr td{border-bottom:1px solid #ccc;color:#333;font-size:11px;padding: 4px 4px 4px 6px;}
 .table tr:hover td{background:#fff1b5}
 .table tr.filter:hover td{background:#F1F9FF}
+.table tr td:hover table tr td{background:none}
 .table tr.action_details td{background:#FAFAFA;}
 .table tr.alt_row.action_details td{background:#E8E8E8;}
 .table tr td.empty{border-bottom:none;background:white!important}
