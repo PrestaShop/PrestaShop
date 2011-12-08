@@ -74,7 +74,8 @@ class AdminPPreferencesControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
-						'type' => 'bool'
+						'type' => 'bool',
+						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_DISPLAY_QTIES' => array(
 						'title' => $this->l('Display available quantities on product page:'),
