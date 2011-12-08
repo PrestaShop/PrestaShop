@@ -25,6 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+include 'mine.php';
 /* Debug only */
 @ini_set('display_errors', 'on');
 define('_PS_DEBUG_SQL_', true);
