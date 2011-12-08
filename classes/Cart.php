@@ -1520,9 +1520,11 @@ class CartCore extends ObjectModel
 					foreach ($products_grouped_by_carriers as $data)
 					{
 						foreach ($data['carrier_list'] as $id_carrier)
-						if (!isset($carrier_count[$id_carrier]))
-							$carrier_count[$id_carrier] = 0;
-						$carrier_count[$id_carrier]++;
+						{
+							if (!isset($carrier_count[$id_carrier]))
+								$carrier_count[$id_carrier] = 0;
+							$carrier_count[$id_carrier]++;
+						}
 					}
 				}
 				arsort($carrier_count);
