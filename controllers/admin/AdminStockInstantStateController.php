@@ -114,6 +114,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	{
 		// query
 		$this->_select = '
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 			SUM(a.physical_quantity) as physical_quantity,
 			SUM(a.usable_quantity) as usable_quantity,
 			SUM(a.price_te * a.physical_quantity) as valuation,
@@ -121,7 +122,21 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 		$this->_group = 'GROUP BY a.id_product, a.id_product_attribute';
 
-		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'warehouse w ON (w.id_warehouse = a.id_warehouse)';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
+		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+			a.id_product = pl.id_product
+			AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').'
+		)';
+		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
+		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
+		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+			al.id_attribute = pac.id_attribute
+			AND al.id_lang = '.(int)$this->context->language->id.'
+		)';
+		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (
+			agl.id_attribute_group = atr.id_attribute_group
+			AND agl.id_lang = '.(int)$this->context->language->id.'
+		)';
 
 		if ($this->getCurrentCoverageWarehouse() != -1)
 			$this->_where .= ' AND a.id_warehouse = '.$this->getCurrentCoverageWarehouse();
@@ -173,7 +188,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			$item['price_te'] = '--';
 			$item[$this->identifier] = $item['id_product'].'_'.$item['id_product_attribute'];
-			$item['name'] = Product::getProductName($item['id_product'], $item['id_product_attribute']);
 
 			// gets stock manager
 			$manager = StockManagerFactory::getManager();

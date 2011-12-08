@@ -1793,7 +1793,6 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['add'] === '1')
 			{
 				$this->action = 'new';
-				$this->action = 'Informations';
 				$this->display = 'add';
 			}
 			else
@@ -2421,7 +2420,7 @@ EOF;
 			$html .= '<td>
 						<img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" />
 						<label class="t">
-							<input class="input_group_shop" type="checkbox" 
+							<input class="input_group_shop" type="checkbox"
 								name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->object->id.'_'.$group_id.'" value="'.$group_id.'" '.
 								($group_checked ? 'checked="checked"' : '').' /> '.
 							$group_data['name'].'
@@ -2440,7 +2439,7 @@ EOF;
 					$html .= '<td>
 								<img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" />
 								<label class="child">';
-					$html .= '<input class="input_shop" type="checkbox" value="'.$group_id.'" 
+					$html .= '<input class="input_shop" type="checkbox" value="'.$group_id.'"
 									name="checkBoxShopAsso_'.$this->table.'_'.$this->object->id.'_'.$shop_id.'" id="checkedBox_'.$shop_id.'" '.
 									($checked ? 'checked="checked"' : '').' /> ';
 					$html .= $shop_data['name'].'</label></td>';
@@ -2598,10 +2597,10 @@ EOF;
 			'.$this->l('Choose language:').'<br /><br />';
 		foreach ($languages as $language)
 			if ($use_vars_instead_of_ids)
-				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" 
+				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'"
 								onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
 			else
-				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" 
+				$output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'"
 								onclick="changeLanguage(\''.$id.'\', \''.$ids.'\', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
 		$output .= '</div>';
 
