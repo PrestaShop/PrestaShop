@@ -157,25 +157,25 @@
 								</td>
 							</tr>
 						</table>
-							<table class="delivery_option_carrier">
-								{foreach $option.carrier_list as $carrier}
-									<tr>
-										<td>
-										{if $carrier.logo}
-											<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
-										{/if}
-									</td>
-									<td>
-										{$carrier.instance->name}
-									</td>
-									<td>
-										{if isset($carrier.instance->delay[$cookie->id_lang])}
-											{$carrier.instance->delay[$cookie->id_lang]}
-										{/if}
-									</td>
-									</tr>
-								{/foreach}
-							</table>
+						<table class="delivery_option_carrier">
+							{foreach $option.carrier_list as $carrier}
+							<tr>
+								<td class="first_item">
+								{if $carrier.logo}
+									<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+								{/if}
+								</td>
+								<td>
+									{$carrier.instance->name}
+								</td>
+								<td>
+									{if isset($carrier.instance->delay[$cookie->id_lang])}
+										{$carrier.instance->delay[$cookie->id_lang]}
+									{/if}
+								</td>
+							</tr>
+						{/foreach}
+						</table>
 					</label>
 				</div>
 			{/foreach}

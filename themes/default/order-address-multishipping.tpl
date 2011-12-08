@@ -166,7 +166,7 @@
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
-	<div class="addresses">
+	<div class="addresses clearfix">
 		<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}" />
 		<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
 		
@@ -181,12 +181,12 @@
 			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 		{/if}
 		</p>
-		<div class="clear"></div>
-		<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
-		</ul>
-		<br class="clear" />
+		<div class="clearfix">
+			<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
+			</ul>
+		</div>
 		<p class="address_add submit">
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back|urlencode}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back|urlencode}{/if}")}" title="{l s='Add'}" class="button_large">&raquo; {l s='Add a new address'}</a>
 		</p>
 		{if !$opc}
 		<div id="ordermsg" class="clearfix">
