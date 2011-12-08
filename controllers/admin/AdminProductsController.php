@@ -1687,18 +1687,24 @@ class AdminProductsControllerCore extends AdminController
 					// i is used as product_tab id
 					$i = 0;
 					$advanced_stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+					$stock_management_active = Configuration::get('PS_STOCK_MANAGEMENT');
 
 					foreach ($this->available_tabs as $product_tab)
 					{
-						if ($advanced_stock_management_active == 1 || ($advanced_stock_management_active == 0 && ($product_tab != 'Warehouses')))
-						{
-							$product_tabs[$product_tab] = array(
-								'id' => ++$i.'-'.$product_tab,
-								'selected' => (strtolower($product_tab) == strtolower($action)),
-								'name' => $this->available_tabs_lang[$product_tab],
-								'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
-							);
-						}
+						// if it's the quantities tab and stock management is disabled, continue
+						if ($stock_management_active == 0 && $product_tab == 'Quantities')
+							continue;
+
+						// if it's the warehouses tab and advanced stock management is disabled, continue
+						if ($advanced_stock_management_active == 0 && $product_tab == 'Warehouses')
+							continue;
+
+						$product_tabs[$product_tab] = array(
+							'id' => ++$i.'-'.$product_tab,
+							'selected' => (strtolower($product_tab) == strtolower($action)),
+							'name' => $this->available_tabs_lang[$product_tab],
+							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
+						);
 					}
 					$this->tpl_form_vars['newproduct'] = 0;
 				}
