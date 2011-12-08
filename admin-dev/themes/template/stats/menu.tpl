@@ -39,6 +39,6 @@
 			{l s='No module installed'}
 		{/if}
 		</ul>
-	</div>
+
 
 

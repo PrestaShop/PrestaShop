@@ -249,6 +249,15 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .sidebar ul.categorieList li div.count{ position:absolute; top:0; right:5px;}
 .sidebar .categorieStatus { display:none;}
 
+/*NAVIGATION ENGINE*/
+.blocEngine { background-color:#eee;}
+.blocEngine .rowForm {    display: block;float: left;margin: 0; padding: 5px 0; }
+.blocEngine .rowForm label { font-weight:normal;}
+.blocEngine .rowForm label,
+.blocEngine .rowForm select {width:220px; float:left; text-align:left;}
+
+.blocEngine p { margin-top:10px;display:block; float:left;}
+
 /*STATCONTAINER*/
 #statsContainer {margin-left:220px; padding:0 0 0 20px;}
 #statsContainer #calendar {   background-color: #EEEEEE;border-top: 1px solid #CCCCCC; display: block; margin: 10px 0;min-height: 25px; padding: 5px;}
