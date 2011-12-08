@@ -137,7 +137,6 @@ abstract class ObjectModelCore
 		if (isset($this->def['primary']))
 			$this->identifier = $this->def['primary'];
 
-
 		if (!is_null($id_lang))
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
@@ -297,9 +296,6 @@ abstract class ObjectModelCore
 	 */
 	public function update($nullValues = false)
 	{
-	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException('wrong identifier or table:'.$this->identifier.', table: '.$this->table);
-
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'UpdateBefore', array('object' => $this));
 
@@ -372,9 +368,6 @@ abstract class ObjectModelCore
 	 */
 	public function delete()
 	{
-	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException('wrong identifier or table:'.$this->identifier.', table: '.$this->table);
-
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'DeleteBefore', array('object' => $this));
 
@@ -406,16 +399,14 @@ abstract class ObjectModelCore
 	/**
 	 * Delete several objects from database
 	 *
-	 * return boolean Deletion result
+	 * @return bool Deletion result
 	 */
 	public function deleteSelection($selection)
 	{
-		if (!is_array($selection) OR !Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException('selection is not an array, or identifier or table:'.$this->identifier.', table: '.$this->table);
 		$result = true;
-		foreach ($selection AS $id)
+		foreach ($selection as $id)
 		{
-			$this->id = (int)($id);
+			$this->id = (int)$id;
 			$result = $result AND $this->delete();
 		}
 		return $result;
@@ -428,15 +419,12 @@ abstract class ObjectModelCore
 	 */
 	public function toggleStatus()
 	{
-	 	if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException('identifier or table:'.$this->identifier.', table: '.$this->table);
-
 	 	/* Object must have a variable called 'active' */
-	 	elseif (!key_exists('active', $this))
+	 	if (!key_exists('active', $this))
 			throw new PrestashopException('property "active is missing in object '.get_class($this));
 
 	 	/* Update active status on object */
-	 	$this->active = (int)(!$this->active);
+	 	$this->active = !(int)$this->active;
 
 		/* Change status to active/inactive */
 		return Db::getInstance()->execute('
@@ -454,12 +442,9 @@ abstract class ObjectModelCore
 	protected function getTranslationsFields($fieldsArray)
 	{
 		/* WARNING : Product do not use this function, so do not forget to report any modification if necessary */
-	 	if (!Validate::isTableOrIdentifier($this->identifier))
-	 		throw new PrestashopException('identifier is not table or identifier : '.$this->identifier);
-
 		$fields = array();
 
-		if($this->id_lang == NULL)
+		if ($this->id_lang == NULL)
 			foreach (Language::getLanguages(false) as $language)
 				$this->makeTranslationFields($fields, $fieldsArray, $language['id_lang']);
 		else
