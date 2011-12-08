@@ -1643,9 +1643,7 @@ class AdminProductsControllerCore extends AdminController
 	public function initContent($token = null)
 	{
 		if ($this->action == 'save')
-		{
-			$this->action = 'informations';
-		}
+			$this->action = '';
 		// this is made to "save and stay" feature
 		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
 		if (Tools::getValue('id_product') || ((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND count($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
