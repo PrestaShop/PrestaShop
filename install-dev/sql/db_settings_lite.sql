@@ -962,7 +962,8 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (105, 'AdminCmsCategories', -1, 0),
 (106, 'AdminCms', -1, 0), 
 (107, 'AdminLogin', -1 , 0),
-(108, 'AdminStockConfiguration', 95, 7);
+(108, 'AdminStockConfiguration', 95, 7),
+(109, 'AdminSpecificPriceRule', 1, 11);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -994,7 +995,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 104, 'Export'),
 (1, 105, 'CMS categories'),
 (1, 106, 'CMS pages'),
-(1, 108, 'Configuration');
+(1, 108, 'Configuration'),
+(1, 109, 'Catalog price rules');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -1024,7 +1026,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 104, 'Export'),
 (2, 105, 'Catégories CMS'),
 (2, 106, 'Pages CMS'),
-(2, 108, 'Configuration');
+(2, 108, 'Configuration'),
+(2, 109, 'Règles de prix catalogue');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -1053,7 +1056,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 104, 'Export'),
 (3, 105, 'CMS categories'),
 (3, 106, 'CMS pages'),
-(3, 108, 'Configuration');
+(3, 108, 'Configuration'),
+(3, 110, 'Catalog price rules');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -1083,7 +1087,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 104, 'Export'),
 (4, 105, 'CMS categories'),
 (4, 106, 'CMS pages'),
-(4, 108, 'Configuration');
+(4, 108, 'Configuration'),
+(4, 109, 'Catalog price rules');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -1113,7 +1118,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 104, 'Export'),
 (5, 105, 'CMS categories'),
 (5, 106, 'CMS pages'),
-(5, 108, 'Configuration');
+(5, 108, 'Configuration'),
+(5, 109, 'Catalog price rules');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`

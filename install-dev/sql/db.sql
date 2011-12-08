@@ -1576,6 +1576,7 @@ CREATE TABLE `PREFIX_search_word` (
 
 CREATE TABLE `PREFIX_specific_price` (
 	`id_specific_price` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`id_specific_price_rule` INT(11) UNSIGNED NOT NULL,
 	`id_product` INT UNSIGNED NOT NULL,
 	`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
 	`id_currency` INT UNSIGNED NOT NULL,
@@ -1589,7 +1590,8 @@ CREATE TABLE `PREFIX_specific_price` (
 	`from` DATETIME NOT NULL,
 	`to` DATETIME NOT NULL,
 	PRIMARY KEY(`id_specific_price`),
-	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`)
+	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`),
+	KEY (`id_specific_price_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_state` (
@@ -2290,3 +2292,35 @@ CREATE TABLE `PREFIX_order_carrier` (
   KEY `id_carrier` (`id_carrier`),
   KEY `id_order_invoice` (`id_order_invoice`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_specific_price_rule` (
+	`id_specific_price_rule` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`id_shop` int(11) unsigned NOT NULL DEFAULT '1',
+	`id_currency` int(10) unsigned NOT NULL,
+	`id_country` int(10) unsigned NOT NULL,
+	`id_group` int(10) unsigned NOT NULL,
+	`from_quantity` mediumint(8) unsigned NOT NULL,
+	`price` DECIMAL(20,6),
+	`reduction` decimal(20,6) NOT NULL,
+	`reduction_type` enum('amount','percentage') NOT NULL,
+	`from` datetime NOT NULL,
+	`to` datetime NOT NULL,
+	PRIMARY KEY (`id_specific_price_rule`),
+	KEY `id_product` (`id_shop`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`from`,`to`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_specific_price_rule_condition_group` (
+	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL,
+	`id_specific_price_rule` INT(11) UNSIGNED NOT NULL,
+	PRIMARY KEY ( `id_specific_price_rule_condition_group`, `id_specific_price_rule` )
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_specific_price_rule_condition` (
+	`id_specific_price_rule_condition` INT(11) UNSIGNED NOT NULL,
+	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL,
+	`type` VARCHAR(255) NOT NULL,
+	`value` VARCHAR(255) NOT NULL,
+PRIMARY KEY (`id_specific_price_rule_condition`),
+INDEX (`id_specific_price_rule_condition_group`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
