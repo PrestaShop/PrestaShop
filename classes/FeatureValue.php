@@ -105,7 +105,7 @@ class FeatureValueCore extends ObjectModel
 	 * @return array Array with feature's values
 	 * @static
 	 */
-	public static function getFeatureValuesWithLang($id_lang, $id_feature)
+	public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
 	{
 		return Db::getInstance()->executeS('
 			SELECT *
@@ -113,7 +113,7 @@ class FeatureValueCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` vl
 				ON (v.`id_feature_value` = vl.`id_feature_value` AND vl.`id_lang` = '.(int)$id_lang.')
 			WHERE v.`id_feature` = '.(int)$id_feature.'
-				AND (v.`custom` IS NULL OR v.`custom` = 0)
+				'.(!$custom ? 'AND (v.`custom` IS NULL OR v.`custom` = 0)' : '').'
 			ORDER BY vl.`value` ASC
 		');
 	}
