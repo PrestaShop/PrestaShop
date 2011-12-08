@@ -74,7 +74,6 @@
 		</td>
 	</tr>
 </table>
-<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
 <script type="text/javascript">
 	var upbutton = '{l s='Upload a file'}';
 	var token = '{$token}';

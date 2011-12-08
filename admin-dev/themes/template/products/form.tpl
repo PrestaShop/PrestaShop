@@ -147,6 +147,8 @@ $(document).ready(function(){
 				});
 			});
 		}
+		else
+			$('#desc-product-newCombination').hide();
 	});
 	{if $show_product_tab_content}
 		$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
