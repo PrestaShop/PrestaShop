@@ -2082,14 +2082,14 @@ class BlockLayered extends Module
 				AND psi.`id_currency` = '.$idCurrency;
 		}
 		
-		$allProductsOut = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+		$allProductsOut = self::query('
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
 		'.$priceFilterQueryOut.'
 		'.$queryFiltersFrom.'
 		WHERE 1 '.$queryFiltersWhere.' GROUP BY id_product');
 		
-		$allProductsIn = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+		$allProductsIn = self::query('
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
 		'.$priceFilterQueryIn.'
@@ -2136,6 +2136,14 @@ class BlockLayered extends Module
 			' LIMIT '.(((int)$this->page - 1) * $n.','.$n));
 		}
 		return $this->products;
+	}
+	
+	private static function query($sql_query)
+	{
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql_query);
+		else
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql_query, false);
 	}
 	
 	public function getFilterBlock($selectedFilters = array())
@@ -3304,7 +3312,7 @@ class BlockLayered extends Module
 		$nCategories = array();
 		$doneCategories = array();
 
-		$attributeGroups = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+		$attributeGroups = self::query('
 		SELECT a.id_attribute, a.id_attribute_group
 		FROM '._DB_PREFIX_.'attribute a
 		LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_attribute = a.id_attribute)
@@ -3319,7 +3327,7 @@ class BlockLayered extends Module
 		while ($row = $db->nextRow($attributeGroups))
 			$attributeGroupsById[(int)$row['id_attribute']] = (int)$row['id_attribute_group'];
 
-		$features = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+		$features = self::query('
 		SELECT fv.id_feature_value, fv.id_feature
 		FROM '._DB_PREFIX_.'feature_value fv
 		LEFT JOIN '._DB_PREFIX_.'feature_product fp ON (fp.id_feature_value = fv.id_feature_value)
