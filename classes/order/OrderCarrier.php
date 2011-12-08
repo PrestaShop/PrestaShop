@@ -84,12 +84,12 @@ class OrderCarrierCore extends ObjectModel
 	{
 		$this->validateFields();
 
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['id_carrier'] = (int)($this->id_carrier);
-		$fields['id_order_invoice'] = (int)($this->id_order_invoice);
-		$fields['weight'] = (float)($this->weight);
-		$fields['shipping_cost_tax_excl'] = (float)($this->shipping_cost_tax_excl);
-		$fields['shipping_cost_tax_incl'] = (float)($this->shipping_cost_tax_incl);
+		$fields['id_order'] = (int)$this->id_order;
+		$fields['id_carrier'] = (int)$this->id_carrier;
+		$fields['id_order_invoice'] = (int)$this->id_order_invoice;
+		$fields['weight'] = (float)$this->weight;
+		$fields['shipping_cost_tax_excl'] = (float)$this->shipping_cost_tax_excl;
+		$fields['shipping_cost_tax_incl'] = (float)$this->shipping_cost_tax_incl;
 		$fields['tracking_number'] = pSQL(($this->tracking_number));
 		$fields['date_add'] = pSQL($this->date_add);
 
