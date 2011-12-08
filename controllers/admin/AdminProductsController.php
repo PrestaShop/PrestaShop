@@ -1643,12 +1643,11 @@ class AdminProductsControllerCore extends AdminController
 	public function initProcess()
 	{
 		parent::initProcess();
+
 		if (isset($_GET['add'.$this->table]))
 		{
 			if ($this->tabAccess['add'] === '1')
-			{
 				$this->action = 'Informations';
-			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
@@ -1900,13 +1899,13 @@ class AdminProductsControllerCore extends AdminController
 						'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
 						'desc' => $this->l('Create'),
 					);
-
-					$this->toolbar_btn['newCombination'] = array(
-						'short' => 'Add a new combination',
-						'desc' => $this->l('Add a new combination'),
-						'class' => 'toolbar-new'
-					);
 				}
+
+				$this->toolbar_btn['newCombination'] = array(
+					'short' => 'Add a new combination',
+					'desc' => $this->l('Add a new combination'),
+					'class' => 'toolbar-new'
+				);
 
 				if ($this->tabAccess['edit'])
 				{
@@ -2300,7 +2299,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	* Init data for accounting
 	*/
-	public function initFormAccounting($product, $t)
+	public function initFormAccounting($obj)
 	{
 		$error = '';
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
@@ -2319,7 +2318,7 @@ class AdminProductsControllerCore extends AdminController
 				$detail['zones'][$zone['id_zone']]['name'] = $zone['name'];
 				$detail['zones'][$zone['id_zone']]['account_number'] = '';
 			}
-			$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($product->id, $id_shop);
+			$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($obj->id, $id_shop);
 
 			// Set Account number to the id_zone for an id_shop if exist
 			foreach($zoneAccountNumberList as $zone)
@@ -2680,7 +2679,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('languages',$languages);
 		$this->object = $product;
 		$this->display = 'edit';
-		$content = '';
 		$has_attribute = $product->hasAttributes();
 		$cover = Product::getCover($product->id);
 		$this->_applyTaxToEcotax($product);
@@ -2862,7 +2860,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
 		$categoryBox = Tools::getValue('categoryBox', array());
 		$data->assign('product', $product);
-		$data->assign('last_content', $content);
 		$data->assign('token', $this->token);
 		$data->assign('currency', $currency);
 		$data->assign($this->tpl_form_vars);
@@ -2900,35 +2897,35 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function initFormImages($obj, $token = null)
+	public function initFormImages($obj)
 	{
 		$data = $this->context->smarty->createData();
+
 		$data->assign('product', $this->loadObject());
-		$content = '';
 		if (!Tools::getValue('id_product'))
-			return ''; // TEMPO
-		global $attributeJs, $images;
+			return; // TEMPO
+
 		$shops = false;
 		if (Shop::isFeatureActive())
 			$shops = Shop::getShops();
 
 		$data->assign('shops', $shops);
-		$countImages = Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$obj->id);
-		$data->assign('countImages', $countImages);
+		$count_images = Db::getInstance()->getValue('
+			SELECT COUNT(id_product)
+			FROM '._DB_PREFIX_.'image
+			WHERE id_product = '.(int)$obj->id
+		);
+		$data->assign('countImages', $count_images);
 
 		$images = Image::getImages($this->context->language->id, $obj->id);
-		$imagesTotal = Image::getImagesTotal($obj->id);
 		$data->assign('id_product', (int)Tools::getValue('id_product'));
 		$data->assign('id_category_default', (int)$this->_category->id);
-
-
 
 		foreach ($images as $k => $image)
 			$images[$k] = new Image($image['id_image']);
 
 		$data->assign('images', $images);
-		$data->assign('token', $token);
-		$data->assign($this->tpl_form_vars);
+		$data->assign('token', $this->token);
 		$data->assign('table', $this->table);
 		$data->assign('max_image_size', $this->max_image_size);
 
@@ -3422,50 +3419,6 @@ class AdminProductsControllerCore extends AdminController
 		die(Tools::jsonEncode(array('error' => false)));
 	}
 
-	public function getLineTableImage($image, $imagesTotal, $token, $shops)
-	{
-		if (Shop::isFeatureActive())
-			$imgObj = new Image((int)$image['id_image']);
-		$image_obj = new Image($image['id_image']);
-		$img_path = $image_obj->getExistingImgPath();
-		$html =  '
-			<tr id="tr_'.$image_obj->id.'">
-				<td style="padding: 4px;"><a href="'._THEME_PROD_DIR_.$img_path.'.jpg" target="_blank">
-					<img src="'._THEME_PROD_DIR_.$img_path.'-small.jpg'.((int)(Tools::getValue('image_updated')) === (int)($image['id_image']) ? '?date='.time() : '').'"
-					alt="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" title="'.htmlentities(stripslashes($image['legend']), ENT_COMPAT, 'UTF-8').'" /></a>
-				</td>
-				<td class="center positionImage">'.(int)($image['position']).'</td>
-				<td id="td_'.$image_obj->id.'" class="pointer dragHandle center">';
-
-		$html .= '
-				<a '.($image['position'] == 1 ? ' style="display: none;"' : '').' href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] - 1).'&imgDirection=0&token='.($token ? $token : $this->token).'"><img src="../img/admin/up.gif" alt="" border="0"></a>
-				<a '.($image['position'] == $imagesTotal ? ' style="display: none;"' : '').' href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&imgPosition='.($image['position'] + 1).'&imgDirection=1&token='.($token ? $token : $this->token).'"><img src="../img/admin/down.gif" alt="" border="0"></a>';
-		$html .= '
-				</td>';
-		if (Shop::isFeatureActive())
-			foreach ($shops as $shop)
-				$html .= '
-				<td class="center"><input type="checkbox" class="image_shop" name="'.(int)$image['id_image'].'" value="'.(int)$shop['id_shop'].'" '.($imgObj->isAssociatedToShop($shop['id_shop']) ? 'checked="1"' : '').' /></td>';
-		$html .= '
-				<td class="center"><a href="'.self::$currentIndex.'&id_image='.$image['id_image'].'&coverImage&token='.($token ? $token : $this->token).'"><img class="covered" src="../img/admin/'.($image['cover'] ? 'enabled.gif' : 'forbbiden.gif').'" alt="" /></a></td>
-				<td class="center">
-				<a href="#" class="delete_product_image"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete this image').'" title="'.$this->l('Delete this image').'" /></a>
-				</td>
-			</tr>';
-		$json = array(
-			'status' => 'ok',
-			'id'=>$image_obj->id,
-			'path' => _THEME_PROD_DIR_.$img_path.'.jpg',
-			'path_small' => _THEME_PROD_DIR_.$img_path.'-small.jpg',
-			'position' => $image['position'],
-			'cover' => $image['cover'],
-			'html' => $html
-			);
-
-		return $this->content = Tools::jsonEncode($json);
-	//	return $html;
-	}
-
 	public function getCombinationImagesJS()
 	{
 		if (!($obj = $this->loadObject(true)))
@@ -3588,7 +3541,6 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			$this->addjQueryPlugin(array(
-				'fileuploader',
 				'autocomplete',
 				'tablednd',
 				'thickbox',
@@ -3609,7 +3561,8 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'price.js',
 				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
 				_PS_JS_DIR_.'tinymce.inc.js',
-				_PS_JS_DIR_.'admin-dnd'
+				_PS_JS_DIR_.'fileuploader.js',
+				_PS_JS_DIR_.'admin-dnd.js'
 			));
 		}
 	}
