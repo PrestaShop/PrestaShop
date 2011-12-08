@@ -97,13 +97,22 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	{
 		$tpl = $this->context->smarty->createTemplate('stats/engines.tpl');
 
+		$autoclean_period = array(
+			'never' => 	$this->l('Never'),
+			'week' => 	$this->l('Week'),
+			'month' => 	$this->l('Month'),
+			'year' => 	$this->l('Year'),
+		);
+
 		$tpl->assign(array(
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 			'graph_engine' => Configuration::get('PS_STATS_RENDER'),
 			'grid_engine' => Configuration::get('PS_STATS_GRID_RENDER'),
+			'auto_clean' => Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN'),
 			'array_graph_engines' => ModuleGraphEngine::getGraphEngines(),
-			'array_grid_engines' => ModuleGridEngine::getGridEngines()
+			'array_grid_engines' => ModuleGridEngine::getGridEngines(),
+			'array_auto_clean' => $autoclean_period,
 		));
 
 		return $tpl->fetch();
@@ -223,6 +232,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				self::$currentIndex .= '&module='.Tools::getValue('module');
 				Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
 				Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
+				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
