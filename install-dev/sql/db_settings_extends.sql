@@ -1546,8 +1546,8 @@ INSERT INTO `ps_stock_available` (`id_stock_available`, `id_product`, `id_produc
 (33, 7, 22, 1, 0, 40, 0, 0),
 (34, 7, 23, 1, 0, 40, 0, 0);
 
-INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `date_add`) VALUES
-(1, 2, NOW());
+INSERT INTO `PREFIX_order_carrier` (`id_order_carrier`, `id_order`, `id_carrier`, `date_add`) VALUES
+(1, 1, 2, NOW());
 
 
 /* new theme, need to be checked */

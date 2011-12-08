@@ -35,9 +35,9 @@ function add_order_carrier()
 	if (count($orders) && is_array($orders))
 	{
 		$i = 0;
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES ';
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order_carrier`, `id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES ';
 		foreach ($orders as $order)
-			$sql .= '('.(int)$order['id_order'].', '.(int)$order['id_carrier'].', '.(int)$order['id_order_invoice'].', '.(float)$order['product_weight'].', '.(float)$order['total_shipping_tax_excl'].', '.(float)$order['total_shipping_tax_incl'].', "'.pSQL($order['date_add']).'"),';
+			$sql .= '(NULL, '.(int)$order['id_order'].', '.(int)$order['id_carrier'].', '.(int)$order['id_order_invoice'].', '.(float)$order['product_weight'].', '.(float)$order['total_shipping_tax_excl'].', '.(float)$order['total_shipping_tax_incl'].', "'.pSQL($order['date_add']).'"),';
 		// removing last comma to avoid SQL error
 		$sql = substr($sql, 0, strlen($sql) - 1);
 		Db::getInstance()->execute($sql);

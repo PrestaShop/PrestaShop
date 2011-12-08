@@ -206,9 +206,13 @@ abstract class PaymentModuleCore extends Module
 						$order_detail_list[] = $order_detail;
 
 						// Adding an entry in order_carrier table
-						Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES
-						('.(int)$order->id.', '.(int)$carrier->id.', '.(float)$order->getTotalWeight().', '.(float)$order->total_shipping_tax_excl.', '.(float)$order->total_shipping_tax_incl.', NOW())');
+						$order_carrier = new OrderCarrier();
+						$order_carrier->id_order = (int)$order->id;
+						$order_carrier->id_carrier = (int)$carrier->id;
+						$order_carrier->weight = (float)$order->getTotalWeight();
+						$order_carrier->shipping_cost_tax_excl = (float)$order->total_shipping_tax_excl;
+						$order_carrier->shipping_cost_tax_incl = (float)$order->total_shipping_tax_incl;
+						$order_carrier->add();
 					}
 			// Register Payment
 			if (!$order->addOrderPayment($amountPaid))

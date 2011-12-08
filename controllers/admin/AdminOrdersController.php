@@ -175,12 +175,15 @@ class AdminOrdersControllerCore extends AdminController
 						// Update order_carrier
 						$id_order_invoice = Tools::getValue('id_order_invoice');
 						$id_carrier = Tools::getValue('id_carrier');
-						Db::getInstance()->execute('
-							UPDATE `'._DB_PREFIX_.'order_carrier`
-							SET `tracking_number` = \''.pSQL(Tools::getValue('tracking_number')).'\'
+						$id_order_carrier = Db::getInstance()->getValue('
+							SELECT `id_order_carrier`
+							FROM `'._DB_PREFIX_.'order_carrier`
 							WHERE `id_order` = '.(int)$order->id.
 							' AND `id_carrier` = '.(int)$id_carrier.
 							($id_order_invoice ? ' AND `id_order_invoice` = '.(int)$id_order_invoice : ''));
+						$order_carrier = new OrderCarrier($id_order_carrier);
+						$order_carrier->tracking_number = pSQL(Tools::getValue('tracking_number'));
+						$order_carrier->update();
 
 						global $_LANGMAIL;
 						$customer = new Customer((int)$order->id_customer);
@@ -635,17 +638,14 @@ class AdminOrdersControllerCore extends AdminController
 						$payment->update();
 					}
 
-					$order_carrier = Db::getInstance()->getRow('
-						SELECT *
+					$id_order_carrier = Db::getInstance()->getRow('
+						SELECT `id_order_carrier`
 						FROM `'._DB_PREFIX_.'order_carrier`
 						WHERE `id_order` = '.(int)$order->id);
-
-					// Update order carrier amount
-					Db::getInstance()->execute('
-						UPDATE `'._DB_PREFIX_.'order_carrier`
-						SET `shipping_cost_tax_excl` = '.(float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_excl'], $old_currency, $currency).',
-						`shipping_cost_tax_incl` = '.(float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_incl'], $old_currency, $currency).'
-						WHERE `id_order` = '.(int)$order->id);
+					$order_carrier = new OrderCarrier($id_order_carrier);
+					$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_excl'], $old_currency, $currency);
+					$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier['shipping_cost_tax_incl'], $old_currency, $currency);
+					$order_carrier->update();
 
 					// Update order amount
 					$order->total_discounts = Tools::convertPriceFull($order->total_discounts, $old_currency, $currency);
@@ -1012,16 +1012,6 @@ class AdminOrdersControllerCore extends AdminController
 				$order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
 				$order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
 				$order_carrier->add();
-				/*// Adding an entry in order_carrier table
-				Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `date_add`) VALUES
-				('.(int)$order->id.',
-					'.(int)$order->id_carrier.',
-					'.(int)$order_invoice->id.',
-					'.(float)$cart->getTotalWeight().',
-					'.$order_invoice->total_shipping_tax_excl.',
-					'.(($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl).',
-					NOW())');*/
 			}
 			// Update current invoice
 			else
