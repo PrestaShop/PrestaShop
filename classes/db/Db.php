@@ -346,7 +346,9 @@ abstract class DbCore
 	 */
 	public function query($sql)
 	{
-		$sql = (string)$sql;
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
+
 		$result = $this->_query($sql);
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
@@ -381,7 +383,9 @@ abstract class DbCore
 	 */
 	public function execute($sql, $use_cache = true)
 	{
-		$sql = (string)$sql;
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
+
 		$this->result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
@@ -398,7 +402,8 @@ abstract class DbCore
 	 */
 	public function executeS($sql, $array = true, $use_cache = true)
 	{
-		$sql = (string)$sql;
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
 
 		// This method must be used only with queries which display results
 		if (!preg_match('#^\s*(select|show|explain|describe)\s#i', $sql))
@@ -443,7 +448,9 @@ abstract class DbCore
 	 */
 	public function getRow($sql, $use_cache = true)
 	{
-		$sql = (string)$sql;
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
+
 		$sql .= ' LIMIT 1';
 		$this->result = false;
 		$this->last_query = $sql;
@@ -473,7 +480,9 @@ abstract class DbCore
 	 */
 	public function getValue($sql, $use_cache = true)
 	{
-		$sql = (string)$sql;
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
+
 		if (!$result = $this->getRow($sql, $use_cache))
 			return false;
 		return array_shift($result);
@@ -508,7 +517,9 @@ abstract class DbCore
 	{
 		global $webservice_call;
 
-		$sql = (string)$sql;
+		if ($sql instanceof DbQuery)
+			$sql = $sql->build();
+
 		$this->result = false;
 		$result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
