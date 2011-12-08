@@ -168,12 +168,12 @@ abstract class ObjectModelCore
 			$result = self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang];
 			if ($result)
 			{
-				$this->id = (int)($id);
-				foreach ($result AS $key => $value)
+				$this->id = (int)$id;
+				foreach ($result as $key => $value)
 					if (key_exists($key, $this))
 						$this->{$key} = $value;
 
-				if (!$id_lang AND method_exists($this, 'getTranslationsFieldsChild'))
+				if (!$id_lang && method_exists($this, 'getTranslationsFieldsChild'))
 				{
 					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
 							WHERE `'.$this->identifier.'` = '.(int)$id
@@ -183,7 +183,7 @@ abstract class ObjectModelCore
 						foreach ($result as $row)
 							foreach ($row AS $key => $value)
 							{
-								if (key_exists($key, $this) AND $key != $this->identifier)
+								if (array_key_exists($key, $this) && $key != $this->identifier)
 								{
 									if (!is_array($this->{$key}))
 										$this->{$key} = array();
@@ -224,9 +224,6 @@ abstract class ObjectModelCore
 	 */
 	public function add($autodate = true, $nullValues = false)
 	{
-	 	if (!Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException('not table or identifier : '.$this->table);
-
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
 
@@ -474,10 +471,10 @@ abstract class ObjectModelCore
 				throw new PrestashopException('identifier is not table or identifier : '.$fieldName);
 
 			/* Copy the field, or the default language field if it's both required and empty */
-			if ((!$this->id_lang AND isset($this->{$fieldName}[$id_language]) AND !empty($this->{$fieldName}[$id_language]))
-			OR ($this->id_lang AND isset($this->$fieldName) AND !empty($this->$fieldName)))
+			if ((!$this->id_lang && isset($this->{$fieldName}[$id_language]) && !empty($this->{$fieldName}[$id_language]))
+			|| ($this->id_lang && isset($this->$fieldName) && !empty($this->$fieldName)))
 				$fields[$id_language][$fieldName] = $this->id_lang ? pSQL($this->$fieldName, $html) : pSQL($this->{$fieldName}[$id_language], $html);
-			elseif (in_array($fieldName, $this->fieldsRequiredLang))
+			else if (in_array($fieldName, $this->fieldsRequiredLang))
 				$fields[$id_language][$fieldName] = $this->id_lang ? pSQL($this->$fieldName, $html) : pSQL($this->{$fieldName}[Configuration::get('PS_LANG_DEFAULT')], $html);
 			else
 				$fields[$id_language][$fieldName] = '';
@@ -491,14 +488,14 @@ abstract class ObjectModelCore
 	{
 		$fieldsRequired = array_merge($this->fieldsRequired, (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array()));
 		foreach ($fieldsRequired as $field)
-			if (Tools::isEmpty($this->{$field}) AND (!is_numeric($this->{$field})))
+			if (Tools::isEmpty($this->{$field}) && !is_numeric($this->{$field}))
 			{
 				if ($die)
 					throw new PrestashopException('property empty : '.get_class($this).'->'.$field);
 				return $errorReturn ? get_class($this).' -> '.$field.' is empty' : false;
 			}
 		foreach ($this->fieldsSize as $field => $size)
-			if (isset($this->{$field}) AND Tools::strlen($this->{$field}) > $size)
+			if (isset($this->{$field}) && Tools::strlen($this->{$field}) > $size)
 			{
 				if ($die)
 					throw new PrestashopException('fieldsize error : '.get_class($this).'->'.$field.' > '.$size);
@@ -508,7 +505,7 @@ abstract class ObjectModelCore
 		foreach ($this->fieldsValidate as $field => $method)
 			if (!method_exists($validate, $method))
 				throw new PrestashopException('Validation function not found. '.$method);
-			elseif (!empty($this->{$field}) AND !call_user_func(array('Validate', $method), $this->{$field}))
+			elseif (!empty($this->{$field}) && !call_user_func(array('Validate', $method), $this->{$field}))
 			{
 				if ($die)
 					throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field});
@@ -554,7 +551,7 @@ abstract class ObjectModelCore
 			foreach ($this->{$fieldArray} as $k => $value)
 				if (!method_exists($validate, $method))
 					throw new PrestashopException('Validation function not found for lang: '.$method);
-				elseif (!empty($value) AND !call_user_func(array('Validate', $method), $value))
+				elseif (!empty($value) && !call_user_func(array('Validate', $method), $value))
 				{
 					if ($die)
 						throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field}. 'for language '.$k);
@@ -570,7 +567,7 @@ abstract class ObjectModelCore
 		@include(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php');
 
 		$key = $className.'_'.md5($field);
-		return ((is_array($_FIELDS) AND array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field);
+		return ((is_array($_FIELDS) && array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field);
 	}
 
 	/**
@@ -590,14 +587,14 @@ abstract class ObjectModelCore
 		/* Checking for required fields */
 		$fieldsRequired = array_merge($this->fieldsRequired, (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array()));
 		foreach ($fieldsRequired AS $field)
-		if (($value = Tools::getValue($field, $this->{$field})) == false AND (string)$value != '0')
+		if (($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
 			if (!$this->id OR $field != 'passwd')
 				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
 
 
 		/* Checking for maximum fields sizes */
 		foreach ($this->fieldsSize AS $field => $maxLength)
-			if (($value = Tools::getValue($field, $this->{$field})) AND Tools::strlen($value) > $maxLength)
+			if (($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $maxLength)
 				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is too long.').' ('.Tools::displayError('Maximum length:').' '.$maxLength.')';
 
 		/* Checking for fields validity */
@@ -623,7 +620,7 @@ abstract class ObjectModelCore
 		return $errors;
 	}
 
-	public function getWebserviceParameters($wsParamsAttributeName = NULL)
+	public function getWebserviceParameters($wsParamsAttributeName = null)
 	{
 		$defaultResourceParameters = array(
 			'objectSqlId' => $this->identifier,
