@@ -171,13 +171,13 @@ class AdminHomeControllerCore extends AdminController
 	private function getQuickLinks()
 	{
 		$quick_links['first'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCatalog').'&amp;addcategory',
+			'href' => $this->context->link->getAdminLink('AdminCategories').'&amp;addcategory',
 			'title' => $this->l('New category'),
 			'description' => $this->l('Create a new category and organize your products.'),
 		);
 
 		$quick_links['second'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCatalog').'&amp;addproduct',
+			'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
 			'title' => $this->l('New product'),
 			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
 		);

@@ -1509,8 +1509,8 @@ class AdminProductsControllerCore extends AdminController
 			// Trick's
 			if ($edit == 1)
 			{
-				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
-				$id_product_download = ($id_product_download_attribute) ? (int) $id_product_download_attribute : (int) Tools::getValue('virtual_product_id');
+				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int)$product->id, $id_product_attribute);
+				$id_product_download = ($id_product_download_attribute) ? (int)$id_product_download_attribute : (int)Tools::getValue('virtual_product_id');
 			} else
 				$id_product_download = Tools::getValue('virtual_product_id');
 
@@ -1551,16 +1551,16 @@ class AdminProductsControllerCore extends AdminController
 				$filename = ProductDownload::getNewFilename();
 
 			$download = new ProductDownload($id_product_download);
-			$download->id_product = (int) $product->id;
-			$download->id_product_attribute = (int) $id_product_attribute;
+			$download->id_product = (int)$product->id;
+			$download->id_product_attribute = (int)$id_product_attribute;
 			$download->display_filename = $virtual_product_name;
 			$download->filename = $filename;
 			$download->date_add = date('Y-m-d H:i:s');
 			$download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date.' 23:59:59' : '';
-			$download->nb_days_accessible = (int) $virtual_product_nb_days;
-			$download->nb_downloadable = (int) $virtual_product_nb_downloable;
+			$download->nb_days_accessible = (int)$virtual_product_nb_days;
+			$download->nb_downloadable = (int)$virtual_product_nb_downloable;
 			$download->active = 1;
-			$download->is_shareable = (int) $is_shareable;
+			$download->is_shareable = (int)$is_shareable;
 
 			if ($download->save())
 				return true;
@@ -1570,8 +1570,8 @@ class AdminProductsControllerCore extends AdminController
 			/* unactive download product if checkbox not checked */
 			if ($edit == 1)
 			{
-				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int) $product->id, $id_product_attribute);
-				$id_product_download = ($id_product_download_attribute) ? (int) $id_product_download_attribute : (int) Tools::getValue('virtual_product_id');
+				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int)$product->id, $id_product_attribute);
+				$id_product_download = ($id_product_download_attribute) ? (int)$id_product_download_attribute : (int)Tools::getValue('virtual_product_id');
 			}
 			else
 				$id_product_download = ProductDownload::getIdFromIdProduct($product->id);
@@ -1636,14 +1636,29 @@ class AdminProductsControllerCore extends AdminController
 		/* Assign tags to this product */
 		foreach ($languages as $language)
 			if ($value = Tools::getValue('tags_'.$language['id_lang']))
-				$tagError &= Tag::addTags($language['id_lang'], (int)($product->id), $value);
+				$tagError &= Tag::addTags($language['id_lang'], (int)$product->id, $value);
 		return $tagError;
+	}
+
+	public function initProcess()
+	{
+		parent::initProcess();
+		if (isset($_GET['add'.$this->table]))
+		{
+			if ($this->tabAccess['add'] === '1')
+			{
+				$this->action = 'Informations';
+			}
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+		}
 	}
 
 	public function initContent($token = null)
 	{
 		if ($this->action == 'save')
 			$this->action = '';
+
 		// this is made to "save and stay" feature
 		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
 		if (Tools::getValue('id_product') || ((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND count($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
@@ -1694,9 +1709,8 @@ class AdminProductsControllerCore extends AdminController
 				$this->tpl_form_vars['tabs_toolbar_save_buttons'] = $this->tabs_toolbar_save_buttons;
 			}
 
-
 			$languages = Language::getLanguages(false);
-			$default_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
+			$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
 		}
 		else
 		{
