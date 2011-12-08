@@ -31,6 +31,9 @@
 	text-indent:-5000px;
 	background:url(img/icon/less.gif) no-repeat 2px 2px;
 }
+#layered_block_left span.closed a {
+	background:url(img/icon/more.gif) no-repeat 2px 2px;
+}
 
 #layered_block_left .layered_subtitle {
 	display: inline-block;
