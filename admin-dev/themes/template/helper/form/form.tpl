@@ -285,7 +285,7 @@
 							{/if}
 							{if isset($input.required) && $input.required} <sup>*</sup>{/if}
 							{if isset($input.desc)}
-								<p class="clear">
+								<p class="preference_description">
 									{if is_array($input.desc)}
 										{foreach $input.desc as $p}
 											{if is_array($p)}
