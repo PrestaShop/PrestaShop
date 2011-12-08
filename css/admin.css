@@ -473,6 +473,7 @@ select optgroup option {
 	border: 1px solid #CC0000;
 	color:#D8000C;
 	min-height: 32px;
+	line-height:28px;
     padding: 5px 5px 5px 40px;
 	border-radius:3px;
 }
