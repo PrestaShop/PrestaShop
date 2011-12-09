@@ -361,16 +361,21 @@ class SearchCore
 	{
 		// Adjust the limit to get only "whole" products, in every languages (and at least one)
 		$limit = max(1, round($limit / $total_languages) * $total_languages);
+
 		return Db::getInstance()->executeS('
-		SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
-			pl.description_short, pl.description, cl.name cname, m.name mname
-		FROM '._DB_PREFIX_.'product p
-		LEFT JOIN '._DB_PREFIX_.'product_lang pl ON p.id_product = pl.id_product
-		LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang)
-		LEFT JOIN '._DB_PREFIX_.'manufacturer m ON m.id_manufacturer = p.id_manufacturer
-		WHERE p.indexed = 0
-		'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
-		LIMIT '.(int)$limit);
+			SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
+				pl.description_short, pl.description, cl.name cname, m.name mname
+			FROM '._DB_PREFIX_.'product p
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl
+				ON p.id_product = pl.id_product
+			LEFT JOIN '._DB_PREFIX_.'category_lang cl
+				ON (cl.id_category = p.id_category_default AND pl.id_lang = cl.id_lang)
+			LEFT JOIN '._DB_PREFIX_.'manufacturer m
+				ON m.id_manufacturer = p.id_manufacturer
+			WHERE p.indexed = 0
+				'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
+			LIMIT '.(int)$limit
+		);
 	}
 
 	public static function indexation($full = false, $id_product = false)
@@ -390,9 +395,10 @@ class SearchCore
 		{
 			// Do it even if you already know the product id in order to be sure that it exists
 			$products = $db->executeS('
-			SELECT id_product
-			FROM '._DB_PREFIX_.'product
-			WHERE '.($id_product ? 'id_product = '.(int)$id_product : 'indexed = 0'));
+				SELECT id_product
+				FROM '._DB_PREFIX_.'product
+				WHERE '.($id_product ? 'id_product = '.(int)$id_product : 'indexed = 0')
+			);
 
 			$ids = array();
 			if ($products)
@@ -440,7 +446,8 @@ class SearchCore
 
 		// Products are processed 50 by 50 in order to avoid overloading MySQL
 		$count = count($products);
-		while ($products = Search::getProductsToIndex($total_languages, $id_product, 50) && $count > 0)
+		$products = Search::getProductsToIndex($total_languages, $id_product, 50);
+		while ($products && $count > 0)
 		{
 			// Now each non-indexed product is processed one by one, langage by langage
 			foreach ($products as $product)

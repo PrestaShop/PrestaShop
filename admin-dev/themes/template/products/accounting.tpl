@@ -23,27 +23,32 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<h4>{l s='Accounting'}</h4>
-<div class="separation"></div>
-{if !empty($error)}
-	<div class="hint" style="display:block">{$error}</div>
-{else}
-	<fieldset>
-		<legend>{l s='Account number'}</legend>
-		<div class="hint" style="display:block">
-			{l s='Configure the account number of the product for each zone, if a field is empty, it will use the default one of the shop set in the Accounting Management tab'}
-		</div>
-		<br />
-			{foreach from=$productAccountNumberList['zones'] key=id_zone item=currentZone}
-				<label>{$currentZone['name']}</label>
-				<div class="margin-form">
-					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']}" />
-				</div>
-			{/foreach}
-		</form>
-		<div style="text-align:left; font-size:11px;">
-			<i>{l s='Theses fields are used for the accounting export'}</i>
-		</div>
-		<div class="separation"></div>
-	</fieldset>
+
+{if isset($product->id)}
+
+	<h4>{l s='Accounting'}</h4>
+	<div class="separation"></div>
+	{if !empty($error)}
+		<div class="hint" style="display:block">{$error}</div>
+	{else}
+		<fieldset>
+			<legend>{l s='Account number'}</legend>
+			<div class="hint" style="display:block">
+				{l s='Configure the account number of the product for each zone, if a field is empty, it will use the default one of the shop set in the Accounting Management tab'}
+			</div>
+			<br />
+				{foreach from=$productAccountNumberList['zones'] key=id_zone item=currentZone}
+					<label>{$currentZone['name']}</label>
+					<div class="margin-form">
+						<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']}" />
+					</div>
+				{/foreach}
+			</form>
+			<div style="text-align:left; font-size:11px;">
+				<i>{l s='Theses fields are used for the accounting export'}</i>
+			</div>
+			<div class="separation"></div>
+		</fieldset>
+	{/if}
+
 {/if}
