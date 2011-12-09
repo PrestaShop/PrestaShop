@@ -323,7 +323,5 @@ abstract class CacheCore
 		}
 		else
 			unset(Cache::$local[$key]);
-
-		d(array_keys(Cache::$local));
 	}
 }
