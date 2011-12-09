@@ -87,7 +87,10 @@ class OrderHistoryCore extends ObjectModel
 				{
 					/* If becoming logable => adding sale */
 					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
+					{
 						ProductSale::addProductSale($product['id_product'], $product['cart_quantity']);
+						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']);
+					}
 					/* If becoming unlogable => removing sale */
 					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
