@@ -1517,7 +1517,7 @@ class ToolsCore
 		foreach (ShopUrl::getShopUrls() as $shop_url)
 		{
 			if (!isset($domains[$shop_url->domain]))
-				$domains[$shop_url['domain']] = array();
+				$domains[$shop_url->domain] = array();
 
 			$domains[$shop_url->domain][] = array(
 				'physical' =>	$shop_url->physical_uri,
