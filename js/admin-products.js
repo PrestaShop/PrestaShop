@@ -345,9 +345,8 @@ $(document).ready(function() {
 	
 	$("#is_virtual_good").change(function(e)
 	{
-		$(".toggleVirtualPhysicalProduct").toggle();
+		$("#virtual_good").toggle();
 	});
-
 
 	if ($("#is_virtual_good").attr("checked"))
 	{

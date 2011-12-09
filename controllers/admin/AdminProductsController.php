@@ -40,6 +40,8 @@ class AdminProductsControllerCore extends AdminController
 		'Informations',
 		'Prices',
 		'Images',
+		'Associations',
+		'Shipping',
 		'Combinations',
 		'Features',
 		'Customization',
@@ -51,6 +53,22 @@ class AdminProductsControllerCore extends AdminController
 	);
 
 	protected $available_tabs_lang = array ();
+
+	protected $tabs_toolbar_save_buttons = array(
+		'Informations' => true,
+		'Images' => false,
+		'Prices' => false,
+		'Associations' => true,
+		'Shipping' => true,
+		'Combinations' => false,
+		'Features' => true,
+		'Customization' => false,
+		'Attachments' => true,
+		'Quantities' => false,
+		'Suppliers' => true,
+		'Warehouses' => true,
+		'Accounting' => true
+	);
 
 	public function __construct()
 	{
@@ -85,6 +103,8 @@ class AdminProductsControllerCore extends AdminController
 			'Informations' => $this->l('Informations'),
 			'Prices' => $this->l('Prices'),
 			'Images' => $this->l('Images'),
+			'Associations' => $this->l('Associations'),
+			'Shipping' => $this->l('Shipping'),
 			'Combinations' => $this->l('Combinations'),
 			'Features' => $this->l('Features'),
 			'Customization' => $this->l('Customization'),
@@ -1484,13 +1504,6 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 
-			// The oos behavior MUST be "Deny orders" for virtual products
-			if (Tools::getValue('out_of_stock') != 0)
-			{
-				$this->_errors[] = $this->l('The "when out of stock" behavior selection must be "deny order" for virtual products');
-				return false;
-			}
-
 			// Trick's
 			if ($edit == 1)
 			{
@@ -1647,6 +1660,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
 		if (Tools::getValue('id_product') || ((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND count($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
 		{
+			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
 			if (empty($this->action))
 				$this->action = 'Informations';
@@ -1917,6 +1931,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if(!method_exists($this, 'initForm'.$this->action))
 			return;
+
 		$this->addJqueryUI('ui.datepicker');
 		// getLanguages init this->_languages
 		$this->getLanguages();
@@ -1951,6 +1966,7 @@ class AdminProductsControllerCore extends AdminController
 				else
 					return $this->tpl_form_vars['custom_form'];
 		}
+
 		return parent::renderForm();
 	}
 
@@ -2321,6 +2337,43 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
+	public function initFormAssociations($obj)
+	{
+		$product = $this->object;
+		$data = $this->context->smarty->createData();
+		// Prepare Categories tree for display in Associations tab
+		$default_category = Tools::getValue('id_category', 1);
+
+		if (!$product->id)
+			$selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
+		else
+		{
+			if (Tools::isSubmit('categoryBox'))
+				$selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
+			else
+				$selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
+		}
+
+		$translations = array(
+			'Home' => $this->l('Home'),
+			'selected' => $this->l('selected'),
+			'Collapse All' => $this->l('Collapse All'),
+			'Expand All' => $this->l('Expand All'),
+			'Check All' => $this->l('Check All'),
+			'Uncheck All'  => $this->l('Uncheck All'),
+			'search' => $this->l('Search a category')
+		);
+
+		$data->assign(array('default_category' => $default_category,
+					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
+					'selected_cat' => $selected_cat,
+					'category_tree' => Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true),
+				  	'product' => $product
+		));
+
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
 	public function initFormPrices($obj, $languages, $default_language)
 	{
 		$data = $this->context->smarty->createData();
@@ -2331,7 +2384,6 @@ class AdminProductsControllerCore extends AdminController
 			$countries = Country::getCountries($this->context->language->id);
 			$groups = Group::getGroups($this->context->language->id);
 			$currencies = Currency::getCurrencies();
-			$currency =
 			$attributes = $obj->getAttributesGroups((int)$this->context->language->id);
 			$combinations = array();
 			foreach($attributes as $attribute)
@@ -2672,6 +2724,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$currency = $this->context->currency;
 		$data->assign('languages',$languages);
+		$data->assign('currency', $currency);
 		$this->object = $product;
 		$this->display = 'edit';
 		$has_attribute = $product->hasAttributes();
@@ -2679,7 +2732,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->_applyTaxToEcotax($product);
 
 		/*
-		* Form for add a virtual product like software, mp3, etc...
+		* Form for adding a virtual product like software, mp3, etc...
 		*/
 		$product_download = new ProductDownload();
 		if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id')))
@@ -2691,8 +2744,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
 		// @todo : uses the helperform
 		$data->assign('displayAssoShop', $this->displayAssoShop());
-		$data->assign('carrier_list', $this->getCarrierList());
-
 
 		$product_props = array();
 		// global informations
@@ -2714,7 +2765,7 @@ class AdminProductsControllerCore extends AdminController
 		array_push($product_props,
 			'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
 			'unity', 'minimum_quantity', 'additional_shipping_cost',
-			'available_now', 'available_later', 'available_date', 'out_of_stock'
+			'available_now', 'available_later', 'available_date'
 		);
 
 		if(Configuration::get('PS_USE_ECOTAX'))
@@ -2729,8 +2780,6 @@ class AdminProductsControllerCore extends AdminController
 
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
 
-		$data->assign('ps_dimension_unit', Configuration::get('PS_DIMENSION_UNIT'));
-		$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
 		// @todo : initPack should not be called like this
 		$this->initPack($product);
 
@@ -2799,35 +2848,6 @@ class AdminProductsControllerCore extends AdminController
 		if (Combination::isFeatureActive())
 			$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product->id));
 
-		$data->assign('ps_order_out_of_stock', Configuration::get('PS_ORDER_OUT_OF_STOCK'));
-
-		$default_category = Tools::getValue('id_category', 1);
-		$data->assign('default_category', $default_category);
-		if (!$product->id)
-		{
-			$selectedCat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
-		}
-		else
-		{
-			if (Tools::isSubmit('categoryBox'))
-				$selectedCat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
-			else
-				$selectedCat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
-		}
-		$data->assign('selected_cat_ids', implode(',', array_keys($selectedCat)));
-		$data->assign('selected_cat', $selectedCat);
-
-		$trads = array(
-			'Home' => $this->l('Home'),
-			'selected' => $this->l('selected'),
-			'Collapse All' => $this->l('Collapse All'),
-			'Expand All' => $this->l('Expand All'),
-			'Check All' => $this->l('Check All'),
-			'Uncheck All'  => $this->l('Uncheck All'),
-			'search' => $this->l('Search a category')
-		);
-		$data->assign('category_tree', Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox', false, true));
-
 		$images = Image::getImages($this->context->language->id, $product->id);
 
 		foreach($images as $k => $image)
@@ -2836,17 +2856,17 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('images', $images);
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
-			$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
+		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
 
-			if ($postAccessories = Tools::getValue('inputAccessories'))
-			{
-				$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
-				foreach ($postAccessoriesTab as $accessory_id)
-					if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
-						$accessories[] = $accessory;
-			}
-			$data->assign('accessories', $accessories);
-			$product->tags = Tag::getProductTags($product->id);
+		if ($postAccessories = Tools::getValue('inputAccessories'))
+		{
+			$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
+			foreach ($postAccessoriesTab as $accessory_id)
+				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
+					$accessories[] = $accessory;
+		}
+		$data->assign('accessories', $accessories);
+		$product->tags = Tag::getProductTags($product->id);
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
@@ -2860,6 +2880,18 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign($this->tpl_form_vars);
 		$data->assign('link', $this->context->link);
 		$this->tpl_form_vars['product'] = $product;
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
+	public function initFormShipping($obj, $token = null)
+	{
+		$data = $this->context->smarty->createData();
+		$data->assign(array(
+						  'product' => $obj,
+						  'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
+						  'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
+						  'carrier_list' => $this->getCarrierList()
+					  ));
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
@@ -3567,7 +3599,11 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
 				_PS_JS_DIR_.'tinymce.inc.js',
 				_PS_JS_DIR_.'fileuploader.js',
-				_PS_JS_DIR_.'admin-dnd.js'
+				_PS_JS_DIR_.'admin-dnd.js',
+				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
+				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
+				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js',
+				_PS_JS_DIR_.'admin-categories-tree.js'
 			));
 		}
 	}
