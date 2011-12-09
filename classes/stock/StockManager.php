@@ -455,13 +455,15 @@ class StockManagerCore implements StockManagerInterface
 
 		// Gets client_orders_qty
 		$query = new DbQuery();
-		$query->select('SUM(od.product_quantity)');
+		$query->select('SUM(od.product_quantity) + SUM(od.product_quantity_refunded)');
 		$query->from('order_detail od');
 		$query->leftjoin('orders o ON o.id_order = od.id_order');
 		$query->where('od.product_id = '.(int)$id_product);
 		if (0 != $id_product_attribute)
 			$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
-		$query->where('o.delivery_number = 0');
+		$query->leftJoin('order_history oh ON (oh.id_order = o.id_order AND oh.date_add = o.date_upd)');
+		$query->leftJoin('order_state os ON (os.id_order_state = oh.id_order_state)');
+		$query->where('os.shipped != 1');
 		$query->where('o.valid = 1');
 		// @FIXME: Once part-shipping is done, remove the comment on the line below.
 		// $query->where('o.id_warehouse IN (0, '.implode(', ', $ids_warehouse).')');
