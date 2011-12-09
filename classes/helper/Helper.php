@@ -293,8 +293,8 @@ class HelperCore
 		}
 		global $_LANGADM;
 
-        if ($class == __CLASS__)
-                $class = 'AdminTab';
+		if ($class == __CLASS__)
+			$class = 'AdminTab';
 
 		$key = md5(str_replace('\'', '\\\'', $string));
 		$str = (key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
@@ -302,7 +302,14 @@ class HelperCore
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 
-	protected function displayAssoShop($type = 'shop')
+	/**
+	 * Render an area to determinate shop association
+	 * 
+	 * @param string $type 'shop' or 'group_shop'
+	 * 
+	 * @return string
+	 */
+	public function renderAssoShop($type = 'shop')
 	{
 		if (!Shop::isFeatureActive() || (!$this->id && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
 			return;
@@ -311,12 +318,33 @@ class HelperCore
 			$type = 'shop';
 
 		$assos = array();
-		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
+		
+		if ((int)$this->id)
+		{
+			$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`
+					WHERE `'.pSQL($this->identifier).'` = '.(int)$this->id;
+	
+			foreach (Db::getInstance()->executeS($sql) as $row)
+				$assos[$row['id_'.$type]] = $row['id_'.$type];
+		}
+		
+		$tpl = $this->createTemplate('helper/assoshop.tpl');
+		$tpl->assign(array(
+			'input' => array(
+				'type' => $type,
+				'values' => Shop::getTree(),
+			),
+			'fields_value' => array(
+				'shop' => $assos
+			),
+			'form_id' => $this->id,
+			'table' => $this->table
+		));
+		return $tpl->fetch();
 
-		foreach (Db::getInstance()->executeS($sql) as $row)
-			$assos[$row['id_'.$type]][] = $row[$this->identifier];
-
+		/*
+		//$page = $this->context->smarty->fetch($tpl);
 		$html = <<<EOF
 			<script type="text/javascript">
 			$().ready(function()
@@ -404,6 +432,7 @@ EOF;
 		}
 		$html .= '</table></div>';
 		return $html;
+		*/
 	}
 
 }

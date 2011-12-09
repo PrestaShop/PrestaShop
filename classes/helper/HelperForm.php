@@ -68,12 +68,11 @@ class HelperFormCore extends Helper
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
-		/* TODO : replace call method displayAssoShop() by form_shop.tpl */
 		if (isset($this->fields_form[0]['form']['asso_shop']) && Shop::isFeatureActive())
 			if ($this->fields_form[0]['asso_shop'] == 'group')
-				$asso_shop = $this->displayAssoShop('group_shop');
+				$asso_shop = $this->renderAssoShop('group_shop');
 			else if ($this->fields_form[0]['form']['asso_shop'] == 'shop')
-				$asso_shop = $this->displayAssoShop();
+				$asso_shop = $this->renderAssoShop();
 
 		$this->context->controller->addJS(_PS_JS_DIR_.'form.js');
 

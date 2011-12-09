@@ -2742,8 +2742,16 @@ class AdminProductsControllerCore extends AdminController
 
 		$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
-		// @todo : uses the helperform
-		$data->assign('displayAssoShop', $this->displayAssoShop());
+		
+		$helper = new Helper();
+		if ($this->object && $this->object->id)
+			$helper->id = $this->object->id;
+		else
+			$helper->id = null;
+		$helper->table = $this->table;
+		$helper->identifier = $this->identifier;
+		
+		$data->assign('displayAssoShop', $helper->renderAssoShop());
 
 		$product_props = array();
 		// global informations
