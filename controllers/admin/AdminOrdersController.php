@@ -428,34 +428,45 @@ class AdminOrdersControllerCore extends AdminController
 					if (!sizeof($this->_errors) AND $productList)
 						foreach ($productList AS $key => $id_order_detail)
 						{
-							$qtyCancelProduct = abs($qtyList[$key]);
-							$orderDetail = new OrderDetail((int)($id_order_detail));
+							$qty_cancel_product = abs($qtyList[$key]);
+							$order_detail = new OrderDetail((int)($id_order_detail));
 
 							// Reinject product
 							if (!$order->hasBeenDelivered() OR ($order->hasBeenDelivered() AND Tools::isSubmit('reinjectQuantities')))
 							{
-								$reinjectableQuantity = (int)($orderDetail->product_quantity) - (int)($orderDetail->product_quantity_reinjected);
-								$quantityToReinject = $qtyCancelProduct > $reinjectableQuantity ? $reinjectableQuantity : $qtyCancelProduct;
-								// TODO (Denis) : fix reinject quantities
-								// if (!Product::reinjectQuantities($orderDetail, $quantityToReinject))
-								//	$this->_errors[] = Tools::displayError('Cannot re-stock product').' <span class="bold">'.$orderDetail->product_name.'</span>';
-								// else
-								// {
-									$updProductAttributeID = !empty($orderDetail->product_attribute_id) ? (int)($orderDetail->product_attribute_id) : NULL;
-									$newProductQty = Product::getQuantity($orderDetail->product_id, $updProductAttributeID);
-									$product = get_object_vars(new Product($orderDetail->product_id, false, $this->context->language->id, $order->id_shop));
-									if (!empty($orderDetail->product_attribute_id))
-									{
-										$updProduct['quantity_attribute'] = (int)($newProductQty);
-										$product['quantity_attribute'] = $updProduct['quantity_attribute'];
-									}
-									else
-									{
-										$updProduct['stock_quantity'] = (int)($newProductQty);
-										$product['stock_quantity'] = $updProduct['stock_quantity'];
-									}
-									Hook::exec('updateQuantity', array('product' => $product, 'order' => $order));
-								// }
+								$reinjectable_quantity = (int)$qty_cancel_product->product_quantity - (int)$qty_cancel_product->product_quantity_reinjected;
+								$quantity_to_reinject = $qty_cancel_product > $reinjectable_quantity ? $reinjectable_quantity : $qty_cancel_product;
+
+								// @since 1.5.0 : Advanced Stock Management
+								$product_to_inject = new Product($qty_cancel_product->product_id, false, $this->context->language->id, $order->id_shop);
+								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $qty_cancel_product->id_warehouse != 0)
+								{
+									$id_supplier = $product_to_inject->id_supplier;
+									$price = ProductSupplier::getProductPrice($id_supplier, $qty_cancel_product->product_id, $order_detail->product_attribute_id);
+									$price_te = $price['price_te'];
+									$id_currency = $price['id_currency'];
+									$warehouse = new Warehouse($id_warehouse);
+
+									$price_te = Tools::convertPriceFull($price_te, $from = new Currency($id_currency), $to = new Currency($warehouse->id_currency));
+
+									$stock_manager->addProduct($qty_cancel_product->product_id,
+															   $qty_cancel_product->product_attribute_id,
+															   $warehouse,
+															   $quantity_to_reinject,
+															   null,
+															   $price_te,
+															   true);
+									StockAvailable::synchronize($order_detail->product_id);
+								}
+								else if ($order_detail->id_warehouse == 0)
+								{
+									StockAvailable::updateQuantity($order_detail->product_id,
+																   $order_detail->product_attribute_id,
+																   $quantity_to_reinject,
+																   $order->id_shop);
+								}
+								else
+									$this->_errors[] = Tools::displayError('Cannot re-stock product');
 							}
 
 							// Delete product
