@@ -137,8 +137,6 @@ class AdminStockConfigurationControllerCore extends AdminController
 			$this->display = 'edit';
 		}
 		parent::init();
-		p($this->display);
-		p($this->action);
 	}
 
 	/**
