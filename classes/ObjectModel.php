@@ -39,13 +39,13 @@ abstract class ObjectModelCore
 
 	/**
 	 * @var string SQL This property shouldn't be overloaded anymore in class, use static $definition['table'] property instead
-	 * @deprecated
+	 * @deprecated 1.5.0
 	 */
 	protected $table;
 
 	/**
 	 * @var string SQL This property shouldn't be overloaded anymore in class, use static $definition['primary'] property instead
-	 * @deprecated
+	 * @deprecated 1.5.0
 	 */
 	protected $identifier;
 
@@ -70,13 +70,13 @@ abstract class ObjectModelCore
  	/** @var array Multilingual fields validity functions for admin panel forms */
  	protected $fieldsValidateLang = array();
 
-	/** @var array tables */
+	/**
+	 * @deprecated 1.5.0
+	 */
  	protected $tables = array();
 
  	/** @var array tables */
  	protected $webserviceParameters = array();
-
-	protected static $_cache = array();
 
 	/** @var  string path to image directory. Used for image deletion. */
 	protected $image_dir = null;
@@ -155,17 +155,18 @@ abstract class ObjectModelCore
 		if ($id)
 		{
 			// Load object from database if object id is present
-			if (!isset(self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang]))
+			$cache_id = 'objectmodel_'.$this->table.'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			if (!Cache::isStored($cache_id))
 			{
 				$sql = 'SELECT *
 						FROM `'._DB_PREFIX_.$this->table.'` a '.
 						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
 						.' WHERE 1 AND a.`'.$this->identifier.'` = '.(int)$id.
 							(($this->id_shop AND $id_lang) ? ' AND b.id_shop = '.$this->id_shop : '');
-				self::$_cache[$this->table][(int)($id)][(int)$id_shop][(int)$id_lang] = Db::getInstance()->getRow($sql);
+				Cache::store($cache_id, Db::getInstance()->getRow($sql));
 			}
 
-			$result = self::$_cache[$this->table][(int)$id][(int)$id_shop][(int)$id_lang];
+			$result = Cache::retrieve($cache_id);
 			if ($result)
 			{
 				$this->id = (int)$id;
@@ -799,10 +800,10 @@ abstract class ObjectModelCore
 
 	public function clearCache($all = false)
 	{
-		if ($all AND isset(self::$_cache[$this->table]))
-			unset(self::$_cache[$this->table]);
-		elseif ($this->id AND isset(self::$_cache[$this->table][(int)$this->id]))
-			unset(self::$_cache[$this->table][(int)$this->id]);
+		if ($all)
+			Cache::clean('objectmodel_'.$this->table.'_*');
+		else if ($this->id)
+			Cache::clean('objectmodel_'.$this->table.'_'.(int)$this->id.'_*');
 	}
 
 	/**

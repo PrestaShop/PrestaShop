@@ -42,8 +42,6 @@ class OrderHistoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	protected $tables = array ('order_history');
-
 	protected	$fieldsRequired = array('id_order', 'id_order_state');
 	protected	$fieldsValidate = array('id_order' => 'isUnsignedId', 'id_order_state' => 'isUnsignedId', 'id_employee' => 'isUnsignedId');
 

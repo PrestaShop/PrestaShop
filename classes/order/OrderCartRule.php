@@ -42,8 +42,6 @@ class OrderCartRuleCore extends ObjectModel
 	/** @var integer */
 	public $value;
 
-	protected $tables = array ('order_cart_rule');
-
 	protected	$fieldsRequired = array ('id_order', 'name', 'value');
 	protected	$fieldsValidate = array ('id_order' => 'isUnsignedId', 'name' => 'isGenericName', 'value' => 'isInt');
 

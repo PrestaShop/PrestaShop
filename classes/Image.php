@@ -59,8 +59,6 @@ class ImageCore extends ObjectModel
 	/** @var int access rights of created folders (octal) */
 	protected static $access_rights = 0775;
 
-	protected $tables = array ('image', 'image_lang');
-
 	protected $fieldsRequired = array('id_product');
 	protected $fieldsValidate = array('id_product' => 'isUnsignedId', 'position' => 'isUnsignedInt', 'cover' => 'isBool');
 	protected $fieldsRequiredLang = array('legend');
