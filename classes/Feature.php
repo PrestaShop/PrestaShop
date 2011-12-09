@@ -169,13 +169,17 @@ class FeatureCore extends ObjectModel
 			 	if (!Validate::isTableOrIdentifier($key))
 	 				die(Tools::displayError());
 
-	 		$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
-	 				WHERE `'.pSQL($this->identifier).'` = '.(int)$this->id.'
+	 		$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+	 				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
 	 					AND `id_lang` = '.(int)$field['id_lang'];
 			$mode = Db::getInstance()->getRow($sql);
-			$result &= (!$mode) ? Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT') :
-			Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', '`'.
-			pSQL($this->identifier).'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']);
+			$result &= (!$mode) ? Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT') :
+			Db::getInstance()->AutoExecute(
+				_DB_PREFIX_.$this->def['table'].'_lang',
+				$field,
+				'UPDATE',
+				'`'.$this->def['primary'].'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']
+			);
 		}
 		Hook::exec('afterSaveFeature', array('id_feature' => $this->id));
 		return $result;

@@ -40,11 +40,11 @@ class AliasCore extends ObjectModel
 		'primary' => 'id_alias',
 	);
 
-	function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
+	public function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{
 		if ($id)
 			parent::__construct($id);
-		elseif ($alias AND Validate::isValidSearch($alias))
+		else if ($alias && Validate::isValidSearch($alias))
 		{
 			if (!self::isFeatureActive())
 			{
@@ -89,7 +89,7 @@ class AliasCore extends ObjectModel
 		if (parent::delete())
 		{
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+			Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table'], true));
 			return true;
 		}
 		return false;
@@ -115,7 +115,7 @@ class AliasCore extends ObjectModel
 
 		$fields['alias'] = pSQL($this->alias);
 		$fields['search'] = pSQL($this->search);
-		$fields['active'] = (int)($this->active);
+		$fields['active'] = (int)$this->active;
 		return $fields;
 	}
 

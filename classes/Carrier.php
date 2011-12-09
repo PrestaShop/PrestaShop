@@ -190,7 +190,7 @@ class CarrierCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
 			return false;
-		if (!Db::getInstance()->executeS('SELECT `id_carrier` FROM `'._DB_PREFIX_.$this->table.'` WHERE `deleted` = 0'))
+		if (!Db::getInstance()->executeS('SELECT `id_carrier` FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE `deleted` = 0'))
 			return false;
 		if (!$num_rows = Db::getInstance()->NumRows())
 			return false;
@@ -198,7 +198,7 @@ class CarrierCore extends ObjectModel
 			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$this->id);
 
 		// Register reference
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->table.'` SET `id_reference` = '.$this->id.' WHERE `id_carrier` = '.$this->id);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'` SET `id_reference` = '.$this->id.' WHERE `id_carrier` = '.$this->id);
 
 		return true;
 	}
@@ -794,8 +794,8 @@ class CarrierCore extends ObjectModel
 			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$this->id);
 
 		// Copy reference
-		$id_reference = Db::getInstance()->getValue('SELECT `id_reference` FROM `'._DB_PREFIX_.$this->table.'` WHERE id_carrier = '.$old_id);
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->table.'`
+		$id_reference = Db::getInstance()->getValue('SELECT `id_reference` FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE id_carrier = '.$old_id);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'`
 			SET `id_reference` = '.$id_reference.'
 			WHERE `id_carrier` = '.$this->id);
 	}

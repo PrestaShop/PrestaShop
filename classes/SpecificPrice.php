@@ -87,7 +87,7 @@ class SpecificPriceCore extends ObjectModel
 		if (parent::delete())
 		{
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table));
+			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table']));
 			return true;
 		}
 		return false;

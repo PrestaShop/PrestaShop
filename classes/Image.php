@@ -123,7 +123,7 @@ class ImageCore extends ObjectModel
 			{
 				$row['position'] = $i++;
 				Db::getInstance()->AutoExecute(
-					_DB_PREFIX_.$this->table,
+					_DB_PREFIX_.$this->def['table'],
 					$row,
 					'UPDATE',
 					'`id_image` = '.(int)$row['id_image'], 1

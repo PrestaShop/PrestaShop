@@ -95,7 +95,7 @@ class SceneCore extends ObjectModel
 		if (parent::update($nullValues))
 		{
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+			Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table'], true));
 			return true;
 		}
 		return false;
@@ -126,7 +126,7 @@ class SceneCore extends ObjectModel
 		if (parent::delete())
 		{
 			return $this->deleteImage() &&
-				Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->table, true));
+				Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table'], true));
 		}
 		return false;
 	}

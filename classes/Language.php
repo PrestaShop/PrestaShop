@@ -477,10 +477,11 @@ class LanguageCore extends ObjectModel
 
 	public function deleteSelection($selection)
 	{
-		if (!is_array($selection) OR !Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
+		if (!is_array($selection))
 			die(Tools::displayError());
+
 		$result = true;
-		foreach ($selection AS $id)
+		foreach ($selection as $id)
 		{
 			$this->id = (int)($id);
 			$result = $result AND $this->delete();
@@ -491,11 +492,11 @@ class LanguageCore extends ObjectModel
 			return true;
 
 		Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-								(int)(Configuration::get('PS_REWRITING_SETTINGS')),
-								(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-								'',
-								(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-							);
+			(int)Configuration::get('PS_REWRITING_SETTINGS'),
+			(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
+			'',
+			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
+		);
 
 		return $result;
 	}

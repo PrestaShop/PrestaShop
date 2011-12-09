@@ -113,7 +113,7 @@ class WarehouseCore extends ObjectModel
 		$query->select('ws.id_shop, s.name');
 		$query->from('warehouse_shop ws');
 		$query->leftJoin('shop s ON (s.id_shop = ws.id_shop)');
-		$query->where($this->identifier.' = '.(int)$this->id);
+		$query->where($this->def['primary'].' = '.(int)$this->id);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		return $res;
@@ -128,11 +128,11 @@ class WarehouseCore extends ObjectModel
 	{
 		$row_to_insert = array();
 		foreach ($ids_shop as $id_shop)
-			$row_to_insert[] = array($this->identifier => $this->id, 'id_shop' => (int)$id_shop);
+			$row_to_insert[] = array($this->def['primary'] => $this->id, 'id_shop' => (int)$id_shop);
 
 		Db::getInstance()->execute('
 			DELETE FROM '._DB_PREFIX_.'warehouse_shop
-			WHERE '.$this->identifier.' = '.(int)$this->id);
+			WHERE '.$this->def['primary'].' = '.(int)$this->id);
 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_shop', $row_to_insert, 'INSERT');
 	}
@@ -149,7 +149,7 @@ class WarehouseCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('wc.id_carrier');
 		$query->from('warehouse_carrier wc');
-		$query->where($this->identifier.' = '.(int)$this->id);
+		$query->where($this->def['primary'].' = '.(int)$this->id);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -169,11 +169,11 @@ class WarehouseCore extends ObjectModel
 	{
 		$row_to_insert = array();
 		foreach ($ids_carriers as $id_carrier)
-			$row_to_insert[] = array($this->identifier => $this->id, 'id_carrier' => (int)$id_carrier);
+			$row_to_insert[] = array($this->def['primary'] => $this->id, 'id_carrier' => (int)$id_carrier);
 
 		Db::getInstance()->execute('
 			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
-			WHERE '.$this->identifier.' = '.(int)$this->id);
+			WHERE '.$this->def['primary'].' = '.(int)$this->id);
 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_carrier', $row_to_insert, 'INSERT');
 	}
@@ -203,7 +203,7 @@ class WarehouseCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('SUM(s.physical_quantity)');
 		$query->from('stock s');
-		$query->where($this->identifier.' = '.(int)$this->id);
+		$query->where($this->def['primary'].' = '.(int)$this->id);
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 0);
 	}
 
