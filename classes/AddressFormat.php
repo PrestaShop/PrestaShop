@@ -526,7 +526,7 @@ class AddressFormatCore extends ObjectModel
 	{
 		$result = Db::getInstance()->getRow('
 		SELECT format
-		FROM `'._DB_PREFIX_.$this->table.'`
+		FROM `'._DB_PREFIX_.$this->def['table'].'`
 		WHERE `id_country` = '.(int)($id_country));
 
 		return isset($result['format']) ? trim($result['format']) : '';

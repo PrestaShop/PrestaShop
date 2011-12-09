@@ -156,7 +156,7 @@ class ManufacturerCore extends ObjectModel
 	 */
 	public function deleteSelection($selection)
 	{
-		if (!is_array($selection) || !Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table))
+		if (!is_array($selection))
 			die(Tools::displayError());
 
 		$result = true;

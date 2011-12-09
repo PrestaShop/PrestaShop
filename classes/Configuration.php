@@ -494,11 +494,11 @@ class ConfigurationCore extends ObjectModel
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
 		$query = '
-		SELECT DISTINCT main.`'.$this->identifier.'` FROM `'._DB_PREFIX_.$this->table.'` main
+		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
 		'.$sql_join.'
 		WHERE id_configuration NOT IN
 		(	SELECT id_configuration
-			FROM '._DB_PREFIX_.$this->table.'_lang
+			FROM '._DB_PREFIX_.$this->def['table'].'_lang
 		) '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '').'

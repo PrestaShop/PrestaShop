@@ -607,9 +607,9 @@ class CustomerCore extends ObjectModel
 
 		/* Change status to active/inactive */
 		return Db::getInstance()->execute('
-		UPDATE `'.pSQL(_DB_PREFIX_.$this->table).'`
+		UPDATE `'.pSQL(_DB_PREFIX_.$this->def['table']).'`
 		SET `date_upd` = NOW()
-		WHERE `'.pSQL($this->identifier).'` = '.(int)$this->id);
+		WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
 	}
 
 
