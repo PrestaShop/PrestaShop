@@ -189,4 +189,25 @@ class ProductSupplierCore extends ObjectModel
 
 		return $res;
 	}
+
+	/**
+	 * For a given Supplier, Product, returns the purchased price
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute Optional
+	 * @return Array keys: price_te, id_currency
+	 */
+	public static function getProductPrice($id_supplier, $id_product, $id_product_attribute = 0)
+	{
+		if (is_null($id_supplier) || is_null($id_product))
+			return;
+
+		$query = new DbQuery();
+		$query->select('product_supplier_price_te as price_te, id_currency');
+		$query->from('product_supplier');
+		$query->where('id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('id_supplier = '.(int)$id_supplier);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+	}
 }
