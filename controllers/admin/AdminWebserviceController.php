@@ -73,6 +73,7 @@ class AdminWebserviceControllerCore extends AdminController
 							'cast' => 'intval',
 							'type' => 'bool'),
 					),
+					'submit' => array()
 				),
 			);
 
