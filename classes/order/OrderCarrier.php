@@ -55,8 +55,6 @@ class OrderCarrierCore extends ObjectModel
 	/** @var string Object creation date */
 	public $date_add;
 
-	protected $tables = array ('order_carrier');
-
 	protected	$fieldsRequired = array ('id_order', 'id_carrier');
 	protected	$fieldsValidate = array (
 		'id_order_carrier' => 'isUnsignedId',

@@ -147,9 +147,6 @@ class OrderCore extends ObjectModel
 	 */
 	public $reference;
 
-
-	protected $tables = array ('orders');
-
 	protected $fieldsRequired = array('conversion_rate', 'id_address_delivery', 'id_address_invoice', 'id_cart', 'id_currency', 'id_lang', 'id_customer', 'id_carrier', 'payment', 'total_paid', 'total_paid_real', 'total_products', 'total_products_wt');
 	protected $fieldsValidate = array(
 		'id_address_delivery' => 'isUnsignedId',

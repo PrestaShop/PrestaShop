@@ -129,8 +129,6 @@ class OrderDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
-	protected $tables = array('order_detail');
-
 	protected	$fieldsRequired = array(
 		'id_order',
 		'id_warehouse',

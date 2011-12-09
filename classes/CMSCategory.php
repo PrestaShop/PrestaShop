@@ -70,9 +70,6 @@ class CMSCategoryCore extends ObjectModel
 
 	protected static $_links = array();
 
-
-	protected $tables = array ('cms_category', 'cms_category_lang');
-
 	protected 	$fieldsRequired = array('id_parent', 'active');
  	protected 	$fieldsSize = array('id_parent' => 10, 'active' => 1);
  	protected 	$fieldsValidate = array('active' => 'isBool', 'id_parent' => 'isUnsignedInt');

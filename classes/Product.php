@@ -208,9 +208,6 @@ class ProductCore extends ObjectModel
 	/** @var array cache stock data in getStock() method */
 	protected static $cacheStock = array();
 
-	/** @var array tables */
-	protected $tables = array ('product', 'product_lang');
-
 	protected $fieldsRequired = array('price');
 	protected $fieldsSize = array('reference' => 32, 'supplier_reference' => 32, 'location' => 64, 'ean13' => 13, 'upc' => 12, 'unity' => 10);
 	protected $fieldsValidate = array(

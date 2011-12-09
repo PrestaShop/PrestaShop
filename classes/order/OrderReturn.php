@@ -48,8 +48,6 @@ class OrderReturnCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	protected $tables = array ('order_return');
-
 	protected	$fieldsRequired = array ('id_customer', 'id_order');
 	protected	$fieldsValidate = array('id_customer' => 'isUnsignedId', 'id_order' => 'isUnsignedId', 'question' => 'isMessage');
 

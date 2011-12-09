@@ -78,8 +78,6 @@ class CategoryCore extends ObjectModel
 
 	protected static $_links = array();
 
-	protected $tables = array ('category', 'category_lang');
-
 	protected $fieldsRequired = array('active');
  	protected $fieldsSize = array('active' => 1);
  	protected $fieldsValidate = array(

@@ -107,7 +107,6 @@ class CustomerCore extends ObjectModel
 	/** @var int id_guest meaning the guest table, not the guest customer  */
 	public $id_guest;
 
-	protected $tables = array ('customer');
 	public $groupBox;
 
  	protected $fieldsRequired = array('lastname', 'passwd', 'firstname', 'email');
