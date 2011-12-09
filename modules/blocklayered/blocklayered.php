@@ -108,6 +108,7 @@ class BlockLayered extends Module
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature_lang_value');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter_shop');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_product_attribute');
 		return parent::uninstall();
 	}
@@ -454,7 +455,8 @@ class BlockLayered extends Module
 	public function hookProductListAssign($params)
 	{
 		global $smarty;
-		if (!Configuration::get('PS_LAYERED_INDEXED'))
+		if (version_compare(_PS_VERSION_,'1.5','<') && !Configuration::get('PS_LAYERED_INDEXED')
+			|| version_compare(_PS_VERSION_,'1.5','>') && !Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			return;
 		// Inform the hook was executed
 		$params['hookExecuted'] = true;
@@ -881,7 +883,11 @@ class BlockLayered extends Module
 			return '{"cursor": '.$cursor.', "count": '.($nbProducts).'}';
 		else
 		{
-			Configuration::updateValue('PS_LAYERED_INDEXED', 1);
+			if (version_compare(_PS_VERSION_,'1.5','>'))
+				Configuration::updateGlobalValue('PS_LAYERED_INDEXED', 1);
+			else
+				Configuration::updateValue('PS_LAYERED_INDEXED', 1);
+				
 			if ($ajax)
 				return '{"result": "ok"}';
 			else
@@ -1175,6 +1181,25 @@ class BlockLayered extends Module
 						$_POST['categoryBox'][] = (int)$category['id_category'];
 				}
 				
+				if (version_compare(_PS_VERSION_,'1.5','>'))
+				{
+					$id_layered_filter = (int)$_POST['id_layered_filter'];
+					if (!$id_layered_filter)
+						$id_layered_filter = (int)Db::getInstance()->Insert_ID();
+					
+					$shop_list = array();
+					foreach ($_POST['checkBoxShopAsso_layered_filter'] as $id_asso_object => $row)
+					{
+						foreach ($row as $id_shop => $value)
+						{
+							$assos[] = array('id_object' => (int)$id_layered_filter, 'id_shop' => (int)$id_shop);
+							$shop_list[] = (int)$id_shop;
+						}
+					}
+				}
+				else
+					$shop_list = array(0);
+				
 				if (count($_POST['categoryBox']))
 				{
 					/* Clean categoryBox before use */
@@ -1182,16 +1207,22 @@ class BlockLayered extends Module
 						foreach ($_POST['categoryBox'] as &$categoryBoxTmp)
 							$categoryBoxTmp = (int)$categoryBoxTmp;
 					
-					Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_category WHERE id_category IN ('.implode(',', array_map('intval', $_POST['categoryBox'])).')');
+					Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_category
+						WHERE
+							id_category IN ('.implode(',', array_map('intval', $_POST['categoryBox'])).')
+							AND id_shop IN ('.implode(',', $shop_list).')');
 	
 					$filterValues = array();
 					foreach ($_POST['categoryBox'] as $idc)
 						$filterValues['categories'][] = (int)$idc;
+						
+				
 	
-					$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position, filter_show_limit, filter_type) VALUES ';
+					$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position, filter_show_limit, filter_type) VALUES ';
 					foreach ($_POST['categoryBox'] as $id_category_layered)
 					{
 						$n = 0;
+						
 						foreach ($_POST as $key => $value)
 							if (substr($key, 0, 17) == 'layered_selection' && $value == 'on')
 							{
@@ -1207,25 +1238,27 @@ class BlockLayered extends Module
 									'filter_show_limit' => (int)$limit
 								);
 								$n++;
-								
-								if ($key == 'layered_selection_stock')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'quantity\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if ($key == 'layered_selection_subcategories')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'category\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if ($key == 'layered_selection_condition')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'condition\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if ($key == 'layered_selection_weight_slider')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'weight\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if ($key == 'layered_selection_price_slider')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'price\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if ($key == 'layered_selection_manufacturer')
-									$sqlToInsert .= '('.(int)$id_category_layered.',NULL,\'manufacturer\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if (substr($key, 0, 21) == 'layered_selection_ag_')
-									$sqlToInsert .= '('.(int)$id_category_layered.','.(int)str_replace('layered_selection_ag_', '', $key).',
-										\'id_attribute_group\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								else if (substr($key, 0, 23) == 'layered_selection_feat_')
-									$sqlToInsert .= '('.(int)$id_category_layered.','.(int)str_replace('layered_selection_feat_', '', $key).',
-										\'id_feature\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								foreach ($shop_list as $id_shop)
+								{
+									if ($key == 'layered_selection_stock')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'quantity\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if ($key == 'layered_selection_subcategories')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'category\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if ($key == 'layered_selection_condition')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'condition\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if ($key == 'layered_selection_weight_slider')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'weight\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if ($key == 'layered_selection_price_slider')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'price\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if ($key == 'layered_selection_manufacturer')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'manufacturer\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if (substr($key, 0, 21) == 'layered_selection_ag_')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_ag_', '', $key).',
+											\'id_attribute_group\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+									else if (substr($key, 0, 23) == 'layered_selection_feat_')
+										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_feat_', '', $key).',
+											\'id_feature\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								}
 							}
 					}
 					
@@ -1239,7 +1272,16 @@ class BlockLayered extends Module
 					if (isset($_POST['id_layered_filter']) && $_POST['id_layered_filter'])
 						$valuesToInsert['id_layered_filter'] = (int)Tools::getValue('id_layered_filter');
 					
-					Db::getInstance()->AutoExecute(_DB_PREFIX_.'layered_filter', $valuesToInsert, 'INSERT');
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'layered_filter', $valuesToInsert, 'INSERT');
+					
+					if (version_compare(_PS_VERSION_,'1.5','>'))
+					{
+						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
+				
+						foreach ($assos as $asso)
+							Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
+								VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
+					}
 					
 					$html .= '<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').
 						$this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
@@ -1296,7 +1338,8 @@ class BlockLayered extends Module
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Indexes and caches').'</legend>
 			<span id="indexing-warning" style="display: none; color:red; font-weight: bold">'.$this->l('Indexing are in progress. Please don\'t leave this page').'<br/><br/></span>';
 
-		if (!Configuration::get('PS_LAYERED_INDEXED'))
+		if (version_compare(_PS_VERSION_,'1.5','<') &&!Configuration::get('PS_LAYERED_INDEXED')
+			|| version_compare(_PS_VERSION_,'1.5','>') && !Configuration::getGlobalValue('PS_LAYERED_INDEXED'))
 			$html .= '
 			<script type="text/javascript">
 			$(document).ready(function() {
@@ -1486,7 +1529,7 @@ class BlockLayered extends Module
 					<td style="text-align: center;">'.(int)$filtersTemplate['n_categories'].'</td>
 					<td>'.Tools::displayDate($filtersTemplate['date_add'], (int)$cookie->id_lang, true).'</td>
 					<td>
-						<a href="#" onclick="updElements('.($filtersTemplate['n_categories'] ? 0 : 1).', '.(int)$filtersTemplate['id_layered_filter'].');">
+						<a href="#" onclick="return updElements('.($filtersTemplate['n_categories'] ? 0 : 1).', '.(int)$filtersTemplate['id_layered_filter'].');">
 						<img src="../img/admin/edit.gif" alt="" title="'.$this->l('Edit').'" /></a> 
 						<a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&deleteFilterTemplate=1&id_layered_filter='.(int)$filtersTemplate['id_layered_filter'].'"
 						onclick="return confirm(\''.addslashes($this->l('Delete filter template #')).(int)$filtersTemplate['id_layered_filter'].$this->l('?').'\');">
@@ -1527,13 +1570,27 @@ class BlockLayered extends Module
 			
 		$html .= '
 			<h2>'.$this->l('Step 1/3 - Select categories').'</h2>
-			<p style="margin-top: 20px;">'.$this->l('Use this template for:').'
+			<p style="margin-top: 20px;">
+				<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Use this template for:').'</span>
 				<input type="radio" id="scope_1" name="scope" value="1" style="margin-left: 15px;" onclick="$(\'#error-treeview\').hide(); $(\'#layered-step-2\').show(); updElements(1, 0);" /> 
 				<label for="scope_1" style="float: none;">'.$this->l('All categories').'</label>
 				<input type="radio" id="scope_2" name="scope" value="2" style="margin-left: 15px;" onclick="$(\'label a#inline\').click(); $(\'#layered-step-2\').show();" /> 
 				<label for="scope_2" style="float: none;"><a id="inline" href="#layered-categories-selection" style="text-decoration: underline;">'.$this->l('Specific').'</a>
 				'.$this->l('categories').' (<span id="layered-cat-counter"></span> '.$this->l('selected').')</label>
-			</p>
+			</p>';
+		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+		{
+			$helper = new Helper();
+			$helper->id = null;
+			$helper->table = 'layered_filter';
+			$helper->identifier = 'id_layered_filter';
+			
+			$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
+			$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+		}
+		
+		$html .= '
 			<div id="error-treeview" class="error" style="display: none;">
 				<img src="../img/admin/error2.png" alt="" /> '.$this->l('Please select at least one specific category or select "All categories".').'
 			</div>
@@ -1642,11 +1699,12 @@ class BlockLayered extends Module
 						
 						$.ajax(
 						{
-							type: \'GET\',
+							type: \'POST\',
 							url: \''.__PS_BASE_URI__.'\' + \'modules/blocklayered/blocklayered-ajax-back.php\',
 							data: \'layered_token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&id_lang='.$id_lang.'&\'
 								+(all ? \'\' : $(\'input[name="categoryBox[]"]\').serialize()+\'&\')
-								+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter) : \'\'),
+								+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter) : \'\')
+								+\'&base_folder='._PS_ADMIN_DIR_.'\',
 							success: function(result)
 							{
 								$(\'#layered-ajax-refresh\').css(\'background-color\', \'transparent\');
@@ -1662,6 +1720,7 @@ class BlockLayered extends Module
 								updLayCounters();
 							}
 						});
+						return false;
 					}
 					
 					function checkForm()
@@ -2165,9 +2224,16 @@ class BlockLayered extends Module
 		
 		$parent = new Category((int)$id_parent);
 		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$id_shop = (int) Context::getContext()->shop->getId(true);
+		else
+			$id_shop = 0;
+		
 		/* Get the filters for the current category */
-		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_category WHERE id_category = '.(int)$id_parent.'
-		GROUP BY `type`, id_value ORDER BY position ASC');
+		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_category
+			WHERE id_category = '.(int)$id_parent.'
+				AND id_shop = '.$id_shop.'
+			GROUP BY `type`, id_value ORDER BY position ASC');
 		// Remove all empty selected filters
 		foreach ($selectedFilters as $key => $value)
 			switch ($key)
@@ -2928,6 +2994,8 @@ class BlockLayered extends Module
 	{
 		global $cookie;
 		
+		$categoryBox = array();
+		
 		if (!empty($id_layered_filter))
 		{
 			$layeredFilter = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$id_layered_filter);
@@ -3197,6 +3265,29 @@ class BlockLayered extends Module
 				});
 			</script>';
 		}
+	
+		if (version_compare(_PS_VERSION_,'1.5','>') && !empty($id_layered_filter))
+		{
+			$helper = new Helper();
+			$helper->id = (int)$id_layered_filter;
+			$helper->table = 'layered_filter';
+			$helper->identifier = 'id_layered_filter';
+			$helper->base_folder = Tools::getValue('base_folder').'/themes/template/';
+			
+			$html .= '
+			<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$(\'#shop_association\').html($(\'#shop_association_ajax\').html());
+					$(\'#shop_association_ajax\').remove();
+					// Initialize checkbox
+					$(\'.input_shop\').each(function(k, v) {
+						check_group_shop_status($(v).val());
+						check_all_shop();
+					});
+				});
+			</script>';
+		}
 
 		return $html;
 	}
@@ -3280,6 +3371,7 @@ class BlockLayered extends Module
 		Db::getInstance()->Execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_category` (
 		`id_layered_category` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+		`id_shop` INT(11) UNSIGNED NOT NULL,
 		`id_category` INT(10) UNSIGNED NOT NULL,
 		`id_value` INT(10) UNSIGNED NULL DEFAULT \'0\',
 		`type` ENUM(\'category\',\'id_feature\',\'id_attribute_group\',\'quantity\',\'condition\',\'manufacturer\',\'weight\',\'price\') NOT NULL,
@@ -3297,6 +3389,13 @@ class BlockLayered extends Module
 		`filters` TEXT NULL,
 		`n_categories` INT(10) UNSIGNED NOT NULL,
 		`date_add` DATETIME NOT NULL)');
+		
+		Db::getInstance()->Execute('
+		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_filter_shop` (
+		`id_layered_filter` INT(10) UNSIGNED NOT NULL,
+		`id_shop` INT(11) UNSIGNED NOT NULL,
+		PRIMARY KEY (`id_layered_filter`, `id_shop`),
+		KEY `id_shop` (`id_shop`))');
 	}
 	
 	public function rebuildLayeredCache($productsIds = array(), $categoriesIds = array())
@@ -3364,63 +3463,70 @@ class BlockLayered extends Module
 			if (!empty($product['features']))
 				$f = array_flip(explode(',', $product['features']));
 
-			$queryCategory = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_value, type, position) VALUES ';
+			if (version_compare(_PS_VERSION_,'1.5','>'))
+				$shop_list = Shop::getShops(false, null, true);
+			else
+				$shop_list = array(0);
+			
+			$queryCategory = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position) VALUES ';
 			$toInsert = false;
-			foreach ($c as $id_category => $category)
-			{
-				if (!isset($nCategories[(int)$id_category]))
-					$nCategories[(int)$id_category] = 1;
-				if (!isset($doneCategories[(int)$id_category]['cat']))
+			foreach ($shop_list as $id_shop)
+				foreach ($c as $id_category => $category)
 				{
-					$doneCategories[(int)$id_category]['cat'] = true;
-					$queryCategory .= '('.(int)$id_category.',NULL,\'category\','.(int)$nCategories[(int)$id_category]++.'),';
-					$toInsert = true;
-				}
-				foreach ($a as $kAttribute => $attribute)
-					if (!isset($doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]]))
+					if (!isset($nCategories[(int)$id_category]))
+						$nCategories[(int)$id_category] = 1;
+					if (!isset($doneCategories[(int)$id_category]['cat']))
 					{
-						$doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]] = true;
-						$queryCategory .= '('.(int)$id_category.','.(int)$attributeGroupsById[(int)$kAttribute].',\'id_attribute_group\','.(int)$nCategories[(int)$id_category]++.'),';
+						$doneCategories[(int)$id_category]['cat'] = true;
+						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'category\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
-				foreach ($f as $kFeature => $feature)
-					if (!isset($doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]]))
+					foreach ($a as $kAttribute => $attribute)
+						if (!isset($doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]]))
+						{
+							$doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]] = true;
+							$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.','.(int)$attributeGroupsById[(int)$kAttribute].',\'id_attribute_group\','.(int)$nCategories[(int)$id_category]++.'),';
+							$toInsert = true;
+						}
+					foreach ($f as $kFeature => $feature)
+						if (!isset($doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]]))
+						{
+							$doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]] = true;
+							$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', '.(int)$featuresById[(int)$kFeature].',\'id_feature\','.(int)$nCategories[(int)$id_category]++.'),';
+							$toInsert = true;
+						}
+					if (!isset($doneCategories[(int)$id_category]['q']))
 					{
-						$doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]] = true;
-						$queryCategory .= '('.(int)$id_category.','.(int)$featuresById[(int)$kFeature].',\'id_feature\','.(int)$nCategories[(int)$id_category]++.'),';
+						$doneCategories[(int)$id_category]['q'] = true;
+						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'quantity\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
-				if (!isset($doneCategories[(int)$id_category]['q']))
-				{
-					$doneCategories[(int)$id_category]['q'] = true;
-					$queryCategory .= '('.(int)$id_category.',NULL,\'quantity\','.(int)$nCategories[(int)$id_category]++.'),';
-					$toInsert = true;
+					if (!isset($doneCategories[(int)$id_category]['m']))
+					{
+						$doneCategories[(int)$id_category]['m'] = true;
+						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'manufacturer\','.(int)$nCategories[(int)$id_category]++.'),';
+						$toInsert = true;
+					}
+					if (!isset($doneCategories[(int)$id_category]['c']))
+					{
+						$doneCategories[(int)$id_category]['c'] = true;
+						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'condition\','.(int)$nCategories[(int)$id_category]++.'),';
+						$toInsert = true;
+					}
+					if (!isset($doneCategories[(int)$id_category]['w']))
+					{
+						$doneCategories[(int)$id_category]['w'] = true;
+						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'weight\','.(int)$nCategories[(int)$id_category]++.'),';
+						$toInsert = true;
+					}
+					if (!isset($doneCategories[(int)$id_category]['p']))
+					{
+						$doneCategories[(int)$id_category]['p'] = true;
+						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'price\','.(int)$nCategories[(int)$id_category]++.'),';
+						$toInsert = true;
+					}
 				}
-				if (!isset($doneCategories[(int)$id_category]['m']))
-				{
-					$doneCategories[(int)$id_category]['m'] = true;
-					$queryCategory .= '('.(int)$id_category.',NULL,\'manufacturer\','.(int)$nCategories[(int)$id_category]++.'),';
-					$toInsert = true;
-				}
-				if (!isset($doneCategories[(int)$id_category]['c']))
-				{
-					$doneCategories[(int)$id_category]['c'] = true;
-					$queryCategory .= '('.(int)$id_category.',NULL,\'condition\','.(int)$nCategories[(int)$id_category]++.'),';
-					$toInsert = true;
-				}
-				if (!isset($doneCategories[(int)$id_category]['w']))
-				{
-					$doneCategories[(int)$id_category]['w'] = true;
-					$queryCategory .= '('.(int)$id_category.',NULL,\'weight\','.(int)$nCategories[(int)$id_category]++.'),';
-					$toInsert = true;
-				}
-				if (!isset($doneCategories[(int)$id_category]['p']))
-				{
-					$doneCategories[(int)$id_category]['p'] = true;
-					$queryCategory .= '('.(int)$id_category.',NULL,\'price\','.(int)$nCategories[(int)$id_category]++.'),';
-					$toInsert = true;
-				}
-			}
+			
 			if ($toInsert)
 				Db::getInstance()->Execute(rtrim($queryCategory, ','));
 		}
