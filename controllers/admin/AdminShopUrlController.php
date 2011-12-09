@@ -254,9 +254,10 @@ class AdminShopUrlControllerCore extends AdminController
 				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
 
 			parent::postProcess();
-			Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
+			if (!$this->_errors)
+				Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
 		}
-		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+		elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -264,7 +265,7 @@ class AdminShopUrlControllerCore extends AdminController
 				{
 					if ($object->main)
 						$this->_errors[] = Tools::displayError('You can\'t disable a main url');
-					else if ($object->toggleStatus())
+					elseif ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
 					else
 						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
