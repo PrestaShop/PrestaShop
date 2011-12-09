@@ -64,8 +64,6 @@ class CountryCore extends ObjectModel
 
 	protected static $_idZones = array();
 
-	protected $tables = array ('country', 'country_lang');
-
  	protected $fieldsRequired = array('id_zone', 'iso_code', 'contains_states', 'need_identification_number', 'display_tax_label');
  	protected $fieldsSize = array('iso_code' => 3);
  	protected $fieldsValidate = array(

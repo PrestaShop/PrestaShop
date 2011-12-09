@@ -57,8 +57,6 @@ class OrderSlipCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	protected $tables = array ('order_slip');
-
 	protected	$fieldsRequired = array ('id_customer', 'id_order', 'conversion_rate');
 	protected	$fieldsValidate = array('id_customer' => 'isUnsignedId', 'id_order' => 'isUnsignedId', 'conversion_rate' => 'isFloat');
 

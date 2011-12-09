@@ -314,6 +314,16 @@ abstract class CacheCore
 
 	public static function clean($key)
 	{
-		unset(Cache::$local[$key]);
+		if (strpos($key, '*'))
+		{
+			$regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
+			foreach (array_keys(Cache::$local) as $key)
+				if (preg_match('#^'.$regexp.'$#', $key))
+					unset(Cache::$local[$key]);
+		}
+		else
+			unset(Cache::$local[$key]);
+
+		d(array_keys(Cache::$local));
 	}
 }

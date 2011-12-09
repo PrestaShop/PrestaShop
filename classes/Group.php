@@ -44,8 +44,6 @@ class GroupCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	protected $tables = array ('group');
-
 	protected $fieldsRequired = array('price_display_method');
 	protected $fieldsSize = array();
 	protected $fieldsValidate = array('reduction' => 'isFloat', 'price_display_method' => 'isPriceDisplayMethod');
