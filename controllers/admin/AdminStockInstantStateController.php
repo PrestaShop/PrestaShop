@@ -272,7 +272,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
+		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1 && count($this->_list) > 0)
 		{
 			$this->toolbar_btn['export-stock-state-quantities-csv'] = array(
 				'short' => 'Export this list as CSV',
