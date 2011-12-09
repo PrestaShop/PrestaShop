@@ -33,16 +33,17 @@
 					<div>{$btn.desc}</div>
 				</a>
 			</li>
-			{if isset($ps_help_context) && $ps_help_context}
-				<li class="help-context" style="display:none">
-					<a id="desc-{$table}-help" class="toolbar_btn" href="#" title="{l s='Help'}">
-						<span class="process-icon-help"></span>
-						<div>{l s='Help'}</div>
-					</a>
-				</li>
-			{/if}
 		{/foreach}
+		{if isset($ps_help_context) && $ps_help_context}
+			<li class="help-context" style="display:none">
+				<a id="desc-{$table}-help" class="toolbar_btn" href="#" title="{l s='Help'}">
+					<span class="process-icon-help"></span>
+					<div>{l s='Help'}</div>
+				</a>
+			</li>
+		{/if}
 	</ul>
+
 	<script language="javascript">
 		$(function() {
 			//get reference on save link

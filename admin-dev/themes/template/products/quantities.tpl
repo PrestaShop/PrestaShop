@@ -1,4 +1,32 @@
-<h4>{l s='Available quantities for sale'}</h4>
+{*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 11069 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*}
+
+{if isset($product->id)}
+
+	<h4>{l s='Available quantities for sale'}</h4>
 	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
@@ -100,118 +128,120 @@
 		</div>
 	{/if}
 
-<script type="text/javascript">
-	var showAjaxError = function(msg)
-	{
-		$('#available_quantity_ajax_error_msg').html(msg);
-		$('#available_quantity_ajax_error_msg').show();
-		$('#available_quantity_ajax_msg').hide();
-		$('#available_quantity_ajax_success_msg').hide();
-	};
-
-	var showAjaxSuccess = function(msg)
-	{
-		$('#available_quantity_ajax_success_msg').html(msg);
-		$('#available_quantity_ajax_error_msg').hide();
-		$('#available_quantity_ajax_msg').hide();
-		$('#available_quantity_ajax_success_msg').show();
-	};
-
-	var showAjaxMsg = function(msg)
-	{
-		$('#available_quantity_ajax_msg').html(msg);
-		$('#available_quantity_ajax_error_msg').hide();
-		$('#available_quantity_ajax_msg').show();
-		$('#available_quantity_ajax_success_msg').hide();
-	};
-
-	var ajaxCall = function(data)
-	{
-		data.ajaxProductQuantity = 1;
-		data.id_product = '{$product->id}';
-		data.token = "{$token}";
-		data.ajax = 1;
-		data.controller = "AdminProducts";
-		data.action = "productQuantity";
-		showAjaxMsg('{l s='Saving data...'}');
-		$.ajax({
-			type: "POST",
-			url: "ajax-tab.php",
-			data: data,
-			dataType: 'json',
-			async : true,
-			success: function(msg)
-			{
-				if (msg.error)
+	<script type="text/javascript">
+		var showAjaxError = function(msg)
+		{
+			$('#available_quantity_ajax_error_msg').html(msg);
+			$('#available_quantity_ajax_error_msg').show();
+			$('#available_quantity_ajax_msg').hide();
+			$('#available_quantity_ajax_success_msg').hide();
+		};
+	
+		var showAjaxSuccess = function(msg)
+		{
+			$('#available_quantity_ajax_success_msg').html(msg);
+			$('#available_quantity_ajax_error_msg').hide();
+			$('#available_quantity_ajax_msg').hide();
+			$('#available_quantity_ajax_success_msg').show();
+		};
+	
+		var showAjaxMsg = function(msg)
+		{
+			$('#available_quantity_ajax_msg').html(msg);
+			$('#available_quantity_ajax_error_msg').hide();
+			$('#available_quantity_ajax_msg').show();
+			$('#available_quantity_ajax_success_msg').hide();
+		};
+	
+		var ajaxCall = function(data)
+		{
+			data.ajaxProductQuantity = 1;
+			data.id_product = '{$product->id}';
+			data.token = "{$token}";
+			data.ajax = 1;
+			data.controller = "AdminProducts";
+			data.action = "productQuantity";
+			showAjaxMsg('{l s='Saving data...'}');
+			$.ajax({
+				type: "POST",
+				url: "ajax-tab.php",
+				data: data,
+				dataType: 'json',
+				async : true,
+				success: function(msg)
+				{
+					if (msg.error)
+					{
+						showAjaxError('{l s='Error durring saving data'}');
+						return;
+					}
+					showAjaxSuccess('{l s='Data saved'}');
+				},
+				error: function(msg)
 				{
 					showAjaxError('{l s='Error durring saving data'}');
-					return;
 				}
-				showAjaxSuccess('{l s='Data saved'}');
-			},
-			error: function(msg)
+			});
+		};
+	
+		var refreshQtyAvaibilityForm = function()
+		{
+			if ($('#depends_on_stock_0').attr('checked'))
 			{
-				showAjaxError('{l s='Error durring saving data'}');
+				$('.available_quantity').find('input').show();
+				$('.available_quantity').find('span').hide();
+			}
+			else
+			{
+				$('.available_quantity').find('input').hide();
+				$('.available_quantity').find('span').show();
+			}
+		};
+	
+		$('.depends_on_stock').click(function(e)
+		{
+			refreshQtyAvaibilityForm();
+			ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
+			if($(this).val() == 0)
+				$('.available_quantity input').trigger('change');
+		});
+	
+		// bind enter key event on search field
+		$('.available_quantity').find('input').bind('keypress', function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if(code == 13) { //Enter keycode
+				e.stopPropagation();//Stop event propagation
+				return false;
 			}
 		});
-	};
-
-	var refreshQtyAvaibilityForm = function()
-	{
-		if ($('#depends_on_stock_0').attr('checked'))
+	
+		$('.available_quantity').find('input').blur(function(e)
 		{
-			$('.available_quantity').find('input').show();
-			$('.available_quantity').find('span').hide();
-		}
-		else
+			ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );
+		});
+	
+		$('.available_quantity').find('input').click(function(e)
 		{
-			$('.available_quantity').find('input').hide();
-			$('.available_quantity').find('span').show();
-		}
-	};
-
-	$('.depends_on_stock').click(function(e)
-	{
-		refreshQtyAvaibilityForm();
-		ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
-		if($(this).val() == 0)
-			$('.available_quantity input').trigger('change');
-	});
-
-	// bind enter key event on search field
-	$('.available_quantity').find('input').bind('keypress', function(e) {
-		var code = (e.keyCode ? e.keyCode : e.which);
-		if(code == 13) { //Enter keycode
-			e.stopPropagation();//Stop event propagation
-			return false;
-		}
-	});
-
-	$('.available_quantity').find('input').blur(function(e)
-	{
-		ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );
-	});
-
-	$('.available_quantity').find('input').click(function(e)
-	{
-		if(typeof(this.intervalId) != 'undefined')
-			window.clearInterval(this.intervalId);
-		this.intervalId = window.setInterval(function(it, initialValue)
-		{
-			if(initialValue != $(it).val())
+			if(typeof(this.intervalId) != 'undefined')
+				window.clearInterval(this.intervalId);
+			this.intervalId = window.setInterval(function(it, initialValue)
 			{
-				window.clearInterval(it.intervalId);
-				$(it).trigger('change');
-				$(it).trigger('click');
-			}
-		}, 500, this, $(this).val())
-	});
-
-	$('.out_of_stock').click(function(e)
-	{
+				if(initialValue != $(it).val())
+				{
+					window.clearInterval(it.intervalId);
+					$(it).trigger('change');
+					$(it).trigger('click');
+				}
+			}, 500, this, $(this).val())
+		});
+	
+		$('.out_of_stock').click(function(e)
+		{
+			refreshQtyAvaibilityForm();
+			ajaxCall( { actionQty: 'out_of_stock', value: $(this).val() } );
+		});
+	
 		refreshQtyAvaibilityForm();
-		ajaxCall( { actionQty: 'out_of_stock', value: $(this).val() } );
-	});
+	</script>
 
-	refreshQtyAvaibilityForm();
-</script>
+{/if}

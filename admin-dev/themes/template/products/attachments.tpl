@@ -23,7 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-	{if $obj->id}<input type="hidden" name="id_{$table}" value="{$obj->id}" />{/if}
+
+{if isset($obj->id)}
+
 	<h4>{l s='Attachment'}</h4>
 	<div class="separation"></div>
 	<fieldset>
@@ -56,38 +58,40 @@
 		</div>
 		<div class="small"><sup>*</sup> {l s='Required field'}</div>
 	</fieldset>
-<div class="clear">&nbsp;</div>
-<table>
-	<tr>
-		<td>
-			<p>{l s='Attachments for this product:'}</p>
-			<select multiple id="selectAttachment1" name="attachments[]" style="width:300px;height:160px;">
-				{foreach $attach1 as $attach}
-					<option value="{$attach.id_attachment}">{$attach.name}</option>
-				{/foreach}
-			</select><br /><br />
-		<a href="#" id="removeAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
-		{l s='Remove'} &gt;&gt;
-	</a>
-</td>
-<td style="padding-left:20px;">
-<p>{l s='Available attachments:'}</p>
-<select multiple id="selectAttachment2" style="width:300px;height:160px;">
-	{foreach $attach2 as $attach}
-		<option value="{$attach.id_attachment}">{$attach.name}</option>
-	{/foreach}
-</select><br /><br />
-		<a href="#" id="addAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
-				&lt;&lt; {l s='Add'}
-			</a>
-		</div>
-		</td>
-	</tr>
-</table>
-<div class="clear">&nbsp;</div>
-<input type="submit" name="submitAttachments" id="submitAttachments" value="{l s='Update attachments'}" class="button" />
+	<div class="clear">&nbsp;</div>
+	<table>
+		<tr>
+			<td>
+				<p>{l s='Attachments for this product:'}</p>
+				<select multiple id="selectAttachment1" name="attachments[]" style="width:300px;height:160px;">
+					{foreach $attach1 as $attach}
+						<option value="{$attach.id_attachment}">{$attach.name}</option>
+					{/foreach}
+				</select><br /><br />
+			<a href="#" id="removeAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+			{l s='Remove'} &gt;&gt;
+		</a>
+	</td>
+	<td style="padding-left:20px;">
+	<p>{l s='Available attachments:'}</p>
+	<select multiple id="selectAttachment2" style="width:300px;height:160px;">
+		{foreach $attach2 as $attach}
+			<option value="{$attach.id_attachment}">{$attach.name}</option>
+		{/foreach}
+	</select><br /><br />
+			<a href="#" id="addAttachment" style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px">
+					&lt;&lt; {l s='Add'}
+				</a>
+			</div>
+			</td>
+		</tr>
+	</table>
+	<div class="clear">&nbsp;</div>
+	<input type="submit" name="submitAttachments" id="submitAttachments" value="{l s='Update attachments'}" class="button" />
+	
+	
+	<script type="text/javascript">
+		displayFlags(languages, id_language, allowEmployeeFormLang);
+	</script>
 
-
-<script type="text/javascript">
-	displayFlags(languages, id_language, allowEmployeeFormLang);
-</script>
+{/if}

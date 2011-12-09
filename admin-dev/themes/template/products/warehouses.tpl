@@ -1,88 +1,118 @@
-<h4>{l s='Product location in warehouses'}</h4>
-			<div class="separation"></div>
-			<div class="hint" style="display:block; position:'auto';">
-	<p>{l s='This interface allows you to specify in which warehouses the product is stocked.'}</p>
-	<p>{l s='It is also possible to specify for each product/product combinations its location in each warehouse.'}</p>
-</div>
-<p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
+{*
+* 2007-2011 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2011 PrestaShop SA
+*  @version  Release: $Revision: 11069 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*}
 
-{assign var=confirm value="Are you sure you want to delete entered product information?"}
+{if isset($product->id)}
 
-<a class="button bt-icon" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse" onclick="return confirm(' {$confirm} ')">
-	<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
-</a>
-
-<div id="warehouse_accordion" style="margin-top:10px; display:block;">
-	{foreach from=$warehouses item=warehouse}
-	    <h3 style="margin-bottom:0;"><a href="#">{$warehouse['name']}</a></h3>
-	    <div style="display:block;">
-			<table cellpadding="10" cellspacing="0" class="table">
-				<tr>
-					<th width="100">{l s='In the warehouse?'}</th>
-					<th>{l s='product name'}</th>
-					<th width="150">{l s='location in the warehouse (optionnal)'}</th>
-				</tr>
-				{foreach $attributes AS $index => $attribute}
-					{assign var=location value=''}
-					{assign var=selected value=''}
-					{foreach from=$associated_warehouses item=aw}
-						{if $aw->id_product == $attribute['id_product'] && $aw->id_product_attribute == $attribute['id_product_attribute'] && $aw->id_warehouse == $warehouse['id_warehouse']}
-							{assign var=location value=$aw->location}
-							{assign var=selected value=true}
-						{/if}
-					{/foreach}
-					<tr {if $index is odd}class="alt_row"{/if}>
-						<td><input type="checkbox"
-							name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-							{if $selected == true}checked="checked"{/if}
-							value="1" />
-						</td>
-						<td>{$product_designation[$attribute['id_product_attribute']]}</td>
-						<td><input type="text"
-							name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-							value="{$location}"
-							size="20" />
-						</td>
+	<h4>{l s='Product location in warehouses'}</h4>
+				<div class="separation"></div>
+				<div class="hint" style="display:block; position:'auto';">
+		<p>{l s='This interface allows you to specify in which warehouses the product is stocked.'}</p>
+		<p>{l s='It is also possible to specify for each product/product combinations its location in each warehouse.'}</p>
+	</div>
+	<p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
+	
+	{assign var=confirm value="Are you sure you want to delete entered product information?"}
+	
+	<a class="button bt-icon" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse" onclick="return confirm(' {$confirm} ')">
+		<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
+	</a>
+	
+	<div id="warehouse_accordion" style="margin-top:10px; display:block;">
+		{foreach from=$warehouses item=warehouse}
+		    <h3 style="margin-bottom:0;"><a href="#">{$warehouse['name']}</a></h3>
+		    <div style="display:block;">
+				<table cellpadding="10" cellspacing="0" class="table">
+					<tr>
+						<th width="100">{l s='In the warehouse?'}</th>
+						<th>{l s='product name'}</th>
+						<th width="150">{l s='location in the warehouse (optionnal)'}</th>
 					</tr>
-				{/foreach}
-				<tr>
-					<td colspan="3">&nbsp;</td>
-				</tr>
-				<tr>
-					<td><input type="checkbox" id="check_all_suppliers" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
-					<td colspan="2"><i>{l s='Mark all products available in the current warehouse.'}</i></td>
-				</tr>
-			</table>
-		</div>
-	{/foreach}
-</div>
-<p>&nbsp;</p>
-
-<script type="text/javascript">
-	$(function() {
-		$('#check_all_suppliers').click(function() {
-			var check = $(this);
-
-			//get all checkboxes of current warehouse
-			var checkboxes = $('input[name*="'+check.val()+'"]');
-
-			for (i=0; i<checkboxes.length; i++)
-			{
-				var item = $(checkboxes[i]);
-
-				if (item.is(':checked'))
+					{foreach $attributes AS $index => $attribute}
+						{assign var=location value=''}
+						{assign var=selected value=''}
+						{foreach from=$associated_warehouses item=aw}
+							{if $aw->id_product == $attribute['id_product'] && $aw->id_product_attribute == $attribute['id_product_attribute'] && $aw->id_warehouse == $warehouse['id_warehouse']}
+								{assign var=location value=$aw->location}
+								{assign var=selected value=true}
+							{/if}
+						{/foreach}
+						<tr {if $index is odd}class="alt_row"{/if}>
+							<td><input type="checkbox"
+								name="check_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
+								{if $selected == true}checked="checked"{/if}
+								value="1" />
+							</td>
+							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
+							<td><input type="text"
+								name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
+								value="{$location}"
+								size="20" />
+							</td>
+						</tr>
+					{/foreach}
+					<tr>
+						<td colspan="3">&nbsp;</td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="check_all_suppliers" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
+						<td colspan="2"><i>{l s='Mark all products available in the current warehouse.'}</i></td>
+					</tr>
+				</table>
+			</div>
+		{/foreach}
+	</div>
+	<p>&nbsp;</p>
+	
+	<script type="text/javascript">
+		$(function() {
+			$('#check_all_suppliers').click(function() {
+				var check = $(this);
+	
+				//get all checkboxes of current warehouse
+				var checkboxes = $('input[name*="'+check.val()+'"]');
+	
+				for (i=0; i<checkboxes.length; i++)
 				{
-					item.attr("checked", "");
+					var item = $(checkboxes[i]);
+	
+					if (item.is(':checked'))
+					{
+						item.attr("checked", "");
+					}
+					else
+					{
+						item.attr("checked", "checked");
+					}
 				}
-				else
-				{
-					item.attr("checked", "checked");
-				}
-			}
+			});
+	
+			setTimeout(function() {
+				$('#warehouse_accordion').accordion();
+			}, 500);
 		});
+	</script>
 
-		setTimeout(function() {
-			$('#warehouse_accordion').accordion();
-		}, 500);
-	});
-</script>
+{/if}
