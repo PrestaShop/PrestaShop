@@ -47,9 +47,9 @@ class FavoriteProducts extends Module
 	public function install()
 	{
 			if (!parent::install()
-				OR !$this->registerHook('myAccountBlock')
-				OR !$this->registerHook('extraLeft')
-				OR !$this->registerHook('header'))
+				|| !$this->registerHook('displayMyAccountBlock')
+				|| !$this->registerHook('displayLeftColumnProduct')
+				|| !$this->registerHook('displayHeader'))
 					return false;
 
 			if (!Db::getInstance()->execute('
@@ -74,7 +74,7 @@ class FavoriteProducts extends Module
 		return true;
 	}
 
-	public function hookCustomerAccount($params)
+	public function hookDisplayCustomerAccount($params)
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
 
@@ -85,12 +85,12 @@ class FavoriteProducts extends Module
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
 
-	public function hookMyAccountBlock($params)
+	public function hookDisplayMyAccountBlock($params)
 	{
-		return $this->hookCustomerAccount($params);
+		return $this->hookDisplayCustomerAccount($params);
 	}
 
-	public function hookExtraLeft($params)
+	public function hookDisplayaLeftColumnProduct($params)
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
 
@@ -100,7 +100,7 @@ class FavoriteProducts extends Module
 		return $this->display(__FILE__, 'favoriteproducts-extra.tpl');
 	}
 
-	public function hookHeader($params)
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'favoriteproducts.css', 'all');
 	}
