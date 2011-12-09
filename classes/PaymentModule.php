@@ -103,8 +103,8 @@ abstract class PaymentModuleCore extends Module
 			// For each package, generate an order
 			$delivery_option_list = $cart->getDeliveryOptionList();
 			$package_list = $cart->getPackageList();
-			$cart_delivery_option = unserialize($cart->delivery_option);
-			
+			$cart_delivery_option = $cart->getDeliveryOption();
+
 			// If some delivery options are not defined, or not valid, use the first valid option
 			foreach ($delivery_option_list as $id_address => $package)
 				if (!isset($cart_delivery_option[$id_address]) || !array_key_exists($cart_delivery_option[$id_address], $package))
