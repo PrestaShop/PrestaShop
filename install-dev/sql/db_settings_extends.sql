@@ -213,6 +213,7 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 (56, 14, 6),
 /* blocksharefb */
 (57, 21, 7),
+(57, 40, 1),
 /* blocksocial */
 (58, 9, 5),
 (58, 21, 5),
@@ -226,8 +227,8 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 (62, 21, 1),
 /* favoriteproducts */
 (64, 9, 22),
-(64, 25, 1),
-(64, 40, 1),
+(64, 26, 1),
+(64, 40, 2),
 (64, 96, 1),
 /* blocknewsletter */
 (65, 9, 24),
@@ -1583,8 +1584,6 @@ REPLACE INTO `PREFIX_configuration` (id_group_shop, id_shop, name, value, `date_
 	(NULL, NULL, 'PS_STORES_DISPLAY_FOOTER','1', NOW(), NOW()),
 	(NULL, NULL, 'SHOP_LOGO_WIDTH','224', NOW(), NOW()),
 	(NULL, NULL, 'SHOP_LOGO_HEIGHT','73', NOW(), NOW()),
-	(NULL, NULL, 'EDITORIAL_IMAGE_WIDTH','530', NOW(), NOW()),
-	(NULL, NULL, 'EDITORIAL_IMAGE_HEIGHT','228', NOW(), NOW()),
 	(NULL, NULL, 'PS_DISPLAY_SUPPLIERS','1', NOW(), NOW()),
 	(NULL, NULL, 'PS_LEGACY_IMAGES','1', NOW(), NOW()),
 	(NULL, NULL, 'PS_IMAGE_QUALITY','jpg', NOW(), NOW()),

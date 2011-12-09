@@ -174,7 +174,7 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
 (93, 'actionAttributeDelete', 'On deleting attribute feature value', 'On deleting attribute feature value', 0, 0),
 (94, 'actionAttributeSave', 'On saving attribute feature value', 'On saving attribute feature value', 0, 0),
 (95, 'actionTaxManager', 'Tax Manager Factory', '' , 0, 0),
-(96, 'myAccountBlock', 'My account block', 'Display extra informations inside the "my account" block', 1, 0);
+(96, 'displayMyAccountBlock', 'My account block', 'Display extra informations inside the "my account" block', 1, 0);
 
 INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES
 (1, 'PS_LANG_DEFAULT', '1', NOW(), NOW()),
