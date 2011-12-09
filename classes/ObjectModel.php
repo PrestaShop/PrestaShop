@@ -114,14 +114,6 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Prepare fields for ObjectModel class (add, update)
-	 * All fields are verified (pSQL, intval...)
-	 *
-	 * @return array All object fields
-	 */
-	public function getFields()	{ return array(); }
-
-	/**
 	 * Build object
 	 *
 	 * @param integer $id Existing object id in order to load object (optional)
@@ -129,13 +121,8 @@ abstract class ObjectModelCore
 	 */
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		// For retrocompatibility, we continue to use $this->table and $this->identifier property.
-		// When all objects will implement $definition static in 1.6, we will remove it.
 		$this->def = self::getDefinition($this);
-		if (isset($this->def['table']))
-			$this->table = $this->def['table'];
-		if (isset($this->def['primary']))
-			$this->identifier = $this->def['primary'];
+		$this->setDefinitionRetrocompatibility();
 
 		if (!is_null($id_lang))
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
@@ -206,6 +193,17 @@ abstract class ObjectModelCore
 			else
 				self::$fieldsRequiredDatabase = array();
 		}
+	}
+
+	/**
+	 * Prepare fields for ObjectModel class (add, update)
+	 * All fields are verified (pSQL, intval...)
+	 *
+	 * @return array All object fields
+	 */
+	public function getFields()
+	{
+		return array();
 	}
 
 	/**
@@ -1072,5 +1070,53 @@ abstract class ObjectModelCore
 		if ($field)
 			return isset($definition[$field]) ? $definition[$field] : null;
 		return $definition;
+	}
+
+	/**
+	 * Retrocompatibility for classes without $definition static
+	 * Remove this in 1.6 !
+	 *
+	 * @since 1.5.0
+	 */
+	protected function setDefinitionRetrocompatibility()
+	{
+		// Retrocompatibility with $table property ($definition['table'])
+		if (isset($this->def['table']))
+			$this->table = $this->def['table'];
+		else
+			$this->def['table'] = $this->table;
+
+		// Retrocompatibility with $identifier property ($definition['primary'])
+		if (isset($this->def['primary']))
+			$this->identifier = $this->def['primary'];
+		else
+			$this->def['primary'] = $this->identifier;
+
+		// Retrocompatibility with $fieldsValidate, $fieldsRequired and $fieldsSize properties ($definition['fields'] && $definition['fields_lang'])
+		foreach (array('fields' => '', 'fields_lang' => 'Lang') as $type => $suffix)
+			if (isset($this->def[$type]))
+			{
+				foreach ($this->def[$type] as $field => $data)
+				{
+					if (isset($data['validate']))
+						$this->{'fieldsValidate'.$suffix}[$field] = $data['validate'];
+					if (isset($data['required']) && $data['required'])
+						$this->{'fieldsRequired'.$suffix}[] = $field;
+					if (isset($data['size']))
+						$this->{'fieldsSize'.$suffix}[$field] = $data['size'];
+				}
+			}
+			else
+			{
+				if ($type == 'fields')
+					$this->def['fields'] = array();
+
+				foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
+					$this->def[$type][$field]['validate'] = $validate;
+				foreach ($this->{'fieldsRequired'.$suffix} as $field)
+					$this->def[$type][$field]['required'] = true;
+				foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
+					$this->def[$type][$field]['size'] = $size;
+			}
 	}
 }
