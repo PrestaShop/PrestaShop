@@ -40,5 +40,4 @@ if (isset($_GET['categoryBox']) AND is_array($_GET['categoryBox']))
 		$value = (int)$value;
 
 $blockLayered = new BlockLayered();
-echo $blockLayered->ajaxCallBackOffice((isset($_GET['categoryBox']) AND is_array($_GET['categoryBox'])) ? $_GET['categoryBox'] : array(), 
-(isset($_GET['id_layered_filter']) AND !empty($_GET['id_layered_filter'])) ? (int)$_GET['id_layered_filter'] : array());
+echo $blockLayered->ajaxCallBackOffice(Tools::getValue('categoryBox'), Tools::getValue('id_layered_filter'));
