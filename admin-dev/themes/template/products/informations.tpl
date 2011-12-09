@@ -158,7 +158,7 @@
 	{/if}
 	<option disabled="disabled">----------</option>
 	</select>&nbsp;&nbsp;&nbsp;
-	<a href="{$link->getAdminLink('AdminManufacturer')}&addmanufacturer" onclick="return confirm('{l s='Are you sure you want to delete product information entered?' js=1} ')">
+	<a href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer" onclick="return confirm('{l s='Are you sure you want to delete product information entered?' js=1} ')">
 	<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
 	</a>
 	</td>
@@ -215,51 +215,6 @@ var textFieldLabel = 0;
 		<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {*onclick="toggleVirtualProduct(this);"*} {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
 			<label for="is_virtual_good" class="t bold" style="color: black;">{l s='Is this a virtual product?'}</label>
 		</p>
-		{* [begin] physical product infos *}
-		<div id="physical_good" class="toggleVirtualPhysicalProduct" {if $product->productDownload->id && $product->productDownload->active}style="display:none"{/if} >
-		<div class="separation"></div>
-		<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
-			<tr>
-				<td class="col-left"><label>{l s='Width ( package ) :' }</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="6" maxlength="6" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
-				</td>
-			</tr>
-			<tr>
-				<td class="col-left"><label>{l s='Height ( package ) :' }</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="6" maxlength="6" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
-				</td>
-			</tr>
-			<tr>
-				<td class="col-left">
-					<label>Carriers:</label>
-				</td>
-				<td class="padding-bottom:5px;">
-					<select name="carriers[]" multiple="multiple" size="4">
-						{foreach $carrier_list as $carrier}
-							<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
-						{/foreach}
-					</select>
-				</td>
-			</tr>
-		</table>
-		<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
-			<tr>
-				<td class="col-left"><label>{l s='Deep ( package ) :' }</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="6" maxlength="6" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_dimension_unit}
-				</td>
-			</tr>
-			<tr>
-				<td class="col-left"><label>{l s='Weight ( package ) :' }</label></td>
-				<td style="padding-bottom:5px;">
-					<input size="6" maxlength="6" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" /> {$ps_weight_unit}
-				</td>
-			</tr>
-		</table>
-		</div>
-		{* [end] of physical product *}
 		{* [begin] virtual product *}
 		<div id="virtual_good" class="toggleVirtualPhysicalProduct" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
@@ -410,45 +365,12 @@ var textFieldLabel = 0;
 						</td>
 						</tr>
 			{/if}
-					<tr>
-						<td class="col-left"><label>{l s='When out of stock:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<input type="radio" name="out_of_stock" id="out_of_stock_1" value="0"  {if $product->out_of_stock == 0}checked="checked"{/if} />
-								<label for="out_of_stock_1" class="t" id="label_out_of_stock_1">{l s='Deny orders'}</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_2" value="1" {if $product->out_of_stock == 1}checked="checked"{/if} />
-								<label for="out_of_stock_2" class="t" id="label_out_of_stock_2">{l s='Allow orders'}</label>
-							<br /><input type="radio" name="out_of_stock" id="out_of_stock_3" value="2" {if $product->out_of_stock == 2}checked="checked"{/if} />
-								<label for="out_of_stock_3" class="t" id="label_out_of_stock_3">{l s='Default:'}
-								<i>{if $ps_order_out_of_stock}{l s='Allow orders'}{else}{l s='Deny orders'}{/if}</i> ({l s='as set in'} <a href="{$link->getAdminLink('AdminPPreferences')}"
-									onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}')">{l s='Preferences'}</a>)</label>
-						</td>
-					</tr>
+
 					<tr>
 						<td colspan="2" style="padding-bottom:5px;">
 							<div class="separation"></div>
 						</td>
 					</tr>
-
-					<tr>
-						<td class="col-left"><label for="id_category_default" class="t">
-							{l s='Default category:'}
-							</label></td>
-						<td>
-						<div id="no_default_category" style="color: red;font-weight: bold;display: none;">
-							{l s='Please check a category in order to select the default category.'}
-						</div>
-						<script type="text/javascript">
-							var post_selected_cat;
-							post_selected_cat = '{$selected_cat_ids}';
-						</script>
-						<select id="id_category_default" name="id_category_default">
-						{foreach from=$selected_cat item=cat}
-							<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
-						{/foreach}
-						</select>
-						</td>
-					</tr>
-					<tr><td colspan="2">{$category_tree}</td></tr>
 					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 {************** DESCRIPTION *****************************}
 				<tr><td colspan="2">

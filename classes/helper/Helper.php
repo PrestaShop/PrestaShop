@@ -129,8 +129,7 @@ class HelperCore
 		$context = Context::getContext();
 		
 		$context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
-		
-		
+
 		$context->controller->addJs(array(
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
@@ -158,6 +157,9 @@ class HelperCore
 			var selectedLabel = \''.$trads['selected'].'\';
 			var home = \''.$trads['Home'].'\';
 			var use_radio = '.(int)$use_radio.';
+			$(document).ready(function(){
+				buildTreeView();
+			});
 		</script>';
 
 		$html .= '
@@ -172,6 +174,7 @@ class HelperCore
 		';
 
 		$home_is_selected = false;
+
 		foreach($selected_cat AS $cat)
 		{
 			if (is_array($cat))

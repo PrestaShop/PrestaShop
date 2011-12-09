@@ -24,6 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}price.js"></script>
 <div class="block_specific_prices_modifications">
 	<h4>{l s='Product price'}</h4>
 	<div class="separation"></div>
