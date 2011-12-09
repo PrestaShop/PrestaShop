@@ -43,7 +43,12 @@ class TranslatedConfigurationCore extends Configuration
 		// Otherwise configuration is not set as translated configuration.
 		if ($id !== null)
 		{
-			$id_translated = Db::getInstance()->executeS('SELECT `'.$this->identifier.'` FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.$this->identifier.'`='.pSQL($id).' LIMIT 0,1');
+			$id_translated = Db::getInstance()->executeS('
+				SELECT `'.$this->def['primary'].'`
+				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+				WHERE `'.$this->def['primary'].'`='.pSQL($id).' LIMIT 0,1
+			');
+
 			if (empty($id_translated))
 				$id = null;
 		}
@@ -81,11 +86,11 @@ class TranslatedConfigurationCore extends Configuration
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
 		$query = '
-		SELECT DISTINCT main.`'.$this->identifier.'` FROM `'._DB_PREFIX_.$this->table.'` main
+		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
 		'.$sql_join.'
 		WHERE id_configuration IN 
 		(	SELECT id_configuration
-			FROM '._DB_PREFIX_.$this->table.'_lang
+			FROM '._DB_PREFIX_.$this->def['table'].'_lang
 		) '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '').'

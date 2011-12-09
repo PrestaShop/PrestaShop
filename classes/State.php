@@ -132,19 +132,16 @@ class StateCore extends ObjectModel
 	*/
 	public function delete()
 	{
-		if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table))
-			die(Tools::displayError());
-
 		if (!$this->isUsed())
 		{
 			/* Database deletion */
-			$result = Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+			$result = Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'` WHERE `'.$this->def['primary'] .'` = '.(int)$this->id);
 			if (!$result)
 				return false;
 
 			/* Database deletion for multilingual fields related to the object */
 			if (method_exists($this, 'getTranslationsFieldsChild'))
-				Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+				Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
 			return $result;
 		}
 		else
@@ -171,7 +168,7 @@ class StateCore extends ObjectModel
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT COUNT(*) AS nb_used
 		FROM `'._DB_PREFIX_.'address`
-		WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+		WHERE `'.$this->def['primary'].'` = '.(int)($this->id));
 		return $row['nb_used'];
 	}
 

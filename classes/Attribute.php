@@ -92,7 +92,7 @@ class AttributeCore extends ObjectModel
 		$result = Db::getInstance()->executeS('
 			SELECT `id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute_combination`
-			WHERE `'.$this->identifier.'` = '.(int)$this->id
+			WHERE `'.$this->def['primary'].'` = '.(int)$this->id
 		);
 
 		if ($result === false)
@@ -106,7 +106,7 @@ class AttributeCore extends ObjectModel
 
 			if (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `'.$this->identifier.'` = '.(int)$this->id) === false)
+				WHERE `'.$this->def['primary'].'` = '.(int)$this->id) === false)
 				return false;
 
 			if (Db::getInstance()->execute('

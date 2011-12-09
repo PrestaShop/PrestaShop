@@ -149,19 +149,19 @@ abstract class ObjectModelCore
 		if ($this->isLangMultishop() && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->getID(true);
 
-	 	if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table))
+	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
 			throw new PrestashopException('Identifier or table format not valid for class '.get_class($this));
 
 		if ($id)
 		{
 			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->table.'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			$cache_id = 'objectmodel_'.$this->def['table'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = 'SELECT *
-						FROM `'._DB_PREFIX_.$this->table.'` a '.
-						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->table).'_lang` b ON (a.`'.$this->identifier.'` = b.`'.$this->identifier).'` AND `id_lang` = '.(int)($id_lang).')' : '')
-						.' WHERE 1 AND a.`'.$this->identifier.'` = '.(int)$id.
+						FROM `'._DB_PREFIX_.$this->def['table'].'` a '.
+						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang` b ON (a.`'.$this->def['primary'].'` = b.`'.$this->def['primary']).'` AND `id_lang` = '.(int)($id_lang).')' : '')
+						.' WHERE 1 AND a.`'.$this->def['primary'].'` = '.(int)$id.
 							(($this->id_shop AND $id_lang) ? ' AND b.id_shop = '.$this->id_shop : '');
 				Cache::store($cache_id, Db::getInstance()->getRow($sql));
 			}
@@ -176,15 +176,15 @@ abstract class ObjectModelCore
 
 				if (!$id_lang && method_exists($this, 'getTranslationsFieldsChild'))
 				{
-					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang`
-							WHERE `'.$this->identifier.'` = '.(int)$id
+					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+							WHERE `'.$this->def['primary'].'` = '.(int)$id
 							.(($this->id_shop) ? ' AND `id_shop` = '.$this->id_shop : '');
 					$result = Db::getInstance()->executeS($sql);
 					if ($result)
 						foreach ($result as $row)
 							foreach ($row AS $key => $value)
 							{
-								if (array_key_exists($key, $this) && $key != $this->identifier)
+								if (array_key_exists($key, $this) && $key != $this->def['primary'])
 								{
 									if (!is_array($this->{$key}))
 										$this->{$key} = array();
@@ -235,9 +235,9 @@ abstract class ObjectModelCore
 			$this->date_upd = date('Y-m-d H:i:s');
 		/* Database insertion */
 		if ($nullValues)
-			$result = Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.$this->table, $this->getFields(), 'INSERT');
+			$result = Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'INSERT');
 		else
-			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->table, $this->getFields(), 'INSERT');
+			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'INSERT');
 
 		if (!$result)
 			return false;
@@ -256,28 +256,28 @@ abstract class ObjectModelCore
 					foreach (array_keys($field) AS $key)
 					 	if (!Validate::isTableOrIdentifier($key))
 			 				throw new PrestashopException('key '.$key.' is not table or identifier, ');
-					$field[$this->identifier] = (int)$this->id;
+					$field[$this->def['primary']] = (int)$this->id;
 
-					if (isset($assos[$this->table.'_lang']) && $assos[$this->table.'_lang']['type'] == 'fk_shop')
+					if (isset($assos[$this->def['table'].'_lang']) && $assos[$this->def['table'].'_lang']['type'] == 'fk_shop')
 					{
 						foreach ($shops as $id_shop)
 						{
 							$field['id_shop'] = (int)$id_shop;
-							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
 						}
 					}
 					else
-						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
 				}
 		}
 
 		if (!Shop::isFeatureActive())
 		{
-			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+			if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getID(true), 'shop');
 
 			$assos = GroupShop::getAssoTables();
-			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
+			if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
 				$result &= $this->associateTo(Context::getContext()->shop->getGroupID(), 'group_shop');
 		}
 
@@ -304,9 +304,9 @@ abstract class ObjectModelCore
 
 		/* Database update */
 		if ($nullValues)
-			$result = Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.$this->table, $this->getFields(), 'UPDATE', '`'.pSQL($this->identifier).'` = '.(int)($this->id));
+			$result = Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'UPDATE', '`'.pSQL($this->def['primary']).'` = '.(int)($this->id));
 		else
-			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->table, $this->getFields(), 'UPDATE', '`'.pSQL($this->identifier).'` = '.(int)($this->id));
+			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'UPDATE', '`'.pSQL($this->def['primary']).'` = '.(int)($this->id));
 		if (!$result)
 			return false;
 
@@ -329,25 +329,25 @@ abstract class ObjectModelCore
 						foreach ($listShops as $shop)
 						{
 							$field['id_shop'] = $shop;
-							$where = pSQL($this->identifier).' = '.(int)$this->id
+							$where = pSQL($this->def['primary']).' = '.(int)$this->id
 										.' AND id_lang = '.(int)$field['id_lang']
 										.' AND id_shop = '.$field['id_shop'];
 
-							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->table).'_lang WHERE '.$where))
-								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', $where);
+							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
+								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'UPDATE', $where);
 							else
-								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
 						}
 					}
 					// If this table is not linked to multishop system ...
 					else
 					{
-						$where = pSQL($this->identifier).' = '.(int)$this->id
+						$where = pSQL($this->def['primary']).' = '.(int)$this->id
 									.' AND id_lang = '.(int)$field['id_lang'];
-						if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->table).'_lang WHERE '.$where))
-							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'UPDATE', $where);
+						if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
+							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'UPDATE', $where);
 						else
-							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table.'_lang', $field, 'INSERT');
+							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
 					}
 				}
 			}
@@ -372,21 +372,21 @@ abstract class ObjectModelCore
 		$this->clearCache();
 
 		/* Database deletion */
-		$result = Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+		$result = Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'` WHERE `'.pSQL($this->def['primary']).'` = '.(int)($this->id));
 		if (!$result)
 			return false;
 
 		/* Database deletion for multilingual fields related to the object */
 		if (method_exists($this, 'getTranslationsFieldsChild'))
-			Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->table).'_lang` WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+			Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang` WHERE `'.pSQL($this->def['primary']).'` = '.(int)($this->id));
 
 		$assos = Shop::getAssoTables();
-		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->table.'_shop` WHERE `'.$this->identifier.'`='.(int)$this->id);
+		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'shop')
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'`='.(int)$this->id);
 
 		$assos = GroupShop::getAssoTables();
-		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
-			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->table.'_group_shop` WHERE `'.$this->identifier.'`='.(int)$this->id);
+		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->def['table'].'_group_shop` WHERE `'.$this->def['primary'].'`='.(int)$this->id);
 
 		/* Hook */
 		Hook::exec('actionObject'.get_class($this).'DeleteAfter', array('object' => $this));
@@ -426,9 +426,9 @@ abstract class ObjectModelCore
 
 		/* Change status to active/inactive */
 		return Db::getInstance()->execute('
-		UPDATE `'.pSQL(_DB_PREFIX_.$this->table).'`
+		UPDATE `'.pSQL(_DB_PREFIX_.$this->def['table']).'`
 		SET `active` = !`active`
-		WHERE `'.pSQL($this->identifier).'` = '.(int)($this->id));
+		WHERE `'.pSQL($this->def['primary']).'` = '.(int)($this->id));
 	}
 
 	/**
@@ -454,7 +454,7 @@ abstract class ObjectModelCore
 	protected function makeTranslationFields(&$fields, &$fieldsArray, $id_language)
 	{
 		$fields[$id_language]['id_lang'] = $id_language;
-		$fields[$id_language][$this->identifier] = (int)($this->id);
+		$fields[$id_language][$this->def['primary']] = (int)($this->id);
 		if ($this->id_shop && $this->isLangMultishop())
 			$fields[$id_language]['id_shop'] = (int)$this->id_shop;
 		foreach ($fieldsArray as $k => $field)
@@ -624,15 +624,15 @@ abstract class ObjectModelCore
 	public function getWebserviceParameters($wsParamsAttributeName = null)
 	{
 		$defaultResourceParameters = array(
-			'objectSqlId' => $this->identifier,
+			'objectSqlId' => $this->def['primary'],
 			'retrieveData' => array(
 				'className' => get_class($this),
 				'retrieveMethod' => 'getWebserviceObjectList',
 				'params' => array(),
-				'table' => $this->table,
+				'table' => $this->def['table'],
 			),
 			'fields' => array(
-				'id' => array('sqlId' => $this->identifier, 'i18n' => false),
+				'id' => array('sqlId' => $this->def['primary'], 'i18n' => false),
 			),
 		);
 
@@ -641,9 +641,9 @@ abstract class ObjectModelCore
 
 
 		if (!isset($this->{$wsParamsAttributeName}['objectNodeName']))
-			$defaultResourceParameters['objectNodeName'] = $this->table;
+			$defaultResourceParameters['objectNodeName'] = $this->def['table'];
 		if (!isset($this->{$wsParamsAttributeName}['objectsNodeName']))
-			$defaultResourceParameters['objectsNodeName'] = $this->table.'s';
+			$defaultResourceParameters['objectsNodeName'] = $this->def['table'].'s';
 
 		if (isset($this->{$wsParamsAttributeName}['associations']))
 			foreach ($this->{$wsParamsAttributeName}['associations'] as $assocName => &$association)
@@ -755,19 +755,19 @@ abstract class ObjectModelCore
 	{
 		$assoc = Shop::getAssoTables();
 
-		if (array_key_exists($this->table ,$assoc))
+		if (array_key_exists($this->def['table'] ,$assoc))
 		{
-			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.$this->table.'_'.$assoc[$this->table]['type'].'` AS multi_shop_'.$this->table.' ON (main.'.$this->identifier.' = '.'multi_shop_'.$this->table.'.'.$this->identifier.')';
+			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.$this->def['table'].'_'.$assoc[$this->def['table']]['type'].'` AS multi_shop_'.$this->def['table'].' ON (main.'.$this->def['primary'].' = '.'multi_shop_'.$this->def['table'].'.'.$this->def['primary'].')';
 			$class_name = WebserviceRequest::$ws_current_classname;
 			$vars = get_class_vars($class_name);
 			foreach ($vars['shopIDs'] as $id_shop)
-				$OR[] = ' multi_shop_'.$this->table.'.id_shop = '.$id_shop.' ';
+				$OR[] = ' multi_shop_'.$this->def['table'].'.id_shop = '.$id_shop.' ';
 			$multi_shop_filter = ' AND ('.implode('OR', $OR).') ';
 			$sql_filter = $multi_shop_filter.' '.$sql_filter;
 			$sql_join = $multi_shop_join .' '. $sql_join;
 		}
 		$query = '
-		SELECT DISTINCT main.`'.$this->identifier.'` FROM `'._DB_PREFIX_.$this->table.'` AS main
+		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` AS main
 		'.$sql_join.'
 		WHERE 1 '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
@@ -801,9 +801,9 @@ abstract class ObjectModelCore
 	public function clearCache($all = false)
 	{
 		if ($all)
-			Cache::clean('objectmodel_'.$this->table.'_*');
+			Cache::clean('objectmodel_'.$this->def['table'].'_*');
 		else if ($this->id)
-			Cache::clean('objectmodel_'.$this->table.'_'.(int)$this->id.'_*');
+			Cache::clean('objectmodel_'.$this->def['table'].'_'.(int)$this->id.'_*');
 	}
 
 	/**
@@ -819,8 +819,8 @@ abstract class ObjectModelCore
 			$id_shop = Context::getContext()->shop->getID();
 
 		$sql = 'SELECT id_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_shop`
-				WHERE `'.$this->identifier.'` = '.(int)$this->id.'
+				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
 					AND id_shop = '.(int)$id_shop;
 		return (bool)Db::getInstance()->getValue($sql);
 	}
@@ -847,7 +847,7 @@ abstract class ObjectModelCore
 		}
 
 		if (!empty($sql))
-			return (bool)Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.$this->table.'_'.$type.'` (`'.$this->identifier.'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
+			return (bool)Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.$this->def['table'].'_'.$type.'` (`'.$this->def['primary'].'`, `id_'.$type.'`) VALUES '.rtrim($sql,','));
 		return true;
 	}
 
@@ -864,8 +864,8 @@ abstract class ObjectModelCore
 			$id_group_shop = Context::getContext()->shop->getGroupID();
 
 		$sql = 'SELECT id_group_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->table).'_group_shop`
-				WHERE `'.$this->identifier.'`='.(int)$this->id.' AND id_group_shop='.(int)$id_group_shop;
+				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_group_shop`
+				WHERE `'.$this->def['primary'].'`='.(int)$this->id.' AND id_group_shop='.(int)$id_group_shop;
 		return (bool)Db::getInstance()->getValue($sql);
 	}
 
@@ -875,12 +875,12 @@ abstract class ObjectModelCore
 	public function duplicateShops($id)
 	{
 		$asso = Shop::getAssoTables();
-		if (!isset($asso[$this->table]) || $asso[$this->table]['type'] != 'shop')
+		if (!isset($asso[$this->def['table']]) || $asso[$this->def['table']]['type'] != 'shop')
 			return false;
 
 		$sql = 'SELECT id_shop
-				FROM '._DB_PREFIX_.$this->table.'_shop
-				WHERE '.$this->identifier.' = '.(int)$id;
+				FROM '._DB_PREFIX_.$this->def['table'].'_shop
+				WHERE '.$this->def['primary'].' = '.(int)$id;
 		if ($results = Db::getInstance()->executeS($sql))
 		{
 			$ids = array();
@@ -914,11 +914,11 @@ abstract class ObjectModelCore
 				&& !unlink($this->image_dir.$this->id.'.'.$this->image_format))
 				return false;
 		}
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_'.$this->id.'.'.$this->image_format)
-			&& !unlink(_PS_TMP_IMG_DIR_.$this->table.'_'.$this->id.'.'.$this->image_format))
+		if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format)
+			&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_'.$this->id.'.'.$this->image_format))
 			return false;
-		if (file_exists(_PS_TMP_IMG_DIR_.$this->table.'_mini_'.$this->id.'.'.$this->image_format)
-			&& !unlink(_PS_TMP_IMG_DIR_.$this->table.'_mini_'.$this->id.'.'.$this->image_format))
+		if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)
+			&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format))
 			return false;
 
 		$types = ImageType::getImagesTypes();
@@ -970,7 +970,7 @@ abstract class ObjectModelCore
 	 */
 	public function getIdentifier()
 	{
-		return $this->identifier;
+		return $this->def['primary'];
 	}
 
 	/**
@@ -994,8 +994,8 @@ abstract class ObjectModelCore
 	public function hydrate(array $data, $id_lang = null)
 	{
 		$this->id_lang = $id_lang;
-		if (isset($data[$this->identifier]))
-			$this->id = $data[$this->identifier];
+		if (isset($data[$this->def['primary']]))
+			$this->id = $data[$this->def['primary']];
 		foreach ($data as $key => $value)
 			if (array_key_exists($key, $this))
 				$this->$key = $value;
