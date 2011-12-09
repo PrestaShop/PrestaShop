@@ -2253,12 +2253,12 @@ class AdminControllerCore extends Controller
 			return;
 
 		$assos = array();
-		foreach ($_POST as $k => $row)
+		foreach ($_POST['checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table] as $id_asso_object => $row)
 		{
-			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
-				continue;
-			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
-			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
+			if (!(int)$id_asso_object)
+				$id_asso_object = $id_object;
+			foreach ($row as $id_shop => $value)
+				$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
 		}
 		return array($assos, $type);
 	}
@@ -2276,21 +2276,9 @@ class AdminControllerCore extends Controller
 
 		$shop_asso = Shop::getAssoTables();
 		$group_shop_asso = GroupShop::getAssoTables();
-		if (isset($shop_asso[$this->table]) && $shop_asso[$this->table]['type'] == 'shop')
-			$type = 'shop';
-		else if (isset($group_shop_asso[$this->table]) && $group_shop_asso[$this->table]['type'] == 'group_shop')
-			$type = 'group_shop';
-		else
-			return;
-
-		$assos = array();
-		foreach ($_POST as $k => $row)
-		{
-			if (!preg_match('/^checkBox'.Tools::toCamelCase($type, true).'Asso_'.$this->table.'_([0-9]+)?_([0-9]+)$/Ui', $k, $res))
-				continue;
-			$id_asso_object = (!empty($res[1]) ? $res[1] : $id_object);
-			$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$res[2]);
-		}
+		$assos_data = $this->getAssoShop($this->table, $id_object);
+		$assos = $assos_data[0];
+		$type = $assos_data[1];
 
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 
@@ -2323,137 +2311,6 @@ class AdminControllerCore extends Controller
 	public function beforeUpdateOptions()
 	{
 	}
-
-	/**
-	 * displayAssoShop
-	 * @todo : create assoshop.tpl and use smarty var asso_shop in pages
-	 *
-	 * @param string $type
-	 * @return void
-	 */
-	protected function displayAssoShop($type = 'shop')
-	{
-		if (!Shop::isFeatureActive() || (!$this->object && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
-			return;
-
-		if ($type != 'shop' && $type != 'group_shop')
-			$type = 'shop';
-
-		$assos = array();
-		$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`';
-		foreach (Db::getInstance()->executeS($sql) as $row)
-			$assos[$row['id_'.$type]][] = $row[$this->identifier];
-
-		$html = <<<EOF
-			<script type="text/javascript">
-			$().ready(function()
-			{
-				// Click on "all shop"
-				$('.input_all_shop').click(function()
-				{
-					var checked = $(this).attr('checked');
-					$('.input_group_shop').attr('checked', checked);
-					$('.input_shop').attr('checked', checked);
-				});
-
-				// Click on a group shop
-				$('.input_group_shop').click(function()
-				{
-					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).attr('checked'));
-					check_all_shop();
-				});
-
-				// Click on a shop
-				$('.input_shop').click(function()
-				{
-					check_group_shop_status($(this).val());
-					check_all_shop();
-				});
-
-				// Initialize checkbox
-				$('.input_shop').each(function(k, v)
-				{
-					check_group_shop_status($(v).val());
-					check_all_shop();
-				});
-			});
-
-			function check_group_shop_status(id_group)
-			{
-				var groupChecked = true;
-				$('.input_shop[value='+id_group+']').each(function(k, v)
-				{
-					if (!$(v).attr('checked'))
-						groupChecked = false;
-				});
-				$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
-			}
-
-			function check_all_shop()
-			{
-				var allChecked = true;
-				$('.input_group_shop').each(function(k, v)
-				{
-					if (!$(v).attr('checked'))
-						allChecked = false;
-				});
-				$('.input_all_shop').attr('checked', allChecked);
-			}
-			</script>
-EOF;
-
-		$html .= '<div class="assoShop">';
-		$html .= '<table class="table" cellpadding="0" cellspacing="0" width="100%">
-					<tr><th>'.$this->l('Shop').'</th></tr>';
-		$html .= '<tr'.(($type == 'group_shop') ? ' class="alt_row"' : '').'>
-					<td>
-						<label class="t">
-							<input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'
-						</label>
-					</td>
-				</tr>';
-		foreach (Shop::getTree() as $group_id => $group_data)
-		{
-			$group_checked = ($type == 'group_shop' && ((isset($assos[$group_id]) && in_array($this->object->id, $assos[$group_id])) || !$this->object->id));
-			$html .= '<tr'.(($type == 'shop') ? ' class="alt_row"' : '').'>';
-			$html .= '<td>
-						<img style="vertical-align: middle;" alt="" src="../img/admin/lv2_b.gif" />
-						<label class="t">
-							<input class="input_group_shop" type="checkbox"
-								name="checkBoxGroupShopAsso_'.$this->table.'_'.$this->object->id.'_'.$group_id.'" value="'.$group_id.'" '.
-								($group_checked ? 'checked="checked"' : '').' /> '.
-							$group_data['name'].'
-						</label>
-					</td>';
-			$html .= '</tr>';
-
-			if ($type == 'shop')
-			{
-				$total = count($group_data['shops']);
-				$j = 0;
-				foreach ($group_data['shops'] as $shop_id => $shop_data)
-				{
-					$checked = ((isset($assos[$shop_id]) && in_array($this->object->id, $assos[$shop_id])) || !$this->object->id);
-					$html .= '<tr>';
-					$html .= '<td>
-								<img style="vertical-align: middle;" alt="" src="../img/admin/lv3_'.(($j < $total - 1) ? 'b' : 'f').'.png" />
-								<label class="child">';
-					$html .= '<input class="input_shop" type="checkbox" value="'.$group_id.'"
-									name="checkBoxShopAsso_'.$this->table.'_'.$this->object->id.'_'.$shop_id.'" id="checkedBox_'.$shop_id.'" '.
-									($checked ? 'checked="checked"' : '').' /> ';
-					$html .= $shop_data['name'].'</label></td>';
-					$html .= '</tr>';
-					$j++;
-				}
-			}
-		}
-		$html .= '</table></div>';
-		$this->context->smarty->assign('asso_shop', $html);
-		return $html;
-	}
-
-
 
 	/**
 	 * Overload this method for custom checking

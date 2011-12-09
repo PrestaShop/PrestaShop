@@ -364,7 +364,7 @@ class ConfigurationCore extends ObjectModel
 			return false;
 
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'configuration_lang`
-				WHERE `id_configuration` = (
+				WHERE `id_configuration` IN (
 					SELECT `id_configuration`
 					FROM `'._DB_PREFIX_.'configuration`
 					WHERE `name` = \''.pSQL($key).'\'
