@@ -74,7 +74,7 @@ class PageCore extends ObjectModel
 		{
 			$objectID = Tools::getValue($specialArray[$controller], null);
 			$where = ' AND `id_object` = '.(int)$objectID;
-			$insertData['id_object'] = $objectID;
+			$insertData['id_object'] = (int)$objectID;
 		}
 
 		$sql = 'SELECT `id_page`
@@ -117,7 +117,7 @@ class PageCore extends ObjectModel
 				SET `counter` = `counter` + 1
 				WHERE `id_date_range` = '.(int)$id_date_range.'
 					AND `id_page` = '.(int)$id_page.'
-					AND `id_shop` = '.$context->shop->getID();
+					AND `id_shop` = '.(int)$context->shop->getID();
 		Db::getInstance()->execute($sql);
 
 		// If no one has seen the page in this date range, it is added
@@ -126,8 +126,8 @@ class PageCore extends ObjectModel
 				'id_date_range' =>	(int)$id_date_range,
 				'id_page' =>		(int)$id_page,
 				'counter' =>		1,
-				'id_shop' =>		$context->shop->getID(),
-				'id_group_shop' =>	$context->shop->getGroupID(),
+				'id_shop' =>		(int)$context->shop->getID(),
+				'id_group_shop' =>	(int)$context->shop->getGroupID(),
 			), 'INSERT');
 	}
 }
