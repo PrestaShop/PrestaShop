@@ -449,6 +449,7 @@ class AdminOrdersControllerCore extends AdminController
 
 									$price_te = Tools::convertPriceFull($price_te, $from = new Currency($id_currency), $to = new Currency($warehouse->id_currency));
 
+									$stock_manager = StockManagerFactory::getManager();
 									$stock_manager->addProduct($qty_cancel_product->product_id,
 															   $qty_cancel_product->product_attribute_id,
 															   $warehouse,
