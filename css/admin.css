@@ -1982,4 +1982,15 @@ div#scrollTop a:hover{
 	opacity:0.8;
 }
 
+.loader{
+	display:none;
+	margin: 450px 0 0 440px;
+	height:128px;
+	width:128px;
+	color:#fff;
+	background-image:url(../img/loader.gif);
+}
 
+#category_block{
+	width:
+}

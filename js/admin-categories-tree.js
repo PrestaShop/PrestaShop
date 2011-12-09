@@ -32,7 +32,8 @@ var intervalCheck = null;
 var id = 0;
 var arrayCatToExpand = new Array();
 
-$(document).ready(function(){
+function buildTreeView()
+{
 	$("#categories-treeview").treeview({
 		url : 'ajax.php',
 		toggle: function () { callbackToggle($(this)); },
@@ -73,7 +74,7 @@ $(document).ready(function(){
 		uncheckAllCategories();
 		return false;
 	});	
-});
+}
 
 function callbackToggle(element)
 {
