@@ -36,12 +36,6 @@ class AttributeGroupCore extends ObjectModel
 	/** @var string Public Name */
 	public $public_name;
 
-	
-	
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -50,10 +44,11 @@ class AttributeGroupCore extends ObjectModel
 		'primary' => 'id_attribute_group',
 		'multilang' => true,
 		'fields' => array(
-			'is_color_group' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'public_name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'position' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isInt'),
+			'is_color_group' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'group_type' => 	array('type' => self::TYPE_STRING),
+			'position' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'name' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'public_name' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
 
@@ -71,17 +66,6 @@ class AttributeGroupCore extends ObjectModel
 			),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['is_color_group'] = (int)$this->is_color_group;
-		$fields['group_type'] = pSQL($this->group_type);
-		$fields['position'] = (int)$this->position;
-
-		return $fields;
-	}
 
 	public function add($autodate = true, $nullValues = false)
 	{

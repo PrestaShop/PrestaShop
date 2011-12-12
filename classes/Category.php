@@ -78,13 +78,6 @@ class CategoryCore extends ObjectModel
 
 	protected static $_links = array();
 
-	
- 	
- 	
-	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -94,21 +87,24 @@ class CategoryCore extends ObjectModel
 		'multilang' => true,
 		'multishop' => true,
 		'fields' => array(
-			'nleft' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'nright' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'level_depth' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true, 'size' => 1),
-			'id_parent' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'groupBox' => array('type' => 'FILL_ME', 'validate' => 'isArrayWithIds'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'link_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
-			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'nleft' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'nright' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'level_depth' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true, 'size' => 1),
+			'id_parent' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'position' => 			array('type' => self::TYPE_INT),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'link_rewrite' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
+			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
+			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 		),
 	);
-
 
 	/** @var string id_image is the category ID when an image exists and 'default' otherwise */
 	public $id_image = 'default';
@@ -136,17 +132,10 @@ class CategoryCore extends ObjectModel
 
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
 		if (isset($this->id))
 			$fields['id_category'] = (int)$this->id;
-		$fields['active'] = (int)$this->active;
-		$fields['id_parent'] = (int)$this->id_parent;
-		$fields['position'] = (int)$this->position;
-		$fields['level_depth'] = (int)$this->level_depth;
-		$fields['nleft'] = (int)$this->nleft;
-		$fields['nright'] = (int)$this->nright;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
+
 		return $fields;
 	}
 

@@ -37,11 +37,6 @@ class CMSCore extends ObjectModel
 	public $position;
 	public $active;
 
- 	
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -50,30 +45,23 @@ class CMSCore extends ObjectModel
 		'primary' => 'id_cms',
 		'multilang' => true,
 		'fields' => array(
-			'id_cms_category' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-			'link_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
-			'content' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 3999999999999),
+			'id_cms_category' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'position' => 			array('type' => self::TYPE_INT),
+			'active' => 			array('type' => self::TYPE_BOOL),
+
+			// Lang fields
+			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_title' =>			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'link_rewrite' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+			'content' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 3999999999999),
 		),
 	);
-
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'content',
 		'objectsNodeName' => 'content_management_system',
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_cms'] = (int)($this->id);
-		$fields['id_cms_category'] = (int)($this->id_cms_category);
-		$fields['position'] = (int)($this->position);
-		$fields['active'] = (int)($this->active);
-		return $fields;
-	}
 
 	public function getTranslationsFieldsChild()
 	{

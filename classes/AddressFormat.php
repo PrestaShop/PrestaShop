@@ -38,10 +38,6 @@ class AddressFormatCore extends ObjectModel
 
 	private $_errorFormatList = array();
 
-	
-	
-
-	/* MySQL does not allow 'order detail' for a table name */
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -49,10 +45,10 @@ class AddressFormatCore extends ObjectModel
 		'table' => 'address_format',
 		'primary' => 'id_country',
 		'fields' => array(
-			'format' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'format' => 	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'id_country' => array('type' => self::TYPE_INT),
 		),
 	);
-
 
 	public static $requireFormFieldsList = array(
 		'firstname',
@@ -99,16 +95,6 @@ class AddressFormatCore extends ObjectModel
 		'Supplier');
 
 	const _CLEANING_REGEX_ = '#([^\w:_]+)#i';
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_country'] = (int)($this->id_country);
-		$fields['format'] = pSQL($this->format);
-
-		return $fields;
-	}
 
 	/*
 	 * Check if the the association of the field name and a class name

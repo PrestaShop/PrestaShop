@@ -102,10 +102,6 @@ class AddressCore extends ObjectModel
 	protected static $_idZones = array();
 	protected static $_idCountries = array();
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -113,29 +109,30 @@ class AddressCore extends ObjectModel
 		'table' => 'address',
 		'primary' => 'id_address',
 		'fields' => array(
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
-			'id_manufacturer' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
-			'id_supplier' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
-			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
-			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
-			'alias' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'company' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 32),
-			'lastname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'vat_number' => array('type' => 'FILL_ME', 'validate' => 'isGenericName'),
-			'firstname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'address1' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'required' => true, 'size' => 128),
-			'address2' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'size' => 128),
-			'postcode' => array('type' => 'FILL_ME', 'validate' => 'isPostCode', 'size' => 12),
-			'city' => array('type' => 'FILL_ME', 'validate' => 'isCityName', 'required' => true, 'size' => 64),
-			'other' => array('type' => 'FILL_ME', 'validate' => 'isMessage', 'size' => 300),
-			'phone' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
-			'phone_mobile' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
-			'deleted' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'dni' => array('type' => 'FILL_ME', 'validate' => 'isDniLite', 'size' => 16),
+			'id_customer' => 		array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+			'id_manufacturer' => 	array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+			'id_supplier' => 		array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+			'id_warehouse' => 		array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+			'id_country' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_state' => 			array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+			'alias' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'company' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
+			'lastname' => 			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' => 			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'vat_number' =>	 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+			'address1' => 			array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
+			'address2' => 			array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
+			'postcode' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPostCode', 'size' => 12),
+			'city' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
+			'other' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 300),
+			'phone' => 				array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+			'phone_mobile' => 		array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+			'dni' => 				array('type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16),
+			'deleted' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 		),
 	);
-
 
 	protected $_includeVars = array('addressType' => 'table');
 	protected $_includeContainer = false;
@@ -205,31 +202,10 @@ class AddressCore extends ObjectModel
 
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
 		if (isset($this->id))
 			$fields['id_address'] = (int)$this->id;
-		$fields['id_customer'] = is_null($this->id_customer) ? 0 : (int)$this->id_customer;
-		$fields['id_manufacturer'] = is_null($this->id_manufacturer) ? 0 : (int)$this->id_manufacturer;
-		$fields['id_supplier'] = is_null($this->id_supplier) ? 0 : (int)$this->id_supplier;
-		$fields['id_warehouse'] = is_null($this->id_warehouse) ? 0 : (int)$this->id_warehouse;
-		$fields['id_country'] = (int)$this->id_country;
-		$fields['id_state'] = (int)$this->id_state;
-		$fields['alias'] = pSQL($this->alias);
-		$fields['company'] = pSQL($this->company);
-		$fields['lastname'] = pSQL($this->lastname);
-		$fields['firstname'] = pSQL($this->firstname);
-		$fields['address1'] = pSQL($this->address1);
-		$fields['address2'] = pSQL($this->address2);
-		$fields['postcode'] = pSQL($this->postcode);
-		$fields['city'] = pSQL($this->city);
-		$fields['other'] = pSQL($this->other);
-		$fields['phone'] = pSQL($this->phone);
-		$fields['phone_mobile'] = pSQL($this->phone_mobile);
-		$fields['vat_number'] = pSQL($this->vat_number);
-		$fields['dni'] = pSQL($this->dni);
-		$fields['deleted'] = (int)$this->deleted;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
+
 		return $fields;
 	}
 

@@ -36,14 +36,6 @@ class AttachmentCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	
-	
-	
-
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -52,23 +44,13 @@ class AttachmentCore extends ObjectModel
 		'primary' => 'id_attachment',
 		'multilang' => true,
 		'fields' => array(
-			'file' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 40),
-			'mime' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128),
-			'file_name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 128),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+			'file' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40),
+			'mime' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128),
+			'file_name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128),
+			'name' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['file_name'] = pSQL($this->file_name);
-		$fields['file'] = pSQL($this->file);
-		$fields['mime'] = pSQL($this->mime);
-		return $fields;
-	}
 
 	public function getTranslationsFieldsChild()
 	{

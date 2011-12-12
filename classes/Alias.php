@@ -31,10 +31,6 @@ class AliasCore extends ObjectModel
 	public $search;
 	public $active = true;
 
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -42,12 +38,11 @@ class AliasCore extends ObjectModel
 		'table' => 'alias',
 		'primary' => 'id_alias',
 		'fields' => array(
-			'search' => array('type' => 'FILL_ME', 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
-			'alias' => array('type' => 'FILL_ME', 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'search' => array('type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
+			'alias' => 	array('type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
+			'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
-
 
 	public function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{
@@ -116,16 +111,6 @@ class AliasCore extends ObjectModel
 
 		$aliases = array_map('implode', $aliases);
 		return implode(', ', $aliases);
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['alias'] = pSQL($this->alias);
-		$fields['search'] = pSQL($this->search);
-		$fields['active'] = (int)$this->active;
-		return $fields;
 	}
 
 	/**
