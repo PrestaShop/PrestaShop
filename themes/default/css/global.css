@@ -751,7 +751,8 @@ table#cart_summary .cart_total_price td.cart_voucher {
 
 .cart_total_price #total_product,
 .cart_total_price #total_price_without_tax,
-.cart_total_price #total_tax {text-align:right}
+.cart_total_price #total_tax,
+.cart_total_price #total_shipping {text-align:right}
 .cart_total_price #total_price {
 	padding:0;
 	border-bottom:1px solid #999
