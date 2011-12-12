@@ -81,7 +81,9 @@ function generateInvoicePDFByIdOrder($id_order)
 	if (!Validate::isLoadedObject($order))
 		die(Tools::displayError('Cannot find order in database'));
 
-	generatePDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE);
+	$order_invoice_list = $order->getInvoicesCollection();
+	Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
+	generatePDF($order_invoice_list, PDF::TEMPLATE_INVOICE);
 }
 
 function generateInvoicePDFByIdOrderInvoice($id_order_invoice)
@@ -90,6 +92,7 @@ function generateInvoicePDFByIdOrderInvoice($id_order_invoice)
 	if (!Validate::isLoadedObject($order_invoice))
 		die(Tools::displayError('Cannot find order invoice in database'));
 
+	Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => array($order_invoice)));
 	generatePDF($order_invoice, PDF::TEMPLATE_INVOICE);
 }
 

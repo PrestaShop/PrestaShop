@@ -48,7 +48,7 @@ class PDFCore
 		$this->smarty = $smarty;
 
 		$this->objects = $objects;
-		if (!is_array($objects))
+		if (!($objects instanceof Iterator))
 			$this->objects = array($objects);
 	}
 
