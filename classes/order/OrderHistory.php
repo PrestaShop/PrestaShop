@@ -89,10 +89,9 @@ class OrderHistoryCore extends ObjectModel
 					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
 					{
 						ProductSale::addProductSale($product['id_product'], $product['cart_quantity']);
-
 					}
 					/* If becoming unlogable => removing sale */
-					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
+					else if (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 					{
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
 						// @since 1.5.0
@@ -123,9 +122,6 @@ class OrderHistoryCore extends ObjectModel
 					else if ($newOS->shipped == 0 && $oldOrderStatus->shipped == 1 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 					{
 						$manager = StockManagerFactory::getManager();
-						$warehouse = new Warehouse($id_warehouse);
-						$depends =
-
 						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['id_product'], $product['id_product_attribute'], $product['cart_quantity']);
 						foreach ($mvts as $mvt)
 						{
