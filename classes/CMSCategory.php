@@ -70,13 +70,6 @@ class CMSCategoryCore extends ObjectModel
 
 	protected static $_links = array();
 
-	
- 	
- 	
-	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -85,17 +78,22 @@ class CMSCategoryCore extends ObjectModel
 		'primary' => 'id_cms_category',
 		'multilang' => true,
 		'fields' => array(
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true, 'size' => 1),
-			'id_parent' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true, 'size' => 10),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'link_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
-			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+			'id_parent' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'position' => 			array('type' => self::TYPE_INT),
+			'level_depth' => 		array('type' => self::TYPE_INT),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'link_rewrite' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
+			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 		),
 	);
-
 
 	public function __construct($id_cms_category = NULL, $id_lang = NULL)
 	{
@@ -104,15 +102,10 @@ class CMSCategoryCore extends ObjectModel
 
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
 		if (isset($this->id))
 			$fields['id_cms_category'] = (int)($this->id);
-		$fields['active'] = (int)($this->active);
-		$fields['id_parent'] = (int)($this->id_parent);
-		$fields['position'] = (int)($this->position);
-		$fields['level_depth'] = (int)($this->level_depth);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
+
 		return $fields;
 	}
 

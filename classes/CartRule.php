@@ -65,77 +65,38 @@ class CartRuleCore extends ObjectModel
 		'primary' => 'id_cart_rule',
 		'multilang' => true,
 		'fields' => array(
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'date_from' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
-			'date_to' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
-			'description' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 65534),
-			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'quantity_per_user' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'priority' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'code' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 254),
-			'minimum_amount' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'minimum_amount_tax' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'minimum_amount_currency' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'minimum_amount_shipping' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'country_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'carrier_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'group_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'cart_rule_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'product_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'free_shipping' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'reduction_percent' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'reduction_amount' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'reduction_tax' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'reduction_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'reduction_product' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'gift_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
-			'date_upd' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 254),
+			'id_customer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'date_from' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+			'date_to' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+			'description' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65534),
+			'quantity' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'quantity_per_user' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'priority' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'code' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 254),
+			'minimum_amount' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'minimum_amount_tax' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'minimum_amount_currency' =>array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'minimum_amount_shipping' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'country_restriction' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'carrier_restriction' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'group_restriction' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'cart_rule_restriction' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'product_restriction' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'free_shipping' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'reduction_percent' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'reduction_amount' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'reduction_tax' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'reduction_currency' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'reduction_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'gift_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'name' => 					array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 254),
 		),
 	);
-
-
- 	
- 	
- 	
- 	
- 	
- 	
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_customer'] = (int)$this->id_customer;
-		$fields['priority'] = (int)$this->priority;
-		$fields['code'] = pSQL($this->code);
-		$fields['quantity'] = (int)$this->quantity;
-		$fields['quantity_per_user'] = (int)$this->quantity_per_user;
-		$fields['date_from'] = pSQL($this->date_from);
-		$fields['date_to'] = pSQL($this->date_to);
-		$fields['description'] = pSQL($this->description);
-		$fields['minimum_amount'] = (float)$this->minimum_amount;
-		$fields['minimum_amount_tax'] = (int)$this->minimum_amount_tax;
-		$fields['minimum_amount_currency'] = (int)$this->minimum_amount_currency;
-		$fields['minimum_amount_shipping'] = (int)$this->minimum_amount_shipping;
-		$fields['country_restriction'] = (int)$this->country_restriction;
-		$fields['carrier_restriction'] = (int)$this->carrier_restriction;
-		$fields['group_restriction'] = (int)$this->group_restriction;
-		$fields['cart_rule_restriction'] = (int)$this->cart_rule_restriction;
-		$fields['product_restriction'] = (int)$this->product_restriction;
-		$fields['free_shipping'] = (int)$this->free_shipping;
-		$fields['reduction_percent'] = (float)$this->reduction_percent;
-		$fields['reduction_amount'] = (float)$this->reduction_amount;
-		$fields['reduction_tax'] = (int)$this->reduction_tax;
-		$fields['reduction_currency'] = (int)$this->reduction_currency;
-		$fields['reduction_product'] = (int)$this->reduction_product;
-		$fields['gift_product'] = (int)$this->gift_product;
-		$fields['active'] = (int)$this->active;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return $fields;
-	}
 
 	public function getTranslationsFieldsChild()
 	{
