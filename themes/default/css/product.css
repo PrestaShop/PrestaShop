@@ -240,16 +240,11 @@ span.view_scroll_spacer {
 
 /* online_only */
 #buy_block p.online_only {
-	display:inline-block;
-	padding:4px 12px;
     font-weight:bold;
-	font-size:13px;
-	color:#fff;
-	text-shadow: 0 1px 0 #000;
-	background:rgba(0, 0, 0, 0.5);
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
-	border-radius: 12px
+	font-size:11px;
+	color:#990000;
+	text-align:left;
+	text-transform:uppercase
 }
 
 /* add_to_cart */
