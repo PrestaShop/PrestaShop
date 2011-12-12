@@ -1593,8 +1593,7 @@ class OrderCore extends ObjectModel
 		if (Db::getInstance()->getRow('
 				SELECT *
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.'
-				LIMIT 1')
+				WHERE `id_order` =  '.(int)$this->id)
 		)
 			return true;
 		return false;
