@@ -50,7 +50,7 @@ class Editorial extends Module
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('home') OR !$this->registerHook('header'))
+		if (!parent::install() OR !$this->registerHook('displayHome') OR !$this->registerHook('displayHeader'));
 			return false;
 
 		if (!Db::getInstance()->execute('
@@ -290,7 +290,7 @@ class Editorial extends Module
 		</form>';
 	}
 
-	public function hookHome($params)
+	public function hookDisplayHome($params)
 	{
 
 		$editorial = new EditorialClass(1, $this->context->language->id);
@@ -306,7 +306,7 @@ class Editorial extends Module
 		return $this->display(__FILE__, 'editorial.tpl');
 	}
 
-	public function hookHeader()
+	public function hookDisplayHeader()
 	{
 		$this->context->controller->addCSS(($this->_path).'editorial.css', 'all');
 	}
