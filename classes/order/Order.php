@@ -1086,7 +1086,9 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$order_invoice->id_order.'
 				AND `id_order_invoice` IS NOT NULL');
-			$order_carrier = new OrderCarrier($id_order_carrier);
+			$order_carrier = new OrderCarrier();
+			$order_carrier->id_carrier = $this->id_carrier;
+			$order_carrier->id_order = $this->id;
 			$order_carrier->id_order_invoice = (int)$order_invoice->id;
 			$order_carrier->update();
 
