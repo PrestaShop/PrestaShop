@@ -224,9 +224,8 @@ class BlockAdvertising extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*/
-	function hookRightColumn($params)
+	public function hookRightColumn($params)
 	{
-		$this->context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
 		$this->context->smarty->assign('image', $this->context->link->protocol_content.$this->adv_img);
 		$this->context->smarty->assign('adv_link', $this->adv_link);
 		$this->context->smarty->assign('adv_title', $this->adv_title);
@@ -234,9 +233,14 @@ class BlockAdvertising extends Module
 		return $this->display(__FILE__, 'blockadvertising.tpl');
 	}
 
-	function hookLeftColumn($params)
+	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
+	}
+
+	public function hookHeader($params)
+	{
+		$this->context->controller->addCSS($this->_path.'blockadvertising.css', 'all');
 	}
 
 }
