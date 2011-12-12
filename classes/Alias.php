@@ -31,14 +31,23 @@ class AliasCore extends ObjectModel
 	public $search;
 	public $active = true;
 
- 	protected 	$fieldsRequired = array('alias', 'search');
- 	protected 	$fieldsSize = array('alias' => 255, 'search' => 255);
- 	protected 	$fieldsValidate = array('search' => 'isValidSearch', 'alias' => 'isValidSearch', 'active' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'alias',
 		'primary' => 'id_alias',
+		'fields' => array(
+			'search' => array('type' => 'FILL_ME', 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
+			'alias' => array('type' => 'FILL_ME', 'validate' => 'isValidSearch', 'required' => true, 'size' => 255),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	public function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{

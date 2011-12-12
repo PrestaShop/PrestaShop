@@ -36,14 +36,22 @@ class WebserviceKeyCore extends ObjectModel
 	/** @var string Webservice Account description */
 	public $description;
 
- 	protected $fieldsRequired = array('key');
- 	protected $fieldsSize = array('key' => 32);
- 	protected $fieldsValidate = array('active' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'webservice_account',
 		'primary' => 'id_webservice_account',
+		'fields' => array(
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'key' => array('type' => 'FILL_ME', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	public function add($autodate = true, $nullValues = false)
 	{

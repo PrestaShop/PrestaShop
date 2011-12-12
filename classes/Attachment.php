@@ -36,19 +36,30 @@ class AttachmentCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	protected $fieldsRequired = array('file', 'mime');
-	protected $fieldsSize = array('file' => 40, 'mime' => 128, 'file_name' => 128);
-	protected $fieldsValidate = array('file' => 'isGenericName', 'mime' => 'isCleanHtml', 'file_name' => 'isGenericName');
+	
+	
+	
 
-	protected $fieldsRequiredLang = array('name');
-	protected $fieldsSizeLang = array('name' => 32);
-	protected $fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'attachment',
 		'primary' => 'id_attachment',
 		'multilang' => true,
+		'fields' => array(
+			'file' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 40),
+			'mime' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128),
+			'file_name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 128),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+		),
 	);
+
 
 	public function getFields()
 	{

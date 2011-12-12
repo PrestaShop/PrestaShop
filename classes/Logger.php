@@ -51,15 +51,26 @@ class	LoggerCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	protected $fieldsRequired = array('severity', 'message');
-	protected $fieldsSize = array();
-	protected $fieldsValidate = array('id_log' => 'isUnsignedId', 'severity' => 'isInt', 'error_code' => 'isUnsignedInt',
-	'message' => 'isMessage', 'object_id' => 'isUnsignedInt', 'object_type' => 'isName');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'log',
 		'primary' => 'id_log',
+		'fields' => array(
+			'id_log' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'severity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'error_code' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'message' => array('type' => 'FILL_ME', 'validate' => 'isMessage', 'required' => true),
+			'object_id' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'object_type' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+		),
 	);
+
 
 	protected static $is_present = array();
 

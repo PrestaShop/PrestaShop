@@ -36,21 +36,27 @@ class FeatureValueCore extends ObjectModel
 	/** @var boolean Custom */
 	public $custom = 0;
 
- 	protected $fieldsRequired = array('id_feature');
-	protected $fieldsValidate = array(
-		'id_feature' => 'isUnsignedId',
-		'custom' => 'isBool'
-	);
+ 	
+	
 
- 	protected $fieldsRequiredLang = array('value');
- 	protected $fieldsSizeLang = array('value' => 255);
- 	protected $fieldsValidateLang = array('value' => 'isGenericName');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'feature_value',
 		'primary' => 'id_feature_value',
 		'multilang' => true,
+		'fields' => array(
+			'id_feature' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'custom' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'value' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_feature_values',

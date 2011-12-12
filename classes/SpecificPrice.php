@@ -41,13 +41,32 @@ class SpecificPriceCore extends ObjectModel
 	public	$from;
 	public	$to;
 
- 	protected 	$fieldsRequired = array('id_product', 'id_shop', 'id_currency', 'id_country', 'id_group', 'price', 'from_quantity', 'reduction', 'reduction_type', 'from', 'to');
- 	protected 	$fieldsValidate = array('id_group_shop' => 'isUnsignedId', 'id_product' => 'isUnsignedId', 'id_product_attribute' => 'isUnsignedId', 'id_shop' => 'isUnsignedId', 'id_country' => 'isUnsignedId', 'id_group' => 'isUnsignedId', 'price' => 'isPrice', 'from_quantity' => 'isUnsignedInt', 'reduction' => 'isPrice', 'reduction_type' => 'isReductionType', 'from' => 'isDateFormat', 'to' => 'isDateFormat');
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'specific_price',
 		'primary' => 'id_specific_price',
+		'fields' => array(
+			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'from_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'reduction_type' => array('type' => 'FILL_ME', 'validate' => 'isReductionType', 'required' => true),
+			'from' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
+			'to' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'required' => true),
+		),
 	);
+
 
 	protected static $_specificPriceCache = array();
 	protected static $_cache_priorities = array();

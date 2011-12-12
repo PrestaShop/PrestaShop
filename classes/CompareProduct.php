@@ -39,15 +39,20 @@ class CompareProductCore extends ObjectModel
 		'id_compare',
 		'id_customer');
 
-	protected $fieldsValidate = array(
-		'id_compare' => 'isUnsignedInt',
-		'id_customer' => 'isUnsignedInt'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'compare',
 		'primary' => 'id_compare',
+		'fields' => array(
+			'id_compare' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+		),
 	);
+
 
 	/**
 	 * Get all comapare products of the customer

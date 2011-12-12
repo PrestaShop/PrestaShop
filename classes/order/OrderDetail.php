@@ -129,53 +129,53 @@ class OrderDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
-	protected	$fieldsRequired = array(
-		'id_order',
-		'id_warehouse',
-		'product_name',
-		'product_quantity',
-		'product_price');
+	
 
-	protected	$fieldsValidate = array(
-		'id_order' => 'isUnsignedId',
-		'id_order_invoice' => 'isUnsignedId',
-		'id_warehouse' => 'isUnsignedId',
-		'product_id' => 'isUnsignedId',
-		'product_attribute_id' => 'isUnsignedId',
-		'product_name' => 'isGenericName',
-		'product_quantity' => 'isInt',
-		'product_quantity_in_stock' => 'isInt',
-		'product_quantity_return' => 'isUnsignedInt',
-		'product_quantity_refunded' => 'isUnsignedInt',
-		'product_quantity_reinjected' => 'isUnsignedInt',
-		'product_price' => 'isPrice',
-		'reduction_percent' => 'isFloat',
-		'reduction_amount' => 'isPrice',
-		'group_reduction' => 'isFloat',
-		'product_quantity_discount' => 'isFloat',
-		'product_ean13' => 'isEan13',
-		'product_upc' => 'isUpc',
-		'product_reference' => 'isReference',
-		'product_supplier_reference' => 'isReference',
-		'product_weight' => 'isFloat',
-		'tax_name' => 'isGenericName',
-		'tax_rate' => 'isFloat',
-		'ecotax' => 'isFloat',
-		'ecotax_tax_rate' => 'isFloat',
-		'discount_quantity_applied' => 'isInt',
-		'download_hash' => 'isGenericName',
-		'download_nb' => 'isInt',
-		'download_deadline' => 'isDateFormat',
-		'unit_price_tax_incl' => 'isPrice',
-		'unit_price_tax_excl' => 'isPrice',
-		'total_price_tax_incl' => 'isPrice',
-		'total_price_tax_excl' => 'isPrice'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_detail',
 		'primary' => 'id_order_detail',
+		'fields' => array(
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_invoice' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'product_id' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'product_attribute_id' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'product_name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'product_quantity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'product_quantity_in_stock' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'product_quantity_return' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'product_quantity_refunded' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'product_quantity_reinjected' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'product_price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'reduction_percent' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'reduction_amount' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'group_reduction' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'product_quantity_discount' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'product_ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13'),
+			'product_upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc'),
+			'product_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
+			'product_supplier_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
+			'product_weight' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'tax_name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName'),
+			'tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'ecotax' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'ecotax_tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'discount_quantity_applied' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'download_hash' => array('type' => 'FILL_ME', 'validate' => 'isGenericName'),
+			'download_nb' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'download_deadline' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat'),
+			'unit_price_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'unit_price_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_price_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_price_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 	'fields' => array (

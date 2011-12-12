@@ -59,21 +59,27 @@ class ProductSupplierCore extends ObjectModel
 	 * */
 	public $product_supplier_price_te;
 
- 	protected $fieldsRequired = array('id_product', 'id_product_attribute', 'id_supplier');
- 	protected $fieldsSize = array('supplier_reference' => 32);
- 	protected $fieldsValidate = array(
- 		'product_supplier_reference' => 'isReference',
- 		'id_product' => 'isUnsignedId',
- 		'id_product_attribute' => 'isUnsignedId',
- 		'id_supplier' => 'isUnsignedId',
- 		'product_supplier_price_te' => 'isPrice',
- 		'id_currency' => 'isUnsignedId',
- 	);
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'product_supplier',
 		'primary' => 'id_product_supplier',
+		'fields' => array(
+			'product_supplier_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_supplier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'product_supplier_price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'supplier_reference' => array('type' => 'FILL_ME', 'size' => 32),
+		),
 	);
+
 
 	public function getFields()
 	{

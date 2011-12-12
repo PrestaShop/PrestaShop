@@ -59,33 +59,31 @@ class StockCore extends ObjectModel
 	/** @var int the unit price without tax forthe current product */
 	public $price_te;
 
-	protected $fieldsRequired = array(
-		'id_warehouse',
-		'id_product',
-		'id_product_attribute',
-		'physical_quantity',
-		'usable_quantity',
-		'price_te',
-	);
+	
 
-	protected $fieldsSize = array();
+	
 
-	protected $fieldsValidate = array(
-		'id_warehouse' => 'isUnsignedId',
-		'id_product' => 'isUnsignedId',
-		'id_product_attribute' => 'isUnsignedId',
-		'reference' => 'isReference',
-		'ean13' => 'isEan13',
-		'upc' => 'isUpc',
-		'physical_quantity' => 'isUnsignedInt',
-		'usable_quantity' => 'isInt',
-		'price_te' => 'isPrice',
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'stock',
 		'primary' => 'id_stock',
+		'fields' => array(
+			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
+			'ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13'),
+			'upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc'),
+			'physical_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'usable_quantity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

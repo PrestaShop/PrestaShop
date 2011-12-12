@@ -44,15 +44,24 @@ class ConfigurationCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	protected	$fieldsRequired = array('name');
-	protected	$fieldsSize = array('name' => 32);
-	protected	$fieldsValidate = array('name' => 'isConfigName', 'id_group_shop' => 'isUnsignedId', 'id_shop' => 'isUnsignedId');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'configuration',
 		'primary' => 'id_configuration',
 		'multilang' => true,
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
+			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+		),
 	);
+
 
 	/** @var array Configuration cache */
 	protected static $_CONF;

@@ -51,26 +51,25 @@ class DeliveryCore extends ObjectModel
 	/** @var float */
 	public $price;
 
-	protected $fieldsRequired = array (
-		'id_carrier',
-		'id_range_price',
-		'id_range_weight',
-		'id_zone',
-		'price'
-	);
+	
 
-	protected $fieldsValidate = array (
-		'id_carrier' => 'isUnsignedId',
-		'id_range_price' => 'isUnsignedId',
-		'id_range_weight' => 'isUnsignedId',
-		'id_zone' => 'isUnsignedId',
-		'price' => 'isPrice'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'delivery',
 		'primary' => 'id_delivery',
+		'fields' => array(
+			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_range_price' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_range_weight' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_zone' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 			'objectsNodeName' => 'deliveries',

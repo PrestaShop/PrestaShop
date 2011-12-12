@@ -31,14 +31,21 @@ class HookCore extends ObjectModel
 	public 		$name;
 	public 		$title;
 
-	protected	$fieldsRequired = array('name');
-	protected	$fieldsSize = array('name' => 32);
-	protected	$fieldsValidate = array('name' => 'isHookName');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'hook',
 		'primary' => 'id_hook',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isHookName', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	protected static $_hookModulesCache;
 

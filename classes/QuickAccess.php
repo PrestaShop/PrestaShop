@@ -36,18 +36,27 @@ class QuickAccessCore extends ObjectModel
 	/** @var boolean New windows or not */
 	public $new_window;
 
- 	protected $fieldsRequired = array('link', 'new_window');
- 	protected $fieldsSize = array('link' => 128);
- 	protected $fieldsValidate = array('link' => 'isUrl', 'new_window' => 'isBool');
- 	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 32);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'quick_access',
 		'primary' => 'id_quick_access',
 		'multilang' => true,
+		'fields' => array(
+			'link' => array('type' => 'FILL_ME', 'validate' => 'isUrl', 'required' => true, 'size' => 128),
+			'new_window' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	public function getFields()
 	{

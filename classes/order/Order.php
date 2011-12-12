@@ -147,41 +147,8 @@ class OrderCore extends ObjectModel
 	 */
 	public $reference;
 
-	protected $fieldsRequired = array('conversion_rate', 'id_address_delivery', 'id_address_invoice', 'id_cart', 'id_currency', 'id_lang', 'id_customer', 'id_carrier', 'payment', 'total_paid', 'total_paid_real', 'total_products', 'total_products_wt');
-	protected $fieldsValidate = array(
-		'id_address_delivery' => 'isUnsignedId',
-		'id_address_invoice' => 'isUnsignedId',
-		'id_cart' => 'isUnsignedId',
-		'id_currency' => 'isUnsignedId',
-		'id_group_shop' => 'isUnsignedId',
-		'id_shop' => 'isUnsignedId',
-		'id_lang' => 'isUnsignedId',
-		'id_customer' => 'isUnsignedId',
-		'id_carrier' => 'isUnsignedId',
-		'secure_key' => 'isMd5',
-		'payment' => 'isGenericName',
-		'recyclable' => 'isBool',
-		'gift' => 'isBool',
-		'gift_message' => 'isMessage',
-		'total_discounts' => 'isPrice',
-		'total_discounts_tax_incl' => 'isPrice',
-		'total_discounts_tax_excl' => 'isPrice',
-		'total_paid' => 'isPrice',
-		'total_paid_tax_incl' => 'isPrice',
-		'total_paid_tax_excl' => 'isPrice',
-		'total_paid_real' => 'isPrice',
-		'total_products' => 'isPrice',
-		'total_products_wt' => 'isPrice',
-		'total_shipping' => 'isPrice',
-		'total_shipping_tax_incl' => 'isPrice',
-		'total_shipping_tax_excl' => 'isPrice',
-		'carrier_tax_rate' => 'isFloat',
-		'total_wrapping' => 'isPrice',
-		'total_wrapping_tax_incl' => 'isPrice',
-		'total_wrapping_tax_excl' => 'isPrice',
-		'shipping_number' => 'isUrl',
-		'conversion_rate' => 'isFloat'
-	);
+	
+	
 
 	protected $webserviceParameters = array(
 		'objectMethods' => array('add' => 'addWs'),
@@ -220,10 +187,48 @@ class OrderCore extends ObjectModel
 	);
 
 	/* MySQL does not allow 'order' for a table name */
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'orders',
 		'primary' => 'id_order',
+		'fields' => array(
+			'id_address_delivery' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_address_invoice' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_cart' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'secure_key' => array('type' => 'FILL_ME', 'validate' => 'isMd5'),
+			'payment' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'recyclable' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'gift' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'gift_message' => array('type' => 'FILL_ME', 'validate' => 'isMessage'),
+			'total_discounts' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_discounts_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_discounts_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_paid' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'total_paid_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_paid_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_paid_real' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'total_products' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'total_products_wt' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'total_shipping' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_shipping_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_shipping_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'carrier_tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'total_wrapping' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_wrapping_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_wrapping_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'shipping_number' => array('type' => 'FILL_ME', 'validate' => 'isUrl'),
+			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+		),
 	);
+
 
 	protected $_taxCalculationMethod = PS_TAX_EXC;
 

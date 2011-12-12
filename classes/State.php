@@ -42,14 +42,25 @@ class StateCore extends ObjectModel
 	/** @var boolean Status for delivery */
 	public		$active = true;
 
- 	protected 	$fieldsRequired = array('id_country', 'id_zone', 'iso_code', 'name');
- 	protected 	$fieldsSize = array('iso_code' => 4, 'name' => 32);
- 	protected 	$fieldsValidate = array('id_country' => 'isUnsignedId', 'id_zone' => 'isUnsignedId', 'iso_code' => 'isStateIsoCode', 'name' => 'isGenericName', 'active' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'state',
 		'primary' => 'id_state',
+		'fields' => array(
+			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_zone' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 4),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

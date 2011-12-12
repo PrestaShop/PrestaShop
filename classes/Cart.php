@@ -84,20 +84,8 @@ class CartCore extends ObjectModel
 	protected static $_nbProducts = array();
 	protected static $_isVirtualCart = array();
 
-	protected $fieldsRequired = array('id_currency', 'id_lang');
-	protected $fieldsValidate = array(
-		'id_address_delivery' => 'isUnsignedId',
-		'id_carrier' => 'isUnsignedId',
-		'id_address_invoice' => 'isUnsignedId',
-		'id_currency' => 'isUnsignedId',
-		'id_customer' => 'isUnsignedId',
-		'id_guest' => 'isUnsignedId',
-		'id_lang' => 'isUnsignedId',
-		'recyclable' => 'isBool',
-		'gift' => 'isBool',
-		'gift_message' => 'isMessage',
-		'allow_seperated_package' => 'isBool'
-	);
+	
+	
 
 	protected $_products = null;
 	protected static $_totalWeight = array();
@@ -106,10 +94,27 @@ class CartCore extends ObjectModel
 	protected static $_taxes_rate = null;
 	protected static $_attributesLists = array();
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'cart',
 		'primary' => 'id_cart',
+		'fields' => array(
+			'id_address_delivery' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_address_invoice' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_guest' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'recyclable' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'gift' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'gift_message' => array('type' => 'FILL_ME', 'validate' => 'isMessage'),
+			'allow_seperated_package' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 		'fields' => array(

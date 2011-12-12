@@ -142,55 +142,42 @@ class SupplyOrderDetailCore extends ObjectModel
 	 */
 	public $price_with_order_discount_te = 0;
 
-	protected $fieldsRequired = array(
-		'id_supply_order',
-		'id_product',
-		'id_product_attribute',
-		'name',
-		'id_currency',
-		'exchange_rate',
-		'unit_price_te',
-		'quantity_expected',
-		'price_te',
-		'discount_rate',
-		'discount_value_te',
-		'price_with_discount_te',
-		'tax_rate',
-		'tax_value',
-		'price_ti',
-		'tax_value_with_order_discount',
-		'price_with_order_discount_te'
-	);
+	
 
-	protected $fieldsValidate = array(
-		'id_supply_order' => 'isUnsignedId',
-		'id_product' => 'isUnsignedId',
-		'id_product_attribute' => 'isUnsignedId',
-		'reference' => 'isReference',
-		'supplier_reference' => 'isReference',
-		'name' => 'isGenericName',
-		'ean13' => 'isEan13',
-		'upc' => 'isUpc',
-		'id_currency' => 'isUnsignedId',
-		'exchange_rate' => 'isFloat',
-		'unit_price_te' => 'isPrice',
-		'quantity_expected' => 'isUnsignedInt',
-		'quantity_received' => 'isUnsignedInt',
-		'price_te' => 'isPrice',
-		'discount_rate' => 'isFloat',
-		'discount_value_te' => 'isPrice',
-		'price_with_discount_te' => 'isPrice',
-		'tax_rate' => 'isFloat',
-		'tax_value' => 'isPrice',
-		'price_ti' => 'isPrice',
-		'tax_value_with_order_discount' => 'isFloat',
-		'price_with_order_discount_te' => 'isPrice',
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'supply_order_detail',
 		'primary' => 'id_supply_order_detail',
+		'fields' => array(
+			'id_supply_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
+			'supplier_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13'),
+			'upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc'),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'exchange_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'unit_price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'quantity_expected' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'quantity_received' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'discount_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'discount_value_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'price_with_discount_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'tax_value' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'price_ti' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'tax_value_with_order_discount' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'price_with_order_discount_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+		),
 	);
+
 
 	/**
 	 * @see ObjectModel::getFields()

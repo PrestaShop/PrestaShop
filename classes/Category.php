@@ -78,33 +78,37 @@ class CategoryCore extends ObjectModel
 
 	protected static $_links = array();
 
-	protected $fieldsRequired = array('active');
- 	protected $fieldsSize = array('active' => 1);
- 	protected $fieldsValidate = array(
- 		'nleft' => 'isUnsignedInt',
- 		'nright' => 'isUnsignedInt',
- 		'level_depth' => 'isUnsignedInt',
- 		'active' => 'isBool',
- 		'id_parent' => 'isUnsignedInt',
- 		'groupBox' => 'isArrayWithIds'
- 	);
-	protected $fieldsRequiredLang = array('name', 'link_rewrite');
- 	protected $fieldsSizeLang = array('name' => 64, 'link_rewrite' => 64, 'meta_title' => 128, 'meta_description' => 255, 'meta_keywords' => 255);
- 	protected $fieldsValidateLang = array(
- 		'name' => 'isCatalogName',
- 		'link_rewrite' => 'isLinkRewrite',
- 		'description' => 'isString',
- 		'meta_title' => 'isGenericName',
- 		'meta_description' => 'isGenericName',
- 		'meta_keywords' => 'isGenericName'
- 	);
+	
+ 	
+ 	
+	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'category',
 		'primary' => 'id_category',
 		'multilang' => true,
 		'multishop' => true,
+		'fields' => array(
+			'nleft' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'nright' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'level_depth' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true, 'size' => 1),
+			'id_parent' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'groupBox' => array('type' => 'FILL_ME', 'validate' => 'isArrayWithIds'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'link_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
+			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+		),
 	);
+
 
 	/** @var string id_image is the category ID when an image exists and 'default' otherwise */
 	public $id_image = 'default';

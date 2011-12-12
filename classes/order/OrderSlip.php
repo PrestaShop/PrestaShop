@@ -57,13 +57,22 @@ class OrderSlipCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	protected	$fieldsRequired = array ('id_customer', 'id_order', 'conversion_rate');
-	protected	$fieldsValidate = array('id_customer' => 'isUnsignedId', 'id_order' => 'isUnsignedId', 'conversion_rate' => 'isFloat');
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_slip',
 		'primary' => 'id_order_slip',
+		'fields' => array(
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

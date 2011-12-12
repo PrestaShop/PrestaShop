@@ -64,24 +64,13 @@ class CountryCore extends ObjectModel
 
 	protected static $_idZones = array();
 
- 	protected $fieldsRequired = array('id_zone', 'iso_code', 'contains_states', 'need_identification_number', 'display_tax_label');
- 	protected $fieldsSize = array('iso_code' => 3);
- 	protected $fieldsValidate = array(
- 		'id_zone' => 'isUnsignedId',
- 		'id_currency' => 'isUnsignedId',
- 		'call_prefix' => 'isInt',
- 		'iso_code' => 'isLanguageIsoCode',
- 		'active' => 'isBool',
- 		'contains_states' => 'isBool',
- 		'need_identification_number' => 'isBool',
- 		'need_zip_code' => 'isBool',
- 		'zip_code_format' => 'isZipCodeFormat',
- 		'display_tax_label' => 'isBool'
- 	);
+ 	
+ 	
+ 	
 
- 	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 64);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+ 	
+ 	
+ 	
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'countries',
@@ -91,11 +80,28 @@ class CountryCore extends ObjectModel
 		),
 	);
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'country',
 		'primary' => 'id_country',
 		'multilang' => true,
+		'fields' => array(
+			'id_zone' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'call_prefix' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'contains_states' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'need_identification_number' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'need_zip_code' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'zip_code_format' => array('type' => 'FILL_ME', 'validate' => 'isZipCodeFormat'),
+			'display_tax_label' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+		),
 	);
+
 
 	public function getFields()
 	{

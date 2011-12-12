@@ -29,13 +29,20 @@ class ThemeCore extends ObjectModel
 {
 	public $name;
 
-	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('name' => 'isGenericName');
+	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'theme',
 		'primary' => 'id_theme',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 64),
+		),
 	);
+
 
 	public function getFields()
 	{

@@ -53,38 +53,33 @@ class CombinationCore extends ObjectModel
 
 	public $available_date;
 
-	protected	$fieldsRequired = array(
-		'id_product',
-	);
-	protected	$fieldsSize = array(
-		'reference' => 32,
-		'supplier_reference' => 32,
-		'location' => 64,
-		'ean13' => 13,
-		'upc' => 12,
-		'wholesale_price' => 27,
-		'price' => 20,
-		'ecotax' => 20,
-		'quantity' => 10
-	);
-	protected	$fieldsValidate = array(
-		'id_product' => 'isUnsignedId',
-		'location' => 'isGenericName',
-		'ean13' => 'isEan13',
-		'upc' => 'isUpc',
-		'wholesale_price' => 'isPrice',
-		'price' => 'isPrice',
-		'ecotax' => 'isPrice',
-		'quantity' => 'isUnsignedInt',
-		'weight' => 'isFloat',
-		'default_on' => 'isBool',
-		'available_date' => 'isDateFormat',
-	);
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'product_attribute',
 		'primary' => 'id_product_attribute',
+		'fields' => array(
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'location' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 64),
+			'ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13', 'size' => 13),
+			'upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc', 'size' => 12),
+			'wholesale_price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'size' => 27),
+			'price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'size' => 20),
+			'ecotax' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'size' => 20),
+			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 10),
+			'weight' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'default_on' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'available_date' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat'),
+			'reference' => array('type' => 'FILL_ME', 'size' => 32),
+			'supplier_reference' => array('type' => 'FILL_ME', 'size' => 32),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'combination',
