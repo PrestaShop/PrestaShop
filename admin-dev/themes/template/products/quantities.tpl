@@ -127,6 +127,54 @@
 			</ul>
 		</div>
 	{/if}
+<div class="separation"></div>
+<h4>{l s='Availability display'}</h4>
+<table cellpadding="5">
+	{if !$ps_stock_management}
+			<tr>
+				<td colspan="2">{l s='The stock management is disabled'}</td>
+			</tr>
+		{/if}
+		{if !$has_attribute}
+		<tr>
+			<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
+			<td style="padding-bottom:5px;">
+				<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+				<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
+			</td>
+		</tr>
+	{/if}
+		<tr>
+			<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
+			<td style="padding-bottom:5px;">
+					{include file="products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_now
+						input_name='available_now'}
+				<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+		</td>
+		</tr>
+		<tr>
+			<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
+			<td style="padding-bottom:5px;">
+					{include file="products/input_text_lang.tpl"
+						languages=$languages
+						input_value=$product->available_later
+						input_name='available_later'}
+				<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+	</td>
+		</tr>
+{if $countAttributes}
+			<tr>
+				<td class="col-left"><label>{l s='Available date:'}</label></td>
+				<td style="padding-bottom:5px;">
+				<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
+				style="text-align: center;" type="text" />
+					<p>{l s='The available date when this product is out of stock'}</p>
+			</td>
+			</tr>
+{/if}
+</table>
 
 	<script type="text/javascript">
 		var showAjaxError = function(msg)
