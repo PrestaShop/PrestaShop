@@ -208,59 +208,70 @@ class ProductCore extends ObjectModel
 	/** @var array cache stock data in getStock() method */
 	protected static $cacheStock = array();
 
-	protected $fieldsRequired = array('price');
-	protected $fieldsSize = array('reference' => 32, 'supplier_reference' => 32, 'location' => 64, 'ean13' => 13, 'upc' => 12, 'unity' => 10);
-	protected $fieldsValidate = array(
-		'id_tax_rules_group' => 'isUnsignedId',
-		'id_manufacturer' => 'isUnsignedId',
-		'id_supplier' => 'isUnsignedId',
-		'id_category_default' => 'isUnsignedId',
-		'minimal_quantity' => 'isUnsignedInt',
-		'price' => 'isPrice',
-		'additional_shipping_cost' => 'isPrice',
-		'wholesale_price' => 'isPrice',
-		'on_sale' => 'isBool',
-		'online_only' => 'isBool',
-		'ecotax' => 'isPrice',
-		'unit_price' => 'isPrice',
-		'unity' => 'isString',
-		'reference' => 'isReference',
-		'supplier_reference' => 'isReference',
-		'location' => 'isReference',
-		'width' => 'isUnsignedFloat',
-		'height' => 'isUnsignedFloat',
-		'depth' => 'isUnsignedFloat',
-		'weight' => 'isUnsignedFloat',
-		'quantity_discount' => 'isBool',
-		'customizable' => 'isUnsignedInt',
-		'uploadable_files' => 'isUnsignedInt',
-		'text_fields' => 'isUnsignedInt',
-		'active' => 'isBool',
-		'available_for_order' => 'isBool',
-		'available_date' => 'isDateFormat',
-		'condition' => 'isGenericName',
-		'show_price' => 'isBool',
-		'ean13' => 'isEan13',
-		'upc' => 'isUpc',
-		'indexed' => 'isBool',
-		'cache_is_pack' => 'isBool',
-		'is_virtual' => 'isBool',
-		'cache_has_attachments' => 'isBool'
-	);
-	protected $fieldsRequiredLang = array('link_rewrite', 'name');
-	/* Description short is limited to 800 chars (but can be configured in Preferences Tab), but without html, so it can't be generic */
-	protected $fieldsSizeLang = array('meta_description' => 255, 'meta_keywords' => 255,
-		'meta_title' => 128, 'link_rewrite' => 128, 'name' => 128, 'available_now' => 255, 'available_later' => 255);
-	protected $fieldsValidateLang = array(
-		'meta_description' => 'isGenericName', 'meta_keywords' => 'isGenericName',
-		'meta_title' => 'isGenericName', 'link_rewrite' => 'isLinkRewrite', 'name' => 'isCatalogName',
-		'description' => 'isString', 'description_short' => 'isString', 'available_now' => 'isGenericName', 'available_later' => 'IsGenericName');
-
 	public static $definition = array(
 		'table' => 'product',
 		'primary' => 'id_product',
 		'multilang' => true,
 		'multishop' => true,
+		'fields' => array(
+			// Classic fields
+			'id_tax_rules_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_manufacturer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_category_default' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'minimal_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'price' => 						array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'additional_shipping_cost' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'wholesale_price' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'on_sale' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'online_only' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'ecotax' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'unity' => 						array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+			'unit_price_ratio' => 			array('type' => self::TYPE_FLOAT),
+			'reference' => 					array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+			'supplier_reference' => 		array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+			'location' => 					array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
+			'width' => 						array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+			'height' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+			'depth' => 						array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+			'weight' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+			'quantity_discount' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'customizable' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'uploadable_files' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'text_fields' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'available_for_order' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'available_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'condition' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'), // @todo enum ?
+			'show_price' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'ean13' => 						array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
+			'upc' => 						array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
+			'indexed' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'cache_is_pack' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'cache_default_attribute' => 	array('type' => self::TYPE_INT),
+			'is_virtual' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'cache_has_attachments' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+
+			// Lang fields
+			'meta_description' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_title' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'link_rewrite' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+			'name' => 						array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
+			'description' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString'),
+			'description_short' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString'),
+			'available_now' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'available_later' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
+		),
+		'associations' => array(
+			'manufacturer' => 				array('type' => self::HAS_ONE),
+			'supplier' => 					array('type' => self::HAS_ONE),
+			'default_category' => 			array('type' => self::HAS_ONE, 'field' => 'id_category_default', 'object' => 'Category'),
+			'tax_rules_group' => 			array('type' => self::HAS_ONE),
+			'categories' =>					array('type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'),
+		),
 	);
 
 	protected $webserviceParameters = array(
@@ -384,50 +395,17 @@ class ProductCore extends ObjectModel
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
 	}
 
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
+
 		if (isset($this->id))
 			$fields['id_product'] = (int)$this->id;
-		$fields['id_tax_rules_group'] = (int)$this->id_tax_rules_group;
-		$fields['id_manufacturer'] = (int)$this->id_manufacturer;
-		$fields['id_supplier'] = (int)$this->id_supplier;
-		$fields['id_category_default'] = (int)$this->id_category_default;
-		$fields['quantity'] = (int)$this->quantity;
-		$fields['minimal_quantity'] = (int)$this->minimal_quantity;
-		$fields['price'] = (float)$this->price;
-		$fields['additional_shipping_cost'] = (float)$this->additional_shipping_cost;
-		$fields['wholesale_price'] = (float)$this->wholesale_price;
-		$fields['on_sale'] = (int)$this->on_sale;
-		$fields['online_only'] = (int)$this->online_only;
-		$fields['ecotax'] = (float)$this->ecotax;
-		$fields['unity'] = pSQL($this->unity);
 		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
-		$fields['ean13'] = pSQL($this->ean13);
-		$fields['upc'] = pSQL($this->upc);
-		$fields['reference'] = pSQL($this->reference);
-		$fields['supplier_reference'] = pSQL($this->supplier_reference);
-		$fields['location'] = pSQL($this->location);
-		$fields['width'] = (float)$this->width;
-		$fields['height'] = (float)$this->height;
-		$fields['depth'] = (float)$this->depth;
-		$fields['weight'] = (float)$this->weight;
-		$fields['quantity_discount'] = (int)$this->quantity_discount;
-		$fields['customizable'] = (int)$this->customizable;
-		$fields['uploadable_files'] = (int)$this->uploadable_files;
-		$fields['text_fields'] = (int)$this->text_fields;
-		$fields['active'] = (int)$this->active;
-		$fields['available_for_order'] = (int)$this->available_for_order;
-		$fields['available_date'] = pSQL($this->available_date);
-		$fields['condition'] = pSQL($this->condition);
-		$fields['show_price'] = (int)$this->show_price;
-		$fields['indexed'] = 0; // Reset indexation every times
-		$fields['cache_is_pack'] = (int)$this->cache_is_pack;
-		$fields['cache_has_attachments'] = (int)$this->cache_has_attachments;
-		$fields['is_virtual'] = (int)$this->is_virtual;
-		$fields['cache_default_attribute'] = (int)$this->cache_default_attribute;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
 
 		return $fields;
 	}
