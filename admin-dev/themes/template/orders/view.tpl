@@ -47,6 +47,13 @@
 	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of product must be set'}";
 	var txt_add_product_no_product_price = "{l s='Error: Price of product must be set'}";
 	var txt_confirm = "{l s='Are you sure?'}";
+	
+	var statesShipped = new Array();
+	{foreach from=$states item=state}
+		{if (!$currentState->shipped && $state['shipped'])}
+			statesShipped.push({$state['id_order_state']});
+		{/if}
+	{/foreach}
 
 	{literal}
 		function showWarehouseList()
@@ -67,6 +74,16 @@
 				prevText: '',
 				nextText: '',
 				dateFormat: 'yy-mm-dd'
+			});
+			$('#id_order_state').change(function() {
+				if ($.inArray(parseInt($(this).val()), statesShipped) >= 0)
+				{
+					showWarehouseList();
+				}
+				else
+				{
+					hideWarehouseList();
+				}
 			});
 		});
 	{/literal}
@@ -108,9 +125,9 @@
 		<div style="width: 48%; float:left;">
 			<!-- Change status form -->
 			<form action="{$currentIndex}&viewOrder&token={$smarty.get.token}" method="post" style="text-align:center;">
-				<select name="id_order_state">
+				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
-					<option onclick="{if (!$currentState->shipped && $state['shipped'])}showWarehouseList(){else}hideWarehouseList(){/if}" value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
+					<option value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
 				{/foreach}
 				</select>
 				<select name="id_warehouse" id="warehouse">
