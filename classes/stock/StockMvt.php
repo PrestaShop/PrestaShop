@@ -196,7 +196,7 @@ class StockMvtCore extends ObjectModel
 	}
 
 	/**
-	 * Gets the negative stock mvts that corresponds to the given order, for the given product, in the given quantity
+	 * Gets the negative stock mvts that correspond to the given order, for the given product, in the given quantity
 	 *
 	 * @since 1.5.0
 	 * @param int $id_order
