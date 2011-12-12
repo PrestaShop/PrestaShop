@@ -89,7 +89,7 @@ class OrderHistoryCore extends ObjectModel
 					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
 					{
 						ProductSale::addProductSale($product['id_product'], $product['cart_quantity']);
-						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']);
+
 					}
 					/* If becoming unlogable => removing sale */
 					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
@@ -100,20 +100,41 @@ class OrderHistoryCore extends ObjectModel
 					// If order is shipped for the first time and
 					// if we use advanced stock management system, decrement stock preperly.
 					// The product is removed from the physical stock. $id_warehouse is needed
+					// @TODO Checks $id_warehouse
 					else if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 					{
 						$manager = StockManagerFactory::getManager();
 						$warehouse = new Warehouse($id_warehouse);
 
-						$manager->removeProduct($product['id_product'],
-								  $product['id_product_attribute'],
-								  $warehouse,
-								  $product['cart_quantity'],
-								  Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
-								  true,
-								  (int)$id_order);
+						$manager->removeProduct(
+							$product['id_product'],
+						    $product['id_product_attribute'],
+						    $warehouse,
+						    $product['cart_quantity'],
+						    Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
+						    true,
+						    (int)$id_order
+						);
 					}
-					// @todo If the old order states was "shipped" and the new is "not shipped" the stock is not decremented
+					else if ($newOS->shipped == 0 && $oldOrderStatus->shipped == 1 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					{
+						$manager = StockManagerFactory::getManager();
+						$warehouse = new Warehouse($id_warehouse);
+
+						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['id_product'], $product['id_product_attribute'], $product['cart_quantity']);
+						foreach ($mvts as $mvt)
+						{
+							$manager->addProduct(
+								$product['id_product'],
+								$product['id_product_attribute'],
+								new Warehouse($mvt['id_warehouse']),
+								$mvt['physical_quantity'],
+								null,
+								$mvt['price_te'],
+								true
+							);
+						}
+					}
 				}
 
 			$this->id_order_state = (int)($new_order_state);

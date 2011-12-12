@@ -441,22 +441,24 @@ class AdminOrdersControllerCore extends AdminController
 								$product_to_inject = new Product($order_detail->product_id, false, $this->context->language->id, $order->id_shop);
 								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $order_detail->id_warehouse != 0)
 								{
-									$id_supplier = $product_to_inject->id_supplier;
-									$price = ProductSupplier::getProductPrice($id_supplier, $order_detail->product_id, $order_detail->product_attribute_id);
-									$price_te = $price['price_te'];
-									$id_currency = $price['id_currency'];
-									$warehouse = new Warehouse($id_warehouse);
+									$mvts = StockMvt::getNegativeStockMvts(
+										$order_detail->id_order,
+										$order_detail->product_id,
+										$order_detail->product_attribute_id,
+										$quantity_to_reinject);
 
-									$price_te = Tools::convertPriceFull($price_te, $from = new Currency($id_currency), $to = new Currency($warehouse->id_currency));
-
-									$stock_manager = StockManagerFactory::getManager();
-									$stock_manager->addProduct($qty_cancel_product->product_id,
-															   $qty_cancel_product->product_attribute_id,
-															   $warehouse,
-															   $quantity_to_reinject,
-															   null,
-															   $price_te,
-															   true);
+									foreach ($mvts as $mvt)
+									{
+										$manager->addProduct(
+											$order_detail->product_id,
+											$order_detail->product_attribute_id,
+											new Warehouse($mvt['id_warehouse']),
+											$mvt['physical_quantity'],
+											null,
+											$mvt['price_te'],
+											true
+										);
+									}
 									StockAvailable::synchronize($order_detail->product_id);
 								}
 								else if ($order_detail->id_warehouse == 0)
