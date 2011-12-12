@@ -47,7 +47,7 @@
 	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of product must be set'}";
 	var txt_add_product_no_product_price = "{l s='Error: Price of product must be set'}";
 	var txt_confirm = "{l s='Are you sure?'}";
-	
+
 	var statesShipped = new Array();
 	{foreach from=$states item=state}
 		{if (!$currentState->shipped && $state['shipped'])}
@@ -293,7 +293,7 @@
 							</tr>
 							{/foreach}
 							<tr>
-								<td><input type="text" name="payment_date" class="datepicker" size="17" value="{dateFormat date=date('Y-m-d H:i:s') full=true}" /></td>
+								<td><input type="text" name="payment_date" class="datepicker" size="17" value="{date('Y-m-d H:i:s')}" /></td>
 								<td>
 									<select name="payment_method">
 									{foreach from=PaymentModule::getInstalledPaymentModules() item=payment_method}

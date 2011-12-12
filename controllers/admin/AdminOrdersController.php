@@ -572,8 +572,12 @@ class AdminOrdersControllerCore extends AdminController
 				elseif (!Validate::isDate(Tools::getValue('payment_date')))
 					$this->_errors[] = Tools::displayError('Date is invalid');
 				else
+				{
 					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date')))
 						$this->_errors[] = Tools::displayError('An error occured on adding of order payment');
+					else
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+				}
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -585,7 +589,7 @@ class AdminOrdersControllerCore extends AdminController
 				$payment_module = Module::getInstanceByName($module_name);
 				$cart = new Cart((int)$id_cart);
 				$payment_module->validateOrder((int)$cart->id, (int)$id_order_state, $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l(sprintf('Manual order - ID Employee :%1', (int)Context::getContext()->cookie->id_employee)));
-				if($payment_module->currentOrder)
+				if ($payment_module->currentOrder)
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
 			}
 			else
