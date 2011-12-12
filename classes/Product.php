@@ -725,7 +725,7 @@ class ProductCore extends ObjectModel
 
 		foreach ($categories as $new_id_categ)
 			if (!in_array($new_id_categ, $current_categories))
-				$new_categ_pos[] = '('.$new_id_categ.', '.$this->id.', '.$new_categ_pos[$new_id_categ].')';
+				$product_cats[] = '('.$new_id_categ.', '.$this->id.', '.$new_categ_pos[$new_id_categ].')';
 		if (count($product_cats))
 			return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
@@ -755,7 +755,7 @@ class ProductCore extends ObjectModel
 			$this->deleteCategory($categ_to_delete['id_category']);
 		// if none are found, it's an error
 		if (!is_array($result))
-			return (false);
+			return false;
 
 		if (!$this->addToCategories($categories))
 			return false;
