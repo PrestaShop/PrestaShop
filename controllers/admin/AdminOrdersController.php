@@ -434,15 +434,15 @@ class AdminOrdersControllerCore extends AdminController
 							// Reinject product
 							if (!$order->hasBeenDelivered() OR ($order->hasBeenDelivered() AND Tools::isSubmit('reinjectQuantities')))
 							{
-								$reinjectable_quantity = (int)$qty_cancel_product->product_quantity - (int)$qty_cancel_product->product_quantity_reinjected;
+								$reinjectable_quantity = (int)$order_detail->product_quantity - (int)$order_detail->product_quantity_reinjected;
 								$quantity_to_reinject = $qty_cancel_product > $reinjectable_quantity ? $reinjectable_quantity : $qty_cancel_product;
 
 								// @since 1.5.0 : Advanced Stock Management
-								$product_to_inject = new Product($qty_cancel_product->product_id, false, $this->context->language->id, $order->id_shop);
-								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $qty_cancel_product->id_warehouse != 0)
+								$product_to_inject = new Product($order_detail->product_id, false, $this->context->language->id, $order->id_shop);
+								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $order_detail->id_warehouse != 0)
 								{
 									$id_supplier = $product_to_inject->id_supplier;
-									$price = ProductSupplier::getProductPrice($id_supplier, $qty_cancel_product->product_id, $order_detail->product_attribute_id);
+									$price = ProductSupplier::getProductPrice($id_supplier, $order_detail->product_id, $order_detail->product_attribute_id);
 									$price_te = $price['price_te'];
 									$id_currency = $price['id_currency'];
 									$warehouse = new Warehouse($id_warehouse);
