@@ -127,6 +127,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table tr.small td{height:15px}
 .table tr.last td{border-bottom:none}
 td.col-left {vertical-align:top; padding-right:10px;}
+#step1 td.col-left { width:250px;}
 td.col-left label { display:block; width:100%; text-align:right;}
 .alt_row{background-color:#f8f8f8}
 .path_bar{background-color:#E2EBEE;border:1px solid #999999;font-family:Trebuchet,Arial,Helvetica,sans-serif;font-size:13px;margin-bottom:20px;padding:5px}
@@ -378,4 +379,8 @@ select#show_modules { font-size:12px;}
 
 /*FOOTER*/
 #footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
-#footer .footer_link, #footer .footer_link:hover {color:#D41958;}
+#footer .footerLeft { float:left; margin-left:10px;}
+#footer .footerRight {float:right; margin-right:10px;}
+
+
+#footer .footer_link, #footer .footer_link:hover { color:#268CCD;}

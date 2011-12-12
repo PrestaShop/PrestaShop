@@ -221,7 +221,7 @@ var textFieldLabel = 0;
 <tr>
 	<td colspan="2">
 		<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {*onclick="toggleVirtualProduct(this);"*} {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
-			<label for="is_virtual_good" class="t bold" style="color: black;">{l s='Is this a virtual product?'}</label>
+			<label for="is_virtual_good" class="t bold">{l s='Is this a virtual product?'}</label>
 		</p>
 		{* [begin] virtual product *}
 		<div id="virtual_good" class="toggleVirtualPhysicalProduct" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
@@ -317,7 +317,9 @@ var textFieldLabel = 0;
 		</div>
 	</td>
 </tr>
-<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+</table>
+<div class="separation"></div>
+<table cellspacing="0" cellpadding="5" border="0">
 				{if !$ps_stock_management}
 						<tr>
 							<td colspan="2">{l s='The stock management is disabled'}</td>
@@ -332,7 +334,6 @@ var textFieldLabel = 0;
 						</td>
 					</tr>
 				{/if}
-					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 				<tr>
 					<td class="col-left"><label>{l s='Additional shipping cost:'}</label></td>
 					<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost"
@@ -374,12 +375,9 @@ var textFieldLabel = 0;
 						</tr>
 			{/if}
 
-					<tr>
-						<td colspan="2" style="padding-bottom:5px;">
-							<div class="separation"></div>
-						</td>
-					</tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+</table>
+<div class="separation"></div>
+<table cellspacing="0" cellpadding="5" border="0">
 {************** DESCRIPTION *****************************}
 				<tr><td colspan="2">
 					<span onclick="$('#seo').slideToggle();" style="cursor: pointer"><img src="../img/admin/arrow.gif" alt="{l s='SEO'}" title="{l s='SEO'}" style="float:left; margin-right:5px;"/>{l s='Click here to improve product\'s rank in search engines (SEO)'}</span><br />
@@ -434,7 +432,9 @@ var textFieldLabel = 0;
 		</td></tr></table>
 						</div>
 					</td></tr>
-					<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+</table>
+<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
+<table cellspacing="0" cellpadding="5" border="0">	
 					<tr>
 						<td class="col-left"><label>{l s='Short description:'}<br /><br /><i>({l s='appears in the product lists and on the top of the product page'})</i></label></td>
 						<td style="padding-bottom:5px;">
@@ -625,7 +625,6 @@ var accessories = new Array();
 						</script>
 					</td>
 				</tr>
-				<tr><td colspan="2" style="padding-bottom:10px;"><div class="separation"></div></td></tr>
 			</table>
 		<br />
 		</div>
