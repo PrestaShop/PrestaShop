@@ -1589,10 +1589,14 @@ class OrderCore extends ObjectModel
 	 */
 	public function hasInvoice()
 	{
-		return Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'order_invoice`
-			WHERE `id_order` =  '.(int)$this->id);
+		if (Db::getInstance()->getRow('
+				SELECT *
+				FROM `'._DB_PREFIX_.'order_invoice`
+				WHERE `id_order` =  '.(int)$this->id.'
+				LIMIT 1')
+		)
+			return true;
+		return false;
 	}
 }
 
