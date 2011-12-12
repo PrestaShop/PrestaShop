@@ -554,6 +554,7 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	padding:0 0 10px 0;
 	background:none;
 }
+#footer .myaccount .favoriteproducts img,
 #footer .myaccount .lnk_wishlist img {display:none}
 
 /* ************************************************************************************************
