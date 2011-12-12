@@ -345,8 +345,8 @@ INSERT INTO `PREFIX_address` (`id_address`, `id_country`, `id_state`, `id_custom
 INSERT INTO `PREFIX_address` (`id_address`, `id_country`, `id_state`, `id_customer`, `id_manufacturer`, `id_supplier`, `alias`, `company`, `lastname`, `firstname`, `address1`, `address2`, `postcode`, `city`, `phone`, `date_add`, `date_upd`, `active`, `deleted`)
 	VALUES (2, 8, 0, 1, 0, 0, 'Mon adresse', 'My Company', 'DOE', 'John', '16, Main street', '2nd floor', '75000', 'Paris ', '0102030405', NOW(), NOW(), 1, 0);
 
-INSERT INTO `PREFIX_supplier` (`id_supplier`, `name`, `date_add`, `date_upd`, `active`) VALUES (1, 'AppleStore', NOW(), NOW(), 1);
-INSERT INTO `PREFIX_supplier` (`id_supplier`, `name`, `date_add`, `date_upd`, `active`) VALUES (2, 'Shure Online Store', NOW(), NOW(), 1);
+INSERT INTO `PREFIX_supplier` (`id_supplier`, `id_address`, `name`, `date_add`, `date_upd`, `active`) VALUES (1, 1, 'AppleStore', NOW(), NOW(), 1);
+INSERT INTO `PREFIX_supplier` (`id_supplier`, `id_address`, `name`, `date_add`, `date_upd`, `active`) VALUES (2, 2, 'Shure Online Store', NOW(), NOW(), 1);
 
 INSERT INTO `PREFIX_supplier_group_shop` (`id_supplier`, `id_group_shop`) (SELECT `id_supplier`, 1 FROM `PREFIX_supplier`);
 
