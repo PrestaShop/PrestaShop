@@ -37,6 +37,14 @@
 				updateMvtStatus($(this).val());
 			});
 			updateMvtStatus($(this).val());
+
+			$('.product-tab-content').each(function(){
+				var id = $(this).attr('id').substr(20);
+
+				if ($("#product-tab-content-"+id).hasClass('not-loaded'))
+					displayTabProductById('#link-'+id, id, false);
+			});
+
 		});
 		function updateMvtStatus(id_mvt_reason)
 		{
@@ -621,8 +629,8 @@ var accessories = new Array();
 			</table>
 		<br />
 		</div>
-
+{*
 		
 			<script type="text/javascript">
 					toggleVirtualProduct(getE('is_virtual_good'));
-			</script>
+			</script>*}
