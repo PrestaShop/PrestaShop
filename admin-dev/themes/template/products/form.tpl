@@ -39,26 +39,26 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		
+
 		var toload = new Array();
 		var pos_select = {$pos_select};
-		
+
 		$(document).ready(function(){
 			$('#desc-product-newCombination').hide();
 			{* submenu binding *}
 			$(".tab-page").click(function(e){
 				e.preventDefault();
-		
+
 				// currentId is the current product tab id
 				currentId = $(".productTabs a.selected").attr('id').substr(5);
 				// id is the wanted producttab id
 				id = $(this).attr('id').substr(5);
-		
+
 				// Update submit button value
 				var split_position = id.indexOf('-') + 1;
 				var btn_name = id.substr(split_position);
 				$("#product_form_submit_btn").attr('name', 'submit'+btn_name);
-		
+
 				if ($(this).attr("id") != $(".productTabs a.selected").attr('id'))
 				{
 					$(".tab-page").removeClass('selected');
@@ -71,31 +71,18 @@
 					else
 						return false;
 				}
-		
+
 				$("#product-tab-content-wait").show();
-		
-				if ($("#product-tab-content-"+id).hasClass('not-loaded') || $(this).hasClass('selected'))
-				{
-					myurl = $(this).attr("href")+"&ajax=1";
-					$.ajax({
-						url : myurl,
-						async : true,
-						success :function(data)
-						{
-							$("#product-tab-content-"+id).html(data);
-							$("#product-tab-content-"+id).removeClass('not-loaded');
-							$("#product-tab-content-"+id).show();
-							$("#link-"+id).addClass('selected');
-						}
-					});
-				}
+
+				if ($("#product-tab-content-"+id).hasClass('not-loaded'))
+					displayTabProductById(this, id, true);
 				else
 				{
 					$("#product-tab-content-"+id).show();
 					$("#link-"+id).addClass('selected');
 				}
 				$("#product-tab-content-wait").hide();
-		
+
 				var languages = new Array();
 				if (btn_name == "Combinations")
 				{

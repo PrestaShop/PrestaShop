@@ -204,6 +204,26 @@ function editProductAttribute(ids, token)
 }
 /* END Combination */
 
+function displayTabProductById(el, id, selected)
+{
+	myurl = $(el).attr("href")+"&ajax=1";
+	$.ajax({
+		url : myurl,
+		async : true,
+		success :function(data)
+		{
+			$("#product-tab-content-"+id).html(data);
+			$("#product-tab-content-"+id).removeClass('not-loaded');
+
+			if (selected)
+			{
+				$("#link-"+id).addClass('selected');
+				$("#product-tab-content-"+id).show();
+			}
+		}
+	});
+}
+
 function addPackItem()
 {
 	if ($('#curPackItemId').val() == '' || $('#curPackItemName').val() == '')
