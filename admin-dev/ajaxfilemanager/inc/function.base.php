@@ -1017,7 +1017,7 @@ function getRootPath() {
 					
 						
 
-			// START ANDR� SILVA DOWNLOAD CODE
+			// START ANDRE SILVA DOWNLOAD CODE
 			// required for IE, otherwise Content-disposition is ignored
 			if(ini_get('zlib.output_compression'))
 			  ini_set('zlib.output_compression', 'Off');
@@ -1033,7 +1033,7 @@ function getRootPath() {
 		
 			readfile($path);
 			exit();
-			// END ANDR� SILVA DOWNLOAD CODE												
+			// END ANDRE SILVA DOWNLOAD CODE												
 				}
 		
 		}
