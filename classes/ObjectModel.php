@@ -27,6 +27,21 @@
 
 abstract class ObjectModelCore
 {
+	/**
+	 * List of field types
+	 */
+	const TYPE_INT = 1;
+	const TYPE_BOOL = 2;
+	const TYPE_STRING = 3;
+	const TYPE_FLOAT = 4;
+	const TYPE_DATE = 5;
+
+	/**
+	 * List of association types
+	 */
+	const HAS_ONE = 1;
+	const HAS_MANY = 2;
+
 	/** @var integer Object id */
 	public $id;
 
@@ -203,7 +218,40 @@ abstract class ObjectModelCore
 	 */
 	public function getFields()
 	{
-		return array();
+		$this->validateFields();
+
+		$fields = array();
+		foreach ($this->def['fields'] as $field => $data)
+			if (!isset($data['lang']) || !$data['lang'])
+				switch ($data['type'])
+				{
+					case self::TYPE_INT :
+						$fields[$field] = (int)$this->$field;
+					break;
+
+					case self::TYPE_BOOL :
+						$fields[$field] = (bool)$this->$field;
+						break;
+
+					case self::TYPE_FLOAT :
+						$fields[$field] = (float)$this->$field;
+					break;
+
+					case self::TYPE_DATE :
+						$fields[$field] = pSQL($this->$field);
+					break;
+
+					case self::TYPE_STRING :
+						$fields[$field] = pSQL($this->$field);
+					break;
+
+					default :
+						if (method_exists($this, 'formatType'.$data['type']))
+							$fields[$field] = $this->{'formatType'.$data['type']}($this->$field);
+					break;
+				}
+
+		return $fields;
 	}
 
 	/**
@@ -1092,31 +1140,30 @@ abstract class ObjectModelCore
 		else
 			$this->def['primary'] = $this->identifier;
 
-		// Retrocompatibility with $fieldsValidate, $fieldsRequired and $fieldsSize properties ($definition['fields'] && $definition['fields_lang'])
-		foreach (array('fields' => '', 'fields_lang' => 'Lang') as $type => $suffix)
-			if (isset($this->def[$type]))
+		// Retrocompatibility with $fieldsValidate, $fieldsRequired and $fieldsSize properties ($definition['fields'])
+		if (isset($this->def['fields']))
+		{
+			foreach ($this->def['fields'] as $field => $data)
 			{
-				foreach ($this->def[$type] as $field => $data)
-				{
-					if (isset($data['validate']))
-						$this->{'fieldsValidate'.$suffix}[$field] = $data['validate'];
-					if (isset($data['required']) && $data['required'])
-						$this->{'fieldsRequired'.$suffix}[] = $field;
-					if (isset($data['size']))
-						$this->{'fieldsSize'.$suffix}[$field] = $data['size'];
-				}
+				$suffix = (isset($data['lang']) && $data['lang']) ? 'Lang' : '';
+				if (isset($data['validate']))
+					$this->{'fieldsValidate'.$suffix}[$field] = $data['validate'];
+				if (isset($data['required']) && $data['required'])
+					$this->{'fieldsRequired'.$suffix}[] = $field;
+				if (isset($data['size']))
+					$this->{'fieldsSize'.$suffix}[$field] = $data['size'];
 			}
-			else
-			{
-				if ($type == 'fields')
-					$this->def['fields'] = array();
-
-				foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
-					$this->def[$type][$field]['validate'] = $validate;
-				foreach ($this->{'fieldsRequired'.$suffix} as $field)
-					$this->def[$type][$field]['required'] = true;
-				foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
-					$this->def[$type][$field]['size'] = $size;
-			}
+		}
+		else
+		{
+			$this->def['fields'] = array();
+			$suffix = (isset($data['lang']) && $data['lang']) ? 'Lang' : '';
+			foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
+				$this->def['fields'][$field]['validate'] = $validate;
+			foreach ($this->{'fieldsRequired'.$suffix} as $field)
+				$this->def['fields'][$field]['required'] = true;
+			foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
+				$this->def['fields'][$field]['size'] = $size;
+		}
 	}
 }
