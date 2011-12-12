@@ -29,13 +29,13 @@
 		{if $display_footer}
 				{$HOOK_FOOTER}
 				<div id="footer">
-					<div style="float:left;margin-left:10px;padding-top:6px">
-						<a href="http://www.prestashop.com/" target="_blank" style="font-weight:700;color:#666666">PrestaShop&trade; {$ps_version}</a><br />
-						<span style="font-size:10px">{l s='Load time: '}{$end_time}s</span>
+					<div class="footerLeft">
+						<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />
+						<span>{l s='Load time: '}{$end_time}s</span>
 					</div>
-					<div style="float:right;height:40px;margin-right:10px;line-height:38px;vertical-align:middle">
+					<div class="footerRight">
 						{if $iso_is_fr}
-							<span style="color: #812143; font-weight: bold;">Questions / Renseignements / Formations :</span> <strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
+							<span>Questions / Renseignements / Formations :</span> <strong>+33 (0)1.40.18.30.04</strong> de 09h &agrave; 18h
 						{/if}
 						|&nbsp;<a href="http://www.prestashop.com/en/contact_us/" target="_blank" class="footer_link">{l s='Contact'}</a>
 						|&nbsp;<a href="http://forge.prestashop.com" target="_blank" class="footer_link">{l s='Bug Tracker'}</a>
