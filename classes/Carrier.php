@@ -110,13 +110,6 @@ class CarrierCore extends ObjectModel
 	/** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
 	public $grade;
 
-	
-	
-	
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -126,23 +119,32 @@ class CarrierCore extends ObjectModel
 		'multilang' => true,
 		'multishop' => true,
 		'fields' => array(
-			'id_tax_rules_group' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
-			'is_free' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'url' => array('type' => 'FILL_ME', 'validate' => 'isAbsoluteUrl'),
-			'shipping_handling' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'range_behavior' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'shipping_method' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'max_width' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'max_height' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'max_deep' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'max_weight' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'grade' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 1),
-			'delay' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			// Classic fields
+			'id_reference' => 			array('type' => self::TYPE_INT),
+			'id_tax_rules_group' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
+			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+			'is_free' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'url' => 					array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
+			'shipping_handling' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'shipping_external' => 		array('type' => self::TYPE_BOOL),
+			'range_behavior' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'shipping_method' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_width' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_height' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_deep' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'grade' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 1),
+			'external_module_name' => 	array('type' => self::TYPE_STRING, 'size' => 64),
+			'is_module' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'need_range' => 			array('type' => self::TYPE_BOOL),
+			'position' => 				array('type' => self::TYPE_INT),
+			'deleted' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+
+			// Lang fields
+			'delay' => 					array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
-
 
 	protected static $price_by_weight = array();
 	protected static $price_by_weight2 = array();
@@ -158,32 +160,6 @@ class CarrierCore extends ObjectModel
 			'is_module' => array(),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_tax_rules_group'] = (int)$this->id_tax_rules_group;
-		$fields['name'] = pSQL($this->name);
-		$fields['url'] = pSQL($this->url);
-		$fields['active'] = (int)$this->active;
-		$fields['deleted'] = (int)$this->deleted;
-		$fields['shipping_handling'] = (int)$this->shipping_handling;
-		$fields['range_behavior'] = (int)$this->range_behavior;
-		$fields['shipping_method'] = (int)$this->shipping_method;
-		$fields['is_module'] = (int)$this->is_module;
-		$fields['is_free'] = (int)$this->is_free;
-		$fields['shipping_external'] = (int)$this->shipping_external;
-		$fields['external_module_name'] = $this->external_module_name;
-		$fields['need_range'] = $this->need_range;
-		$fields['position'] = (int)$this->position;
-		$fields['id_reference'] = (int)$this->id_reference;
-		$fields['max_width'] = (int)$this->max_width;
-		$fields['max_height'] = (int)$this->max_height;
-		$fields['max_depth'] = (int)$this->max_depth;
-		$fields['max_weight'] = (int)$this->max_weight;
-		$fields['grade'] = (int)$this->grade;
-		return $fields;
-	}
 
 	public function __construct($id = null, $id_lang = null)
 	{

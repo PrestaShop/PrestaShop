@@ -53,10 +53,6 @@ class CombinationCore extends ObjectModel
 
 	public $available_date;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -64,22 +60,21 @@ class CombinationCore extends ObjectModel
 		'table' => 'product_attribute',
 		'primary' => 'id_product_attribute',
 		'fields' => array(
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'location' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 64),
-			'ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13', 'size' => 13),
-			'upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc', 'size' => 12),
-			'wholesale_price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'size' => 27),
-			'price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'size' => 20),
-			'ecotax' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'size' => 20),
-			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 10),
-			'weight' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'default_on' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'available_date' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat'),
-			'reference' => array('type' => 'FILL_ME', 'size' => 32),
-			'supplier_reference' => array('type' => 'FILL_ME', 'size' => 32),
+			'id_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'location' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
+			'upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
+			'wholesale_price' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 27),
+			'price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 20),
+			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 20),
+			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
+			'weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
+			'default_on' => 		array('type' => self::TYPE_INT, 'validate' => 'isBool'),
+			'available_date' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'reference' => 			array('type' => self::TYPE_STRING, 'size' => 32),
+			'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
 		),
 	);
-
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'combination',
@@ -92,25 +87,6 @@ class CombinationCore extends ObjectModel
 			'images' => array('resource' => 'image'),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_product'] = (int)($this->id_product);
-		$fields['reference'] = pSQL($this->reference);
-		$fields['supplier_reference'] = pSQL($this->supplier_reference);
-		$fields['location'] = pSQL($this->location);
-		$fields['ean13'] = pSQL($this->ean13);
-		$fields['upc'] = pSQL($this->upc);
-		$fields['wholesale_price'] = pSQL($this->wholesale_price);
-		$fields['price'] = pSQL($this->price);
-		$fields['ecotax'] = pSQL($this->ecotax);
-		$fields['quantity'] = (int)($this->quantity);
-		$fields['weight'] = pSQL($this->weight);
-		$fields['default_on'] = (int)($this->default_on);
-		$fields['available_date'] = pSQL($this->available_date);
-		return $fields;
-	}
 
 	public function delete()
 	{

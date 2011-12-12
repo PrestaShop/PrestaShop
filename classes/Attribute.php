@@ -36,12 +36,6 @@ class AttributeCore extends ObjectModel
 	public $position;
 	public $default;
 
- 	
-	
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -50,10 +44,10 @@ class AttributeCore extends ObjectModel
 		'primary' => 'id_attribute',
 		'multilang' => true,
 		'fields' => array(
-			'id_attribute_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'color' => array('type' => 'FILL_ME', 'validate' => 'isColor'),
-			'position' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'id_attribute_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
+			'position' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
 
@@ -73,17 +67,6 @@ class AttributeCore extends ObjectModel
 		$this->image_dir = _PS_COL_IMG_DIR_;
 
 		parent::__construct($id, $id_lang, $id_shop);
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_attribute_group'] = (int)$this->id_attribute_group;
-		$fields['color'] = pSQL($this->color);
-		$fields['position'] = (int)$this->position;
-
-		return $fields;
 	}
 
 	/**
