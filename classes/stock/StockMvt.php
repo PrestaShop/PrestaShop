@@ -194,4 +194,40 @@ class StockMvtCore extends ObjectModel
 	{
 		Tools::displayAsDeprecated();
 	}
+
+	/**
+	 * Gets the negative stock mvts that corresponds to the given order, for the given product, in the given quantity
+	 *
+	 * @since 1.5.0
+	 * @param int $id_order
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $quantity
+	 * @return Array mvts
+	 */
+	public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity)
+	{
+		$mvts = array();
+		$quantity_total = 0;
+
+		$query = new DbQuery();
+		$query->select('sm.*, s.id_warehouse');
+		$query->from('stock_mvt sm');
+		$query->innerJoin('stock s ON (s.id_stock = sm.id_stock)');
+		$query->where('sm.sign = -1');
+		$query->where('sm.id_order = '.(int)$id_order);
+		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->orderBy('date_add DESC');
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($query);
+		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res))
+		{
+			if ($quantity_total >= $quantity)
+				break;
+			$quantity_total += (int)$row['physical_quantity'];
+			$mvts[] = $row;
+		}
+
+		return $mvts;
+	}
 }
