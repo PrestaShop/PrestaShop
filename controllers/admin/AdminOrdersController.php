@@ -746,6 +746,22 @@ class AdminOrdersControllerCore extends AdminController
 
 		$this->toolbar_title = $this->l('Order #').sprintf('%06d', $order->id).' ('.$order->reference.') - '.$customer->firstname.' '.$customer->lastname;
 
+		// gets warehouses to ship products, if and only if advanced stock management is activated
+		$warehouse_list = null;
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$order_details = $order->getOrderDetailList();
+			foreach ($order_details as $order_detail)
+			{
+				$warehouses = Warehouse::getWarehousesByProductId($order_detail['product_id'], $order_detail['product_attribute_id']);
+				foreach ($warehouses as $warehouse)
+				{
+					if (!isset($warehouse_list[$warehouse['id_warehouse']]))
+						$warehouse_list[$warehouse['id_warehouse']] = $warehouse;
+				}
+			}
+		}
+
 		// Smarty assign
 		$this->tpl_view_vars = array(
 			'order' => $order,
@@ -769,7 +785,7 @@ class AdminOrdersControllerCore extends AdminController
 			'carrier' => $carrier = new Carrier($order->id_carrier),
 			'history' => $order->getHistory($this->context->language->id),
 			'states' => OrderState::getOrderStates($this->context->language->id),
-			'warehouse_list' => Warehouse::getWarehouses(false, $order->id_shop),
+			'warehouse_list' => $warehouse_list,
 			'sources' => ConnectionsSource::getOrderSources($order->id),
 			'currentState' => OrderHistory::getLastOrderState($order->id),
 			'currency' => new Currency($order->id_currency),
