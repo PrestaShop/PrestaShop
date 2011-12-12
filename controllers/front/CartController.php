@@ -257,7 +257,7 @@ class CartControllerCore extends FrontController
 	public function displayAjax()
 	{
 		if ($this->errors)
-			die(Tools::jsonEncode(array('hasError' => true, $this->errors)));
+			die(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
 
 		if (Tools::getIsset('summary'))
 		{
