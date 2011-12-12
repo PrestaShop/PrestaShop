@@ -124,6 +124,7 @@ class OrderHistoryCore extends ObjectModel
 					{
 						$manager = StockManagerFactory::getManager();
 						$warehouse = new Warehouse($id_warehouse);
+						$depends =
 
 						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['id_product'], $product['id_product_attribute'], $product['cart_quantity']);
 						foreach ($mvts as $mvt)
@@ -138,7 +139,11 @@ class OrderHistoryCore extends ObjectModel
 								true
 							);
 						}
-						StockAvailable::synchronize($product['id_product']);
+
+						if (StockAvailable::dependsOnStock($product['id_product'], $order->id_shop))
+							StockAvailable::synchronize($product['id_product']);
+						else
+							StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity'], $order->id_shop);
 					}
 				}
 
