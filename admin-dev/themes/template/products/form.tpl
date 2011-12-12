@@ -57,7 +57,6 @@
 				// Update submit button value
 				var split_position = id.indexOf('-') + 1;
 				var btn_name = id.substr(split_position);
-				$("#product_form_submit_btn").attr('name', 'submit'+btn_name);
 
 				if ($(this).attr("id") != $(".productTabs a.selected").attr('id'))
 				{
