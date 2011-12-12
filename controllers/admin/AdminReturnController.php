@@ -134,9 +134,11 @@ class AdminReturnControllerCore extends AdminController
 			}
 		}
 
-		/* Classic products */
+		// Classic products
 		$products = OrderReturn::getOrdersReturnProducts($this->object->id, $order);
 
+		// Prepare customer explanation for display
+		$this->object->question = nl2br($this->object->question);
 
 		$this->tpl_form_vars = array(
 			'customer' => new Customer($this->object->id_customer),

@@ -65,7 +65,8 @@ class OrderReturnCore extends ObjectModel
 		$fields['state'] = pSQL($this->state);
 		$fields['date_add'] = pSQL($this->date_add);
 		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['question'] = pSQL(Tools::nl2br($this->question), true);
+		// we don't want to use nl2br now because <br> will not pass Validation::isMessage()
+		$fields['question'] = pSQL($this->question, true);
 		return $fields;
 	}
 	
