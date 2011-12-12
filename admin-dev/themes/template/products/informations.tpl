@@ -110,13 +110,6 @@
 		<label for="active_off" class="t">{l s='Disabled'} </label>
 	</td>
 </tr>
-	{if $feature_shop_active}
-	{* @todo use asso_shop from Helper *}
-	<tr id="shop_association">
-		<td class="col-left"><label>{l s='Shop association:' }</label></td>
-		<td style="padding-bottom:5px;">{$displayAssoShop}</td>
-	</tr>
-	{/if}
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
 		<td class="col-left"><label>{l s='Options:' }</label></td>
 		<td style="padding-bottom:5px;">
@@ -317,63 +310,7 @@ var textFieldLabel = 0;
 		</div>
 	</td>
 </tr>
-</table>
-<div class="separation"></div>
-<table cellspacing="0" cellpadding="5" border="0">
-				{if !$ps_stock_management}
-						<tr>
-							<td colspan="2">{l s='The stock management is disabled'}</td>
-						</tr>
-					{/if}
-					{if !$has_attribute}
-					<tr>
-						<td class="col-left"><label>{l s='Minimum quantity:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<input size="3" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
-							<p class="preference_description">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
-						</td>
-					</tr>
-				{/if}
-				<tr>
-					<td class="col-left"><label>{l s='Additional shipping cost:'}</label></td>
-					<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost"
-							value="{$product->additional_shipping_cost}" />{$currency->suffix}
-						{if $country_display_tax_label}{l s='tax excl.'}{/if}
-						<p>{l s='Carrier tax will be applied.'}</p>
-				</td>
-			</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
-						<td style="padding-bottom:5px;">
-								{include file="products/input_text_lang.tpl"
-									languages=$languages
-									input_value=$product->available_now
-									input_name='available_now'}
-							<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-					</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
-						<td style="padding-bottom:5px;">
-								{include file="products/input_text_lang.tpl"
-									languages=$languages
-									input_value=$product->available_later
-									input_name='available_later'}
-							<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-				</td>
-					</tr>
-			{if $countAttributes}
 
-{* .(($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00').'" *}
-						<tr>
-							<td class="col-left"><label>{l s='Available date:'}</label></td>
-							<td style="padding-bottom:5px;">
-							<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
-							style="text-align: center;" type="text" />
-								<p>{l s='The available date when this product is out of stock'}</p>
-						</td>
-						</tr>
-			{/if}
 
 </table>
 <div class="separation"></div>
@@ -568,61 +505,6 @@ var textFieldLabel = 0;
 				<p class="preference_description">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
 					</td>
 				</tr>
-				
-				<tr>
-					<td class="col-left"><label>{l s='Accessories:'}<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i></label></td>
-					<td style="padding-bottom:5px;">
-						<div id="divAccessories">
-				{* @todo : donot use 3 foreach, but assign var *}
-				{foreach from=$accessories item=accessory}
-					{$accessory.name|htmlentitiesUTF8}{if !empty($accessory.reference)}{$accessory.reference}{/if} <span onclick="delAccessory({$accessory.id_product});" style="cursor: pointer;"><img src="../img/admin/delete.gif" class="middle" alt="" /></span><br />
-				{/foreach}
-				</div>
-				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
-				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|htmlentitiesUTF8}¤{/foreach}" />
-<script type="text/javascript">
-var formProduct;
-var accessories = new Array();
-</script>
-						
-						<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
-							<p class="clear">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}</p>
-							<input type="text" value="" id="product_autocomplete_input" />
-							<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />
-						</div>
-						<script type="text/javascript">
-							urlToCall = null;
-							/* function autocomplete */
-							$(document).ready(function() {
-								$('#product_autocomplete_input')
-									.autocomplete('ajax_products_list.php', {
-										minChars: 1,
-										autoFill: true,
-										max:20,
-										matchContains: true,
-										mustMatch:true,
-										scroll:false,
-										cacheLength:0,
-										formatItem: function(item) {
-											return item[1]+' - '+item[0];
-										}
-									}).result(addAccessory);
-								$('#product_autocomplete_input').setOptions({
-									extraParams: {
-										excludeIds : getAccessorieIds()
-									}
-								});
-							});
-
-							function getAccessorieIds()
-							{
-								var ids = {$product->id}+',';
-								ids += $('#inputAccessories').val().replace(/\\-/g,',').replace(/\\,$/,'');
-								ids = ids.replace(/\,$/,'');
-
-								return ids;
-							}
-						</script>
 					</td>
 				</tr>
 			</table>
