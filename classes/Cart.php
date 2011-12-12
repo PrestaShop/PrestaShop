@@ -1607,6 +1607,7 @@ class CartCore extends ObjectModel
 	 *                       ),
 	 *                   ),
 	 *               );
+	 *               If there are no carriers available for an address, return an empty  array
 	 */
 	public function getDeliveryOptionList(Country $default_country = null, $flush = false)
 	{
