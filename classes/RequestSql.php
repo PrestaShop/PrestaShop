@@ -30,14 +30,22 @@ class RequestSqlCore extends ObjectModel
 	public $name;
 	public $sql;
 
-	protected $fieldsRequired = array('name', 'sql');
-	protected $fieldsSize = array('name' => 200 , 'sql' => 400);
-	protected $fieldsValidate = array('name' => 'isString', 'sql' => 'isString');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'request_sql',
 		'primary' => 'id_request_sql',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isString', 'required' => true, 'size' => 200),
+			'sql' => array('type' => 'FILL_ME', 'validate' => 'isString', 'required' => true, 'size' => 400),
+		),
 	);
+
 
 	public $tested = array('required' => array ('SELECT', 'FROM'),
 							'option' => array('WHERE', 'ORDER', 'LIMIT', 'HAVING', 'GROUP', 'UNION'),

@@ -65,28 +65,29 @@ class ManufacturerCore extends ObjectModel
 	/** @var boolean active */
 	public $active;
 
- 	protected $fieldsRequired = array('name');
- 	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('name' => 'isCatalogName');
-	protected $fieldsSizeLang = array(
-		'short_description' => 254,
-		'meta_title' => 128,
-		'meta_description' => 255,
-		'meta_description' => 255
-	);
-	protected $fieldsValidateLang = array(
-		'description' => 'isString',
-		'short_description' => 'isString',
-		'meta_title' => 'isGenericName',
-		'meta_description' => 'isGenericName',
-		'meta_keywords' => 'isGenericName'
-	);
+ 	
+ 	
+ 	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'manufacturer',
 		'primary' => 'id_manufacturer',
 		'multilang' => true,
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
+			'short_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 		'fields' => array(

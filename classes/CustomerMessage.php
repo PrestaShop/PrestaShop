@@ -37,14 +37,23 @@ class CustomerMessageCore extends ObjectModel
 	public $private;
 	public $date_add;
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'customer_message',
 		'primary' => 'id_customer_message',
+		'fields' => array(
+			'message' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'ip_address' => array('type' => 'FILL_ME', 'validate' => 'isIp2Long'),
+		),
 	);
 
-	protected $fieldsRequired = array('message');
-	protected $fieldsSize = array('message' => 65000);
-	protected $fieldsValidate = array('message' => 'isCleanHtml', 'id_employee' => 'isUnsignedId', 'ip_address' => 'isIp2Long');
+
+	
+	
+	
 
 	public	function getFields()
 	{

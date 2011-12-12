@@ -36,17 +36,27 @@ class AttributeCore extends ObjectModel
 	public $position;
 	public $default;
 
- 	protected $fieldsRequired = array('id_attribute_group');
-	protected $fieldsValidate = array('id_attribute_group' => 'isUnsignedId', 'color' => 'isColor', 'position' => 'isInt');
- 	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 64);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+ 	
+	
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'attribute',
 		'primary' => 'id_attribute',
 		'multilang' => true,
+		'fields' => array(
+			'id_attribute_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'color' => array('type' => 'FILL_ME', 'validate' => 'isColor'),
+			'position' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+		),
 	);
+
 
 	protected	$image_dir = _PS_COL_IMG_DIR_;
 

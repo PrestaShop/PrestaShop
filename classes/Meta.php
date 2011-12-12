@@ -34,20 +34,31 @@ class MetaCore extends ObjectModel
 	public 		$keywords;
 	public 		$url_rewrite;
 
- 	protected 	$fieldsRequired = array('page');
- 	protected 	$fieldsSize = array('page' => 64);
- 	protected 	$fieldsValidate = array('page' => 'isFileName');
+ 	
+ 	
+ 	
 
-	protected	$fieldsRequiredLang = array();
-	protected	$fieldsSizeLang = array('title' => 128, 'description' => 255, 'keywords' => 255, 'url_rewrite' => 255);
-	protected	$fieldsValidateLang = array('title' => 'isGenericName', 'description' => 'isGenericName', 'keywords' => 'isGenericName', 'url_rewrite' => 'isLinkRewrite');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'meta',
 		'primary' => 'id_meta',
 		'multilang' => true,
 		'multishop' => true,
+		'fields' => array(
+			'page' => array('type' => 'FILL_ME', 'validate' => 'isFileName', 'required' => true, 'size' => 64),
+			'title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'url_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'size' => 255),
+		),
 	);
+
 
 	public function getFields()
 	{

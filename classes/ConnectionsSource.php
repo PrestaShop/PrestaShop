@@ -35,13 +35,24 @@ class ConnectionsSourceCore extends ObjectModel
 
 	// Controler les keywords
 	
-	protected	$fieldsRequired = array('id_connections', 'date_add');
-	protected	$fieldsValidate = array('id_connections' => 'isUnsignedId', 'http_referer' => 'isAbsoluteUrl', 'request_uri' => 'isUrl', 'keywords' => 'isMessage');
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'connections_source',
 		'primary' => 'id_connections_source',
+		'fields' => array(
+			'id_connections' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'http_referer' => array('type' => 'FILL_ME', 'validate' => 'isAbsoluteUrl'),
+			'request_uri' => array('type' => 'FILL_ME', 'validate' => 'isUrl'),
+			'keywords' => array('type' => 'FILL_ME', 'validate' => 'isMessage'),
+			'date_add' => array('type' => 'FILL_ME', 'required' => true),
+		),
 	);
+
 	
 	public function getFields()
 	{

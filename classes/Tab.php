@@ -41,23 +41,30 @@ class TabCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	protected $fieldsRequired = array('class_name');
-	protected $fieldsSize = array('class_name' => 64, 'module' => 64);
-	protected $fieldsValidate = array(
-		'id_parent' => 'isInt',
-		'position' => 'isUnsignedInt',
-		'module' => 'isTabName'
-	);
+	
+	
+	
 
-	protected $fieldsRequiredLang = array('name');
-	protected $fieldsSizeLang = array('name' => 32);
-	protected $fieldsValidateLang = array('name' => 'isGenericName');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'tab',
 		'primary' => 'id_tab',
 		'multilang' => true,
+		'fields' => array(
+			'id_parent' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'position' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'module' => array('type' => 'FILL_ME', 'validate' => 'isTabName', 'size' => 64),
+			'class_name' => array('type' => 'FILL_ME', 'required' => true, 'size' => 64),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	protected static $_getIdFromClassName = null;
 

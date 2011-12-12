@@ -36,14 +36,23 @@ class CountyCore extends ObjectModel
 	public $id_state;
 	public $active;
 
-	protected 	$fieldsRequired = array('name');
-	protected 	$fieldsSize = array('name' => 64);
-	protected 	$fieldsValidate = array('name' => 'isGenericName', 'id_state' => 'isUnsignedId', 'active' => 'isBool');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'county',
 		'primary' => 'id_county',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	private static $_cache_get_counties = array();
 	private static $_cache_county_zipcode = array();

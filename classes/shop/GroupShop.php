@@ -37,19 +37,24 @@ class GroupShopCore extends ObjectModel
 	public $share_order;
 	public $deleted;
 
-	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array(
- 					'active' => 'isBool',
- 					'share_customer' => 'isBool',
- 					'share_order' => 'isBool',
- 					'share_stock' => 'isBool',
- 					'name' => 'isGenericName',
- 				);
+	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'group_shop',
 		'primary' => 'id_group_shop',
+		'fields' => array(
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'share_customer' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'share_order' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'share_stock' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 64),
+		),
 	);
+
 
 	private	static $assoTables = array(
 		'attribute_group' => array('type' => 'group_shop'),

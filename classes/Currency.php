@@ -59,16 +59,31 @@ class CurrencyCore extends ObjectModel
 	/** @var int bool active */
 	public $active;
 
- 	protected $fieldsRequired = array('name', 'iso_code', 'sign', 'conversion_rate', 'format', 'decimals');
- 	protected $fieldsSize = array('name' => 32, 'iso_code' => 3, 'iso_code_num' => 3, 'sign' => 8);
- 	protected $fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'iso_code_num' => 'isNumericIsoCode', 'blank' => 'isInt', 'sign' => 'isGenericName',
-		'format' => 'isUnsignedId', 'decimals' => 'isBool', 'conversion_rate' => 'isFloat', 'deleted' => 'isBool', 'active' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'currency',
 		'primary' => 'id_currency',
 		'multilang' => true,
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+			'iso_code_num' => array('type' => 'FILL_ME', 'validate' => 'isNumericIsoCode', 'size' => 3),
+			'blank' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'sign' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
+			'format' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'decimals' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'deleted' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	/** @var array Currency cache */
 	static protected $currencies = array();

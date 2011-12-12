@@ -59,34 +59,29 @@ class WarehouseCore extends ObjectModel
 	 */
 	public $management_type;
 
-	protected $fieldsRequired = array(
-		'id_address',
-		'reference',
-		'name',
-		'id_employee',
-		'management_type',
-		'id_currency'
-	);
+	
 
-	protected $fieldsSize = array(
-		'stock_management' => 32,
-		'reference' => 45,
-		'name' => 45
-	);
+	
 
-	protected $fieldsValidate = array(
-		'id_address' => 'isUnsignedId',
-		'reference' => 'isString',
-		'name' => 'isName',
-		'id_employee' => 'isUnsignedId',
-		'management_type' => 'isStockManagement', /* @see Validate::isStockManagement() */
-		'id_currency' => 'isUnsignedId'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'warehouse',
 		'primary' => 'id_warehouse',
+		'fields' => array(
+			'id_address' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => array('type' => 'FILL_ME', 'validate' => 'isString', 'required' => true, 'size' => 45),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 45),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'management_type' => array('type' => 'FILL_ME', 'validate' => 'isStockManagement', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'stock_management' => array('type' => 'FILL_ME', 'size' => 32),
+		),
 	);
+
 
 	public function getFields()
 	{

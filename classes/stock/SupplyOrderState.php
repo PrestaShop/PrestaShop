@@ -65,24 +65,30 @@ class SupplyOrderStateCore extends ObjectModel
 	 */
 	public $color;
 
-	protected $fieldsValidate = array(
-		'delivery_note' => 'isBool',
-		'editable' => 'isBool',
-		'receipt_state' => 'isBool',
-		'pending_receipt' => 'isBool',
-		'enclosed' => 'isBool',
-		'color' => 'isColor'
-	);
+	
 
-	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 128);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName');
+	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'supply_order_state',
 		'primary' => 'id_supply_order_state',
 		'multilang' => true,
+		'fields' => array(
+			'delivery_note' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'editable' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'receipt_state' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'pending_receipt' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'enclosed' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'color' => array('type' => 'FILL_ME', 'validate' => 'isColor'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+		),
 	);
+
 
 	/**
 	 * @see ObjectModel::getFields()

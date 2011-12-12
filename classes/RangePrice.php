@@ -31,13 +31,22 @@ class RangePriceCore extends ObjectModel
 	public 		$delimiter1;
 	public 		$delimiter2;
 	
- 	protected 	$fieldsRequired = array('id_carrier', 'delimiter1', 'delimiter2');
- 	protected 	$fieldsValidate = array('id_carrier' => 'isInt', 'delimiter1' => 'isUnsignedFloat', 'delimiter2' => 'isUnsignedFloat');
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'range_price',
 		'primary' => 'id_range_price',
+		'fields' => array(
+			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'delimiter1' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedFloat', 'required' => true),
+			'delimiter2' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedFloat', 'required' => true),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 			'objectsNodeName' => 'price_ranges',

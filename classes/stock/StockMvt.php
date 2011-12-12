@@ -122,37 +122,34 @@ class StockMvtCore extends ObjectModel
 	 */
 	public $quantity;
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'stock_mvt',
 		'primary' => 'id_stock_mvt',
+		'fields' => array(
+			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'employee_firstname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'employee_lastname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'id_stock' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'physical_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'id_stock_mvt_reason' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_supply_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'sign' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'last_wa' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'current_wa' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'referer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+		),
 	);
 
- 	protected $fieldsRequired = array(
- 		'date_add',
- 		'id_employee',
- 		'id_stock',
- 		'physical_quantity',
- 		'id_stock_mvt_reason',
- 		'sign',
- 		'price_te'
- 	);
 
- 	protected $fieldsValidate = array(
- 		'date_add' => 'isDate',
- 		'id_employee' => 'isUnsignedId',
- 		'employee_firstname' => 'isName',
- 		'employee_lastname' => 'isName',
- 		'id_stock' => 'isUnsignedId',
- 		'physical_quantity' => 'isUnsignedInt',
- 	 	'id_stock_mvt_reason' => 'isUnsignedId',
- 		'id_order' => 'isUnsignedId',
- 		'id_supply_order' => 'isUnsignedId',
- 		'sign' => 'isInt',
- 		'last_wa' => 'isPrice',
- 		'current_wa' => 'isPrice',
- 		'price_te' => 'isPrice',
- 		'referer' => 'isUnsignedId'
- 	);
+ 	
+
+ 	
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movements',

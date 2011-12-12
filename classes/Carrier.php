@@ -110,22 +110,39 @@ class CarrierCore extends ObjectModel
 	/** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
 	public $grade;
 
-	protected $fieldsRequired = array('name', 'active');
-	protected $fieldsSize = array('name' => 64, 'grade' => 1);
-	protected $fieldsValidate = array('id_tax_rules_group' => 'isInt', 'name' => 'isCarrierName', 'active' => 'isBool',
-		'is_free' => 'isBool', 'url' => 'isAbsoluteUrl', 'shipping_handling' => 'isBool', 'range_behavior' => 'isBool',
-		'shipping_method' => 'isUnsignedInt', 'max_width' => 'isUnsignedInt', 'max_height' => 'isUnsignedInt',
-		'max_deep' => 'isUnsignedInt', 'max_weight' => 'isUnsignedInt', 'grade' => 'isUnsignedInt');
-	protected $fieldsRequiredLang = array('delay');
-	protected $fieldsSizeLang = array('delay' => 128);
-	protected $fieldsValidateLang = array('delay' => 'isGenericName');
+	
+	
+	
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'carrier',
 		'primary' => 'id_carrier',
 		'multilang' => true,
 		'multishop' => true,
+		'fields' => array(
+			'id_tax_rules_group' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'is_free' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'url' => array('type' => 'FILL_ME', 'validate' => 'isAbsoluteUrl'),
+			'shipping_handling' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'range_behavior' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'shipping_method' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'max_width' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'max_height' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'max_deep' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'max_weight' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'grade' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 1),
+			'delay' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+		),
 	);
+
 
 	protected static $price_by_weight = array();
 	protected static $price_by_weight2 = array();

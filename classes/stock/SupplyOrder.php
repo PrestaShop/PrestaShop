@@ -120,48 +120,42 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	public $is_template = 0;
 
-	protected $fieldsRequired = array(
-		'id_supplier',
-		'supplier_name',
-		'id_lang',
-		'id_warehouse',
-		'id_supply_order_state',
-		'id_currency',
-		'id_ref_currency',
-		'reference',
-		'discount_rate',
-		'date_delivery_expected'
-	);
+	
 
-	protected $fieldsValidate = array(
-		'id_supplier' => 'isUnsignedId',
-		'supplier_name' => 'isCatalogName',
-		'id_lang' => 'isUnsignedId',
-		'id_warehouse' => 'isUnsignedId',
-		'id_supply_order_state' => 'isUnsignedId',
-		'id_currency' => 'isUnsignedId',
-		'id_ref_currency' => 'isUnsignedId',
-		'reference' => 'isGenericName',
-		'date_add' => 'isDate',
-		'date_upd' => 'isDate',
-		'date_delivery_expected' => 'isDate',
-		'total_te' => 'isPrice',
-		'total_with_discount_te' => 'isPrice',
-		'total_ti' => 'isPrice',
-		'total_tax' => 'isPrice',
-		'discount_rate' => 'isFloat',
-		'discount_value_te' => 'isPrice',
-		'is_template' => 'isBool',
-	);
+	
 
 	/**
 	 * @var array Contains object definition
 	 * @see ObjectModel::definition
 	 */
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
-    	'table' => 'supply_order',
-    	'primary' => 'id_supply_order',
+		'table' => 'supply_order',
+		'primary' => 'id_supply_order',
+		'fields' => array(
+			'id_supplier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'supplier_name' => array('type' => 'FILL_ME', 'validate' => 'isCatalogName', 'required' => true),
+			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_supply_order_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_ref_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
+			'date_upd' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
+			'date_delivery_expected' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
+			'total_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_with_discount_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_ti' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'total_tax' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'discount_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'discount_value_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'is_template' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	public function getFields()
 	{

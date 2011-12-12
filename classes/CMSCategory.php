@@ -70,19 +70,32 @@ class CMSCategoryCore extends ObjectModel
 
 	protected static $_links = array();
 
-	protected 	$fieldsRequired = array('id_parent', 'active');
- 	protected 	$fieldsSize = array('id_parent' => 10, 'active' => 1);
- 	protected 	$fieldsValidate = array('active' => 'isBool', 'id_parent' => 'isUnsignedInt');
-	protected 	$fieldsRequiredLang = array('name', 'link_rewrite');
- 	protected 	$fieldsSizeLang = array('name' => 64, 'link_rewrite' => 64, 'meta_title' => 128, 'meta_description' => 255, 'meta_keywords' => 255);
- 	protected 	$fieldsValidateLang = array('name' => 'isCatalogName', 'link_rewrite' => 'isLinkRewrite', 'description' => 'isCleanHtml',
-											'meta_title' => 'isGenericName', 'meta_description' => 'isGenericName', 'meta_keywords' => 'isGenericName');
+	
+ 	
+ 	
+	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'cms_category',
 		'primary' => 'id_cms_category',
 		'multilang' => true,
+		'fields' => array(
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true, 'size' => 1),
+			'id_parent' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true, 'size' => 10),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'link_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+		),
 	);
+
 
 	public function __construct($id_cms_category = NULL, $id_lang = NULL)
 	{

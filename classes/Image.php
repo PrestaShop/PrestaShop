@@ -59,17 +59,27 @@ class ImageCore extends ObjectModel
 	/** @var int access rights of created folders (octal) */
 	protected static $access_rights = 0775;
 
-	protected $fieldsRequired = array('id_product');
-	protected $fieldsValidate = array('id_product' => 'isUnsignedId', 'position' => 'isUnsignedInt', 'cover' => 'isBool');
-	protected $fieldsRequiredLang = array('legend');
-	protected $fieldsSizeLang = array('legend' => 128);
-	protected $fieldsValidateLang = array('legend' => 'isGenericName');
+	
+	
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'image',
 		'primary' => 'id_image',
 		'multilang' => true,
+		'fields' => array(
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'position' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'cover' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'legend' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+		),
 	);
+
 
 	protected static $_cacheGetSize = array();
 

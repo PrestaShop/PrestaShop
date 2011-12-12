@@ -102,22 +102,40 @@ class AddressCore extends ObjectModel
 	protected static $_idZones = array();
 	protected static $_idCountries = array();
 
-	protected $fieldsRequired = array('id_country', 'alias', 'lastname', 'firstname', 'address1', 'city');
-	protected $fieldsSize = array('alias' => 32, 'company' => 32, 'lastname' => 32, 'firstname' => 32,
-									'address1' => 128, 'address2' => 128, 'postcode' => 12, 'city' => 64,
-									'other' => 300, 'phone' => 16, 'phone_mobile' => 16, 'dni' => 16);
-	protected $fieldsValidate = array('id_customer' => 'isNullOrUnsignedId', 'id_manufacturer' => 'isNullOrUnsignedId',
-										'id_supplier' => 'isNullOrUnsignedId', 'id_warehouse' => 'isNullOrUnsignedId',
-										'id_country' => 'isUnsignedId', 'id_state' => 'isNullOrUnsignedId',
-										'alias' => 'isGenericName', 'company' => 'isGenericName', 'lastname' => 'isName','vat_number' => 'isGenericName',
-										'firstname' => 'isName', 'address1' => 'isAddress', 'address2' => 'isAddress', 'postcode'=>'isPostCode',
-										'city' => 'isCityName', 'other' => 'isMessage',
-										'phone' => 'isPhoneNumber', 'phone_mobile' => 'isPhoneNumber', 'deleted' => 'isBool', 'dni' => 'isDniLite');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'address',
 		'primary' => 'id_address',
+		'fields' => array(
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
+			'id_manufacturer' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
+			'id_supplier' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
+			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
+			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
+			'alias' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'company' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 32),
+			'lastname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'vat_number' => array('type' => 'FILL_ME', 'validate' => 'isGenericName'),
+			'firstname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'address1' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'required' => true, 'size' => 128),
+			'address2' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'size' => 128),
+			'postcode' => array('type' => 'FILL_ME', 'validate' => 'isPostCode', 'size' => 12),
+			'city' => array('type' => 'FILL_ME', 'validate' => 'isCityName', 'required' => true, 'size' => 64),
+			'other' => array('type' => 'FILL_ME', 'validate' => 'isMessage', 'size' => 300),
+			'phone' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
+			'phone_mobile' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
+			'deleted' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'dni' => array('type' => 'FILL_ME', 'validate' => 'isDniLite', 'size' => 16),
+		),
 	);
+
 
 	protected $_includeVars = array('addressType' => 'table');
 	protected $_includeContainer = false;

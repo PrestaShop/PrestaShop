@@ -65,22 +65,29 @@ class SupplierCore extends ObjectModel
 	 * */
 	public $id_address;
 
- 	protected $fieldsRequired = array('name');
- 	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('name' => 'isCatalogName', 'id_address' => 'isUnsignedId');
-	protected $fieldsSizeLang = array('meta_title' => 128, 'meta_description' => 255, 'meta_keywords' => 255);
-	protected $fieldsValidateLang = array(
-		'description' => 'isGenericName',
-		'meta_title' => 'isGenericName',
-		'meta_description' => 'isGenericName',
-		'meta_keywords' => 'isGenericName'
-	);
+ 	
+ 	
+ 	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'supplier',
 		'primary' => 'id_supplier',
 		'multilang' => true,
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'id_address' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
+			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

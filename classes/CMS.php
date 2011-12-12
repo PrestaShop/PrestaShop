@@ -37,16 +37,28 @@ class CMSCore extends ObjectModel
 	public $position;
 	public $active;
 
- 	protected $fieldsValidate = array('id_cms_category' => 'isUnsignedInt');
-	protected $fieldsRequiredLang = array('meta_title', 'link_rewrite');
-	protected $fieldsSizeLang = array('meta_description' => 255, 'meta_keywords' => 255, 'meta_title' => 128, 'link_rewrite' => 128, 'content' => 3999999999999);
-	protected $fieldsValidateLang = array('meta_description' => 'isGenericName', 'meta_keywords' => 'isGenericName', 'meta_title' => 'isGenericName', 'link_rewrite' => 'isLinkRewrite', 'content' => 'isString');
+ 	
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'cms',
 		'primary' => 'id_cms',
 		'multilang' => true,
+		'fields' => array(
+			'id_cms_category' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'link_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+			'content' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 3999999999999),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'objectNodeName' => 'content',

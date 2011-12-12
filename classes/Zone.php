@@ -34,14 +34,22 @@ class ZoneCore extends ObjectModel
 	public $active = true;
 	public $eu_zone = false; /* Obsolete; to remove */
 
- 	protected $fieldsRequired = array('name');
- 	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('name' => 'isGenericName', 'active' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'zone',
 		'primary' => 'id_zone',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	protected $webserviceParameters = array();
 

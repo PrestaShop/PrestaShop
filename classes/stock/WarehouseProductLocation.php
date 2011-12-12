@@ -49,19 +49,24 @@ class WarehouseProductLocationCore extends ObjectModel
 	 * */
 	public $location;
 
- 	protected $fieldsRequired = array('id_product', 'id_product_attribute', 'id_warehouse');
- 	protected $fieldsSize = array('location' => 64);
- 	protected $fieldsValidate = array(
- 		'location' => 'isReference',
- 		'id_product' => 'isUnsignedId',
- 		'id_product_attribute' => 'isUnsignedId',
- 		'id_warehouse' => 'isUnsignedId',
- 	);
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'warehouse_product_location',
 		'primary' => 'id_warehouse_product_location',
+		'fields' => array(
+			'location' => array('type' => 'FILL_ME', 'validate' => 'isReference', 'size' => 64),
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

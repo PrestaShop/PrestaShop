@@ -60,26 +60,26 @@ class SupplyOrderHistoryCore extends ObjectModel
 	 */
 	public $date_add;
 
-	protected $fieldsRequired = array(
-		'id_supply_order',
-		'id_employee',
-		'id_state',
-		'date_add'
-	);
+	
 
-	protected $fieldsValidate = array(
-		'id_supply_order' => 'isUnsignedId',
-		'id_employee' => 'isUnsignedId',
-	 	'employee_firstname' => 'isName',
- 		'employee_lastname' => 'isName',
-		'id_state' => 'isUnsignedId',
-		'date_add' => 'isDate'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'supply_order_history',
 		'primary' => 'id_supply_order_history',
+		'fields' => array(
+			'id_supply_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'employee_firstname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'employee_lastname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

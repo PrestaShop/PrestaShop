@@ -42,14 +42,23 @@ class OrderCartRuleCore extends ObjectModel
 	/** @var integer */
 	public $value;
 
-	protected	$fieldsRequired = array ('id_order', 'name', 'value');
-	protected	$fieldsValidate = array ('id_order' => 'isUnsignedId', 'name' => 'isGenericName', 'value' => 'isInt');
+	
+	
 
 	/* MySQL does not allow 'order detail' for a table name */
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_cart_rule',
 		'primary' => 'id_order_cart_rule',
+		'fields' => array(
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'value' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

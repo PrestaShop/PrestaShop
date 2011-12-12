@@ -44,19 +44,28 @@ class GroupCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	protected $fieldsRequired = array('price_display_method');
-	protected $fieldsSize = array();
-	protected $fieldsValidate = array('reduction' => 'isFloat', 'price_display_method' => 'isPriceDisplayMethod');
+	
+	
+	
 
-	protected	$fieldsRequiredLang = array('name');
-	protected	$fieldsSizeLang = array('name' => 32);
-	protected	$fieldsValidateLang = array('name' => 'isGenericName');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'group',
 		'primary' => 'id_group',
 		'multilang' => true,
+		'fields' => array(
+			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'price_display_method' => array('type' => 'FILL_ME', 'validate' => 'isPriceDisplayMethod', 'required' => true),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	protected static $cache_reduction = array();
 	protected static $group_price_display_method = array();
