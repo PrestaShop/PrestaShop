@@ -393,6 +393,13 @@ class OrderOpcControllerCore extends ParentOrderController
 		$address_invoice = ($this->context->cart->id_address_delivery == $this->context->cart->id_address_invoice ? $address_delivery : new Address($this->context->cart->id_address_invoice));
 		if (!$this->context->cart->id_address_delivery OR !$this->context->cart->id_address_invoice OR !Validate::isLoadedObject($address_delivery) OR !Validate::isLoadedObject($address_invoice) OR $address_invoice->deleted OR $address_delivery->deleted)
 			return '<p class="warning">'.Tools::displayError('Error: please choose an address').'</p>';
+		if (count($this->context->cart->getDeliveryOptionList()) == 0)
+		{
+			if ($this->context->cart->isMultiAddressDelivery())
+				return '<p class="warning">'.Tools::displayError('Error: There are no carriers available that deliver to some of your addresses').'</p>';
+			else
+				return '<p class="warning">'.Tools::displayError('Error: There are no carriers available that deliver to this address').'</p>';
+		}
 		if (!$this->context->cart->getDeliveryOption() AND !$this->context->cart->isVirtualCart())
 			return '<p class="warning">'.Tools::displayError('Error: please choose a carrier').'</p>';
 		if (!$this->context->cart->id_currency)

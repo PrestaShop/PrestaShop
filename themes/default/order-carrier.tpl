@@ -180,8 +180,17 @@
 				</div>
 			{/foreach}
 			</div>
+			{foreachelse}
+			<p class="warning" id="noCarrierWarning">
+				{if $cart->isMultiAddressDelivery()}
+					{l s='There are no carriers available that deliver to some of your addresses.'}
+				{else}
+					{l s='There are no carriers available that deliver to this address.'}
+				{/if}
+			</p>
 		{/foreach}
 	{/if}
+	
 	</div>
 	<div style="display: none;" id="extra_carrier"></div>
 	
@@ -231,7 +240,9 @@
 		{else}
 				<a href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" title="{l s='Previous'}" class="button">&laquo; {l s='Previous'}</a>
 		{/if}
-		<input type="submit" name="processCarrier" value="{l s='Next'} &raquo;" class="exclusive" />
+		{if $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
+			<input type="submit" name="processCarrier" value="{l s='Next'} &raquo;" class="exclusive" />
+		{/if}
 	</p>
 </form>
 {else}
