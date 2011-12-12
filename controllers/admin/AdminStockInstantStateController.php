@@ -115,9 +115,6 @@ class AdminStockInstantStateControllerCore extends AdminController
 		// query
 		$this->_select = '
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-			SUM(a.physical_quantity) as physical_quantity,
-			SUM(a.usable_quantity) as usable_quantity,
-			SUM(a.price_te * a.physical_quantity) as valuation,
 			w.id_currency';
 
 		$this->_group = 'GROUP BY a.id_product, a.id_product_attribute';
@@ -125,7 +122,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
 		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 			a.id_product = pl.id_product
-			AND pl.id_lang = '.(int)$this->context->language->id.$this->context->shop->addSqlRestrictionOnLang('pl').'
+			AND pl.id_lang = '.(int)$this->context->language->id.'
 		)';
 		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
 		$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
@@ -192,6 +189,18 @@ class AdminStockInstantStateControllerCore extends AdminController
 			// gets stock manager
 			$manager = StockManagerFactory::getManager();
 
+			// gets quantities and valuation
+			$query = new DbQuery();
+			$query->select('SUM(physical_quantity) as physical_quantity');
+			$query->select('SUM(usable_quantity) as usable_quantity');
+			$query->select('SUM(price_te * physical_quantity) as valuation');
+			$query->from('stock');
+			$query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
+			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+			$item['physical_quantity'] = $res['physical_quantity'];
+			$item['usable_quantity'] = $res['usable_quantity'];
+
 			// gets real_quantity depending on the warehouse
 			$item['real_quantity'] = $manager->getProductRealQuantities($item['id_product'],
 																		$item['id_product_attribute'],
@@ -201,6 +210,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 			// removes the valuation if the filter corresponds to 'all warehouses'
 			if ($this->getCurrentCoverageWarehouse() == -1)
 				$item['valuation'] = 'N/A';
+			else
+				$item['valuation'] = $res['valuation'];
 		}
 	}
 
