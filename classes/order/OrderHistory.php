@@ -93,10 +93,14 @@ class OrderHistoryCore extends ObjectModel
 					}
 					/* If becoming unlogable => removing sale */
 					elseif (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
+					{
 						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
+						// @since 1.5.0
+						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity'], $order->id_shop);
+					}
 
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))
-						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity']);
+						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity'], $order->id_shop);
 					// If order is shipped for the first time and
 					// if we use advanced stock management system, decrement stock preperly.
 					// The product is removed from the physical stock. $id_warehouse is needed
@@ -134,6 +138,7 @@ class OrderHistoryCore extends ObjectModel
 								true
 							);
 						}
+						StockAvailable::synchronize($product['id_product']);
 					}
 				}
 
