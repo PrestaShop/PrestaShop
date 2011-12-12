@@ -68,11 +68,15 @@
 			color:#666
 		}
 		
-		#account-creation_form span.form_info,
-		#account-creation_form span.inline-infos {
+		#account-creation_form span.form_info {
 			display:block;
 			margin:5px 0 0 265px;
 			color:#666
+		}
+		#account-creation_form p.inline-infos {
+			margin:0 0 0 100px !important;
+			font-size:12px;
+			color:#666px;
 		}
 	
 	#center_column #account-creation_form p.cart_navigation {margin:20px 0}
