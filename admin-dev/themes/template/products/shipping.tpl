@@ -55,6 +55,14 @@
 	</td>
 	</tr>
 	<tr>
+		<td class="col-left"><label>{l s='Additional shipping cost:'}</label></td>
+		<td style="padding-bottom:5px;">{$currency->prefix}<input type="text" name="additional_shipping_cost"
+				value="{$product->additional_shipping_cost}" />{$currency->suffix}
+			{if $country_display_tax_label}{l s='tax excl.'}{/if}
+			<p>{l s='Carrier tax will be applied.'}</p>
+		</td>
+	</tr>
+	<tr>
 		<td class="col-left">
 			<label>Carriers:</label>
 		</td>

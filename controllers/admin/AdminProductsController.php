@@ -39,8 +39,8 @@ class AdminProductsControllerCore extends AdminController
 	protected $available_tabs = array(
 		'Informations',
 		'Prices',
-		'Images',
 		'Associations',
+		'Images',
 		'Shipping',
 		'Combinations',
 		'Features',
@@ -56,9 +56,9 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $tabs_toolbar_save_buttons = array(
 		'Informations' => true,
-		'Images' => false,
 		'Prices' => false,
 		'Associations' => true,
+		'Images' => false,
 		'Shipping' => true,
 		'Combinations' => false,
 		'Features' => true,
@@ -2364,6 +2364,30 @@ class AdminProductsControllerCore extends AdminController
 			'search' => $this->l('Search a category')
 		);
 
+		// Multishop block
+		$data->assign('feature_shop_active', Shop::isFeatureActive());
+		$helper = new Helper();
+		if ($this->object && $this->object->id)
+			$helper->id = $this->object->id;
+		else
+			$helper->id = null;
+		$helper->table = $this->table;
+		$helper->identifier = $this->identifier;
+
+		$data->assign('displayAssoShop', $helper->renderAssoShop());
+
+		// Accessories block
+		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
+
+		if ($postAccessories = Tools::getValue('inputAccessories'))
+		{
+			$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
+			foreach ($postAccessoriesTab as $accessory_id)
+				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
+					$accessories[] = $accessory;
+		}
+		$data->assign('accessories', $accessories);
+
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
@@ -2727,9 +2751,21 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		$this->display = 'edit';
-		$has_attribute = $product->hasAttributes();
+
 		$cover = Product::getCover($product->id);
 		$this->_applyTaxToEcotax($product);
+
+		// Accessories block
+		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
+
+		if ($postAccessories = Tools::getValue('inputAccessories'))
+		{
+			$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
+			foreach ($postAccessoriesTab as $accessory_id)
+				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
+					$accessories[] = $accessory;
+		}
+		$data->assign('accessories', $accessories);
 
 		/*
 		* Form for adding a virtual product like software, mp3, etc...
@@ -2739,19 +2775,7 @@ class AdminProductsControllerCore extends AdminController
 			$product_download = new ProductDownload($id_product_download);
 		$product->{'productDownload'} = $product_download;
 
-
 		$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
-		$data->assign('feature_shop_active', Shop::isFeatureActive());
-		
-		$helper = new Helper();
-		if ($this->object && $this->object->id)
-			$helper->id = $this->object->id;
-		else
-			$helper->id = null;
-		$helper->table = $this->table;
-		$helper->identifier = $this->identifier;
-		
-		$data->assign('displayAssoShop', $helper->renderAssoShop());
 
 		$product_props = array();
 		// global informations
@@ -2850,12 +2874,6 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign('error_product_download', $error);
 		}
 
-		$data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
-		$data->assign('has_attribute', $has_attribute);
-		// Check if product has combination, to display the available date only for the product or for each combination
-		if (Combination::isFeatureActive())
-			$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product->id));
-
 		$images = Image::getImages($this->context->language->id, $product->id);
 
 		foreach($images as $k => $image)
@@ -2864,16 +2882,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('images', $images);
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
-		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
-
-		if ($postAccessories = Tools::getValue('inputAccessories'))
-		{
-			$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
-			foreach ($postAccessoriesTab as $accessory_id)
-				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
-					$accessories[] = $accessory;
-		}
-		$data->assign('accessories', $accessories);
 		$product->tags = Tag::getProductTags($product->id);
 
 		// TinyMCE
@@ -2898,7 +2906,9 @@ class AdminProductsControllerCore extends AdminController
 						  'product' => $obj,
 						  'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
 						  'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
-						  'carrier_list' => $this->getCarrierList()
+						  'carrier_list' => $this->getCarrierList(),
+						  'currency' => $this->context->currency,
+						  'country_display_tax_label' =>  $this->context->country->display_tax_label
 					  ));
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
@@ -3195,7 +3205,7 @@ class AdminProductsControllerCore extends AdminController
 		return $helper->generateList($comb_array, $this->fieldsDisplay);
 	}
 
-	public function initFormQuantities($obj)
+	public function initFormQuantities($obj, $languages)
 	{
 		$data = $this->context->smarty->createData();
 
@@ -3247,6 +3257,12 @@ class AdminProductsControllerCore extends AdminController
 					$show_quantities = false;
 			}
 
+			$data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
+			$data->assign('has_attribute', $obj->hasAttributes());
+			// Check if product has combination, to display the available date only for the product or for each combination
+			if (Combination::isFeatureActive())
+				$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
+
 			$data->assign(array(
 				'attributes' => $attributes,
 				'available_quantity' => $available_quantity,
@@ -3255,7 +3271,8 @@ class AdminProductsControllerCore extends AdminController
 				'product' => $obj,
 				'show_quantities' => $show_quantities,
 				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
-				'token' => $this->token
+				'token' => $this->token,
+				'languages' => $languages
 			));
 		}
 		else
