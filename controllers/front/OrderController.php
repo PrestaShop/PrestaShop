@@ -185,6 +185,10 @@ class OrderControllerCore extends ParentOrderController
 
 		if ($this->step >= 2 && (!$this->context->cart->id_address_delivery || !$this->context->cart->id_address_invoice))
 			Tools::redirect('index.php?controller=order&step=1');
+		
+		if ($this->step > 2 && !$isVirtualCart && count($this->context->cart->getDeliveryOptionList()) == 0)
+			Tools::redirect('index.php?controller=order&step=2');
+		
 		$delivery = new Address((int)$this->context->cart->id_address_delivery);
 		$invoice = new Address((int)$this->context->cart->id_address_invoice);
 

@@ -2280,6 +2280,9 @@ class AdminControllerCore extends Controller
 		$assos = $assos_data[0];
 		$type = $assos_data[1];
 
+		if (!$type)
+			return;
+		
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 
 		foreach ($assos as $asso)
