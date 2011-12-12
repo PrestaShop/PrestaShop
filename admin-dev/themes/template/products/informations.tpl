@@ -132,7 +132,7 @@
 			</script>
 		<label for="available_for_order" class="t">{l s='available for order'}</label>
 		<br class="clear" />
-		<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} />
+		<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
 		<label for="show_price" class="t">{l s='show price'}</label>
 		<br class="clear" />
 		<input style="float: left;" type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
