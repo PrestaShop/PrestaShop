@@ -156,11 +156,11 @@ class AdminGroupsControllerCore extends AdminController
 						'query' => array(
 							array(
 								'id_method' => PS_TAX_EXC,
-								'name' => $this->l('Tax excluded'),
-								array(
-									'id_method' => PS_TAX_INC,
-									'name' => $this->l('Tax included')
-								)
+								'name' => $this->l('Tax excluded')
+							),
+							array(
+								'id_method' => PS_TAX_INC,
+								'name' => $this->l('Tax included')
 							)
 						),
 						'id' => 'id_method',
