@@ -1365,7 +1365,8 @@ class OrderCore extends ObjectModel
 		else
 			$this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false), 2);
 
-		return $order_payment->add() && $this->update();
+		// We put autodate parameter of add method to true if date_add field is null
+		return $order_payment->add(is_null($order_payment->date_add)) && $this->update();
 	}
 
 	/**
