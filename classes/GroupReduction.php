@@ -31,13 +31,22 @@ class GroupReductionCore extends ObjectModel
 	public	$id_category;
 	public	$reduction;
 
- 	protected $fieldsRequired = array('id_group', 'id_category', 'reduction');
- 	protected $fieldsValidate = array('id_group' => 'isUnsignedId', 'id_category' => 'isUnsignedId', 'reduction' => 'isPrice');
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'group_reduction',
 		'primary' => 'id_group_reduction',
+		'fields' => array(
+			'id_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_category' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+		),
 	);
+
 
 	protected static $reduction_cache = array();
 

@@ -39,13 +39,28 @@ class SpecificPriceRuleCore extends ObjectModel
 	public	$from;
 	public	$to;
 
- 	protected 	$fieldsRequired = array('id_shop', 'id_currency', 'id_country', 'id_group', 'from_quantity', 'reduction', 'reduction_type', 'from', 'to');
- 	protected 	$fieldsValidate = array('id_shop' => 'isUnsignedId', 'id_country' => 'isUnsignedId', 'id_group' => 'isUnsignedId', 'from_quantity' => 'isUnsignedInt', 'reduction' => 'isPrice', 'reduction_type' => 'isReductionType', 'from' => 'isDateFormat', 'to' => 'isDateFormat');
+ 	
+ 	
 	
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'specific_price_rule',
 		'primary' => 'id_specific_price_rule',
+		'fields' => array(
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'from_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'reduction_type' => array('type' => 'FILL_ME', 'validate' => 'isReductionType', 'required' => true),
+			'from' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
+			'to' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

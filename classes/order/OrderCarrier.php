@@ -55,21 +55,27 @@ class OrderCarrierCore extends ObjectModel
 	/** @var string Object creation date */
 	public $date_add;
 
-	protected	$fieldsRequired = array ('id_order', 'id_carrier');
-	protected	$fieldsValidate = array (
-		'id_order_carrier' => 'isUnsignedId',
-		'id_order' => 'isUnsignedId',
-		'id_carrier' => 'isUnsignedId',
-		'id_order_invoice' => 'isUnsignedId',
-		'weight' => 'isFloat',
-		'shipping_cost_tax_excl' => 'isFloat',
-		'shipping_cost_tax_incl' => 'isFloat',
-		'tracking_number' => 'isAnything');
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_carrier',
 		'primary' => 'id_order_carrier',
+		'fields' => array(
+			'id_order_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_invoice' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'weight' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'shipping_cost_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'shipping_cost_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'tracking_number' => array('type' => 'FILL_ME', 'validate' => 'isAnything'),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

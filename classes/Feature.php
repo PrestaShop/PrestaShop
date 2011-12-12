@@ -31,17 +31,22 @@ class FeatureCore extends ObjectModel
 	public $name;
 	public $position;
 
-	protected $fieldsRequiredLang = array('name');
-	protected $fieldsSizeLang = array('name' => 128);
-	protected $fieldsValidateLang = array(
-		'name' => 'isGenericName',
-		'position' => 'isInt'
-	);
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'feature',
 		'primary' => 'id_feature',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'position' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isInt'),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_features',

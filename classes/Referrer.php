@@ -46,37 +46,35 @@ class ReferrerCore extends ObjectModel
 
 	public $date_add;
 
-	protected $fieldsRequired = array('name');
-	protected $fieldsSize = array(
-		'name' => 64,
-		'http_referer_regexp' => 64,
-		'request_uri_regexp' => 64,
-		'http_referer_like' => 64,
-		'request_uri_like' => 64,
-		'passwd' => 32
-	);
+	
+	
 
-	protected $fieldsValidate = array(
-		'id_shop' => 'isUnsignedInt',
-		'name' => 'isGenericName',
-		'passwd' => 'isPasswd',
-		'http_referer_regexp' => 'isCleanHtml',
-		'request_uri_regexp' => 'isCleanHtml',
-		'http_referer_like' => 'isCleanHtml',
-		'request_uri_like' => 'isCleanHtml',
-		'http_referer_regexp_not' => 'isCleanHtml',
-		'request_uri_regexp_not' => 'isCleanHtml',
-		'http_referer_like_not' => 'isCleanHtml',
-		'request_uri_like_not' => 'isCleanHtml',
-		'base_fee' => 'isFloat',
-		'percent_fee' => 'isFloat',
-		'click_fee' => 'isFloat'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'referrer',
 		'primary' => 'id_referrer',
+		'fields' => array(
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'passwd' => array('type' => 'FILL_ME', 'validate' => 'isPasswd', 'size' => 32),
+			'http_referer_regexp' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
+			'request_uri_regexp' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
+			'http_referer_like' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
+			'request_uri_like' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
+			'http_referer_regexp_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
+			'request_uri_regexp_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
+			'http_referer_like_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
+			'request_uri_like_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
+			'base_fee' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'percent_fee' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'click_fee' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+		),
 	);
+
 
 	protected static $_join = '(r.http_referer_like IS NULL OR r.http_referer_like = \'\' OR cs.http_referer LIKE r.http_referer_like)
 			AND (r.request_uri_like IS NULL OR r.request_uri_like = \'\' OR cs.request_uri LIKE r.request_uri_like)

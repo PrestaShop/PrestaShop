@@ -50,16 +50,26 @@ class MessageCore extends ObjectModel
 	/** @var string Object creation date */
 	public 		$date_add;
 	
-	protected	$fieldsRequired = array('message');
-	protected	$fieldsSize = array('message' => 1600);
-	protected	$fieldsValidate = array(
-		'message' => 'isCleanHtml', 'id_cart' => 'isUnsignedId', 'id_order' => 'isUnsignedId',
-		'id_customer' => 'isUnsignedId', 'id_employee' => 'isUnsignedId', 'private' => 'isBool');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'message',
 		'primary' => 'id_message',
+		'fields' => array(
+			'message' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
+			'id_cart' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'private' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	public function getFields()
 	{

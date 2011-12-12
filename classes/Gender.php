@@ -34,18 +34,26 @@ class GenderCore extends ObjectModel
 	public $name;
 	public $type;
 
-	protected $fieldsRequired = array('type');
-	protected $fieldsSize = array();
-	protected $fieldsValidate = array();
-	protected $fieldsRequiredLang = array('name');
-	protected $fieldsSizeLang = array('name' => 20);
-	protected $fieldsValidateLang = array('name' => 'isString');
+	
+	
+	
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'gender',
 		'primary' => 'id_gender',
 		'multilang' => true,
+		'fields' => array(
+			'type' => array('type' => 'FILL_ME', 'required' => true),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
+		),
 	);
+
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{

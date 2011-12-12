@@ -43,16 +43,24 @@ class TaxCore extends ObjectModel
 	/** @var string Account Number */
 	public 		$account_number;
 
- 	protected 	$fieldsRequired = array('rate');
- 	protected 	$fieldsValidate = array('rate' => 'isFloat');
- 	protected 	$fieldsRequiredLang = array('name');
- 	protected 	$fieldsSizeLang = array('name' => 32);
- 	protected 	$fieldsValidateLang = array('name' => 'isGenericName');
+ 	
+ 	
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'tax',
 		'primary' => 'id_tax',
+		'fields' => array(
+			'rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	protected static $_product_country_tax = array();
 	protected static $_product_tax_via_rules = array();

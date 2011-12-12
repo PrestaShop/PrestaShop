@@ -65,27 +65,27 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
 	 */
 	public $date_add;
 
-	protected $fieldsRequired = array(
-		'id_supply_order_detail',
-		'id_supply_order_state',
-		'id_employee',
-		'quantity'
-	);
+	
 
-	protected $fieldsValidate = array(
-		'id_supply_order_detail' => 'isUnsignedId',
-		'id_supply_order_state' => 'isUnsignedId',
-		'id_employee' => 'isUnsignedId',
-	 	'employee_firstname' => 'isName',
- 		'employee_lastname' => 'isName',
-		'quantity' => 'isUnsignedInt',
-		'date_add' => 'isDate'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'supply_order_receipt_history',
 		'primary' => 'id_supply_order_receipt_history',
+		'fields' => array(
+			'id_supply_order_detail' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_supply_order_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'employee_firstname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'employee_lastname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
+		),
 	);
+
 
 	public function getFields()
 	{

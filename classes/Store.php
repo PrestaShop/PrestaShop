@@ -78,16 +78,35 @@ class StoreCore extends ObjectModel
 	/** @var boolean Store status */
 	public 		$active = true;
 	
- 	protected 	$fieldsRequired = array('id_country', 'name', 'address1', 'city', 'active');
- 	protected 	$fieldsSize = array('name' => 128, 'address1' => 128, 'address2' => 128, 'postcode' => 12, 'city' => 64, 'latitude' => 12, 'longitude' => 12, 'hours' => 254, 'phone' => 16, 'fax' => 16, 'email' => 128, 'note' => 65000);
- 	protected 	$fieldsValidate = array('id_country' => 'isUnsignedId', 'id_state' => 'isNullOrUnsignedId', 'name' => 'isGenericName', 'address1' => 'isAddress', 'address2' => 'isAddress',
-	'city' => 'isCityName', 'latitude' => 'isCoordinate', 'longitude' => 'isCoordinate', 'hours' => 'isSerializedArray', 'phone' => 'isPhoneNumber', 'fax' => 'isPhoneNumber',
-	'note' => 'isCleanHtml', 'email' => 'isEmail', 'active' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'store',
 		'primary' => 'id_store',
+		'fields' => array(
+			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'address1' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'required' => true, 'size' => 128),
+			'address2' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'size' => 128),
+			'city' => array('type' => 'FILL_ME', 'validate' => 'isCityName', 'required' => true, 'size' => 64),
+			'latitude' => array('type' => 'FILL_ME', 'validate' => 'isCoordinate', 'size' => 12),
+			'longitude' => array('type' => 'FILL_ME', 'validate' => 'isCoordinate', 'size' => 12),
+			'hours' => array('type' => 'FILL_ME', 'validate' => 'isSerializedArray', 'size' => 254),
+			'phone' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
+			'fax' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
+			'note' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 65000),
+			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'size' => 128),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'postcode' => array('type' => 'FILL_ME', 'size' => 12),
+		),
 	);
+
 	
 	protected	$webserviceParameters = array(
 		'fields' => array(

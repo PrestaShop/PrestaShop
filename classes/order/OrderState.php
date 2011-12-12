@@ -56,23 +56,30 @@ class OrderStateCore extends ObjectModel
 	/** @var boolean Shipped */
 	public $shipped;
 
- 	protected $fieldsValidate = array(
- 		'send_email' => 'isBool',
- 		'invoice' => 'isBool',
- 		'color' => 'isColor',
- 		'logable' => 'isBool',
- 		'shipped' => 'isBool'
- 	);
+ 	
 
-	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 64, 'template' => 64);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'template' => 'isTplName');
+	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_state',
 		'primary' => 'id_order_state',
 		'multilang' => true,
+		'fields' => array(
+			'send_email' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'invoice' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'color' => array('type' => 'FILL_ME', 'validate' => 'isColor'),
+			'logable' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'shipped' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'template' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 		'fields' => array(

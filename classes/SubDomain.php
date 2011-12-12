@@ -29,14 +29,21 @@ class SubDomainCore extends ObjectModel
 {
 	public $name;
 
-	protected $fieldsRequired = array('name');
-	protected $fieldsSize = array('name' => 16);
-	protected $fieldsValidate = array('name' => 'isSubDomainName');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'subdomain',
 		'primary' => 'id_subdomain',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isSubDomainName', 'required' => true, 'size' => 16),
+		),
 	);
+
 
 	public function getFields()
 	{

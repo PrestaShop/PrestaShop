@@ -38,14 +38,21 @@ class AddressFormatCore extends ObjectModel
 
 	private $_errorFormatList = array();
 
-	protected	$fieldsRequired = array ('format');
-	protected	$fieldsValidate = array ('format' => 'isGenericName');
+	
+	
 
 	/* MySQL does not allow 'order detail' for a table name */
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'address_format',
 		'primary' => 'id_country',
+		'fields' => array(
+			'format' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+		),
 	);
+
 
 	public static $requireFormFieldsList = array(
 		'firstname',

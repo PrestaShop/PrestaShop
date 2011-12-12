@@ -40,18 +40,28 @@ class ContactCore extends ObjectModel
 
 	public $customer_service;
 
- 	protected $fieldsRequired = array();
- 	protected $fieldsSize = array('email' => 128);
- 	protected $fieldsValidate = array('email' => 'isEmail', 'customer_service' => 'isBool');
- 	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 32);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'description' => 'isCleanHtml');
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'contact',
 		'primary' => 'id_contact',
 		'multilang' => true,
+		'fields' => array(
+			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'size' => 128),
+			'customer_service' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+		),
 	);
+
 
 	public function getFields()
 	{

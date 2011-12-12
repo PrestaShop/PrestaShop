@@ -30,13 +30,21 @@ class SearchEngineCore extends ObjectModel
 	public $server;
 	public $getvar;
 
-	protected	$fieldsRequired = array ('server', 'getvar');	
-	protected	$fieldsValidate = array ('server' => 'isUrl', 'getvar' => 'isModuleName');
+		
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'search_engine',
 		'primary' => 'id_search_engine',
+		'fields' => array(
+			'server' => array('type' => 'FILL_ME', 'validate' => 'isUrl', 'required' => true),
+			'getvar' => array('type' => 'FILL_ME', 'validate' => 'isModuleName', 'required' => true),
+		),
 	);
+
 	
 	public function getFields()
 	{

@@ -50,15 +50,27 @@ class LanguageCore extends ObjectModel
 	/** @var boolean Status */
 	public 		$active = true;
 
-	protected 	$fieldsRequired = array('name', 'iso_code', 'date_format_lite', 'date_format_full');
-	protected 	$fieldsSize = array('name' => 32, 'iso_code' => 2, 'language_code' => 5, 'date_format_lite' => 32, 'date_format_full' => 32);
-	protected 	$fieldsValidate = array('name' => 'isGenericName', 'iso_code' => 'isLanguageIsoCode', 'language_code' => 'isLanguageCode',
-	'active' => 'isBool', 'is_rtl' => 'isBool', 'date_format_lite' => 'isPhpDateFormat', 'date_format_full' => 'isPhpDateFormat');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'lang',
 		'primary' => 'id_lang',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
+			'language_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageCode', 'size' => 5),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'is_rtl' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'date_format_lite' => array('type' => 'FILL_ME', 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
+			'date_format_full' => array('type' => 'FILL_ME', 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
+		),
 	);
+
 
 	/** @var array Languages cache */
 	protected static $_checkedLangs;

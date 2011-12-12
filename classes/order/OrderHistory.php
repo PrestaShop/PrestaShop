@@ -42,13 +42,22 @@ class OrderHistoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	protected	$fieldsRequired = array('id_order', 'id_order_state');
-	protected	$fieldsValidate = array('id_order' => 'isUnsignedId', 'id_order_state' => 'isUnsignedId', 'id_employee' => 'isUnsignedId');
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_history',
 		'primary' => 'id_order_history',
+		'fields' => array(
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'order_histories',

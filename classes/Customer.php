@@ -109,25 +109,9 @@ class CustomerCore extends ObjectModel
 
 	public $groupBox;
 
- 	protected $fieldsRequired = array('lastname', 'passwd', 'firstname', 'email');
- 	protected $fieldsSize = array('lastname' => 32, 'passwd' => 32, 'firstname' => 32, 'email' => 128, 'note' => 65000);
- 	protected $fieldsValidate = array(
- 		'secure_key' => 'isMd5',
- 		'lastname' => 'isName',
- 		'firstname' => 'isName',
- 		'email' => 'isEmail',
- 		'passwd' => 'isPasswd',
-		'id_gender' => 'isUnsignedId',
-		'birthday' => 'isBirthDate',
-		'newsletter' => 'isBool',
-		'optin' => 'isBool',
-		'active' => 'isBool',
-		'note' => 'isCleanHtml',
-		'is_guest' => 'isBool',
-		'id_shop' => 'isUnsignedId',
-		'id_group_shop' => 'isUnsignedId',
- 		'groupBox' => 'isArrayWithIds'
- 	);
+ 	
+ 	
+ 	
 
 	protected $webserviceParameters = array(
 		'fields' => array(
@@ -141,10 +125,31 @@ class CustomerCore extends ObjectModel
 		),
 	);
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'customer',
 		'primary' => 'id_customer',
+		'fields' => array(
+			'secure_key' => array('type' => 'FILL_ME', 'validate' => 'isMd5'),
+			'lastname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+			'passwd' => array('type' => 'FILL_ME', 'validate' => 'isPasswd', 'required' => true, 'size' => 32),
+			'id_gender' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'birthday' => array('type' => 'FILL_ME', 'validate' => 'isBirthDate'),
+			'newsletter' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'optin' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'note' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 65000),
+			'is_guest' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'groupBox' => array('type' => 'FILL_ME', 'validate' => 'isArrayWithIds'),
+		),
 	);
+
 
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();

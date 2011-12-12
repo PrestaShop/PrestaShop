@@ -48,15 +48,26 @@ class ConnectionCore extends ObjectModel
 	/** @var string */
 	public $date_add;
 
-	protected	$fieldsRequired = array ('id_guest', 'id_page', 'id_shop', 'id_group_shop');
-	protected	$fieldsValidate = array ('id_guest' => 'isUnsignedId', 'id_page' => 'isUnsignedId',
-										 'ip_address' => 'isInt', 'http_referer' => 'isAbsoluteUrl');
+	
+	
 
 	/* MySQL does not allow 'connection' for a table name */
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'connections',
 		'primary' => 'id_connections',
+		'fields' => array(
+			'id_guest' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_page' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'ip_address' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'http_referer' => array('type' => 'FILL_ME', 'validate' => 'isAbsoluteUrl'),
+			'id_shop' => array('type' => 'FILL_ME', 'required' => true),
+			'id_group_shop' => array('type' => 'FILL_ME', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

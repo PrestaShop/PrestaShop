@@ -40,24 +40,29 @@ class CustomerThreadCore extends ObjectModel
 	public $date_add;
 	public $date_upd;
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'customer_thread',
 		'primary' => 'id_customer_thread',
+		'fields' => array(
+			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_contact' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'size' => 254),
+			'token' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+		),
 	);
 
-	protected $fieldsRequired = array('id_lang', 'id_contact', 'token');
-	protected $fieldsSize = array('email' => 254);
 
-	protected $fieldsValidate = array(
-		'id_lang' => 'isUnsignedId',
-		'id_contact' => 'isUnsignedId',
-		'id_shop' => 'isUnsignedId',
-		'id_customer' => 'isUnsignedId',
-		'id_order' => 'isUnsignedId',
-		'id_product' => 'isUnsignedId',
-		'email' => 'isEmail',
-		'token' => 'isGenericName'
-	);
+	
+	
+
+	
 
 	public	function getFields()
 	{

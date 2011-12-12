@@ -67,16 +67,30 @@ class EmployeeCore extends ObjectModel
 
 	public $remote_addr;
 
- 	protected $fieldsRequired = array('lastname', 'firstname', 'email', 'passwd', 'id_profile', 'id_lang');
- 	protected $fieldsSize = array('lastname' => 32, 'firstname' => 32, 'email' => 128, 'passwd' => 32, 'bo_color' => 32, 'bo_theme' => 32);
- 	protected $fieldsValidate = array('lastname' => 'isName', 'firstname' => 'isName', 'email' => 'isEmail', 'id_lang' => 'isUnsignedInt',
-		'passwd' => 'isPasswdAdmin', 'active' => 'isBool', 'id_profile' => 'isInt', 'bo_color' => 'isColor', 'bo_theme' => 'isGenericName',
-		'bo_show_screencast' => 'isBool');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'employee',
 		'primary' => 'id_employee',
+		'fields' => array(
+			'lastname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
+			'passwd' => array('type' => 'FILL_ME', 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'id_profile' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'bo_color' => array('type' => 'FILL_ME', 'validate' => 'isColor', 'size' => 32),
+			'bo_theme' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 32),
+			'bo_show_screencast' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	protected	$webserviceParameters = array(
 		'fields' => array(

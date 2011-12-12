@@ -36,19 +36,27 @@ class OrderMessageCore extends ObjectModel
 	/** @var string Object creation date */
 	public $date_add;
 
-	protected $fieldsRequired = array();
-	protected $fieldsValidate = array();
-	protected $fieldsSize = array();
+	
+	
+	
 
-	protected $fieldsRequiredLang = array('name', 'message');
-	protected $fieldsSizeLang = array('name' => 128, 'message' => 1200);
-	protected $fieldsValidateLang = array('name' => 'isGenericName', 'message' => 'isMessage');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_message',
 		'primary' => 'id_order_message',
 		'multilang' => true,
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'message' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 			'fields' => array(

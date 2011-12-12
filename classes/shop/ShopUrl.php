@@ -38,14 +38,25 @@ class ShopUrlCore extends ObjectModel
 	private static $main_domain = null;
 	private static $main_domain_ssl = null;
 
-	protected $fieldsRequired = array('domain', 'id_shop');
-	protected $fieldsSize = array('domain' => 255, 'physical_uri' => 64, 'virtual_uri' => 64);
-	protected $fieldsValidate = array('active' => 'isBool');
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'shop_url',
 		'primary' => 'id_shop_url',
+		'fields' => array(
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'domain' => array('type' => 'FILL_ME', 'required' => true, 'size' => 255),
+			'id_shop' => array('type' => 'FILL_ME', 'required' => true),
+			'physical_uri' => array('type' => 'FILL_ME', 'size' => 64),
+			'virtual_uri' => array('type' => 'FILL_ME', 'size' => 64),
+		),
 	);
+
 
 	public function getFields()
 	{

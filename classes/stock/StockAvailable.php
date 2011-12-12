@@ -54,30 +54,29 @@ class StockAvailableCore extends ObjectModel
 	/** @var bool determine if a product is out of stock - it was previously in Product class */
 	public $out_of_stock = 0;
 
-	protected $fieldsRequired = array(
-		'id_product',
-		'id_product_attribute',
-		'quantity',
-		'depends_on_stock',
-		'out_of_stock'
-	);
+	
 
-	protected $fieldsSize = array();
+	
 
-	protected $fieldsValidate = array(
-		'id_product' => 'isUnsignedId',
-		'id_product_attribute' => 'isUnsignedId',
-		'id_shop' => 'isUnsignedId',
-		'id_group_shop' => 'isUnsignedId',
-		'quantity' => 'isInt',
-		'depends_on_stock' => 'isBool',
-		'out_of_stock' => 'isInt'
-	);
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'stock_available',
 		'primary' => 'id_stock_available',
+		'fields' => array(
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'depends_on_stock' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
+			'out_of_stock' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+		),
 	);
+
 
 	public function getFields()
 	{

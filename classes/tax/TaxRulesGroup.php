@@ -33,14 +33,21 @@ class TaxRulesGroupCore extends ObjectModel
     /** @var bool active state */
     public $active;
 
- 	protected $fieldsRequired = array('name');
- 	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array('name' => 'isGenericName');
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'tax_rules_group',
 		'primary' => 'id_tax_rules_group',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+		),
 	);
+
 
     protected static $_taxes = array();
 

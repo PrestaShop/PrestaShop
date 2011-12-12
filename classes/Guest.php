@@ -42,28 +42,33 @@ class GuestCore extends ObjectModel
 	public $windows_media;
 	public $accept_language;
 	
- 	protected 	$fieldsSize = array('accept_language' => 8);
- 	protected 	$fieldsValidate = array(
-		'id_operating_system' => 'isUnsignedId',
-		'id_web_browser' => 'isUnsignedId',
-		'id_customer' => 'isUnsignedId',
-		'javascript' => 'isBool',
-		'screen_resolution_x' => 'isInt',
-		'screen_resolution_y' => 'isInt',
-		'screen_color' => 'isInt',
-		'sun_java' => 'isBool',
-		'adobe_flash' => 'isBool',
-		'adobe_director' => 'isBool',
-		'apple_quicktime' => 'isBool',
-		'real_player' => 'isBool',
-		'windows_media' => 'isBool',
-		'accept_language' => 'isGenericName'
-	);
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'guest',
 		'primary' => 'id_guest',
+		'fields' => array(
+			'id_operating_system' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_web_browser' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'javascript' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'screen_resolution_x' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'screen_resolution_y' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'screen_color' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'sun_java' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'adobe_flash' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'adobe_director' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'apple_quicktime' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'real_player' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'windows_media' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'accept_language' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 8),
+		),
 	);
+
 	
 	protected	$webserviceParameters = array(
 		'fields' => array(

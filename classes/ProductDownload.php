@@ -59,37 +59,31 @@ class ProductDownloadCore extends ObjectModel
 
 	protected static $_productIds = array();
 
-	protected	$fieldsRequired = array(
-		'id_product'
-	);
+	
 
-	protected	$fieldsSize = array(
-		'display_filename' => 255,
-		'filename' => 255,
-		'date_add' => 20,
-		'date_expiration' => 20,
-		'nb_days_accessible' => 10,
-		'nb_downloadable' => 10,
-		'active' => 1,
-		'is_shareable' => 1
-	);
-	protected	$fieldsValidate = array(
-		'id_product' => 'isUnsignedId',
-		'id_product_attribute ' => 'isUnsignedId',
-		'display_filename' => 'isGenericName',
-		'filename' => 'isSha1',
-		'date_add' => 'isDate',
-		'date_expiration' => 'isDate',
-		'nb_days_accessible' => 'isUnsignedInt',
-		'nb_downloadable' => 'isUnsignedInt',
-		'active' => 'isUnsignedInt',
-		'is_shareable' => 'isUnsignedInt'
-	);
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'product_download',
 		'primary' => 'id_product_download',
+		'fields' => array(
+			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute ' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'display_filename' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 255),
+			'filename' => array('type' => 'FILL_ME', 'validate' => 'isSha1', 'size' => 255),
+			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'size' => 20),
+			'date_expiration' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'size' => 20),
+			'nb_days_accessible' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 10),
+			'nb_downloadable' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 10),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 1),
+			'is_shareable' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 1),
+		),
 	);
+
 
 	/**
 	 * Build a virtual product

@@ -32,13 +32,21 @@ class PageCore extends ObjectModel
 
 	public $name;
 
-	protected $fieldsRequired = array ('id_page_type');
-	protected $fieldsValidate = array ('id_page_type' => 'isUnsignedId', 'id_object' => 'isUnsignedId');
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'page',
 		'primary' => 'id_page',
+		'fields' => array(
+			'id_page_type' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_object' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+		),
 	);
+
 
 	public function getFields()
 	{

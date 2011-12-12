@@ -56,24 +56,29 @@ class ImageTypeCore extends ObjectModel
 	/** @var integer Apply to store */
 	public 		$stores;
 
-	protected $fieldsRequired = array('name', 'width', 'height');
-	protected $fieldsValidate = array(
-		'name' => 'isImageTypeName',
-		'width' => 'isImageSize',
-		'height' => 'isImageSize',
-		'categories' => 'isBool',
-		'products' => 'isBool',
-		'manufacturers' => 'isBool',
-		'suppliers' => 'isBool',
-		'scenes' => 'isBool',
-		'stores' => 'isBool'
-	);
-	protected $fieldsSize = array('name' => 16);
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
+		'fields' => array(
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
+			'width' => array('type' => 'FILL_ME', 'validate' => 'isImageSize', 'required' => true),
+			'height' => array('type' => 'FILL_ME', 'validate' => 'isImageSize', 'required' => true),
+			'categories' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'products' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'manufacturers' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'suppliers' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'scenes' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'stores' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+		),
 	);
+
 
 	/**
 	 * @var array Image types cache

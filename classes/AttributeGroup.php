@@ -36,17 +36,27 @@ class AttributeGroupCore extends ObjectModel
 	/** @var string Public Name */
 	public $public_name;
 
-	protected $fieldsRequired = array();
-	protected $fieldsValidate = array('is_color_group' => 'isBool');
- 	protected $fieldsRequiredLang = array('name', 'public_name');
- 	protected $fieldsSizeLang = array('name' => 64, 'public_name' => 64);
- 	protected $fieldsValidateLang = array('name' => 'isGenericName', 'public_name' => 'isGenericName', 'position' => 'isInt');
+	
+	
+ 	
+ 	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'attribute_group',
 		'primary' => 'id_attribute_group',
 		'multilang' => true,
+		'fields' => array(
+			'is_color_group' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'public_name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'position' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isInt'),
+		),
 	);
+
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_options',

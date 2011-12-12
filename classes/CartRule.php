@@ -57,46 +57,52 @@ class CartRuleCore extends ObjectModel
 	public $date_add;
 	public $date_upd;
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'cart_rule',
 		'primary' => 'id_cart_rule',
 		'multilang' => true,
+		'fields' => array(
+			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'date_from' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
+			'date_to' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
+			'description' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 65534),
+			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'quantity_per_user' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'priority' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'code' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 254),
+			'minimum_amount' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'minimum_amount_tax' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'minimum_amount_currency' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'minimum_amount_shipping' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'country_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'carrier_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'group_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'cart_rule_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'product_restriction' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'free_shipping' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'reduction_percent' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'reduction_amount' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'reduction_tax' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'reduction_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'reduction_product' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
+			'gift_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
+			'date_upd' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
+			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 254),
+		),
 	);
 
- 	protected $fieldsRequired = array('date_from', 'date_to');
- 	protected $fieldsSize = array('code' => 254, 'description' => 65534);
- 	protected $fieldsValidate = array(
-		'id_customer' => 'isUnsignedId',
-		'date_from' => 'isDate',
-		'date_to' => 'isDate',
-		'description' => 'isCleanHtml',
-		'quantity' => 'isUnsignedInt',
-		'quantity_per_user' => 'isUnsignedInt',
-		'priority' => 'isUnsignedInt',
-		'code' => 'isCleanHtml',
-		'minimum_amount' => 'isFloat',
-		'minimum_amount_tax' => 'isBool',
-		'minimum_amount_currency' => 'isInt',
-		'minimum_amount_shipping' => 'isBool',
-		'country_restriction' => 'isBool',
-		'carrier_restriction' => 'isBool',
-		'group_restriction' => 'isBool',
-		'cart_rule_restriction' => 'isBool',
-		'product_restriction' => 'isBool',
-		'free_shipping' => 'isBool',
-		'reduction_percent' => 'isFloat',
-		'reduction_amount' => 'isFloat',
-		'reduction_tax' => 'isBool',
-		'reduction_currency' => 'isUnsignedId',
-		'reduction_product' => 'isInt',
-		'gift_product' => 'isUnsignedId',
-		'active' => 'isBool',
-		'date_add' => 'isDate',
-		'date_upd' => 'isDate'
-	);
- 	protected $fieldsRequiredLang = array('name');
- 	protected $fieldsSizeLang = array('name' => 254);
- 	protected $fieldsValidateLang = array('name' => 'isCleanHtml');
+
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
 
 	public function getFields()
 	{

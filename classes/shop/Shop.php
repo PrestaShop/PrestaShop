@@ -48,17 +48,25 @@ class ShopCore extends ObjectModel
 	 */
 	protected $group;
 
-	protected $fieldsRequired = array('id_theme', 'id_category', 'id_group_shop', 'name');
-	protected $fieldsSize = array('name' => 64);
- 	protected $fieldsValidate = array(
- 		'active' => 'isBool',
-		'name' => 'isGenericName',
- 	);
+	
+	
+ 	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'shop',
 		'primary' => 'id_shop',
+		'fields' => array(
+			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'id_theme' => array('type' => 'FILL_ME', 'required' => true),
+			'id_category' => array('type' => 'FILL_ME', 'required' => true),
+			'id_group_shop' => array('type' => 'FILL_ME', 'required' => true),
+		),
 	);
+
 
 	/** @var array List of shops cached */
 	protected static $shops;

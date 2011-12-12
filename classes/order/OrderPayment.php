@@ -39,25 +39,30 @@ class OrderPaymentCore extends ObjectModel
 	public $card_holder;
 	public $date_add;
 
-	protected	$fieldsRequired = array('id_order', 'id_currency', 'amount');
-	protected	$fieldsSize = array('transaction_id' => 254, 'card_number' => 254, 'card_brand' => 254, 'card_expiration' => 254, 'card_holder' => 254);
-	protected	$fieldsValidate = array(
-		'id_order' => 'isUnsignedId',
-		'id_currency' => 'isUnsignedId',
-		'amount' => 'isPrice',
-		'payment_method' => 'isName',
-		'conversion_rate' => 'isFloat',
-		'transaction_id' => 'isAnything',
-		'card_number' => 'isAnything',
-		'card_brand' => 'isAnything',
-		'card_expiration' => 'isAnything',
-		'card_holder' => 'isAnything'
-	);
+	
+	
+	
 
+	/**
+	 * @see ObjectModel::$definition
+	 */
 	public static $definition = array(
 		'table' => 'order_payment',
 		'primary' => 'id_order_payment',
+		'fields' => array(
+			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'amount' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'payment_method' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'transaction_id' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
+			'card_number' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
+			'card_brand' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
+			'card_expiration' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
+			'card_holder' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
+		),
 	);
+
 
 	public function getFields()
 	{
