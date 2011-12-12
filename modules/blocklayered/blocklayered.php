@@ -2141,6 +2141,9 @@ class BlockLayered extends Module
 				AND psi.`id_currency` = '.$idCurrency;
 		}
 		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$queryFiltersFrom .= Context::getContext()->shop->addSqlAssociation('product', 'p');
+		
 		$allProductsOut = self::query('
 		SELECT p.`id_product` id_product
 		FROM `'._DB_PREFIX_.'product` p
@@ -2387,7 +2390,11 @@ class BlockLayered extends Module
 			
 			$products = false;
 			if (!empty($sqlQuery['from']))
+			{
+				if (version_compare(_PS_VERSION_,'1.5','>'))
+					$sqlQuery['from'] .= Context::getContext()->shop->addSqlAssociation('product', 'p');
 				$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlQuery['select']."\n".$sqlQuery['from']."\n".$sqlQuery['join']."\n".$sqlQuery['where']."\n".$sqlQuery['group']);
+			}
 
 			foreach ($filters as $filterTmp)
 			{
