@@ -699,12 +699,18 @@ table#cart_summary  .cart_delete {
 .cart_total_tax {display:none}
 
 .cart_total_delivery #total_shipping,
-.cart_total_price #total_price,
 .cart_total_price #total_product,
 .cart_total_price #total_price_without_tax,
 .cart_total_price #total_tax {
-	border-right:none
+	border-right:none;
+	text-align: right
 }
+
+.cart_total_price #total_price {
+	border-right:none;
+}
+
+
 
 table#cart_summary .cart_total_price td.cart_voucher {
 	border-bottom:1px solid #999;
