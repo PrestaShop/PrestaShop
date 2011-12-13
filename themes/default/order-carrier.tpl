@@ -108,7 +108,12 @@
 	<div class="delivery_options_address">
 	{if isset($delivery_option_list)}
 		{foreach $delivery_option_list as $id_address => $option_list}
-			<h3>{$address_collection[$id_address]->alias}</h3>
+			<h3>
+				{if isset($address_collection[$id_address])}
+					{$address_collection[$id_address]->alias}
+				{else}
+				{/if}
+			</h3>
 			<div class="delivery_options">
 			{foreach $option_list as $key => $option}
 				<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
