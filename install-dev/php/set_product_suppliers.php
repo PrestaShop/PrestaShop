@@ -2,7 +2,7 @@
 function set_product_suppliers()
 {
 	//Get all products with positive quantity
-	$resource = Db::getInstance()->query('
+	$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
 		SELECT id_supplier, id_product, supplier_reference, wholesale_price
 		FROM `'._DB_PREFIX_.'product`
 		WHERE `id_supplier` > 0
@@ -19,7 +19,7 @@ function set_product_suppliers()
 		');
 
 		//Try to get product attribues
-		$attributes = Db::getInstance()->ExecuteS('
+		$attributes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT id_product_attribute, supplier_reference, wholesale_price
 			FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product` = '.(int)$row['id_product']
@@ -28,9 +28,6 @@ function set_product_suppliers()
 		//Add each attribute to stock_available
 		foreach ($attributes as $attribute)
 		{
-			// add to global quantity
-			$quantity += $attribute['quantity'];
-
 			// set supplier for attribute
 			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'product_supplier`
