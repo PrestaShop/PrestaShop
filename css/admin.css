@@ -1737,6 +1737,15 @@ fieldset .optionsDescription ul li {
     padding:0;
 }
 
+p.product_description {
+font-family:Georgia, Arial, 'sans-serif';
+	font-style:italic;
+    clear: both;
+    text-align: left;
+	color:#7F7F7F;
+	text-align:right;
+}
+
 p.preference_description{
 	font-family:Georgia, Arial, 'sans-serif';
 	font-style:italic;
@@ -1993,6 +2002,18 @@ div#scrollTop a:hover{
 	background-image:url(../img/loader.gif);
 }
 
-#category_block{
-	width:
+.category-filter {
+	background-color:#dde0e9;
+	padding: 5px 10px;
+	min-height:20px;
 }
+.category-filter span { float:left; line-height: 18px; color:#585A69;}
+.category-filter a {
+	color:#585A69;
+	float:left;
+	line-height:20px;
+	padding:0 5px;
+}
+
+.category-filter #filternameForm { float:left; margin-left:10px; color:#585A69;}
+

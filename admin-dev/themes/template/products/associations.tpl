@@ -27,17 +27,24 @@
 <div class="Associations">
 	<h4>{l s='Product price'}</h4>
 	<div class="separation"></div>
-	<label for="id_category_default" class="t">
-	{l s='Default category:'}
-	</label>
-	<div id="no_default_category" style="color: red;font-weight: bold;display: none;">
+		<div id="no_default_category" style="font-weight: bold;display: none;">
 		{l s='Please check a category in order to select the default category.'}
 	</div>
+	<table cellspacing="0" cellpadding="0" border="0">
+	 <tr>
+			<td class="col-left">
+			<label for="id_category_default">{l s='Default category:'}</label>
+			</td>
+			<td class="col-right">
 	<select id="id_category_default" name="id_category_default">
 	{foreach from=$selected_cat item=cat}
 		<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 	{/foreach}
 	</select>
+	</td>
+	</tr>
+	</table>
+	<br/>
 	<div id="category_block">{$category_tree}</div>
 	{if $feature_shop_active}
 		{* @todo use asso_shop from Helper *}
@@ -47,6 +54,7 @@
 		</tr>
 	{/if}
 
+<div class="separation"></div>
 	<table>
 		<tr>
 			<td class="col-left"><label>{l s='Accessories:'}<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i></label></td>
