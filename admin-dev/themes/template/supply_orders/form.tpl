@@ -216,7 +216,7 @@
 			// set autocomplete on search field
 			$('#cur_product_name').autocomplete("ajax-tab.php", {
 				delay: 100,
-				minChars: 4,
+				minChars: 3,
 				autoFill: true,
 				max:20,
 				matchContains: true,
