@@ -30,13 +30,18 @@
 	<form id="supply_orders" type="get">
 		<input type="hidden" name="controller" value="AdminSupplyOrders" />
 		<input type="hidden" name="token" value="{$token}" />
-		<label for="filter_status">{l s='Choose not to display completed/canceled orders and filter by warehouse:'}</label>
-		<input type="checkbox" name="filter_status" class="noborder" onChange="$(this).parent().submit();" {if $filter_status == 1}value="on" checked{/if}></input>
-		<select name="id_warehouse" onChange="$(this).parent().submit();">
+		<div>
+			<label for="id_warehouse">{l s='Filter by warehouse:'}</label>
+			<select name="id_warehouse" onChange="$(this).parent().parent().submit();">
 			{foreach from=$warehouses key=k item=i}
 				<option {if $i.id_warehouse == $current_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 			{/foreach}
-		</select>
+			</select>
+		</div>
+		<div style="margin-top: 5px;">
+			<label for="filter_status">{l s='Choose not to display completed/canceled orders:'}</label>
+			<input type="checkbox" name="filter_status" class="noborder" onChange="$(this).parent().parent().submit();" {if $filter_status == 1}value="on" checked{/if}></input>
+		</div>
 	</form>
 </div>
 {/if}
