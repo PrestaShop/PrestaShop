@@ -96,15 +96,20 @@
 			</td>
 		</tr>
 		<tr id="tr_unit_price">
-			<td class="col-left"><label>{l s='Unit price without tax:' }</label></td>
+			<td class="col-left"><label>{l s='Unit price:' }</label></td>
 			<td style="padding-bottom:5px;">
 				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$product->unit_price}"
 					onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
-				{l s='per'} <input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+				{l s='/'} <!--<input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/> -->
+				<select onchange="unitySecond();" name="unity" id="unity">
+					{foreach $unities as $unity}
+						<option value="{$unity}">{$unity}</option>
+					{/foreach}
+				</select>
 				{if $ps_tax && $country_display_tax_label}
 					<span style="margin-left:15px">{l s='or'}
 						{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
-						{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
+						{l s='/'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
 					</span>
 				{/if}
 				<p>{l s='Eg. $15 per Lb'}</p>
@@ -138,7 +143,7 @@
 		</tr>
 	</table>
 	<div class="separation"></div>
-	
+
 	{if isset($specificPriceModificationForm)}
 		<h4>{l s='Current specific prices'}</h4>
 		<a class="button bt-icon" href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>
@@ -155,30 +160,30 @@
 			<div class="margin-form">
 				<select name="sp_id_shop">
 					<option value="0">{l s='All shops'}</option>
-				{foreach from=$shops item=shop}
-					<option value="{$shop['id_shop']}">{$shop['name']|htmlentitiesUTF8}</option>
-				{/foreach}
+					{foreach from=$shops item=shop}
+						<option value="{$shop.id_shop}">{$shop.name|htmlentitiesUTF8}</option>
+					{/foreach}
 				</select>
 							&gt;
 				<select name="sp_id_currency" id="spm_currency_0" onchange="changeCurrencySpecificPrice(0);">
 					<option value="0">{l s='All currencies'}</option>
-				{foreach from=$currencies item=curr}
-					<option value="{$curr['id_currency']}">{$curr['name']|htmlentitiesUTF8}</option>
-				{/foreach}
+					{foreach from=$currencies item=curr}
+						<option value="{$curr.id_currency}">{$curr.name|htmlentitiesUTF8}</option>
+					{/foreach}
 				</select>
 							&gt;
 				<select name="sp_id_country">
 					<option value="0">{l s='All countries'}</option>
-				{foreach from=$countries item=country}
-					<option value="{$country['id_country']}">{$country['name']|htmlentitiesUTF8}</option>
-				{/foreach}
+					{foreach from=$countries item=country}
+						<option value="{$country.id_country}">{$country.name|htmlentitiesUTF8}</option>
+					{/foreach}
 				</select>
 							&gt;
 				<select name="sp_id_group">
 					<option value="0">{l s='All groups'}</option>
-				{foreach from=$groups item=group}
-					<option value="'.(int)($group['id_group']).'">{$group['name']}</option>
-				{/foreach}
+					{foreach from=$groups item=group}
+						<option value="{$group.id_group}">{$group.name}</option>
+					{/foreach}
 				</select>
 			</div>
 			{if $combinations|@count != 0}
@@ -197,7 +202,7 @@
 				<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" /><span style="font-weight:bold; color:#000000; font-size:12px"> {l s='to'}</span>
 				<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
 			</div>
-		
+
 			<label>{l s='Starting at'}</label>
 			<div class="margin-form">
 				<input type="text" name="sp_from_quantity" value="1" size="3" /> <span style="font-weight:bold; color:#000000; font-size:12px">{l s='unit'}</span>
@@ -250,7 +255,7 @@
 				</select>
 				{l s='(if set to "amount", the tax is included)'}
 			</div>
-			
+
 			<div class="margin-form">
 				<input type="submit" name="submitPriceAddition" value="{l s='Add'}" class="button" />
 			</div>
@@ -279,5 +284,4 @@
 						calcPriceTI();
 						unitPriceWithTax('unit');
 					</script>
-						
 	{/if}
