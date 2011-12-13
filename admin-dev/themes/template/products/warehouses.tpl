@@ -33,13 +33,13 @@
 		<p>{l s='It is also possible to specify for each product/product combinations its location in each warehouse.'}</p>
 	</div>
 	<p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
-	
+
 	{assign var=confirm value="Are you sure you want to delete entered product information?"}
-	
+
 	<a class="button bt-icon" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse" onclick="return confirm(' {$confirm} ')">
 		<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
 	</a>
-	
+
 	<div id="warehouse_accordion" style="margin-top:10px; display:block;">
 		{foreach from=$warehouses item=warehouse}
 		    <h3 style="margin-bottom:0;"><a href="#">{$warehouse['name']}</a></h3>
@@ -85,19 +85,19 @@
 		{/foreach}
 	</div>
 	<p>&nbsp;</p>
-	
+
 	<script type="text/javascript">
 		$(function() {
 			$('#check_all_suppliers').click(function() {
 				var check = $(this);
-	
+
 				//get all checkboxes of current warehouse
 				var checkboxes = $('input[name*="'+check.val()+'"]');
-	
+
 				for (i=0; i<checkboxes.length; i++)
 				{
 					var item = $(checkboxes[i]);
-	
+
 					if (item.is(':checked'))
 					{
 						item.attr("checked", "");
@@ -108,7 +108,7 @@
 					}
 				}
 			});
-	
+
 			setTimeout(function() {
 				$('#warehouse_accordion').accordion();
 			}, 500);

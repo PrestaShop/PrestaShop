@@ -67,14 +67,14 @@
 					<h4>{l s='Product reference(s)'}</h4>
 	<div class="separation"></div>
 	<p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
-	
+
 	<div id="suppliers_accordion" style="margin-top:10px; display:block;">
 		{foreach from=$associated_suppliers item=supplier}
 		    <h3 style="margin-bottom:0;"><a href="#">{$supplier->name}</a></h3>
 		    <div style="display:block;">
-	
+
 				<table cellpadding="10" cellspacing="0" class="table">
-	
+
 					<thead>
 						<tr>
 							<th>{l s='Product name'}</th>
@@ -119,20 +119,20 @@
 			</div>
 		{/foreach}
 	</div>
-	
+
 	<script type="text/javascript">
 		$(function() {
 			var default_is_ok = false;
-	
+
 			var manageDefaultSupplier = function() {
-	
+
 				var availables_radio_buttons = [];
 				var radio_buttons = $('input[name="default_supplier"]');
-	
+
 				for (i=0; i<radio_buttons.length; i++)
 				{
 					var item = $(radio_buttons[i]);
-	
+
 					if (item.is(':disabled'))
 					{
 						if (item.is(':checked'))
@@ -146,30 +146,30 @@
 						availables_radio_buttons.push(item);
 					}
 				}
-	
+
 				if (default_is_ok == false)
 				{
 					for (i=0; i<availables_radio_buttons.length; i++)
 					{
 						var item = $(availables_radio_buttons[i]);
-	
+
 						if (item.is(':disabled') == false)
 						{
 							item.attr("checked", "checked");
 							default_is_ok = true;
 						}
-	
+
 						break;
 					}
 				}
 			};
-	
+
 			$('.supplierCheckBox').click(function() {
-	
+
 				var check = $(this);
-	
+
 				var checkbox = $('#default_supplier_'+check.val());
-	
+
 				if (this.checked)
 				{
 					//enable default radio button associated
@@ -180,16 +180,16 @@
 					//enable default radio button associated
 					checkbox.attr("disabled","disabled");
 				}
-	
+
 				//manage default supplier check
 				manageDefaultSupplier();
-	
+
 			});
-	
+
 			setTimeout(function() {
 				$('#suppliers_accordion').accordion();
 			}, 500);
 		});
 	</script>
-	
+
 {/if}
