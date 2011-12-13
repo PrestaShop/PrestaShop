@@ -438,6 +438,11 @@ class ParentOrderControllerCore extends FrontController
 			'conditions' => (int)(Configuration::get('PS_CONDITIONS')),
 			'link_conditions' => $this->link_conditions,
 			'recyclable' => (int)($this->context->cart->recyclable),
+			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+			'carriers' => $this->context->cart->simulateCarriersOutput(),
+			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
+			'address_collection' => $this->context->cart->getAddressCollection(),
+			'delivery_option' => $this->context->cart->getDeliveryOption(),
 			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));

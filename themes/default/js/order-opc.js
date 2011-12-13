@@ -130,7 +130,8 @@ function updateCarrierSelectionAndGift()
 	var delivery_option_radio = $('.delivery_option_radio');
 	var delivery_option_params = '&';
 	$.each(delivery_option_radio, function(i) {
-		delivery_option_params += $(delivery_option_radio[i]).attr('name') + '=' + $(delivery_option_radio[i]).val() + '&';
+		if ($(this).attr('checked'))
+			delivery_option_params += $(delivery_option_radio[i]).attr('name') + '=' + $(delivery_option_radio[i]).val() + '&';
 	});
 	if (delivery_option_params == '&')
 		delivery_option_params = '&delivery_option=&'
@@ -172,6 +173,7 @@ function updateCarrierSelectionAndGift()
 				updateCarrierList(jsonData.carrier_data);
 				$('#opc_payment_methods-overlay').fadeOut('slow');
 				$('#opc_delivery_methods-overlay').fadeOut('slow');
+				refreshDeliveryOptions();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
