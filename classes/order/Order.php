@@ -298,21 +298,6 @@ class OrderCore extends ObjectModel
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
 	}
 
-	public function add($autodate = true, $null_values = false)
-	{
-		if (Context::getContext()->shop->getGroup()->share_order == true)
-			$this->id_shop = null;
-		return parent::add($autodate);
-	}
-
-	public function update($null_values = false)
-	{
-		if (Context::getContext()->shop->getGroup()->share_order == true)
-			$this->id_shop = null;
-		$return = parent::update();
-		return $return;
-	}
-
 	public function getTaxCalculationMethod()
 	{
 		return (int)($this->_taxCalculationMethod);

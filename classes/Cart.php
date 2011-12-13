@@ -84,8 +84,20 @@ class CartCore extends ObjectModel
 	protected static $_nbProducts = array();
 	protected static $_isVirtualCart = array();
 
-	
-	
+	protected $fieldsRequired = array('id_currency', 'id_lang');
+	protected $fieldsValidate = array(
+		'id_address_delivery' => 'isUnsignedId',
+		'id_carrier' => 'isUnsignedId',
+		'id_address_invoice' => 'isUnsignedId',
+		'id_currency' => 'isUnsignedId',
+		'id_customer' => 'isUnsignedId',
+		'id_guest' => 'isUnsignedId',
+		'id_lang' => 'isUnsignedId',
+		'recyclable' => 'isBool',
+		'gift' => 'isBool',
+		'gift_message' => 'isMessage',
+		'allow_seperated_package' => 'isBool'
+	);
 
 	protected $_products = null;
 	protected static $_totalWeight = array();
@@ -94,31 +106,9 @@ class CartCore extends ObjectModel
 	protected static $_taxes_rate = null;
 	protected static $_attributesLists = array();
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
 	public static $definition = array(
 		'table' => 'cart',
 		'primary' => 'id_cart',
-		'fields' => array(
-			'id_group_shop' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_address_delivery' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_address_invoice' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_carrier' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_currency' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_customer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_guest' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_lang' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'recyclable' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'gift' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'gift_message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
-			'delivery_option' => 		array('type' => self::TYPE_STRING),
-			'secure_key' => 			array('type' => self::TYPE_STRING, 'size' => 32),
-			'allow_seperated_package' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-		),
 	);
 
 	protected $webserviceParameters = array(
@@ -148,6 +138,32 @@ class CartCore extends ObjectModel
 	const ONLY_WRAPPING = 6;
 	const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
 
+	public function getFields()
+	{
+		$this->validateFields();
+
+		$fields['id_group_shop'] = (int)$this->id_group_shop;
+		$fields['id_shop'] = (int)$this->id_shop;
+
+		$fields['id_address_delivery'] = (int)$this->id_address_delivery;
+		$fields['id_address_invoice'] = (int)$this->id_address_invoice;
+		$fields['id_currency'] = (int)$this->id_currency;
+		$fields['id_customer'] = (int)$this->id_customer;
+		$fields['id_carrier'] = (int)$this->id_carrier;
+		$fields['id_guest'] = (int)$this->id_guest;
+		$fields['id_lang'] = (int)$this->id_lang;
+		$fields['recyclable'] = (int)$this->recyclable;
+		$fields['gift'] = (int)$this->gift;
+		$fields['secure_key'] = pSQL($this->secure_key);
+		$fields['gift_message'] = pSQL($this->gift_message);
+		$fields['date_add'] = pSQL($this->date_add);
+		$fields['date_upd'] = pSQL($this->date_upd);
+		$fields['allow_seperated_package'] = (int)$this->allow_seperated_package;
+		$fields['delivery_option'] = $this->delivery_option;
+
+		return $fields;
+	}
+
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
@@ -171,8 +187,7 @@ class CartCore extends ObjectModel
 	{
 		if (!$this->id_lang)
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-		if (Context::getContext()->shop->getGroup()->share_order == true)
-			$this->id_shop = null;
+
 		$return = parent::add($autodate);
 		Hook::exec('cart');
 
@@ -186,8 +201,7 @@ class CartCore extends ObjectModel
 
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
-		if (Context::getContext()->shop->getGroup()->share_order == true)
-			$this->id_shop = null;
+
 		$this->_products = null;
 		$return = parent::update();
 		Hook::exec('cart');
