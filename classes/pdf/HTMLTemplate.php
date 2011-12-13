@@ -84,11 +84,11 @@ abstract class HTMLTemplateCore
 		$logo = '';
 
 		if (file_exists(_PS_IMG_DIR_.'logo_invoice.jpg'))
-			$logo = 'img/logo_invoice.jpg';
+			$logo = _PS_IMG_.'logo_invoice.jpg';
 		else if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-			$logo = 'img/logo.jpg';
+			$logo = _PS_IMG_.'logo.jpg';
 
-		return Tools::getShopDomain(true).__PS_BASE_URI__.'/'.$logo;
+		return $logo;
     }
 
 	/**
@@ -101,15 +101,9 @@ abstract class HTMLTemplateCore
 		$template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
 		$hook_name = 'displayPDF'.$template;
 
-//        p('='.Hook::exec($hook_name, array('object' => $object)));
-
 		$this->smarty->assign(array(
 			'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
-            'kikoo' => 'lol'
 		));
-
-
-
 	}
 
 	/**

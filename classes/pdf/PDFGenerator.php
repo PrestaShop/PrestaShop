@@ -34,7 +34,7 @@ require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
  */
 class PDFGeneratorCore extends TCPDF
 {
-	const DEFAULT_FONT = 'dejavusans';
+	const DEFAULT_FONT = 'helvetica';
 
 	public $header;
 	public $footer;
@@ -42,6 +42,12 @@ class PDFGeneratorCore extends TCPDF
 	public $font;
 
 	public $font_by_lang = array('jp' => 'cid0jp');
+
+
+	public function __construct()
+	{
+		parent::__construct('P', 'mm', 'A4', true, 'UTF-8', false, false);
+	}
 
 	/**
 	 * set the PDF encoding
@@ -91,6 +97,8 @@ class PDFGeneratorCore extends TCPDF
 		$this->font = self::DEFAULT_FONT;
 		if (array_key_exists($iso_lang, $this->font_by_lang))
 			$this->font = $this->font_by_lang[$iso_lang];
+
+		$this->setFont($this->font);
 	}
 
 	/**
@@ -98,7 +106,6 @@ class PDFGeneratorCore extends TCPDF
 	 */
 	public function Header()
 	{
-		$this->setFont($this->font);
 		$this->writehtml($this->header);
 	}
 
@@ -107,7 +114,6 @@ class PDFGeneratorCore extends TCPDF
 	 */
 	public function Footer()
 	{
-		$this->setFont($this->font);
 		$this->writehtml($this->footer);
 	}
 
@@ -131,7 +137,6 @@ class PDFGeneratorCore extends TCPDF
 	 */
 	public function writePage()
 	{
-
 		$this->SetHeaderMargin(5);
 		$this->SetFooterMargin(18);
 		$this->setMargins(10, 40, 10);
