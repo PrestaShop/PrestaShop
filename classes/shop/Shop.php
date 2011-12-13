@@ -758,13 +758,12 @@ class ShopCore extends ObjectModel
 		}
 		else
 		{
-			if ($shop_group_id && ($share == Shop::SHARE_CUSTOMER || $share == Shop::SHARE_ORDER))
-				$restriction = ' AND '.$alias.'id_group_shop = '.$shop_group_id.' AND '.$alias.'id_shop = 0';
-			else if ($shop_id || $shop_group_id)
+			if ($shop_id || $shop_group_id)
 				$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', $this->getListOfID($share)).') ';
 			//else if ($share == Shop::SHARE_STOCK)
 			//	$restriction = ' AND '.$alias.'id_shop = '.$this->getID(true);
 		}
+
 		return $restriction;
 	}
 
