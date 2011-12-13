@@ -81,21 +81,80 @@ class AdminProductsControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->_defaultOrderBy = 'position';
 
+		$categoriesArray = array();
+		$categories = Category::getSimpleCategories($this->context->language->id);
+
+		foreach ($categories AS $categorie)
+			$categoriesArray[$categorie['id_category']] = $categorie['name'];
+
 		$this->fieldsDisplay = array(
-			'id_product' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 20),
-			'image' => array('title' => $this->l('Photo'), 'align' => 'center', 'image' => 'p',
-				'width' => 70, 'orderby' => false, 'filter' => false, 'search' => false),
-			'name' => array('title' => $this->l('Name'), 'filter_key' => 'b!name'),
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 80),
-			'name_category' => array('title' => $this->l('Category'), 'width' => 100, 'filter_key' => 'cl!name'),
-			'price' => array('title' => $this->l('Base price'), 'width' => 70,
-				'type' => 'price', 'align' => 'right', 'filter_key' => 'a!price'),
-			'price_final' => array('title' => $this->l('Final price'), 'width' => 70,
-				'type' => 'price', 'align' => 'right', 'havingFilter' => true, 'orderby' => false),
-			'active' => array('title' => $this->l('Displayed'), 'width' => 70, 'active' => 'status',
-				'filter_key' => 'a!active', 'align' => 'center', 'type' => 'bool', 'orderby' => false),
-			'position' => array('title' => $this->l('Position'), 'width' => 70,'filter_key' => 'cp!position',
-				'align' => 'center', 'position' => 'position'),
+			'id_product' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 20
+			),
+			'image' => array(
+				'title' => $this->l('Photo'),
+				'align' => 'center',
+				'image' => 'p',
+				'width' => 70,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'filter_key' => 'b!name'
+			),
+			'reference' => array(
+				'title' => $this->l('Reference'),
+				'align' => 'center',
+				'width' => 80
+			),
+			/*'name_category' => array(
+				'title' => $this->l('Category'),
+				'width' => 100,
+				'filter_key' => 'cl!name'
+			),*/
+			'name_category' => array(
+				'title' => $this->l('Category'),
+				'width' => 230,
+				'type' => 'select',
+				'list' => $categoriesArray,
+				'filter_key' => 'cl!name',
+				'filter_type' => 'int'
+			),
+			'price' => array(
+				'title' => $this->l('Base price'),
+				'width' => 70,
+				'type' => 'price',
+				'align' => 'right',
+				'filter_key' => 'a!price'
+			),
+			'price_final' => array(
+				'title' => $this->l('Final price'),
+				'width' => 70,
+				'type' => 'price',
+				'align' => 'right',
+				'havingFilter' => true,
+				'orderby' => false
+			),
+			'active' => array(
+				'title' => $this->l('Displayed'),
+				'width' => 70,
+				'active' => 'status',
+				'filter_key' => 'a!active',
+				'align' => 'center',
+				'type' => 'bool',
+				'orderby' => false
+			),
+			'position' => array(
+				'title' => $this->l('Position'),
+				'width' => 70,
+				'filter_key' => 'cp!position',
+				'align' => 'center',
+				'position' => 'position'
+			)
 		);
 
 		// @since 1.5 : translations for tabs
@@ -116,10 +175,17 @@ class AdminProductsControllerCore extends AdminController
 		);
 
 		/* Join categories table */
-		if ($id_category = Tools::getvalue('id_category'))
+			
+		if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
+		{
+			$this->_category = new Category($id_category);
+			$_POST['productFilter_cl!name'] = $this->_category->name[$this->context->language->id];
+		}
+		else if ($id_category = Tools::getvalue('id_category'))
 			$this->_category = new Category($id_category);
 		else
 			$this->_category = new Category();
+		
 
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
@@ -130,7 +196,7 @@ class AdminProductsControllerCore extends AdminController
 	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 
 		// if no category selected, display all products
-		if (Validate::isLoadedObject($this->_category))
+		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
 			$this->_filter = 'AND cp.`id_category` = '.(int)$this->_category->id;
 
 		$this->_select = 'cl.name `name_category`, cp.`position`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS price_final';
@@ -1978,7 +2044,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function getPreviewUrl(Product $product)
 	{
-		if (!(bool)$this->context->shop->virtual_uri)
+		if (!(bool)$this->context->shop->virtual_uri && $this->context->shop->theme_name != 'default')
 			return false;
 
 		$preview_url = $this->context->link->getProductLink(

@@ -35,25 +35,25 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	public function __construct()
 	{
 	 	$this->table = 'product_attribute';
-	 	$this->className = 'Product';
+		$this->className = 'Product';
 		parent::__construct();
 	}
 
 	private function addAttribute($arr, $price = 0, $weight = 0)
 	{
-		foreach ($arr AS $attr)
+		foreach ($arr as $attr)
 		{
-			$price += (float)($_POST['price_impact_'.(int)($attr)]);
-			$weight += (float)($_POST['weight_impact'][(int)($attr)]);
+			$price += (float)$_POST['price_impact_'.(int)$attr];
+			$weight += (float)$_POST['weight_impact'][(int)$attr];
 		}
 		if ($this->product->id)
 		{
 			return (array(
-					'id_product' => (int)($this->product->id),
-					'price' => (float)($price),
-					'weight' => (float)($weight),
+					'id_product' => (int)$this->product->id,
+					'price' => (float)$price,
+					'weight' => (float)$weight,
 					'ecotax' => 0,
-					'quantity' => (int)($_POST['quantity']),
+					'quantity' => (int)$_POST['quantity'],
 					'reference' => pSQL($_POST['reference']),
 					'default_on' => 0,
 					'available_date' => '0000-00-00'));
@@ -61,24 +61,24 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		return array();
 	}
 
-	static private function createCombinations($list)
+	private static function createCombinations($list)
 	{
-		if (sizeof($list) <= 1)
-			return sizeof($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;
+		if (count($list) <= 1)
+			return count($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;
 		$res = array();
 		$first = array_pop($list);
-		foreach ($first AS $attribute)
+		foreach ($first as $attribute)
 		{
 			$tab = self::createCombinations($list);
-			foreach ($tab AS $toAdd)
-				$res[] = is_array($toAdd) ? array_merge($toAdd, array($attribute)) : array($toAdd, $attribute);
+			foreach ($tab as $to_add)
+				$res[] = is_array($to_add) ? array_merge($to_add, array($attribute)) : array($to_add, $attribute);
 		}
 		return $res;
 	}
 
 	public function postProcess()
 	{
-		$this->product = new Product((int)(Tools::getValue('id_product')));
+		$this->product = new Product((int)Tools::getValue('id_product'));
 
 		if (isset($_POST['generate']))
 		{
@@ -87,7 +87,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 			else
 			{
 				$tab = array_values($_POST['options']);
-				if (sizeof($tab) AND  Validate::isLoadedObject($this->product))
+				if (count($tab) && Validate::isLoadedObject($this->product))
 				{
                     self::setAttributesImpacts($this->product->id, $tab);
 					$this->combinations = array_values(self::createCombinations($tab));
@@ -101,40 +101,40 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
 			}
 		}
-		elseif (isset($_POST['back']))
-			Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&addproduct'.'&tabs=3&token='.Tools::getValue('token'));
+		else if (isset($_POST['back']))
+			Tools::redirectAdmin(self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&addproduct'.'&tabs=3&token='.Tools::getValue('token'));
 		parent::postProcess();
 	}
 
 	private static function displayAndReturnAttributeJs()
 	{
 		$attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
-		$attributeJs = array();
-		foreach ($attributes AS $k => $attribute)
-			$attributeJs[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
+		$attribute_js = array();
+		foreach ($attributes as $k => $attribute)
+			$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
 		echo '
 		<script type="text/javascript">
 			var attrs = new Array();
 			attrs[0] = new Array(0, \'---\');';
-		foreach ($attributeJs AS $idgrp => $group)
+		foreach ($attribute_js as $idgrp => $group)
 		{
 			echo '
 				attrs['.$idgrp.'] = new Array(0, \'---\' ';
-			foreach ($group AS $idattr => $attrname)
+			foreach ($group as $idattr => $attrname)
 				echo ', '.$idattr.', \''.addslashes(($attrname)).'\'';
 			echo ');';
 		}
 		echo '
 		</script>';
-		return $attributeJs;
+		return $attribute_js;
 	}
 
     private static function setAttributesImpacts($id_product, $tab)
     {
         $attributes = array();
-        foreach ($tab AS $group)
-            foreach ($group AS $attribute)
-                $attributes[] = '('.(int)($id_product).', '.(int)($attribute).', '.(float)($_POST['price_impact_'.(int)($attribute)]).', '.(float)($_POST['weight_impact'][(int)($attribute)]).')';
+        foreach ($tab as $group)
+            foreach ($group as $attribute)
+                $attributes[] = '('.(int)$id_product.', '.(int)$attribute.', '.(float)$_POST['price_impact_'.(int)$attribute].', '.(float)$_POST['weight_impact'][(int)$attribute].')';
 
 		return Db::getInstance()->execute(
 	        'INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
@@ -149,32 +149,32 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $result = Db::getInstance()->executeS(
         'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
 		FROM `'._DB_PREFIX_.'attribute_impact` ai
-		WHERE ai.`id_product` = '.(int)($id_product));
+		WHERE ai.`id_product` = '.(int)$id_product);
         if (!$result)
             return array();
-        foreach ($result AS $impact)
+        foreach ($result as $impact)
         {
-            $tab[$impact['id_attribute']]['price'] = (float)($impact['price']);
-            $tab[$impact['id_attribute']]['weight'] = (float)($impact['weight']);
+            $tab[$impact['id_attribute']]['price'] = (float)$impact['price'];
+            $tab[$impact['id_attribute']]['weight'] = (float)$impact['weight'];
         }
         return $tab;
     }
 
 	public function initGroupTable()
 	{
-		$combinationsGroups = $this->product->getAttributesGroups($this->context->language->id);
+		$combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
 		$attributes = array();
         $impacts = self::getAttributesImpacts($this->product->id);
-		foreach ($combinationsGroups as &$combination)
-        {
+		foreach ($combinations_groups as &$combination)
+		{
             $target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
 			$target = $combination;
             if (isset($impacts[$combination['id_attribute']]))
             {
-                $target['price'] = $impacts[$combination['id_attribute']]['price'];
-                $target['weight'] = $impacts[$combination['id_attribute']]['weight'];
-            }
-        }
+				$target['price'] = $impacts[$combination['id_attribute']]['price'];
+				$target['weight'] = $impacts[$combination['id_attribute']]['weight'];
+			}
+		}
         $this->context->smarty->assign(array(
         	'currency_sign' => $this->context->currency->sign,
         	'weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
@@ -194,7 +194,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' 
+				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
+					$this->l('Performances').'</a>');
 			return;
 		}
 
@@ -206,15 +208,15 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		$js_attributes = self::displayAndReturnAttributeJs();
 		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
-		$this->product = new Product((int)(Tools::getValue('id_product')));
+		$this->product = new Product((int)Tools::getValue('id_product'));
 
 		$this->context->smarty->assign(array(
 			'tax_rates' => $this->product->getTaxesRate(),
-			'generate' => isset($_POST['generate']) AND !sizeof($this->_errors),
+			'generate' => isset($_POST['generate']) && !count($this->_errors),
 			'combinations_size' => count($this->combinations),
 			'product_name' => $this->product->name[$this->context->language->id],
 			'product_reference' => $this->product->reference,
-			'url_generator' => self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&attributegenerator&token='.Tools::getValue('token'),
+			'url_generator' => self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&attributegenerator&token='.Tools::getValue('token'),
 			'attribute_groups' => $attribute_groups,
 			'attribute_js' => $js_attributes,
 			'toolbar_btn' => $this->toolbar_btn,

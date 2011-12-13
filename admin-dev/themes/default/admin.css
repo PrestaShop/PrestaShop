@@ -368,7 +368,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .blocLiveEdit { float:right; clear:right;  background-color: #EBEDF4; border: 1px solid #C2C4D9;display: block;  width:250px;}
 .blocLiveEdit h2 { background: transparent url(live_edit.png) no-repeat scroll 10px 10px; height: 40px; line-height: 50px;margin: 0; padding: 0 10px; text-indent: 40px;}
 .blocLiveEdit p { padding: 0 10px;}
-.blocLiveEdit a.button {�float: left; margin:10px; display: inline-block;}
+.blocLiveEdit a.button {float: left; margin:10px; display: inline-block;}
 
 
 #modulePosition { width:100%; float:left; clear:left; margin-right:270px;}
