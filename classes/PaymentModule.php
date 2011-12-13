@@ -59,10 +59,6 @@ abstract class PaymentModuleCore extends Module
 		$return = Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
 		SELECT '.(int)($this->id).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
-		// Insert group availability
-		$return &= Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'module_group` (id_module, id_group)
-		SELECT '.(int)($this->id).', id_group FROM `'._DB_PREFIX_.'group`');
 
 		return $return;
 	}
