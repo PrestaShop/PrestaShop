@@ -350,8 +350,8 @@ abstract class ModuleCore
 
 		// Retrocompatibility
 		Hook::preloadHookAlias();
-		if (isset(Hook::$preloadHookAlias[$hook_name]))
-			$hook_name = Hook::$preloadHookAlias[$hook_name];
+		if (isset(Hook::$_hook_alias[$hook_name]))
+			$hook_name = Hook::$_hook_alias[$hook_name];
 
 		// Get hook id
 		$sql = 'SELECT `id_hook`
@@ -422,8 +422,8 @@ abstract class ModuleCore
 		{
 			// Retrocompatibility
 			Hook::preloadHookAlias();
-			if (isset(Hook::$preloadHookAlias[$hook_id]))
-				$hook_id = Hook::$preloadHookAlias[$hook_id];
+			if (isset(Hook::$_hook_alias[$hook_id]))
+				$hook_id = Hook::$_hook_alias[$hook_id];
 
 			$sql = 'SELECT `id_hook`
 					FROM `'._DB_PREFIX_.'hook`
