@@ -171,8 +171,13 @@ class AdminStockMvtControllerCore extends AdminController
 		// if export requested
 		if (Tools::isSubmit('csv'))
 		{
-			$this->renderCSV();
-			die;
+			if (count($this->_list) > 0)
+			{
+				$this->renderCSV();
+				die;
+			}
+			else
+				$this->displayWarning($this->l('There is nothing to export as CSV.'));
 		}
 
 		return $list;
@@ -229,7 +234,7 @@ class AdminStockMvtControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		if (count($this->_list) > 0)
+		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
 		{
 			$this->toolbar_btn['export-stock-mvt-csv'] = array(
 				'short' => 'Export this list as CSV',

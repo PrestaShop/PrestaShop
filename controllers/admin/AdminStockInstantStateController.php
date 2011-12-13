@@ -158,10 +158,16 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$list = parent::renderList();
 
 		// if export requested
-		if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) && (int)Tools::getValue('id_warehouse') != -1)
+		if ((Tools::isSubmit('csv_quantities') || Tools::isSubmit('csv_prices')) &&
+			(int)Tools::getValue('id_warehouse') != -1)
 		{
-			$this->renderCSV();
-			die;
+			if (count($this->_list) > 0)
+			{
+				$this->renderCSV();
+				die;
+			}
+			else
+				$this->displayWarning($this->l('There is nothing to export as CSV.'));
 		}
 
 		return $list;
@@ -283,7 +289,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 */
 	public function initToolbar()
 	{
-		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1 && count($this->_list) > 0)
+		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
 		{
 			$this->toolbar_btn['export-stock-state-quantities-csv'] = array(
 				'short' => 'Export this list as CSV',

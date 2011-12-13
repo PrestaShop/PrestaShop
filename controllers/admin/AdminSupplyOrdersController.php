@@ -43,6 +43,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 	$this->className = 'SupplyOrder';
 	 	$this->identifier = 'id_supply_order';
 	 	$this->lang = false;
+	 	$this->is_template_list = false;
 
 		$this->addRowAction('updatereceipt');
 		$this->addRowAction('changestate');
@@ -309,6 +310,32 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
 			$limit = false;
 
+		// defines button specific for non-template supply orders
+		if (!$this->is_template_list)
+		{
+			// adds export csv buttons
+			$this->toolbar_btn['export-csv-orders'] = array(
+				'short' => 'Export Orders',
+				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders&id_warehouse='.$this->getCurrentWarehouse(),
+				'desc' => $this->l('Export Orders (CSV)'),
+			);
+
+			$this->toolbar_btn['export-csv-details'] = array(
+				'short' => 'Export Orders Details',
+				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details&id_warehouse='.$this->getCurrentWarehouse(),
+				'desc' => $this->l('Export Orders Details (CSV)'),
+			);
+
+			unset($this->toolbar_btn['new']);
+			if ($this->tabAccess['add'] === '1')
+			{
+				$this->toolbar_btn['new'] = array(
+					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+					'desc' => $this->l('Add new')
+				);
+			}
+		}
+
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		// actions filters on supply orders list
@@ -343,16 +370,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouse();
 		$this->tpl_list_vars['filter_status'] = $this->getFilterStatus();
 
-		// access
-		unset($this->toolbar_btn['new']);
-		if ($this->tabAccess['add'] === '1')
-		{
-			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-				'desc' => $this->l('Add new')
-			);
-		}
-
 		// overrides query
 		$this->_select = '
 			s.name AS supplier,
@@ -383,30 +400,20 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_where .= ' AND st.enclosed != 1';
 		$first_list = parent::renderList();
 
-		if (count($this->_list) > 0)
-		{
-			// adds export csv buttons
-			$this->toolbar_btn['export-csv-orders'] = array(
-				'short' => 'Export Orders',
-				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders',
-				'desc' => $this->l('Export Orders (CSV)'),
-			);
-
-			$this->toolbar_btn['export-csv-details'] = array(
-				'short' => 'Export Orders Details',
-				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details',
-				'desc' => $this->l('Export Orders Details (CSV)'),
-			);
-		}
-
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
 		{
-			$this->renderCSV();
-			die;
+			if (count($this->_list) > 0)
+			{
+				$this->renderCSV();
+				die;
+			}
+			else
+				$this->displayWarning($this->l('There is nothing to export as CSV.'));
 		}
 
 		// second list : templates
 		$second_list = null;
+		$this->is_template_list = true;
 		unset($this->tpl_list_vars['warehouses']);
 		unset($this->tpl_list_vars['current_warehouse']);
 		unset($this->tpl_list_vars['filter_status']);
@@ -421,7 +428,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('createsupplyorder');
 		// unsets some fields
-		unset($this->fieldsDisplay['state'], $this->fieldsDisplay['date_upd'], $this->fieldsDisplay['id_pdf'], $this->fieldsDisplay['date_delivery_expected']);
+		unset($this->fieldsDisplay['state'],
+			  $this->fieldsDisplay['date_upd'],
+			  $this->fieldsDisplay['id_pdf'],
+			  $this->fieldsDisplay['date_delivery_expected']);
 		// adds filter, to gets only templates
 		unset($this->_where);
 		$this->_where = ' AND a.is_template = 1';
@@ -431,6 +441,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// re-defines toolbar & buttons
 		$this->toolbar_title = $this->l('Stock : Supply orders templates');
 		$this->initToolbar();
+		unset($this->toolbar_btn['new']);
 		$this->toolbar_btn['new'] = array(
 			'href' => self::$currentIndex.'&amp;add'.$this->table.'&mod=template&amp;token='.$this->token,
 			'desc' => $this->l('Add new template')
@@ -1055,7 +1066,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('create_supply_order') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessCopyFromTemplate();
 
-		if ( (!count($this->_errors) && $this->is_editing_order) || !$this->is_editing_order)
+		if ((!count($this->_errors) && $this->is_editing_order) || !$this->is_editing_order)
 			parent::postProcess();
 
 		// if the threshold is defined and we are saving the order
@@ -1081,6 +1092,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$orders = new Collection('SupplyOrder', $id_lang = (int)Context::getContext()->language->id);
 			$orders->where('is_template = 0');
 			$orders->where('id_supply_order IN('.implode(', ', $ids).')');
+			$id_warehouse = $this->getCurrentWarehouse();
+			if ($id_warehouse != -1)
+				$orders->where('id_warehouse = '.(int)$id_warehouse);
 			$orders->getAll();
 			$csv = new CSV($orders, $this->l('supply_orders'));
     		$csv->export();
@@ -1102,19 +1116,23 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				return;
 
 			// for each supply order
-			$keys = array('id_supply_order', 'id_product', 'id_product_attribute', 'reference', 'supplier_reference', 'ean13', 'upc', 'name',
+			$keys = array('id_product', 'id_product_attribute', 'reference', 'supplier_reference', 'ean13', 'upc', 'name',
 						  'unit_price_te', 'quantity_expected', 'quantity_received', 'price_te', 'discount_rate', 'discount_value_te',
 						  'price_with_discount_te', 'tax_rate', 'tax_value', 'price_ti', 'tax_value_with_order_discount',
-						  'price_with_order_discount_te');
+						  'price_with_order_discount_te', 'id_supply_order');
 			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $keys)));
 
 			foreach ($ids as $id)
 			{
 				$query = new DbQuery();
-				$query->select(implode(',', $keys));
-				$query->from('supply_order_detail');
-				$query->where('id_supply_order = '.(int)$id);
-				$query->orderBy('id_supply_order_detail DESC');
+				$query->select(implode(', sod.', $keys));
+				$query->from('supply_order_detail sod');
+				$query->leftJoin('supply_order so ON (so.id_supply_order = sod.id_supply_order)');
+				$id_warehouse = $this->getCurrentWarehouse();
+				if ($id_warehouse != -1)
+					$query->where('so.id_warehouse = '.(int)$id_warehouse);
+				$query->where('sod.id_supply_order = '.(int)$id);
+				$query->orderBy('sod.id_supply_order_detail DESC');
 				$resource = Db::getInstance()->query($query);
 				// gets details
 				while ($row = Db::getInstance()->nextRow($resource))
