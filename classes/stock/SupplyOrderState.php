@@ -65,12 +65,6 @@ class SupplyOrderStateCore extends ObjectModel
 	 */
 	public $color;
 
-	
-
-	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -79,32 +73,17 @@ class SupplyOrderStateCore extends ObjectModel
 		'primary' => 'id_supply_order_state',
 		'multilang' => true,
 		'fields' => array(
-			'delivery_note' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'editable' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'receipt_state' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'pending_receipt' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'enclosed' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'color' => array('type' => 'FILL_ME', 'validate' => 'isColor'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'delivery_note' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'editable' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'receipt_state' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'pending_receipt' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'enclosed' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
+
+			// Lang fields
+			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
-
-
-	/**
-	 * @see ObjectModel::getFields()
-	 */
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['delivery_note'] = (bool)$this->delivery_note;
-		$fields['editable'] = (bool)$this->editable;
-		$fields['receipt_state'] = (bool)$this->receipt_state;
-		$fields['pending_receipt'] = (bool)$this->pending_receipt;
-		$fields['enclosed'] = (bool)$this->enclosed;
-		$fields['color'] = pSQL($this->color);
-
-		return $fields;
-	}
 
 	/**
 	 * @see ObjectModel::getTranslationsFieldsChild()

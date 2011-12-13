@@ -49,10 +49,6 @@ class WarehouseProductLocationCore extends ObjectModel
 	 * */
 	public $location;
 
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -60,25 +56,12 @@ class WarehouseProductLocationCore extends ObjectModel
 		'table' => 'warehouse_product_location',
 		'primary' => 'id_warehouse_product_location',
 		'fields' => array(
-			'location' => array('type' => 'FILL_ME', 'validate' => 'isReference', 'size' => 64),
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'location' => 				array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
+			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_warehouse' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
-		$fields['id_warehouse'] = (int)$this->id_warehouse;
-		$fields['location'] = pSQL($this->location);
-
-		return $fields;
-	}
 
 	/**
 	 * For a given product and warehouse, get the location
