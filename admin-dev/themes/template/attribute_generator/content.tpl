@@ -120,11 +120,10 @@
 		</div>
 		<div style="float: left; margin-left: 60px;">
 			<div>
-				<select multiple name="attributes[]" id="attribute_group" style="width: 200px; height: 350px; margin-bottom: 10px;">';
-					{$attribute_groups|@var_dump}
+				<select multiple name="attributes[]" id="attribute_group" style="width: 200px; height: 350px; margin-bottom: 10px;">
 					{foreach $attribute_groups as $k => $attribute_group}
 						{if isset($attribute_js[$attribute_group['id_attribute_group']])}
-							<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'htmlall':'UTF-8'}">';
+							<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'htmlall':'UTF-8'}">
 								{foreach $attribute_js[$attribute_group['id_attribute_group']] as $k => $v}
 									<option name="{$k}" id="attr_{$k}" value="{$v|escape:'quotes':'UTF-8'}" title="{$v|escape:'quotes':'UTF-8'}">{$v|escape:'quotes':'UTF-8'}</option>
 								{/foreach}
