@@ -47,39 +47,19 @@ class CustomerThreadCore extends ObjectModel
 		'table' => 'customer_thread',
 		'primary' => 'id_customer_thread',
 		'fields' => array(
-			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_contact' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'size' => 254),
-			'token' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'id_lang' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_contact' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_customer' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_order' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'email' => 		array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 254),
+			'token' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'status' => 	array('type' => self::TYPE_STRING),
+			'date_add' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	
-	
-
-	
-
-	public	function getFields()
-	{
-	 	$this->validateFields();
-		$fields['id_lang'] = (int)$this->id_lang;
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_contact'] = (int)$this->id_contact;
-		$fields['id_customer'] = (int)$this->id_customer;
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['status'] = pSQL($this->status);
-		$fields['email'] = pSQL($this->email);
-		$fields['token'] = pSQL($this->token);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return $fields;
-	}
 
 	public function delete()
 	{

@@ -32,9 +32,6 @@ class PageCore extends ObjectModel
 
 	public $name;
 
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -42,19 +39,10 @@ class PageCore extends ObjectModel
 		'table' => 'page',
 		'primary' => 'id_page',
 		'fields' => array(
-			'id_page_type' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_object' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_page_type' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_object' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_page_type'] = (int)($this->id_page_type);
-		$fields['id_object'] = (int)($this->id_object);
-		return $fields;
-	}
 
 	/**
 	 * @return int Current page ID

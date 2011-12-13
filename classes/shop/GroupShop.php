@@ -37,9 +37,6 @@ class GroupShopCore extends ObjectModel
 	public $share_order;
 	public $deleted;
 
-	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -47,14 +44,14 @@ class GroupShopCore extends ObjectModel
 		'table' => 'group_shop',
 		'primary' => 'id_group_shop',
 		'fields' => array(
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'share_customer' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'share_order' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'share_stock' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 64),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'share_customer' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'share_order' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'share_stock' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
-
 
 	private	static $assoTables = array(
 		'attribute_group' => array('type' => 'group_shop'),
@@ -67,17 +64,16 @@ class GroupShopCore extends ObjectModel
 		'tax_rules_group' => array('type' => 'group_shop'),
 	);
 
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
+		if (!$this->share_customer || !$this->share_stock)
+			$this->share_order = false;
 
-		$fields['name'] = pSQL($this->name);
-		$fields['share_customer'] = (int)$this->share_customer;
-		$fields['share_stock'] = (int)$this->share_stock;
-		$fields['share_order'] = ($fields['share_customer'] && $fields['share_stock']) ? (int)$this->share_order : false;
-		$fields['active'] = (int)$this->active;
-		$fields['deleted'] = (int)$this->deleted;
-		return $fields;
+		return parent::getFields();
 	}
 
 	public static function getGroupShops($active = true)

@@ -59,12 +59,6 @@ class ImageCore extends ObjectModel
 	/** @var int access rights of created folders (octal) */
 	protected static $access_rights = 0775;
 
-	
-	
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -73,13 +67,14 @@ class ImageCore extends ObjectModel
 		'primary' => 'id_image',
 		'multilang' => true,
 		'fields' => array(
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'position' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'cover' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'legend' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+
+			// Lang fields
+			'legend' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
-
 
 	protected static $_cacheGetSize = array();
 
@@ -88,15 +83,6 @@ class ImageCore extends ObjectModel
 		parent::__construct($id, $id_lang);
 		$this->image_dir = _PS_PROD_IMG_DIR_;
 		$this->source_index = _PS_PROD_IMG_DIR_.'index.php';
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['position'] = (int)$this->position;
-		$fields['cover'] = (int)$this->cover;
-		return $fields;
 	}
 
 	public function getTranslationsFieldsChild()

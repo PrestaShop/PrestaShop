@@ -36,13 +36,6 @@ class FeatureValueCore extends ObjectModel
 	/** @var boolean Custom */
 	public $custom = 0;
 
- 	
-	
-
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -51,12 +44,13 @@ class FeatureValueCore extends ObjectModel
 		'primary' => 'id_feature_value',
 		'multilang' => true,
 		'fields' => array(
-			'id_feature' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'custom' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'value' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+			'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'custom' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+
+			// Lang fields
+			'value' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
 		),
 	);
-
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_feature_values',
@@ -65,16 +59,6 @@ class FeatureValueCore extends ObjectModel
 			'id_feature' => array('xlink_resource'=> 'product_features'),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_feature'] = (int)$this->id_feature;
-		$fields['custom'] = (int)$this->custom;
-
-		return $fields;
-	}
 
 	/**
 	* Check then return multilingual fields for database interaction

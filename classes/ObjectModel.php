@@ -35,6 +35,7 @@ abstract class ObjectModelCore
 	const TYPE_STRING = 3;
 	const TYPE_FLOAT = 4;
 	const TYPE_DATE = 5;
+	const TYPE_HTML = 5;
 
 	/**
 	 * List of association types
@@ -230,7 +231,7 @@ abstract class ObjectModelCore
 					break;
 
 					case self::TYPE_BOOL :
-						$fields[$field] = (bool)$this->$field;
+						$fields[$field] = (int)$this->$field;
 						break;
 
 					case self::TYPE_FLOAT :
@@ -243,6 +244,10 @@ abstract class ObjectModelCore
 
 					case self::TYPE_STRING :
 						$fields[$field] = pSQL($this->$field);
+					break;
+
+					case self::TYPE_STRING :
+						$fields[$field] = pSQL($this->$field, true);
 					break;
 
 					default :

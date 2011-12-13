@@ -48,10 +48,6 @@ class ConnectionCore extends ObjectModel
 	/** @var string */
 	public $date_add;
 
-	
-	
-
-	/* MySQL does not allow 'connection' for a table name */
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -59,16 +55,19 @@ class ConnectionCore extends ObjectModel
 		'table' => 'connections',
 		'primary' => 'id_connections',
 		'fields' => array(
-			'id_guest' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_page' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'ip_address' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'http_referer' => array('type' => 'FILL_ME', 'validate' => 'isAbsoluteUrl'),
-			'id_shop' => array('type' => 'FILL_ME', 'required' => true),
-			'id_group_shop' => array('type' => 'FILL_ME', 'required' => true),
+			'id_guest' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_page' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'ip_address' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'http_referer' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
+			'id_shop' => 		array('type' => self::TYPE_INT, 'required' => true),
+			'id_group_shop' => 	array('type' => self::TYPE_INT, 'required' => true),
 		),
 	);
 
-
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
 		if (!$this->id_shop)
@@ -76,15 +75,7 @@ class ConnectionCore extends ObjectModel
 		if (!$this->id_group_shop)
 			$this->id_group_shop = Context::getContext()->shop->getGroupID();
 
-		$this->validateFields();
-		$fields['id_guest'] = (int)($this->id_guest);
-		$fields['id_page'] = (int)($this->id_page);
-		$fields['ip_address'] = (int)($this->ip_address);
-		if (Validate::isAbsoluteUrl($this->http_referer))
-			$fields['http_referer'] = pSQL($this->http_referer);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
+		$fields = parent::getFields();
 		return $fields;
 	}
 

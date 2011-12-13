@@ -44,10 +44,6 @@ class ConfigurationCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -56,12 +52,14 @@ class ConfigurationCore extends ObjectModel
 		'primary' => 'id_configuration',
 		'multilang' => true,
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
-			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
+			'id_group_shop' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'value' => 			array('type' => self::TYPE_STRING),
+			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
 
 	/** @var array Configuration cache */
 	protected static $_CONF;
@@ -74,18 +72,6 @@ class ConfigurationCore extends ObjectModel
 			'value' => array(),
 		)
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['name'] = pSQL($this->name);
-		$fields['id_group_shop'] = $this->id_group_shop;
-		$fields['id_shop'] = $this->id_shop;
-		$fields['value'] = pSQL($this->value);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return $fields;
-	}
 
 	/**
 	  * Check then return multilingual fields for database interaction

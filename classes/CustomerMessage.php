@@ -44,30 +44,16 @@ class CustomerMessageCore extends ObjectModel
 		'table' => 'customer_message',
 		'primary' => 'id_customer_message',
 		'fields' => array(
-			'message' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
-			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'ip_address' => array('type' => 'FILL_ME', 'validate' => 'isIp2Long'),
+			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_customer_thread' => array('type' => self::TYPE_INT),
+			'ip_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isIp2Long'),
+			'message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
+			'file_name' => 			array('type' => self::TYPE_STRING),
+			'user_agent' => 		array('type' => self::TYPE_STRING),
+			'private' => 			array('type' => self::TYPE_STRING),
+			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	
-	
-	
-
-	public	function getFields()
-	{
-	 	$this->validateFields();
-		$fields['id_customer_thread'] = (int)$this->id_customer_thread;
-		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['message'] = pSQL($this->message);
-		$fields['file_name'] = pSQL($this->file_name);
-		$fields['ip_address'] = (int)$this->ip_address;
-		$fields['user_agent'] = pSQL($this->user_agent);
-		$fields['private'] = pSQL($this->private);
-		$fields['date_add'] = pSQL($this->date_add);
-		return $fields;
-	}
 
 	public static function getMessagesByOrderId($id_order, $private = true)
 	{

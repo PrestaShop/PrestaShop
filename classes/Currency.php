@@ -59,10 +59,6 @@ class CurrencyCore extends ObjectModel
 	/** @var int bool active */
 	public $active;
 
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -71,19 +67,18 @@ class CurrencyCore extends ObjectModel
 		'primary' => 'id_currency',
 		'multilang' => true,
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-			'iso_code_num' => array('type' => 'FILL_ME', 'validate' => 'isNumericIsoCode', 'size' => 3),
-			'blank' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'sign' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
-			'format' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'decimals' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
-			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
-			'deleted' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'iso_code' => 		array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+			'iso_code_num' => 	array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
+			'blank' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'sign' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
+			'format' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'decimals' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
-
 
 	/** @var array Currency cache */
 	static protected $currencies = array();
@@ -141,23 +136,6 @@ class CurrencyCore extends ObjectModel
 		} else {
 			return false;
 		}
-	}
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['name'] = pSQL($this->name);
-		$fields['iso_code'] = pSQL($this->iso_code);
-		$fields['iso_code_num'] = pSQL($this->iso_code_num);
-		$fields['sign'] = pSQL($this->sign);
-		$fields['format'] = (int)($this->format);
-		$fields['decimals'] = (int)($this->decimals);
-		$fields['blank'] = (int)($this->blank);
-		$fields['conversion_rate'] = (float)($this->conversion_rate);
-		$fields['deleted'] = (int)($this->deleted);
-		$fields['active'] = (int)($this->active);
-
-		return $fields;
 	}
 
 	public function deleteSelection($selection)

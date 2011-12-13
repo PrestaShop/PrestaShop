@@ -57,9 +57,6 @@ class OrderSlipCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -67,28 +64,17 @@ class OrderSlipCore extends ObjectModel
 		'table' => 'order_slip',
 		'primary' => 'id_order_slip',
 		'fields' => array(
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
+			'id_customer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'conversion_rate' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'amount' => 				array('type' => self::TYPE_INT),
+			'shipping_cost' => 			array('type' => self::TYPE_INT),
+			'shipping_cost_amount' =>	array('type' => self::TYPE_FLOAT),
+			'partial' =>				array('type' => self::TYPE_INT),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_customer'] = (int)($this->id_customer);
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['conversion_rate'] = (float)($this->conversion_rate);
-		$fields['amount'] = (int)($this->amount);
-		$fields['shipping_cost'] = (int)($this->shipping_cost);
-		$fields['shipping_cost_amount'] = (float)($this->shipping_cost_amount);
-		$fields['partial'] = (int)($this->partial);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return $fields;
-	}
 
 	public function addSlipDetail($orderDetailList, $productQtyList)
 	{

@@ -39,10 +39,6 @@ class OrderPaymentCore extends ObjectModel
 	public $card_holder;
 	public $date_add;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -50,35 +46,19 @@ class OrderPaymentCore extends ObjectModel
 		'table' => 'order_payment',
 		'primary' => 'id_order_payment',
 		'fields' => array(
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'amount' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'payment_method' => array('type' => 'FILL_ME', 'validate' => 'isName'),
-			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'transaction_id' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
-			'card_number' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
-			'card_brand' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
-			'card_expiration' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
-			'card_holder' => array('type' => 'FILL_ME', 'validate' => 'isAnything', 'size' => 254),
+			'id_order' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'amount' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'payment_method' => 	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'conversion_rate' => 	array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
+			'transaction_id' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
+			'card_number' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
+			'card_brand' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
+			'card_expiration' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
+			'card_holder' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['id_currency'] = (int)($this->id_currency);
-		$fields['amount'] = (float)($this->amount);
-		$fields['payment_method'] = pSQL($this->payment_method);
-		$fields['transaction_id'] = pSQL($this->transaction_id);
-		$fields['card_number'] = pSQL($this->card_number);
-		$fields['card_brand'] = pSQL($this->card_brand);
-		$fields['card_expiration'] = pSQL($this->card_expiration);
-		$fields['card_holder'] = pSQL($this->card_holder);
-		$fields['date_add'] = pSQL($this->date_add);
-		return $fields;
-	}
 
 	public function add($autodate = true, $nullValues = false)
 	{

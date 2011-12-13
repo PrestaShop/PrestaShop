@@ -41,9 +41,6 @@ class GuestCore extends ObjectModel
 	public $real_player;
 	public $windows_media;
 	public $accept_language;
-	
- 	
- 	
 
 	/**
 	 * @see ObjectModel::$definition
@@ -52,52 +49,29 @@ class GuestCore extends ObjectModel
 		'table' => 'guest',
 		'primary' => 'id_guest',
 		'fields' => array(
-			'id_operating_system' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_web_browser' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'javascript' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'screen_resolution_x' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'screen_resolution_y' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'screen_color' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'sun_java' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'adobe_flash' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'adobe_director' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'apple_quicktime' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'real_player' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'windows_media' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'accept_language' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 8),
+			'id_operating_system' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_web_browser' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_customer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'javascript' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'screen_resolution_x' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'screen_resolution_y' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'screen_color' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'sun_java' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'adobe_flash' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'adobe_director' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'apple_quicktime' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'real_player' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'windows_media' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'accept_language' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8),
 		),
 	);
 
-	
 	protected	$webserviceParameters = array(
 		'fields' => array(
 			'id_customer' => array('xlink_resource' => 'customers'),
 		),
 	);
-	
-	public function getFields()
-	{
-		$this->validateFields();
-		
-		$fields['id_operating_system'] = (int)($this->id_operating_system);
-		$fields['id_web_browser'] = (int)($this->id_web_browser);
-		$fields['id_customer'] = (int)($this->id_customer);
-		$fields['javascript'] = (int)($this->javascript);
-		$fields['screen_resolution_x'] = (int)($this->screen_resolution_x);
-		$fields['screen_resolution_y'] = (int)($this->screen_resolution_y);
-		$fields['screen_color'] = (int)($this->screen_color);
-		$fields['sun_java'] = (int)($this->sun_java);
-		$fields['adobe_flash'] = (int)($this->adobe_flash);
-		$fields['adobe_director'] = (int)($this->adobe_director);
-		$fields['apple_quicktime'] = (int)($this->apple_quicktime);
-		$fields['real_player'] = (int)($this->real_player);
-		$fields['windows_media'] = (int)($this->windows_media);
-		$fields['accept_language'] = pSQL($this->accept_language);
-		
-		return $fields;
-	}
-	
+
 	function userAgent()
 	{
 		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';

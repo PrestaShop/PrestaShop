@@ -41,14 +41,6 @@ class TabCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
-	
-	
-	
-
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -57,26 +49,18 @@ class TabCore extends ObjectModel
 		'primary' => 'id_tab',
 		'multilang' => true,
 		'fields' => array(
-			'id_parent' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'position' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'module' => array('type' => 'FILL_ME', 'validate' => 'isTabName', 'size' => 64),
-			'class_name' => array('type' => 'FILL_ME', 'required' => true, 'size' => 64),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'id_parent' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'module' => 	array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
+			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
 
 	protected static $_getIdFromClassName = null;
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_parent'] = (int)$this->id_parent;
-		$fields['class_name'] = pSQL($this->class_name);
-		$fields['module'] = pSQL($this->module);
-		$fields['position'] = (int)$this->position;
-		return $fields;
-	}
 
 	public function getTranslationsFieldsChild()
 	{

@@ -59,12 +59,6 @@ class StockCore extends ObjectModel
 	/** @var int the unit price without tax forthe current product */
 	public $price_te;
 
-	
-
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -72,35 +66,17 @@ class StockCore extends ObjectModel
 		'table' => 'stock',
 		'primary' => 'id_stock',
 		'fields' => array(
-			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
-			'ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13'),
-			'upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc'),
-			'physical_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
-			'usable_quantity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
-			'price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'id_warehouse' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => 				array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
+			'ean13' => 					array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
+			'upc' => 					array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
+			'physical_quantity' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'usable_quantity' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'price_te' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_warehouse'] = (int)$this->id_warehouse;
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
-		$fields['reference'] = pSQL($this->reference);
-		$fields['ean13'] = pSQL($this->ean13);
-		$fields['upc'] = pSQL($this->upc);
-		$fields['physical_quantity'] = (int)$this->physical_quantity;
-		$fields['usable_quantity'] = (int)$this->usable_quantity;
-		$fields['price_te'] = (float)round($this->price_te, 6);
-
-		return $fields;
-	}
 
 	/**
 	 * @see ObjectModel::update()

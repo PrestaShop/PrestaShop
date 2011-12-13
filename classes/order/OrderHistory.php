@@ -42,9 +42,6 @@ class OrderHistoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -52,9 +49,10 @@ class OrderHistoryCore extends ObjectModel
 		'table' => 'order_history',
 		'primary' => 'id_order_history',
 		'fields' => array(
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_order' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_employee' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
@@ -66,18 +64,6 @@ class OrderHistoryCore extends ObjectModel
 			'id_order' => array('xlink_resource' => 'orders'),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['id_order_state'] = (int)$this->id_order_state;
-		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['date_add'] = pSQL($this->date_add);
-
-		return $fields;
-	}
 
 	public function changeIdOrderState($new_order_state, $id_order, $id_warehouse = null)
 	{

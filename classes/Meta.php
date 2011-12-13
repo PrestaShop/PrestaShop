@@ -34,14 +34,6 @@ class MetaCore extends ObjectModel
 	public 		$keywords;
 	public 		$url_rewrite;
 
- 	
- 	
- 	
-
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -51,20 +43,15 @@ class MetaCore extends ObjectModel
 		'multilang' => true,
 		'multishop' => true,
 		'fields' => array(
-			'page' => array('type' => 'FILL_ME', 'validate' => 'isFileName', 'required' => true, 'size' => 64),
-			'title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'url_rewrite' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'size' => 255),
+			'page' => 			array('type' => self::TYPE_STRING, 'validate' => 'isFileName', 'required' => true, 'size' => 64),
+
+			// Lang fields
+			'title' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'url_rewrite' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'size' => 255),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		return array('page' => pSQL($this->page));
-	}
 
 	public function getTranslationsFieldsChild()
 	{
