@@ -59,12 +59,6 @@ class WarehouseCore extends ObjectModel
 	 */
 	public $management_type;
 
-	
-
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -72,30 +66,15 @@ class WarehouseCore extends ObjectModel
 		'table' => 'warehouse',
 		'primary' => 'id_warehouse',
 		'fields' => array(
-			'id_address' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'reference' => array('type' => 'FILL_ME', 'validate' => 'isString', 'required' => true, 'size' => 45),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 45),
-			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'management_type' => array('type' => 'FILL_ME', 'validate' => 'isStockManagement', 'required' => true),
-			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'stock_management' => array('type' => 'FILL_ME', 'size' => 32),
+			'id_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => 			array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
+			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 45),
+			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'management_type' => 	array('type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true),
+			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'deleted' => 			array('type' => self::TYPE_BOOL),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_address'] = (int)$this->id_address;
-		$fields['reference'] = $this->reference;
-		$fields['name'] = pSQL($this->name);
-		$fields['deleted'] = (int)$this->deleted;
-		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['management_type'] = pSQL($this->management_type);
-		$fields['id_currency'] = (int)$this->id_currency;
-
-		return $fields;
-	}
 
 	/**
 	 * Gets the shops (id and name) associated to the current warehouse

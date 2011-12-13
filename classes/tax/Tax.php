@@ -43,12 +43,6 @@ class TaxCore extends ObjectModel
 	/** @var string Account Number */
 	public 		$account_number;
 
- 	
- 	
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -56,8 +50,13 @@ class TaxCore extends ObjectModel
 		'table' => 'tax',
 		'primary' => 'id_tax',
 		'fields' => array(
-			'rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'account_number' => array('type' => self::TYPE_STRING),
+			'active' => 		array('type' => self::TYPE_BOOL),
+			'deleted' => 		array('type' => self::TYPE_BOOL),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
@@ -68,16 +67,6 @@ class TaxCore extends ObjectModel
 	protected	$webserviceParameters = array(
 		'objectsNodeName' => 'taxes',
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['rate'] = (float)($this->rate);
-		$fields['active'] = (int)($this->active);
-		$fields['deleted'] = (int)($this->deleted);
-		$fields['account_number'] = $this->account_number;
-		return $fields;
-	}
 
 	/**
 	* Check then return multilingual fields for database interaction
@@ -281,7 +270,7 @@ class TaxCore extends ObjectModel
 
 		return $tax_calculator->getTotalRate();
 	}
-	
+
 	/**
 	 * Returns the Account number of a Tax
 	 *
@@ -292,7 +281,7 @@ class TaxCore extends ObjectModel
 	{
 		return Db::getInstance()->getValue('
 			SELECT account_number FROM `'._DB_PREFIX_.'tax`
-			WHERE id_tax = '.(int)$id_tax);	
+			WHERE id_tax = '.(int)$id_tax);
 	}
 }
 
