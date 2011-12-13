@@ -31,10 +31,6 @@ class FeatureCore extends ObjectModel
 	public $name;
 	public $position;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -42,8 +38,10 @@ class FeatureCore extends ObjectModel
 		'table' => 'feature',
 		'primary' => 'id_feature',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-			'position' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isInt'),
+			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
 
@@ -53,11 +51,6 @@ class FeatureCore extends ObjectModel
 		'objectNodeName' => 'product_feature',
 		'fields' => array(),
 	);
-
-	public function getFields()
-	{
-		return array('id_feature' => null, 'position' => (int)$this->position);
-	}
 
 	/**
 	* Check then return multilingual fields for database interaction

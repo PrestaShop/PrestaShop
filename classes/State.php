@@ -42,10 +42,6 @@ class StateCore extends ObjectModel
 	/** @var boolean Status for delivery */
 	public		$active = true;
 
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -53,32 +49,20 @@ class StateCore extends ObjectModel
 		'table' => 'state',
 		'primary' => 'id_state',
 		'fields' => array(
-			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_zone' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 4),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_zone' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'iso_code' => 	array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 4),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
 
-
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_zone' => array('xlink_resource'=> 'zones'),
 			'id_country' => array('xlink_resource'=> 'countries')
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_country'] = (int)($this->id_country);
-		$fields['id_zone'] = (int)($this->id_zone);
-		$fields['iso_code'] = pSQL(strtoupper($this->iso_code));
-		$fields['name'] = pSQL($this->name);
-		$fields['active'] = (int)($this->active);
-		return $fields;
-	}
 
 	public static function getStates($id_lang = false, $active = false)
 	{

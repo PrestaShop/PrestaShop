@@ -120,10 +120,6 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	public $is_template = 0;
 
-	
-
-	
-
 	/**
 	 * @var array Contains object definition
 	 * @see ObjectModel::definition
@@ -135,53 +131,26 @@ class SupplyOrderCore extends ObjectModel
 		'table' => 'supply_order',
 		'primary' => 'id_supply_order',
 		'fields' => array(
-			'id_supplier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'supplier_name' => array('type' => 'FILL_ME', 'validate' => 'isCatalogName', 'required' => true),
-			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_supply_order_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_ref_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'reference' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
-			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
-			'date_upd' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
-			'date_delivery_expected' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
-			'total_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_with_discount_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_ti' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_tax' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'discount_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
-			'discount_value_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'is_template' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'id_supplier' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'supplier_name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true),
+			'id_lang' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_warehouse' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_supply_order_state' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_ref_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'reference' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'date_delivery_expected' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+			'total_te' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_with_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_ti' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_tax' =>				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'discount_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'discount_value_te' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'is_template' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_supplier'] = (int)$this->id_supplier;
-		$fields['supplier_name'] = pSQL($this->supplier_name);
-		$fields['id_lang'] = (int)$this->id_lang;
-		$fields['id_warehouse'] = (int)$this->id_warehouse;
-		$fields['id_supply_order_state'] = (int)$this->id_supply_order_state;
-		$fields['id_currency'] = (int)$this->id_currency;
-		$fields['id_ref_currency'] = (int)$this->id_ref_currency;
-		$fields['reference'] = pSQL($this->reference);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['date_delivery_expected'] = pSQL($this->date_delivery_expected);
-		$fields['total_te'] = (float)$this->total_te;
-		$fields['total_with_discount_te'] = (float)$this->total_with_discount_te;
-		$fields['total_ti'] = (float)$this->total_ti;
-		$fields['total_tax'] = (float)$this->total_tax;
-		$fields['discount_rate'] = (float)$this->discount_rate;
-		$fields['discount_value_te'] = (float)$this->discount_value_te;
-		$fields['is_template'] = (int)(bool)$this->is_template;
-
-		return $fields;
-	}
 
 	/**
 	 * @see ObjectModel::update()

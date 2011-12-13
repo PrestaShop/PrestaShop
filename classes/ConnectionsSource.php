@@ -33,11 +33,6 @@ class ConnectionsSourceCore extends ObjectModel
 	public $keywords;
 	public $date_add;
 
-	// Controler les keywords
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -45,26 +40,14 @@ class ConnectionsSourceCore extends ObjectModel
 		'table' => 'connections_source',
 		'primary' => 'id_connections_source',
 		'fields' => array(
-			'id_connections' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'http_referer' => array('type' => 'FILL_ME', 'validate' => 'isAbsoluteUrl'),
-			'request_uri' => array('type' => 'FILL_ME', 'validate' => 'isUrl'),
-			'keywords' => array('type' => 'FILL_ME', 'validate' => 'isMessage'),
-			'date_add' => array('type' => 'FILL_ME', 'required' => true),
+			'id_connections' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'http_referer' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
+			'request_uri' => 	array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
+			'keywords' => 		array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
+			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
 		),
 	);
 
-	
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_connections'] = (int)($this->id_connections);
-		$fields['http_referer'] = pSQL($this->http_referer);
-		$fields['request_uri'] = pSQL($this->request_uri);
-		$fields['keywords'] = pSQL($this->keywords);
-		$fields['date_add'] = pSQL($this->date_add);
-		return $fields;
-	}
-	
 	public function add($autodate = true, $nullValues = false)
 	{
 		if ($result = parent::add($autodate, $nullValues))

@@ -39,9 +39,6 @@ class SpecificPriceRuleCore extends ObjectModel
 	public	$from;
 	public	$to;
 
- 	
- 	
-	
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -49,36 +46,17 @@ class SpecificPriceRuleCore extends ObjectModel
 		'table' => 'specific_price_rule',
 		'primary' => 'id_specific_price_rule',
 		'fields' => array(
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'from_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
-			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'reduction_type' => array('type' => 'FILL_ME', 'validate' => 'isReductionType', 'required' => true),
-			'from' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
-			'to' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
-			'id_currency' => array('type' => 'FILL_ME', 'required' => true),
+			'id_shop' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_country' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => 	array('type' => self::TYPE_INT, 'required' => true),
+			'id_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'from_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'reduction' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_type' => array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
+			'from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
+			'to' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		
-		$fields['name'] = pSQL($this->name);
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_currency'] = (int)$this->id_currency;
-		$fields['id_country'] = (int)$this->id_country;
-		$fields['id_group'] = (int)$this->id_group;
-		$fields['from_quantity'] = (int)$this->from_quantity;
-		$fields['reduction'] = (float)$this->reduction;
-		$fields['reduction_type'] = pSQL($this->reduction_type);
-		$fields['from'] = pSQL($this->from);
-		$fields['to'] = pSQL($this->to);
-		
-		return $fields;
-	}
 
 	public function delete()
 	{

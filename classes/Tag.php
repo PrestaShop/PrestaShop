@@ -33,9 +33,6 @@ class TagCore extends ObjectModel
  	/** @var string Name */
 	public $name;
 
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -43,16 +40,16 @@ class TagCore extends ObjectModel
 		'table' => 'tag',
 		'primary' => 'id_tag',
 		'fields' => array(
-			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
+			'id_lang' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
 		),
 	);
 
 
 	protected $webserviceParameters = array(
-	'fields' => array(
-	'id_lang' => array('xlink_resource' => 'languages'),
-	),
+		'fields' => array(
+			'id_lang' => array('xlink_resource' => 'languages'),
+		),
 	);
 
 	public function __construct($id = null, $name = null, $id_lang = null)
@@ -73,14 +70,6 @@ class TagCore extends ObjectModel
 				$this->name = $row['name'];
 			}
 		}
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_lang'] = (int)$this->id_lang;
-		$fields['name'] = pSQL($this->name);
-		return $fields;
 	}
 
 	public function add($autodate = true, $null_values = false)

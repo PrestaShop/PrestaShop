@@ -48,9 +48,6 @@ class OrderReturnCore extends ObjectModel
 	/** @var string Object last modification date */
 	public 		$date_upd;
 
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -58,27 +55,15 @@ class OrderReturnCore extends ObjectModel
 		'table' => 'order_return',
 		'primary' => 'id_order_return',
 		'fields' => array(
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'question' => array('type' => 'FILL_ME', 'validate' => 'isMessage'),
+			'id_customer' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'question' => 		array('type' => self::TYPE_HTML, 'validate' => 'isMessage'),
+			'state' => 			array('type' => self::TYPE_STRING),
+			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
-	
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_customer'] = pSQL($this->id_customer);
-		$fields['id_order'] = pSQL($this->id_order);
-		$fields['state'] = pSQL($this->state);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		// we don't want to use nl2br now because <br> will not pass Validation::isMessage()
-		$fields['question'] = pSQL($this->question, true);
-		return $fields;
-	}
-	
 	public function addReturnDetail($orderDetailList, $productQtyList, $customizationIds, $customizationQtyInput)
 	{
 		/* Classic product return */

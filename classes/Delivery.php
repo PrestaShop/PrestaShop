@@ -51,10 +51,6 @@ class DeliveryCore extends ObjectModel
 	/** @var float */
 	public $price;
 
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -62,38 +58,35 @@ class DeliveryCore extends ObjectModel
 		'table' => 'delivery',
 		'primary' => 'id_delivery',
 		'fields' => array(
-			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_range_price' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_range_weight' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_zone' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'id_carrier' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_range_price' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_range_weight' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_zone' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => 		array('type' => self::TYPE_INT),
+			'id_group_shop' => 	array('type' => self::TYPE_INT),
+			'price' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 		),
 	);
 
-
 	protected $webserviceParameters = array(
-			'objectsNodeName' => 'deliveries',
-			'fields' => array(
-				'id_carrier' => array('xlink_resource' => 'carriers'),
-				'id_range_price' => array('xlink_resource' => 'price_ranges'),
-				'id_range_weight' => array('xlink_resource' => 'weight_ranges'),
-				'id_zone' => array('xlink_resource' => 'zones'),
+		'objectsNodeName' => 'deliveries',
+		'fields' => array(
+			'id_carrier' => array('xlink_resource' => 'carriers'),
+			'id_range_price' => array('xlink_resource' => 'price_ranges'),
+			'id_range_weight' => array('xlink_resource' => 'weight_ranges'),
+			'id_zone' => array('xlink_resource' => 'zones'),
 		)
 	);
 
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
 
+		// @todo add null management in definitions
 		if ($this->id_shop)
 			$fields['id_shop'] = (int)$this->id_shop;
 		if ($this->id_group_shop)
 			$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['id_carrier'] = (int)$this->id_carrier;
-		$fields['id_range_price'] = (int)$this->id_range_price;
-		$fields['id_range_weight'] = (int)$this->id_range_weight;
-		$fields['id_zone'] = (int)$this->id_zone;
-		$fields['price'] = (float)$this->price;
 
 		return $fields;
 	}

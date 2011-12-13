@@ -53,29 +53,20 @@ class StockMvtReasonCore extends ObjectModel
 		'primary' => 'id_stock_mvt_reason',
 		'multilang' => true,
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+			'sign' => 		array('type' => self::TYPE_INT),
+			'deleted' => 	array('type' => self::TYPE_BOOL),
+			'date_add' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
 		),
 	);
-
-
- 	
- 	
- 	
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movement_reasons',
 		'objectNodeName' => 'stock_movement_reason',
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['sign'] = (int)$this->sign;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['deleted'] = (int)$this->deleted;
-		return $fields;
-	}
 
 	public function getTranslationsFieldsChild()
 	{

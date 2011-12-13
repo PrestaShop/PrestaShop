@@ -44,14 +44,6 @@ class GroupCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	
-	
-	
-
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -60,27 +52,30 @@ class GroupCore extends ObjectModel
 		'primary' => 'id_group',
 		'multilang' => true,
 		'fields' => array(
-			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'price_display_method' => array('type' => 'FILL_ME', 'validate' => 'isPriceDisplayMethod', 'required' => true),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'price_display_method' => 	array('type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'name' => 					array('type' => self::TYPE_INT, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
-
 
 	protected static $cache_reduction = array();
 	protected static $group_price_display_method = array();
 
-	protected	$webserviceParameters = array();
+	protected $webserviceParameters = array();
 
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
 		if (isset($this->id))
 			$fields['id_group'] = (int)$this->id;
-		$fields['reduction'] = (float)$this->reduction;
-		$fields['price_display_method'] = (int)$this->price_display_method;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
 
 		return $fields;
 	}

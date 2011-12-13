@@ -36,10 +36,6 @@ class CountyCore extends ObjectModel
 	public $id_state;
 	public $active;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -47,12 +43,11 @@ class CountyCore extends ObjectModel
 		'table' => 'county',
 		'primary' => 'id_county',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'id_state' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
-
 
 	private static $_cache_get_counties = array();
 	private static $_cache_county_zipcode = array();
@@ -66,15 +61,6 @@ class CountyCore extends ObjectModel
 			'id_state' => array('xlink_resource'=> 'states'),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_state'] = (int)($this->id_state);
-		$fields['name'] = pSQL($this->name);
-		$fields['active'] = (int)($this->active);
-		return $fields;
-	}
 
 	public function delete()
 	{

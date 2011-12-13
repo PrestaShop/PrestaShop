@@ -42,10 +42,6 @@ class OrderCartRuleCore extends ObjectModel
 	/** @var integer */
 	public $value;
 
-	
-	
-
-	/* MySQL does not allow 'order detail' for a table name */
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -53,28 +49,16 @@ class OrderCartRuleCore extends ObjectModel
 		'table' => 'order_cart_rule',
 		'primary' => 'id_order_cart_rule',
 		'fields' => array(
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
-			'value' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'id_order' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'value' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 		),
 	);
 
-
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_order' => array('xlink_resource' => 'orders'),
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_order'] = (int)($this->id_order);
-		$fields['name'] = pSQL($this->name);
-		$fields['value'] = (int)($this->value);
-
-		return $fields;
-	}
 }
 

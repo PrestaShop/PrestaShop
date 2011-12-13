@@ -129,10 +129,6 @@ class OrderDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -140,53 +136,52 @@ class OrderDetailCore extends ObjectModel
 		'table' => 'order_detail',
 		'primary' => 'id_order_detail',
 		'fields' => array(
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order_invoice' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_warehouse' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'product_id' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'product_attribute_id' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'product_name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
-			'product_quantity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
-			'product_quantity_in_stock' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'product_quantity_return' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'product_quantity_refunded' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'product_quantity_reinjected' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'product_price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'reduction_percent' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'reduction_amount' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'group_reduction' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'product_quantity_discount' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'product_ean13' => array('type' => 'FILL_ME', 'validate' => 'isEan13'),
-			'product_upc' => array('type' => 'FILL_ME', 'validate' => 'isUpc'),
-			'product_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
-			'product_supplier_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
-			'product_weight' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'tax_name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName'),
-			'tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'ecotax' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'ecotax_tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'discount_quantity_applied' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'download_hash' => array('type' => 'FILL_ME', 'validate' => 'isGenericName'),
-			'download_nb' => array('type' => 'FILL_ME', 'validate' => 'isInt'),
-			'download_deadline' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat'),
-			'unit_price_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'unit_price_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_price_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_price_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
+			'id_order' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_invoice' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_warehouse' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'product_id' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'product_attribute_id' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'product_name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'product_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'product_quantity_in_stock' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'product_quantity_return' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'product_quantity_refunded' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'product_quantity_reinjected' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'product_price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_percent' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'reduction_amount' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'group_reduction' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'product_quantity_discount' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'product_ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
+			'product_upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
+			'product_reference' => 			array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
+			'product_supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
+			'product_weight' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'tax_name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+			'tax_rate' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'ecotax' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'ecotax_tax_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'discount_quantity_applied' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'download_hash' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
+			'download_nb' => 				array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'download_deadline' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'unit_price_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'unit_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_price_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 		),
 	);
 
-
-	protected	$webserviceParameters = array(
-	'fields' => array (
-		'id_order' => array('xlink_resource' => 'orders'),
-		'product_id' => array('xlink_resource' => 'products'),
-		'product_attribute_id' => array('xlink_resource' => 'combinations'),
-		'product_quantity_reinjected' => array(),
-		'group_reduction' => array(),
-		'discount_quantity_applied' => array(),
-		'download_hash' => array(),
-		'download_deadline' => array()
+	protected $webserviceParameters = array(
+		'fields' => array (
+			'id_order' => array('xlink_resource' => 'orders'),
+			'product_id' => array('xlink_resource' => 'products'),
+			'product_attribute_id' => array('xlink_resource' => 'combinations'),
+			'product_quantity_reinjected' => array(),
+			'group_reduction' => array(),
+			'discount_quantity_applied' => array(),
+			'download_hash' => array(),
+			'download_deadline' => array()
 		)
 	);
 
@@ -215,46 +210,6 @@ class OrderDetailCore extends ObjectModel
 		if ($this->context != null && isset($this->context->shop))
 			$id_shop = $this->context->shop->getID();
 		return parent::__construct($id, $id_lang, $id_shop);
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['id_order_invoice'] = (int)$this->id_order_invoice;
-		$fields['id_warehouse'] = pSQL($this->id_warehouse);
-		$fields['product_id'] = (int)$this->product_id;
-		$fields['product_attribute_id'] = (int)$this->product_attribute_id;
-		$fields['product_name'] = pSQL($this->product_name);
-		$fields['product_quantity'] = (int)$this->product_quantity;
-		$fields['product_quantity_in_stock'] = (int)$this->product_quantity_in_stock;
-		$fields['product_quantity_return'] = (int)$this->product_quantity_return;
-		$fields['product_quantity_refunded'] = (int)$this->product_quantity_refunded;
-		$fields['product_quantity_reinjected'] = (int)$this->product_quantity_reinjected;
-		$fields['product_price'] = (float)$this->product_price;
-		$fields['reduction_percent'] = (float)$this->reduction_percent;
-		$fields['reduction_amount'] = (float)$this->reduction_amount;
-		$fields['group_reduction'] = (float)$this->group_reduction;
-		$fields['product_quantity_discount'] = (float)$this->product_quantity_discount;
-		$fields['product_ean13'] = pSQL($this->product_ean13);
-		$fields['product_upc'] = pSQL($this->product_upc);
-		$fields['product_reference'] = pSQL($this->product_reference);
-		$fields['product_supplier_reference'] = pSQL($this->product_supplier_reference);
-		$fields['product_weight'] = (float)$this->product_weight;
-		$fields['tax_name'] = pSQL($this->tax_name);
-		$fields['tax_rate'] = (float)$this->tax_rate;
-		$fields['ecotax'] = (float)$this->ecotax;
-		$fields['ecotax_tax_rate'] = (float)$this->ecotax_tax_rate;
-		$fields['download_hash'] = pSQL($this->download_hash);
-		$fields['download_nb'] = (int)$this->download_nb;
-		$fields['download_deadline'] = pSQL($this->download_deadline);
-		$fields['unit_price_tax_incl'] = (float)$this->unit_price_tax_incl;
-		$fields['unit_price_tax_excl'] = (float)$this->unit_price_tax_excl;
-		$fields['total_price_tax_incl'] = (float)$this->total_price_tax_incl;
-		$fields['total_price_tax_excl'] = (float)$this->total_price_tax_excl;
-
-		return $fields;
 	}
 
 	public static function getDownloadFromHash($hash)

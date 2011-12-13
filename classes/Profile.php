@@ -29,10 +29,6 @@ class ProfileCore extends ObjectModel
 {
  	/** @var string Name */
 	public 		$name;
-	
- 	
- 	
- 	
 
 	/**
 	 * @see ObjectModel::$definition
@@ -42,16 +38,11 @@ class ProfileCore extends ObjectModel
 		'primary' => 'id_profile',
 		'multilang' => true,
 		'fields' => array(
+			// Lang fields
 			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
-		
-	public function getFields()
-	{
-		return array('id_profile' => $this->id);
-	}
-	
 	/**
 	* Check then return multilingual fields for database interaction
 	*

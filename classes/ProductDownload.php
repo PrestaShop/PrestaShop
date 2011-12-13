@@ -59,11 +59,6 @@ class ProductDownloadCore extends ObjectModel
 
 	protected static $_productIds = array();
 
-	
-
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -71,19 +66,18 @@ class ProductDownloadCore extends ObjectModel
 		'table' => 'product_download',
 		'primary' => 'id_product_download',
 		'fields' => array(
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute ' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'display_filename' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 255),
-			'filename' => array('type' => 'FILL_ME', 'validate' => 'isSha1', 'size' => 255),
-			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'size' => 20),
-			'date_expiration' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'size' => 20),
-			'nb_days_accessible' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 10),
-			'nb_downloadable' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 10),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 1),
-			'is_shareable' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'size' => 1),
+			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute ' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'display_filename' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
+			'filename' => 				array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_expiration' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'nb_days_accessible' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
+			'nb_downloadable' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
+			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'is_shareable' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
-
 
 	/**
 	 * Build a virtual product
@@ -94,6 +88,18 @@ class ProductDownloadCore extends ObjectModel
 	{
 		parent::__construct($id_product_download);
 		// @TODO check if the file is present on hard drive
+	}
+
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
+	public function getFields()
+	{
+		if (!$this->date_expiration)
+			$this->date_expiration = '0000-00-00 00:00:00';
+
+		return parent::getFields();
 	}
 
 	public function add($autodate = true, $nullValues = false)
@@ -124,26 +130,6 @@ class ProductDownloadCore extends ObjectModel
 		if ($deleteFile)
 			return $this->deleteFile();
 		return true;
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$date_expiration = $this->date_expiration;
-		if (!$date_expiration)
-			$date_expiration = '0000-00-00 00:00:00';
-
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_product_attribute'] = pSQL($this->id_product_attribute);
-		$fields['display_filename'] = pSQL($this->display_filename);
-		$fields['filename'] = pSQL($this->filename);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_expiration'] = pSQL($date_expiration);
-		$fields['nb_days_accessible'] = (int)$this->nb_days_accessible;
-		$fields['nb_downloadable'] = (int)$this->nb_downloadable;
-		$fields['active'] = (int)$this->active;
-		$fields['is_shareable'] = (int)$this->is_shareable;
-		return $fields;
 	}
 
 	/**

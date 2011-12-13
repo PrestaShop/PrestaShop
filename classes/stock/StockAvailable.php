@@ -54,12 +54,6 @@ class StockAvailableCore extends ObjectModel
 	/** @var bool determine if a product is out of stock - it was previously in Product class */
 	public $out_of_stock = 0;
 
-	
-
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -67,30 +61,15 @@ class StockAvailableCore extends ObjectModel
 		'table' => 'stock_available',
 		'primary' => 'id_stock_available',
 		'fields' => array(
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
-			'depends_on_stock' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
-			'out_of_stock' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
+			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_group_shop' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'quantity' => 				array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'depends_on_stock' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+			'out_of_stock' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['quantity'] = (int)$this->quantity;
-		// booleans can NOT be inserted in an INTEGER database field
-		$fields['depends_on_stock'] = (int)(bool)$this->depends_on_stock;
-		$fields['out_of_stock'] = (int)$this->out_of_stock;
-		return $fields;
-	}
 
 	/**
 	 * For a given {id_product, id_product_attribute and id_shop}, gets the stock available id associated

@@ -36,14 +36,6 @@ class OrderMessageCore extends ObjectModel
 	/** @var string Object creation date */
 	public $date_add;
 
-	
-	
-	
-
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -52,8 +44,11 @@ class OrderMessageCore extends ObjectModel
 		'primary' => 'id_order_message',
 		'multilang' => true,
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-			'message' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'message' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
 		),
 	);
 
@@ -64,12 +59,6 @@ class OrderMessageCore extends ObjectModel
 			'date_add' => array('sqlId' => 'date_add')
 		)
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		return array('date_add' => pSQL($this->date_add));
-	}
 
 	public function getTranslationsFieldsChild()
 	{

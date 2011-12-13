@@ -34,13 +34,6 @@ class GenderCore extends ObjectModel
 	public $name;
 	public $type;
 
-	
-	
-	
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -49,25 +42,18 @@ class GenderCore extends ObjectModel
 		'primary' => 'id_gender',
 		'multilang' => true,
 		'fields' => array(
-			'type' => array('type' => 'FILL_ME', 'required' => true),
+			'type' => array('type' => self::TYPE_INT, 'required' => true),
+
+			// Lang fields
 			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
 		),
 	);
-
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
 		parent::__construct($id, $id_lang, $id_shop);
 
 		$this->image_dir = _PS_GENDERS_DIR_;
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_gender'] = (int)$this->id_gender;
-		$fields['type'] = (int)$this->type;
-		return $fields;
 	}
 
 	/**

@@ -51,10 +51,6 @@ class	LoggerCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -62,34 +58,18 @@ class	LoggerCore extends ObjectModel
 		'table' => 'log',
 		'primary' => 'id_log',
 		'fields' => array(
-			'id_log' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'severity' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
-			'error_code' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'message' => array('type' => 'FILL_ME', 'validate' => 'isMessage', 'required' => true),
-			'object_id' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'object_type' => array('type' => 'FILL_ME', 'validate' => 'isName'),
+			'id_log' => 		array('type' => self::TYPE_STRING, 'validate' => 'isUnsignedId'),
+			'severity' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'error_code' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'message' => 		array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'required' => true),
+			'object_id' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'object_type' =>	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
-
 	protected static $is_present = array();
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['severity'] = intval($this->severity);
-		$fields['error_code'] = intval($this->error_code);
-		$fields['message'] = pSQL($this->message);
-		$fields['object_type'] = pSQL($this->object_type);
-		$fields['object_id'] = intval($this->object_id);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-
-		return $fields;
-	}
-
 
 	/**
 	 * Send e-mail to the shop owner only if the minimal severity level has been reached
@@ -181,6 +161,5 @@ class	LoggerCore extends ObjectModel
 
 		return self::$is_present[$this->getHash()];
 	}
-
 }
 

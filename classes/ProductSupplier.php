@@ -59,10 +59,6 @@ class ProductSupplierCore extends ObjectModel
 	 * */
 	public $product_supplier_price_te;
 
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -70,30 +66,15 @@ class ProductSupplierCore extends ObjectModel
 		'table' => 'product_supplier',
 		'primary' => 'id_product_supplier',
 		'fields' => array(
-			'product_supplier_reference' => array('type' => 'FILL_ME', 'validate' => 'isReference'),
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_supplier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'product_supplier_price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'supplier_reference' => array('type' => 'FILL_ME', 'size' => 32),
+			'product_supplier_reference' => array('type' => self::TYPE_INT, 'validate' => 'isReference'),
+			'id_product' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_supplier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'product_supplier_price_te' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'id_currency' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'supplier_reference' => 		array('type' => self::TYPE_STRING, 'size' => 32),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
-		$fields['id_supplier'] = (int)$this->id_supplier;
-		$fields['product_supplier_reference'] = pSQL($this->product_supplier_reference);
-		$fields['id_currency'] = (int)$this->id_currency;
-		$fields['product_supplier_price_te'] = pSQL($this->product_supplier_price_te);
-
-		return $fields;
-	}
 
 	/**
 	 * For a given product and supplier, get the product reference

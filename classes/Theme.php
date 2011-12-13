@@ -29,9 +29,6 @@ class ThemeCore extends ObjectModel
 {
 	public $name;
 
-	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -39,17 +36,9 @@ class ThemeCore extends ObjectModel
 		'table' => 'theme',
 		'primary' => 'id_theme',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'size' => 64),
+			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['name'] = pSQL($this->name);
-		return $fields;
-	}
 
 	public static function getThemes()
 	{

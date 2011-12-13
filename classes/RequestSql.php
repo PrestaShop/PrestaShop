@@ -30,10 +30,6 @@ class RequestSqlCore extends ObjectModel
 	public $name;
 	public $sql;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -41,11 +37,10 @@ class RequestSqlCore extends ObjectModel
 		'table' => 'request_sql',
 		'primary' => 'id_request_sql',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isString', 'required' => true, 'size' => 200),
-			'sql' => array('type' => 'FILL_ME', 'validate' => 'isString', 'required' => true, 'size' => 400),
+			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200),
+			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 400),
 		),
 	);
-
 
 	public $tested = array('required' => array ('SELECT', 'FROM'),
 							'option' => array('WHERE', 'ORDER', 'LIMIT', 'HAVING', 'GROUP', 'UNION'),
@@ -66,14 +61,6 @@ class RequestSqlCore extends ObjectModel
 								'secure_key' => '*******************');
 
 	public $error_sql = array();
-
-	public function getFields()
-	{
-		parent::validateFields();
-		$fields['name'] = pSQL($this->name);
-		$fields['sql'] = pSQL($this->sql);
-		return $fields;
-	}
 
 	public static function getRequestSql()
 	{

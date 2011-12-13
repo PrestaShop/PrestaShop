@@ -77,10 +77,6 @@ class StoreCore extends ObjectModel
 	
 	/** @var boolean Store status */
 	public 		$active = true;
-	
- 	
- 	
- 	
 
 	/**
 	 * @see ObjectModel::$definition
@@ -89,25 +85,26 @@ class StoreCore extends ObjectModel
 		'table' => 'store',
 		'primary' => 'id_store',
 		'fields' => array(
-			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_state' => array('type' => 'FILL_ME', 'validate' => 'isNullOrUnsignedId'),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-			'address1' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'required' => true, 'size' => 128),
-			'address2' => array('type' => 'FILL_ME', 'validate' => 'isAddress', 'size' => 128),
-			'city' => array('type' => 'FILL_ME', 'validate' => 'isCityName', 'required' => true, 'size' => 64),
-			'latitude' => array('type' => 'FILL_ME', 'validate' => 'isCoordinate', 'size' => 12),
-			'longitude' => array('type' => 'FILL_ME', 'validate' => 'isCoordinate', 'size' => 12),
-			'hours' => array('type' => 'FILL_ME', 'validate' => 'isSerializedArray', 'size' => 254),
-			'phone' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
-			'fax' => array('type' => 'FILL_ME', 'validate' => 'isPhoneNumber', 'size' => 16),
-			'note' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 65000),
-			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'size' => 128),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
-			'postcode' => array('type' => 'FILL_ME', 'size' => 12),
+			'id_country' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_state' => 		array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'address1' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
+			'address2' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
+			'postcode' => 		array('type' => self::TYPE_STRING, 'size' => 12),
+			'city' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
+			'latitude' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 12),
+			'longitude' =>		array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 12),
+			'hours' => 			array('type' => self::TYPE_STRING, 'validate' => 'isSerializedArray', 'size' => 254),
+			'phone' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+			'fax' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
+			'note' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
+			'email' => 			array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
-	
 	protected	$webserviceParameters = array(
 		'fields' => array(
 			'id_country' => array('xlink_resource'=> 'countries'),
@@ -116,31 +113,6 @@ class StoreCore extends ObjectModel
 		),
 	);
 
-	public function getFields()
-	{
-		$this->validateFields();
-		
-		$fields['id_country'] = (int)$this->id_country;
-		$fields['id_state'] = (int)$this->id_state;
-		$fields['name'] = pSQL($this->name);
-		$fields['address1'] = pSQL($this->address1);
-		$fields['address2'] = pSQL($this->address2);
-		$fields['postcode'] = pSQL($this->postcode);
-		$fields['city'] = pSQL($this->city);
-		$fields['latitude'] = (float)$this->latitude;
-		$fields['longitude'] = (float)$this->longitude;
-		$fields['hours'] = pSQL($this->hours);
-		$fields['phone'] = pSQL($this->phone);
-		$fields['fax'] = pSQL($this->fax);
-		$fields['note'] = pSQL($this->note);
-		$fields['email'] = pSQL($this->email);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['active'] = (int)$this->active;
-		
-		return $fields;
-	}
-	
 	public function __construct($id_store = NULL, $id_lang = NULL)
 	{
 		parent::__construct($id_store, $id_lang);
@@ -159,5 +131,3 @@ class StoreCore extends ObjectModel
 		return true;
 	}
 }
-
-

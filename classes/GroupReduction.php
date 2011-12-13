@@ -31,9 +31,6 @@ class GroupReductionCore extends ObjectModel
 	public	$id_category;
 	public	$reduction;
 
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -41,23 +38,13 @@ class GroupReductionCore extends ObjectModel
 		'table' => 'group_reduction',
 		'primary' => 'id_group_reduction',
 		'fields' => array(
-			'id_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_category' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
+			'id_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_category' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'reduction' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 		),
 	);
 
-
 	protected static $reduction_cache = array();
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_group'] = (int)$this->id_group;
-		$fields['id_category'] = (int)$this->id_category;
-		$fields['reduction'] = (float)$this->reduction;
-		return $fields;
-	}
 
 	public function add($autodate = true, $null_values = false)
 	{

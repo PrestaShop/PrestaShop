@@ -33,11 +33,6 @@ class OrderReturnStateCore extends ObjectModel
 	/** @var string Display state in the specified color */
 	public $color;
 
- 	
-	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -46,18 +41,12 @@ class OrderReturnStateCore extends ObjectModel
 		'primary' => 'id_order_return_state',
 		'multilang' => true,
 		'fields' => array(
-			'color' => array('type' => 'FILL_ME', 'validate' => 'isColor'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'color' => 	array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
+
+			// Lang fields
+			'name' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['color'] = pSQL($this->color);
-		return $fields;
-	}
 
 	/**
 	* Check then return multilingual fields for database interaction
