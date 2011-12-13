@@ -65,10 +65,6 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
 	 */
 	public $date_add;
 
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -76,30 +72,13 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
 		'table' => 'supply_order_receipt_history',
 		'primary' => 'id_supply_order_receipt_history',
 		'fields' => array(
-			'id_supply_order_detail' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_supply_order_state' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'employee_firstname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
-			'employee_lastname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
-			'quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
-			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate'),
+			'id_supply_order_detail' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_supply_order_state' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_employee' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'employee_firstname' => 	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'employee_lastname' => 		array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'quantity' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_supply_order_detail'] = (int)$this->id_supply_order_detail;
-		$fields['id_supply_order_state'] = (int)$this->id_supply_order_state;
-		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['employee_lastname'] = pSQL($this->employee_lastname);
-		$fields['employee_firstname'] = pSQL(Tools::ucfirst($this->employee_firstname));
-		$fields['quantity'] = (int)$this->quantity;
-
-		$fields['date_add'] = pSQL($this->date_add);
-
-		return $fields;
-	}
 }

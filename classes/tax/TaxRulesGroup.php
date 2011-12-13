@@ -33,10 +33,6 @@ class TaxRulesGroupCore extends ObjectModel
     /** @var bool active state */
     public $active;
 
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -44,20 +40,12 @@ class TaxRulesGroupCore extends ObjectModel
 		'table' => 'tax_rules_group',
 		'primary' => 'id_tax_rules_group',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'name' =>	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'active' =>	array('type' => self::TYPE_BOOL),
 		),
 	);
 
-
     protected static $_taxes = array();
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['name'] = ($this->name);
-		$fields['active'] = (int)$this->active;
-		return $fields;
-	}
 
 	public static function getTaxRulesGroups($only_active = true)
 	{
