@@ -127,7 +127,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table tr.small td{height:15px}
 .table tr.last td{border-bottom:none}
 td.col-left {vertical-align:top; padding-right:10px;}
-#step1 td.col-left { width:250px;}
+#tabPane1 td.col-left { width:200px;}
 td.col-left label { display:block; width:100%; text-align:right;}
 .alt_row{background-color:#f8f8f8}
 .path_bar{background-color:#E2EBEE;border:1px solid #999999;font-family:Trebuchet,Arial,Helvetica,sans-serif;font-size:13px;margin-bottom:20px;padding:5px}
@@ -162,7 +162,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center;}
 .toolbarBox a.toolbar_btn {   border:1px solid #f8f8f8; min-width:50px; border-width: 1px; font-size:11px;cursor: pointer; display: block; float: left; padding: 3px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;}
 .toolbarBox a.toolbar_btn:hover { background-color:#fff; border:1px inset #ccc; border-radius:3px;}
-.toolbarBox .toolbar_btn span{ display: block;float: none;height: 32px;margin: 0 auto;width: 32px;}
+.toolbarBox .toolbar_btn span{ display: block;float: none;height: 32px;margin: 0 auto;width: 32px; /*hacking ie7*/ margin:0 !ie; position:relative !ie;}
 .toolbarBox .process-icon-delete { background-image: url(process-icon-delete.png);}
 .toolbarBox .process-icon-duplicate { background-image: url(process-icon-duplicate.png);}
 .toolbarBox .process-icon-preview { background-image: url(process-icon-preview.png);}
@@ -199,7 +199,7 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 #productBox { position:relative; width:100%; float:left;}
 
 /*tab-pane*/
-form#product_form, form#access_form, form#cart_rule_form {   background-color:#ebedf4; border:1px solid #ccced7; min-height:350px; padding: 5px 10px 10px; margin-left:140px;}
+form#product_form, form#access_form, form#cart_rule_form {   background-color:#ebedf4; border:1px solid #ccced7; min-height:400px; padding: 5px 10px 10px; margin-left:140px;}
 form#product_form h4 { font-size:18px; font-weight:normal;}
 .tab-row {}
 .tab-row .tab {background:#EFEFEF;width:100px;}
@@ -213,6 +213,9 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .productTabs ul li.tab-row a.selected { background-color:#EBEDF4;font-weight:bold;color:#000; border-right:none;}
 .product-tab-content h4.tab { display:none;}
 
+
+#categories-treeview { }
+#product-tab-content-3-Associations .Association td.col-left  { width:200px;}
 
 /*FILTER MODULE*/
 .filter-module { background-color:#ebedf4; border:1px solid #c2c4d9; margin-top:10px; padding:10px; display:block; min-height:25px;}

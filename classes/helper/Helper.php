@@ -163,13 +163,16 @@ class HelperCore
 		</script>';
 
 		$html .= '
-		<div style="background-color:#F4E6C9; width:99%;padding:5px 0 5px 5px;">
-			<a href="#" id="collapse_all" >'.$trads['Collapse All'].'</a>
-			 - <a href="#" id="expand_all" >'.$trads['Expand All'].'</a>
+		<div class="category-filter">
+			<span><a href="#" id="collapse_all" >'.$trads['Collapse All'].'</a>
+			| </span>
+			<span><a href="#" id="expand_all" >'.$trads['Expand All'].'</a>
 			'.(!$use_radio ? '
-			 - <a href="#" id="check_all" >'.$trads['Check All'].'</a>
-			 - <a href="#" id="uncheck_all" >'.$trads['Uncheck All'].'</a>
-			 ' : '').($use_search ? '<span style="margin-left:20px">'.$trads['search'].' : <form method="post" id="filternameForm"><input type="text" name="search_cat" id="search_cat"></form></span>' : '').'
+			 |</span>
+			 <span> <a href="#" id="check_all" >'.$trads['Check All'].'</a>
+			 |</span>
+			 <span><a href="#" id="uncheck_all" >'.$trads['Uncheck All'].'</a>|</span>
+			 ' : '').($use_search ? '<form method="post" id="filternameForm"><span>'.$trads['search'].' : <input type="text" name="search_cat" id="search_cat"></form></span>' : '').'
 		</div>
 		';
 
