@@ -373,7 +373,7 @@ var textFieldLabel = 0;
 <tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 <table cellspacing="0" cellpadding="5" border="0">	
 					<tr>
-						<td class="col-left"><label>{l s='Short description:'}<br /><br /><i>({l s='appears in the product lists and on the top of the product page'})</i></label></td>
+						<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
 						<td style="padding-bottom:5px;">
 								{include file="products/textarea_lang.tpl"
 								languages=$languages
@@ -384,7 +384,7 @@ var textFieldLabel = 0;
 			</td>
 					</tr>
 					<tr>
-						<td class="col-left"><label>{l s='Description:'}<br /><br /><i>({l s='appears in the body of the product page'})</i></label></td>
+						<td class="col-left"><label>{l s='Description:'}<br /></label><p class="product_description">({l s='appears in the body of the product page'})</p></td>
 						<td style="padding-bottom:5px;">
 								{include file="products/textarea_lang.tpl" languages=$languages
 								input_name='description'
