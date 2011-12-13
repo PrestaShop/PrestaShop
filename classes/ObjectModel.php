@@ -222,6 +222,9 @@ abstract class ObjectModelCore
 		$this->validateFields();
 
 		$fields = array();
+		if ($this->id)
+			$fields[$this->def['primary']] = $this->id;
+
 		foreach ($this->def['fields'] as $field => $data)
 			if (!isset($data['lang']) || !$data['lang'])
 				switch ($data['type'])
