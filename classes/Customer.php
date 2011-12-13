@@ -187,7 +187,10 @@ class CustomerCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = true)
 	{
-		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->getID();
+		if (Context::getContext()->shop->getGroup()->share_customer == true)
+			$this->id_shop = null;
+		else
+			$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->getID();
 		$this->id_group_shop = ($this->id_group_shop) ? $this->id_group_shop : Context::getContext()->shop->getGroupID();
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
