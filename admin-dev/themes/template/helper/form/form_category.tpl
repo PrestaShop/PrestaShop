@@ -27,10 +27,13 @@
 	<script type="text/javascript">
 		var inputName = '{$categories.input_name}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
-		var selectedCat = '{$categories.selected_cat}';
+		var selectedCat = '{implode value=$categories.selected_cat}';
 		var selectedLabel = '{$categories.trads.selected}';
 		var home = '{$categories.trads.Home}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
+		$(document).ready(function(){
+			buildTreeView();
+		});
 	</script>
 
 	<div style="background-color:#F4E6C9; width:99%;padding:5px 0 5px 5px;">
@@ -75,7 +78,7 @@
 						value="1"
 						{if $home_is_selected}checked{/if}
 						onclick="clickOnCategoryBox($(this));" />
-				{$categories.trads.Home}
+					{$categories.trads.Home}
 			</span>
 			<ul>
 				<li><span class="placeholder">&nbsp;</span></li>

@@ -54,20 +54,20 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $available_tabs_lang = array ();
 
-	protected $tabs_toolbar_save_buttons = array(
+	protected $tabs_preloaded = array(
 		'Informations' => true,
-		'Prices' => false,
+		'Prices' => true,
 		'Associations' => true,
 		'Images' => false,
 		'Shipping' => true,
 		'Combinations' => false,
-		'Features' => true,
+		'Features' => false,
 		'Customization' => false,
-		'Attachments' => true,
-		'Quantities' => false,
-		'Suppliers' => true,
-		'Warehouses' => true,
-		'Accounting' => true
+		'Attachments' => false,
+		'Quantities' => true,
+		'Suppliers' => false,
+		'Warehouses' => false,
+		'Accounting' => false
 	);
 
 	public function __construct()
@@ -499,7 +499,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 
 		/* Product images management */
-		else if (($id_image = (int)(Tools::getValue('id_image'))) && Validate::isUnsignedId($id_image) && Validate::isLoadedObject($image = new Image($id_image)))
+		else if (($id_image = (int)Tools::getValue('id_image')) && Validate::isUnsignedId($id_image) && Validate::isLoadedObject($image = new Image($id_image)))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -722,18 +722,18 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($id_specific_prices as $key => $id_specific_price)
 					if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
 					{
-						$specificPrice = new SpecificPrice((int)($id_specific_price));
-						$specificPrice->id_shop = (int)$id_shops[$key];
-						$specificPrice->id_currency = (int)($id_currencies[$key]);
-						$specificPrice->id_country = (int)($id_countries[$key]);
-						$specificPrice->id_group = (int)($id_groups[$key]);
-						$specificPrice->price = (float)($prices[$key]);
-						$specificPrice->from_quantity = (int)($from_quantities[$key]);
-						$specificPrice->reduction = (float)($reduction_types[$key] == 'percentage' ? ($reductions[$key] / 100) : $reductions[$key]);
-						$specificPrice->reduction_type = !$reductions[$key] ? 'amount' : $reduction_types[$key];
-						$specificPrice->from = !$froms[$key] ? '0000-00-00 00:00:00' : $froms[$key];
-						$specificPrice->to = !$tos[$key] ? '0000-00-00 00:00:00' : $tos[$key];
-						if (!$specificPrice->update())
+						$specific_price = new SpecificPrice((int)($id_specific_price));
+						$specific_price->id_shop = (int)$id_shops[$key];
+						$specific_price->id_currency = (int)($id_currencies[$key]);
+						$specific_price->id_country = (int)($id_countries[$key]);
+						$specific_price->id_group = (int)($id_groups[$key]);
+						$specific_price->price = (float)($prices[$key]);
+						$specific_price->from_quantity = (int)($from_quantities[$key]);
+						$specific_price->reduction = (float)($reduction_types[$key] == 'percentage' ? ($reductions[$key] / 100) : $reductions[$key]);
+						$specific_price->reduction_type = !$reductions[$key] ? 'amount' : $reduction_types[$key];
+						$specific_price->from = !$froms[$key] ? '0000-00-00 00:00:00' : $froms[$key];
+						$specific_price->to = !$tos[$key] ? '0000-00-00 00:00:00' : $tos[$key];
+						if (!$specific_price->update())
 							$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 					}
 				if (!count($this->_errors))
@@ -759,20 +759,20 @@ class AdminProductsControllerCore extends AdminController
 				$to = Tools::getValue('sp_to');
 				if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to))
 				{
-					$specificPrice = new SpecificPrice();
-					$specificPrice->id_product = $id_product;
-					$specificPrice->id_product_attribute = (int)Tools::getValue('id_product_attribute');
-					$specificPrice->id_shop = (int)$id_shop;
-					$specificPrice->id_currency = (int)($id_currency);
-					$specificPrice->id_country = (int)($id_country);
-					$specificPrice->id_group = (int)($id_group);
-					$specificPrice->price = (float)($price);
-					$specificPrice->from_quantity = (int)($from_quantity);
-					$specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
-					$specificPrice->reduction_type = $reduction_type;
-					$specificPrice->from = !$from ? '0000-00-00 00:00:00' : $from;
-					$specificPrice->to = !$to ? '0000-00-00 00:00:00' : $to;
-					if (!$specificPrice->add())
+					$specific_price = new SpecificPrice();
+					$specific_price->id_product = $id_product;
+					$specific_price->id_product_attribute = (int)Tools::getValue('id_product_attribute');
+					$specific_price->id_shop = (int)$id_shop;
+					$specific_price->id_currency = (int)($id_currency);
+					$specific_price->id_country = (int)($id_country);
+					$specific_price->id_group = (int)($id_group);
+					$specific_price->price = (float)($price);
+					$specific_price->from_quantity = (int)($from_quantity);
+					$specific_price->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+					$specific_price->reduction_type = $reduction_type;
+					$specific_price->from = !$from ? '0000-00-00 00:00:00' : $from;
+					$specific_price->to = !$to ? '0000-00-00 00:00:00' : $to;
+					if (!$specific_price->add())
 						$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 					else
 						$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token);
@@ -791,8 +791,8 @@ class AdminProductsControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('Invalid specific price ID');
 				else
 				{
-					$specificPrice = new SpecificPrice((int)($id_specific_price));
-					if (!$specificPrice->delete())
+					$specific_price = new SpecificPrice((int)($id_specific_price));
+					if (!$specific_price->delete())
 						$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
 					else
 						$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&action=Prices&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token);
@@ -882,9 +882,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->postProcessFormSuppliers();
 		//Manage warehouses
 		else if (Tools::isSubmit('submitWarehouses') || Tools::isSubmit('submitWarehousesAndStay'))
-		{
 			$this->postProcessFormWarehouses();
-		}
 
 		if (!$this->redirect_after)
 			parent::postProcess(true);
@@ -1203,9 +1201,9 @@ class AdminProductsControllerCore extends AdminController
 			else if ($method == 'auto')
 			{
 				$imagesTypes = ImageType::getImagesTypes('products');
-				foreach ($imagesTypes as $k => $imageType)
-					if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
-						$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+				foreach ($imagesTypes as $k => $image_type)
+					if (!imageResize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
+						$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($image_type['name']);
 			}
 
 			@unlink($tmpName);
@@ -2347,7 +2345,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormAssociations($obj)
 	{
-		$product = $this->object;
+		$product = $obj;
 		$data = $this->context->smarty->createData();
 		// Prepare Categories tree for display in Associations tab
 		$default_category = Tools::getValue('id_category', 1);
@@ -2387,10 +2385,10 @@ class AdminProductsControllerCore extends AdminController
 		// Accessories block
 		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
 
-		if ($postAccessories = Tools::getValue('inputAccessories'))
+		if ($post_accessories = Tools::getValue('inputAccessories'))
 		{
-			$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
-			foreach ($postAccessoriesTab as $accessory_id)
+			$post_accessories_tab = explode('-', Tools::getValue('inputAccessories'));
+			foreach ($post_accessories_tab as $accessory_id)
 				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
 					$accessories[] = $accessory;
 		}
@@ -2406,7 +2404,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
-	public function initFormPrices($obj, $languages, $default_language)
+	public function initFormPrices($obj)
 	{
 		$data = $this->context->smarty->createData();
 		$product = $obj;
@@ -2418,17 +2416,26 @@ class AdminProductsControllerCore extends AdminController
 			$currencies = Currency::getCurrencies();
 			$attributes = $obj->getAttributesGroups((int)$this->context->language->id);
 			$combinations = array();
-			foreach($attributes as $attribute)
+			foreach ($attributes as $attribute)
 			{
 				$combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
 				if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
 					$combinations[$attribute['id_product_attribute']]['attributes'] = '';
 				$combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
 
-				$combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(Tools::convertPrice(Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']), $this->context->currency), $this->context->currency);
+				$combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
+					Tools::convertPrice(
+						Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
+						$this->context->currency
+					), $this->context->currency
+				);
 			}
+
 			foreach ($combinations as &$combination)
 				$combination['attributes'] = rtrim($combination['attributes'], ' - ');
+			$data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm(
+				$this->context->currency, $shops, $currencies, $countries, $groups)
+			);
 
 			$data->assign(array(
 				'shops' => $shops,
@@ -2438,7 +2445,6 @@ class AdminProductsControllerCore extends AdminController
 				'combinations' => $combinations,
 				'product' => $product
 			));
-			$data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm($this->context->currency, $shops, $currencies, $countries, $groups));
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding specific prices'));
@@ -2453,7 +2459,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
 		if ($product->unit_price_ratio != 0)
-			$data->assign('unit_price', Tools::ps_round($product->price)/$product->unit_price_ratio);
+			$data->assign('unit_price', Tools::ps_round($product->price) / $product->unit_price_ratio);
 		else
 			$data->assign('unit_price', 0);
 
@@ -2461,20 +2467,28 @@ class AdminProductsControllerCore extends AdminController
 
 		$data->assign('country_display_tax_label', $this->context->country->display_tax_label);
 
+		$unities = array(
+			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
+			'PS_DISTANCE_UNIT' => Configuration::get('PS_DISTANCE_UNIT'),
+			'PS_VOLUME_UNIT' => Configuration::get('PS_VOLUME_UNIT'),
+			'PS_DIMENSION_UNIT' => Configuration::get('PS_DIMENSION_UNIT')
+		);
+
 		$data->assign(array(
 			'currency', $this->context->currency,
-			'product' => $product
+			'product' => $product,
+			'unities' => $unities
 		));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
-	private function _getFinalPrice($specificPrice, $productPrice, $taxRate)
+	private function _getFinalPrice($specific_price, $productPrice, $taxRate)
 	{
-		$price = Tools::ps_round((float)($specificPrice['price']) ? $specificPrice['price'] : $productPrice, 2);
-		if (!(float)($specificPrice['reduction']))
-			return (float)($specificPrice['price']);
-		return ($specificPrice['reduction_type'] == 'amount') ? ($price - $specificPrice['reduction'] / (1 + $taxRate / 100)) : ($price - $price * $specificPrice['reduction']);
+		$price = Tools::ps_round((float)($specific_price['price']) ? $specific_price['price'] : $productPrice, 2);
+		if (!(float)($specific_price['reduction']))
+			return (float)($specific_price['price']);
+		return ($specific_price['reduction_type'] == 'amount') ? ($price - $specific_price['reduction'] / (1 + $taxRate / 100)) : ($price - $price * $specific_price['reduction']);
 	}
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
@@ -2482,8 +2496,8 @@ class AdminProductsControllerCore extends AdminController
 		$content = '';
 		if (!($obj = $this->loadObject()))
 			return;
-		$specificPrices = SpecificPrice::getByProductId((int)$obj->id);
-		$specificPricePriorities = SpecificPrice::getPriority((int)$obj->id);
+		$specific_prices = SpecificPrice::getByProductId((int)$obj->id);
+		$specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
 
 		$taxRate = $obj->getTaxesRate(Address::initialize());
 
@@ -2506,7 +2520,7 @@ class AdminProductsControllerCore extends AdminController
 			$tmp[$group['id_group']] = $group;
 		$groups = $tmp;
 
-		if (!is_array($specificPrices) || !count($specificPrices))
+		if (!is_array($specific_prices) || !count($specific_prices))
 			$content .= '
 				<tr>
 					<td colspan="9">'.$this->l('No specific prices').'</td>
@@ -2514,21 +2528,21 @@ class AdminProductsControllerCore extends AdminController
 		else
 		{
 			$i = 0;
-			foreach ($specificPrices as $specificPrice)
+			foreach ($specific_prices as $specific_price)
 			{
-				$current_specific_currency = $currencies[($specificPrice['id_currency'] ? $specificPrice['id_currency'] : $defaultCurrency->id)];
-				if ($specificPrice['reduction_type'] == 'percentage')
-					$reduction = ($specificPrice['reduction'] * 100).' %';
+				$current_specific_currency = $currencies[($specific_price['id_currency'] ? $specific_price['id_currency'] : $defaultCurrency->id)];
+				if ($specific_price['reduction_type'] == 'percentage')
+					$reduction = ($specific_price['reduction'] * 100).' %';
 				else
-					$reduction = Tools::displayPrice(Tools::ps_round($specificPrice['reduction'], 2), $current_specific_currency);
+					$reduction = Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency);
 
-				if ($specificPrice['from'] == '0000-00-00 00:00:00' && $specificPrice['to'] == '0000-00-00 00:00:00')
+				if ($specific_price['from'] == '0000-00-00 00:00:00' && $specific_price['to'] == '0000-00-00 00:00:00')
 					$period = $this->l('Unlimited');
 				else
-					$period = $this->l('From').' '.($specificPrice['from'] != '0000-00-00 00:00:00' ? $specificPrice['from'] : '0000-00-00 00:00:00').'<br />'.$this->l('To').' '.($specificPrice['to'] != '0000-00-00 00:00:00' ? $specificPrice['to'] : '0000-00-00 00:00:00');
-				if ($specificPrice['id_product_attribute'])
+					$period = $this->l('From').' '.($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00').'<br />'.$this->l('To').' '.($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
+				if ($specific_price['id_product_attribute'])
 				{
-					$combination = new Combination((int)$specificPrice['id_product_attribute']);
+					$combination = new Combination((int)$specific_price['id_product_attribute']);
 					$attributes = $combination->getAttributesName((int)$this->context->language->id);
 					$attributes_name = '';
 					foreach ($attributes as $attribute)
@@ -2538,23 +2552,23 @@ class AdminProductsControllerCore extends AdminController
 				else
 					$attributes_name = $this->l('All combinations');
 
-				$rule = new SpecificPriceRule((int)$specificPrice['id_specific_price_rule']);
+				$rule = new SpecificPriceRule((int)$specific_price['id_specific_price_rule']);
 				$rule_name = ($rule->id ? $rule->name : '--');
 				
 				$content .= '
 				<tr '.($i%2 ? 'class="alt_row"' : '').'>
 					<td class="cell border">'.$rule_name.'</td>
 					<td class="cell border">'.$attributes_name.'</td>
-					<td class="cell border">'.($specificPrice['id_shop'] ? $shops[$specificPrice['id_shop']]['name'] : $this->l('All shops')).'</td>
-					<td class="cell border">'.($specificPrice['id_currency'] ? $currencies[$specificPrice['id_currency']]['name'] : $this->l('All currencies')).'</td>
-					<td class="cell border">'.($specificPrice['id_country'] ? $countries[$specificPrice['id_country']]['name'] : $this->l('All countries')).'</td>
-					<td class="cell border">'.($specificPrice['id_group'] ? $groups[$specificPrice['id_group']]['name'] : $this->l('All groups')).'</td>
-					<td class="cell border">'.Tools::displayPrice((float)$specificPrice['price'], $current_specific_currency).'</td>
+					<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>
+					<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
+					<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
+					<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
+					<td class="cell border">'.Tools::displayPrice((float)$specific_price['price'], $current_specific_currency).'</td>
 					<td class="cell border">'.$reduction.'</td>
 					<td class="cell border">'.$period.'</td>
-					<td class="cell border">'.$specificPrice['from_quantity'].'</th>
-					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specificPrice, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specificPrice['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
+					<td class="cell border">'.$specific_price['from_quantity'].'</th>
+					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specific_price, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
+					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 				</tr>';
 				$i++;
 			}
@@ -2592,30 +2606,30 @@ class AdminProductsControllerCore extends AdminController
 		<label>'.$this->l('Priorities:').'</label>
 		<div class="margin-form">
 			<select name="specificPricePriority[]">
-				<option value="id_shop"'.($specificPricePriorities[0] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
-				<option value="id_currency"'.($specificPricePriorities[0] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-				<option value="id_country"'.($specificPricePriorities[0] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-				<option value="id_group"'.($specificPricePriorities[0] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+				<option value="id_shop"'.($specific_price_priorities[0] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+				<option value="id_currency"'.($specific_price_priorities[0] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
+				<option value="id_country"'.($specific_price_priorities[0] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
+				<option value="id_group"'.($specific_price_priorities[0] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
 			</select>
 			<select name="specificPricePriority[]">
-				<option value="id_shop"'.($specificPricePriorities[1] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
-				<option value="id_currency"'.($specificPricePriorities[1] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-				<option value="id_country"'.($specificPricePriorities[1] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-				<option value="id_group"'.($specificPricePriorities[1] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
-			</select>
-			&gt;
-			<select name="specificPricePriority[]">
-				<option value="id_shop"'.($specificPricePriorities[2] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
-				<option value="id_currency"'.($specificPricePriorities[2] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-				<option value="id_country"'.($specificPricePriorities[2] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-				<option value="id_group"'.($specificPricePriorities[2] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+				<option value="id_shop"'.($specific_price_priorities[1] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+				<option value="id_currency"'.($specific_price_priorities[1] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
+				<option value="id_country"'.($specific_price_priorities[1] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
+				<option value="id_group"'.($specific_price_priorities[1] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
 			</select>
 			&gt;
 			<select name="specificPricePriority[]">
-				<option value="id_shop"'.($specificPricePriorities[3] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
-				<option value="id_currency"'.($specificPricePriorities[3] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
-				<option value="id_country"'.($specificPricePriorities[3] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
-				<option value="id_group"'.($specificPricePriorities[3] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+				<option value="id_shop"'.($specific_price_priorities[2] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+				<option value="id_currency"'.($specific_price_priorities[2] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
+				<option value="id_country"'.($specific_price_priorities[2] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
+				<option value="id_group"'.($specific_price_priorities[2] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
+			</select>
+			&gt;
+			<select name="specificPricePriority[]">
+				<option value="id_shop"'.($specific_price_priorities[3] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
+				<option value="id_currency"'.($specific_price_priorities[3] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
+				<option value="id_country"'.($specific_price_priorities[3] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
+				<option value="id_group"'.($specific_price_priorities[3] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
 			</select>
 		</div>
 
@@ -2744,7 +2758,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
-	public function initFormInformations($product, $languages, $default_language)
+	public function initFormInformations($product)
 	{
 		$data = $this->context->smarty->createData();
 
@@ -2755,7 +2769,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['tinymce'] = true;
 
 		$currency = $this->context->currency;
-		$data->assign('languages',$languages);
+		$data->assign('languages', $this->_languages);
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		$this->display = 'edit';
@@ -2766,10 +2780,10 @@ class AdminProductsControllerCore extends AdminController
 		// Accessories block
 		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
 
-		if ($postAccessories = Tools::getValue('inputAccessories'))
+		if ($post_accessories = Tools::getValue('inputAccessories'))
 		{
-			$postAccessoriesTab = explode('-', Tools::getValue('inputAccessories'));
-			foreach ($postAccessoriesTab as $accessory_id)
+			$post_accessories_tab = explode('-', Tools::getValue('inputAccessories'));
+			foreach ($post_accessories_tab as $accessory_id)
 				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
 					$accessories[] = $accessory;
 		}
@@ -2783,7 +2797,7 @@ class AdminProductsControllerCore extends AdminController
 			$product_download = new ProductDownload($id_product_download);
 		$product->{'productDownload'} = $product_download;
 
-		$cache_default_attribute = (int) $this->getFieldValue($product, 'cache_default_attribute');
+		$cache_default_attribute = (int)$this->getFieldValue($product, 'cache_default_attribute');
 
 		$product_props = array();
 		// global informations
@@ -2808,10 +2822,10 @@ class AdminProductsControllerCore extends AdminController
 			'available_now', 'available_later', 'available_date'
 		);
 
-		if(Configuration::get('PS_USE_ECOTAX'))
+		if (Configuration::get('PS_USE_ECOTAX'))
 			array_push($product_props, 'ecotax');
 
-		foreach($product_props as $prop)
+		foreach ($product_props as $prop)
 			$product->$prop = $this->getFieldValue($product, $prop);
 
 		$product->name['class'] = 'updateCurrentText';
@@ -2848,14 +2862,15 @@ class AdminProductsControllerCore extends AdminController
 
 		if (empty($product->cache_default_attribute))
 		{
-			$data->assign('show_file_input', !strval(Tools::getValue('virtual_product_filename')) OR $product->productDownload->id > 0);
+			$data->assign('show_file_input', !strval(Tools::getValue('virtual_product_filename')) || $product->productDownload->id > 0);
 			// found in informations and combination : to merge
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
 			$display_filename = ($product->productDownload->id > 0) ? $product->productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
 
 			if (!$product->productDownload->id || !$product->productDownload->active)
 				$hidden = 'display:none;';
-			else $hidden ='';
+			else
+				$hidden = '';
 
 			$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
 			$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
@@ -2864,18 +2879,18 @@ class AdminProductsControllerCore extends AdminController
 		}
 		else
 		{
-			$error ='';
+			$error = '';
 			$product_attribute = ProductDownload::getAttributeFromIdProduct($this->getFieldValue($product, 'id'));
 			foreach ($product_attribute as $p)
 			{
-				$product_downloadAttribute = new ProductDownload($p['id_product_download']);
-				$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$product_downloadAttribute->filename;
-				if (!file_exists($exists_file2) && !empty($product_downloadAttribute->id_product_attribute))
+				$product_download_attribute = new ProductDownload($p['id_product_download']);
+				$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename;
+				if (!file_exists($exists_file2) && !empty($product_download_attribute->id_product_attribute))
 				{
-					$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product_downloadAttribute->display_filename);
+					$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product_download_attribute->display_filename);
 					$error .= '<p class="alert" id="file_missing">
 						<b>'.$msg.' :<br/>
-						'.realpath(_PS_DOWNLOAD_DIR_) .'/'. $product_downloadAttribute->filename.'</b>
+						'.realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename.'</b>
 					</p>';
 				}
 			}
@@ -2884,20 +2899,23 @@ class AdminProductsControllerCore extends AdminController
 
 		$images = Image::getImages($this->context->language->id, $product->id);
 
-		foreach($images as $k => $image)
+		foreach ($images as $k => $image)
 			$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small');
 		$data->assign('ps_ssl_enabled', Configuration::get('PS_SSL_ENABLED'));
 		$data->assign('images', $images);
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
 		$product->tags = Tag::getProductTags($product->id);
+		
+		
+		$data->assign('tabs_preloaded', $this->tabs_preloaded);
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
 		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
-		$categoryBox = Tools::getValue('categoryBox', array());
+		$category_box = Tools::getValue('categoryBox', array());
 		$data->assign('product', $product);
 		$data->assign('token', $this->token);
 		$data->assign('currency', $currency);
@@ -2907,7 +2925,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
-	public function initFormShipping($obj, $token = null)
+	public function initFormShipping($obj)
 	{
 		$data = $this->context->smarty->createData();
 		$data->assign(array(
@@ -2942,7 +2960,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Tools::getValue('carriers'))
 		{
-			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+			if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 			{
 				if (Tools::getValue('carriers'))
 					$product->setCarriers(Tools::getValue('carriers'));
@@ -2969,20 +2987,20 @@ class AdminProductsControllerCore extends AdminController
 				WHERE id_product = '.(int)$obj->id
 			);
 			$data->assign('countImages', $count_images);
-	
+
 			$images = Image::getImages($this->context->language->id, $obj->id);
 			$data->assign('id_product', (int)Tools::getValue('id_product'));
 			$data->assign('id_category_default', (int)$this->_category->id);
-	
+
 			foreach ($images as $k => $image)
 				$images[$k] = new Image($image['id_image']);
-	
+
 			$data->assign('images', $images);
 
 			$data->assign('token', $this->token);
 			$data->assign('table', $this->table);
 			$data->assign('max_image_size', $this->max_image_size);
-	
+
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
 			$data->assign('currency', $this->context->currency);
 		}
@@ -2997,14 +3015,15 @@ class AdminProductsControllerCore extends AdminController
 		return $this->initFormAttributes($obj, $languages, $default_language);
 	}
 
-	public function initFormAttributes($product, $languages, $default_language)
+	public function initFormAttributes($product)
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').
+				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
 			return;
 		}
-		
+
 		$data = $this->context->smarty->createData();
 		if ((bool)$product->id)
 		{
@@ -3016,32 +3035,32 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign('attributeJs', $attribute_js);
 			$data->assign('attributes_groups', AttributeGroup::getAttributesGroups($this->context->language->id));
 			$default_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-	
+
 			$product->productDownload = new ProductDownload();
 			$id_product_download = (int)$product->productDownload->getIdFromIdProduct($this->getFieldValue($product, 'id'));
 			if (!empty($id_product_download))
 				$product->productDownload = new ProductDownload($id_product_download);
-	
+
 		//	$data->assign('productDownload', $product_download);
 			$data->assign('currency', $currency);
-	
+
 			$images = Image::getImages($this->context->language->id, $product->id);
 			if ($product->id)
 			{
 				$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
 				$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
-	
+
 				$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
 				$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
-	
+
 				$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
 				$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
 				$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
 				$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00');
-	
+
 				$i = 0;
 				$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
-				$data->assign('imageWidth', (isset($imageType['width']) ? (int)($imageType['width']) : 64) + 25);
+				$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
 				foreach ($images as $k => $image)
 				{
 					$images[$k]['obj'] = new Image($image['id_image']);
