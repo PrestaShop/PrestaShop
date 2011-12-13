@@ -177,7 +177,7 @@
 				<select name="sp_id_group">
 					<option value="0">{l s='All groups'}</option>
 				{foreach from=$groups item=group}
-					<option value="'.(int)($group['id_group']).'">'.{$group['name']}</option>
+					<option value="'.(int)($group['id_group']).'">{$group['name']}</option>
 				{/foreach}
 				</select>
 			</div>
