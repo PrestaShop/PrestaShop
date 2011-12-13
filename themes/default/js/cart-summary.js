@@ -615,17 +615,21 @@ function updateHookShoppingCartExtra(html)
 {
 	$('#HOOK_SHOPPING_CART_EXTRA').html(html);
 }
-$(document).ready(function() {
+function refreshDeliveryOptions()
+{
 	$.each($('.delivery_option_radio'), function() {
 		if ($(this).attr('checked'))
 			$(this).parent().find('.delivery_option_carrier').show();
 		else
 			$(this).parent().find('.delivery_option_carrier').hide();
-			
 	});
-	$('.delivery_option_radio').change(function() {
-		$(this).parent().parent().find('.delivery_option_carrier').hide();
-		$(this).parent().find('.delivery_option_carrier').show();
+}
+$(document).ready(function() {
+	
+	refreshDeliveryOptions();
+	
+	$('.delivery_option_radio').live('change', function() {
+		refreshDeliveryOptions();
 	});
 	
 	$('#allow_seperated_package').live('click', function() {
