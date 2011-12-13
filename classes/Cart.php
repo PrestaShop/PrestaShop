@@ -171,7 +171,8 @@ class CartCore extends ObjectModel
 	{
 		if (!$this->id_lang)
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-
+		if (Context::getContext()->shop->getGroup()->share_order == true)
+			$this->id_shop = null;
 		$return = parent::add($autodate);
 		Hook::exec('cart');
 
@@ -185,7 +186,8 @@ class CartCore extends ObjectModel
 
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
-
+		if (Context::getContext()->shop->getGroup()->share_order == true)
+			$this->id_shop = null;
 		$this->_products = null;
 		$return = parent::update();
 		Hook::exec('cart');
