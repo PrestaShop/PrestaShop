@@ -50,55 +50,61 @@ class Editorial extends Module
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('displayHome') OR !$this->registerHook('displayHeader'));
+		if (!parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('displayHeader'))
 			return false;
 
-		if (!Db::getInstance()->execute('
-		CREATE TABLE `'._DB_PREFIX_.'editorial` (
-		`id_editorial` int(10) unsigned NOT NULL auto_increment,
-		`body_home_logo_link` varchar(255) NOT NULL,
-		PRIMARY KEY (`id_editorial`))
-		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
-			return false;
+		$res = Db::getInstance()->execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial` (
+			`id_editorial` int(10) unsigned NOT NULL auto_increment,
+			`body_home_logo_link` varchar(255) NOT NULL,
+			PRIMARY KEY (`id_editorial`))
+			ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-		if (!Db::getInstance()->execute('
-		CREATE TABLE `'._DB_PREFIX_.'editorial_lang` (
-		`id_editorial` int(10) unsigned NOT NULL,
-		`id_lang` int(10) unsigned NOT NULL,
-		`body_title` varchar(255) NOT NULL,
-		`body_subheading` varchar(255) NOT NULL,
-		`body_paragraph` text NOT NULL,
-		`body_logo_subheading` varchar(255) NOT NULL,
-		PRIMARY KEY (`id_editorial`, `id_lang`))
-		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
-			return false;
+		if ($res)
+			$res &= Db::getInstance()->execute('
+				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial_lang` (
+				`id_editorial` int(10) unsigned NOT NULL,
+				`id_lang` int(10) unsigned NOT NULL,
+				`body_title` varchar(255) NOT NULL,
+				`body_subheading` varchar(255) NOT NULL,
+				`body_paragraph` text NOT NULL,
+				`body_logo_subheading` varchar(255) NOT NULL,
+				PRIMARY KEY (`id_editorial`, `id_lang`))
+				ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-		if (!Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'editorial`(`body_home_logo_link`)
-		VALUES("http://www.prestashop.com")'))
-			return false;
+		if ($res)
+			$res &= Db::getInstance()->execute('
+				INSERT INTO `'._DB_PREFIX_.'editorial`(`body_home_logo_link`)
+				VALUES("http://www.prestashop.com")');
+		if ($res)
+		{
+			$id_editorial = Db::getInstance()->Insert_ID();
+			foreach (Language::getLanguages(false) as $lang)
+				$res &= Db::getInstance()->autoExecute(_DB_PREFIX_.'editorial_lang', array(
+					'id_editorial' =>			$id_editorial,
+					'id_lang' =>				$lang['id_lang'],
+					'body_title' =>				'Lorem ipsum dolor sit amet',
+					'body_subheading' =>		'Excepteur sint occaecat cupidatat non proident',
+					'body_paragraph' =>			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>',
+					'body_logo_subheading' =>	'Lorem ipsum presta shop amet',
+					), 'INSERT');
+		}
 
-		$id_editorial = Db::getInstance()->Insert_ID();
-		$result = true;
-		foreach (Language::getLanguages(false) as $lang)
-			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'editorial_lang', array(
-				'id_editorial' =>			$id_editorial,
-				'id_lang' =>				$lang['id_lang'],
-				'body_title' =>				'Lorem ipsum dolor sit amet',
-				'body_subheading' =>		'Excepteur sint occaecat cupidatat non proident',
-				'body_paragraph' =>			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>',
-				'body_logo_subheading' =>	'Lorem ipsum presta shop amet',
-			), 'INSERT');
-
-		return $result;
+		if (!$res)
+			$res &= $this->uninstall();
+		
+		return $res;
 	}
 
 	public function uninstall()
 	{
-		if (!parent::uninstall())
+		$res = Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'editorial`');
+		$res &= Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'editorial_lang`');
+
+		if (!$res || !parent::uninstall())
 			return false;
-		return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'editorial`') AND
-				Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'editorial_lang`'));
+
+		return true;
 	}
 
 	public function putContent($xml_data, $key, $field, $forbidden, $section)
