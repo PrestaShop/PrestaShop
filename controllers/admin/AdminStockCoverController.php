@@ -292,7 +292,7 @@ class AdminStockCoverControllerCore extends AdminController
 	/**
 	 * Gets the current warning
 	 *
-	 * @return int warn period
+	 * @return int warn_days
 	 */
 	private function getCurrentWarning()
 	{
@@ -307,6 +307,14 @@ class AdminStockCoverControllerCore extends AdminController
 		return $warning;
 	}
 
+	/**
+	 * For a given product, and a given period, returns the quantity sold
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $coverage
+	 * @return int $quantity
+	 */
 	protected function getQuantitySold($id_product, $id_product_attribute, $coverage)
 	{
 		$query = new DbQuery();
