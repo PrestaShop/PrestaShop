@@ -554,7 +554,7 @@ class StockManagerCore implements StockManagerInterface
 	/**
 	 * @see StockManagerInterface::getProductCoverage()
 	 * Here, $coverage is a number of days
-	 * @return int number of days left
+	 * @return int number of days left (-1 if infinite)
 	 */
 	public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)
 	{
@@ -584,14 +584,14 @@ class StockManagerCore implements StockManagerInterface
 
 		$quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 		if (!$quantity_out)
-			return '--';
+			return -1;
 
-		$quantity_per_day = round($quantity_out / $coverage);
+		$quantity_per_day = Tools::ps_round($quantity_out / $coverage);
 		$physical_quantity = $this->getProductPhysicalQuantities($id_product,
 															     $id_product_attribute,
 															     ($id_warehouse ? array($id_warehouse) : null),
 															     true);
-		$time_left = ($quantity_per_day == 0) ? '--' : round($physical_quantity / $quantity_per_day);
+		$time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);
 
 		return $time_left;
 	}

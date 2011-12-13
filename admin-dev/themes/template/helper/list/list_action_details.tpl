@@ -55,6 +55,10 @@ $(document).ready(function() {
 									.attr('colspan', $('#details_{$id}').parent().parent().find('td').length)));
 						$.each(data.data, function(it, row)
 						{
+							var bg_color = ''; // Color
+							if (row.color)
+								bg_color = 'style="background:' + row.color +';"';
+								
 							var content = $('<tr class="action_details details_{$id} '+(alt_row ? 'alt_row' : '')+'"></tr>');
 							content.append($('<td class="empty"></td>'));
 							var first = true;
@@ -69,9 +73,9 @@ $(document).ready(function() {
 								if (typeof(row[it]) == 'undefined')
 								{
 									if (first || count == 0)
-										content.append($('<td class="'+this.align+' empty"></td>'));
+										content.append($('<td class="'+this.align+' empty"' + bg_color + '></td>'));
 									else
-										content.append($('<td class="'+this.align+'"></td>'));
+										content.append($('<td class="'+this.align+'"' + bg_color + '></td>'));
 								}
 								else
 								{
@@ -79,12 +83,12 @@ $(document).ready(function() {
 									if (first)
 									{
 										first = false;
-										content.append($('<td class="'+this.align+' first">'+row[it]+'</td>'));
+										content.append($('<td class="'+this.align+' first"' + bg_color + '>'+row[it]+'</td>'));
 									}
 									else if (count == 0)
-										content.append($('<td class="'+this.align+' last">'+row[it]+'</td>'));
+										content.append($('<td class="'+this.align+' last"' + bg_color + '>'+row[it]+'</td>'));
 									else
-										content.append($('<td class="'+this.align+' '+count+'">'+row[it]+'</td>'));
+										content.append($('<td class="'+this.align+' '+count+'"' + bg_color + '>'+row[it]+'</td>'));
 								}
 							});
 							content.append($('<td class="empty"></td>'));

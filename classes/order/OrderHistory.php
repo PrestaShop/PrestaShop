@@ -127,6 +127,11 @@ class OrderHistoryCore extends ObjectModel
 						    true,
 						    (int)$id_order
 						);
+
+						if (StockAvailable::dependsOnStock($product['id_product'], $order->id_shop))
+							StockAvailable::synchronize($product['id_product']);
+						else
+							StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity'], $order->id_shop);
 					}
 					else if ($newOS->shipped == 0 && $oldOrderStatus->shipped == 1 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 					{
