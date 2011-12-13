@@ -171,15 +171,6 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
 		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
-		if (count($selected_cat) > 0)
-		{
-			if (isset($selected_cat[0]))
-				$selected_cat = implode(',', $selected_cat);
-			else
-				$selected_cat = implode(',', array_keys($selected_cat));
-		}
-		else
-			$selected_cat = '';
 
 		$this->fields_form = array(
 			'tinymce' => true,
