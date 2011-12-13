@@ -66,9 +66,6 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var intger */
 	public $date_add;
 
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -76,32 +73,21 @@ class OrderInvoiceCore extends ObjectModel
 		'table' => 'order_invoice',
 		'primary' => 'id_order_invoice',
 		'fields' => array(
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'number' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'number' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'total_discount_tax_excl' =>array('type' => self::TYPE_FLOAT),
+			'total_discount_tax_incl' =>array('type' => self::TYPE_FLOAT),
+			'total_paid_tax_excl' =>	array('type' => self::TYPE_FLOAT),
+			'total_paid_tax_incl' =>	array('type' => self::TYPE_FLOAT),
+			'total_products' =>			array('type' => self::TYPE_FLOAT),
+			'total_products_wt' =>		array('type' => self::TYPE_FLOAT),
+			'total_shipping_tax_excl' =>array('type' => self::TYPE_FLOAT),
+			'total_shipping_tax_incl' =>array('type' => self::TYPE_FLOAT),
+			'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
+			'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['number'] = (int)$this->number;
-		$fields['total_discount_tax_excl'] = (float)$this->total_discount_tax_excl;
-		$fields['total_discount_tax_incl'] = (float)$this->total_discount_tax_incl;
-		$fields['total_paid_tax_excl'] = (float)$this->total_paid_tax_excl;
-		$fields['total_paid_tax_incl'] = (float)$this->total_paid_tax_incl;
-		$fields['total_products'] = (float)$this->total_products;
-		$fields['total_products_wt'] = (float)$this->total_products_wt;
-		$fields['total_shipping_tax_excl'] = (float)$this->total_shipping_tax_excl;
-		$fields['total_shipping_tax_incl'] = (float)$this->total_shipping_tax_incl;
-		$fields['total_wrapping_tax_excl'] = (float)$this->total_wrapping_tax_excl;
-		$fields['total_wrapping_tax_incl'] = (float)$this->total_wrapping_tax_incl;
-		$fields['date_add'] = pSQL($this->date_add);
-
-		return $fields;
-	}
 
 	public function getProductsDetail()
 	{

@@ -35,12 +35,6 @@ class CompareProductCore extends ObjectModel
 
 	public $date_upd;
 
-	protected $fieldRequired = array(
-		'id_compare',
-		'id_customer');
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -48,14 +42,13 @@ class CompareProductCore extends ObjectModel
 		'table' => 'compare',
 		'primary' => 'id_compare',
 		'fields' => array(
-			'id_compare' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
+			'id_compare' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'id_customer' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 		),
 	);
 
-
 	/**
-	 * Get all comapare products of the customer
+	 * Get all compare products of the customer
 	 * @param int $id_customer
 	 * @return array
 	 */
@@ -70,8 +63,8 @@ class CompareProductCore extends ObjectModel
 		$compareProducts = null;
 
 		if ($results)
-		foreach($results as $result)
-			$compareProducts[] = $result['id_product'];
+			foreach($results as $result)
+				$compareProducts[] = $result['id_product'];
 
 		return $compareProducts;
 	}
@@ -97,6 +90,7 @@ class CompareProductCore extends ObjectModel
 				Context::getContext()->cookie->id_compare = $id_compare;
 			}
 		}
+
 		return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'compare_product` (`id_compare`, `id_product`, `date_add`, `date_upd`)
 			VALUES ('.(int)($id_compare).', '.(int)($id_product).', NOW(), NOW())');
@@ -104,7 +98,8 @@ class CompareProductCore extends ObjectModel
 
 	/**
 	 * Remove a compare product for the customer
-	 * @param int $id_compare, int $id_product
+	 * @param int $id_compare
+	 * @param int $id_product
 	 * @return boolean
 	 */
 	public static function removeCompareProduct($id_compare, $id_product)

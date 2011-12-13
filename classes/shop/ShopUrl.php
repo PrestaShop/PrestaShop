@@ -38,10 +38,6 @@ class ShopUrlCore extends ObjectModel
 	private static $main_domain = null;
 	private static $main_domain_ssl = null;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -49,19 +45,22 @@ class ShopUrlCore extends ObjectModel
 		'table' => 'shop_url',
 		'primary' => 'id_shop_url',
 		'fields' => array(
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'domain' => array('type' => 'FILL_ME', 'required' => true, 'size' => 255),
-			'id_shop' => array('type' => 'FILL_ME', 'required' => true),
-			'physical_uri' => array('type' => 'FILL_ME', 'size' => 64),
-			'virtual_uri' => array('type' => 'FILL_ME', 'size' => 64),
+			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'main' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'domain' => 		array('type' => self::TYPE_STRING, 'required' => true, 'size' => 255),
+			'domain_ssl' => 	array('type' => self::TYPE_STRING, 'size' => 255),
+			'id_shop' => 		array('type' => self::TYPE_INT, 'required' => true),
+			'physical_uri' => 	array('type' => self::TYPE_STRING, 'size' => 64),
+			'virtual_uri' => 	array('type' => self::TYPE_STRING, 'size' => 64),
 		),
 	);
 
-
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
-
 		$this->physical_uri = trim($this->physical_uri, '/');
 		if ($this->physical_uri)
 			$this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
@@ -72,14 +71,7 @@ class ShopUrlCore extends ObjectModel
 		if ($this->virtual_uri)
 			$this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
 
-		$fields['domain'] = pSQL($this->domain);
-		$fields['domain_ssl'] = pSQL($this->domain_ssl);
-		$fields['physical_uri'] = pSQL($this->physical_uri);
-		$fields['virtual_uri'] = pSQL($this->virtual_uri);
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['main'] = (int)$this->main;
-		$fields['active'] = (int)$this->active;
-		return $fields;
+		return parent::getFields();
 	}
 
 	public function getURL($ssl = false)

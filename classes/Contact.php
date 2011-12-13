@@ -40,13 +40,6 @@ class ContactCore extends ObjectModel
 
 	public $customer_service;
 
- 	
- 	
- 	
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -55,21 +48,14 @@ class ContactCore extends ObjectModel
 		'primary' => 'id_contact',
 		'multilang' => true,
 		'fields' => array(
-			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'size' => 128),
-			'customer_service' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+			'email' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+			'customer_service' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+
+			// Lang fields
+			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['email'] = pSQL($this->email);
-		$fields['customer_service'] = (int)$this->customer_service;
-		return $fields;
-	}
 
 	/**
 	  * Check then return multilingual fields for database interaction

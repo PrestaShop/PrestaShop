@@ -31,10 +31,6 @@ class HookCore extends ObjectModel
 	public 		$name;
 	public 		$title;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -42,7 +38,8 @@ class HookCore extends ObjectModel
 		'table' => 'hook',
 		'primary' => 'id_hook',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isHookName', 'required' => true, 'size' => 32),
+			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 32),
+			'title' => 	array('type' => self::TYPE_STRING),
 		),
 	);
 
@@ -51,14 +48,6 @@ class HookCore extends ObjectModel
 
 	static $preloadModulesFromHooks = null;
 	static $preloadHookAlias = null;
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['name'] = pSQL($this->name);
-		$fields['title'] = pSQL($this->title);
-		return $fields;
-	}
 
 	/**
 	  * Return hook ID from name

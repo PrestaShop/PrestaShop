@@ -30,9 +30,6 @@ class SearchEngineCore extends ObjectModel
 	public $server;
 	public $getvar;
 
-		
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -40,20 +37,11 @@ class SearchEngineCore extends ObjectModel
 		'table' => 'search_engine',
 		'primary' => 'id_search_engine',
 		'fields' => array(
-			'server' => array('type' => 'FILL_ME', 'validate' => 'isUrl', 'required' => true),
-			'getvar' => array('type' => 'FILL_ME', 'validate' => 'isModuleName', 'required' => true),
+			'server' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true),
+			'getvar' => array('type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true),
 		),
 	);
 
-	
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['server'] = pSQL($this->server);
-		$fields['getvar'] = pSQL($this->getvar);
-		return $fields;
-	}
-	
 	public static function getKeywords($url)
 	{
 		$parsedUrl = @parse_url($url);

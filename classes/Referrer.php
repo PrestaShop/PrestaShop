@@ -46,11 +46,6 @@ class ReferrerCore extends ObjectModel
 
 	public $date_add;
 
-	
-	
-
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -58,23 +53,22 @@ class ReferrerCore extends ObjectModel
 		'table' => 'referrer',
 		'primary' => 'id_referrer',
 		'fields' => array(
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt'),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'passwd' => array('type' => 'FILL_ME', 'validate' => 'isPasswd', 'size' => 32),
-			'http_referer_regexp' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
-			'request_uri_regexp' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
-			'http_referer_like' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
-			'request_uri_like' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 64),
-			'http_referer_regexp_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
-			'request_uri_regexp_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
-			'http_referer_like_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
-			'request_uri_like_not' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml'),
-			'base_fee' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'percent_fee' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'click_fee' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
+			'name' => 						array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'passwd' => 					array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 32),
+			'http_referer_regexp' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
+			'request_uri_regexp' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
+			'http_referer_like' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
+			'request_uri_like' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
+			'http_referer_regexp_not' => 	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+			'request_uri_regexp_not' => 	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+			'http_referer_like_not' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+			'request_uri_like_not' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+			'base_fee' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'percent_fee' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'click_fee' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
 
 	protected static $_join = '(r.http_referer_like IS NULL OR r.http_referer_like = \'\' OR cs.http_referer LIKE r.http_referer_like)
 			AND (r.request_uri_like IS NULL OR r.request_uri_like = \'\' OR cs.request_uri LIKE r.request_uri_like)
@@ -84,27 +78,6 @@ class ReferrerCore extends ObjectModel
 			AND (r.request_uri_regexp IS NULL OR r.request_uri_regexp = \'\' OR cs.request_uri REGEXP r.request_uri_regexp)
 			AND (r.http_referer_regexp_not IS NULL OR r.http_referer_regexp_not = \'\' OR cs.http_referer NOT REGEXP r.http_referer_regexp_not)
 			AND (r.request_uri_regexp_not IS NULL OR r.request_uri_regexp_not = \'\' OR cs.request_uri NOT REGEXP r.request_uri_regexp_not)';
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['name'] = pSQL($this->name);
-		$fields['passwd'] = pSQL($this->passwd);
-		$fields['http_referer_regexp'] = pSQL($this->http_referer_regexp, true);
-		$fields['request_uri_regexp'] = pSQL($this->request_uri_regexp, true);
-		$fields['http_referer_like'] = pSQL($this->http_referer_like, true);
-		$fields['request_uri_like'] = pSQL($this->request_uri_like, true);
-		$fields['http_referer_regexp_not'] = pSQL($this->http_referer_regexp_not, true);
-		$fields['request_uri_regexp_not'] = pSQL($this->request_uri_regexp_not, true);
-		$fields['http_referer_like_not'] = pSQL($this->http_referer_like_not, true);
-		$fields['request_uri_like_not'] = pSQL($this->request_uri_like_not, true);
-		$fields['base_fee'] = number_format($this->base_fee, 2, '.', '');
-		$fields['percent_fee'] = number_format($this->percent_fee, 2, '.', '');
-		$fields['click_fee'] = number_format($this->click_fee, 2, '.', '');
-		$fields['date_add'] = pSQL($this->date_add);
-		return $fields;
-	}
 
 	public function add($autodate = true, $nullValues = false)
 	{

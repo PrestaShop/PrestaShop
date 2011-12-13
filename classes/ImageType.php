@@ -56,10 +56,6 @@ class ImageTypeCore extends ObjectModel
 	/** @var integer Apply to store */
 	public 		$stores;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -67,40 +63,24 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
-			'width' => array('type' => 'FILL_ME', 'validate' => 'isImageSize', 'required' => true),
-			'height' => array('type' => 'FILL_ME', 'validate' => 'isImageSize', 'required' => true),
-			'categories' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'products' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'manufacturers' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'suppliers' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'scenes' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'stores' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
+			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
+			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
+			'categories' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'products' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'manufacturers' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'suppliers' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'scenes' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'stores' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
-
 
 	/**
 	 * @var array Image types cache
 	 */
 	protected static $images_types_cache = array();
 	
-	protected	$webserviceParameters = array();
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['name'] = pSQL($this->name);
-		$fields['width'] = (int)($this->width);
-		$fields['height'] = (int)($this->height);
-		$fields['products'] = (int)($this->products);
-		$fields['categories'] = (int)($this->categories);
-		$fields['manufacturers'] = (int)($this->manufacturers);
-		$fields['suppliers'] = (int)($this->suppliers);
-		$fields['scenes'] = (int)($this->scenes);
-		$fields['stores'] = (int)($this->stores);
-		return $fields;
-	}
+	protected $webserviceParameters = array();
 
 	/**
 	* Returns image type definitions

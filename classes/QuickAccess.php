@@ -36,13 +36,6 @@ class QuickAccessCore extends ObjectModel
 	/** @var boolean New windows or not */
 	public $new_window;
 
- 	
- 	
- 	
- 	
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -51,20 +44,13 @@ class QuickAccessCore extends ObjectModel
 		'primary' => 'id_quick_access',
 		'multilang' => true,
 		'fields' => array(
-			'link' => array('type' => 'FILL_ME', 'validate' => 'isUrl', 'required' => true, 'size' => 128),
-			'new_window' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'link' => 		array('type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true, 'size' => 128),
+			'new_window' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
-
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['link'] = pSQL($this->link);
-		$fields['new_window'] = (int)$this->new_window;
-		return $fields;
-	}
 
 	/**
 	* Check then return multilingual fields for database interaction

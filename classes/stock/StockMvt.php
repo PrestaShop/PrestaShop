@@ -129,27 +129,22 @@ class StockMvtCore extends ObjectModel
 		'table' => 'stock_mvt',
 		'primary' => 'id_stock_mvt',
 		'fields' => array(
-			'date_add' => array('type' => 'FILL_ME', 'validate' => 'isDate', 'required' => true),
-			'id_employee' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'employee_firstname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
-			'employee_lastname' => array('type' => 'FILL_ME', 'validate' => 'isName'),
-			'id_stock' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'physical_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
-			'id_stock_mvt_reason' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_supply_order' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'sign' => array('type' => 'FILL_ME', 'validate' => 'isInt', 'required' => true),
-			'last_wa' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'current_wa' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'price_te' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'referer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
+			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'employee_lastname' => 	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'id_stock' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'physical_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'id_stock_mvt_reason' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_supply_order' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'sign' => 				array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'last_wa' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'current_wa' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'price_te' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'referer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
 		),
 	);
-
-
- 	
-
- 	
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movements',
@@ -161,26 +156,6 @@ class StockMvtCore extends ObjectModel
 			'id_order' => array('xlink_resource'=> 'orders')
 		),
 	);
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['id_employee'] = (int)$this->id_employee;
-		$fields['employee_lastname'] = pSQL($this->employee_lastname);
-		$fields['employee_firstname'] = pSQL(Tools::ucfirst($this->employee_firstname));
-		$fields['id_stock'] = (int)$this->id_stock;
-		$fields['physical_quantity'] = (int)$this->physical_quantity;
-		$fields['id_stock_mvt_reason'] = (int)$this->id_stock_mvt_reason;
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['id_supply_order'] = (int)$this->id_supply_order;
-		$fields['sign'] = (int)$this->sign;
-		$fields['last_wa'] = (float)Tools::ps_round($this->last_wa, 6);
-		$fields['current_wa'] = (float)Tools::ps_round($this->current_wa, 6);
-		$fields['price_te'] = (float)Tools::ps_round($this->price_te, 6);
-		$fields['referer'] = (int)$this->referer;
-		return $fields;
-	}
 
 	/**
 	 * @deprecated since 1.5.0

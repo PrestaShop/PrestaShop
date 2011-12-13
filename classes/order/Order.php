@@ -142,13 +142,61 @@ class OrderCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var string Order reference
-	 * This reference is not unique, but unique for a payment
+	/**
+	 * @var string Order reference, this reference is not unique, but unique for a payment
 	 */
 	public $reference;
 
-
-
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'orders',
+		'primary' => 'id_order',
+		'fields' => array(
+			'id_address_delivery' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_address_invoice' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_cart' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_currency' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_group_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_customer' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_carrier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'secure_key' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMd5'),
+			'payment' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'module' => 					array('type' => self::TYPE_STRING),
+			'recyclable' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'gift' => 						array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'gift_message' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMessage'),
+			'total_discounts' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_discounts_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_discounts_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_paid' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'total_paid_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_paid_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_paid_real' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'total_products' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'total_products_wt' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'total_shipping' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_shipping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_shipping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'carrier_tax_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'total_wrapping' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
+			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'invoice_number' => 			array('type' => self::TYPE_INT),
+			'delivery_number' => 			array('type' => self::TYPE_INT),
+			'invoice_date' => 				array('type' => self::TYPE_DATE),
+			'delivery_date' => 				array('type' => self::TYPE_DATE),
+			'valid' => 						array('type' => self::TYPE_BOOL),
+			'reference' => 					array('type' => self::TYPE_STRING),
+			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+		),
+	);
 
 	protected $webserviceParameters = array(
 		'objectMethods' => array('add' => 'addWs'),
@@ -181,110 +229,14 @@ class OrderCore extends ObjectModel
 					'product_quantity' => array('required' => true),
 					'product_name' => array('setter' => false),
 					'product_price' => array('setter' => false),
-			)),
+				)),
 		),
 
 	);
-
-	/* MySQL does not allow 'order' for a table name */
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'orders',
-		'primary' => 'id_order',
-		'fields' => array(
-			'id_address_delivery' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_address_invoice' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_cart' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_currency' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_lang' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_customer' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_carrier' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'secure_key' => array('type' => 'FILL_ME', 'validate' => 'isMd5'),
-			'payment' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true),
-			'recyclable' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'gift' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'gift_message' => array('type' => 'FILL_ME', 'validate' => 'isMessage'),
-			'total_discounts' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_discounts_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_discounts_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_paid' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'total_paid_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_paid_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_paid_real' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'total_products' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'total_products_wt' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'total_shipping' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_shipping_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_shipping_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'carrier_tax_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat'),
-			'total_wrapping' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_wrapping_tax_incl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'total_wrapping_tax_excl' => array('type' => 'FILL_ME', 'validate' => 'isPrice'),
-			'shipping_number' => array('type' => 'FILL_ME', 'validate' => 'isUrl'),
-			'conversion_rate' => array('type' => 'FILL_ME', 'validate' => 'isFloat', 'required' => true),
-		),
-	);
-
 
 	protected $_taxCalculationMethod = PS_TAX_EXC;
 
 	protected static $_historyCache = array();
-
-	public function getFields()
-	{
-		if (!$this->id_lang)
-			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
-
-		$this->validateFields();
-
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_address_delivery'] = (int)($this->id_address_delivery);
-		$fields['id_address_invoice'] = (int)($this->id_address_invoice);
-		$fields['id_cart'] = (int)$this->id_cart;
-		$fields['id_currency'] = (int)($this->id_currency);
-		$fields['id_lang'] = (int)($this->id_lang);
-		$fields['id_customer'] = (int)($this->id_customer);
-		$fields['id_carrier'] = (int)($this->id_carrier);
-		$fields['secure_key'] = pSQL($this->secure_key);
-		$fields['payment'] = pSQL($this->payment);
-		$fields['module'] = pSQL($this->module);
-		$fields['conversion_rate'] = (float)($this->conversion_rate);
-		$fields['recyclable'] = (int)($this->recyclable);
-		$fields['gift'] = (int)($this->gift);
-		$fields['gift_message'] = pSQL($this->gift_message);
-		$fields['shipping_number'] = pSQL($this->shipping_number);
-		$fields['total_discounts'] = (float)($this->total_discounts);
-		$fields['total_discounts_tax_incl'] = (float)($this->total_discounts_tax_incl);
-		$fields['total_discounts_tax_excl'] = (float)($this->total_discounts_tax_excl);
-		$fields['total_paid'] = (float)($this->total_paid);
-		$fields['total_paid_tax_incl'] = (float)($this->total_paid_tax_incl);
-		$fields['total_paid_tax_excl'] = (float)($this->total_paid_tax_excl);
-		$fields['total_paid_real'] = (float)($this->total_paid_real);
-		$fields['total_products'] = (float)($this->total_products);
-		$fields['total_products_wt'] = (float)($this->total_products_wt);
-		$fields['total_shipping'] = (float)($this->total_shipping);
-		$fields['total_shipping_tax_incl'] = (float)($this->total_shipping_tax_incl);
-		$fields['total_shipping_tax_excl'] = (float)($this->total_shipping_tax_excl);
-		$fields['carrier_tax_rate'] = (float)($this->carrier_tax_rate);
-		$fields['total_wrapping'] = (float)($this->total_wrapping);
-		$fields['total_wrapping_tax_incl'] = (float)($this->total_wrapping_tax_incl);
-		$fields['total_wrapping_tax_excl'] = (float)($this->total_wrapping_tax_excl);
-		$fields['invoice_number'] = (int)($this->invoice_number);
-		$fields['delivery_number'] = (int)($this->delivery_number);
-		$fields['invoice_date'] = pSQL($this->invoice_date);
-		$fields['delivery_date'] = pSQL($this->delivery_date);
-		$fields['valid'] = (int)($this->valid) ? 1 : 0;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['reference'] = pSQL($this->reference);
-
-		return $fields;
-	}
 
 	public function __construct($id = NULL, $id_lang = NULL)
 	{
@@ -296,6 +248,18 @@ class OrderCore extends ObjectModel
 		}
 		else
 			$this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
+	}
+
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
+	public function getFields()
+	{
+		if (!$this->id_lang)
+			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+
+		return parent::getFields();
 	}
 
 	public function getTaxCalculationMethod()

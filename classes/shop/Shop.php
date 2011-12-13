@@ -48,10 +48,6 @@ class ShopCore extends ObjectModel
 	 */
 	protected $group;
 
-	
-	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -59,14 +55,14 @@ class ShopCore extends ObjectModel
 		'table' => 'shop',
 		'primary' => 'id_shop',
 		'fields' => array(
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'id_theme' => array('type' => 'FILL_ME', 'required' => true),
-			'id_category' => array('type' => 'FILL_ME', 'required' => true),
-			'id_group_shop' => array('type' => 'FILL_ME', 'required' => true),
+			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'id_theme' => 		array('type' => self::TYPE_INT, 'required' => true),
+			'id_category' => 	array('type' => self::TYPE_INT, 'required' => true),
+			'id_group_shop' => 	array('type' => self::TYPE_INT, 'required' => true),
 		),
 	);
-
 
 	/** @var array List of shops cached */
 	protected static $shops;
@@ -119,19 +115,6 @@ class ShopCore extends ObjectModel
 	 */
 	const SHARE_CUSTOMER = 'share_customer';
 	const SHARE_ORDER = 'share_order';
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['id_category'] = (int)$this->id_category;
-		$fields['id_theme'] = (int)$this->id_theme;
-		$fields['name'] = pSQL($this->name);
-		$fields['active'] = (int)$this->active;
-		$fields['deleted'] = (int)$this->deleted;
-		return $fields;
-	}
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{

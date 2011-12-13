@@ -41,9 +41,6 @@ class SpecificPriceCore extends ObjectModel
 	public	$from;
 	public	$to;
 
- 	
- 	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -51,44 +48,25 @@ class SpecificPriceCore extends ObjectModel
 		'table' => 'specific_price',
 		'primary' => 'id_specific_price',
 		'fields' => array(
-			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_product' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_country' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'id_group' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId', 'required' => true),
-			'price' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'from_quantity' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedInt', 'required' => true),
-			'reduction' => array('type' => 'FILL_ME', 'validate' => 'isPrice', 'required' => true),
-			'reduction_type' => array('type' => 'FILL_ME', 'validate' => 'isReductionType', 'required' => true),
-			'from' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
-			'to' => array('type' => 'FILL_ME', 'validate' => 'isDateFormat', 'required' => true),
-			'id_currency' => array('type' => 'FILL_ME', 'required' => true),
+			'id_group_shop' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_currency' => 			array('type' => self::TYPE_INT, 'required' => true),
+			'id_specific_price_rule' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_country' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_group' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'price' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'from_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_type' => 		array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
+			'from' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
+			'to' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
 		),
 	);
 
-
 	protected static $_specificPriceCache = array();
 	protected static $_cache_priorities = array();
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_specific_price_rule'] =  (int)$this->id_specific_price_rule;
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_product_attribute'] = (int)$this->id_product_attribute;
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_currency'] = (int)$this->id_currency;
-		$fields['id_country'] = (int)$this->id_country;
-		$fields['id_group'] = (int)$this->id_group;
-		$fields['price'] = (float)$this->price;
-		$fields['from_quantity'] = (int)$this->from_quantity;
-		$fields['reduction'] = (float)$this->reduction;
-		$fields['reduction_type'] = pSQL($this->reduction_type);
-		$fields['from'] = pSQL($this->from);
-		$fields['to'] = pSQL($this->to);
-		return $fields;
-	}
 
 	public function add($autodate = true, $nullValues = false)
 	{

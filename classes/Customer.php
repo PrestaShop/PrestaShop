@@ -109,10 +109,6 @@ class CustomerCore extends ObjectModel
 
 	public $groupBox;
 
- 	
- 	
- 	
-
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_default_group' => array('xlink_resource' => 'groups'),
@@ -132,56 +128,44 @@ class CustomerCore extends ObjectModel
 		'table' => 'customer',
 		'primary' => 'id_customer',
 		'fields' => array(
-			'secure_key' => array('type' => 'FILL_ME', 'validate' => 'isMd5'),
-			'lastname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'firstname' => array('type' => 'FILL_ME', 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'email' => array('type' => 'FILL_ME', 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-			'passwd' => array('type' => 'FILL_ME', 'validate' => 'isPasswd', 'required' => true, 'size' => 32),
-			'id_gender' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'birthday' => array('type' => 'FILL_ME', 'validate' => 'isBirthDate'),
-			'newsletter' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'optin' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'note' => array('type' => 'FILL_ME', 'validate' => 'isCleanHtml', 'size' => 65000),
-			'is_guest' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'id_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'id_group_shop' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'groupBox' => array('type' => 'FILL_ME', 'validate' => 'isArrayWithIds'),
+			'secure_key' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMd5'),
+			'lastname' => 					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' => 					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'email' => 						array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+			'passwd' => 					array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 32),
+			'last_passwd_gen' =>			array('type' => self::TYPE_STRING),
+			'id_gender' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'birthday' => 					array('type' => self::TYPE_DATE, 'validate' => 'isBirthDate'),
+			'newsletter' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'newsletter_date_add' =>		array('type' => self::TYPE_DATE),
+			'ip_registration_newsletter' =>	array('type' => self::TYPE_STRING),
+			'optin' => 						array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'deleted' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'note' => 						array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
+			'is_guest' =>					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'id_shop' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_group_shop' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_default_group' => 			array('type' => self::TYPE_INT),
+			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-
 
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();
 	protected static $_customer_groups = array();
 
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
+		$fields = parent::getFields();
 		if (isset($this->id))
 			$fields['id_customer'] = (int)$this->id;
 
-		$fields['id_shop'] = (int)$this->id_shop;
-		$fields['id_group_shop'] = (int)$this->id_group_shop;
-		$fields['secure_key'] = pSQL($this->secure_key);
-		$fields['note'] = pSQL($this->note, true);
-		$fields['id_gender'] = (int)$this->id_gender;
-		$fields['id_default_group'] = (int)$this->id_default_group;
-		$fields['lastname'] = pSQL($this->lastname);
-		$fields['firstname'] = pSQL($this->firstname);
-		$fields['birthday'] = pSQL($this->birthday);
-		$fields['email'] = pSQL($this->email);
-		$fields['newsletter'] = (int)$this->newsletter;
-		$fields['newsletter_date_add'] = pSQL($this->newsletter_date_add);
-		$fields['ip_registration_newsletter'] = pSQL($this->ip_registration_newsletter);
-		$fields['optin'] = (int)$this->optin;
-		$fields['passwd'] = pSQL($this->passwd);
-		$fields['last_passwd_gen'] = pSQL($this->last_passwd_gen);
-		$fields['active'] = (int)$this->active;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['is_guest'] = (int)$this->is_guest;
-		$fields['deleted'] = (int)$this->deleted;
 		return $fields;
 	}
 

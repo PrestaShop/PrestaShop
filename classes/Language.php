@@ -50,10 +50,6 @@ class LanguageCore extends ObjectModel
 	/** @var boolean Status */
 	public 		$active = true;
 
-	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -61,13 +57,13 @@ class LanguageCore extends ObjectModel
 		'table' => 'lang',
 		'primary' => 'id_lang',
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'iso_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
-			'language_code' => array('type' => 'FILL_ME', 'validate' => 'isLanguageCode', 'size' => 5),
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'is_rtl' => array('type' => 'FILL_ME', 'validate' => 'isBool'),
-			'date_format_lite' => array('type' => 'FILL_ME', 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
-			'date_format_full' => array('type' => 'FILL_ME', 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
+			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'iso_code' => 			array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
+			'language_code' => 		array('type' => self::TYPE_STRING, 'validate' => 'isLanguageCode', 'size' => 5),
+			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'is_rtl' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'date_format_lite' => 	array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
+			'date_format_full' => 	array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
 		),
 	);
 
@@ -94,19 +90,16 @@ class LanguageCore extends ObjectModel
 		parent::__construct($id);
 	}
 
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
-		$fields['name'] = pSQL($this->name);
-		$fields['iso_code'] = pSQL(strtolower($this->iso_code));
-		$fields['language_code'] = pSQL(strtolower($this->language_code));
-		$fields['is_rtl'] = (int)$this->is_rtl;
-		if (empty($fields['language_code']))
-			$fields['language_code'] = $fields['iso_code'];
-		$fields['date_format_lite'] = pSQL($this->date_format_lite);
-		$fields['date_format_full'] = pSQL($this->date_format_full);
-		$fields['active'] = (int)$this->active;
-		return $fields;
+		if (empty($this->language_code))
+			$this->language_code = $this->iso_code;
+
+		return parent::getFields();
 	}
 
 	/**

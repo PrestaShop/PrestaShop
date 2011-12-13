@@ -50,21 +50,14 @@ class SceneCore extends ObjectModel
 		'primary' => 'id_scene',
 		'multilang' => true,
 		'fields' => array(
-			'active' => array('type' => 'FILL_ME', 'validate' => 'isBool', 'required' => true),
-			'zones' => array('type' => 'FILL_ME', 'validate' => 'isSceneZones'),
-			'categories' => array('type' => 'FILL_ME', 'validate' => 'isArrayWithIds'),
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 100),
+			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+
+			// Lang fields
+			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 100),
 		),
 	);
 
-
- 	
- 	
- 	
- 	
- 	
-
- 	protected static	$feature_active = null;
+ 	protected static $feature_active = null;
 
  	public function __construct($id = NULL, $id_lang = NULL, $liteResult = true, $hideScenePosition = false)
 	{
@@ -77,18 +70,11 @@ class SceneCore extends ObjectModel
 		$this->image_dir = _PS_SCENE_IMG_DIR_;
 	}
 
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['active'] = (int)($this->active);
-		return $fields;
-	}
-
 	/**
-  * Check then return multilingual fields for database interaction
-  *
-  * @return array Multilingual fields
-  */
+	 * Check then return multilingual fields for database interaction
+	 *
+	 * @return array Multilingual fields
+	 */
 	public function getTranslationsFieldsChild()
 	{
 		$this->validateFieldsLang();

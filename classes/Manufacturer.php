@@ -65,12 +65,6 @@ class ManufacturerCore extends ObjectModel
 	/** @var boolean active */
 	public $active;
 
- 	
- 	
- 	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -79,15 +73,19 @@ class ManufacturerCore extends ObjectModel
 		'primary' => 'id_manufacturer',
 		'multilang' => true,
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
-			'short_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 254),
-			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
+			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'active' => 			array('type' => self::TYPE_BOOL),
+			'date_add' => 			array('type' => self::TYPE_DATE),
+			'date_upd' => 			array('type' => self::TYPE_DATE),
+
+			// Lang fields
+			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
+			'short_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
 		),
 	);
-
 
 	protected $webserviceParameters = array(
 		'fields' => array(
@@ -111,17 +109,15 @@ class ManufacturerCore extends ObjectModel
 		$this->image_dir = _PS_MANU_IMG_DIR_;
 	}
 
+	/**
+	 * @see ObjectModel::getFields()
+	 * @return array
+	 */
 	public function getFields()
 	{
-		$this->validateFields();
-
+		$fields = parent::getFields();
 		if (isset($this->id))
 			$fields['id_manufacturer'] = (int)$this->id;
-
-		$fields['name'] = pSQL($this->name);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['active'] = (int)$this->active;
 
 		return $fields;
 	}

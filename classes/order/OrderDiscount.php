@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @deprecated 1.5.0
+ */
 class OrderDiscountCore extends OrderCartRule
 {
 	public function __get($key)

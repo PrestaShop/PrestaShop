@@ -65,12 +65,6 @@ class SupplierCore extends ObjectModel
 	 * */
 	public $id_address;
 
- 	
- 	
- 	
-	
-	
-
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -79,15 +73,19 @@ class SupplierCore extends ObjectModel
 		'primary' => 'id_supplier',
 		'multilang' => true,
 		'fields' => array(
-			'name' => array('type' => 'FILL_ME', 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'id_address' => array('type' => 'FILL_ME', 'validate' => 'isUnsignedId'),
-			'description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
-			'meta_title' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'id_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'active' => 			array('type' => self::TYPE_BOOL),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+			// Lang fields
+			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
+			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 		),
 	);
-
 
 	protected	$webserviceParameters = array(
 		'fields' => array(
@@ -106,19 +104,6 @@ class SupplierCore extends ObjectModel
 	public function getLink()
 	{
 		return Tools::link_rewrite($this->name, false);
-	}
-
-	public function getFields()
-	{
-		$this->validateFields();
-		if (isset($this->id))
-			$fields['id_supplier'] = (int)$this->id;
-		$fields['name'] = pSQL($this->name);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		$fields['active'] = (int)$this->active;
-		$fields['id_address'] = (int)$this->id_address;
-		return $fields;
 	}
 
 	public function getTranslationsFieldsChild()
