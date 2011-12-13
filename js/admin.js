@@ -1018,3 +1018,22 @@ $(document).ready(function(){
 			scroll.hide();
 	});
 });
+
+// Delete all tags HTML
+function stripHTML(oldString)
+{
+	var newString = '';
+	var inTag = false;
+	for(var i = 0; i < oldString.length; i++) {
+		if(oldString.charAt(i) == '<') inTag = true;
+		if(oldString.charAt(i) == '>') {
+			if(oldString.charAt(i+1)!='<')
+			{
+				inTag = false;
+				i++;
+			}
+		}
+		if(!inTag) newString += oldString.charAt(i);
+	}
+	return newString;
+}

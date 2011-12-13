@@ -387,7 +387,8 @@ var textFieldLabel = 0;
 								{include file="products/textarea_lang.tpl"
 								languages=$languages
 								input_name='description_short'
-								input_value=$product->description_short}
+								input_value=$product->description_short
+								max=400}
 
 		<p class="clear"></p>
 			</td>
