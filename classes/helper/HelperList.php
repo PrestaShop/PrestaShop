@@ -207,7 +207,7 @@ class HelperListCore extends Helper
 		foreach ($this->_list as $index => $tr)
 		{
 			$id = $tr[$this->identifier];
-
+			$name = isset($tr['name']) ? $tr['name'] : null;
 			if ($this->shopLinkType)
 				$this->_list[$index]['short_shop_name'] = Tools::strlen($tr['shop_name']) > 15 ? Tools::substr($tr['shop_name'], 0, 15).'...' : $tr['shop_name'];
 
@@ -220,9 +220,9 @@ class HelperListCore extends Helper
 					$method_name = 'display'.ucfirst($action).'Link';
 
 					if (method_exists($this->context->controller, $method_name))
-						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id);
+						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id, $name);
 					else if (method_exists($this, $method_name))
-						$this->_list[$index][$action] = $this->$method_name($token, $id);
+						$this->_list[$index][$action] = $this->$method_name($token, $id, $name);
 
 				}
 			}
@@ -345,7 +345,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display duplicate action link
 	 */
-	protected function displayDuplicateLink($token = null, $id)
+	protected function displayDuplicateLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_duplicate.tpl');
 		if (!array_key_exists('Duplicate', self::$cache_lang))
@@ -387,7 +387,7 @@ class HelperListCore extends Helper
 	 *     fields_display: // attribute $fieldsDisplay of the admin controller
 	 *   }
 	 */
-	protected function displayDetailsLink($token = null, $id)
+	protected function displayDetailsLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_details.tpl');
 		if (!array_key_exists('Details', self::$cache_lang))
@@ -405,7 +405,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display view action link
 	 */
-	protected function displayViewLink($token = null, $id)
+	protected function displayViewLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_view.tpl');
 		if (!array_key_exists('View', self::$cache_lang))
@@ -423,7 +423,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display edit action link
 	 */
-	protected function displayEditLink($token = null, $id)
+	protected function displayEditLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_edit.tpl');
 		if (!array_key_exists('Edit', self::$cache_lang))
@@ -442,18 +442,25 @@ class HelperListCore extends Helper
 	/**
 	 * Display delete action link
 	 */
-	protected function displayDeleteLink($token = null, $id)
+	protected function displayDeleteLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_delete.tpl');
+
 		if (!array_key_exists('Delete', self::$cache_lang))
 			self::$cache_lang['Delete'] = $this->l('Delete');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item ?', __CLASS__, true, false);
+
+		if (!array_key_exists('Name', self::$cache_lang))
+			self::$cache_lang['Name'] = $this->l('Name:');
+
+		if (!is_null($name))
+			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$id.' ? '),
+			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name.' \n'.$this->l('ID:').' '.$id),
 			'action' => self::$cache_lang['Delete'],
 			'id' => $id,
 		)));
@@ -464,7 +471,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display delete action link
 	 */
-	protected function displayDefaultLink($token = null, $id)
+	protected function displayDefaultLink($token = null, $id, $name = null)
 	{
 		$tpl = $this->createTemplate('list_action_default.tpl');
 		if (!array_key_exists('Default', self::$cache_lang))

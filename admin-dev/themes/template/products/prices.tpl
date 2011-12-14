@@ -56,7 +56,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="col-left"><label>{l s='Tax rule:' }</label></td>
+			<td class="col-left"><label>{l s='Tax rule:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<script type="text/javascript">
 					noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
@@ -93,7 +93,7 @@
 		</tr>
 		{if $ps_use_ecotax}
 			<tr>
-				<td class="col-left"><label>{l s='Eco-tax (tax incl.):' }</label></td>
+				<td class="col-left"><label>{l s='Eco-tax (tax incl.):'}</label></td>
 				<td style="padding-bottom:5px;">
 					{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax}" onkeyup="if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
 					<span style="margin-left:10px">({l s='already included in price'})</span>
@@ -101,13 +101,13 @@
 			</tr>
 		{/if}
 		<tr {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none"{/if} >
-			<td class="col-left"><label>{l s='Retail price with tax:' }</label></td>
+			<td class="col-left"><label>{l s='Retail price with tax:'}</label></td>
 			<td style="padding-bottom:5px;">
 				{$currency->prefix}<input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma('priceTI');" onkeyup="if (isArrowKey(event)) return;  calcPriceTE();" />{$currency->suffix}
 			</td>
 		</tr>
 		<tr id="tr_unit_price">
-			<td class="col-left"><label>{l s='Unit price:' }</label></td>
+			<td class="col-left"><label>{l s='Unit price:'}</label></td>
 			<td style="padding-bottom:5px;">
 				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$product->unit_price}"
 					onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
@@ -144,12 +144,6 @@
 					 /
 				{/if}
 				{$currency->prefix}<span id="finalPriceWithoutTax" style="font-weight: bold;"></span>{$currency->suffix} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
-			</td>
-		</tr>
-		<tr>
-			<td class="col-left"><label>&nbsp;</label></td>
-			<td>
-				<div class="hint clear" style="display: block;width: 70%;">{l s='You can define many discounts and specific price rules in the Prices tab'}</div>
 			</td>
 		</tr>
 	</table>

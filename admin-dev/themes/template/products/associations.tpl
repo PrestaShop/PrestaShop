@@ -61,7 +61,7 @@
 	{if $feature_shop_active}
 		{* @todo use asso_shop from Helper *}
 		<tr id="shop_association">
-			<td class="col-left"><label>{l s='Shop association:' }</label></td>
+			<td class="col-left"><label>{l s='Shop association:'}</label></td>
 			<td style="padding-bottom:5px;">{$displayAssoShop}</td>
 		</tr>
 	{/if}
@@ -71,19 +71,25 @@
 		<tr>
 			<td class="col-left"><label>{l s='Accessories:'}<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i></label></td>
 			<td style="padding-bottom:5px;">
-				<div id="divAccessories">
-					{* @todo : donot use 3 foreach, but assign var *}
-					{foreach from=$accessories item=accessory}
-						{$accessory.name|htmlentitiesUTF8}{if !empty($accessory.reference)}{$accessory.reference}{/if} <span onclick="delAccessory({$accessory.id_product});" style="cursor: pointer;"><img src="../img/admin/delete.gif" class="middle" alt="" /></span><br />
-					{/foreach}
-				</div>
 				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
 				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|htmlentitiesUTF8}¤{/foreach}" />
 
 				<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
-					<p class="clear">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}</p>
-					<input type="text" value="" id="product_autocomplete_input" />
-					<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />
+					<p style="clear:both;margin-top:0;" class="preference_description">
+						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
+						<input type="text" value="" id="product_autocomplete_input" />
+					</p>
+					
+					<!--<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />-->
+				</div>
+				<div id="divAccessories">
+					{* @todo : donot use 3 foreach, but assign var *}
+					{foreach from=$accessories item=accessory}
+						{$accessory.name|htmlentitiesUTF8}{if !empty($accessory.reference)}{$accessory.reference}{/if} 
+						<span onclick="delAccessory({$accessory.id_product});" style="cursor: pointer;">
+							<img src="../img/admin/delete.gif" class="middle" alt="" />
+						</span><br />
+					{/foreach}
 				</div>
 			</td>
 		</tr>
