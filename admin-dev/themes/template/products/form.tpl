@@ -77,7 +77,6 @@
 	<script type="text/javascript">
 
 		var toload = new Array();
-		var pos_select = {$pos_select};
 
 		$(document).ready(function(){
 			$('#desc-product-newCombination').hide();
@@ -94,17 +93,12 @@
 				var split_position = id.indexOf('-') + 1;
 				var btn_name = id.substr(split_position);
 
+				$('#key_tab').val(btn_name);
+
 				if ($(this).attr("id") != $(".productTabs a.selected").attr('id'))
 				{
 					$(".tab-page").removeClass('selected');
 					$("#product-tab-content-"+currentId).hide();
-				}
-				else
-				{
-					if (confirm(' {l s='Do you really want to reload the current tab (all modifications will be lost)'}'))
-						$("#product-tab-content-"+currentId).html();
-					else
-						return false;
 				}
 
 				$("#product-tab-content-wait").show();
@@ -264,7 +258,6 @@
 	
 	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
 		<input type="hidden" name="id_product" value="{$id_product}" />
-		<input type="hidden" name="tabs" id="tabs" value="0" />
 		<div class="tab-pane" id="tabPane1">
 		{if !$product->active}
 			<div class="warn draft" >
@@ -288,6 +281,7 @@
 			{/foreach}
 		</div>
 		<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
+		<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
 		<input id="product_form_submit_btn"  type="submit" value="{l s='Save'}" name="submitAddproduct" class="button" />
 	</form>
 	

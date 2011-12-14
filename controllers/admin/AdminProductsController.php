@@ -366,7 +366,7 @@ class AdminProductsControllerCore extends AdminController
 				if (!count($this->_errors))
 				{
 					$attachment->add();
-					$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=6&action=Attachments&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&action=Attachments&token='.($token ? $token : $this->token);
 				}
 				else
 					$this->_errors[] = Tools::displayError('Invalid file');
@@ -472,7 +472,7 @@ class AdminProductsControllerCore extends AdminController
 					$productId = (int)(Tools::getValue('id_product'));
 					@unlink(_PS_TMP_IMG_DIR_.'/product_'.$productId.'.jpg');
 					@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$productId.'.jpg');
-					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&action=Images&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&tabs=1'.'&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&action=Images&addproduct'.'&token='.($token ? $token : $this->token);
 				}
 			}
 
@@ -480,7 +480,7 @@ class AdminProductsControllerCore extends AdminController
 			else if (isset($_GET['imgPosition']) && isset($_GET['imgDirection']))
 			{
 				$image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
-				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1&action=Images&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Images&token='.($token ? $token : $this->token);
 			}
 		}
 		else
@@ -630,7 +630,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 			if (!count($this->_errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Features&tabs=4&conf=4&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Features&conf=4&token='.($token ? $token : $this->token);
 		}
 		else
 			$this->_errors[] = Tools::displayError('Product must be created before adding features.');
@@ -638,8 +638,6 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processPricesModification($token)
 	{
-		$_POST['tabs'] = 5;
-
 		$id_specific_prices = Tools::getValue('spm_id_specific_price');
 		$id_shops = Tools::getValue('spm_id_shop');
 		$id_currencies = Tools::getValue('spm_id_currency');
@@ -670,7 +668,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 			}
 		if (!count($this->_errors))
-			$this->redirect_after = self::$currentIndex.'&action=Prices&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&update'.$this->table.'&tabs=2&token='.($token ? $token : $this->token);
+			$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&update'.$this->table.'&action=Prices&token='.($token ? $token : $this->token);
 
 	}
 
@@ -705,7 +703,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!$specificPrice->add())
 				$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
 			else
-				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.$id_product.'&add'.$this->table.'&action=Prices&conf=3&token='.($token ? $token : $this->token);
 		}
 	}
 
@@ -721,7 +719,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!$specificPrice->delete())
 				$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
 			else
-				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&action=Prices&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&action=Prices&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&conf=1&token='.($token ? $token : $this->token);
 		}
 	}
 
@@ -736,12 +734,12 @@ class AdminProductsControllerCore extends AdminController
 			if (!SpecificPrice::setPriorities($priorities))
 				$this->_errors[] = Tools::displayError('An error occurred while updating priorities.');
 			else
-				$this->redirect_after = self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&action=Prices&conf=4&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&action=Prices&conf=4&token='.($token ? $token : $this->token);
 		}
 		else if (!SpecificPrice::setSpecificPriority((int)($obj->id), $priorities))
 			$this->_errors[] = Tools::displayError('An error occurred while setting priorities.');
 		else
-			$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token);
+			$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$obj->id.'&add'.$this->table.'&conf=4&token='.($token ? $token : $this->token);
 	}
 
 	public function processCustomizationConfiguration($token)
@@ -758,7 +756,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!count($this->_errors) && !$product->update())
 				$this->_errors[] = Tools::displayError('An error occurred while updating customization configuration.');
 			if (!count($this->_errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&action=Customization&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Customization&token='.($token ? $token : $this->token);
 		}
 		else
 			$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -774,7 +772,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!count($this->_errors) && !$product->updateLabels())
 				$this->_errors[] = Tools::displayError('An error occurred while updating customization.');
 			if (!count($this->_errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&action=Customization&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&action=Customization&add'.$this->table.'&token='.($token ? $token : $this->token);
 		}
 		else
 			$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -936,7 +934,7 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->action == 'attachments')
 			if ($id = (int)Tools::getValue($this->identifier))
 				if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
-					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&tabs=6&action=Attachments&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
 
 		if (!$this->redirect_after)
 			parent::postProcess(true);
@@ -1313,7 +1311,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.($token ? $token : $this->token);
 				// Save and stay on same form
 				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&action='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
 				else
 					// Default behavior (save and back)
 					$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=3&token='.($token ? $token : $this->token);
@@ -1388,7 +1386,7 @@ class AdminProductsControllerCore extends AdminController
 						else //if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))// || ($id_image && $id_image !== true)) // Save and stay on same form
 						{// Save and stay on same form
 						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-							$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
+							$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&action='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
                         else
 						// Default behavior (save and back)
 						$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
@@ -2615,7 +2613,7 @@ class AdminProductsControllerCore extends AdminController
 					<td class="cell border">'.$period.'</td>
 					<td class="cell border">'.$specific_price['from_quantity'].'</th>
 					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specific_price, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
+					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&action=Prices&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 				</tr>';
 				$i++;
 			}
