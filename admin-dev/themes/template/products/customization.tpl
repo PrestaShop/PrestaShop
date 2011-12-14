@@ -23,6 +23,19 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('input').keypress(function(e) { 
+			var code = null; 
+			code = (e.keyCode ? e.keyCode : e.which);
+			return (code == 13) ? false : true;
+		});
+	});
+
+</script>
+
 {if isset($obj->id)}
 	<h4>{l s='Add or modify customizable properties'}</h4>
 	

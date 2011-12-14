@@ -142,9 +142,11 @@
 				else
 					$('#desc-product-newCombination').hide();
 			});
+
 			{if $show_product_tab_content}
 				$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
 			{/if}
+
 		});
 	</script>
 	
@@ -279,7 +281,9 @@
 			<div id="product-tab-content-wait" style="display:none" >{l s='loading ...'}</div>
 			{foreach $product_tabs key=numStep item=tab}
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
-				{if $tab.selected}{$custom_form}{/if}
+					{if $tab.selected}
+						{$custom_form}
+					{/if}
 				</div>
 			{/foreach}
 		</div>

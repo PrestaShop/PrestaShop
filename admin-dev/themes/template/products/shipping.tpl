@@ -24,6 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('input').keypress(function(e) { 
+			var code = null; 
+			code = (e.keyCode ? e.keyCode : e.which);
+			return (code == 13) ? false : true;
+		});
+	});
+
+</script>
+
 <h4 class="tab">1. {l s='Info.'}</h4>
 <h4>{l s='Shipping'}</h4>
 
