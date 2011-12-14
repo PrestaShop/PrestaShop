@@ -58,5 +58,6 @@ class ModuleControllerCore extends FrontController
 			$this->setTemplate($module->$method());
 		else
 			die('Module action not found');
+		parent::initContent();
 	}
 }

@@ -115,6 +115,7 @@ class SearchControllerCore extends FrontController
 		$this->context->smarty->assign('add_prod_display', Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'));
 
 		$this->setTemplate(_PS_THEME_DIR_.'search.tpl');
+		parent::initContent();
 	}
 
 	public function displayHeader($display = true)

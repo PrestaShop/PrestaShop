@@ -83,6 +83,7 @@ class OrderReturnControllerCore extends FrontController
 			'nbdaysreturn' => (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'))
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
+		parent::initContent();
 	}
 
 	public function displayAjax()

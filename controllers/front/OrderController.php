@@ -161,6 +161,7 @@ class OrderControllerCore extends ParentOrderController
 			'currencyFormat' => $this->context->currency->format,
 			'currencyBlank' => $this->context->currency->blank,
 		));
+		parent::initContent();
 	}
 
 	private function processAddressFormat()

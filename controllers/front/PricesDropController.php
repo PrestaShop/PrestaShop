@@ -53,6 +53,7 @@ class PricesDropControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'prices-drop.tpl');
+		parent::initContent();
 	}
 }
 
