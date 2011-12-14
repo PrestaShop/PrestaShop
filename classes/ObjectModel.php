@@ -235,7 +235,7 @@ abstract class ObjectModelCore
 
 					case self::TYPE_BOOL :
 						$fields[$field] = (int)$this->$field;
-						break;
+					break;
 
 					case self::TYPE_FLOAT :
 						$fields[$field] = (float)$this->$field;

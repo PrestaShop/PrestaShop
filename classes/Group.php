@@ -67,19 +67,6 @@ class GroupCore extends ObjectModel
 
 	protected $webserviceParameters = array();
 
-	/**
-	 * @see ObjectModel::getFields()
-	 * @return array
-	 */
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if (isset($this->id))
-			$fields['id_group'] = (int)$this->id;
-
-		return $fields;
-	}
-
 	public function getTranslationsFieldsChild()
 	{
 		if (!$this->validateFieldsLang())

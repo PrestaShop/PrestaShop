@@ -109,19 +109,6 @@ class ManufacturerCore extends ObjectModel
 		$this->image_dir = _PS_MANU_IMG_DIR_;
 	}
 
-	/**
-	 * @see ObjectModel::getFields()
-	 * @return array
-	 */
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if (isset($this->id))
-			$fields['id_manufacturer'] = (int)$this->id;
-
-		return $fields;
-	}
-
 	public function getTranslationsFieldsChild()
 	{
 		$this->validateFieldsLang();

@@ -402,9 +402,6 @@ class ProductCore extends ObjectModel
 	public function getFields()
 	{
 		$fields = parent::getFields();
-
-		if (isset($this->id))
-			$fields['id_product'] = (int)$this->id;
 		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
 
 		return $fields;
