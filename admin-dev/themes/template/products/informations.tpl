@@ -372,7 +372,7 @@ var textFieldLabel = 0;
 									<a style="cursor:pointer" class="button"
 									onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;{l s='Friendly-url from product\'s name.'}<br /><br />
 								{l s='Product link will look like this:'}
-								{if $ps_ssl_enabled}https://{else}http://{/if}{*$smarty.server.SERVER_NAME*}/<b>id_product</b>-<span id="friendly-url"></span>.html</p>
+								{if $ps_ssl_enabled}https://{else}http://{/if}{$smarty.server.SERVER_NAME}{$smarty.const.__PS_BASE_URI__}<b>{if isset($product->id)}{$product->id}{else}id_product{/if}</b>-<span id="friendly-url"></span>.html</p>
 									</td>
 								</tr>
 		</td></tr></table>
