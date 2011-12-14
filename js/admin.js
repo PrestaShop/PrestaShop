@@ -51,7 +51,7 @@ function str2url(str,encoding,ucfirst)
 	str = str.replace(/[\u013E\u013A]/g,'l');
 	str = str.replace(/[\u0155]/g,'r');
 
-	str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]/g,'');
+	str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
 	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
 	str = str.replace(/[ ]/g,'-');
 	str = str.replace(/[\/]/g,'-');
@@ -86,7 +86,7 @@ function strToAltImgAttr(str,encoding,ucfirst)
 	str = str.replace(/[\u013E\u013A]/g,'l');
 	str = str.replace(/[\u0155]/g,'r');
 
-	str = str.replace(/[^a-zA-Z0-9\s\'\:\/\[\]-]/g,'');
+	str = str.replace(/[^a-zA-Z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
 	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
 
 	if (ucfirst == 1) {

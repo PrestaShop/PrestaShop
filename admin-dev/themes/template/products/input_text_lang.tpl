@@ -30,7 +30,8 @@
 	<input size="30" type="text" id="{$input_name}_{$language.id_lang}" 
 	name="{$input_name}_{$language.id_lang}"
 		value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
-		 />
+		onchange="updateFriendlyURL();"
+		onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"/>
 </div>
 {/foreach}
 </div>
