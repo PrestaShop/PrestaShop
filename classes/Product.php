@@ -259,6 +259,7 @@ class ProductCore extends ObjectModel
 			'cache_has_attachments' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'advanced_stock_management' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'meta_description' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),

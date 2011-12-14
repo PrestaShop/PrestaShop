@@ -173,7 +173,7 @@ class AdminProductsControllerCore extends AdminController
 		);
 
 		/* Join categories table */
-			
+
 		if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
 		{
 			$this->_category = new Category($id_category);
@@ -183,7 +183,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->_category = new Category($id_category);
 		else
 			$this->_category = new Category();
-		
+
 
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (a.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang`)
@@ -2345,14 +2345,14 @@ class AdminProductsControllerCore extends AdminController
 			$error = '';
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 			$detail = array();
-	
+
 			if (count($this->context->shop->getListOfID()) > 1)
 				$error = $this->l('Please select the shop you want to configure');
 			else
 			{
 				$zones = Zone::getZones();
 				$id_shop = $this->context->shop->getID();
-	
+
 				// Set default zone value to the shop	and sort it
 				foreach($zones as $zone)
 				{
@@ -2360,12 +2360,12 @@ class AdminProductsControllerCore extends AdminController
 					$detail['zones'][$zone['id_zone']]['account_number'] = '';
 				}
 				$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($obj->id, $id_shop);
-	
+
 				// Set Account number to the id_zone for an id_shop if exist
 				foreach($zoneAccountNumberList as $zone)
 					$detail['zones'][$zone['id_zone']]['account_number'] = $zone['account_number'];
 			}
-	
+
 			$data->assign(array(
 				'productAccountNumberList' => $detail,
 				'shopName' => $this->context->shop->name,
@@ -2528,7 +2528,7 @@ class AdminProductsControllerCore extends AdminController
 			'languages' => $languages,
 			'default_language' => $default_language,
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED')
-		)); 
+		));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
@@ -2604,7 +2604,7 @@ class AdminProductsControllerCore extends AdminController
 
 				$rule = new SpecificPriceRule((int)$specific_price['id_specific_price_rule']);
 				$rule_name = ($rule->id ? $rule->name : '--');
-				
+
 				$content .= '
 				<tr '.($i%2 ? 'class="alt_row"' : '').'>
 					<td class="cell border">'.$rule_name.'</td>
@@ -2955,7 +2955,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
 		$product->tags = Tag::getProductTags($product->id);
-		
+
 		$data->assign('tabs_preloaded', $this->tabs_preloaded);
 
 		// TinyMCE
@@ -3118,7 +3118,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 			else
 				$this->content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
-	
+
 			// @todo
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
 			$data->assign($this->tpl_form_vars);
@@ -3437,6 +3437,7 @@ class AdminProductsControllerCore extends AdminController
 			$attributes = $obj->getAttributesResume($this->context->language->id);
 			if (empty($attributes))
 				$attributes[] = array(
+					'id_product' => $obj->id,
 					'id_product_attribute' => 0,
 					'attribute_designation' => ''
 				);
@@ -3505,7 +3506,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			$data->assign('available_features', $features);
-	
+
 			$data->assign('product', $obj);
 			$data->assign('link', $this->context->link);
 			$data->assign('languages', $this->_languages);
