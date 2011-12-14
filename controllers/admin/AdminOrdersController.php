@@ -817,7 +817,6 @@ class AdminOrdersControllerCore extends AdminController
 									'found' => true);
 		else
 			$to_return = array('found' => false);
-
 		$this->content = Tools::jsonEncode($to_return);
 	}
 
@@ -840,6 +839,9 @@ class AdminOrdersControllerCore extends AdminController
 				// Tax rate for this customer
 				if (Tools::isSubmit('id_address'))
 					$product['tax_rate'] = $productObj->getTaxesRate(new Address(Tools::getValue('id_address')));
+					
+				$product['warehouse_list'] = array();
+				
 				foreach($attributes AS $attribute)
 				{
 					if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
@@ -857,7 +859,23 @@ class AdminOrdersControllerCore extends AdminController
 					}
 					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
 						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
+					
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+						$product['warehouse_list'][$attribute['id_product_attribute']] = Warehouse::getProductWarehouseList($product['id_product'], $attribute['id_product_attribute']);
+					else
+						$product['warehouse_list'][$attribute['id_product_attribute']] = array();
+					
+					$product['stock'][$attribute['id_product_attribute']] = Product::getRealQuantity($product['id_product'], $attribute['id_product_attribute']);
+					
 				}
+				
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					$product['warehouse_list'][0] = Warehouse::getProductWarehouseList($product['id_product']);
+				else
+					$product['warehouse_list'][0] = array();
+				
+				$product['stock'][0] = Product::getRealQuantity($product['id_product'], 0, 0);
+				
 
 				foreach ($combinations AS &$combination)
 					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
@@ -1064,7 +1082,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Create Order detail information
 		$order_detail = new OrderDetail();
-		$order_detail->createList($order, $cart, OrderHistory::getLastOrderState($order->id), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes);
+		$order_detail->createList($order, $cart, OrderHistory::getLastOrderState($order->id), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int)Tools::getValue('add_product_warehouse'));
 
 		// update totals amount of order
 		$order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -1332,7 +1350,7 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('Can\'t load Order object')
 			)));
 
-		if ($order_detail->id_order != $order->id_order)
+		if ($order_detail->id_order != $order->id)
 			die(Tools::jsonEncode(array(
 				'result' => false,
 				'error' => Tools::displayError('Can\'t edit this Order Detail for this order')

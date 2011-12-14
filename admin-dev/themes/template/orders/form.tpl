@@ -175,7 +175,7 @@
 				updateQty(product[0], product[1], $(this).val() - cart_quantity[$(this).attr('rel')]);
 			}
 		});
-		$('.increaseqty_product,.decreaseqty_product').live('click', function(e) {
+		$('.increaseqty_product, .decreaseqty_product').live('click', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			var sign = '';
@@ -183,9 +183,17 @@
 				sign = '-';
 			updateQty(product[0], product[1], sign+1);
 		});
+		$('#id_product').live('keydown', function(e) {
+			$(this).click();
+			return true;
+		});
 		$('#id_product, .id_product_attribute').live('change', function(e) {
 			e.preventDefault();
 			displayQtyInStock(this.id);
+		});
+		$('#id_product, .id_product_attribute').live('keydown', function(e) {
+			$(this).change();
+			return true;
 		});
 		$('.product_unit_price').live('change', function(e) {
 			e.preventDefault();
@@ -233,10 +241,13 @@
 
 	function displayQtyInStock(id)
 	{
-		if (id == 'id_product')
-			$('#qty_in_stock').html($('#id_product option:selected').attr('rel'));
+		var id_product = $('#id_product').val();
+		if ($('#ipa_' + id_product + ' option').length)
+			var id_product_attribute = $('#ipa_' + id_product).val();
 		else
-			$('#qty_in_stock').html($('#ipa_'+$('#id_product option:selected').val()+' option:selected').attr('rel'));
+			var id_product_attribute = 0;
+
+		$('#qty_in_stock').html(stock[id_product][id_product_attribute]);
 	}
 
 	function duplicateOrder(id_order)
@@ -460,6 +471,8 @@
 			{
 				var products_found = '';
 				var attributes_html = '';
+				stock = {};
+				
 				if(res.found)
 				{
 					$('#products_err').hide();
@@ -469,12 +482,19 @@
 					$.each(res.products, function() {
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
+						var id_product = this.id_product;
+						
 						$.each(this.combinations, function() {
 							attributes_html += '<option rel="'+this.qty_in_stock+'" '+(this.default_on == 1 ? 'selected="selected"' : '')+' value="'+this.id_product_attribute+'">'+this.attributes+' - '+this.formatted_price+'</option>';
 						});
+						
+						stock[this.id_product] = this.stock;
+						
 						attributes_html += '</select>';
 					});
+					
 					products_found += '</select>';
+					
 					$('#products_found #product_list').html(products_found);
 					$('#products_found #attributes_list').html(attributes_html);
 					displayProductAttributes();
@@ -771,14 +791,14 @@
 		<input type="hidden" value="" id="id_cart" name="id_cart" />
 		<input type="text" id="product" value="" /></p>
 		<div id="products_found">
-<div id="product_list">
-</div>
-<div id="attributes_list">
-</div>
-<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty"/>&nbsp;<b>{l s='In stock:'}</b>&nbsp;<span id="qty_in_stock"></span></p>
-<div class="margin-form">
-	<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
-</div>
+			<div id="product_list">
+			</div>
+			<div id="attributes_list">
+			</div>
+			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty"/>&nbsp;<b>{l s='In stock:'}</b>&nbsp;<span id="qty_in_stock"></span></p>
+			<div class="margin-form">
+				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
+			</div>
 		</div>
 	</div>
 	<div id="products_err" class="warn" style="display:none;"></div>

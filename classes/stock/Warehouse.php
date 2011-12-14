@@ -250,17 +250,18 @@ class WarehouseCore extends ObjectModel
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $id_shop
-	 * @return string
+	 * @return array
 	 */
-	public static function getProductWarehouseList($id_product, $id_product_attribute, $id_shop = null)
+	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
 		$query = new DbQuery();
-		$query->select('wpl.id_warehouse');
+		$query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
 		$query->from('warehouse_product_location wpl');
 		$query->innerJoin('warehouse_shop ws ON (ws.id_warehouse = wpl.id_warehouse AND id_shop = '.(int)$id_shop.')');
+		$query->innerJoin('warehouse w ON (ws.id_warehouse = w.id_warehouse)');
 		$query->where('id_product = '.(int)$id_product);
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);
 		$query->groupBy('wpl.id_warehouse');
@@ -388,7 +389,7 @@ class WarehouseCore extends ObjectModel
 	 * @param int $id_product_attribute
 	 * @return array
 	 */
-	public static function getWarehousesByProductId($id_product, $id_product_attribute)
+	public static function getWarehousesByProductId($id_product, $id_product_attribute = 0)
 	{
 		if (!$id_product && !$id_product_attribute)
 			return array();

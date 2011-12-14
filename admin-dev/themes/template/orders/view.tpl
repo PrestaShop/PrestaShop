@@ -507,6 +507,9 @@
 	<form style="width: 98%" action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
+			<div style="display: none">
+				<input type="hidden" value="{$order->getWarehouseList()|implode}" id="warehouse_list" />
+			</div>
 			<legend><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Products'}</legend>
 			<div style="float:left;width: 100%;">
 				{if $can_edit}

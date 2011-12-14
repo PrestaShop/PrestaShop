@@ -5,6 +5,10 @@
 		<div id="add_product_product_attribute_area" style="margin-top: 5px;display: none;">
 			{l s='Combinations:'} <select name="add_product[product_attribute_id]" id="add_product_product_attribute_id"></select>
 		</div>
+		<div id="add_product_product_warehouse_area" style="margin-top: 5px; display: none;">
+			{l s='Warehouse:'} <select  id="add_product_warehouse" name="add_product_warehouse">
+			</select>
+		</div>
 	</td>
 	<td style="display:none;">
 		{if $currency->sign % 2}{$currency->sign}{/if}<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" size="4" disabled="disabled" /> {if !($currency->sign % 2)}{$currency->sign}{/if} {l s='tax excl.'}<br />
