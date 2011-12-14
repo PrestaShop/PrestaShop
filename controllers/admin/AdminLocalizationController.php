@@ -99,10 +99,10 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
-			if (!$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml') &&
-				!$pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml'))
+			$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml');
+			if (!$pack || !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
 				$this->_errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
-			else if (!$selection = Tools::getValue('selection'))
+			if (!$selection = Tools::getValue('selection'))
 				$this->_errors[] = Tools::displayError('Please select at least one content item to import.');
 			else
 			{
@@ -151,22 +151,27 @@ class AdminLocalizationControllerCore extends AdminController
 		$selection_import = array(
 			array(
 				'id' => 'states',
+				'val' => 'states',
 				'name' => $this->l('States')
 			),
 			array(
 				'id' => 'taxes',
+				'val' => 'taxes',
 				'name' => $this->l('Taxes')
 			),
 			array(
 				'id' => 'currencies',
+				'val' => 'currencies',
 				'name' => $this->l('Currencies')
 			),
 			array(
 				'id' => 'languages',
+				'val' => 'languages',
 				'name' => $this->l('Languages')
 			),
 			array(
 				'id' => 'units',
+				'val' => 'units',
 				'name' => $this->l('Units (e.g., weight, volume, distance)')
 			)
 		);
