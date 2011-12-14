@@ -200,15 +200,6 @@ class AddressCore extends ObjectModel
 		return $out;
 	}
 
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if (isset($this->id))
-			$fields['id_address'] = (int)$this->id;
-
-		return $fields;
-	}
-
 	public function validateController($htmlentities = true)
 	{
 		$errors = parent::validateController($htmlentities);

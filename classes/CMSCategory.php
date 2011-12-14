@@ -100,15 +100,6 @@ class CMSCategoryCore extends ObjectModel
 		parent::__construct($id_cms_category, $id_lang);
 	}
 
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if (isset($this->id))
-			$fields['id_cms_category'] = (int)($this->id);
-
-		return $fields;
-	}
-
 	/**
 	  * Check then return multilingual fields for database interaction
 	  *
