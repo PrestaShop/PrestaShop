@@ -148,6 +148,8 @@
 										<br />
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=desc&token={$token}"><img border="0" src="../img/admin/down{if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}_d{/if}.gif" /></a>
 										<a href="{$currentIndex}&{$identifier}={$id_cat}&{$table}Orderby={$key|urlencode}&{$table}Orderway=asc&token={$token}"><img border="0" src="../img/admin/up{if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}_d{/if}.gif" /></a>
+									{else}
+										<br />&nbsp;
 									{/if}
 								</th>
 							{/foreach}
@@ -161,7 +163,7 @@
 								</th>
 							{/if}
 							{if $has_actions}
-								<th class="center">{l s='Actions'}</th>
+								<th class="center">{l s='Actions'}<br />&nbsp;</th>
 							{/if}
 						</tr>
  						{if !$simple_header}
