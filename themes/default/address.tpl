@@ -248,6 +248,7 @@ $(function(){ldelim}
 			<label for="other">{l s='Additional information'}</label>
 			<textarea id="other" name="other" cols="26" rows="3">{if isset($smarty.post.other)}{$smarty.post.other}{else}{if isset($address->other)}{$address->other|escape:'htmlall':'UTF-8'}{/if}{/if}</textarea>
 		</p>
+		<p class="inline-infos required">{l s='You must register at least one phone number'} <sup class="required">*</sup></p>
 		<p class="text">
 			<label for="phone">{l s='Home phone'}</label>
 			<input type="text" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'htmlall':'UTF-8'}{/if}{/if}" />
@@ -256,7 +257,6 @@ $(function(){ldelim}
 			<label for="phone_mobile">{l s='Mobile phone'}</label>
 			<input type="text" id="phone_mobile" name="phone_mobile" value="{if isset($smarty.post.phone_mobile)}{$smarty.post.phone_mobile}{else}{if isset($address->phone_mobile)}{$address->phone_mobile|escape:'htmlall':'UTF-8'}{/if}{/if}" />
 		</p>
-		<span class="inline-infos required">{l s='You must register at least one phone number'} <sup class="required">*</sup></span>
 		<p class="required text" id="adress_alias">
 			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
 			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{if isset($address->alias)}{$address->alias|escape:'htmlall':'UTF-8'}{/if}{if isset($select_address)}{else}{l s='My address'}{/if}{/if}" />

@@ -338,6 +338,8 @@ ul.footer_links li .icon {
 .sortPagiBar #nb_item {border:1px solid #ccc}
 
 /* pagination ********************************************************************************** */
+form.pagination {display:none;}
+
 div.pagination {
 	margin:10px 0;
 	text-align: center
@@ -515,6 +517,10 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 	font-size:12px
 }
 .breadcrumb .navigation-pipe {margin:0 3px 0 5px}
+.breadcrumb img {
+	position:relative;
+	top:5px
+}
 
 
 /* ************************************************************************************************
@@ -549,10 +555,11 @@ div.star_hover a, div.star a:hover { background-position: 0 -32px }
 #footer li {padding:7px 0}
 #footer li a {color:#fff}
 
-#footer .myaccount {padding: 15px 10px;}
+#footer .myaccount {padding: 15px 10px}
 #footer .myaccount h4 {
 	padding:0 0 10px 0;
 	background:none;
+	text-shadow:none
 }
 #footer .myaccount .favoriteproducts img,
 #footer .myaccount .lnk_wishlist img {display:none}
@@ -590,7 +597,7 @@ ul.idTabs li {
 #more_info_sheets ol,
 #more_info_sheets dl {margin-left:20px}
 
-.block_hidden_only_for_screen {display:none;}
+.block_hidden_only_for_screen {display:none}
 
 
 /* ************************************************************************************************
@@ -844,8 +851,14 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	color:#666
 }
 
+#orderopc #login_form_content label {
+	display:block;
+	margin:0 0 10px 0
+}
+
 #create-account_form #email_create,
 #login_form #email,
+#login_form #login_email,
 #login_form #passwd {
 	padding:0 5px;
 	height:20px;
@@ -865,6 +878,15 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	width:200px
 }
 .lost_password a {color:#666}
+
+#orderopc .lost_password {
+	display:block;
+	float:none;
+	margin:5px 0 10px;
+	width:auto;
+	font-size:11px;
+	color:#666
+}
 
 #ordermsg p {padding-bottom:0}
 #ordermsg p.txt {
