@@ -335,63 +335,6 @@ var textFieldLabel = 0;
 
 </table>
 <div class="separation"></div>
-<table cellspacing="0" cellpadding="5" border="0">
-{************** DESCRIPTION *****************************}
-				<tr><td colspan="2">
-					<span onclick="$('#seo').slideToggle();" style="cursor: pointer"><img src="../img/admin/arrow.gif" alt="{l s='SEO'}" title="{l s='SEO'}" style="float:left; margin-right:5px;"/>{l s='Click here to improve product\'s rank in search engines (SEO)'}</span><br />
-					<div id="seo" style="display: none; padding-top: 15px;">
-					<table>
-						<tr>
-						<td class="col-left"><label>{l s='Meta title:'}</label></td>
-						<td>
-							{include file="products/input_text_lang.tpl"
-								languages=$languages
-								input_name='meta_title'
-								input_value=$product->meta_title}
-								<p class="clear">{l s='Product page title; leave blank to use product name'}</p>
-						</td>
-						</tr>
-						<tr>
-							<td class="col-left"><label>{l s='Meta description:'}</label></td>
-							<td>
-								{include file="products/input_text_lang.tpl"
-									languages=$languages
-									input_name='meta_description'
-									input_value=$product->meta_description
-									input_hint='{l s=\'Forbidden characters:\'\} <>;=#{\}'
-								}
-								<p class="clear">{l s='A single sentence for HTML header'}</p>
-							</td>
-						</tr>
-						<tr>
-							<td class="col-left"><label>{l s='Meta keywords:'}</label></td>
-							<td>
-							{include file="products/input_text_lang.tpl" languages=$languages
-							input_value=$product->meta_keywords
-							input_name='meta_keywords'}
-								<p class="clear">{l s='Keywords for HTML header, separated by a comma'}</p>
-									</td>
-								</tr>
-								<tr>
-								<td class="col-left"><label>{l s='Friendly URL:'}</label></td>
-									<td>
-								{include file="products/input_text_lang.tpl"
-									languages=$languages
-									input_value=$product->link_rewrite
-									input_name='link_rewrite'}
-
-								<p class="clear" style="padding:10px 0 0 0">
-									<a style="cursor:pointer" class="button"
-									onmousedown="updateFriendlyURLByName();">{l s='Generate'}</a>&nbsp;{l s='Friendly-url from product\'s name.'}<br /><br />
-								{l s='Product link will look like this:'}
-								{if $ps_ssl_enabled}https://{else}http://{/if}{$smarty.server.SERVER_NAME}{$smarty.const.__PS_BASE_URI__}<b>{if isset($product->id)}{$product->id}{else}id_product{/if}</b>-<span id="friendly-url"></span>.html</p>
-									</td>
-								</tr>
-		</td></tr></table>
-						</div>
-					</td></tr>
-</table>
-<tr><td colspan="2" style="padding-bottom:5px;"><div class="separation"></div></td></tr>
 <table cellspacing="0" cellpadding="5" border="0">	
 					<tr>
 						<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
