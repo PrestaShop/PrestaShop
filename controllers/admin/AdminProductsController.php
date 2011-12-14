@@ -39,6 +39,7 @@ class AdminProductsControllerCore extends AdminController
 	protected $available_tabs = array(
 		'Informations',
 		'Prices',
+		'Seo',
 		'Associations',
 		'Images',
 		'Shipping',
@@ -57,6 +58,7 @@ class AdminProductsControllerCore extends AdminController
 	protected $tabs_preloaded = array(
 		'Informations' => true,
 		'Prices' => true,
+		'Seo' => true,
 		'Associations' => true,
 		'Images' => false,
 		'Shipping' => true,
@@ -111,11 +113,6 @@ class AdminProductsControllerCore extends AdminController
 				'align' => 'center',
 				'width' => 80
 			),
-			/*'name_category' => array(
-				'title' => $this->l('Category'),
-				'width' => 100,
-				'filter_key' => 'cl!name'
-			),*/
 			'name_category' => array(
 				'title' => $this->l('Category'),
 				'width' => 230,
@@ -161,6 +158,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->available_tabs_lang = array (
 			'Informations' => $this->l('Informations'),
 			'Prices' => $this->l('Prices'),
+			'Seo' => $this->l('SEO'),
 			'Images' => $this->l('Images'),
 			'Associations' => $this->l('Associations'),
 			'Shipping' => $this->l('Shipping'),
@@ -2521,6 +2519,20 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 
+	public function initFormSeo($product, $languages, $default_language)
+	{
+		$data = $this->context->smarty->createData();
+
+		$data->assign(array(
+			'product' => $product,
+			'languages' => $languages,
+			'default_language' => $default_language,
+			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED')
+		)); 
+
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
 	private function _getFinalPrice($specific_price, $productPrice, $taxRate)
 	{
 		$price = Tools::ps_round((float)($specific_price['price']) ? $specific_price['price'] : $productPrice, 2);
@@ -2939,7 +2951,6 @@ class AdminProductsControllerCore extends AdminController
 
 		foreach ($images as $k => $image)
 			$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small');
-		$data->assign('ps_ssl_enabled', Configuration::get('PS_SSL_ENABLED'));
 		$data->assign('images', $images);
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
