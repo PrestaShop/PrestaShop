@@ -37,7 +37,7 @@
 </script>
 
 <div class="Associations">
-	<h4>{l s='Product price'}</h4>
+	<h4>{l s='Associations'}</h4>
 	<div class="separation"></div>
 		<div id="no_default_category" style="font-weight: bold;display: none;">
 		{l s='Please check a category in order to select the default category.'}

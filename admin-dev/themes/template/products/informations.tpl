@@ -123,8 +123,7 @@
 	<td class="col-left"><label>{l s='Status:'}</label></td>
 	<td style="padding-bottom:5px;">
 		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}"
-			title="{l s='Enabled'}" style="float:left; padding:0px 5px 0px 5px;" />
+		<label for="active_on" class="t">
 		{l s='Enabled'}</label>
 		<br class="clear" />
 		<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
@@ -463,12 +462,12 @@ var textFieldLabel = 0;
 
 			{foreach from=$languages item=language}
 				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
-						<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
+					<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
 						value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
-						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
-						</div>
+					<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
+				</div>
 			{/foreach}
-				<p class="preference_description">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
+				<p class="preference_description clear">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
 					</td>
 				</tr>
 					</td>

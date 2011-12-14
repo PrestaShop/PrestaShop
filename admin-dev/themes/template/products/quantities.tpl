@@ -140,7 +140,7 @@
 		</div>
 	{/if}
 <div class="separation"></div>
-<h4>{l s='Availability display'}</h4>
+<h4>{l s='Availability settings'}</h4>
 <table cellpadding="5">
 	{if !$ps_stock_management}
 			<tr>
