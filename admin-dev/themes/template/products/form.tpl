@@ -51,7 +51,7 @@
 						count = stripHTML(textarea_value).length;
 						rest = max - count;
 						if (rest < 0)
-							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s="Maximum"} '+max+' {l s=' characters'} : '+rest+'</span>');
+							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s=' characters'} : '+rest+'</span>');
 						else
 							textarea.parent('div').find('span.counter').html(' ');
 					}

@@ -156,11 +156,11 @@
 						<div id="upload-confirmation2">
 				
 							<p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-									<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
+									<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file'}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
 							</p>
 						
 						</div>
-						<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
+						<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file'}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
 						{if $up_filename}
 							<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="{$up_filename}" />
 						{/if}

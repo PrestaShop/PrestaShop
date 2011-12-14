@@ -83,7 +83,7 @@
 <table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 {* global information *}
 	<tr>
-		<td class="col-left"><label>{l s='Name:' }</label></td>
+		<td class="col-left"><label>{l s='Name:'}</label></td>
 		<td style="padding-bottom:5px;" class="translatable">
 		{foreach from=$languages item=language}
 			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
@@ -98,20 +98,20 @@
 			</td>
 					</tr>
 					<tr>
-						<td class="col-left"><label>{l s='Reference:' }</label></td>
+						<td class="col-left"><label>{l s='Reference:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
-							<span class="hint" name="help_box">{l s='Special characters allowed:' }.-_#\<span class="hint-pointer">&nbsp;</span></span>
+							<span class="hint" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left"><label>{l s='EAN13 or JAN:' }</label></td>
+						<td class="col-left"><label>{l s='EAN13 or JAN:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(Europe, Japan)'}</span>
 						</td>
 					</tr>
 					<tr>
-						<td class="col-left"><label>{l s='UPC:' }</label></td>
+						<td class="col-left"><label>{l s='UPC:'}</label></td>
 						<td style="padding-bottom:5px;">
 							<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
 						</td>
@@ -120,7 +120,7 @@
 {* status informations *}
 <table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 <tr>
-	<td class="col-left"><label>{l s='Status:' }</label></td>
+	<td class="col-left"><label>{l s='Status:'}</label></td>
 	<td style="padding-bottom:5px;">
 		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
 		<label for="active_on" class="t"><img src="../img/admin/enabled.gif" alt="{l s='Enabled'}"
@@ -132,7 +132,7 @@
 	</td>
 </tr>
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
-		<td class="col-left"><label>{l s='Options:' }</label></td>
+		<td class="col-left"><label>{l s='Options:'}</label></td>
 		<td style="padding-bottom:5px;">
 			<input style="float: left;" type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
 			<script type="text/javascript">
@@ -161,7 +161,7 @@
 		</td>
 	</tr>
 	<tr>
-	<td class="col-left"><label>{l s='Condition:' }</label></td>
+	<td class="col-left"><label>{l s='Condition:'}</label></td>
 	<td style="padding-bottom:5px;">
 	<select name="condition" id="condition">
 	<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
@@ -171,7 +171,7 @@
 	</td>
 	</tr>
 	<tr>
-	<td class="col-left"><label>{l s='Manufacturer:' }</label></td>
+	<td class="col-left"><label>{l s='Manufacturer:'}</label></td>
 	<td style="padding-bottom:5px;">
 	<select name="id_manufacturer" id="id_manufacturer">
 	<option value="0">-- {l s='Choose (optional)'} --</option>
@@ -278,14 +278,14 @@ var textFieldLabel = 0;
 									<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
 								{/if}
 							</div>
-							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('{l s='Delete this file' slashes=1 js=1}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
+							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
 								{l s='Delete this file'}
 							</a>
 							</div>
 						{else}
 							<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
 							{l s='This is the link'}:&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-							<a onclick="return confirm('{l s='Delete this file' slashes=1 js=1})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">{l s='Delete this file'}</a>
+							<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">{l s='Delete this file'}</a>
 						{/if}
 						</p>
 

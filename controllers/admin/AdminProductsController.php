@@ -3189,10 +3189,7 @@ class AdminProductsControllerCore extends AdminController
 				$combination_images = $product->getCombinationImages($this->context->language->id);
 				foreach ($combinaisons as $k => $combinaison)
 				{
-					if ($currency->format % 2 != 0)
-						$price = $currency->sign.' '.$combinaison['price'];
-					else
-						$price = $combinaison['price'].' '.$currency->sign;
+					$price = Tools::displayPrice($combinaison['price'], $currency);
 
 					$comb_array[$combinaison['id_product_attribute']]['id_combinaison_attribute'] = $product->id.'||'.$combinaison['id_product_attribute'];
 					$comb_array[$combinaison['id_product_attribute']]['id_product_attribute'] = $combinaison['id_product_attribute'];
