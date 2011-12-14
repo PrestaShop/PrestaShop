@@ -56,7 +56,7 @@ class WebserviceRequestCore
 	 * PrestaShop Webservice Documentation URL
 	 * @var string
 	 */
-	protected $_docUrl = 'http://prestashop.com/docs/1.4/webservice';
+	protected $_docUrl = 'http://doc.prestashop.com/display/PS14/Using+the+REST+webservice';
 
 	/**
 	 * Set if the authentication key was checked
@@ -263,6 +263,7 @@ class WebserviceRequestCore
 			'stock_movements' => array('description' => 'Stock movements management', 'class' => 'StockMvt', 'forbidden_method' => array('PUT')),
 			'search' => array('description' => 'Search', 'specific_management' => true, 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'stock_movement_reasons' => array('description' => 'The stock movement reason', 'class' => 'StockMvtReason'),
+			'content_management_system' => array('description' => 'Content management system', 'class' => 'CMS'),			
 			'shops' => array('description' => 'Shops from multi-shop feature', 'class' => 'Shop'),
 			'shop_groups' => array('description' => 'Shop groups from multi-shop feature', 'class' => 'GroupShop'),
 			'taxes' => array('description' => 'The tax rate', 'class' => 'Tax'),
@@ -308,6 +309,7 @@ class WebserviceRequestCore
 		$arr_return = $this->specificPriceCalculation($parameters);
 		return $arr_return;
 	}
+	
 	public function specificPriceCalculation($parameters)
 	{
 		$arr_return = array();
@@ -327,6 +329,7 @@ class WebserviceRequestCore
 			$use_reduc = (isset($value['use_reduction']) ? $value['use_reduction'] : true);
 			$use_ecotax = (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
 			$specific_price_output = null;
+			$id_county = (isset($value['county']) ? $value['county'] : 0);
 			$return_value = Product::priceCalculation(null, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
 									$use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
 			$arr_return[$name] = array('sqlId'=>strtolower($name), 'value'=>$return_value);
@@ -380,10 +383,10 @@ class WebserviceRequestCore
 		$webservice_call = true;
 		$display_errors = strtolower(ini_get('display_errors')) != 'off';
 		// __PS_BASE_URI__ is from Shop::$current_base_uri
-		$this->wsUrl = Tools::getHttpHost(true).__PS_BASE_URI__;
+		$this->wsUrl = Tools::getHttpHost(true).__PS_BASE_URI__.'api/';
 		// set the output object which manage the content and header structure and informations
 		$this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
-
+	
 		// Error handler
 		set_error_handler(array($this, 'webserviceErrorHandler'));
 		ini_set('html_errors', 'off');
@@ -393,8 +396,9 @@ class WebserviceRequestCore
 		$this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;
 		// Set the render object to build the output on the asked format (XML, JSON, CSV, ...)
 		$this->objOutput->setObjectRender($this->getOutputObject($this->outputFormat));
+		$this->params = $params;
 		// Check webservice activation and request authentication
-		if ($this->isActivated() && $this->authenticate() && $this->shopExists($params) && $this->shopHasRight($key))
+		if ($this->webserviceChecks())
 		{
 			if ($bad_class_name)
 				$this->setError(500, 'Bad override class name for this key. Please update class_name field', 126);
@@ -484,7 +488,7 @@ class WebserviceRequestCore
 				// if the management is specific
 				else
 				{
-					$specificObjectName = 'WebserviceSpecificManagement'.ucfirst($this->urlSegment[0]);
+					$specificObjectName = 'WebserviceSpecificManagement'.ucfirst(Tools::toCamelCase($this->urlSegment[0]));
 					if(!class_exists($specificObjectName))
 						$this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
 					else
@@ -511,6 +515,10 @@ class WebserviceRequestCore
 		unset ($display_errors);
 	}
 
+	protected function webserviceChecks()
+	{
+		return ($this->isActivated() && $this->authenticate() && $this->shopExists($this->params) && $this->shopHasRight($this->_key));
+	}
 
 	/**
 	 * Set a webservice error
