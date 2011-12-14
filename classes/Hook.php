@@ -38,8 +38,8 @@ class HookCore extends ObjectModel
 		'table' => 'hook',
 		'primary' => 'id_hook',
 		'fields' => array(
-			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 32),
-			'title' => array('type' => self::TYPE_STRING),
+			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 32),
+			'title' => 	array('type' => self::TYPE_STRING),
 		),
 	);
 

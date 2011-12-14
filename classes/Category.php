@@ -130,15 +130,6 @@ class CategoryCore extends ObjectModel
 		$this->image_dir = _PS_CAT_IMG_DIR_;
 	}
 
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if (isset($this->id))
-			$fields['id_category'] = (int)$this->id;
-
-		return $fields;
-	}
-
 	/**
 	  * Allows to display the category description without HTML tags and slashes
 	  *

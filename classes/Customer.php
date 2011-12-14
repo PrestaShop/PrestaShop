@@ -156,19 +156,6 @@ class CustomerCore extends ObjectModel
 	protected static $_customerHasAddress = array();
 	protected static $_customer_groups = array();
 
-	/**
-	 * @see ObjectModel::getFields()
-	 * @return array
-	 */
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if (isset($this->id))
-			$fields['id_customer'] = (int)$this->id;
-
-		return $fields;
-	}
-
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->getID();
