@@ -562,11 +562,11 @@ if (Tools::isSubmit('getHookableList'))
 		die('{"hasError" : true, "errors" : ["Live Edit : This functionnality has been disabled"]}');
 	/* PrestaShop demo mode*/
 
-	if (!strlen(Tools::getValue('hooks_list')))
+	if (!count(Tools::getValue('hooks_list')))
 		die('{"hasError" : true, "errors" : ["Live Edit : no module on this page"]}');
 
-	$modules_list = explode(',', Tools::getValue('modules_list'));
-	$hooks_list = explode(',', Tools::getValue('hooks_list'));
+	$modules_list = Tools::getValue('modules_list');
+	$hooks_list = Tools::getValue('hooks_list');
 	$hookableList = array();
 
 	foreach ($modules_list as $module)
@@ -629,35 +629,34 @@ if (Tools::isSubmit('saveHook'))
 
 	$res = true;
 	$hookableList = array();
-	foreach ($hooks_list as $hook)
+	// $_POST['hook'] is an array of id_module
+	$hooks_list = Tools::getValue('hook');
+	foreach ($hooks_list as $id_hook => $modules)
 	{
-		$hook = trim($hook);
-		if (!$hook)
-			continue;
-
-		$sql = 'DELETE FROM '._DB_PREFIX_.'hook_module
-			WHERE id_hook = (	SELECT id_hook 
-				FROM '._DB_PREFIX_.'hook 
-				WHERE `name` = \''.pSQL($hook).'\' LIMIT 1
-			)
+		// 1st, drop all previous hooked modules
+		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
+			WHERE `id_hook` =  '.(int)$id_hook.'
 			AND id_shop = '.$id_shop;
 		$res &= Db::getInstance()->execute($sql);
-		$hookedModules = explode(',', Tools::getValue($hook));
+
 		$i = 1;
 		$value = '';
 		$ids = array();
-		foreach ($hookedModules as $module)
+		// then prepare sql query to rehook all chosen modules(id_module, id_shop, id_hook, position)
+		// position is i (autoincremented)
+		foreach ($modules as $id_module)
 		{
-			$id = explode('_', $module);
-			if (!in_array($id[1], $ids))
+			if (!in_array($id_module, $ids))
 			{
-				$ids[] = $id[1];
-				$value .= '('.(int)$id[1].', '.$id_shop.', (SELECT id_hook FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook).'\' LIMIT 0, 1), '.$i.'),';
+				$ids[] = $id_module;
+				$value .= '('.(int)$id_module.', '.$id_shop.', '.(int)$id_hook.', '.$i.'),';
 			}
 			$i++;
 		}
 		$value = rtrim($value, ',');
-		$res &= Db::getInstance()->execute('INSERT INTO  '._DB_PREFIX_.'hook_module (id_module, id_shop, id_hook, position) VALUES '.$value);
+		$res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module` 
+			(id_module, id_shop, id_hook, position) 
+			VALUES '.$value);
 
 	}
 	if ($res)

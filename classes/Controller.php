@@ -73,6 +73,9 @@ abstract class ControllerCore
 	protected $status = '';
 
 	protected $redirect_after = null;
+	
+	/** hook_list is used with liveEdit */
+	public $hook_list = array();
 	/**
 	 * check that the controller is available for the current user/visitor
 	 */

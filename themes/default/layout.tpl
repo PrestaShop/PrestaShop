@@ -19,9 +19,19 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6594 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{$HOOK_HOME}
+{if isset($display_header)}
+	{include file='./header.tpl' HOOK_HEADER=$HOOK_HEADER}
+{/if}
+{if isset($template)}
+	{$template}
+{/if}
+{if isset($display_footer)}
+	{include file='./footer.tpl'}
+{/if}
+{if isset($live_edit)}
+	{$live_edit}
+{/if}
