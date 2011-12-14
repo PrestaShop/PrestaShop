@@ -307,7 +307,7 @@ $(document).ready(function() {
 		closeAddProduct();
 
 		query = 'ajax=1&token='+token+'&action=loadProductInformation&id_order_detail='+
-				$(this).parent().parent().find('input.edit_product_id_order_detail').val()+'&id_address='+id_address;
+				$(this).parent().parent().find('input.edit_product_id_order_detail').val()+'&id_address='+id_address+'&id_order='+id_order;
 		var element = $(this);
 		$.ajax({
 			type: 'POST',
