@@ -24,6 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('input').keypress(function(e) { 
+			var code = null; 
+			code = (e.keyCode ? e.keyCode : e.which);
+			return (code == 13) ? false : true;
+		});
+	});
+
+</script>
+
 <div class="Associations">
 	<h4>{l s='Product price'}</h4>
 	<div class="separation"></div>

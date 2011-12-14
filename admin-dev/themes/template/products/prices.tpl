@@ -24,7 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}price.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('input').keypress(function(e) { 
+			var code = null; 
+			code = (e.keyCode ? e.keyCode : e.which);
+			return (code == 13) ? false : true;
+		});
+	});
+
+</script>
+
 <div class="block_specific_prices_modifications">
 	<h4>{l s='Product price'}</h4>
 	<div class="separation"></div>
@@ -209,15 +220,17 @@
 			</div>
 			<script type="text/javascript">
 				$(document).ready(function(){
-						product_prices['0'] = $('#sp_current_ht_price').html();
-						$('#id_product_attribute').change(function() {
-							$('#sp_current_ht_price').html(product_prices[$('#id_product_attribute option:selected').val()]);
-						});
-						$('.datepicker').datepicker({
-							prevText: '',
-							nextText: '',
-							dateFormat: 'yy-mm-dd'
-						});
+					product_prices['0'] = $('#sp_current_ht_price').html();
+
+					$('#id_product_attribute').change(function() {
+						$('#sp_current_ht_price').html(product_prices[$('#id_product_attribute option:selected').val()]);
+					});
+
+					$('.datepicker').datepicker({
+						prevText: '',
+						nextText: '',
+						dateFormat: 'yy-mm-dd'
+					});
 				});
 			</script>
 		
@@ -284,4 +297,4 @@
 						calcPriceTI();
 						unitPriceWithTax('unit');
 					</script>
-	{/if}
+				{/if}

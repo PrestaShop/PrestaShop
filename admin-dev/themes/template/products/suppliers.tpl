@@ -24,6 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('input').keypress(function(e) { 
+			var code = null; 
+			code = (e.keyCode ? e.keyCode : e.which);
+			return (code == 13) ? false : true;
+		});
+	});
+
+</script>
+
 {if isset($product->id)}
 
 	<h4>{l s='Suppliers of the current product'}</h4>
