@@ -2973,7 +2973,6 @@ class AdminProductsControllerCore extends AdminController
 
 		$product->tags = Tag::getProductTags($product->id);
 		
-		
 		$data->assign('tabs_preloaded', $this->tabs_preloaded);
 
 		// TinyMCE
@@ -3706,7 +3705,6 @@ class AdminProductsControllerCore extends AdminController
 			$this->addJqueryUI(array(
 				'ui.core',
 				'ui.widget',
-				'ui.progressbar',
 				'ui.accordion'
 			));
 
@@ -3721,7 +3719,8 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
 				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
 				_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js',
-				_PS_JS_DIR_.'admin-categories-tree.js'
+				_PS_JS_DIR_.'admin-categories-tree.js',
+				_PS_JS_DIR_.'/jquery/ui/jquery.ui.progressbar.min.js'
 			));
 		}
 	}
