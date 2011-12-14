@@ -46,6 +46,8 @@ class WebserviceOutputBuilderCore
 	protected $fieldsToDisplay;
 	protected $specificFields = array();
 	protected $virtualFields = array();
+	protected $statusInt;
+	protected $wsParamOverrides;
 
 	// Header properties
 	protected $headerParams = array(
@@ -62,8 +64,10 @@ class WebserviceOutputBuilderCore
 
 	public function __construct($ws_url)
 	{
+		$this->statusInt = 200;
 		$this->status = $_SERVER['SERVER_PROTOCOL'].' 200 OK';
 		$this->wsUrl = $ws_url;
+		$this->wsParamOverrides = array();
 	}
 
 	/**
@@ -184,6 +188,10 @@ class WebserviceOutputBuilderCore
 	{
 		return $this->status;
 	}
+	public function getStatusInt()
+	{
+		return $this->statusInt;
+	}
 	/**
 	 * Set the return header status
 	 *
@@ -192,6 +200,7 @@ class WebserviceOutputBuilderCore
 	 */
 	public function setStatus($num)
 	{
+		$this->statusInt = (int)$num;
 		switch ($num)
 		{
 			case 200 :
@@ -315,6 +324,11 @@ class WebserviceOutputBuilderCore
 		return $output;
 	}
 
+	public function registerOverrideWSParameters($wsrObject, $method)
+	{
+		$this->wsParamOverrides[] = array('object' => $wsrObject, 'method' => $method);
+	}
+
 	/**
 	 * Method is used for each content type
 	 * Different content types are :
@@ -346,6 +360,11 @@ class WebserviceOutputBuilderCore
 		}
 
 		$ws_params = $objects['empty']->getWebserviceParameters();
+		foreach ($this->wsParamOverrides AS $p)
+		{
+			$object = $p['object'];
+			$ws_params = $object->{$p['method']}($ws_params);
+		}
 
 		// If a list is asked, need to wrap with a plural node
 		if ($type_of_view === self::VIEW_LIST)
@@ -428,6 +447,11 @@ class WebserviceOutputBuilderCore
 	{
 		$output = '';
 		$ws_params = $object->getWebserviceParameters();
+		foreach ($this->wsParamOverrides AS $p)
+		{
+			$o = $p['object'];
+			$ws_params = $o->{$p['method']}($ws_params);
+		}
 		$output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
 
 		if ($object->id != 0)
@@ -489,7 +513,7 @@ class WebserviceOutputBuilderCore
 			if ($field_name === 'id')
 				$show_field = false;
 		}
-		else if ($this->schemaToDisplay === 'blank')
+		if ($this->schemaToDisplay === 'blank')
 			if (isset($field['setter']) && !$field['setter'])
 				$show_field = false;
 
