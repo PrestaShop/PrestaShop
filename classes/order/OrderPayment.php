@@ -29,6 +29,7 @@ class OrderPaymentCore extends ObjectModel
 {
 	public $id_order;
 	public $id_currency;
+	public $id_order_invoice;
 	public $amount;
 	public $payment_method;
 	public $conversion_rate;
@@ -48,6 +49,7 @@ class OrderPaymentCore extends ObjectModel
 		'fields' => array(
 			'id_order' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_order_invoice' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'amount' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'payment_method' => 	array('type' => self::TYPE_STRING, 'validate' => 'isName'),
 			'conversion_rate' => 	array('type' => self::TYPE_INT, 'validate' => 'isFloat'),

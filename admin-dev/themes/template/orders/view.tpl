@@ -279,6 +279,7 @@
 								<th>{l s='Payment method'}</th>
 								<th style="width:15%">{l s='Transaction ID'}</th>
 								<th style="width:25%">{l s='Amount'}</th>
+								<th style="width:15%">{l s='Invoice'}</th>
 								<th style="width:10%">&nbsp;</th>
 							</tr>
 						</thead>
@@ -289,6 +290,13 @@
 								<td>{$payment->payment_method}</td>
 								<td>{$payment->transaction_id}</td>
 								<td>{displayPrice price=$payment->amount currency=$payment->id_currency}</td>
+								<td>
+								{if $payment->id_order_invoice}
+									#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:OrderInvoice::retrieveOneById($payment->id_order_invoice)->number}
+								{else}
+									{l s='No invoice'}
+								{/if}
+								</td>
 								<td></td>
 							</tr>
 							{/foreach}
@@ -312,6 +320,17 @@
 										<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
 									{/foreach}
 									</select>
+								</td>
+								<td>
+									{if sizeof($invoices_collection)}
+										<select name="payment_invoice">
+										{foreach from=$invoices_collection item=invoice}
+											<option value="{$invoice->id}" selected="selected">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>
+										{/foreach}
+										</select>
+									{else}
+										{l s='No invoice available'}
+									{/if}
 								</td>
 								<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
 							</tr>

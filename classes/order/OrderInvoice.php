@@ -381,54 +381,68 @@ class OrderInvoiceCore extends ObjectModel
 		);
 	}
 
-    /**
-     * Returns all the order invoice that match the date interval
-     *
-     * @since 1.5
-     * @static
-     * @param $date_from
-     * @param $date_to
-     * @return array collection of OrderInvoice
-     */
-    public static function getByDateInterval($date_from, $date_to)
-    {
-        $order_invoice_list = Db::getInstance()->ExecuteS('SELECT oi.*
-                                FROM `'._DB_PREFIX_.'order_invoice` oi
-                                LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
-                                WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
-                                AND oi.date_add >= \''.pSQL($date_from).'\'
-                                '.Context::getContext()->shop->addSqlRestriction().
-                                ' ORDER BY oi.date_add ASC');
+	/**
+	 * Returns all the order invoice that match the date interval
+	 *
+	 * @since 1.5
+	 * @static
+	 * @param $date_from
+	 * @param $date_to
+	 * @return array collection of OrderInvoice
+	 */
+	public static function getByDateInterval($date_from, $date_to)
+	{
+		$order_invoice_list = Db::getInstance()->ExecuteS('
+			SELECT oi.*
+			FROM `'._DB_PREFIX_.'order_invoice` oi
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+			WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
+			AND oi.date_add >= \''.pSQL($date_from).'\'
+			'.Context::getContext()->shop->addSqlRestriction().
+			' ORDER BY oi.date_add ASC
+		');
 
-        return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
-    }
+		return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
+	}
 
+	/**
+	 * @since 1.5
+	 * @static
+	 * @param $id_order_invoice
+	 */
+	public static function getCarrier($id_order_invoice)
+	{
+		$carrier = false;
+		if ($id_carrier = OrderInvoice::getCarrierId($id_order_invoice))
+			$carrier = new Carrier((int)$id_carrier);
+
+		return $carrier;
+	}
 
     /**
      * @since 1.5
      * @static
      * @param $id_order_invoice
      */
-    public static function getCarrier($id_order_invoice)
-    {
-        $carrier = false;
-        if ($id_carrier = OrderInvoice::getCarrierId($id_order_invoice))
-            $carrier = new Carrier((int)$id_carrier);
+	public static function getCarrierId($id_order_invoice)
+	{
+		$sql = 'SELECT `id_carrier`
+				FROM `'._DB_PREFIX_.'order_carrier`
+				WHERE `id_order_invoice` = '.(int)$id_order_invoice;
 
-        return $carrier;
-    }
+		return Db::getInstance()->getValue($sql);
+	}
 
-    /**
-     * @since 1.5
-     * @static
-     * @param $id_order_invoice
-     */
-    public static function getCarrierId($id_order_invoice)
-    {
-        $sql = 'SELECT `id_carrier`
-                FROM `'._DB_PREFIX_.'order_carrier`
-                WHERE `id_order_invoice` = '.(int)$id_order_invoice;
-
-        return Db::getInstance()->getValue($sql);
-    }
+	/**
+	 * @static
+	 * @param $id
+	 * @return OrderInvoice
+	 */
+	public static function retrieveOneById($id)
+	{
+		$order_invoice = new OrderInvoice($id);
+		if (!Validate::isLoadedObject($order_invoice))
+			throw new PrestashopException('Can\'t load Order Invoice object for id: '.$id);
+		return $order_invoice;
+	}
 }
