@@ -121,7 +121,7 @@ $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') >
 if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookieLifetime);
 else
-	$cookie = new Cookie('ps', '', $cookieLifetime);
+	$cookie = new Cookie('ps'.Context::getContext()->shop->getID(), '', $cookieLifetime);
 Context::getContext()->cookie = $cookie;
 
 /* Create employee if in BO, customer else */
@@ -138,6 +138,18 @@ else
 	{
 		$customer = new Customer($cookie->id_customer);
 		$customer->logged = $cookie->logged;
+
+		if (!isset($cookie->id_cart))
+		{
+			$groupShop = new GroupShop(Context::getContext()->shop->id_group_shop);
+			foreach (Shop::getSharedShops(Context::getContext()->shop->getID(), Shop::SHARE_ORDER) as $k => $v)
+			{
+				$cart = new Cart();
+				$id_cart = Db::getInstance()->getValue('SELECT `id_cart` FROM `'._DB_PREFIX_.'cart` WHERE `id_customer` = "'.(int)$customer->id.'" ORDER BY `id_cart` DESC');
+				if (Db::getInstance()->getValue('SELECT `quantity` FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = "'.(int)$id_cart.'"') > 0)
+					$cookie->id_cart = $id_cart;
+			}
+		}
 	}
 	else
 		$customer = new Customer();
