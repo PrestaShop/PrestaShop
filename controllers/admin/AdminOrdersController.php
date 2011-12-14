@@ -559,6 +559,10 @@ class AdminOrdersControllerCore extends AdminController
 				$order = new Order(Tools::getValue('id_order'));
 				$amount = str_replace(',', '.', Tools::getValue('payment_amount'));
 				$currency = new Currency(Tools::getValue('payment_currency'));
+				if ($order->hasInvoice())
+					$order_invoice = new OrderInvoice(Tools::getValue('payment_invoice'));
+				else
+					$order_invoice = null;
 				if (!Validate::isLoadedObject($order))
 					$this->_errors[] = Tools::displayError('Order can\'t be found');
 				elseif (!Validate::isPrice($amount))
@@ -569,11 +573,13 @@ class AdminOrdersControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('Transaction ID is invalid');
 				elseif (!Validate::isLoadedObject($currency))
 					$this->_errors[] = Tools::displayError('Currency is invalid');
+				elseif ($order->hasInvoice() && !Validate::isLoadedObject($order_invoice))
+					$this->_errors[] = Tools::displayError('Invoice is invalid');
 				elseif (!Validate::isDate(Tools::getValue('payment_date')))
 					$this->_errors[] = Tools::displayError('Date is invalid');
 				else
 				{
-					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date')))
+					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice))
 						$this->_errors[] = Tools::displayError('An error occured on adding of order payment');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
@@ -839,9 +845,9 @@ class AdminOrdersControllerCore extends AdminController
 				// Tax rate for this customer
 				if (Tools::isSubmit('id_address'))
 					$product['tax_rate'] = $productObj->getTaxesRate(new Address(Tools::getValue('id_address')));
-					
+
 				$product['warehouse_list'] = array();
-				
+
 				foreach($attributes AS $attribute)
 				{
 					if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
@@ -859,23 +865,23 @@ class AdminOrdersControllerCore extends AdminController
 					}
 					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
 						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
-					
+
 					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 						$product['warehouse_list'][$attribute['id_product_attribute']] = Warehouse::getProductWarehouseList($product['id_product'], $attribute['id_product_attribute']);
 					else
 						$product['warehouse_list'][$attribute['id_product_attribute']] = array();
-					
+
 					$product['stock'][$attribute['id_product_attribute']] = Product::getRealQuantity($product['id_product'], $attribute['id_product_attribute']);
-					
+
 				}
-				
+
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 					$product['warehouse_list'][0] = Warehouse::getProductWarehouseList($product['id_product']);
 				else
 					$product['warehouse_list'][0] = array();
-				
+
 				$product['stock'][0] = Product::getRealQuantity($product['id_product'], 0, 0);
-				
+
 
 				foreach ($combinations AS &$combination)
 					$combination['attributes'] = rtrim($combination['attributes'], ' - ');

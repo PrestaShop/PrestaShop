@@ -1065,6 +1065,12 @@ class OrderCore extends ObjectModel
 				SET `id_order_invoice` = '.(int)$order_invoice->id.'
 				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
+			// Update order payment
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'order_payment`
+				SET `id_order_invoice` = '.(int)$order_invoice->id.'
+				WHERE `id_order` = '.(int)$order_invoice->id_order);
+
 			$this->invoice_date = $order_invoice->date_add;
 			$this->invoice_number = $order_invoice->number;
 			$this->update();
@@ -1313,12 +1319,14 @@ class OrderCore extends ObjectModel
 	 * @param string $payment_transaction_id
 	 * @param Currency $currency
 	 * @param string $date
+	 * @param OrderInvoice $order_invoice
 	 * @return bool
 	 */
-	public function addOrderPayment($amount_paid, $payment_method = null, $payment_transaction_id = null, $currency = null, $date = null)
+	public function addOrderPayment($amount_paid, $payment_method = null, $payment_transaction_id = null, $currency = null, $date = null, $order_invoice = null)
 	{
 		$order_payment = new OrderPayment();
 		$order_payment->id_order = $this->id;
+		$order_payment->id_order_invoice = (!is_null($order_invoice) ? $order_invoice->id : null);
 		$order_payment->id_currency = ($currency ? $currency->id : $this->id_currency);
 		// we kept the currency rate for historization reasons
 		$order_payment->conversion_rate = ($currency ? $currency->conversion_rate : 1);
@@ -1567,10 +1575,10 @@ class OrderCore extends ObjectModel
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Get warehouse associated to the order
-	 * 
+	 *
 	 * return array List of warehouse
 	 */
 	public function getWarehouseList()
@@ -1582,11 +1590,11 @@ class OrderCore extends ObjectModel
 			GROUP BY id_warehouse');
 		if (!$results)
 			return array();
-		
+
 			$warehouse_list = array();
 		foreach ($results as $row)
 			$warehouse_list[] = $row['id_warehouse'];
-		
+
 		return $warehouse_list;
 	}
 }
