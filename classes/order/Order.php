@@ -1567,5 +1567,27 @@ class OrderCore extends ObjectModel
 			return true;
 		return false;
 	}
+	
+	/**
+	 * Get warehouse associated to the order
+	 * 
+	 * return array List of warehouse
+	 */
+	public function getWarehouseList()
+	{
+		$results = Db::getInstance()->executeS('
+			SELECT id_warehouse
+			FROM `'._DB_PREFIX_.'order_detail`
+			WHERE `id_order` =  '.(int)$this->id.'
+			GROUP BY id_warehouse');
+		if (!$results)
+			return array();
+		
+			$warehouse_list = array();
+		foreach ($results as $row)
+			$warehouse_list[] = $row['id_warehouse'];
+		
+		return $warehouse_list;
+	}
 }
 
