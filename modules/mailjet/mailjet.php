@@ -43,7 +43,7 @@ class Mailjet extends Module
 	public function __construct()
 	{
 		$this->name = 'mailjet';
-		$this->tab = 'front_office_features';
+		$this->tab = 'advertising_marketing';
 		$this->version = '1.0';
 		$this->displayName = 'Mailjet';
 
