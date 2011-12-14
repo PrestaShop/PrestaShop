@@ -1039,7 +1039,7 @@ class ToolsCore
 		$str = self::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
-		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
+		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u','', $str);
 		$str = preg_replace('/[\s\'\:\/\[\]-]+/',' ', $str);
 		$str = preg_replace('/[ ]/','-', $str);
 		$str = preg_replace('/[\/]/','-', $str);
@@ -1556,8 +1556,8 @@ class ToolsCore
 			fwrite($write_fd, "# Images\n");
 			if (Configuration::get('PS_LEGACY_IMAGES'))
 			{
-				fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
-				fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-]*\.jpg$ '._PS_PROD_IMG_.'$1-$2.jpg [L]'."\n");
+				fwrite($write_fd, 'RewriteRule (*UTF8)^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+				fwrite($write_fd, 'RewriteRule (*UTF8)^([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2.jpg [L]'."\n");
 			}
 
 			// Rewrite product images < 100 millions
@@ -1570,10 +1570,10 @@ class ToolsCore
 					$img_name .= '$'.$j;
 				}
 				$img_name .= '$'.$j;
-				fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-]*\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.".jpg [L]\n");
+				fwrite($write_fd, 'RewriteRule (*UTF8)^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.".jpg [L]\n");
 			}
-			fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-]*\.jpg$ img/c/$1$2.jpg [L]'."\n");
-			fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)/[a-zA-Z0-9-]+\.jpg$ img/c/$1.jpg [L]'."\n");
+			fwrite($write_fd, 'RewriteRule (*UTF8)^c/([0-9]+)(\-[_a-zA-Z0-9-\pL]*)/[_a-zA-Z0-9-]*\.jpg$ img/c/$1$2.jpg [L]'."\n");
+			fwrite($write_fd, 'RewriteRule (*UTF8)^c/([a-zA-Z-]+)/[a-zA-Z0-9-\pL]+\.jpg$ img/c/$1.jpg [L]'."\n");
 		}
 
 		// Redirections to dispatcher
