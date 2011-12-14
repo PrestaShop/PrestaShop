@@ -304,7 +304,7 @@ class CustomerCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
 					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).
-					($ignore_guest ? 'AND `is_guest` = 0' : '');
+					($ignore_guest ? ' AND `is_guest` = 0' : '');
 		$result = Db::getInstance()->getRow($sql);
 
 		if ($return_id)

@@ -4643,4 +4643,20 @@ class ProductCore extends ObjectModel
 			Search::indexation(false, $this->id);
 		return $success;
 	}
+	
+	public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = 0, $id_shop = null)
+	{
+		static $manager = null;
+		
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && is_null($manager))
+			$manager = StockManagerFactory::getManager();
+		
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+		
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($id_product, $id_shop))
+			return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
+		else
+			return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
+	}
 }

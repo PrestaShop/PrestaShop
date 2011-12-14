@@ -95,13 +95,19 @@ $(document).ready(function() {
 			{
 				// Reset combinations list
 				$('select#add_product_product_attribute_id').html('');
+				var defaultAttribute = 0;
 				$.each(current_product.combinations, function() {
 					$('select#add_product_product_attribute_id').append('<option value="'+this.id_product_attribute+'"'+(this.default_on == 1 ? ' selected="selected"' : '')+'>'+this.attributes+'</option>');
 					if (this.default_on == 1)
+					{
 						$('#add_product_product_stock').html(this.qty_in_stock);
+						defaultAttribute = this.id_product_attribute;
+					}
 				});
 				// Show select list
 				$('#add_product_product_attribute_area').show();
+				
+				populateWarehouseList(current_product.warehouse_list[defaultAttribute]);
 			}
 			else
 			{
@@ -109,6 +115,8 @@ $(document).ready(function() {
 				$('select#add_product_product_attribute_id').html('');
 				// Hide select list
 				$('#add_product_product_attribute_area').hide();
+				
+				populateWarehouseList(current_product.warehouse_list[0]);
 			}
 		}
 	});
@@ -116,11 +124,33 @@ $(document).ready(function() {
 	$('select#add_product_product_attribute_id').change(function() {
 		$('#add_product_product_price_tax_incl').val(current_product.combinations[$(this).val()].price_tax_incl);
 		$('#add_product_product_price_tax_excl').val(current_product.combinations[$(this).val()].price_tax_excl);
+		
+		populateWarehouseList(current_product.warehouse_list[$(this).val()]);
 
 		addProductRefreshTotal();
 
 		$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
 	});
+	
+	function populateWarehouseList(warehouse_list)
+	{
+		$('#add_product_product_warehouse_area').hide();
+		if (warehouse_list.length > 1)
+		{
+			$('#add_product_product_warehouse_area').show();
+		}
+		var order_warehouse_list = $('#warehouse_list').val().split(',');
+		$('#add_product_warehouse').html('');
+		var warehouse_selected = false;
+		$.each(warehouse_list, function() {
+			if (warehouse_selected == false && $.inArray(this.id_warehouse, order_warehouse_list))
+				warehouse_selected = this.id_warehouse;
+			
+			$('#add_product_warehouse').append($('<option value="' + this.id_warehouse + '">' + this.name + '</option>'));
+		});
+		if (warehouse_selected)
+			$('#add_product_warehouse').val(warehouse_selected);
+	}
 
 	$('input#add_product_product_quantity').keyup(function() {
 		var quantity = parseInt($(this).val());
@@ -170,6 +200,7 @@ $(document).ready(function() {
 			{
 				var query = 'ajax=1&token='+token+'&action=addProductOnOrder&id_order='+id_order+'&';
 
+				query += $('#add_product_warehouse').serialize()+'&';
 				query += $('tr#new_product select, tr#new_product input').serialize();
 				if ($('select#add_product_product_invoice').val() == 0)
 					query += '&'+$('tr#new_invoice select, tr#new_invoice input').serialize();
@@ -633,9 +664,5 @@ $(document).ready(function() {
 		return false;
 	});
 });
-
-
-
-
 
 
