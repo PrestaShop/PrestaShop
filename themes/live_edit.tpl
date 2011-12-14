@@ -24,8 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	{if isset($ad) && isset($live_edit)}
-	var ad = "{$smarty.get.ad}";
+	{if isset($smarty.get.ad) && isset($smarty.get.live_edit)}
+		var ad = "{$smarty.get.ad}";
 	{/if}
 	var lastMove = '';
 	var saveOK = '{l s='Module position saved'}';
@@ -40,8 +40,16 @@
 </script>
 
 <div style="width:100%;height:30px;padding-top:10px;background-color:#D0D3D8;border:solid 1px gray;position:fixed;bottom:0;left:0;opacity:0.7" onmouseover="$(this).css('opacity', 1);" onmouseout="$(this).css('opacity', 0.7);">
-	<input type="submit" value="{l s='Save'}" id="saveLiveEdit" class="exclusive" style="float:left">
+<form id="liveEdit-action-form" action="./{$ad}/ajax.php" method="POST" >
+	<input type="hidden" name="ajax" value="true" />
+	<input type="hidden" name="id_shop" value="{$id_shop}" />
+	{foreach from=$hook_list key=hook_id item=hook_name}
+		<input class="hook_list" type="hidden" name="hook_list[{$hook_id}]" 
+			value="{$hook_name}" />
+	{/foreach}
+	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="exclusive" style="float:left">
 	<input type="submit" value="{l s='Close Live edit'}" id="closeLiveEdit" class="button" style="float:left">
+</form>
 	<div style="float:right;margin-right:20px;" id="live_edit_feed_back"></div>
 </div>
 <a href="#" style="display:none;" id="fancy"></a>

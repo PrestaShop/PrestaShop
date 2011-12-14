@@ -374,6 +374,13 @@ class FrontControllerCore extends Controller
 	public function initContent()
 	{
 		$this->process();
+
+		$this->context->smarty->assign(array(
+			'HOOK_HEADER' => Hook::exec('displayHeader'),
+			'HOOK_TOP' => Hook::exec('displayTop'),
+			'HOOK_LEFT_COLUMN' => Hook::exec('displayLeftColumn'),
+			'HOOK_RIGHT_COLUMN' => Hook::exec('displayRightColumn', array('cart' => $this->context->cart)),
+		));
 	}
 
 	public function initCursedPage()
@@ -393,23 +400,40 @@ class FrontControllerCore extends Controller
 	public function display()
 	{
 		Tools::safePostVars();
-		$this->context->smarty->assign('errors', $this->errors);
 
-		if ($this->display_header)
-			$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
-
-		if ($this->template)
-			$this->context->smarty->display($this->template);
-
-		if ($this->display_footer)
-			$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
-
-		// live edit
-		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		// assign css_files and js_files at the very last time
+		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
 		{
-			$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
-			$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
+			// CSS compressor management
+			if (Configuration::get('PS_CSS_THEME_CACHE'))
+				$this->css_files = Media::cccCSS($this->css_files);
+			//JS compressor management
+			if (Configuration::get('PS_JS_THEME_CACHE'))
+				$this->js_files = Media::cccJs($this->js_files);
 		}
+
+ 		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('js_files', array_unique($this->js_files));
+
+		$this->context->smarty->assign(array(
+			'errors' => $this->errors,
+			'display_header' => $this->display_header,
+			'display_footer' => $this->display_footer,
+			'template' => $this->context->smarty->fetch($this->template),
+		));
+		
+
+	
+
+		if (Tools::isSubmit('live_edit'))
+		{
+			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
+		}
+		
+		
+		$this->context->smarty->display(_PS_THEME_DIR_.'layout.tpl');
+
+		return true;
 	}
 
 	/* Display a maintenance page if shop is closed */
@@ -549,31 +573,37 @@ class FrontControllerCore extends Controller
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only')
 		));
-		$this->context->smarty->assign(array(
-			'HOOK_HEADER' => Hook::exec('header'),
-			'HOOK_TOP' => Hook::exec('top'),
-			'HOOK_LEFT_COLUMN' => Hook::exec('leftColumn')
-		));
 
-		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
-		{
-			// CSS compressor management
-			if (Configuration::get('PS_CSS_THEME_CACHE'))
-				$this->css_files = Media::cccCSS($this->css_files);
-			//JS compressor management
-			if (Configuration::get('PS_JS_THEME_CACHE'))
-				$this->js_files = Media::cccJs($this->js_files);
-		}
-		$this->context->smarty->assign('css_files', $this->css_files);
-		$this->context->smarty->assign('js_files', array_unique($this->js_files));
+
+
 	}
 
 	public function initFooter()
 	{
 		$this->context->smarty->assign(array(
-			'HOOK_RIGHT_COLUMN' => Hook::exec('rightColumn', array('cart' => $this->context->cart)),
 			'HOOK_FOOTER' => Hook::exec('footer'),
 		));
+
+		
+	}
+
+	public function getLiveEditFooter(){
+		if (Tools::isSubmit('live_edit') 
+			&& ($ad = Tools::getValue('ad'))
+			&& (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_))
+		)
+		{
+			$data = $this->context->smarty->createData();
+			$data->assign(array(
+				'ad' => $ad, 
+				'live_edit' => true,
+				'hook_list' => $this->hook_list,
+				'id_shop' => $this->context->shop->getId(true)
+			));
+			return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();
+		}
+		else 
+			return '';
 	}
 
 	public function productSort()
