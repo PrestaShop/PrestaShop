@@ -912,15 +912,6 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		// Manage accounting
-		else if (Tools::isSubmit('submitAccounting') || Tools::isSubmit('submitAccountingAndStay'))
-			$this->action = 'accounting';
-		//Manage suppliers
-		else if (Tools::isSubmit('submitSuppliers') || Tools::isSubmit('submitSuppliersAndStay'))
-			$this->action = 'suppliers';
-		//Manage warehouses
-		else if (Tools::isSubmit('submitWarehouses') || Tools::isSubmit('submitWarehousesAndStay'))
-			$this->action = 'warehouses';
 	}
 
 	/**
@@ -1351,6 +1342,9 @@ class AdminProductsControllerCore extends AdminController
 					$this->updateAccessories($object);
 					$this->updateDownloadProduct($object, 1);
 					$this->updateAssoShop((int)$object->id);
+					$this->processAccounting($token);
+					$this->processSuppliers($token);
+					$this->processWarehouses($token);
 					$languages = Language::getLanguages(false);
 					if (!$this->updatePackItems($object))
 						$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
@@ -1993,7 +1987,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
 		$this->fields_form = array('');
 		$this->display = 'edit';
-		$this->tpl_form_vars['pos_select'] = ($tab = Tools::getValue('tabs')) ? $tab : '0';
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
 		$id_product = Tools::getvalue('id_product');
