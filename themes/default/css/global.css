@@ -650,8 +650,10 @@ table#cart_summary  td {
 	font-size:12px;
 	vertical-align:top
 }
-table#cart_summary  td.cart_delete {border-right:none}
+table#cart_summary  td.cart_delete,
+table#cart_summary  td.price_discount_del {border-right:none}
 table#cart_summary  .last_item  td {border-bottom:1px solid #999}
+table#cart_summary  td.cart_discount_price {border-bottom:1px solid #999}
 
 
 table#cart_summary tr:nth-child(odd),
@@ -690,7 +692,8 @@ table#cart_summary  .cart_delete {
 	width:64px;
 	text-align:center
 }
-.cart_delete a.cart_quantity_delete {
+.cart_delete a.cart_quantity_delete, 
+a.price_discount_delete {
 	display:inline-block;
 	padding:1px 2px;
 	font-size:8px;
@@ -708,7 +711,8 @@ table#cart_summary  .cart_delete {
 .cart_total_delivery #total_shipping,
 .cart_total_price #total_product,
 .cart_total_price #total_price_without_tax,
-.cart_total_price #total_tax {
+.cart_total_price #total_tax,
+.cart_total_voucher #total_discount {
 	border-right:none;
 	text-align: right
 }
@@ -716,7 +720,6 @@ table#cart_summary  .cart_delete {
 .cart_total_price #total_price {
 	border-right:none;
 }
-
 
 
 table#cart_summary .cart_total_price td.cart_voucher {
