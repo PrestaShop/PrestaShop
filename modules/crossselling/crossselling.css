@@ -15,7 +15,19 @@
 #crossselling li a img {border:1px solid #ccc}
 #crossselling li p.product_name {text-align:center}
 
+#crossselling_list {overflow: hidden;}
 
+#crossselling_scroll_left,
+ #crossselling_scroll_right {
+	background: url('../../../img/thumbs_left.gif') no-repeat center;
+	text-indent: -3000px;
+	display: block;
+	width: 9px;
+	height: 18px;
+	float: left;
+	margin-top: 30px
+}
+#crossselling_scroll_right { background-image: url('../../../img/thumbs_right.gif') }
 /*
 div#crossselling {
 	padding-top: 10px;
@@ -50,15 +62,4 @@ div#crossselling {
 	overflow: hidden
 }
 #crossselling_list li a { margin: auto }
-#crossselling_scroll_left,
- #crossselling_scroll_right {
-	background: url('../../../img/thumbs_left.gif') no-repeat center;
-	text-indent: -3000px;
-	display: block;
-	width: 9px;
-	height: 18px;
-	float: left;
-	margin-top: 30px
-}
-#crossselling_scroll_right { background-image: url('../../../img/thumbs_right.gif') }
 */

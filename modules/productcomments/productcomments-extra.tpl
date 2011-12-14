@@ -23,22 +23,28 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{literal}
 <script type="text/javascript">
-	$(function(){literal}{{/literal} $('input[@type=radio].star').rating(); {literal}}{/literal});
-	$(function(){literal}{{/literal}
-		$('.auto-submit-star').rating({literal}{{/literal}
-			callback: function(value, link){literal}{{/literal}
-			{literal}}{/literal}
-		{literal}}{/literal});
-	{literal}}{/literal});
+	/*$(function(){ $('input[@type=radio].star').rating(); });
+	$(function(){
+		$('.auto-submit-star').rating({
+			callback: function(value, link){
+			}
+		});
+	});*/
 	
+	$(function(){
+		$('input[@type=radio].star').rating();
+		$('.auto-submit-star').rating(callback: function(value, link));
+	});
+		
 	//close  comment form
-	function closeCommentForm(){ldelim}
+	function closeCommentForm(){
 		$('#sendComment').slideUp('fast');
 		$('input#addCommentButton').fadeIn('slow');
-	{rdelim}
+	}
 
-	$('document').ready(function(){literal}{{/literal}
+	$('document').ready(function(){
 
 		var limitInputText = {
 				'maxCharacterSize': 200,
@@ -50,20 +56,20 @@
 		
 		$('#commentContent').textareaCount(limitInputText);
 		
-		$('#new_comment_btn').fancybox({literal}{{/literal}
+		$('#new_comment_btn').fancybox({
 			'hideOnContentClick': false,
-			'onClosed': function(){literal}{{/literal}
-			{literal}}{/literal},
-		{literal}}{/literal});
+			'onClosed': function(){
+			},
+		});
 	
-		$('a[href=#idTab5]').click(function(){literal}{{/literal}
+		$('a[href=#idTab5]').click(function(){
 			$('*[id^="idTab"]').addClass('block_hidden_only_for_screen');
 			$('div#idTab5').removeClass('block_hidden_only_for_screen');
 			
 			$('ul#more_info_tabs a[href^="#idTab"]').removeClass('selected');
 			$('a[href="#idTab5"]').addClass('selected');
-		{literal}}{/literal});
-		{literal}
+		});
+		
 		$('#submitMessage').click(function(){
 			var datas = [];
 			$('#fancybox-content').find('input, textarea, select').each(function(index){
@@ -73,7 +79,7 @@
 				datas.push(o);
 			});
 			$.ajax({
-				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				url: "{/literal}{$module_dir}{literal}productcomments-ajax.php",
 				post: "POST",
 				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
 				dataType: "json",
@@ -92,7 +98,7 @@
 				datas.push(o);
 			});
 			$.ajax({
-				{/literal}url: "{$module_dir}productcomments-ajax.php",{literal}
+				url: "{/literal}{$module_dir}{literal}productcomments-ajax.php",
 				post: "POST",
 				data: {action: 'sendComment', secure_key: '{/literal}{$secure_key}{literal}', review: JSON.stringify(datas)},
 				dataType: "json",
@@ -100,10 +106,10 @@
 					$.fancybox.close();
 	 		 	}
 			});
-		});
-		{/literal}
-	{literal}}{/literal});
+		});		
+	});
 </script>
+{/literal}
 
 <div id="product_comments_block_extra">
 	{if $nbComments != 0}
@@ -125,9 +131,9 @@
 		{if $nbComments != 0}
 		<a href="#idTab5">{l s='Read user reviews' mod='productcomments'} ({$nbComments})</a><br/>
 		{/if}
-	{if ($too_early == false AND ($logged OR $allow_guests))}
+		{if ($too_early == false AND ($logged OR $allow_guests))}
 		<a id="new_comment_btn" href="#new_comment_form">{l s='Write your review' mod='productcomments'}</a>
-	{/if}
+		{/if}
 	</div>
 	<div style="display: none;">
 		<div id="new_comment_form">
