@@ -315,6 +315,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->_processAddressFormat();
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
+		parent::initContent();
 	}
 
 	protected function _getGuestInformations()

@@ -46,6 +46,7 @@ class DiscountControllerCore extends FrontController
 
 		$this->context->smarty->assign(array('nbDiscounts' => (int)($nbDiscounts), 'discount' => $discounts));
 		$this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
+		parent::initContent();
 	}
 }
 

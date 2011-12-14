@@ -285,6 +285,7 @@ class AddressControllerCore extends FrontController
 		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'address.tpl');
+		parent::initContent();
 	}
 
 	/**

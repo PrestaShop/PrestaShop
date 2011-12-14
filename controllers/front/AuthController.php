@@ -146,6 +146,7 @@ class AuthControllerCore extends FrontController
 			die(Tools::jsonEncode($return));
 		}
 		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
+		parent::initContent();
 	}
 
 	/**

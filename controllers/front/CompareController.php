@@ -153,6 +153,7 @@ class CompareControllerCore extends FrontController
 		$this->context->smarty->assign('hasProduct', $hasProduct);
 
 		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
+		parent::initContent();
 	}
 }
 

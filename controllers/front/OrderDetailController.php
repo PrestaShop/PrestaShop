@@ -203,6 +203,7 @@ class OrderDetailControllerCore extends FrontController
 		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'order-detail.tpl');
+		parent::initContent();
 	}
 
 	public function setMedia()

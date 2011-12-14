@@ -111,6 +111,7 @@ class CategoryControllerCore extends FrontController
 
 
 		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
+		parent::initContent();
 	}
 
 	/**
