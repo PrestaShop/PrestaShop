@@ -180,8 +180,8 @@ class HelperListCore extends Helper
 		$tpl_enable = $this->createTemplate('list_action_enable.tpl');
 		$tpl_enable->assign(array(
 			'enabled' => (bool)$value,
-			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
-				((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token)
+			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.
+				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token != null ? $token : $this->token)
 		));
 		return $tpl_enable->fetch();
 	}
@@ -491,7 +491,7 @@ class HelperListCore extends Helper
 	 */
 	public function displayListHeader($token = null)
 	{
-		$id_cat = Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
+		$id_cat = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
 
 		if (!isset($token) || empty($token))
 			$token = $this->token;
@@ -621,8 +621,6 @@ class HelperListCore extends Helper
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
-			/*'back' => Tools::getValue('back'),
-			'no_back' => $this->no_back,*/
 		)));
 
 		return $this->header_tpl->fetch();
@@ -637,10 +635,7 @@ class HelperListCore extends Helper
 			'token' => $this->token,
 			'table' => $this->table,
 			'current' => $this->currentIndex,
-			'simple_header' => $this->simple_header,
 			'bulk_actions' => $this->bulk_actions,
-			'back' => Tools::getValue('back'),
-			'no_back' => $this->no_back,
 		)));
 		return $this->footer_tpl->fetch();
 	}

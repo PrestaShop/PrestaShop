@@ -147,7 +147,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory'))
 		{
 			$this->toolbar_btn['edit'] = array(
-				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.Tools::getValue('id_category').'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
 				'desc' => $this->l('Edit')
 			);
 			$back = Tools::safeOutput(Tools::getValue('back', ''));
@@ -160,7 +160,7 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 		if ($this->display == 'view')
 			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.Tools::getValue('id_category').'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
 				'desc' => $this->l('Add new')
 			);
 		parent::initToolbar();
