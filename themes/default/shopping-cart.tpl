@@ -167,7 +167,6 @@
 				</tr>
 			{/if}
 
-		{if $use_taxes}
 			<tr class="cart_total_price">
 				<td colspan="5">{l s='Total (tax excl.):'}</td>
 				<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
@@ -186,26 +185,6 @@
 						{/foreach}
 						</ul>
 					{/if}
-				{/if}
-				</td>
-				<td colspan="2" class="price" id="total_price">
-					<p>{l s='Total:'}</p>
-					<span>{displayPrice price=$total_price}</span>
-				</td>
-			</tr>
-		{else}
-			<tr class="cart_total_price">
-				<td colspan="4" id="cart_voucher" class="cart_voucher">
-				{if $voucherAllowed}
-				<div id="cart_voucher" class="table_block">
-					{if isset($errors_discount) && $errors_discount}
-						<ul class="error">
-						{foreach from=$errors_discount key=k item=error}
-							<li>{$error|escape:'htmlall':'UTF-8'}</li>
-						{/foreach}
-						</ul>
-					{/if}
-					{if $voucherAllowed}
 					<form action="{if $opc}{$link->getPageLink('order-opc.php', true)}{else}{$link->getPageLink('order.php', true)}{/if}" method="post" id="voucher">
 						<fieldset>
 							<h4><label for="discount_name">{l s='Vouchers'}</label></h4>
@@ -223,16 +202,20 @@
 						{/if}
 						</fieldset>
 					</form>
-					{/if}
-				</div>
 				{/if}
 				</td>
+				{if $use_taxes}
+				<td colspan="2" class="price" id="total_price">
+					<p>{l s='Total:'}</p>
+					<span>{displayPrice price=$total_price}</span>
+				</td>
+				{else}
 				<td colspan="2" id="total_price" class="price">
 					<p>{l s='Total:'}</p>
 					<span>{displayPrice price=$total_price_without_tax}</span>
 				</td>
+				{/if}
 			</tr>
-			{/if}
 		</tfoot>
 		<tbody>
 		{foreach from=$products item=product name=productLoop}
@@ -308,19 +291,17 @@
 		<tbody>
 		{foreach from=$discounts item=discount name=discountLoop}
 			<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
-				<td class="cart_discount_name" colspan="4">{$discount.name}</td>
+				<td class="cart_discount_name" colspan="3">{$discount.name}</td>
 				<td class="cart_discount_price"><span class="price-discount">
 					{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}
 				</span></td>
-				<td class="cart_discount_delete">
-					<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" title="{l s='Delete'}">
-						<img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="icon" width="11" height="13" />
-					</a>
-					1
+				<td class="cart_discount_delete">1</td>
+				<td class="cart_discount_price">
+					<span class="price-discount">{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}</span>
 				</td>
-				<td class="cart_discount_price"><span class="price-discount">
-					{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}
-				</span></td>
+				<td class="price_discount_del">
+					<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" class="price_discount_delete" title="{l s='Delete'}">{l s='Delete'}</a>
+				</td>
 			</tr>
 		{/foreach}
 		</tbody>
