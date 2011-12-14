@@ -83,6 +83,7 @@ class SupplierControllerCore extends FrontController
 			$this->assignAll();
 			$this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
 		}
+		parent::initContent();
 	}
 
 	/**

@@ -43,6 +43,7 @@ class BestSalesControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'best-sales.tpl');
+		parent::initContent();
 	}
 
 	public function setMedia()

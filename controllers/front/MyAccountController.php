@@ -51,6 +51,7 @@ class MyAccountControllerCore extends FrontController
 		$this->context->smarty->assign('HOOK_CUSTOMER_ACCOUNT', Hook::exec('customerAccount'));
 
 		$this->setTemplate(_PS_THEME_DIR_.'my-account.tpl');
+		parent::initContent();
 	}
 }
 

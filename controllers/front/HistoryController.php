@@ -64,6 +64,7 @@ class HistoryControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'history.tpl');
+		parent::initContent();
 	}
 }
 

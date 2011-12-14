@@ -252,6 +252,7 @@ class StoresControllerCore extends FrontController
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'stores.tpl');
+		parent::initContent();
 	}
 
 	public function setMedia()

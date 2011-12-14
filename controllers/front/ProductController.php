@@ -199,6 +199,7 @@ class ProductControllerCore extends FrontController
 		$this->context->smarty->assign('errors', $this->errors);
 
 		$this->setTemplate(_PS_THEME_DIR_.'product.tpl');
+		parent::initContent();
 	}
 
 	/**

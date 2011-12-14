@@ -105,6 +105,7 @@ class GuestTrackingControllerCore extends FrontController
 			'errors' => $this->errors,
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'guest-tracking.tpl');
+		parent::initContent();
 	}
 
 	/**

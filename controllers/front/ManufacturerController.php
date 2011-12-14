@@ -81,6 +81,7 @@ class ManufacturerControllerCore extends FrontController
 			$this->assignAll();
 			$this->setTemplate(_PS_THEME_DIR_.'manufacturer-list.tpl');
 		}
+		parent::initContent();
 	}
 
 	/**

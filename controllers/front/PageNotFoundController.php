@@ -36,6 +36,7 @@ class PageNotFoundControllerCore extends FrontController
 	public function initContent()
 	{
 		$this->setTemplate(_PS_THEME_DIR_.'404.tpl');
+		parent::initContent();
 	}
 }
 

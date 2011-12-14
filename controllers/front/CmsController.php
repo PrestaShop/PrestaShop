@@ -107,5 +107,6 @@ class CmsControllerCore extends FrontController
 		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'cms.tpl');
+		parent::initContent();
 	}
 }
