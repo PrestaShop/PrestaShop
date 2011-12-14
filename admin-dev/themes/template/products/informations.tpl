@@ -484,20 +484,20 @@ var textFieldLabel = 0;
 					<script type="text/javascript">
 						$(function() {
 							changeTagImage();
-							$("#createImageDescription input").change(function(){
+							$('#createImageDescription input').change(function(){
 								changeTagImage();
 							});
 
 							var i = 0;
-							$(".addImageDescription").click(function(){
+							$('.addImageDescription').click(function(){
 								if (i == 0){
-									$("#createImageDescription").animate({
-										opacity: 1, height: "toggle"
+									$('#createImageDescription').animate({
+										opacity: 1, height: 'toggle'
 										}, 500);
 									i = 1;
 								}else{
-									$("#createImageDescription").animate({
-										opacity: 0, height: "toggle"
+									$('#createImageDescription').animate({
+										opacity: 0, height: 'toggle'
 										}, 500);
 									i = 0;
 								}
@@ -505,10 +505,11 @@ var textFieldLabel = 0;
 						});
 
 						function changeTagImage(){
-							var smallImage = $("input[name=smallImage]:checked").attr("value");
-							var leftRight = $("input[name=leftRight]:checked").attr("value");
-							var imageTypes = $("input[name=imageTypes]:checked").attr("value");
-							$("#resultImage").val("{img-"+smallImage+"-"+leftRight+"-"+imageTypes+"}");
+							var smallImage = $('input[name=smallImage]:checked').attr('value');
+							var leftRight = $('input[name=leftRight]:checked').attr('value');
+							var imageTypes = $('input[name=imageTypes]:checked').attr('value');
+							var tag = '[img-'+smallImage+'-'+leftRight+'-'+imageTypes+']';
+							$('#resultImage').val(tag);
 						}
 					</script>
 {/if}
