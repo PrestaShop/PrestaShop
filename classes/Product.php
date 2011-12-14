@@ -188,6 +188,12 @@ class ProductCore extends ObjectModel
 	/*** @var array Tags */
 	public $tags;
 
+	/**
+	 * @since 1.5.0
+	 * @var boolean Tells if the product uses the advanced stock management
+	 */
+	public $advanced_stock_management;
+
 	public $isFullyLoaded = false;
 
 	public $cache_is_pack;
@@ -253,6 +259,7 @@ class ProductCore extends ObjectModel
 			'cache_has_attachments' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'advanced_stock_management' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'meta_description' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
