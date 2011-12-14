@@ -285,7 +285,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function deleteVirtualProduct()
+	public function processDeleteVirtualProduct($token)
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), 0)))
 			return false;
@@ -293,12 +293,636 @@ class AdminProductsControllerCore extends AdminController
 		return $product_download->deleteFile((int)$id_product_download);
 	}
 
-	public function deleteVirtualProductAttribute()
+	public function processDeleteVirtualProductAttribute($token)
 	{
 		if (!($id_product_download = ProductDownload::getIdFromIdAttribute((int)Tools::getValue('id_product'), (int)Tools::getValue('id_product_attribute'))))
 			return false;
 		$product_download = new ProductDownload((int)$id_product_download);
 		return $product_download->deleteFile((int)$id_product_download);
+	}
+
+	public function processAddAttachments($token)
+	{
+		$languages = Language::getLanguages(false);
+		$is_attachment_name_valid = false;
+		foreach ($languages as $language)
+		{
+			$attachment_name_lang = Tools::getValue('attachment_name_'.(int)($language['id_lang']));
+			if (strlen($attachment_name_lang ) > 0)
+				$is_attachment_name_valid = true;
+
+			if (!Validate::isGenericName(Tools::getValue('attachment_name_'.(int)($language['id_lang']))))
+				$this->_errors[] = Tools::displayError('Invalid Name');
+			else if (Tools::strlen(Tools::getValue('attachment_name_'.(int)($language['id_lang']))) > 32)
+				$this->_errors[] = Tools::displayError('Name is too long');
+			if (!Validate::isCleanHtml(Tools::getValue('attachment_description_'.(int)($language['id_lang']))))
+				$this->_errors[] = Tools::displayError('Invalid description');
+		}
+		if (!$is_attachment_name_valid)
+			$this->_errors[] = Tools::displayError('Attachment Name Required');
+
+		if (empty($this->_errors))
+		{
+			if (isset($_FILES['attachment_file']) && is_uploaded_file($_FILES['attachment_file']['tmp_name']))
+			{
+				if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+					$this->_errors[] = $this->l('File too large, maximum size allowed:').' '.(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.$this->l('File size you\'re trying to upload is:').number_format(($_FILES['attachment_file']['size']/1024), 2, '.', '').$this->l('kb');
+				else
+				{
+					do $uniqid = sha1(microtime());
+					while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
+					if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
+						$this->_errors[] = $this->l('File copy failed');
+					@unlink($_FILES['attachment_file']['tmp_name']);
+				}
+			}
+			else if ((int)$_FILES['attachment_file']['error'] === 1)
+			{
+				$max_upload = (int)ini_get('upload_max_filesize');
+				$max_post = (int)ini_get('post_max_size');
+				$upload_mb = min($max_upload, $max_post);
+				$this->_errors[] = $this->l('the File').' <b>'.$_FILES['attachment_file']['name'].'</b> '.$this->l('exceeds the size allowed by the server, this limit is set to').' <b>'.$upload_mb.$this->l('Mb').'</b>';
+			}
+
+			if (empty($this->_errors) && isset($uniqid))
+			{
+				$attachment = new Attachment();
+				foreach ($languages as $language)
+				{
+					if (isset($_POST['attachment_name_'.(int)$language['id_lang']]))
+						$attachment->name[(int)$language['id_lang']] = pSQL($_POST['attachment_name_'.(int)$language['id_lang']]);
+					if (isset($_POST['attachment_description_'.(int)$language['id_lang']]))
+						$attachment->description[(int)$language['id_lang']] = pSQL($_POST['attachment_description_'.(int)$language['id_lang']]);
+				}
+				$attachment->file = $uniqid;
+				$attachment->mime = $_FILES['attachment_file']['type'];
+				$attachment->file_name = pSQL($_FILES['attachment_file']['name']);
+				if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128)
+					$this->_errors[] = Tools::displayError('Invalid file extension');
+				if (!Validate::isGenericName($attachment->file_name))
+					$this->_errors[] = Tools::displayError('Invalid file name');
+				if (Tools::strlen($attachment->file_name) > 128)
+					$this->_errors[] = Tools::displayError('File name too long');
+				if (!count($this->_errors))
+				{
+					$attachment->add();
+					$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=6&action=Attachments&token='.($token ? $token : $this->token);
+				}
+				else
+					$this->_errors[] = Tools::displayError('Invalid file');
+			}
+		}
+	}
+
+	public function processDuplicate($token)
+	{
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			$id_product_old = $product->id;
+			unset($product->id);
+			unset($product->id_product);
+			$product->indexed = 0;
+			$product->active = 0;
+			if ($product->add()
+			&& Category::duplicateProductCategories($id_product_old, $product->id)
+			&& ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+			&& GroupReduction::duplicateReduction($id_product_old, $product->id)
+			&& Product::duplicateAccessories($id_product_old, $product->id)
+			&& Product::duplicateFeatures($id_product_old, $product->id)
+			&& Product::duplicateSpecificPrices($id_product_old, $product->id)
+			&& Pack::duplicate($id_product_old, $product->id)
+			&& Product::duplicateCustomizationFields($id_product_old, $product->id)
+			&& Product::duplicateTags($id_product_old, $product->id)
+			&& Product::duplicateDownload($id_product_old, $product->id)
+			&& $product->duplicateShops($id_product_old))
+			{
+				if ($product->hasAttributes())
+					Product::updateDefaultAttribute($product->id);
+
+				if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combination_images))
+					$this->_errors[] = Tools::displayError('An error occurred while copying images.');
+				else
+				{
+					Hook::exec('addProduct', array('product' => $product));
+					Search::indexation(false, $product->id);
+					$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token);
+				}
+			}
+			else
+				$this->_errors[] = Tools::displayError('An error occurred while creating object.');
+		}
+	}
+
+	public function processDelete($token)
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
+		{
+			// check if request at least one object with noZeroObject
+			if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
+				$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+			else
+			{
+				$id_category = Tools::getValue('id_category');
+				$category_url = empty($id_category) ? '' : '&id_category='.$id_category;
+
+				if ($this->deleted)
+				{
+					$object->deleteImages();
+					$object->deleted = 1;
+					if ($object->update())
+						$this->redirect_after = self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url;
+				}
+				else if ($object->delete())
+					$this->redirect_after = self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url;
+				$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+			}
+		}
+		else
+			$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+	}
+
+	public function processImage($token)
+	{
+		$id_image = Tools::getValue('id_image');
+		$image = new Image($id_image);
+		if (Validate::isLoadedObject($image))
+		{
+			/* Update product image/legend */
+			// @todo : move in processEditProductImage
+			if (isset($_GET['editImage']))
+			{
+				if ($image->cover)
+					$_POST['cover'] = 1;
+				$languages = Language::getLanguages(false);
+				foreach ($languages as $language)
+					if (isset($image->legend[$language['id_lang']]))
+						$_POST['legend_'.$language['id_lang']] = $image->legend[$language['id_lang']];
+				$_POST['id_image'] = $image->id;
+			}
+
+			/* Choose product cover image */
+			else if (isset($_GET['coverImage']))
+			{
+				Image::deleteCover($image->id_product);
+				$image->cover = 1;
+				if (!$image->update())
+					$this->_errors[] = Tools::displayError('Cannot change the product cover');
+				else
+				{
+					$productId = (int)(Tools::getValue('id_product'));
+					@unlink(_PS_TMP_IMG_DIR_.'/product_'.$productId.'.jpg');
+					@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$productId.'.jpg');
+					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&action=Images&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&tabs=1'.'&token='.($token ? $token : $this->token);
+				}
+			}
+
+			/* Choose product image position */
+			else if (isset($_GET['imgPosition']) && isset($_GET['imgDirection']))
+			{
+				$image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
+				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1&action=Images&token='.($token ? $token : $this->token);
+			}
+		}
+		else
+			$this->_errors[] = Tools::displayError('Could not find image.');
+	}
+
+	public function processBulkDelete($token)
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+		{
+			$object = new $this->className();
+
+			if (isset($object->noZeroObject) &&
+				// Check if all object will be deleted
+				(count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject)))))
+				$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+			else
+			{
+				$result = true;
+				if ($this->deleted)
+				{
+					foreach (Tools::getValue($this->table.'Box') as $id)
+					{
+						$toDelete = new $this->className($id);
+						$toDelete->deleted = 1;
+						$result = $result && $toDelete->update();
+					}
+				}
+				else
+					$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
+
+				if ($result)
+				{
+					$id_category = Tools::getValue('id_category');
+					$category_url = empty($id_category) ? '' : '&id_category='.$id_category;
+
+					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$token.$category_url;
+				}
+				$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+			}
+		}
+		else
+			$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+	}
+
+	public function processProductAttribute($token)
+	{
+		if (!Combination::isFeatureActive())
+			return;
+
+		$is_virtual = (int)Tools::getValue('is_virtual');
+
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			if (!isset($_POST['attribute_price']) || $_POST['attribute_price'] == null)
+				$this->_errors[] = Tools::displayError('Attribute price required.');
+			if (!isset($_POST['attribute_combinaison_list']) || !count($_POST['attribute_combinaison_list']))
+				$this->_errors[] = Tools::displayError('You must add at least one attribute.');
+
+			if (!count($this->_errors))
+			{
+				if (!isset($_POST['attribute_wholesale_price'])) $_POST['attribute_wholesale_price'] = 0;
+				if (!isset($_POST['attribute_price_impact'])) $_POST['attribute_price_impact'] = 0;
+				if (!isset($_POST['attribute_weight_impact'])) $_POST['attribute_weight_impact'] = 0;
+				if (!isset($_POST['attribute_ecotax'])) $_POST['attribute_ecotax'] = 0;
+				if (Tools::getValue('attribute_default'))
+					$product->deleteDefaultAttributes();
+				// Change existing one
+				if ($id_product_attribute = (int)Tools::getValue('id_product_attribute'))
+				{
+					if ($this->tabAccess['edit'] === '1')
+					{
+						if ($product->productAttributeExists($_POST['attribute_combinaison_list'], $id_product_attribute))
+							$this->_errors[] = Tools::displayError('This attribute already exists.');
+						else
+						{
+							if (Validate::isDateFormat(Tools::getValue('available_date')))
+							{
+								$product->updateAttribute($id_product_attribute,
+									Tools::getValue('attribute_wholesale_price'),
+									Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
+									Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
+									Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
+									Tools::getValue('attribute_ecotax'),
+									Tools::getValue('id_image_attr'),
+									Tools::getValue('attribute_reference'),
+									Tools::getValue('attribute_ean13'),
+									Tools::getValue('attribute_default'),
+									Tools::getValue('attribute_location'),
+									Tools::getValue('attribute_upc'),
+									Tools::getValue('minimal_quantity'),
+									Tools::getValue('available_date'));
+
+								if ($id_reason = (int)Tools::getValue('id_mvt_reason') && (int)Tools::getValue('attribute_mvt_quantity') > 0 && $id_reason > 0)
+								{
+									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, null, $this->context->employee->id))
+										$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
+								}
+								Hook::exec('updateProductAttribute', array('id_product_attribute' => (int)$id_product_attribute));
+								$this->updateDownloadProduct($product, 1, $id_product_attribute);
+							}
+							else
+								$this->_errors[] = Tools::displayError('Invalid date format.');
+						}
+					}
+				}
+			}
+		}
+		else
+			$this->_errors[] = Tools::displayError('Could not load Product');
+	}
+
+	public function processFeatures($token)
+	{
+		if (!Feature::isFeatureActive())
+			return;
+
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			// delete all objects
+			$product->deleteFeatures();
+
+			// add new objects
+			$languages = Language::getLanguages(false);
+			foreach ($_POST as $key => $val)
+			{
+				if (preg_match('/^feature_([0-9]+)_value/i', $key, $match))
+				{
+					if ($val)
+						$product->addFeaturesToDB($match[1], $val);
+					else
+					{
+						if ($default_value = $this->checkFeatures($languages, $match[1]))
+						{
+							$id_value = $product->addFeaturesToDB($match[1], 0, 1);
+							foreach ($languages as $language)
+							{
+								if ($cust = Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang']))
+									$product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $cust);
+								else
+									$product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $default_value);
+							}
+						}
+						else
+							$id_value = $product->addFeaturesToDB($match[1], 0, 1);
+					}
+				}
+			}
+			if (!count($this->_errors))
+				$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Features&tabs=4&conf=4&token='.($token ? $token : $this->token);
+		}
+		else
+			$this->_errors[] = Tools::displayError('Product must be created before adding features.');
+	}
+
+	public function processPricesModification($token)
+	{
+		$_POST['tabs'] = 5;
+
+		$id_specific_prices = Tools::getValue('spm_id_specific_price');
+		$id_shops = Tools::getValue('spm_id_shop');
+		$id_currencies = Tools::getValue('spm_id_currency');
+		$id_countries = Tools::getValue('spm_id_country');
+		$id_groups = Tools::getValue('spm_id_group');
+		$prices = Tools::getValue('spm_price');
+		$from_quantities = Tools::getValue('spm_from_quantity');
+		$reductions = Tools::getValue('spm_reduction');
+		$reduction_types = Tools::getValue('spm_reduction_type');
+		$froms = Tools::getValue('spm_from');
+		$tos = Tools::getValue('spm_to');
+
+		foreach ($id_specific_prices as $key => $id_specific_price)
+			if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
+			{
+				$specific_price = new SpecificPrice((int)($id_specific_price));
+				$specific_price->id_shop = (int)$id_shops[$key];
+				$specific_price->id_currency = (int)($id_currencies[$key]);
+				$specific_price->id_country = (int)($id_countries[$key]);
+				$specific_price->id_group = (int)($id_groups[$key]);
+				$specific_price->price = (float)($prices[$key]);
+				$specific_price->from_quantity = (int)($from_quantities[$key]);
+				$specific_price->reduction = (float)($reduction_types[$key] == 'percentage' ? ($reductions[$key] / 100) : $reductions[$key]);
+				$specific_price->reduction_type = !$reductions[$key] ? 'amount' : $reduction_types[$key];
+				$specific_price->from = !$froms[$key] ? '0000-00-00 00:00:00' : $froms[$key];
+				$specific_price->to = !$tos[$key] ? '0000-00-00 00:00:00' : $tos[$key];
+				if (!$specific_price->update())
+					$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
+			}
+		if (!count($this->_errors))
+			$this->redirect_after = self::$currentIndex.'&action=Prices&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&update'.$this->table.'&tabs=2&token='.($token ? $token : $this->token);
+
+	}
+
+	public function proccessPriceAddition($token)
+	{
+		$id_product = (int)(Tools::getValue('id_product'));
+		$id_shop = Tools::getValue('sp_id_shop');
+		$id_currency = Tools::getValue('sp_id_currency');
+		$id_country = Tools::getValue('sp_id_country');
+		$id_group = Tools::getValue('sp_id_group');
+		$price = Tools::getValue('sp_price');
+		$from_quantity = Tools::getValue('sp_from_quantity');
+		$reduction = (float)(Tools::getValue('sp_reduction'));
+		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
+		$from = Tools::getValue('sp_from');
+		$to = Tools::getValue('sp_to');
+		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to))
+		{
+			$specificPrice = new SpecificPrice();
+			$specificPrice->id_product = $id_product;
+			$specificPrice->id_product_attribute = (int)Tools::getValue('id_product_attribute');
+			$specificPrice->id_shop = (int)$id_shop;
+			$specificPrice->id_currency = (int)($id_currency);
+			$specificPrice->id_country = (int)($id_country);
+			$specificPrice->id_group = (int)($id_group);
+			$specificPrice->price = (float)($price);
+			$specificPrice->from_quantity = (int)($from_quantity);
+			$specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+			$specificPrice->reduction_type = $reduction_type;
+			$specificPrice->from = !$from ? '0000-00-00 00:00:00' : $from;
+			$specificPrice->to = !$to ? '0000-00-00 00:00:00' : $to;
+			if (!$specificPrice->add())
+				$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
+			else
+				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token);
+		}
+	}
+
+	public function processDeleteSpecificPrice($token)
+	{
+		if (!($obj = $this->loadObject()))
+			return;
+		if (!$id_specific_price = Tools::getValue('id_specific_price') || !Validate::isUnsignedId($id_specific_price))
+			$this->_errors[] = Tools::displayError('Invalid specific price ID');
+		else
+		{
+			$specificPrice = new SpecificPrice((int)($id_specific_price));
+			if (!$specificPrice->delete())
+				$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
+			else
+				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&action=Prices&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token);
+		}
+	}
+
+	public function processSpecificPricePriorities($token)
+	{
+		if (!($obj = $this->loadObject()))
+			return;
+		if (!$priorities = Tools::getValue('specificPricePriority'))
+			$this->_errors[] = Tools::displayError('Please specify priorities');
+		else if (Tools::isSubmit('specificPricePriorityToAll'))
+		{
+			if (!SpecificPrice::setPriorities($priorities))
+				$this->_errors[] = Tools::displayError('An error occurred while updating priorities.');
+			else
+				$this->redirect_after = self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&action=Prices&conf=4&token='.($token ? $token : $this->token);
+		}
+		else if (!SpecificPrice::setSpecificPriority((int)($obj->id), $priorities))
+			$this->_errors[] = Tools::displayError('An error occurred while setting priorities.');
+		else
+			$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token);
+	}
+
+	public function processCustomizationConfiguration($token)
+	{
+		if (Validate::isLoadedObject($product = new Product(Tools::getValue('id_product'))))
+		{
+			if (!$product->createLabels((int)($_POST['uploadable_files']) - (int)($product->uploadable_files), (int)($_POST['text_fields']) - (int)($product->text_fields)))
+				$this->_errors[] = Tools::displayError('An error occurred while creating customization fields.');
+			if (!count($this->_errors) && !$product->updateLabels())
+				$this->_errors[] = Tools::displayError('An error occurred while updating customization.');
+			$product->uploadable_files = (int)($_POST['uploadable_files']);
+			$product->text_fields = (int)($_POST['text_fields']);
+			$product->customizable = ((int)($_POST['uploadable_files']) > 0 || (int)($_POST['text_fields']) > 0) ? 1 : 0;
+			if (!count($this->_errors) && !$product->update())
+				$this->_errors[] = Tools::displayError('An error occurred while updating customization configuration.');
+			if (!count($this->_errors))
+				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&action=Customization&token='.($token ? $token : $this->token);
+		}
+		else
+			$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
+	}
+
+	public function processProductCustomization($token)
+	{
+		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		{
+			foreach ($_POST as $field => $value)
+				if (strncmp($field, 'label_', 6) == 0 && !Validate::isLabel($value))
+					$this->_errors[] = Tools::displayError('Label fields are invalid');
+			if (!count($this->_errors) && !$product->updateLabels())
+				$this->_errors[] = Tools::displayError('An error occurred while updating customization.');
+			if (!count($this->_errors))
+				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&action=Customization&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token);
+		}
+		else
+			$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
+	}
+
+	/**
+	 * Overrides parent for custom redirect link
+	 * @param $token
+	 */
+	public function processPosition($token)
+	{
+		if (!Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+				' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		}
+		else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+			$this->_errors[] = Tools::displayError('Failed to update the position.');
+		else
+			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
+	}
+
+	public function initProcess()
+	{
+		parent::initProcess();
+
+		if ($this->action)
+		{
+			if ($this->action == 'new')
+				$this->action = 'Informations';
+			return;
+		}
+
+		// Delete a product in the download folder
+		elseif (Tools::getValue('deleteVirtualProduct'))
+		{
+			if ($this->tabAccess['delete'] === '1')
+				$this->action = 'deleteVirtualProduct';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		else if (Tools::getValue('deleteVirtualProductAttribute'))/* Delete a product in the download folder */
+		{
+			if ($this->tabAccess['delete'] === '1')
+				$this->action = 'deleteVirtualProductAttribute';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		// Update attachments
+		else if (Tools::isSubmit('submitAddAttachments'))
+		{
+			if ($this->tabAccess['add'] === '1')
+				$this->action = 'addAttachments';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+		}
+		else if (Tools::isSubmit('submitAttachments'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'attachments';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		// Product duplication
+		else if (isset($_GET['duplicate'.$this->table]))
+		{
+			if ($this->tabAccess['add'] === '1')
+				$this->action = 'duplicate';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+		}
+		// Product images management
+		else if (Tools::getValue('id_image') && Tools::getValue('ajax'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'image';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		// Product attributes management
+		else if (Tools::isSubmit('submitProductAttribute'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'productAttribute';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		// Product features management
+		else if (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'features';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		// Product specific prices management
+		else if (Tools::isSubmit('submitPricesModification'))
+		{
+			if ($this->tabAccess['add'] === '1')
+				$this->action = 'pricesModification';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+		}
+		else if (Tools::isSubmit('submitPriceAddition'))
+		{
+			if ($this->tabAccess['add'] === '1')
+				$this->action = 'priceAddition';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+		}
+		else if (Tools::isSubmit('deleteSpecificPrice'))
+		{
+			if ($this->tabAccess['delete'] === '1')
+				$this->action = 'deleteSpecificPrice';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+		}
+		else if (Tools::isSubmit('submitSpecificPricePriorities'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'specificPricePriorities';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		// Customization management
+		else if (Tools::isSubmit('submitCustomizationConfiguration'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'customizationConfiguration';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		else if (Tools::isSubmit('submitProductCustomization'))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'productCustomization';
+			else
+				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+		// Manage accounting
+		else if (Tools::isSubmit('submitAccounting') || Tools::isSubmit('submitAccountingAndStay'))
+			$this->action = 'accounting';
+		//Manage suppliers
+		else if (Tools::isSubmit('submitSuppliers') || Tools::isSubmit('submitSuppliersAndStay'))
+			$this->action = 'suppliers';
+		//Manage warehouses
+		else if (Tools::isSubmit('submitWarehouses') || Tools::isSubmit('submitWarehousesAndStay'))
+			$this->action = 'warehouses';
 	}
 
 	/**
@@ -309,646 +933,10 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function postProcess($token = null)
 	{
-		/* Add a new product */
-		if (Tools::isSubmit('submitAddproduct') || Tools::isSubmit('submitAddproductAndStay') || Tools::isSubmit('submitAddProductAndPreview'))
-		{
-			$id_product = Tools::getValue('id_product');
-			if (($id_product && $this->tabAccess['edit'] === '1')
-				|| ($this->tabAccess['add'] == 1 && (Tools::isSubmit('submitAddproduct') || Tools::isSubmit('submitAddproductAndStay') ) && !$id_product)
-			)
-				$this->submitAddproduct($token);
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		/* Delete a product in the download folder */
-		else if (Tools::getValue('deleteVirtualProduct'))
-		{
-			if ($this->tabAccess['delete'] === '1')
-				$this->deleteVirtualProduct();
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-		else if (Tools::getValue('deleteVirtualProductAttribute'))/* Delete a product in the download folder */
-		{
-			if ($this->tabAccess['delete'] === '1')
-				$this->deleteVirtualProductAttribute();
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-
-		/* Update attachments */
-		else if (Tools::isSubmit('submitAddAttachments'))
-		{
-			if ($this->tabAccess['add'] === '1')
-			{
-				$languages = Language::getLanguages(false);
-				$is_attachment_name_valid = false;
-				foreach ($languages as $language)
-				{
-					$attachment_name_lang = Tools::getValue('attachment_name_'.(int)($language['id_lang']));
-					if (strlen($attachment_name_lang ) > 0)
-						$is_attachment_name_valid = true;
-
-					if (!Validate::isGenericName(Tools::getValue('attachment_name_'.(int)($language['id_lang']))))
-						$this->_errors[] = Tools::displayError('Invalid Name');
-					else if (Tools::strlen(Tools::getValue('attachment_name_'.(int)($language['id_lang']))) > 32)
-						$this->_errors[] = Tools::displayError('Name is too long');
-					if (!Validate::isCleanHtml(Tools::getValue('attachment_description_'.(int)($language['id_lang']))))
-						$this->_errors[] = Tools::displayError('Invalid description');
-				}
-				if (!$is_attachment_name_valid)
-					$this->_errors[] = Tools::displayError('Attachment Name Required');
-
-				if (empty($this->_errors))
-				{
-					if (isset($_FILES['attachment_file']) && is_uploaded_file($_FILES['attachment_file']['tmp_name']))
-					{
-						if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-							$this->_errors[] = $this->l('File too large, maximum size allowed:').' '.(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.$this->l('File size you\'re trying to upload is:').number_format(($_FILES['attachment_file']['size']/1024), 2, '.', '').$this->l('kb');
-						else
-						{
-							do $uniqid = sha1(microtime());
-							while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-							if (!copy($_FILES['attachment_file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
-								$this->_errors[] = $this->l('File copy failed');
-							@unlink($_FILES['attachment_file']['tmp_name']);
-						}
-					}
-					else if ((int)$_FILES['attachment_file']['error'] === 1)
-					{
-						$max_upload = (int)ini_get('upload_max_filesize');
-						$max_post = (int)ini_get('post_max_size');
-						$upload_mb = min($max_upload, $max_post);
-						$this->_errors[] = $this->l('the File').' <b>'.$_FILES['attachment_file']['name'].'</b> '.$this->l('exceeds the size allowed by the server, this limit is set to').' <b>'.$upload_mb.$this->l('Mb').'</b>';
-					}
-
-					if (empty($this->_errors) && isset($uniqid))
-					{
-						$attachment = new Attachment();
-						foreach ($languages as $language)
-						{
-							if (isset($_POST['attachment_name_'.(int)$language['id_lang']]))
-								$attachment->name[(int)$language['id_lang']] = pSQL($_POST['attachment_name_'.(int)$language['id_lang']]);
-							if (isset($_POST['attachment_description_'.(int)$language['id_lang']]))
-								$attachment->description[(int)$language['id_lang']] = pSQL($_POST['attachment_description_'.(int)$language['id_lang']]);
-						}
-						$attachment->file = $uniqid;
-						$attachment->mime = $_FILES['attachment_file']['type'];
-						$attachment->file_name = pSQL($_FILES['attachment_file']['name']);
-						if (empty($attachment->mime) || Tools::strlen($attachment->mime) > 128)
-							$this->_errors[] = Tools::displayError('Invalid file extension');
-						if (!Validate::isGenericName($attachment->file_name))
-							$this->_errors[] = Tools::displayError('Invalid file name');
-						if (Tools::strlen($attachment->file_name) > 128)
-							$this->_errors[] = Tools::displayError('File name too long');
-						if (!count($this->_errors))
-						{
-							$attachment->add();
-							$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&tabs=6&action=Attachments&token='.($token ? $token : $this->token);
-						}
-						else
-							$this->_errors[] = Tools::displayError('Invalid file');
-					}
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitAttachments'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-				if ($id = (int)Tools::getValue($this->identifier))
-					if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
-						$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&tabs=6&action=Attachments&token='.($token ? $token : $this->token);
-		}
-
-		/* Product duplication */
-		else if (isset($_GET['duplicate'.$this->table]))
-		{
-			if ($this->tabAccess['add'] === '1')
-			{
-				if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-				{
-					$id_product_old = $product->id;
-					unset($product->id);
-					unset($product->id_product);
-					$product->indexed = 0;
-					$product->active = 0;
-					if ($product->add()
-					&& Category::duplicateProductCategories($id_product_old, $product->id)
-					&& ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
-					&& GroupReduction::duplicateReduction($id_product_old, $product->id)
-					&& Product::duplicateAccessories($id_product_old, $product->id)
-					&& Product::duplicateFeatures($id_product_old, $product->id)
-					&& Product::duplicateSpecificPrices($id_product_old, $product->id)
-					&& Pack::duplicate($id_product_old, $product->id)
-					&& Product::duplicateCustomizationFields($id_product_old, $product->id)
-					&& Product::duplicateTags($id_product_old, $product->id)
-					&& Product::duplicateDownload($id_product_old, $product->id)
-					&& $product->duplicateShops($id_product_old))
-					{
-						if ($product->hasAttributes())
-							Product::updateDefaultAttribute($product->id);
-
-						if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combination_images))
-							$this->_errors[] = Tools::displayError('An error occurred while copying images.');
-						else
-						{
-							Hook::exec('addProduct', array('product' => $product));
-							Search::indexation(false, $product->id);
-							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token);
-						}
-					}
-					else
-						$this->_errors[] = Tools::displayError('An error occurred while creating object.');
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		/* Change object statuts (active, inactive) */
-		else if (isset($_GET['status']) && Tools::getValue($this->identifier))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Validate::isLoadedObject($object = $this->loadObject()))
-				{
-					// @todo : redirect to the previous page instead of always product list
-					if ($object->toggleStatus())
-						$this->redirect_after = self::$currentIndex.'&conf=5'.((($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.($token ? $token : $this->token);
-					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
-				}
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		/* Delete object */
-		else if (isset($_GET['delete'.$this->table]))
-		{
-			if ($this->tabAccess['delete'] === '1')
-			{
-				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
-				{
-					// check if request at least one object with noZeroObject
-					if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
-					else
-					{
-						$id_category = Tools::getValue('id_category');
-						$category_url = empty($id_category) ? '' : '&id_category='.$id_category;
-
-						if ($this->deleted)
-						{
-							$object->deleteImages();
-							$object->deleted = 1;
-							if ($object->update())
-								$this->redirect_after = self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url;
-						}
-						else if ($object->delete())
-							$this->redirect_after = self::$currentIndex.'&conf=1&token='.($token ? $token : $this->token).$category_url;
-						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
-					}
-				}
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-
-		/* Delete multiple objects */
-		else if (Tools::getValue('submitDel'.$this->table))
-		{
-			if ($this->tabAccess['delete'] === '1')
-			{
-				if (isset($_POST[$this->table.'Box']))
-				{
-					$object = new $this->className();
-
-					if (isset($object->noZeroObject) &&
-						// Check if all object will be deleted
-						(count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject)))))
-						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
-					else
-					{
-						$result = true;
-						if ($this->deleted)
-						{
-							foreach (Tools::getValue($this->table.'Box') as $id)
-							{
-								$toDelete = new $this->className($id);
-								$toDelete->deleted = 1;
-								$result = $result && $toDelete->update();
-							}
-						}
-						else
-							$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
-
-						if ($result)
-						{
-							$id_category = Tools::getValue('id_category');
-							$category_url = empty($id_category) ? '' : '&id_category='.$id_category;
-
-							$this->redirect_after = self::$currentIndex.'&conf=2&token='.$token.$category_url;
-						}
-						$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
-					}
-				}
-				else
-					$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-
-		/* Product images management */
-		else if (($id_image = (int)Tools::getValue('id_image')) && Validate::isUnsignedId($id_image) && Validate::isLoadedObject($image = new Image($id_image)))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				/* Update product image/legend */
-				// @todo : move in processEditProductImage
-				if (isset($_GET['editImage']))
-				{
-					if ($image->cover)
-						$_POST['cover'] = 1;
-					$languages = Language::getLanguages(false);
-					foreach ($languages as $language)
-						if (isset($image->legend[$language['id_lang']]))
-							$_POST['legend_'.$language['id_lang']] = $image->legend[$language['id_lang']];
-					$_POST['id_image'] = $image->id;
-				}
-
-				/* Choose product cover image */
-				else if (isset($_GET['coverImage']))
-				{
-					Image::deleteCover($image->id_product);
-					$image->cover = 1;
-					if (!$image->update())
-						$this->_errors[] = Tools::displayError('Cannot change the product cover');
-					else
-					{
-						$productId = (int)(Tools::getValue('id_product'));
-						@unlink(_PS_TMP_IMG_DIR_.'/product_'.$productId.'.jpg');
-						@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$productId.'.jpg');
-						$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&action=Images&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&tabs=1'.'&token='.($token ? $token : $this->token);
-					}
-				}
-
-				/* Choose product image position */
-				else if (isset($_GET['imgPosition']) && isset($_GET['imgDirection']))
-				{
-					$image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
-					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1&action=Images&token='.($token ? $token : $this->token);
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-
-		/* Product attributes management */
-		else if (Tools::isSubmit('submitProductAttribute'))
-		{
-			if (!Combination::isFeatureActive())
-				return;
-
-			$is_virtual = (int)Tools::getValue('is_virtual');
-
-			if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-			{
-				if (!isset($_POST['attribute_price']) || $_POST['attribute_price'] == null)
-					$this->_errors[] = Tools::displayError('Attribute price required.');
-				if (!isset($_POST['attribute_combinaison_list']) || !count($_POST['attribute_combinaison_list']))
-					$this->_errors[] = Tools::displayError('You must add at least one attribute.');
-
-				if (!count($this->_errors))
-				{
-					if (!isset($_POST['attribute_wholesale_price'])) $_POST['attribute_wholesale_price'] = 0;
-					if (!isset($_POST['attribute_price_impact'])) $_POST['attribute_price_impact'] = 0;
-					if (!isset($_POST['attribute_weight_impact'])) $_POST['attribute_weight_impact'] = 0;
-					if (!isset($_POST['attribute_ecotax'])) $_POST['attribute_ecotax'] = 0;
-					if (Tools::getValue('attribute_default'))
-						$product->deleteDefaultAttributes();
-					// Change existing one
-					if ($id_product_attribute = (int)Tools::getValue('id_product_attribute'))
-					{
-						if ($this->tabAccess['edit'] === '1')
-						{
-							if ($product->productAttributeExists($_POST['attribute_combinaison_list'], $id_product_attribute))
-								$this->_errors[] = Tools::displayError('This attribute already exists.');
-							else
-							{
-								if (Validate::isDateFormat(Tools::getValue('available_date')))
-								{
-									$product->updateAttribute($id_product_attribute,
-										Tools::getValue('attribute_wholesale_price'),
-										Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
-										Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
-										Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
-										Tools::getValue('attribute_ecotax'),
-										Tools::getValue('id_image_attr'),
-										Tools::getValue('attribute_reference'),
-										Tools::getValue('attribute_ean13'),
-										Tools::getValue('attribute_default'),
-										Tools::getValue('attribute_location'),
-										Tools::getValue('attribute_upc'),
-										Tools::getValue('minimal_quantity'),
-										Tools::getValue('available_date'));
-
-									if ($id_reason = (int)Tools::getValue('id_mvt_reason') && (int)Tools::getValue('attribute_mvt_quantity') > 0 && $id_reason > 0)
-									{
-										if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, null, $this->context->employee->id))
-											$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
-									}
-									Hook::exec('updateProductAttribute', array('id_product_attribute' => (int)$id_product_attribute));
-									$this->updateDownloadProduct($product, 1, $id_product_attribute);
-								}
-								else
-								{
-									$this->_errors[] = Tools::displayError('Invalid date format.');
-								}
-							}
-						}
-						else
-							$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-					}
-					// Add new
-					else
-					{
-						if ($this->tabAccess['add'] === '1')
-						{
-							if ($product->productAttributeExists($_POST['attribute_combinaison_list']))
-								$this->_errors[] = Tools::displayError('This combination already exists.');
-							else
-								$id_product_attribute = $product->addCombinationEntity(
-									Tools::getValue('attribute_wholesale_price'),
-									Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
-									Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
-									Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
-									Tools::getValue('attribute_ecotax'),
-									Tools::getValue('id_image_attr'),
-									Tools::getValue('attribute_reference'),
-									null,
-									Tools::getValue('attribute_ean13'),
-									Tools::getValue('attribute_default'),
-									Tools::getValue('attribute_location'),
-									Tools::getValue('attribute_upc')
-								);
-							$this->updateDownloadProduct($product, 0, $id_product_attribute);
-						}
-						else
-							$this->_errors[] = Tools::displayError('You do not have permission to').'<hr>'.Tools::displayError('Edit here.');
-					}
-					if (!count($this->_errors))
-					{
-						$product->addAttributeCombinaison($id_product_attribute, Tools::getValue('attribute_combinaison_list'));
-						$product->checkDefaultAttributes();
-					}
-					if (!count($this->_errors))
-					{
-						if (!$product->cache_default_attribute)
-							Product::updateDefaultAttribute($product->id);
-
-						if (!empty($is_virtual))
-							Product::updateIsVirtual($product->id);
-
-						$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Combinations&tabs=3&token='.($token ? $token : $this->token);
-					}
-				}
-			}
-		}
-
-		/* Product features management */
-		else if (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay'))
-		{
-			if (!Feature::isFeatureActive())
-				return;
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-				{
-					// delete all objects
-					$product->deleteFeatures();
-
-					// add new objects
-					$languages = Language::getLanguages(false);
-					foreach ($_POST as $key => $val)
-					{
-						if (preg_match('/^feature_([0-9]+)_value/i', $key, $match))
-						{
-							if ($val)
-								$product->addFeaturesToDB($match[1], $val);
-							else
-							{
-								if ($default_value = $this->checkFeatures($languages, $match[1]))
-								{
-									$id_value = $product->addFeaturesToDB($match[1], 0, 1);
-									foreach ($languages as $language)
-									{
-										if ($cust = Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang']))
-											$product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $cust);
-										else
-											$product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $default_value);
-									}
-								}
-								else
-									$id_value = $product->addFeaturesToDB($match[1], 0, 1);
-							}
-						}
-					}
-					if (!count($this->_errors))
-						$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Features&tabs=4&conf=4&token='.($token ? $token : $this->token);
-				}
-				else
-					$this->_errors[] = Tools::displayError('Product must be created before adding features.');
-			}
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		/* Product specific prices management */
-		else if (Tools::isSubmit('submitPricesModification'))
-		{
-			$_POST['tabs'] = 5;
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$id_specific_prices = Tools::getValue('spm_id_specific_price');
-				$id_shops = Tools::getValue('spm_id_shop');
-				$id_currencies = Tools::getValue('spm_id_currency');
-				$id_countries = Tools::getValue('spm_id_country');
-				$id_groups = Tools::getValue('spm_id_group');
-				$prices = Tools::getValue('spm_price');
-				$from_quantities = Tools::getValue('spm_from_quantity');
-				$reductions = Tools::getValue('spm_reduction');
-				$reduction_types = Tools::getValue('spm_reduction_type');
-				$froms = Tools::getValue('spm_from');
-				$tos = Tools::getValue('spm_to');
-
-				foreach ($id_specific_prices as $key => $id_specific_price)
-					if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
-					{
-						$specific_price = new SpecificPrice((int)($id_specific_price));
-						$specific_price->id_shop = (int)$id_shops[$key];
-						$specific_price->id_currency = (int)($id_currencies[$key]);
-						$specific_price->id_country = (int)($id_countries[$key]);
-						$specific_price->id_group = (int)($id_groups[$key]);
-						$specific_price->price = (float)($prices[$key]);
-						$specific_price->from_quantity = (int)($from_quantities[$key]);
-						$specific_price->reduction = (float)($reduction_types[$key] == 'percentage' ? ($reductions[$key] / 100) : $reductions[$key]);
-						$specific_price->reduction_type = !$reductions[$key] ? 'amount' : $reduction_types[$key];
-						$specific_price->from = !$froms[$key] ? '0000-00-00 00:00:00' : $froms[$key];
-						$specific_price->to = !$tos[$key] ? '0000-00-00 00:00:00' : $tos[$key];
-						if (!$specific_price->update())
-							$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
-					}
-				if (!count($this->_errors))
-					$this->redirect_after = self::$currentIndex.'&action=Prices&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&update'.$this->table.'&tabs=2&token='.($token ? $token : $this->token);
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('submitPriceAddition'))
-		{
-			if ($this->tabAccess['add'] === '1')
-			{
-				$id_product = (int)(Tools::getValue('id_product'));
-				$id_shop = Tools::getValue('sp_id_shop');
-				$id_currency = Tools::getValue('sp_id_currency');
-				$id_country = Tools::getValue('sp_id_country');
-				$id_group = Tools::getValue('sp_id_group');
-				$price = Tools::getValue('sp_price');
-				$from_quantity = Tools::getValue('sp_from_quantity');
-				$reduction = (float)(Tools::getValue('sp_reduction'));
-				$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
-				$from = Tools::getValue('sp_from');
-				$to = Tools::getValue('sp_to');
-				if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to))
-				{
-					$specific_price = new SpecificPrice();
-					$specific_price->id_product = $id_product;
-					$specific_price->id_product_attribute = (int)Tools::getValue('id_product_attribute');
-					$specific_price->id_shop = (int)$id_shop;
-					$specific_price->id_currency = (int)($id_currency);
-					$specific_price->id_country = (int)($id_country);
-					$specific_price->id_group = (int)($id_group);
-					$specific_price->price = (float)($price);
-					$specific_price->from_quantity = (int)($from_quantity);
-					$specific_price->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
-					$specific_price->reduction_type = $reduction_type;
-					$specific_price->from = !$from ? '0000-00-00 00:00:00' : $from;
-					$specific_price->to = !$to ? '0000-00-00 00:00:00' : $to;
-					if (!$specific_price->add())
-						$this->_errors = Tools::displayError('An error occurred while updating the specific price.');
-					else
-						$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$id_product.'&add'.$this->table.'&tabs=2&conf=3&token='.($token ? $token : $this->token);
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		else if (Tools::isSubmit('deleteSpecificPrice'))
-		{
-			if ($this->tabAccess['delete'] === '1')
-			{
-				if (!($obj = $this->loadObject()))
-					return;
-				if (!$id_specific_price = Tools::getValue('id_specific_price') || !Validate::isUnsignedId($id_specific_price))
-					$this->_errors[] = Tools::displayError('Invalid specific price ID');
-				else
-				{
-					$specific_price = new SpecificPrice((int)($id_specific_price));
-					if (!$specific_price->delete())
-						$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
-					else
-						$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&action=Prices&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=1&token='.($token ? $token : $this->token);
-				}
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-		}
-		else if (Tools::isSubmit('submitSpecificPricePriorities'))
-		{
-			if (!($obj = $this->loadObject()))
-				return;
-			if (!$priorities = Tools::getValue('specificPricePriority'))
-				$this->_errors[] = Tools::displayError('Please specify priorities');
-			else if (Tools::isSubmit('specificPricePriorityToAll'))
-			{
-				if (!SpecificPrice::setPriorities($priorities))
-					$this->_errors[] = Tools::displayError('An error occurred while updating priorities.');
-				else
-					$this->redirect_after = self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&action=Prices&conf=4&token='.($token ? $token : $this->token);
-			}
-			else if (!SpecificPrice::setSpecificPriority((int)($obj->id), $priorities))
-				$this->_errors[] = Tools::displayError('An error occurred while setting priorities.');
-			else
-				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$obj->id.'&add'.$this->table.'&tabs=2&conf=4&token='.($token ? $token : $this->token);
-		}
-		/* Customization management */
-		else if (Tools::isSubmit('submitCustomizationConfiguration'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-				{
-					if (!$product->createLabels((int)($_POST['uploadable_files']) - (int)($product->uploadable_files), (int)($_POST['text_fields']) - (int)($product->text_fields)))
-						$this->_errors[] = Tools::displayError('An error occurred while creating customization fields.');
-					if (!count($this->_errors) && !$product->updateLabels())
-						$this->_errors[] = Tools::displayError('An error occurred while updating customization.');
-					$product->uploadable_files = (int)($_POST['uploadable_files']);
-					$product->text_fields = (int)($_POST['text_fields']);
-					$product->customizable = ((int)($_POST['uploadable_files']) > 0 || (int)($_POST['text_fields']) > 0) ? 1 : 0;
-					if (!count($this->_errors) && !$product->update())
-						$this->_errors[] = Tools::displayError('An error occurred while updating customization configuration.');
-					if (!count($this->_errors))
-						$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=5&action=Customization&token='.($token ? $token : $this->token);
-				}
-				else
-					$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (Tools::isSubmit('submitProductCustomization'))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
-				{
-					foreach ($_POST as $field => $value)
-						if (strncmp($field, 'label_', 6) == 0 && !Validate::isLabel($value))
-							$this->_errors[] = Tools::displayError('Label fields are invalid');
-					if (!count($this->_errors) && !$product->updateLabels())
-						$this->_errors[] = Tools::displayError('An error occurred while updating customization.');
-					if (!count($this->_errors))
-						$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&action=Customization&add'.$this->table.'&tabs=5&token='.($token ? $token : $this->token);
-				}
-				else
-					$this->_errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-		}
-		else if (isset($_GET['position']))
-		{
-			if ($this->tabAccess['edit'] !== '1')
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-			else if (!Validate::isLoadedObject($object = $this->loadObject()))
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			if (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
-				$this->_errors[] = Tools::displayError('Failed to update the position.');
-			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
-		}
-		else if (Tools::isSubmit('submitAccounting') || Tools::isSubmit('submitAccountingAndStay'))
-			$this->postProcessFormAccounting();
-		//Manage suppliers
-		else if (Tools::isSubmit('submitSuppliers') || Tools::isSubmit('submitSuppliersAndStay'))
-			$this->postProcessFormSuppliers();
-		//Manage warehouses
-		else if (Tools::isSubmit('submitWarehouses') || Tools::isSubmit('submitWarehousesAndStay'))
-			$this->postProcessFormWarehouses();
+		if ($this->action == 'attachments')
+			if ($id = (int)Tools::getValue($this->identifier))
+				if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
+					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&tabs=6&action=Attachments&token='.($token ? $token : $this->token);
 
 		if (!$this->redirect_after)
 			parent::postProcess(true);
@@ -1161,9 +1149,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 			@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
 			@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
-			if (!$this->ajax)
-				$this->redirect_after = $currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=1'.'&token='.($token ? $token : $this->token);
-		else
+
 			$this->content = '{"status":"ok"}';
 		}
 	}
@@ -1277,10 +1263,150 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
+	public function processAdd($token)
+	{
+		$this->checkProduct();
+
+		if (!empty($this->_errors))
+			return false;
+
+		$object = new $this->className();
+		$this->_removeTaxFromEcotax();
+		$this->copyFromPost($object, $this->table);
+		if ($object->add())
+		{
+			$this->addCarriers();
+			$this->updateAssoShop((int)$object->id);
+			$this->updateAccessories($object);
+			if (!$this->updatePackItems($object))
+				$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
+			$this->updateDownloadProduct($object);
+
+			if (!count($this->_errors))
+			{
+				$languages = Language::getLanguages(false);
+				if (!$object->updateCategories($_POST['categoryBox']))
+					$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
+				else if (!$this->updateTags($languages, $object))
+					$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
+				else if ($id_image = $this->addProductImage($object))
+				{
+					Hook::exec('addProduct', array('product' => $object));
+					Search::indexation(false, $object->id);
+				}
+				// Save and preview
+				if (Tools::isSubmit('submitAddProductAndPreview'))
+				{
+					$preview_url = ($this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id)));
+					if (!$object->active)
+					{
+						$admin_dir = dirname($_SERVER['PHP_SELF']);
+						$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+						$token = Tools::encrypt('PreviewProduct'.$object->id);
+						$preview_url .= '&adtoken='.$token.'&ad='.$admin_dir;
+					}
+
+					$this->redirect_after = $preview_url;
+				}
+
+				if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
+					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.($token ? $token : $this->token);
+				// Save and stay on same form
+				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
+				else
+					// Default behavior (save and back)
+					$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=3&token='.($token ? $token : $this->token);
+			}
+			else
+				$object->delete();
+		}
+		else
+			$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+	}
+
+	public function processUpdate($token)
+	{
+		$this->checkProduct();
+
+		if (!empty($this->_errors))
+			return false;
+
+		$id = (int)Tools::getValue('id_'.$this->table);
+		$tagError = true;
+		/* Update an existing product */
+		if (isset($id) && !empty($id))
+		{
+			$object = new $this->className($id);
+			if (Validate::isLoadedObject($object))
+			{
+				$this->_removeTaxFromEcotax();
+				$this->copyFromPost($object, $this->table);
+				if ($object->update())
+				{
+					$this->addCarriers();
+					if ($id_reason = (int)Tools::getValue('id_mvt_reason') && Tools::getValue('mvt_quantity') > 0 && $id_reason > 0)
+					{
+						if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, null, null, $this->context->employee->id))
+							$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
+					}
+					$this->updateAccessories($object);
+					$this->updateDownloadProduct($object, 1);
+					$this->updateAssoShop((int)$object->id);
+					$languages = Language::getLanguages(false);
+					if (!$this->updatePackItems($object))
+						$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
+					else if (!$object->updateCategories($_POST['categoryBox'], true))
+						$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
+					else if (!$this->updateTags($languages, $object))
+						$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
+					else //if (Tools::getValue('id_image') && $id_image = $this->addProductImage($object, Tools::getValue('resizer')))
+					{
+						//self::$currentIndex .= '&image_updated='.$id_image;
+						Hook::exec('updateProduct', array('product' => $object));
+						Search::indexation(false, $object->id);
+						//if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
+						//	$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') || Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token));
+
+						// Save and preview
+						if (Tools::isSubmit('submitAddProductAndPreview'))
+						{
+							$preview_url = $this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id), null, null, Context::getContext()->shop->getID());
+							if (!$object->active)
+							{
+								$admin_dir = dirname($_SERVER['PHP_SELF']);
+								$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+								$token = Tools::encrypt('PreviewProduct'.$object->id);
+								if (strpos($preview_url, '?') === false)
+									$preview_url .= '?';
+								else
+									$preview_url .= '&';
+								$preview_url .= 'adtoken='.$token.'&ad='.$admin_dir;
+							}
+							$this->redirect_after = $preview_url;
+						}
+						else //if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))// || ($id_image && $id_image !== true)) // Save and stay on same form
+						{// Save and stay on same form
+						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+							$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
+                        else
+						// Default behavior (save and back)
+						$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
+						}
+					}
+				}
+				else
+					$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
+			}
+			else
+				$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Tools::displayError('Cannot load object').')';
+		}
+	}
+
 	/**
-	 * Add or update a product
+	 * Check that a saved product is valid
 	 */
-	public function submitAddProduct($token = null)
+	public function checkProduct()
 	{
 		$className = 'Product';
 		$rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
@@ -1353,137 +1479,6 @@ class AdminProductsControllerCore extends AdminController
 			if ($value = Tools::getValue('tags_'.$language['id_lang']))
 				if (!Validate::isTagsList($value))
 					$this->_errors[] = $this->l('Tags list').' ('.$language['name'].') '.$this->l('is invalid');
-
-		if (!count($this->_errors))
-		{
-			$id = (int)Tools::getValue('id_'.$this->table);
-			$tagError = true;
-
-			/* Update an existing product */
-			if (isset($id) && !empty($id))
-			{
-				$object = new $this->className($id);
-				if (Validate::isLoadedObject($object))
-				{
-					$this->_removeTaxFromEcotax();
-					$this->copyFromPost($object, $this->table);
-					if ($object->update())
-					{
-						$this->addCarriers();
-						if ($id_reason = (int)Tools::getValue('id_mvt_reason') && Tools::getValue('mvt_quantity') > 0 && $id_reason > 0)
-						{
-							if (!$object->addStockMvt(Tools::getValue('mvt_quantity'), $id_reason, null, null, $this->context->employee->id))
-								$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
-						}
-						$this->updateAccessories($object);
-						$this->updateDownloadProduct($object, 1);
-						$this->updateAssoShop((int)$object->id);
-
-						if (!$this->updatePackItems($object))
-							$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
-						else if (!$object->updateCategories($_POST['categoryBox'], true))
-							$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-						else if (!$this->updateTags($languages, $object))
-							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
-						else if (Tools::getValue('id_image') && $id_image = $this->addProductImage($object, Tools::getValue('resizer')))
-						{
-							self::$currentIndex .= '&image_updated='.$id_image;
-							Hook::exec('updateProduct', array('product' => $object));
-							Search::indexation(false, $object->id);
-							if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
-								$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') || Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token));
-
-							// Save and preview
-							if (Tools::isSubmit('submitAddProductAndPreview'))
-							{
-								$preview_url = $this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id), null, null, Context::getContext()->shop->getID());
-								if (!$object->active)
-								{
-									$admin_dir = dirname($_SERVER['PHP_SELF']);
-									$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
-									$token = Tools::encrypt('PreviewProduct'.$object->id);
-									if (strpos($preview_url, '?') === false)
-										$preview_url .= '?';
-									else
-										$preview_url .= '&';
-									$preview_url .= 'adtoken='.$token.'&ad='.$admin_dir;
-								}
-								$this->redirect_after = $preview_url;
-							}
-							else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') || ($id_image && $id_image !== true)) // Save and stay on same form
-							{// Save and stay on same form
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
-
-							// Default behavior (save and back)
-							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
-							}
-						}
-					}
-					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
-				}
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Tools::displayError('Cannot load object').')';
-			}
-
-			/* Add a new product */
-			else
-			{
-				$object = new $this->className();
-				$this->_removeTaxFromEcotax();
-				$this->copyFromPost($object, $this->table);
-				if ($object->add())
-				{
-					$this->addCarriers();
-					$this->updateAssoShop((int)$object->id);
-					$this->updateAccessories($object);
-					if (!$this->updatePackItems($object))
-						$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
-					$this->updateDownloadProduct($object);
-					if (!count($this->_errors))
-					{
-						if (!$object->updateCategories($_POST['categoryBox']))
-							$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-						else if (!$this->updateTags($languages, $object))
-							$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
-						else if ($id_image = $this->addProductImage($object))
-						{
-							Hook::exec('addProduct', array('product' => $object));
-							Search::indexation(false, $object->id);
-						}
-						// Save and preview
-						if (Tools::isSubmit('submitAddProductAndPreview'))
-						{
-							$preview_url = ($this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id)));
-							if (!$object->active)
-							{
-								$admin_dir = dirname($_SERVER['PHP_SELF']);
-								$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
-								$token = Tools::encrypt('PreviewProduct'.$object->id);
-								$preview_url .= '&adtoken='.$token.'&ad='.$admin_dir;
-							}
-
-							$this->redirect_after = $preview_url;
-						}
-
-						if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
-							$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.($token ? $token : $this->token);
-						// Save and stay on same form
-						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-							$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=3&tabs='.(int)(Tools::getValue('tabs')).'&token='.($token ? $token : $this->token);
-						else
-							// Default behavior (save and back)
-							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=3&token='.($token ? $token : $this->token);
-					}
-					else
-						$object->delete();
-				}
-				else
-					$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
-			}
-		}
-
 	}
 
 	private function _removeTaxFromEcotax()
@@ -1700,19 +1695,6 @@ class AdminProductsControllerCore extends AdminController
 			if ($value = Tools::getValue('tags_'.$language['id_lang']))
 				$tagError &= Tag::addTags($language['id_lang'], (int)$product->id, $value);
 		return $tagError;
-	}
-
-	public function initProcess()
-	{
-		parent::initProcess();
-
-		if (isset($_GET['add'.$this->table]))
-		{
-			if ($this->tabAccess['add'] === '1')
-				$this->action = 'Informations';
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
-		}
 	}
 
 	public function initContent($token = null)
@@ -2072,11 +2054,10 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	/**
-	* Post traitment for accounting
+	* Post treatment for accounting
 	*/
-	public function postProcessFormAccounting()
+	public function processAccounting($token)
 	{
-
 		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
 		{
 			$id_shop = $this->context->shop->getID();
@@ -2104,9 +2085,9 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	/**
-	* Post traitment for suppliers
+	* Post treatment for suppliers
 	*/
-	public function postProcessFormSuppliers()
+	public function processSuppliers($token)
 	{
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
@@ -2282,9 +2263,9 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	/**
-	* Post traitment for warehouses
+	* Post treatment for warehouses
 	*/
-	public function postProcessFormWarehouses()
+	public function processWarehouses($token)
 	{
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
@@ -3121,7 +3102,7 @@ class AdminProductsControllerCore extends AdminController
 				$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
 				$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
 				$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
-				$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $language['id_lang']))) : '0000-00-00');
+				$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
 
 				$i = 0;
 				$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
@@ -3134,7 +3115,7 @@ class AdminProductsControllerCore extends AdminController
 				$data->assign('images', $images);
 			}
 			else
-				$content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
+				$this->content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
 	
 			// @todo
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
@@ -3169,6 +3150,8 @@ class AdminProductsControllerCore extends AdminController
 			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 70),
 			'upc' => array('title' => $this->l('UPC'), 'align' => 'center', 'width' => 70)
 		);
+
+		$product_download = new ProductDownload($id_product_download);
 
 		if ($id_product_download && !empty($product_download->display_filename))
 		{
@@ -3656,35 +3639,6 @@ class AdminProductsControllerCore extends AdminController
 		return $trad[$key];
 	}
 
-	/**
-	 * Load class object using identifier in $_GET (if possible)
-	 * otherwise return an empty object, or die
-	 *
-	 * @param boolean $opt Return an empty object if load fail
-	 * @return object
-	 */
-	protected function loadObject($opt = false)
-	{
-		$id = (int)Tools::getValue($this->identifier);
-		if ($id && Validate::isUnsignedId($id))
-		{
-			if (!$this->object)
-				$this->object = new $this->className($id);
-			if (Validate::isLoadedObject($this->object))
-				return $this->object;
-			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
-		}
-		else if ($opt)
-		{
-			$this->object = new $this->className();
-			return $this->object;
-		}
-		else
-			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
-
-		return $this->object;
-	}
-
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -3719,6 +3673,8 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'/jquery/ui/jquery.ui.progressbar.min.js'
 			));
+
+			$this->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
 		}
 	}
 }
