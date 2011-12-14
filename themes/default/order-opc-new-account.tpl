@@ -34,14 +34,14 @@
 					<span><input type="text" id="login_email" name="email" /></span>
 				</div>
 				<div style="margin-left:40px;margin-bottom:5px;float:left;width:40%;">
-					<label for="passwd">{l s='Password'}</label>
-					<span><input type="password" id="login_passwd" name="passwd" /></span>
+					<label for="login_passwd">{l s='Password'}</label>
+					<span><input type="password" id="login_passwd" name="login_passwd" /></span>
+					<a href="{$link->getPageLink('password', true)}" class="lost_password">{l s='Forgot your password?'}</a>
 				</div>
 				<p class="submit">
 					{if isset($back)}<input type="hidden" class="hidden" name="back" value="{$back|escape:'htmlall':'UTF-8'}" />{/if}
 					<input type="submit" id="SubmitLogin" name="SubmitLogin" class="button" value="{l s='Log in'}" />
 				</p>
-				<p class="lost_password"><a href="{$link->getPageLink('password', true)}">{l s='Forgot your password?'}</a></p>
 			</div>
 		</fieldset>
 	</form>
@@ -407,4 +407,3 @@
 	</form>
 	<div class="clear"></div>
 </div>
-
