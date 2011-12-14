@@ -27,7 +27,7 @@
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
 		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
-				{include file="toolbar.tpl" toolbar_btn=$toolbar_btn}
+				{include file="toolbar.tpl"}
 				<div class="pageTitle">
 				<h3>
 					{block name=pageTitle}
