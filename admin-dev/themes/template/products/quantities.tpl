@@ -59,8 +59,16 @@
 			<tbody>
 				<tr>
 					<td valign="top" style="vertical-align:top;">
-						<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
+						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="on" checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
+								type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
+						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='I want to use the advanced stock management system for this product'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
+						<br /><br />
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" style="vertical-align:top;">
+						<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled AND/OR if this product does not use the stock management'}</b>{/if}</label>
 						<br /><br />
 					</td>
 				</tr>
@@ -105,13 +113,13 @@
 								<tr>
 									<td class="col-left"><label>{l s='When out of stock:'}</label></td>
 									<td style="padding-bottom:5px;">
-										<input {if $product->out_of_stock == 0}checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
+										<input {if $product->out_of_stock == 0} checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">{l s='Deny orders'}</label>
 										<br>
-										<input {if $product->out_of_stock == 1} 'checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
+										<input {if $product->out_of_stock == 1} checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">{l s='Allow orders'}</label>
 										<br>
-										<input {if $product->out_of_stock == 2} 'checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
+										<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
 											Default:
 											<i>Deny orders</i>
@@ -264,6 +272,27 @@
 			ajaxCall( { actionQty: 'depends_on_stock', value: $(this).val() } );
 			if($(this).val() == 0)
 				$('.available_quantity input').trigger('change');
+		});
+
+		$('.advanced_stock_management').click(function(e)
+		{
+			var val = 0;
+			if ($(this).attr('checked'))
+				val = 1;
+			
+			ajaxCall( { actionQty: 'advanced_stock_management', value: val } );
+			if (val == 1)
+			{
+				$('#depends_on_stock_1').attr('disabled', false);
+			}
+			else
+			{
+				$('#depends_on_stock_1').attr('disabled', true);
+				$('#depends_on_stock_0').attr('checked', true);
+				ajaxCall( { actionQty: 'depends_on_stock', value: 0} );
+				refreshQtyAvaibilityForm();
+			}
+			refreshQtyAvaibilityForm();
 		});
 	
 		// bind enter key event on search field
