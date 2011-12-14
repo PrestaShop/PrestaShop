@@ -6,14 +6,16 @@ h2.productscategory_h2 {
 	color:#333
 }
 
-#productscategory_list ul {list-style-type:none}
+#productscategory {overflow:auto}
+#productscategory_list ul {
+	list-style-type:none;
+	margin: 0 0 0 14px;
+}
 #productscategory_list li {
 	float:left;
-	margin-right:25px
+	margin-right:30px
 }
 #productscategory_list li a.lnk_img {display:block}
 #productscategory_list li a img {border:1px solid #ccc}
 #productscategory_list li p.product_name {text-align:center}
-
-
 
