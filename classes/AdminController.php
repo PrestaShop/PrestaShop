@@ -561,12 +561,71 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
-	 * Object update and creation
-	 * TODO: split processAdd and processUpdate
+	 * Call the right method for creating or updating object
+	 *
+	 * @param $token
+	 * @return mixed
+	 */
+    public function processSave($token)
+	{
+		if ($this->id_object)
+			return $this->processUpdate($token);
+		else
+			return $this->processAdd($token);
+	}
+
+	/**
+	 * Object creation
 	 *
 	 * @param string $token
 	 */
-	public function processSave($token)
+	public function processAdd($token)
+	{
+		/* Checking fields validity */
+		$this->validateRules();
+
+		if (!count($this->_errors))
+		{
+			$object = new $this->className();
+			$this->copyFromPost($object, $this->table);
+			$this->beforeAdd($object);
+			if (!$object->add())
+			{
+				$this->_errors[] = Tools::displayError('An error occurred while creating object.').
+					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+			}
+			 /* voluntary do affectation here */
+			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
+			{
+				$parent_id = (int)Tools::getValue('id_parent', 1);
+				$this->afterAdd($object);
+				$this->updateAssoShop($object->id);
+				// Save and stay on same form
+				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
+				// Save and back to parent
+				if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
+				// Default behavior (save and back)
+				if (empty($this->redirect_after))
+					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
+			}
+		}
+
+		$this->_errors = array_unique($this->_errors);
+		if (count($this->_errors) > 0)
+			return;
+
+		return $object;
+	}
+
+
+	/**
+	 * Object update
+	 *
+	 * @param string $token
+	 */
+	public function processUpdate($token)
 	{
 		/* Checking fields validity */
 		$this->validateRules();
@@ -640,35 +699,6 @@ class AdminControllerCore extends Controller
 				else
 					$this->_errors[] = Tools::displayError('An error occurred while updating object.').
 						' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			}
-
-			/* Object creation */
-			else
-			{
-				$object = new $this->className();
-				$this->copyFromPost($object, $this->table);
-				$this->beforeAdd($object);
-				if (!$object->add())
-				{
-					$this->_errors[] = Tools::displayError('An error occurred while creating object.').
-						' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-				}
-				 /* voluntary do affectation here */
-				else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
-				{
-					$parent_id = (int)Tools::getValue('id_parent', 1);
-					$this->afterAdd($object);
-					$this->updateAssoShop($object->id);
-					// Save and stay on same form
-					if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-						$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
-					// Save and back to parent
-					if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-						$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
-					// Default behavior (save and back)
-					if (empty($this->redirect_after))
-						$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
-				}
 			}
 		}
 
@@ -1763,7 +1793,9 @@ class AdminControllerCore extends Controller
 		}
 		else if ($submitted_action = Tools::getValue('submitAction'.$this->table))
 				$this->action = $submitted_action;
-		else if (Tools::getValue('submitAdd'.$this->table) || Tools::getValue('submitAdd'.$this->table.'AndStay'))
+		else if (Tools::getValue('submitAdd'.$this->table)
+				 || Tools::getValue('submitAdd'.$this->table.'AndStay')
+				 || Tools::getValue('submitAdd'.$this->table.'AndPreview'))
 		{
 			// case 1: updating existing entry
 			if ($this->id_object)
@@ -2414,7 +2446,7 @@ class AdminControllerCore extends Controller
 		return $result;
 	}
 
-	protected function processBulkaffectzone($token)
+	protected function processBulkAffectZone($token)
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
