@@ -276,6 +276,7 @@ ALTER TABLE `PREFIX_address` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL
 
 ALTER TABLE `PREFIX_order_detail` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL default '0' AFTER `id_order_invoice`;
 
+ALTER TABLE `PREFIX_product` ADD COLUMN `advanced_stock_management` tinyint(1) default '0' NOT NULL;
 
 /* Update records after alter tables */
 /* PHP:update_stock_mvt_reasons(); */;

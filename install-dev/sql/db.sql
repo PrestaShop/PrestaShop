@@ -1336,6 +1336,7 @@ CREATE TABLE `PREFIX_product` (
   `cache_default_attribute` int(10) unsigned default NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `advanced_stock_management` tinyint(1) default '0' NOT NULL,
   PRIMARY KEY  (`id_product`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`),
