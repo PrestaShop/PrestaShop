@@ -132,7 +132,7 @@ class CarrierCore extends ObjectModel
 			'shipping_method' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'max_width' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'max_height' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'max_deep' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_depth' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'max_weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'grade' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 1),
 			'external_module_name' => 	array('type' => self::TYPE_STRING, 'size' => 64),
