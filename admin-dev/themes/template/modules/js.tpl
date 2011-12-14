@@ -39,7 +39,7 @@
 	
 	{if isset($smarty.get.anchor)}
 	$('document').ready( function() {
-		$.scrollTo('#{$smarty.get.anchor|htmlentities}', 1200, {literal}{offset: -100}{/literal});
+		$.scrollTo('#{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''}', 1200, {literal}{offset: -100}{/literal});
 	});
 	{/if}
 
