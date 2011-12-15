@@ -166,7 +166,7 @@
 						{/if}
 				
 						<p class="block">
-							<label for="virtual_product_name" class="t">{l s='Filename'}</label>
+							<label for="virtual_product_name_attribute" class="t">{l s='Filename'}</label>
 							<input id="virtual_product_name_attribute" name="virtual_product_name_attribute" style="width:200px" value="" type="text">
 							<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g., Book.pdf)'}</span>
 						</p>
