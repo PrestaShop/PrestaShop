@@ -50,11 +50,11 @@ class CMSCore extends ObjectModel
 			'active' => 			array('type' => self::TYPE_BOOL),
 
 			// Lang fields
-			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_title' =>			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-			'link_rewrite' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
-			'content' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 3999999999999),
+			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_title' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+			'content' => 			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'size' => 3999999999999),
 		),
 	);
 
@@ -62,18 +62,6 @@ class CMSCore extends ObjectModel
 		'objectNodeName' => 'content',
 		'objectsNodeName' => 'content_management_system',
 	);
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array(
-			'meta_description',
-			'meta_keywords',
-			'meta_title',
-			'link_rewrite',
-			'content' => array('html' => true),
-		));
-	}
 
 	public function add($autodate = true, $nullValues = false)
 	{

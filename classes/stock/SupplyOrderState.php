@@ -81,18 +81,9 @@ class SupplyOrderStateCore extends ObjectModel
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 
 			// Lang fields
-			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
-
-	/**
-	 * @see ObjectModel::getTranslationsFieldsChild()
-	 */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
 
 	/**
 	 * Gets the list of supply order states

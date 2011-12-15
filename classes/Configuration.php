@@ -74,16 +74,14 @@ class ConfigurationCore extends ObjectModel
 	);
 
 	/**
-	  * Check then return multilingual fields for database interaction
-	  *
+	  * @see ObjectModel::getFieldsLang()
 	  * @return array Multilingual fields
 	  */
-	public function getTranslationsFieldsChild()
+	public function getFieldsLang()
 	{
 		if (!is_array($this->value))
 			return true;
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('value'));
+		return $this->getFieldsLang();
 	}
 
 	/**

@@ -47,8 +47,10 @@ class AttributeGroupCore extends ObjectModel
 			'is_color_group' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'group_type' => 	array('type' => self::TYPE_STRING),
 			'position' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'name' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'public_name' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+
+			// Lang fields
+			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'public_name' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
 
@@ -82,17 +84,6 @@ class AttributeGroupCore extends ObjectModel
 		$return = parent::update($nullValues);
 		Hook::exec('afterSaveAttributeGroup', array('id_attribute_group' => $this->id));
 		return $return;
-	}
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name', 'public_name'));
 	}
 
 	public static function cleanDeadCombinations()

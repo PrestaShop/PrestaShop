@@ -135,7 +135,7 @@ class StateCore extends ObjectModel
 				return false;
 
 			/* Database deletion for multilingual fields related to the object */
-			if (method_exists($this, 'getTranslationsFieldsChild'))
+			if (!empty($this->def['multilang']))
 				Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
 			return $result;
 		}

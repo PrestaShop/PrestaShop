@@ -79,11 +79,11 @@ class ManufacturerCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
 			// Lang fields
-			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
-			'short_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'size' => 254),
-			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
+			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString', 'size' => 254),
+			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
 		),
 	);
 
@@ -107,19 +107,6 @@ class ManufacturerCore extends ObjectModel
 		$this->id_address = $this->getManufacturerAddress();
 		$this->link_rewrite = $this->getLink();
 		$this->image_dir = _PS_MANU_IMG_DIR_;
-	}
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-
-		return $this->getTranslationsFields(array(
-			'meta_description',
-			'meta_keywords',
-			'meta_title',
-			'description' => array('html' => true),
-			'short_description' => array('html' => true),
-		));
 	}
 
 	public function delete()

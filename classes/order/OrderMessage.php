@@ -47,8 +47,8 @@ class OrderMessageCore extends ObjectModel
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-			'message' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'message' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isMessage', 'required' => true, 'size' => 1200),
 		),
 	);
 
@@ -59,12 +59,6 @@ class OrderMessageCore extends ObjectModel
 			'date_add' => array('sqlId' => 'date_add')
 		)
 	);
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name', 'message'));
-	}
 
 	public static function getOrderMessages($id_lang)
 	{

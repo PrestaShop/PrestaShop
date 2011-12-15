@@ -45,7 +45,7 @@ class GenderCore extends ObjectModel
 			'type' => array('type' => self::TYPE_INT, 'required' => true),
 
 			// Lang fields
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
+			'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
 		),
 	);
 
@@ -54,19 +54,6 @@ class GenderCore extends ObjectModel
 		parent::__construct($id, $id_lang, $id_shop);
 
 		$this->image_dir = _PS_GENDERS_DIR_;
-	}
-
-	/**
-	 * Check then return multilingual fields for database interaction
-	 *
-	 * @return array Multilingual fields
-	 */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array(
-			'name',
-		));
 	}
 
 	public static function getGenders($id_lang = null)

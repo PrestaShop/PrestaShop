@@ -59,7 +59,7 @@ class StockMvtReasonCore extends ObjectModel
 			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
 		),
 	);
 
@@ -67,12 +67,6 @@ class StockMvtReasonCore extends ObjectModel
 		'objectsNodeName' => 'stock_movement_reasons',
 		'objectNodeName' => 'stock_movement_reason',
 	);
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
 
 	public static function getStockMvtReasons($id_lang, $sign = null)
 	{
