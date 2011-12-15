@@ -95,5 +95,9 @@
 		</td>
 	</tr>
 </table>
+	
+<script type="text/javascript">
+	displayFlags(languages, id_language, allowEmployeeFormLang);
+</script>
 
 
