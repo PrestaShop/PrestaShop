@@ -63,6 +63,16 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	protected $is_hydrated = false;
 
 	/**
+	 * @var int Collection iterator
+	 */
+	protected $iterator;
+
+	/**
+	 * @var int Total of elements for iteration
+	 */
+	protected $total;
+
+	/**
 	 * @param string $classname
 	 * @param int $id_lang
 	 */
@@ -156,7 +166,9 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	public function rewind()
 	{
 		$this->getAll();
-		reset($this->results);
+		$this->results = array_merge($this->results);
+		$this->iterator = 0;
+		$this->total = count($this->results);
 	}
 
 	/**
@@ -167,7 +179,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function current()
 	{
-		return current($this->results);
+		return $this->results[$this->iterator];
 	}
 
 	/**
@@ -178,7 +190,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function valid()
 	{
-		return (bool)current($this->results);
+		return $this->iterator < $this->total;
 	}
 
 	/**
@@ -189,7 +201,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function key()
 	{
-		return key($this->results);
+		return $this->iterator;
 	}
 
 	/**
@@ -199,7 +211,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function next()
 	{
-		next($this->results);
+		$this->iterator++;
 	}
 
 	/**
