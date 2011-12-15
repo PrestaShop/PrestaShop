@@ -44,9 +44,9 @@ class PDFGeneratorCore extends TCPDF
 	public $font_by_lang = array('jp' => 'cid0jp');
 
 
-	public function __construct()
+	public function __construct($use_cache = false)
 	{
-		parent::__construct('P', 'mm', 'A4', true, 'UTF-8', false, false);
+		parent::__construct('P', 'mm', 'A4', true, 'UTF-8', $use_cache, false);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class PDFGeneratorCore extends TCPDF
 
 	/**
 	 * Change the font
-	 * @param unknown_type $iso_lang
+	 * @param string $iso_lang
 	 */
 	public function setFontForLang($iso_lang)
 	{
