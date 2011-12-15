@@ -1293,9 +1293,9 @@ class CartCore extends ObjectModel
 		{
 			$result = $this->getCartRules();
 			foreach ($result as $row)
-				$order_total_discount += Tools::ps_round($row['obj']->getContextualValue($with_taxes));
+				$order_total_discount += Tools::ps_round($row['obj']->getContextualValue($with_taxes), 2);
 
-			$order_total_discount = min(Tools::ps_round($order_total_discount), $wrapping_fees + $order_total_products + $shipping_fees);
+			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
 
