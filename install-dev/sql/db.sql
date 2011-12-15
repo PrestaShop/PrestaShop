@@ -1069,6 +1069,7 @@ CREATE TABLE `PREFIX_order_invoice` (
   `total_shipping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `note` text,
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_order_invoice`),
   KEY `id_order` (`id_order`)

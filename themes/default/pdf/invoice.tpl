@@ -227,6 +227,20 @@
 
 {$tax_tab}
 
+{if isset($order_invoice->note) && $order_invoice->note}
+<div style="line-height: 1pt">&nbsp;</div>
+<table style="width: 100%">
+    <tr>
+        <td style="width: 15%"></td>
+        <td style="width: 85%">
+			<p>
+            {$order_invoice->note|nl2br}
+			</p>
+        </td>
+    </tr>
+</table>
+{/if}
+
 {if isset($HOOK_DISPLAY_PDF)}
 <div style="line-height: 1pt">&nbsp;</div>
 <table style="width: 100%">

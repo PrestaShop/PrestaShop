@@ -63,6 +63,9 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var float */
 	public $total_wrapping_tax_incl;
 
+	/** @var string note */
+	public $note;
+
 	/** @var intger */
 	public $date_add;
 
@@ -85,6 +88,7 @@ class OrderInvoiceCore extends ObjectModel
 			'total_shipping_tax_incl' =>array('type' => self::TYPE_FLOAT),
 			'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
+			'note' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
