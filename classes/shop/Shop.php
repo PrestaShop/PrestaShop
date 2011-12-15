@@ -213,7 +213,8 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Find the shop from current domain / uri and get an instance of this shop
-	 *
+	 * if INSTALL_VERSION is defined, will return an empty shop object
+	 * 
 	 * @return Shop
 	 */
 	public static function initialize()
@@ -263,19 +264,29 @@ class ShopCore extends ObjectModel
 				}
 		}
 
-		// Get instance of found shop
-		$shop = new Shop($id_shop);
-		if (!Validate::isLoadedObject($shop) || !$shop->active)
+		if($id_shop)
 		{
-			// No shop found ... too bad, let's redirect to default shop
-			$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-			if (!$default_shop)
+			// Get instance of found shop
+			$shop = new Shop($id_shop);
+			if (!Validate::isLoadedObject($shop) || !$shop->active)
+			{
+				// No shop found ... too bad, let's redirect to default shop
+				$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 				// Hmm there is something really bad in your Prestashop !
-				die('Shop not found');
-			$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().ltrim($_SERVER['SCRIPT_NAME'], '/').'?'.$_SERVER['QUERY_STRING'];
-			header('location: '.$url);
-			exit;
+				if (!Validate::isLoadedObject($default_shop))
+					throw new PrestashopException('Shop not found');
+
+				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().ltrim($_SERVER['SCRIPT_NAME'], '/').'?'.$_SERVER['QUERY_STRING'];
+				header('location: '.$url);
+				exit;
+			}
 		}
+		else
+			if (defined('INSTALL_VERSION'))
+				$shop = new Shop();
+			else
+				throw new PrestashopException('Shop not found');
+
 		return $shop;
 	}
 
