@@ -297,6 +297,35 @@ function delPackItem(id)
 		}
 	});
 }
+/**
+ * Update the manufacturer select element with the list of existing manufacturers
+ */
+function getManufacturers()
+{
+	$.ajax({
+			url: 'ajax-tab.php',
+			cache: false,
+			dataType: 'json',
+			data: {
+				ajaxProductManufacturers:"1",
+				ajax : '1',
+				token : token,
+				controller : 'AdminProducts',
+				action : 'productManufacturers'
+			},
+			success: function(j) {
+				var options = $('select#id_manufacturer').html();
+				if (j)
+				for (var i = 0; i < j.length; i++)
+					options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
+				$("select#id_manufacturer").replaceWith("<select id=\"id_manufacturer\">"+options+"</select>");
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown)
+			{
+				$("select#id_manufacturer").replaceWith("<p id=\"id_manufacturer\">[TECHNICAL ERROR] ajaxProductManufacturers: "+textStatus+"</p>");
+			}
+	});
+}
 
 /* function autocomplete */
 urlToCall = null;
@@ -312,30 +341,6 @@ function getSelectedIds()
 $(document).ready(function() {
 	updateCurrentText();
 	updateFriendlyURL();
-	$.ajax({
-		url: 'ajax-tab.php',
-		cache: false,
-		dataType: 'json',
-		data: {
-			ajaxProductManufacturers:"1",
-			ajax : '1',
-			token : token,
-			controller : 'AdminProducts',
-			action : 'productManufacturers',
-		},
-		success: function(j) {
-			var options = $('select#id_manufacturer').html();
-			if (j)
-			for (var i = 0; i < j.length; i++)
-				options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-			$("select#id_manufacturer").replaceWith("<select id=\"id_manufacturer\">"+options+"</select>");
-		},
-		error: function(XMLHttpRequest, textStatus, errorThrown)
-		{
-			$("select#id_manufacturer").replaceWith("<p id=\"id_manufacturer\">[TECHNICAL ERROR] ajaxProductManufacturers: "+textStatus+"</p>");
-		}
-
-	});
 
 	$(function() {
 		$('#curPackItemName')

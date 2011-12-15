@@ -69,17 +69,17 @@
 <div class="separation"></div>
 	<table>
 		<tr>
-			<td class="col-left"><label>{l s='Accessories:'}<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i></label></td>
+			<td class="col-left"><label>{l s='Accessories:'}{*<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i>*}</label></td>
 			<td style="padding-bottom:5px;">
 				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
 				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|htmlentitiesUTF8}¤{/foreach}" />
 
-				<div id="ajax_choose_product" style="padding:6px; padding-top:2px; width:600px;">
-					<p style="clear:both;margin-top:0;" class="preference_description">
-						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
+				<div id="ajax_choose_product">
+					<p style="clear:both;margin-top:0;">
 						<input type="text" value="" id="product_autocomplete_input" />
+						{l s='Begin typing the first letters of the product name, then select the product from the drop-down list'}
 					</p>
-					
+					<p class="preference_description">{l s='(Do not forget to Save the product afterward)'}</p>
 					<!--<img onclick="$(this).prev().search();" style="cursor: pointer;" src="../img/admin/add.gif" alt="{l s='Add an accessory'}" title="{l s='Add an accessory'}" />-->
 				</div>
 				<div id="divAccessories">
@@ -93,6 +93,23 @@
 				</div>
 			</td>
 		</tr>
+		<tr>
+		<br />
+		<td class="col-left"><label>{l s='Manufacturer:'}</label></td>
+		<td style="padding-bottom:5px;">
+		<select name="id_manufacturer" id="id_manufacturer">
+		<option value="0">-- {l s='Choose (optional)'} --</option>
+		{if $product->id_manufacturer}
+		<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
+		{/if}
+		<option disabled="disabled">----------</option>
+		</select>&nbsp;&nbsp;&nbsp;
+		<a href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer" onclick="return confirm('{l s='Are you sure you want to delete product information entered?' js=1} ')">
+		<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
+		</a>
+		</td>
+		</tr>
+
 	</table>
 </div>
 
@@ -115,11 +132,14 @@
 					return item[1]+' - '+item[0];
 				}
 			}).result(addAccessory);
+
 		$('#product_autocomplete_input').setOptions({
 			extraParams: {
 				excludeIds : getAccessorieIds()
 			}
 		});
+
+		getManufacturers();
 	});
 
 	function getAccessorieIds()
