@@ -172,19 +172,17 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		<!-- product img-->
 		<div id="image-block">
 		{if $have_image}
-			{if $have_image && !$jqZoomEnabled}
+			{if $have_image && $jqZoomEnabled}
 			<span id="view_full_size">
 				<img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="{$largeSize.width}" height="{$largeSize.height}" />
 				<span class="span_link">{l s='View full size'}</span>
 			</span>
 			{/if}
 		{else}
-			{if $have_image && !$jqZoomEnabled}
 			<span id="view_full_size">
 				<img src="{$img_prod_dir}{$lang_iso}-default-large.jpg" id="bigpic" alt="" title="{$product->name|escape:'htmlall':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}" />
 				<span class="span_link">{l s='View full size'}</span>
 			</span>
-			{/if}
 		{/if}
 		</div>
 
@@ -433,16 +431,17 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{/if}
 			{*close if for show price*}
 			{/if}
-			<p{if
-				(!$allow_oosp && $product->quantity <= 0)
-				OR
-				!$product->available_for_order
-				OR
-				(isset($restricted_country_mode) AND $restricted_country_mode)
-				OR
-				$PS_CATALOG_MODE
-			} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><span></span><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
-
+			{if (!$allow_oosp && $product->quantity <= 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE}
+				<span class="exclusive">
+					<span></span>
+					{l s='Add to cart'}
+				</span>
+			{else}
+				<p id="add_to_cart" class="buttons_bottom_block">
+					<span></span>
+					<input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" />
+				</p>
+			{/if}
 			{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}
 
 			<div class="clear"></div>
