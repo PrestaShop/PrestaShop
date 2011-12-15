@@ -27,15 +27,15 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		$('input').keypress(function(e) { 
-			var code = null; 
+		$('input').keypress(function(e) {
+			var code = null;
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
 	});
 
 </script>
-
+<input type="hidden" name="supplier_loaded" value="1">
 {if isset($product->id)}
 
 	<h4>{l s='Suppliers of the current product'}</h4>

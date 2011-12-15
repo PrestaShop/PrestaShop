@@ -27,15 +27,15 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		$('input').keypress(function(e) { 
-			var code = null; 
+		$('input').keypress(function(e) {
+			var code = null;
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
 	});
 
 </script>
-
+<input type="hidden" name="warehouse_loaded" value="1">
 {if isset($product->id)}
 
 	<h4>{l s='Product location in warehouses'}</h4>
