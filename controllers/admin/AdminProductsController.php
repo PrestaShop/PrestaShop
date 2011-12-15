@@ -2652,10 +2652,10 @@ class AdminProductsControllerCore extends AdminController
 		$content .= '
 		<div class="separation"></div>
 		<h4>'.$this->l('Priorities management').'</h4>
-		<div class="hint" style="display:block;">
-				'.$this->l('Sometimes one customer could fit in multiple rules, priorities allows you to define which rule to apply.').'
-		</div>
-	<br />
+		<div class="hint" style="display:block;min-height:0;">
+				'.$this->l('Sometimes one customer can fit in multiple specific prices rules. Priorities allow you to define which rule applies to the customer.').'
+		</div
+	<br /><br />
 		<label>'.$this->l('Priorities:').'</label>
 		<div class="margin-form">
 			<select name="specificPricePriority[]">
@@ -2664,6 +2664,7 @@ class AdminProductsControllerCore extends AdminController
 				<option value="id_country"'.($specific_price_priorities[0] == 'id_country' ? ' selected="selected"' : '').'>'.$this->l('Country').'</option>
 				<option value="id_group"'.($specific_price_priorities[0] == 'id_group' ? ' selected="selected"' : '').'>'.$this->l('Group').'</option>
 			</select>
+			&gt;
 			<select name="specificPricePriority[]">
 				<option value="id_shop"'.($specific_price_priorities[1] == 'id_shop' ? ' selected="selected"' : '').'>'.$this->l('Shop').'</option>
 				<option value="id_currency"'.($specific_price_priorities[1] == 'id_currency' ? ' selected="selected"' : '').'>'.$this->l('Currency').'</option>
