@@ -1148,42 +1148,29 @@ abstract class ObjectModelCore
 			throw new PrestashopException("Class '$class' not found");
 
 		$collection = array();
-		$group_keys = array();
 		$rows = array();
-		$identifier = $fieldsValidateLang = null;
 		if ($datas)
 		{
-			// Get identifier and lang fields
-			$obj = new $class;
-			if (!$obj instanceof ObjectModel)
-				throw new PrestashopException("Class '$class' must be an instance of class ObjectModel");
-			$identifier = $obj->getIdentifier();
-			$fieldsValidateLang = $obj->getFieldsValidateLang();
-
-			// Check primary key
-			if (!array_key_exists($identifier, $datas[0]))
-				throw new PrestashopException("Identifier '$identifier' not found for class '$class'");
+			$definition = ObjectModel::getDefinition($class);
+			if (!array_key_exists($definition['primary'], $datas[0]))
+				throw new PrestashopException("Identifier '{$definition['primary']}' not found for class '$class'");
 
 			foreach ($datas as $row)
 			{
 				// Get object common properties
-				$id = $row[$identifier];
+				$id = $row[$definition['primary']];
 				if (!isset($rows[$id]))
 					$rows[$id] = $row;
 
 				// Get object lang properties
 				if (isset($row['id_lang']) && !$id_lang)
-				{
-					foreach ($fieldsValidateLang as $field => $validator)
-					{
-						if (!$id_lang)
+					foreach ($definition['fields'] as $field => $data)
+						if (!empty($data['lang']))
 						{
 							if (!is_array($rows[$id][$field]))
 								$rows[$id][$field] = array();
 							$rows[$id][$field][$row['id_lang']] = $row[$field];
 						}
-					}
-				}
 			}
 		}
 
