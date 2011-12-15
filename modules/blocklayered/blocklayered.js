@@ -422,7 +422,7 @@ function getUrlParams()
 function updateProductUrl()
 {
 	// Adding the filters to URL product
-	$('ul#product_list li.ajax_block_product .product_img_link').attr('href', $('ul#product_list li.ajax_block_product .product_img_link').attr('href') + param_product_url);
-	$('ul#product_list li.ajax_block_product h3 a').attr('href', $('ul#product_list li.ajax_block_product h3 a').attr('href') + param_product_url);
-	$('ul#product_list li.ajax_block_product .product_desc a').attr('href', $('ul#product_list li.ajax_block_product .product_desc a').attr('href') + param_product_url);
+	$.each($('ul#product_list li.ajax_block_product .product_img_link, ul#product_list li.ajax_block_product h3 a, ul#product_list li.ajax_block_product .product_desc a'), function() {
+		$(this).attr('href', $(this).attr('href') + param_product_url);
+	});
 }
