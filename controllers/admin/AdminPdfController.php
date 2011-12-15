@@ -72,28 +72,17 @@ class AdminPdfControllerCore extends AdminController
 				'icon' =>	'pdf',
 				'class' =>	'width2',
 				'fields' =>	array(
-					'PS_PDF_ENCODING' => array(
-						'title' => $this->l('Encoding:'),
-						'desc' => $this->l('Encoding for PDF invoice'),
-						'type' => 'selectLang',
-						'cast' => 'strval',
-						'identifier' => 'mode',
-						'list' => $this->encoding_list
-					),
-					'PS_PDF_FONT' => array(
-						'title' => $this->l('Font:'),
-						'desc' => $this->l('Font for PDF invoice'),
-						'type' => 'selectLang',
-						'cast' => 'strval',
-						'identifier' => 'mode',
-						'list' => $this->font_list
-					)
+                    'PS_PDF_USE_CACHE' => array(
+                        'title' => $this->l('Use disk as cache'),
+                        'desc' => $this->l('Save memory but slow down the rendering process.'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool'
+                    )
 				),
 				'submit' => array()
 			)
 		);
-
-		$this->context->smarty->assign('custom_key', 'PS_PDF_ENCODING¤PS_PDF_FONT');
 
 		parent::__construct();
 	}

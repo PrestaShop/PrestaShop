@@ -43,7 +43,7 @@ class PDFCore
 
 	public function __construct($objects, $template, $smarty)
 	{
-		$this->pdf_renderer = new PDFGenerator();
+		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'));
 		$this->template = $template;
 		$this->smarty = $smarty;
 
@@ -58,17 +58,17 @@ class PDFCore
 		$this->pdf_renderer->setFontForLang('fr');
 		foreach ($this->objects as $object)
 		{
-            $template = $this->getTemplateObject($object);
-            if (!$template)
-                continue;
+         $template = $this->getTemplateObject($object);
+         if (!$template)
+             continue;
 
-            if (empty($this->filename))
-            {
-                $this->filename = $template->getFilename();
-                if (count($this->objects) > 1)
-                    $this->filename = $template->getBulkFilename();
-            }
-			
+         if (empty($this->filename))
+         {
+             $this->filename = $template->getFilename();
+             if (count($this->objects) > 1)
+                 $this->filename = $template->getBulkFilename();
+         }
+
 			$template->assignHookData($object);
 
 			$this->pdf_renderer->createHeader($template->getHeader());
@@ -82,7 +82,6 @@ class PDFCore
 
 		if ($render)
 	      $this->pdf_renderer->render($this->filename);
-
 	}
 
     public function getTemplateObject($object)
