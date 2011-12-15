@@ -96,10 +96,11 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public function getFields()
 	{
-		if (!$this->date_expiration)
-			$this->date_expiration = '0000-00-00 00:00:00';
+		$fields = parent::getFields();
+		if (!$fields['date_expiration'])
+			$fields['date_expiration'] = '0000-00-00 00:00:00';
 
-		return parent::getFields();
+		return $fields;
 	}
 
 	public function add($autodate = true, $nullValues = false)
