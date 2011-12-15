@@ -58,11 +58,6 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	protected $results = array();
 
 	/**
-	 * @var int Current object iteration
-	 */
-	protected $iterator = 0;
-
-	/**
 	 * @var bool Is current collection already hydrated
 	 */
 	protected $is_hydrated = false;
@@ -160,18 +155,19 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function rewind()
 	{
-		$this->iterator = 0;
 		$this->getAll();
+		reset($this->results);
 	}
 
 	/**
 	 * Get current result
 	 *
 	 * @see Iterator::current()
+	 * @return ObjectModel
 	 */
 	public function current()
 	{
-		return $this->results[$this->iterator];
+		return current($this->results);
 	}
 
 	/**
@@ -182,7 +178,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function valid()
 	{
-		return isset($this->results[$this->iterator]);
+		return (bool)current($this->results);
 	}
 
 	/**
@@ -193,7 +189,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function key()
 	{
-		return $this->iterator;
+		return key($this->results);
 	}
 
 	/**
@@ -203,7 +199,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function next()
 	{
-		$this->iterator++;
+		next($this->results);
 	}
 
 	/**
@@ -273,6 +269,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function offsetUnset($offset)
 	{
+		$this->getAll();
 		unset($this->results[$offset]);
 	}
 }
