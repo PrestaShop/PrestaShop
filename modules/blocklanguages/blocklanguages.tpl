@@ -25,6 +25,7 @@
 *}
 
 <!-- Block languages module -->
+{if count($languages) > 1}
 <div id="languages_block_top">
 	<div id="countries">
 	{* @todo fix display current languages, removing the first foreach loop *}
@@ -81,4 +82,5 @@ $(document).ready(function () {
 
 });
 </script>
+{/if}
 <!-- /Block languages module -->
