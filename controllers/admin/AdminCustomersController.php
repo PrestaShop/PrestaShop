@@ -31,6 +31,8 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->required_database = true;
+		$this->required_fields = array('newsletter','optin');
 	 	$this->table = 'customer';
 		$this->className = 'Customer';
 	 	$this->lang = false;
@@ -157,6 +159,7 @@ class AdminCustomersControllerCore extends AdminController
 				'url_delete' => htmlentities($_SERVER['REQUEST_URI']),
 				'boxes' => $this->boxes,
 			));
+
 		parent::initContent();
 	}
 
@@ -736,7 +739,6 @@ class AdminCustomersControllerCore extends AdminController
 				'.($customer->optin ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
-
 }
 
 

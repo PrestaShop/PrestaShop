@@ -32,6 +32,8 @@ class AdminAddressesControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->required_database = true;
+		$this->required_fields = array('company','address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
 	 	$this->table = 'address';
 	 	$this->className = 'Address';
 	 	$this->lang = false;
