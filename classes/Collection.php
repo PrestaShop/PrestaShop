@@ -91,6 +91,8 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 		{
 			$this->query->select('b.*');
 			$this->query->leftJoin($this->definition['table'].'_lang b ON a.'.$this->definition['primary'].' = b.'.$this->definition['primary']);
+			if ($this->id_lang)
+				$this->query->where('b.id_lang = '.(int)$this->id_lang);
 		}
 	}
 
@@ -153,6 +155,8 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 	/**
 	 * This method is called when a foreach begin
+	 *
+	 * @see Iterator::rewind()
 	 */
 	public function rewind()
 	{
@@ -162,6 +166,8 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 	/**
 	 * Get current result
+	 *
+	 * @see Iterator::current()
 	 */
 	public function current()
 	{
@@ -170,6 +176,9 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 	/**
 	 * Check if there is a current result
+	 *
+	 * @see Iterator::valid()
+	 * @return bool
 	 */
 	public function valid()
 	{
@@ -178,6 +187,9 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 	/**
 	 * Get current result index
+	 *
+	 * @see Iterator::key()
+	 * @return int
 	 */
 	public function key()
 	{
@@ -186,6 +198,8 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 	/**
 	 * Go to next result
+	 *
+	 * @see Iterator::next()
 	 */
 	public function next()
 	{
@@ -195,6 +209,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Get total of results
 	 *
+	 * @see Countable::count()
 	 * @return int
 	 */
 	public function count()
@@ -206,6 +221,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Check if a result exist
 	 *
+	 * @see ArrayAccess::offsetExists()
 	 * @param $offset
 	 * @return bool
 	 */
@@ -218,6 +234,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Get a result by offset
 	 *
+	 * @see ArrayAccess::offsetGet()
 	 * @param $offset
 	 * @return ObjectModel
 	 */
@@ -232,6 +249,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Add an element in the collection
 	 *
+	 * @see ArrayAccess::offsetSet()
 	 * @param $offset
 	 * @param $value
 	 */
@@ -249,7 +267,8 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 	/**
 	 * Delete an element from the collection
-	 * 
+	 *
+	 * @see ArrayAccess::offsetUnset()
 	 * @param $offset
 	 */
 	public function offsetUnset($offset)
