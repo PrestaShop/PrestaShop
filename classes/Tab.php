@@ -61,12 +61,6 @@ class TabCore extends ObjectModel
 
 	protected static $_getIdFromClassName = null;
 
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
-
 	/**
 	 * additionnal treatments for Tab when creating new one :
 	 * - generate a new position
