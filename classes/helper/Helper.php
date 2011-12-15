@@ -321,17 +321,17 @@ class HelperCore
 			$type = 'shop';
 
 		$assos = array();
-		
+
 		if ((int)$this->id)
 		{
 			$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
 					FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`
 					WHERE `'.pSQL($this->identifier).'` = '.(int)$this->id;
-	
+
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$assos[$row['id_'.$type]] = $row['id_'.$type];
 		}
-		
+
 		$tpl = $this->createTemplate('helper/assoshop.tpl');
 		$tpl->assign(array(
 			'input' => array(
@@ -347,5 +347,41 @@ class HelperCore
 		return $tpl->fetch();
 	}
 
+	/**
+	 * Render a form with potentials required fields
+	 *
+	 * @param string $class_name
+	 * @param string $identifier
+	 * @param array $table_fields
+	 * @return string
+	 */
+	public function renderRequiredFields($class_name, $identifier, $table_fields)
+	{
+		$rules = call_user_func_array(array($class_name, 'getValidationRules'), array($class_name));
+		$required_class_fields = array($identifier);
+		foreach ($rules['required'] as $required)
+			$required_class_fields[] = $required;
+
+		$object = new $class_name();
+		$res = $object->getFieldsRequiredDatabase();
+
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
+		$this->tpl_vars = array(
+			'table_fields' => $table_fields,
+			'irow' => 0,
+			'required_class_fields' => $required_class_fields,
+			'required_fields' => $required_fields,
+			'current' => $this->currentIndex,
+			'token' => $this->token
+		);
+
+		$tpl = $this->createTemplate('helper/required_fields.tpl');
+		$tpl->assign($this->tpl_vars);
+
+		return $tpl->fetch();
+	}
 }
 
