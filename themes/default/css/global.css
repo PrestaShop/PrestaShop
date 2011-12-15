@@ -862,7 +862,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 #create-account_form #email_create,
 #login_form #email,
 #login_form #login_email,
-#login_form #passwd {
+#login_form #login_passwd {
 	padding:0 5px;
 	height:20px;
 	width:220px;/* 230 */
