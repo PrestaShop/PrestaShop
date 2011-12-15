@@ -224,9 +224,9 @@ class HookCore extends ObjectModel
 		$retro_hook_name = Hook::getRetroHookName($hook_name);
 
 		// Hook list for live edit
-		$ctrl = Context::getContext()->controller;
+		$ctrl = $context->controller;
 		if ($ctrl && !in_array($hook_name, $ctrl->hook_list));
-			Context::getContext()->controller->hook_list[Hook::getIdByName($hook_name)] = $hook_name;
+			$context->controller->hook_list[Hook::getIdByName($hook_name)] = $hook_name;
 
 		$live_edit = false;
 		if (!isset($hookArgs['cookie']) || !$hookArgs['cookie'])
