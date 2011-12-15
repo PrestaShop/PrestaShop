@@ -325,11 +325,11 @@ if (Tools::isSubmit('ajaxProductsPositions'))
 			{
 				if ($product = new Product((int)$pos[2]))
 					if (isset($position) && $product->updatePosition($way, $position))
-						echo "ok position $position for product $pos[2]\r\n";
+						echo "ok position ".(int)$position." for product ".(int)$pos[2]."\r\n";
 					else
-						echo '{"hasError" : true, "errors" : "Can not update product '. $id_product . ' to position '.$position.' "}';
+						echo '{"hasError" : true, "errors" : "Can not update product '. (int)$id_product . ' to position '.(int)$position.' "}';
 				else
-					echo '{"hasError" : true, "errors" : "This product ('.$id_product.') can t be loaded"}';
+					echo '{"hasError" : true, "errors" : "This product ('.(int)$id_product.') can t be loaded"}';
 
 				break;
 			}
@@ -860,11 +860,11 @@ if (Tools::isSubmit('ajaxAttributesPositions'))
 			{
 				if ($attribute = new Attribute((int)$pos[2]))
 					if (isset($position) && $attribute->updatePosition($way, $position))
-						echo "ok position $position for attribute $pos[2]\r\n";
+						echo "ok position ".(int)$position." for attribute ".(int)$pos[2]."\r\n";
 					else
-						echo '{"hasError" : true, "errors" : "Can not update attribute '. $id_attribute . ' to position '.$position.' "}';
+						echo '{"hasError" : true, "errors" : "Can not update attribute '. (int)$id_attribute . ' to position '.(int)$position.' "}';
 				else
-					echo '{"hasError" : true, "errors" : "This attribute ('.$id_attribute.') can t be loaded"}';
+					echo '{"hasError" : true, "errors" : "This attribute ('.(int)$id_attribute.') can t be loaded"}';
 
 				break;
 			}
@@ -892,11 +892,11 @@ if (Tools::isSubmit('ajaxGroupsAttributesPositions'))
 		{
 			if ($group_attribute = new AttributeGroup((int)$pos[1]))
 				if (isset($position) && $group_attribute->updatePosition($way, $position))
-					echo "ok position $position for group attribute $pos[1]\r\n";
+					echo "ok position ".(int)$position." for group attribute ".(int)$pos[1]."\r\n";
 				else
-					echo '{"hasError" : true, "errors" : "Can not update group attribute '. $id_attribute_group . ' to position '.$position.' "}';
+					echo '{"hasError" : true, "errors" : "Can not update group attribute '. (int)$id_attribute_group . ' to position '.(int)$position.' "}';
 			else
-				echo '{"hasError" : true, "errors" : "This group attribute ('.$id_attribute_group.') can t be loaded"}';
+				echo '{"hasError" : true, "errors" : "This group attribute ('.(int)$id_attribute_group.') can t be loaded"}';
 
 			break;
 		}
@@ -924,11 +924,11 @@ if (Tools::isSubmit('ajaxFeaturesPositions'))
 		{
 			if ($feature = new Feature((int)$pos[2]))
 				if (isset($position) && $feature->updatePosition($way, $position))
-					echo "ok position $position for feature $pos[1]\r\n";
+					echo "ok position ".(int)$position." for feature ".(int)$pos[1]."\r\n";
 				else
-					echo '{"hasError" : true, "errors" : "Can not update feature '. $id_feature . ' to position '.$position.' "}';
+					echo '{"hasError" : true, "errors" : "Can not update feature '. (int)$id_feature . ' to position '.(int)$position.' "}';
 			else
-				echo '{"hasError" : true, "errors" : "This feature ('.$id_feature.') can t be loaded"}';
+				echo '{"hasError" : true, "errors" : "This feature ('.(int)$id_feature.') can t be loaded"}';
 
 			break;
 		}
@@ -951,11 +951,11 @@ if (Tools::isSubmit('ajaxCarriersPositions'))
 		{
 			if ($carrier = new Carrier((int)$pos[2]))
 				if (isset($position) && $carrier->updatePosition($way, $position))
-					echo "ok position $position for carrier $pos[1]\r\n";
+					echo "ok position ".(int)$position." for carrier ".(int)$pos[1]."\r\n";
 				else
-					echo '{"hasError" : true, "errors" : "Can not update carrier '. $id_carrier . ' to position '.$position.' "}';
+					echo '{"hasError" : true, "errors" : "Can not update carrier '. (int)$id_carrier . ' to position '.(int)$position.' "}';
 			else
-				echo '{"hasError" : true, "errors" : "This carrier ('.$id_carrier.') can t be loaded"}';
+				echo '{"hasError" : true, "errors" : "This carrier ('.(int)$id_carrier.') can t be loaded"}';
 
 			break;
 		}
