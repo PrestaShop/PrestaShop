@@ -64,6 +64,8 @@ class AdminControllerCore extends Controller
 	/** @var array noTabLink array of admintab names witch have no content */
 	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
 
+	public $required_database = false;
+
 	/** @var string Security token */
 	public $token;
 
@@ -78,6 +80,7 @@ class AdminControllerCore extends Controller
 	public $tpl_delete_link_vars = array();
 	public $tpl_option_vars = array();
 	public $tpl_view_vars = array();
+	public $tpl_required_fields_vars = array();
 
 	public $base_tpl_view = null;
 	public $base_tpl_form = null;
@@ -157,6 +160,9 @@ class AdminControllerCore extends Controller
 
 	/** @var array $cache_lang cache for traduction */
 	public static $cache_lang = array();
+
+	/** @var array required_fields to display in the Required Fields form */
+	public $required_fields = array();
 
 	/**
 	 * @var array actions to execute on multiple selections
@@ -1361,6 +1367,9 @@ class AdminControllerCore extends Controller
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
 		}
+		// if we have to display the required fields form
+		if ($this->required_database)
+			$this->content .= $this->displayRequiredFields();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
@@ -1853,7 +1862,7 @@ class AdminControllerCore extends Controller
 		/* Submit options list */
 		else if (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
 			$this->action = 'update_options';
-		else if (Tools::isSubmit('submitFields') && $this->requiredDatabase && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
+		else if (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
 		else if (is_array($this->bulk_actions))
 			foreach ($this->bulk_actions as $bulk_action => $params)
@@ -2511,6 +2520,20 @@ class AdminControllerCore extends Controller
 	protected function beforeAdd($object)
 	{
 		return true;
+	}
+
+	/**
+	 * prepare the view to display the required fields form
+	 */
+	public function displayRequiredFields()
+	{
+		if (!$this->tabAccess['add'] || !$this->tabAccess['delete'] === '1' || !$this->required_database)
+			return;
+
+		$helper = new Helper();
+		$helper->currentIndex = self::$currentIndex;
+		$helper->token = $this->token;
+		return $helper->renderRequiredFields($this->className, $this->identifier, $this->required_fields);
 	}
 }
 
