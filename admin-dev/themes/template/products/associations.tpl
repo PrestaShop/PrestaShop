@@ -42,28 +42,36 @@
 		<div id="no_default_category" style="font-weight: bold;display: none;">
 		{l s='Please check a category in order to select the default category.'}
 	</div>
-	<table cellspacing="0" cellpadding="0" border="0">
-	 <tr>
+	<table>
+		<tr>
 			<td class="col-left">
-			<label for="id_category_default">{l s='Default category:'}</label>
+				<label for="id_category_default">{l s='Default category:'}</label>
 			</td>
 			<td class="col-right">
-	<select id="id_category_default" name="id_category_default">
-	{foreach from=$selected_cat item=cat}
-		<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
-	{/foreach}
-	</select>
-	</td>
-	</tr>
+				<select id="id_category_default" name="id_category_default">
+					{foreach from=$selected_cat item=cat}
+						<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
+					{/foreach}
+				</select>
+			</td>
+		</tr>
 	</table>
-	<br/>
-	<div id="category_block">{$category_tree}</div>
+	<br />
+	<table>
+		<tr>
+			<td class="col-left">
+				<label for="category_block">{l s='Associated categories:'}</label>
+			</td>
+			<td class="col-right">
+				<div id="category_block">{$category_tree}</div>
+			</td>
+		</tr>
+	</table>
+	<div class="separation"></div>
 	{if $feature_shop_active}
 		{* @todo use asso_shop from Helper *}
-		<tr id="shop_association">
-			<td class="col-left"><label>{l s='Shop association:'}</label></td>
-			<td style="padding-bottom:5px;">{$displayAssoShop}</td>
-		</tr>
+		<label>{l s='Shop association:'}</label>
+		{$displayAssoShop}
 	{/if}
 
 <div class="separation"></div>
