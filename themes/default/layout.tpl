@@ -23,15 +23,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($display_header)}
+{if !empty($display_header)}
 	{include file='./header.tpl' HOOK_HEADER=$HOOK_HEADER}
 {/if}
-{if isset($template)}
+{if !empty($template)}
 	{$template}
 {/if}
-{if isset($display_footer)}
+{if !empty($display_footer)}
 	{include file='./footer.tpl'}
 {/if}
-{if isset($live_edit)}
+{if !empty($live_edit)}
 	{$live_edit}
 {/if}
