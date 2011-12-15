@@ -38,6 +38,8 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $available_tabs = array(
 		'Informations',
+		'Pack',
+		'VirtualProduct',
 		'Prices',
 		'Seo',
 		'Associations',
@@ -57,6 +59,8 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $tabs_preloaded = array(
 		'Informations' => true,
+		'Pack' => true,
+		'VirtualProduct' => true,
 		'Prices' => true,
 		'Seo' => true,
 		'Associations' => true,
@@ -157,6 +161,8 @@ class AdminProductsControllerCore extends AdminController
 		// @since 1.5 : translations for tabs
 		$this->available_tabs_lang = array (
 			'Informations' => $this->l('Informations'),
+			'Pack' => $this->l('Pack'),
+			'VirtualProduct' => $this->l('Virtual Product'),
 			'Prices' => $this->l('Prices'),
 			'Seo' => $this->l('SEO'),
 			'Images' => $this->l('Images'),
@@ -2533,6 +2539,117 @@ class AdminProductsControllerCore extends AdminController
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED')
 		));
 
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
+	public function initFormPack($product, $languages, $default_language)
+	{
+		$data = $this->context->smarty->createData();
+
+		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
+
+		$input_pack_items = '';
+		if (Tools::getValue('inputPackItems'))
+			$input_pack_items = Tools::getValue('inputPackItems');
+		else
+			foreach ($product->packItems as $pack_item)
+				$input_pack_items .= $pack_item->pack_quantity.'x'.$pack_item->id.'-';
+
+		$input_namepack_items = '';
+		if (Tools::getValue('namePackItems'))
+			$input_namepack_items = Tools::getValue('namePackItems');
+		else
+			foreach ($product->packItems as $pack_item)
+				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
+
+		$data->assign(array(
+			'product' => $product,
+			'languages' => $languages,
+			'default_language' => $default_language,
+			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
+			'is_pack' => ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack'),
+			'input_pack_items' => $input_pack_items,
+			'input_namepack_items' => $input_namepack_items
+		));
+
+		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+	}
+
+	public function initFormVirtualProduct($product, $languages, $default_language)
+	{
+		
+		$data = $this->context->smarty->createData();
+
+		$currency = $this->context->currency;
+
+		/*
+		* Form for adding a virtual product like software, mp3, etc...
+		*/
+		$product_download = new ProductDownload();
+		if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id')))
+			$product_download = new ProductDownload($id_product_download);
+		$product->{'productDownload'} = $product_download;
+
+		// @todo handle is_virtual with the value of the product
+		$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
+		$data->assign('product_downloaded', $product->productDownload->id && !empty($product->productDownload->display_filename));
+
+		if (!file_exists($exists_file)
+			&& !empty($product->productDownload->display_filename)
+			&& !empty($product->cache_default_attribute))
+		{
+			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
+		}
+		else
+			$msg = '';
+
+		$data->assign('download_product_file_missing', $msg);
+		$data->assign('download_dir_writable', ProductDownload::checkWritableDir());
+
+		if (empty($product->cache_default_attribute))
+		{
+			$data->assign('show_file_input', !strval(Tools::getValue('virtual_product_filename')) || $product->productDownload->id > 0);
+			// found in informations and combination : to merge
+			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
+			$display_filename = ($product->productDownload->id > 0) ? $product->productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
+
+			if (!$product->productDownload->id || !$product->productDownload->active)
+				$hidden = 'display:none;';
+			else
+				$hidden = '';
+
+			$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
+			$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
+			$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
+			$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
+		}
+		else
+		{
+			$error = '';
+			$product_attribute = ProductDownload::getAttributeFromIdProduct($this->getFieldValue($product, 'id'));
+			foreach ($product_attribute as $p)
+			{
+				$product_download_attribute = new ProductDownload($p['id_product_download']);
+				$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename;
+				if (!file_exists($exists_file2) && !empty($product_download_attribute->id_product_attribute))
+				{
+					$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product_download_attribute->display_filename);
+					$error .= '<p class="alert" id="file_missing">
+						<b>'.$msg.' :<br/>
+						'.realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename.'</b>
+					</p>';
+				}
+			}
+			$data->assign('error_product_download', $error);
+		}
+
+		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
+		$data->assign('product', $product);
+		$data->assign('token', $this->token);
+		$data->assign('currency', $currency);
+		$data->assign($this->tpl_form_vars);
+		$data->assign('link', $this->context->link);
+		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
 

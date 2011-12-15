@@ -67,7 +67,7 @@ class ProductDownloadCore extends ObjectModel
 		'primary' => 'id_product_download',
 		'fields' => array(
 			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_product_attribute ' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'display_filename' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
 			'filename' => 				array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
