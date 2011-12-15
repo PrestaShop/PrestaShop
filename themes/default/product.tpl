@@ -222,7 +222,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 	<!-- left infos-->
 	<div id="pb-left-column">
 		<h1>{$product->name|escape:'htmlall':'UTF-8'}</h1>
-	
+
 		{if $product->description_short OR $packItems|@count > 0}
 		<div id="short_description_block">
 			{if $product->description_short}
@@ -244,7 +244,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{/if}
 		</div>
 		{/if}
-		
+
 		{*{if isset($colors) && $colors}
 		<!-- colors -->
 		<div id="color_picker">
@@ -270,7 +270,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<input type="hidden" name="add" value="1" />
 				<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
 			</p>
-			
+
 			<div class="product_attributes">
 				{if isset($groups)}
 				<!-- attributes -->
@@ -281,7 +281,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 							<label class="attribute_label" for="group_{$id_attribute_group|intval}">{$group.name|escape:'htmlall':'UTF-8'} :</label>
 							{assign var="groupName" value="group_$id_attribute_group"}
 							<div class="attribute_list">
-							{if ($group.group_type == 'select')} 
+							{if ($group.group_type == 'select')}
 								<select name="{$groupName}" id="group_{$id_attribute_group|intval}" class="attribute_select" onchange="findCombination();getProductAttribute();{if $colors|@count > 0}$('#wrapResetImages').show('slow');{/if};">
 									{foreach from=$group.attributes key=id_attribute item=group_attribute}
 										<option value="{$id_attribute|intval}"{if (isset($smarty.get.$groupName) && $smarty.get.$groupName|intval == $id_attribute) || $group.default == $id_attribute} selected="selected"{/if} title="{$group_attribute|escape:'htmlall':'UTF-8'}">{$group_attribute|escape:'htmlall':'UTF-8'}</option>
@@ -320,13 +320,13 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<label for="product_reference">{l s='Reference :'} </label>
 				<span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
 			</p>
-			
+
 			<!-- quantity wanted -->
 			<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) OR $virtual OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
 				<label>{l s='Quantity :'}</label>
 				<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" size="2" maxlength="3" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} />
 			</p>
-			
+
 			<!-- minimal quantity wanted -->
 			<p id="minimal_quantity_wanted_p"{if $product->minimal_quantity <= 1 OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>{l s='You must add '}<b id="minimal_quantity_label">{$product->minimal_quantity}</b>{l s=' as a minimum quantity to buy this product.'}</p>
 			{if $product->minimal_quantity > 1}
@@ -351,7 +351,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				<span {if $product->quantity == 1} style="display: none;"{/if} id="quantityAvailableTxtMultiple">{l s='items in stock'}</span>
 			</p>
 			{/if}
-			
+
 			<!-- Out of stock hook -->
 			<p id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
 				{$HOOK_PRODUCT_OOS}
@@ -367,7 +367,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{if $product->online_only}
 			<p class="online_only">{l s='Online only'}</p>
 			{/if}
-			
+
 			<div class="price">
 				{if !$priceDisplay || $priceDisplay == 2}
 					{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL)}
@@ -376,7 +376,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 					{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL)}
 					{assign var='productPriceWithoutRedution' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 				{/if}
-				
+
 				<p class="our_price_display">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
 					<span id="our_price_display">{convertPrice price=$productPrice}</span>
@@ -385,7 +385,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 					{/if}-->
 				{/if}
 				</p>
-				
+
 				{if $product->on_sale}
 					<img src="{$img_dir}onsale_{$lang_iso}.gif" alt="{l s='On sale'}" class="on_sale_img"/>
 					<span class="on_sale">{l s='On sale!'}</span>
@@ -402,7 +402,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{elseif $product->specificPrice AND $product->specificPrice.reduction_type == 'amount'}
 				<p id="reduction_amount"><span id="reduction_amount_display">-{convertPrice price=$product->specificPrice.reduction|floatval}</span></p>
 			{/if}
-			
+
 			{if $product->specificPrice AND $product->specificPrice.reduction}
 				<p id="old_price"><span class="bold">
 				{if $priceDisplay >= 0 && $priceDisplay <= 2}
@@ -433,11 +433,18 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 			{/if}
 			{*close if for show price*}
 			{/if}
-			
-			<p{if (!$allow_oosp && $product->quantity > 0) OR !$product->available_for_order OR (isset($restricted_country_mode) AND $restricted_country_mode) OR $PS_CATALOG_MODE} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><span></span><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
-			
+			<p{if
+				(!$allow_oosp && $product->quantity <= 0)
+				OR
+				!$product->available_for_order
+				OR
+				(isset($restricted_country_mode) AND $restricted_country_mode)
+				OR
+				$PS_CATALOG_MODE
+			} style="display: none;"{/if} id="add_to_cart" class="buttons_bottom_block"><span></span><input type="submit" name="Submit" value="{l s='Add to cart'}" class="exclusive" /></p>
+
 			{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}
-			
+
 			<div class="clear"></div>
 		</div>
 		</form>
