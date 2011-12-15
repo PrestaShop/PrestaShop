@@ -52,21 +52,10 @@ class ContactCore extends ObjectModel
 			'customer_service' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
-			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
-
-	/**
-	  * Check then return multilingual fields for database interaction
-	  *
-	  * @return array Multilingual fields
-	  */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name', 'description'));
-	}
 
 	/**
 	  * Return available contacts

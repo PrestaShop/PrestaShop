@@ -47,7 +47,9 @@ class AttributeCore extends ObjectModel
 			'id_attribute_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 			'position' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+
+			// Lang fields
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
 
@@ -67,17 +69,6 @@ class AttributeCore extends ObjectModel
 		$this->image_dir = _PS_COL_IMG_DIR_;
 
 		parent::__construct($id, $id_lang, $id_shop);
-	}
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
 	}
 
 	public function delete()

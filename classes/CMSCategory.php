@@ -86,29 +86,18 @@ class CMSCategoryCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'link_rewrite' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
-			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
-			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
+			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 		),
 	);
 
 	public function __construct($id_cms_category = NULL, $id_lang = NULL)
 	{
 		parent::__construct($id_cms_category, $id_lang);
-	}
-
-	/**
-	  * Check then return multilingual fields for database interaction
-	  *
-	  * @return array Multilingual fields
-	  */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name', 'description', 'link_rewrite', 'meta_title', 'meta_keywords', 'meta_description'));
 	}
 
 	public	function add($autodate = true, $nullValues = false)

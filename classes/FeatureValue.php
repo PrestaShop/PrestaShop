@@ -48,7 +48,7 @@ class FeatureValueCore extends ObjectModel
 			'custom' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
-			'value' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+			'value' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
 		),
 	);
 
@@ -59,17 +59,6 @@ class FeatureValueCore extends ObjectModel
 			'id_feature' => array('xlink_resource'=> 'product_features'),
 		),
 	);
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('value'));
-	}
 
 	/**
 	 * Get all values for a given feature

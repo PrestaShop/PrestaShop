@@ -90,19 +90,19 @@ class CategoryCore extends ObjectModel
 			'nleft' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'nright' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'level_depth' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true, 'size' => 1),
+			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'id_parent' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'position' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'name' => 				array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-			'link_rewrite' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
-			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isString'),
-			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
+			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
+			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
+			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 		),
 	);
 
@@ -138,24 +138,6 @@ class CategoryCore extends ObjectModel
 	public static function getDescriptionClean($description)
 	{
 		return strip_tags(stripslashes($description));
-	}
-
-	/**
-	  * Check then return multilingual fields for database interaction
-	  *
-	  * @return array Multilingual fields
-	  */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array(
-			'name',
-			'description' => array('html' => true),
-			'link_rewrite',
-			'meta_title',
-			'meta_keywords',
-			'meta_description',
-		));
 	}
 
 	public	function add($autodate = true, $nullValues = false)

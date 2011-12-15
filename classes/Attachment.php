@@ -47,16 +47,12 @@ class AttachmentCore extends ObjectModel
 			'file' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 40),
 			'mime' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 128),
 			'file_name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 128),
-			'name' => 			array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml'),
+
+			// Lang fields
+			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name', 'description'));
-	}
 
 	public function delete()
 	{

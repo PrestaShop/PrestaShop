@@ -94,16 +94,9 @@ class CartRuleCore extends ObjectModel
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'name' => 					array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 254),
+			'name' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 254),
 		),
 	);
-
-	public function getTranslationsFieldsChild()
-	{
-		if (!$this->validateFieldsLang())
-			return false;
-		return $this->getTranslationsFields(array('name'));
-	}
 
 	public function add($autodate = true, $nullValues = false)
 	{

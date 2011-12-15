@@ -53,7 +53,7 @@ class SceneCore extends ObjectModel
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
 			// Lang fields
-			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 100),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 100),
 		),
 	);
 
@@ -68,17 +68,6 @@ class SceneCore extends ObjectModel
 		if ($hideScenePosition)
 			$this->name = Scene::hideScenePosition($this->name);
 		$this->image_dir = _PS_SCENE_IMG_DIR_;
-	}
-
-	/**
-	 * Check then return multilingual fields for database interaction
-	 *
-	 * @return array Multilingual fields
-	 */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
 	}
 
 	public function update($nullValues = false)
