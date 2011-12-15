@@ -67,14 +67,14 @@ class NotificationCore
 
 		if ($type == 'order' || $type == 'message')
 			$sql = 'SELECT id_order, id_customer, '.(($type == 'order') ? 'total_paid_real' : 'message').'
-					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`
-					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.'
-					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
+					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
+					WHERE `id_'.bqSQL($type).'` > '.(int)$id_last_element.'
+					ORDER BY `id_'.bqSQL($type).'` DESC LIMIT 5';
 		else
-			$sql = 'SELECT id_'.pSQL($type).'
-					FROM `'._DB_PREFIX_.pSQL($type).'`
-					WHERE `id_'.pSQL($type).'` > '.(int)$id_last_element.'
-					ORDER BY `id_'.pSQL($type).'` DESC LIMIT 5';
+			$sql = 'SELECT id_'.bqSQL($type).'
+					FROM `'._DB_PREFIX_.bqSQL($type).'`
+					WHERE `id_'.bqSQL($type).'` > '.(int)$id_last_element.'
+					ORDER BY `id_'.bqSQL($type).'` DESC LIMIT 5';
 
 		$json = array();
 		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $key => $value)
@@ -110,8 +110,8 @@ class NotificationCore
 			// We update the last item viewed
 			return Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'employee`
-					SET `id_last_'.pSQL($type).'` = (SELECT MAX(`id_'.$type.'`)
-					FROM `'._DB_PREFIX_.(($type == 'order') ? pSQL($type).'s' : pSQL($type)).'`)
+					SET `id_last_'.bqSQL($type).'` = (SELECT MAX(`id_'.bqSQL($type).'`)
+					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`)
 					WHERE `id_employee` = '.(int)Context::getContext()->employee->id);
 		else
 			return false;
