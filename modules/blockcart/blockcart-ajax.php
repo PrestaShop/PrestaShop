@@ -24,7 +24,8 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-include(dirname(__FILE__).'/blockcart.php');
+// @TODO Find the reason why the blockcart.php is includ multiple time
+include_once(dirname(__FILE__).'/blockcart.php');
 $context = Context::getContext();
 $blockCart = new BlockCart();
 echo $blockCart->hookAjaxCall(array('cookie' => $context->cookie, 'cart' => $context->cart));

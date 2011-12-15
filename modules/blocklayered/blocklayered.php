@@ -1188,14 +1188,19 @@ class BlockLayered extends Module
 						$id_layered_filter = (int)Db::getInstance()->Insert_ID();
 					
 					$shop_list = array();
-					foreach ($_POST['checkBoxShopAsso_layered_filter'] as $id_asso_object => $row)
+					if (isset($_POST['checkBoxShopAsso_layered_filter']))
 					{
-						foreach ($row as $id_shop => $value)
+						foreach ($_POST['checkBoxShopAsso_layered_filter'] as $id_asso_object => $row)
 						{
-							$assos[] = array('id_object' => (int)$id_layered_filter, 'id_shop' => (int)$id_shop);
-							$shop_list[] = (int)$id_shop;
+							foreach ($row as $id_shop => $value)
+							{
+								$assos[] = array('id_object' => (int)$id_layered_filter, 'id_shop' => (int)$id_shop);
+								$shop_list[] = (int)$id_shop;
+							}
 						}
 					}
+					else
+						$shop_list = array(0);
 				}
 				else
 					$shop_list = array(0);
@@ -1277,10 +1282,11 @@ class BlockLayered extends Module
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 					{
 						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
-				
-						foreach ($assos as $asso)
-							Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
-								VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
+						
+					if (isset($assos))
+							foreach ($assos as $asso)
+								Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
+									VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
 					}
 					
 					$html .= '<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').
@@ -1586,8 +1592,11 @@ class BlockLayered extends Module
 			$helper->table = 'layered_filter';
 			$helper->identifier = 'id_layered_filter';
 			
-			$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
-			$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+			if (Shop::isFeatureActive())
+			{
+				$html .= '<span style="color: #585A69;display: block;float: left;font-weight: bold;text-align: right;width: 200px;" >'.$this->l('Choose shop association:').'</span>';
+				$html .= '<div id="shop_association" style="width: 300px;margin-left: 215px;">'.$helper->renderAssoShop().'</div>';
+			}
 		}
 		
 		$html .= '
@@ -3275,25 +3284,28 @@ class BlockLayered extends Module
 	
 		if (version_compare(_PS_VERSION_,'1.5','>') && !empty($id_layered_filter))
 		{
-			$helper = new Helper();
-			$helper->id = (int)$id_layered_filter;
-			$helper->table = 'layered_filter';
-			$helper->identifier = 'id_layered_filter';
-			$helper->base_folder = Tools::getValue('base_folder').'/themes/template/';
-			
-			$html .= '
-			<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
-			<script type="text/javascript">
-				$(document).ready(function() {
-					$(\'#shop_association\').html($(\'#shop_association_ajax\').html());
-					$(\'#shop_association_ajax\').remove();
-					// Initialize checkbox
-					$(\'.input_shop\').each(function(k, v) {
-						check_group_shop_status($(v).val());
-						check_all_shop();
+			if (Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL)
+			{
+				$helper = new Helper();
+				$helper->id = (int)$id_layered_filter;
+				$helper->table = 'layered_filter';
+				$helper->identifier = 'id_layered_filter';
+				$helper->base_folder = Tools::getValue('base_folder').'/themes/template/';
+				
+				$html .= '
+				<div id="shop_association_ajax">'.$helper->renderAssoShop().'</div>
+				<script type="text/javascript">
+					$(document).ready(function() {
+						$(\'#shop_association\').html($(\'#shop_association_ajax\').html());
+						$(\'#shop_association_ajax\').remove();
+						// Initialize checkbox
+						$(\'.input_shop\').each(function(k, v) {
+							check_group_shop_status($(v).val());
+							check_all_shop();
+						});
 					});
-				});
-			</script>';
+				</script>';
+			}
 		}
 
 		return $html;
