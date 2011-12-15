@@ -167,7 +167,14 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_ALLOW_MULTISHIPPING' => array(
 					'title' => $this->l('Allow multi-shipping'),
-					'desc' => $this->l('Allow the customer to ship is order to multiple addressed or in to deliver the products "in stock" first. This option will transform the customer cart in one or more orders.'),
+					'desc' => $this->l('Allow the customer to ship his order to multiple addresses. This option will transform the customer cart in one or more orders.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool'
+				),
+				'PS_SHIP_WHEN_AVAILABLE' => array(
+					'title' => $this->l('Allow shipping when available'),
+					'desc' => $this->l('Allow the customer to split his order. One with the products "in stock", and an other with the other products. This option will transform the customer cart in two orders.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'

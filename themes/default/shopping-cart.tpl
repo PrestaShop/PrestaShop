@@ -309,14 +309,14 @@
 	</table>
 </div>
 
-{if !$cart->isAllProductsInStock()}
+{if !$cart->isAllProductsInStock() && Configuration::get('PS_SHIP_WHEN_AVAILABLE')}
 <p>
 	<input type="checkbox" name="allow_seperated_package" id="allow_seperated_package" {if $cart->allow_seperated_package}checked="checked"{/if} />
 	<label for="allow_seperated_package">{l s="Send the available products first"}</label>
 </p>
 {/if}
 {if !$opc}
-	{if Configuration::get('PS_ALLOW_MULTISHIPPING')}
+	{if Configuration::get('PS_SHIP_WHEN_AVAILABLE')}
 		<p>
 			<input type="checkbox" {if $multi_shipping}checked="checked"{/if} id="enable-multishipping" />
 			<label for="enable-multishipping">{l s="I want to specify a delivery address for each products ordered."}</label>

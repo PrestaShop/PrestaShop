@@ -132,7 +132,7 @@ class CartControllerCore extends FrontController
 	
 	protected function processAllowSeperatedPackage()
 	{
-		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
+		if (!Configuration::get('PS_SHIP_WHEN_AVAILABLE'))
 			return;
 		
 		if (Tools::getValue('value') === false)
