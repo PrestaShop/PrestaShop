@@ -62,7 +62,7 @@ class HookCore extends ObjectModel
 			return false;
 		$hook_alias_list = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_alias`');
 		foreach ($hook_alias_list as $ha)
-			self::$_hook_alias[strtolower($ha['name'])] = $ha['alias'];
+			self::$_hook_alias[strtolower($ha['alias'])] = $ha['name'];
 		return true;
 	}
 
@@ -79,6 +79,9 @@ class HookCore extends ObjectModel
 		self::preloadHookAlias();
 		if (isset(self::$_hook_alias[strtolower($hook_name)]))
 			$retro_hook_name = self::$_hook_alias[strtolower($hook_name)];
+		foreach (self::$_hook_alias as $alias => $name)
+			if ($hook_name == $name)
+				return $alias;
 		return $retro_hook_name;
 	}
 
@@ -220,8 +223,9 @@ class HookCore extends ObjectModel
 		// Get retrocompatible hook name
 		$retro_hook_name = Hook::getRetroHookName($hook_name);
 
-    if (!in_array($hook_name, Context::getContext()->controller->hook_list))
-      Context::getContext()->controller->hook_list[Hook::getIdByName($hook_name)] = $hook_name;
+		// Hook list for live edit
+		if (!in_array($hook_name, Context::getContext()->controller->hook_list))
+			Context::getContext()->controller->hook_list[Hook::getIdByName($hook_name)] = $hook_name;
 
 		$live_edit = false;
 		if (!isset($hookArgs['cookie']) || !$hookArgs['cookie'])
