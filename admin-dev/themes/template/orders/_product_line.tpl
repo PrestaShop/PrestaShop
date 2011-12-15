@@ -64,7 +64,7 @@
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
 	</td>
 	<td colspan="2" style="display: none;" class="add_product_fields">&nbsp;</th>
-	<td align="center" class="cancelCheck standard_refund_fields" style="background-color:rgb(232, 237, 194);display:none">
+	<td align="center" class="cancelCheck standard_refund_fields current-edit" style="display:none">
 		<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="{$product['product_quantity_return']}" />
 		<input type="hidden" name="totalQty" id="totalQty" value="{$product['product_quantity']}" />
 		<input type="hidden" name="productName" id="productName" value="{$product['product_name']}" />
@@ -74,7 +74,7 @@
 		--
 	{/if}
 	</td>
-	<td class="cancelQuantity standard_refund_fields" style="background-color:rgb(232, 237, 194);display:none">
+	<td class="cancelQuantity standard_refund_fields current-edit" style="display:none">
 	{if ($product['product_quantity_return'] + $product['product_quantity_refunded'] >= $product['product_quantity'])}
 		<input type="hidden" name="cancelQuantity[{$k}]" value="0" />
 	{elseif (!$order->hasBeenDelivered() OR Configuration::get('PS_ORDER_RETURN'))}
@@ -95,7 +95,7 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields" style="text-align:right;background-color:rgb(232, 237, 194);display:none"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</td>
+	<td class="partial_refund_fields current-edit" style="text-align:right;display:none"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
 		{if sizeof($invoices_collection)}

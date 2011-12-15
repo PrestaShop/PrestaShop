@@ -588,6 +588,26 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+		elseif (Tools::isSubmit('submitEditNote')) {
+			$id_order_invoice = (int)Tools::getValue('id_order_invoice');
+			$note = Tools::getValue('note');
+			$order_invoice = new OrderInvoice($id_order_invoice);
+			if (Validate::isLoadedObject($order_invoice) && Validate::isCleanHtml($note))
+			{
+				if ($this->tabAccess['edit'] === '1')
+				{
+					$order_invoice->note = $note;
+					if ($order_invoice->save())
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order_invoice->id_order.'&vieworder&conf=4&token='.$this->token);
+					else
+						$this->_errors[] = Tools::displayError('Unable to save invoice note.');
+				}
+				else
+					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			}
+			else
+				$this->_errors[] = Tools::displayError('Unable to load invoice for edit note.');
+		}
 		elseif (Tools::isSubmit('submitAddOrder') == 1 && ($id_cart = Tools::getValue('id_cart')) && ($module_name = pSQL(Tools::getValue('payment_module_name'))) && ($id_order_state = Tools::getValue('id_order_state')))
 		{
 			if ($this->tabAccess['edit'] === '1')
