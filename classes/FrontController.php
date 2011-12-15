@@ -423,15 +423,37 @@ class FrontControllerCore extends Controller
 		));
 		
 
-	
+
 
 		if (Tools::isSubmit('live_edit'))
 		{
 			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
 		}
 		
+		// handle 1.4 theme (with layout.tpl missing)
+		if (file_exists(_PS_THEME_DIR_.'layout.tpl'))
+			$this->context->smarty->display(_PS_THEME_DIR_.'layout.tpl');
+		else
+		{
+			// BEGIN - 1.4 retrocompatibility - will be removed in 1.6
+			Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
+			if ($this->display_header)
+				$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
 		
-		$this->context->smarty->display(_PS_THEME_DIR_.'layout.tpl');
+			if ($this->template)
+				$this->context->smarty->display($this->template);
+		
+			if ($this->display_footer)
+				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+
+			// live edit
+			if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+			{
+				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
+				$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
+			}
+			// END - 1.4 retrocompatibility - will be removed in 1.6
+		}
 
 		return true;
 	}
