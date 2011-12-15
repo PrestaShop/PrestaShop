@@ -267,8 +267,8 @@ class ProductCore extends ObjectModel
 			'meta_title' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'link_rewrite' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
 			'name' => 						array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
-			'description' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString'),
-			'description_short' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString'),
+			'description' => 				array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
+			'description_short' => 			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isString'),
 			'available_now' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'available_later' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
 		),
@@ -427,27 +427,6 @@ class ProductCore extends ObjectModel
 		$return = parent::update($null_values);
 		Hook::exec('afterSaveProduct', array('id_product' => $this->id));
 		return $return;
-	}
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array(
-			'meta_description',
-			'meta_keywords',
-			'meta_title',
-			'link_rewrite',
-			'name',
-			'available_now',
-			'available_later',
-			'description' => array('html' => true),
-			'description_short' => array('html' => true),
-		));
 	}
 
 	public static function initPricesComputation($id_customer = null)

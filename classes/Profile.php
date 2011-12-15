@@ -39,21 +39,10 @@ class ProfileCore extends ObjectModel
 		'multilang' => true,
 		'fields' => array(
 			// Lang fields
-			'name' => array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
-	
 	/**
 	* Get all available profiles
 	*

@@ -74,8 +74,8 @@ class OrderStateCore extends ObjectModel
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
-			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'template' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'template' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
 		),
 	);
 
@@ -86,17 +86,6 @@ class OrderStateCore extends ObjectModel
 			'hidden' => array(),
 		),
 	);
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name', 'template'));
-	}
 
 	/**
 	* Get all available order states

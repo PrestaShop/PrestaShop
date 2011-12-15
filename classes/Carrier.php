@@ -142,7 +142,7 @@ class CarrierCore extends ObjectModel
 			'deleted' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
-			'delay' => 					array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'delay' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
 
@@ -166,17 +166,6 @@ class CarrierCore extends ObjectModel
 		parent::__construct($id, $id_lang);
 		if ($this->name == '0')
 			$this->name = Configuration::get('PS_SHOP_NAME');
-	}
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('delay'));
 	}
 
 	public function add($autodate = true, $null_values = false)

@@ -55,10 +55,9 @@ class TabCore extends ObjectModel
 			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
 
 			// Lang fields
-			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
-
 
 	protected static $_getIdFromClassName = null;
 

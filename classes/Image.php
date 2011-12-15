@@ -72,7 +72,7 @@ class ImageCore extends ObjectModel
 			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
-			'legend' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
 
@@ -83,12 +83,6 @@ class ImageCore extends ObjectModel
 		parent::__construct($id, $id_lang);
 		$this->image_dir = _PS_PROD_IMG_DIR_;
 		$this->source_index = _PS_PROD_IMG_DIR_.'index.php';
-	}
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('legend'));
 	}
 
 	public function add($autodate = true, $null_values = false)

@@ -84,7 +84,7 @@ class CountryCore extends ObjectModel
 			'display_tax_label' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
 			// Lang fields
-			'name' => 						array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			'name' => 						array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
 	);
 
@@ -95,17 +95,6 @@ class CountryCore extends ObjectModel
 			'id_currency' => array('sqlId' => 'id_currency', 'xlink_resource'=> 'currencies'),
 		),
 	);
-
-	/**
-	  * Check then return multilingual fields for database interaction
-	  *
-	  * @return array Multilingual fields
-	  */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
 
 	public function delete()
 	{

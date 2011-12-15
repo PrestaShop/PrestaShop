@@ -41,7 +41,7 @@ class FeatureCore extends ObjectModel
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
 			// Lang fields
-			'name' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
 
@@ -51,17 +51,6 @@ class FeatureCore extends ObjectModel
 		'objectNodeName' => 'product_feature',
 		'fields' => array(),
 	);
-
-	/**
-	* Check then return multilingual fields for database interaction
-	*
-	* @return array Multilingual fields
-	*/
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
 
 	/**
 	 * Get a feature data for a given id_feature and id_lang
@@ -160,7 +149,7 @@ class FeatureCore extends ObjectModel
 	 	$this->clearCache();
 
 	 	$result = 1;
-	 	$fields = $this->getTranslationsFieldsChild();
+	 	$fields = $this->getFieldsLang();
 		foreach ($fields as $field)
 		{
 			foreach (array_keys($field) as $key)

@@ -80,10 +80,10 @@ class SupplierCore extends ObjectModel
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'description' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName'),
-			'meta_title' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-			'meta_description' => 	array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-			'meta_keywords' => 		array('type' => 'FILL_ME', 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
+			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 		),
 	);
 
@@ -104,12 +104,6 @@ class SupplierCore extends ObjectModel
 	public function getLink()
 	{
 		return Tools::link_rewrite($this->name, false);
-	}
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('description', 'meta_title', 'meta_keywords', 'meta_description'));
 	}
 
 	/**

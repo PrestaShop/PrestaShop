@@ -58,7 +58,7 @@ class GroupCore extends ObjectModel
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
 			// Lang fields
-			'name' => 					array('type' => self::TYPE_INT, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'name' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
@@ -66,13 +66,6 @@ class GroupCore extends ObjectModel
 	protected static $group_price_display_method = array();
 
 	protected $webserviceParameters = array();
-
-	public function getTranslationsFieldsChild()
-	{
-		if (!$this->validateFieldsLang())
-			return false;
-		return $this->getTranslationsFields(array('name'));
-	}
 
 	public static function getGroups($id_lang)
 	{
