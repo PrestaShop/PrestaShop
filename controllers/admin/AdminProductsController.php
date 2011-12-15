@@ -2430,11 +2430,14 @@ class AdminProductsControllerCore extends AdminController
 		}
 		$data->assign('accessories', $accessories);
 
+		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
+
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
 					'category_tree' => Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true),
-				  	'product' => $product
+				  	'product' => $product,
+					'link' => $this->context->link
 		));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
@@ -2827,18 +2830,6 @@ class AdminProductsControllerCore extends AdminController
 		$cover = Product::getCover($product->id);
 		$this->_applyTaxToEcotax($product);
 
-		// Accessories block
-		$accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
-
-		if ($post_accessories = Tools::getValue('inputAccessories'))
-		{
-			$post_accessories_tab = explode('-', Tools::getValue('inputAccessories'));
-			foreach ($post_accessories_tab as $accessory_id)
-				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
-					$accessories[] = $accessory;
-		}
-		$data->assign('accessories', $accessories);
-
 		/*
 		* Form for adding a virtual product like software, mp3, etc...
 		*/
@@ -2881,8 +2872,6 @@ class AdminProductsControllerCore extends AdminController
 		$product->name['class'] = 'updateCurrentText';
 		if (!$product->id)
 			$product->name['class'] .= ' copy2friendlyUrl';
-
-		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
 
 		// @todo : initPack should not be called like this
 		$this->initPack($product);

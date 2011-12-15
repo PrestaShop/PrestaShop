@@ -169,21 +169,6 @@
 	</select>
 	</td>
 	</tr>
-	<tr>
-	<td class="col-left"><label>{l s='Manufacturer:'}</label></td>
-	<td style="padding-bottom:5px;">
-	<select name="id_manufacturer" id="id_manufacturer">
-	<option value="0">-- {l s='Choose (optional)'} --</option>
-	{if $product->id_manufacturer}
-	<option value="{$product->id_manufacturer}" selected="selected">{$product->manufacturer_name}</option>
-	{/if}
-	<option disabled="disabled">----------</option>
-	</select>&nbsp;&nbsp;&nbsp;
-	<a href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer" onclick="return confirm('{l s='Are you sure you want to delete product information entered?' js=1} ')">
-	<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
-	</a>
-	</td>
-	</tr>
 </table>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 {* [begin] pack product *}
