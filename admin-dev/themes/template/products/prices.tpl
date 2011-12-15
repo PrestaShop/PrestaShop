@@ -150,7 +150,11 @@
 	<div class="separation"></div>
 
 	{if isset($specificPriceModificationForm)}
-		<h4>{l s='Current specific prices'}</h4>
+		<h4>{l s='Specific prices'}</h4>
+		<div class="hint" style="display:block;min-height:0;">
+			{l s='You can set specific prices for clients belonging to different groups, different countries...'}
+		</div>
+		<br />
 		<a class="button bt-icon" href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>
 		<br/>
 		<script type="text/javascript">
@@ -247,7 +251,7 @@
 						<span id="sp_current_ht_price">{displayWtPrice p=$product->price}</span>
 					)
 				</span>
-				<div class="hint" style="display:block;">
+				<div class="hint" style="display:block;min-height:0;">
 					{l s='You can set this value at 0 in order to apply the default price'}
 				</div>
 			</div>
