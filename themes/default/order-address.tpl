@@ -201,7 +201,7 @@
 <div id="opc_account" class="opc-main-block">
 	<div id="opc_account-overlay" class="opc-overlay" style="display: none;"></div>
 {/if}
-	<div class="addresses">
+	<div class="addresses clearfix">
 		<p class="address_delivery select">
 			<label for="id_address_delivery">{l s='Choose a delivery address:'}</label>
 			<select name="id_address_delivery" id="id_address_delivery" class="address_select" onchange="updateAddressesDisplay();{if $opc}updateAddressSelection();{/if}">
@@ -230,12 +230,12 @@
 				<a style="margin-left: 221px;" href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1&select_address=1{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 			{/if}
 		</p>
-		<div class="clear"></div>
-		<ul class="address item" id="address_delivery" {if $cart->isVirtualCart()}style="display:none;"{/if}>
-		</ul>
-		<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
-		</ul>
-		<br class="clear" />
+		<div class="clearfix">
+			<ul class="address item" id="address_delivery" {if $cart->isVirtualCart()}style="display:none;"{/if}>
+			</ul>
+			<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if}" id="address_invoice">
+			</ul>
+		</div>
 		<p class="address_add submit">
 			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 		</p>
