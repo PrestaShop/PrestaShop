@@ -238,9 +238,10 @@
 						<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
 							<td colspan="4">
 								<form action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
-									<p class="center">
+									<p>
+										<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 										<input type="hidden" name="id_order_invoice" value="{$document->id}" />
-										<textarea name="note" rows="10" cols="10" style="width:98%;height:100px;">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="note" rows="10" cols="10" id="editNote{$document->id}" style="width:98%;height:100px;">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
 									</p>
 									<p class="right">
 										<input type="submit" name="submitEditNote" value="{l s='Save'}" class="button" />
@@ -251,7 +252,7 @@
 						</tr>
 						{foreachelse}
 						<tr>
-							<td colspan="3" class="center">
+							<td colspan="4" class="center">
 								<h3>{l s='No document is available'}</h3>
 								<p><a class="button" href="{$currentIndex}&viewOrder&submitGenerateInvoice&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
 							</td>
