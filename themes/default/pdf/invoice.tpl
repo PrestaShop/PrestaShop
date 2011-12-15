@@ -232,11 +232,7 @@
 <table style="width: 100%">
     <tr>
         <td style="width: 15%"></td>
-        <td style="width: 85%">
-			<p>
-            {$order_invoice->note|nl2br}
-			</p>
-        </td>
+        <td style="width: 85%">{$order_invoice->note|nl2br}</td>
     </tr>
 </table>
 {/if}
@@ -246,9 +242,7 @@
 <table style="width: 100%">
     <tr>
         <td style="width: 15%"></td>
-        <td style="width: 85%">
-            {$HOOK_DISPLAY_PDF}
-        </td>
+        <td style="width: 85%">{$HOOK_DISPLAY_PDF}</td>
     </tr>
 </table>
 {/if}
