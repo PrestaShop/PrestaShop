@@ -225,7 +225,7 @@ class HookCore extends ObjectModel
 
 		// Hook list for live edit
 		$ctrl = Context::getContext()->controller;
-		if (is_object($ctrl) && !in_array($hook_name, $ctrl->controller->hook_list))
+		if ($ctrl && !in_array($hook_name, $ctrl->hook_list));
 			Context::getContext()->controller->hook_list[Hook::getIdByName($hook_name)] = $hook_name;
 
 		$live_edit = false;
