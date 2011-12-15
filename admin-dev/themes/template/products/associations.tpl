@@ -67,8 +67,8 @@
 			</td>
 		</tr>
 	</table>
-	<div class="separation"></div>
 	{if $feature_shop_active}
+		<div class="separation"></div>
 		{* @todo use asso_shop from Helper *}
 		<label>{l s='Shop association:'}</label>
 		{$displayAssoShop}
@@ -77,7 +77,7 @@
 <div class="separation"></div>
 	<table>
 		<tr>
-			<td class="col-left"><label>{l s='Accessories:'}{*<br /><br /><i>{l s='(Do not forget to Save the product afterward)'}</i>*}</label></td>
+			<td class="col-left"><label>{l s='Accessories:'}</label></td>
 			<td style="padding-bottom:5px;">
 				<input type="hidden" name="inputAccessories" id="inputAccessories" value="{foreach from=$accessories item=accessory}{$accessory.id_product}-{/foreach}" />
 				<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|htmlentitiesUTF8}¤{/foreach}" />
