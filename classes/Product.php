@@ -585,24 +585,16 @@ class ProductCore extends ObjectModel
 		);
 	}
 
+	/**
+	 * @see ObjectModel::validateFieldsLang()
+	 */
 	public function validateFieldsLang($die = true, $error_return = false)
 	{
 		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
 		if ($limit <= 0)
 			$limit = 800;
-		if (!is_array($this->description_short))
-			$this->description_short = array();
-		foreach ($this->description_short as $k => $value)
-			if (Tools::strlen(strip_tags($value)) > $limit)
-			{
-				if ($die) die (Tools::displayError().' ('.get_class($this).'->description_short: length > '.$limit.' for language '.$k.')');
+		$this->def['fields']['description_short']['size'] = $limit;
 
-				$return = false;
-				if ($error_return)
-					$return = get_class($this).'->'.Tools::displayError('description_short: length >').' '.$limit.' '.Tools::displayError('for language').' '.$k;
-
-				return $return;
-			}
 		return parent::validateFieldsLang($die, $error_return);
 	}
 

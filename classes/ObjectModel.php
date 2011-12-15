@@ -53,37 +53,46 @@ abstract class ObjectModelCore
 
 	private $getShopFromContext = true;
 
+	protected static $fieldsRequiredDatabase = null;
+
 	/**
-	 * @var string SQL This property shouldn't be overloaded anymore in class, use static $definition['table'] property instead
-	 * @deprecated 1.5.0
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['table'] property instead
 	 */
 	protected $table;
 
 	/**
-	 * @var string SQL This property shouldn't be overloaded anymore in class, use static $definition['primary'] property instead
-	 * @deprecated 1.5.0
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['primary'] property instead
 	 */
 	protected $identifier;
 
-	/** @var array Required fields for admin panel forms */
+	/**
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 */
  	protected $fieldsRequired = array();
 
-	/** @var fieldsRequiredDatabase */
-	protected static $fieldsRequiredDatabase = null;
-
- 	/** @var array Maximum fields size for admin panel forms */
+	/**
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 */
  	protected $fieldsSize = array();
 
- 	/** @var array Fields validity functions for admin panel forms */
+	/**
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 */
  	protected $fieldsValidate = array();
 
-	/** @var array Multilingual required fields for admin panel forms */
+	/**
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 */
  	protected $fieldsRequiredLang = array();
 
- 	/** @var array Multilingual maximum fields size for admin panel forms */
+	/**
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 */
  	protected $fieldsSizeLang = array();
 
- 	/** @var array Multilingual fields validity functions for admin panel forms */
+	/**
+	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 */
  	protected $fieldsValidateLang = array();
 
 	/**
@@ -121,12 +130,13 @@ abstract class ObjectModelCore
 	{
 		$object = new $className();
 		return array(
-		'required' => $object->fieldsRequired,
-		'size' => $object->fieldsSize,
-		'validate' => $object->fieldsValidate,
-		'requiredLang' => $object->fieldsRequiredLang,
-		'sizeLang' => $object->fieldsSizeLang,
-		'validateLang' => $object->fieldsValidateLang);
+			'required' => $object->fieldsRequired,
+			'size' => $object->fieldsSize,
+			'validate' => $object->fieldsValidate,
+			'requiredLang' => $object->fieldsRequiredLang,
+			'sizeLang' => $object->fieldsSizeLang,
+			'validateLang' => $object->fieldsValidateLang,
+		);
 	}
 
 	/**
@@ -204,7 +214,7 @@ abstract class ObjectModelCore
 		{
 			$fields = $this->getfieldsRequiredDatabase(true);
 			if ($fields)
-				foreach ($fields AS $row)
+				foreach ($fields as $row)
 					self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);
 			else
 				self::$fieldsRequiredDatabase = array();
@@ -226,6 +236,7 @@ abstract class ObjectModelCore
 	/**
 	 * Prepare multilang fields
 	 *
+	 * @since 1.5.0
 	 * @return array
 	 */
 	public function getFieldsLang()
@@ -247,10 +258,11 @@ abstract class ObjectModelCore
 	}
 
 	/**
+	 * @since 1.5.0
 	 * @param int $id_lang If this parameter is given, only take lang fields
 	 * @return array
 	 */
-	public function formatFields($id_lang = null)
+	protected function formatFields($id_lang = null)
 	{
 		$fields = array();
 
@@ -613,32 +625,20 @@ abstract class ObjectModelCore
 	 */
 	public function validateFields($die = true, $error_return = false)
 	{
-		$fieldsRequired = array_merge($this->fieldsRequired, (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array()));
-		foreach ($fieldsRequired as $field)
-			if (Tools::isEmpty($this->{$field}) && !is_numeric($this->{$field}))
-			{
-				if ($die)
-					throw new PrestashopException('property empty : '.get_class($this).'->'.$field);
-				return $error_return ? get_class($this).' -> '.$field.' is empty' : false;
-			}
+		foreach ($this->def['fields'] as $field => $data)
+		{
+			if (!empty($data['lang']))
+				continue;
 
-		foreach ($this->fieldsSize as $field => $size)
-			if (isset($this->{$field}) && Tools::strlen($this->{$field}) > $size)
+			$message = $this->validateField($field, $this->$field);
+			if ($message !== true)
 			{
 				if ($die)
-					throw new PrestashopException('fieldsize error : '.get_class($this).'->'.$field.' > '.$size);
-				return $error_return ? get_class($this).' -> '.$field.' Length '.$size : false;
+					throw new PrestashopException($message);
+				return $error_return ? $message : false;
 			}
+		}
 
-		foreach ($this->fieldsValidate as $field => $method)
-			if (!method_exists('Validate', $method))
-				throw new PrestashopException('Validation function not found. '.$method);
-			elseif (!empty($this->{$field}) && !call_user_func(array('Validate', $method), $this->{$field}))
-			{
-				if ($die)
-					throw new PrestashopException('Field not valid : '.get_class($this).'->'.$field.' = '.$this->{$field});
-				return $error_return ? get_class($this).' -> '.$field.' = '.$this->{$field} : false;
-			}
 		return true;
 	}
 
@@ -651,46 +651,72 @@ abstract class ObjectModelCore
 	 */
 	public function validateFieldsLang($die = true, $error_return = false)
 	{
-		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
-		foreach ($this->fieldsRequiredLang as $fieldArray)
+		foreach ($this->def['fields'] as $field => $data)
 		{
-			if (!is_array($this->{$fieldArray}))
-				continue ;
-			if (!$this->{$fieldArray} || !count($this->{$fieldArray}) || ($this->{$fieldArray}[$defaultLanguage] !== '0' && empty($this->{$fieldArray}[$defaultLanguage])))
+			if (empty($data['lang']))
+				continue;
+
+			$values = $this->$field;
+			if (!is_array($values))
+				$values = array($this->id_lang => $values);
+
+			foreach ($values as $id_lang => $value)
 			{
-				if ($die)
-					throw new PrestashopException('empty for default language : '.get_class($this).'->'.$fieldArray);
-				return $error_return ? get_class($this).'->'.$fieldArray.' '.Tools::displayError('is empty for default language.') : false;
+				$message = $this->validateField($field, $value, $id_lang);
+				if ($message !== true)
+				{
+					if ($die)
+						throw new PrestashopException($message);
+					return $error_return ? $message : false;
+				}
 			}
 		}
 
-		foreach ($this->fieldsSizeLang as $fieldArray => $size)
+		return true;
+	}
+
+	/**
+	 * Validate a single field
+	 *
+	 * @since 1.5.0
+	 * @param string $field Field name
+	 * @param mixed $value Field value
+	 * @param int $id_lang
+	 * @return bool|string
+	 */
+	public function validateField($field, $value, $id_lang = null)
+	{
+		$data = $this->def['fields'][$field];
+
+		// Check if field is required
+		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
+		if (!$id_lang || $id_lang == Configuration::get('PS_LANG_DEFAULT'))
+			if (!empty($data['required']) || in_array($field, $required_fields))
+				if (Tools::isEmpty($value))
+					return 'Property '.get_class($this).'->'.$field.' is empty';
+
+		// Check field size
+		if (!empty($data['size']))
 		{
-			if (!is_array($this->{$fieldArray}))
-				continue ;
-			foreach ($this->{$fieldArray} as $k => $value)
-				if (Tools::strlen($value) > $size)
-				{
-					if ($die)
-						throw new PrestashopException('fieldsize error '.get_class($this).'->'.$fieldArray.' length of '.$size.' for language');
-					return $error_return ? get_class($this).'->'.$fieldArray.' '.Tools::displayError('Length').' '.$size.' '.Tools::displayError('for language') : false;
-				}
+			$size = $data['size'];
+			if (!is_array($data['size']))
+				$size = array('min' => 0, 'max' => $data['size']);
+
+			$length = Tools::strlen($value);
+			if ($length < $size['min'] || $length > $size)
+				return 'Property '.get_class($this).'->'.$field.' has bad length ('.$length.') and must be between '.$size['min'].' and '.$size['max'];
 		}
 
-		foreach ($this->fieldsValidateLang as $fieldArray => $method)
+		// Check field validator
+		if (!empty($data['validate']))
 		{
-			if (!is_array($this->{$fieldArray}))
-				continue ;
-			foreach ($this->{$fieldArray} as $k => $value)
-				if (!method_exists('Validate', $method))
-					throw new PrestashopException('Validation function not found for lang: '.$method);
-				elseif (!empty($value) && !call_user_func(array('Validate', $method), $value))
-				{
-					if ($die)
-						throw new PrestashopException('Field not valid : '.get_class($this).'->'.$fieldArray.' = '.$value. 'for language '.$k);
-					return $error_return ? Tools::displayError('The following field is invalid according to the validate method ').'<b>'.$method.'</b>:<br/> ('. get_class($this).'->'.$fieldArray.' = '.$value.' '.Tools::displayError('for language').' '.$k : false;
-				}
+			if (!method_exists('Validate', $data['validate']))
+				throw new PrestashopException('Validation function not found. '.$data['validate']);
+
+			if (!empty($value) && !call_user_func(array('Validate', $data['validate']), $value))
+				return 'Property '.get_class($this).'->'.$field.' is not valid';
 		}
+
 		return true;
 	}
 

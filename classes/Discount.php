@@ -243,7 +243,7 @@ class DiscountCore extends CartRule
 		$now = time();
 		$voucher->date_from = date('Y-m-d H:i:s', $now);
 		$voucher->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
-		if (!$voucher->validateFieldsLang(false) OR !$voucher->add())
+		if (!$voucher->validateFieldsLang(false) || !$voucher->add())
 			return false;
 		// set correct name
 		$voucher->name = 'V'.(int)($voucher->id).'C'.(int)($order->id_customer).'O'.$order->id;
