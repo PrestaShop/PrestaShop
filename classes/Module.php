@@ -33,6 +33,12 @@ abstract class ModuleCore
 	/** @var float Version */
 	public $version;
 
+	/** @var array filled with known compliant PS versions */
+	public $ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
+
+	/** @var array filled with modules needed for install */
+	public $dependencies = array();
+
 	/** @var string Unique name */
 	public $name;
 
@@ -54,50 +60,49 @@ abstract class ModuleCore
 	/** @var boolean Status */
 	public $active = false;
 
+	/** @var string Fill it if the module is installed but not yet set up */
+	public $warning;
+
+	/** @var array to store the limited country */
+	public $limited_countries = array();
+
+	/** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
+	public static $classInModule = array();
+
 	/** @var array current language translations */
 	protected $_lang = array();
 
 	/** @var string Module web path (eg. '/shop/modules/modulename/')  */
 	protected $_path = NULL;
 
-	/** @var string Fill it if the module is installed but not yet set up */
-	public $warning;
-
-	/** @var string Message display before uninstall a module */
-	public $beforeUninstall = NULL;
-
+	/** @var protected array filled with module errors */
 	protected $_errors = false;
 
+	/** @var protected string main table used for modules installed */
 	protected $table = 'module';
 
+	/** @var protected string identifier of the main table */
 	protected $identifier = 'id_module';
 
-	public static $_db;
+	/** @var protected array cache filled with modules informations */
+	protected static $modules_cache;
 
-	/** @var array to store the limited country */
-	public $limited_countries = array();
-
-	protected static $modulesCache;
-
+	/** @var protected array cache filled with modules instances */
 	protected static $_INSTANCE = array();
 
-	protected static $_generateConfigXmlMode = false;
+	/** @var protected boolean filled with config xml generation mode */
+	protected static $_generate_config_xml_mode = false;
 
+	/** @var protected array filled with cache translations */
 	protected static $l_cache = array();
 
+	/** @var protected array filled with cache permissions (modules / employee profiles) */
 	protected static $cache_permissions = array();
-
-	/**
-	 * @var array used by AdminTab to determine which lang file to use (admin.php or module lang file)
-	 */
-	public static $classInModule	= array();
 
 	/** @var Context */
 	protected $context;
 
-	/**
-	 * @var Smarty_Data
-	 */
+	/** @var Smarty_Data */
 	protected $smarty;
 
 	/**
@@ -108,36 +113,41 @@ abstract class ModuleCore
 	 */
 	public function __construct($name = null, Context $context = null)
 	{
+		// Load context and smarty
 		$this->context = $context ? $context : Context::getContext();
 		$this->smarty = $this->context->smarty->createData($this->context->smarty);
 
+		// If the module has no name we gave him its id as name
 		if ($this->name == NULL)
 			$this->name = $this->id;
+
+		// If the module has the name we load the corresponding data from the cache
 		if ($this->name != NULL)
 		{
-			if (self::$modulesCache == NULL AND !is_array(self::$modulesCache))
+			// If cache is not generated, we generate it
+			if (self::$modules_cache == NULL AND !is_array(self::$modules_cache))
 			{
-				$list = $this->context->shop->getListOfID();
-
 				// Join clause is done to check if the module is activated in current shop context
-				$sql = 'SELECT m.id_module, m.name, (
-							SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
-						) as total
-						FROM '._DB_PREFIX_.'module m';
-				self::$modulesCache = array();
+				$list = $this->context->shop->getListOfID();
+				$sqlLimitShop = 'SELECT COUNT(*) FROM `'._DB_PREFIX_.'module_shop` ms WHERE m.`id_module` = ms.`id_module` AND ms.`id_shop` IN ('.implode(',', $list).')';
+				$sql = 'SELECT m.`id_module`, m.`name`, ('.$sqlLimitShop.') as total FROM `'._DB_PREFIX_.'module` m';
+
+				// Result is cached
+				self::$modules_cache = array();
 				$result = Db::getInstance()->executeS($sql);
 				foreach ($result as $row)
 				{
-					self::$modulesCache[$row['name']] = $row;
-					self::$modulesCache[$row['name']]['active'] = ($row['total'] == count($list)) ? true : false;
+					self::$modules_cache[$row['name']] = $row;
+					self::$modules_cache[$row['name']]['active'] = ($row['total'] == count($list)) ? true : false;
 				}
 			}
 
-			if (isset(self::$modulesCache[$this->name]))
+			// We load configuration from the cache
+			if (isset(self::$modules_cache[$this->name]))
 			{
-				$this->active = self::$modulesCache[$this->name]['active'];
-				$this->id = self::$modulesCache[$this->name]['id_module'];
-				foreach (self::$modulesCache[$this->name] AS $key => $value)
+				$this->active = self::$modules_cache[$this->name]['active'];
+				$this->id = self::$modules_cache[$this->name]['id_module'];
+				foreach (self::$modules_cache[$this->name] AS $key => $value)
 					if (key_exists($key, $this))
 						$this->{$key} = $value;
 				$this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
@@ -145,6 +155,9 @@ abstract class ModuleCore
 		}
 	}
 
+	/**
+	 * Get SQL modules restriction by shop
+	 */
 	protected function sqlShopRestriction($share = false, $alias = null)
 	{
 		return $this->context->shop->addSqlRestriction($share, $alias, 'shop');
@@ -155,20 +168,47 @@ abstract class ModuleCore
 	 */
 	public function install()
 	{
+		// Check module name validation
 		if (!Validate::isModuleName($this->name))
 			die(Tools::displayError());
-		$result = Db::getInstance()->getRow('
-		SELECT `id_module`
-		FROM `'._DB_PREFIX_.'module`
-		WHERE `name` = \''.pSQL($this->name).'\'');
-		if ($result)
-			return false;
 
-		$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1), 'INSERT');
-		if (!$result)
+		// Check PS version compliancy
+		if (version_compare(_PS_VERSION_, $this->ps_versions_compliancy['min']) < 0 || version_compare(_PS_VERSION_, $this->ps_versions_compliancy['max']) > 0)
+		{
+			$this->_errors[] = $this->l('The version of your module is not compliant with your PrestaShop version.');
 			return false;
+		}
+
+		// Check module dependencies
+		if (count($this->dependencies) > 0)
+			foreach ($this->dependencies as $dependency)
+				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($dependency).'\''))
+				{
+					$error = $this->l('Before installing this module, you have to installed these/this module(s) first :').'<br />';
+					foreach ($this->dependencies as $d)
+						$error .= '- '.$d.'<br />';
+					$this->_errors[] = $error;
+					return false;
+				}
+
+		// Check if module is installed
+		$result = Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->name).'\'');
+		if ($result)
+		{
+			$this->_errors[] = $this->l('This module has already been installed.');
+			return false;
+		}
+
+		// Install module and retrieve the installation id
+		$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1), 'INSERT');
+		if (!$result)
+		{
+			$this->_errors[] = $this->l('Technical error : PrestaShop could not installed this module.');
+			return false;
+		}
 		$this->id = Db::getInstance()->Insert_ID();
 
+		// Enable the module for all shops
 		$this->enable(true);
 
 		// Permissions management
@@ -186,6 +226,7 @@ abstract class ModuleCore
 			WHERE id_tab = (SELECT `id_tab` FROM '._DB_PREFIX_.'tab WHERE class_name = \'AdminModules\' LIMIT 1)
 			AND a.`view` = 0
 		)');
+
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
 
@@ -199,31 +240,31 @@ abstract class ModuleCore
 	 */
 	public function uninstall()
 	{
+		// Check module installation id validation
 		if (!Validate::isUnsignedId($this->id))
 			return false;
 
-		$sql = 'SELECT id_hook
-				FROM '._DB_PREFIX_.'hook_module hm
-				WHERE id_module = '.(int)$this->id;
+		// Retrieve hooks used by the module
+		$sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
 		$result = Db::getInstance()->executeS($sql);
 		foreach	($result AS $row)
 		{
-			$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
-					WHERE `id_module` = '.(int)$this->id.'
-						AND `id_hook` = '.(int)$row['id_hook'];
+			$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$row['id_hook'];
 			Db::getInstance()->execute($sql);
 			$this->cleanPositions($row['id_hook']);
 		}
+
+		// Disable the module for all shops
 		$this->disable(true);
 
+		// Delete permissions module access
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_module` = '.(int)$this->id);
 
 		// Remove restrictions for client groups
 		Group::truncateRestrictionsByModule($this->id);
 
-		return Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'module`
-			WHERE `id_module` = '.(int)$this->id);
+		// Uninstall the module
+		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module` WHERE `id_module` = '.(int)$this->id);
 	}
 
 	/**
@@ -236,9 +277,11 @@ abstract class ModuleCore
 	 */
 	public static function enableByName($name)
 	{
+		// If $name is not an array, we set it as an array
 		if (!is_array($name))
 			$name = array($name);
 
+		// Enable each module
 		foreach ($name as $k => $v)
 			Module::getInstanceByName($name)->enable();
 	}
@@ -250,16 +293,17 @@ abstract class ModuleCore
 	 */
 	public function enable($forceAll = false)
 	{
+		// Retrieve all shops where the module is enabled
 		$list = $this->context->shop->getListOfID();
-		$sql = 'SELECT id_shop
-				FROM '._DB_PREFIX_.'module_shop
-				WHERE id_module = '.$this->id.'
-					'.((!$forceAll) ? 'AND id_shop IN('.implode(', ', $list).')' : '');
+		$sql = 'SELECT `id_shop` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.$this->id.' '.((!$forceAll) ? 'AND `id_shop` IN('.implode(', ', $list).')' : '');
+
+		// Store the results in an array
 		$items = array();
 		if ($results = Db::getInstance($sql)->executeS($sql))
 			foreach ($results as $row)
 				$items[] = $row['id_shop'];
 
+		// Enable module in the shop where it is not enabled yet
 		foreach ($list as $id)
 			if (!in_array($id, $items))
 				Db::getInstance()->autoExecute(_DB_PREFIX_.'module_shop', array(
@@ -280,9 +324,11 @@ abstract class ModuleCore
 	 */
 	public static function disableByName($name)
 	{
+		// If $name is not an array, we set it as an array
 		if (!is_array($name))
 			$name = array($name);
 
+		// Disable each module
 		foreach ($name as $k => $v)
 			Module::getInstanceByName($name)->disable();
 
@@ -296,9 +342,8 @@ abstract class ModuleCore
 	 */
 	public function disable($forceAll = false)
 	{
-		$sql = 'DELETE FROM '._DB_PREFIX_.'module_shop
-				WHERE id_module = '.$this->id.'
-					'.((!$forceAll) ? ' AND id_shop IN('.implode(', ', $this->context->shop->getListOfID()).')' : '');
+		// Disable module for all shops
+		$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.$this->id.' '.((!$forceAll) ? ' AND `id_shop` IN('.implode(', ', $this->context->shop->getListOfID()).')' : '');
 		Db::getInstance()->execute($sql);
 	}
 
@@ -343,6 +388,7 @@ abstract class ModuleCore
 	 */
 	public function registerHook($hook_name, $shopList = null)
 	{
+		// Check hook name validation and if module is installed
 		if (!Validate::isHookName($hook_name))
 			die(Tools::displayError());
 		if (!isset($this->id) OR !is_numeric($this->id))
@@ -354,10 +400,10 @@ abstract class ModuleCore
 			$hook_name = Hook::$_hook_alias[$hook_name];
 
 		// Get hook id
-		$sql = 'SELECT `id_hook`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `name` = \''.pSQL($hook_name).'\'';
+		$sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook_name).'\'';
 		$hookID = Db::getInstance()->getValue($sql);
+
+		// If hook does not exist, we create it
 		if (!$hookID)
 		{
 			$newHook = new Hook();
@@ -369,6 +415,7 @@ abstract class ModuleCore
 				return false;
 		}
 
+		// If shop lists is null, we fill it with all shops
 		if (is_null($shopList))
 			$shopList = Shop::getShops(true, null, true);
 
@@ -377,34 +424,33 @@ abstract class ModuleCore
 		{
 			// Check if already register
 			$sql = 'SELECT hm.`id_module`
-					FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
-					WHERE hm.`id_module` = '.(int)($this->id).'
-						AND h.id_hook = '.$hookID.'
-						AND h.`id_hook` = hm.`id_hook`
-						AND id_shop = '.$shopID;
+				FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
+				WHERE hm.`id_module` = '.(int)($this->id).' AND h.`id_hook` = '.$hookID.'
+				AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)($shopID);
 			if (Db::getInstance()->getRow($sql))
 				continue;
 
 			// Get module position in hook
 			$sql = 'SELECT MAX(`position`) AS position
-					FROM `'._DB_PREFIX_.'hook_module`
-					WHERE `id_hook` = '.$hookID
-						.' AND id_shop = '.$shopID;
+				FROM `'._DB_PREFIX_.'hook_module`
+				WHERE `id_hook` = '.(int)$hookID.' AND `id_shop` = '.(int)$shopID;
 			if (!$position = Db::getInstance()->getValue($sql))
 				$position = 0;
 
 			// Register module in hook
 			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module', array(
-				'id_module' =>	$this->id,
-				'id_hook' =>	$hookID,
-				'id_shop' =>	$shopID,
-				'position' =>	$position + 1,
+				'id_module' => (int)$this->id,
+				'id_hook' => (int)$hookID,
+				'id_shop' => (int)$shopID,
+				'position' => (int)($position + 1),
 			), 'INSERT');
 			if (!$result)
 				$return &= false;
 		}
 
+		// Clean modules position
 		$this->cleanPositions($hookID, $shopList);
+
 		return $return;
 	}
 
@@ -425,20 +471,24 @@ abstract class ModuleCore
 			if (isset(Hook::$_hook_alias[$hook_id]))
 				$hook_id = Hook::$_hook_alias[$hook_id];
 
+			// Unregister module on hook by name
 			$sql = 'SELECT `id_hook`
-					FROM `'._DB_PREFIX_.'hook`
-					WHERE `name` = \''.pSQL($hook_id).'\'';
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `name` = \''.pSQL($hook_id).'\'';
 			$hook_id = Db::getInstance()->getValue($sql);
 			if (!$hook_id)
 				return false;
 		}
 
+		// Unregister module on hook by id
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
-				WHERE `id_module` = '.(int)$this->id.'
-					AND `id_hook` = '.(int)$hook_id
-					.(($shopList) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '');
+			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
+			.(($shopList) ? ' AND `id_shop` IN('.implode(', ', $shopList).')' : '');
 		$result = Db::getInstance()->execute($sql);
+
+		// Clean modules position
 		$this->cleanPositions($hook_id, $shopList);
+
 		return $result;
 	}
 
@@ -451,11 +501,9 @@ abstract class ModuleCore
 	  */
 	public function unregisterExceptions($hook_id, $shopList = null)
 	{
-		$sql = 'DELETE
-				FROM `'._DB_PREFIX_.'hook_module_exceptions`
-				WHERE `id_module` = '.(int)$this->id.'
-					AND `id_hook` = '.(int)$hook_id
-					.(($shopList) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '');
+		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions`
+			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
+			.(($shopList) ? ' AND `id_shop` IN('.implode(', ', $shopList).')' : '');
 		return Db::getInstance()->execute($sql);
 	}
 
@@ -469,9 +517,11 @@ abstract class ModuleCore
 	  */
 	public function registerExceptions($id_hook, $excepts, $shopList = null)
 	{
+		// If shop lists is null, we fill it with all shops
 		if (is_null($shopList))
 			Context::getContext()->shop->getListOfID();
 
+		// Save modules exception for each shop
 		foreach ($shopList as $shopID)
 		{
 			foreach ($excepts AS $except)
@@ -480,10 +530,10 @@ abstract class ModuleCore
 					continue;
 
 				$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module_exceptions', array(
-					'id_module' =>	$this->id,
-					'id_hook' =>	(int)$id_hook,
-					'id_shop' =>	$shopID,
-					'file_name' =>	pSQL($except),
+					'id_module' => (int)$this->id,
+					'id_hook' => (int)$id_hook,
+					'id_shop' => (int)$shopID,
+					'file_name' => pSQL($except),
 				), 'INSERT');
 				if (!$result)
 					return false;
@@ -492,6 +542,13 @@ abstract class ModuleCore
 		return true;
 	}
 
+	/**
+	  * Edit exceptions for module->Hook
+	  *
+	  * @param int $hookID Hook id
+	  * @param array $excepts List of shopID and file name
+	  * @return boolean result
+	  */
 	public function editExceptions($hookID, $excepts)
 	{
 		$result = true;
@@ -713,10 +770,10 @@ abstract class ModuleCore
 					$moduleList[] = $item;
 					if (!$xml_exist OR $needNewConfigFile)
 					{
-						self::$_generateConfigXmlMode = true;
+						self::$_generate_config_xml_mode = true;
 						$tmpModule = new $module;
 						$tmpModule->_generateConfigXml();
-						self::$_generateConfigXmlMode = false;
+						self::$_generate_config_xml_mode = false;
 					}
 				}
 				else
@@ -985,7 +1042,7 @@ abstract class ModuleCore
 	 */
 	public function l($string, $specific = false, $id_lang = null)
 	{
-		if (self::$_generateConfigXmlMode)
+		if (self::$_generate_config_xml_mode)
 			return $string;
 
 		global $_MODULES, $_MODULE;
@@ -1318,5 +1375,7 @@ abstract class ModuleCore
 	{
 		return Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = "'.pSQL($name).'"');
 	}
+
+	public function getErrors() { return $this->_errors; }
 }
 

@@ -529,7 +529,7 @@ class AdminModulesControllerCore extends AdminController
 							}
 						}
 
-						if (((method_exists($module, $method) && ($echo = $module->{$method}())) || ($echo = ' ')) AND $key == 'configure' AND Module::isInstalled($module->name))
+						if (((method_exists($module, $method) && ($echo = $module->{$method}()))) AND $key == 'configure' AND Module::isInstalled($module->name))
 						{
 							$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
 							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
@@ -573,10 +573,10 @@ class AdminModulesControllerCore extends AdminController
 							// TODO : Make something cleaner
 							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
-						elseif($echo)
+						elseif($echo === true)
 							$return = ($method == 'install' ? 12 : 13);
 						elseif ($echo === false)
-							$module_errors[] = $name;
+							$module_errors[] = array('name' => $name, 'errors' => $module->getErrors());
 
 						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 						{
@@ -590,9 +590,15 @@ class AdminModulesControllerCore extends AdminController
 			if (count($module_errors))
 			{
 				// If error during module installation, no redirection
-				$html_error = '<ul>';
+				$html_error = '<ul style="line-height:20px">';
 				foreach ($module_errors as $module_error)
-					$html_error .= '<li>'.$module_error.'</li>';
+				{
+					$html_error_description = '';
+					if (count($module_error['errors']) > 0)
+						foreach ($module_error['errors'] as $e) 
+							$html_error_description = '<br />'.$e;
+					$html_error .= '<li><b>- '.$module_error['name'].'</b> : '.$html_error_description.'</li>';
+				}
 				$html_error .= '</ul>';
 
 				$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
