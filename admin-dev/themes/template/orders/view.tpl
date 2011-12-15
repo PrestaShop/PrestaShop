@@ -224,6 +224,7 @@
 							<th style="width:20%">Date</th>
 							<th>Document</th>
 							<th style="width:20%">Number</th>
+							<th style="width:20px"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -232,6 +233,21 @@
 							<td>{dateFormat date=$document->date_add}</td>
 							<td>Invoice</td>
 							<td><a href="pdf.php?pdf&id_order_invoice={$document->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->number}</a></td>
+							<td><a href="#" onclick="jQuery('#invoiceNote{$document->id}').show(); return false;"><img src="../img/admin/comment_edit.png" alt="{l s='Edit'}" /></a></td>
+						</tr>
+						<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
+							<td colspan="4">
+								<form action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
+									<p class="center">
+										<input type="hidden" name="id_order_invoice" value="{$document->id}" />
+										<textarea name="note" rows="10" cols="10" style="width:98%;height:100px;">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
+									</p>
+									<p class="right">
+										<input type="submit" name="submitEditNote" value="{l s='Save'}" class="button" />
+										<input type="button" name="cancelNote" id="cancelNote" value="{l s='Cancel'}" onclick="jQuery('#invoiceNote{$document->id}').hide();" class="button" />
+									</p>
+								</form>
+							</td>
 						</tr>
 						{foreachelse}
 						<tr>
@@ -602,29 +618,29 @@
 						<tr id="total_products">
 							<td width="150px;"><b>{l s='Products'}</b></td>
 							<td class="amount" align="right">{displayPrice price=$order->total_products_wt currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
 							<td><b>{l s='Discounts'}</b></td>
 							<td class="amount" align="right">-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
 							<td><b>{l s='Wrapping'}</b></td>
 							<td class="amount" align="right">{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 						<tr id="total_shipping">
 							<td><b>{l s='Shipping'}</b></td>
 							<td class="amount" align="right">{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}</td>
-							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
+							<td class="partial_refund_fields current-edit" style="display:none;"><input type="text" size="3" name="partialRefundShippingCost" /> &euro;</td>
 						</tr>
 						<tr style="font-size: 20px" id="total_order">
 							<td style="font-size: 20px">{l s='Total'}</td>
 							<td class="amount" style="font-size: 20px" align="right">
 								{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}
 							</td>
-							<td class="partial_refund_fields" style="display:none;background-color:rgb(232, 237, 194);">&nbsp;</td>
+							<td class="partial_refund_fields current-edit" style="display:none;">&nbsp;</td>
 						</tr>
 					</table>
 				</div>
