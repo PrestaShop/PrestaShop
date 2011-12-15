@@ -48,7 +48,7 @@ ALTER TABLE `PREFIX_address` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL
 ALTER TABLE `PREFIX_order_invoice` ADD `note` TEXT NOT NULL AFTER `total_wrapping_tax_incl`;
 
 /************************
- * STOCK MANAGEMENT 
+ * STOCK MANAGEMENT
 *************************/
 
 /* PHP:add_stock_tab(); */;
@@ -281,4 +281,6 @@ ALTER TABLE `PREFIX_product` ADD COLUMN `advanced_stock_management` tinyint(1) d
 /* Update records after alter tables */
 /* PHP:update_stock_mvt_reasons(); */;
 
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_ENCODING';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 
