@@ -115,6 +115,10 @@ $(document).ready(function()
 		hideFilterValueAction(this);
 	});
 	
+	$('#selectPrductSort').live('change', function() {
+		reloadContent();
+	});
+	
 	paginationButton();
 	initLayered();
 });
