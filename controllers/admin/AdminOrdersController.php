@@ -959,6 +959,7 @@ class AdminOrdersControllerCore extends AdminController
 			)));
 
 		$product_informations = $_POST['add_product'];
+		$invoice_informations = $_POST['add_invoice'];
 		$product = new Product($product_informations['product_id'], false, $order->id_lang);
 		if (!Validate::isLoadedObject($product))
 			die(Tools::jsonEncode(array(
@@ -1005,9 +1006,6 @@ class AdminOrdersControllerCore extends AdminController
 		$initial_prodcut_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
 			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-		// This variable will be used in order to know if we adding shipping costs on order total or not
-		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
-
 		if ($product_informations['product_price_tax_incl'] < $initial_prodcut_price_tax_incl)
 		{
 			$reduction_tax_incl = $initial_prodcut_price_tax_incl - $product_informations['product_price_tax_incl'];
@@ -1044,6 +1042,9 @@ class AdminOrdersControllerCore extends AdminController
 					// FIXME Cart Rule isn't applied but correctly save in database
 					$cart_rule = new CartRule();
 					$cart_rule->id_customer = $order->id_customer;
+					$cart_rule->name = array(
+						Configuration::get('PS_LANG_DEFAULT') => $this->l('[Generated] CartRule for Free Shipping')
+					);
 					$cart_rule->date_from = date('Y-m-d H:i:s', time());
 					$cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 3600);
 					$cart_rule->quantity = 1;
@@ -1055,18 +1056,17 @@ class AdminOrdersControllerCore extends AdminController
 					$cart_rule->add();
 
 					$cart->addCartRule($cart_rule->id);
-					$order->addCartRule($cart_rule->id, $cart_rule->name, $cart_rule->getContextualValue(true));
+					$order->addCartRule($cart_rule->id, $cart_rule->name[Configuration::get('PS_LANG_DEFAULT')], $cart_rule->getContextualValue(true));
 				}
-				else
-					$total_method = Cart::BOTH;
+
 				$order_invoice->id_order = $order->id;
 				if ($order_invoice->number)
 					Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
-				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
-				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
+				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH), 2);
+				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, Cart::BOTH), 2);
 				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_shipping_tax_excl = (float)$cart->getTotalShippingCost(null, false);
@@ -1084,6 +1084,7 @@ class AdminOrdersControllerCore extends AdminController
 				$order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
 				$order->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
 				$order_invoice->add();
+
 				$order_carrier = new OrderCarrier();
 				$order_carrier->id_order = (int)$order->id;
 				$order_carrier->id_carrier = (int)$order->id_carrier;
@@ -1096,8 +1097,8 @@ class AdminOrdersControllerCore extends AdminController
 			// Update current invoice
 			else
 			{
-				$order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
-				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+				$order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
+				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
 				$order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_shipping_tax_excl += (float)$cart->getTotalShippingCost(null, false);
@@ -1116,9 +1117,9 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 		$order->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 
-		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
-		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
-		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
+		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
+		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
 
 		// discount
 		$order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
