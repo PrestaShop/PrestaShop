@@ -165,8 +165,10 @@
 <table>
 	<tr>
 		<td>
-			<input type="checkbox" name="ppack" id="ppack" value="1" {if $is_pack}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
-			<label class="t" for="ppack">{l s='Pack'}</label>
+			<div class="ppack">
+				<input type="checkbox" name="ppack" id="ppack" value="1" {if $is_pack}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
+				<label class="t" for="ppack">{l s='Pack'}</label>
+			</div>
 		</td>
 		<td>
 			<div id="ppackdiv" {if !$is_pack}style="display: none;"{/if}>
