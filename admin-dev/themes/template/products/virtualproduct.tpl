@@ -34,14 +34,11 @@
 	var uploadableFileLabel = 0;
 	var textFieldLabel = 0;
 
-	$('#is_virtual_good').change(function(e) {
-		$('#virtual_good').toggle();
-	});
-
 	if ($('#is_virtual_good').attr('checked'))
 	{
 		$('#virtual_good').show();
 		$('#virtual_good_more').show();
+		$('#is_virtual_good').attr('disabled', 'disabled');
 	}
 
 	if ( $('input[name=is_virtual_file]:checked').val() == 1)
@@ -58,7 +55,7 @@
 	}
 
 	$('input[name=is_virtual_file]').live('change', function() {
-		if($(this).val() == "1")
+		if($(this).val() == '1')
 		{
 			$('#virtual_good_more').show();
 			$('#virtual_good_attributes').show();
@@ -72,12 +69,12 @@
 		}
 	});
 
-	$('input[name=is_virtual_good]').live('change', function() {
+	/*$('input[name=is_virtual_good]').live('change', function() {
 		if($(this).attr('checked'))
 			$('#is_virtual').val(1);
 		else
 			$('#is_virtual').val(0);
-	});
+	});*/
 
 	$(document).ready(function() {
 		$('input').keypress(function(e) { 
@@ -86,6 +83,74 @@
 			return (code == 13) ? false : true;
 		});
 	});
+	
+	function uploadFile()
+	{
+		$.ajaxFileUpload (
+			{
+				url:'./uploadProductFile.php',
+				secureuri:false,
+				fileElementId:'virtual_product_file',
+				dataType: 'xml',
+				success: function (data, status)
+				{
+					data = data.getElementsByTagName('return')[0];
+					var result = data.getAttribute("result");
+					var msg = data.getAttribute("msg");
+					var fileName = data.getAttribute("filename")
+					if(result == "error")
+						$("#upload-confirmation").html('<p>error: ' + msg + '</p>');
+					else
+					{
+						$('#virtual_product_file').remove();
+						$('#virtual_product_file_label').hide();
+						$('#file_missing').hide();
+						$('#delete_downloadable_product').show();
+						$('#virtual_product_name').attr('value', fileName);
+						$('#upload-confirmation').html(
+							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">{l s='The file'}&nbsp;"' + fileName + '"&nbsp;{l s='has successfully been uploaded'}</a>' +
+							'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
+					}
+				}
+			}
+		);
+	}
+
+	function uploadFile2()
+	{
+			var link = '';
+			$.ajaxFileUpload (
+			{
+				url:'./uploadProductFileAttribute.php',
+				secureuri:false,
+				fileElementId:'virtual_product_file_attribute',
+				dataType: 'xml',
+				success: function (data, status)
+				{
+					data = data.getElementsByTagName('return')[0];
+					var result = data.getAttribute("result");
+					var msg = data.getAttribute("msg");
+					var fileName = data.getAttribute("filename");
+					if(result == "error")
+						$("#upload-confirmation2").html('<p>error: ' + msg + '</p>');
+					else
+					{
+						$('#virtual_product_file_attribute').remove();
+						$('#virtual_product_file_label').hide();
+						$('#file_missing').hide();
+						$('#delete_downloadable_product_attribute').show();
+						$('#upload-confirmation2').html(
+							'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">{l s='The file'}&nbsp;"' + fileName + '"&nbsp;{l s='has successfully been uploaded'}</a>' +
+							'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
+						$('#virtual_product_name_attribute').attr('value', fileName);
+
+						link = $("#delete_downloadable_product_attribute").attr('href');
+						$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
+					}
+				}
+			}
+		);
+	}
 
 </script>
 
@@ -103,8 +168,8 @@
 				<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 					<tr><td>
 						<br/>{l s='Does this product has an associated file ?'}<br />
-						<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}
-						<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}<br /><br />
+						<label style="width:50px"><input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}</label>
+						<label style="width:50px"><input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}</label><br /><br />
 						{if $download_product_file_missing}
 							<p class="alert" id="file_missing">
 								<b>{$download_product_file_missing} :<br/>
@@ -139,13 +204,16 @@
 									{/if}
 								</div>
 								<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
-									{l s='Delete this file'}
+									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
 								</a>
 								</div>
 							{else}
 								<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
-								{l s='This is the link'}:&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">{l s='Delete this file'}</a>
+								{l s='This is the link'}:<br />
+								{$product->productDownload->getHtmlLink(false, true)}
+								<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
+									<img src="../img/admin/delete.gif" alt="{l s='Delete this file'}"/>
+								</a>
 							{/if}
 							</p>
 	
