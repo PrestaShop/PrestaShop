@@ -1398,6 +1398,20 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
+	 * Get all not paid invoices for the current order
+	 * @since 1.5.0.2
+	 * @return Collection of Order invoice not paid
+	 */
+	public function getNotPaidInvoicesCollection()
+	{
+		$invoices = $this->getInvoicesCollection();
+		foreach ($invoices as $key => $invoice)
+			if ($invoice->isPaid())
+				unset($invoices[$key]);
+		return $invoices;
+	}
+
+	/**
 	 * Get total paid
 	 *
 	 * @since 1.5.0.1
