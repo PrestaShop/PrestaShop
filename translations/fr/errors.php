@@ -256,7 +256,7 @@ $_ERRORS['298883b17e36ee3a18d73e835c0b44fc'] = 'Aucun fichier n\'a été envoyé
 $_ERRORS['20c6125376d8de28149d655c7cc25e32'] = 'Aucun fichiers n\'a été envoyés';
 $_ERRORS['cb20447a4bf5ff9bec717ec68a357a93'] = 'Aucun moteur de rendu choisi';
 $_ERRORS['ccacacd12f75e1ab3f9ce3e234ed5777'] = 'Aucun moteur de tableau sélectionné';
-$_ERRORS['774eec2772b5f57b2e13d11e1b093a4f'] = 'Aucune image trouvée pour la combinaison avec id_product = %s et la position de l\'image = %s.';
+$_ERRORS['774eec2772b5f57b2e13d11e1b093a4f'] = 'Aucune image trouvée pour la déclinaison avec id_product = %s et la position de l\'image = %s.';
 $_ERRORS['0e63e5844a0255aeb0cee434263552ae'] = 'aucune facture avec cet ID:';
 $_ERRORS['e21c3c406358073b38d481fd3d88221c'] = 'Aucune facture trouvée';
 $_ERRORS['f59b67acbc1ca8ecad71a742f5e43b09'] = 'aucune commande avec cet ID:';
@@ -347,7 +347,7 @@ $_ERRORS['71f4f008985ea6abc73e89a668e15197'] = 'Cet attribut existe déjà.';
 $_ERRORS['ecc5c9c627d8b41fc33888b5b17ea1a5'] = 'Cette classe dépend de plusieurs fichiers modifiés dans la version 1.4.5.0 et ne doit pas être utilisé dans une version plus ancienne';
 $_ERRORS['ecc5c9c627d8b41fc33888b5b17ea1a5'] = 'Cette classe dépend de plusieurs fichiers modifiés en v1.4.5 et ne devrait pas être utilisée dans une ancienne version';
 $_ERRORS['e49f206b6d8f0e5e2a6cb13d96b44ed2'] = 'Ce nom de classe n\'existe pas';
-$_ERRORS['e22a6ea51eb74bee7acaa4acf2846c7b'] = 'Cette combinaison existe déjà';
+$_ERRORS['e22a6ea51eb74bee7acaa4acf2846c7b'] = 'Cette déclinaison existe déjà';
 $_ERRORS['d51499b48399054d809f49bce078923e'] = 'Ce client existent déjà en tant que non-invité.';
 $_ERRORS['8562db06e3931e51ac8c456b56088b02'] = 'Le client n\'existe pas';
 $_ERRORS['350e5d76b60ae887c90d55e2fb23fdc5'] = 'ce bon de réduction n\'est pas applicable à cette catégorie de produit';
