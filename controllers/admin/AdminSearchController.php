@@ -103,7 +103,7 @@ class AdminSearchControllerCore extends AdminController
 	}
 
 
-	public function	searchIP()
+	public function searchIP()
 	{
 		if (!ip2long(trim($this->query)))
 		{
@@ -130,7 +130,7 @@ class AdminSearchControllerCore extends AdminController
 	*
 	* @params string $query String to find in the catalog
 	*/
-	public function	searchCustomer()
+	public function searchCustomer()
 	{
 		$this->_list['customers'] = Customer::searchByName($this->query);
 	}
@@ -146,9 +146,9 @@ class AdminSearchControllerCore extends AdminController
 		$tabs = array();
 		$result = Db::getInstance()->executeS('SELECT class_name, name FROM '._DB_PREFIX_.'tab t INNER JOIN '._DB_PREFIX_.'tab_lang tl ON t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id);
 		foreach ($result as $row)
-			$tabs[$row['class_name']] = $row['name'];
+			$tabs[strtolower($row['class_name'])] = $row['name'];
 		foreach (AdminTab::$tabParenting as $key => $value)
-			$tabs[$key] = $tabs[$value];
+			$tabs[strtolower($key)] = $tabs[strtolower($value)];
 		$this->_list['features'] = array();
 
 		foreach ($_LANGADM as $key => $value)
