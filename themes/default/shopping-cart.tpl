@@ -205,14 +205,14 @@
 				{/if}
 				</td>
 				{if $use_taxes}
-				<td colspan="2" class="price" id="total_price">
+				<td colspan="2" class="price" id="total_price_container">
 					<p>{l s='Total:'}</p>
-					<span>{displayPrice price=$total_price}</span>
+					<span id="total_price">{displayPrice price=$total_price}</span>
 				</td>
 				{else}
-				<td colspan="2" id="total_price" class="price">
+				<td colspan="2" class="price" id="total_price_container">
 					<p>{l s='Total:'}</p>
-					<span>{displayPrice price=$total_price_without_tax}</span>
+					<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
 				</td>
 				{/if}
 			</tr>

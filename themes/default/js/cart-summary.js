@@ -33,13 +33,10 @@ $(document).ready(function()
 		$('.cart_quantity_down').unbind('click').live('click', function(){ downQuantity($(this).attr('id').replace('cart_quantity_down_', '')); return false; });
 		$('.cart_quantity_delete' ).unbind('click').live('click', function(){ deleteProductFromSummary($(this).attr('id')); return false; });
 		$('.cart_quantity_input').typeWatch({ highlight: true, wait: 600, captureLength: 0, callback: updateQty });
-		
-		$('.cart_address_delivery').live('change', function(){ changeAddressDelivery($(this)); });
 	}
-	else
-	{
-		$('.cart_address_delivery').change(function(){ submit(); });
-	}
+	
+	$('.cart_address_delivery').live('change', function(){ changeAddressDelivery($(this)); });
+	
 	cleanSelectAddressDelivery();
 });
 
