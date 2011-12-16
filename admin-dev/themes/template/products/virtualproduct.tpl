@@ -33,50 +33,50 @@
 	var customizationTextFieldNumber = '{$product->text_fields}';
 	var uploadableFileLabel = 0;
 	var textFieldLabel = 0;
-	
-	$("#is_virtual_good").change(function(e) {
-		$("#virtual_good").toggle();
+
+	$('#is_virtual_good').change(function(e) {
+		$('#virtual_good').toggle();
 	});
 
-	if ($("#is_virtual_good").attr("checked"))
+	if ($('#is_virtual_good').attr('checked'))
 	{
-		$("#virtual_good").show();
-		$("#virtual_good_more").show();
+		$('#virtual_good').show();
+		$('#virtual_good_more').show();
 	}
 
-	if ( $("input[name=is_virtual_file]:checked").val() == 1)
+	if ( $('input[name=is_virtual_file]:checked').val() == 1)
 	{
-		$("#virtual_good_more").show();
-		$("#virtual_good_attributes").show();
-		$("#is_virtual_file_product").show();
+		$('#virtual_good_more').show();
+		$('#virtual_good_attributes').show();
+		$('#is_virtual_file_product').show();
 	}
 	else
 	{
-		$("#virtual_good_more").hide();
-		$("#virtual_good_attributes").hide();
-		$("#is_virtual_file_product").hide();
+		$('#virtual_good_more').hide();
+		$('#virtual_good_attributes').hide();
+		$('#is_virtual_file_product').hide();
 	}
 
-	$("input[name=is_virtual_file]").live("change", function() {
+	$('input[name=is_virtual_file]').live('change', function() {
 		if($(this).val() == "1")
 		{
-			$("#virtual_good_more").show();
-			$("#virtual_good_attributes").show();
-			$("#is_virtual_file_product").show();
+			$('#virtual_good_more').show();
+			$('#virtual_good_attributes').show();
+			$('#is_virtual_file_product').show();
 		}
 		else
 		{
-			$("#virtual_good_more").hide();
-			$("#virtual_good_attributes").hide();
-			$("#is_virtual_file_product").hide();
+			$('#virtual_good_more').hide();
+			$('#virtual_good_attributes').hide();
+			$('#is_virtual_file_product').hide();
 		}
 	});
 
-	$("input[name=is_virtual_good]").live("change", function() {
-		if($(this).attr("checked"))
-			$("#is_virtual").val(1);
+	$('input[name=is_virtual_good]').live('change', function() {
+		if($(this).attr('checked'))
+			$('#is_virtual').val(1);
 		else
-			$("#is_virtual").val(0);
+			$('#is_virtual').val(0);
 	});
 
 	$(document).ready(function() {

@@ -78,8 +78,27 @@
 			$('#mvt_sign').show();
 		}
 	</script>
-		<div class="separation"></div>
-		<br />
+	<div class="separation"></div>
+
+	<div>
+		<label>{l s='Type:'}</label>
+		<label>
+			<input type="radio" name="type_product" id="simple_product" value="0" />
+			{l s='Product'}
+		</label>
+		<label>
+			<input type="radio" name="type_product" id="pack_product" value="1" />
+			{l s='Pack'}
+		</label>
+		<label>
+			<input type="radio" name="type_product" id="virtual_product" value="2" />
+			{l s='Virtual product'}
+		</label>
+	</div>
+	<br />
+
+	<div class="separation"></div>
+	<br />
 <table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
 {* global information *}
 	<tr>
@@ -205,119 +224,6 @@
 	</tr>
 </table>
 
-<script type="text/javascript">
-var newLabel = '{l s='New label'}';
-var choose_language = '{l s='Choose language:'}';
-var required = '{l s='required'}';
-var customizationUploadableFileNumber = '{$product->uploadable_files}';
-var customizationTextFieldNumber = '{$product->text_fields}';
-var uploadableFileLabel = 0;
-var textFieldLabel = 0;
-</script>
-<div class="separation"></div>
-<table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
-<tr>
-	<td colspan="2">
-		<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {*onclick="toggleVirtualProduct(this);"*} {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
-			<label for="is_virtual_good" class="t bold">{l s='Is this a virtual product?'}</label>
-		</p>
-		{* [begin] virtual product *}
-		<div id="virtual_good" class="toggleVirtualPhysicalProduct" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
-			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
-			<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
-				<tr><td>
-					<br/>{l s='Does this product has an associated file ?'}<br />
-					<input type="radio" value="1" id="virtual_good_file_1" name="is_virtual_file" {if $product_downloaded}checked="checked"{/if} />{l s='Yes'}
-					<input type="radio" value="0" id="virtual_good_file_2" name="is_virtual_file" {if !$product_downloaded}checked="checked"{/if} />{l s='No'}<br /><br />
-					{if $download_product_file_missing}
-						<p class="alert" id="file_missing">
-							<b>{$download_product_file_missing} :<br/>
-							{$smarty.const._PS_DOWNLOAD_DIR_}/{$product->productDownload->filename}</b>
-						</p>
-					{/if}
-				</td></tr>
-			<tr>
-				<td>
-					<div id="is_virtual_file_product" style="display:none;">
-					{if !$download_dir_writable}
-						<p class="alert">
-							{l s='Your download repository is not writable.'}<br/>
-							{$smarty.const._PS_DOWNLOAD_DIR_}
-						</p>
-					{/if}
-					{if empty($product->cache_default_attribute)}
-						{if $product->productDownload->id}
-							<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="{$product->productDownload->id}" />
-						{/if}
-						<p class="block">
-						{if !$product->productDownload->checkFile()}
-							<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #CCCCCC">
-							<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize}</p>
-							{if $show_file_input}
-								<label id="virtual_product_file_label" for="virtual_product_file" class="t">{l s='Upload a file'}</label>
-								<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" /></p>
-							{/if}
-							<div id="upload-confirmation">
-								{if $up_filename}
-									<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$up_filename}" />
-								{/if}
-							</div>
-							<a id="delete_downloadable_product" style="display:none;" onclick="return confirm('{l s='Delete this file'}')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">
-								{l s='Delete this file'}
-							</a>
-							</div>
-						{else}
-							<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
-							{l s='This is the link'}:&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-							<a onclick="return confirm('{l s='Delete this file'})')" href="{$currentIndex}&deleteVirtualProduct=true&token={$token}&id_product={$product->id}" class="red">{l s='Delete this file'}</a>
-						{/if}
-						</p>
-
-						<p class="block">
-							<label for="virtual_product_name" class="t">{l s='Filename'}</label>
-							<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentitiesUTF8}" />
-							<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g., Book.pdf)'}</span>
-						</p>
-					</div>
-				</td></tr>
-			</table>
-			<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
-				<tr><td>
-					<div id="virtual_good_more" style="'.$hidden.'padding:5px;width:40%;float:left;margin-left:10px">
-						<p class="block">
-							<label for="virtual_product_nb_downloable" class="t">{l s='Number of downloads'}</label>
-							<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="{$product->productDownload->nb_downloadable}" class="" size="6" />
-							<span class="hint" name="help_box" style="display:none">{l s='Number of authorized downloads per customer'}</span>
-						</p>
-						<p class="block">
-							<label for="virtual_product_expiration_date" class="t">{l s='Expiration date'}</label>
-							<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
-							<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
-						</p>
-						<p class="block">
-							<label for="virtual_product_nb_days" class="t">{l s='Number of days'}</label>
-							<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="{$product->productDownload->nb_days_accessible}" class="" size="4" /><sup> *</sup>
-							<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='set to zero for unlimited access'})</em></span>
-						</p>
-						<p class="block">
-							<label for="virtual_product_is_shareable" class="t">{l s='is shareable'}</label>
-							<input type="checkbox" id="virtual_product_is_shareable" name="virtual_product_is_shareable" value="1" {if $product->productDownload->is_shareable}checked="checked"{/if} />
-							<span class="hint" name="help_box" style="display:none">{l s='Specify if the file can be shared'}</span>
-						</p>
-					</div>
-					{else}
-					<div class="hint clear" style="display: block;width: 70%;">{l s='You used combinations, for this reason you can\'t edit your file here, but in the Combinations tab'}</div>
-					<br />
-						{$error_product_download}
-					{/if}
-				</td></tr>
-			</table>
-		</div>
-	</td>
-</tr>
-
-
-</table>
 <div class="separation"></div>
 <table cellspacing="0" cellpadding="5" border="0">	
 					<tr>
@@ -458,10 +364,6 @@ var textFieldLabel = 0;
 					</td>
 				</tr>
 			</table>
-		<br />
+			<br />
 		</div>
-{*
-		
-			<script type="text/javascript">
-					toggleVirtualProduct(getE('is_virtual_good'));
-			</script>*}
+

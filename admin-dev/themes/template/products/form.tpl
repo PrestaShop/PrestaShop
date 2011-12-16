@@ -81,13 +81,13 @@
 		$(document).ready(function(){
 
 			{if $is_pack}
-				$('#pack_product').attr("checked", "checked");
+				$('#pack_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
 			{elseif $product->is_virtual}
-				$('#virtual_product').attr("checked", "checked");
+				$('#virtual_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="Pack"]').hide();
 			{else}
-				$('#simple_product').attr("checked", "checked");
+				$('#simple_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
 			{/if}
@@ -99,10 +99,14 @@
 				if (val == 1)
 					$('li.tab-row a[id*="Pack"]').show();
 				else if (val == 2)
+				{
 					$('li.tab-row a[id*="VirtualProduct"]').show();
+					$('#is_virtual_good').attr('checked',  true).attr('disabled', 'disabled');
+					$('#virtual_good').show();
+				}
 				else
 				{
-					$('#is_virtual_good').removeAttr("checked");
+					$('#is_virtual_good').removeAttr('checked');
 					$('#is_virtual').val(0);
 				}
 			});
