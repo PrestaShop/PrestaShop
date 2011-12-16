@@ -3727,7 +3727,7 @@ class AdminProductsControllerCore extends AdminController
 		Pack::deleteItems($product->id);
 
 		// lines format: QTY x ID-QTY x ID
-		if (Tools::getValue('ppack'))
+		if (Tools::getValue('type_product') == 1)
 		{
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));

@@ -93,22 +93,29 @@
 			{/if}
 
 			$('input[name="type_product"]').click(function() {
+
+				// Reset settings
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
+				$('#is_virtual_good').removeAttr('checked');
+				$('#is_virtual').val(0);
+
 				var val = $(this).val();
+
 				if (val == 1)
+				{
 					$('li.tab-row a[id*="Pack"]').show();
+					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
+					$('#ppackdiv').show();
+				}
 				else if (val == 2)
 				{
 					$('li.tab-row a[id*="VirtualProduct"]').show();
-					$('#is_virtual_good').attr('checked',  true).attr('disabled', 'disabled');
+					$('#is_virtual_good').attr('checked', true).attr('disabled', 'disabled');
 					$('#virtual_good').show();
+					$('#is_virtual').val(1);
 				}
-				else
-				{
-					$('#is_virtual_good').removeAttr('checked');
-					$('#is_virtual').val(0);
-				}
+
 			});
 
 			$('#desc-product-newCombination').hide();
@@ -189,79 +196,6 @@
 	    	ThickboxI18nPrev = "{l s='< Previous'}";
 	    	tb_pathToImage = "../img/loadingAnimation.gif";
 	    //]]>
-	</script>
-	
-	<script type="text/javascript">
-		//<![CDATA[
-	
-		function uploadFile()
-		{
-			$.ajaxFileUpload (
-				{
-					url:'./uploadProductFile.php',
-					secureuri:false,
-					fileElementId:'virtual_product_file',
-					dataType: 'xml',
-					success: function (data, status)
-					{
-						data = data.getElementsByTagName('return')[0];
-						var result = data.getAttribute("result");
-						var msg = data.getAttribute("msg");
-						var fileName = data.getAttribute("filename")
-						if(result == "error")
-							$("#upload-confirmation").html('<p>error: ' + msg + '</p>');
-						else
-						{
-							$('#virtual_product_file').remove();
-							$('#virtual_product_file_label').hide();
-							$('#file_missing').hide();
-							$('#delete_downloadable_product').show();
-							$('#virtual_product_name').attr('value', fileName);
-							$('#upload-confirmation').html(
-								'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">{l s='The file'}&nbsp;"' + fileName + '"&nbsp;{l s='has successfully been uploaded'}</a>' +
-								'<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="' + msg + '" />');
-						}
-					}
-				}
-			);
-		}
-	
-		function uploadFile2()
-		{
-				var link = '';
-				$.ajaxFileUpload (
-				{
-					url:'./uploadProductFileAttribute.php',
-					secureuri:false,
-					fileElementId:'virtual_product_file_attribute',
-					dataType: 'xml',
-					success: function (data, status)
-					{
-						data = data.getElementsByTagName('return')[0];
-						var result = data.getAttribute("result");
-						var msg = data.getAttribute("msg");
-						var fileName = data.getAttribute("filename");
-						if(result == "error")
-							$("#upload-confirmation2").html('<p>error: ' + msg + '</p>');
-						else
-						{
-							$('#virtual_product_file_attribute').remove();
-							$('#virtual_product_file_label').hide();
-							$('#file_missing').hide();
-							$('#delete_downloadable_product_attribute').show();
-							$('#upload-confirmation2').html(
-								'<a class="link" href="get-file-admin.php?file='+msg+'&filename='+fileName+'">{l s='The file'}&nbsp;"' + fileName + '"&nbsp;{l s='has successfully been uploaded'}</a>' +
-								'<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="' + msg + '" />');
-							$('#virtual_product_name_attribute').attr('value', fileName);
-	
-							link = $("#delete_downloadable_product_attribute").attr('href');
-							$("#delete_downloadable_product_attribute").attr('href', link+"&file="+msg);
-						}
-					}
-				}
-			);
-		}
-		//]]>
 	</script>
 	
 	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
