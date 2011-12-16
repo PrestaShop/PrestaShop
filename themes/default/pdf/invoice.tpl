@@ -79,7 +79,18 @@
 			{$order->date_add|date_format:"%d-%m-%Y %H:%M"}<br />
 			<br />
 			<b>{l s='Payment Method:' pdf='true'}</b><br />
-			{$order->payment}<br />
+			<table style="width: 100%;">
+			{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
+				<tr>
+					<td style="width: 50%">{$payment->payment_method}</td>
+					<td style="width: 50%">{displayPrice price=$payment->amount currency=$order->id_currency}</td>
+				</tr>
+			{foreachelse}
+				<tr>
+					<td>{l s='No payment'}</td>
+				</tr>
+			{/foreach}
+			</table>
 			<br />
 			<!-- / CUSTOMER INFORMATIONS -->
 		</td>
@@ -216,6 +227,13 @@
 					<td style="text-align: right; font-weight: bold">{l s='Total' pdf='true'}</td>
 					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
 				</tr>
+
+				{if $order_invoice->getRestPaid()}
+				<tr style="line-height:5px;color:red;">
+					<td style="text-align: right; font-weight: bold">{l s='Total rest paid' pdf='true'}</td>
+					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->getRestPaid()}</td>
+				</tr>
+				{/if}
 			</table>
 
 		</td>
