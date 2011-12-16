@@ -37,7 +37,13 @@
 			return (code == 13) ? false : true;
 		});
 
-		$('#curPackItemName') .autocomplete('ajax_products_list.php', {
+		if ($('#ppack').attr('checked'))
+		{
+			$('#ppack').attr('disabled', 'disabled');
+			$('#ppackdiv').show();
+		}
+
+		$('#curPackItemName').autocomplete('ajax_products_list.php', {
 			delay: 100,
 			minChars: 1,
 			autoFill: true,
@@ -57,11 +63,99 @@
 
 		$('#curPackItemName').setOptions({
 			extraParams: {
-				excludeIds : getSelectedIds(), excludeVirtuals : 1
+				excludeIds : getSelectedIds(),
+				excludeVirtuals : 1
 			}
 		});
 
 	});
+
+	function addPackItem()
+	{
+		var curPackItemId = $('#curPackItemId').val();
+		var curPackItemName = $('#curPackItemName').val();
+		var curPackItemQty = $('#curPackItemQty').val();
+		if (curPackItemId == '' || curPackItemName == '')
+		{
+			alert(msg_select_one);
+			return false;
+		}
+		else if (curPackItemId == '' || curPackItemQty == '')
+		{
+			alert(msg_set_quantity);
+			return false;
+		}
+
+		var lineDisplay = curPackItemQty+ 'x ' +curPackItemName;
+
+		var divContent = $('#divPackItems').html();
+		divContent += lineDisplay;
+		divContent += '<span onclick="delPackItem(' + curPackItemId + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+
+		// QTYxID-QTYxID
+		var line = curPackItemQty+ 'x' +curPackItemId;
+
+
+		$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
+		$('#divPackItems').html(divContent);
+			$('#namePackItems').val($('#namePackItems').val() + lineDisplay + '¤');
+
+		$('#curPackItemId').val('');
+		$('#curPackItemName').val('');
+
+		$('#curPackItemName').setOptions({
+			extraParams: {
+				excludeIds :  getSelectedIds(),
+				q: curPackItemName
+			}
+		});
+	}
+
+	function delPackItem(id)
+	{
+		var reg = new RegExp('-', 'g');
+		var regx = new RegExp('x', 'g');
+
+		var div = getE('divPackItems');
+		var input = getE('inputPackItems');
+		var name = getE('namePackItems');
+		var select = getE('curPackItemId');
+		var select_quantity = getE('curPackItemQty');
+
+		var inputCut = input.value.split(reg);
+		var nameCut = name.value.split(new RegExp('¤', 'g'));
+
+		input.value = '';
+		name.value = '';
+		div.innerHTML = '';
+
+		for (var i = 0; i < inputCut.length; ++i)
+			if (inputCut[i])
+			{
+				var inputQty = inputCut[i].split(regx);
+				if (inputQty[1] != id)
+				{
+					input.value += inputCut[i] + '-';
+					name.value += nameCut[i] + '¤';
+					div.innerHTML += nameCut[i] + ' <span onclick="delPackItem(' + inputQty[1] + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
+				}
+			}
+
+		$('#curPackItemName').setOptions({
+			extraParams: {
+				excludeIds :  getSelectedIds()
+			}
+		});
+	}
+
+	function getSelectedIds()
+	{
+		// input lines QTY x ID-
+		var ids = id_product + ',';
+		ids += $('#inputPackItems').val().replace(/\\d+x/g, '').replace(/\-/g,',');
+		ids = ids.replace(/\,$/,'');
+		return ids;
+	}
 
 </script>
 

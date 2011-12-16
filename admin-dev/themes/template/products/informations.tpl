@@ -82,15 +82,15 @@
 
 	<div>
 		<label>{l s='Type:'}</label>
-		<label>
+		<label style="width:100px;text-align:center;">
 			<input type="radio" name="type_product" id="simple_product" value="0" />
 			{l s='Product'}
 		</label>
-		<label>
+		<label style="width:100px;text-align:center;">
 			<input type="radio" name="type_product" id="pack_product" value="1" />
 			{l s='Pack'}
 		</label>
-		<label>
+		<label style="width:100px;text-align:center;">
 			<input type="radio" name="type_product" id="virtual_product" value="2" />
 			{l s='Virtual product'}
 		</label>
@@ -99,56 +99,56 @@
 
 	<div class="separation"></div>
 	<br />
-<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
-{* global information *}
-	<tr>
-		<td class="col-left"><label>{l s='Name:'}</label></td>
-		<td style="padding-bottom:5px;" class="translatable">
-		{foreach from=$languages item=language}
-			<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
-				<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text"
-					id="name_{$language.id_lang}" name="name_{$language.id_lang}"
-					value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
-				<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
-				</span>
-			</div>
-	{/foreach}
-
+	<table cellpadding="5" style="width: 50%; float: left; margin-right: 20px; border-right: 1px solid #CCCCCC;">
+	{* global information *}
+		<tr>
+			<td class="col-left"><label>{l s='Name:'}</label></td>
+			<td style="padding-bottom:5px;" class="translatable">
+			{foreach from=$languages item=language}
+				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
+					<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text"
+						id="name_{$language.id_lang}" name="name_{$language.id_lang}"
+						value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
+					<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
+					</span>
+				</div>
+			{/foreach}
+	
 			</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Reference:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
-							<span class="hint" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='EAN13 or JAN:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<input size="55" maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(Europe, Japan)'}</span>
-						</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='UPC:'}</label></td>
-						<td style="padding-bottom:5px;">
-							<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
-						</td>
-					</tr>
-</table>
-{* status informations *}
-<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
-<tr>
-	<td class="col-left"><label>{l s='Status:'}</label></td>
-	<td style="padding-bottom:5px;">
-		<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-		<label for="active_on" class="t">
-		{l s='Enabled'}</label>
-		<br class="clear" />
-		<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
-		<label for="active_off" class="t">{l s='Disabled'} </label>
-	</td>
-</tr>
+		</tr>
+		<tr>
+			<td class="col-left"><label>{l s='Reference:'}</label></td>
+			<td style="padding-bottom:5px;">
+				<input size="55" type="text" name="reference" value="{$product->reference|htmlentitiesUTF8}" style="width: 130px; margin-right: 44px;" />
+				<span class="hint" name="help_box">{l s='Special characters allowed:'}.-_#\<span class="hint-pointer">&nbsp;</span></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="col-left"><label>{l s='EAN13 or JAN:'}</label></td>
+			<td style="padding-bottom:5px;">
+				<input size="55" maxlength="13" type="text" name="ean13" value="{$product->ean13|htmlentitiesUTF8}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(Europe, Japan)'}</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="col-left"><label>{l s='UPC:'}</label></td>
+			<td style="padding-bottom:5px;">
+				<input size="55" maxlength="12" type="text" name="upc" value="{$product->upc}" style="width: 130px; margin-right: 5px;" /> <span class="small">{l s='(US, Canada)'}</span>
+			</td>
+		</tr>
+	</table>
+	{* status informations *}
+	<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
+	<tr>
+		<td class="col-left"><label>{l s='Status:'}</label></td>
+		<td style="padding-bottom:5px;">
+			<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
+			<label for="active_on" class="t">
+			{l s='Enabled'}</label>
+			<br class="clear" />
+			<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
+			<label for="active_off" class="t">{l s='Disabled'} </label>
+		</td>
+	</tr>
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
 		<td class="col-left"><label>{l s='Options:'}</label></td>
 		<td style="padding-bottom:5px;">
@@ -169,201 +169,166 @@
 				});
 			});
 			</script>
-		<label for="available_for_order" class="t">{l s='available for order'}</label>
-		<br class="clear" />
-		<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-		<label for="show_price" class="t">{l s='show price'}</label>
-		<br class="clear" />
-		<input style="float: left;" type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-		<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
+			<label for="available_for_order" class="t">{l s='available for order'}</label>
+			<br class="clear" />
+			<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
+			<label for="show_price" class="t">{l s='show price'}</label>
+			<br class="clear" />
+			<input style="float: left;" type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
+			<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
 		</td>
 	</tr>
 	<tr>
-	<td class="col-left"><label>{l s='Condition:'}</label></td>
-	<td style="padding-bottom:5px;">
-	<select name="condition" id="condition">
-	<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
-	<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
-	<option value="refurbished" {if $product->condition == 'refurbished'}selected="selected"{/if}>{l s='Refurbished'}</option>
-	</select>
-	</td>
+		<td class="col-left"><label>{l s='Condition:'}</label></td>
+		<td style="padding-bottom:5px;">
+			<select name="condition" id="condition">
+				<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
+				<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
+				<option value="refurbished" {if $product->condition == 'refurbished'}selected="selected"{/if}>{l s='Refurbished'}</option>
+			</select>
+		</td>
 	</tr>
 </table>
+
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
-{* [begin] pack product *}
-<script type='text/javascript'>
-	var msg_select_one = '{l s='Thanks to select at least one product.'}';
-	var msg_set_quantity = '{l s='Thanks to set a quantity to add a product.'}';
-</script>
-<table>
-	<tr>
-		<td>
-			<input type="checkbox" name="ppack" id="ppack" value="1" {if $is_pack}checked="checked"{/if} onclick="$('#ppackdiv').slideToggle();" />
-			<label class="t" for="ppack">{l s='Pack'}</label>
-		</td>
-		<td>
-			<div id="ppackdiv" {if !$is_pack}style="display: none;"{/if}>
-				<div id="divPackItems">
-				{foreach from=$product->packItems item=packItem}
-					{$packItem->pack_quantity} x {$packItem->name}<span onclick="delPackItem({$packItem->id});" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />
-				{/foreach}
-				</div>
-				<input type="hidden" name="inputPackItems" id="inputPackItems" value="{$input_pack_items}" />
 
-				<input type="hidden" name="namePackItems" id="namePackItems" value="{$input_namepack_items}" />
 
-				<input type="hidden" size="2" id="curPackItemId" />
+		<table cellspacing="0" cellpadding="5" border="0">	
+			<tr>
+				<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
+				<td style="padding-bottom:5px;">
+						{include file="products/textarea_lang.tpl"
+						languages=$languages
+						input_name='description_short'
+						input_value=$product->description_short
+						max=400}
 
-				<p class="clear">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
-				<br />{l s='You cannot add downloadable products to a pack.'}</p>
-				<input type="text" size="25" id="curPackItemName" />
-				<input type="text" name="curPackItemQty" id="curPackItemQty" value="1" size="1" />
-				<span onclick="addPackItem();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add an item to the pack'}" title="{l s='Add an item to the pack'}" /></span>
-			</td>
-		</div>
-	</tr>
-</table>
-
-<div class="separation"></div>
-<table cellspacing="0" cellpadding="5" border="0">	
-					<tr>
-						<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
-						<td style="padding-bottom:5px;">
-								{include file="products/textarea_lang.tpl"
-								languages=$languages
-								input_name='description_short'
-								input_value=$product->description_short
-								max=400}
-
-		<p class="clear"></p>
-			</td>
-					</tr>
-					<tr>
-						<td class="col-left"><label>{l s='Description:'}<br /></label><p class="product_description">({l s='appears in the body of the product page'})</p></td>
-						<td style="padding-bottom:5px;">
-								{include file="products/textarea_lang.tpl" languages=$languages
-								input_name='description'
-								input_value=$product->description
-								}
-		<p class="clear"></p>
-					</td>
-					</tr>
-
-{if $images}
-
-					<tr>
-						<td class="col-left"><label></label></td>
-						<td style="padding-bottom:5px;">
-							<div style="display:block;width:620px;" class="hint clear">
-								{l s='Do you want an image associated with the product in your description?'}
-								<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
-								<table id="createImageDescription" style="display:none;">
-									<tr>
-										<td colspan="2" height="10"></td>
-									</tr>
-									<tr>
-										<td class="col-left"><label>{l s='Select your image:'}</label></td>
-										<td style="padding-bottom:5px;">
-											<ul>
-											{foreach from=$images item=image key=key}
-													<li>
-														<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
-														<label for="smallImage_{$key}" class="t">
-															<img src="{$image.src}" alt="{$image.legend}" />
-														</label>
-													</li>
-											{/foreach}
-											</ul>
-											<p class="clear"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="col-left"><label>{l s='Where to place it?'}</label></td>
-										<td style="padding-bottom:5px;">
-											<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
-											<label for="leftRight_1" class="t">{l s='left'}</label>
-											<br />
-											<input type="radio" name="leftRight" id="leftRight_2" value="right">
-											<label for="leftRight_2" class="t">{l s='right'}</label>
-											<p class="clear"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
-										<td style="padding-bottom:5px;">
-											{foreach from=$imagesTypes key=key item=type}
-													<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
-													<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
-													<br />
-											{/foreach}
-
-											<p class="clear"></p>
-										</td>
-									</tr>
-
-									<tr>
-										<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
-										<td style="padding-bottom:5px;">
-											<input type="text" id="resultImage" name="resultImage" />
-											<p>{l s='The tag is to copy / paste in the description.'}</p>
-										</td>
-									</tr>
-								</table>
-							</div>
-							<p class="clear"></p>
-						</td>
-					</tr>
-
-					<script type="text/javascript">
-						$(function() {
-							changeTagImage();
-							$('#createImageDescription input').change(function(){
-								changeTagImage();
-							});
-
-							var i = 0;
-							$('.addImageDescription').click(function(){
-								if (i == 0){
-									$('#createImageDescription').animate({
-										opacity: 1, height: 'toggle'
-										}, 500);
-									i = 1;
-								}else{
-									$('#createImageDescription').animate({
-										opacity: 0, height: 'toggle'
-										}, 500);
-									i = 0;
-								}
-							});
-						});
-
-						function changeTagImage(){
-							var smallImage = $('input[name=smallImage]:checked').attr('value');
-							var leftRight = $('input[name=leftRight]:checked').attr('value');
-							var imageTypes = $('input[name=imageTypes]:checked').attr('value');
-							var tag = '[img-'+smallImage+'-'+leftRight+'-'+imageTypes+']';
-							$('#resultImage').val(tag);
+					<p class="clear"></p>
+				</td>
+			</tr>
+			<tr>
+				<td class="col-left"><label>{l s='Description:'}<br /></label><p class="product_description">({l s='appears in the body of the product page'})</p></td>
+				<td style="padding-bottom:5px;">
+						{include file="products/textarea_lang.tpl" languages=$languages
+						input_name='description'
+						input_value=$product->description
 						}
-					</script>
-{/if}
+					<p class="clear"></p>
+				</td>
+			</tr>
 
-				<tr>
-					<td class="col-left"><label>{l s='Tags:'}</label></td>
-					<td style="padding-bottom:5px;" class="translatable">
+		{if $images}
 
-			{foreach from=$languages item=language}
-				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
-					<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
-						value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
-					<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
-				</div>
-			{/foreach}
+			<tr>
+				<td class="col-left"><label></label></td>
+				<td style="padding-bottom:5px;">
+					<div style="display:block;width:620px;" class="hint clear">
+						{l s='Do you want an image associated with the product in your description?'}
+						<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
+						<table id="createImageDescription" style="display:none;">
+							<tr>
+								<td colspan="2" height="10"></td>
+							</tr>
+							<tr>
+								<td class="col-left"><label>{l s='Select your image:'}</label></td>
+								<td style="padding-bottom:5px;">
+									<ul>
+									{foreach from=$images item=image key=key}
+											<li>
+												<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+												<label for="smallImage_{$key}" class="t">
+													<img src="{$image.src}" alt="{$image.legend}" />
+												</label>
+											</li>
+									{/foreach}
+									</ul>
+									<p class="clear"></p>
+								</td>
+							</tr>
+							<tr>
+								<td class="col-left"><label>{l s='Where to place it?'}</label></td>
+								<td style="padding-bottom:5px;">
+									<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
+									<label for="leftRight_1" class="t">{l s='left'}</label>
+									<br />
+									<input type="radio" name="leftRight" id="leftRight_2" value="right">
+									<label for="leftRight_2" class="t">{l s='right'}</label>
+									<p class="clear"></p>
+								</td>
+							</tr>
+							<tr>
+								<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
+								<td style="padding-bottom:5px;">
+									{foreach from=$imagesTypes key=key item=type}
+											<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
+											<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
+											<br />
+									{/foreach}
+
+									<p class="clear"></p>
+								</td>
+							</tr>
+
+							<tr>
+								<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
+								<td style="padding-bottom:5px;">
+									<input type="text" id="resultImage" name="resultImage" />
+									<p>{l s='The tag is to copy / paste in the description.'}</p>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<p class="clear"></p>
+				</td>
+			</tr>
+
+			<script type="text/javascript">
+				$(function() {
+					changeTagImage();
+					$('#createImageDescription input').change(function(){
+						changeTagImage();
+					});
+
+					var i = 0;
+					$('.addImageDescription').click(function(){
+						if (i == 0){
+							$('#createImageDescription').animate({
+								opacity: 1, height: 'toggle'
+								}, 500);
+							i = 1;
+						}else{
+							$('#createImageDescription').animate({
+								opacity: 0, height: 'toggle'
+								}, 500);
+							i = 0;
+						}
+					});
+				});
+
+				function changeTagImage(){
+					var smallImage = $('input[name=smallImage]:checked').attr('value');
+					var leftRight = $('input[name=leftRight]:checked').attr('value');
+					var imageTypes = $('input[name=imageTypes]:checked').attr('value');
+					var tag = '[img-'+smallImage+'-'+leftRight+'-'+imageTypes+']';
+					$('#resultImage').val(tag);
+				}
+			</script>
+		{/if}
+
+		<tr>
+			<td class="col-left"><label>{l s='Tags:'}</label></td>
+			<td style="padding-bottom:5px;" class="translatable">
+				{foreach from=$languages item=language}
+					<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if}float: left;">
+						<input size="55" type="text" id="tags_{$language.id_lang}" name="tags_{$language.id_lang}"
+							value="{$product->getTags($language.id_lang, true)|htmlentitiesUTF8}" />
+						<span class="hint" name="help_box">{l s='Forbidden characters:'} !&lt;;&gt;;?=+#&quot;&deg;{}_$%<span class="hint-pointer">&nbsp;</span></span>
+					</div>
+				{/foreach}
 				<p class="preference_description clear">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
-					</td>
-				</tr>
-					</td>
-				</tr>
-			</table>
-			<br />
-		</div>
+			</td>
+		</tr>
+	</table>
+	<br />
+</div>
 
