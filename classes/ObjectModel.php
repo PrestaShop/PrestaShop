@@ -142,8 +142,9 @@ abstract class ObjectModelCore
 	/**
 	 * Build object
 	 *
-	 * @param integer $id Existing object id in order to load object (optional)
-	 * @param integer $id_lang Required if object is multilingual (optional)
+	 * @param int $id Existing object id in order to load object (optional)
+	 * @param int $id_lang Required if object is multilingual (optional)
+	 * @param int $id_shop ID shop for objects with multishop on langs
 	 */
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
@@ -171,11 +172,15 @@ abstract class ObjectModelCore
 			$cache_id = 'objectmodel_'.$this->def['table'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
-				$sql = 'SELECT *
-						FROM `'._DB_PREFIX_.$this->def['table'].'` a '.
-						($id_lang ? ('LEFT JOIN `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang` b ON (a.`'.$this->def['primary'].'` = b.`'.$this->def['primary']).'` AND `id_lang` = '.(int)($id_lang).')' : '')
-						.' WHERE 1 AND a.`'.$this->def['primary'].'` = '.(int)$id.
-							(($this->id_shop AND $id_lang) ? ' AND b.id_shop = '.$this->id_shop : '');
+				$sql = new DbQuery();
+				$sql->from($this->def['table'].' a');
+				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
+				if ($id_lang)
+				{
+					$sql->leftJoin($this->def['table'].'_lang b ON a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
+					if ($this->id_shop)
+						$sql->where('b.id_shop = '.$this->id_shop);
+				}
 				Cache::store($cache_id, Db::getInstance()->getRow($sql));
 			}
 
@@ -1086,17 +1091,19 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	* Specify if an ObjectModel is already in database
-	*
-	* @param $id_entity entity id
-	* @return boolean
-	*/
+	 * Specify if an ObjectModel is already in database
+	 *
+	 * @param int $id_entity
+	 * @param string $table
+	 * @return boolean
+	 */
 	public static function existsInDatabase($id_entity, $table)
 	{
 		$row = Db::getInstance()->getRow('
-		SELECT `id_'.$table.'` as id
-		FROM `'._DB_PREFIX_.$table.'` e
-		WHERE e.`id_'.$table.'` = '.(int)($id_entity));
+			SELECT `id_'.$table.'` as id
+			FROM `'._DB_PREFIX_.$table.'` e
+			WHERE e.`id_'.$table.'` = '.(int)$id_entity
+		);
 
 		return isset($row['id']);
 	}
@@ -1116,28 +1123,6 @@ abstract class ObjectModelCore
 		if ($has_active_column)
 			$query->where('`active` = 1');
 		return (bool)Db::getInstance()->getValue($query);
-	}
-
-	/**
-	 * Get object identifier name
-	 *
-	 * @since 1.5.0
-	 * @return string
-	 */
-	public function getIdentifier()
-	{
-		return $this->def['primary'];
-	}
-
-	/**
-	 * Get list of fields related to language to validate
-	 *
-	 * @since 1.5.0
-	 * @return array
-	 */
-	public function getFieldsValidateLang()
-	{
-		return $this->fieldsValidateLang;
 	}
 
 	/**
