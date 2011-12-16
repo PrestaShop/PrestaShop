@@ -344,14 +344,14 @@ function add_attr()
 {
 	var attr_group = $('#attribute_group option:selected');
 	if (attr_group.val() == 0)
-		return alert('Please choose a group');
+		return alert(msg_combination_1);
 
 	var attr_name = $('#attribute option:selected');
 	if (attr_name.val() == 0)
-		return alert('Please choose an attribute');
+		return alert(msg_combination_2);
 	
 	if (attr_group.val() in storeUsedGroups)
-		return alert('You can only add one type of group per combination');
+		return alert(msg_combination_3);
 
 	storeUsedGroups[attr_group.val()] = true;
 	$('<option></option>')

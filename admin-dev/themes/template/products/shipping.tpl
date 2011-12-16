@@ -76,7 +76,7 @@
 	</tr>
 	<tr>
 		<td class="col-left">
-			<label>Carriers:</label>
+			<label>{l s='Carriers:'}</label>
 		</td>
 		<td class="padding-bottom:5px;">
 			<select name="carriers[]" multiple="multiple" size="4">
