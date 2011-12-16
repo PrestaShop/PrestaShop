@@ -69,13 +69,6 @@
 		}
 	});
 
-	/*$('input[name=is_virtual_good]').live('change', function() {
-		if($(this).attr('checked'))
-			$('#is_virtual').val(1);
-		else
-			$('#is_virtual').val(0);
-	});*/
-
 	$(document).ready(function() {
 		$('input').keypress(function(e) { 
 			var code = null; 
@@ -159,9 +152,10 @@
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
 	<tr>
 		<td colspan="2">
-			<p><input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {*onclick="toggleVirtualProduct(this);"*} {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
+			<div class="is_virtual_good">
+				<input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {*onclick="toggleVirtualProduct(this);"*} {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
 				<label for="is_virtual_good" class="t bold">{l s='Is this a virtual product?'}</label>
-			</p>
+			</div>
 			{* [begin] virtual product *}
 			<div id="virtual_good" class="toggleVirtualPhysicalProduct" {if !$product->productDownload->id || $product->productDownload->active}style="display:none"{/if} >
 				<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual}" />
