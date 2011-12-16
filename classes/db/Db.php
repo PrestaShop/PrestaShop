@@ -114,6 +114,8 @@ abstract class DbCore
 
 	/**
 	 * Get number of rows in a result
+	 *
+	 * @param mixed $result
 	 */
 	abstract protected function _numRows($result);
 
@@ -129,6 +131,8 @@ abstract class DbCore
 
 	/**
 	 * Get next row for a query which doesn't return an array
+	 *
+	 * @param mixed $result
 	 */
 	abstract public function nextRow($result = false);
 
@@ -248,11 +252,12 @@ abstract class DbCore
 	 * @param string $data Data to insert/update
 	 * @param string $type INSERT or INSERT IGNORE or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
-	 * @param string $limit LIMIT clause (optional)
+	 * @param int $limit LIMIT clause (optional)
+	 * @param bool $use_cache
 	 * @param bool $use_null If true, replace empty strings and NULL by a NULL value
 	 * @return mixed|boolean SQL query result
 	 */
-	public function autoExecute($table, $data, $type, $where = false, $limit = false, $use_cache = 1, $use_null = false)
+	public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
 	{
 		if (!$data)
 			return true;
@@ -330,10 +335,10 @@ abstract class DbCore
 	 * @param string $values Data to insert/update
 	 * @param string $type INSERT or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
-	 * @param string $limit LIMIT clause (optional)
+	 * @param int $limit LIMIT clause (optional)
 	 * @return mixed|boolean SQL query result
 	 */
-	public function autoExecuteWithNullValues($table, $values, $type, $where = false, $limit = false)
+	public function autoExecuteWithNullValues($table, $values, $type, $where = '', $limit = 0)
 	{
 		return $this->autoExecute($table, $values, $type, $where, $limit, 0, true);
 	}
@@ -364,7 +369,7 @@ abstract class DbCore
 	 * @param bool $use_cache Use cache or not
 	 * @return bool
 	 */
-	public function delete($table, $where = false, $limit = false, $use_cache = true)
+	public function delete($table, $where = '', $limit = 0, $use_cache = true)
 	{
 		$this->result = false;
 		$sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
@@ -397,7 +402,7 @@ abstract class DbCore
 	 *
 	 * @param string $sql query to execute
 	 * @param boolean $array return an array instead of a mysql_result object (deprecated since 1.5.0, use query method instead)
-	 * @param int $use_cache if query has been already executed, use its result
+	 * @param bool $use_cache if query has been already executed, use its result
 	 * @return array or result object
 	 */
 	public function executeS($sql, $array = true, $use_cache = true)
@@ -443,7 +448,7 @@ abstract class DbCore
 	 * This function automatically add "limit 1" to the query
 	 *
 	 * @param mixed $sql the select query (without "LIMIT 1")
-	 * @param int $use_cache find it in cache first
+	 * @param bool $use_cache find it in cache first
 	 * @return array associative array of (field=>value)
 	 */
 	public function getRow($sql, $use_cache = true)
@@ -475,8 +480,8 @@ abstract class DbCore
 	 * getValue return the first item of a select query.
 	 *
 	 * @param mixed $sql
-	 * @param int $use_cache
-	 * @return void
+	 * @param bool $use_cache
+	 * @return mixed
 	 */
 	public function getValue($sql, $use_cache = true)
 	{
@@ -512,11 +517,10 @@ abstract class DbCore
 	 *
 	 * @param string $sql
 	 * @param bool $use_cache
+	 * @return mixed $result
 	 */
 	protected function q($sql, $use_cache = true)
 	{
-		global $webservice_call;
-
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
@@ -530,7 +534,7 @@ abstract class DbCore
 	/**
 	 * Display last SQL error
 	 *
-	 * @param unknown_type $sql
+	 * @param bool $sql
 	 */
 	public function displayError($sql = false)
 	{
@@ -575,7 +579,8 @@ abstract class DbCore
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
 	 * @param string $db Database name
-	 * @param bool $newDbLink
+	 * @param bool $new_db_link
+	 * @param bool $engine
 	 * @return int
 	 */
 	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null)
@@ -596,13 +601,7 @@ abstract class DbCore
 		return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
 	}
 
-	/**
-	 * Alias of Db::getInstance()->ExecuteS
-	 *
-	 * @acces string query The query to execute
-	 * @return array Array of line returned by MySQL
-	 */
-	public static function s($sql, $use_cache = 1)
+	public static function s($sql, $use_cache = true)
 	{
 		return Db::getInstance()->executeS($sql, true, $use_cache);
 	}
