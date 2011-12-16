@@ -798,6 +798,10 @@ class AdminModulesControllerCore extends AdminController
 			// Make modules stats
 			$this->makeModulesStats($module);
 
+			// Assign warnings
+			if (isset($module->warning) && !empty($module->warning))
+				$this->warnings[] = '<b>'.$module->displayName.' :</b> '.$module->warning;
+
 			// Apply filter
 			if ($this->isModuleFiltered($module))
 				unset($modules[$km]);
