@@ -47,6 +47,10 @@ ALTER TABLE `PREFIX_suplier` ADD COLUMN `id_address` int(10) unsigned NOT NULL A
 ALTER TABLE `PREFIX_address` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL DEFAULT 0 AFTER `id_supplier`;
 ALTER TABLE `PREFIX_order_invoice` ADD `note` TEXT NOT NULL AFTER `total_wrapping_tax_incl`;
 
+/* ORDER STATES */
+ALTER TABLE `PREFIX_order_state` ADD `paid` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `shipped`;
+UPDATE `PREFIX_order_state` SET `paid` = 1 WHERE `id_order_state` IN (2, 3, 4, 5, 9, 12);
+
 /************************
  * STOCK MANAGEMENT
 *************************/

@@ -155,7 +155,7 @@
 					<td>{dateFormat date=$row['date_add'] full=true}</td>
 					<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
 					<td>{$row['ostate_name']|stripslashes}</td>
-					<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
+					<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
 				</tr>
 				{/if}
 			{/foreach}
@@ -221,10 +221,11 @@
 				<table class="table" width="100%;" cellspacing="0" cellpadding="0">
 					<thead>
 						<tr>
-							<th style="width:20%">Date</th>
-							<th>Document</th>
-							<th style="width:20%">Number</th>
-							<th style="width:20px"></th>
+							<th style="width:20%">{l s='Date'}</th>
+							<th style="width:25%">{l s='Document'}</th>
+							<th style="width:20%">{l s='Number'}</th>
+							<th>{l s='Amount'}</th>
+							<th style="width:42px"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -233,10 +234,26 @@
 							<td>{dateFormat date=$document->date_add}</td>
 							<td>Invoice</td>
 							<td><a href="pdf.php?pdf&id_order_invoice={$document->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->number}</a></td>
-							<td><a href="#" onclick="jQuery('#invoiceNote{$document->id}').show(); return false;"><img src="../img/admin/comment_edit.png" alt="{l s='Edit'}" /></a></td>
+							<td>
+								{*if TYPE DOCUMENT = INVOICE *}
+								{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
+								{if $document->getRestPaid()}
+								<span style="color:red;font-weight:bold;">({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})</span>
+								{/if}
+								{*/if*}
+							</td>
+							<td class="right">
+								{*if TYPE DOCUMENT = INVOICE *}
+								{if $document->getRestPaid()}
+								<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
+								{/if}
+								<a href="#" onclick="$('#invoiceNote{$document->id}').show(); return false;"><img src="../img/admin/comment_edit.png" alt="{l s='Edit note'}" /></a>
+								{*/if*}
+							</td>
 						</tr>
+						{*if TYPE DOCUMENT = INVOICE *}
 						<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
-							<td colspan="4">
+							<td colspan="5">
 								<form action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
 									<p>
 										<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
@@ -245,14 +262,15 @@
 									</p>
 									<p class="right">
 										<input type="submit" name="submitEditNote" value="{l s='Save'}" class="button" />
-										<input type="button" name="cancelNote" id="cancelNote" value="{l s='Cancel'}" onclick="jQuery('#invoiceNote{$document->id}').hide();" class="button" />
+										<input type="button" name="cancelNote" id="cancelNote" value="{l s='Cancel'}" onclick="$('#invoiceNote{$document->id}').hide();" class="button" />
 									</p>
 								</form>
 							</td>
 						</tr>
+						{*/if*}
 						{foreachelse}
 						<tr>
-							<td colspan="4" class="center">
+							<td colspan="5" class="center">
 								<h3>{l s='No document is available'}</h3>
 								<p><a class="button" href="{$currentIndex}&viewOrder&submitGenerateInvoice&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
 							</td>
@@ -288,7 +306,7 @@
 					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 				</p>
 
-				<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
+				<form id="formAddPayment" method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
 						<thead>
 							<tr>
@@ -317,40 +335,38 @@
 								<td></td>
 							</tr>
 							{/foreach}
-							<tr>
-								<td><input type="text" name="payment_date" class="datepicker" size="17" value="{date('Y-m-d H:i:s')}" /></td>
-								<td>
-									<select name="payment_method">
-									{foreach from=PaymentModule::getInstalledPaymentModules() item=payment_method}
-										{assign var=payment_name value=Module::getInstanceByName($payment_method.name)->displayName}
-										<option value="{$payment_name}">{$payment_name}</option>
-									{/foreach}
-									</select>
-								</td>
-								<td>
-									<input type="text" name="payment_transaction_id" value="" />
-								</td>
-								<td>
-									<input type="text" name="payment_amount" size="5" value="" />
-									<select name="payment_currency">
-									{foreach from=$currencies item=current_currency}
-										<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
-									{/foreach}
-									</select>
-								</td>
-								<td>
-									{if sizeof($invoices_collection)}
+							{if count($not_paid_invoices_collection) > 0}
+								<tr class="current-edit">
+									<td><input type="text" name="payment_date" class="datepicker" size="17" value="{date('Y-m-d H:i:s')}" /></td>
+									<td>
+										<select name="payment_method">
+										{foreach from=PaymentModule::getInstalledPaymentModules() item=payment_method}
+											{assign var=payment_name value=Module::getInstanceByName($payment_method.name)->displayName}
+											<option value="{$payment_name}">{$payment_name}</option>
+										{/foreach}
+										</select>
+									</td>
+									<td>
+										<input type="text" name="payment_transaction_id" value="" />
+									</td>
+									<td>
+										<input type="text" name="payment_amount" size="5" value="" />
+										<select name="payment_currency">
+										{foreach from=$currencies item=current_currency}
+											<option value="{$current_currency['id_currency']}"{if $current_currency['id_currency'] == $currency->id} selected="selected"{/if}>{$current_currency['sign']}</option>
+										{/foreach}
+										</select>
+									</td>
+									<td>
 										<select name="payment_invoice">
-										{foreach from=$invoices_collection item=invoice}
+										{foreach from=$not_paid_invoices_collection item=invoice}
 											<option value="{$invoice->id}" selected="selected">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>
 										{/foreach}
 										</select>
-									{else}
-										{l s='No invoice available'}
-									{/if}
-								</td>
-								<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
-							</tr>
+									</td>
+									<td><input class="button" type="submit" name="submitAddPayment" value="Add" /></td>
+								</tr>
+							{/if}
 						</tbody>
 					</table>
 				</form>

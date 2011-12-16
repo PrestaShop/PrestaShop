@@ -588,7 +588,8 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::isSubmit('submitEditNote')) {
+		elseif (Tools::isSubmit('submitEditNote'))
+		{
 			$id_order_invoice = (int)Tools::getValue('id_order_invoice');
 			$note = Tools::getValue('note');
 			$order_invoice = new OrderInvoice($id_order_invoice);
@@ -829,6 +830,7 @@ class AdminOrdersControllerCore extends AdminController
 			'can_edit' => ($this->tabAccess['edit'] == 1),
 			'current_id_lang' => $this->context->language->id,
 			'invoices_collection' => $order->getInvoicesCollection(),
+			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'HOOK_INVOICE' => Hook::exec('invoice', array('id_order' => $order->id)),
 			'HOOK_ADMIN_ORDER' => Hook::exec('adminOrder', array('id_order' => $order->id))
 		);
