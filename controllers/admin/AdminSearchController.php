@@ -144,11 +144,18 @@ class AdminSearchControllerCore extends AdminController
 	{
 		global $_LANGADM;
 		$tabs = array();
+		$key_match = array();
 		$result = Db::getInstance()->executeS('SELECT class_name, name FROM '._DB_PREFIX_.'tab t INNER JOIN '._DB_PREFIX_.'tab_lang tl ON t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->language->id);
 		foreach ($result as $row)
+		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];
+			$key_match[strtolower($row['class_name'])] = $row['class_name'];
+		}
 		foreach (AdminTab::$tabParenting as $key => $value)
+		{
 			$tabs[strtolower($key)] = $tabs[strtolower($value)];
+			$key_match[strtolower($key)] = $key;
+		}
 		$this->_list['features'] = array();
 
 		foreach ($_LANGADM as $key => $value)
@@ -163,7 +170,7 @@ class AdminSearchControllerCore extends AdminController
 					continue;
 				if (!isset($this->_list['features'][$tabs[$key]]))
 					$this->_list['features'][$tabs[$key]] = array();
-				$this->_list['features'][$tabs[$key]][] = array('link' => '?tab='.Tools::safeOutput($key).'&token='.Tools::getAdminTokenLite($key) , 'value' => Tools::safeOutput($value));
+				$this->_list['features'][$tabs[$key]][] = array('link' => Context::getContext()->link->getAdminLink($key_match[$key]), 'value' => Tools::safeOutput($value));
 			}
 		}
 
