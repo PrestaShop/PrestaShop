@@ -130,6 +130,10 @@ abstract class PaymentModuleCore extends Module
 				die($errorMessage);
 			}
 
+			$order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
+			if (!Validate::isLoadedObject($order_status))
+				throw new PrestashopException('Can\'t load Order state status');
+
 			foreach ($cart_delivery_option as $id_address => $key_carriers)
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
 					foreach ($data['package_list'] as $id_package)
@@ -194,6 +198,13 @@ abstract class PaymentModuleCore extends Module
 						// Creating order
 						$result = $order->add();
 
+						// Register Payment only if the order status validate the order
+						if ($result && $order_status->logable)
+						{
+							if (!$order->addOrderPayment($amountPaid))
+								throw new PrestashopException('Can\'t save Order Payment');
+						}
+
 						$order_list[] = $order;
 
 						// Insert new Order detail list using cart for the current order
@@ -210,13 +221,6 @@ abstract class PaymentModuleCore extends Module
 						$order_carrier->shipping_cost_tax_incl = (float)$order->total_shipping_tax_incl;
 						$order_carrier->add();
 					}
-			// Register Payment
-			if (!$order->addOrderPayment($amountPaid))
-			{
-				$errorMessage = Tools::displayError('Can\'t save payment');
-				Logger::addLog($errorMessage, 4, '0000003', 'Order', intval($order->id));
-				die($errorMessage);
-			}
 
 			// Next !
 			foreach ($order_detail_list as $key => $order_detail)
@@ -243,8 +247,6 @@ abstract class PaymentModuleCore extends Module
 					// Insert new Order detail list using cart for the current order
 					//$orderDetail = new OrderDetail(null, null, $this->context);
 					//$orderDetail->createList($order, $cart, $id_order_state);
-
-					//$this->addPCC($order->id, $order->id_currency, $amountPaid);
 
 					// Construct order detail table for the email
 					$productsList = '';
@@ -343,14 +345,10 @@ abstract class PaymentModuleCore extends Module
 					}
 
 					// Hook validate order
-					$orderStatus = new OrderState((int)$id_order_state, (int)$order->id_lang);
-					if (Validate::isLoadedObject($orderStatus))
-					{
-						Hook::exec('newOrder', array('cart' => $cart, 'order' => $order, 'customer' => $customer, 'currency' => $currency, 'orderStatus' => $orderStatus));
-						foreach ($cart->getProducts() AS $product)
-							if ($orderStatus->logable)
-								ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
-					}
+					Hook::exec('newOrder', array('cart' => $cart, 'order' => $order, 'customer' => $customer, 'currency' => $currency, 'orderStatus' => $order_status));
+					foreach ($cart->getProducts() AS $product)
+						if ($order_status->logable)
+							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 
 					if (Configuration::get('PS_STOCK_MANAGEMENT') && $order_detail->getStockState())
 					{
@@ -433,7 +431,7 @@ abstract class PaymentModuleCore extends Module
 							$data = array_merge($data, $extraVars);
 
 						// Join PDF invoice
-						if ((int)(Configuration::get('PS_INVOICE')) AND Validate::isLoadedObject($orderStatus) AND $orderStatus->invoice AND $order->invoice_number)
+						if ((int)(Configuration::get('PS_INVOICE')) && $order_status->invoice && $order->invoice_number)
 						{
 							$fileAttachment['content'] = PDF::invoice($order, 'S');
 							$fileAttachment['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)($order->id_lang)).sprintf('%06d', $order->invoice_number).'.pdf';

@@ -57,7 +57,7 @@ INSERT INTO `PREFIX_module` (`id_module`, `name`, `active`) VALUES (1, 'homefeat
 (34, 'graphvisifire', 1),(35, 'graphxmlswfcharts', 1),(36, 'graphgooglechart', 1),(37, 'graphartichow', 1),(39, 'gridhtml', 1),(40, 'statsbestcustomers', 1),
 (41, 'statsorigin', 1),(42, 'pagesnotfound', 1),(43, 'sekeywords', 1),(44, 'statsproduct', 1),(45, 'statsbestproducts', 1),(46, 'statsbestcategories', 1),
 (47, 'statsbestvouchers', 1),(48, 'statsbestsuppliers', 1),(49, 'statscarrier', 1),(50, 'statsnewsletter', 1),(51, 'statssearch', 1),(52, 'statscheckup', 1),(53, 'statsstock', 1),
-(54, 'blockstore', 1),(55, 'statsforecast', 1), 
+(54, 'blockstore', 1),(55, 'statsforecast', 1),
 /* new themes : modules to add */
 (56, 'blocktopmenu', 1),
 (57, 'blocksharefb', 1),
@@ -78,12 +78,12 @@ INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `vie
 INSERT INTO `PREFIX_module_shop` (`id_module`, `id_shop`) (SELECT `id_module`, 1 FROM `PREFIX_module`);
 
 
-/* 
- * rightcolumn=6, leftcolumn=7, home=8, header=9, top=14, 
+/*
+ * rightcolumn=6, leftcolumn=7, home=8, header=9, top=14,
  */
 
- 
-INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES 
+
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 /* homefeatured */
 (1, 8, 2),
 (1, 9, 23),
@@ -325,8 +325,6 @@ INSERT INTO `PREFIX_order_history` (`id_order_history`, `id_employee`, `id_order
 INSERT INTO `PREFIX_order_detail_tax` (`id_order_detail`, `id_tax`, `unit_amount`, `total_amount`) VALUES
 (1, 1, '76.860000', '76.860000'),
 (2, 1, '24.420000', '24.420000');
-
-INSERT INTO `PREFIX_order_payment` (`id_order`, `id_currency`, `amount`, `payment_method`, `date_add`) VALUES (1, 1, '626.37', 'Chèque', NOW());
 
 INSERT INTO `PREFIX_manufacturer` (`id_manufacturer`, `name`, `date_add`, `date_upd`, `active`) VALUES (1, 'Apple Computer, Inc', NOW(), NOW(), 1);
 INSERT INTO `PREFIX_manufacturer` (`id_manufacturer`, `name`, `date_add`, `date_upd`, `active`) VALUES(2, 'Shure Incorporated', NOW(), NOW(), 1);
@@ -1670,7 +1668,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_newsletter` (
 			  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
 			  PRIMARY KEY (`id_slide`)
 			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
-			
+
 			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider_slides_lang` (
 			  `id_slide` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
@@ -1683,7 +1681,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_newsletter` (
 			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
 
 INSERT INTO `PREFIX_configuration` (name, value)
-VALUES 
+VALUES
 ("HOMESLIDER_WIDTH", "535"),
 ("HOMESLIDER_HEIGHT", "300"),
 ("HOMESLIDER_SPEED", "1300"),
@@ -1691,7 +1689,7 @@ VALUES
 
 INSERT INTO `PREFIX_homeslider` (id_slide, id_shop) VALUES (1, 1),(2, 1), (3, 1), (4, 1), (5, 1);
 
-INSERT INTO `PREFIX_homeslider_slides` (id_slide, position, active) 
+INSERT INTO `PREFIX_homeslider_slides` (id_slide, position, active)
 VALUES (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1);
 
 INSERT INTO `PREFIX_homeslider_slides_lang` (id_slide, id_lang, title, description, legend, url, image) VALUES
