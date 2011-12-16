@@ -712,7 +712,9 @@ a.price_discount_delete {
 .cart_total_price #total_product,
 .cart_total_price #total_price_without_tax,
 .cart_total_price #total_tax,
-.cart_total_voucher #total_discount {
+.cart_total_voucher #total_discount,
+.cart_total_voucher #total_wrapping,
+.cart_total_tax #total_tax {
 	border-right:none;
 	text-align: right
 }
