@@ -563,8 +563,8 @@ class CartRuleCore extends ObjectModel
 		{
 			$array['selected'] = Db::getInstance()->ExecuteS('
 			SELECT t.*, tl.*, 1 as selected
-			FROM '._DB_PREFIX_.''.$type.' t
-			LEFT JOIN '._DB_PREFIX_.''.$type.'_lang tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.'
+			FROM `'._DB_PREFIX_.$type.'` t
+			LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.'
 			WHERE 1
 			'.($active ? 'AND t.active = 1' : '').'
 			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').'
@@ -578,9 +578,9 @@ class CartRuleCore extends ObjectModel
 			{
 				$result = Db::getInstance()->ExecuteS('
 				SELECT t.*, tl.*, IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
-				FROM '._DB_PREFIX_.''.$type.' t
-				LEFT JOIN '._DB_PREFIX_.''.$type.'_lang tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.'
-				LEFT JOIN (SELECT id_'.$type.' FROM '._DB_PREFIX_.'cart_rule_'.$type.' WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.$type.' = crt.id_'.$type.'
+				FROM `'._DB_PREFIX_.$type.'` t
+				LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.'
+				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.$type.' = crt.id_'.$type.'
 				'.($active ? 'WHERE t.active = 1' : '').'
 				ORDER BY name ASC',
 				false);
