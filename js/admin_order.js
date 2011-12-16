@@ -485,7 +485,7 @@ $(document).ready(function() {
 		var id_invoice = $(this).attr('data-id-invoice');
 		$('select[name=payment_invoice] option[value='+id_invoice+']').attr('selected', true);
 
-		$.scrollTo('#formAddPayment', 1000);
+		$.scrollTo('#formAddPayment', 1000, {offset: -100});
 
 		return false;
 	})
