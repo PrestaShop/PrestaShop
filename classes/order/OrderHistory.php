@@ -143,6 +143,19 @@ class OrderHistoryCore extends ObjectModel
 					}
 				}
 
+			$this->id_order_state = (int)($new_order_state);
+
+			/* Change invoice number of order ? */
+			if (!Validate::isLoadedObject($newOS) OR !Validate::isLoadedObject($order))
+				die(Tools::displayError('Invalid new order state'));
+
+			/* The order is valid only if the invoice is available and the order is not cancelled */
+			$order->valid = $newOS->logable;
+			$order->update();
+
+			if ($newOS->invoice AND !$order->invoice_number)
+				$order->setInvoice();
+
 			// Set order as paid
 			if ($newOS->paid == 1)
 			{
@@ -165,18 +178,6 @@ class OrderHistoryCore extends ObjectModel
 				}
 			}
 
-			$this->id_order_state = (int)($new_order_state);
-
-			/* Change invoice number of order ? */
-			if (!Validate::isLoadedObject($newOS) OR !Validate::isLoadedObject($order))
-				die(Tools::displayError('Invalid new order state'));
-
-			/* The order is valid only if the invoice is available and the order is not cancelled */
-			$order->valid = $newOS->logable;
-			$order->update();
-
-			if ($newOS->invoice AND !$order->invoice_number)
-				$order->setInvoice();
 			// Update delivery date even if it was already set by another state change
 			if ($newOS->delivery)
 				$order->setDelivery();
