@@ -171,7 +171,7 @@
 					{/if}
 				{/if}
 				</td>
-				<td colspan="2" class="price" id="total_price">
+				<td colspan="2" class="price" id="total_price_container">
 					<p>{l s='Total:'}</p>
 					<span>{displayPrice price=$total_price}</span>
 				</td>
@@ -210,7 +210,7 @@
 				</div>
 				{/if}
 				</td>
-				<td colspan="2" id="total_price" class="price">
+				<td colspan="2" id="total_price_container" class="price">
 					<p>{l s='Total:'}</p>
 					<span>{displayPrice price=$total_price_without_tax}</span>
 				</td>
