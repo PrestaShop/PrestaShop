@@ -245,9 +245,9 @@
 							<td class="right">
 								{*if TYPE DOCUMENT = INVOICE *}
 								{if $document->getRestPaid()}
-								<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
+								<a href="#" class="js-set-payment" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}"><img src="../img/admin/money_add.png" alt="{l s='Set payment form'}" /></a>
 								{/if}
-								<a href="#" onclick="$('#invoiceNote{$document->id}').show(); return false;"><img src="../img/admin/comment_edit.png" alt="{l s='Edit note'}" /></a>
+								<a href="#" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}"><img src="../img/admin/note.png" alt="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}"{if $document->note eq ''} class="js-disabled-action"{/if} /></a>
 								{*/if*}
 							</td>
 						</tr>
@@ -258,7 +258,7 @@
 									<p>
 										<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 										<input type="hidden" name="id_order_invoice" value="{$document->id}" />
-										<textarea name="note" rows="10" cols="10" id="editNote{$document->id}" style="width:98%;height:100px;">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
+										<textarea name="note" rows="10" cols="10" id="editNote{$document->id}" class="edit-note">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
 									</p>
 									<p class="right">
 										<input type="submit" name="submitEditNote" value="{l s='Save'}" class="button" />
@@ -283,7 +283,7 @@
 
 			<!-- Payments block -->
 			<fieldset style="width: 100%;">
-				<legend><img src="../img/admin/details.gif" /> {l s='Payment'}</legend>
+				<legend><img src="../img/admin/money.gif" /> {l s='Payment'}</legend>
 
 				{if !$order->valid}
 				<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
