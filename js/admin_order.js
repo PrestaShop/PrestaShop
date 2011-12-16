@@ -488,7 +488,9 @@ $(document).ready(function() {
 		$.scrollTo('#formAddPayment', 1000, {offset: -100});
 
 		return false;
-	})
+	});
+
+	$('img.js-disabled-action').css({"opacity":0.5});
 });
 
 function addProductRefreshTotal()
