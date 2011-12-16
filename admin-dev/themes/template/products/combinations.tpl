@@ -27,12 +27,16 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		$('input').keypress(function(e) { 
+		$('input').keypress(function(e) {
 			var code = null; 
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
 	});
+
+	var msg_combination_1 = '{l s='Please choose a group'}';
+	var msg_combination_2 = '{l s='Please choose an attribute'}';
+	var msg_combination_3 = '{l s='You can only add one combination per type of group'}';
 
 </script>
 
