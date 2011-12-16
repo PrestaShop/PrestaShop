@@ -206,6 +206,10 @@ class AdminSpecificPriceRuleController extends AdminController
 					'required' => true,
 				),
 			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			),
 		);
 		
 		$attribute_groups = array();
