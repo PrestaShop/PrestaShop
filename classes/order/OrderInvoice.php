@@ -488,4 +488,15 @@ class OrderInvoiceCore extends ObjectModel
 	{
 		return $this->getTotalPaid() == $this->total_paid_tax_incl;
 	}
+
+	/**
+	 * @since 1.5.0.2
+	 * @return Collection of Order payment
+	 */
+	public function getOrderPaymentCollection()
+	{
+		$order_payments = new Collection('OrderPayment');
+		$order_payments->where('id_order_invoice = '.(int)$this->id);
+		return $order_payments;
+	}
 }
