@@ -418,7 +418,13 @@
 							<td>{$line.type}</td>
 							<td>{$line.state_name}</td>
 							<td>{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
-							<td>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}{else}{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}{/if}</td>
+							<td>
+								{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
+									{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}
+								{else}
+									{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}
+								{/if}
+							</td>
 							<td>
 								<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 								{if $line.can_edit}

@@ -813,7 +813,7 @@ class AdminOrdersControllerCore extends AdminController
 			'slips' => OrderSlip::getOrdersSlip($order->id_customer, $order->id),
 			'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
 			'messages' => Message::getMessagesByOrderId($order->id, true),
-			'carrier' => $carrier = new Carrier($order->id_carrier),
+			'carrier' => new Carrier($order->id_carrier),
 			'history' => $order->getHistory($this->context->language->id),
 			'states' => OrderState::getOrderStates($this->context->language->id),
 			'warehouse_list' => $warehouse_list,
