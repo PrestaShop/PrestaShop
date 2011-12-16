@@ -334,6 +334,12 @@
 								</td>
 								<td></td>
 							</tr>
+							{foreachelse}
+							<tr>
+								<td colspan="6" class="center">
+									<h3>{l s='No payment available'}</h3>
+								</td>
+							</tr>
 							{/foreach}
 							{if count($not_paid_invoices_collection) > 0}
 								<tr class="current-edit">
