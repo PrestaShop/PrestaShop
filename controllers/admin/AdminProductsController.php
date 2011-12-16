@@ -633,7 +633,7 @@ class AdminProductsControllerCore extends AdminController
 					if (!empty($is_virtual))
 						Product::updateIsVirtual($product->id);
 
-					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Combinations&token='.($token ? $token : $this->token);
 				}
 			}
 		}

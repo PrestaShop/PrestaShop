@@ -45,6 +45,17 @@
 	<table>
 		<tr>
 			<td class="col-left">
+				<label for="category_block">{l s='Associated categories:'}</label>
+			</td>
+			<td class="col-right">
+				<div id="category_block">{$category_tree}</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td class="col-left">
 				<label for="id_category_default">{l s='Default category:'}</label>
 			</td>
 			<td class="col-right">
@@ -53,17 +64,6 @@
 						<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 					{/foreach}
 				</select>
-			</td>
-		</tr>
-	</table>
-	<br />
-	<table>
-		<tr>
-			<td class="col-left">
-				<label for="category_block">{l s='Associated categories:'}</label>
-			</td>
-			<td class="col-right">
-				<div id="category_block">{$category_tree}</div>
 			</td>
 		</tr>
 	</table>
