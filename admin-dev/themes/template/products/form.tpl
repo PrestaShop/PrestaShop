@@ -97,7 +97,9 @@
 				// Reset settings
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
+				$('div.ppack').hide();
 				$('#is_virtual_good').removeAttr('checked');
+				$('div.is_virtual_good').hide();
 				$('#is_virtual').val(0);
 
 				var val = $(this).val();
