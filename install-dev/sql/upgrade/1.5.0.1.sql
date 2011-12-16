@@ -551,7 +551,7 @@ ALTER TABLE `PREFIX_hook` ADD `is_native` TINYINT( 1 ) NOT NULL DEFAULT '0';
 
 ALTER TABLE `PREFIX_tax` ADD COLUMN `account_number` VARCHAR(64) NOT NULL;
 
-/* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de combinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, -1); */;
+/* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de déclinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, -1); */;
 /* PHP:add_new_tab(AdminCMSCategories, fr:Catégories CMS|es:CMS categories|en:CMS categories|de:CMS categories|it:CMS categories, -1); */;
 /* PHP:add_new_tab(AdminCMS, fr:Pages CMS|es:CMS pages|en:CMS pages|de:CMS pages|it:CMS pages, -1); */;
 
