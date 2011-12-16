@@ -717,7 +717,7 @@ a.price_discount_delete {
 	text-align: right
 }
 
-.cart_total_price #total_price {
+.cart_total_price #total_price_container {
 	border-right:none;
 }
 
@@ -769,11 +769,11 @@ table#cart_summary .cart_total_price td.cart_voucher {
 .cart_total_price #total_price_without_tax,
 .cart_total_price #total_tax,
 .cart_total_price #total_shipping {text-align:right}
-.cart_total_price #total_price {
+.cart_total_price #total_price_container {
 	padding:0;
 	border-bottom:1px solid #999
 }
-.cart_total_price #total_price p {
+.cart_total_price #total_price_container p {
 	display:block;
 	padding:8px;
 	font-weight:bold;
@@ -781,7 +781,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	text-transform:uppercase;
 	background:#333
 }
-.cart_total_price #total_price span {
+.cart_total_price #total_price_container span {
 	display:block;
 	padding:15px;
 	font-weight:bold;
@@ -1763,3 +1763,4 @@ div.star_hover a, div.star a:hover { background-position: 0 -12px }
 /* ************************************************************************************************
       xxxxx
 ************************************************************************************************ */
+
