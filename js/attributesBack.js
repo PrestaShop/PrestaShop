@@ -144,7 +144,6 @@ virtual_product_nb_days, is_shareable)
 		var opt = document.createElement('option');
 		opt.text = old_attr[i++];
 		opt.value = old_attr[i];
-
 		try {
 			elem.add(opt, null);
 		}

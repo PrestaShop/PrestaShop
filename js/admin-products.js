@@ -142,7 +142,6 @@ function editProductAttribute(ids, token)
 			$('#product_att_list').html('');
 			removeButtonCombination('update');
 			$.scrollTo('#add_new_combination', 1200, { offset: -100 });
-
 			var wholesale_price = Math.abs(data[0]['wholesale_price']);
 			var price = Math.abs(data[0]['price']);
 			var weight = Math.abs(data[0]['weight']);
@@ -151,17 +150,13 @@ function editProductAttribute(ids, token)
 			var ean = data[0]['ean13'];
 			var quantity = data[0]['quantity'];
 			var image = false;
-			var old_attr = Array(data[0]['list_attributes']);
-
-			var product_att_list = '';
+			var product_att_list = new Array();
 			for(i=0;i<data.length;i++)
 			{
-				product_att_list += data[i]['group_name']+' : ';
-				product_att_list += data[i]['attribute_name']+', ';
-				product_att_list += data[i]['id_attribute']+', ';
+				product_att_list.push(data[i]['group_name']+' : '+data[i]['attribute_name']);
+				product_att_list.push(data[i]['id_attribute']);
 			}
 
-			var old_attr = Array(product_att_list.substr(0, (product_att_list.length-2)));
 			var id_product_attribute = data[0]['id_product_attribute'];
 			var default_attribute = data[0]['default_on'];
 			var eco_tax = data[0]['ecotax'];
@@ -184,7 +179,7 @@ function editProductAttribute(ids, token)
 				ean,
 				quantity,
 				image,
-				old_attr,
+				product_att_list,
 				id_product_attribute,
 				default_attribute,
 				eco_tax,

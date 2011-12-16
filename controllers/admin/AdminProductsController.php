@@ -590,11 +590,53 @@ class AdminProductsControllerCore extends AdminController
 								$this->_errors[] = Tools::displayError('Invalid date format.');
 						}
 					}
+					else
+						$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				}
+				// Add new
+				else
+				{
+					if ($this->tabAccess['add'] === '1')
+					{
+						if ($product->productAttributeExists($_POST['attribute_combinaison_list']))
+							$this->_errors[] = Tools::displayError('This combination already exists.');
+						else
+							$id_product_attribute = $product->addCombinationEntity(
+								Tools::getValue('attribute_wholesale_price'),
+								Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact'),
+								Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact'),
+								Tools::getValue('attribute_unity') * Tools::getValue('attribute_unit_impact'),
+								Tools::getValue('attribute_ecotax'),
+								Tools::getValue('id_image_attr'),
+								Tools::getValue('attribute_reference'),
+								null,
+								Tools::getValue('attribute_ean13'),
+								Tools::getValue('attribute_default'),
+								Tools::getValue('attribute_location'),
+								Tools::getValue('attribute_upc')
+							);
+						$this->updateDownloadProduct($product, 0, $id_product_attribute);
+					}
+					else
+						$this->_errors[] = Tools::displayError('You do not have permission to').'<hr>'.Tools::displayError('Edit here.');
+				}
+				if (!count($this->_errors))
+				{
+					$product->addAttributeCombinaison($id_product_attribute, Tools::getValue('attribute_combinaison_list'));
+					$product->checkDefaultAttributes();
+				}
+				if (!count($this->_errors))
+				{
+					if (!$product->cache_default_attribute)
+						Product::updateDefaultAttribute($product->id);
+
+					if (!empty($is_virtual))
+						Product::updateIsVirtual($product->id);
+
+					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&tabs=3&token='.($token ? $token : $this->token);
 				}
 			}
 		}
-		else
-			$this->_errors[] = Tools::displayError('Could not load Product');
 	}
 
 	public function processFeatures($token)
@@ -801,17 +843,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		parent::initProcess();
-
-		if ($this->action)
-		{
-			if ($this->action == 'new')
-				$this->action = 'Informations';
-			return;
-		}
-
 		// Delete a product in the download folder
-		elseif (Tools::getValue('deleteVirtualProduct'))
+		if (Tools::getValue('deleteVirtualProduct'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'deleteVirtualProduct';
@@ -915,6 +948,16 @@ class AdminProductsControllerCore extends AdminController
 				$this->action = 'productCustomization';
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
+
+		if (!$this->action)
+			parent::initProcess();
+
+		if ($this->action)
+		{
+			if ($this->action == 'new')
+				$this->action = 'Informations';
+			return;
 		}
 	}
 
@@ -1043,20 +1086,11 @@ class AdminProductsControllerCore extends AdminController
 			$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 			{
-				$combinaisons = $product->getAttributeCombinaisonsById($id_product_attribute, $this->context->language->id);
-				foreach ($combinaisons as $key => $combinaison)
-					$combinaisons[$key]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+				$combinations = $product->getAttributeCombinaisonsById($id_product_attribute, $this->context->language->id);
+				foreach ($combinations as $key => $combinaison)
 
-				foreach ($combinaisons as $key => $combinaison)
-				{
-					$js_list = '';
-					asort($combinaison['attributes']);
-					foreach ($combinaison['attributes'] AS $attribute)
-						$js_list .= '\''.addslashes(htmlspecialchars($combinaison['group_name'])).' : '.addslashes(htmlspecialchars($combinaison['attribute_name'])).'\', \''.$combinaison['id_attribute'].'\', ';
-					$combinaisons[$key]['list_attributes'] = rtrim($js_list, ', ');
-				}
-
-				die(Tools::jsonEncode($combinaisons));
+					$combinations[$key]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+				die(Tools::jsonEncode($combinations));
 			}
 		}
 	}
@@ -1928,8 +1962,8 @@ class AdminProductsControllerCore extends AdminController
 
 					// adding button for adding a new combination in Combinaition tab
 					$this->toolbar_btn['newCombination'] = array(
-						'short' => 'Add a new combination',
-						'desc' => $this->l('Add a new combination'),
+						'short' => 'New combination',
+						'desc' => $this->l('New combination'),
 						'class' => 'toolbar-new'
 					);
 				}
@@ -2084,7 +2118,7 @@ class AdminProductsControllerCore extends AdminController
 	*/
 	public function processSuppliers($token)
 	{
-		if (Tools::getValue('supplier_loaded') && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			// Get all id_product_attribute
 			$attributes = $product->getAttributesResume($this->context->language->id);
@@ -2262,7 +2296,7 @@ class AdminProductsControllerCore extends AdminController
 	*/
 	public function processWarehouses($token)
 	{
-		if (Tools::getValue('warehouse_loaded') && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			// Get all id_product_attribute
 			$attributes = $product->getAttributesResume($this->context->language->id);
