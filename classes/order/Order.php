@@ -1367,9 +1367,12 @@ class OrderCore extends ObjectModel
 		return OrderReturn::getOrdersReturn($this->id_customer, $this->id);
 	}
 
+	/**
+	 * @return array return all shipping method for the current order
+	 */
 	public function getShipping()
 	{
-		$shipping = Db::getInstance()->ExecuteS('
+		return Db::getInstance()->ExecuteS('
 			SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `state_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_history` oh
@@ -1381,7 +1384,6 @@ class OrderCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl
 				ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE o.`id_order` = '.(int)$this->id);
-		return $shipping;
 	}
 
 	/**
