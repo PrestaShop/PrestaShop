@@ -143,6 +143,28 @@ class OrderHistoryCore extends ObjectModel
 					}
 				}
 
+			// Set order as paid
+			if ($newOS->paid == 1)
+			{
+				$invoices = $order->getInvoicesCollection();
+				$payment_method = Module::getInstanceByName($order->module);
+				foreach ($invoices as $invoice)
+				{
+					$rest_paid = $invoice->getRestPaid();
+					if ($rest_paid)
+					{
+						$payment = new OrderPayment();
+						$payment->id_order = $order->id;
+						$payment->id_order_invoice = $invoice->id;
+						$payment->id_currency = $order->id_currency;
+						$payment->amount = $rest_paid;
+						$payment->payment_method = $payment_method->displayName;
+						$payment->conversion_rate = 1;
+						$payment->save();
+					}
+				}
+			}
+
 			$this->id_order_state = (int)($new_order_state);
 
 			/* Change invoice number of order ? */

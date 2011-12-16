@@ -81,8 +81,21 @@ class OrderPaymentCore extends ObjectModel
 	{
 		return Db::getInstance()->ExecuteS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'payment_order`
+			FROM `'._DB_PREFIX_.'order_payment`
 			WHERE `id_order` = '.(int)$id_order);
+	}
+
+	/**
+	 * Get Order Payments By Invoice ID
+	 * @static
+	 * @param $id_invoice Invoice ID
+	 * @return Collection Collection
+	 */
+	public static function getByInvoiceId($id_invoice)
+	{
+		$payments = new Collection('OrderPayment');
+		$payments->where('a.id_order_invoice = '.(int)$id_invoice);
+		return $payments;
 	}
 }
 

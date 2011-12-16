@@ -69,6 +69,9 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var intger */
 	public $date_add;
 
+	/** @var array Total paid cache */
+	protected static $_total_paid_cache = array();
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -448,5 +451,41 @@ class OrderInvoiceCore extends ObjectModel
 		if (!Validate::isLoadedObject($order_invoice))
 			throw new PrestashopException('Can\'t load Order Invoice object for id: '.$id);
 		return $order_invoice;
+	}
+
+	/**
+	 * Amounts of payments
+	 * @since 1.5.0.2
+	 * @return float Total paid
+	 */
+	public function getTotalPaid()
+	{
+		if (!array_key_exists($this->id, self::$_total_paid_cache))
+		{
+			self::$_total_paid_cache[$this->id] = 0;
+			$payments = OrderPayment::getByInvoiceId($this->id);
+			foreach ($payments as $payment)
+				self::$_total_paid_cache[$this->id] += $payment->amount;
+		}
+		return self::$_total_paid_cache[$this->id];
+	}
+
+	/**
+	 * Rest Paid
+	 * @since 1.5.0.2
+	 * @return float Rest Paid
+	 */
+	public function getRestPaid()
+	{
+		return $this->total_paid_tax_incl - $this->getTotalPaid();
+	}
+
+	/**
+	 * @since 1.5.0.2
+	 * @return bool Is paid ?
+	 */
+	public function isPaid()
+	{
+		return $this->getTotalPaid() == $this->total_paid_tax_incl;
 	}
 }

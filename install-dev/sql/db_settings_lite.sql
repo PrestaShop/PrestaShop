@@ -364,9 +364,9 @@ INSERT INTO `PREFIX_category` (`id_category`, `id_parent`, `level_depth`, `nleft
 INSERT INTO `PREFIX_category_lang` (`id_category`, `id_lang`, `name`, `description`, `link_rewrite`, `meta_title`, `meta_keywords`, `meta_description`) VALUES
 (1, 1, 'Home', '', 'home', NULL, NULL, NULL),(1, 2, 'Accueil', '', 'home', NULL, NULL, NULL),(1, 3, 'Inicio', '', 'home', NULL, NULL, NULL),(1, 4, 'Start', '', 'home', NULL, NULL, NULL),(1, 5, 'Home page', '', 'home', NULL, NULL, NULL);
 
-INSERT INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`, `shipped`) VALUES
-(1, 0, 1, 'RoyalBlue', 1, 0, 0, 0),(2, 1, 1, 'LimeGreen', 1, 1, 0, 0),(3, 1, 1, 'DarkOrange', 1, 1, 1, 0),(4, 1, 1, 'BlueViolet', 1, 1, 1, 1),(5, 1, 0, '#108510', 1, 1, 1, 1),
-(6, 0, 1, 'Crimson', 1, 0, 0, 0),(7, 1, 1, '#ec2e15', 1, 0, 0, 0),(8, 0, 1, '#8f0621', 1, 0, 0, 0),(9, 1, 1, 'HotPink', 1, 0, 0, 0),(10, 0, 1, 'RoyalBlue', 1, 0, 0, 0),(11, 0, 0, 'RoyalBlue', 1, 0, 0, 0),(12, 1, 0, 'LimeGreen', 1, 1, 0, 0);
+INSERT INTO `PREFIX_order_state` (`id_order_state`, `invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`, `shipped`, `paid`) VALUES
+(1, 0, 1, 'RoyalBlue', 1, 0, 0, 0, 0),(2, 1, 1, 'LimeGreen', 1, 1, 0, 0, 1),(3, 1, 1, 'DarkOrange', 1, 1, 1, 0, 1),(4, 1, 1, 'BlueViolet', 1, 1, 1, 1, 1),(5, 1, 0, '#108510', 1, 1, 1, 1, 1),
+(6, 0, 1, 'Crimson', 1, 0, 0, 0, 0),(7, 1, 1, '#ec2e15', 1, 0, 0, 0, 0),(8, 0, 1, '#8f0621', 1, 0, 0, 0, 0),(9, 1, 1, 'HotPink', 1, 0, 0, 0, 1),(10, 0, 1, 'RoyalBlue', 1, 0, 0, 0, 0),(11, 0, 0, 'RoyalBlue', 1, 0, 0, 0, 0),(12, 1, 0, 'LimeGreen', 1, 1, 0, 0, 1);
 
 INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `template`) VALUES
 (1, 1, 'Awaiting cheque payment', 'cheque'),

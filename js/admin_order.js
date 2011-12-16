@@ -478,6 +478,17 @@ $(document).ready(function() {
 		});
 		return false;
 	});
+
+	$('.js-set-payment').click(function() {
+		var amount = $(this).attr('data-amount');
+		$('input[name=payment_amount]').val(amount);
+		var id_invoice = $(this).attr('data-id-invoice');
+		$('select[name=payment_invoice] option[value='+id_invoice+']').attr('selected', true);
+
+		$.scrollTo('#formAddPayment', 1000);
+
+		return false;
+	})
 });
 
 function addProductRefreshTotal()

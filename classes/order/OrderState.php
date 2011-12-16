@@ -56,6 +56,9 @@ class OrderStateCore extends ObjectModel
 	/** @var boolean Shipped */
 	public $shipped;
 
+	/** @var boolean Paid */
+	public $paid;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -72,6 +75,7 @@ class OrderStateCore extends ObjectModel
 			'unremovable' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
