@@ -242,7 +242,10 @@ abstract class ModuleCore
 	{
 		// Check module installation id validation
 		if (!Validate::isUnsignedId($this->id))
+		{
+			$this->_errors[] = $this->l('The module is not installed.');
 			return false;
+		}
 
 		// Retrieve hooks used by the module
 		$sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
