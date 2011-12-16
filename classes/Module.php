@@ -528,13 +528,13 @@ abstract class ModuleCore
 			{
 				if (!$except)
 					continue;
-
-				$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module_exceptions', array(
+				$insertException = array(
 					'id_module' => (int)$this->id,
 					'id_hook' => (int)$id_hook,
 					'id_shop' => (int)$shopID,
 					'file_name' => pSQL($except),
-				), 'INSERT');
+				);
+				$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module_exceptions', $insertException, 'INSERT');
 				if (!$result)
 					return false;
 			}
@@ -628,8 +628,7 @@ abstract class ModuleCore
 		if (is_null($id2name))
 		{
 			$id2name = array();
-			$sql = 'SELECT id_module, name
-					FROM '._DB_PREFIX_.'module';
+			$sql = 'SELECT `id_module`, `name` FROM `'._DB_PREFIX_.'module`';
 			if ($results = Db::getInstance()->executeS($sql))
 				foreach ($results as $row)
 					$id2name[$row['id_module']] = $row['name'];
@@ -637,6 +636,7 @@ abstract class ModuleCore
 
 		if (isset($id2name[$moduleID]))
 			return Module::getInstanceByName($id2name[$moduleID]);
+
 		return false;
 	}
 
@@ -646,21 +646,23 @@ abstract class ModuleCore
 	}
 
 	/**
-	  * Return available modules
-	  *
-	  * @param boolean $useConfig in order to use config.xml file in module dir
-	  * @return array Modules
-	  */
+	 * Return available modules
+	 *
+	 * @param boolean $useConfig in order to use config.xml file in module dir
+	 * @return array Modules
+	 */
 	public static function getModulesOnDisk($useConfig = false, $loggedOnAddons = false)
 	{
 		global $_MODULES;
 
+		// Init var
 		$moduleList = array();
 		$moduleNameList = array();
 		$modulesNameToCursor = array();
 		$errors = array();
-		$modules_dir = self::getModulesDirOnDisk();
 
+		// Get modules directory list and memory limit
+		$modules_dir = self::getModulesDirOnDisk();
 		$memory_limit = Tools::getMemoryLimit();
 
 		foreach ($modules_dir as $module)
@@ -862,6 +864,12 @@ abstract class ModuleCore
 		return $moduleList;
 	}
 
+
+	/**
+	 * Return modules directory list
+	 *
+	 * @return array Modules Directory List
+	 */
 	public static function getModulesDirOnDisk()
 	{
 		$moduleList = array();
@@ -878,12 +886,13 @@ abstract class ModuleCore
 		return $moduleList;
 	}
 
+
 	/**
-		* Return non native module
-		*
-		* @param int $position Take only positionnables modules
-		* @return array Modules
-		*/
+	 * Return non native module
+	 *
+	 * @param int $position Take only positionnables modules
+	 * @return array Modules
+	 */
 	public static function getNonNativeModuleList()
 	{
 		$db = Db::getInstance();
@@ -899,10 +908,7 @@ abstract class ModuleCore
 					$arrNativeModules[] = '"'.pSQL($module['name']).'"';
 			}
 
-		return $db->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'module` m
-			WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
+		return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',',$arrNativeModules).') ');
 	}
 
 	/**
@@ -913,13 +919,12 @@ abstract class ModuleCore
 	 */
 	public static function getModulesInstalled($position = 0)
 	{
-		$sql = 'SELECT m.*
-				FROM `'._DB_PREFIX_.'module` m';
+		$sql = 'SELECT m.* FROM `'._DB_PREFIX_.'module` m ';
 		if ($position)
-			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON m.`id_module` = hm.`id_module`
-					LEFT JOIN `'._DB_PREFIX_.'hook` k ON hm.`id_hook` = k.`id_hook`
-					WHERE k.`position` = 1
-					GROUP BY m.id_module';
+			$sql .= 'LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON m.`id_module` = hm.`id_module`
+				 LEFT JOIN `'._DB_PREFIX_.'hook` k ON hm.`id_hook` = k.`id_hook`
+				 WHERE k.`position` = 1
+				 GROUP BY m.id_module';
 		return Db::getInstance()->executeS($sql);
 	}
 
@@ -1073,8 +1078,7 @@ abstract class ModuleCore
 		{
 			$sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
 					FROM `'._DB_PREFIX_.'hook_module` hm
-					WHERE hm.`id_hook` = '.(int)$id_hook.'
-						AND hm.id_shop = '.$shopID.'
+					WHERE hm.`id_hook` = '.(int)$id_hook.' AND hm.`id_shop` = '.$shopID.'
 					ORDER BY hm.`position` '.($way ? 'ASC' : 'DESC');
 			if (!$res = Db::getInstance()->executeS($sql))
 				continue;
@@ -1094,18 +1098,16 @@ abstract class ModuleCore
 				$to['position'] = (int)($position);
 
 			$sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-					SET `position`= position '.($way ? '-1' : '+1').'
-					WHERE position between '.(int)(min(array($from['position'], $to['position']))) .' AND '.(int)(max(array($from['position'], $to['position']))).'
-						AND `id_hook`='.(int)$from['id_hook'].'
-						AND id_shop = '.$shopID;
+				SET `position`= position '.($way ? '-1' : '+1').'
+				WHERE position between '.(int)(min(array($from['position'], $to['position']))) .' AND '.(int)(max(array($from['position'], $to['position']))).'
+				AND `id_hook` = '.(int)$from['id_hook'].' AND `id_shop` = '.$shopID;
 			if (!Db::getInstance()->execute($sql))
 				return false;
 
 			$sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-					SET `position`='.(int)($to['position']).'
-					WHERE `'.pSQL($this->identifier).'` = '.(int)($from[$this->identifier]).'
-						AND `id_hook` = '.(int)($to['id_hook']).'
-						AND id_shop = '.$shopID;
+				SET `position`='.(int)($to['position']).'
+				WHERE `'.pSQL($this->identifier).'` = '.(int)($from[$this->identifier]).'
+				AND `id_hook` = '.(int)($to['id_hook']).' AND `id_shop` = '.$shopID;
 			if (!Db::getInstance()->execute($sql))
 				return false;
 		}
@@ -1119,11 +1121,11 @@ abstract class ModuleCore
 	 */
 	public function cleanPositions($id_hook, $shopList = null)
 	{
-		$sql = 'SELECT id_module, id_shop
-				FROM '._DB_PREFIX_.'hook_module
-				WHERE id_hook = '.(int)$id_hook.'
-				'.((!is_null($shopList) && $shopList) ? ' AND id_shop IN('.implode(', ', $shopList).')' : '').'
-				ORDER BY position';
+		$sql = 'SELECT `id_module`, `id_shop`
+			FROM `'._DB_PREFIX_.'hook_module`
+			WHERE `id_hook` = '.(int)$id_hook.'
+			'.((!is_null($shopList) && $shopList) ? ' AND `id_shop` IN('.implode(', ', $shopList).')' : '').'
+			ORDER BY `position`';
 		$results = Db::getInstance()->executeS($sql);
 		$position = array();
 		foreach ($results as $row)
@@ -1131,11 +1133,10 @@ abstract class ModuleCore
 			if (!isset($position[$row['id_shop']]))
 				$position[$row['id_shop']] = 1;
 
-			$sql = 'UPDATE '._DB_PREFIX_.'hook_module
-					SET position = '.$position[$row['id_shop']].'
-					WHERE id_hook = '.(int)$id_hook.'
-						AND id_module = '.$row['id_module'].'
-						AND id_shop = '.$row['id_shop'];
+			$sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
+				SET `position` = '.$position[$row['id_shop']].'
+				WHERE `id_hook` = '.(int)$id_hook.'
+				AND `id_module` = '.$row['id_module'].' AND `id_shop` = '.$row['id_shop'];
 			Db::getInstance()->execute($sql);
 			$position[$row['id_shop']]++;
 		}
@@ -1174,9 +1175,8 @@ abstract class ModuleCore
 		if (is_null(self::$exceptionsCache))
 		{
 			self::$exceptionsCache = array();
-			$sql = 'SELECT *
-					FROM `'._DB_PREFIX_.'hook_module_exceptions`
-					WHERE id_shop IN ('.implode(', ', Context::getContext()->shop->getListOfID()).')';
+			$sql = 'SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`
+				WHERE `id_shop` IN ('.implode(', ', Context::getContext()->shop->getListOfID()).')';
 			$result = Db::getInstance()->executeS($sql);
 			foreach ($result as $row)
 			{
@@ -1224,10 +1224,9 @@ abstract class ModuleCore
 			return false;
 
 		$sql = 'SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'hook_module` hm
-				LEFT JOIN `'._DB_PREFIX_.'hook` h ON (h.`id_hook` = hm.`id_hook`)
-				WHERE h.`name` = \''.pSQL($hook).'\'
-					AND hm.`id_module` = '.(int)($this->id);
+			FROM `'._DB_PREFIX_.'hook_module` hm
+			LEFT JOIN `'._DB_PREFIX_.'hook` h ON (h.`id_hook` = hm.`id_hook`)
+			WHERE h.`name` = \''.pSQL($hook).'\' AND hm.`id_module` = '.(int)($this->id);
 		return Db::getInstance()->getValue($sql);
 	}
 
@@ -1321,20 +1320,34 @@ abstract class ModuleCore
 	}
 
 	/**
+	 * Check if the module is transplantable on the hook in parameter
 	 * @param string $hook_name
 	 * @return bool if module can be transplanted on hook
 	 */
 	public function isHookableOn($hook_name)
 	{
-		$hook_retro = Db::getInstance()->getValue('SELECT `alias` FROM `'._DB_PREFIX_.'hook_alias` where `name` = \''.pSQL($hook_name).'\'');
-		return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($hook_retro))));
+		$retro_hook_name = Hook::getRetroHookName($hook_name);
+		return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))));
 	}
 
+	/**
+	 * Check employee permission for module
+	 * @param array $variable (action)
+	 * @param object $employee
+	 * @return bool if module can be transplanted on hook
+	 */
 	public function getPermission($variable, $employee = null)
 	{
 		return self::getPermissionStatic($this->id, $variable, $employee);
 	}
 
+	/**
+	 * Check employee permission for module (static method)
+	 * @param integer $id_module
+	 * @param array $variable (action)
+	 * @param object $employee
+	 * @return bool if module can be transplanted on hook
+	 */
 	public static function getPermissionStatic($id_module, $variable, $employee = null)
 	{
 		if (!in_array($variable, array('view', 'configure')))
@@ -1344,7 +1357,7 @@ abstract class ModuleCore
 		if (!isset($cache_permissions[$employee->id_profile]))
 		{
 			$cache_permissions[$employee->id_profile] = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_module, `view`, `configure` FROM '._DB_PREFIX_.'module_access WHERE id_profile = '.(int)$employee->id_profile);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
 			foreach ($result as $row)
 			{
 				$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
@@ -1355,27 +1368,32 @@ abstract class ModuleCore
 	}
 
 	/**
-	 * get Unauthorized modules for a client group
+	 * Get Unauthorized modules for a client group
 	 * @param integer group_id
 	 */
 	public static function getAuthorizedModules($group_id)
 	{
 		return Db::getInstance()->executeS('
-			SELECT m.id_module, m.name FROM `'._DB_PREFIX_.'module_group` mg
-			LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
-			WHERE mg.`id_group` = '.(int) $group_id);
+		SELECT m.`id_module`, m.`name` FROM `'._DB_PREFIX_.'module_group` mg
+		LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
+		WHERE mg.`id_group` = '.(int) $group_id);
 	}
 
 	/**
-	 * get id module by name
+	 * Get id module by name
 	 * @param string name
 	 * @return integer id
 	 */
 	public static function getModuleIdByName($name)
 	{
-		return Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = "'.pSQL($name).'"');
+		return Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
 	}
 
+	/**
+	 * Get module errors
+	 * @since 1.5.0
+	 * @return array errors
+	 */
 	public function getErrors() { return $this->_errors; }
 }
 
