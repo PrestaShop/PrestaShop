@@ -111,7 +111,7 @@ class AdminOrdersControllerCore extends AdminController
 			if (!$order->hasBeenDelivered())
 				$this->toolbar_btn['new'] = array(
 					'short' => 'Create',
-					'href' => '',
+					'href' => '#',
 					'desc' => $this->l('Add a product'),
 					'class' => 'add_product'
 				);
@@ -959,7 +959,10 @@ class AdminOrdersControllerCore extends AdminController
 			)));
 
 		$product_informations = $_POST['add_product'];
-		$invoice_informations = $_POST['add_invoice'];
+		if (isset($_POST['add_invoice']))
+			$invoice_informations = $_POST['add_invoice'];
+		else
+			$invoice_informations = array();
 		$product = new Product($product_informations['product_id'], false, $order->id_lang);
 		if (!Validate::isLoadedObject($product))
 			die(Tools::jsonEncode(array(
@@ -976,6 +979,9 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('Can\'t load Combination object')
 			)));
 		}
+
+		// Total method
+		$total_method = Cart::BOTH_WITHOUT_SHIPPING;
 
 		// Create new cart
 		$cart = new Cart();
@@ -1010,23 +1016,7 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$reduction_tax_incl = $initial_prodcut_price_tax_incl - $product_informations['product_price_tax_incl'];
 
-			// FIXME Cart Rule isn't applied but correctly save in database
-			$cart_rule = new CartRule();
-			$cart_rule->id_customer = $order->id_customer;
-			$cart_rule->date_from = date('Y-m-d H:i:s', time());
-			$cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 3600);
-			$cart_rule->quantity = 1;
-			$cart_rule->quantity_per_user = 1;
-			$cart_rule->minimum_amount_currency = $order->id_currency;
-			$cart_rule->reduction_product = $product->id;
-			$cart_rule->reduction_amount = $reduction_tax_incl;
-			$cart_rule->reduction_currency = $order->id_currency;
-			$cart_rule->reduction_tax = true;
-			$cart_rule->active = 1;
-			$cart_rule->add();
-
-			$cart->addCartRule($cart_rule->id);
-			$order->addCartRule($cart_rule->id, $cart_rule->name, $cart_rule->getContextualValue(true));
+			// TODO Use Specific price !!!
 		}
 
 		// If order is valid, we can create a new invoice or edit an existing invoice
@@ -1036,10 +1026,11 @@ class AdminOrdersControllerCore extends AdminController
 			// Create new invoice
 			if ($order_invoice->id == 0)
 			{
+				// If we create a new invoice, we calculate shipping cost
+				$total_method = Cart::BOTH;
 				// Create Cart rule in order to make free shipping
 				if (isset($invoice_informations['free_shipping']) && $invoice_informations['free_shipping'])
 				{
-					// FIXME Cart Rule isn't applied but correctly save in database
 					$cart_rule = new CartRule();
 					$cart_rule->id_customer = $order->id_customer;
 					$cart_rule->name = array(
@@ -1055,6 +1046,7 @@ class AdminOrdersControllerCore extends AdminController
 					$cart_rule->active = 1;
 					$cart_rule->add();
 
+					// Add cart rule to cart and in order
 					$cart->addCartRule($cart_rule->id);
 					$order->addCartRule($cart_rule->id, $cart_rule->name[Configuration::get('PS_LANG_DEFAULT')], $cart_rule->getContextualValue(true));
 				}
@@ -1065,8 +1057,8 @@ class AdminOrdersControllerCore extends AdminController
 				else
 					$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
-				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH), 2);
-				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, Cart::BOTH), 2);
+				$order_invoice->total_paid_tax_excl = Tools::ps_round((float)$cart->getOrderTotal(false, $total_method), 2);
+				$order_invoice->total_paid_tax_incl = Tools::ps_round((float)$cart->getOrderTotal($use_taxes, $total_method), 2);
 				$order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_shipping_tax_excl = (float)$cart->getTotalShippingCost(null, false);
@@ -1097,8 +1089,8 @@ class AdminOrdersControllerCore extends AdminController
 			// Update current invoice
 			else
 			{
-				$order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
-				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
+				$order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+				$order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
 				$order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 				$order_invoice->total_shipping_tax_excl += (float)$cart->getTotalShippingCost(null, false);
@@ -1117,9 +1109,9 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 		$order->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 
-		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
-		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH)), 2);
-		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, Cart::BOTH)), 2);
+		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
+		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
 
 		// discount
 		$order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
@@ -1133,20 +1125,36 @@ class AdminOrdersControllerCore extends AdminController
 		// Get the last product
 		$product = $products[max(array_keys($products))];
 
+		// Get invoices collection
+		$invoice_collection = $order->getInvoicesCollection();
+
+		$invoice_array = array();
+		foreach($invoice_collection as $invoice)
+		{
+			$invoice->name = '#'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).sprintf('%06d', $invoice->number);
+			$invoice_array[] = $invoice;
+		}
+
 		// Assign to smarty informations in order to show the new product line
 		$this->context->smarty->assign(array(
 			'product' => $product,
 			'order' => $order,
 			'currency' => new Currency($order->id_currency),
 			'can_edit' => $this->tabAccess['edit'],
-			'invoices_collection' => $order->getInvoicesCollection()
+			'invoices_collection' => $invoice_collection,
+			'current_id_lang' => Context::getContext()->language->id,
+			'link' => Context::getContext()->link,
+			'current_index' => self::$currentIndex
 		));
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
 			'view' => $this->context->smarty->fetch('orders/_product_line.tpl'),
 			'can_edit' => $this->tabAccess['add'],
-			'order' => $order
+			'order' => $order,
+			'invoices' => $invoice_array,
+			'documents_html' => $this->context->smarty->fetch('orders/_documents.tpl'),
+			'shipping_html' => $this->context->smarty->fetch('orders/_shipping.tpl')
 		)));
 	}
 
@@ -1274,8 +1282,22 @@ class AdminOrdersControllerCore extends AdminController
 			'product' => $product,
 			'order' => $order,
 			'currency' => new Currency($order->id_currency),
-			'can_edit' => $this->tabAccess['edit']
+			'can_edit' => $this->tabAccess['edit'],
+			'invoices_collection' => $invoice_collection,
+			'current_id_lang' => Context::getContext()->language->id,
+			'link' => Context::getContext()->link,
+			'current_index' => self::$currentIndex
 		));
+
+		// Get invoices collection
+		$invoice_collection = $order->getInvoicesCollection();
+
+		$invoice_array = array();
+		foreach($invoice_collection as $invoice)
+		{
+			$invoice->name = '#'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).sprintf('%06d', $invoice->number);
+			$invoice_array[] = $invoice;
+		}
 
 		if (!$res)
 			die(Tools::jsonEncode(array(
@@ -1287,8 +1309,11 @@ class AdminOrdersControllerCore extends AdminController
 			'result' => $res,
 			'view' => $this->context->smarty->fetch('orders/_product_line.tpl'),
 			'can_edit' => $this->tabAccess['add'],
-			'invoices_collection' => $order->getInvoicesCollection(),
-			'order' => $order
+			'invoices_collection' => $invoice_collection,
+			'order' => $order,
+			'invoices' => $invoice_array,
+			'documents_html' => $this->context->smarty->fetch('orders/_documents.tpl'),
+			'shipping_html' => $this->context->smarty->fetch('orders/_shipping.tpl')
 		)));
 	}
 
@@ -1353,9 +1378,32 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('Error occured on deletion of this product line')
 			)));
 
+		// Get invoices collection
+		$invoice_collection = $order->getInvoicesCollection();
+
+		$invoice_array = array();
+		foreach($invoice_collection as $invoice)
+		{
+			$invoice->name = '#'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).sprintf('%06d', $invoice->number);
+			$invoice_array[] = $invoice;
+		}
+
+		// Assign to smarty informations in order to show the new product line
+		$this->context->smarty->assign(array(
+			'order' => $order,
+			'currency' => new Currency($order->id_currency),
+			'invoices_collection' => $invoice_collection,
+			'current_id_lang' => Context::getContext()->language->id,
+			'link' => Context::getContext()->link,
+			'current_index' => self::$currentIndex
+		));
+
 		die(Tools::jsonEncode(array(
 			'result' => $res,
-			'order' => $order
+			'order' => $order,
+			'invoices' => $invoice_array,
+			'documents_html' => $this->context->smarty->fetch('orders/_documents.tpl'),
+			'shipping_html' => $this->context->smarty->fetch('orders/_shipping.tpl')
 		)));
 	}
 
