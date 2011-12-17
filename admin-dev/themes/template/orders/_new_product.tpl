@@ -22,7 +22,7 @@
 	<td style="display:none;" align="center" colspan="2">
 		{if sizeof($invoices_collection)}
 		<select name="add_product[invoice]" id="add_product_product_invoice" disabled="disabled">
-			<optgroup label="{l s='Existing'}">
+			<optgroup class="existing" label="{l s='Existing'}">
 				{foreach from=$invoices_collection item=invoice}
 				<option value="{$invoice->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>
 				{/foreach}
