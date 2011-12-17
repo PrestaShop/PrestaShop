@@ -130,7 +130,7 @@ abstract class PaymentModuleCore extends Module
 				die($errorMessage);
 			}
 
-			$order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
+			$order_status = new OrderState((int)$id_order_state, (int)$cart->id_lang);
 			if (!Validate::isLoadedObject($order_status))
 				throw new PrestashopException('Can\'t load Order state status');
 
