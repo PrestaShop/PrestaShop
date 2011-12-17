@@ -975,6 +975,11 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * @deprecated 1.5.0.1
+	 * @see Order::addCartRule()
+	 * @param $id_cart_rule
+	 * @param $name
+	 * @param $value
+	 * @return bool
 	 */
 	public function addDiscount($id_cart_rule, $name, $value)
 	{
@@ -982,6 +987,13 @@ class OrderCore extends ObjectModel
 		return Order::addCartRule($id_cart_rule, $name, $value);
 	}
 
+	/**
+	 * @since 1.5.0.1
+	 * @param $id_cart_rule
+	 * @param $name
+	 * @param $value
+	 * @return bool
+	 */
 	public function addCartRule($id_cart_rule, $name, $value)
 	{
 		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_cart_rule', array('id_order' => (int)$this->id, 'id_cart_rule' => (int)$id_cart_rule, 'name' => pSQL($name), 'value' => (float)$value), 'INSERT');

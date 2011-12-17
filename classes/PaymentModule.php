@@ -324,9 +324,14 @@ abstract class PaymentModuleCore extends Module
 						}
 
 						$order->addCartRule($cartRule->id, $cartRule->name, $value);
+
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED'))
-							$cartRule->quantity = $cartRule->quantity - 1;
-						$cartRule->update();
+						{
+							// Create a new instance of Cart Rule without id_lang, in order to update it quantity
+							$cart_rule_to_update = new CartRule($cartRule->id);
+							$cart_rule_to_update->quantity = $cart_rule_to_update->quantity - 1;
+							$cart_rule_to_update->update();
+						}
 
 						$cartRulesList .= '
 						<tr style="background-color:#EBECEE;">
