@@ -301,14 +301,17 @@ abstract class PaymentModuleCore extends Module
 					foreach ($result as $cart_rule)
 					{
 						$cartRule = $cart_rule['obj'];
-						$value = $cartRule->getContextualValue(true);
+						$values = array(
+							'tax_incl' => $cartRule->getContextualValue(true),
+							'tax_excl' => $cartRule->getContextualValue(false)
+						);
 						// Todo : has not been tested because order processing wasn't functionnal
-						if ($value > $order->total_products_wt && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0)
+						if ($values['tax_incl'] > $order->total_products_wt && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0)
 						{
 							$voucher = clone $cartRule;
 							unset($voucher->id);
 							$voucher->code = empty($voucher->code) ? substr(md5($order->id.'-'.$order->id_customer.'-'.$cartRule->id), 0, 16) : $voucher->code.'-2';
-							$voucher->reduction_amount = $value - $order->total_products_wt;
+							$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt;
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
 							if ($voucher->add())
@@ -323,7 +326,7 @@ abstract class PaymentModuleCore extends Module
 							}
 						}
 
-						$order->addCartRule($cartRule->id, $cartRule->name, $value);
+						$order->addCartRule($cartRule->id, $cartRule->name, $values);
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED'))
 						{
@@ -336,7 +339,7 @@ abstract class PaymentModuleCore extends Module
 						$cartRulesList .= '
 						<tr style="background-color:#EBECEE;">
 							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.$this->l('Voucher name:').' '.$cartRule->name.'</td>
-							<td style="padding:0.6em 0.4em;text-align:right">'.($value != 0.00 ? '-' : '').Tools::displayPrice($value, $currency, false).'</td>
+							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $currency, false).'</td>
 						</tr>';
 					}
 

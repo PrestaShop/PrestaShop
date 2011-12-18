@@ -43,8 +43,8 @@
 					<textarea name="note" rows="10" cols="10" id="editNote{$document->id}" class="edit-note">{$document->note|escape:'htmlall':'UTF-8'}</textarea>
 				</p>
 				<p class="right">
-					<input type="submit" name="submitEditNote" value="{l s='Save'}" class="button" />
-					<input type="button" name="cancelNote" id="cancelNote" value="{l s='Cancel'}" onclick="$('#invoiceNote{$document->id}').hide();" class="button" />
+					<input type="submit" name="submitEditNote" value="{l s='Save'}" class="button" />&nbsp;
+					<a href="#" id="cancelNote" onclick="$('#invoiceNote{$document->id}').hide();return false;">{l s='Cancel'}</a>
 				</p>
 			</form>
 		</td>
