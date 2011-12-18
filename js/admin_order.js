@@ -683,6 +683,51 @@ function init()
 
 		return false;
 	});
+
+	$('#add_voucher').click(function() {
+		$(this).parent().parent().hide();
+		$('#voucher_form').parent().show();
+
+		return false;
+	});
+
+	$('#cancel_add_voucher').click(function() {
+		$('#voucher_form').parent().hide();
+		$('#add_voucher').parent().parent().show();
+
+		return false;
+	});
+
+	$('#discount_type').change(function() {
+		// Percent type
+		if ($(this).val() == 1)
+		{
+			$('#discount_value_field').show();
+			$('#discount_currency_sign').hide();
+			$('#discount_value_help').hide();
+			$('#discount_percent_symbol').show();
+		}
+		// Amount type
+		else if ($(this).val() == 2)
+		{
+			$('#discount_value_field').show();
+			$('#discount_percent_symbol').hide();
+			$('#discount_value_help').show();
+			$('#discount_currency_sign').show();
+		}
+		// Free shipping
+		else if ($(this).val() == 3)
+		{
+			$('#discount_value_field').hide();
+		}
+	});
+
+	$('#discount_all_invoices').change(function() {
+		if ($(this).is(':checked'))
+			$('select[name=discount_invoice]').attr('disabled', true);
+		else
+			$('select[name=discount_invoice]').attr('disabled', false);
+	});
 }
 
 
