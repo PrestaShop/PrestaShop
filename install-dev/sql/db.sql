@@ -1133,8 +1133,10 @@ CREATE TABLE `PREFIX_order_cart_rule` (
   `id_order_cart_rule` int(10) unsigned NOT NULL auto_increment,
   `id_order` int(10) unsigned NOT NULL,
   `id_cart_rule` int(10) unsigned NOT NULL,
+  `id_order_invoice` int(10) unsigned DEFAULT 0,
   `name` varchar(32) NOT NULL,
   `value` decimal(17,2) NOT NULL default '0.00',
+  `value_tax_excl` decimal(17,2) NOT NULL default '0.00',
   PRIMARY KEY (`id_order_cart_rule`),
   KEY `id_order` (`id_order`),
   KEY `id_cart_rule` (`id_cart_rule`)

@@ -976,27 +976,35 @@ class OrderCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.1
 	 * @see Order::addCartRule()
-	 * @param $id_cart_rule
-	 * @param $name
-	 * @param $value
+	 * @param int $id_cart_rule
+	 * @param string $name
+	 * @param float $value
 	 * @return bool
 	 */
 	public function addDiscount($id_cart_rule, $name, $value)
 	{
 		Tools::displayAsDeprecated();
-		return Order::addCartRule($id_cart_rule, $name, $value);
+		return Order::addCartRule($id_cart_rule, $name, array('tax_incl' => $value, 'tax_excl' => '0.00'));
 	}
 
 	/**
 	 * @since 1.5.0.1
-	 * @param $id_cart_rule
-	 * @param $name
-	 * @param $value
+	 * @param int $id_cart_rule
+	 * @param string $name
+	 * @param array $values
+	 * @param int $id_order_invoice
 	 * @return bool
 	 */
-	public function addCartRule($id_cart_rule, $name, $value)
+	public function addCartRule($id_cart_rule, $name, $values, $id_order_invoice = 0)
 	{
-		return Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_cart_rule', array('id_order' => (int)$this->id, 'id_cart_rule' => (int)$id_cart_rule, 'name' => pSQL($name), 'value' => (float)$value), 'INSERT');
+		$order_cart_rule = new OrderCartRule();
+		$order_cart_rule->id_order = $this->id;
+		$order_cart_rule->id_cart_rule = $id_cart_rule;
+		$order_cart_rule->id_order_invoice = $id_order_invoice;
+		$order_cart_rule->name = $name;
+		$order_cart_rule->value = $values['tax_incl'];
+		$order_cart_rule->value_tax_excl = $values['tax_excl'];
+		$order_cart_rule->add();
 	}
 
 	public function getNumberOfDays()
@@ -1083,6 +1091,13 @@ class OrderCore extends ObjectModel
 				SET `id_order_invoice` = '.(int)$order_invoice->id.'
 				WHERE `id_order` = '.(int)$order_invoice->id_order);
 
+			// Update order cart rule
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'order_cart_rule`
+				SET `id_order_invoice` = '.(int)$order_invoice->id.'
+				WHERE `id_order` = '.(int)$order_invoice->id_order);
+
+			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
 			$this->invoice_number = $order_invoice->number;
 			$this->update();
