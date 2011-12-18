@@ -201,7 +201,7 @@ class authorizeAIM extends PaymentModule
 
 	public function hookHeader()
 	{
-		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/jquery.validate.creditcard2-1.0.1.js');
+		$this->context->controller->addJqueryPlugin('validate-creditcard');
   	}
 
 	/**
