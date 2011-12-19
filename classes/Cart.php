@@ -427,6 +427,8 @@ class CartCore extends ObjectModel
 			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
 			$sql->leftJoin('customization cu ON p.`id_product` = cu.`id_product`');
 		}
+		else
+			$sql->select('0 AS customization_quantity');
 
 		if (Combination::isFeatureActive())
 		{
