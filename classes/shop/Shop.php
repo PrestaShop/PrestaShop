@@ -92,7 +92,7 @@ class ShopCore extends ObjectModel
 		'store' => array('type' => 'shop'),
 		'webservice_account' => array('type' => 'shop'),
 		'warehouse' => array('type' => 'shop'),
-		'stock_available' => array('type' => 'fk_shop', 'primary' => 'id_stock_available'),
+		/* 'stock_available' => array('type' => 'fk_shop', 'primary' => 'id_stock_available'), */
 	);
 
 	protected $webserviceParameters = array(
@@ -166,6 +166,11 @@ class ShopCore extends ObjectModel
 			);
 		}
 
+		// removes stock available
+		$res &= Db::getInstance()->execute('
+			DELETE FROM '._DB_PREFIX_.'stock_available
+			WHERE id_shop = '.(int)$this->id);
+
 		Shop::cacheShops(true);
 
 		return $res;
@@ -214,7 +219,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * Find the shop from current domain / uri and get an instance of this shop
 	 * if INSTALL_VERSION is defined, will return an empty shop object
-	 * 
+	 *
 	 * @return Shop
 	 */
 	public static function initialize()

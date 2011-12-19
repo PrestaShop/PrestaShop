@@ -64,6 +64,19 @@ class WarehouseProductLocationCore extends ObjectModel
 	);
 
 	/**
+	 * @see ObjectModel::$webserviceParameters
+	 */
+ 	protected $webserviceParameters = array(
+ 		'fields' => array(
+ 			'id_product' => array('xlink_resource' => 'products'),
+ 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+ 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+ 		),
+ 		'hidden_fields' => array(
+ 		),
+ 	);
+
+	/**
 	 * For a given product and warehouse, get the location
 	 *
 	 * @param int $id_product
