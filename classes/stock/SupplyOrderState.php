@@ -99,8 +99,8 @@ class SupplyOrderStateCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('sl.name, s.id_supply_order_state');
-		$query->from('supply_order_state s');
-		$query->leftjoin('supply_order_state_lang sl ON (s.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang.')');
+		$query->from('supply_order_state', 's');
+		$query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang);
 
 		if (!is_null($id_state_referrer))
 		{

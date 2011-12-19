@@ -61,8 +61,8 @@ class SpecificPriceRuleCore extends ObjectModel
 	public function delete()
 	{
 		$ids_condition_group = Db::getInstance()->executeS('SELECT id_specific_price_rule_condition_group
-																		 FROM '._DB_PREFIX_.'specific_price_rule_condition_group 
-																		 WHERE id_specific_price_rule='.(int)$this->id); 
+																		 FROM '._DB_PREFIX_.'specific_price_rule_condition_group
+																		 WHERE id_specific_price_rule='.(int)$this->id);
 		if ($ids_condition_group)
 			foreach ($ids_condition_group as $row)
 			{
@@ -79,7 +79,7 @@ class SpecificPriceRuleCore extends ObjectModel
 	{
 		if (!is_array($conditions))
 			return;
-		if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'specific_price_rule_condition_group` (`id_specific_price_rule_condition_group`, `id_specific_price_rule`) 
+		if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'specific_price_rule_condition_group` (`id_specific_price_rule_condition_group`, `id_specific_price_rule`)
 						VALUES(\'\', '.(int)$this->id.')'))
 			return false;
 		$id_specific_price_rule_condition_group = (int)Db::getInstance()->Insert_ID();
@@ -87,7 +87,7 @@ class SpecificPriceRuleCore extends ObjectModel
 			if (!Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'specific_price_rule_condition (id_specific_price_rule_condition, id_specific_price_rule_condition_group, type, value)
 													VALUES(\'\', '.(int)$id_specific_price_rule_condition_group.', \''.pSQL($condition['type']).'\', \''.pSQL($condition['value']).'\')'))
 				return false;
-		return true;	
+		return true;
 	}
 
 	public function apply($products = false)
@@ -102,7 +102,7 @@ class SpecificPriceRuleCore extends ObjectModel
 	{
 		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id);
 	}
-	
+
 	public static function applyAllRules($products = false)
 	{
 		$rules = new Collection('SpecificPriceRule');
@@ -134,21 +134,21 @@ class SpecificPriceRuleCore extends ObjectModel
 		}
 		return $conditions_group;
 	}
-	
+
 	public function getAffectedProducts($products = false)
 	{
 		$conditions_group = $this->getConditions();
-		
+
 		$query = new DbQuery();
 		$query->select('p.id_product');
-		$query->from('product p');
+		$query->from('product', 'p');
 		$query->groupBy('p.id_product');
 
 		$attributes = false;
 		$categories = false;
 		$features = false;
 		$where = false;
-		
+
 		if ($conditions_group)
 		{
 			$where = '(';
@@ -190,17 +190,17 @@ class SpecificPriceRuleCore extends ObjectModel
 		if ($attributes)
 		{
 			$query->select('pa.id_product_attribute');
-			$query->leftJoin('product_attribute pa ON (p.id_product = pa.id_product)');
-			$query->leftJoin('product_attribute_combination pac ON (pa.id_product_attribute = pac.id_product_attribute)');
+			$query->leftJoin('product_attribute', 'pa', 'p.id_product = pa.id_product');
+			$query->leftJoin('product_attribute_combination', 'pac', 'pa.id_product_attribute = pac.id_product_attribute');
 			$query->groupBy('pa.id_product_attribute');
 		}
 		else
 			$query->select('NULL id_product_attribute');
 
 		if ($features)
-			$query->leftJoin('feature_product fp ON (p.id_product = fp.id_product)');
+			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');
 		if ($categories)
-			$query->leftJoin('category_product cp ON (p.id_product = cp.id_product)');
+			$query->leftJoin('category_product', 'cp', 'p.id_product = cp.id_product');
 		if ($where)
 			$query->where($where);
 

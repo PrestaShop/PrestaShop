@@ -130,7 +130,7 @@ class Newsletter extends Module
 	{
 		$dbquery = new DbQuery();
 		$dbquery->select('c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`, c.`ip_registration_newsletter`, c.`newsletter_date_add`')
-				->from('customer c')
+				->from('customer', 'c')
 				->groupBy('c.`email`');
 
 		if (Tools::getValue('SUSCRIBERS'))

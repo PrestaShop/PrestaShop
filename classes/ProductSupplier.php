@@ -88,7 +88,7 @@ class ProductSupplierCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('ps.product_supplier_reference');
-		$query->from('product_supplier ps');
+		$query->from('product_supplier', 'ps');
 		$query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
 			AND ps.id_supplier = '.(int)$id_supplier
@@ -110,7 +110,7 @@ class ProductSupplierCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('ps.product_supplier_price_te');
-		$query->from('product_supplier ps');
+		$query->from('product_supplier', 'ps');
 		$query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
 			AND ps.id_supplier = '.(int)$id_supplier
@@ -132,7 +132,7 @@ class ProductSupplierCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('ps.id_product_supplier');
-		$query->from('product_supplier ps');
+		$query->from('product_supplier', 'ps');
 		$query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
 			AND ps.id_supplier = '.(int)$id_supplier

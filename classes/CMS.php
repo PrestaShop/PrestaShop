@@ -185,9 +185,9 @@ class CMSCore extends ObjectModel
 	{
 		$sql = new DbQuery();
 		$sql->select('*');
-		$sql->from('cms c');
+		$sql->from('cms', 'c');
 		if ($id_lang)
-			$sql->innerJoin('cms_lang l ON c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang);
+			$sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang);
 
 		if ($active)
 			$sql->where('c.active = 1');
