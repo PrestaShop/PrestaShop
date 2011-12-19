@@ -33,7 +33,6 @@ virtual_product_nb_days, is_shareable)
 {
 	var link = '';
 	init_elems();
-	$("#virtual_good_attributes").show();
 	$('#stock_mvt_attribute').show();
 	$('#initial_stock_attribute').hide();
 	$('#attribute_quantity').html(quantity);

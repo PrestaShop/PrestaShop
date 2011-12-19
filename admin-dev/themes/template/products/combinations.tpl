@@ -34,6 +34,12 @@
 		});
 	});
 
+	{if $product->is_virtual}
+		$('#virtual_good_attributes').show();
+	{else}
+		$('#virtual_good_attributes').hide();
+	{/if}
+
 	var msg_combination_1 = '{l s='Please choose a group'}';
 	var msg_combination_2 = '{l s='Please choose an attribute'}';
 	var msg_combination_3 = '{l s='You can only add one combination per type of group'}';
@@ -47,30 +53,6 @@
 				updateMvtStatus($(this).val());
 			});
 			updateMvtStatus($(this).val());
-	
-			if ( $("input[name=is_virtual_file]:checked").val() == 1)
-			{
-				$("#virtual_good_attributes").show();
-				$("#is_virtual_file_product").show();
-			}
-			else
-			{
-				$("#virtual_good_attributes").hide();
-				$("#is_virtual_file_product").hide();
-			}
-	
-			$("input[name=is_virtual_file]").live("change", function() {
-				if($(this).val() == "1")
-				{
-					$("#virtual_good_attributes").show();
-					$("#is_virtual_file_product").show();
-				}
-				else
-				{
-					$("#virtual_good_attributes").hide();
-					$("#is_virtual_file_product").hide();
-				}
-			});
 		});
 	</script>
 	<script type="text/javascript">
@@ -184,6 +166,7 @@
 						</p>
 						<p class="block">
 							<label for="virtual_product_expiration_date_attribute" class="t">{l s='Expiration date'}</label>
+							<input type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" class="datepicker hasDatepicker" /> {l s='Format: YYYY-MM-DD'}
 							<input class="datepicker" type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
 							<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
 						</p>

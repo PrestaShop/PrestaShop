@@ -38,19 +38,18 @@
 	{
 		$('#virtual_good').show();
 		$('#virtual_good_more').show();
-		$('#is_virtual_good').attr('disabled', 'disabled');
 	}
+
+	$('.is_virtual_good').hide();
 
 	if ( $('input[name=is_virtual_file]:checked').val() == 1)
 	{
 		$('#virtual_good_more').show();
-		$('#virtual_good_attributes').show();
 		$('#is_virtual_file_product').show();
 	}
 	else
 	{
 		$('#virtual_good_more').hide();
-		$('#virtual_good_attributes').hide();
 		$('#is_virtual_file_product').hide();
 	}
 
@@ -58,13 +57,11 @@
 		if($(this).val() == '1')
 		{
 			$('#virtual_good_more').show();
-			$('#virtual_good_attributes').show();
 			$('#is_virtual_file_product').show();
 		}
 		else
 		{
 			$('#virtual_good_more').hide();
-			$('#virtual_good_attributes').hide();
 			$('#is_virtual_file_product').hide();
 		}
 	});
@@ -76,7 +73,7 @@
 			return (code == 13) ? false : true;
 		});
 	});
-	
+
 	function uploadFile()
 	{
 		$.ajaxFileUpload (
@@ -153,7 +150,7 @@
 	<tr>
 		<td colspan="2">
 			<div class="is_virtual_good">
-				<input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {*onclick="toggleVirtualProduct(this);"*} {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
+				<input type="checkbox" id="is_virtual_good" name="is_virtual_good" value="true" {if $product->is_virtual && $product->productDownload->active}checked="checked"{/if} />
 				<label for="is_virtual_good" class="t bold">{l s='Is this a virtual product?'}</label>
 			</div>
 			{* [begin] virtual product *}
@@ -210,7 +207,7 @@
 								</a>
 							{/if}
 							</p>
-	
+
 							<p class="block">
 								<label for="virtual_product_name" class="t">{l s='Filename'}</label>
 								<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentitiesUTF8}" />
@@ -229,7 +226,7 @@
 							</p>
 							<p class="block">
 								<label for="virtual_product_expiration_date" class="t">{l s='Expiration date'}</label>
-								<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
+								<input class="datepicker hasDatepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
 								<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
 							</p>
 							<p class="block">

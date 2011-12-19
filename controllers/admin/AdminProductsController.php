@@ -66,7 +66,7 @@ class AdminProductsControllerCore extends AdminController
 		'Associations' => true,
 		'Images' => false,
 		'Shipping' => true,
-		'Combinations' => false,
+		'Combinations' => true,
 		'Features' => false,
 		'Customization' => false,
 		'Attachments' => false,
@@ -1087,9 +1087,25 @@ class AdminProductsControllerCore extends AdminController
 			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 			{
 				$combinations = $product->getAttributeCombinaisonsById($id_product_attribute, $this->context->language->id);
+				$product_download = ProductDownload::getAttributeFromIdAttribute($id_product, $id_product_attribute);
 				foreach ($combinations as $key => $combinaison)
-
+				{
 					$combinations[$key]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+
+					// Added fields virtual product
+					if (count($product_download))
+					{
+						$combinations[$key]['id_product_download'] = $product_download[0]['id_product_download'];
+						$combinations[$key]['display_filename'] = $product_download[0]['display_filename'];
+						$combinations[$key]['filename'] = $product_download[0]['filename'];
+						$combinations[$key]['date_expiration'] = $product_download[0]['date_expiration'];
+						$combinations[$key]['nb_days_accessible'] = $product_download[0]['nb_days_accessible'];
+						$combinations[$key]['nb_downloadable'] = $product_download[0]['nb_downloadable'];
+						$combinations[$key]['is_shareable'] = $product_download[0]['is_shareable'];
+					}
+				}
+				
+					
 				die(Tools::jsonEncode($combinations));
 			}
 		}
