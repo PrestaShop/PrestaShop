@@ -126,15 +126,15 @@
 					</div>
 				{/if}
 				{if {$show_new_messages} == 1}
-					<div id="messages_notif" class="notifs">
-						<span id="messages_notif_number_wrapper" class="number_wrapper">
-							<span id="messages_notif_value">0</span>
+					<div id="customer_messages_notif" class="notifs">
+						<span id="customer_messages_notif_number_wrapper" class="number_wrapper">
+							<span id="customer_messages_notif_value">0</span>
 						</span>
-						<div id="messages_notif_wrapper" class="notifs_wrapper">
+						<div id="customer_messages_notif_wrapper" class="notifs_wrapper">
 							<h3>{l s='Last messages'}</h3>
 							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
-							<ul id="list_messages_notif"></ul>
-							<p><a href="index.php?controller=AdminMessages&token={getAdminToken tab='AdminMessages'}">{l s='Show all messages'}</a></p>
+							<ul id="list_customer_messages_notif"></ul>
+							<p><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
 				{/if}
