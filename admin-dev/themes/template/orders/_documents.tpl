@@ -15,7 +15,7 @@
 	{*/if*}
 		<td class="document_date">{dateFormat date=$document->date_add}</td>
 		<td class="document_type">Invoice</td>
-		<td class="document_number"><a href="pdf.php?pdf&id_order_invoice={$document->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->number}</a></td>
+		<td class="document_number"><a href="pdf.php?pdf&id_order_invoice={$document->id}">{$document->getInvoiceNumberFormatted($current_id_lang)}</a></td>
 		<td class="document_amount">
 		{*if TYPE DOCUMENT = INVOICE *}
 			{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
