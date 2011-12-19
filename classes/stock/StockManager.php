@@ -425,7 +425,7 @@ class StockManagerCore implements StockManagerInterface
 
 		$query = new DbQuery();
 		$query->select('SUM('.($usable ? 's.usable_quantity' : 's.physical_quantity').')');
-		$query->from('stock s');
+		$query->from('stock', 's');
 		$query->where('s.id_product = '.(int)$id_product);
 		if (0 != $id_product_attribute)
 			$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
@@ -456,13 +456,13 @@ class StockManagerCore implements StockManagerInterface
 		// Gets client_orders_qty
 		$query = new DbQuery();
 		$query->select('SUM(od.product_quantity) + SUM(od.product_quantity_refunded)');
-		$query->from('order_detail od');
-		$query->leftjoin('orders o ON o.id_order = od.id_order');
+		$query->from('order_detail', 'od');
+		$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
 		$query->where('od.product_id = '.(int)$id_product);
 		if (0 != $id_product_attribute)
 			$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
-		$query->leftJoin('order_history oh ON (oh.id_order = o.id_order AND oh.date_add = o.date_upd)');
-		$query->leftJoin('order_state os ON (os.id_order_state = oh.id_order_state)');
+		$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.date_add = o.date_upd');
+		$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
 		$query->where('os.shipped != 1');
 		$query->where('o.valid = 1');
 		// @FIXME: Once part-shipping is done, remove the comment on the line below.
@@ -472,9 +472,9 @@ class StockManagerCore implements StockManagerInterface
 		// Gets supply_orders_qty
 		$query = new DbQuery();
 		$query->select('SUM(sod.quantity_expected)');
-		$query->from('supply_order so');
-		$query->leftjoin('supply_order_detail sod ON (sod.id_supply_order = so.id_supply_order)');
-		$query->leftjoin('supply_order_state sos ON (sos.id_supply_order_state = so.id_supply_order_state)');
+		$query->from('supply_order', 'so');
+		$query->leftjoin('supply_order_detail', 'sod', 'sod.id_supply_order = so.id_supply_order');
+		$query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
 		$query->where('sos.pending_receipt = 1');
 		$query->where('sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute);
 		if (count($ids_warehouse))

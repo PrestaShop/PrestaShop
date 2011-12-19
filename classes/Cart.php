@@ -383,27 +383,27 @@ class CartCore extends ObjectModel
 						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery, p.`wholesale_price`');
 
 		// Build FROM
-		$sql->from('cart_product cp');
+		$sql->from('cart_product', 'cp');
 
 		// Build JOIN
-		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
-		$sql->leftJoin('product_lang pl
-			ON p.`id_product` = pl.`id_product`
+		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
+		$sql->leftJoin('product_lang', 'pl', '
+			p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('tax_rule tr
-			ON p.`id_tax_rules_group` = tr.`id_tax_rules_group`
+		$sql->leftJoin('tax_rule', 'tr', '
+			p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 			AND tr.`id_country` = '.(int)$id_country.'
 			AND tr.`id_state` = 0
 			AND tr.`zipcode_from` = 0'
 		);
-		$sql->leftJoin('tax t ON t.`id_tax` = tr.`id_tax`');
-		$sql->leftJoin('tax_lang tl
-			ON t.`id_tax` = tl.`id_tax`
+		$sql->leftJoin('tax', 't', 't.`id_tax` = tr.`id_tax`');
+		$sql->leftJoin('tax_lang', 'tl', '
+			t.`id_tax` = tl.`id_tax`
 			AND tl.`id_lang` = '.(int)$this->id_lang
 		);
-		$sql->leftJoin('category_lang cl
-			ON p.`id_category_default` = cl.`id_category`
+		$sql->leftJoin('category_lang', 'cl', '
+			p.`id_category_default` = cl.`id_category`
 			AND cl.`id_lang` = '.(int)$this->id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl')
 		);
 
@@ -425,7 +425,7 @@ class CartCore extends ObjectModel
 		if (Customization::isFeatureActive())
 		{
 			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
-			$sql->leftJoin('customization cu ON p.`id_product` = cu.`id_product`');
+			$sql->leftJoin('customization', 'cu', 'p.`id_product` = cu.`id_product`');
 		}
 		else
 			$sql->select('0 AS customization_quantity');
@@ -444,9 +444,9 @@ class CartCore extends ObjectModel
 				pa.`ecotax` AS ecotax_attr'
 			);
 
-			$sql->leftJoin('product_attribute pa ON pa.`id_product_attribute` = cp.`id_product_attribute`');
-			$sql->leftJoin('product_attribute_image pai ON pai.`id_product_attribute` = pa.`id_product_attribute`');
-			$sql->leftJoin('image_lang il ON il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
+			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
+			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
+			$sql->leftJoin('image_lang', 'il', 'il.id_image = pai.id_image AND il.id_lang = '.(int)$this->id_lang);
 		}
 		else
 			$sql->select(
@@ -1611,7 +1611,7 @@ class CartCore extends ObjectModel
 			$best_price_carriers = array();
 			$best_grade_carriers = array();
 			$carriers_instance = array();
-			
+
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
@@ -1772,36 +1772,36 @@ class CartCore extends ObjectModel
 		$cache = $delivery_option_list;
 		return $delivery_option_list;
 	}
-	
+
 	/**
 	 * Get all deliveries options available for the current cart formated like Carriers::getCarriersForOrder
 	 * This method was wrote for retrocompatibility with 1.4 theme
 	 * New theme need to use Cart::getDeliveryOptionList() to generate carriers option in the checkout process
-	 * 
+	 *
 	 * @since 1.5.0
-	 * 
+	 *
 	 * @param Country $default_country
 	 * @param boolean $flush Force flushing cache
-	 * 
+	 *
 	 */
 	public function simulateCarriersOutput(Country $default_country = null, $flush = false)
 	{
 		static $cache = false;
 		if ($cache !== false && !$flush)
 			return $cache;
-		
+
 		$delivery_option_list = $this->getDeliveryOptionList($default_country, $flush);
-		
+
 		// This method cannot work if there is multiple address delivery
 		if (count($delivery_option_list) > 1 || empty($delivery_option_list))
 			return array();
-		
+
 		$carriers = array();
 		foreach (reset($delivery_option_list) as $key => $option)
 		{
 			$price = $option['total_price_with_tax'];
 			$price_tax_exc = $option['total_price_without_tax'];
-			
+
 			if ($option['unique_carrier'])
 			{
 				$carrier = reset($option['carrier_list']);
@@ -1831,24 +1831,24 @@ class CartCore extends ObjectModel
 		}
 		return $carriers;
 	}
-	
+
 	public function simulateCarrierSelectedOutput()
 	{
 		$delivery_option = $this->getDeliveryOption();
-		
+
 		if (count($delivery_option) > 1 || empty($delivery_option))
 			return 0;
-		
+
 		return self::intifier(reset($delivery_option));
 	}
-	
+
 	/**
 	 * Translate a string option_delivery identifier ('24,3,') in a int (3240002000)
-	 * 
+	 *
 	 * The  option_delivery identifier is a list of integers separated by a ','.
 	 * This method replace the delimiter by a sequence of '0'.
 	 * The size of this sequence is fixed by the first digit of the return
-	 * 
+	 *
 	 * @return int
 	 */
 	public static function intifier($string, $delimiter = ',')
@@ -1857,7 +1857,7 @@ class CartCore extends ObjectModel
 		$max = max($elm);
 		return strlen($max).join(str_repeat('0', strlen($max)+1), $elm);
 	}
-	
+
 	/**
 	 * Translate a int option_delivery identifier (3240002000) in a string ('24,3,')
 	 */
@@ -1877,7 +1877,7 @@ class CartCore extends ObjectModel
 	{
 		$sql = new DbQuery();
 		$sql->select('count(distinct id_address_delivery)');
-		$sql->from('cart_product as cp');
+		$sql->from('cart_product', 'cp');
 		$sql->where('id_cart = '.(int)$this->id);
 
 		return Db::getInstance()->getValue($sql) > 1;
@@ -2754,7 +2754,7 @@ class CartCore extends ObjectModel
 		// Checking if the product with the old address delivery exists
 		$sql = new DbQuery();
 		$sql->select('count(*)');
-		$sql->from('cart_product as cp');
+		$sql->from('cart_product', 'cp');
 		$sql->where('id_product = '.(int)$id_product);
 		$sql->where('id_product_attribute = '.(int)$id_product_attribute);
 		$sql->where('id_address_delivery = '.(int)$old_id_address_delivery);
@@ -2767,7 +2767,7 @@ class CartCore extends ObjectModel
 		// Checking if there is no others similar products with this new address delivery
 		$sql = new DbQuery();
 		$sql->select('sum(quantity) as qty');
-		$sql->from('cart_product as cp');
+		$sql->from('cart_product', 'cp');
 		$sql->where('id_product = '.(int)$id_product);
 		$sql->where('id_product_attribute = '.(int)$id_product_attribute);
 		$sql->where('id_address_delivery = '.(int)$new_id_address_delivery);
@@ -2816,7 +2816,7 @@ class CartCore extends ObjectModel
 		// Checking the product do not exist with the new address
 		$sql = new DbQuery();
 		$sql->select('count(*)');
-		$sql->from('cart_product as c');
+		$sql->from('cart_product', 'c');
 		$sql->where('id_product = '.(int)$id_product);
 		$sql->where('id_product_attribute = '.(int)$id_product_attribute);
 		$sql->where('id_address_delivery = '.(int)$new_id_address_delivery);
@@ -2855,7 +2855,7 @@ class CartCore extends ObjectModel
 		// Checking if there is customizations
 		$sql = new DbQuery();
 		$sql->select('*');
-		$sql->from('customization as c');
+		$sql->from('customization', 'c');
 		$sql->where('id_product = '.(int)$id_product);
 		$sql->where('id_product_attribute = '.(int)$id_product_attribute);
 		$sql->where('id_address_delivery = '.(int)$id_address_delivery);

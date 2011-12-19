@@ -829,11 +829,11 @@ class InstallXmlLoader
 		// Build query
 		$sql = new DbQuery();
 		$sql->select('a.*');
-		$sql->from($entity.' a');
+		$sql->from($entity, 'a');
 		if ($is_multilang)
 		{
 			$sql->select('b.*');
-			$sql->leftJoin($entity.'_lang b ON a.'.$primary.' = b.'.$primary);
+			$sql->leftJoin($entity.'_lang', 'b', 'a.'.$primary.' = b.'.$primary);
 		}
 
 		if (isset($config['sql']) && $config['sql'])

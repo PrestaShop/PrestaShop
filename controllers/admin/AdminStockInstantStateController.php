@@ -260,8 +260,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$query = new DbQuery();
 			$query->select('w.id_currency, s.price_te, SUM(s.physical_quantity) as physical_quantity, SUM(s.usable_quantity) as usable_quantity,
 							(s.price_te * SUM(s.physical_quantity)) as valuation');
-			$query->from('stock s');
-			$query->leftJoin('warehouse w ON (w.id_warehouse = s.id_warehouse)');
+			$query->from('stock', 's');
+			$query->leftJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
 			$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
 			if ($id_warehouse != -1)
 				$query->where('s.id_warehouse = '.(int)$id_warehouse);
@@ -369,8 +369,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 				// gets prices
 				$query = new DbQuery();
 				$query->select('s.price_te, SUM(s.physical_quantity) as physical_quantity, SUM(s.usable_quantity) as usable_quantity');
-				$query->from('stock s');
-				$query->leftJoin('warehouse w ON (w.id_warehouse = s.id_warehouse)');
+				$query->from('stock', 's');
+				$query->leftJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
 				$query->where('s.id_product = '.$id_product.' AND s.id_product_attribute = '.$id_product_attribute);
 				$query->where('s.id_warehouse = '.$id_warehouse);
 				$query->groupBy('s.price_te');

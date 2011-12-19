@@ -125,7 +125,7 @@ class AdminStockCoverControllerCore extends AdminController
 			$query = new DbQuery();
 			$query->select('pa.id_product_attribute as id, pa.id_product, stock_view.reference, stock_view.ean13,
 							stock_view.upc, stock_view.usable_quantity as stock');
-			$query->from('product_attribute pa');
+			$query->from('product_attribute', 'pa');
 			$query->join('INNER JOIN
 						  (
 						  	SELECT SUM(s.usable_quantity) as usable_quantity, s.id_product_attribute, s.reference, s.ean13, s.upc
@@ -319,10 +319,10 @@ class AdminStockCoverControllerCore extends AdminController
 	{
 		$query = new DbQuery();
 		$query->select('SUM(od.product_quantity)');
-		$query->from('order_detail od');
-		$query->leftJoin('orders o ON (od.id_order = o.id_order)');
-		$query->leftJoin('order_history oh ON (o.date_upd = oh.date_add)');
-		$query->leftJoin('order_state os ON (os.id_order_state = oh.id_order_state)');
+		$query->from('order_detail', 'od');
+		$query->leftJoin('orders', 'o', 'od.id_order = o.id_order');
+		$query->leftJoin('order_history', 'oh', 'o.date_upd = oh.date_add');
+		$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
 		$query->where('od.product_id = '.(int)$id_product);
 		$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
 		$query->where('TO_DAYS(NOW()) - TO_DAYS(oh.date_add) <= '.(int)$coverage);

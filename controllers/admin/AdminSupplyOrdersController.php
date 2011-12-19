@@ -1126,8 +1126,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			{
 				$query = new DbQuery();
 				$query->select(implode(', sod.', $keys));
-				$query->from('supply_order_detail sod');
-				$query->leftJoin('supply_order so ON (so.id_supply_order = sod.id_supply_order)');
+				$query->from('supply_order_detail', 'sod');
+				$query->leftJoin('supply_order', 'so', 'so.id_supply_order = sod.id_supply_order');
 				$id_warehouse = $this->getCurrentWarehouse();
 				if ($id_warehouse != -1)
 					$query->where('so.id_warehouse = '.(int)$id_warehouse);
@@ -1498,14 +1498,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name
 		');
 
-		$query->from('product p');
+		$query->from('product', 'p');
 
-		$query->innerJoin('product_lang pl ON (pl.id_product = p.id_product AND pl.id_lang = '.$id_lang.')');
-		$query->leftJoin('product_attribute pa ON (pa.id_product = p.id_product)');
-		$query->leftJoin('product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)');
-		$query->leftJoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
-		$query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang.')');
-		$query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
+		$query->innerJoin('product_lang', 'pl', 'pl.id_product = p.id_product AND pl.id_lang = '.$id_lang);
+		$query->leftJoin('product_attribute', 'pa', 'pa.id_product = p.id_product');
+		$query->leftJoin('product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute');
+		$query->leftJoin('attribute', 'atr', 'atr.id_attribute = pac.id_attribute');
+		$query->leftJoin('attribute_lang', 'al', 'al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang);
+		$query->leftJoin('attribute_group_lang', 'agl', 'agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang);
 
 		$query->where('pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\'');
 		$query->where('p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
@@ -1859,28 +1859,21 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					    IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
 						IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
 						IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc');
-		$query->from('product_supplier ps');
-		$query->leftJoin('stock s ON
-						  (
-						  	s.id_product = ps.id_product
-						  	AND
-						  	s.id_product_attribute = ps.id_product_attribute
-						  )');
-		$query->innerJoin('warehouse_product_location wpl ON
-						   (
-						   	wpl.id_product = ps.id_product
-							AND
-							wpl.id_product_attribute = ps.id_product_attribute
-							AND
-							wpl.id_warehouse = '.(int)$supply_order->id_warehouse.'
-						   )');
-		$query->leftJoin('product p ON (p.id_product = ps.id_product)');
-		$query->leftJoin('product_attribute pa ON
-						  (
-						  	pa.id_product_attribute = ps.id_product_attribute
-						  	AND
-						  	p.id_product = ps.id_product
-						  )');
+		$query->from('product_supplier', 'ps');
+		$query->leftJoin('stock', 's', '
+			s.id_product = ps.id_product
+			AND s.id_product_attribute = ps.id_product_attribute
+		');
+		$query->innerJoin('warehouse_product_location', 'wpl', '
+			wpl.id_product = ps.id_product
+			AND wpl.id_product_attribute = ps.id_product_attribute
+			AND wpl.id_warehouse = '.(int)$supply_order->id_warehouse.'
+		');
+		$query->leftJoin('product', 'p', 'p.id_product = ps.id_product');
+		$query->leftJoin('product_attribute', 'pa', '
+			pa.id_product_attribute = ps.id_product_attribute
+			AND p.id_product = ps.id_product
+		');
 		$query->where('ps.id_supplier = '.(int)$supply_order->id_supplier);
 
 		// gets items

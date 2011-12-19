@@ -1815,21 +1815,21 @@ class ProductCore extends ObjectModel
 			(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice'
 		);
 
-		$sql->from('product p');
+		$sql->from('product', 'p');
 		$sql->join($context->shop->addSqlAssociation('product', 'p'));
-		$sql->leftJoin('product_lang pl ON (
+		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')'
+			AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('image i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)');
-		$sql->leftJoin('image_lang il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')');
-		$sql->leftJoin('tax_rule tr ON (
+		$sql->leftJoin('image', 'i', 'i.`id_product` = p.`id_product` AND i.`cover` = 1');
+		$sql->leftJoin('image_lang', 'il', 'i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang);
+		$sql->leftJoin('tax_rule', 'tr', '
 			p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 			AND tr.`id_country` = '.(int)$context->country->id.'
-			AND tr.`id_state` = 0)'
+			AND tr.`id_state` = 0'
 		);
-		$sql->leftJoin('tax t ON (t.`id_tax` = tr.`id_tax`)');
-		$sql->leftJoin('manufacturer m ON (m.`id_manufacturer` = p.`id_manufacturer`)');
+		$sql->leftJoin('tax', 't', 't.`id_tax` = tr.`id_tax`');
+		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 		Product::sqlStock('p', 0, false, null, $sql);
 
 		$sql->where('p.`active` = 1');
@@ -1856,7 +1856,7 @@ class ProductCore extends ObjectModel
 		if (Combination::isFeatureActive())
 		{
 			$sql->select('pa.id_product_attribute');
-			$sql->leftOuterJoin('product_attribute pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)');
+			$sql->leftOuterJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product` AND `default_on` = 1');
 		}
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -2355,7 +2355,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql = new DbQuery();
 			$sql->select('p.`price`, p.`ecotax`');
-			$sql->from('product p');
+			$sql->from('product', 'p');
 			$sql->where('p.`id_product` = '.(int)$id_product);
 
 			if (Combination::isFeatureActive())
@@ -2363,7 +2363,7 @@ class ProductCore extends ObjectModel
 				if ($id_product_attribute)
 				{
 					$sql->select('pa.`price` AS attribute_price');
-					$sql->leftJoin('product_attribute pa ON (pa.`id_product_attribute` = '.(int)$id_product_attribute.')');
+					$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = '.(int)$id_product_attribute);
 				}
 				else
 					$sql->select(
@@ -2613,7 +2613,7 @@ class ProductCore extends ObjectModel
 		{
 			// @todo remove this code when query builder is accepted or removed
 			$method = ($inner_join) ? 'innerJoin' : 'leftJoin';
-			$sql->$method('stock_available stock ON stock.id_product = '.pSQL($product_alias).'.id_product');
+			$sql->$method('stock_available', 'stock', 'stock.id_product = '.pSQL($product_alias).'.id_product');
 			if (!is_null($product_attribute))
 			{
 				if (!Combination::isFeatureActive())
@@ -3049,14 +3049,14 @@ class ProductCore extends ObjectModel
 
 		$sql = new DbQuery();
 		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`');
-		$sql->from('category_product cp');
-		$sql->leftJoin('product p ON p.`id_product` = cp.`id_product`');
+		$sql->from('category_product', 'cp');
+		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join($context->shop->addSqlAssociation('product', 'p'));
-		$sql->leftJoin('product_lang pl ON (
+		$sql->leftJoin('product_lang', 'pl', '
 			p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl').')'
+			AND pl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('pl')
 		);
-		$sql->leftJoin('manufacturer m ON m.`id_manufacturer` = p.`id_manufacturer`');
+		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
 
 		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\' OR p.`reference` LIKE \'%'.pSQL($query).'%\' OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'';
 		$sql->groupBy('`id_product`');
@@ -3064,7 +3064,7 @@ class ProductCore extends ObjectModel
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->leftJoin('product_attribute pa ON pa.`id_product` = p.`id_product`');
+			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
 			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'';
 		}
 		$sql->where($where);
@@ -4583,18 +4583,18 @@ class ProductCore extends ObjectModel
 
 		// queries different tables if it is a combination
 		if ($id_product_attribute)
-			$query->from('product_attribute pa');
+			$query->from('product_attribute', 'pa');
 		else
-			$query->from('product_lang pl');
+			$query->from('product_lang', 'pl');
 
 		// adds joins & where clauses for combinations
 		if ($id_product_attribute)
 		{
-			$query->innerJoin('product_lang pl ON (pl.id_product = pa.id_product AND pl.id_lang = '.(int)$id_lang.')');
-			$query->leftJoin('product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)');
-			$query->leftJoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
-			$query->leftJoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.(int)$id_lang.')');
-			$query->leftJoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.(int)$id_lang.')');
+			$query->innerJoin('product_lang', 'pl', 'pl.id_product = pa.id_product AND pl.id_lang = '.(int)$id_lang);
+			$query->leftJoin('product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute');
+			$query->leftJoin('attribute', 'atr', 'atr.id_attribute = pac.id_attribute');
+			$query->leftJoin('attribute_lang', 'al', 'al.id_attribute = atr.id_attribute AND al.id_lang = '.(int)$id_lang);
+			$query->leftJoin('attribute_group_lang', 'agl', 'agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.(int)$id_lang);
 			$query->where('pa.id_product = '.(int)$id_product.' AND pa.id_product_attribute = '.(int)$id_product_attribute);
 		}
 		else // or just adds a 'where' clause for a simple product

@@ -65,10 +65,10 @@ class DbQueryCore
 	 * @param string $table Table name
 	 * @return DbQuery
 	 */
-	public function from($table)
+	public function from($table, $alias = null)
 	{
 		if (!empty($table))
-			$this->query['from'] = _DB_PREFIX_.$table;
+			$this->query['from'] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
 		return $this;
 	}
 
@@ -93,12 +93,9 @@ class DbQueryCore
 	 *
 	 * @param string $join Table followed by ON claused
 	 */
-	public function leftJoin($join)
+	public function leftJoin($table, $alias = null, $on = null)
 	{
-		if (!empty($join))
-			return $this->join('LEFT JOIN '._DB_PREFIX_.$join);
-
-		return $this;
+		return $this->join('LEFT JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
@@ -107,12 +104,9 @@ class DbQueryCore
 	 *
 	 * @param string $join Table followed by ON claused
 	 */
-	public function innerJoin($join)
+	public function innerJoin($table, $alias = null, $on = null)
 	{
-		if (!empty($join))
-			return $this->join('INNER JOIN '._DB_PREFIX_.$join);
-
-		return $this;
+		return $this->join('INNER JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
@@ -120,12 +114,9 @@ class DbQueryCore
 	 *
 	 * @param string $join Table followed by ON claused
 	 */
-	public function leftOuterJoin($join)
+	public function leftOuterJoin($table, $alias = null, $on = null)
 	{
-		if (!empty($join))
-			return $this->join('LEFT OUTER JOIN '._DB_PREFIX_.$join);
-
-		return $this;
+		return $this->join('LEFT OUTER JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
@@ -133,12 +124,9 @@ class DbQueryCore
 	 *
 	 * @param string $join
 	 */
-	public function naturalJoin($join)
+	public function naturalJoin($table, $alias = null, $on = null)
 	{
-		if (!empty($join))
-			return $this->join('NATURAL JOIN '._DB_PREFIX_.$join);
-
-		return $this;
+		return $this->join('NATURAL JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**

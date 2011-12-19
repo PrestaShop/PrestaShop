@@ -85,8 +85,8 @@ class WarehouseCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('ws.id_shop, s.name');
-		$query->from('warehouse_shop ws');
-		$query->leftJoin('shop s ON (s.id_shop = ws.id_shop)');
+		$query->from('warehouse_shop', 'ws');
+		$query->leftJoin('shop', 's', 's.id_shop = ws.id_shop');
 		$query->where($this->def['primary'].' = '.(int)$this->id);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -122,7 +122,7 @@ class WarehouseCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('wc.id_carrier');
-		$query->from('warehouse_carrier wc');
+		$query->from('warehouse_carrier', 'wc');
 		$query->where($this->def['primary'].' = '.(int)$this->id);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -176,7 +176,7 @@ class WarehouseCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('SUM(s.physical_quantity)');
-		$query->from('stock s');
+		$query->from('stock', 's');
 		$query->where($this->def['primary'].' = '.(int)$this->id);
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 0);
 	}
@@ -259,9 +259,9 @@ class WarehouseCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
-		$query->from('warehouse_product_location wpl');
-		$query->innerJoin('warehouse_shop ws ON (ws.id_warehouse = wpl.id_warehouse AND id_shop = '.(int)$id_shop.')');
-		$query->innerJoin('warehouse w ON (ws.id_warehouse = w.id_warehouse)');
+		$query->from('warehouse_product_location', 'wpl');
+		$query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = wpl.id_warehouse AND id_shop = '.(int)$id_shop);
+		$query->innerJoin('warehouse', 'w', 'ws.id_warehouse = w.id_warehouse');
 		$query->where('id_product = '.(int)$id_product);
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);
 		$query->groupBy('wpl.id_warehouse');
@@ -285,11 +285,11 @@ class WarehouseCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('w.id_warehouse, CONCAT(reference, \' - \', name) as name');
-		$query->from('warehouse w');
+		$query->from('warehouse', 'w');
 		$query->where('deleted = 0');
 		$query->orderBy('reference ASC');
 		if (!$ignore_shop)
-			$query->innerJoin('warehouse_shop ws ON ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int)$id_shop);
+			$query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int)$id_shop);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
@@ -360,7 +360,7 @@ class WarehouseCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('SUM(s.`price_te`)');
-		$query->from('stock s');
+		$query->from('stock', 's');
 		$query->where('s.`id_warehouse` = '.(int)$this->id);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -376,7 +376,7 @@ class WarehouseCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('w.id_warehouse');
-		$query->from('warehouse w');
+		$query->from('warehouse', 'w');
 		$query->where('w.id_employee = '.(int)$id_employee);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -396,8 +396,8 @@ class WarehouseCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
-		$query->from('warehouse w');
-		$query->leftJoin('stock s ON (s.id_warehouse = w.id_warehouse)');
+		$query->from('warehouse', 'w');
+		$query->leftJoin('stock', 's', 's.id_warehouse = w.id_warehouse');
 		if ($id_product)
 			$query->where('s.id_product = '.(int)$id_product);
 		if ($id_product_attribute)

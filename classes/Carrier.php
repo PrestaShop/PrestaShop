@@ -1024,8 +1024,8 @@ class CarrierCore extends ObjectModel
 		// Does the product is linked with carriers?
 		$query = new DbQuery();
 		$query->select('id_carrier');
-		$query->from('product_carrier pc');
-		$query->innerJoin('carrier c ON (c.id_reference = pc.id_carrier_reference AND c.deleted = 0)');
+		$query->from('product_carrier', 'pc');
+		$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
 		$query->where('id_product = '.(int)($product->id));
 		$query->where('id_shop = '.(int)$id_shop);
 		$carriers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
