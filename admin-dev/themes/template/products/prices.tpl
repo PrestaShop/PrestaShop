@@ -147,7 +147,7 @@ jQuery(document).ready(Customer.init);
 		<tr>
 			<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{equation=$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
+				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
 				<p class="preference_description">{l s='The pre-tax retail price to sell this product'}</p>
 			</td>
 		</tr>
