@@ -87,7 +87,7 @@
 						</a>
 					</td>
 					<td align="center">{displayWtPriceWithCurrency price=$product.price_wt currency=$currency}</td>
-					<td align="center" class="productQuantity">{$product.customizationQuantityTotal}</td>
+					<td align="center" class="productQuantity">{$product.customization_quantity}</td>
 					<td align="center" class="productQuantity">{$product.qty_in_stock}</td>
 					<td align="right">{displayWtPriceWithCurrency price=$product.total_customization_wt currency=$currency}</td>
 				</tr>
@@ -121,7 +121,7 @@
 				{/foreach}
 			{/if}
 			
-			{if $product.cart_quantity > $product.customizationQuantityTotal}
+			{if $product.cart_quantity > $product.customization_quantity}
 				<tr>
 					<td align="center">{$product.image}</td>
 					<td>
@@ -132,7 +132,7 @@
 						</a>
 					</td>
 					<td align="center">{displayWtPriceWithCurrency price=$product.product_price currency=$currency}</td>
-					<td align="center" class="productQuantity">{math equation='x - y' x=$product.cart_quantity y=$product.customizationQuantityTotal}</td>
+					<td align="center" class="productQuantity">{math equation='x - y' x=$product.cart_quantity y=$product.customization_quantity}</td>
 					<td align="center" class="productQuantity">{$product.qty_in_stock}</td>
 					<td align="right">{displayWtPriceWithCurrency price=$product.product_total currency=$currency}</td>
 				</tr>
