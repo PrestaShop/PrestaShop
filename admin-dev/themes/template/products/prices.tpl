@@ -24,6 +24,102 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{* BEGIN CUSTOMER AUTO-COMPLETE / TO REFACTO *}
+{literal}
+<script type="text/javascript">
+var Customer = {
+	"hiddenField": jQuery('#id_customer'),
+	"field": jQuery('#customer'),
+	"container": jQuery('#customers'),
+	"loader": jQuery('#customerLoader'),
+	"init": function() {
+		jQuery(Customer.field).typeWatch({
+			"captureLength": 1,
+			"highlight": true,
+			"wait": 50,
+			"callback": Customer.search
+		}).focus(Customer.placeholderIn).blur(Customer.placeholderOut);
+	},
+	"placeholderIn": function() {
+		if (this.value == '{/literal}{l s='All customers'}{literal}') {
+			this.value = '';
+		}
+	},
+	"placeholderOut": function() {
+		if (this.value == '') {
+			this.value = '{/literal}{l s='All customers'}{literal}';
+		}
+	},
+	"search": function()
+	{
+		Customer.showLoader();
+		jQuery.ajax({
+			"type": "POST",
+			"url": "{/literal}{$link->getAdminLink('AdminProducts')}{literal}",
+			"async": true,
+			"dataType": "json",
+			"data": {
+				"ajax": "1",
+				"token": "{/literal}{$token}{literal}",
+				"tab": "AdminProducts",
+				"action": "searchCustomers",
+				"customer_search": Customer.field.val()
+			},
+			"success": Customer.success
+		});
+	},
+	"success": function(result)
+	{
+		if(result.found) {
+			var html = '<ul class="clearfix">';
+			jQuery.each(result.customers, function() {
+				html += '<li><a class="fancybox" href="{/literal}{$link->getAdminLink('AdminCustomers')}{literal}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
+				html += '<a href="mailto:'+this.email+'">'+this.email+'</a><br />';
+				html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{/literal}{l s='Choose'}{literal}</a></li>';
+			});
+			html += '</ul>';
+		}
+		else
+			html = '<div class="warn">{/literal}{l s='No customers found'}{literal}</div>';
+		Customer.hideLoader();
+		Customer.container.html(html);
+		jQuery('.fancybox', Customer.container).fancybox();
+	},
+	"select": function(id_customer, fullname)
+	{
+		Customer.hiddenField.val(id_customer);
+		Customer.field.val(fullname);
+		Customer.container.empty();
+		return false;
+	},
+	"showLoader": function() {
+		Customer.loader.fadeIn();
+	},
+	"hideLoader": function() {
+		Customer.loader.fadeOut();
+	}
+};
+jQuery(document).ready(Customer.init);
+</script>
+<style type="text/css">
+#content #customers .warn {
+	margin: 10px 0 0 0;
+}
+#customers li {
+	background-color: #ABDFF7;
+	border: 1px solid #ccc;
+	float: left;
+	margin: 5px;
+	padding: 5px;
+}
+#customers li .button {
+	display: block;
+	margin-top: 5px;
+}
+</style>
+{/literal}
+{* END CUSTOMER AUTO-COMPLETE / TO REFACTO *}
+
 <script type="text/javascript">
 
 	$(document).ready(function() {
@@ -195,6 +291,13 @@
 					{/foreach}
 				</select>
 			</div>
+			<label>{l s='Customer:'}</label>
+			<div class="margin-form">
+				<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
+				<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
+				<img src="../img/admin/field-loader.gif" id="customerLoader" alt="{l s='Loading...'}" style="display: none;" />
+				<div id="customers"></div>
+			</div>
 			{if $combinations|@count != 0}
 				<label>{l s='Combination:'}</label>
 				<div class="margin-form">
@@ -281,6 +384,7 @@
 					<th class="cell border" style="width: 12%;">{l s='Currency'}</th>
 					<th class="cell border" style="width: 11%;">{l s='Country'}</th>
 					<th class="cell border" style="width: 13%;">{l s='Group'}</th>
+					<th class="cell border" style="width: 13%;">{l s='Customer'}</th>
 					<th class="cell border" style="width: 12%;">{l s='Price'} {if $country_display_tax_label}{l s='(tax excl)'}{/if}</th>
 					<th class="cell border" style="width: 10%;">{l s='Reduction'}</th>
 					<th class="cell border" style="width: 15%;">{l s='Period'}</th>

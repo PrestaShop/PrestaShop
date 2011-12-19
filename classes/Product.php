@@ -2195,7 +2195,8 @@ class ProductCore extends ObjectModel
 	*/
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
 		$only_reduc = false, $usereduc = true, $quantity = 1, $force_associated_tax = false, $id_customer = null, $id_cart = null,
-		$id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null)
+		$id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null,
+		$use_customer_price = true)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -2282,6 +2283,10 @@ class ProductCore extends ObjectModel
 			&& Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
 
+		$id_customer = 0;
+		if (Validate::isLoadedObject($context->customer))
+			$id_customer = $context->customer->id;
+
 		return Product::priceCalculation(
 			$context->shop->getID(),
 			$id_product,
@@ -2298,7 +2303,9 @@ class ProductCore extends ObjectModel
 			$usereduc,
 			$with_ecotax,
 			$specific_price_output,
-			$use_group_reduction
+			$use_group_reduction,
+			$id_customer,
+			$use_customer_price
 		);
 	}
 
@@ -2324,8 +2331,12 @@ class ProductCore extends ObjectModel
 	* @return float Product price
 	**/
 	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
-		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction)
+		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
+		$id_customer = 0, $use_customer_price = true)
 	{
+		if (!$use_customer_price)
+			$id_customer = 0;
+
 		// Caching
 		if ($id_product_attribute === null)
 			$product_attribute_label = 'null';
@@ -2333,7 +2344,7 @@ class ProductCore extends ObjectModel
 			$product_attribute_label = ($id_product_attribute === false ? 'false' : $id_product_attribute);
 		$cache_id = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.
 			'-'.$quantity.'-'.$product_attribute_label.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
-			'-'.($use_reduc?'1':'0').'-'.$with_ecotax;
+			'-'.($use_reduc?'1':'0').'-'.$with_ecotax.'-'.$id_customer;
 
 		// reference parameter is filled before any returns
 		$specific_price = SpecificPrice::getSpecificPrice(
@@ -2343,7 +2354,8 @@ class ProductCore extends ObjectModel
 			$id_country,
 			$id_group,
 			$quantity,
-			$id_product_attribute
+			$id_product_attribute,
+			$id_customer
 		);
 
 		if (isset(self::$_prices[$cache_id]))

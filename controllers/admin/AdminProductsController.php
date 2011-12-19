@@ -689,6 +689,7 @@ class AdminProductsControllerCore extends AdminController
 		$id_currencies = Tools::getValue('spm_id_currency');
 		$id_countries = Tools::getValue('spm_id_country');
 		$id_groups = Tools::getValue('spm_id_group');
+		$id_customers = Tools::getValue('spm_id_customer');
 		$prices = Tools::getValue('spm_price');
 		$from_quantities = Tools::getValue('spm_from_quantity');
 		$reductions = Tools::getValue('spm_reduction');
@@ -697,13 +698,14 @@ class AdminProductsControllerCore extends AdminController
 		$tos = Tools::getValue('spm_to');
 
 		foreach ($id_specific_prices as $key => $id_specific_price)
-			if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
+			if ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key]))
 			{
 				$specific_price = new SpecificPrice((int)($id_specific_price));
 				$specific_price->id_shop = (int)$id_shops[$key];
 				$specific_price->id_currency = (int)($id_currencies[$key]);
 				$specific_price->id_country = (int)($id_countries[$key]);
 				$specific_price->id_group = (int)($id_groups[$key]);
+				$specific_price->id_customer = (int)$id_customers[$key];
 				$specific_price->price = (float)($prices[$key]);
 				$specific_price->from_quantity = (int)($from_quantities[$key]);
 				$specific_price->reduction = (float)($reduction_types[$key] == 'percentage' ? ($reductions[$key] / 100) : $reductions[$key]);
@@ -725,13 +727,14 @@ class AdminProductsControllerCore extends AdminController
 		$id_currency = Tools::getValue('sp_id_currency');
 		$id_country = Tools::getValue('sp_id_country');
 		$id_group = Tools::getValue('sp_id_group');
+		$id_customer = Tools::getValue('sp_id_customer');
 		$price = Tools::getValue('sp_price');
 		$from_quantity = Tools::getValue('sp_from_quantity');
 		$reduction = (float)(Tools::getValue('sp_reduction'));
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
 		$from = Tools::getValue('sp_from');
 		$to = Tools::getValue('sp_to');
-		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to))
+		if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to))
 		{
 			$specificPrice = new SpecificPrice();
 			$specificPrice->id_product = $id_product;
@@ -740,6 +743,7 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice->id_currency = (int)($id_currency);
 			$specificPrice->id_country = (int)($id_country);
 			$specificPrice->id_group = (int)($id_group);
+			$specificPrice->id_customer = (int)$id_customer;
 			$specificPrice->price = (float)($price);
 			$specificPrice->from_quantity = (int)($from_quantity);
 			$specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
@@ -1138,6 +1142,19 @@ class AdminProductsControllerCore extends AdminController
 		$this->status = 'ok';
 	}
 
+	/**
+	 * Search customers
+	 */
+	public function ajaxProcessSearchCustomers()
+	{
+		if ($customers = Customer::searchByName(pSQL(Tools::getValue('customer_search'))))
+			$to_return = array('customers' => $customers, 'found' => true);
+		else
+			$to_return = array('found' => false);
+
+		$this->content = Tools::jsonEncode($to_return);
+	}
+
 	public function ajaxProcessUpdateImagePosition()
 	{
 		$this->json = true;
@@ -1197,9 +1214,9 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
+	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
 	{
-		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group))
+		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer))
 			$this->_errors[] = Tools::displayError('Wrong ID\'s');
 		else if ((empty($price) && empty($reduction)) || (!empty($price) && !Validate::isPrice($price)) || (!empty($reduction) && !Validate::isPrice($reduction)))
 			$this->_errors[] = Tools::displayError('Invalid price/reduction amount');
@@ -2068,7 +2085,9 @@ class AdminProductsControllerCore extends AdminController
 					return $this->tpl_form_vars['custom_form'];
 		}
 
-		return parent::renderForm();
+		$parent = parent::renderForm();
+		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+		return $parent;
 	}
 
 	public function getPreviewUrl(Product $product)
@@ -2540,7 +2559,9 @@ class AdminProductsControllerCore extends AdminController
 				'countries' => $countries,
 				'groups' => $groups,
 				'combinations' => $combinations,
-				'product' => $product
+				'product' => $product,
+				'link' => new Link,
+				'token' => $this->token
 			));
 		}
 		else
@@ -2745,7 +2766,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!is_array($specific_prices) || !count($specific_prices))
 			$content .= '
 				<tr>
-					<td colspan="9">'.$this->l('No specific prices').'</td>
+					<td colspan="13">'.$this->l('No specific prices').'</td>
 				</tr>';
 		else
 		{
@@ -2777,6 +2798,14 @@ class AdminProductsControllerCore extends AdminController
 				$rule = new SpecificPriceRule((int)$specific_price['id_specific_price_rule']);
 				$rule_name = ($rule->id ? $rule->name : '--');
 
+				if ($specific_price['id_customer'])
+				{
+					$customer = new Customer((int)$specific_price['id_customer']);
+					if (Validate::isLoadedObject($customer))
+						$customer_full_name = $customer->firstname.' '.$customer->lastname;
+					unset($customer);
+				}
+
 				$content .= '
 				<tr '.($i%2 ? 'class="alt_row"' : '').'>
 					<td class="cell border">'.$rule_name.'</td>
@@ -2785,6 +2814,7 @@ class AdminProductsControllerCore extends AdminController
 					<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
 					<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
 					<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
+					<td class="cell border" title="'.$this->l('ID:').' '.$specific_price['id_customer'].'">'.(isset($customer_full_name) ? $customer_full_name : $this->l('All customers')).'</td>
 					<td class="cell border">'.Tools::displayPrice((float)$specific_price['price'], $current_specific_currency).'</td>
 					<td class="cell border">'.$reduction.'</td>
 					<td class="cell border">'.$period.'</td>
@@ -2793,6 +2823,7 @@ class AdminProductsControllerCore extends AdminController
 					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&action=Prices&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 				</tr>';
 				$i++;
+				unset($customer_full_name);
 			}
 		}
 		$content .= '

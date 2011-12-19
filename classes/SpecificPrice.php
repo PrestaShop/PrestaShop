@@ -35,6 +35,7 @@ class SpecificPriceCore extends ObjectModel
 	public	$id_currency;
 	public	$id_country;
 	public	$id_group;
+	public	$id_customer;
 	public	$price;
 	public	$from_quantity;
 	public	$reduction;
@@ -57,6 +58,7 @@ class SpecificPriceCore extends ObjectModel
 			'id_specific_price_rule' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_country' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_group' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_customer' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'price' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'from_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
@@ -108,7 +110,7 @@ class SpecificPriceCore extends ObjectModel
 	}
 
 	// score generation for quantity discount
-	protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group)
+	protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer)
 	{
 	    $select = '(';
 
@@ -141,10 +143,11 @@ class SpecificPriceCore extends ObjectModel
 
 	    if (!$priority)
 	        $priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
+		$priority = 'id_customer;'.$priority;
 	    return preg_split('/;/', $priority);
     }
 
-	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null)
+	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -158,7 +161,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			$now = date('Y-m-d H:i:s');
 			self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT *, '.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
+				SELECT *, '.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price`
 				WHERE `id_product` IN (0, '.(int)$id_product.')
 				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
@@ -166,6 +169,7 @@ class SpecificPriceCore extends ObjectModel
 				AND `id_currency` IN (0, '.(int)$id_currency.')
 				AND `id_country` IN (0, '.(int)$id_country.')
 				AND `id_group` IN (0, '.(int)$id_group.')
+				AND `id_customer` IN (0, '.(int)$id_customer.')
 				AND `from_quantity` <= '.(int)$quantity.'
 				AND
 				(
@@ -209,7 +213,7 @@ class SpecificPriceCore extends ObjectModel
 		');
 	}
 
-	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false)
+	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false, $id_customer = 0)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -217,7 +221,7 @@ class SpecificPriceCore extends ObjectModel
 		$now = date('Y-m-d H:i:s');
 		$res =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
-					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
+					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE   
 					`id_product` IN(0, '.(int)$id_product.') AND
@@ -225,7 +229,8 @@ class SpecificPriceCore extends ObjectModel
 					`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
 					`id_country` IN(0, '.(int)$id_country.') AND
-					`id_group` IN(0, '.(int)$id_group.')
+					`id_group` IN(0, '.(int)$id_group.') AND
+					`id_customer` IN(0, '.(int)$id_customer.')
 					AND
 					(
 						(`from` = \'0000-00-00 00:00:00\' OR \''.$now.'\' >= `from`)
@@ -253,7 +258,7 @@ class SpecificPriceCore extends ObjectModel
 		return $targeted_prices;
 	}
 
-	public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null)
+	public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -261,7 +266,7 @@ class SpecificPriceCore extends ObjectModel
 		$now = date('Y-m-d H:i:s');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *,
-					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group).'
+					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	
 					`id_product` IN(0, '.(int)$id_product.') AND
@@ -270,6 +275,7 @@ class SpecificPriceCore extends ObjectModel
 					`id_currency` IN(0, '.(int)$id_currency.') AND
 					`id_country` IN(0, '.(int)$id_country.') AND
 					`id_group` IN(0, '.(int)$id_group.') AND
+					`id_customer` IN(0, '.(int)$id_customer.') AND
 					`from_quantity` >= '.(int)$quantity.'
 					AND
 					(
@@ -281,7 +287,7 @@ class SpecificPriceCore extends ObjectModel
 		');
 	}
 
-	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending)
+	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0)
 	{
 		if (!self::isFeatureActive())
 			return array();
@@ -293,6 +299,7 @@ class SpecificPriceCore extends ObjectModel
 					`id_currency` IN(0, '.(int)$id_currency.') AND
 					`id_country` IN(0, '.(int)$id_country.') AND
 					`id_group` IN(0, '.(int)$id_group.') AND
+					`id_customer` IN(0, '.(int)$id_customer.') AND
 					`from_quantity` = 1 AND
 					(
 						(`from` = \'0000-00-00 00:00:00\' OR \''.pSQL($beginning).'\' >= `from`)
