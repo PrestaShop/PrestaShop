@@ -671,7 +671,7 @@ CREATE TABLE `PREFIX_employee` (
   `bo_show_screencast` tinyint(1) NOT NULL default '1',
   `active` tinyint(1) unsigned NOT NULL default '0',
   `id_last_order` tinyint(1) unsigned NOT NULL default '0',
-  `id_last_message` tinyint(1) unsigned NOT NULL default '0',
+  `id_last_customer_message` tinyint(1) unsigned NOT NULL default '0',
   `id_last_customer` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_employee`),
   KEY `employee_login` (`email`,`passwd`),
