@@ -50,7 +50,8 @@
 			{foreach from=$shop_details['zones'] key=id_zone item=currentZone}
 				<label>{$currentZone['name']}</label>
 				<div class="margin-form">
-					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']}" />
+					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']|escape:htmlall}" />
+
 				</div>
 			{/foreach}
 			<div class="margin-form">
