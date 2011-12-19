@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0 It now defines stock movements when the advanced stock management system is available
+ */
 class StockMvtCore extends ObjectModel
 {
 	public $id;
@@ -153,7 +156,8 @@ class StockMvtCore extends ObjectModel
 			'id_employee' => array('xlink_resource'=> 'employees'),
 			'id_stock' => array('xlink_resource'=> 'stock'),
 			'id_stock_mvt_reason' => array('xlink_resource'=> 'stock_movement_reasons'),
-			'id_order' => array('xlink_resource'=> 'orders')
+			'id_order' => array('xlink_resource'=> 'orders'),
+			'id_supply_order' => array('xlink_resource'=> 'supply_order'),
 		),
 	);
 
