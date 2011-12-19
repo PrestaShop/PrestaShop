@@ -1475,6 +1475,22 @@ class OrderCore extends ObjectModel
 
 		return Tools::ps_round($total, 2);
 	}
+	
+	/**
+	 * Get the sum of total_paid_tax_incl of the orders with similar reference
+	 *
+	 * @since 1.5.0.1
+	 * @return float
+	 */
+	public function getOrdersTotalPaid()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(total_paid_tax_incl)
+			FROM `'._DB_PREFIX_.'orders`
+			WHERE `reference` = '.(int)$this->reference.'
+			AND `id_cart` = '.(int)$this->id_cart
+		);
+	}
 
 	/**
 	 *
