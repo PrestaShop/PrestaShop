@@ -228,6 +228,23 @@ class ProductDownloadCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'product_download`
 		WHERE `id_product` = '.(int)$id_product.' AND `active` = 1');
 	}
+	
+	/**
+	 * Return the result from an id_product_attribute
+	 *
+	 * @param int $id_product Product the id
+	 * @param int $id_product_attribute Attribute the id
+	 * @return array result for this virtual product
+	 */
+	public static function getAttributeFromIdAttribute($id_product, $id_product_attribute)
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'product_download`
+		WHERE `id_product` = '.(int)$id_product.'
+		AND `id_product_attribute` = '.(int)$id_product_attribute.'
+		AND `active` = 1');
+	}
 
 	/**
 	 * Return the display filename from a physical filename
