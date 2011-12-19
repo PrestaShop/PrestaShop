@@ -1024,6 +1024,7 @@ class AdminOrdersControllerCore extends AdminController
 			'customerStats' => $customer->getStats(),
 			'products' => $products,
 			'discounts' => $order->getCartRules(),
+			'orders_total_paid_tax_incl' => $order->getOrdersTotalPaid(), // Get the sum of total_paid_tax_incl of the order with similar reference
 			'total_paid' => $order->getTotalPaid(),
 			'returns' => OrderReturn::getOrdersReturn($order->id_customer, $order->id),
 			'slips' => OrderSlip::getOrdersSlip($order->id_customer, $order->id),
