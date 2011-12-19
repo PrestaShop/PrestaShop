@@ -1,5 +1,7 @@
 SET NAMES 'utf8';
 
+ALTER TABLE `PREFIX_module` ADD `version` VARCHAR( 8 ) NOT NULL;
+
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('1', '108', '1', '1', '1', '1');
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('2', '108', '1', '1', '1', '1');
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('3', '108', '1', '1', '1', '1');

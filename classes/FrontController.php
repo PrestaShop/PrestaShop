@@ -340,6 +340,9 @@ class FrontControllerCore extends Controller
 		$this->iso = $iso;
 		$this->setMedia();
 
+		// Customer wasn't defined at all
+		$customer = new StdClass();
+
 		if($this->context->cookie->id_country)
 			$customer->geoloc_id_country = (int)$this->context->cookie->id_country;
 		if($this->context->cookie->id_state)
