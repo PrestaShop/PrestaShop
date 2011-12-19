@@ -226,29 +226,24 @@ class AdminOrdersControllerCore extends AdminController
 					$history = new OrderHistory();
 					$history->id_order = (int)$id_order;
 					$history->id_employee = (int)$this->context->employee->id;
-					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !(int)Tools::getValue('id_warehouse'))
-						$this->_errors[] = Tools::displayError('An error occurred while changing the status.');
-					else
-					{
-						$history->changeIdOrderState((int)($newOrderStatusId), (int)($id_order), (int)Tools::getValue('id_warehouse'));
-						$order = new Order((int)$order->id);
-						$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
-						$templateVars = array();
-						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') AND $order->shipping_number)
-							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-						else if ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
-							$templateVars = array(
-								'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
-								'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : ''));
-						elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
-							$templateVars = array(
-								'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
-								'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
-								'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : ''));
-						if ($history->addWithemail(true, $templateVars))
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
-						$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
-					}
+					$history->changeIdOrderState((int)($newOrderStatusId), (int)($id_order));
+					$order = new Order((int)$order->id);
+					$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
+					$templateVars = array();
+					if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') AND $order->shipping_number)
+						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+					else if ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
+						$templateVars = array(
+							'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
+							'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : ''));
+					elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
+						$templateVars = array(
+							'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
+							'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
+							'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : ''));
+					if ($history->addWithemail(true, $templateVars))
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
+					$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 				}
 			}
 			else
@@ -439,7 +434,13 @@ class AdminOrdersControllerCore extends AdminController
 
 								// @since 1.5.0 : Advanced Stock Management
 								$product_to_inject = new Product($order_detail->product_id, false, $this->context->language->id, $order->id_shop);
-								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $order_detail->id_warehouse != 0)
+								
+								$product = new Product($order_detail->product_id);
+								
+								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+									&& $product->advanced_stock_management
+									&& $order_detail->id_warehouse != 0
+								)
 								{
 									$mvts = StockMvt::getNegativeStockMvts(
 										$order_detail->id_order,
@@ -989,10 +990,15 @@ class AdminOrdersControllerCore extends AdminController
 
 		// gets warehouses to ship products, if and only if advanced stock management is activated
 		$warehouse_list = null;
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		
+		$order_details = $order->getOrderDetailList();
+		foreach ($order_details as $order_detail)
 		{
-			$order_details = $order->getOrderDetailList();
-			foreach ($order_details as $order_detail)
+			$product = new Product($order_detail['product_id']);
+			
+			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+				&& $product->advanced_stock_management
+			)
 			{
 				$warehouses = Warehouse::getWarehousesByProductId($order_detail['product_id'], $order_detail['product_attribute_id']);
 				foreach ($warehouses as $warehouse)
@@ -1098,7 +1104,7 @@ class AdminOrdersControllerCore extends AdminController
 					if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock']))
 						$combinations[$attribute['id_product_attribute']]['qty_in_stock']= StockAvailable::getQuantityAvailableByProduct((int)$product['id_product'], $attribute['id_product_attribute'], (int)$this->context->shop->getID());
 
-					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$product['advanced_stock_management'] == 1)
 						$product['warehouse_list'][$attribute['id_product_attribute']] = Warehouse::getProductWarehouseList($product['id_product'], $attribute['id_product_attribute']);
 					else
 						$product['warehouse_list'][$attribute['id_product_attribute']] = array();
@@ -1107,7 +1113,7 @@ class AdminOrdersControllerCore extends AdminController
 
 				}
 
-				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)$product['advanced_stock_management'] == 1)
 					$product['warehouse_list'][0] = Warehouse::getProductWarehouseList($product['id_product']);
 				else
 					$product['warehouse_list'][0] = array();

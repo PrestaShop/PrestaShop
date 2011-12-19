@@ -101,6 +101,8 @@ class OrderInvoiceCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_detail` od
+		LEFT JOIN `'._DB_PREFIX_.'product` p
+		ON p.id_product = od.product_id
 		WHERE od.`id_order` = '.(int)$this->id_order.'
 		AND od.`id_order_invoice` = '.(int)$this->id);
 	}
@@ -173,7 +175,12 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	protected function setProductCurrentStock(&$product)
 	{
-		$product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+			&& (int)$product['advanced_stock_management'] == 1
+			&& (int)$product['id_warehouse'] > 0)
+			$product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
+		else
+			$product['current_stock'] = '--';
 	}
 
 	/**
