@@ -93,20 +93,22 @@ function getPush(refresh)
 			// Add messages notifications to the list
 			html = "";
 			nb_notifs = 0;
-			$.each(json.message, function(property, value) {
-				html += "<li>" + new_msg + "<br />" + from_msg + "<strong>" + value.customer_name + "</strong><br />" + excerpt_msg + "<strong>" + value.message_customer + "</strong><br /><a href=\"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_msg + "</a></li>";
+			$.each(json.customer_message, function(property, value) {
+				html += "<li>" + new_msg + "<br />" + from_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminCustomerThreads&token=" + token_admin_customer_threads + "&viewcustomer_thread&id_customer_thread=" + parseInt(value.id_customer_thread) + "\">" + see_msg + "</a></li>";
 			});
+
 			if (html != "")
 			{
-				$("#list_messages_notif").prev("p").hide();
-				$("#list_messages_notif").empty().append(html);
-				nb_notifs = $("#list_messages_notif li").length;
-				$("#messages_notif_value").text(nb_notifs);
-				$("#messages_notif_number_wrapper").show();
+
+				$("#list_customer_messages_notif").prev("p").hide();
+				$("#list_customer_messages_notif").empty().append(html);
+				nb_notifs = $("#list_customer_messages_notif li").length;
+				$("#customer_messages_notif_value").text(nb_notifs);
+				$("#customer_messages_notif_number_wrapper").show();
 			}
 			else
 			{
-				$("#messages_notif_number_wrapper").hide();
+				$("#customer_messages_notif_number_wrapper").hide();
 			}
 		}
 		if(refresh)
