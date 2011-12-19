@@ -42,7 +42,8 @@
 	<div class="separation"></div>
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to manage the available quantities for sale of the current product and its combinations on the current shop.'}</p>
-		<p>{l s='You can manually specify the quantities for the product / each product combinations, or choose to automatically determine these quantities based on your stock.'}</p>
+		<p>{l s='You can choose to use the advanced stock management system for this product or not.'}</p>
+		<p>{l s='You can manually specify the quantities for the product / each product combinations, or choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
 	</div>
 	<br />
@@ -50,7 +51,7 @@
 	<div class="separation"></div>
 
 
-	{if $show_quantities == true}
+	{if $show_quantities == true && !$product->cache_is_pack}
 		<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
 		<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 		<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
@@ -137,6 +138,10 @@
 				</tr>
 			</tbody>
 		</table>
+	{elseif $product->cache_is_pack}
+		<div class="warn">
+			<p>{l s='It is not possible to manage quantities when you are managing a pack.'}</p>
+		</div>
 	{else}
 		<div class="warn">
 			<p>{l s='It is not possible to manage quantities when : '}</p>
