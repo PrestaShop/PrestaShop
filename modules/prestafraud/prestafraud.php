@@ -212,12 +212,11 @@ class PrestaFraud extends Module
 		
 		foreach ($modules AS $module)
 		{
-			if (!method_exists($module, 'hookPayment') OR !$module->id)
-				continue;
-			$this->_html .= '<tr><td>'.$module->displayName.'</td><td><select name="paymentmodule_'.$module->id.'">
+			$mod = Module::getInstanceByName($module['name']);
+			$this->_html .= '<tr><td>'.$mod->displayName.'</td><td><select name="paymentmodule_'.$mod->id.'">
 			<option value="0">'.$this->l('Choose a payment type...').'</option>';
 			foreach ($this->_payment_types AS $type => $name)
-				$this->_html .= '<option value="'.$type.'"'.((isset($configured_payments[$module->id]) AND $type == $configured_payments[$module->id]) ? ' selected="true"' : '').'>'.$name.'</option>';
+				$this->_html .= '<option value="'.$type.'"'.((isset($configured_payments[$mod->id]) AND $type == $configured_payments[$mod->id]) ? ' selected="true"' : '').'>'.$name.'</option>';
 			$this->_html .= '</select></td>';
 		}
 			$this->_html .= '</tbody></table></margin>
