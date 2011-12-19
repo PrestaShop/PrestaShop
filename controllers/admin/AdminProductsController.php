@@ -561,7 +561,7 @@ class AdminProductsControllerCore extends AdminController
 							$this->_errors[] = Tools::displayError('This attribute already exists.');
 						else
 						{
-							if (Validate::isDateFormat(Tools::getValue('available_date')))
+							if (Validate::isDateFormat(Tools::getValue('available_date_attribute')))
 							{
 								$product->updateAttribute($id_product_attribute,
 									Tools::getValue('attribute_wholesale_price'),
@@ -576,7 +576,7 @@ class AdminProductsControllerCore extends AdminController
 									Tools::getValue('attribute_location'),
 									Tools::getValue('attribute_upc'),
 									Tools::getValue('minimal_quantity'),
-									Tools::getValue('available_date'));
+									Tools::getValue('available_date_attribute'));
 
 								if ($id_reason = (int)Tools::getValue('id_mvt_reason') && (int)Tools::getValue('attribute_mvt_quantity') > 0 && $id_reason > 0)
 								{
@@ -1993,13 +1993,6 @@ class AdminProductsControllerCore extends AdminController
 						'class' => 'toolbar-new'
 					);
 				}
-
-				$this->toolbar_btn['cancel'] = array(
-					'short' => 'Close',
-					'href' => '#todo'.$this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id,
-					'desc' => $this->l('Cancel'),
-					'confirm' => 1
-				);
 
 				if ($this->tabAccess['edit'])
 				{
