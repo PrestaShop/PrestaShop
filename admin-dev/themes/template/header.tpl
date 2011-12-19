@@ -64,6 +64,7 @@
 				var see_msg = '{l s='Click here to see that message'}';
 				var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
 				var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
+				var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 			</script>
 		{/if}
 
