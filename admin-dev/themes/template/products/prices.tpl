@@ -43,7 +43,7 @@
 		<tr>
 			<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{math equation=$product->wholesale_price format="%.2f"}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
+				{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{math format='%.2f' equation=$product->wholesale_price}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
 				<p class="preference_description">{l s='The wholesale price at which you bought this product'}</p>
 			</td>
 		</tr>
@@ -51,7 +51,7 @@
 		<tr>
 			<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{math equation=$product->price format="%.2f"}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
+				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{math format='%.2f' equation=$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
 				<p class="preference_description">{l s='The pre-tax retail price to sell this product'}</p>
 			</td>
 		</tr>
