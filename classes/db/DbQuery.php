@@ -89,44 +89,50 @@ class DbQueryCore
 
 	/**
 	 * Add LEFT JOIN clause
-	 * 	E.g. $this->leftJoin('product p ON ...')
 	 *
-	 * @param string $join Table followed by ON claused
+	 * @param string $table Table name (without prefix)
+	 * @param string $alias Table alias
+	 * @param string $on ON clause
 	 */
 	public function leftJoin($table, $alias = null, $on = null)
 	{
-		return $this->join('LEFT JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
+		return $this->join('LEFT JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
 	 * Add INNER JOIN clause
 	 * 	E.g. $this->innerJoin('product p ON ...')
 	 *
-	 * @param string $join Table followed by ON claused
+	 * @param string $table Table name (without prefix)
+	 * @param string $alias Table alias
+	 * @param string $on ON clause
 	 */
 	public function innerJoin($table, $alias = null, $on = null)
 	{
-		return $this->join('INNER JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
+		return $this->join('INNER JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
 	 * Add LEFT OUTER JOIN clause
 	 *
-	 * @param string $join Table followed by ON claused
+	 * @param string $table Table name (without prefix)
+	 * @param string $alias Table alias
+	 * @param string $on ON clause
 	 */
 	public function leftOuterJoin($table, $alias = null, $on = null)
 	{
-		return $this->join('LEFT OUTER JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
+		return $this->join('LEFT OUTER JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : '').($on ? ' ON '.$on : ''));
 	}
 
 	/**
 	 * Add NATURAL JOIN clause
 	 *
-	 * @param string $join
+	 * @param string $table Table name (without prefix)
+	 * @param string $alias Table alias
 	 */
-	public function naturalJoin($table, $alias = null, $on = null)
+	public function naturalJoin($table, $alias = null)
 	{
-		return $this->join('NATURAL JOIN `'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '').($on ? ' ON '.$on : ''));
+		return $this->join('NATURAL JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : ''));
 	}
 
 	/**
