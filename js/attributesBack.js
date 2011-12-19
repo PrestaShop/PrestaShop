@@ -151,14 +151,8 @@ virtual_product_nb_days, is_shareable)
 		}
 	}
 	getE('id_product_attribute').value = id_product_attribute;
-	if (document.getElementById)
-		var style = document.getElementById('ResetSpan').style;
-	else if (document.all)
-		var style = document.all['ResetSpan'].style;
-	else if (document.layers)
-		var style = document.layers['ResetSpan'].style;
-	if (style.display == 'none')
-		style.display = 'block';
+
+	$('#available_date_attribute').val(available_date);
 }
 
 function populate_attrs()
@@ -224,6 +218,12 @@ function init_elems()
 		for (i = elem.length - 1; i >= 0; i--)
 			if (elem[i])
 				elem.remove(i);
+
+	$('input[name="id_image_attr[]"]').each(function (){
+		$(this).attr('checked', false);
+	});
+	
+	$('#attribute_default').attr('checked', false);
 
 	getE('attribute_price_impact').selectedIndex = 0;
 	getE('attribute_weight_impact').selectedIndex = 0;

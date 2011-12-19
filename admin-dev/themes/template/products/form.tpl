@@ -160,6 +160,8 @@
 				if (btn_name == "Combinations")
 				{
 					$('#desc-product-new').hide();
+					$('#desc-product-save-and-stay').hide();
+					$('#desc-product-save').hide();
 					$('#desc-product-newCombination').show();
 					populate_attrs();
 				}
@@ -178,7 +180,11 @@
 					});
 				}
 				else
+				{
 					$('#desc-product-newCombination').hide();
+					$('#desc-product-save-and-stay').show();
+					$('#desc-product-save').show();
+				}
 			});
 
 			{if $show_product_tab_content}
