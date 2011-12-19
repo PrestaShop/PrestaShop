@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helper/form/form.tpl"}
-
+{debug}
 {block name="label"}
 
 	{if $input.type == 'text' && $input.name == 'name'}
