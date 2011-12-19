@@ -36,14 +36,13 @@
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var by = '{l s='by'}';
 	var errorLogin = '{l s='Could not login to Addons'}';
-	
-	{if isset($smarty.get.anchor)}
-	$('document').ready( function() {
-		$.scrollTo('#{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''}', 1200, {literal}{offset: -100}{/literal});
-	});
-	{/if}
+	{if isset($smarty.get.anchor)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''}';{else}var anchor = '';{/if}
+
+
+
 
 	{literal}
+
 	function getPrestaStore(){if(getE("prestastore").style.display!='block')return;$.post(dirNameCurrentIndex+"/ajax.php",{page:"prestastore"},function(a){getE("prestastore-content").innerHTML=a;})}
 	function truncate_author(author){return ((author.length > 20) ? author.substring(0, 20)+"..." : author);}
 	function modules_management(action)
@@ -65,7 +64,19 @@
 		}
 		document.location.href=currentIndex+'&token='+token+'&'+action+'='+module_list.substring(1, module_list.length);
 	}
+
+
 	$('document').ready( function() {
+
+
+
+		// ScrollTo
+		if (anchor != '')
+			$.scrollTo('#'+anchor, 1200, {offset: -100});
+
+
+
+		// AutoComplete Search
 		$('input[name="filtername"]').autocomplete(moduleList, {
 				minChars: 0,
 				width: 310,
@@ -84,13 +95,30 @@
 		$('input[name="filtername"]').result(function(event, data, formatted) {
 			 $('#filternameForm').submit();
 		});
-	});
+
+
+
+		// Method to check / uncheck all modules checkbox
+		$('#checkme').click(function()
+		{
+			if ($(this).attr("rel") == 'false')
+			{
+				$(this).attr("checked", "checked");
+				$(this).attr("rel", "true");
+				$("input[name=modules]").attr("checked", "checked");
+			}
+			else
+			{
+				$(this).attr("checked", "");
+				$(this).attr("rel", "false");
+				$("input[name=modules]").attr("checked", "");
+			}
+		});		
 
 
 
 
-	// Method to reload filter in ajax
-	$(document).ready(function(){
+		// Method to reload filter in ajax
 		$('.categoryModuleFilterLink').click(function()
 		{
 			$('.categoryModuleFilterLink').css('background-color', 'white');
@@ -125,25 +153,22 @@
 			catch(e){}
 			return false;
 		});
-	});
 
 
 
-
-	// Method to get modules_list.xml from prestashop.com and default_country_modules_list.xml from addons.prestashop.com
-	$(document).ready(function(){
-			try
-			{
-				resAjax = $.ajax({
-						type:"POST",
-						url : ajaxCurrentIndex,
-						async: true,
-						data : {
-						ajaxMode : "1",
-						ajax : "1",
-						token : token,
-						controller : "AdminModules",
-						action : "refreshModuleList"
+		// Method to get modules_list.xml from prestashop.com and default_country_modules_list.xml from addons.prestashop.com
+		try
+		{
+			resAjax = $.ajax({
+					type:"POST",
+					url : ajaxCurrentIndex,
+					async: true,
+					data : {
+					ajaxMode : "1",
+					ajax : "1",
+					token : token,
+					controller : "AdminModules",
+					action : "refreshModuleList"
 				},
 				success : function(res,textStatus,jqXHR)
 				{
@@ -155,12 +180,11 @@
 				}
 			});
 		}
-		catch(e){}
-	});
+		catch(e) { }
 
 
-	// Method to log on PrestaShop Addons WebServices
-	$(document).ready(function(){
+
+		// Method to log on PrestaShop Addons WebServices
 		$('#addons_login_button').click(function()
 		{
 			var username_addons = $("#username_addons").val();
@@ -204,6 +228,9 @@
 			catch(e){}
 			return false;
 		});
+
+
+
 	});
 	{/literal}
 </script>
