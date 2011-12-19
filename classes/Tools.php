@@ -556,10 +556,14 @@ class ToolsCore
 	*/
 	public static function displayDate($date, $id_lang, $full = false, $separator = '-')
 	{
-	 	if (!$date || !($time = strtotime($date)))
-	 		return $date;
+		if (!$date || !($time = strtotime($date)))
+			return $date;
+		
+		if ($date == '0000-00-00 00:00:00' || $date == '0000-00-00')
+			return '';
+		
 		if (!Validate::isDate($date) || !Validate::isBool($full))
-			die (self::displayError('Invalid date'));
+			throw new PrestashopException('Invalid date');
 
 		$context = Context::getContext();
 		$date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
@@ -575,7 +579,7 @@ class ToolsCore
 	*/
 	public static function safeOutput($string, $html = false)
 	{
-	 	if (!$html)
+		if (!$html)
 			$string = strip_tags($string);
 		return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);
 	}
