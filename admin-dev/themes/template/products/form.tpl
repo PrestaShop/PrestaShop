@@ -101,6 +101,7 @@
 				$('#is_virtual_good').removeAttr('checked');
 				$('div.is_virtual_good').hide();
 				$('#is_virtual').val(0);
+				$("#virtual_good_attributes").hide();
 
 				var val = $(this).val();
 
@@ -113,9 +114,10 @@
 				else if (val == 2)
 				{
 					$('li.tab-row a[id*="VirtualProduct"]').show();
-					$('#is_virtual_good').attr('checked', true).attr('disabled', 'disabled');
+					$('#is_virtual_good').attr('checked', true);
 					$('#virtual_good').show();
 					$('#is_virtual').val(1);
+					$("#virtual_good_attributes").show();
 				}
 
 			});

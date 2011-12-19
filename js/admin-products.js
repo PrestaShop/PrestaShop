@@ -163,12 +163,12 @@ function editProductAttribute(ids, token)
 			var upc = data[0]['upc'];
 			var minimal_quantity = data[0]['minimal_quantity'];
 			var available_date = data[0]['available_date'];
-			var virtual_product_name_attribute = null;
-			var virtual_product_filename_attribute = null;
-			var virtual_product_nb_downloable = null;
-			var virtual_product_expiration_date_attribute = null;
-			var virtual_product_nb_days = null;
-			var is_shareable = null;
+			var virtual_product_name_attribute = data[0]['display_filename'];
+			var virtual_product_filename_attribute = data[0]['display_filename'];
+			var virtual_product_nb_downloable = data[0]['nb_downloadable'];
+			var virtual_product_expiration_date_attribute = data[0]['date_expiration'];
+			var virtual_product_nb_days = data[0]['nb_days_accessible'];
+			var is_shareable = data[0]['is_shareable'];
 
 			fillCombinaison(
 				wholesale_price,
