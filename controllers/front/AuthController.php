@@ -345,7 +345,11 @@ class AuthControllerCore extends FrontController
 			$_POST['passwd'] = md5(time()._COOKIE_KEY_);
 		if (isset($_POST['guest_email']) && $_POST['guest_email'])
 			$_POST['email'] = $_POST['guest_email'];
-
+		// Checked the user address in case he changed his email address
+		if (!Validate::isEmail($email = Tools::getValue('email')) || empty($email))
+			$this->errors[] = Tools::displayError('Invalid e-mail address');
+		elseif (Customer::customerExists($email))
+			$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.');
 		// Preparing customer
 		$customer = new Customer();
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
