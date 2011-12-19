@@ -43,7 +43,7 @@ class AdminShopControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Shop'),
 				'width' => 'auto',
-				'filter_key' => 'a!name'
+				'filter_key' => 'b!name'
 			),
 			'group_shop_name' => array(
 				'title' => $this->l('Group Shop'),
@@ -326,7 +326,8 @@ class AdminShopControllerCore extends AdminController
 			);
 
 		$this->fields_value = array(
-			'id_group_shop' => $obj->id_group_shop
+			'id_group_shop' => $obj->id_group_shop,
+			'active' => true
 		);
 
 		$this->tpl_form_vars = array(

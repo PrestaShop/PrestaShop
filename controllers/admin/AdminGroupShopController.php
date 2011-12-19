@@ -229,7 +229,9 @@ class AdminGroupShopControllerCore extends AdminController
 		);
 		if (isset($this->fields_import_form))
 			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
-
+		$this->fields_value = array(
+			'active' => true
+			);
 		return parent::renderForm();
 	}
 
