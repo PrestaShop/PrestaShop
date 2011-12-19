@@ -89,13 +89,13 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 		$this->query = new DbQuery();
 		$this->query->select('a.*');
-		$this->query->from($this->definition['table'].' a');
+		$this->query->from($this->definition['table'], 'a');
 
 		// If multilang, create association to lang table
 		if (isset($this->definition['multilang']) && $this->definition['multilang'])
 		{
 			$this->query->select('b.*');
-			$this->query->leftJoin($this->definition['table'].'_lang b ON a.'.$this->definition['primary'].' = b.'.$this->definition['primary']);
+			$this->query->leftJoin($this->definition['table'].'_lang', 'b', 'a.'.$this->definition['primary'].' = b.'.$this->definition['primary']);
 			if ($this->id_lang)
 				$this->query->where('b.id_lang = '.(int)$this->id_lang);
 		}

@@ -72,8 +72,8 @@ class StockMvtReasonCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
-		$query->from('stock_mvt_reason smr');
-		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+		$query->from('stock_mvt_reason', 'smr');
+		$query->leftjoin('stock_mvt_reason_lang', 'smrl', 'smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang);
 		$query->where('smr.deleted = 0');
 
 		if ($sign != null)
@@ -94,8 +94,8 @@ class StockMvtReasonCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('smrl.name, smr.id_stock_mvt_reason, smr.sign');
-		$query->from('stock_mvt_reason smr');
-		$query->leftjoin('stock_mvt_reason_lang smrl ON (smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang.')');
+		$query->from('stock_mvt_reason', 'smr');
+		$query->leftjoin('stock_mvt_reason_lang', 'smrl', 'smr.id_stock_mvt_reason = smrl.id_stock_mvt_reason AND smrl.id_lang='.(int)$id_lang);
 		$query->where('smr.deleted = 0');
 
 		if ($sign != null)
@@ -120,7 +120,7 @@ class StockMvtReasonCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('smr.id_stock_mvt_reason');
-		$query->from('stock_mvt_reason smr');
+		$query->from('stock_mvt_reason', 'smr');
 		$query->where('smr.id_stock_mvt_reason = '.(int)$id_stock_mvt_reason);
 		$query->where('smr.deleted = 0');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

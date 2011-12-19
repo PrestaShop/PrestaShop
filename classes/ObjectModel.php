@@ -173,11 +173,11 @@ abstract class ObjectModelCore
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
-				$sql->from($this->def['table'].' a');
+				$sql->from($this->def['table'], 'a');
 				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
 				if ($id_lang)
 				{
-					$sql->leftJoin($this->def['table'].'_lang b ON a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
+					$sql->leftJoin($this->def['table'].'_lang', 'b', 'a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
 					if ($this->id_shop)
 						$sql->where('b.id_shop = '.$this->id_shop);
 				}
@@ -1119,7 +1119,7 @@ abstract class ObjectModelCore
 	{
 		$query = new DbQuery();
 		$query->select('`id_'.pSQL($table).'`');
-		$query->from(pSQL($table));
+		$query->from($table);
 		if ($has_active_column)
 			$query->where('`active` = 1');
 		return (bool)Db::getInstance()->getValue($query);

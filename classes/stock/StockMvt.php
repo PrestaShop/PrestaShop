@@ -186,8 +186,8 @@ class StockMvtCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('sm.*, s.id_warehouse');
-		$query->from('stock_mvt sm');
-		$query->innerJoin('stock s ON (s.id_stock = sm.id_stock)');
+		$query->from('stock_mvt', 'sm');
+		$query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
 		$query->where('sm.sign = -1');
 		$query->where('sm.id_order = '.(int)$id_order);
 		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);

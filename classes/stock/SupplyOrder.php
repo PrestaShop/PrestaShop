@@ -239,15 +239,15 @@ class SupplyOrderCore extends ObjectModel
 			p.reference as reference,
 			p.ean13 as ean13');
 
-		$query->from('supply_order_detail s');
+		$query->from('supply_order_detail', 's');
 
-		$query->innerjoin('product_lang pl ON (pl.id_product = s.id_product AND pl.id_lang = '.$id_lang.')');
+		$query->innerjoin('product_lang', 'pl', 'pl.id_product = s.id_product AND pl.id_lang = '.$id_lang);
 
-		$query->leftjoin('product p ON p.id_product = s.id_product');
-		$query->leftjoin('product_attribute_combination pac ON (pac.id_product_attribute = s.id_product_attribute)');
-		$query->leftjoin('attribute atr ON (atr.id_attribute = pac.id_attribute)');
-		$query->leftjoin('attribute_lang al ON (al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang.')');
-		$query->leftjoin('attribute_group_lang agl ON (agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang.')');
+		$query->leftjoin('product', 'p', 'p.id_product = s.id_product');
+		$query->leftjoin('product_attribute_combination', 'pac', 'pac.id_product_attribute = s.id_product_attribute');
+		$query->leftjoin('attribute', 'atr', 'atr.id_attribute = pac.id_attribute');
+		$query->leftjoin('attribute_lang', 'al', 'al.id_attribute = atr.id_attribute AND al.id_lang = '.$id_lang);
+		$query->leftjoin('attribute_group_lang', 'agl', 'agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang);
 
 		$query->where('s.id_supply_order = '.(int)$this->id);
 
@@ -278,7 +278,7 @@ class SupplyOrderCore extends ObjectModel
 	{
 		$query = new DbQuery();
 		$query->select('COUNT(*)');
-		$query->from('supply_order_detail s');
+		$query->from('supply_order_detail', 's');
 		$query->where('s.id_supply_order = '.(int)$this->id);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) > 0);
@@ -294,7 +294,7 @@ class SupplyOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.editable');
-		$query->from('supply_order_state s');
+		$query->from('supply_order_state', 's');
 		$query->where('s.id_supply_order_state = '.(int)$this->id_supply_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
@@ -310,7 +310,7 @@ class SupplyOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.delivery_note');
-		$query->from('supply_order_state s');
+		$query->from('supply_order_state', 's');
 		$query->where('s.id_supply_order_state = '.(int)$this->id_supply_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
@@ -326,7 +326,7 @@ class SupplyOrderCore extends ObjectModel
 		// build query
 		$query = new DbQuery();
 		$query->select('s.receipt_state');
-		$query->from('supply_order_state s');
+		$query->from('supply_order_state', 's');
 		$query->where('s.id_supply_order_state = '.(int)$this->id_supply_order_state);
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query) == 1);
@@ -372,8 +372,8 @@ class SupplyOrderCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('COUNT(so.id_supply_order) as supply_orders');
-		$query->from('supply_order so');
-		$query->leftJoin('supply_order_state sos ON (so.id_supply_order_state = sos.id_supply_order_state)');
+		$query->from('supply_order', 'so');
+		$query->leftJoin('supply_order_state', 'sos', 'so.id_supply_order_state = sos.id_supply_order_state');
 		$query->where('sos.enclosed != 1');
 		$query->where('so.id_warehouse = '.(int)$id_warehouse);
 
@@ -394,8 +394,8 @@ class SupplyOrderCore extends ObjectModel
 
 		$query = new DbQuery();
 		$query->select('COUNT(so.id_supply_order) as supply_orders');
-		$query->from('supply_order so');
-		$query->leftJoin('supply_order_state sos ON (so.id_supply_order_state = sos.id_supply_order_state)');
+		$query->from('supply_order', 'so');
+		$query->leftJoin('supply_order_state', 'sos', 'so.id_supply_order_state = sos.id_supply_order_state');
 		$query->where('sos.enclosed != 1');
 		$query->where('so.id_supplier = '.(int)$id_supplier);
 

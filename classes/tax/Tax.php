@@ -148,13 +148,13 @@ class TaxCore extends ObjectModel
 	{
 		$sql = new DbQuery();
 		$sql->select('t.id_tax, t.rate');
-		$sql->from('tax t');
+		$sql->from('tax', 't');
 		$sql->where('t.`deleted` != 1');
 
 		if ($id_lang)
 		{
 			$sql->select('tl.name, tl.id_lang');
-			$sql->leftJoin('tax_lang tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang.')');
+			$sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang);
 			$sql->orderBy('`name` ASC');
 		}
 
