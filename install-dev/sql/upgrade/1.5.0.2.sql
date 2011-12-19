@@ -288,5 +288,11 @@ ALTER TABLE `PREFIX_product` ADD COLUMN `advanced_stock_management` tinyint(1) d
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_ENCODING';
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 
+
+ALTER TABLE  `PREFIX_order_detail`
+ADD  `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
+ADD  `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`;
+
 ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tax_excl` DECIMAL(17, 2) NOT NULL DEFAULT '0.00';
 ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT NOT NULL DEFAULT '0' AFTER `id_cart_rule`;
+

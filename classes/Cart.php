@@ -380,7 +380,7 @@ class CartCore extends ObjectModel
 						p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`,
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
 						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
-						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery');
+						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery, p.`wholesale_price`');
 
 		// Build FROM
 		$sql->from('cart_product cp');
