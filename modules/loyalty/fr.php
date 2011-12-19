@@ -85,7 +85,6 @@ $_MODULE['<{loyalty}prestashop>loyalty_8e69341aca5dbf9f55c2e75a2ed5df3c'] = 'Auc
 $_MODULE['<{loyalty}prestashop>loyalty_00d56a5e37c19c59d521530fc8e7f337'] = 'Aucun point de fidélité pour le moment.';
 $_MODULE['<{loyalty}prestashop>loyalty_0b3db27bc15f682e92ff250ebb167d4b'] = 'Retour à votre compte';
 $_MODULE['<{loyalty}prestashop>my-account_c540093e64d84440025b2d8201f04336'] = 'Mes points de fidélité';
-$_MODULE['<{loyalty}prestashop>product_ded9088edfbcc1041c3a642b031c8f72'] = 'Programme de fidélisation';
 $_MODULE['<{loyalty}prestashop>product_08ef6b34ab8e7039ef0ee69378f0ac0b'] = 'En achetant ce produit vous pouvez gagner jusqu\'à ';
 $_MODULE['<{loyalty}prestashop>product_2996152bb442bf98c80c515c6055de5f'] = 'points de fidélité';
 $_MODULE['<{loyalty}prestashop>product_b40d5c523ee75453134b1449dd9cd13a'] = 'point de fidélité';
