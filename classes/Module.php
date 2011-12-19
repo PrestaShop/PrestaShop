@@ -33,6 +33,12 @@ abstract class ModuleCore
 	/** @var float Version */
 	public $version;
 
+	/**
+	 * @since 1.5.1
+	 * @var string Registered Version in database
+	 */
+	public $registered_version;
+
 	/** @var array filled with known compliant PS versions */
 	public $ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
 
@@ -74,9 +80,17 @@ abstract class ModuleCore
 
 	/** @var string Module web path (eg. '/shop/modules/modulename/')  */
 	protected $_path = NULL;
+	/**
+	 * @since 1.5.1
+	 * @var string Module local path (eg. '/home/prestashop/modules/modulename/')
+	 */
+	protected $local_path = NULL;
 
 	/** @var protected array filled with module errors */
-	protected $_errors = false;
+	protected $_errors = array();
+
+	/** @var protected array filled with module success */
+	protected $_confirmations = array();
 
 	/** @var protected string main table used for modules installed */
 	protected $table = 'module';
@@ -152,6 +166,7 @@ abstract class ModuleCore
 						$this->{$key} = $value;
 				$this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
 			}
+			$this->local_path = _PS_MODULE_DIR_.$this->name.'/';
 		}
 	}
 
@@ -213,24 +228,200 @@ abstract class ModuleCore
 
 		// Permissions management
 		Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-			SELECT id_profile, '.(int)$this->id.', 1, 1
-			FROM '._DB_PREFIX_.'access a
-			WHERE id_tab = (SELECT `id_tab` FROM '._DB_PREFIX_.'tab WHERE class_name = \'AdminModules\' LIMIT 1)
-			AND a.`view` = 1
-		)');
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 1
+				FROM '._DB_PREFIX_.'access a
+				WHERE id_tab = (
+					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
+					WHERE class_name = \'AdminModules\' LIMIT 1)
+				AND a.`view` = 1)');
+
 		Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-			SELECT id_profile, '.(int)$this->id.', 1, 0
-			FROM '._DB_PREFIX_.'access a
-			WHERE id_tab = (SELECT `id_tab` FROM '._DB_PREFIX_.'tab WHERE class_name = \'AdminModules\' LIMIT 1)
-			AND a.`view` = 0
-		)');
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 0
+				FROM '._DB_PREFIX_.'access a
+				WHERE id_tab = (
+					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
+					WHERE class_name = \'AdminModules\' LIMIT 1)
+				AND a.`view` = 0)');
 
 		// Adding Restrictions for client groups
 		Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
 
 		return true;
+	}
+
+	/**
+	 * Set errors, warning or success message of a module upgrade
+	 *
+	 * @param $upgrade_detail
+	 */
+	private function setUpgradeMessage($upgrade_detail)
+	{
+		// Store information if a module has been upgraded (memory optimization)
+		if ($upgrade_detail['available_upgrade'])
+		{
+			if ($upgrade_detail['success'])
+			{
+				$this->_confirmations[] = $this->l('Current version: ').$this->version;
+				$this->_confirmations[] = $upgrade_detail['number_upgraded'].' '.$this->l('file upgrade applied');
+			}
+			else
+			{
+				if (!$upgrade_detail['number_upgraded'])
+					$this->_errors[] = $this->l('None upgrades have been applied');
+				else
+				{
+					$this->_errors[] = $this->l('Upgraded from: ').$upgrade_detail['upgraded_from'].$this->l(' to ').
+						$upgrade_detail['upgraded_to'];
+					$this->_errors[] = $upgrade_detail['number_upgrade_left'].' '.$this->l('upgrade left');
+				}
+
+				$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
+			}
+		}
+	}
+
+	/**
+	 * Init the upgrade module
+	 *
+	 * @static
+	 * @param $module_name
+	 * @param $module_version
+	 * @return bool
+	 */
+	public static function initUpgradeModule($module_name, $module_version)
+	{
+		// Init cache upgrade details
+		self::$modules_cache[$module_name]['upgrade'] = array(
+			'success' => false, // bool to know if upgrade succeed or not
+			'available_upgrade' => 0, // Number of available module before any upgrade
+			'number_upgraded' => 0, // Number of upgrade done
+			'number_upgrade_left' => 0,
+			'upgrade_file_left' => array(), // List of the upgrade file left
+			'version_fail' => 0, // Version of the upgrade failure
+			'upgraded_from' => 0, // Version number before upgrading anything
+			'upgraded_to' => 0, // Last upgrade applied
+		);
+
+		// Need Upgrade will check and load upgrade file to the moduleCache upgrade case detail
+		return (bool)(Module::isInstalled($module_name) &&
+			Module::needUpgrade($module_name, $module_version));
+	}
+
+	/**
+	 * Run the upgrade for a given module name and version
+	 *
+	 * @return array
+	 */
+	public function runUpgradeModule()
+	{
+		$upgrade = &self::$modules_cache[$this->name]['upgrade'];
+		foreach($upgrade['upgrade_file_left'] as $num => $file_detail)
+		{
+			// Default variable required in the included upgrade file need to be set by default there:
+			// upgrade_version, success_upgrade
+			$upgrade_result = false;
+			include($file_detail['file']);
+
+			// Call the upgrade function if defined
+			if (function_exists($file_detail['upgrade_function']))
+				$upgrade_result = $file_detail['upgrade_function']($this);
+
+			$upgrade['success'] = $upgrade_result;
+
+			// Set detail when an upgrade succeed or failed
+			if ($upgrade_result)
+			{
+				$upgrade['number_upgraded'] += 1;
+				$upgrade['upgraded_to'] = $file_detail['version'];
+
+				unset($upgrade['upgrade_file_left'][$num]);
+			}
+			else
+			{
+				$upgrade['version_fail'] = $file_detail['version'];
+
+				// If any errors, the module is disabled
+				$this->disable();
+				break;
+			}
+		}
+
+		$upgrade['number_upgrade_left'] = count($upgrade['upgrade_file_left']);
+
+		// Update module version in DB with the last succeed upgrade
+		if ($upgrade['upgraded_to'])
+			Db::getInstance()->execute('
+				UPDATE `'._DB_PREFIX_.'module` m
+				SET m.version = \''.bqSQL($upgrade['upgraded_to']).'\'
+				WHERE m.name = \''.bqSQL($this->name).'\'');
+		$this->setUpgradeMessage($upgrade);
+		return $upgrade;
+	}
+
+	/**
+	 * Check if a module need to be upgraded.
+	 * This method modify the module_cache adding an upgrade list file
+	 *
+	 * @static
+	 * @param $module_name
+	 * @param $module_version
+	 * @return bool
+	 */
+	public static function needUpgrade($module_name, $module_version)
+	{
+		$registered_version = Db::getInstance()->getValue('
+			SELECT m.`version` FROM `'._DB_PREFIX_.'module` m
+			WHERE m.`name` = \''.bqSQL($module_name).'\'');
+
+		self::$modules_cache[$module_name]['upgrade']['upgraded_from'] = $registered_version;
+		// Check the version of the module with the registered one and look if any upgrade file exist
+		return (bool)(version_compare($module_version, $registered_version, '>') &&
+			Module::loadUpgradeVersionList($module_name, $module_version, $registered_version));
+	}
+
+	/**
+	 * Load the available list of upgrade of a specified module
+	 * with an associated version
+	 *
+	 * @static
+	 * @param $module_name
+	 * @param $registered_version
+	 * @return bool to know directly if any files have been found
+	 */
+	private static function loadUpgradeVersionList($module_name, $module_version, $registered_version)
+	{
+		$list = array();
+
+		$upgradePath =  _PS_MODULE_DIR_.$module_name.'/'.'upgrade/';
+
+		// Check if folder exist and it could be read
+		if (file_exists($upgradePath) && ($files = scandir($upgradePath)))
+		{
+			// Read each file name
+			foreach ($files as $file)
+				if (!in_array($file, array('.', '..', '.svn')))
+				{
+					$tab = explode('-', $file);
+					$file_version = basename($tab[1], '.php');
+					// Compare version, if minor than actual, we need to upgrade the module
+					if (count($tab) == 2 &&
+						 (version_compare($file_version, $module_version, '<=') &&
+							version_compare($file_version, $registered_version, '>')))
+					{
+						$list[] = array(
+							'file' => $upgradePath.$file,
+							'version' => $file_version,
+							'upgrade_function' => 'upgrade_module_'.str_replace('.', '_', $file_version));
+					}
+				}
+			}
+
+		// Set the list to module cache
+		self::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
+		self::$modules_cache[$module_name]['upgrade']['available_upgrade'] = count($list);
+		return (bool)(count($list));
 	}
 
 	/**
@@ -1398,5 +1589,12 @@ abstract class ModuleCore
 	 * @return array errors
 	 */
 	public function getErrors() { return $this->_errors; }
+
+	/**
+	 * Get module messages confirmation
+	 * @since 1.5.1
+	 * @return array conf
+	 */
+	public function getConfirmations() { return $this->_confirmations; }
 }
 

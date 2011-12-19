@@ -576,7 +576,7 @@ class AdminModulesControllerCore extends AdminController
 						elseif($echo === true)
 							$return = ($method == 'install' ? 12 : 13);
 						elseif ($echo === false)
-							$module_errors[] = array('name' => $name, 'errors' => $module->getErrors());
+							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
 
 						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 						{
@@ -590,17 +590,7 @@ class AdminModulesControllerCore extends AdminController
 			if (count($module_errors))
 			{
 				// If error during module installation, no redirection
-				$html_error = '<ul style="line-height:20px">';
-				foreach ($module_errors as $module_error)
-				{
-					$html_error_description = '';
-					if (count($module_error['errors']) > 0)
-						foreach ($module_error['errors'] as $e) 
-							$html_error_description = '<br />'.$e;
-					$html_error .= '<li><b>- '.$module_error['name'].'</b> : '.$html_error_description.'</li>';
-				}
-				$html_error .= '</ul>';
-
+				$html_error = $this->generateHtmlMessage($module_errors);
 				$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
 			}
 		}
@@ -630,10 +620,31 @@ class AdminModulesControllerCore extends AdminController
 			$this->postProcessCallback();
 	}
 
+	/**
+	 * Generate html errors for a module process
+	 *
+	 * @param $module_errors
+	 * @return string
+	 */
+	private function generateHtmlMessage($module_errors)
+	{
+		$html_error = '';
 
-
-
-
+		if (count($module_errors))
+		{
+			$html_error = '<ul style="line-height:20px">';
+			foreach ($module_errors as $module_error)
+			{
+				$html_error_description = '';
+				if (count($module_error['message']) > 0)
+					foreach ($module_error['message'] as $e)
+						$html_error_description .= '<br />'.$e;
+				$html_error .= '<li><b>- '.$module_error['name'].'</b> : '.$html_error_description.'</li>';
+			}
+			$html_error .= '</ul>';
+		}
+		return $html_error;
+	}
 
 	/*
 	** Display Modules Lists
@@ -792,9 +803,23 @@ class AdminModulesControllerCore extends AdminController
 		$this->initModulesList($modules);
 		$this->nb_modules_total = count($modules);
 
+		$module_errors = array();
+		$module_success = array();
+
 		// Browse modules list
 		foreach ($modules as $km => $module)
 		{
+			// Upgrade Module process, init check if a module could be upgraded
+			if (Module::initUpgradeModule($module->name, $module->version))
+				if ($object = new $module->name())
+				{
+					$object->runUpgradeModule();
+					if ((count($errors_module_list = $object->getErrors())))
+						$module_errors[] = array('name' => $module->name, 'message' => $errors_module_list);
+					else if ((count($conf_module_list = $object->getConfirmations())))
+						$module_success[] = array('name' => $module->name, 'message' => $conf_module_list);
+				}
+
 			// Make modules stats
 			$this->makeModulesStats($module);
 
@@ -831,6 +856,19 @@ class AdminModulesControllerCore extends AdminController
 					'option' => $this->displayModuleOptions($module)
 				)).', ';
 			}
+			unset($object);
+		}
+
+		// Actually used for the report of the upgraded errors
+		if (count($module_errors))
+		{
+			$html = $this->generateHtmlMessage($module_errors);
+			$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s'), $html);
+		}
+		if (count($module_success))
+		{
+			$html = $this->generateHtmlMessage($module_success);
+			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
 		}
 
 		// Init tpl vars for smarty

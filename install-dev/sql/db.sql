@@ -951,6 +951,7 @@ CREATE TABLE `PREFIX_module` (
   `id_module` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(64) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL default '0',
+  `version` VARCHAR(8) NOT NULL,
   PRIMARY KEY  (`id_module`),
   KEY `name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
