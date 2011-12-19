@@ -135,7 +135,7 @@
 							<h3>{l s='Last messages'}</h3>
 							<p class="no_notifs">{l s='No new messages posted on your shop'}</p>
 							<ul id="list_customer_messages_notif"></ul>
-							<p><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">{l s='Show all messages'}</a></p>
+							<p><a href="index.php?tab=AdminCustomerThreads&token={getAdminToken tab='AdminCustomerThreads'}">{l s='Show all messages'}</a></p>
 						</div>
 					</div>
 				{/if}
