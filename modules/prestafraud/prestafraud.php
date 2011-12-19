@@ -201,7 +201,7 @@ class PrestaFraud extends Module
 		}
 			$this->_html .= '</tbody></table></margin>
 			</div>';
-		$modules = Module::getModulesOnDisk();
+		$modules = PaymentModule::getInstalledPaymentModules();
 		$configured_payments = $this->_getConfiguredPayments();
 
 		$this->_html .= '
