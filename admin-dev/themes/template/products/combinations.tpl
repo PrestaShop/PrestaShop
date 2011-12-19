@@ -278,7 +278,7 @@
 					<label>{l s='Available date:'}</label>
 				</td>
 				<td style="padding-bottom:5px;">
-					<input class="datepicker" id="available_date" name="available_date" value="{$available_date}" style="text-align: center;" type="text" />
+					<input class="datepicker" id="available_date_attribute" name="available_date_attribute" value="{$available_date}" style="text-align: center;" type="text" />
 					<p>{l s='The available date when this product is out of stock'}</p>
 					<script type="text/javascript">
 						$(document).ready(function(){
@@ -325,8 +325,8 @@
 					<span style="float: left;">
 						<input type="submit" name="submitProductAttribute" id="submitProductAttribute" value="{l s='Add this combination'}" class="button" onclick="attr_selectall(); this.form.action += '&addproduct&tabs=3';" add="{l s='Add this combination'}" update="{l s='Update this combination'}" />
 					</span>
-					<span id="ResetSpan" style="float: left; margin-left: 8px; display: none;">
-						<input type="reset" name="ResetBtn" id="ResetBtn" onclick="init_elems(); getE('submitProductAttribute').value ='{l s='Add this attributes group'}';getE('id_product_attribute').value = 0; $('#ResetSpan').slideToggle();" class="button" value="{l s='Cancel modification'}" />
+					<span id="ResetSpan" style="float:left;margin-left:8px;display:none;">
+						<input type="reset" name="ResetBtn" id="ResetBtn" onclick="init_elems();getE('id_product_attribute').value = 0;" class="button" value="{l s='Cancel modification'}" />
 					</span>
 					<span class="clear"></span>
 				</td>
