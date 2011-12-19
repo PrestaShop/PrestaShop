@@ -117,7 +117,7 @@ class WarehouseProductLocationCore extends ObjectModel
 	public static function getCollection($id_product)
 	{
 		$collection = new Collection('WarehouseProductLocation');
-		$collection->where('a.id_product = '.(int)$id_product);
+		$collection->where('id_product', '=', $id_product);
 		return $collection;
 	}
 }

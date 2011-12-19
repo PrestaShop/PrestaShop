@@ -264,7 +264,7 @@ class SupplyOrderCore extends ObjectModel
 	public function getEntriesCollection()
 	{
 		$details = new Collection('SupplyOrderDetail');
-		$details->where('a.id_supply_order = '.(int)$this->id);
+		$details->where('id_supply_order', '=', $this->id);
 		return $details;
 	}
 

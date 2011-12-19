@@ -1337,7 +1337,7 @@ class OrderCore extends ObjectModel
 	public function getOrderPaymentCollection()
 	{
 		$order_payments = new Collection('OrderPayment');
-		$order_payments->where('id_order = '.(int)$this->id);
+		$order_payments->where('id_order', '=', $this->id);
 		return $order_payments;
 	}
 
@@ -1426,7 +1426,7 @@ class OrderCore extends ObjectModel
 	public function getInvoicesCollection()
 	{
 		$order_invoices = new Collection('OrderInvoice');
-		$order_invoices->where('id_order = '.(int)$this->id);
+		$order_invoices->where('id_order', '=', $this->id);
 		return $order_invoices;
 	}
 

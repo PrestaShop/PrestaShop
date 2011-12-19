@@ -208,7 +208,7 @@ class CartRuleCore extends ObjectModel
 	{
 		$return = true;
 		$cart_rules = new Collection('CartRule');
-		$cart_rules->where('a.id_customer = '.(int)$id_customer);
+		$cart_rules->where('id_customer', '=', $id_customer);
 		foreach ($cart_rules as $cart_rule)
 			$return &= $cart_rule->delete();
 		return $return;
