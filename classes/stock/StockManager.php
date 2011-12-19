@@ -620,11 +620,12 @@ class StockManagerCore implements StockManagerInterface
 	protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
 	{
 		$stocks = new Collection('Stock');
-		$stocks->where('a.id_product = '.(int)$id_product.' AND a.id_product_attribute = '.(int)$id_product_attribute);
+		$stocks->where('id_product', '=', $id_product);
+		$stocks->where('id_product_attribute', '=', $id_product_attribute);
 		if ($id_warehouse)
-			$stocks->where('a.id_warehouse = '.(int)$id_warehouse);
+			$stocks->where('id_warehouse', '=', $id_warehouse);
 		if ($price_te)
-			$stocks->where('a.price_te = '.(float)$price_te);
+			$stocks->where('price_te', '=', $price_te);
 
 		return $stocks;
 	}

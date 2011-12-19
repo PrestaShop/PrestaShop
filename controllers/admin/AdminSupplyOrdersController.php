@@ -1089,12 +1089,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if (count($ids) <= 0)
 				return;
 
-			$orders = new Collection('SupplyOrder', $id_lang = (int)Context::getContext()->language->id);
-			$orders->where('is_template = 0');
-			$orders->where('id_supply_order IN('.implode(', ', $ids).')');
+			$id_lang = Context::getContext()->language->id;
+			$orders = new Collection('SupplyOrder', $id_lang);
+			$orders->where('is_template', '=', false);
+			$orders->where('id_supply_order', 'in', $ids);
 			$id_warehouse = $this->getCurrentWarehouse();
 			if ($id_warehouse != -1)
-				$orders->where('id_warehouse = '.(int)$id_warehouse);
+				$orders->where('id_warehouse', '=', $id_warehouse);
 			$orders->getAll();
 			$csv = new CSV($orders, $this->l('supply_orders'));
     		$csv->export();

@@ -503,7 +503,7 @@ class OrderInvoiceCore extends ObjectModel
 	public function getOrderPaymentCollection()
 	{
 		$order_payments = new Collection('OrderPayment');
-		$order_payments->where('id_order_invoice = '.(int)$this->id);
+		$order_payments->where('id_order_invoice', '=', $this->id);
 		return $order_payments;
 	}
 }

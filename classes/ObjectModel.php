@@ -300,40 +300,47 @@ abstract class ObjectModelCore
 			}
 
 			// Format field value
-			switch ($data['type'])
-			{
-				case self::TYPE_INT :
-					$fields[$field] = (int)$value;
-				break;
-
-				case self::TYPE_BOOL :
-					$fields[$field] = (int)$value;
-				break;
-
-				case self::TYPE_FLOAT :
-					$fields[$field] = (float)$value;
-				break;
-
-				case self::TYPE_DATE :
-					$fields[$field] = pSQL($value);
-				break;
-
-				case self::TYPE_STRING :
-					$fields[$field] = pSQL($value);
-				break;
-
-				case self::TYPE_HTML :
-					$fields[$field] = pSQL($value, true);
-				break;
-
-				default :
-					if (method_exists($this, 'formatType'.$data['type']))
-						$fields[$field] = $this->{'formatType'.$data['type']}($value);
-				break;
-			}
+			$fields[$field] = ObjectModel::formatValue($value, $data['type']);
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * Format a data
+	 *
+	 * @param mixed $value
+	 * @param int $type
+	 */
+	public static function formatValue($value, $type, $with_quotes = false)
+	{
+		switch ($type)
+		{
+			case self::TYPE_INT :
+				return (int)$value;
+
+			case self::TYPE_BOOL :
+				return (int)$value;
+
+			case self::TYPE_FLOAT :
+				return (float)$value;
+
+			case self::TYPE_DATE :
+				if ($with_quotes)
+					return '\''.pSQL($value).'\'';
+				return pSQL($value);
+
+			case self::TYPE_HTML :
+				if ($with_quotes)
+					return '\''.pSQL($value).'\'';
+				return pSQL($value);
+
+			case self::TYPE_STRING :
+			default :
+				if ($with_quotes)
+					return '\''.pSQL($value).'\'';
+				return pSQL($value);
+		}
 	}
 
 	/**
@@ -1198,7 +1205,7 @@ abstract class ObjectModelCore
 		$reflection = new ReflectionClass($class);
 		$definition = $reflection->getStaticPropertyValue('definition');
 		if ($field)
-			return isset($definition[$field]) ? $definition[$field] : null;
+			return isset($definition['fields'][$field]) ? $definition['fields'][$field] : null;
 		return $definition;
 	}
 

@@ -681,7 +681,8 @@ class CategoryCore extends ObjectModel
 			$id_lang = Context::getContext()->language->id;
 
 		$categories = new Collection('Category', $id_lang);
-		$categories->where((int)$this->nleft.' < nleft AND nright < '.(int)$this->nright);
+		$categories->where('nleft', '>', $this->nleft);
+		$categories->where('nright', '<', $this->nright);
 		return $categories;
 	}
 
