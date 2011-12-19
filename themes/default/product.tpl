@@ -414,7 +414,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 				</span>
 				</p>
 			{/if}
-			{if $packItems|@count}
+			{if $packItems|@count && $productPrice < $product->getNoPackPrice()}
 				<p class="pack_price">{l s='instead of'} <span style="text-decoration: line-through;">{convertPrice price=$product->getNoPackPrice()}</span></p>
 				<br class="clear" />
 			{/if}
