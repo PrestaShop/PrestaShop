@@ -529,7 +529,7 @@ select optgroup option {
 	color:#4F8A10;
 	padding: 5px 5px 5px 40px;
 	border-radius:3px;
-	min-height:32px;	
+	min-height:32px;
 }
 
 
@@ -1022,25 +1022,25 @@ table.permissions td {
 	#header_shoplist select.shopList option{
 		padding: 2px;
 	}
-	
+
 		#header_shoplist select.shopList .first{
 			font-weight: bold;
 			background-color: #408BD5;
 			color: #ffffff;
 		}
-		
+
 		#header_shoplist select.shopList .group{
 			font-weight: bold;
 			font-style: italic;
 			padding-left: 10px;
 			background-color: #C6DEFC;
 		}
-		
+
 		#header_shoplist select.shopList .shop{
 			padding-left: 20px;
 			background-color: #EAF2FC;
 		}
-		
+
 .multishop_info{
 	margin-top: 4px;
 	margin-bottom: 10px;
@@ -1236,7 +1236,7 @@ html[xmlns] .clearfix {
 	font-size: 8pt;
 }
 
-.table_info{	
+.table_info{
 	width: 283px;
 	float: left;
 	padding: 0;
@@ -1252,7 +1252,7 @@ html[xmlns] .clearfix {
 		color:000;
 		margin:0;
 		padding:6px;
- 		text-shadow:0 1px 0 #fff; 
+ 		text-shadow:0 1px 0 #fff;
 		display:block;
 		background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 		background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;}
@@ -1381,7 +1381,7 @@ html[xmlns] .clearfix {
 	padding-left: 15px;
 	font-size: 12pt;
 	font-weight:normal;
-	
+
 }
 
 .admin-box2{
@@ -1855,7 +1855,7 @@ div.progressBarImage
 	font-weight:bold;
 	color:green;
 }
-#products_part #products_found {	
+#products_part #products_found {
 	display:none;
 }
 #vouchers_part #voucher_list {
@@ -1884,7 +1884,7 @@ div.progressBarImage
 }
 ul.connectedSortable
 {
-	padding-left: 0;	
+	padding-left: 0;
 }
 ul.connectedSortable li.module_list {
 	margin: 0 5px 5px 5px;
@@ -2020,3 +2020,5 @@ div#scrollTop a:hover{
 .current-edit { background-color: rgb(232, 237, 194); }
 
 .edit-note { width: 98%; height: 100px; }
+
+.payment_information { background-color: #BDE5F8 }

@@ -236,7 +236,48 @@
 									{l s='No invoice'}
 								{/if}
 								</td>
-								<td></td>
+								<td class="right">
+									<a href="#" class="open_payment_information"><img src="../img/admin/details.gif" title="{l s='See payment informations'}" alt="{l s='See payment informations'}" /></a>
+								</td>
+							</tr>
+							<tr class="payment_information" style="display: none;">
+								<td colspan="6">
+									<p>
+										<b>{l s='Card Number:'}</b>&nbsp;
+										{if $payment->card_number}
+											{$payment->card_number}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+
+									<p>
+										<b>{l s='Card Brand:'}</b>&nbsp;
+										{if $payment->card_brand}
+											{$payment->card_brand}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+
+									<p>
+										<b>{l s='Card Expiration:'}</b>&nbsp;
+										{if $payment->card_expiration}
+											{$payment->card_expiration}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+
+									<p>
+										<b>{l s='Card Holder:'}</b>&nbsp;
+										{if $payment->card_holder}
+											{$payment->card_holder}
+										{else}
+											<i>{l s='Not defined'}</i>
+										{/if}
+									</p>
+								</td>
 							</tr>
 							{foreachelse}
 							<tr>
