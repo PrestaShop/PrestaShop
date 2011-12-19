@@ -1588,6 +1588,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`id_currency` INT UNSIGNED NOT NULL,
 	`id_country` INT UNSIGNED NOT NULL,
 	`id_group` INT UNSIGNED NOT NULL,
+	`id_customer` INT UNSIGNED NOT NULL,
 	`id_product_attribute` INT UNSIGNED NOT NULL,
 	`price` DECIMAL(20, 6) NOT NULL,
 	`from_quantity` mediumint(8) UNSIGNED NOT NULL,
@@ -1596,7 +1597,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`from` DATETIME NOT NULL,
 	`to` DATETIME NOT NULL,
 	PRIMARY KEY(`id_specific_price`),
-	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`),
+	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
 	KEY (`id_specific_price_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
