@@ -31,6 +31,7 @@ class SpecificPriceCore extends ObjectModel
 	public	$id_specific_price_rule = 0;
 	public	$id_product_attribute;
 	public	$id_shop;
+	public	$id_group_shop;
 	public	$id_currency;
 	public	$id_country;
 	public	$id_group;

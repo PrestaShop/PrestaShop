@@ -104,7 +104,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Adress:'),
+					'label' => $this->l('Address:'),
 					'name' => 'address',
 					'size' => 100,
 					'maxlength' => 128,
@@ -112,7 +112,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Adress:').' (2)',
+					'label' => $this->l('Address:').' (2)',
 					'name' => 'address2',
 					'size' => 100,
 					'maxlength' => 128,
