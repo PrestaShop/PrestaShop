@@ -43,6 +43,8 @@
 			$('#ppackdiv').show();
 		}
 
+		$('div.ppack').hide();
+
 		$('#curPackItemName').autocomplete('ajax_products_list.php', {
 			delay: 100,
 			minChars: 1,
@@ -102,6 +104,7 @@
 
 		$('#curPackItemId').val('');
 		$('#curPackItemName').val('');
+		$('p.listOfPack').show();
 
 		$('#curPackItemName').setOptions({
 			extraParams: {
@@ -172,22 +175,37 @@
 		</td>
 		<td>
 			<div id="ppackdiv" {if !$is_pack}style="display: none;"{/if}>
-				<div id="divPackItems">
-				{foreach from=$product->packItems item=packItem}
-					{$packItem->pack_quantity} x {$packItem->name}<span onclick="delPackItem({$packItem->id});" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />
-				{/foreach}
-				</div>
-				<input type="hidden" name="inputPackItems" id="inputPackItems" value="{$input_pack_items}" />
 
-				<input type="hidden" name="namePackItems" id="namePackItems" value="{$input_namepack_items}" />
+				<label for="curPackItemName" style="width:560px;text-align:left;">
+					{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
+				</label><br /><br />
 
-				<input type="hidden" size="2" id="curPackItemId" />
-
-				<p class="clear">{l s='Begin typing the first letters of the product name, then select the product from the drop-down list:'}
-				<br />{l s='You cannot add downloadable products to a pack.'}</p>
 				<input type="text" size="25" id="curPackItemName" />
 				<input type="text" name="curPackItemQty" id="curPackItemQty" value="1" size="1" />
-				<span onclick="addPackItem();" style="cursor: pointer;"><img src="../img/admin/add.gif" alt="{l s='Add an item to the pack'}" title="{l s='Add an item to the pack'}" /></span>
+				<input type="hidden" name="inputPackItems" id="inputPackItems" value="{$input_pack_items}" />
+				<input type="hidden" name="namePackItems" id="namePackItems" value="{$input_namepack_items}" />
+				<input type="hidden" size="2" id="curPackItemId" />
+
+				<span onclick="addPackItem();" class="button" style="cursor: pointer;">
+					{l s='Add this product in the pack'}
+				</span>
+
+				<p class="product_description listOfPack" style="display:{if count($product->packItems) > 0}block{else}none{/if};text-align: left;">
+					<br />{l s='List of products for that pack:'}
+				</p>
+
+				<div id="divPackItems">
+					{foreach from=$product->packItems item=packItem}
+						{$packItem->pack_quantity} x {$packItem->name}
+						<span onclick="delPackItem({$packItem->id});" style="cursor: pointer;">
+							<img src="../img/admin/delete.gif" />
+						</span><br />
+					{/foreach}
+				</div>
+
+				<br />
+				<p class="hint" style="display:block">{l s='You cannot add downloadable products to a pack.'}</p>
+
 			</td>
 		</div>
 	</tr>
