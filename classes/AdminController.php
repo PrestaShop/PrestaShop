@@ -1231,10 +1231,7 @@ class AdminControllerCore extends Controller
 		{
 			if (Tab::checkTabRights($tab['id_tab']) === true)
 			{
-				if ($tab['name'] == 'Stock'
-					&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0
-					&& (int)$product['advanced_stock_management'] == 1
-				)
+				if ($tab['name'] == 'Stock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 				{
 					unset($tabs[$index]);
 					continue;
