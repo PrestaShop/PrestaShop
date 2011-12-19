@@ -260,13 +260,17 @@ class WebserviceRequestCore
 			'weight_ranges' => array('description' => 'Weight ranges', 'class' => 'RangeWeight'),
 			'zones' => array('description' => 'The Countries zones','class' => 'Zone'),
 			'employees' => array('description' => 'The Employees', 'class' => 'Employee'),
-			'stock_movements' => array('description' => 'Stock movements management', 'class' => 'StockMvt', 'forbidden_method' => array('PUT')),
 			'search' => array('description' => 'Search', 'specific_management' => true, 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
-			'stock_movement_reasons' => array('description' => 'The stock movement reason', 'class' => 'StockMvtReason'),
-			'content_management_system' => array('description' => 'Content management system', 'class' => 'CMS'),			
+			'content_management_system' => array('description' => 'Content management system', 'class' => 'CMS'),
 			'shops' => array('description' => 'Shops from multi-shop feature', 'class' => 'Shop'),
 			'shop_groups' => array('description' => 'Shop groups from multi-shop feature', 'class' => 'GroupShop'),
 			'taxes' => array('description' => 'The tax rate', 'class' => 'Tax'),
+			'stock_movements' => array('description' => 'Stock movements', 'class' => 'StockMvtWS', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'stock_movement_reasons' => array('description' => 'Stock movement reason', 'class' => 'StockMvtReason'),
+			'warehouses' => array('description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'stocks' => array('description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'available_quantities' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'warehouse_product_locations' => array('description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 		);
 		ksort($resources);
 		return $resources;
@@ -309,7 +313,7 @@ class WebserviceRequestCore
 		$arr_return = $this->specificPriceCalculation($parameters);
 		return $arr_return;
 	}
-	
+
 	public function specificPriceCalculation($parameters)
 	{
 		$arr_return = array();
@@ -386,7 +390,7 @@ class WebserviceRequestCore
 		$this->wsUrl = Tools::getHttpHost(true).__PS_BASE_URI__.'api/';
 		// set the output object which manage the content and header structure and informations
 		$this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
-	
+
 		// Error handler
 		set_error_handler(array($this, 'webserviceErrorHandler'));
 		ini_set('html_errors', 'off');

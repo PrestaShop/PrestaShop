@@ -57,8 +57,6 @@ class StockMvtReasonCore extends ObjectModel
 			'deleted' => 	array('type' => self::TYPE_BOOL),
 			'date_add' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-
-			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
 		),
 	);
@@ -66,6 +64,9 @@ class StockMvtReasonCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movement_reasons',
 		'objectNodeName' => 'stock_movement_reason',
+		'fields' => array(
+			'sign' => array(),
+		),
 	);
 
 	public static function getStockMvtReasons($id_lang, $sign = null)

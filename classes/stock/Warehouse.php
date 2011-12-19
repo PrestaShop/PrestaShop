@@ -77,6 +77,40 @@ class WarehouseCore extends ObjectModel
 	);
 
 	/**
+	 * @see ObjectModel::$webserviceParameters
+	 */
+ 	protected $webserviceParameters = array(
+ 		'fields' => array(
+ 			'id_address' => array('xlink_resource' => 'addresses'),
+ 			'id_employee' => array('xlink_resource' => 'employees'),
+ 			'id_currency' => array('xlink_resource' => 'currencies'),
+ 			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
+ 			'deleted' => array(),
+ 		),
+ 		'associations' => array(
+			'stocks' => array(
+				'resource' => 'stock',
+				'fields' => array(
+					'id' => array(),
+				),
+			),
+			'carriers' => array(
+				'resource' => 'carrier',
+				'fields' => array(
+					'id' => array(),
+				),
+			),
+			'shops' => array(
+				'resource' => 'shop',
+				'fields' => array(
+					'id' => array(),
+					'name' => array(),
+				),
+			),
+		),
+ 	);
+
+	/**
 	 * Gets the shops (id and name) associated to the current warehouse
 	 *
 	 * @return array
@@ -419,6 +453,67 @@ class WarehouseCore extends ObjectModel
 		$query->from('warehouse');
 		$query->where('id_warehouse = '.(int)$id_warehouse);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * Webservice : gets the value of the warehouse
+	 * @return int
+	 */
+	public function getWsStockValue()
+	{
+		return $this->getStockValue();
+	}
+
+	/**
+	 * Webservice : gets the ids stock associated to this warehouse
+	 * @return array
+	 */
+	public function getWsStocks()
+	{
+		$query = new DbQuery();
+		$query->select('s.id_stock as id');
+		$query->from('stock', 's');
+		$query->where('s.id_warehouse ='.(int)$this->id);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
+	/**
+	 * Webservice : gets the ids shops associated to this warehouse
+	 * @return array
+	 */
+	public function getWsShops()
+	{
+		$query = new DbQuery();
+		$query->select('ws.id_shop as id, s.name');
+		$query->from('warehouse_shop', 'ws');
+		$query->leftJoin('shop', 's', 's.id_shop = ws.id_shop');
+		$query->where($this->def['primary'].' = '.(int)$this->id);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		return $res;
+	}
+
+	/**
+	 * Webservice : gets the ids carriers associated to this warehouse
+	 * @return array
+	 */
+	public function getWsCarriers()
+	{
+		$ids_carrier = array();
+
+		$query = new DbQuery();
+		$query->select('wc.id_carrier as id');
+		$query->from('warehouse_carrier', 'wc');
+		$query->where($this->def['primary'].' = '.(int)$this->id);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		foreach ($res as $carriers)
+			foreach ($carriers as $carrier)
+				$ids_carrier[] = $carrier;
+
+		return $ids_carrier;
 	}
 
 }
