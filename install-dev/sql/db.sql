@@ -1091,6 +1091,8 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_price` decimal(20,6) NOT NULL default '0.000000',
   `reduction_percent` DECIMAL(10, 2) NOT NULL default '0.00',
   `reduction_amount` DECIMAL(20, 6) NOT NULL default '0.000000',
+  `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL default '0.000000',
+  `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL default '0.000000',
   `group_reduction` DECIMAL(10, 2) NOT NULL default '0.000000',
   `product_quantity_discount` decimal(20,6) NOT NULL default '0.000000',
   `product_ean13` varchar(13) default NULL,
