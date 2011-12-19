@@ -817,7 +817,7 @@ class AdminModulesControllerCore extends AdminController
 				$modules[$km]->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
 				$modules[$km]->options['install_url'] = self::$currentIndex.'&install='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
 				$modules[$km]->options['uninstall_url'] = self::$currentIndex.'&uninstall='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name);
-				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'if(confirm(\''.addslashes($module->confirmUninstall).'\')) ').'document.location.href=\''.$modules[$km]->options['uninstall_url'].'\'' : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
+				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
 				if (Tools::getValue('module_name') == $module->name && (int)Tools::getValue('conf') > 0)
 					$modules[$km]->message = $this->_conf[(int)Tools::getValue('conf')];
 
