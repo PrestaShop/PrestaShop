@@ -43,7 +43,7 @@ class AdminShopControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Shop'),
 				'width' => 'auto',
-				'filter_key' => 'b!name'
+				'filter_key' => 'a!name'
 			),
 			'group_shop_name' => array(
 				'title' => $this->l('Group Shop'),
