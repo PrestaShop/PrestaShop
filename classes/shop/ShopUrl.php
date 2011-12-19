@@ -93,7 +93,7 @@ class ShopUrlCore extends ObjectModel
 	{
 		$urls = new Collection('ShopUrl');
 		if ($id_shop)
-			$urls->where('id_shop = '.(int)$id_shop);
+			$urls->where('id_shop', '=', $id_shop);
 		return $urls;
 	}
 

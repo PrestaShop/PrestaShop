@@ -94,7 +94,7 @@ class OrderPaymentCore extends ObjectModel
 	public static function getByInvoiceId($id_invoice)
 	{
 		$payments = new Collection('OrderPayment');
-		$payments->where('a.id_order_invoice = '.(int)$id_invoice);
+		$payments->where('id_order_invoice', '=', $id_invoice);
 		return $payments;
 	}
 }

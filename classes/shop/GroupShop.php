@@ -79,9 +79,9 @@ class GroupShopCore extends ObjectModel
 	public static function getGroupShops($active = true)
 	{
 		$groups = new Collection('GroupShop');
-		$groups->where('deleted = 0');
+		$groups->where('deleted', '=', false);
 		if ($active)
-			$groups->where('active = 1');
+			$groups->where('active', '=', true);
 		return $groups;
 	}
 

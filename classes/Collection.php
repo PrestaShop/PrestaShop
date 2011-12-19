@@ -72,6 +72,10 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	protected $total;
 
+	protected $fields = array();
+	protected $alias = array();
+	protected $alias_iterator = 0;
+
 	/**
 	 * @param string $classname
 	 * @param int $id_lang
@@ -87,53 +91,122 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 		else if (!isset($this->definition['primary']))
 			throw new PrestashopException('Miss primary in definition for class '.$this->classname);
 
+		$alias = $this->generateAlias();
 		$this->query = new DbQuery();
-		$this->query->select('a.*');
-		$this->query->from($this->definition['table'], 'a');
+		$this->query->select($alias.'.*');
+		$this->query->from($this->definition['table'], $alias);
 
 		// If multilang, create association to lang table
+		// @todo create virtual association with lang in ObjectModel::getDefinition()
 		if (isset($this->definition['multilang']) && $this->definition['multilang'])
 		{
-			$this->query->select('b.*');
-			$this->query->leftJoin($this->definition['table'].'_lang', 'b', 'a.'.$this->definition['primary'].' = b.'.$this->definition['primary']);
+			$lang_alias = $this->generateAlias('@lang');
+			$this->query->select($lang_alias.'.*');
+			$this->query->leftJoin($this->definition['table'].'_lang', $lang_alias, $alias.'.'.$this->definition['primary'].' = '.$lang_alias.'.'. $this->definition['primary']);
 			if ($this->id_lang)
-				$this->query->where('b.id_lang = '.(int)$this->id_lang);
+				$this->query->where($lang_alias.'.id_lang = '.(int)$this->id_lang);
 		}
 	}
 
 	/**
 	 * Add WHERE restriction on query
 	 *
-	 * @param string $str
+	 * @param string $field Field name
+	 * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
+	 * @param mixed $value
 	 * @return Collection
 	 */
-	public function where($str)
+	public function where($field, $operator, $value)
 	{
-		$this->query->where($str);
+		// Create WHERE clause with an array value (IN, NOT IN)
+		if (is_array($value))
+		{
+			switch (strtolower($operator))
+			{
+				case '=' :
+				case 'in' :
+					$this->query->where($this->parseField($field).' IN('.implode(', ', $this->formatValue($value, $field)));
+				break;
+
+				case '!=' :
+				case '<>' :
+				case 'notin' :
+					$this->query->where($this->parseField($field).' NOT IN('.implode(', ', $this->formatValue($value, $field)));
+				break;
+
+				default :
+					throw new PrestashopException('Operator not supported for array value');
+			}
+		}
+		// Create WHERE clause
+		else
+		{
+			switch (strtolower($operator))
+			{
+				case '=' :
+				case '!=' :
+				case '<>' :
+				case '>' :
+				case '>=' :
+				case '<' :
+				case '<=' :
+				case 'like' :
+				case 'regexp' :
+					$this->query->where($this->parseField($field).' '.$operator.' '.$this->formatValue($value, $field));
+				break;
+
+				case 'notlike' :
+					$this->query->where($this->parseField($field).' NOT LIKE '.$this->formatValue($value, $field));
+				break;
+
+				case 'notregexp' :
+					$this->query->where($this->parseField($field).' NOT REGEXP '.$this->formatValue($value, $field));
+				break;
+
+				default :
+					throw new PrestashopException('Operator not supported');
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add WHERE restriction on query using real SQL syntax
+	 *
+	 * @param string $sql
+	 */
+	public function sqlWhere($sql)
+	{
+		$this->query->where($this->parseFields($sql));
 		return $this;
 	}
 
 	/**
 	 * Add ORDER BY restriction on query
 	 *
-	 * @param string $str
+	 * @param string $field Field name
+	 * @param string $order asc|desc
 	 * @return Collection
 	 */
-	public function orderBy($str)
+	public function orderBy($field, $order = 'asc')
 	{
-		$this->query->orderBy($str);
+		$order = strtolower($order);
+		if ($order != 'asc' && $order != 'desc')
+			throw new PrestashopException('Order must be asc or desc');
+		$this->query->orderBy($this->parseField($field).' '.$order);
 		return $this;
 	}
 
 	/**
 	 * Add GROUP BY restriction on query
 	 *
-	 * @param string $str
+	 * @param string $field Field name
 	 * @return Collection
 	 */
-	public function groupBy($str)
+	public function groupBy($field)
 	{
-		$this->query->groupBy($str);
+		$this->query->groupBy($this->parseField($field));
 		return $this;
 	}
 
@@ -283,5 +356,95 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	{
 		$this->getAll();
 		unset($this->results[$offset]);
+	}
+
+	/**
+	 * Parse all fields with {field} syntax in a string
+	 *
+	 * @param string $str
+	 * @return string
+	 */
+	protected function parseFields($str)
+	{
+		preg_match_all('#\{(([a-z0-9_]+\.)*[a-z0-9_]+)\}#i', $str, $m);
+		for ($i = 0, $total = count($m[0]); $i < $total; $i++)
+			$str = str_replace($m[0][$i], $this->parseField($m[1][$i]), $str);
+		return $str;
+	}
+
+	/**
+	 * Replace a field with its SQL version (E.g. manufacturer.name with a2.name)
+	 *
+	 * @param string $field Field name
+	 * @return string
+	 */
+	protected function parseField($field)
+	{
+		$info = $this->getFieldInfo($field);
+		return $info['alias'].'.`'.$info['name'].'`';
+	}
+
+	/**
+	 * Format a value with the type of the given field
+	 *
+	 * @param mixed $value
+	 * @param string $field Field name
+	 */
+	protected function formatValue($value, $field)
+	{
+		$info = $this->getFieldInfo($field);
+		if (is_array($value))
+		{
+			$results = array();
+			foreach ($value as $item)
+				$results[] = ObjectModel::formatValue($item, $info['type'], true);
+			return $results;
+		}
+		return ObjectModel::formatValue($value, $info['type'], true);
+	}
+
+	/**
+	 * Obtain some informations on a field (alias, name, type, etc.)
+	 *
+	 * @param string $field Field name
+	 * @return array
+	 */
+	protected function getFieldInfo($field)
+	{
+		if (!isset($this->fields[$field]))
+		{
+			$split = explode('.', $field);
+			$association = '';
+			$definition = ObjectModel::getDefinition($this->classname);
+			for ($i = 0, $total_association = count($split) - 1; $i < $total_association; $i++)
+			{
+				// @todo association
+			}
+
+			$fieldname = $split[$i];
+			if (!isset($definition['fields'][$fieldname]))
+				throw new PrestashopException('Field '.$fieldname.' not found in class '.$this->classname);
+
+			$this->fields[$field] = array(
+				'name' => 			$fieldname,
+				'association' =>	$association,
+				'alias' =>			$this->generateAlias($association),
+				'type' =>			$definition['fields'][$fieldname]['type'],
+			);
+		}
+		return $this->fields[$field];
+	}
+
+	/**
+	 * Generate uniq alias from association name
+	 *
+	 * @param string $association Use empty association for alias on current table
+	 * @return string
+	 */
+	protected function generateAlias($association = '')
+	{
+		if (!isset($this->alias[$association]))
+			$this->alias[$association] = 'a'.$this->alias_iterator++;
+		return $this->alias[$association];
 	}
 }
