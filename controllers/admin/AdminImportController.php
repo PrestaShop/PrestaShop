@@ -46,7 +46,7 @@ class AdminImportControllerCore extends AdminController
 
 	public $available_fields = array();
 
-	public static $required_fields = array('name');
+	public $required_fields = array('name');
 
 	public static $default_values = array();
 
@@ -89,7 +89,7 @@ class AdminImportControllerCore extends AdminController
 		switch ((int)Tools::getValue('entity'))
 		{
 			case $this->entities[$this->l('Combinations')]:
-				self::$required_fields = array(
+				$this->required_fields = array(
 					'id_product',
 					'group',
 					'attribute'
@@ -241,7 +241,7 @@ class AdminImportControllerCore extends AdminController
 
 			case $this->entities[$this->l('Customers')]:
 				//Overwrite required_fields AS only email is required whereas other entities
-				self::$required_fields = array('email', 'passwd', 'lastname', 'firstname');
+				$this->required_fields = array('email', 'passwd', 'lastname', 'firstname');
 
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')),
@@ -269,7 +269,7 @@ class AdminImportControllerCore extends AdminController
 
 			case $this->entities[$this->l('Addresses')]:
 				//Overwrite required_fields
-				self::$required_fields = array(
+				$this->required_fields = array(
 					'lastname',
 					'firstname',
 					'address1',
@@ -393,7 +393,7 @@ class AdminImportControllerCore extends AdminController
 		$nb_table = ceil($nb_column / MAX_COLUMNS);
 
 		$res = array();
-		foreach (self::$required_fields as $elem)
+		foreach ($this->required_fields as $elem)
 			$res[] = '\''.$elem.'\'';
 
 		$data = array();
