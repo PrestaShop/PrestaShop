@@ -51,6 +51,11 @@ ALTER TABLE `PREFIX_order_invoice` ADD `note` TEXT NOT NULL AFTER `total_wrappin
 ALTER TABLE `PREFIX_order_state` ADD `paid` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `shipped`;
 UPDATE `PREFIX_order_state` SET `paid` = 1 WHERE `id_order_state` IN (2, 3, 4, 5, 9, 12);
 
+/* SPECIFIC PRICE */
+ALTER TABLE `PREFIX_specific_price` ADD `id_customer` INT UNSIGNED NOT NULL AFTER `id_group`;
+ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product` ,
+ADD INDEX `id_product` (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`);
+
 /************************
  * STOCK MANAGEMENT
 *************************/
