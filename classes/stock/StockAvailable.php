@@ -90,7 +90,6 @@ class StockAvailableCore extends ObjectModel
 			$query->where('id_product_attribute = '.(int)$id_product_attribute);
 
 		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 
@@ -259,19 +258,44 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_product_attribute))
 			$id_product_attribute = 0;
 
-		$query = new DbQuery();
-		$query->select('SUM(quantity)');
-		$query->from('stock_available');
+		// if product is a pack
+		if (Pack::isPack($id_product))
+		{
+			$items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
 
-		// if null, it's a product without attributes
-		if (!is_null($id_product))
-			$query->where('id_product = '.(int)$id_product);
-
-		$query->where('id_product_attribute = '.(int)$id_product_attribute);
-
-		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-
-		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+			// gets an array of quantities (quantity for the product / quantity in pack)
+			$quantities = array();
+			foreach ($items as $item)
+				if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
+					$quantities[] = Product::getQuantity($item->id) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+					
+			// gets the minimum
+			$quantity = $quantities[0];
+			foreach ($quantities as $value)
+			{
+				if ($quantity > $value)
+					$quantity = $value;
+			}
+			
+			// returns the number of pack available
+			return $quantity;
+		}
+		else // else
+		{
+			$query = new DbQuery();	
+			$query->select('SUM(quantity)');
+			$query->from('stock_available');
+	
+			// if null, it's a product without attributes
+			if (!is_null($id_product))
+				$query->where('id_product = '.(int)$id_product);
+	
+			$query->where('id_product_attribute = '.(int)$id_product_attribute);
+	
+			$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
+			
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		}
 	}
 
 	/**
