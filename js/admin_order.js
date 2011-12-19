@@ -736,6 +736,15 @@ function init()
 		else
 			$('select[name=discount_invoice]').attr('disabled', false);
 	});
+
+	$('.open_payment_information').click(function() {
+		if ($(this).parent().parent().next('tr').is(':visible'))
+			$(this).parent().parent().next('tr').hide();
+		else
+			$(this).parent().parent().next('tr').show();
+
+		return false;
+	});
 }
 
 
