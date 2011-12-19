@@ -81,6 +81,12 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $reduction_amount;
 
+    /** @var float */
+    public $reduction_amount_tax_excl;
+
+    /** @var float */
+    public $reduction_amount_tax_incl;
+
 	/** @var float */
 	public $group_reduction;
 
@@ -129,6 +135,12 @@ class OrderDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
+    /** @var float additional shipping price tax excl */
+    public $total_shipping_price_tax_excl;
+
+    /** @var float additional shipping price tax incl */
+    public $total_shipping_price_tax_incl;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -150,6 +162,8 @@ class OrderDetailCore extends ObjectModel
 			'product_price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'reduction_percent' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'reduction_amount' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'reduction_amount_tax_incl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'reduction_amount_tax_excl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'group_reduction' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'product_quantity_discount' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'product_ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
@@ -397,6 +411,8 @@ class OrderDetailCore extends ObjectModel
 					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
 					$this->reduction_amount = (float)(!$this->specificPrice['id_currency'] ?
 						$price : $this->specificPrice['reduction']);
+                    $this->reduction_amount_tax_incl = $this->reduction_amount;
+                    $this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
 			}
 	}
 
@@ -425,6 +441,10 @@ class OrderDetailCore extends ObjectModel
 		$this->unit_price_tax_excl = (float)$product['price'];
 		$this->total_price_tax_incl = (float)$product['total_wt'];
 		$this->total_price_tax_excl = (float)$product['total'];
+
+        $this->purchase_supplier_price = (float)$product['wholesale_price'];
+        if ($product['id_supplier'] > 0)
+            $this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute']);
 
 		$this->setSpecificPrice($order);
 
@@ -490,6 +510,7 @@ class OrderDetailCore extends ObjectModel
 
 		if ($use_taxes)
 			$this->setProductTax($order, $product);
+        $this->setShippingCost($order, $product);
 		$this->setDetailProductPrice($order, $cart, $product);
 
 		// Set order invoice id
@@ -535,5 +556,24 @@ class OrderDetailCore extends ObjectModel
 	{
 		return $this->outOfStock;
 	}
+
+    /**
+     * Set the additional shipping information
+     *
+     * @param Order $order
+     * @param $product
+     */
+    public function setShippingCost(Order $order, $product)
+    {
+        $tax_rate = 0;
+
+        $carrier = OrderInvoice::getCarrier((int)$this->id_order_invoice);
+        if (isset($carrier) && Validate::isLoadedObject($carrier))
+            $tax_rate = $carrier->getTaxesRate(new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
+        $this->total_shipping_price_tax_excl = (float) $product['additional_shipping_cost'];
+        $this->total_shipping_price_tax_incl = (float) ($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
+        $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, 2);
+    }
 }
 
