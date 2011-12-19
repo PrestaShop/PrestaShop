@@ -111,11 +111,6 @@ $_MODULE['<{mondialrelay}prestashop>mondialrelay_0dbe844fb964d5eca2f51be724e4329
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c6aefd5e2191e1210a2f50416812b517'] = 'URL du suivi';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_61e70b58e38fd01daa254f44c4fa264b'] = 'Nombre de Points Relais';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_bba366864d25056c941b72f18ef79e7c'] = 'Cette erreur n\'est pas mentionnée:';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_e0626222614bdee31951d84c64e5e9ff'] = 'Choisir';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_91b442d385b54e1418d81adc34871053'] = 'Sélectionné';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_ef2a1f426c2c289ed5986c7636a5d696'] = 'Merci de choisir un point relay';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_80a0c205cd57b22fca7f174253870300'] = 'Heures d\'ouvertures';
-$_MODULE['<{mondialrelay}prestashop>mondialrelay_2b56b60f878922093facd42284848a0c'] = 'Plus de détails';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_81b7b4587a2a3ea7a0d6bb1df3fbba54'] = 'Livraison à';
 $_MODULE['<{mondialrelay}prestashop>orderdetail_c2d05abc7f5ebdc72b6656df35038b43'] = 'Suivre mon colis sur le site de Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mrcreatetickets_a1c3470a944b9625cfb924fd15c8bdbf'] = 'Veuillez choisir au moins une commande';

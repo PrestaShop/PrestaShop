@@ -9,7 +9,7 @@ $_MODULE['<{authorizeaim}prestashop>authorizeaim_6a26f548831e6a8c26bfbbd9f6ec61e
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_11a4b229c0e206b831f729572618553f'] = 'Dans votre panneau d\'aministration PrestaShop';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_bc6781f2b59d4e973bd0075baab62a40'] = 'Indiquez le login avec celui fourni par Authorize.net';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_95eb440b753d6505aad5c3f72b50eec9'] = 'Indiquez la clé avec la clé de transaction indiquée par Authorize.net';
-$_MODULE['<{authorizeaim}prestashop>authorizeaim_a7180ba675bb293f415aab47e52a1732'] = 'Attention: votre site doit posséder un certificat SSL pour utiliser le module Authorize.net AIM. Vous êtes responsable de la sécurité des informations bancaires de vos clients. PrestaShop ne peut être tenu responsable en cas de problème de sécurité sur votre site.';
+$_MODULE['<{authorizeaim}prestashop>authorizeaim_a7180ba675bb293f415aab47e52a1732'] = 'Attention : votre site doit posséder un certificat SSL pour utiliser le module Authorize.net AIM. Vous êtes responsable de la sécurité des informations bancaires de vos clients. PrestaShop ne peut être tenu responsable en cas de problème de sécurité sur votre site.';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_f4f70727dc34561dfde1a3c529b6205c'] = 'Parametres';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_f3ef34226d51e9ca88eaa2f20d7ffb91'] = 'Login';
 $_MODULE['<{authorizeaim}prestashop>authorizeaim_897356954c2cd3d41b221e3f24f99bba'] = 'Clé';

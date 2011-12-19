@@ -8,6 +8,8 @@ $_MODULE['<{dateofdelivery}prestashop>beforecarrier_b7ab10d227790bd29e51c1845153
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_b0f76e26cffaf27784d901a64f39593e'] = 'Date de livraison';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_98110868b266d63c3bacdac4430169cf'] = 'Afficher une date approximative de livraison';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_a39df5444246aeb081729db7e17f51bc'] = 'Configuration: Date de livraison';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_8e8fe67c419e34287373a91cc6cab1de'] = 'La date approximative de livraison est entre :';
+$_MODULE['<{dateofdelivery}prestashop>dateofdelivery_be5d5d37542d75f93a87094459f76678'] = 'et';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_0ea55758c7a68c0309b915e4b718d6b8'] = 'Le format de la date est invalide';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_7ccf58c950043c9fbfed668df13ce608'] = 'Paramètres mis à jour';
 $_MODULE['<{dateofdelivery}prestashop>dateofdelivery_ecfe3ba0ff66a97029088e8e90a3f051'] = 'Délais minimum incorrect';
