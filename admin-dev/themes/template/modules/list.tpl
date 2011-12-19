@@ -33,11 +33,7 @@
 					<thead>
 						<tr class="nodrag nodrop">
 							<th class="center">
-								<input type="checkbox" onclick="" class="noborder" name="checkme"><br>
-								<!-- TODO
-									<a href="#"><img border="0" src="../img/admin/down.gif"></a>
-									<a href="#"><img border="0" src="../img/admin/up_d.gif"></a>
-								-->
+								<input type="checkbox" rel="false" class="noborder" id="checkme"><br>
 							</th>
 							<th class="center"></th>
 							<th>{l s='Module name'}</th>
@@ -46,7 +42,7 @@
 					<tbody>
 					{foreach from=$modules item=module}
 						<tr>
-							<td><input type="checkbox" name="modules" value="{$module->name}" class="noborder"></td>
+							<td><input type="checkbox" name="modules" value="{$module->name}" {if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if} class="noborder"></td>
 							<td><img class="imgm" alt="" src="{if isset($module->image)}{$module->image}{else}../modules/{$module->name}/{$module->logo}{/if}"></td>
 							<td>
 								<div class="moduleDesc" id="anchor{$module->name|ucfirst}">
@@ -74,7 +70,7 @@
 									</div>
 								</div>
 							</td>
-							<td><a href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed"><span>{if isset($module->id) && $module->id gt 0}{l s='Uninstall'}{else}{l s='Install'}{/if}</span></a></td>
+							<td><a {if isset($module->id) && $module->id gt 0 && !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{if isset($module->id) && $module->id gt 0}{$module->options.uninstall_url}{else}{$module->options.install_url}{/if}" class="button installed"><span>{if isset($module->id) && $module->id gt 0}{l s='Uninstall'}{else}{l s='Install'}{/if}</span></a></td>
 						</tr>
 					{/foreach}
 					</tbody>
