@@ -332,9 +332,11 @@ class OrderInvoiceCore extends ObjectModel
 			foreach ($taxes_infos as $tax_infos)
 			{
 				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
-					$tmp_tax_infos[$tax_infos['rate']] = array('total_amount' => 0,
-																'name' => 0,
-																'total_price_tax_excl' => 0);
+					$tmp_tax_infos[$tax_infos['rate']] = array(
+						'total_amount' => 0,
+						'name' => 0,
+						'total_price_tax_excl' => 0
+					);
 
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $tax_infos['total_amount'];
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
@@ -505,5 +507,16 @@ class OrderInvoiceCore extends ObjectModel
 		$order_payments = new Collection('OrderPayment');
 		$order_payments->where('id_order_invoice', '=', $this->id);
 		return $order_payments;
+	}
+
+	/**
+	 * Get the formatted number of invoice
+	 * @since 1.5.0.2
+	 * @param int $id_lang for invoice_prefix
+	 * @return string
+	 */
+	public function getInvoiceNumberFormatted($id_lang)
+	{
+		return '#'.Configuration::get('PS_INVOICE_PREFIX', $id_lang).sprintf('%06d', $this->number);
 	}
 }

@@ -92,6 +92,11 @@ function updateShipping(shipping_html)
 	$('#shipping_table_old').remove();
 }
 
+function updateDiscountForm(discount_form_html)
+{
+	$('#voucher_form').html(discount_form_html);
+}
+
 function populateWarehouseList(warehouse_list)
 {
 	$('#add_product_product_warehouse_area').hide();
@@ -419,6 +424,7 @@ function init()
 							updateInvoice(data.invoices);
 							updateDocuments(data.documents_html);
 							updateShipping(data.shipping_html);
+							updateDiscountForm(data.discount_form_html);
 
 							// Initialize all events
 							init();
@@ -591,6 +597,7 @@ function init()
 						updateAmounts(data.order);
 						updateInvoice(data.invoices);
 						updateDocuments(data.documents_html);
+						updateDiscountForm(data.discount_form_html);
 
 						// Initialize all events
 						init();
@@ -665,6 +672,7 @@ function init()
 					updateAmounts(data.order);
 					updateInvoice(data.invoices);
 					updateDocuments(data.documents_html);
+					updateDiscountForm(data.discount_form_html);
 				}
 				else
 					alert(data.error);

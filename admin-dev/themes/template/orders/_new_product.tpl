@@ -24,7 +24,7 @@
 		<select name="add_product[invoice]" id="add_product_product_invoice" disabled="disabled">
 			<optgroup class="existing" label="{l s='Existing'}">
 				{foreach from=$invoices_collection item=invoice}
-				<option value="{$invoice->id}">#{Configuration::get('PS_INVOICE_PREFIX', $current_id_lang)}{'%06d'|sprintf:$invoice->number}</option>
+				<option value="{$invoice->id}">{$invoice->getInvoiceNumberFormatted($current_id_lang)}</option>
 				{/foreach}
 			</optgroup>
 			<optgroup label="{l s='New'}">
