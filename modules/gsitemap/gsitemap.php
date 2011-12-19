@@ -309,7 +309,7 @@ XML;
 	{
 		$sitemap = $xml->addChild('url');
 		$sitemap->addChild('loc', htmlspecialchars($loc));
-		$sitemap->addChild('priority',  $priority);
+		$sitemap->addChild('priority',  number_format($priority,1,'.',''));
 		if ($last_mod)
 			$sitemap->addChild('lastmod', $last_mod);
 		$sitemap->addChild('changefreq', $change_freq);
