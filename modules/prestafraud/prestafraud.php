@@ -242,9 +242,9 @@ class PrestaFraud extends Module
 			$payments_configuration = array();
 			foreach($_POST AS $field => $val)
 			{
-				if (preg_match('/^carrier_([0-9]+)/Ui', $field, $res))
+				if (preg_match('/^carrier_([0-9]+)$/Ui', $field, $res))
 					$carriers_configuration[$res[1]] = $val;
-				elseif (preg_match('/^paymentmodule_([0-9]+)/Ui', $field, $pay_res))
+				elseif (preg_match('/^paymentmodule_([0-9]+)$/Ui', $field, $pay_res))
 					$payments_configuration[$pay_res[1]] = $val;	
 			}
 
