@@ -83,8 +83,8 @@ function calcImpactPriceTI()
 {
 	var tax = getTax();
 	var priceTE = parseFloat(document.getElementById('attribute_price').value.replace(/,/g, '.'));
-	var newPrice = priceTE * ((tax / 100) + 1);
-	$('#attribute_priceTI').val((isNaN(newPrice) == true || newPrice < 0) ? '' :ps_round(newPrice.toFixed(6), 6));
+	var newPrice = Math.round(priceTE * ((tax / 100) + 1)*100)/100;
+	$('#attribute_priceTI').val((isNaN(newPrice) == true || newPrice < 0) ? '' : ps_round(newPrice.toFixed(6), 6));
 	var total = ps_round((parseFloat($('#attribute_priceTI').val())*parseInt($('#attribute_price_impact').val())+parseFloat($('#finalPrice').html())), 2);
 	if (isNaN(total) || total < 0)
 		$('#attribute_new_total_price').html('0.00');
