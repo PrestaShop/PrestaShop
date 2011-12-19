@@ -633,7 +633,7 @@ class AdminProductsControllerCore extends AdminController
 					if (!empty($is_virtual))
 						Product::updateIsVirtual($product->id);
 
-					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Combinations&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&conf=4&action=Combinations&token='.($token ? $token : $this->token);
 				}
 			}
 		}
@@ -1415,13 +1415,14 @@ class AdminProductsControllerCore extends AdminController
 							}
 							$this->redirect_after = $preview_url;
 						}
-						else //if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))// || ($id_image && $id_image !== true)) // Save and stay on same form
-						{// Save and stay on same form
-						if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-							$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&action='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
-                        else
-						// Default behavior (save and back)
-						$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
+						else
+						{
+							// Save and stay on same form
+							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+								$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&action='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
+							else
+							// Default behavior (save and back)
+							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
 						}
 					}
 				}
@@ -1734,7 +1735,16 @@ class AdminProductsControllerCore extends AdminController
 
 		// this is made to "save and stay" feature
 		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
-		if (Tools::getValue('id_product') || ((Tools::isSubmit('submitAddproduct') OR Tools::isSubmit('submitAddproductAndPreview') OR Tools::isSubmit('submitAddproductAndStay') OR Tools::isSubmit('submitSpecificPricePriorities') OR Tools::isSubmit('submitPriceAddition') OR Tools::isSubmit('submitPricesModification')) AND count($this->_errors)) OR Tools::isSubmit('updateproduct') OR Tools::isSubmit('addproduct'))
+		if (Tools::getValue('id_product')
+			|| ((Tools::isSubmit('submitAddproduct')
+				|| Tools::isSubmit('submitAddproductAndPreview')
+				|| Tools::isSubmit('submitAddproductAndStay')
+				|| Tools::isSubmit('submitSpecificPricePriorities')
+				|| Tools::isSubmit('submitPriceAddition')
+				|| Tools::isSubmit('submitPricesModification'))
+			&& count($this->_errors))
+			|| Tools::isSubmit('updateproduct')
+			|| Tools::isSubmit('addproduct'))
 		{
 			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
@@ -2037,7 +2047,6 @@ class AdminProductsControllerCore extends AdminController
 		// let's calculate this once for all
 		if (!Validate::isLoadedObject($this->object) && Tools::getValue('id_product'))
 			$this->_errors[] = 'Unable to load object';
-	//		throw new PrestashopException('object not loaded');
 		else
 		{
 			$this->_displayDraftWarning($this->object->active);

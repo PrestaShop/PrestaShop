@@ -184,6 +184,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-export-csv-orders { background-image: url(process-icon-export-csv.png);}
 .toolbarBox .process-icon-export-csv-details { background-image: url(process-icon-export-csv-details.png);}
 .toolbarBox .process-icon-export-stock-mvt-csv { background-image: url(process-icon-export-csv.png);}
+.toolbarBox .process-icon-newAttributes, .toolbarBox .toolbar-new{ background-image: url(process-icon-new.png);}
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
