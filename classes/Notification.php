@@ -106,7 +106,7 @@ class NotificationCore
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),				
-				'total_paid_real' => ((!empty($value['total_paid_real'] && $currency != NULL)) ? Tools::displayPrice((float)$value['total_paid_real'], $currency, false) : 0),
+				'total_paid_real' => ((!empty($value['total_paid_real']) && $currency != NULL) ? Tools::displayPrice((float)$value['total_paid_real'], $currency, false) : 0),
 				'customer_name' => (($customer != NULL) ? $customer->firstname.' '.$customer->lastname : (isset($value['email']) ? $value['email'] : ''))
 			);
 		}
