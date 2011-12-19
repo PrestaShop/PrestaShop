@@ -3747,10 +3747,10 @@ class AdminProductsControllerCore extends AdminController
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
-					$product->advanced_stock_management = (int)Tools::getValue('value');
-					$product->save();
-					if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
-						StockAvailable::setProductDependsOnStock($product->id, 0);
+				$product->advanced_stock_management = (int)Tools::getValue('value');
+				$product->save();
+				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
+					StockAvailable::setProductDependsOnStock($product->id, 0);
 				break;
 
 		}

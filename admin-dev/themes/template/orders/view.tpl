@@ -54,39 +54,6 @@
 			statesShipped.push({$state['id_order_state']});
 		{/if}
 	{/foreach}
-
-	{literal}
-		function showWarehouseList()
-		{
-			{/literal}{if (count($warehouse_list) > 1)}{literal}
-				$('#warehouse').show();
-			{/literal}{/if}{literal}
-		}
-
-		function hideWarehouseList()
-		{
-			$('#warehouse').hide();
-		}
-
-		$(document).ready(function() {
-			hideWarehouseList();
-			$("input.datepicker").datepicker({
-				prevText: '',
-				nextText: '',
-				dateFormat: 'yy-mm-dd'
-			});
-			$('#id_order_state').change(function() {
-				if ($.inArray(parseInt($(this).val()), statesShipped) >= 0)
-				{
-					showWarehouseList();
-				}
-				else
-				{
-					hideWarehouseList();
-				}
-			});
-		});
-	{/literal}
 	</script>
 
 	{if ($HOOK_INVOICE)}
@@ -128,11 +95,6 @@
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
 					<option value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
-				{/foreach}
-				</select>
-				<select name="id_warehouse" id="warehouse">
-				{foreach from=$warehouse_list item=warehouse}
-					<option value="{$warehouse['id_warehouse']}">{$warehouse['name']}</option>
 				{/foreach}
 				</select>
 				<input type="hidden" name="id_order" value="{$order->id}" />

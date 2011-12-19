@@ -3060,7 +3060,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = new DbQuery();
-		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`');
+		$sql->select('p.`id_product`, pl.`name`, p.`active`, p.`reference`, m.`name` AS manufacturer_name, stock.`quantity`, p.advanced_stock_management');
 		$sql->from('category_product', 'cp');
 		$sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
 		$sql->join($context->shop->addSqlAssociation('product', 'p'));

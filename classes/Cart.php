@@ -380,7 +380,8 @@ class CartCore extends ObjectModel
 						p.`id_manufacturer`, p.`on_sale`, p.`ecotax`, p.`additional_shipping_cost`, p.`available_for_order`, p.`price`, p.`weight`,
 						stock.`quantity` quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`,	p.`active`, p.`date_add`,
 						p.`date_upd`, t.`id_tax`, tl.`name` AS tax, t.`rate`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
-						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery, p.`wholesale_price`');
+						CONCAT(cp.`id_product`, cp.`id_product_attribute`, cp.`id_address_delivery`) AS unique_id, cp.id_address_delivery, p.`wholesale_price`,
+						p.advanced_stock_management');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -1358,7 +1359,7 @@ class CartCore extends ObjectModel
 
 			$product['warehouse_list'] = array();
 
-			if ($stock_management_active)
+			if ($stock_management_active && (int)$product['advanced_stock_management'] == 1)
 			{
 				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
 				// Does the product is in stock ?

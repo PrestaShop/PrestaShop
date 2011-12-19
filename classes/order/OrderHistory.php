@@ -65,7 +65,7 @@ class OrderHistoryCore extends ObjectModel
 		),
 	);
 
-	public function changeIdOrderState($new_order_state, $id_order, $id_warehouse = null)
+	public function changeIdOrderState($new_order_state, $id_order)
 	{
 		if ($new_order_state != NULL)
 		{
@@ -75,58 +75,71 @@ class OrderHistoryCore extends ObjectModel
 			/* Best sellers */
 			$newOS = new OrderState((int)($new_order_state), $order->id_lang);
 			$oldOrderStatus = OrderHistory::getLastOrderState((int)$id_order);
-			$cart = Cart::getCartByOrderId($id_order);
 			$isValidated = $this->isValidated();
-			if (Validate::isLoadedObject($cart))
-				foreach ($cart->getProducts() as $product)
+			if (Validate::isLoadedObject($order))
+				foreach ($order->getProductsDetail() as $product)
 				{
 					/* If becoming logable => adding sale */
 					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
 					{
-						ProductSale::addProductSale($product['id_product'], $product['cart_quantity']);
+						ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
 					}
 					/* If becoming unlogable => removing sale */
 					else if (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
 					{
-						ProductSale::removeProductSale($product['id_product'], $product['cart_quantity']);
+						ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 						// @since 1.5.0
-						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity'], $order->id_shop);
+						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					}
 
-					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !$isValidated AND $newOS->logable AND isset($oldOrderStatus) AND $oldOrderStatus AND $oldOrderStatus->id == Configuration::get('PS_OS_ERROR'))
-						StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity'], $order->id_shop);
+					if ((!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') || (int)$product['advanced_stock_management'] != 1)
+						&& !$isValidated
+						&& $newOS->logable
+						&& isset($oldOrderStatus)
+						&& $oldOrderStatus
+						&& $oldOrderStatus->id == Configuration::get('PS_OS_ERROR')
+					)
+						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					// If order is shipped for the first time and
 					// if we use advanced stock management system, decrement stock preperly.
 					// The product is removed from the physical stock. $id_warehouse is needed
 					// @TODO Checks $id_warehouse
-					else if ($newOS->shipped == 1 && $oldOrderStatus->shipped == 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					else if ($newOS->shipped == 1
+						&& $oldOrderStatus->shipped == 0
+						&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+						&& (int)$product['advanced_stock_management'] == 1
+					)
 					{
 						$manager = StockManagerFactory::getManager();
-						$warehouse = new Warehouse($id_warehouse);
+						$warehouse = new Warehouse($product['id_warehouse']);
 
 						$manager->removeProduct(
-							$product['id_product'],
-						    $product['id_product_attribute'],
-						    $warehouse,
-						    $product['cart_quantity'],
-						    Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
-						    true,
-						    (int)$id_order
+							$product['product_id'],
+							$product['product_attribute_id'],
+							$warehouse,
+							$product['product_quantity'],
+							Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
+							true,
+							(int)$id_order
 						);
 
-						if (StockAvailable::dependsOnStock($product['id_product'], $order->id_shop))
-							StockAvailable::synchronize($product['id_product']);
+						if (StockAvailable::dependsOnStock($product['product_id'], $order->id_shop))
+							StockAvailable::synchronize($product['product_id']);
 						else
-							StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity'], $order->id_shop);
+							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 					}
-					else if ($newOS->shipped == 0 && $oldOrderStatus->shipped == 1 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+					else if ($newOS->shipped == 0
+						&& $oldOrderStatus->shipped == 1
+						&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+						&& (int)$product['advanced_stock_management'] == 1
+					)
 					{
 						$manager = StockManagerFactory::getManager();
-						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['id_product'], $product['id_product_attribute'], $product['cart_quantity']);
+						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['cart_quantity']);
 						foreach ($mvts as $mvt)
 						{
 							$manager->addProduct(
-								$product['id_product'],
+								$product['product_id'],
 								$product['id_product_attribute'],
 								new Warehouse($mvt['id_warehouse']),
 								$mvt['physical_quantity'],
@@ -136,10 +149,10 @@ class OrderHistoryCore extends ObjectModel
 							);
 						}
 
-						if (StockAvailable::dependsOnStock($product['id_product'], $order->id_shop))
-							StockAvailable::synchronize($product['id_product']);
+						if (StockAvailable::dependsOnStock($product['product_id'], $order->id_shop))
+							StockAvailable::synchronize($product['product_id']);
 						else
-							StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], (int)$product['cart_quantity'], $order->id_shop);
+							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['physical_quantity'], $order->id_shop);
 					}
 				}
 
