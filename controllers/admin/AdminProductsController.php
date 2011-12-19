@@ -718,7 +718,7 @@ class AdminProductsControllerCore extends AdminController
 
 	}
 
-	public function proccessPriceAddition($token)
+	public function processPriceAddition($token)
 	{
 		$id_product = (int)(Tools::getValue('id_product'));
 		$id_shop = Tools::getValue('sp_id_shop');

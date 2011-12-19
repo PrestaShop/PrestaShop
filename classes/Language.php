@@ -516,7 +516,7 @@ class LanguageCore extends ObjectModel
 	{
 		if (!self::$_LANGUAGES)
 			self::loadLanguages();
-		$languages = array();
+
 		$languages = array();
 		foreach (self::$_LANGUAGES AS $language)
 		{
@@ -615,6 +615,7 @@ class LanguageCore extends ObjectModel
 		$sql = 'SELECT l.*, ls.`id_shop`
 				FROM `'._DB_PREFIX_.'lang` l
 				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
+
 		$result = Db::getInstance()->executeS($sql);
 		foreach ($result AS $row)
 		{

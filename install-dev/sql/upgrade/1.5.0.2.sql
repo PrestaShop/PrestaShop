@@ -296,3 +296,4 @@ ADD  `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount
 ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tax_excl` DECIMAL(17, 2) NOT NULL DEFAULT '0.00';
 ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT NOT NULL DEFAULT '0' AFTER `id_cart_rule`;
 
+ALTER TABLE `PREFIX_specific_price` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL AFTER `id_shop`;
