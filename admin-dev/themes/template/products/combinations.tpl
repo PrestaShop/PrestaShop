@@ -154,6 +154,7 @@
 			<tr>
 				<td colspan="2">
 					<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #E0D0B1">
+					     	<h3>{l s='Virtual product'}</h3>
 						<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize}</p>
 						<label id="virtual_product_file_attribute_label" for="virtual_product_file_attribute" class="t">{l s='Upload a file'}</label>
 						<p><input id="virtual_product_file_attribute" name="virtual_product_file_attribute" onchange="uploadFile2();" maxlength="'.$this->maxFileSize.'" type="file"></p>
@@ -183,7 +184,7 @@
 						</p>
 						<p class="block">
 							<label for="virtual_product_expiration_date_attribute" class="t">{l s='Expiration date'}</label>
-							<input type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
+							<input class="datepicker" type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
 							<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
 						</p>
 						<p class="block">
@@ -300,7 +301,8 @@
 						$(document).ready(function(){
 							$(".datepicker").datepicker({
 								prevText: '',
-								nextText: ''
+								nextText: '',
+								dateFormat: 'yy-mm-dd'
 							});
 						});
 					</script>
