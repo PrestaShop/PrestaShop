@@ -68,10 +68,10 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .notifs { float: left;position: relative;cursor: pointer;margin:0; padding:5px; width: 18px;height: 16px;}
 #orders_notif {background: url("notif_order.png") no-repeat center top;}
 #customers_notif {background: url("notif_customer.png") no-repeat center top;}
-#messages_notif {background: url("notif_message.png") no-repeat center top;}
+#customer_messages_notif {background: url("notif_message.png") no-repeat center top;}
 #orders_notif.open_notifs,
 #customers_notif.open_notifs,
-#messages_notif.open_notifs { background-color: #FFFFFF;border: 1px solid #000000; position: relative; display: block; background-position:center bottom; }
+#customer_messages_notif.open_notifs { background-color: #FFFFFF;border: 1px solid #000000; position: relative; display: block; background-position:center bottom; }
 
 
 .number_wrapper {color: white;display: none;font-size: 13px;font-weight: bold;position: absolute; right: -8px;top: -10px;z-index: 101;padding: 2px 5px;}
