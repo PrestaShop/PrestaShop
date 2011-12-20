@@ -31,7 +31,7 @@ function smartyTranslate($params, &$smarty)
 {
 	global $_LANG, $_MODULES, $cookie, $_MODULE, $_LANGPDF;
 	if (!isset($params['js'])) $params['js'] = 0;
-   	if (!isset($params['pdf'])) $params['pdf'] = false;
+	if (!isset($params['pdf'])) $params['pdf'] = false;
 	if (!isset($params['mod'])) $params['mod'] = false;
 
 	$string = str_replace('\'', '\\\'', $params['s']);
@@ -59,18 +59,18 @@ function smartyTranslate($params, &$smarty)
 			if(is_array($_MODULE))
 				$_MODULES = array_merge($_MODULES, $_MODULE);
 		$lang_array = $_MODULES;
-	} 
-    else if ($params['pdf']) 
-    {
+	}
+	else if ($params['pdf']) 
+	{
 		$iso = Language::getIsoById($cookie->id_lang);
-        $translationsFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
+		$translationsFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
 
-        if (Tools::file_exists_cache($translationsFile))
-            @include_once($translationsFile);
-        
-        $key = 'PDF'.md5($string);
-        $lang_array = $_LANGPDF;
-    }
+		if (Tools::file_exists_cache($translationsFile))
+			@include_once($translationsFile);
+		
+		$key = 'PDF'.md5($string);
+		$lang_array = $_LANGPDF;
+	}
 
 	if (is_array($lang_array) AND key_exists($key, $lang_array))
 		$msg = $lang_array[$key];
