@@ -608,7 +608,7 @@ abstract class Module
 	{
 		$db = Db::getInstance();
 
-		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
 		$nativeModules = simplexml_load_file($module_list_xml);
 		$nativeModules = $nativeModules->modules;
 		foreach ($nativeModules as $nativeModulesType)

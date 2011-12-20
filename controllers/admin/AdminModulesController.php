@@ -41,8 +41,6 @@ class AdminModulesControllerCore extends AdminController
 	private $list_modules_categories = array();
 	private $list_partners_modules = array();
 	private $list_natives_modules = array();
-	private $cache_file_modules_list = '/config/modules_list.xml';
- 	private $xml_modules_list = 'http://api.prestashop.com/xml/modules_list.xml';
 
 	private $nb_modules_total = 0;
 	private $nb_modules_installed = 0;
@@ -55,10 +53,12 @@ class AdminModulesControllerCore extends AdminController
 	private $iso_default_country;
 	private $filter_configuration = array();
 
-	private $addons_url = 'https://addons.prestashop.com/webservice/151/';
+ 	private $xml_modules_list = 'http://api.prestashop.com/xml/modules_list.xml';
+	private $addons_url = 'http://api.addons.prestashop.com/151/';
 	private $logged_on_addons = false;
-	private $cache_file_default_country_modules_list = '/config/default_country_modules_list.xml';
-	private $cache_file_customer_modules_list = '/config/customer_modules_list.xml';
+	private $cache_file_modules_list = '/config/xml/modules_list.xml';
+	private $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
+	private $cache_file_customer_modules_list = '/config/xml/customer_modules_list.xml';
 
 	/*
 	** Admin Modules Controller Constructor
@@ -167,12 +167,12 @@ class AdminModulesControllerCore extends AdminController
 			$this->status = 'cache';
 
 
-		// If logged to Addons Webservices, refresh default country modules list every day
+		// If logged to Addons Webservices, refresh default country native modules list every day
 		if ($this->logged_on_addons && $this->status != 'error')
 		{
 			if (!$this->isFresh($this->cache_file_default_country_modules_list, 86400))
 			{
-				if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url.'listing/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
+				if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url.'listing/native/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -208,7 +208,7 @@ class AdminModulesControllerCore extends AdminController
 		$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
 		if (!$xml)
 			die('KO');
-		$result = strtoupper((string)$xml->msg);
+		$result = strtoupper((string)$xml->success);
 		if (!in_array($result, array('OK', 'KO')))
 			die ('KO');
 		if ($result == 'OK')

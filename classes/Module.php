@@ -1000,7 +1000,7 @@ abstract class ModuleCore
 		// Get Default Country Modules and customer module
 		if ($loggedOnAddons)
 		{
-			$filesList = array(_PS_ROOT_DIR_.'/config/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/customer_modules_list.xml');
+			$filesList = array(_PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/xml/customer_modules_list.xml');
 			foreach ($filesList as $file)
 				if (file_exists($file))
 				{
@@ -1091,7 +1091,7 @@ abstract class ModuleCore
 	{
 		$db = Db::getInstance();
 
-		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
 		$nativeModules = simplexml_load_file($module_list_xml);
 		$nativeModules = $nativeModules->modules;
 		foreach ($nativeModules as $nativeModulesType)
