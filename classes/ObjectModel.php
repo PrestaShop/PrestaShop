@@ -925,22 +925,21 @@ abstract class ObjectModelCore
 
 		if (array_key_exists($this->def['table'] ,$assoc))
 		{
-			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.$this->def['table'].'_'.$assoc[$this->def['table']]['type'].'` AS multi_shop_'.$this->def['table'].' ON (main.'.$this->def['primary'].' = '.'multi_shop_'.$this->def['table'].'.'.$this->def['primary'].')';
+			$multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc[$this->def['table']]['type']).'` AS multi_shop_'.bqSQL($this->def['table']).' ON (main.'.bqSQL($this->def['primary']).' = '.'multi_shop_'.bqSQL($this->def['table']).'.'.bqSQL($this->def['primary']).')';
 			$class_name = WebserviceRequest::$ws_current_classname;
 			$vars = get_class_vars($class_name);
 			foreach ($vars['shopIDs'] as $id_shop)
-				$OR[] = ' multi_shop_'.$this->def['table'].'.id_shop = '.$id_shop.' ';
+				$OR[] = ' multi_shop_'.bqSQL($this->def['table']).'.id_shop = '.(int)$id_shop.' ';
 			$multi_shop_filter = ' AND ('.implode('OR', $OR).') ';
 			$sql_filter = $multi_shop_filter.' '.$sql_filter;
 			$sql_join = $multi_shop_join .' '. $sql_join;
 		}
 		$query = '
-		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` AS main
+		SELECT DISTINCT main.`'.bqSQL($this->def['primary']).'` FROM `'._DB_PREFIX_.bqSQL($this->def['table']).'` AS main
 		'.$sql_join.'
 		WHERE 1 '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
-		'.($sql_limit != '' ? $sql_limit : '').'
-		';
+		'.($sql_limit != '' ? $sql_limit : '');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
