@@ -319,19 +319,19 @@ class WebserviceRequestCore
 		$arr_return = array();
 		foreach($parameters as $name => $value)
 		{
-			$id_country = (isset($value['country']) ? $value['country'] : (int)(Configuration::get('PS_COUNTRY_DEFAULT')));
-			$id_state = (isset($value['state']) ? $value['state'] : 0);
-			$id_currency = (isset($value['currency']) ? $value['currency'] : Configuration::get('PS_CURRENCY_DEFAULT'));
-			$id_group = (isset($value['group']) ? $value['group'] : Configuration::get('_PS_DEFAULT_CUSTOMER_GROUP_'));
-			$quantity = (isset($value['quantity']) ? $value['quantity'] : 1);
-			$use_tax = (isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
-			$decimals = (isset($value['decimals']) ? $value['decimals'] : Configuration::get('PS_PRICE_ROUND_MODE'));
-			$id_product_attribute = (isset($value['product_attribute']) ? $value['product_attribute'] : null);
-			$id_county = (isset($value['county']) ? $value['county'] : null);
+			$id_country = (int)(isset($value['country']) ? $value['country'] : (Configuration::get('PS_COUNTRY_DEFAULT')));
+			$id_state = (int)(isset($value['state']) ? $value['state'] : 0);
+			$id_currency = (int)(isset($value['currency']) ? $value['currency'] : Configuration::get('PS_CURRENCY_DEFAULT'));
+			$id_group = (int)(isset($value['group']) ? $value['group'] : Configuration::get('_PS_DEFAULT_CUSTOMER_GROUP_'));
+			$quantity = (int)(isset($value['quantity']) ? $value['quantity'] : 1);
+			$use_tax = (int)(isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
+			$decimals = (int)(isset($value['decimals']) ? $value['decimals'] : Configuration::get('PS_PRICE_ROUND_MODE'));
+			$id_product_attribute = (int)(isset($value['product_attribute']) ? $value['product_attribute'] : null);
+			$id_county = (int)(isset($value['county']) ? $value['county'] : null);
 
-			$only_reduc = (isset($value['only_reduction']) ? $value['only_reduction'] : false);
-			$use_reduc = (isset($value['use_reduction']) ? $value['use_reduction'] : true);
-			$use_ecotax = (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
+			$only_reduc = (int)(isset($value['only_reduction']) ? $value['only_reduction'] : false);
+			$use_reduc = (int)(isset($value['use_reduction']) ? $value['use_reduction'] : true);
+			$use_ecotax = (int)(isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
 			$specific_price_output = null;
 			$id_county = (isset($value['county']) ? $value['county'] : 0);
 			$return_value = Product::priceCalculation(null, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
@@ -1026,7 +1026,7 @@ class WebserviceRequestCore
 								if (isset($this->resourceConfiguration['linked_tables']) && isset($this->resourceConfiguration['linked_tables'][$field]))
 								{
 									// contruct SQL join for linked tables
-									$sql_join .= 'LEFT JOIN `'._DB_PREFIX_.pSQL($this->resourceConfiguration['linked_tables'][$field]['table']).'` '.pSQL($field).' ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.pSQL($field).'.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
+									$sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['linked_tables'][$field]['table']).'` '.bqSQL($field).' ON (main.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = '.bqSQL($field).'.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
 
 									// construct SQL filter for linked tables
 									foreach ($url_param as $field2 => $value)
@@ -1048,7 +1048,7 @@ class WebserviceRequestCore
 								{
 									if (!is_array($url_param))
 										$url_param = array($url_param);
-									$sql_join .= 'LEFT JOIN `'._DB_PREFIX_.pSQL($this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
+									$sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
 									foreach ($url_param as $field2 => $value)
 									{
 										$linked_field = $this->resourceConfiguration['fields'][$field];
@@ -1182,7 +1182,7 @@ class WebserviceRequestCore
 		if ($sqlObjects)
 		{
 			foreach ($sqlObjects as $sqlObject)
-				$objects[] = new $this->resourceConfiguration['retrieveData']['className']($sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
+				$objects[] = new $this->resourceConfiguration['retrieveData']['className']((int)$sqlObject[$this->resourceConfiguration['fields']['id']['sqlId']]);
 			return $objects;
 		}
 	}
@@ -1198,15 +1198,15 @@ class WebserviceRequestCore
 		if (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
 		{
 			$sql = 'SELECT 1
-					FROM '._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].' ';
+					FROM '.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type']).' ';
 			foreach (self::$shopIDs as $id_shop)
-				$OR[] = ' id_shop = '.$id_shop.' ';
-			$check = ' WHERE ('.implode('OR', $OR).') AND '.$this->resourceConfiguration['fields']['id']['sqlId'].' = '.(int)$this->urlSegment[1];
+				$OR[] = ' id_shop = '.(int)$id_shop.' ';
+			$check = ' WHERE ('.implode('OR', $OR).') AND '.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).' = '.(int)$this->urlSegment[1];
 			if (!Db::getInstance()->getValue($sql.$check))
 				$this->setError(403, 'Bad id_shop : You are not allowed to access this '.$this->resourceConfiguration['retrieveData']['className'].' ('.(int)$this->urlSegment[1].')', 131);
 		}
 		//get entity details
-		$object = new $this->resourceConfiguration['retrieveData']['className']($this->urlSegment[1]);
+		$object = new $this->resourceConfiguration['retrieveData']['className']((int)$this->urlSegment[1]);
 		if ($object->id)
 		{
 			$objects[] = $object;
@@ -1497,9 +1497,9 @@ class WebserviceRequestCore
 						if (array_key_exists($this->resourceConfiguration['retrieveData']['table'] ,$assoc))
 						{
 							// PUT nor POST is destructive, no deletion
-							$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type'].'` (id_shop, '.$this->resourceConfiguration['fields']['id']['sqlId'].') VALUES ';
+							$sql = 'INSERT IGNORE INTO `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table'].'_'.$assoc[$this->resourceConfiguration['retrieveData']['table']]['type']).'` (id_shop, '.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).') VALUES ';
 							foreach (self::$shopIDs as $id)
-								$sql .= '('.$id.','.$object->id.')';
+								$sql .= '('.(int)$id.','.(int)$object->id.')';
 							Db::getInstance()->execute($sql);
 						}
 					}
@@ -1530,7 +1530,7 @@ class WebserviceRequestCore
 		if (count($matches) > 1)
 		{
 			if ($matches[1] == '%' || $matches[3] == '%')
-				$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` LIKE "'.$matches[1].pSQL($matches[2]).$matches[3]."\"\n";
+				$ret .= ' AND '.bqSQL($tableAlias).'`'.bqSQL($sqlId).'` LIKE "'.pSQL($matches[1].$matches[2].$matches[3])."\"\n";
 			elseif ($matches[1] == '' && $matches[3] == '')
 			{
 				if (strpos($matches[2], '|') > 0)
@@ -1539,7 +1539,7 @@ class WebserviceRequestCore
 					$ret .= ' AND (';
 					$temp = '';
 					foreach ($values as $value)
-						$temp .= $tableAlias.'`'.pSQL($sqlId).'` = "'.pSQL($value).'" OR ';
+						$temp .= bqSQL($tableAlias).'`'.bqSQL($sqlId).'` = "'.bqSQL($value).'" OR ';
 					$ret .= rtrim($temp, 'OR ').')'."\n";
 				}
 				elseif (preg_match('/^([\d\.:-\s]+),([\d\.:-\s]+)$/', $matches[2], $matches3))
@@ -1548,21 +1548,21 @@ class WebserviceRequestCore
 					if (count($matches3) > 0)
 					{
 						sort($matches3);
-						$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` BETWEEN "'.pSQL($matches3[0]).'" AND "'.pSQL($matches3[1])."\"\n";
+						$ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` BETWEEN "'.pSQL($matches3[0]).'" AND "'.pSQL($matches3[1])."\"\n";
 					}
 				}
 				else
-					$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'`="'.pSQL($matches[2]).'"'."\n";
+					$ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'`="'.pSQL($matches[2]).'"'."\n";
 			}
 			elseif ($matches[1] == '>')
-				$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` > "'.pSQL($matches[2])."\"\n";
+				$ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` > "'.pSQL($matches[2])."\"\n";
 			elseif ($matches[1] == '<')
-				$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` < "'.pSQL($matches[2])."\"\n";
+				$ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` < "'.pSQL($matches[2])."\"\n";
 			elseif ($matches[1] == '!')
-				$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` != "'.pSQL($matches[2])."\"\n";
+				$ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` != "'.pSQL($matches[2])."\"\n";
 		}
 		else
-			$ret .= ' AND '.$tableAlias.'`'.pSQL($sqlId).'` '.(Validate::isFloat(pSQL($filterValue)) ? 'LIKE' : '=').' "'.pSQL($filterValue)."\"\n";
+			$ret .= ' AND '.$tableAlias.'`'.bqSQL($sqlId).'` '.(Validate::isFloat(pSQL($filterValue)) ? 'LIKE' : '=').' "'.pSQL($filterValue)."\"\n";
 		return $ret;
 	}
 
