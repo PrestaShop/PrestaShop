@@ -60,9 +60,11 @@ class HookCore extends ObjectModel
 	{
 		if (!is_null(self::$_hook_alias))
 			return false;
+		self::$_hook_alias = array();
 		$hook_alias_list = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_alias`');
-		foreach ($hook_alias_list as $ha)
-			self::$_hook_alias[strtolower($ha['alias'])] = $ha['name'];
+		if ($hook_alias_list)
+			foreach ($hook_alias_list as $ha)
+				self::$_hook_alias[strtolower($ha['alias'])] = $ha['name'];
 		return true;
 	}
 
