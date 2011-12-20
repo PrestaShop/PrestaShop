@@ -185,7 +185,7 @@ class ShopCore extends ObjectModel
 	{
 		$has_dependency = false;
 		$nbr_customer = (int)Db::getInstance()->getValue('
-			SELECT `id_customer`
+			SELECT count(*)
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `id_shop`='.(int)$id_shop
 		);
@@ -194,7 +194,7 @@ class ShopCore extends ObjectModel
 		else
 		{
 			$nbr_order = (int)Db::getInstance()->getValue('
-				SELECT `id_order`
+				SELECT count(*)
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `id_shop`='.(int)$id_shop
 			);
@@ -351,7 +351,7 @@ class ShopCore extends ObjectModel
 	{
 		if (!$this->domain)
 			return false;
-		return 'http://'.$this->domain.$this->physical_uri.$this->virtual_uri;
+		return 'http://'.$this->domain.$this->getBaseURI();
 	}
 
 	/**
