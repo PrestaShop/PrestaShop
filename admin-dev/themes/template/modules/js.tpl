@@ -231,6 +231,52 @@
 
 
 
+		// Method to set filter on modules
+		function setFilter()
+		{
+			var module_type = $("#module_type_filter").val();
+			var module_install = $("#module_install_filter").val();
+			var module_status = $("#module_status_filter").val();
+			var country_module_value = $("#country_module_value_filter").val();
+			try
+			{
+				resAjax = $.ajax({
+						type:"POST",
+						url : ajaxCurrentIndex,
+						async: true,
+						data : {
+							ajax : "1",
+							token : token,
+							controller : "AdminModules",
+							action : "setFilter",
+							module_type : module_type,
+							module_install : module_install,
+							module_status : module_status,
+							country_module_value : country_module_value,
+							filterModules : 'Filter'
+						},
+						success : function(data)
+						{
+							// res.status  = cache or refresh
+							if (data == 'OK')
+								window.location.href = window.location.href;
+						},
+						error: function(res,textStatus,jqXHR)
+						{
+							//alert("TECHNICAL ERROR"+res);
+						}
+				});
+			}
+			catch(e){}
+			return false;
+		}
+		$('#module_type_filter').change(function() { setFilter(); });
+		$('#module_install_filter').change(function() { setFilter(); });
+		$('#module_status_filter').change(function() { setFilter(); });
+		$('#country_module_value_filter').change(function() { setFilter(); });
+
+
+
 	});
 	{/literal}
 </script>
