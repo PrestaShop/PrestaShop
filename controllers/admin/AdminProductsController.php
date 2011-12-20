@@ -1154,8 +1154,8 @@ class AdminProductsControllerCore extends AdminController
 						$combinations[$key]['is_shareable'] = $product_download[0]['is_shareable'];
 					}
 				}
-				
-					
+
+
 				die(Tools::jsonEncode($combinations));
 			}
 		}
@@ -2217,7 +2217,7 @@ class AdminProductsControllerCore extends AdminController
 				if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate))
 				{
 					$associated_supplier->delete();
-					unset($associated_supplier);
+					unset($associated_suppliers[$key]);
 				}
 
 			// Associate suppliers
@@ -2334,7 +2334,7 @@ class AdminProductsControllerCore extends AdminController
 							}
 						}
 					}
-					else
+					else if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))
 					{
 						//int attribute with default values if possible
 						if ((int)$attribute['id_product_attribute'] > 0)
@@ -2680,7 +2680,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormVirtualProduct($product, $languages, $default_language)
 	{
-		
+
 		$data = $this->context->smarty->createData();
 
 		$currency = $this->context->currency;
