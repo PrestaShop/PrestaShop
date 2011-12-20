@@ -186,7 +186,8 @@ class AdminCategoriesControllerCore extends AdminController
 					'lang' => true,
 					'size' => 48,
 					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'class' => 'copy2friendlyUrl',
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
 				array(
 					'type' => 'radio',
