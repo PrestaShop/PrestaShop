@@ -69,8 +69,7 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_ADVANCED_STOCK_MANAGEMENT' => array(
 						'title' => $this->l('Enable advanced stock management:'),
-						'desc' => $this->l('When active, allows you to manage your physical stock, warehouses and supply orders.
-							You have to manage at least 1 warehouse when this feature is enabled.'),
+						'desc' => $this->l('Allows you to manage a physical stock, warehouses and supply orders.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
