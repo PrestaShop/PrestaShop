@@ -33,11 +33,11 @@
 	<p>{l s='total missing expresssions:'} {$missing_translations|array_sum} </p>
 	{$limit_warning}
 	{if !$suoshin_exceeded}
-		<form method="post" action="{$url_submit}" class="form">
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 		{$toggle_button}
-		{include file="translations/auto_translate.tpl"}
+		{*{include file="translations/auto_translate.tpl"}*}
 		<input type="hidden" name="lang" value="{$lang}" />
-		<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 		<br /><br />
 		{foreach $tabsArray as $k => $newLang}
 			{if !empty($newLang)}
@@ -71,7 +71,6 @@
 				</fieldset><br />
 			{/if}
 		{/foreach}
-		<br /><input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" /></form>
 	{/if}
 
 {/block}
