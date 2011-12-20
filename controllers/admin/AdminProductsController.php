@@ -35,6 +35,10 @@ class AdminProductsControllerCore extends AdminController
 	protected $max_image_size;
 
 	private $_category;
+	/**
+	 * @var string name of the tab to display
+	 */
+	protected $tab_display;
 
 	protected $available_tabs = array(
 		'Informations',
@@ -305,6 +309,12 @@ class AdminProductsControllerCore extends AdminController
 		return $product_download->deleteFile((int)$id_product_download);
 	}
 
+	/**
+	 * Upload new attachment
+	 *
+	 * @param $token
+	 * @return void
+	 */
 	public function processAddAttachments($token)
 	{
 		$languages = Language::getLanguages(false);
@@ -347,6 +357,8 @@ class AdminProductsControllerCore extends AdminController
 				$upload_mb = min($max_upload, $max_post);
 				$this->_errors[] = $this->l('the File').' <b>'.$_FILES['attachment_file']['name'].'</b> '.$this->l('exceeds the size allowed by the server, this limit is set to').' <b>'.$upload_mb.$this->l('Mb').'</b>';
 			}
+			else
+				$this->_errors[] = Tools::displayError('File is missing');
 
 			if (empty($this->_errors) && isset($uniqid))
 			{
@@ -370,12 +382,26 @@ class AdminProductsControllerCore extends AdminController
 				if (!count($this->_errors))
 				{
 					$attachment->add();
-					$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue($this->identifier)).'&id_category='.(int)(Tools::getValue('id_category')).'&addproduct&conf=4&action=Attachments&token='.($token ? $token : $this->token);
+					$this->confirmations[] = $this->l('Attachment successfully added');
 				}
 				else
 					$this->_errors[] = Tools::displayError('Invalid file');
 			}
 		}
+	}
+
+	/**
+	 * Attach an existing attachment to the product
+	 *
+	 * @param $token
+	 * @return void
+	 */
+	public function processAttachment($token)
+	{
+		if ($this->action == 'attachments')
+			if ($id = (int)Tools::getValue($this->identifier))
+				if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
+					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
 	}
 
 	public function processDuplicate($token)
@@ -866,14 +892,20 @@ class AdminProductsControllerCore extends AdminController
 		else if (Tools::isSubmit('submitAddAttachments'))
 		{
 			if ($this->tabAccess['add'] === '1')
+			{
 				$this->action = 'addAttachments';
+				$this->tab_display = 'attachments';
+			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (Tools::isSubmit('submitAttachments'))
 		{
 			if ($this->tabAccess['edit'] === '1')
+			{
 				$this->action = 'attachments';
+				$this->tab_display = 'attachments';
+			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
@@ -957,12 +989,31 @@ class AdminProductsControllerCore extends AdminController
 		if (!$this->action)
 			parent::initProcess();
 
+		// Set tab to display
 		if ($this->action)
 		{
-			if ($this->action == 'new')
-				$this->action = 'Informations';
-			return;
+			if (in_array($this->action, $this->available_tabs))
+			$this->tab_display = $this->action;
+			elseif ($this->action == 'new' || $this->action == 'save')
+			$this->tab_display = 'Informations';
 		}
+
+		// Set type of display (edit-add-list)
+		if (Tools::getValue('id_product')
+			|| ((Tools::isSubmit('submitAddproduct')
+				|| Tools::isSubmit('submitAddproductAndPreview')
+				|| Tools::isSubmit('submitAddproductAndStay')
+				|| Tools::isSubmit('submitSpecificPricePriorities')
+				|| Tools::isSubmit('submitPriceAddition')
+				|| Tools::isSubmit('submitPricesModification'))
+			&& count($this->_errors))
+			|| Tools::isSubmit('updateproduct')
+			|| Tools::isSubmit('addproduct'))
+			$this->display = 'edit';
+		elseif ($this->action == 'new')
+			$this->display = 'add';
+		else
+			$this->display = 'list';
 	}
 
 	/**
@@ -973,11 +1024,6 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function postProcess($token = null)
 	{
-		if ($this->action == 'attachments')
-			if ($id = (int)Tools::getValue($this->identifier))
-				if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
-					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
-
 		if (!$this->redirect_after)
 			parent::postProcess(true);
 	}
@@ -1763,42 +1809,27 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initContent($token = null)
 	{
-		if ($this->action == 'save')
-			$this->action = '';
-
 		// this is made to "save and stay" feature
 		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
-		if (Tools::getValue('id_product')
-			|| ((Tools::isSubmit('submitAddproduct')
-				|| Tools::isSubmit('submitAddproductAndPreview')
-				|| Tools::isSubmit('submitAddproductAndStay')
-				|| Tools::isSubmit('submitSpecificPricePriorities')
-				|| Tools::isSubmit('submitPriceAddition')
-				|| Tools::isSubmit('submitPricesModification'))
-			&& count($this->_errors))
-			|| Tools::isSubmit('updateproduct')
-			|| Tools::isSubmit('addproduct'))
+
+		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
-			if (empty($this->action))
-				$this->action = 'Informations';
+			if (empty($this->tab_display))
+				$this->tab_display = 'Informations';
 
-			if(method_exists($this, 'initForm'.$this->action))
-				$this->tpl_form = 'products/'.strtolower($this->action).'.tpl';
+			if(method_exists($this, 'initForm'.$this->tab_display))
+				$this->tpl_form = 'products/'.strtolower($this->tab_display).'.tpl';
 
 			if ($this->ajax)
-			{
-				$this->display = 'edit';
 				$this->content_only = true;
-			}
 			else
 			{
 				$product_tabs = array();
-				// action defines which tab to display first
-				$action = $this->action;
-				if (empty($action) || !method_exists($this, 'initForm'.$action))
-					$action = 'Informations';
+				// tab_display defines which tab to display first
+				if (empty($this->tab_display) || !method_exists($this, 'initForm'.$this->tab_display))
+					$this->tab_display = 'Informations';
 
 				// i is used as product_tab id
 				$i = 0;
@@ -1817,7 +1848,7 @@ class AdminProductsControllerCore extends AdminController
 
 					$product_tabs[$product_tab] = array(
 						'id' => ++$i.'-'.$product_tab,
-						'selected' => (strtolower($product_tab) == strtolower($action)),
+						'selected' => (strtolower($product_tab) == strtolower($this->tab_display)),
 						'name' => $this->available_tabs_lang[$product_tab],
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,
 					);
@@ -1826,12 +1857,11 @@ class AdminProductsControllerCore extends AdminController
 				$this->tpl_form_vars['product_tabs'] = $product_tabs;
 			}
 
-			$languages = Language::getLanguages(false);
-			$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
+			/*$languages = Language::getLanguages(false);
+			$default_language = (int)Configuration::get('PS_LANG_DEFAULT');*/
 		}
 		else
 		{
-			$this->display = 'list';
 			if ($id_category = (int)Tools::getValue('id_category'))
 				self::$currentIndex .= '&id_category='.$id_category;
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
@@ -2000,7 +2030,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->toolbar_btn['stats'] = array(
 						'short' => 'Statistics',
 						'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsproduct&amp;id_product='.$product->id,
-						'desc' => $this->l('View product sales'),
+						'desc' => $this->l('Product sales'),
 					);
 
 					// adding button for adding a new combination in Combinaition tab
@@ -2043,13 +2073,13 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	/**
-	 * initForm contains all necessary initialization needed for all tabs
+	 * renderForm contains all necessary initialization needed for all tabs
 	 *
 	 * @return void
 	 */
 	public function renderForm()
 	{
-		if(!method_exists($this, 'initForm'.$this->action))
+		if(!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
 		$this->addJqueryUI('ui.datepicker');
@@ -2076,11 +2106,11 @@ class AdminProductsControllerCore extends AdminController
 		else
 		{
 			$this->_displayDraftWarning($this->object->active);
-			$this->{'initForm'.$this->action}($this->object, $languages, $default_language);
+			$this->{'initForm'.$this->tab_display}($this->object, $languages, $default_language);
 			$this->tpl_form_vars['product'] = $this->object;
 			if ($this->ajax)
 				if (!isset($this->tpl_form_vars['custom_form']))
-					throw new PrestashopException('custom_form empty for action '.$this->action);
+					throw new PrestashopException('custom_form empty for action '.$this->tab_display);
 				else
 					return $this->tpl_form_vars['custom_form'];
 		}
