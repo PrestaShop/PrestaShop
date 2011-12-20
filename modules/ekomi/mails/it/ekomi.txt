@@ -1,4 +1,0 @@
-{firstname} {lastname}
-{email}
-{id_order}
-

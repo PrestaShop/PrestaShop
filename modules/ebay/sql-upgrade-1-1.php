@@ -1,6 +1,0 @@
-<?php
-
-	// Init
-	$sql = array();
-
-
