@@ -236,6 +236,7 @@ class ImageCore extends ObjectModel
 		{
 			$image_old = new Image($row['id_image']);
 			$image_new = clone $image_old;
+			unset($image_new->id);
 			$image_new->id_product = (int)$id_product_new;
 			// A new id is generated for the cloned image when calling add()
 			if ($image_new->add())
