@@ -60,7 +60,7 @@
 			<tbody>
 				<tr>
 					<td valign="top" style="vertical-align:top;">
-						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="on" checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
+						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="1" checked="checked" {/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
 								type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
 						<label style="float:none;font-weight:normal" for="advanced_stock_management">{l s='I want to use the advanced stock management system for this product'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
 						<br /><br />
