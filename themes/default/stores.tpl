@@ -34,7 +34,7 @@
 {if $simplifiedStoresDiplay}
 	{if $stores|@count}
 	<p>{l s='Here are the details of our stores, feel free to contact us:'}</p>
-	{foreach from=$stores item=store}
+	{foreach $stores as $store}
 		<div class="store-small">
 			{if $store.has_picture}<p><img src="{$img_store_dir}{$store.id_store}-medium.jpg" alt="" width="{$mediumSize.width}" height="{$mediumSize.height}" /></p>{/if}
 			<p>
