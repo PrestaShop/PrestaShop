@@ -2334,3 +2334,10 @@ CREATE TABLE `PREFIX_specific_price_rule_condition` (
 PRIMARY KEY (`id_specific_price_rule_condition`),
 INDEX (`id_specific_price_rule_condition_group`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_category_shop` (
+  `id_category` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  PRIMARY KEY (`id_category`, `id_shop`),
+  UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
