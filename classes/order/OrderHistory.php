@@ -80,12 +80,16 @@ class OrderHistoryCore extends ObjectModel
 				foreach ($order->getProductsDetail() as $product)
 				{
 					/* If becoming logable => adding sale */
-					if ($newOS->logable AND (!$oldOrderStatus OR !$oldOrderStatus->logable))
+					if ($newOS->logable 
+						&& $oldOrderStatus instanceof OrderHistory
+						&& $oldOrderStatus->logable)
 					{
 						ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
 					}
 					/* If becoming unlogable => removing sale */
-					else if (!$newOS->logable AND ($oldOrderStatus AND $oldOrderStatus->logable))
+					else if (!$newOS->logable 
+						&& $oldOrderStatus instanceof OrderHistory
+						&& $oldOrderStatus->logable)
 					{
 						ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 						// @since 1.5.0
@@ -95,8 +99,7 @@ class OrderHistoryCore extends ObjectModel
 					if ((!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') || (int)$product['advanced_stock_management'] != 1)
 						&& !$isValidated
 						&& $newOS->logable
-						&& isset($oldOrderStatus)
-						&& $oldOrderStatus
+						&& $oldOrderStatus instanceof OrderHistory
 						&& $oldOrderStatus->id == Configuration::get('PS_OS_ERROR')
 					)
 						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
@@ -105,6 +108,7 @@ class OrderHistoryCore extends ObjectModel
 					// The product is removed from the physical stock. $id_warehouse is needed
 					// @TODO Checks $id_warehouse
 					else if ($newOS->shipped == 1
+						&& $oldOrderStatus instanceof OrderHistory
 						&& $oldOrderStatus->shipped == 0
 						&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
 						&& (int)$product['advanced_stock_management'] == 1
@@ -129,6 +133,7 @@ class OrderHistoryCore extends ObjectModel
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 					}
 					else if ($newOS->shipped == 0
+						&& $oldOrderStatus instanceof OrderHistory
 						&& $oldOrderStatus->shipped == 1
 						&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
 						&& (int)$product['advanced_stock_management'] == 1
