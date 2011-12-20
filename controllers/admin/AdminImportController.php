@@ -1130,7 +1130,6 @@ class AdminImportControllerCore extends AdminController
 							$image->id_product = (int)$product->id;
 							$image->position = Image::getHighestPosition($product->id) + 1;
 							$image->cover = (!$key && !$product_has_images) ? true : false;
-							$image->legend = self::createMultiLangField($product->name[$default_language_id]);
 							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
@@ -1139,7 +1138,7 @@ class AdminImportControllerCore extends AdminController
 							}
 							else
 							{
-								$this->warnings[] = $image->legend[$default_language_id].(isset($image->id_product) ? ' ('.$image->id_product.')' : '').
+								$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').
 									' '.Tools::displayError('Cannot be saved');
 								$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
@@ -1208,7 +1207,6 @@ class AdminImportControllerCore extends AdminController
 				$image->id_product = (int)$product->id;
 				$image->position = Image::getHighestPosition($product->id) + 1;
 				$image->cover = (!$product_has_images) ? true : false;
-				$image->legend = self::createMultiLangField($product->name);
 
 				if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 					($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
@@ -1220,7 +1218,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->warnings[] = $image->legend[$default_language_id].(isset($image->id_product) ? ' ('.$image->id_product.')' : '').
+					$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').
 						' '.Tools::displayError('Cannot be saved');
 					$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
