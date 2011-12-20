@@ -1361,7 +1361,7 @@ class CartCore extends ObjectModel
 
 			if ($stock_management_active && (int)$product['advanced_stock_management'] == 1)
 			{
-				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
+				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute'], $this->id_shop);
 				// Does the product is in stock ?
 				// If yes, get only warehouse where the product is in stock
 				$warehouse_in_stock = array();
