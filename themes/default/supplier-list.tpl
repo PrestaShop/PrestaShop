@@ -43,11 +43,10 @@
 			{/if}
 		</span>{/strip}
 	</p>
-
 {if $nbSuppliers > 0}
 	<ul id="suppliers_list">
-	{foreach from=$suppliers item=supplier name=suppliers}
-		<li class="clearfix {if $smarty.foreach.suppliers.first}first_item{elseif $smarty.foreach.suppliers.last}last_item{else}item{/if}"> 
+	{foreach $suppliers_list as $supplier}
+		<li class="clearfix {if $supplier@first}first_item{elseif $supplier@last}last_item{else}item{/if}">
 			<div class="left_side">
 				<!-- logo -->
 				<div class="logo">
