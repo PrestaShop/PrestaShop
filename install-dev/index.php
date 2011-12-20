@@ -117,8 +117,8 @@ if ($lm->getIncludeTradFilename())
 	<title><?php echo sprintf(lang('PrestaShop %s Installer'), INSTALL_VERSION); ?></title>
 	<link rel="stylesheet" type="text/css" media="all" href="view.css"/>
 	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/ajaxfileupload.js"></script>
-	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/jquery.pngFix.pack.js"></script>
+	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/plugins/ajaxfileupload/jquery.ajaxfileupload.js"></script>
+	<script type="text/javascript" src="<?php echo PS_BASE_URI ?>js/jquery/plugins/jquery.pngFix.js"></script>
 	<link rel="shortcut icon" href="<?php echo PS_BASE_URI ?>img/favicon.ico" />
 
 	<script type="text/javascript">
@@ -737,8 +737,8 @@ if ($lm->getIncludeTradFilename())
 					if (!isset($_GET['language']))
 						$_GET['language'] = 0;
 				?>
-				<link href="../css/jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />
-				<script src="../js/jquery/jquery.fancybox-1.3.4.js" type="text/javascript"></script>
+				<link href="../js/plugins/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="screen" />
+				<script src="../js/jquery/plugins/fancybox/jquery.fancybox.js" type="text/javascript"></script>
 					<script type="text/javascript">
 					var moduleChecked = new Array();
 					$(document).ready(function() {
