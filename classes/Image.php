@@ -35,9 +35,6 @@ class ImageCore extends ObjectModel
 	/** @var integer Product ID */
 	public $id_product;
 
-	/** @var string HTML title and alt attributes */
-	public $legend;
-
 	/** @var integer Position used to order images of the same product */
 	public $position;
 
@@ -70,9 +67,6 @@ class ImageCore extends ObjectModel
 			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-
-			// Lang fields
-			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
 
