@@ -175,8 +175,7 @@ class AdminShopUrlControllerCore extends AdminController
 						)
 					),
 					'desc' => array(
-						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url
-							(you can only have one main url per shop).'),
+						$this->l('If you set this url as main url for selected shop, all urls set to this shop will be redirected to this url (you can only have one main url per shop).'),
 						array(
 							'text' => $this->l('Since the selected shop has no main url, you have to set this url as main'),
 							'id' => 'mainUrlInfo'
