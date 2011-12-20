@@ -606,7 +606,7 @@ class ProductCore extends ObjectModel
 		 * - physical stock for this product
 		 * - supply order(s) for this product
 		 */
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->advanced_stock_management)
 		{
 			$stock_manager = StockManagerFactory::getManager();
 			$physical_quantity = $stock_manager->getProductPhysicalQuantities($this->id, 0);
@@ -4633,6 +4633,16 @@ class ProductCore extends ObjectModel
 		return $success;
 	}
 
+	/**
+	 * For a given product, returns its real quantity
+	 *
+	 * @since 1.5.0
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @param int $id_warehouse
+	 * @param int $id_shop
+	 * @return int real_quantity
+	 */
 	public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = 0, $id_shop = null)
 	{
 		static $manager = null;
@@ -4643,9 +4653,27 @@ class ProductCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($id_product, $id_shop))
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && self::usesAdvancedStockManagement($id_product) &&
+			StockAvailable::dependsOnStock($id_product, $id_shop))
 			return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
 		else
 			return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
+	}
+
+	/**
+	 * For a given product, tells if it uses the advanced stock management
+	 *
+	 * @since 1.5.0
+	 * @param int $id_product
+	 * @return bool
+	 */
+	public static function usesAdvancedStockManagement($id_product)
+	{
+		$query = new DbQuery;
+		$query->select('p.advanced_stock_management');
+		$query->from('products', 'p');
+		$query->where('p.id_product = '.(int)$id_product);
+
+		return (bool)Db::getInstance()->getValue($query);
 	}
 }
