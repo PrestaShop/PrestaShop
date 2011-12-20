@@ -86,6 +86,61 @@ class AdminShopControllerCore extends AdminController
 		parent::__construct();
 	}
 
+
+	public function initToolbar()
+	{
+		if ($this->display == 'edit' || $this->display == 'add')
+		{
+			if ($shop = $this->loadObject(true))
+			{
+				if ((bool)$shop->id)
+				{
+					// adding button for delete this shop
+					if ($this->tabAccess['delete']  && $this->display != 'add'  && !Shop::has_dependency($shop->id))
+						$this->toolbar_btn['delete'] = array(
+							'short' => 'Delete',
+							'href' => $this->context->link->getAdminLink('AdminShop').'&amp;id_shop='.$shop->id.'&amp;deleteshop',
+							'desc' => $this->l('Delete this shop'),
+							'confirm' => 1);
+
+					// adding button for preview this shop
+					if ($url_preview = $shop->getBaseURL())
+						$this->toolbar_btn['preview'] = array(
+							'href' => $url_preview,
+							'desc' => $this->l('Home page'),
+							'target' => true,
+							'class' => 'previewUrl'
+						);
+
+					$this->toolbar_btn['new-url'] = array(
+							'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;id_shop='.$shop->id.'&amp;addshop_url',
+							'desc' => $this->l('Add url'),
+							'class' => 'addShopUrl'
+						);
+
+				}
+
+				if ($this->tabAccess['edit'])
+				{
+					$this->toolbar_btn['save'] = array(
+						'short' => 'Save',
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminShops').'&amp;id_shop='.$shop->id,
+						'desc' => $this->l('Save'),
+					);
+
+					$this->toolbar_btn['save-and-stay'] = array(
+						'short' => 'SaveAndStay',
+						'href' => '#todo'.$this->context->link->getAdminLink('AdminShops').'&amp;id_shop='.$shop->id,
+						'desc' => $this->l('Save and stay'),
+					);
+				}
+			}
+		}
+
+		parent::initToolbar();
+		$this->context->smarty->assign('toolbar_fix', 1);
+	}
+
 	public function initContent()
 	{
 		$shops =  Shop::getShopWithoutUrls();
@@ -133,6 +188,17 @@ class AdminShopControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
+	public function processDelete($token)
+	{
+		if (!Validate::isLoadedObject($object = $this->loadObject()))
+			$this->_errors[] = Tools::displayError('Unable to load this shop.');
+		else if(!Shop::has_dependency($object->id))
+			return parent::processDelete($token);
+		else
+			$this->_errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
+
+		return false;
+	}
 	public function afterAdd($new_shop)
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
