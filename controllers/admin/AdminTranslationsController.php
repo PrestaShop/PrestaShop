@@ -68,6 +68,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
+		$this->toolbar_btn = array();
+/*
 		$this->toolbar_btn['save'] = array(
 			'href' => self::$currentIndex.'&token='.$this->token,
 			'desc' => $this->l('Update translations')
@@ -76,6 +78,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'href' => self::$currentIndex.'&token='.$this->token,
 			'desc' => $this->l('Cancel')
 		);
+*/
 	}
 
 	public function initMain()
