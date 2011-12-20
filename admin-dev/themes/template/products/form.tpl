@@ -165,20 +165,6 @@
 					$('#desc-product-newCombination').show();
 					populate_attrs();
 				}
-				else if (btn_name == 'Attachments')
-				{
-					$("#addAttachment").live('click', function() {
-						return !$("#selectAttachment2 option:selected").remove().appendTo("#selectAttachment1");
-					});
-					$("#removeAttachment").live('click', function() {
-						return !$("#selectAttachment1 option:selected").remove().appendTo("#selectAttachment2");
-					});
-					$("#product").submit(function() {
-						$("#selectAttachment1 option").each(function(i) {
-							$(this).attr("selected", "selected");
-						});
-					});
-				}
 				else
 				{
 					$('#desc-product-newCombination').hide();
