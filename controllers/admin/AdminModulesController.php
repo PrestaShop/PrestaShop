@@ -228,9 +228,14 @@ class AdminModulesControllerCore extends AdminController
 
 		$this->initContent();
 		$this->context->smarty->display('modules/list.tpl');
-		exit;
+		die('OK');
 	}
 
+	public function ajaxProcessSetFilter()
+	{
+		$this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
+		die('OK');
+	}
 
 
 
@@ -881,9 +886,9 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['autocompleteList'] = rtrim($autocompleteList, ' ,').'];';
 
 		$tpl_vars['showTypeModules'] = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showInstalledModules'] = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showEnabledModules'] = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showCountryModules'] = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['showCountryModules'] = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['showInstalledModules'] = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
+		$tpl_vars['showEnabledModules'] = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
 		$tpl_vars['nameCountryDefault'] = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
 		$tpl_vars['isoCountryDefault'] = $this->iso_default_country;
 
