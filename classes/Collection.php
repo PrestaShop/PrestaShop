@@ -65,7 +65,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * @var int Collection iterator
 	 */
-	protected $iterator;
+	protected $iterator = 0;
 
 	/**
 	 * @var int Total of elements for iteration
@@ -252,7 +252,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function current()
 	{
-		return $this->results[$this->iterator];
+		return isset($this->results[$this->iterator]) ? $this->results[$this->iterator] : null;
 	}
 
 	/**
