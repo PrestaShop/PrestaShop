@@ -32,6 +32,5 @@ else
 	$controller = new FrontController();
 	$controller->init();
 }
-
-$controller->initHeader();
-Context::getContext()->smarty->display(_PS_THEME_DIR_.'header.tpl');
+Tools::displayFileAsDeprecated();
+$controller->displayHeader();
