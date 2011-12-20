@@ -200,7 +200,7 @@ class AdminPaymentControllerCore extends AdminController
 		);
 
 		$this->toolbar_title = $this->l('Paiement');
-		unset($this->toolbar_btn['cancel']);
+		unset($this->toolbar_btn['back']);
 		return parent::renderView();
 	}
 }
