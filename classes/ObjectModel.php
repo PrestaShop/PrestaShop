@@ -270,7 +270,7 @@ abstract class ObjectModelCore
 		$fields = array();
 
 		// Set primary key in fields
-		if ($this->id)
+		if (isset($this->id))
 			$fields[$this->def['primary']] = $this->id;
 
 		// Set id_lang field for multilang fields and id_shop for multishop field
@@ -1258,5 +1258,10 @@ abstract class ObjectModelCore
 			foreach ($this->{'fieldsSize'.$suffix} as $field => $size)
 				$this->def['fields'][$field]['size'] = $size;
 		}
+	}
+
+	public function getEntity($entity)
+	{
+
 	}
 }
