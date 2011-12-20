@@ -192,7 +192,7 @@ class ProductCore extends ObjectModel
 	 * @since 1.5.0
 	 * @var boolean Tells if the product uses the advanced stock management
 	 */
-	public $advanced_stock_management;
+	public $advanced_stock_management = 0;
 
 	public $isFullyLoaded = false;
 
