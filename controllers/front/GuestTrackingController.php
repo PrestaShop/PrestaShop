@@ -69,7 +69,7 @@ class GuestTrackingControllerCore extends FrontController
 			else if (!Validate::isLoadedObject($order))
 				$this->errors[] = Tools::displayError('Invalid Order ID');
 			else if (!$order->isAssociatedAtGuest($email))
-				$this->errors[] = Tools::displayError('123');
+				$this->errors[] = Tools::displayError('Invalid order ID');
 			else
 			{
 				$this->assignOrderTracking($order);
