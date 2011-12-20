@@ -60,7 +60,8 @@ class AdminStockManagementControllerCore extends AdminController
 				'title' => $this->l('Name'),
 			),
 			'stock' => array(
-				'title' => $this->l('Total quantities in stock'),
+				'title' => $this->l('Quantity'),
+				'hint' => $this->l('Sum of quantities for all warehouses'),
 				'width' => 100,
 				'orderby' => false,
 				'filter' => false,
@@ -99,9 +100,9 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->_where = 'AND a.cache_is_pack = 0 AND a.is_virtual = 0';
 
 		$this->displayInformation($this->l('This interface allows you to manage the stocks of each of your products and their variations.').'<br />');
-		$this->displayInformation($this->l('Total quantities in stock represent the sum for all warehouses.').'<br />');
-		$this->displayInformation($this->l('Through this interface, you can add and delete products for a given warehouse.'));
-		$this->displayInformation($this->l('Also, you can transfer products between warehouses, or within one warehouse.'));
+		$this->displayInformation($this->l('Through this interface, you can increase quantities (add) and decrease quantities (delete) of products for a given warehouse.'));
+		$this->displayInformation($this->l('Furthermore, you can move quantities (transfer) of products between warehouses, or within one warehouse.').'<br />');
+		$this->displayInformation($this->l('Note that if you want to increase quantities of multiple products at once, you can use the supply orders tab.'));
 
 		return parent::renderList();
 	}

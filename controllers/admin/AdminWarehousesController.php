@@ -112,10 +112,10 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the general default currency used.').'<br />');
 		$this->displayInformation($this->l('Futhermore, for each warehouse, you have to check :
-											the management type (according to the law in your country), the valuation currency,
+											the management type (WA/FIFO/LIFO, according to the law in your country), the valuation currency,
 											its associated carriers and shops.').'<br />');
 		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation,
-											the number of products and quantities stored.'));
+											the number of products and quantities stored, ...'));
 
 		return parent::renderList();
 	}
@@ -179,7 +179,7 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Adress:'),
+					'label' => $this->l('Address:'),
 					'name' => 'address',
 					'size' => 100,
 					'maxlength' => 128,
@@ -187,10 +187,11 @@ class AdminWarehousesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Adress:').' (2)',
+					'label' => $this->l('Address:').' (2)',
 					'name' => 'address2',
 					'size' => 100,
 					'maxlength' => 128,
+					'desc' => $this->l('Address of this warehouse (complementary address is optional).'),
 				),
 				array(
 					'type' => 'text',
@@ -277,6 +278,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Management type:'),
+				'hint' => $this->l('Careful ! You won\'t be able to change this value later!'),
 				'name' => 'management_type',
 				'required' => true,
 				'options' => array(
@@ -303,6 +305,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Stock valuation currency:'),
+				'hint' => $this->l('Careful ! You won\'t be able to change this value later!'),
 				'name' => 'id_currency',
 				'required' => true,
 				'options' => array(
@@ -453,7 +456,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function renderView()
 	{
-		$this->displayInformation($this->l('This interface allows you to display detailed informations on your warehouse.').'<br />');
+		$this->displayInformation($this->l('This interface allows you to display detailed informations on your warehouse.'));
 
 		$id_warehouse = (int)Tools::getValue('id_warehouse');
 		$warehouse = new Warehouse($id_warehouse);

@@ -43,6 +43,8 @@
 	<div class="hint" style="display:block; position:'auto';">
 		<p>{l s='This interface allows you to specify the suppliers of the current product and eventually its combinations.'}</p>
 		<p>{l s='It is also possible to specify for each product/product combinations the supplier reference according to previously associated suppliers.'}</p>
+		<br />
+		<p>{l s='When using the advanced stock management (see Preferences/Products), the values you fill here (prices, references) will be used in the supply orders.'}</p>
 	</div>
 	<p>{l s='Please choose the suppliers associated to this product, and the default one.'}</p>
 	{assign var=confirm value="Are you sure you want to delete entered product information?"}
@@ -78,7 +80,11 @@
 	<p>&nbsp;</p>
 					<h4>{l s='Product reference(s)'}</h4>
 	<div class="separation"></div>
-	<p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
+	{if $associated_suppliers|@count == 0}
+		<p>{l s='You have to specify the suppliers associated to this product and the default one before setting references.'}</p>
+	{else}
+		<p>{l s='You can specify product reference(s) for each supplier associated.'}</p>
+	{/if}
 
 	<div id="suppliers_accordion" style="margin-top:10px; display:block;">
 		{foreach from=$associated_suppliers item=supplier}

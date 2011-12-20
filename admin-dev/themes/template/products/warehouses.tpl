@@ -58,9 +58,9 @@
 		    <div style="display:block;">
 				<table cellpadding="10" cellspacing="0" class="table">
 					<tr>
-						<th width="100">{l s='In the warehouse?'}</th>
-						<th>{l s='product name'}</th>
-						<th width="150">{l s='location in the warehouse (optionnal)'}</th>
+						<th width="100">{l s='Stored'}</th>
+						<th>{l s='Product'}</th>
+						<th width="150">{l s='Location (optionnal)'}</th>
 					</tr>
 					{foreach $attributes AS $index => $attribute}
 						{assign var=location value=''}
@@ -90,7 +90,7 @@
 					</tr>
 					<tr>
 						<td><input type="checkbox" id="check_all_suppliers" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
-						<td colspan="2"><i>{l s='Mark all products available in the current warehouse.'}</i></td>
+						<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
 					</tr>
 				</table>
 			</div>
