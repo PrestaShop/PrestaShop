@@ -26,8 +26,8 @@
 
 <script type="text/javascript">
 
-	var msg_select_one = '{l s='Thanks to select at least one product.'}';
-	var msg_set_quantity = '{l s='Thanks to set a quantity to add a product.'}';
+	var msg_select_one = '{l s='Thanks to select at least one product.' js=1}';
+	var msg_set_quantity = '{l s='Thanks to set a quantity to add a product.' js=1}';
 
 	$(document).ready(function() {
 
