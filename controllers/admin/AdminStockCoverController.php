@@ -198,8 +198,8 @@ class AdminStockCoverControllerCore extends AdminController
 			'warn_days' => $this->getCurrentWarning()
 		);
 
-		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,
-					  						this interface gives you an idea of when one product will run out of stock.'));
+		$this->displayInformation($this->l('Considering the coverage period choosen and the quantity of products/combinations that you sold,'));
+		$this->displayInformation($this->l('this interface gives you an idea of when a product will run out of stock.'));
 
 		return parent::renderList();
 	}
