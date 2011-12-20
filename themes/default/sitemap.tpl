@@ -59,8 +59,8 @@
 		<div class="tree_top"><a href="{$base_dir_ssl}">{$categoriesTree.name|escape:'htmlall':'UTF-8'}</a></div>
 		<ul class="tree">
 		{if isset($categoriesTree.children)}
-			{foreach from=$categoriesTree.children item=child name=sitemapTree}
-				{if $smarty.foreach.sitemapTree.last}
+			{foreach $categoriesTree.children as $child}
+				{if $child@last}
 					{include file="$tpl_dir./category-tree-branch.tpl" node=$child last='true'}
 				{else}
 					{include file="$tpl_dir./category-tree-branch.tpl" node=$child}
@@ -74,7 +74,7 @@
 		<div class="tree_top"><a href="{$categoriescmsTree.link}">{$categoriescmsTree.name|escape:'htmlall':'UTF-8'}</a></div>
 		<ul class="tree">
 			{if isset($categoriescmsTree.children)}
-				{foreach from=$categoriescmsTree.children item=child name=sitemapCmsTree}
+				{foreach $categoriescmsTree.children as $child}
 					{if (isset($child.children) && $child.children|@count > 0) || $child.cms|@count > 0}
 						{include file="$tpl_dir./category-cms-tree-branch.tpl" node=$child}
 					{/if}

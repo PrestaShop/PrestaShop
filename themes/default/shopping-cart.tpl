@@ -180,7 +180,7 @@
 				{if $voucherAllowed}
 					{if isset($errors_discount) && $errors_discount}
 						<ul class="error">
-						{foreach from=$errors_discount key=k item=error}
+						{foreach $errors_discount as $k=>$error}
 							<li>{$error|escape:'htmlall':'UTF-8'}</li>
 						{/foreach}
 						</ul>
@@ -195,7 +195,7 @@
 						{if $displayVouchers}
 							<h4 class="title_offers">{l s='Take advantage of our offers:'}</h4>
 							<div id="display_cart_vouchers">
-							{foreach from=$displayVouchers item=voucher}
+							{foreach $displayVouchers as $voucher}
 								<span onclick="$('#discount_name').val('{$voucher.name}');return false;" class="voucher_name">{$voucher.name}</span> - {$voucher.description} <br />
 							{/foreach}
 							</div>
@@ -218,33 +218,33 @@
 			</tr>
 		</tfoot>
 		<tbody>
-		{foreach from=$products item=product name=productLoop}
+		{foreach $products as $product}
 			{assign var='productId' value=$product.id_product}
 			{assign var='productAttributeId' value=$product.id_product_attribute}
 			{assign var='quantityDisplayed' value=0}
 			{* Display the product line *}
-			{include file="./shopping-cart-product-line.tpl" productLast=$smarty.foreach.productLoop.last productFirst=$smarty.foreach.productLoop.first}
+			{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 			{* Then the customized datas ones*}
 			{if isset($customizedDatas.$productId.$productAttributeId)}
-				{foreach from=$customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] key=id_customization item=customization}
+				{foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
 					<tr id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" class="alternate_item cart_item">
 						<td colspan="5">
-							{foreach from=$customization.datas key=type item=custom_data}
+							{foreach $customization.datas as $type=>$custom_data}
 
 								{if $type == $CUSTOMIZE_FILE}
 									<div class="customizationUploaded">
 										<ul class="customizationUploaded">
-											{foreach from=$datas item=picture}<li><img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" /></li>{/foreach}
+											{foreach $datas as $picture}<li><img src="{$pic_dir}{$picture.value}_small" alt="" class="customizationUploaded" /></li>{/foreach}
 										</ul>
 									</div>
 								{elseif $type == $CUSTOMIZE_TEXTFIELD}
 									<ul class="typedText">
-										{foreach from=$custom_data item=textField name=typedText}
+										{foreach $custom_data as $textField}
 											<li>
 												{if $textField.name}
 													{$textField.name}
 												{else}
-													{l s='Text #'}{$smarty.foreach.typedText.index+1}
+													{l s='Text #'}{$textField@index+1}
 												{/if}
 												{l s=':'} {$textField.value}
 											</li>
@@ -283,14 +283,14 @@
 					{assign var='quantityDisplayed' value=$quantityDisplayed+$customization.quantity}
 				{/foreach}
 				{* If it exists also some uncustomized products *}
-				{if $product.quantity-$quantityDisplayed > 0}{include file="./shopping-cart-product-line.tpl" productLast=$smarty.foreach.productLoop.last productFirst=$smarty.foreach.productLoop.first}{/if}
+				{if $product.quantity-$quantityDisplayed > 0}{include file="./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}{/if}
 			{/if}
 		{/foreach}
 		</tbody>
 	{if sizeof($discounts)}
 		<tbody>
-		{foreach from=$discounts item=discount name=discountLoop}
-			<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
+		{foreach $discounts as $discount}
+			<tr class="cart_discount {if $discount@last}last_item{elseif $discount@first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
 				<td class="cart_discount_name" colspan="3">{$discount.name}</td>
 				<td class="cart_discount_price"><span class="price-discount">
 					{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}
@@ -368,13 +368,13 @@
 	</ul>
 	{/if}
 	{else}
-		{foreach from=$formattedAddresses item=address name=myLoop}
-			<ul class="address {if $smarty.foreach.myLoop.last}last_item{elseif $smarty.foreach.myLoop.first}first_item{/if} {if $smarty.foreach.myLoop.index % 2}alternate_item{else}item{/if}">
+		{foreach $formattedAddresses as $address}
+			<ul class="address {if $address@last}last_item{elseif $address@first}first_item{/if} {if $address@index % 2}alternate_item{else}item{/if}">
 				<li class="address_title">{$address.object.alias}</li>
-				{foreach from=$address.ordered name=adr_loop item=pattern}
+				{foreach $address.ordered as $pattern}
 					{assign var=addressKey value=" "|explode:$pattern}
 					<li>
-					{foreach from=$addressKey item=key name="word_loop"}
+					{foreach $addressKey as $key}
 						<span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
 							{$address.formated[$key]|escape:'htmlall':'UTF-8'}
 						</span>
