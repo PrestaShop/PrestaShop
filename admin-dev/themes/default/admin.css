@@ -200,7 +200,8 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 #productBox { position:relative; width:100%; float:left;}
 
 /*tab-pane*/
-form#product_form, form#access_form, form#cart_rule_form {   background-color:#ebedf4; border:1px solid #ccced7; min-height:404px; padding: 5px 10px 10px; margin-left:140px;}
+form#product_form, form#access_form, form#cart_rule_form { background-color:#ebedf4; border:1px solid #ccced7; min-height:404px; padding: 5px 10px 10px; margin-left:140px;}
+#content form.adminstockmanagement {margin-left:0px;}
 form#product_form h4 { font-size:18px; font-weight:normal;}
 .tab-row {}
 .tab-row .tab {background:#EFEFEF;width:100px;}

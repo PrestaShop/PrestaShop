@@ -37,6 +37,7 @@ class HelperFormCore extends Helper
 	public $fields_value = array();
 
 	public $table;
+	public $name_controller = '';
 
 	/** @var string if not null, a title will be added on that list */
 	public $title = null;
@@ -151,6 +152,7 @@ class HelperFormCore extends Helper
 			'current' => $this->currentIndex,
 			'token' => $this->token,
 			'table' => $this->table,
+			'name_controller' => $this->name_controller,
 			'languages' => $this->languages,
 			'defaultFormLanguage' => $this->default_form_language,
 			'allowEmployeeFormLang' => $this->allow_employee_form_lang,
