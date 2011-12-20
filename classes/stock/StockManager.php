@@ -232,6 +232,7 @@ class StockManagerCore implements StockManagerInterface
 				return $return;
 
 			$stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
+			$stock_collection->getAll();
 
 			// check if the collection is loaded
 			if (count($stock_collection) <= 0)
