@@ -1024,6 +1024,15 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function postProcess($token = null)
 	{
+		if ($this->action == 'attachments')
+			if ($id = (int)Tools::getValue($this->identifier))
+			{
+				$attachments = trim(Tools::getValue('arrayAttachments'), ',');
+				$attachments_tab = explode(',', $attachments);
+				if (Attachment::attachToProduct($id, $attachments_tab))
+					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
+			}
+
 		if (!$this->redirect_after)
 			parent::postProcess(true);
 	}
