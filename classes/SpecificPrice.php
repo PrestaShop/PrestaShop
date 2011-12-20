@@ -330,6 +330,7 @@ class SpecificPriceCore extends ObjectModel
 	{
 		if ($id_product)
 			$this->id_product = (int)$id_product;
+		unset($this->id);
 		return $this->add();
 	}
 
