@@ -386,6 +386,52 @@ class FrontControllerCore extends Controller
 		));
 	}
 
+	/**
+	 * @deprecated
+	 */
+	public function displayHeader($display = true)
+	{
+		// This method will be removed in 1.6
+		Tools::displayAsDeprecated();
+		$this->initHeader();
+ 		$hook_header = Hook::exec('displayHeader');
+		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
+		{
+			// CSS compressor management
+			if (Configuration::get('PS_CSS_THEME_CACHE'))
+				$this->css_files = Media::cccCSS($this->css_files);
+			//JS compressor management
+			if (Configuration::get('PS_JS_THEME_CACHE'))
+				$this->js_files = Media::cccJs($this->js_files);
+		}
+
+ 		$this->context->smarty->assign('css_files', $this->css_files);
+		$this->context->smarty->assign('js_files', array_unique($this->js_files));
+
+		$this->context->smarty->assign(array(
+			'HOOK_HEADER' => $hook_header,
+			'HOOK_TOP' => Hook::exec('displayTop'),
+		));
+
+		$this->display_header = $display;
+		$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
+
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public function displayFooter($display = true)
+	{
+		// This method will be removed in 1.6
+		Tools::displayAsDeprecated();
+		$this->context->smarty->assign(array(
+			'HOOK_RIGHT_COLUMN' => Hook::exec('displayRightColumn', array('cart' => $this->context->cart)),
+			'HOOK_FOOTER' => Hook::exec('footer'),
+		));
+		$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+	}
+
 	public function initCursedPage()
 	{
 		return $this->displayMaintenancePage();
@@ -609,7 +655,6 @@ class FrontControllerCore extends Controller
 			'HOOK_FOOTER' => Hook::exec('footer'),
 		));
 
-		
 	}
 
 	public function getLiveEditFooter(){
