@@ -260,7 +260,8 @@ function updateNbSubCategorySelected(category, add)
 		updateNbSubCategorySelected(currentSpan.parent().children('input'), add);
 }
 
-$(document).ready( function() {
+function searchCategory()
+{
 	var category_to_check;
 	if ($('#search_cat').length)
 	{
@@ -283,7 +284,7 @@ $(document).ready( function() {
 			parent_ids = getParentCategoriesIdAndOpen(item[1]);
 		});
 	}
-});
+}
 
 function getParentCategoriesIdAndOpen(id_category)
 {
