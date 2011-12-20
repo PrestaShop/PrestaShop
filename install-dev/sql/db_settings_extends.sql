@@ -1719,3 +1719,7 @@ INSERT INTO `PREFIX_homeslider_slides_lang` (id_slide, id_lang, title, descripti
 (4, 5, "PHP.net", "PrestaShop use PHP, the well-known open-source technology", "php", "http://www.php.net", "sample-4.jpg"),
 (5, 5, "Smarty.net", "PrestaShop use the template engine Smarty (V3)", "Smarty", "http://www.smarty.net", "sample-5.jpg");
 
+INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
+(2, 1),
+(3, 1),
+(4, 1);

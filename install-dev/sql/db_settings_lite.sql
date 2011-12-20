@@ -1605,3 +1605,6 @@ INSERT INTO `PREFIX_supply_order_state_lang` (`id_supply_order_state`, `id_lang`
 (6, 3, 'order fenced'),
 (6, 4, 'order fenced'),
 (6, 5, 'order fenced');
+
+INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
+(1, 1);

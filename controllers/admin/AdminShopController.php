@@ -213,6 +213,12 @@ class AdminShopControllerCore extends AdminController
 				)
 			);
 		}
+		$this->fields_form['input'][] = array(
+			'type' => 'categories_select',
+			'name' => 'categoryBox',
+			'label' => $this->l('Associated categories :'),
+			'category_tree' => $this->initCategoriesAssociation($this)
+		);
 
 		$categories = Category::getCategories($this->context->language->id, false, false);
 		$this->fields_form['input'][] = array(
@@ -335,10 +341,73 @@ class AdminShopControllerCore extends AdminController
 			'checked' => (Tools::getValue('addshop') !== false) ? true : false,
 			'defaultShop' => (int)Configuration::get('PS_SHOP_DEFAULT'),
 		);
-
 		if (isset($this->fields_import_form))
 			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
 
 		return parent::renderForm();
+	}
+
+	public function initCategoriesAssociation()
+	{
+		$selected_cat = Shop::getCategories(Tools::getValue('id_shop'));
+
+		$translations = array(
+			'Home' => $this->l('Home'),
+			'selected' => $this->l('selected'),
+			'Collapse All' => $this->l('Collapse All'),
+			'Expand All' => $this->l('Expand All'),
+			'Check All' => $this->l('Check All'),
+			'Uncheck All'  => $this->l('Uncheck All'),
+			'search' => $this->l('Search a category')
+		);
+
+		return Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true);
+	}
+
+	/**
+	 * Object creation
+	 *
+	 * @param string $token
+	 */
+	public function processAdd($token)
+	{
+		/* Checking fields validity */
+		$this->validateRules();
+
+		if (!count($this->_errors))
+		{
+			$object = new $this->className();
+			$this->copyFromPost($object, $this->table);
+			$this->beforeAdd($object);
+			if (!$object->add())
+			{
+				$this->_errors[] = Tools::displayError('An error occurred while creating object.').
+					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+			}
+			 /* voluntary do affectation here */
+			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
+			{
+				$parent_id = (int)Tools::getValue('id_parent', 1);
+				$this->afterAdd($object);
+				$this->updateAssoShop($object->id);
+				// Save and stay on same form
+				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
+				// Save and back to parent
+				if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
+				// Default behavior (save and back)
+				if (empty($this->redirect_after))
+					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
+			}
+		}
+
+		$this->_errors = array_unique($this->_errors);
+		if (count($this->_errors) > 0)
+			return;
+
+		$shop = new Shop($object->id);
+		$shop->updateCategories(Tools::getValue('categoryBox'));
+		return $object;
 	}
 }

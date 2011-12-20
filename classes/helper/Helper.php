@@ -172,7 +172,7 @@ class HelperCore
 			 <span> <a href="#" id="check_all" >'.$trads['Check All'].'</a>
 			 |</span>
 			 <span><a href="#" id="uncheck_all" >'.$trads['Uncheck All'].'</a>|</span>
-			 ' : '').($use_search ? '<form method="post" id="filternameForm"><span>'.$trads['search'].' : <input type="text" name="search_cat" id="search_cat"></form></span>' : '').'
+			 ' : '').($use_search ? '<span>'.$trads['search'].' : <input type="text" name="search_cat" id="search_cat"></span>' : '').'
 		</div>
 		';
 

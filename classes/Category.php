@@ -663,8 +663,10 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->addSqlRestrictionOnLang('cl').'
+		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON c.`id_category` = cs.`id_category`
 		WHERE `id_lang` = '.(int)$id_lang.'
 		AND c.`id_parent` = '.(int)$id_parent.'
+		AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true).'
 		'.($active ? 'AND `active` = 1' : '').'
 		ORDER BY `position` ASC');
 	}
@@ -713,8 +715,10 @@ class CategoryCore extends ObjectModel
 					)' : '0').' AS nbSelectedSubCat
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->addSqlRestrictionOnLang('cl').'
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON c.`id_category` = cs.`id_category`
 				WHERE `id_lang` = '.(int)$id_lang.'
 					AND c.`id_parent` = '.(int)$id_parent.'
+					AND cs.`id_shop` = '.(int)$shop->getID(true).'
 				ORDER BY `position` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
@@ -883,7 +887,10 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON (c.`id_category` = cl.`id_category`
 					AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+					ON c.`id_category` = cs.`id_category`
 				WHERE c.`id_category` = '.(int)$id_current.'
+					AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true).'
 					AND c.`id_parent` != 0
 			');
 
@@ -1196,6 +1203,17 @@ class CategoryCore extends ObjectModel
 			$categories[$category['id_category']] = $category;
 
 		return $categories;
+	}
+
+	public function isParentCategoryAvailable($id_shop)
+	{
+		return Db::getInstance()->getValue('
+		SELECT c.`id_category`
+		FROM `'._DB_PREFIX_.'category` c
+		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+			ON c.`id_category` = cs.`id_category`
+		WHERE cs.`id_shop` = '.(int)$id_shop.'
+		AND c.`id_parent` = '.(int)$this->id_parent);
 	}
 }
 
