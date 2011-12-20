@@ -315,13 +315,17 @@ class AdminCategoriesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
-			if ($id_category = (int)Tools::getValue('id_category'))
+			$id_category = (int)Tools::getValue('id_category');
+			$id_parent = (int)Tools::getValue('id_parent');
+			if ($id_category)
 			{
-				if (!Category::checkBeforeMove($id_category, $this->_category->id_parent))
+				if ($id_category != $id_parent)
 				{
-					$this->_errors[] = Tools::displayError('Category cannot be moved here');
-					return false;
+					if (!Category::checkBeforeMove($id_category, $id_parent))
+						$this->_errors[] = Tools::displayError($this->l('Category cannot be moved here'));
 				}
+				else
+					$this->_errors[] = Tools::displayError($this->l('Category cannot be parent of herself.'));
 			}
 		}
 		/* Delete object */
