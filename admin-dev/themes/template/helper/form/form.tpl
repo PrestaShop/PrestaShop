@@ -283,7 +283,7 @@
 							{elseif $input.type == 'free'}
 								{$fields_value[$input.name]}
 							{/if}
-							{if isset($input.required) && $input.required} <sup>*</sup>{/if}
+							{if isset($input.required) && $input.required && $input.type != 'radio'} <sup>*</sup>{/if}
 							{if isset($input.desc)}
 								<p class="preference_description">
 									{if is_array($input.desc)}
