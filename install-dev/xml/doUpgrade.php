@@ -145,6 +145,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'hook_blocksearch_on_header.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_canada.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'generate_order_reference.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;
