@@ -1219,20 +1219,44 @@ class AdminOrdersControllerCore extends AdminController
 		$this->context->cart = $cart;
 		$this->context->customer = new Customer($order->id_customer);
 
-		// Add product to cart
-		$cart->updateQty($product_informations['product_quantity'], $product->id, isset($combination) ? $combination->id : null, false, 'up', new Shop($cart->id_shop));
-
 		$use_taxes = ($order->getTaxCalculationMethod() == PS_TAX_INC);
 
 		$initial_prodcut_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
 			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-		if ($product_informations['product_price_tax_incl'] < $initial_prodcut_price_tax_incl)
+		// Creating specific price if needed
+		if ($product_informations['product_price_tax_incl'] != $initial_prodcut_price_tax_incl)
 		{
-			$reduction_tax_incl = $initial_prodcut_price_tax_incl - $product_informations['product_price_tax_incl'];
-
-			// TODO Use Specific price !!!
+			$specific_price = new SpecificPrice();
+			$specific_price->id_shop = 0;
+			$specific_price->id_group_shop = 0;
+			$specific_price->id_currency = 0;
+			$specific_price->id_country = 0;
+			$specific_price->id_group = 0;
+			$specific_price->id_customer = $order->id_customer;
+			$specific_price->id_product = $product->id;
+			if (isset($combination))
+				$specific_price->id_product_attribute = $combination->id;
+			else
+				$specific_price->id_product_attribute = 0;
+			$specific_price->price = $product_informations['product_price_tax_excl'];
+			$specific_price->from_quantity = 1;
+			$specific_price->reduction = 0;
+			$specific_price->reduction_type = 'amount';
+			$specific_price->from = '0000-00-00 00:00:00';
+			$specific_price->to = '0000-00-00 00:00:00';
+			$specific_price->add();
 		}
+
+		// Flush cache
+		// @TODO clean the following line used only in order to clean cache of getPriceStatic method
+		$specific_price_output = null;
+		Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
+			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price_output, true, true, null,
+			true, true);
+
+		// Add product to cart
+		$cart->updateQty($product_informations['product_quantity'], $product->id, isset($combination) ? $combination->id : null, false, 'up', new Shop($cart->id_shop));
 
 		// If order is valid, we can create a new invoice or edit an existing invoice
 		if ($order->hasInvoice())
@@ -1339,6 +1363,10 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Save changes of order
 		$order->update();
+
+		// Delete specific price if exists
+		if (isset($specific_price))
+			$specific_price->delete();
 
 		$products = $this->getProducts($order);
 		// Get the last product

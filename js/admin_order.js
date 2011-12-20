@@ -370,7 +370,8 @@ function init()
 			$('#add_product_product_stock').css('font-weight', 'normal').css('color', 'black').css('font-size', '1em');;
 	});
 
-	$('#submitAddProduct').click(function() {
+	$('#submitAddProduct').click(function(e) {
+		e.preventDefault();
 		var go = true;
 
 		if ($('input#add_product_product_id').val() == 0)

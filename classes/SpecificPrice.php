@@ -75,6 +75,8 @@ class SpecificPriceCore extends ObjectModel
 	{
 		if (parent::add($autodate, $nullValues))
 		{
+			// Flush cache when we adding a new specific price
+			self::$_specificPriceCache = array();
 			// Set cache of feature detachable to true
 			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
 			return true;
@@ -82,10 +84,21 @@ class SpecificPriceCore extends ObjectModel
 		return false;
 	}
 
+	public function update($null_values = false)
+	{
+		if (parent::update($null_values))
+		{
+			// Flush cache when we updating a new specific price
+			self::$_specificPriceCache = array();
+		}
+	}
+
 	public function delete()
 	{
 		if (parent::delete())
 		{
+			// Flush cache when we deletind a new specific price
+			self::$_specificPriceCache = array();
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table']));
 			return true;
@@ -223,7 +236,7 @@ class SpecificPriceCore extends ObjectModel
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
-			WHERE   
+			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
 					'.(!$all_combinations ? '`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND ' : '').'
 					`id_shop` IN(0, '.(int)$id_shop.') AND
@@ -268,7 +281,7 @@ class SpecificPriceCore extends ObjectModel
 			SELECT *,
 					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
-			WHERE	
+			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
 					`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND
 					`id_shop` IN(0, '.(int)$id_shop.') AND
