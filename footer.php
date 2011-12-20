@@ -32,6 +32,5 @@ else
 	$controller = new FrontController();
 	$controller->init();
 }
-
-$controller->initFooter();
-Context::getContext()->smarty->display(_PS_THEME_DIR_.'footer.tpl');
+Tools::displayFileAsDeprecated();
+$controller->displayFooter();
