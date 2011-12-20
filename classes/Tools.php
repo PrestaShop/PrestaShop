@@ -633,7 +633,10 @@ class ToolsCore
 	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
 		global $_ERRORS;
-
+		
+		if (is_null($context))
+			$context = Context::getContext();
+		
 		@include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/errors.php');
 
 		if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $string == 'Fatal error')

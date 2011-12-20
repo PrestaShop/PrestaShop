@@ -201,7 +201,7 @@ class AdminProductsControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group`
 				AND tr.`id_country` = '.(int)$this->context->country->id.' AND tr.`id_state` = 0)
-	   		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
 
 		// if no category selected, display all products
 		if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
@@ -328,7 +328,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!Validate::isGenericName(Tools::getValue('attachment_name_'.(int)($language['id_lang']))))
 				$this->_errors[] = Tools::displayError('Invalid Name');
 			else if (Tools::strlen(Tools::getValue('attachment_name_'.(int)($language['id_lang']))) > 32)
-				$this->_errors[] = Tools::displayError('Name is too long');
+				$this->_errors[] = Tools::displayError('Name is too long.').' '.'(32 '.Tools::displayError('chars max').')';
 			if (!Validate::isCleanHtml(Tools::getValue('attachment_description_'.(int)($language['id_lang']))))
 				$this->_errors[] = Tools::displayError('Invalid description');
 		}
