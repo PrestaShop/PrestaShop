@@ -2101,6 +2101,8 @@ class AdminProductsControllerCore extends AdminController
 			$this->_errors[] = 'Unable to load object';
 		else
 		{
+			if (!Shop::isProductAvailable($this->object->id))
+				$this->_displayUnavailableProductWarning();
 			$this->_displayDraftWarning($this->object->active);
 			$this->{'initForm'.$this->tab_display}($this->object, $languages, $default_language);
 			$this->tpl_form_vars['product'] = $this->object;
@@ -3836,7 +3838,7 @@ class AdminProductsControllerCore extends AdminController
 		Pack::deleteItems($product->id);
 
 		// lines format: QTY x ID-QTY x ID
-		if (Tools::getValue('type_product') == 1)
+		if (Tools::getValue('ppack'))
 		{
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));
@@ -3905,5 +3907,20 @@ class AdminProductsControllerCore extends AdminController
 
 			$this->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
 		}
+	}
+
+	protected function _displayUnavailableProductWarning()
+	{
+		$content = '<div class="warn">
+				<p>
+				<span style="float: left">
+				'.$this->l('Your product will be saved as draft').'
+				</span>
+				<span style="float:right"><a href="#" class="button" style="display: block" onclick="submitAddProductAndPreview()" >'.$this->l('Save and preview').'</a></span>
+				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
+				<br class="clear" />
+				</p>
+			</div>';
+			$this->tpl_form_vars['warning_unavailable_product'] = $content;
 	}
 }

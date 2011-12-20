@@ -118,6 +118,9 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
+		// we add restriction for shop
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON a.`id_category` = cs.`id_category`';
+		$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true);
 		parent::getList($id_lang, 'position', $order_way, $start, $limit, Context::getContext()->shop->getID(true));
 		// Check each row to see if there are combinations and get the correct action in consequence
 
@@ -170,7 +173,8 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
-		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
+		$id_shop = Context::getContext()->shop->getID(true);
+		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', 1));
 
 		$this->fields_form = array(
 			'tinymce' => true,
