@@ -1535,6 +1535,7 @@ class AdminControllerCore extends Controller
 		$helper->currentIndex = self::$currentIndex;
 		$helper->className = $this->className;
 		$helper->table = $this->table;
+		$helper->name_controller = Tools::getValue('controller');
 		$helper->orderBy = $this->_orderBy;
 		$helper->orderWay = $this->_orderWay;
 		$helper->listTotal = $this->_listTotal;
