@@ -50,7 +50,7 @@
 	</div>
 	{/if}
 	<div>
-		<label for="warn_days">{l s='Highlight when coverage is less than:'}</label>
+		<label for="warn_days">{l s='Highlight when coverage (in days) is less than:'}</label>
 		<input name="warn_days" type="text" size="3" onChange="$(this).parent().parent().submit();" 
 			   value="{if isset($stock_cover_warn_days)}{$stock_cover_warn_days}{/if}">
 		</input>

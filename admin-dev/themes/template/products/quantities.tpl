@@ -76,7 +76,7 @@
 				<tr>
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
-						<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually, and manage my stock independently'}</label>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually'}</label>
 						<br /><br />
 					</td>
 				</tr>
@@ -148,7 +148,7 @@
 			<ul>
 				<li>{l s='You are managing all shops.'}</li>
 				<li>{l s='You are managing a group of shops where quantities are not shared between all shops of this group.'}</li>
-				<li>{l s='You are managing a shop witch is in a group where quantities are shared between all shops of this group.'}</li>
+				<li>{l s='You are managing a shop which is in a group where quantities are shared between all shops of this group.'}</li>
 			</ul>
 		</div>
 	{/if}
