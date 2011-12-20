@@ -483,10 +483,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				if ($image->cover)
 					$_POST['cover'] = 1;
-				$languages = Language::getLanguages(false);
-				foreach ($languages as $language)
-					if (isset($image->legend[$language['id_lang']]))
-						$_POST['legend_'.$language['id_lang']] = $image->legend[$language['id_lang']];
+
 				$_POST['id_image'] = $image->id;
 			}
 
@@ -795,7 +792,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!$specificPrice->delete())
 				$this->_errors[] = Tools::displayError('An error occurred while deleting the specific price');
 			else
-				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&action=Prices&id_category='.Tools::getValue('id_category') : '').'&id_product='.$obj->id.'&add'.$this->table.'&conf=1&token='.($token ? $token : $this->token);
+				$this->confirmations[] = $this->l('Specific price successfully deleted');
 		}
 	}
 
@@ -810,12 +807,12 @@ class AdminProductsControllerCore extends AdminController
 			if (!SpecificPrice::setPriorities($priorities))
 				$this->_errors[] = Tools::displayError('An error occurred while updating priorities.');
 			else
-				$this->redirect_after = self::$currentIndex.'&id_product='.$obj->id.'&add'.$this->table.'&action=Prices&conf=4&token='.($token ? $token : $this->token);
+				$this->confirmations[] = $this->l('Price rule successfully updated');
 		}
 		else if (!SpecificPrice::setSpecificPriority((int)($obj->id), $priorities))
 			$this->_errors[] = Tools::displayError('An error occurred while setting priorities.');
 		else
-			$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&action=Prices&id_product='.$obj->id.'&add'.$this->table.'&conf=4&token='.($token ? $token : $this->token);
+			$this->confirmations[] = $this->l('Price priorities successfully updated');
 	}
 
 	public function processCustomizationConfiguration($token)
@@ -966,7 +963,10 @@ class AdminProductsControllerCore extends AdminController
 		else if (Tools::isSubmit('submitSpecificPricePriorities'))
 		{
 			if ($this->tabAccess['edit'] === '1')
+			{
 				$this->action = 'specificPricePriorities';
+				$this->tab_display = 'prices';
+			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
@@ -1024,15 +1024,6 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function postProcess($token = null)
 	{
-		if ($this->action == 'attachments')
-			if ($id = (int)Tools::getValue($this->identifier))
-			{
-				$attachments = trim(Tools::getValue('arrayAttachments'), ',');
-				$attachments_tab = explode(',', $attachments);
-				if (Attachment::attachToProduct($id, $attachments_tab))
-					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
-			}
-
 		if (!$this->redirect_after)
 			parent::postProcess(true);
 	}
@@ -1247,26 +1238,22 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessDeleteProductImage()
 	{
-		/* Delete product image */
-		if (isset($_GET['deleteProductImage']) || $this->action == 'deleteProductImage')
+		$image = new Image((int)Tools::getValue('id_image'));
+		$image->delete();
+		if (!Image::getCover($image->id_product))
 		{
-			$image = new Image((int)Tools::getValue('id_image'));
-			$image->delete();
-			if (!Image::getCover($image->id_product))
-			{
-				$first_img = Db::getInstance()->getRow('
-				SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-				WHERE `id_product` = '.(int)$image->id_product);
-				Db::getInstance()->Execute('
-				UPDATE `'._DB_PREFIX_.'image`
-				SET `cover` = 1
-				WHERE `id_image` = '.(int)$first_img['id_image']);
-			}
-			@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
-			@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
-
-			$this->content = '{"status":"ok"}';
+			$first_img = Db::getInstance()->getRow('
+			SELECT `id_image` FROM `'._DB_PREFIX_.'image`
+			WHERE `id_product` = '.(int)$image->id_product);
+			Db::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'image`
+			SET `cover` = 1
+			WHERE `id_image` = '.(int)$first_img['id_image']);
 		}
+		@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
+
+		$this->content = '{"status":"ok"}';
 	}
 
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
@@ -3885,7 +3872,6 @@ class AdminProductsControllerCore extends AdminController
 	public function setMedia()
 	{
 		parent::setMedia();
-
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			$this->addjQueryPlugin(array(

@@ -160,12 +160,10 @@ class qqUploadedFileXhr
 		unlink($tmpName);
 		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
 		$lang = Context::getContext()->employee->id_lang;
-		
-		foreach (Language::getLanguages(false) as $l)
-			$image->legend[$l['id_lang']] = $id_image." ".$p->name[$l['id_lang']]." ".$p->reference;
+
 		if (!$image->update())
 			return array('error' => Tools::displayError('Error while updating status'));
-		$img = array('id_image' => $image->id, 'legend' => $image->legend[$lang], 'position' => $image->position, 'cover' => $image->cover);
+		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover);
 		return array("success" => $img);
 	}
 	
@@ -173,6 +171,7 @@ class qqUploadedFileXhr
 	{
 		return $_GET['qqfile'];
 	}
+
 	function getSize() 
 	{
 		if (isset($_SERVER["CONTENT_LENGTH"]))
