@@ -48,6 +48,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		parent::__construct();
 
+	 	$this->table = 'translations';
 		include_once(_PS_ADMIN_DIR_.'/../tools/tar/Archive_Tar.php');
 		include_once(_PS_ADMIN_DIR_.'/../tools/pear/PEAR.php');
 
@@ -68,17 +69,14 @@ class AdminTranslationsControllerCore extends AdminController
 
 	public function initToolbar()
 	{
-		$this->toolbar_btn = array();
-/*
 		$this->toolbar_btn['save'] = array(
-			'href' => self::$currentIndex.'&token='.$this->token,
+			'href' => '#',
 			'desc' => $this->l('Update translations')
 		);
 		$this->toolbar_btn['cancel'] = array(
 			'href' => self::$currentIndex.'&token='.$this->token,
 			'desc' => $this->l('Cancel')
 		);
-*/
 	}
 
 	public function initMain()
@@ -896,7 +894,7 @@ class AdminTranslationsControllerCore extends AdminController
 		);
 
 		// Add js variables needed for autotranslate
-		$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
+		//$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';
@@ -906,7 +904,6 @@ class AdminTranslationsControllerCore extends AdminController
 	public function initFormBack($lang)
 	{
 		$_LANGADM = $this->fileExists(_PS_TRANSLATIONS_DIR_.$lang, 'admin.php', '_LANGADM');
-		$str_output = '';
 		// count will contain the number of expressions of the page
 		$count = 0;
 		$missing_translations = array();

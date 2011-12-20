@@ -33,12 +33,12 @@
 	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
 	{l s='Click on the titles to open fieldsets'}.<br /><br />
 	{if !$suoshin_exceeded}
-		<form method="post" action="{$url_submit}" class="form">
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 		{$toggle_button}
 		<input type="hidden" name="lang" value="{$lang}" />
 		<input type="hidden" name="type" value="{$type}" />
-		<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-		<input type="submit" name="submitTranslations{$type|ucfirst}AndStay" value="{l s='Update and stay'}" class="button" />
+		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+		{*<input type="submit" name="submitTranslations{$type|ucfirst}AndStay" value="{l s='Update and stay'}" class="button" />*}
 		<br /><br />
 	
 		{l s='Core e-mails:'}
@@ -60,9 +60,6 @@
 				{$mails['display']}
 			{/foreach}
 		{/if}
-		<br />
-		<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-		<input type="submit" name="submitTranslations{$type|ucfirst}AndStay" value="{l s='Update and stay'}" class="button" />
 		</form>
 	{/if}
 
