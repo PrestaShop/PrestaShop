@@ -32,10 +32,10 @@
 	{l s='Errors to translate'} : <b>{$count}</b>
 	{$limit_warning}
 	{if !$suoshin_exceeded}
-		<form method="post" action="{$url_submit}" class="form">
-			{$auto_translate}
+		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
+			{*{$auto_translate}$*}
 			<input type="hidden" name="lang" value="{$lang}" />
-			<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+			<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 			<br /><br />
 			<table cellpadding="0" cellspacing="0" class="table">
 			{foreach $errorsArray as $key => $value}
@@ -44,8 +44,7 @@
 					<td style="width: 430px">= <input type="text" name="{$key|md5}" value="{$value|regex_replace:'#"#':'&quot;'|stripslashes}" style="width: 380px"></td>
 				</tr>
 			{/foreach}
-			</table><br />
-			<input type="submit" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
+			</table>
 		</form>
 	{/if}
 
