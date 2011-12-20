@@ -297,3 +297,6 @@ ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tax_excl` DECIMAL(17, 2) NOT NUL
 ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT NOT NULL DEFAULT '0' AFTER `id_cart_rule`;
 
 ALTER TABLE `PREFIX_specific_price` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL AFTER `id_shop`;
+
+/* Generate order references */
+/* PHP:generate_order_reference(); */;
