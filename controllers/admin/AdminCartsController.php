@@ -483,6 +483,12 @@ class AdminCartsControllerCore extends AdminController
 						);
 	}
 
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		unset($this->toolbar_btn['new']);
+	}
+
 	public function displayAjaxGetSummary()
 	{
 		echo Tools::jsonEncode($this->ajaxReturnVars());
