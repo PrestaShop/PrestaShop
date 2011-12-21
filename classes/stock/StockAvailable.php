@@ -140,7 +140,6 @@ class StockAvailableCore extends ObjectModel
 				foreach ($ids_product_attribute as $id_product_attribute)
 				{
 					$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
-
 					$query = array(
 						'table' => _DB_PREFIX_.'stock_available',
 						'data' => array('quantity' => $quantity),

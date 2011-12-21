@@ -85,8 +85,6 @@ class OrderHistoryCore extends ObjectModel
 						&& $oldOrderStatus->logable))
 					{
 						ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
-						// @since 1.5.0
-						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 					}
 					/* If becoming unlogable => removing sale */
 					else if (!$newOS->logable
@@ -95,7 +93,8 @@ class OrderHistoryCore extends ObjectModel
 					{
 						ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 						// @since 1.5.0
-						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+						if ($newOS->id == Configuration::get('PS_OS_ERROR') || $newOS->id == Configuration::get('PS_OS_CANCELED'))
+							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					}
 
 					if ((!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') || (int)$product['advanced_stock_management'] != 1)
@@ -113,8 +112,7 @@ class OrderHistoryCore extends ObjectModel
 						&& $oldOrderStatus instanceof OrderState
 						&& $oldOrderStatus->shipped == 0
 						&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-						&& (int)$product['advanced_stock_management'] == 1
-					)
+						&& (int)$product['advanced_stock_management'] == 1)
 					{
 						$manager = StockManagerFactory::getManager();
 						$warehouse = new Warehouse($product['id_warehouse']);
@@ -142,12 +140,12 @@ class OrderHistoryCore extends ObjectModel
 					)
 					{
 						$manager = StockManagerFactory::getManager();
-						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['cart_quantity']);
+						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['product_quantity']);
 						foreach ($mvts as $mvt)
 						{
 							$manager->addProduct(
 								$product['product_id'],
-								$product['id_product_attribute'],
+								$product['product_attribute_id'],
 								new Warehouse($mvt['id_warehouse']),
 								$mvt['physical_quantity'],
 								null,
