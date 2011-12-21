@@ -181,7 +181,10 @@ class LanguageCore extends ObjectModel
 		// create empty files if they not exists
 		$this->_generateFiles();
 
+		// @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
 		$resUpdateSQL = $this->loadUpdateSQL();
+		$resUpdateSQL = true;
+
 		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
 		if(!Configuration::get('PS_REWRITING_SETTINGS'))
 			return $resUpdateSQL;
