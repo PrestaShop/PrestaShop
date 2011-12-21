@@ -57,7 +57,7 @@ class HomeSlider extends Module
 	public function install()
 	{
 		/* Adds Module */
-		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('backOfficeTop') && $this->registerHook('displayHeader'))
+		if (parent::install() && $this->registerHook('displayHome') && $this->registerHook('displayHeader'))
 		{
 			/* Sets up configuration */
 			$res = Configuration::updateValue('HOMESLIDER_WIDTH', '535');
@@ -73,7 +73,7 @@ class HomeSlider extends Module
 	public function uninstall()
 	{
 		/* Deletes Module */
-		if (parent::uninstall() && $this->unregisterHook('home') && $this->unregisterHook('backOfficeTop') && $this->unregisterHook('header'))
+		if (parent::uninstall() && $this->unregisterHook('home') && $this->unregisterHook('header'))
 		{
 			/* Deletes tables */
 			$res = $this->deleteTables();
@@ -92,33 +92,33 @@ class HomeSlider extends Module
 		/* Slides */
 		$res = (bool)Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider` (
-				`id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
+				`id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
-				PRIMARY KEY (`id_slide`, `id_shop`)
+				PRIMARY KEY (`id_homeslider_slides`, `id_shop`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
 		');
 
 		/* Slides configuration */
 		$res &= Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides` (
-			  `id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `position` int(10) unsigned NOT NULL DEFAULT \'0\',
 			  `active` tinyint(1) unsigned NOT NULL DEFAULT \'0\',
-			  PRIMARY KEY (`id_slide`)
+			  PRIMARY KEY (`id_homeslider_slides`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
 		');
 
 		/* Slides lang configuration */
 		$res &= Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'homeslider_slides_lang` (
-			  `id_slide` int(10) unsigned NOT NULL,
+			  `id_homeslider_slides` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
 			  `title` varchar(255) NOT NULL,
 			  `description` text NOT NULL,
 			  `legend` varchar(255) NOT NULL,
 			  `url` varchar(255) NOT NULL,
 			  `image` varchar(255) NOT NULL,
-			  PRIMARY KEY (`id_slide`,`id_lang`)
+			  PRIMARY KEY (`id_homeslider_slides`,`id_lang`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=UTF8;
 		');
 
@@ -140,6 +140,7 @@ class HomeSlider extends Module
 
 	public function getContent()
 	{
+		$this->_html .= $this->headerHTML();
 		$this->_html .= '<h2>'.$this->displayName.'.</h2>';
 
 		/* Validate & process */
@@ -579,17 +580,18 @@ class HomeSlider extends Module
 	{
 		if (!$this->getSlides(true))
 			return;
-		$this->context->controller->addJqueryUI('ui.sortable');
+
 		$this->context->controller->addJS($this->_path.'js/jquery.bxSlider.min.js');
 		$this->context->controller->addCSS($this->_path.'bx_styles.css');
 		$this->context->controller->addJS($this->_path.'js/homeslider.js');
 	}
 
-	public function hookBackOfficeTop()
+	public function headerHTML()
 	{
 		if (Tools::getValue('controller') != 'AdminModules' && Tools::getValue('configure') != $this->name)
 			return;
 
+		$this->context->controller->addJqueryUI('ui.sortable');
 		/* Style & js for fieldset 'slides configuration' */
 		$html = '
 		<style>
@@ -631,7 +633,7 @@ class HomeSlider extends Module
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT MAX(hss.`position`) AS `next_position`
 				FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
-				WHERE hss.`id_slide` = hs.`id_slide` AND hs.`id_shop` = '.(int)$this->context->shop->getId()
+				WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$this->context->shop->getId()
 		);
 
 		return (++$row['next_position']);
@@ -644,7 +646,7 @@ class HomeSlider extends Module
 		$id_lang = $this->context->language->id;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT hs.`id_slide`,
+			SELECT hs.`id_homeslider_slides` as id_slide,
 					   hssl.`image`,
 					   hss.`position`,
 					   hss.`active`,
@@ -653,8 +655,8 @@ class HomeSlider extends Module
 					   hssl.`legend`,
 					   hssl.`description`
 			FROM '._DB_PREFIX_.'homeslider hs
-			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_slide = hss.id_slide)
-			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hssl.id_slide = hs.id_slide)
+			LEFT JOIN '._DB_PREFIX_.'homeslider_slides hss ON (hs.id_homeslider_slides = hss.id_homeslider_slides)
+			LEFT JOIN '._DB_PREFIX_.'homeslider_slides_lang hssl ON (hss.id_homeslider_slides = hssl.id_homeslider_slides)
 			WHERE (id_shop = '.(int)$id_shop.' OR id_shop = 1)
 			AND hssl.id_lang = '.(int)$id_lang.
 			($active ? ' AND hss.`active` = 1' : ' ').'
@@ -674,9 +676,9 @@ class HomeSlider extends Module
 
 	public function slideExists($id_slide)
 	{
-		$req = 'SELECT hs.`id_slide`
+		$req = 'SELECT hs.`id_homeslider_slides` as id_slide
 				FROM `'._DB_PREFIX_.'homeslider` hs
-				WHERE hs.`id_slide` = '.(int)$id_slide;
+				WHERE hs.`id_homeslider_slides` = '.(int)$id_slide;
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($req);
 		return ($row);
 	}

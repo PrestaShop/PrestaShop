@@ -61,12 +61,12 @@ class HomeSlide extends ObjectModel
 
 	protected $tables = array('homeslider_slides, homeslider_slides_lang');
 	protected $table = 'homeslider_slides';
-	protected $identifier = 'id_slide';
+	protected $identifier = 'id_homeslider_slides';
 
 	public function getFields()
 	{
 		$this->validateFields();
-		$fields['id_slide'] = (int)$this->id;
+		$fields['id_homeslider_slides'] = (int)$this->id;
 		$fields['active'] = (int)$this->active;
 		$fields['position'] = (int)$this->position;
 		return $fields;
@@ -96,7 +96,7 @@ class HomeSlide extends ObjectModel
 
 		$res = parent::add($autodate, $null_values);
 		$res &= Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'homeslider` (`id_shop`, `id_slide`)
+			INSERT INTO `'._DB_PREFIX_.'homeslider` (`id_shop`, `id_homeslider_slides`)
 			VALUES('.(int)$id_shop.', '.(int)$this->id.')'
 		);
 		return $res;
@@ -115,7 +115,7 @@ class HomeSlide extends ObjectModel
 		$res &= $this->reOrderPositions();
 		$res &= Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'homeslider`
-			WHERE `id_slide` = '.(int)$this->id
+			WHERE `id_homeslider_slides` = '.(int)$this->id
 		);
 
 		$res &= parent::delete();
@@ -131,16 +131,16 @@ class HomeSlide extends ObjectModel
 		$max = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT MAX(hss.`position`) as position
 			FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
-			WHERE hss.`id_slide` = hs.`id_slide` AND hs.`id_shop` = '.(int)$id_shop
+			WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$id_shop
 		);
 
 		if ((int)$max == (int)$id_slide)
 			return true;
 
 		$rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT hss.`position` as position, hss.`id_slide` as id_slide
+			SELECT hss.`position` as position, hss.`id_homeslider_slides` as id_slide
 			FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
-			WHERE hss.`id_slide` = hs.`id_slide` AND hs.`id_shop` = '.(int)$id_shop.' AND hss.`position` > '.(int)$this->position
+			WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$id_shop.' AND hss.`position` > '.(int)$this->position
 		);
 
 		if (!$rows)

@@ -32,7 +32,7 @@ $context = Context::getContext();
 $homeSlider = new HomeSlider();
 $slides = array();
 
-if (!Tools::isSubmit('secure_key') OR Tools::getValue('secure_key') != $homeSlider->secure_key OR !Tools::getValue('action'))
+if (!Tools::isSubmit('secure_key') || Tools::getValue('secure_key') != $homeSlider->secure_key || !Tools::getValue('action'))
 	die(1);
 
 if (Tools::getValue('action') == 'updateSlidesPosition' && Tools::getValue('slides'))
@@ -43,8 +43,8 @@ if (Tools::getValue('action') == 'updateSlidesPosition' && Tools::getValue('slid
 	foreach ($slides as $position => $id_slide)
 	{
 		$res = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'homeslider_slides` SET `position` = '.(int)($position).'
-			WHERE `id_slide` = '.(int)($id_slide)
+			UPDATE `'._DB_PREFIX_.'homeslider_slides` SET `position` = '.(int)$position.'
+			WHERE `id_slide` = '.(int)$id_slide
 		);
 
 	}
