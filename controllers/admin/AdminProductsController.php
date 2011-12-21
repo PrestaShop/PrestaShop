@@ -2106,6 +2106,9 @@ class AdminProductsControllerCore extends AdminController
 			if ($this->object->id && !Shop::isProductAvailable($this->object->id))
 				$this->_displayUnavailableProductWarning();
 			$this->_displayDraftWarning($this->object->active);
+
+			$this->initPack($product);
+
 			$this->{'initForm'.$this->tab_display}($this->object, $languages, $default_language);
 			$this->tpl_form_vars['product'] = $this->object;
 			if ($this->ajax)
@@ -3103,8 +3106,6 @@ class AdminProductsControllerCore extends AdminController
 		$product->name['class'] = 'updateCurrentText';
 		if (!$product->id)
 			$product->name['class'] .= ' copy2friendlyUrl';
-
-		$this->initPack($product);
 
 		$images = Image::getImages($this->context->language->id, $product->id);
 
