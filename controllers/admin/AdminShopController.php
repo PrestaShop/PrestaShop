@@ -286,18 +286,6 @@ class AdminShopControllerCore extends AdminController
 			'category_tree' => $this->initCategoriesAssociation($this)
 		);
 
-		$categories = Category::getCategories($this->context->language->id, false, false);
-		$this->fields_form['input'][] = array(
-			'type' => 'select',
-			'label' => $this->l('Category root:'),
-			'name' => 'id_category',
-			'options' => array(
-				'query' => $categories,
-				'id' => 'id_category',
-				'name' => 'name'
-			)
-		);
-
 		$this->fields_form['input'][] = array(
 			'type' => 'radio',
 			'label' => $this->l('Status:'),
