@@ -92,10 +92,27 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                     self::setAttributesImpacts($this->product->id, $tab);
 					$this->combinations = array_values(self::createCombinations($tab));
 					$values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
+
+					// @since 1.5.0
+					if ($this->product->depends_on_stock == 0)
+					{
+						$attributes = Product::getProductAttributesIds($this->product->id);
+						foreach ($attributes as $attribute)
+							StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], $this->context->shop->id);
+					}
+
 					$this->product->deleteProductAttributes();
 					$res = $this->product->addProductAttributeMultiple($values);
 					$this->product->addAttributeCombinationMultiple($res, $this->combinations);
-					$this->product->updateQuantityProductWithAttributeQuantity();
+
+					// @since 1.5.0
+					if ($this->product->depends_on_stock == 0)
+					{
+						$attributes = Product::getProductAttributesIds($this->product->id);
+						$quantity = (int)Tools::getValue('quantity');
+						foreach ($attributes as $attribute)
+							StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity, $this->context->shop->id);
+					}
 				}
 				else
 					$this->_errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
@@ -194,7 +211,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').' 
+			$this->displayWarning($this->l('This feature has been disabled, you can active this feature at this page:').'
 				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
 					$this->l('Performances').'</a>');
 			return;
