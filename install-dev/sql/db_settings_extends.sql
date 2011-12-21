@@ -1726,3 +1726,19 @@ INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
 (2, 1),
 (3, 1),
 (4, 1);
+
+CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop` (
+	`id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`id_shop` INT UNSIGNED NOT NULL,
+	`new_window` TINYINT( 1 ) NOT NULL,
+	`link` VARCHAR( 128 ) NOT NULL,
+	INDEX (`id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
+	`id_link` INT NOT NULL,
+	`id_lang` INT NOT NULL,
+	`id_shop` INT NOT NULL,
+	`label` VARCHAR( 128 ) NOT NULL ,
+	INDEX ( `id_link` , `id_lang`, `id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
