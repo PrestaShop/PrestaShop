@@ -784,7 +784,8 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!($obj = $this->loadObject()))
 			return;
-		if (!$id_specific_price = Tools::getValue('id_specific_price') || !Validate::isUnsignedId($id_specific_price))
+		$id_specific_price = Tools::getValue('id_specific_price');
+		if (!$id_specific_price || !Validate::isUnsignedId($id_specific_price))
 			$this->_errors[] = Tools::displayError('Invalid specific price ID');
 		else
 		{
