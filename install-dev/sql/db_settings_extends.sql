@@ -235,7 +235,10 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_hook`, `position`) VALUES
 (65, 6, 8),
 /* blocksupplier */
 (66, 7, 5),
-(67, 9, 25);
+(66, 9, 25),
+
+/* feeder */
+(67, 9, 26);
 
 CREATE TABLE `PREFIX_pagenotfound` (
   `id_pagenotfound` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
