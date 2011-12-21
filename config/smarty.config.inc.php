@@ -31,9 +31,9 @@ require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 
 global $smarty;
 $smarty = new Smarty();
-$smarty->compile_dir = _PS_CACHE_DIR_.'smarty/compile';
-$smarty->cache_dir = _PS_CACHE_DIR_.'smarty/cache';
-$smarty->config_dir = _PS_SMARTY_DIR_.'configs';
+$smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
+$smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
+$smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_) ? true : false;
