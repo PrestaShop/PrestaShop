@@ -546,8 +546,8 @@ abstract class DbCore
 		else if (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS'))
 		{
 			if ($sql)
-				throw new PrestashopDatabaseException(Tools::displayError($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>'));
-			throw new PrestashopDatabaseException(Tools::displayError($this->getMsgError()));
+				throw new PrestashopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
+			throw new PrestashopDatabaseException($this->getMsgError());
 		}
 	}
 
