@@ -395,8 +395,8 @@ abstract class ObjectModelCore
 				foreach ($fields as &$field)
 				{
 					foreach (array_keys($field) AS $key)
-					 	if (!Validate::isTableOrIdentifier($key))
-			 				throw new PrestashopException('key '.$key.' is not table or identifier, ');
+						if (!Validate::isTableOrIdentifier($key))
+							throw new PrestashopException('key '.$key.' is not table or identifier, ');
 					$field[$this->def['primary']] = (int)$this->id;
 
 					if (isset($assos[$this->def['table'].'_lang']) && $assos[$this->def['table'].'_lang']['type'] == 'fk_shop')
