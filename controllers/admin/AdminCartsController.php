@@ -496,7 +496,25 @@ class AdminCartsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateProductPrice()
 	{
-
+		SpecificPrice::deleteByIdCart((int)$this->context->cart->id, (int)Tools::getValue('id_product'), (int)Tools::getValue('id_product_attribute'));
+		$specific_price = new SpecificPrice();
+		$specific_price->id_cart = (int)$this->context->cart->id;
+		$specific_price->id_shop = 0;
+		$specific_price->id_group_shop = 0;
+		$specific_price->id_currency = 0;
+		$specific_price->id_country = 0;
+		$specific_price->id_group = 0;
+		$specific_price->id_customer = (int)$this->context->customer->id;
+		$specific_price->id_product = (int)Tools::getValue('id_product');
+		$specific_price->id_product_attribute = (int)Tools::getValue('id_product_attribute');
+		$specific_price->price = (float)Tools::getValue('price');
+		$specific_price->from_quantity = 1;
+		$specific_price->reduction = 0;
+		$specific_price->reduction_type = 'amount';
+		$specific_price->from = '0000-00-00 00:00:00';
+		$specific_price->to = '0000-00-00 00:00:00';
+		$specific_price->add();
+		echo Tools::jsonEncode($this->ajaxReturnVars());
 	}
 
 	public static function getOrderTotalUsingTaxCalculationMethod($id_cart)

@@ -353,5 +353,5 @@ CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_SMARTY_CONSOLE', '0', NOW(), NOW());
-
-ALTER TABLE `PREFIX_group` ADD `show_prices` tinyint(1) unsigned NOT NULL DEFAULT '1' AFTER `price_display_method`;
+ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
+ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
