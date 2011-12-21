@@ -3043,7 +3043,8 @@ class AdminProductsControllerCore extends AdminController
 				'attach2' => Attachment::getAttachments($this->context->language->id, $obj->id, false),
 				'default_form_language' => $default_language,
 				'attachment_name' => $attachment_name,
-				'attachment_description' => $attachment_description
+				'attachment_description' => $attachment_description,
+				'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')
 			));
 		}
 		else
