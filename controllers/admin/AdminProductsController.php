@@ -2107,7 +2107,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->_displayUnavailableProductWarning();
 			$this->_displayDraftWarning($this->object->active);
 
-			$this->initPack($product);
+			$this->initPack($this->object);
 
 			$this->{'initForm'.$this->tab_display}($this->object, $languages, $default_language);
 			$this->tpl_form_vars['product'] = $this->object;
