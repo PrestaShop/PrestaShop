@@ -262,6 +262,13 @@ class OrderCore extends ObjectModel
 		return parent::getFields();
 	}
 
+	public function add($autodate = true, $null_values = true)
+	{
+		if (parent::add($autodate, $null_values))
+			return SpecificPrice::deleteByIdCart($this->id_cart);
+		return false;
+	}
+
 	public function getTaxCalculationMethod()
 	{
 		return (int)($this->_taxCalculationMethod);

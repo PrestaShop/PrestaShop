@@ -2308,7 +2308,8 @@ class ProductCore extends ObjectModel
 			$specific_price_output,
 			$use_group_reduction,
 			$id_customer,
-			$use_customer_price
+			$use_customer_price,
+			$id_cart
 		);
 	}
 
@@ -2334,7 +2335,7 @@ class ProductCore extends ObjectModel
 	**/
 	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
 		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
-		$id_customer = 0, $use_customer_price = true)
+		$id_customer = 0, $use_customer_price = true, $id_cart = 0)
 	{
 		if (!$use_customer_price)
 			$id_customer = 0;
@@ -2357,7 +2358,8 @@ class ProductCore extends ObjectModel
 			$id_group,
 			$quantity,
 			$id_product_attribute,
-			$id_customer
+			$id_customer,
+			$id_cart
 		);
 
 		if (isset(self::$_prices[$cache_id]))

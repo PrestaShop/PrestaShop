@@ -732,7 +732,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_gender_lang` (
   `id_gender` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(20) NOT NULL,
-  `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id_gender`,`id_lang`),
   KEY `id_gender` (`id_gender`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1587,6 +1586,7 @@ CREATE TABLE `PREFIX_search_word` (
 CREATE TABLE `PREFIX_specific_price` (
 	`id_specific_price` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`id_specific_price_rule` INT(11) UNSIGNED NOT NULL,
+	`id_cart` INT(11) UNSIGNED NOT NULL,
 	`id_product` INT UNSIGNED NOT NULL,
 	`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
 	`id_group_shop` INT(11) UNSIGNED NOT NULL,
@@ -1603,7 +1603,8 @@ CREATE TABLE `PREFIX_specific_price` (
 	`to` DATETIME NOT NULL,
 	PRIMARY KEY(`id_specific_price`),
 	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
-	KEY (`id_specific_price_rule`)
+	KEY (`id_specific_price_rule`),
+	KEY (`id_cart`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_state` (
