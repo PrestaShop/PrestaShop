@@ -49,6 +49,7 @@
 				</div>
 			{/foreach}
 			<sup>&nbsp;*</sup>
+			<p class="preference_description">{l s='Maximum 32 characters.'}</p>
 		</div>
 		<div class="clear">&nbsp;</div>
 		<label>{l s='Description:'} </label>
@@ -63,7 +64,7 @@
 		<label>{l s='File'}</label>
 		<div class="margin-form">
 			<p><input type="file" name="attachment_file" /></p>
-			<p class="preference_description">{l s='Upload file from your computer'}</p>
+			<p class="preference_description">{l s='Upload file from your computer'} ({$PS_ATTACHMENT_MAXIMUM_SIZE} {l s='Mo maximum'})</p>
 		</div>
 		<div class="clear">&nbsp;</div>
 		<div class="margin-form">
