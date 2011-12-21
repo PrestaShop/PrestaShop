@@ -1404,7 +1404,7 @@ INSERT INTO `PREFIX_module_group` (`id_group`, `id_module`) VALUES
 ("1", "53"),
 ("1", "54"),
 ("1", "55"),
-("1", "56");
+("1", "56"),
 ("2", "1"),
 ("2", "2"),
 ("2", "3"),
@@ -1457,7 +1457,7 @@ INSERT INTO `PREFIX_module_group` (`id_group`, `id_module`) VALUES
 ("2", "53"),
 ("2", "54"),
 ("2", "55"),
-("2", "56");
+("2", "56"),
 ("3", "1"),
 ("3", "2"),
 ("3", "3"),
@@ -1509,7 +1509,7 @@ INSERT INTO `PREFIX_module_group` (`id_group`, `id_module`) VALUES
 ("3", "52"),
 ("3", "53"),
 ("3", "54"),
-("3", "55");
+("3", "55"),
 ("3", "56");
 
 INSERT INTO `PREFIX_stock_available` (`id_stock_available`, `id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`) VALUES
