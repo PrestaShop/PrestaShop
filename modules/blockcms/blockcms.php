@@ -56,7 +56,6 @@ class BlockCms extends Module
 		!Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block`(
 		`id_cms_block` int(10) unsigned NOT NULL auto_increment,
-		`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT \'1\',
 		`id_cms_category` int(10) unsigned NOT NULL,
 		`location` tinyint(1) unsigned NOT NULL,
 		`position` int(10) unsigned NOT NULL default \'0\',
@@ -78,6 +77,12 @@ class BlockCms extends Module
 		`is_category` tinyint(1) unsigned NOT NULL,
 		PRIMARY KEY (`id_cms_block_page`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
+		!Db::getInstance()->execute('
+		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'cms_block_shop` (
+		`id_cms_block` int(10) unsigned NOT NULL auto_increment,
+		`id_shop` int(10) unsigned NOT NULL,
+		PRIMARY KEY (`id_cms_block`, `id_shop`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') OR
 		!Configuration::updateValue('FOOTER_CMS', '') OR
 		!Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', 1) OR
 		!Configuration::updateValue('FOOTER_POWEREDBY', 1))
@@ -90,9 +95,16 @@ class BlockCms extends Module
 			'position' =>			0,
 		), 'INSERT'))
 			return false;
-
 		$id_cms_block = Db::getInstance()->Insert_ID();
 		$result = true;
+		$shops =  Shop::getShops(true, null, true);
+		foreach ($shops as $shop)
+			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_shop', array(
+				'id_cms_block' =>	$id_cms_block,
+				'id_shop' =>		$shop
+			), 'INSERT');
+			
+
 		foreach (Language::getLanguages(false) as $lang)
 			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_lang', array(
 				'id_cms_block' =>	$id_cms_block,
@@ -116,7 +128,7 @@ class BlockCms extends Module
 		!Configuration::deleteByName('FOOTER_CMS') OR
 		!Configuration::deleteByName('FOOTER_BLOCK_ACTIVATION') OR
 		!Configuration::deleteByName('FOOTER_POWEREDBY') OR
-		!Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'cms_block` , `'._DB_PREFIX_.'cms_block_page`, `'._DB_PREFIX_.'cms_block_lang`'))
+		!Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'cms_block` , `'._DB_PREFIX_.'cms_block_page`, `'._DB_PREFIX_.'cms_block_lang`, `'._DB_PREFIX_.'cms_block_shop`'))
 		return false;
 		return true;
 	}
@@ -206,9 +218,10 @@ class BlockCms extends Module
 		$cmsCategories = Db::getInstance()->executeS('
 		SELECT bc.`id_cms_block`, bc.`id_cms_category`, bc.`display_store`, ccl.`link_rewrite`, ccl.`name` category_name, bcl.`name` block_name
 		FROM `'._DB_PREFIX_.'cms_block` bc
+		LEFT JOIN `'._DB_PREFIX_.'cms_block_shop` bcs ON (bcs.id_cms_block = bc.id_cms_block)
 		INNER JOIN `'._DB_PREFIX_.'cms_category_lang` ccl ON (bc.`id_cms_category` = ccl.`id_cms_category`)
 		INNER JOIN `'._DB_PREFIX_.'cms_block_lang` bcl ON (bc.`id_cms_block` = bcl.`id_cms_block`)
-		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bc.id_shop = '.$context->shop->getID(true).'
+		WHERE bc.`location` = '.(int)($location).' AND ccl.`id_lang` = '.(int)$context->language->id.' AND bcl.`id_lang` = '.(int)$context->language->id.' AND bcs.id_shop = '.$context->shop->getID(true).'
 		ORDER BY `position`');
 
 		$content = array();
@@ -532,16 +545,23 @@ class BlockCms extends Module
 			    <label  class="t" for="PS_STORES_DISPLAY_CMS_off">'.$this->l('No').'</label><br />'
 			    .$this->l('Display "our stores" at the end of the block')
 			    .'</div>';
-			    $this->_html .=	'<div id="cms_subcategories"></div>
+			    $this->_html .=	'<div class="margin-form" id="cms_subcategories"></div><div class="clear">&nbsp;</div>';
+			
+			$helper = new Helper();
+			$helper->id = (int)Tools::getValue('id_cms_block');
+			$helper->table = 'cms_block';
+			$helper->identifier = 'id_cms_block';
+			
+			if (Shop::isFeatureActive())
+				$this->_html .= '<label for="shop_association">'.$this->l('Shop association:').'</label><div id="shop_association" class="margin-form">'.$helper->renderAssoShop().'</div>';
+	    $this->_html .= '
 			<p class="center">
 				<input type="submit" class="button" name="submitBlockCMS" value="'.$this->l('Save').'" />
 				<a class="button" style="position:relative; padding:3px 3px 4px 3px; top:1px" href="'.AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'">'.$this->l('Cancel').'</a>
-			</p>';
-
-			    $this->_html .= '
-		</fieldset>
-		</form>
-		<script type="text/javascript">CMSCategory_js($(\'#id_category\').val(), \''.$this->secure_key.'\')</script>';
+			</p>
+			</fieldset>
+			</form>
+			<script type="text/javascript">CMSCategory_js($(\'#id_category\').val(), \''.$this->secure_key.'\')</script>';
 	}
 
 	private function _postValidation()
@@ -713,6 +733,19 @@ class BlockCms extends Module
 					WHERE `id_cms_block` = '.(int)$id_cms_block.'
 					AND `id_lang`= '.(int)$language['id_lang']);
 			}
+			
+			if (Tools::isSubmit('submitBlockCMS') || Tools::isSubmit('editBlockCMS'))
+			{
+				$assos_shop = Tools::getValue('checkBoxShopAsso_cms_block');
+				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cms_block_shop WHERE id_cms_block='.(int)$id_cms_block);
+				foreach ($assos_shop as $asso)
+					foreach ($asso as $id_shop => $row)
+						Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_shop', array(
+							'id_cms_block' =>	(int)$id_cms_block,
+							'id_shop' => (int)$id_shop,
+						), 'INSERT');
+			}
+			
 			$cmsBoxes = Tools::getValue('cmsBox');
 			if (sizeof($cmsBoxes))
 			foreach ($cmsBoxes as $cmsBox)
@@ -722,6 +755,7 @@ class BlockCms extends Module
 					INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`)
 					VALUES('.(int)$id_cms_block.', '.(int)$cms_properties[1].', '.(int)$cms_properties[0].')');
 			}
+
 			if (Tools::isSubmit('addBlockCMS'))
 			Tools::redirectAdmin(AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&addBlockCMSConfirmation');
 			elseif (Tools::isSubmit('editBlockCMS'))

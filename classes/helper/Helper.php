@@ -324,14 +324,13 @@ class HelperCore
 
 		if ((int)$this->id)
 		{
-			$sql = 'SELECT id_'.$type.', `'.pSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.pSQL($this->table).'_'.$type.'`
-					WHERE `'.pSQL($this->identifier).'` = '.(int)$this->id;
+			$sql = 'SELECT `id_'.bqSQL($type).'`, `'.bqSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.bqSQL($this->table).'_'.bqSQL($type).'`
+					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
 
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$assos[$row['id_'.$type]] = $row['id_'.$type];
 		}
-
 		$tpl = $this->createTemplate('helper/assoshop.tpl');
 		$tpl->assign(array(
 			'input' => array(

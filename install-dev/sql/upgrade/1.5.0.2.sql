@@ -392,3 +392,4 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ('PS_SMARTY_CONSOLE', '0', NOW(), NOW());
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
+/* PHP:update_modules_multishop.php; */;
