@@ -486,14 +486,17 @@ class SearchCore
 							$wordIdsByWord[$product['id_shop']][$product['id_lang']]['_'.$word] = 0;
 						}
 
-					$existingWords = $db->executeS('
-					SELECT DISTINCT word FROM '._DB_PREFIX_.'search_word
-						WHERE word IN ('.implode(',', $queryArray2).')
-					AND id_lang = '.(int)$product['id_lang'].'
-					AND id_shop = '.(int)$product['id_shop']);
+					if ($queryArray2)
+					{
+						$existingWords = $db->executeS('
+						SELECT DISTINCT word FROM '._DB_PREFIX_.'search_word
+							WHERE word IN ('.implode(',', $queryArray2).')
+						AND id_lang = '.(int)$product['id_lang'].'
+						AND id_shop = '.(int)$product['id_shop']);
 
 						foreach ($existingWords as $data)
 							unset($queryArray[Tools::replaceAccentedChars($data['word'])]);
+					}
 
 					if (count($queryArray))
 					{
