@@ -801,9 +801,10 @@ class AdminImportControllerCore extends AdminController
 				$category->doNotRegenerateNTree = true;
 
 				// If id category AND id category already in base, trying to update
-				if ($category->id && $category->categoryExists($category->id))
+				if ($category->id && $category->categoryExists($category->id) && $category->id != 1)
 					$res = $category->update();
-
+				if ($category->id == 1)
+					$this->_errors[] = Tools::displayError('Root category cannot be modify');
 				// If no id_category or update failed
 				if (!$res)
 					$res = $category->add();

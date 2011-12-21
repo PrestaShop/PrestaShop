@@ -315,9 +315,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					'{comment}' => stripslashes($_POST['message_forward']));
 
 					if (Mail::Send(
-						(int)$cookie->id_lang,
+						$this->context->language->id,
 						'forward_msg',
-						Mail::l('Fwd: Customer message', (int)$cookie->id_lang),
+						Mail::l('Fwd: Customer message', $this->context->language->id),
 						$params, $email, null,
 						$current_employee->email, $current_employee->firstname.' '.$current_employee->lastname,
 						null, null, _PS_MAIL_DIR_, true))
@@ -357,7 +357,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					);
 					//#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
 					if (Mail::Send(
-						$ct->id_lang,
+						(int)$ct->id_lang,
 						'reply_msg',
 						Mail::l('An answer to your message is available', $ct->id_lang).' #ct'.$ct->id.'#tc'.$ct->token,
 						$params, Tools::getValue('msg_email'), null, null, null, $file_attachment, null,
