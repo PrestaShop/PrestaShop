@@ -338,7 +338,8 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (161, 'PS_STOCK_CUSTOMER_ORDER_REASON', '3', NOW(), NOW()),
 (162, 'PS_UNIDENTIFIED_GROUP', '1', NOW(), NOW()),
 (163, 'PS_GUEST_GROUP', '2', NOW(), NOW()),
-(164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW());
+(164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW()),
+(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),

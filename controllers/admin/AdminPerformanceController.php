@@ -88,12 +88,39 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					),
 					'desc' => $this->l('Should be enabled except for debugging.')
-				)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Debug console:'),
+					'name' => 'smarty_console',
+					'class' => 't',
+					'br' => true,
+					'values' => array(
+						array(
+							'id' => 'smarty_console_none',
+							'value' => 0,
+							'label' => $this->l('Not open console')
+						),
+						array(
+							'id' => 'smarty_console_url',
+							'value' => 1,
+							'label' => $this->l('Open console with URL parameter (SMARTY_DEBUG)'),
+							'desc' => $this->l('To open the debug console, you simply pass the SMARTY_DEBUG parameter in the URL.')
+						),
+						array(
+							'id' => 'smarty_console_open',
+							'value' => 2,
+							'label' => $this->l('Always open console'),
+							'desc' => $this->l('To always force open the debug console choose this option.')
+						)
+					)
+				),
 			)
 		);
 
 		$this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
 		$this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
+		$this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
 	}
 
 	public function initFieldsetFeaturesDetachables()
@@ -539,6 +566,7 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
+				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
 				$redirecAdmin = true;
 			}
 			else
