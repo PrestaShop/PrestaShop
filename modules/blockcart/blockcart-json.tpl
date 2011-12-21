@@ -38,6 +38,7 @@
 		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|escape|truncate:15:'...':true}",
 		"price":         "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId}{else}0{/if},
+		"idAddressDelivery": {if isset($product.id_address_delivery)}{$product.id_address_delivery}{else}0{/if},
 {if isset($product.attributes_small)}
 		"hasAttributes": true,
 		"attributes":    "{$product.attributes_small|addslashes|replace:'\\\'':'\''}",

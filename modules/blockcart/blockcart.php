@@ -94,7 +94,8 @@ class BlockCart extends Module
 			'product_total' => Tools::displayPrice($params['cart']->getOrderTotal($useTax, Cart::BOTH_WITHOUT_SHIPPING), $currency),
 			'total' => Tools::displayPrice($totalToPay, $currency),
 			'order_process' => Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc' : 'order',
-			'ajax_allowed' => (int)(Configuration::get('PS_BLOCK_CART_AJAX')) == 1 ? true : false
+			'ajax_allowed' => (int)(Configuration::get('PS_BLOCK_CART_AJAX')) == 1 ? true : false,
+			'static_token' => Tools::getToken(false)
 		));
 		if (sizeof($errors))
 			$this->smarty->assign('errors', $errors);
