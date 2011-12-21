@@ -157,7 +157,7 @@
 															{else}
 																{if $fields_value[$input.name] == $option[$input.options.options.id]}selected="selected"{/if}
 															{/if}
-														>{$option[$input.options.options.name]|escape:'htmlall':'UTF-8'}</option>
+														>{$option[$input.options.options.name]}</option>
 													{/foreach}
 												</optgroup>
 											{/foreach}
@@ -171,7 +171,7 @@
 													{else}
 														{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
 													{/if}
-												>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
+												>{$option[$input.options.name]}</option>
 											{/foreach}
 										{/if}
 									</select>
