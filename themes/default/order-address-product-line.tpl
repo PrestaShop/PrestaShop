@@ -64,7 +64,7 @@
 				{if $product.id_address_delivery == 0 && $delivery->id == 0}
 				<option></option>
 				{/if}
-				<option value="-1">{l s='New address'}</option>
+				<option value="-1">{l s='Create a new address'}</option>
 				{foreach $address_list as $address}
 					<option value="{$address.id_address}"
 						{if ($product.id_address_delivery > 0 && $product.id_address_delivery == $address.id_address) || ($product.id_address_delivery == 0  && $address.id_address == $delivery->id)}
@@ -74,7 +74,7 @@
 						{$address.alias}
 					</option>
 				{/foreach}
-				<option value="-2">{l s='Ship to an other address'}</option>
+				<option value="-2">{l s='Ship to multiple addresses'}</option>
 			</select>
 		</form>
 	</td>
