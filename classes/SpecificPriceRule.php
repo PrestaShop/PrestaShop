@@ -217,6 +217,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$specific_price->id_specific_price_rule = (int)$rule->id;
 		$specific_price->id_product = (int)$id_product;
 		$specific_price->id_product_attribute = (int)$id_product_attribute;
+		$specific_price->id_customer = 0;
 		$specific_price->id_shop = (int)$rule->id_shop;
 		$specific_price->id_country = (int)$rule->id_country;
 		$specific_price->id_currency = (int)$rule->id_currency;
