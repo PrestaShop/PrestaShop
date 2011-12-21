@@ -132,7 +132,7 @@ ul#product_list {
 		background: url(../img/icon/pict_add_cart.png) no-repeat 0 0 transparent
 	}
 	#product_list li .lnk_view {
-		display: inline-block;
+		display: block;
 		margin-top:15px;
 		padding:0 10px;
 		border:none;
@@ -141,17 +141,4 @@ ul#product_list {
 		background:url(../img/arrow_right_1.png) no-repeat 100% 4px transparent
 	}
 	#product_list li .lnk_view:hover {text-decoration:underline}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
