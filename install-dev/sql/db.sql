@@ -732,6 +732,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_gender_lang` (
   `id_gender` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(20) NOT NULL,
+  `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id_gender`,`id_lang`),
   KEY `id_gender` (`id_gender`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -740,6 +741,7 @@ CREATE TABLE `PREFIX_group` (
   `id_group` int(10) unsigned NOT NULL auto_increment,
   `reduction` decimal(17,2) NOT NULL default '0.00',
   `price_display_method` TINYINT NOT NULL DEFAULT 0,
+  `show_prices` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY  (`id_group`)
