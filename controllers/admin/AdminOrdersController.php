@@ -1248,13 +1248,6 @@ class AdminOrdersControllerCore extends AdminController
 			$specific_price->add();
 		}
 
-		// Flush cache
-		// @TODO clean the following line used only in order to clean cache of getPriceStatic method
-		$specific_price_output = null;
-		Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-			false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price_output, true, true, null,
-			true, true);
-
 		// Add product to cart
 		$cart->updateQty($product_informations['product_quantity'], $product->id, isset($combination) ? $combination->id : null, false, 'up', new Shop($cart->id_shop));
 
