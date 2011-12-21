@@ -214,7 +214,6 @@ class Cheque extends PaymentModule
 		$cart = $this->context->cart;
 		if (!$this->_checkCurrency($cart))
 			Tools::redirect('index.php?controller=order');
-
 		$this->context->smarty->assign(array(
 			'nbProducts' => $cart->nbProducts(),
 			'cust_currency' => $cart->id_currency,
@@ -223,8 +222,8 @@ class Cheque extends PaymentModule
 			'isoCode' => $this->context->language->iso_code,
 			'chequeName' => $this->chequeName,
 			'chequeAddress' => Tools::nl2br($this->address),
-			'this_path' => $this->_path,
-			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
+			'cheque_path' => $this->_path,
+			'cheque_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
 
 		if (!$direct_call)
