@@ -998,52 +998,54 @@ abstract class ModuleCore
 
 
 		// Get Default Country Modules and customer module
-		if ($loggedOnAddons)
-		{
-			$filesList = array(_PS_ROOT_DIR_.'/config/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/customer_modules_list.xml');
-			foreach ($filesList as $file)
-				if (file_exists($file))
+		$filesList = array(
+			array('type' => 'addonsNative', 'file' => _PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml', 'loggedOnAddons' => 0),
+			array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.'/config/xml/customer_modules_list.xml', 'loggedOnAddons' => 1),
+		);
+		foreach ($filesList as $f)
+			if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $loggedOnAddons))
+			{
+				$file = $f['file'];
+				$content = Tools::file_get_contents($file);
+				$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+				foreach ($xml->module as $modaddons)
 				{
-					$content = Tools::file_get_contents($file);
-					$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
-					foreach ($xml->module as $modaddons)
-					{
-						$flagFound = 0;
-						foreach ($moduleList as $k => $m)
-							if ($m->name == $modaddons->name && !isset($m->available_on_addons))
-							{
-								$flagFound = 1;
-								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
-									$moduleList[$k]->version_addons = $modaddons->version;
-							}
-						if ($flagFound == 0)
+					$flagFound = 0;
+					foreach ($moduleList as $k => $m)
+						if ($m->name == $modaddons->name && !isset($m->available_on_addons))
 						{
-							$item = new stdClass();
-							$item->id = 0;
-							$item->warning = '';
-							$item->name = strip_tags((string)$modaddons->name);
-							$item->version = strip_tags((string)$modaddons->version);
-							$item->tab = strip_tags((string)$modaddons->tab);
-							$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
-							$item->description = strip_tags((string)$modaddons->description);
-							$item->author = strip_tags((string)$modaddons->author);
-							$item->limited_countries = array();
-							$item->is_configurable = 0;
-							$item->need_instance = 0;
-							$item->available_on_addons = 1;
-							$item->active = 0;
-							if (isset($modaddons->img))
-							{
-								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-									copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
-								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
-							}
-							$moduleList[] = $item;
+							$flagFound = 1;
+							if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
+								$moduleList[$k]->version_addons = $modaddons->version;
 						}
+					if ($flagFound == 0)
+					{
+						$item = new stdClass();
+						$item->id = 0;
+						$item->warning = '';
+						$item->type = strip_tags((string)$f['type']);
+						$item->name = strip_tags((string)$modaddons->name);
+						$item->version = strip_tags((string)$modaddons->version);
+						$item->tab = strip_tags((string)$modaddons->tab);
+						$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
+						$item->description = strip_tags((string)$modaddons->description);
+						$item->author = strip_tags((string)$modaddons->author);
+						$item->limited_countries = array();
+						$item->is_configurable = 0;
+						$item->need_instance = 0;
+						$item->available_on_addons = 1;
+						$item->active = 0;
+						if (isset($modaddons->img))
+						{
+							if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+								copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
+							if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+								$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+						}
+						$moduleList[] = $item;
 					}
 				}
-		}
+			}
 
 		//echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
 
@@ -1091,7 +1093,7 @@ abstract class ModuleCore
 	{
 		$db = Db::getInstance();
 
-		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
 		$nativeModules = simplexml_load_file($module_list_xml);
 		$nativeModules = $nativeModules->modules;
 		foreach ($nativeModules as $nativeModulesType)
