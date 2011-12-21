@@ -236,15 +236,6 @@
 				</p>
 				</div>
 		{/if}
-		{if isset($warning_unavailable_product)}
-			<div class="warn" >
-				<p>
-					<span style="float: left">
-					{l s='This product is active in this shop but it doesn\'t belong to any active category for this shop.'}
-					</span>
-				</p>
-			</div>
-		{/if}
 		{* all input are here *}
 			<div id="product-tab-content-wait" style="display:none" >{l s='loading ...'}</div>
 			{foreach $product_tabs key=numStep item=tab}

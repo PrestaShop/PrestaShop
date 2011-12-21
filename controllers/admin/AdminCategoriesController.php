@@ -170,8 +170,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
-		$id_shop = Context::getContext()->shop->getID(true);
-		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', 1));
+		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
 
 		$this->fields_form = array(
 			'tinymce' => true,
