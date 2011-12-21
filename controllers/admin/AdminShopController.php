@@ -279,13 +279,17 @@ class AdminShopControllerCore extends AdminController
 				)
 			);
 		}
+		$categories = Category::getCategories($this->context->language->id, false, false);
 		$this->fields_form['input'][] = array(
-			'type' => 'categories_select',
-			'name' => 'categoryBox',
-			'label' => $this->l('Associated categories :'),
-			'category_tree' => $this->initCategoriesAssociation($this)
+			'type' => 'select',
+			'label' => $this->l('Category root:'),
+			'name' => 'id_category',
+			'options' => array(
+				'query' => $categories,
+				'id' => 'id_category',
+				'name' => 'name'
+			)
 		);
-
 		$this->fields_form['input'][] = array(
 			'type' => 'radio',
 			'label' => $this->l('Status:'),
@@ -401,22 +405,6 @@ class AdminShopControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function initCategoriesAssociation()
-	{
-		$selected_cat = Shop::getCategories(Tools::getValue('id_shop'));
-
-		$translations = array(
-			'Home' => $this->l('Home'),
-			'selected' => $this->l('selected'),
-			'Collapse All' => $this->l('Collapse All'),
-			'Expand All' => $this->l('Expand All'),
-			'Check All' => $this->l('Check All'),
-			'Uncheck All'  => $this->l('Uncheck All'),
-			'search' => $this->l('Search a category')
-		);
-
-		return Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true);
-	}
 
 	/**
 	 * Object creation
@@ -461,7 +449,6 @@ class AdminShopControllerCore extends AdminController
 			return;
 
 		$shop = new Shop($object->id);
-		$shop->updateCategories(Tools::getValue('categoryBox'));
 		return $object;
 	}
 }
