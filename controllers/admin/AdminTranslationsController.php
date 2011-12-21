@@ -1047,7 +1047,7 @@ class AdminTranslationsControllerCore extends AdminController
 		);
 
 		// Add js variables needed for autotranslate
-		$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
+		//$this->tpl_view_vars = array_merge($this->tpl_view_vars, $this->initAutoTranslate());
 
 		$this->initToolbar();
 		$this->base_tpl_view = 'translation_form.tpl';

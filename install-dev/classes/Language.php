@@ -134,7 +134,7 @@ class Language extends ObjectModel
 
 	/**
 	 * This functions checks if every files exists for the language $iso_code.
-	 * Concerned files are theses located in translations/$iso_code/
+	 * Concerned files are those located in translations/$iso_code/
 	 * and translations/mails/$iso_code .
 	 *
 	 * @param mixed $iso_code

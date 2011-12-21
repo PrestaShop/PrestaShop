@@ -218,7 +218,7 @@ function updateDisplay()
 		if (!allowBuyWhenOutOfStock)
 			$('#quantity_wanted_p:visible').hide('slow');
 
-		//display that the product is unavailable with theses attributes
+		//display that the product is unavailable with these attributes
 		if (!selectedCombination['unavailable'])
 			$('#availability_value').text(doesntExistNoMore + (globalQuantity > 0 ? ' ' + doesntExistNoMoreBut : '')).addClass('warning_inline');
 		else
