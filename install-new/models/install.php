@@ -147,6 +147,7 @@ class InstallModelInstall extends InstallAbstractModel
 	{
 		if ($clear_database)
 			$this->clearDatabase(true);
+			$this->clearDatabase(true);
 
 		// Install first shop
 		if (!$this->createShop())
@@ -411,18 +412,16 @@ class InstallModelInstall extends InstallAbstractModel
 			return false;
 		}
 
-		// Create default contact
+		// Update default contact
 		if (isset($data['admin_email']))
 		{
 			Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
 
-			$contact = new Contact();
-			$contact->email = $data['admin_email'];
-			$contact->customer_service = true;
-			if (!$contact->add())
+			$contacts = new Collection('Contact');
+			foreach ($contacts as $contact)
 			{
-				$this->setError($this->language->l('Cannot create default contact'));
-				return false;
+				$contact->email = $data['admin_email'];
+				$contact->update();
 			}
 		}
 
@@ -465,21 +464,32 @@ class InstallModelInstall extends InstallAbstractModel
 				'blockcart',
 				'blockcategories',
 				'blockcms',
+				'blockcontact',
+				'blockcontactinfos',
 				'blockcurrencies',
+				'blockcustomerprivacy',
 				'blocklanguages',
 				'blockmanufacturer',
 				'blockmyaccount',
+				'blockmyaccountfooter',
 				'blocknewproducts',
+				'blocknewsletter',
 				'blockpaymentlogo',
 				'blockpermanentlinks',
+				'blockreinsurance',
 				'blocksearch',
+				'blocksharefb',
+				'blocksocial',
 				'blockspecials',
 				'blockstore',
+				'blocksupplier',
 				'blocktags',
+				'blocktopmenu',
 				'blockuserinfo',
 				'blockviewed',
 				'cheque',
-				'editorial',
+				'favoriteproducts',
+				'feeder',
 				'graphartichow',
 				'graphgooglechart',
 				'graphvisifire',
@@ -487,6 +497,7 @@ class InstallModelInstall extends InstallAbstractModel
 				'gridhtml',
 				'gsitemap',
 				'homefeatured',
+				'homeslider',
 				'moneybookers',
 				'pagesnotfound',
 				'sekeywords',
@@ -517,6 +528,9 @@ class InstallModelInstall extends InstallAbstractModel
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
+			if (!file_exists(_PS_MODULE_DIR_.$module_name))
+				continue;
+
 			$module = Module::getInstanceByName($module_name);
 			if (!$module->install())
 				$errors[] = $this->language->l('Cannot install module "%s"', $module_name);

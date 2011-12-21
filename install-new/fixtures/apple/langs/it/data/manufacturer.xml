@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <entity_manufacturer>
-	<manufacturer id="Apple_Computer_Inc">
-		<description><![CDATA[]]></description>
-		<short_description><![CDATA[]]></short_description>
-		<meta_title><![CDATA[]]></meta_title>
-		<meta_keywords><![CDATA[]]></meta_keywords>
-		<meta_description><![CDATA[]]></meta_description>
-	</manufacturer>
+  <manufacturer id="Apple_Computer_Inc">
+    <description/>
+    <short_description/>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </manufacturer>
 </entity_manufacturer>
