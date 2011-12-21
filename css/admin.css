@@ -811,7 +811,7 @@ tr.deleted td {
 	color: #00529B;
 	background: #BDE5F8 url(../img/admin/icon-info.png) no-repeat 6px 5px;
 	border-radius:3px;
-	min-height:32px;
+	min-height:15px;
 }
 .hint p {
 	color: #00529B;
@@ -1842,15 +1842,27 @@ div.progressBarImage
 #menu .submenu_size .submenu { display: none; position:absolute}
 #menu .submenu_size:hover > .submenu { display: block; }
 .submenu li{float:none;clear:left;}
+
+#fancybox-content { text-align:left;}
+/*customer_form*/
+.blocTitle {background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
+#customers { display:block; position:relative;}
+#customer_form #fieldset_0 { text-align:left;}
 #customer_part #customers ul {
 	float:left;
 }
 #customer_part #customers ul li {
+	background-color:#fff;
 	display:inline;
 	list-style-type: none;
 	float:left;
 	margin:10px;
-}
+	border:1px solid #ccc;
+	padding:5px;
+	width:200px;
+	}
+#customer_part #customers ul li div.customerName { font-size:13px;}
+
 #customer_part #customers ul li .id_customer {
 	font-weight:bold;
 	color:green;
@@ -1864,6 +1876,17 @@ div.progressBarImage
 #vouchers_part #vouchers_err {
 	display:none;
 }
+
+/*address_part*/
+#address_part #address_delivery, #address_part #address_invoice { width:400px; float:left;}
+#address_part #address_delivery h3, #address_part #address_invoice h3 { margin-top:0;}
+#address_part #address_delivery {border-right:1px solid #cccccc;}
+#address_part #address_invoice { border-left: 1px solid #ffffff; padding-left:20px;}
+#address_part #address_delivery_detail, #address_invoice #address_invoice_detail { font-size:12px; color:#585A69; padding:10px 0;}
+#address_part a#new_address {clear:both; float:left; margin:20px 0;}
+
+
+
 #loader_container {
 	display:none;
 	z-index: 100;

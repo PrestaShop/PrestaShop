@@ -36,12 +36,15 @@
 		});
 	</script>
 
-	<div style="background-color:#F4E6C9; width:99%;padding:5px 0 5px 5px;">
-		<a href="#" id="collapse_all" >{$categories.trads['Collapse All']}</a>
-		 - <a href="#" id="expand_all" >{$categories.trads['Expand All']}</a>
+	<div class="category-filter">
+		<span><a href="#" id="collapse_all" >{$categories.trads['Collapse All']}</a>
+		 |</span>
+		 <span><a href="#" id="expand_all" >{$categories.trads['Expand All']}</a>
 		{if !$categories.use_radio}
-		 - <a href="#" id="check_all" >{$categories.trads['Check All']}</a>
-		 - <a href="#" id="uncheck_all" >{$categories.trads['Uncheck All']}</a>
+		 |</span>
+		 <span></span><a href="#" id="check_all" >{$categories.trads['Check All']}</a>
+		 |</span>
+		 <span></span><a href="#" id="uncheck_all" >{$categories.trads['Uncheck All']}</a></span>
 		 {/if}
 		{if $categories.use_search}
 			<span style="margin-left:20px">

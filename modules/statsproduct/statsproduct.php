@@ -175,7 +175,7 @@ class StatsProduct extends ModuleGraph
 			<p>'.$this->l('Conversion rate:').' '.number_format($totalViewed ? $totalBought / $totalViewed : 0, 2).'</p>
 			<center>'.$this->engine(array('layers' => 2, 'type' => 'line', 'option' => '1-'.$id_product)).'</center>
 			<br />
-			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>';
+			<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=1"><span>'.$this->l('CSV Export').'</span></a></p>';
 			if ($hasAttribute = $product->hasAttributes() && $totalBought)
 				$this->html .= '<h3 class="space">'.$this->l('Attribute sales distribution').'</h3><center>'.$this->engine(array('type' => 'pie', 'option' => '3-'.$id_product)).'</center><br />
 			<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1&exportType=2"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p><br />';

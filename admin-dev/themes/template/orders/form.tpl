@@ -361,8 +361,8 @@
 				{
 					var html = '<ul>';
 					$.each(res.customers, function() {
-						html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a> - '+this.birthday+'<br/>';
-						html += '<a href="mailto:'+this.email+'">'+this.email+'<br />';
+						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a> - '+this.birthday+'</div>';
+						html += '<div class="customerEmail"><a href="mailto:'+this.email+'">'+this.email+'</div>';
 						html += '<a onclick="setupCustomer('+ this.id_customer+');" href="#" class="id_customer">{l s='Choose'}</a></li>';
 					});
 					html += '</ul>';
@@ -780,7 +780,7 @@
 </script>
 <fieldset id="customer_part"><legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
 	<p><label>{l s='Search customers:'}</label><input type="text" id="customer" value="" />
-	<a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&addcustomer&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new customer'}</a></p>
+	<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')}&addcustomer&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span></a></p>
 	<div id="customers">
 	</div>
 </fieldset><br />
@@ -802,7 +802,7 @@
 		</div>
 	</div>
 	<div id="products_err" class="warn" style="display:none;"></div>
-	<div style="clear:both;float:left;width:600px;">
+	<div>
 		<table class="table" id="customer_cart">
 			<thead>
 				<tr>
@@ -818,7 +818,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div style="float:right">
+	<div>
 		<p><label for="id_currency">{l s='Currency:'}</label>
 			<script type="text/javascript">
 				{foreach from=$currencies item='currency'}
@@ -840,11 +840,12 @@
 		</select>
 		</p>
 	</div>
-	<div id="carts" style="margin: 20px 0;clear:both;float:left;">
+	<div class="separation"></div>
+	<div id="carts">
 		<p><a href="#" id="show_old_carts"></a></p>
 		<div id="old_carts_orders">
-			<div id="nonOrderedCarts" style="clear:both;float:left;">
-				<h2>{l s='Carts:'}</h2>
+			<div id="nonOrderedCarts">
+				<h3>{l s='Carts:'}</h3>
 				<table class="table">
 				<thead>
 					<tr>
@@ -858,8 +859,8 @@
 					</tbody>
 				</table>
 			</div>
-			<div id="lastOrders" style="float:left;margin-left:20px;">
-				<h2>{l s='Orders:'}</h2>
+			<div id="lastOrders">
+				<h3>{l s='Orders:'}</h3>
 				<table class="table">
 					<thead>
 						<tr>
@@ -885,7 +886,7 @@
 	<p>
 		<label>{l s='Search a voucher:'} </label>
 		<input type="text" id="voucher" value="" />
-		<a class="fancybox" href="{$link->getAdminLink('AdminDiscounts')}&adddiscount&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
+		<a class="fancybox button" href="{$link->getAdminLink('AdminDiscounts')}&adddiscount&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
 	</p>
 	<div class="margin-form">
 		<table class="table" id="voucher_list">
@@ -904,25 +905,23 @@
 	<div id="vouchers_err" class="warn"></div>
 </fieldset>
 <br />
-<fieldset id="address_part" class="width2" style="display:none;">
+<fieldset id="address_part" style="display:none;">
 	<legend><img src="../img/t/AdminAddresses.gif" />{l s='Addresses'}</legend>
-	<div id="address_delivery" style="clear:both;float:left;">
-		<p><b>{l s='Delivery:'}</b></p>
+	<div id="address_delivery">
+		<h3>{l s='Delivery:'}</h3>
 		<select id="id_address_delivery" name="id_address_delivery">
 		</select>
 		<div id="address_delivery_detail">
 		</div>
 	</div>
-	<div id="address_invoice" style="float:left; margin-left:10px;">
-		<p><b>{l s='Invoice:'}</b></p>
+	<div id="address_invoice">
+		<h3>{l s='Invoice:'}</h3>
 		<select id="id_address_invoice" name="id_address_invoice">
 		</select>
 		<div id="address_invoice_detail">
 		</div>
 	</div>
-	<div>
-		<p><a class="fancybox" id="new_address" href="{$link->getAdminLink('AdminAddresses')}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new address'}</a></p>
-	</div>
+<a class="fancybox button" id="new_address" href="{$link->getAdminLink('AdminAddresses')}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new address'}</a>
 </fieldset>
 <br />
 <fieldset id="carriers_part" style="display:none;">
