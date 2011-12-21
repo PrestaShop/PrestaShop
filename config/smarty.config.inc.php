@@ -37,8 +37,15 @@ $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_CHECK_COMPILE_) ? true : false;
+
+// Production mode
 $smarty->debugging = false;
-$smarty->debugging_ctrl = 'URL'; // 'NONE' on production
+$smarty->debugging_ctrl = 'NONE';
+
+if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_BY_URL_)
+	$smarty->debugging_ctrl = 'URL';
+else if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_)
+	$smarty->debugging = true;
 
 if (defined('_PS_ADMIN_DIR_'))
 	require_once (dirname(__FILE__).'/smartyadmin.config.inc.php');

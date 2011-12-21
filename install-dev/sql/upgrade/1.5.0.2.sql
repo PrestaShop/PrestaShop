@@ -326,3 +326,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
 	`label` VARCHAR( 128 ) NOT NULL ,
 	INDEX ( `id_link` , `id_lang`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
+('PS_SMARTY_CONSOLE', '0', NOW(), NOW());

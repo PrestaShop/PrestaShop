@@ -25,7 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 global $smarty;
-$smarty->template_dir = _PS_ADMIN_DIR_.'/themes/template';
+$smarty->setTemplateDir(_PS_ADMIN_DIR_.'/themes/template');
+$smarty->debugging = false;
+$smarty->debugging_ctrl = 'NONE';
 
 function smartyTranslate($params, &$smarty)
 {
