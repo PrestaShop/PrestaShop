@@ -2399,6 +2399,7 @@ $_LANGADM['AdminModules526d688f37a86d3c3f27d0c5016eb71d'] = 'Réinitialiser';
 $_LANGADM['AdminModulesf1206f9fadc5ce41694f69129aecac26'] = 'Configurer';
 $_LANGADM['AdminModulesf2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
 $_LANGADM['AdminModules9ce81cf948b7325d53c64aa610851552'] = 'Cette action supprime définitivement le module sur votre serveur. Êtes-vous vraiment sûr ?';
+$_LANGADM['AdminModulesfda2be82f9bf59bf76019b5167186a95'] = 'Le(s) module(s) suivant ont été correctement mis à jour :';
 $_LANGADM['AdminModules13348442cc6a27032d2b4aa28b75a5d3'] = 'Rechercher';
 $_LANGADM['AdminModules33d8042bd735c559cc3206f4bc99aedc'] = 'Trier par';
 $_LANGADM['AdminModules00c3388449f7c4d73cc8c417d7d38554'] = 'Tous les modules';
