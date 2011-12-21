@@ -50,3 +50,47 @@ require_once _PS_INSTALL_PATH_.'classes/model.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
 require_once _PS_INSTALL_PATH_.'classes/sqlLoader.php';
 require_once _PS_INSTALL_PATH_.'classes/xmlLoader.php';
+
+class InstallLog
+{
+	/**
+	 * @return InstallLog
+	 */
+	public function getInstance()
+	{
+		static $instance = null;
+
+		if (!$instance)
+			$instance = new InstallLog();
+		return $instance;
+	}
+
+	protected $fd;
+	protected $start_time = array();
+	protected $last_time;
+
+	public function __construct()
+	{
+		$this->fd = fopen(_PS_INSTALL_PATH_.'log.txt', 'w');
+		$this->last_time = microtime(true);
+	}
+
+	public function write($id)
+	{
+		$str = "[$id]";
+		$str .= ' - [Time: '.round(microtime(true) - $this->last_time, 4).']';
+		if (isset($this->start_time[$id]))
+			$str .= ' - [Length: '.round(microtime(true) - $this->start_time[$id], 4).']';
+		fwrite($this->fd, "$str\n");
+	}
+
+	public function start($id)
+	{
+		$this->start_time[$id] = microtime(true);
+	}
+
+	public function __destruct()
+	{
+		fclose($this->fd);
+	}
+}

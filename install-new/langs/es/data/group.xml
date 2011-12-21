@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <entity_group>
-	<group id="Default" name="Predeterminado" />
+  <group id="Unidentified" name="Unidentified"/>
+  <group id="Guest" name="Guest"/>
+  <group id="Default" name="Predeterminado"/>
 </entity_group>

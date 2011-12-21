@@ -1,63 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <entity_attribute>
-	<attribute id="2GB">
-		<name><![CDATA[2GB]]></name>
-	</attribute>
-	<attribute id="4GB">
-		<name><![CDATA[4GB]]></name>
-	</attribute>
-	<attribute id="Metal">
-		<name><![CDATA[Metallic]]></name>
-	</attribute>
-	<attribute id="Blue">
-		<name><![CDATA[Blau]]></name>
-	</attribute>
-	<attribute id="Pink">
-		<name><![CDATA[Pink]]></name>
-	</attribute>
-	<attribute id="Green">
-		<name><![CDATA[Grün]]></name>
-	</attribute>
-	<attribute id="Orange">
-		<name><![CDATA[Orange]]></name>
-	</attribute>
-	<attribute id="Optional_64GB_solid-state_drive">
-		<name><![CDATA[Optionale 64 GB Solid-State-Drive]]></name>
-	</attribute>
-	<attribute id="80GB_Parallel_ATA_Drive_4200_rpm">
-		<name><![CDATA[Parallele ATA 80GB Drive @ 4200 rpm]]></name>
-	</attribute>
-	<attribute id="1_60GHz_Intel_Core_2_Duo">
-		<name><![CDATA[1.60GHz Intel Core 2 Duo]]></name>
-	</attribute>
-	<attribute id="1_80GHz_Intel_Core_2_Duo">
-		<name><![CDATA[1.80GHz Intel Core 2 Duo]]></name>
-	</attribute>
-	<attribute id="80GB_20_000_Songs">
-		<name><![CDATA[80GB: 20.000 Songs]]></name>
-	</attribute>
-	<attribute id="160GB_40_000_Songs">
-		<name><![CDATA[160GB: 40.000 Songs]]></name>
-	</attribute>
-	<attribute id="Black">
-		<name><![CDATA[Schwarz]]></name>
-	</attribute>
-	<attribute id="8Go">
-		<name><![CDATA[8Go]]></name>
-	</attribute>
-	<attribute id="16Go">
-		<name><![CDATA[16Go]]></name>
-	</attribute>
-	<attribute id="32Go">
-		<name><![CDATA[32Go]]></name>
-	</attribute>
-	<attribute id="Purple">
-		<name><![CDATA[Violett]]></name>
-	</attribute>
-	<attribute id="Yellow">
-		<name><![CDATA[Gelb]]></name>
-	</attribute>
-	<attribute id="Red">
-		<name><![CDATA[Rot]]></name>
-	</attribute>
+  <attribute id="2GB">
+    <name>2GB</name>
+  </attribute>
+  <attribute id="4GB">
+    <name>4GB</name>
+  </attribute>
+  <attribute id="Metal">
+    <name>Metallic</name>
+  </attribute>
+  <attribute id="Blue">
+    <name>Blau</name>
+  </attribute>
+  <attribute id="Pink">
+    <name>Pink</name>
+  </attribute>
+  <attribute id="Green">
+    <name>Gr&#xFC;n</name>
+  </attribute>
+  <attribute id="Orange">
+    <name>Orange</name>
+  </attribute>
+  <attribute id="Optional_64GB_solid-state_drive">
+    <name>Optionale 64 GB Solid-State-Drive</name>
+  </attribute>
+  <attribute id="80GB_Parallel_ATA_Drive_4200_rpm">
+    <name>Parallele ATA 80GB Drive @ 4200 rpm</name>
+  </attribute>
+  <attribute id="1_60GHz_Intel_Core_2_Duo">
+    <name>1.60GHz Intel Core 2 Duo</name>
+  </attribute>
+  <attribute id="1_80GHz_Intel_Core_2_Duo">
+    <name>1.80GHz Intel Core 2 Duo</name>
+  </attribute>
+  <attribute id="80GB_20_000_Songs">
+    <name>80GB: 20.000 Songs</name>
+  </attribute>
+  <attribute id="160GB_40_000_Songs">
+    <name>160GB: 40.000 Songs</name>
+  </attribute>
+  <attribute id="Black">
+    <name>Schwarz</name>
+  </attribute>
+  <attribute id="8Go">
+    <name>8Go</name>
+  </attribute>
+  <attribute id="16Go">
+    <name>16Go</name>
+  </attribute>
+  <attribute id="32Go">
+    <name>32Go</name>
+  </attribute>
+  <attribute id="Purple">
+    <name>Violett</name>
+  </attribute>
+  <attribute id="Yellow">
+    <name>Gelb</name>
+  </attribute>
+  <attribute id="Red">
+    <name>Rot</name>
+  </attribute>
 </entity_attribute>

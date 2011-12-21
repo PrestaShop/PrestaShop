@@ -50,6 +50,7 @@ class InstallXmlLoader
 	protected $data_path;
 	protected $lang_path;
 	protected $img_path;
+	public $path_type;
 
 	protected $ids = array();
 
@@ -72,6 +73,7 @@ class InstallXmlLoader
 
 	public function setDefaultPath()
 	{
+		$this->path_type = 'common';
 		$this->data_path = _PS_INSTALL_DATA_PATH_.'xml/';
 		$this->lang_path = _PS_INSTALL_LANGS_PATH_;
 		$this->img_path = _PS_INSTALL_DATA_PATH_.'img/';
@@ -79,6 +81,7 @@ class InstallXmlLoader
 
 	public function setFixturesPath()
 	{
+		$this->path_type = 'fixture';
 		$this->data_path = _PS_INSTALL_FIXTURES_PATH_.'apple/data/';
 		$this->lang_path = _PS_INSTALL_FIXTURES_PATH_.'apple/langs/';
 		$this->img_path = _PS_INSTALL_FIXTURES_PATH_.'apple/img/';
@@ -336,7 +339,7 @@ class InstallXmlLoader
 		if ($iso)
 			$cache_id .= ':'.$iso;
 
-		if (!isset($this->cache_xml_entity[$cache_id]))
+		if (!isset($this->cache_xml_entity[$this->path_type][$cache_id]))
 		{
 			$path = $this->data_path.$entity.'.xml';
 			if ($iso)
@@ -345,11 +348,11 @@ class InstallXmlLoader
 			if (!file_exists($path))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml not found');
 
-			if (!$this->cache_xml_entity[$cache_id] = @simplexml_load_file($path))
+			if (!$this->cache_xml_entity[$this->path_type][$cache_id] = @simplexml_load_file($path))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml invalid');
 		}
 
-		return $this->cache_xml_entity[$cache_id];
+		return $this->cache_xml_entity[$this->path_type][$cache_id];
 	}
 
 	/**
@@ -591,7 +594,7 @@ class InstallXmlLoader
 				$columns[$table][$row['Field']] = $this->checkIfTypeIsText($row['Type']);
 		}
 
-		$exclude = array_merge(array('id_'.$table, 'date_add', 'date_upd', 'position', 'deleted', 'id_lang', 'id_shop', 'id_group_shop'), $exclude);
+		$exclude = array_merge(array('id_'.$table, 'date_add', 'date_upd', 'position', 'deleted', 'id_lang'), $exclude);
 
 		$list = array();
 		foreach ($columns[$table] as $k => $v)
@@ -886,6 +889,7 @@ class InstallXmlLoader
 		$alias_multilang = array();
 		if ($is_multilang)
 		{
+			$columns = $this->getColumns($entity);
 			$multilang_columns = $this->getColumns($entity, true);
 
 			// If some columns from _lang table have same name than original table, rename them (E.g. value in configuration)
@@ -1002,7 +1006,7 @@ class InstallXmlLoader
 		if (!$primary)
 			return '';
 
-		if (!$id_format || !$row)
+		if (!$id_format || !$row || !$row[$id_format])
 			$ids[$entity][$primary] = $entity.'_'.$primary;
 		else
 		{
