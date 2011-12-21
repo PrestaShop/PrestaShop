@@ -38,7 +38,7 @@ class ToolsInstall
 	 */
 	public static function checkDB ($srv, $login, $password, $name, $posted = true)
 	{
-		// Don't include theses files if classes are already defined
+		// Don't include these files if classes are already defined
 		if (!class_exists('Validate', false))
 		{
 			include_once(INSTALL_PATH.'/../classes/Validate.php');
