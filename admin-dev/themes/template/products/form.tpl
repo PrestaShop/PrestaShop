@@ -128,6 +128,7 @@
 					$('li.tab-row a[id*="Shipping"]').show();
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
+					$('.stockForVirtualProduct').show();
 				}
 				else if (val == 2)
 				{
@@ -140,12 +141,14 @@
 					$('#condition').attr('disabled', 'disabled');
 					$('#condition option[value=refurbished]').removeAttr('selected');
 					$('#condition option[value=used]').removeAttr('selected');
+					$('.stockForVirtualProduct').hide();
 				}
 				else
 				{
 					$('li.tab-row a[id*="Shipping"]').show();
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
+					$('.stockForVirtualProduct').show();
 				}
 
 			});
