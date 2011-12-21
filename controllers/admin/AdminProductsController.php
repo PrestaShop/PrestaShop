@@ -2110,8 +2110,6 @@ class AdminProductsControllerCore extends AdminController
 			$this->_errors[] = 'Unable to load object';
 		else
 		{
-			if ($this->object->id && !Shop::isProductAvailable($this->object->id))
-				$this->_displayUnavailableProductWarning();
 			$this->_displayDraftWarning($this->object->active);
 
 			$this->initPack($this->object);
