@@ -46,6 +46,9 @@ class AliasCore extends ObjectModel
 
 	public function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
 	{
+		$this->def = self::getDefinition($this);
+		$this->setDefinitionRetrocompatibility();
+
 		if ($id)
 			parent::__construct($id);
 		else if ($alias && Validate::isValidSearch($alias))
