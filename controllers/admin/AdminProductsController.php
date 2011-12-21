@@ -396,12 +396,16 @@ class AdminProductsControllerCore extends AdminController
 	 * @param $token
 	 * @return void
 	 */
-	public function processAttachment($token)
+	public function processAttachments($token)
 	{
 		if ($this->action == 'attachments')
 			if ($id = (int)Tools::getValue($this->identifier))
-				if (Attachment::attachToProduct($id, Tools::getValue('attachments')))
+			{
+				$attachments = trim(Tools::getValue('arrayAttachments'), ',');
+				$attachments = explode(',', $attachments);
+				if (Attachment::attachToProduct($id, $attachments))
 					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$id.(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
+			}
 	}
 
 	public function processDuplicate($token)

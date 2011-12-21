@@ -48,6 +48,7 @@
 					<input type="text" name="attachment_name_{$language.id_lang}" value="{$attachment_name[$language.id_lang]}" />
 				</div>
 			{/foreach}
+			<sup>&nbsp;*</sup>
 		</div>
 		<div class="clear">&nbsp;</div>
 		<label>{l s='Description:'} </label>
