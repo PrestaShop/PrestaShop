@@ -1868,15 +1868,16 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
 CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   `id_shop_url` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_shop` int(11) unsigned NOT NULL,
-  `domain` varchar(255) NOT NULL,
-  `domain_ssl` varchar(255) NOT NULL,
+  `domain` varchar(150) NOT NULL,
+  `domain_ssl` varchar(150) NOT NULL,
   `physical_uri` varchar(64) NOT NULL,
   `virtual_uri` varchar(64) NOT NULL,
   `main` TINYINT(1) NOT NULL,
   `active` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id_shop_url`),
   KEY `id_shop` (`id_shop`),
-  UNIQUE KEY `shop_url` (`domain`, `virtual_uri`)
+  UNIQUE KEY `full_shop_url` (`domain`, `physical_uri`, `virtual_uri`),
+  UNIQUE KEY `full_shop_url_ssl` (`domain_ssl`, `physical_uri`, `virtual_uri`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
