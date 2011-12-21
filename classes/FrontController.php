@@ -644,9 +644,6 @@ class FrontControllerCore extends Controller
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only')
 		));
-
-
-
 	}
 
 	public function initFooter()
