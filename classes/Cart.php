@@ -736,6 +736,14 @@ class CartCore extends ObjectModel
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
+		
+		if (Context::getContext()->customer->id)
+		{
+			if ($id_address_delivery == 0) // The $id_address_delivery is null, get the default customer address
+				$id_address_delivery = (int)Address::getFirstCustomerAddressId((int)Context::getContext()->customer->id);
+			else if (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) // The $id_address_delivery must be linked with customer
+					$id_address_delivery = 0;
+		}
 
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
@@ -2972,32 +2980,19 @@ class CartCore extends ObjectModel
 	 */
 	public function autosetProductAddress()
 	{
+		$id_address_delivery = 0;
 		// Get the main address of the customer
 		if ((int)$this->id_address_delivery > 0)
-			$id_address_deivery = (int)$this->id_address_delivery;
+			$id_address_delivery = (int)$this->id_address_delivery;
 		else
-		{
-			if ((int)$cart->id_customer == 0)
-				return;
-
-			$customer = new Customer((int)$cart->id_customer);
-			$addresses = $customer->getAddresses(Context::getContext()->language->id);
-
-			if (count($addresses) == 0)
-				return;
-
-			$id_address_delivery = $addresses[0]['id_address'];
-		}
-
+			$id_address_delivery = (int)Address::getFirstCustomerAddressId(Context::getContext()->customer->id);
+		
+		if (!$id_address_delivery)
+			return;
+		
 		// Update
 		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-			SET `id_address_delivery` =
-			(
-				SELECT `id_address_delivery`
-				FROM `'._DB_PREFIX_.'cart`
-				WHERE `id_cart` = '.(int)$this->id.'
-					AND `id_shop` = '.(int)$this->id_shop.'
-			)
+			SET `id_address_delivery` = '.(int)$id_address_delivery.'
 			WHERE `id_cart` = '.(int)$this->id.'
 				AND (`id_address_delivery` = 0 OR `id_address_delivery` IS NULL)
 				AND `id_shop` = '.(int)$this->id_shop;
