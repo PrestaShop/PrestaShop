@@ -99,6 +99,8 @@
 				$('#virtual_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="Shipping"]').hide();
+				$('#condition').attr('disabled', 'disabled');
+				$('#condition option[value=new]').attr('selected', 'selected');
 			{else}
 				$('#simple_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="Pack"]').hide();
@@ -124,6 +126,8 @@
 					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
 					$('#ppackdiv').show();
 					$('li.tab-row a[id*="Shipping"]').show();
+					$('#condition').removeAttr('disabled');
+					$('#condition option[value=new]').removeAttr('selected');
 				}
 				else if (val == 2)
 				{
@@ -133,9 +137,16 @@
 					$('#is_virtual').val(1);
 					$("#virtual_good_attributes").show();
 					$('li.tab-row a[id*="Shipping"]').hide();
+					$('#condition').attr('disabled', 'disabled');
+					$('#condition option[value=refurbished]').removeAttr('selected');
+					$('#condition option[value=used]').removeAttr('selected');
 				}
 				else
+				{
 					$('li.tab-row a[id*="Shipping"]').show();
+					$('#condition').removeAttr('disabled');
+					$('#condition option[value=new]').removeAttr('selected');
+				}
 
 			});
 
