@@ -260,16 +260,19 @@ jQuery(document).ready(Customer.init);
 		{/foreach}
 		</script>
 		<div id="add_specific_price" style="display: none;">
-			<input type="hidden" name="sp_id_shop" value="0" />
-			<label>{l s='For:'}</label>
-			<div class="margin-form">
-				<select name="sp_id_shop">
-					<option value="0">{l s='All shops'}</option>
-					{foreach from=$shops item=shop}
-						<option value="{$shop.id_shop}">{$shop.name|htmlentitiesUTF8}</option>
-					{/foreach}
-				</select>
-							&gt;
+			{if !$multi_shop}
+				<input type="hidden" name="sp_id_shop" value="0" />
+			{else}
+				<label>{l s='For:'}</label>
+				<div class="margin-form">
+					<select name="sp_id_shop">
+						<option value="0">{l s='All shops'}</option>
+						{foreach from=$shops item=shop}
+							<option value="{$shop.id_shop}">{$shop.name|htmlentitiesUTF8}</option>
+						{/foreach}
+					</select>
+								&gt;
+				{/if}
 				<select name="sp_id_currency" id="spm_currency_0" onchange="changeCurrencySpecificPrice(0);">
 					<option value="0">{l s='All currencies'}</option>
 					{foreach from=$currencies item=curr}
@@ -380,7 +383,7 @@ jQuery(document).ready(Customer.init);
 				<tr>
 					<th class="cell border" style="width: 12%;">{l s='Rule'}</th>
 					<th class="cell border" style="width: 12%;">{l s='Combination'}</th>
-					<th class="cell border" style="width: 12%;">{l s='Shop'}</th>
+					{if $multi_shop}<th class="cell border" style="width: 12%;">{l s='Shop'}</th>{/if}
 					<th class="cell border" style="width: 12%;">{l s='Currency'}</th>
 					<th class="cell border" style="width: 11%;">{l s='Country'}</th>
 					<th class="cell border" style="width: 13%;">{l s='Group'}</th>

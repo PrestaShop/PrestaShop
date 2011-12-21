@@ -2589,7 +2589,8 @@ class AdminProductsControllerCore extends AdminController
 				'groups' => $groups,
 				'combinations' => $combinations,
 				'product' => $product,
-				'link' => new Link
+				'multi_shop' => Shop::isFeatureActive(),
+				'link' => new Link()
 			));
 		}
 		else
@@ -2838,7 +2839,7 @@ class AdminProductsControllerCore extends AdminController
 				<tr '.($i%2 ? 'class="alt_row"' : '').'>
 					<td class="cell border">'.$rule_name.'</td>
 					<td class="cell border">'.$attributes_name.'</td>
-					<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>
+					'.(Shop::isFeatureActive() ? '<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>' : '').'
 					<td class="cell border">'.($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->l('All currencies')).'</td>
 					<td class="cell border">'.($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->l('All countries')).'</td>
 					<td class="cell border">'.($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->l('All groups')).'</td>
