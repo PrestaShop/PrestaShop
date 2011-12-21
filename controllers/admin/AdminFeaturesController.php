@@ -355,10 +355,10 @@ class AdminFeaturesControllerCore extends AdminController
 
 			if (Tools::isSubmit('deletefeature_value'))
 			{
-			 	if ($this->tabAccess['delete'] === '1')
-			 	{
-				 	if (Tools::getValue('id_feature_value'))
-				 	{
+				if ($this->tabAccess['delete'] === '1')
+				{
+					if (Tools::getValue('id_feature_value'))
+					{
 						$object = new FeatureValue((int)Tools::getValue('id_feature_value'));
 						if ($object->delete())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
@@ -412,10 +412,10 @@ class AdminFeaturesControllerCore extends AdminController
 
 			if (Tools::getValue('submitDel'.$this->table))
 			{
-			 	if ($this->tabAccess['delete'] === '1')
-			 	{
-				 	if (isset($_POST[$this->table.'Box']))
-				 	{
+				if ($this->tabAccess['delete'] === '1')
+				{
+					if (isset($_POST[$this->table.'Box']))
+					{
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
