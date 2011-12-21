@@ -300,3 +300,15 @@ ALTER TABLE `PREFIX_specific_price` ADD `id_group_shop` INT(11) UNSIGNED NOT NUL
 
 /* Generate order references */
 /* PHP:generate_order_reference(); */;
+
+CREATE TABLE `PREFIX_category_shop` (
+  `id_category` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  PRIMARY KEY (`id_category`, `id_shop`),
+  UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
+(1, 1);
+
+
