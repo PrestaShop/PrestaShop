@@ -80,10 +80,10 @@
 		{/if}
 		</td>
 		<td style="width:40%" class="translatable">
-		{foreach from=$languages item=language}
+		{foreach from=$languages key=k item=language}
 			<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}float: left;">
 			<textarea class="custom_{$available_feature.id_feature}_" name="custom_{$available_feature.id_feature}_{$language.id_lang}" cols="40" rows="1"
-				onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$language.id_lang].value|htmlentitiesUTF8|default:""}</textarea>
+				onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|htmlentitiesUTF8|default:""}</textarea>
 			</div>
 		{/foreach}
 		</td>
