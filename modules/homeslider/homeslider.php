@@ -258,7 +258,7 @@ class HomeSlider extends Module
 		$defaultLanguage = (int)Configuration::get('PS_LANG_DEFAULT');
 		$languages = Language::getLanguages(false);
 		$divLangName = 'image¤title¤url¤legend¤description';
-		$this->_html = '<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>';
+		$this->_html .= '<script type="text/javascript">id_language = Number('.$defaultLanguage.');</script>';
 
 		/* Form */
 		$this->_html .= '<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="POST" enctype="multipart/form-data">';
@@ -466,7 +466,7 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', (int)Tools::getValue('HOMESLIDER_PAUSE'));
 			if (!$res)
 				$errors .= $this->displayError($this->l('Configuration could not be updated'));
-			$this->_html = $this->displayConfirmation($this->l('Configuration updated'));
+			$this->_html .= $this->displayConfirmation($this->l('Configuration updated'));
 		} /* Process Slide status */
 		else if (Tools::isSubmit('changeStatus') && Tools::isSubmit('id_slide'))
 		{
@@ -476,7 +476,7 @@ class HomeSlider extends Module
 			else
 				$slide->active = 0;
 			$res = $slide->update();
-			$this->_html = ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayErro($this->l('Configuration could not be updated')));
+			$this->_html .= ($res ? $this->displayConfirmation($this->l('Configuration updated')) : $this->displayErro($this->l('Configuration could not be updated')));
 		}
 		/* Processes Slide */
 		else if (Tools::isSubmit('submitSlide'))
@@ -487,7 +487,7 @@ class HomeSlider extends Module
 				$slide = new HomeSlide((int)Tools::getValue('id_slide'));
 				if (!Validate::isLoadedObject($slide))
 				{
-					$this->_html = $this->displayError($this->l('Invalid id_slide'));
+					$this->_html .= $this->displayError($this->l('Invalid id_slide'));
 					return;
 				}
 			}
@@ -511,20 +511,24 @@ class HomeSlider extends Module
 				if (Tools::getValue('description_'.$language['id_lang']) != '')
 					$slide->description[$language['id_lang']] = pSQL(Tools::getValue('description_'.$language['id_lang']));
 				/* Uploads image and sets slide */
+				$type = strtolower(substr(strrchr($_FILES['image_'.$language['id_lang']]['name'], '.'), 1));
 				if (isset($_FILES['image_'.$language['id_lang']]) &&
 					isset($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
-					!empty($_FILES['image_'.$language['id_lang']]['tmp_name']))
+					!empty($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
+					in_array(strtolower(substr(strrchr($_FILES['image_'.$language['id_lang']]['type'], '/'), 1)), array('jpg', 'gif', 'jpeg', 'png')) &&
+					in_array($type, array('jpg', 'gif', 'jpeg', 'png')))
 				{
 					$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+					$salt = sha1(microtime());
 					if ($error = checkImage($_FILES['image_'.$language['id_lang']]))
 						$errors .= $error;
 					else if (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
-					else if (!imageResize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name']).'.jpg'))
+					else if (!imageResize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).$type))
 						$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
 						unlink($temp_name);
-					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name']).'.jpg');
+					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).$type);
 				}
 				if (Tools::getValue('image_old_'.$language['id_lang']) != '')
 					$slide->image[$language['id_lang']] = pSQL(Tools::getValue('image_old_'.$language['id_lang']));
@@ -545,7 +549,8 @@ class HomeSlider extends Module
 			$res = $slide->delete();
 			if (!$res)
 				$this->_html .= $this->displayError('Could not delete');
-			$this->_html = $this->displayConfirmation($this->l('Slide deleted'));
+			else
+				$this->_html .= $this->displayConfirmation($this->l('Slide deleted'));
 		}
 
 		/* Display errors if needed */

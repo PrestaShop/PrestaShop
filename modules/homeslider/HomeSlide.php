@@ -104,15 +104,17 @@ class HomeSlide extends ObjectModel
 
 	public function delete()
 	{
-		$res = null;
+		$res = true;
+
 		$images = $this->image;
 		foreach ($images as $image)
 		{
-			if (file_exists(dirname(__FILE__).'/images/'.$image))
+			if ($image && file_exists(dirname(__FILE__).'/images/'.$image))
 				$res &= @unlink(dirname(__FILE__).'/images/'.$image);
 		}
 
 		$res &= $this->reOrderPositions();
+
 		$res &= Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'homeslider`
 			WHERE `id_homeslider_slides` = '.(int)$this->id
@@ -139,12 +141,10 @@ class HomeSlide extends ObjectModel
 
 		$rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT hss.`position` as position, hss.`id_homeslider_slides` as id_slide
-			FROM `'._DB_PREFIX_.'homeslider_slides` hss, `'._DB_PREFIX_.'homeslider` hs
-			WHERE hss.`id_homeslider_slides` = hs.`id_homeslider_slides` AND hs.`id_shop` = '.(int)$id_shop.' AND hss.`position` > '.(int)$this->position
+			FROM `'._DB_PREFIX_.'homeslider_slides` hss
+			LEFT JOIN `'._DB_PREFIX_.'homeslider` hs ON (hss.`id_homeslider_slides` = hs.`id_homeslider_slides`)
+			WHERE hs.`id_shop` = '.(int)$id_shop.' AND hss.`position` > '.(int)$this->position
 		);
-
-		if (!$rows)
-			return false;
 
 		foreach ($rows as $row)
 		{
