@@ -465,9 +465,10 @@ class StockManagerCore implements StockManagerInterface
 		$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.date_add = o.date_upd');
 		$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
 		$query->where('os.shipped != 1');
-		$query->where('o.valid = 1');
-		// @FIXME: Once part-shipping is done, remove the comment on the line below.
-		// $query->where('o.id_warehouse IN (0, '.implode(', ', $ids_warehouse).')');
+		$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
+					   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
+		//if (count($ids_warehouse))
+			//$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
 		$client_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		// Gets supply_orders_qty
