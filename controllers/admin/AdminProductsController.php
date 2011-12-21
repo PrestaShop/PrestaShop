@@ -2080,6 +2080,9 @@ class AdminProductsControllerCore extends AdminController
 		if(!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
+		// Used for loading each tab
+		$this->tpl_form_vars['tabs_preloaded'] = $this->tabs_preloaded;
+
 		$this->addJqueryUI('ui.datepicker');
 		// getLanguages init this->_languages
 		$this->getLanguages();
@@ -3115,8 +3118,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
 		$product->tags = Tag::getProductTags($product->id);
-
-		$data->assign('tabs_preloaded', $this->tabs_preloaded);
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;

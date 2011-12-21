@@ -104,7 +104,7 @@
 	
 	
 	<script type="text/javascript">
-		displayFlags(languages, id_language, allowEmployeeFormLang);
+		//displayFlags(languages, id_language, allowEmployeeFormLang);
 		$(document).ready(function() {
 
 			$("#addAttachment").live('click', function() {
