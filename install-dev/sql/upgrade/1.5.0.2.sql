@@ -278,7 +278,10 @@ CREATE TABLE IF NOT EXISTS `PREFIX_stock_mvt` (
 ALTER TABLE `PREFIX_orders` DROP COLUMN `id_warehouse`;
 ALTER TABLE `PREFIX_supplier` ADD COLUMN `id_address` int(10) unsigned NOT NULL default '0' AFTER `id_supplier`;
 ALTER TABLE `PREFIX_address` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL DEFAULT 0 AFTER `id_supplier`;
-ALTER TABLE `PREFIX_order_detail` ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL default '0' AFTER `id_order_invoice`;
+ALTER TABLE `PREFIX_order_detail`
+ADD COLUMN `id_warehouse` int(10) unsigned NOT NULL default '0' AFTER `id_order_invoice`;
+
+
 ALTER TABLE `PREFIX_stock_mvt_reason` ADD COLUMN `deleted` tinyint(1) unsigned NOT NULL default '0' AFTER `date_upd`;
 ALTER TABLE `PREFIX_product` ADD COLUMN `advanced_stock_management` tinyint(1) default '0' NOT NULL;
 
@@ -290,8 +293,27 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 
 
 ALTER TABLE  `PREFIX_order_detail`
-ADD  `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
-ADD  `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`;
+ADD `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
+ADD `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
+ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,,
+ADD `total_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_incl`,
+ADD `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_excl`,
+ADD `unit_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `unit_price_tax_incl`,
+ADD `total_shipping_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `unit_price_tax_excl`,
+ADD `total_shipping_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_shipping_price_tax_incl`,
+ADD `purchase_supplier_price` DECIMAL(20, 6) NOT NULL AFTER  `total_shipping_price_tax_excl`,
+ADD `original_product_price` DECIMAL(20, 6) NOT NULL AFTER  `purchase_supplier_price`;
+
+
+ALTER TABLE  `PREFIX_orders`
+ADD `total_discount_tax_excl` decimal(17,2) NOT NULL AFTER  `total_discounts`,
+ADD `total_discount_tax_incl` decimal(17,2) NOT NULL AFTER  `total_discount_tax_excl`,
+ADD `total_paid_tax_excl` decimal(17,2) NOT NULL AFTER  `total_paid`,
+ADD `total_paid_tax_incl` decimal(17,2) NOT NULL AFTER  `total_paid_tax_excl`,
+ADD `total_shipping_tax_excl` decimal(17,2) NOT NULL AFTER  `total_shipping`,
+ADD `total_shipping_tax_incl` decimal(17,2) NOT NULL AFTER  `total_shipping_tax_excl`,
+ADD `total_wrapping_tax_excl` decimal(17,2) NOT NULL AFTER  `total_wrapping`,
+ADD `total_wrapping_tax_incl` decimal(17,2) NOT NULL AFTER  `total_wrapping_tax_excl`;
 
 ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tax_excl` DECIMAL(17, 2) NOT NULL DEFAULT '0.00';
 ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT NOT NULL DEFAULT '0' AFTER `id_cart_rule`;
@@ -310,6 +332,8 @@ CREATE TABLE `PREFIX_category_shop` (
 
 INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
 (1, 1);
+
+/* PHP:migrate_orders(); */;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop` (
 	`id_link` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

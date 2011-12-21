@@ -147,6 +147,8 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_canada.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'generate_order_reference.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_orders.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;
