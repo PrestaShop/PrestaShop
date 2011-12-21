@@ -26,7 +26,7 @@
 
 {if $existingExport}
 	<div class="hint" style="display:block;">
-		{l s='The last export has been for this section:'}
+		{l s='The last export has been found for this section:'}
 		<a href="{$smarty.server.REQUEST_URI}&download={$type}">{l s='Click here'}</a>
 	</div>
 	<br />
