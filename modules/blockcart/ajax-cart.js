@@ -81,8 +81,10 @@ var ajaxCart = {
 					productAttributeId = parseInt(ids[1]);
 			}
 
+			var idAddressDelivery = $(this).parent().parent().attr('id').match(/.*_\d+_\d+_(\d+)/)[1];
+
 			// Removing product from the cart
-			ajaxCart.remove(productId, productAttributeId, customizationId);
+			ajaxCart.remove(productId, productAttributeId, customizationId, idAddressDelivery);
 			return false;
 		});
 	},
@@ -243,7 +245,7 @@ var ajaxCart = {
 	},
 
 	//remove a product from the cart via ajax
-	remove : function(idProduct, idCombination, customizationId){
+	remove : function(idProduct, idCombination, customizationId, idAddressDelivery){
 		//send the ajax request to the server
 		$.ajax({
 			type: 'POST',
@@ -251,7 +253,7 @@ var ajaxCart = {
 			async: true,
 			cache: false,
 			dataType : "json",
-			data: 'controller=cart&delete=1&id_product=' + idProduct + '&ipa=' + ((idCombination != null && parseInt(idCombination)) ? idCombination : '') + ((customizationId && customizationId != null) ? '&id_customization=' + customizationId : '') + '&token=' + static_token + '&ajax=true',
+			data: 'controller=cart&delete=1&id_product=' + idProduct + '&ipa=' + ((idCombination != null && parseInt(idCombination)) ? idCombination : '') + ((customizationId && customizationId != null) ? '&id_customization=' + customizationId : '') + '&id_address_delivery=' + idAddressDelivery + '&token=' + static_token + '&ajax=true',
 			success: function(jsonData)	{
 				ajaxCart.updateCart(jsonData);
 				if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
