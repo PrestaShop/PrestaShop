@@ -24,6 +24,7 @@
 			font-size:12px;
 			text-align:right
 		}
+		#contact p.textarea label {vertical-align:top}
 		#contact p.text input,
 		#contact p.select input {
 			padding:0 5px;
