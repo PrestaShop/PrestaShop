@@ -372,7 +372,10 @@ class AdminCategoriesControllerCore extends AdminController
 			if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 				$this->_errors[] = Tools::displayError('Failed to update the position.');
 			else
+			{
+				$object->regenerateEntireNtree();
 				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
+			}
 		}
 		/* Delete multiple objects */
 		else if (Tools::getValue('submitDel'.$this->table))
