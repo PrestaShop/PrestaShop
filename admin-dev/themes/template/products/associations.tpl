@@ -40,7 +40,7 @@
 <div class="Associations">
 	<h4>{l s='Associations'}</h4>
 	<div class="separation"></div>
-		<div id="no_default_category" style="font-weight: bold;display: none;">
+		<div id="no_default_category" class="hint">
 		{l s='Please check a category in order to select the default category.'}
 	</div>
 	<table>

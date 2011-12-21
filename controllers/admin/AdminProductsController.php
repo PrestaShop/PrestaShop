@@ -3309,12 +3309,12 @@ class AdminProductsControllerCore extends AdminController
 		$color_by_default = '#BDE5F8';
 
 		$this->fieldsDisplay = array(
-			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'center', 'width' => 70),
-			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'center', 'width' => 70),
-			'weight' => array('title' => $this->l('Weight'), 'align' => 'center', 'width' => 70),
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 70),
-			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'center', 'width' => 70),
-			'upc' => array('title' => $this->l('UPC'), 'align' => 'center', 'width' => 70)
+			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left', 'width' => 70),
+			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'left', 'width' => 70),
+			'weight' => array('title' => $this->l('Weight'), 'align' => 'left', 'width' => 70),
+			'reference' => array('title' => $this->l('Reference'), 'align' => 'left', 'width' => 70),
+			'ean13' => array('title' => $this->l('EAN13'), 'align' => 'left', 'width' => 70),
+			'upc' => array('title' => $this->l('UPC'), 'align' => 'left', 'width' => 70)
 		);
 
 		$product_download = new ProductDownload($id_product_download);
@@ -3850,8 +3850,8 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'admin-categories-tree.js',
 				_PS_JS_DIR_.'/jquery/ui/jquery.ui.progressbar.min.js'
 			));
-
 			$this->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
+
 		}
 	}
 
