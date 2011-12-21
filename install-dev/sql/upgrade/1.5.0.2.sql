@@ -351,6 +351,43 @@ CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
 	INDEX ( `id_link` , `id_lang`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, `note`, `date_add`) (
+	SELECT `id_order`, `invoice_number`, `total_discounts_tax_excl`, `total_discounts_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
+	FROM `PREFIX_orders`
+	WHERE `invoice_number` != 0
+);
+
+UPDATE `PREFIX_order_detail` od
+SET od.`id_order_invoice` =  (
+	SELECT oi.`id_order_invoice`
+	FROM `PREFIX_order_invoice` oi
+	WHERE oi.`id_order` = od.`id_order`
+);
+
+INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) (
+	SELECT `id_order`, `id_carrier`, (
+		SELECT oi.`id_order_invoice`
+		FROM `PREFIX_order_invoice` oi
+		WHERE oi.`id_order` = o.`id_order`
+	), (
+		SELECT SUM(`product_weight`)
+		FROM `PREFIX_order_detail` od
+		WHERE od.`id_order` = o.`id_order`
+	), `total_shipping_tax_excl`, `total_shipping_tax_incl`, `shipping_number`, `date_add`
+	FROM `PREFIX_orders` o
+);
+
+INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) (
+	SELECT (
+		SELECT oi.`id_order_invoice`
+		  FROM `PREFIX_order_invoice` oi
+		  WHERE oi.`id_order` = o.`id_order`
+	), o.`id_order`, o.`id_currency`, o.`total_paid_real`, o.`payment`, o.`conversion_rate`, o.`date_add`
+	FROM `PREFIX_orders` o
+	LEFT JOIN `PREFIX_order_payment` op ON (op.`id_order` = o.`id_order`)
+	WHERE op.`id_order_payment` IS NULL
+)
+
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_SMARTY_CONSOLE', '0', NOW(), NOW());
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
