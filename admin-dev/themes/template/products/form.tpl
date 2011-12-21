@@ -86,6 +86,7 @@
 			{elseif $product->is_virtual}
 				$('#virtual_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="Pack"]').hide();
+				$('li.tab-row a[id*="Shipping"]').hide();
 			{else}
 				$('#simple_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="Pack"]').hide();
@@ -110,6 +111,7 @@
 					$('li.tab-row a[id*="Pack"]').show();
 					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
 					$('#ppackdiv').show();
+					$('li.tab-row a[id*="Shipping"]').show();
 				}
 				else if (val == 2)
 				{
@@ -118,7 +120,10 @@
 					$('#virtual_good').show();
 					$('#is_virtual').val(1);
 					$("#virtual_good_attributes").show();
+					$('li.tab-row a[id*="Shipping"]').hide();
 				}
+				else
+					$('li.tab-row a[id*="Shipping"]').show();
 
 			});
 
