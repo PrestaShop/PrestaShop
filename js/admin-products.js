@@ -107,8 +107,14 @@ function defaultProductAttribute(ids, token, parent)
 			if (data.status == 'ok')
 			{
 				showSuccessMessage(data.message);
-				$('table.table').find('tr').each(function(){
-					$(this).attr('style', '');
+				$('table.table').find('tr').attr('style', function() {
+					var style = $(this).attr('style');
+					if (style)
+					{
+						$(this).attr('style', '');
+						var ids = $(this).find('a.edit').attr('ids');
+						$(this).find('a.edit').after("<a title=\"Default\" onclick=\"javascript:defaultProductAttribute("+ids+", 'b3a62213044bad81d091b225780ba544', $(this).parent('td').parent('tr'));\" class=\"pointer default\"><img alt=\"Default\" src=\"../img/admin/asterisk.gif\"></a>");
+					}
 				});
 				parent.find('a.default').hide();
 				parent.css('background','#BDE5F8');
