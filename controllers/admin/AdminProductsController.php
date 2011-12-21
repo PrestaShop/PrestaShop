@@ -63,21 +63,21 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $tabs_preloaded = array(
 		'Informations' => true,
-		'Pack' => true,
-		'VirtualProduct' => true,
 		'Prices' => true,
 		'Seo' => true,
 		'Associations' => true,
 		'Images' => false,
 		'Shipping' => true,
 		'Combinations' => true,
-		'Features' => false,
-		'Customization' => false,
-		'Attachments' => false,
+		'Features' => true,
+		'Customization' => true,
+		'Attachments' => true,
 		'Quantities' => true,
-		'Suppliers' => false,
-		'Warehouses' => false,
-		'Accounting' => false
+		'Suppliers' => true,
+		'Warehouses' => true,
+		'Accounting' => true,
+		'Pack' => true,
+		'VirtualProduct' => true,
 	);
 
 	public function __construct()
