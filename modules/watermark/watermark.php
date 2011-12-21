@@ -44,7 +44,7 @@ class Watermark extends Module
 	{
 		$this->name = 'watermark';
 		$this->tab = 'administration';
-		$this->version = 0.1;
+		$this->version = '0.2';
 		$this->author = 'PrestaShop';
 		
 		parent::__construct();
@@ -120,13 +120,18 @@ class Watermark extends Module
 		return !sizeof($this->_postErrors) ? true : false;
 	}
 
-	private function _postProcess(){	
+	private function _postProcess()
+	{	
 		
 		Configuration::updateValue('WATERMARK_TYPES', implode(',', Tools::getValue('image_types')));
 		Configuration::updateValue('WATERMARK_Y_ALIGN', Tools::getValue('yalign'));
 		Configuration::updateValue('WATERMARK_X_ALIGN', Tools::getValue('xalign'));
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', Tools::getValue('transparency'));
-
+	   
+		if (Context::getContext()->shop->getContextType() == Shop::CONTEXT_SHOP)
+			$str_shop = '-'.(int)$this->context->shop->id;
+		else
+			$str_shop = '';
 		//submited watermark
 		if (isset($_FILES['PS_WATERMARK']) AND !empty($_FILES['PS_WATERMARK']['tmp_name']))
 		{
@@ -134,7 +139,7 @@ class Watermark extends Module
 			if ($error = checkImage($_FILES['PS_WATERMARK']))
 				$this->_errors[] = $error;
 			/* Copy new watermark */
-			elseif(!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark.gif'))
+			elseif(!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
 				$this->_errors[] = Tools::displayError('an error occurred while uploading watermark: '.$_FILES['PS_WATERMARK']['tmp_name'].' to '.$dest);
 		}
 		
@@ -148,6 +153,10 @@ class Watermark extends Module
 	private function _displayForm()
 	{
 	    $imageTypes = ImageType::getImagesTypes('products');
+	   $str_shop = '-'.(int)$this->context->shop->id;
+		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
+			$str_shop = '';
+			
 		$this->_html .=
 		'<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" enctype="multipart/form-data">
 			<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" />'.$this->l('Watermark details').'</legend>
@@ -155,7 +164,7 @@ class Watermark extends Module
 				<table border="0" width="500" cellpadding="0" cellspacing="0" id="form">
 					<tr>
 						<td />
-						<td>'.(file_exists(dirname(__FILE__).'/watermark.gif') ? '<img src="../modules/'.$this->name.'/watermark.gif?t='.time().'" />' : $this->l('No watermark uploaded.')).'</td>
+						<td>'.(Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif') ? '<img src="../modules/'.$this->name.'/watermark'.$str_shop.'.gif?t='.time().'" />' : $this->l('No watermark uploaded.')).'</td>
 					</tr>
 					<tr>
 						<td>'.$this->l('Watermark file').'</td>
@@ -228,15 +237,19 @@ class Watermark extends Module
 		$image = new Image($params['id_image']);
 		$image->id_product = $params['id_product'];
 		$file = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-watermark.jpg';
-		
+
+	   $str_shop = '-'.(int)$this->context->shop->id;
+		if (Context::getContext()->shop->getContextType() != Shop::CONTEXT_SHOP || !Tools::file_exists_cache(dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
+			$str_shop = '';
+
 		//first make a watermark image
-		$return = $this->watermarkByImage(_PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.jpg',  dirname(__FILE__).'/watermark.gif', $file, 23, 0, 0, 'right');
+		$return = $this->watermarkByImage(_PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.jpg',  dirname(__FILE__).'/watermark'.$str_shop.'.gif', $file, 23, 0, 0, 'right');
 
 		//go through file formats defined for watermark and resize them
 		foreach($this->imageTypes as $imageType)
 		{
 		    $newFile = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg';
-		    if (!imageResize($file, $newFile, (int)($imageType['width']), (int)($imageType['height'])))
+		    if (!imageResize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
 				$return = false;    
 		}
 		return $return;
