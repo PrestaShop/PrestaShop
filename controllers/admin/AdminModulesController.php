@@ -53,8 +53,8 @@ class AdminModulesControllerCore extends AdminController
 	private $iso_default_country;
 	private $filter_configuration = array();
 
- 	private $xml_modules_list = 'http://api.prestashop.com/xml/modules_list.xml';
-	private $addons_url = 'http://api.addons.prestashop.com/151/';
+ 	private $xml_modules_list = 'https://api.prestashop.com/xml/modules_list.xml';
+	private $addons_url = 'https://api.addons.prestashop.com/151/';
 	private $logged_on_addons = false;
 	private $cache_file_modules_list = '/config/xml/modules_list.xml';
 	private $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
@@ -168,7 +168,7 @@ class AdminModulesControllerCore extends AdminController
 
 
 		// If logged to Addons Webservices, refresh default country native modules list every day
-		if ($this->logged_on_addons && $this->status != 'error')
+		if ($this->status != 'error')
 		{
 			if (!$this->isFresh($this->cache_file_default_country_modules_list, 86400))
 			{
@@ -491,16 +491,20 @@ class AdminModulesControllerCore extends AdminController
 				foreach ($modules AS $name)
 				{
 					// If Addons module, download and unzip it before installing it
-					if ($this->logged_on_addons && !is_dir('../modules/'.$name.'/'))
+					if (!is_dir('../modules/'.$name.'/'))
 					{
-						$filesList = array($this->cache_file_default_country_modules_list, $this->cache_file_customer_modules_list);
-						foreach ($filesList as $file)
-							if (file_exists(_PS_ROOT_DIR_.$file))
+						$filesList = array(
+							array('type' => 'addonsNative', 'file' => $this->cache_file_default_country_modules_list, 'loggedOnAddons' => 0),
+							array('type' => 'addonsBought', 'file' => $this->cache_file_customer_modules_list, 'loggedOnAddons' => 1),
+						);
+						foreach ($filesList as $f)
+							if (file_exists(_PS_ROOT_DIR_.$f['file']))
 							{
+								$file = $f['file'];
 								$content = Tools::file_get_contents(_PS_ROOT_DIR_.$file);
 								$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
 								foreach ($xml->module as $modaddons)
-									if ($name == $modaddons->name && isset($modaddons->id))
+									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 										if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
 											$this->extractArchive('../modules/'.$modaddons->name.'.zip');
 							}
