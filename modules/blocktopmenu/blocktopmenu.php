@@ -480,8 +480,6 @@ class blocktopmenu extends Module
 
 	public function hookTop($param)
 	{
-		elog('rrrrrr');
-		caller();
 		global $smarty;
 		$this->makeMenu();
 		$smarty->assign('MENU_SEARCH', Configuration::get('MOD_BLOCKTOPMENU_SEARCH'));
@@ -490,4 +488,3 @@ class blocktopmenu extends Module
 		return $this->display(__FILE__, 'blocktopmenu.tpl');
 	}
 }
-
