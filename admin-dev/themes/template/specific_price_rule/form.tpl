@@ -115,6 +115,9 @@
 		</div>
 	</div>
 </fieldset>
+{if !$is_multishop}
+	<input type="hidden" name="id_shop" value=1 />
+{/if}
 {/block}
 
 {block name="script"}

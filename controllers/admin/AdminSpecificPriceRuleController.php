@@ -93,12 +93,10 @@ class AdminSpecificPriceRuleController extends AdminController
 			'from' => array(
 				'title' => $this->l('From'),
 				'align' => 'center',
-				
 			),
 			'to' => array(
 				'title' => $this->l('To'),
 				'align' => 'center',
-				
 			),
 		);
 		
@@ -129,6 +127,7 @@ class AdminSpecificPriceRuleController extends AdminController
 						'id' => 'id_shop',
 						'name' => 'name'
 					),
+					'condition' => Shop::isFeatureActive()
 				),
 				array(
 					'type' => 'select',
@@ -166,7 +165,8 @@ class AdminSpecificPriceRuleController extends AdminController
 					'name' => 'from_quantity',
 					'size' => 6,
 					'maxlength' => 10,
-					'value' => '1'
+					'value' => '1',
+					'required' => true
 				),
 				array(
 					'type' => 'text',
@@ -182,12 +182,14 @@ class AdminSpecificPriceRuleController extends AdminController
 					'label' => $this->l('From:'),
 					'name' => 'from',
 					'size' => 12,
+					'required' => true
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('To:'),
 					'name' => 'to',
 					'size' => 12,
+					'required' => true
 				),
 				array(
 					'type' => 'select',
@@ -211,7 +213,7 @@ class AdminSpecificPriceRuleController extends AdminController
 				'class' => 'button'
 			),
 		);
-		
+
 		$attribute_groups = array();
 		$attributes = Attribute::getAttributes((int)$this->context->language->id);
 		foreach ($attributes as $attribute)
@@ -236,7 +238,8 @@ class AdminSpecificPriceRuleController extends AdminController
 										'attributes_group' => $attribute_groups,
 										'features' => $features,
 										'categories' => Category::getSimpleCategories((int)$this->context->language->id),
-										'conditions' => $this->object->getConditions()
+										'conditions' => $this->object->getConditions(),
+										'is_multishop' => Shop::isFeatureActive()
 										);
 		
 		return parent::renderForm();
@@ -260,7 +263,7 @@ class AdminSpecificPriceRuleController extends AdminController
 					$object->addConditions($conditions);
 				}
 			}
+			$object->apply();
 		}
-		$object->apply();
 	}
 }

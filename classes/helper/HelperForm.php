@@ -81,10 +81,13 @@ class HelperFormCore extends Helper
 		$color = true;
 		$date = true;
 		$tinymce = true;
-		foreach ($this->fields_form as $fieldset)
+		foreach ($this->fields_form as $fieldset_key => $fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $key => $params)
 				{
+					// If the condition is not met, the field will not be displayed
+					if (isset($params['condition']) && !$params['condition'])
+						unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
 					switch ($params['type'])
 					{
 						case 'categories':
