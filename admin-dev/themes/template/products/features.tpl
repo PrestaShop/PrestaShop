@@ -32,6 +32,10 @@
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
+
+		$('.confirm_leave').bind('click', function(){
+			return confirm('{l s='You will lose all unsaved modifications, do you want to proceed?' js=1}');
+		});
 	});
 
 </script>
@@ -75,7 +79,7 @@
 			<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
 				<span style="font-size: 10px; color: #666;">{l s='N/A'} -
 				<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
-				 style="color: #666; text-decoration: underline;">{l s='Add pre-defined values first'}</a>
+				 style="color: #666; text-decoration: underline;" class="confirm_leave">{l s='Add pre-defined values first'}</a>
 			</span>
 		{/if}
 		</td>
@@ -96,7 +100,7 @@
 	</table>
 	<div class="separation"></div>
 	<div style="text-align:center;">
-		<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature" onclick="return confirm('{l s='You will lose all modifications not saved, you may want to save modifications first?' js=1}');">
+		<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature" class="confirm_leave">
 			<img src="../img/admin/add.gif" alt="new_features" title="{l s='Add a new feature'}" />&nbsp;{l s='Add a new feature'}
 		</a>
 	</div>
