@@ -57,7 +57,7 @@
 				{/foreach}
 			</form>
 			<div style="text-align:left; font-size:11px;">
-				<i>{l s='Theses fields are used for the accounting export'}</i>
+				<i>{l s='These fields are used for the accounting export'}</i>
 			</div>
 			<div class="separation"></div>
 		</fieldset>
