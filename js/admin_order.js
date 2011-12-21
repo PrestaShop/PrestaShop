@@ -25,6 +25,7 @@
 */
 
 var current_product = null;
+var ajaxQueries = new Array();
 
 $(document).ready(function() {
 	// Init all events
@@ -32,6 +33,14 @@ $(document).ready(function() {
 
 	$('img.js-disabled-action').css({"opacity":0.5});
 });
+
+function stopAjaxQuery() {
+	if (typeof(ajaxQueries) == 'undefined')
+		ajaxQueries = new Array();
+	for(i = 0; i < ajaxQueries.length; i++)
+		ajaxQueries[i].abort();
+	ajaxQueries = new Array();
+}
 
 function updateInvoice(invoices)
 {
@@ -372,6 +381,7 @@ function init()
 
 	$('#submitAddProduct').click(function(e) {
 		e.preventDefault();
+		stopAjaxQuery();
 		var go = true;
 
 		if ($('input#add_product_product_id').val() == 0)
@@ -409,7 +419,7 @@ function init()
 				if ($('select#add_product_product_invoice').val() == 0)
 					query += '&'+$('tr#new_invoice select, tr#new_invoice input').serialize();
 
-				$.ajax({
+				var ajax_query = $.ajax({
 					type: 'POST',
 					url: admin_order_tab_link,
 					cache: false,
@@ -437,6 +447,7 @@ function init()
 							alert(data.error);
 					}
 				});
+				ajaxQueries.push(ajax_query);
 			}
 		}
 	});

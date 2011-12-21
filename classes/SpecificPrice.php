@@ -77,6 +77,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			// Flush cache when we adding a new specific price
 			self::$_specificPriceCache = array();
+			Product::flushPriceCache();
 			// Set cache of feature detachable to true
 			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
 			return true;
@@ -90,6 +91,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			// Flush cache when we updating a new specific price
 			self::$_specificPriceCache = array();
+			Product::flushPriceCache();
 		}
 	}
 
@@ -99,6 +101,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			// Flush cache when we deletind a new specific price
 			self::$_specificPriceCache = array();
+			Product::flushPriceCache();
 			// Refresh cache of feature detachable
 			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table']));
 			return true;
