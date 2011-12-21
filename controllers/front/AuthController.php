@@ -294,17 +294,22 @@ class AuthControllerCore extends FrontController
 				$this->context->cookie->is_guest = $customer->isGuest();
 				$this->context->cookie->passwd = $customer->passwd;
 				$this->context->cookie->email = $customer->email;
-				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0))
-					$this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
-				// Update cart address
-				$this->context->cart->setDeliveryOption(null);
-				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
-				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
-				$this->context->cart->secure_key = $customer->secure_key;
-				$this->context->cart->update();
 				
 				// Add customer to the context
 				$this->context->customer = $customer;
+				
+				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0))
+					$this->context->cookie->id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id);
+				
+				// Update cart address
+				$this->context->cart->id = $this->context->cookie->id_cart;
+				$this->context->cart->setDeliveryOption(null);
+				$this->context->cart->id_address_delivery = Address::getFirstCustomerAddressId((int)($customer->id));
+				
+				$this->context->cart->id_address_invoice = Address::getFirstCustomerAddressId((int)($customer->id));
+				$this->context->cart->secure_key = $customer->secure_key;
+				$this->context->cart->update();
+				$this->context->cart->autosetProductAddress();
 
 				Hook::exec('authentication');
 

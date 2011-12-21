@@ -200,10 +200,10 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Return customers list
-	  *
-	  * @return array Customers
-	  */
+	 * Return customers list
+	 *
+	 * @return array Customers
+	 */
 	public static function getCustomers(Shop $shop = null)
 	{
 		if (!$shop)
@@ -217,21 +217,21 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Return customer instance from its e-mail (optionnaly check password)
-	  *
-	  * @param string $email e-mail
-	  * @param string $passwd Password is also checked if specified
-	  * @return Customer instance
-	  */
+	 * Return customer instance from its e-mail (optionnaly check password)
+	 *
+	 * @param string $email e-mail
+	 * @param string $passwd Password is also checked if specified
+	 * @return Customer instance
+	 */
 	public function getByEmail($email, $passwd = null, Shop $shop = null)
 	{
-	 	if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd)))
-	 		die (Tools::displayError());
+		if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd)))
+			die (Tools::displayError());
 
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-	 	$sql = 'SELECT *
+		$sql = 'SELECT *
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `active` = 1
 					AND `email` = \''.pSQL($email).'\'
@@ -252,13 +252,13 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Check id the customer is active or not
-	  *
-	  * @return boolean customer validity
-	  */
+	 * Check id the customer is active or not
+	 *
+	 * @return boolean customer validity
+	 */
 	public static function isBanned($id_customer)
 	{
-	 	if (!Validate::isUnsignedId($id_customer))
+		if (!Validate::isUnsignedId($id_customer))
 			return true;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `id_customer`
@@ -268,26 +268,26 @@ class CustomerCore extends ObjectModel
 		AND `deleted` = 0');
 		if (isset($result['id_customer']))
 			return false;
-        return true;
+		return true;
 	}
 
 	/**
-	  * Check if e-mail is already registered in database
-	  *
-	  * @param string $email e-mail
-	  * @param $return_id boolean
-	  * @param $ignore_guest boolean, to exclude guest customer
-	  * @return Customer ID if found, false otherwise
-	  */
+	 * Check if e-mail is already registered in database
+	 *
+	 * @param string $email e-mail
+	 * @param $return_id boolean
+	 * @param $ignore_guest boolean, to exclude guest customer
+	 * @return Customer ID if found, false otherwise
+	 */
 	public static function customerExists($email, $return_id = false, $ignore_guest = true, Shop $shop = null)
 	{
-	 	if (!Validate::isEmail($email))
-	 		die (Tools::displayError());
+		if (!Validate::isEmail($email))
+			die (Tools::displayError());
 
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-	 	$sql = 'SELECT `id_customer`
+		$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `email` = \''.pSQL($email).'\'
 					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).
@@ -300,12 +300,12 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Check if an address is owned by a customer
-	  *
-	  * @param integer $id_customer Customer ID
-	  * @param integer $id_address Address ID
-	  * @return boolean result
-	  */
+	 * Check if an address is owned by a customer
+	 *
+	 * @param integer $id_customer Customer ID
+	 * @param integer $id_address Address ID
+	 * @return boolean result
+	 */
 	public static function customerHasAddress($id_customer, $id_address)
 	{
 		if (!array_key_exists($id_customer, self::$_customerHasAddress))
@@ -327,11 +327,11 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Return customer addresses
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return array Addresses
-	  */
+	 * Return customer addresses
+	 *
+	 * @param integer $id_lang Language ID
+	 * @return array Addresses
+	 */
 	public function getAddresses($id_lang)
 	{
 		$sql = 'SELECT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
@@ -344,11 +344,11 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Count the number of addresses for a customer
-	  *
-	  * @param integer $id_customer Customer ID
-	  * @return integer Number of addresses
-	  */
+	 * Count the number of addresses for a customer
+	 *
+	 * @param integer $id_customer Customer ID
+	 * @return integer Number of addresses
+	 */
 	public static function getAddressesTotalById($id_customer)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -360,17 +360,17 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Check if customer password is the right one
-	  *
-	  * @param string $passwd Password
-	  * @return boolean result
-	  */
+	 * Check if customer password is the right one
+	 *
+	 * @param string $passwd Password
+	 * @return boolean result
+	 */
 	public static function checkPassword($id_customer, $passwd)
 	{
-	 	if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd))
-	 		die (Tools::displayError());
+		if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd))
+			die (Tools::displayError());
 
-	 	$sql = 'SELECT `id_customer`
+		$sql = 'SELECT `id_customer`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `id_customer` = '.$id_customer.'
 					AND `passwd` = \''.$passwd.'\'';
@@ -378,11 +378,11 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Light back office search for customers
-	  *
-	  * @param string $query Searched string
-	  * @return array Corresponding customers
-	  */
+	 * Light back office search for customers
+	 *
+	 * @param string $query Searched string
+	 * @return array Corresponding customers
+	 */
 	public static function searchByName($query, Shop $shop = null)
 	{
 		if (!$shop)
@@ -400,10 +400,10 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Search for customers by ip address
-	  *
-	  * @param string $ip Searched string
-	  */
+	 * Search for customers by ip address
+	 *
+	 * @param string $ip Searched string
+	 */
 	public static function searchByIp($ip)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -415,10 +415,10 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Return several useful statistics about customer
-	  *
-	  * @return array Stats
-	  */
+	 * Return several useful statistics about customer
+	 *
+	 * @return array Stats
+	 */
 	public function getStats()
 	{
 		$result = Db::getInstance()->getRow('
@@ -445,15 +445,15 @@ class CustomerCore extends ObjectModel
 
 	public function getLastConnections()
 	{
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
-        FROM `'._DB_PREFIX_.'guest` g
-        LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
-        LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-        WHERE g.`id_customer` = '.(int)$this->id.'
-        GROUP BY c.`id_connections`
-        ORDER BY c.date_add DESC
-        LIMIT 10');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
+		FROM `'._DB_PREFIX_.'guest` g
+		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
+		LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+		WHERE g.`id_customer` = '.(int)$this->id.'
+		GROUP BY c.`id_connections`
+		ORDER BY c.date_add DESC
+		LIMIT 10');
 	}
 
 	/*
@@ -612,8 +612,8 @@ class CustomerCore extends ObjectModel
 			$vars = array(
 				'{firstname}' => $this->firstname,
 				'{lastname}' => $this->lastname,
-			    '{email}' => $this->email,
-			    '{passwd}' => $password
+				'{email}' => $this->email,
+				'{passwd}' => $password
 			);
 
 			Mail::Send(
@@ -642,28 +642,28 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Check customer informations and return customer validity
-	  *
-	  * @since 1.5.0
-	  * @param boolean $with_guest
-	  * @return boolean customer validity
-	  */
+	 * Check customer informations and return customer validity
+	 *
+	 * @since 1.5.0
+	 * @param boolean $with_guest
+	 * @return boolean customer validity
+	 */
 	public function isLogged($with_guest = false)
 	{
 		if (!$with_guest && $this->is_guest == 1)
 			return false;
 
 		/* Customer is valid only if it can be load and if object password is the same as database one */
-	 	if ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && self::checkPassword($this->id, $this->passwd))
-        	return true;
-        return false;
+		if ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && self::checkPassword($this->id, $this->passwd))
+			return true;
+		return false;
 	}
 
 	/**
-	  * Logout
-	  *
-	  * @since 1.5.0
-	  */
+	 * Logout
+	 *
+	 * @since 1.5.0
+	 */
 	public function logout()
 	{
 		if (isset(Context::getContext()->cookie))
@@ -672,11 +672,11 @@ class CustomerCore extends ObjectModel
 	}
 
 	/**
-	  * Soft logout, delete everything links to the customer
-	  * but leave there affiliate's informations
-	  *
-	  * @since 1.5.0
-	  */
+	 * Soft logout, delete everything links to the customer
+	 * but leave there affiliate's informations
+	 *
+	 * @since 1.5.0
+	 */
 	public function mylogout()
 	{
 		if (isset(Context::getContext()->cookie))

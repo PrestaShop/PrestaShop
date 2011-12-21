@@ -294,6 +294,9 @@ class AddressCore extends ObjectModel
 
 	public static function getFirstCustomerAddressId($id_customer, $active = true)
 	{
+		if (!$id_customer)
+			return false;
+		
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
