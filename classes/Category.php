@@ -1205,15 +1205,41 @@ class CategoryCore extends ObjectModel
 		return $categories;
 	}
 
+	/**
+	 * @param $id_shop
+	 * @return bool
+	 */
 	public function isParentCategoryAvailable($id_shop)
 	{
-		return Db::getInstance()->getValue('
+		return (bool)Db::getInstance()->getValue('
 		SELECT c.`id_category`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 			ON c.`id_category` = cs.`id_category`
 		WHERE cs.`id_shop` = '.(int)$id_shop.'
 		AND c.`id_parent` = '.(int)$this->id_parent);
+	}
+
+	/**
+	 * Add association between shop and cateogries
+	 * @param int $id_shop
+	 * @return bool
+	 */
+	public function addShop($id_shop)
+	{
+		$sql = '';
+		if (!$id_shop)
+		{
+			foreach (Shop::getShops(true) as $shop)
+				$sql .= '('.(int)$this->id.', '.(int)$shop['id_shop'].'),';
+			// removing last comma to avoid SQL error
+			$sql = substr($sql, 0, strlen($sql) - 1);
+		} else
+			$sql .= '('.(int)$this->id.', '.(int)$id_shop.')';
+
+		return Db::getInstance()->execute('
+		INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`) VALUES
+		'.$sql);
 	}
 }
 

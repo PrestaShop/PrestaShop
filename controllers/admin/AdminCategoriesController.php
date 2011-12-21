@@ -433,6 +433,12 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		return strip_tags(stripslashes($description));
 	}
+
+	public function afterAdd($object)
+	{
+		// associate the category to the context shop
+		$object->addShop($this->context->shop->getID());
+	}
 }
 
 
