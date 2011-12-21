@@ -572,7 +572,7 @@ class AdminControllerCore extends Controller
 	 * @param $token
 	 * @return mixed
 	 */
-    public function processSave($token)
+	public function processSave($token)
 	{
 		if ($this->id_object)
 			return $this->processUpdate($token);
@@ -600,13 +600,13 @@ class AdminControllerCore extends Controller
 				$this->_errors[] = Tools::displayError('An error occurred while creating object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
-			 /* voluntary do affectation here */
+			/* voluntary do affectation here */
 			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);
 				$this->updateAssoShop($object->id);
-//							d($object);
+
 				// Save and stay on same form
 				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;

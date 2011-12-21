@@ -28,8 +28,8 @@
 class HookCore extends ObjectModel
 {
 	/** @var string Name and Title */
-	public 		$name;
-	public 		$title;
+	public $name;
+	public $title;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -339,13 +339,6 @@ class HookCore extends ObjectModel
 		return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\'); </script><!--<div id="add_'.$hook_name.'" class="add_module_live_edit">
 			<a class="exclusive" href="#">Add a module</a></div>--><div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
 	}
-
-
-
-
-
-
-
 
 	public static function updateOrderStatus($newOrderStatusId, $id_order)
 	{

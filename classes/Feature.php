@@ -37,6 +37,7 @@ class FeatureCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'feature',
 		'primary' => 'id_feature',
+		'multilang' => true,
 		'fields' => array(
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
