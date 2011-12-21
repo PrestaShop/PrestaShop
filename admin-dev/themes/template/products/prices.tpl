@@ -260,10 +260,11 @@ jQuery(document).ready(Customer.init);
 		{/foreach}
 		</script>
 		<div id="add_specific_price" style="display: none;">
+			<label>{l s='For:'}</label>
 			{if !$multi_shop}
-				<input type="hidden" name="sp_id_shop" value="0" />
+				<div class="margin-form">
+					<input type="hidden" name="sp_id_shop" value="0" />
 			{else}
-				<label>{l s='For:'}</label>
 				<div class="margin-form">
 					<select name="sp_id_shop">
 						<option value="0">{l s='All shops'}</option>
@@ -272,7 +273,7 @@ jQuery(document).ready(Customer.init);
 						{/foreach}
 					</select>
 								&gt;
-				{/if}
+			{/if}
 				<select name="sp_id_currency" id="spm_currency_0" onchange="changeCurrencySpecificPrice(0);">
 					<option value="0">{l s='All currencies'}</option>
 					{foreach from=$currencies item=curr}
