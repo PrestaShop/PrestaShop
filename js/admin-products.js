@@ -175,7 +175,16 @@ function editProductAttribute(ids, token)
 			var virtual_product_expiration_date_attribute = data[0]['date_expiration'];
 			var virtual_product_nb_days = data[0]['nb_days_accessible'];
 			var is_shareable = data[0]['is_shareable'];
-
+			if (wholesale_price != 0 && wholesale_price > 0)
+			{
+				$("#attribute_wholesale_price_full").show();
+				$("#attribute_wholesale_price_blank").hide();
+			}
+			else
+			{
+				$("#attribute_wholesale_price_full").hide();
+				$("#attribute_wholesale_price_blank").show();
+			}
 			fillCombinaison(
 				wholesale_price,
 				price,
