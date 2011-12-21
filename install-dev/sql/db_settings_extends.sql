@@ -1663,27 +1663,27 @@ CREATE TABLE IF NOT EXISTS `PREFIX_newsletter` (
 ) ENGINE=ENGINE_TYPE default CHARSET=utf8;
 
 			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider` (
-				`id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
+				`id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 				`id_shop` int(10) unsigned NOT NULL,
-				PRIMARY KEY (`id_slide`, `id_shop`)
+				PRIMARY KEY (`id_homeslider_slides`, `id_shop`)
 			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
 
 			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider_slides` (
-			  `id_slide` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `id_homeslider_slides` int(10) unsigned NOT NULL AUTO_INCREMENT,
 			  `position` int(10) unsigned NOT NULL DEFAULT '0',
 			  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-			  PRIMARY KEY (`id_slide`)
+			  PRIMARY KEY (`id_homeslider_slides`)
 			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
 
 			CREATE TABLE IF NOT EXISTS `PREFIX_homeslider_slides_lang` (
-			  `id_slide` int(10) unsigned NOT NULL,
+			  `id_homeslider_slides` int(10) unsigned NOT NULL,
 			  `id_lang` int(10) unsigned NOT NULL,
 			  `title` varchar(255) NOT NULL,
 			  `description` text NOT NULL,
 			  `legend` varchar(255) NOT NULL,
 			  `url` varchar(255) NOT NULL,
 			  `image` varchar(255) NOT NULL,
-			  PRIMARY KEY (`id_slide`,`id_lang`)
+			  PRIMARY KEY (`id_homeslider_slides`,`id_lang`)
 			) ENGINE=ENGINE_TYPE DEFAULT CHARSET=UTF8;
 
 INSERT INTO `PREFIX_configuration` (name, value)
@@ -1693,12 +1693,12 @@ VALUES
 ("HOMESLIDER_SPEED", "1300"),
 ("HOMESLIDER_PAUSE", "7700");
 
-INSERT INTO `PREFIX_homeslider` (id_slide, id_shop) VALUES (1, 1),(2, 1), (3, 1), (4, 1), (5, 1);
+INSERT INTO `PREFIX_homeslider` (id_homeslider_slides, id_shop) VALUES (1, 1),(2, 1), (3, 1), (4, 1), (5, 1);
 
-INSERT INTO `PREFIX_homeslider_slides` (id_slide, position, active)
+INSERT INTO `PREFIX_homeslider_slides` (id_homeslider_slides, position, active)
 VALUES (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1);
 
-INSERT INTO `PREFIX_homeslider_slides_lang` (id_slide, id_lang, title, description, legend, url, image) VALUES
+INSERT INTO `PREFIX_homeslider_slides_lang` (id_homeslider_slides, id_lang, title, description, legend, url, image) VALUES
 (1, 1, "Add Ons", "improve your e-commerce site by adding new features", "addons", "http://addons.prestashop.com", "sample-1.jpg"),
 (2, 1, "PrestaBox", "Your e-shop ready to use open in 10 minutes", "prestabox", "http://www.prestabox.com", "sample-2.jpg"),
 (3, 1, "Support", "contact PrestaShop Support team to help you in installing or configuring your software", "support", "http://support.prestashop.com", "sample-3.jpg"),
