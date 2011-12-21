@@ -215,7 +215,7 @@ abstract class ModuleCore
 		}
 
 		// Install module and retrieve the installation id
-		$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1), 'INSERT');
+		$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version), 'INSERT');
 		if (!$result)
 		{
 			$this->_errors[] = $this->l('Technical error : PrestaShop could not installed this module.');
@@ -1000,7 +1000,7 @@ abstract class ModuleCore
 		// Get Default Country Modules and customer module
 		if ($loggedOnAddons)
 		{
-			$filesList = array(_PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/xml/customer_modules_list.xml');
+			$filesList = array(_PS_ROOT_DIR_.'/config/default_country_modules_list.xml', _PS_ROOT_DIR_.'/config/customer_modules_list.xml');
 			foreach ($filesList as $file)
 				if (file_exists($file))
 				{
@@ -1091,7 +1091,7 @@ abstract class ModuleCore
 	{
 		$db = Db::getInstance();
 
-		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
+		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
 		$nativeModules = simplexml_load_file($module_list_xml);
 		$nativeModules = $nativeModules->modules;
 		foreach ($nativeModules as $nativeModulesType)
@@ -1509,7 +1509,7 @@ abstract class ModuleCore
 	<is_configurable>'.(int)method_exists($this, 'getContent').'</is_configurable>
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(sizeof($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
-		if (is_writable(_PS_MODULE_DIR_.$this->name.'/config.xml'))
+		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
 			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', $xml);
 	}
 
