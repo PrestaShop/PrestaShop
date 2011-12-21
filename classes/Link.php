@@ -85,7 +85,15 @@ class LinkCore
 		$url .= $this->getLangLink($id_lang);
 
 		if (!is_object($product))
-			$product = new Product($product, false, $id_lang);
+		{
+			if (is_array($product) && isset($product['id_product']))
+					$product = new Product((int)$product['id_product'], false, $id_lang);
+			else if(is_numeric($product))
+					$product = new Product((int)$product, false, $id_lang);
+			else
+				throw new PrestashopException('Invalid product vars');
+		}
+
 
 		// Set available keywords
 		$params = array();

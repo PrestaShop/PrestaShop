@@ -39,7 +39,7 @@
 #cart_block .quantity-formated {
 	display:inline-block;
 	margin-right:5px;
-	width:15px
+	min-width:18px;
 }
 #cart_block .cart_block_product_name {font-weight:bold}
 #cart_block .remove_link {
