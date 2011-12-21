@@ -165,7 +165,8 @@ class AdminWarehousesControllerCore extends AdminController
 					'size' => 40,
 					'maxlength' => 45,
 					'required' => true,
-					'desc' => $this->l('Name of this warehouse')
+					'desc' => $this->l('Name of this warehouse'),
+					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:',
 				),
 				array(
 					'type' => 'text',
