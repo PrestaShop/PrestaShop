@@ -46,6 +46,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		'table' => 'specific_price_rule',
 		'primary' => 'id_specific_price_rule',
 		'fields' => array(
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
 			'id_shop' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_country' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_currency' => 	array('type' => self::TYPE_INT, 'required' => true),
