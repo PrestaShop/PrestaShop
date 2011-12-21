@@ -58,6 +58,7 @@
 
 		<table cellpadding="5" style="width:100%">
 			<tbody>
+				{if !$product->is_virtual}
 				<tr>
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="1" checked="checked"{else}value="0"{/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
@@ -73,6 +74,7 @@
 						<br /><br />
 					</td>
 				</tr>
+				{/if}
 				<tr>
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
