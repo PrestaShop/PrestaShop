@@ -1509,7 +1509,7 @@ abstract class ModuleCore
 	<is_configurable>'.(int)method_exists($this, 'getContent').'</is_configurable>
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(sizeof($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
-		if (is_writable(_PS_MODULE_DIR_.$this->name.'/'))
+		if (is_writable(_PS_MODULE_DIR_.$this->name.'/config.xml'))
 			file_put_contents(_PS_MODULE_DIR_.$this->name.'/config.xml', $xml);
 	}
 
