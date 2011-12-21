@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <entity_carrier>
-	<carrier id="My_carrier">
-		<delay><![CDATA[Consegna il giorno dopo!]]></delay>
-	</carrier>
+  <carrier id="My_carrier" id_shop="1">
+    <delay>Consegna il giorno dopo!</delay>
+  </carrier>
 </entity_carrier>

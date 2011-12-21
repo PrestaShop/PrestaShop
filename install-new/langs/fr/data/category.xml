@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <entity_category>
-	<category id="Home">
-		<name><![CDATA[Accueil]]></name>
-		<description><![CDATA[]]></description>
-		<link_rewrite><![CDATA[home]]></link_rewrite>
-		<meta_title><![CDATA[]]></meta_title>
-		<meta_keywords><![CDATA[]]></meta_keywords>
-		<meta_description><![CDATA[]]></meta_description>
-	</category>
+  <category id="Home" id_shop="1">
+    <name>Accueil</name>
+    <description/>
+    <link_rewrite>home</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
 </entity_category>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <entity_cms_category>
-	<cms_category id="Home">
-		<name><![CDATA[Home]]></name>
-		<description><![CDATA[]]></description>
-		<link_rewrite><![CDATA[home]]></link_rewrite>
-		<meta_title><![CDATA[]]></meta_title>
-		<meta_keywords><![CDATA[]]></meta_keywords>
-		<meta_description><![CDATA[]]></meta_description>
-	</cms_category>
+  <cms_category id="Home">
+    <name>Home</name>
+    <description/>
+    <link_rewrite>home</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </cms_category>
 </entity_cms_category>

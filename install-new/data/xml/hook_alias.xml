@@ -1,350 +1,349 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_hook_alias>
-	<fields id="alias">
-		<field name="alias" />
-		<field name="name" />
-	</fields>
-
-	<entities>
-		<hook_alias id="payment">
-			<alias><![CDATA[payment]]></alias>
-			<name><![CDATA[displayPayment]]></name>
-		</hook_alias>
-		<hook_alias id="newOrder">
-			<alias><![CDATA[newOrder]]></alias>
-			<name><![CDATA[actionValidateOrder]]></name>
-		</hook_alias>
-		<hook_alias id="paymentConfirm">
-			<alias><![CDATA[paymentConfirm]]></alias>
-			<name><![CDATA[actionPaymentConfirmation]]></name>
-		</hook_alias>
-		<hook_alias id="paymentReturn">
-			<alias><![CDATA[paymentReturn]]></alias>
-			<name><![CDATA[displayPaymentReturn]]></name>
-		</hook_alias>
-		<hook_alias id="updateQuantity">
-			<alias><![CDATA[updateQuantity]]></alias>
-			<name><![CDATA[actionUpdateQuantity]]></name>
-		</hook_alias>
-		<hook_alias id="rightColumn">
-			<alias><![CDATA[rightColumn]]></alias>
-			<name><![CDATA[displayRightColumn]]></name>
-		</hook_alias>
-		<hook_alias id="leftColumn">
-			<alias><![CDATA[leftColumn]]></alias>
-			<name><![CDATA[displayLeftColumn]]></name>
-		</hook_alias>
-		<hook_alias id="home">
-			<alias><![CDATA[home]]></alias>
-			<name><![CDATA[displayHome]]></name>
-		</hook_alias>
-		<hook_alias id="header">
-			<alias><![CDATA[header]]></alias>
-			<name><![CDATA[displayHeader]]></name>
-		</hook_alias>
-		<hook_alias id="cart">
-			<alias><![CDATA[cart]]></alias>
-			<name><![CDATA[actionCartSave]]></name>
-		</hook_alias>
-		<hook_alias id="authentication">
-			<alias><![CDATA[authentication]]></alias>
-			<name><![CDATA[actionAuthentication]]></name>
-		</hook_alias>
-		<hook_alias id="addproduct">
-			<alias><![CDATA[addproduct]]></alias>
-			<name><![CDATA[actionProductAdd]]></name>
-		</hook_alias>
-		<hook_alias id="updateproduct">
-			<alias><![CDATA[updateproduct]]></alias>
-			<name><![CDATA[actionProductUpdate]]></name>
-		</hook_alias>
-		<hook_alias id="top">
-			<alias><![CDATA[top]]></alias>
-			<name><![CDATA[displayTop]]></name>
-		</hook_alias>
-		<hook_alias id="extraRight">
-			<alias><![CDATA[extraRight]]></alias>
-			<name><![CDATA[displayRightColumnProduct]]></name>
-		</hook_alias>
-		<hook_alias id="deleteproduct">
-			<alias><![CDATA[deleteproduct]]></alias>
-			<name><![CDATA[actionProductDelete]]></name>
-		</hook_alias>
-		<hook_alias id="productfooter">
-			<alias><![CDATA[productfooter]]></alias>
-			<name><![CDATA[displayFooterProduct]]></name>
-		</hook_alias>
-		<hook_alias id="invoice">
-			<alias><![CDATA[invoice]]></alias>
-			<name><![CDATA[displayInvoice]]></name>
-		</hook_alias>
-		<hook_alias id="updateOrderStatus">
-			<alias><![CDATA[updateOrderStatus]]></alias>
-			<name><![CDATA[actionOrderStatusUpdate]]></name>
-		</hook_alias>
-		<hook_alias id="adminOrder">
-			<alias><![CDATA[adminOrder]]></alias>
-			<name><![CDATA[displayAdminOrder]]></name>
-		</hook_alias>
-		<hook_alias id="footer">
-			<alias><![CDATA[footer]]></alias>
-			<name><![CDATA[displayFooter]]></name>
-		</hook_alias>
-		<hook_alias id="PDFInvoice">
-			<alias><![CDATA[PDFInvoice]]></alias>
-			<name><![CDATA[displayPDFInvoice]]></name>
-		</hook_alias>
-		<hook_alias id="adminCustomers">
-			<alias><![CDATA[adminCustomers]]></alias>
-			<name><![CDATA[displayAdminCustomers]]></name>
-		</hook_alias>
-		<hook_alias id="orderConfirmation">
-			<alias><![CDATA[orderConfirmation]]></alias>
-			<name><![CDATA[displayOrderConfirmation]]></name>
-		</hook_alias>
-		<hook_alias id="createAccount">
-			<alias><![CDATA[createAccount]]></alias>
-			<name><![CDATA[actionCustomerAccountAdd]]></name>
-		</hook_alias>
-		<hook_alias id="customerAccount">
-			<alias><![CDATA[customerAccount]]></alias>
-			<name><![CDATA[displayCustomerAccount]]></name>
-		</hook_alias>
-		<hook_alias id="orderSlip">
-			<alias><![CDATA[orderSlip]]></alias>
-			<name><![CDATA[actionOrderSlipAdd]]></name>
-		</hook_alias>
-		<hook_alias id="productTab">
-			<alias><![CDATA[productTab]]></alias>
-			<name><![CDATA[displayProductTab]]></name>
-		</hook_alias>
-		<hook_alias id="productTabContent">
-			<alias><![CDATA[productTabContent]]></alias>
-			<name><![CDATA[displayProductTabContent]]></name>
-		</hook_alias>
-		<hook_alias id="shoppingCart">
-			<alias><![CDATA[shoppingCart]]></alias>
-			<name><![CDATA[displayShoppingCartFooter]]></name>
-		</hook_alias>
-		<hook_alias id="createAccountForm">
-			<alias><![CDATA[createAccountForm]]></alias>
-			<name><![CDATA[displayCustomerAccountForm]]></name>
-		</hook_alias>
-		<hook_alias id="AdminStatsModules">
-			<alias><![CDATA[AdminStatsModules]]></alias>
-			<name><![CDATA[displayAdminStatsModules]]></name>
-		</hook_alias>
-		<hook_alias id="GraphEngine">
-			<alias><![CDATA[GraphEngine]]></alias>
-			<name><![CDATA[displayAdminStatsGraphEngine]]></name>
-		</hook_alias>
-		<hook_alias id="orderReturn">
-			<alias><![CDATA[orderReturn]]></alias>
-			<name><![CDATA[actionOrderReturn]]></name>
-		</hook_alias>
-		<hook_alias id="productActions">
-			<alias><![CDATA[productActions]]></alias>
-			<name><![CDATA[displayProductButtons]]></name>
-		</hook_alias>
-		<hook_alias id="backOfficeHome">
-			<alias><![CDATA[backOfficeHome]]></alias>
-			<name><![CDATA[displayBackOfficeHome]]></name>
-		</hook_alias>
-		<hook_alias id="GridEngine">
-			<alias><![CDATA[GridEngine]]></alias>
-			<name><![CDATA[displayAdminStatsGridEngine]]></name>
-		</hook_alias>
-		<hook_alias id="watermark">
-			<alias><![CDATA[watermark]]></alias>
-			<name><![CDATA[actionWatermark]]></name>
-		</hook_alias>
-		<hook_alias id="cancelProduct">
-			<alias><![CDATA[cancelProduct]]></alias>
-			<name><![CDATA[actionProductCancel]]></name>
-		</hook_alias>
-		<hook_alias id="extraLeft">
-			<alias><![CDATA[extraLeft]]></alias>
-			<name><![CDATA[displayLeftColumnProduct]]></name>
-		</hook_alias>
-		<hook_alias id="productOutOfStock">
-			<alias><![CDATA[productOutOfStock]]></alias>
-			<name><![CDATA[actionProductOutOfStock]]></name>
-		</hook_alias>
-		<hook_alias id="updateProductAttribute">
-			<alias><![CDATA[updateProductAttribute]]></alias>
-			<name><![CDATA[actionProductAttributeUpdate]]></name>
-		</hook_alias>
-		<hook_alias id="extraCarrier">
-			<alias><![CDATA[extraCarrier]]></alias>
-			<name><![CDATA[displayCarrierList]]></name>
-		</hook_alias>
-		<hook_alias id="shoppingCartExtra">
-			<alias><![CDATA[shoppingCartExtra]]></alias>
-			<name><![CDATA[displayShoppingCart]]></name>
-		</hook_alias>
-		<hook_alias id="search">
-			<alias><![CDATA[search]]></alias>
-			<name><![CDATA[actionSearch]]></name>
-		</hook_alias>
-		<hook_alias id="backBeforePayment">
-			<alias><![CDATA[backBeforePayment]]></alias>
-			<name><![CDATA[displayBeforePayment]]></name>
-		</hook_alias>
-		<hook_alias id="updateCarrier">
-			<alias><![CDATA[updateCarrier]]></alias>
-			<name><![CDATA[actionCarrierUpdate]]></name>
-		</hook_alias>
-		<hook_alias id="postUpdateOrderStatus">
-			<alias><![CDATA[postUpdateOrderStatus]]></alias>
-			<name><![CDATA[actionOrderStatusPostUpdate]]></name>
-		</hook_alias>
-		<hook_alias id="createAccountTop">
-			<alias><![CDATA[createAccountTop]]></alias>
-			<name><![CDATA[displayCustomerAccountFormTop]]></name>
-		</hook_alias>
-		<hook_alias id="backOfficeHeader">
-			<alias><![CDATA[backOfficeHeader]]></alias>
-			<name><![CDATA[displayBackOfficeHeader]]></name>
-		</hook_alias>
-		<hook_alias id="backOfficeTop">
-			<alias><![CDATA[backOfficeTop]]></alias>
-			<name><![CDATA[displayBackOfficeTop]]></name>
-		</hook_alias>
-		<hook_alias id="backOfficeFooter">
-			<alias><![CDATA[backOfficeFooter]]></alias>
-			<name><![CDATA[displayBackOfficeFooter]]></name>
-		</hook_alias>
-		<hook_alias id="deleteProductAttribute">
-			<alias><![CDATA[deleteProductAttribute]]></alias>
-			<name><![CDATA[actionProductAttributeDelete]]></name>
-		</hook_alias>
-		<hook_alias id="processCarrier">
-			<alias><![CDATA[processCarrier]]></alias>
-			<name><![CDATA[actionCarrierProcess]]></name>
-		</hook_alias>
-		<hook_alias id="orderDetail">
-			<alias><![CDATA[orderDetail]]></alias>
-			<name><![CDATA[actionOrderDetail]]></name>
-		</hook_alias>
-		<hook_alias id="beforeCarrier">
-			<alias><![CDATA[beforeCarrier]]></alias>
-			<name><![CDATA[displayBeforeCarrier]]></name>
-		</hook_alias>
-		<hook_alias id="orderDetailDisplayed">
-			<alias><![CDATA[orderDetailDisplayed]]></alias>
-			<name><![CDATA[displayOrderDetail]]></name>
-		</hook_alias>
-		<hook_alias id="paymentCCAdded">
-			<alias><![CDATA[paymentCCAdded]]></alias>
-			<name><![CDATA[actionPaymentCCAdd]]></name>
-		</hook_alias>
-		<hook_alias id="extraProductComparison">
-			<alias><![CDATA[extraProductComparison]]></alias>
-			<name><![CDATA[displayProductComparison]]></name>
-		</hook_alias>
-		<hook_alias id="categoryAddition">
-			<alias><![CDATA[categoryAddition]]></alias>
-			<name><![CDATA[actionCategoryAdd]]></name>
-		</hook_alias>
-		<hook_alias id="categoryUpdate">
-			<alias><![CDATA[categoryUpdate]]></alias>
-			<name><![CDATA[actionCategoryUpdate]]></name>
-		</hook_alias>
-		<hook_alias id="categoryDeletion">
-			<alias><![CDATA[categoryDeletion]]></alias>
-			<name><![CDATA[actionCategoryDelete]]></name>
-		</hook_alias>
-		<hook_alias id="beforeAuthentication">
-			<alias><![CDATA[beforeAuthentication]]></alias>
-			<name><![CDATA[actionBeforeAuthentication]]></name>
-		</hook_alias>
-		<hook_alias id="paymentTop">
-			<alias><![CDATA[paymentTop]]></alias>
-			<name><![CDATA[displayPaymentTop]]></name>
-		</hook_alias>
-		<hook_alias id="afterCreateHtaccess">
-			<alias><![CDATA[afterCreateHtaccess]]></alias>
-			<name><![CDATA[actionHtaccessCreate]]></name>
-		</hook_alias>
-		<hook_alias id="afterSaveAdminMeta">
-			<alias><![CDATA[afterSaveAdminMeta]]></alias>
-			<name><![CDATA[actionAdminMetaSave]]></name>
-		</hook_alias>
-		<hook_alias id="attributeGroupForm">
-			<alias><![CDATA[attributeGroupForm]]></alias>
-			<name><![CDATA[displayAttributeGroupForm]]></name>
-		</hook_alias>
-		<hook_alias id="afterSaveAttributeGroup">
-			<alias><![CDATA[afterSaveAttributeGroup]]></alias>
-			<name><![CDATA[actionAttributeGroupSave]]></name>
-		</hook_alias>
-		<hook_alias id="afterDeleteAttributeGroup">
-			<alias><![CDATA[afterDeleteAttributeGroup]]></alias>
-			<name><![CDATA[actionAttributeGroupDelete]]></name>
-		</hook_alias>
-		<hook_alias id="featureForm">
-			<alias><![CDATA[featureForm]]></alias>
-			<name><![CDATA[displayFeatureForm]]></name>
-		</hook_alias>
-		<hook_alias id="afterSaveFeature">
-			<alias><![CDATA[afterSaveFeature]]></alias>
-			<name><![CDATA[actionFeatureSave]]></name>
-		</hook_alias>
-		<hook_alias id="afterDeleteFeature">
-			<alias><![CDATA[afterDeleteFeature]]></alias>
-			<name><![CDATA[actionFeatureDelete]]></name>
-		</hook_alias>
-		<hook_alias id="afterSaveProduct">
-			<alias><![CDATA[afterSaveProduct]]></alias>
-			<name><![CDATA[actionProductSave]]></name>
-		</hook_alias>
-		<hook_alias id="productListAssign">
-			<alias><![CDATA[productListAssign]]></alias>
-			<name><![CDATA[actionProductListOverride]]></name>
-		</hook_alias>
-		<hook_alias id="postProcessAttributeGroup">
-			<alias><![CDATA[postProcessAttributeGroup]]></alias>
-			<name><![CDATA[displayAttributeGroupPostProcess]]></name>
-		</hook_alias>
-		<hook_alias id="postProcessFeature">
-			<alias><![CDATA[postProcessFeature]]></alias>
-			<name><![CDATA[displayFeaturePostProcess]]></name>
-		</hook_alias>
-		<hook_alias id="featureValueForm">
-			<alias><![CDATA[featureValueForm]]></alias>
-			<name><![CDATA[displayFeatureValueForm]]></name>
-		</hook_alias>
-		<hook_alias id="postProcessFeatureValue">
-			<alias><![CDATA[postProcessFeatureValue]]></alias>
-			<name><![CDATA[displayFeatureValuePostProcess]]></name>
-		</hook_alias>
-		<hook_alias id="afterDeleteFeatureValue">
-			<alias><![CDATA[afterDeleteFeatureValue]]></alias>
-			<name><![CDATA[actionFeatureValueDelete]]></name>
-		</hook_alias>
-		<hook_alias id="afterSaveFeatureValue">
-			<alias><![CDATA[afterSaveFeatureValue]]></alias>
-			<name><![CDATA[actionFeatureValueSave]]></name>
-		</hook_alias>
-		<hook_alias id="attributeForm">
-			<alias><![CDATA[attributeForm]]></alias>
-			<name><![CDATA[displayAttributeForm]]></name>
-		</hook_alias>
-		<hook_alias id="postProcessAttribute">
-			<alias><![CDATA[postProcessAttribute]]></alias>
-			<name><![CDATA[actionAttributePostProcess]]></name>
-		</hook_alias>
-		<hook_alias id="afterDeleteAttribute">
-			<alias><![CDATA[afterDeleteAttribute]]></alias>
-			<name><![CDATA[actionAttributeDelete]]></name>
-		</hook_alias>
-		<hook_alias id="afterSaveAttribute">
-			<alias><![CDATA[afterSaveAttribute]]></alias>
-			<name><![CDATA[actionAttributeSave]]></name>
-		</hook_alias>
-		<hook_alias id="taxManager">
-			<alias><![CDATA[taxManager]]></alias>
-			<name><![CDATA[actionTaxManager]]></name>
-		</hook_alias>
-	</entities>
+  <fields id="alias">
+    <field name="alias"/>
+    <field name="name"/>
+  </fields>
+  <entities>
+    <hook_alias id="payment">
+      <alias>payment</alias>
+      <name>displayPayment</name>
+    </hook_alias>
+    <hook_alias id="newOrder">
+      <alias>newOrder</alias>
+      <name>actionValidateOrder</name>
+    </hook_alias>
+    <hook_alias id="paymentConfirm">
+      <alias>paymentConfirm</alias>
+      <name>actionPaymentConfirmation</name>
+    </hook_alias>
+    <hook_alias id="paymentReturn">
+      <alias>paymentReturn</alias>
+      <name>displayPaymentReturn</name>
+    </hook_alias>
+    <hook_alias id="updateQuantity">
+      <alias>updateQuantity</alias>
+      <name>actionUpdateQuantity</name>
+    </hook_alias>
+    <hook_alias id="rightColumn">
+      <alias>rightColumn</alias>
+      <name>displayRightColumn</name>
+    </hook_alias>
+    <hook_alias id="leftColumn">
+      <alias>leftColumn</alias>
+      <name>displayLeftColumn</name>
+    </hook_alias>
+    <hook_alias id="home">
+      <alias>home</alias>
+      <name>displayHome</name>
+    </hook_alias>
+    <hook_alias id="header">
+      <alias>header</alias>
+      <name>displayHeader</name>
+    </hook_alias>
+    <hook_alias id="cart">
+      <alias>cart</alias>
+      <name>actionCartSave</name>
+    </hook_alias>
+    <hook_alias id="authentication">
+      <alias>authentication</alias>
+      <name>actionAuthentication</name>
+    </hook_alias>
+    <hook_alias id="addproduct">
+      <alias>addproduct</alias>
+      <name>actionProductAdd</name>
+    </hook_alias>
+    <hook_alias id="updateproduct">
+      <alias>updateproduct</alias>
+      <name>actionProductUpdate</name>
+    </hook_alias>
+    <hook_alias id="top">
+      <alias>top</alias>
+      <name>displayTop</name>
+    </hook_alias>
+    <hook_alias id="extraRight">
+      <alias>extraRight</alias>
+      <name>displayRightColumnProduct</name>
+    </hook_alias>
+    <hook_alias id="deleteproduct">
+      <alias>deleteproduct</alias>
+      <name>actionProductDelete</name>
+    </hook_alias>
+    <hook_alias id="productfooter">
+      <alias>productfooter</alias>
+      <name>displayFooterProduct</name>
+    </hook_alias>
+    <hook_alias id="invoice">
+      <alias>invoice</alias>
+      <name>displayInvoice</name>
+    </hook_alias>
+    <hook_alias id="updateOrderStatus">
+      <alias>updateOrderStatus</alias>
+      <name>actionOrderStatusUpdate</name>
+    </hook_alias>
+    <hook_alias id="adminOrder">
+      <alias>adminOrder</alias>
+      <name>displayAdminOrder</name>
+    </hook_alias>
+    <hook_alias id="footer">
+      <alias>footer</alias>
+      <name>displayFooter</name>
+    </hook_alias>
+    <hook_alias id="PDFInvoice">
+      <alias>PDFInvoice</alias>
+      <name>displayPDFInvoice</name>
+    </hook_alias>
+    <hook_alias id="adminCustomers">
+      <alias>adminCustomers</alias>
+      <name>displayAdminCustomers</name>
+    </hook_alias>
+    <hook_alias id="orderConfirmation">
+      <alias>orderConfirmation</alias>
+      <name>displayOrderConfirmation</name>
+    </hook_alias>
+    <hook_alias id="createAccount">
+      <alias>createAccount</alias>
+      <name>actionCustomerAccountAdd</name>
+    </hook_alias>
+    <hook_alias id="customerAccount">
+      <alias>customerAccount</alias>
+      <name>displayCustomerAccount</name>
+    </hook_alias>
+    <hook_alias id="orderSlip">
+      <alias>orderSlip</alias>
+      <name>actionOrderSlipAdd</name>
+    </hook_alias>
+    <hook_alias id="productTab">
+      <alias>productTab</alias>
+      <name>displayProductTab</name>
+    </hook_alias>
+    <hook_alias id="productTabContent">
+      <alias>productTabContent</alias>
+      <name>displayProductTabContent</name>
+    </hook_alias>
+    <hook_alias id="shoppingCart">
+      <alias>shoppingCart</alias>
+      <name>displayShoppingCartFooter</name>
+    </hook_alias>
+    <hook_alias id="createAccountForm">
+      <alias>createAccountForm</alias>
+      <name>displayCustomerAccountForm</name>
+    </hook_alias>
+    <hook_alias id="AdminStatsModules">
+      <alias>AdminStatsModules</alias>
+      <name>displayAdminStatsModules</name>
+    </hook_alias>
+    <hook_alias id="GraphEngine">
+      <alias>GraphEngine</alias>
+      <name>displayAdminStatsGraphEngine</name>
+    </hook_alias>
+    <hook_alias id="orderReturn">
+      <alias>orderReturn</alias>
+      <name>actionOrderReturn</name>
+    </hook_alias>
+    <hook_alias id="productActions">
+      <alias>productActions</alias>
+      <name>displayProductButtons</name>
+    </hook_alias>
+    <hook_alias id="backOfficeHome">
+      <alias>backOfficeHome</alias>
+      <name>displayBackOfficeHome</name>
+    </hook_alias>
+    <hook_alias id="GridEngine">
+      <alias>GridEngine</alias>
+      <name>displayAdminStatsGridEngine</name>
+    </hook_alias>
+    <hook_alias id="watermark">
+      <alias>watermark</alias>
+      <name>actionWatermark</name>
+    </hook_alias>
+    <hook_alias id="cancelProduct">
+      <alias>cancelProduct</alias>
+      <name>actionProductCancel</name>
+    </hook_alias>
+    <hook_alias id="extraLeft">
+      <alias>extraLeft</alias>
+      <name>displayLeftColumnProduct</name>
+    </hook_alias>
+    <hook_alias id="productOutOfStock">
+      <alias>productOutOfStock</alias>
+      <name>actionProductOutOfStock</name>
+    </hook_alias>
+    <hook_alias id="updateProductAttribute">
+      <alias>updateProductAttribute</alias>
+      <name>actionProductAttributeUpdate</name>
+    </hook_alias>
+    <hook_alias id="extraCarrier">
+      <alias>extraCarrier</alias>
+      <name>displayCarrierList</name>
+    </hook_alias>
+    <hook_alias id="shoppingCartExtra">
+      <alias>shoppingCartExtra</alias>
+      <name>displayShoppingCart</name>
+    </hook_alias>
+    <hook_alias id="search">
+      <alias>search</alias>
+      <name>actionSearch</name>
+    </hook_alias>
+    <hook_alias id="backBeforePayment">
+      <alias>backBeforePayment</alias>
+      <name>displayBeforePayment</name>
+    </hook_alias>
+    <hook_alias id="updateCarrier">
+      <alias>updateCarrier</alias>
+      <name>actionCarrierUpdate</name>
+    </hook_alias>
+    <hook_alias id="postUpdateOrderStatus">
+      <alias>postUpdateOrderStatus</alias>
+      <name>actionOrderStatusPostUpdate</name>
+    </hook_alias>
+    <hook_alias id="createAccountTop">
+      <alias>createAccountTop</alias>
+      <name>displayCustomerAccountFormTop</name>
+    </hook_alias>
+    <hook_alias id="backOfficeHeader">
+      <alias>backOfficeHeader</alias>
+      <name>displayBackOfficeHeader</name>
+    </hook_alias>
+    <hook_alias id="backOfficeTop">
+      <alias>backOfficeTop</alias>
+      <name>displayBackOfficeTop</name>
+    </hook_alias>
+    <hook_alias id="backOfficeFooter">
+      <alias>backOfficeFooter</alias>
+      <name>displayBackOfficeFooter</name>
+    </hook_alias>
+    <hook_alias id="deleteProductAttribute">
+      <alias>deleteProductAttribute</alias>
+      <name>actionProductAttributeDelete</name>
+    </hook_alias>
+    <hook_alias id="processCarrier">
+      <alias>processCarrier</alias>
+      <name>actionCarrierProcess</name>
+    </hook_alias>
+    <hook_alias id="orderDetail">
+      <alias>orderDetail</alias>
+      <name>actionOrderDetail</name>
+    </hook_alias>
+    <hook_alias id="beforeCarrier">
+      <alias>beforeCarrier</alias>
+      <name>displayBeforeCarrier</name>
+    </hook_alias>
+    <hook_alias id="orderDetailDisplayed">
+      <alias>orderDetailDisplayed</alias>
+      <name>displayOrderDetail</name>
+    </hook_alias>
+    <hook_alias id="paymentCCAdded">
+      <alias>paymentCCAdded</alias>
+      <name>actionPaymentCCAdd</name>
+    </hook_alias>
+    <hook_alias id="extraProductComparison">
+      <alias>extraProductComparison</alias>
+      <name>displayProductComparison</name>
+    </hook_alias>
+    <hook_alias id="categoryAddition">
+      <alias>categoryAddition</alias>
+      <name>actionCategoryAdd</name>
+    </hook_alias>
+    <hook_alias id="categoryUpdate">
+      <alias>categoryUpdate</alias>
+      <name>actionCategoryUpdate</name>
+    </hook_alias>
+    <hook_alias id="categoryDeletion">
+      <alias>categoryDeletion</alias>
+      <name>actionCategoryDelete</name>
+    </hook_alias>
+    <hook_alias id="beforeAuthentication">
+      <alias>beforeAuthentication</alias>
+      <name>actionBeforeAuthentication</name>
+    </hook_alias>
+    <hook_alias id="paymentTop">
+      <alias>paymentTop</alias>
+      <name>displayPaymentTop</name>
+    </hook_alias>
+    <hook_alias id="afterCreateHtaccess">
+      <alias>afterCreateHtaccess</alias>
+      <name>actionHtaccessCreate</name>
+    </hook_alias>
+    <hook_alias id="afterSaveAdminMeta">
+      <alias>afterSaveAdminMeta</alias>
+      <name>actionAdminMetaSave</name>
+    </hook_alias>
+    <hook_alias id="attributeGroupForm">
+      <alias>attributeGroupForm</alias>
+      <name>displayAttributeGroupForm</name>
+    </hook_alias>
+    <hook_alias id="afterSaveAttributeGroup">
+      <alias>afterSaveAttributeGroup</alias>
+      <name>actionAttributeGroupSave</name>
+    </hook_alias>
+    <hook_alias id="afterDeleteAttributeGroup">
+      <alias>afterDeleteAttributeGroup</alias>
+      <name>actionAttributeGroupDelete</name>
+    </hook_alias>
+    <hook_alias id="featureForm">
+      <alias>featureForm</alias>
+      <name>displayFeatureForm</name>
+    </hook_alias>
+    <hook_alias id="afterSaveFeature">
+      <alias>afterSaveFeature</alias>
+      <name>actionFeatureSave</name>
+    </hook_alias>
+    <hook_alias id="afterDeleteFeature">
+      <alias>afterDeleteFeature</alias>
+      <name>actionFeatureDelete</name>
+    </hook_alias>
+    <hook_alias id="afterSaveProduct">
+      <alias>afterSaveProduct</alias>
+      <name>actionProductSave</name>
+    </hook_alias>
+    <hook_alias id="productListAssign">
+      <alias>productListAssign</alias>
+      <name>actionProductListOverride</name>
+    </hook_alias>
+    <hook_alias id="postProcessAttributeGroup">
+      <alias>postProcessAttributeGroup</alias>
+      <name>displayAttributeGroupPostProcess</name>
+    </hook_alias>
+    <hook_alias id="postProcessFeature">
+      <alias>postProcessFeature</alias>
+      <name>displayFeaturePostProcess</name>
+    </hook_alias>
+    <hook_alias id="featureValueForm">
+      <alias>featureValueForm</alias>
+      <name>displayFeatureValueForm</name>
+    </hook_alias>
+    <hook_alias id="postProcessFeatureValue">
+      <alias>postProcessFeatureValue</alias>
+      <name>displayFeatureValuePostProcess</name>
+    </hook_alias>
+    <hook_alias id="afterDeleteFeatureValue">
+      <alias>afterDeleteFeatureValue</alias>
+      <name>actionFeatureValueDelete</name>
+    </hook_alias>
+    <hook_alias id="afterSaveFeatureValue">
+      <alias>afterSaveFeatureValue</alias>
+      <name>actionFeatureValueSave</name>
+    </hook_alias>
+    <hook_alias id="attributeForm">
+      <alias>attributeForm</alias>
+      <name>displayAttributeForm</name>
+    </hook_alias>
+    <hook_alias id="postProcessAttribute">
+      <alias>postProcessAttribute</alias>
+      <name>actionAttributePostProcess</name>
+    </hook_alias>
+    <hook_alias id="afterDeleteAttribute">
+      <alias>afterDeleteAttribute</alias>
+      <name>actionAttributeDelete</name>
+    </hook_alias>
+    <hook_alias id="afterSaveAttribute">
+      <alias>afterSaveAttribute</alias>
+      <name>actionAttributeSave</name>
+    </hook_alias>
+    <hook_alias id="taxManager">
+      <alias>taxManager</alias>
+      <name>actionTaxManager</name>
+    </hook_alias>
+  </entities>
 </entity_hook_alias>

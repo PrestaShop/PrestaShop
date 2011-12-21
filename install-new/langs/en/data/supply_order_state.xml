@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<entity_supply_order_state>
+  <supply_order_state id="supply_order_state_1">
+    <name>creation in progress</name>
+  </supply_order_state>
+  <supply_order_state id="supply_order_state_2">
+    <name>Order validated</name>
+  </supply_order_state>
+  <supply_order_state id="supply_order_state_3">
+    <name>Pending receipt</name>
+  </supply_order_state>
+  <supply_order_state id="supply_order_state_4">
+    <name>Order received in part</name>
+  </supply_order_state>
+  <supply_order_state id="supply_order_state_5">
+    <name>Order received completely</name>
+  </supply_order_state>
+  <supply_order_state id="supply_order_state_6">
+    <name>order fenced</name>
+  </supply_order_state>
+</entity_supply_order_state>
