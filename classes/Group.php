@@ -38,6 +38,9 @@ class GroupCore extends ObjectModel
 	/** @var int Price display method (tax inc/tax exc) */
 	public $price_display_method;
 
+	/** @var boolean Show prices */
+	public $show_prices = 1;
+
 	/** @var string Object creation date */
 	public $date_add;
 
@@ -54,6 +57,7 @@ class GroupCore extends ObjectModel
 		'fields' => array(
 			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'price_display_method' => 	array('type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true),
+			'show_prices' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
@@ -278,6 +282,23 @@ class GroupCore extends ObjectModel
 		// removing last comma to avoid SQL error
 		$sql = substr($sql, 0, strlen($sql) - 1);
 		Db::getInstance()->execute($sql);
+	}
+
+	/**
+	 * Return current group object
+	 * Use context
+	 * @static
+	 * @return Group Group object
+	 */
+	public static function getCurrent()
+	{
+		$customer = Context::getContext()->customer;
+		$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+
+		if (Validate::isLoadedObject($customer))
+			$id_group = (int)$customer->id_default_group;
+
+		return new self($id_group);
 	}
 }
 

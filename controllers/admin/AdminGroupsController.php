@@ -50,11 +50,42 @@ class AdminGroupsControllerCore extends AdminController
 		);
 
 		$this->fieldsDisplay = array(
-			'id_group' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 80, 'filter_key' => 'b!name'),
-			'reduction' => array('title' => $this->l('Discount'), 'width' => 50, 'align' => 'right'),
-			'nb' => array('title' => $this->l('Members'), 'width' => 25, 'align' => 'center'),
-			'date_add' => array('title' => $this->l('Creation date'), 'width' => 60, 'type' => 'date', 'align' => 'right'));
+			'id_group' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 25
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 80,
+				'filter_key' => 'b!name'
+			),
+			'reduction' => array(
+				'title' => $this->l('Discount'),
+				'width' => 50,
+				'align' =>
+				'right'
+			),
+			'nb' => array(
+				'title' => $this->l('Members'),
+				'width' => 25,
+				'align' => 'center'
+			),
+			'show_prices' => array(
+				'title' => $this->l('Show prices'),
+				'width' => 25,
+				'align' => 'center',
+				'type' => 'bool',
+				'callback' => 'printShowPricesIcon',
+				'orderby' => false
+			),
+			'date_add' => array(
+				'title' => $this->l('Creation date'),
+				'width' => 60,
+				'type' => 'date',
+				'align' => 'right'
+			)
+		);
 
 		$this->addRowActionSkipList('delete', $groups_to_keep);
 
@@ -66,6 +97,16 @@ class AdminGroupsControllerCore extends AdminController
 		parent::setMedia();
 		$this->addJqueryPlugin('fancybox');
 		$this->addJqueryUi('ui.sortable');
+	}
+
+	public function initProcess()
+	{
+		$this->id_object = Tools::getValue('id_'.$this->table);
+
+		if (Tools::isSubmit('changeShowPricesVal') && $this->id_object)
+			$this->action = 'change_show_prices_val';
+
+		parent::initProcess();
 	}
 
 	public function renderView()
@@ -166,6 +207,27 @@ class AdminGroupsControllerCore extends AdminController
 						'id' => 'id_method',
 						'name' => 'name'
 					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Show prices:'),
+					'name' => 'show_prices',
+					'required' => false,
+					'class' => 't',
+					'is_bool' => true,
+					'values' => array(
+						array(
+							'id' => 'show_prices_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						array(
+							'id' => 'show_prices_off',
+							'value' => 0,
+							'label' => $this->l('Disabled')
+						)
+					),
+					'desc' => $this->l('Customers in this group can view price')
 				),
 				array(
 					'type' => 'group_discount_category',
@@ -368,5 +430,38 @@ class AdminGroupsControllerCore extends AdminController
 				}
 			}
 		}
+	}
+
+	/**
+	 * Toggle show prices flag
+	 *
+	 * @param string $token
+	 */
+	public function processChangeShowPricesVal($token)
+	{
+		$group = new Group($this->id_object);
+		if (!Validate::isLoadedObject($group))
+			$this->_errors[] = Tools::displayError('An error occurred while updating group.');
+		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'group` SET show_prices = '.($group->show_prices ? 0 : 1).' WHERE `id_group` = '.(int)$group->id);
+		if (!$update)
+			$this->_errors[] = Tools::displayError('An error occurred while updating group.');
+		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+	}
+
+	/**
+	 * Print enable / disable icon for show prices option
+	 * @static
+	 * @param $id_group integer Group ID
+	 * @param $tr array Row data
+	 * @return string HTML link and icon
+	 */
+	public static function printShowPricesIcon($id_group, $tr)
+	{
+		$group = new Group($tr['id_group']);
+		if (!Validate::isLoadedObject($group))
+			return;
+		return '<a href="index.php?tab=AdminGroups&id_group='.(int)$group->id.'&changeShowPricesVal&token='.Tools::getAdminTokenLite('AdminGroups').'">
+				'.($group->show_prices ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+			'</a>';
 	}
 }
