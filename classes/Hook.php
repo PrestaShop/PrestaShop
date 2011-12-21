@@ -195,10 +195,15 @@ class HookCore extends ObjectModel
 	{
 		$hook_name = strtolower($hook_name);
 		$retro_hook_name = strtolower($retro_hook_name);
+
+		$return = array();
 		if (isset(self::$_hook_modules_cache_exec[$hook_name]))
-			return self::$_hook_modules_cache_exec[$hook_name];
+			$return = array_merge((array)$return, (array)self::$_hook_modules_cache_exec[$hook_name]);
 		if (isset(self::$_hook_modules_cache_exec[$retro_hook_name]))
-			return self::$_hook_modules_cache_exec[$retro_hook_name];
+			$return = array_merge((array)$return, (array)self::$_hook_modules_cache_exec[$retro_hook_name]);
+
+		if (count($return) > 0)
+			return $return;
 		return false;
 	}
 
