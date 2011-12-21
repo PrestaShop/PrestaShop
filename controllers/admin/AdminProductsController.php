@@ -2589,8 +2589,7 @@ class AdminProductsControllerCore extends AdminController
 				'groups' => $groups,
 				'combinations' => $combinations,
 				'product' => $product,
-				'link' => new Link,
-				'token' => $this->token
+				'link' => new Link
 			));
 		}
 		else
@@ -2624,7 +2623,8 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign(array(
 			'currency', $this->context->currency,
 			'product' => $product,
-			'unities' => $unities
+			'unities' => $unities,
+			'token' => $this->token
 		));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
@@ -2679,7 +2679,6 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormVirtualProduct($product, $languages, $default_language)
 	{
-
 		$data = $this->context->smarty->createData();
 
 		$currency = $this->context->currency;
@@ -3103,68 +3102,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!$product->id)
 			$product->name['class'] .= ' copy2friendlyUrl';
 
-		// @todo : initPack should not be called like this
 		$this->initPack($product);
-
-		/*
-		 * Form for add a virtual product like software, mp3, etc...
-		 */
-		$product_download = new ProductDownload();
-		if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id')))
-			$product->{'product_download'} = new ProductDownload($id_product_download);
-
-		// @todo handle is_virtual with the value of the product
-		$exists_file = realpath(_PS_DOWNLOAD_DIR_).'/'.$product->productDownload->filename;
-		$data->assign('product_downloaded', $product->productDownload->id && !empty($product->productDownload->display_filename));
-
-		if (!file_exists($exists_file)
-			&& !empty($product->productDownload->display_filename)
-			&& !empty($product->cache_default_attribute))
-		{
-			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
-		}
-		else
-			$msg = '';
-
-		$data->assign('download_product_file_missing', $msg);
-		$data->assign('download_dir_writable', ProductDownload::checkWritableDir());
-
-		if (empty($product->cache_default_attribute))
-		{
-			$data->assign('show_file_input', !strval(Tools::getValue('virtual_product_filename')) || $product->productDownload->id > 0);
-			// found in informations and combination : to merge
-			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename')));
-			$display_filename = ($product->productDownload->id > 0) ? $product->productDownload->display_filename : htmlentities(Tools::getValue('virtual_product_name'), ENT_COMPAT, 'UTF-8');
-
-			if (!$product->productDownload->id || !$product->productDownload->active)
-				$hidden = 'display:none;';
-			else
-				$hidden = '';
-
-			$product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
-			$product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '' ) : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
-			$product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
-			$product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
-		}
-		else
-		{
-			$error = '';
-			$product_attribute = ProductDownload::getAttributeFromIdProduct($this->getFieldValue($product, 'id'));
-			foreach ($product_attribute as $p)
-			{
-				$product_download_attribute = new ProductDownload($p['id_product_download']);
-				$exists_file2 = realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename;
-				if (!file_exists($exists_file2) && !empty($product_download_attribute->id_product_attribute))
-				{
-					$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product_download_attribute->display_filename);
-					$error .= '<p class="alert" id="file_missing">
-						<b>'.$msg.' :<br/>
-						'.realpath(_PS_DOWNLOAD_DIR_).'/'.$product_download_attribute->filename.'</b>
-					</p>';
-				}
-			}
-			$data->assign('error_product_download', $error);
-		}
 
 		$images = Image::getImages($this->context->language->id, $product->id);
 
@@ -3839,7 +3777,7 @@ class AdminProductsControllerCore extends AdminController
 		Pack::deleteItems($product->id);
 
 		// lines format: QTY x ID-QTY x ID
-		if (Tools::getValue('ppack'))
+		if (Tools::getValue('type_product') == 1)
 		{
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));

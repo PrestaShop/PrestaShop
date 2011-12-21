@@ -166,7 +166,6 @@
 						</p>
 						<p class="block">
 							<label for="virtual_product_expiration_date_attribute" class="t">{l s='Expiration date'}</label>
-							<input type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" class="datepicker hasDatepicker" /> {l s='Format: YYYY-MM-DD'}
 							<input class="datepicker" type="text" id="virtual_product_expiration_date_attribute" name="virtual_product_expiration_date_attribute" value="" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
 							<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
 						</p>
