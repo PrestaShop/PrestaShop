@@ -138,4 +138,8 @@ define('_PS_SMARTY_NO_COMPILE_', 0);
 define('_PS_SMARTY_CHECK_COMPILE_', 1);
 define('_PS_SMARTY_FORCE_COMPILE_', 2);
 
+define('_PS_SMARTY_CONSOLE_CLOSE_', 0);
+define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
+define('_PS_SMARTY_CONSOLE_OPEN_', 2);
+
 define('_PS_JQUERY_VERSION_', '1.4.4');
