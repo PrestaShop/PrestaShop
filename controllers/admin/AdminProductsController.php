@@ -1459,6 +1459,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->processAccounting($token);
 					$this->processSuppliers($token);
 					$this->processWarehouses($token);
+					$this->processFeatures($token);
 					$languages = Language::getLanguages(false);
 					if (!$this->updatePackItems($object))
 						$this->_errors[] = Tools::displayError('An error occurred while adding products to the pack.');
