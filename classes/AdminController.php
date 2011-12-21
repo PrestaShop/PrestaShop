@@ -606,7 +606,6 @@ class AdminControllerCore extends Controller
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);
 				$this->updateAssoShop($object->id);
-
 				// Save and stay on same form
 				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
