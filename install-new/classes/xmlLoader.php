@@ -363,8 +363,12 @@ class InstallXmlLoader
 		$xml = $this->loadEntity($entity);
 		foreach ($xml->fields->field as $field)
 			if ($field['relation'])
-				$data[(string)$field['name']] = $this->retrieveId((string)$field['relation'], $data[(string)$field['name']]);
-
+			{
+				$id = $this->retrieveId((string)$field['relation'], $data[(string)$field['name']]);
+				if (!$id && $data[(string)$field['name']] && is_numeric($data[(string)$field['name']]))
+					$id = $data[(string)$field['name']];
+				$data[(string)$field['name']] = $id;
+			}
 		return $data;
 	}
 
@@ -567,6 +571,11 @@ class InstallXmlLoader
 		return $tables;
 	}
 
+	public function hasElements($table)
+	{
+		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.$table);
+	}
+
 	public function getColumns($table, $multilang = false, array $exclude = array())
 	{
 		static $columns = array();
@@ -640,6 +649,15 @@ class InstallXmlLoader
 		return file_exists($this->data_path.$entity.'.xml');
 	}
 
+	public function getEntitiesList()
+	{
+		$entities = array();
+		foreach (scandir($this->data_path) as $file)
+			if ($file[0] != '.' && preg_match('#^(.+)\.xml$#', $file, $m))
+				$entities[] = $m[1];
+		return $entities;
+	}
+
 	public function getEntityInfo($entity)
 	{
 		$info = array(
@@ -648,6 +666,7 @@ class InstallXmlLoader
 				'primary' => 	'',
 				'class' => 		'',
 				'sql' => 		'',
+				'ordersql' => 	'',
 				'image' => 		'',
 			),
 			'fields' => 	array(),
@@ -685,29 +704,15 @@ class InstallXmlLoader
 		return $info;
 	}
 
-	/**
-	 * ONLY FOR DEVELOPMENT PURPOSE
-	 */
-	public function generateAllEntityFiles()
+	public function getDependencies()
 	{
 		$entities = array();
-		foreach (scandir($this->data_path) as $file)
-			if ($file[0] != '.' && preg_match('#^(.+)\.xml$#', $file, $m))
-				$entities[$m[1]] = $this->getEntityInfo($m[1]);
+		foreach ($this->getEntitiesList() as $entity)
+			$entities[$entity] = $this->getEntityInfo($entity);
 
-		$this->generateEntityFiles($entities);
-	}
-
-	/**
-	 * ONLY FOR DEVELOPMENT PURPOSE
-	 */
-	public function generateEntityFiles($entities)
-	{
 		$dependencies = array();
-		$list_entities = array();
 		foreach ($entities as $entity => $info)
 		{
-			$list_entities[] = $entity;
 			foreach ($info['fields'] as $field => $info_field)
 			{
 				if (isset($info_field['relation']) && $info_field['relation'] != $entity)
@@ -719,12 +724,60 @@ class InstallXmlLoader
 			}
 		}
 
+		return $dependencies;
+	}
+
+	public function generateEntitySchema($entity, array $fields, array $config)
+	{
+		if ($this->entityExists($entity))
+			$xml = $this->loadEntity($entity);
+		else
+			$xml = new SimpleXMLElement('<entity_'.$entity.' />');
+		unset($xml->fields);
+
+		// Fill <fields> attributes (config)
+		$xml->addChild('fields');
+		foreach ($config as $k => $v)
+			if ($v)
+				$xml->fields[$k] = $v;
+
+		// Create list of fields
+		foreach ($fields as $column => $info)
+		{
+			$field = $xml->fields->addChild('field');
+			$field['name'] = $column;
+			if (isset($info['relation']))
+				$field['relation'] = $info['relation'];
+
+		}
+
+		$this->writeNiceAndSweetXML($xml, $this->data_path.$entity.'.xml');
+	}
+
+	/**
+	 * ONLY FOR DEVELOPMENT PURPOSE
+	 */
+	public function generateAllEntityFiles()
+	{
+		$entities = array();
+		foreach ($this->getEntitiesList() as $entity)
+			$entities[$entity] = $this->getEntityInfo($entity);
+		$this->generateEntityFiles($entities);
+	}
+
+	/**
+	 * ONLY FOR DEVELOPMENT PURPOSE
+	 */
+	public function generateEntityFiles($entities)
+	{
+		$dependencies = $this->getDependencies();
+
 		// Sort entities to populate database in good order (E.g. zones before countries)
 		do
 		{
 			$current = (isset($sort_entities)) ? $sort_entities : array();
 			$sort_entities = array();
-			foreach ($list_entities as $entity)
+			foreach ($entities as $entity)
 			{
 				if (isset($dependencies[$entity]))
 				{
@@ -740,50 +793,29 @@ class InstallXmlLoader
 				else
 					$sort_entities[] = $entity;
 			}
-			$list_entities = $sort_entities;
+			$entities = $sort_entities;
 		}
 		while ($current != $sort_entities);
 
 		foreach ($sort_entities as $entity)
-			$this->generateEntityFile($entity, $entities[$entity]['config'], $entities[$entity]['fields']);
+			$this->generateEntityContent($entity);
 	}
 
-	/**
-	 * ONLY FOR DEVELOPMENT PURPOSE
-	 */
-	public function generateEntityFile($entity, array $config, array $columns)
+	public function generateEntityContent($entity)
 	{
+		$xml = $this->loadEntity($entity);
 		if (method_exists($this, 'getEntityContents'.Tools::toCamelCase($entity)))
-			$content = $this->{'getEntityContents'.Tools::toCamelCase($entity)}($config, $columns);
+			$content = $this->{'getEntityContents'.Tools::toCamelCase($entity)}($entity);
 		else
-			$content = $this->getEntityContents($entity, $config, $columns);
+			$content = $this->getEntityContents($entity);
 
-		// Generate common XML file
-		$xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-		$xml .= '<entity_'.$entity.'>'."\n";
-		$xml .= "\t<fields"
-					.((isset($config['id']) && $config['id']) ? ' id="'.htmlspecialchars($config['id']).'"' : '')
-					.((isset($config['primary']) && $config['primary']) ? ' primary="'.htmlspecialchars($config['primary']).'"' : '')
-					.((isset($config['class']) && $config['class']) ? ' class="'.htmlspecialchars($config['class']).'"' : '')
-					.((isset($config['sql']) && $config['sql']) ? ' sql="'.htmlspecialchars($config['sql']).'"' : '')
-					.((isset($config['image']) && $config['image']) ? ' image="'.htmlspecialchars($config['image']).'"' : '')
-					.">\n";
-		foreach ($columns as $column => $info)
-			if (isset($info['relation']))
-				$xml .= "\t\t".'<field name="'.$column.'" relation="'.$info['relation'].'" />'."\n";
-			else
-				$xml .= "\t\t".'<field name="'.$column.'" />'."\n";
-		$xml .= "\t</fields>\n\n";
-		$xml .= "\t<entities>\n";
-		if ($content['nodes'])
-			$xml .= $this->createXmlEntityNodes($entity, $content['nodes'], 2);
-		$xml .= "\t</entities>\n";
-		$xml .= '</entity_'.$entity.'>';
-		file_put_contents($this->data_path.$entity.'.xml', $xml);
+		unset($xml->entities);
+		$entities = $xml->addChild('entities');
+		$this->createXmlEntityNodes($entity, $content['nodes'], $entities);
+		$this->writeNiceAndSweetXML($xml, $this->data_path.$entity.'.xml');
 
 		// Generate multilang XML files
 		if ($content['nodes_lang'])
-		{
 			foreach ($content['nodes_lang'] as $id_lang => $nodes)
 			{
 				if (!isset($this->languages[$id_lang]))
@@ -793,29 +825,27 @@ class InstallXmlLoader
 				if (!is_dir($this->lang_path.$iso.'/data'))
 					mkdir($this->lang_path.$iso.'/data');
 
-				$xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-				$xml .= '<entity_'.$entity.'>'."\n";
-				$xml .= $this->createXmlEntityNodes($entity, $nodes);
-				$xml .= '</entity_'.$entity.'>';
-				file_put_contents($this->lang_path.$iso.'/data/'.$entity.'.xml', $xml);
+				$xml = new SimpleXMLElement('<entity_'.$entity.' />');
+				$this->createXmlEntityNodes($entity, $nodes, $xml);
+				$this->writeNiceAndSweetXML($xml, $this->lang_path.$iso.'/data/'.$entity.'.xml');
 			}
-		}
 
-		if (isset($config['image']) && $config['image'])
+		if ($xml->fields['image'])
 		{
 			if (method_exists($this, 'backupImage'.Tools::toCamelCase($entity)))
-				$this->{'backupImage'.Tools::toCamelCase($entity)}($config['image']);
+				$this->{'backupImage'.Tools::toCamelCase($entity)}((string)$xml->fields['image']);
 			else
-				$this->backupImage($entity, $config['image']);
+				$this->backupImage($entity, (string)$xml->fields['image']);
 		}
 	}
 
 	/**
 	 * ONLY FOR DEVELOPMENT PURPOSE
 	 */
-	public function getEntityContents($entity, array $config, array $columns)
+	public function getEntityContents($entity)
 	{
-		$primary = (isset($config['primary']) && $config['primary']) ? $config['primary'] : 'id_'.$entity;
+		$xml = $this->loadEntity($entity);
+		$primary = (isset($xml->fields['primary']) && $xml->fields['primary']) ? (string)$xml->fields['primary'] : 'id_'.$entity;
 		$is_multilang = $this->isMultilang($entity);
 
 		// Check if current table is an association table (if multiple primary keys)
@@ -836,17 +866,21 @@ class InstallXmlLoader
 			$sql->leftJoin($entity.'_lang', 'b', 'a.'.$primary.' = b.'.$primary);
 		}
 
-		if (isset($config['sql']) && $config['sql'])
-			$sql->where($config['sql']);
+		if (isset($xml->fields['sql']) && $xml->fields['sql'])
+			$sql->where((string)$xml->fields['sql']);
 
 		if (!$is_association)
 		{
 			$sql->select('a.'.$primary);
-			$sql->orderBy('a.'.$primary);
+			if (!isset($xml->fields['ordersql']) || !$xml->fields['ordersql'])
+				$sql->orderBy('a.'.$primary);
 		}
 
-		if ($is_multilang)
+		if ($is_multilang && (!isset($xml->fields['ordersql']) || !$xml->fields['ordersql']))
 			$sql->orderBy('b.id_lang');
+
+		if (isset($xml->fields['ordersql']) && $xml->fields['ordersql'])
+			$sql->orderBy((string)$xml->fields['ordersql']);
 
 		// Get multilang columns
 		$alias_multilang = array();
@@ -881,19 +915,24 @@ class InstallXmlLoader
 						$id .= '_'.$row[$key];
 				}
 				else
-					$id = $this->generateId($entity, $row[$primary], $row, (isset($config['id']) && $config['id']) ? $config['id'] : null);
+					$id = $this->generateId($entity, $row[$primary], $row, (isset($xml->fields['id']) && $xml->fields['id']) ? (string)$xml->fields['id'] : null);
 
 				if (!isset($nodes[$id]))
 				{
 					$node = array();
-					foreach ($columns as $column => $info)
+					foreach ($xml->fields->field as $field)
 					{
-						if (isset($info['relation']))
+						$column = (string)$field['name'];
+						if (isset($field['relation']))
 						{
-							$sql = 'SELECT `id_'.bqSQL($info['relation']).'`
-									FROM `'.bqSQL(_DB_PREFIX_.$info['relation']).'`
-									WHERE `id_'.bqSQL($info['relation']).'` = '.(int)$row[$column];
-							$node[$column] = $this->generateId($info['relation'], Db::getInstance()->getValue($sql));
+							$sql = 'SELECT `id_'.bqSQL($field['relation']).'`
+									FROM `'.bqSQL(_DB_PREFIX_.$field['relation']).'`
+									WHERE `id_'.bqSQL($field['relation']).'` = '.(int)$row[$column];
+							$node[$column] = $this->generateId((string)$field['relation'], Db::getInstance()->getValue($sql));
+
+							// A little trick to allow storage of some hard values, like '-1' for tab.id_parent
+							if (!$node[$column] && $row[$column])
+								$node[$column] = $row[$column];
 						}
 						else
 							$node[$column] = $row[$column];
@@ -985,36 +1024,22 @@ class InstallXmlLoader
 	/**
 	 * ONLY FOR DEVELOPMENT PURPOSE
 	 */
-	public function createXmlEntityNodes($entity, array $nodes, $tabs = 1)
+	public function createXmlEntityNodes($entity, array $nodes, SimpleXMLElement $entities)
 	{
-		$xml = '';
 		$types = array_merge($this->getColumns($entity), $this->getColumns($entity, true));
 		foreach ($nodes as $id => $node)
 		{
-			$attrs = $cdata = array();
+			$entity_node = $entities->addChild($entity);
+			$entity_node['id'] = $id;
 			foreach ($node as $k => $v)
-				if (isset($types[$k]) && $types[$k])
-					$cdata[$k] = $v;
-				else
-					$attrs[$k] = $v;
-
-			$xml .= str_repeat("\t", $tabs).'<'.$entity.' id="'.$id.'"';
-			if ($attrs)
-				foreach ($attrs as $k => $v)
-					$xml .= ' '.$k.'="'.htmlspecialchars($v).'"';
-
-			if ($cdata)
 			{
-				$xml .= ">\n";
-				foreach ($cdata as $k => $v)
-					$xml .= str_repeat("\t", $tabs + 1).'<'.$k.'><![CDATA['.$v.']]></'.$k.'>'."\n";
-				$xml .= str_repeat("\t", $tabs).'</'.$entity.'>'."\n";
+				if (isset($types[$k]) && $types[$k])
+					// Sadly SimpleXML is really stupid ...
+					$entity_node->addChild($k, str_replace('&', '&amp;', $v));
+				else
+					$entity_node[$k] = $v;
 			}
-			else
-				$xml .= " />\n";
 		}
-
-		return $xml;
 	}
 
 	/**
@@ -1097,5 +1122,17 @@ class InstallXmlLoader
 		foreach ($xml->entities->tab as $tab)
 			if (file_exists($from_path.$tab->class_name.'.gif'))
 				copy($from_path.$tab->class_name.'.gif', $backup_path.$tab->class_name.'.gif');
+	}
+
+	/**
+	 * ONLY FOR DEVELOPMENT PURPOSE
+	 */
+	public function writeNiceAndSweetXML(SimpleXMLElement $xml, $filename)
+	{
+		$dom = new DOMDocument('1.0');
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = true;
+		$dom->loadXML($xml->asXML());
+		file_put_contents($filename, $dom->saveXML());
 	}
 }
