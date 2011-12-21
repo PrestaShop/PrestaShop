@@ -1366,10 +1366,11 @@ class AdminControllerCore extends Controller
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
+
+			// if we have to display the required fields form
+			if ($this->required_database)
+				$this->content .= $this->displayRequiredFields();
 		}
-		// if we have to display the required fields form
-		if ($this->required_database)
-			$this->content .= $this->displayRequiredFields();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
