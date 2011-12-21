@@ -142,6 +142,7 @@ class AdminBackupControllerCore extends AdminController
 			'content' => $this->content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
+		parent::initContent();
 	}
 
 	/**
