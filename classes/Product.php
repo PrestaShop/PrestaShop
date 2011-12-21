@@ -681,16 +681,19 @@ class ProductCore extends ObjectModel
 		if (!count($categories))
 			return false;
 
+		$categories = array_map('intval', $categories);
+
 		$current_categories = $this->getCategories();
+		$current_categories = array_map('intval', $current_categories);
 
 		// for new categ, put product at last position
 		$res_categ_new_pos = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT id_category, MAX(position)+1 newPos
 			FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_category` IN('.implode(',', array_map('intval', $categories)).')
+			WHERE `id_category` IN('.implode(',', $categories).')
 			GROUP BY id_category');
 		foreach ($res_categ_new_pos as $array)
-			$new_categories[$array['id_category']] = $array['newPos'];
+			$new_categories[(int)$array['id_category']] = (int)$array['newPos'];
 
 		$new_categ_pos = array();
 		foreach ($categories as $id_category)
@@ -700,7 +703,7 @@ class ProductCore extends ObjectModel
 
 		foreach ($categories as $new_id_categ)
 			if (!in_array($new_id_categ, $current_categories))
-				$product_cats[] = '('.$new_id_categ.', '.$this->id.', '.$new_categ_pos[$new_id_categ].')';
+				$product_cats[] = '('.$new_id_categ.', '.(int)$this->id.', '.$new_categ_pos[$new_id_categ].')';
 		if (count($product_cats))
 			return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
