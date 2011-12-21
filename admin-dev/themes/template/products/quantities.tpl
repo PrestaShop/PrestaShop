@@ -58,8 +58,7 @@
 
 		<table cellpadding="5" style="width:100%">
 			<tbody>
-				{if !$product->is_virtual}
-				<tr>
+				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="1" checked="checked"{else}value="0"{/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
 								type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
@@ -67,15 +66,15 @@
 						<br /><br />
 					</td>
 				</tr>
-				<tr>
+				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
 						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled AND/OR if this product does not use the stock management'}</b>{/if}</label>
 						<br /><br />
 					</td>
 				</tr>
-				{/if}
-				<tr>
+				
+				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
 						<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually'}</label>
