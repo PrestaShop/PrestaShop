@@ -2191,13 +2191,12 @@ class ProductCore extends ObjectModel
 	* @param variable_reference $specificPriceOutput.
 	* 	If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
 	* @param boolean $with_ecotax insert ecotax in price output.
-	* @param bool $flush_cache set to true in order to flush getPriceStatic cache for these parameters
 	* @return float Product price
 	*/
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
 		$only_reduc = false, $usereduc = true, $quantity = 1, $force_associated_tax = false, $id_customer = null, $id_cart = null,
 		$id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null,
-		$use_customer_price = true, $flush_cache = false)
+		$use_customer_price = true)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -2234,10 +2233,6 @@ class ProductCore extends ObjectModel
 				$cache_name = (int)$id_cart.'_'.(int)$id_product.'_'.(int)$id_product_attribute;
 				$condition = ' AND `id_product_attribute` = '.(int)$id_product_attribute;
 			}
-
-			// Flush cache
-			if (isset(self::$_cart_quantity[$cache_name]) && $flush_cache)
-				unset(self::$_cart_quantity[$cache_name]);
 
 			if (!isset(self::$_cart_quantity[$cache_name]) || self::$_cart_quantity[$cache_name] != (int)$quantity)
 			{
@@ -2310,8 +2305,7 @@ class ProductCore extends ObjectModel
 			$specific_price_output,
 			$use_group_reduction,
 			$id_customer,
-			$use_customer_price,
-			$flush_cache
+			$use_customer_price
 		);
 	}
 
@@ -2333,12 +2327,11 @@ class ProductCore extends ObjectModel
 	* @param boolean $with_ecotax insert ecotax in price output.
 	* @param variable_reference $specific_price_output
 	* 	If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
-	* @param bool $flush_cache set to true in order to flush getPriceStatic cache for these parameters
 	* @return float Product price
 	**/
 	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
 		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
-		$id_customer = 0, $use_customer_price = true, $flush_cache = false)
+		$id_customer = 0, $use_customer_price = true)
 	{
 		if (!$use_customer_price)
 			$id_customer = 0;
@@ -2364,17 +2357,11 @@ class ProductCore extends ObjectModel
 			$id_customer
 		);
 
-		// Flush cache
-		if (isset(self::$_prices[$cache_id]) && $flush_cache)
-			unset(self::$_prices[$cache_id]);
-
 		if (isset(self::$_prices[$cache_id]))
 			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
 		$cache_id_2 = $id_product.'-'.$id_product_attribute;
-		if (isset(self::$_pricesLevel2[$cache_id_2]) && $flush_cache)
-			unset(self::$_pricesLevel2[$cache_id_2]);
 		if (!isset(self::$_pricesLevel2[$cache_id_2]))
 		{
 			$sql = new DbQuery();
@@ -2407,10 +2394,10 @@ class ProductCore extends ObjectModel
 		}
 		$result = self::$_pricesLevel2[$cache_id_2];
 
-    if (!$specific_price || $specific_price['price'] ==0)
-      $price = (float)$result['price'];
-     else
-      $price = (float)$specific_price['price'];
+		if (!$specific_price || $specific_price['price'] ==0)
+			$price = (float)$result['price'];
+		else
+			$price = (float)$specific_price['price'];
 		// convert only if the specific price is in the default currency (id_currency = 0)
 		if (!$specific_price || !($specific_price['price'] > 0 && $specific_price['id_currency']))
 			$price = Tools::convertPrice($price, $id_currency);
@@ -4687,5 +4674,16 @@ class ProductCore extends ObjectModel
 		$query->where('p.id_product = '.(int)$id_product);
 
 		return (bool)Db::getInstance()->getValue($query);
+	}
+
+	/**
+	 * This method allows to flush price cache
+	 * @static
+	 * @since 1.5.0.2
+	 */
+	public static function flushPriceCache()
+	{
+		self::$_prices = array();
+		self::$_pricesLevel2 = array();
 	}
 }
