@@ -332,8 +332,8 @@ abstract class ObjectModelCore
 
 			case self::TYPE_HTML :
 				if ($with_quotes)
-					return '\''.pSQL($value).'\'';
-				return pSQL($value);
+					return '\''.pSQL($value, true).'\'';
+				return pSQL($value, true);
 
 			case self::TYPE_STRING :
 			default :
