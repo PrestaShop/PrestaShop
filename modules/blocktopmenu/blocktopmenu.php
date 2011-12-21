@@ -25,7 +25,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include _PS_MODULE_DIR_.'blocktopmenu/menutoplinks.class.php';
+require dirname(__FILE__).'/menutoplinks.class.php';
+
 class blocktopmenu extends Module
 {
 	private $_menu = '';
@@ -34,9 +35,12 @@ class blocktopmenu extends Module
 	public function __construct()
 	{
 		$this->name = 'blocktopmenu';
-		$this->tab = 'Julien Breux Developpement';
+		$this->tab = 'front_office_features';
 		$this->version = 1.3;
+		$this->author = 'PrestaShop';
+
 		parent::__construct();
+
 		$this->displayName = $this->l('Top horizontal menu');
 		$this->description = $this->l('Add a new menu on top of your shop.');
 	}
@@ -329,7 +333,9 @@ class blocktopmenu extends Module
 		$items_shop = explode(',', $items_shop);
 		$items_global = Configuration::getGlobalValue('MOD_BLOCKTOPMENU_ITEMS');
 		$items_global = explode(',', $items_global);
-		
+
+		$items_global = array_diff($items_global, $items_shop);
+
 		return array('global' => $items_global, 'shop' => $items_shop);
 	}
 
