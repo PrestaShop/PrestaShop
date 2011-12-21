@@ -1927,6 +1927,17 @@ class CartCore extends ObjectModel
 			return;
 		}
 
+		$delivery_option_list = $this->getDeliveryOptionList(null , true);
+		
+		foreach ($delivery_option_list as $id_address => $options)
+			if (!isset($delivery_option[$id_address]))
+				foreach ($options as $key => $option)
+					if ($option['is_best_price'])
+								{
+									$delivery_option[$id_address] = $key;
+									break;
+								}
+
 		if (count($delivery_option) == 1)
 			$this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);
 
@@ -2909,6 +2920,7 @@ class CartCore extends ObjectModel
 				AND id_address_delivery = '.(int)$new_id_address_delivery;
 			Db::getInstance()->execute($sql);
 		}
+		
 		return true;
 	}
 
