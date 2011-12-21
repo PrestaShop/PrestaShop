@@ -61,7 +61,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		
 	 	$this->pathAccountExportTpl = _PS_ADMIN_DIR_.'/themes/template/accounting_export/';
 	 	$this->content = '';
-	 	$this->downloadDir = _PS_ROOT_DIR_.'/download/';
+	 	$this->downloadDir = _PS_ADMIN_DIR_.'/export/';
 	 	$this->exportSelected = 'global_export';
 	 	
 	 	$this->initExportFieldList();	
@@ -274,19 +274,21 @@ class AdminAccountingExportControllerCore extends AdminController
 		
 		$this->writeExportToFile($list);
 	}
-	
+
 	/**
-	 * Generate a line for the CSV for the global export  
-	 * @var array $row - Line from Database query
-	 * @var int $line_number - Request line generation
+	 * Generate a line for the CSV for the global export
+	 *
+	 * @param $row
+	 * @param $line_number
+	 * @return array
 	 */
 	private function createLine($row, $line_number)
 	{
 		$line = array();
-		
+
 		// Default Values
 		$line[0] = $row['invoice_date'];
-		$line[1] = Tools::getValue('journal'); 
+		$line[1] = Tools::getValue('journal');
 		$line[2] = ''; // account number
 		$line[3] = $row['invoice_number'];
 		$line[4] = 0.00; // Credit TTC (Total for first csv line, 0 for others)
@@ -304,7 +306,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				$line[4] = $row['total_price_tax_incl'];
 				break;
 			case 1:
-				$line[2] = !empty($row['account']) ? $row['account'] : 
+				$line[2] = !empty($row['account']) ? $row['account'] :
 					Configuration::get('default_account_number', NULL, NULL, $row['id_shop']);
 				// Force an empty string if Configuration send false
 				$line[2] = empty($line[2]) ? '' : $line[2];
@@ -319,8 +321,10 @@ class AdminAccountingExportControllerCore extends AdminController
 	}
 	
 	/**
-	 * Build an proper list to be written into the export file 
-	 * @var array $db_details - Content from datatbase
+	 * Build an proper list to be written into the export file
+	 *
+	 * @param $db_details
+	 * @return array
 	 */
 	private function buildGlobalExportlist($db_details)
 	{
@@ -328,39 +332,74 @@ class AdminAccountingExportControllerCore extends AdminController
 		$list = array();
 		
 		// Cache list to merge easily the content with the same accounting for different invoice number
-		$acc_invoice_list = array();
+		$cache_list = array();
 		$num = 0;
 		foreach($db_details as $row)
 		{
-			// Init the list
-			if (!array_key_exists($row['invoice_number'], $acc_invoice_list))
-				$acc_invoice_list[$row['invoice_number']] = array();
+			// Init the list for the current invoice number
+			if (!array_key_exists($row['invoice_number'], $cache_list))
+				$cache_list[$row['invoice_number']] = array();
 			
 			// Need to Generate 3 lines for a product
 			for ($i = 0; $i < 3; ++$i)
-				// Create line for the two first line and check if a tax exist for the last one
+				// Create the two first line and check if a tax exist for the last one
 				if ($i < 2 || ($i == 2 && $row['id_tax'] !== NULL))
 				{
-					$tmp = $this->createLine($row, $i);
-					// Check if the account number hadn't already be use for this invoice number
-					if (!array_key_exists($tmp[2], $acc_invoice_list[$tmp[3]]))
-					{
-						// Create a new entry and cache the account number for this invoice number
-						$acc_invoice_list[$tmp[3]][$tmp[2]] = $num;
-						$list[$num] = $tmp;
-						++$num;
-					}
+					// Generate a product line
+					$line = $this->createLine($row, $i);
+					if ($i == 0)
+						$list[$num++] = $line;
 					else
 					{
-						// Merge amount retrieving the position in the list of the invoice number
-						$pos = $acc_invoice_list[$tmp[3]][$tmp[2]];
-						if (!$i)
-							$list[$pos][4] += $tmp[4];
+						// Check if the account number hadn't already be used for this invoice number
+						// $line[3] = invoice_number, $line[2] = account_number
+						if (!array_key_exists($line[2], $cache_list[$line[3]]))
+							$cache_list[$line[3]][$line[2]] = array();
+
+						// If this id_product doesn't exist for this invoice number, then we create it as a cache
+						if (!in_array($row['id_product'], $cache_list[$line[3]][$line[2]]))
+						{
+							$cache_list[$line[3]][$line[2]][$row['id_product']] = array(
+								'position' => $num,
+								'id_order' => $row['id_order'],
+								'id_product_attribute' => $row['id_product_attribute'],
+								'quantity' => 1,
+								'advanced_stock_management' => $row['advanced_stock_management']);
+							$list[$num++] = $line;
+						}
 						else
-							$list[$pos][5] += $tmp[5];
+						{
+							// Merge amount retrieving the position in the list of the invoice number
+							// Some information could change (quantity) for the Stock movement price calculation
+							$pos = $cache_list[$line[3]][$line[2]][$row['id_product']]['position'];
+							$cache_list[$line[3]][$line[2]][$row['id_product']]['quantity'] += 1;
+							if (!$i)
+								$list[$pos][4] += $line[4];
+							else
+								$list[$pos][5] += $line[5];
+						}
 					}
 				}
 		}
+
+		// If advanced stock management enable then we foreach the cache_list to know
+		// if a product use the system to store back the movement price.
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			foreach($cache_list as $invoice_list)
+				foreach($invoice_list as $product_list)
+					foreach($product_list as $id_product => $product_detail)
+						if ($product_detail['advanced_stock_management'])
+						{
+							// Get stock product stock movement detail
+							$stock_mvt =	StockMvt::getNegativeStockMvts(
+								$product_detail['id_order'],
+								$id_product,
+								$product_detail['id_product_attribute'],
+								$product_detail['quantity']);
+
+							// Store new price
+							$list[$product_detail['position']] = $stock_mvt['price_te'];
+						}
 		return $list;
 	}
 	
@@ -390,10 +429,13 @@ class AdminAccountingExportControllerCore extends AdminController
  					WHEN (a.`company` != "" AND a.`company` IS NOT NULL) THEN a.`company`
 					ELSE  a.`lastname`
 				END AS wording,
-				t.account_number AS tax_accounting_account_number,
-				t.id_tax,
-				o.id_shop,
-				odt.total_amount AS tax_total_amount
+				t.`account_number` AS tax_accounting_account_number,
+				t.`id_tax`,
+				o.`id_shop`,
+				odt.`total_amount` AS tax_total_amount,
+				od.`product_id` AS id_product,
+				od.`product_attribute_id` as id_product_attribute,
+				p.`advanced_stock_management`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` customer ON customer.`id_customer` = o.`id_customer`
 				LEFT JOIN `'._DB_PREFIX_.'address` a ON a.`id_customer` = o.`id_customer` 
@@ -403,6 +445,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'order_detail_tax` odt ON odt.`id_order_detail` = od.`id_order_detail`
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON t.`id_tax` = odt.`id_tax`
 				LEFT JOIN `'._DB_PREFIX_.'country` country ON country.`id_country` = a.`id_country`
+				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = od.`product_id`
 				LEFT JOIN `'._DB_PREFIX_.'accounting_product_zone_shop` acc_pzs
 					ON (acc_pzs.`id_shop` = o.`id_shop`
 					AND acc_pzs.`id_zone` = country.`id_zone`
@@ -416,7 +459,7 @@ class AdminAccountingExportControllerCore extends AdminController
 					BETWEEN \''.pSQL($this->date['begin']).'\' 
 					AND \''.pSQL($this->date['end']).'\'
 				ORDER BY o.`id_order` ASC';
-		
+
 		$list = $this->buildGlobalExportlist(Db::getInstance()->executeS($query));
 		$this->writeExportToFile($list);
 	}
@@ -428,8 +471,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	private function downloadFile($fileName)
 	{
 		$path = $this->downloadDir.$fileName;
-		header('Content-Type: application/csv'); 
-		header('Content-length: ' . filesize($path)); 
+		header('Content-length: ' . filesize($path));
 		header('Content-Disposition: attachment; filename="'.$fileName.'"');
 		
 		// Flush buffered data before reading the file
