@@ -75,10 +75,22 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-
 		var toload = new Array();
-
+		var tabs_preloaded = new Array();
 		$(document).ready(function(){
+			{foreach $tabs_preloaded as $k => $tab}
+				tabs_preloaded['{$k}'] = '{$tab}';
+			{/foreach}
+
+			$('.product-tab-content').each(function(){
+				var id = $(this).attr('id').substr(20);
+				var split_position = id.indexOf('-') + 1;
+				var btn_name = id.substr(split_position);
+
+			if (tabs_preloaded[btn_name])
+				if ($("#product-tab-content-"+id).hasClass('not-loaded'))
+					displayTabProductById('#link-'+id, id, false);
+			});
 
 			{if $is_pack}
 				$('#pack_product').attr('checked', 'checked');

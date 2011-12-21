@@ -42,7 +42,6 @@
 	<script type="text/javascript">
 		var token = '{$token}';
 		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
-		var tabs_preloaded = new Array();
 
 		{$combinationImagesJs}
 		$(document).ready(function(){
@@ -51,21 +50,6 @@
 				updateMvtStatus($(this).val());
 			});
 			updateMvtStatus($(this).val());
-
-			{foreach $tabs_preloaded as $k => $tab}
-				tabs_preloaded['{$k}'] = '{$tab}';
-			{/foreach}
-
-			$('.product-tab-content').each(function(){
-				var id = $(this).attr('id').substr(20);
-				var split_position = id.indexOf('-') + 1;
-				var btn_name = id.substr(split_position);
-
-			if (tabs_preloaded[btn_name])
-				if ($("#product-tab-content-"+id).hasClass('not-loaded'))
-					displayTabProductById('#link-'+id, id, false);
-			});
-
 		});
 		function updateMvtStatus(id_mvt_reason)
 		{
