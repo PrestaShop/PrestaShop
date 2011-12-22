@@ -36,12 +36,12 @@ Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_4" id_country="CA">
-      <format>firstname lastname&#13;
-company&#13;
-address1&#13;
-address2&#13;
-city State:name postcode&#13;
-Country:name&#13;
+      <format>firstname lastname
+company
+address1
+address2
+city State:name postcode
+Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_5" id_country="CN">
@@ -95,14 +95,14 @@ Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_10" id_country="IT">
-      <format>firstname lastname&#13;
-company&#13;
-vat_number&#13;
-address1&#13;
-address2&#13;
-postcode city&#13;
-State:name&#13;
-Country:name&#13;
+      <format>firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+State:name
+Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_11" id_country="JP">
@@ -206,11 +206,11 @@ Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_21" id_country="US">
-      <format>firstname lastname&#13;
-company&#13;
-address1 address2&#13;
-city, State:name postcode&#13;
-Country:name&#13;
+      <format>firstname lastname
+company
+address1 address2
+city, State:name postcode
+Country:name
 phone</format>
     </address_format>
     <address_format id="address_format_22" id_country="HK">
