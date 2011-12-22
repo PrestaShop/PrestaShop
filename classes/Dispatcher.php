@@ -108,10 +108,10 @@ class DispatcherCore
 		),
 		'module' => array(
 			'controller' =>	'module',
-			'rule' =>		'module/{module}/{action}',
+			'rule' =>		'module/{module}/{process}',
 			'keywords' => array(
 				'module' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'module'),
-				'action' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'action'),
+				'process' =>		array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'process'),
 			),
 		),
 	);
@@ -149,7 +149,7 @@ class DispatcherCore
 	/**
 	 * @var string Controller to use if found controller doesn't exist
 	 */
-	protected $controller_not_found = 'PageNotFound';
+	protected $controller_not_found = 'pagenotfound';
 
 	/**
 	 * @var array List of controllers where are stored controllers
@@ -286,6 +286,20 @@ class DispatcherCore
  			if (!isset($controllers[$this->controller]))
  				$this->controller = strtolower($this->controller_not_found);
  			$controller_class = $controllers[$this->controller];
+
+			// If module controller is called, we have to call the right module controller
+			if ($controller_class == 'ModuleController')
+			{
+				$module_name = Tools::getValue('module');
+				$module = Module::getInstanceByName($module_name);
+				if (Validate::isLoadedObject($module) && $module->active && file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'Controller.php'))
+				{
+					include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'Controller.php');
+					$controller_class = 'Module'.$module_name.'Controller';
+				}
+				else
+					$controller_class = $controllers[$this->controller_not_found];
+			}
 		}
 		// BO dispatch
 		else
