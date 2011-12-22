@@ -10,7 +10,7 @@
 * http://opensource.org/licenses/osl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
+* to license@prestashop.com so we can send you a copy 502immediately.
 *
 * DISCLAIMER
 *
@@ -391,7 +391,11 @@ class CartRuleCore extends ObjectModel
 			{
 				$minimumAmountCurrency = new Currency($this->minimum_amount_currency);
 				//p($this->minimum_amount_currency);
-				$minimum_amount = $this->minimum_amount / $minimumAmountCurrency->convertion_rate;
+
+				if ($this->minimum_amount == 0 || $minimumAmountCurrency->conversion_rate == 0)
+					$minimum_amount = 0;
+				else
+					$minimum_amount = $this->minimum_amount / $minimumAmountCurrency->convertion_rate;
 			}
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
@@ -464,11 +468,15 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_currency != $context->currency->id)
 			{
 				$voucherCurrency = new Currency($this->reduction_currency);
+
 				// First we convert the voucher value to the default currency
-				$reduction_amount /= $voucherCurrency->conversion_rate;
+				if ($reduction_amount == 0 || $voucherCurrency->conversion_rate == 0)
+					$reduction_amount = 0;
+				else
+					$reduction_amount /= $voucherCurrency->conversion_rate;
+
 				// Then we convert the voucher value in the default currency into the cart currency
 				$reduction_amount *= $context->currency->conversion_rate;
-
 				$reduction_amount = Tools::ps_round($reduction_amount);
 			}
 
@@ -486,7 +494,12 @@ class CartRuleCore extends ObjectModel
 							$product_price_ti = $product['price_wt'];
 							$product_price_te = $product['price'];
 							$product_vat_amount = $product_price_ti - $product_price_te;
-							$product_vat_rate = $product_vat_amount / $product_price_te;
+
+							if ($product_vat_amount == 0 || $product_price_te == 0)
+								$product_vat_rate = 0;
+							else
+								$product_vat_rate = $product_vat_amount / $product_price_te;
+
 							if ($this->reduction_tax && !$useTax)
 								$reductionValue += $reduction_amount / (1 + $product_vat_rate);
 							elseif (!$this->reduction_tax && $useTax)
@@ -499,7 +512,12 @@ class CartRuleCore extends ObjectModel
 					$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 					$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 					$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
-					$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
+
+					if ($cart_vat_amount == 0 || $cart_amount_te == 0)
+						$cart_average_vat_rate = 0;
+					else
+						$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
+
 					if ($this->reduction_tax && !$useTax)
 						$reductionValue += $reduction_amount / (1 + $cart_average_vat_rate);
 					elseif (!$this->reduction_tax && $useTax)
