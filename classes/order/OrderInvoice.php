@@ -33,6 +33,12 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var integer */
 	public $number;
 
+	/** @var integer */
+	public $delivery_number;
+
+	/** @var integer */
+	public $delivery_date;
+
 	/** @var float */
 	public $total_discount_tax_excl;
 
@@ -81,6 +87,8 @@ class OrderInvoiceCore extends ObjectModel
 		'fields' => array(
 			'id_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'number' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'delivery_number' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'delivery_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'total_discount_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_discount_tax_incl' =>array('type' => self::TYPE_FLOAT),
 			'total_paid_tax_excl' =>	array('type' => self::TYPE_FLOAT),

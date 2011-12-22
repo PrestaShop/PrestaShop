@@ -32,17 +32,18 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
 	public $order;
 
-	public function __construct(Order $order, $smarty)
+	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
-		$this->order = $order;
-        $this->smarty = $smarty;
+		$this->order_invoice = $order_invoice;
+		$this->order = new Order($this->order_invoice->id_order);
+		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($order->invoice_date, (int)$order->id_lang);
-		$this->title = 'Invoice '.Configuration::get('PS_INVOICE_PREFIX').sprintf('%06d', $order->invoice_number);
+		$this->date = Tools::displayDate($this->order->invoice_date, (int)$this->order->id_lang);
+		$this->title = self::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
 
 		// footer informations
-		$shop = new Shop((int)$order->id_shop);
+		$shop = new Shop((int)$this->order->id_shop);
 		$this->address = $shop->getAddress();
 	}
 
@@ -68,9 +69,10 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order->getProducts(),
+			'order_details' => $this->order_invoice->getProducts(),
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
+			'order_invoice' => $this->order_invoice
 		));
 
 		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/delivery-slip.tpl');
