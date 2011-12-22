@@ -81,7 +81,18 @@
 			{$order->date_add|date_format:"%d-%m-%Y %H:%M"}<br />
 			<br />
 			<b>{l s='Payment Method:' pdf='true'}</b><br />
-			{$order->payment}<br />
+			<table style="width: 100%;">
+			{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
+				<tr>
+					<td style="width: 50%">{$payment->payment_method}</td>
+					<td style="width: 50%">{displayPrice price=$payment->amount currency=$order->id_currency}</td>
+				</tr>
+			{foreachelse}
+				<tr>
+					<td>{l s='No payment'}</td>
+				</tr>
+			{/foreach}
+			</table>
 			<br />
 			<!-- / CUSTOMER INFORMATIONS -->
 		</td>

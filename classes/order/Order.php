@@ -1117,16 +1117,28 @@ class OrderCore extends ObjectModel
 
 	public function setDelivery()
 	{
-		// Set delivery number
-		$number = (int)(Configuration::get('PS_DELIVERY_NUMBER'));
-		if (!(int)($number))
-			die(Tools::displayError('Invalid delivery number'));
-		$this->delivery_number = $number;
-		Configuration::updateValue('PS_DELIVERY_NUMBER', $number + 1);
+		// Get all invoice
+		$order_invoice_collection = $this->getInvoicesCollection();
+		foreach($order_invoice_collection as $order_invoice)
+		{
+			$number = (int)Configuration::get('PS_DELIVERY_NUMBER');
+			if (!$number)
+				throw new PrestashopException('Invalid delivery number');
 
+			// Set delivery number on invoice
+			$order_invoice->delivery_number = $number;
+			$order_invoice->delivery_date = date('Y-m-d H:i:s');
+			// Update Order Invoice
+			$order_invoice->update();
+
+			// Keep for backward compatibility
+			$this->delivery_number = $number;
+			Configuration::updateValue('PS_DELIVERY_NUMBER', $number + 1);
+		}
+
+		// Keep it for backward compatibility, to remove on 1.6 version
 		// Set delivery date
 		$this->delivery_date = date('Y-m-d H:i:s');
-
 		// Update object
 		$this->update();
 	}
@@ -1156,7 +1168,7 @@ class OrderCore extends ObjectModel
 		$sql = 'SELECT id_order
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `delivery_number` = '.(int)($id_delivery).'
-					'.Context::getContext()->shop->addSqlRestriction();
+				'.Context::getContext()->shop->addSqlRestriction();
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 		return new Order((int)($res['id_order']));
 	}
@@ -1395,14 +1407,24 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		$invoices = $this->getInvoicesCollection()->getResults();
+		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
+		// @TODO review
+		foreach($delivery_slips as $delivery)
+		{
+			$delivery->is_delivery = true;
+			$delivery->date_add = $delivery->delivery_date;
+		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
-		$documents = array_merge($invoices, $order_slips);
+
+		// @TODO review
 		function sortDocuments($a, $b)
 		{
-		    if ($a->date_add == $b->date_add)
-			return 0;
-		    return ($a->date_add < $b->date_add) ? -1 : 1;
+			if ($a->date_add == $b->date_add)
+				return 0;
+			return ($a->date_add < $b->date_add) ? -1 : 1;
 		}
+
+		$documents = array_merge($invoices, $order_slips, $delivery_slips);
 		usort($documents, "sortDocuments");
 
 		return $documents;
@@ -1436,7 +1458,7 @@ class OrderCore extends ObjectModel
 	/**
 	 *
 	 * Get all order_slips for the current order
-	 * @since 1.5.0.1
+	 * @since 1.5.0.2
 	 * @return Collection of Order slip
 	 */
 	public function getOrderSlipsCollection()
@@ -1445,7 +1467,6 @@ class OrderCore extends ObjectModel
 		$order_slips->where('id_order', '=', $this->id);
 		return $order_slips;
 	}
-
 
 	/**
 	 *
@@ -1457,6 +1478,20 @@ class OrderCore extends ObjectModel
 	{
 		$order_invoices = new Collection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
+		return $order_invoices;
+	}
+
+	/**
+	 *
+	 * Get all delivery slips for the current order
+	 * @since 1.5.0.2
+	 * @return Collection of Order invoice
+	 */
+	public function getDeliverySlipsCollection()
+	{
+		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices->where('id_order', '=', $this->id);
+		$order_invoices->where('delivery_number', '!=', '0');
 		return $order_invoices;
 	}
 

@@ -36,7 +36,7 @@
 {* Generate HTML code for printing Delivery Icon with link *}
 <span style="width:20px;">
 {if ($order_state->delivery && $order->delivery_number)}
-	<a target="_blank" href="pdf.php?id_delivery={$order->delivery_number}"><img src="../img/admin/delivery.gif" alt="delivery" /></a>
+	<a target="_blank" href="pdf.php?id_order={$order->id}&delivery"><img src="../img/admin/delivery.gif" alt="delivery" /></a>
 {else}
 	-
 {/if}
