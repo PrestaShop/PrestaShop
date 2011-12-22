@@ -228,7 +228,7 @@ class CartControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('You must add').' '.$minimal_quantity.' '.Tools::displayError('Minimum quantity');
 				}
 				else if (!$updateQuantity)
-					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.');
+					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', false);
 			}
 		}
 		CartRule::autoRemoveFromCart();
