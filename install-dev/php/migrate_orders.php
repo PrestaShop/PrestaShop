@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-public function migrate_orders()
+function migrate_orders()
 {
 	if (!defined('PS_TAX_EXC'))
 		define('PS_TAX_EXC', 1);
@@ -84,10 +84,10 @@ public function migrate_orders()
 		$wrapping_tax_rate = 1 + ((float)Configuration::get('PS_GIFT_WRAPPING_TAX') / 100);
 		$carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
 
-		$total_discount_tax_excl = $order['total_discount'] / $average_tax_used;
+		$total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
 
 		$sql = 'UPDATE `'._DB_PREFIX_.'orders`
-				SET `total_discount_tax_incl` = '.(float)$order['total_discount'].',
+				SET `total_discount_tax_incl` = '.(float)$order['total_discounts'].',
 					`total_discount_tax_excl` = '.(float)$total_discount_tax_excl.',
 					`total_paid_tax_incl` = '.(float)$order['total_paid'].',
 					`total_paid_tax_excl` = '.(float)$order['total_paid'].',
