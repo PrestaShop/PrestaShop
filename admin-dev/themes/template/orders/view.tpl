@@ -46,7 +46,7 @@
 	var txt_add_product_no_product = "{l s='Error: No product has been selected'}";
 	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of product must be set'}";
 	var txt_add_product_no_product_price = "{l s='Error: Price of product must be set'}";
-	var txt_confirm = "{l s='Are you sure?'}";
+	var txt_confirm = "{l s='Are you sure?' js=1}";
 
 	var statesShipped = new Array();
 	{foreach from=$states item=state}
