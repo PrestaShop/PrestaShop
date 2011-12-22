@@ -67,10 +67,6 @@ class InstallModelInstall extends InstallAbstractModel
 			return false;
 		}
 
-		// If no mcrypt, do not use RIJNDAEL algorithm
-		if (!function_exists('mcrypt'))
-			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` = \'PS_CIPHER_ALGORITHM\'');
-
 		return true;
 	}
 
@@ -370,8 +366,7 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', 		$data['smtp_port']);
 
 		// Activate rijndael 128 encrypt algorihtm if mcrypt is activated
-		if (function_exists('mcrypt_encrypt'))
-			Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', 1);
+		Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', function_exists('mcrypt_encrypt') ? 1 : 0);
 
 		// Set logo configuration
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
