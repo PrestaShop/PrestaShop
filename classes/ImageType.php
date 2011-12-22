@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,9 +29,6 @@ class ImageTypeCore extends ObjectModel
 {
 	public		$id;
 
-	/** @var string id_theme */
-	public		$id_theme;
-	
 	/** @var string Name */
 	public		$name;
 
@@ -55,7 +52,7 @@ class ImageTypeCore extends ObjectModel
 
 	/** @var integer Apply to scenes */
 	public 		$scenes;
-	
+
 	/** @var integer Apply to store */
 	public 		$stores;
 
@@ -66,7 +63,6 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
-			'id_theme' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
 			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
@@ -83,7 +79,7 @@ class ImageTypeCore extends ObjectModel
 	 * @var array Image types cache
 	 */
 	protected static $images_types_cache = array();
-	
+
 	protected $webserviceParameters = array();
 
 	/**
@@ -92,17 +88,16 @@ class ImageTypeCore extends ObjectModel
 	* @param string|null Image type
 	* @return array Image type definitions
 	*/
-	public static function getImagesTypes($type = NULL, $id_theme = false)
+	public static function getImagesTypes($type = NULL)
 	{
-		if (!isset(self::$images_types_cache[$type.($id_theme ? '-'.$id_theme : '')]))
+		if (!isset(self::$images_types_cache[$type]))
 		{
-			$where = 'WHERE 1';
-			if ($id_theme)
-				$where .= ' AND id_theme='.(int)$id_theme;
 			if (!empty($type))
-				$where .= ' AND ' . pSQL($type) . ' = 1 ';
+				$where = 'WHERE ' . pSQL($type) . ' = 1 ';
+			else
+				$where = '';
 
-			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.' ORDER BY `name` ASC';
+			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.'ORDER BY `name` ASC';
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 

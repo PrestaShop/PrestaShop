@@ -42,7 +42,7 @@ class ToolsCore
 	{
 		switch ($flag)
 		{
-			case 'NUMERIC': 
+			case 'NUMERIC':
 				$str = '0123456789';
 				break;
 			case 'NO_NUMERIC':
@@ -52,7 +52,7 @@ class ToolsCore
 				$str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				break;
 		}
-		
+
 		for ($i = 0, $passwd = ''; $i < $length; $i++)
 			$passwd .= self::substr($str, mt_rand(0, self::strlen($str) - 1), 1);
 		return $passwd;
@@ -367,7 +367,7 @@ class ToolsCore
 			$context = Context::getContext();
 		if ($id_lang = (int)(self::getValue('id_lang')) AND Validate::isUnsignedId($id_lang))
 			$context->cookie->id_lang = $id_lang;
-		
+
 		$language = new Language($id_lang);
 		if (Validate::isLoadedObject($language))
 			$context->language = $language;
@@ -558,10 +558,10 @@ class ToolsCore
 	{
 		if (!$date || !($time = strtotime($date)))
 			return $date;
-		
+
 		if ($date == '0000-00-00 00:00:00' || $date == '0000-00-00')
 			return '';
-		
+
 		if (!Validate::isDate($date) || !Validate::isBool($full))
 			throw new PrestashopException('Invalid date');
 
@@ -636,7 +636,7 @@ class ToolsCore
 
 		if (is_null($context))
 			$context = Context::getContext();
-		
+
 		@include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/errors.php');
 
 		if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $string == 'Fatal error')
@@ -1566,8 +1566,8 @@ class ToolsCore
 			fwrite($write_fd, "# Images\n");
 			if (Configuration::get('PS_LEGACY_IMAGES'))
 			{
-				fwrite($write_fd, 'RewriteRule (*UTF8)^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
-				fwrite($write_fd, 'RewriteRule (*UTF8)^([0-9]+)\-([0-9]+)(-[0-9]+)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+				fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+				fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2.jpg [L]'."\n");
 			}
 
 			// Rewrite product images < 100 millions
@@ -1580,10 +1580,10 @@ class ToolsCore
 					$img_name .= '$'.$j;
 				}
 				$img_name .= '$'.$j;
-				fwrite($write_fd, 'RewriteRule (*UTF8)^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j+1).".jpg [L]\n");
+				fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.".jpg [L]\n");
 			}
-			fwrite($write_fd, 'RewriteRule (*UTF8)^c/([0-9]+)(\-[_a-zA-Z0-9-\pL]*)(-[0-9]+)?/[_a-zA-Z0-9-]*\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
-			fwrite($write_fd, 'RewriteRule (*UTF8)^c/([a-zA-Z-]+)(-[0-9]+)?/[a-zA-Z0-9-\pL]+\.jpg$ img/c/$1$2.jpg [L]'."\n");
+			fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-\pL]*)/[_a-zA-Z0-9-]*\.jpg$ img/c/$1$2.jpg [L]'."\n");
+			fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)/[a-zA-Z0-9-\pL]+\.jpg$ img/c/$1.jpg [L]'."\n");
 		}
 
 		// Redirections to dispatcher
@@ -1702,7 +1702,7 @@ FileETag INode MTime Size
 		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
 		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.$callee['Line'].') is deprecated and will be removed in the next major version.';
 
-		trigger_error($message, E_WARNING); 
+		trigger_error($message, E_WARNING);
 		$class = isset($callee['class']) ? $callee['class'] : null;
 		self::throwDeprecated($error, $message, $class);
 	}
@@ -2092,7 +2092,7 @@ FileETag INode MTime Size
 
 		return false;
 	}
-	
+
 
 	/**
 	 * @params string $path Path to scan
@@ -2108,15 +2108,15 @@ FileETag INode MTime Size
 		$files = scandir($real_path);
 		if (!$files)
 			return array();
-		
+
 		$filtered_files = array();
-		
+
 		$real_ext =  '';
 		if (!empty($ext))
 			$real_ext = '.' . $ext;
-		
+
 		$real_ext_length = strlen($real_ext);
-		
+
 		foreach ($files as $file)
 			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
 				$filtered_files[] = $dir . '/' . $file;
