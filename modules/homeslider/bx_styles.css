@@ -6,7 +6,10 @@
  */
 
 .bx-window {margin-bottom:20px;}
-.bx-wrapper {height:300px}
+.bx-wrapper {
+	margin-bottom:20px;
+	height:300px
+}
  
 /*next button*/
 .bx-next {
