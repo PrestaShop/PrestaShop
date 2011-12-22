@@ -175,6 +175,9 @@ class WarehouseCore extends ObjectModel
 	 */
 	public function setCarriers($ids_carriers)
 	{
+		if (!is_array($ids_carriers))
+			$ids_carriers = array();
+
 		$row_to_insert = array();
 		foreach ($ids_carriers as $id_carrier)
 			$row_to_insert[] = array($this->def['primary'] => $this->id, 'id_carrier' => (int)$id_carrier);
@@ -183,7 +186,8 @@ class WarehouseCore extends ObjectModel
 			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
 			WHERE '.$this->def['primary'].' = '.(int)$this->id);
 
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_carrier', $row_to_insert, 'INSERT');
+		if ($row_to_insert)
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_carrier', $row_to_insert, 'INSERT');
 	}
 
 	/**

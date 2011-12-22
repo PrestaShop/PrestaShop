@@ -185,6 +185,10 @@ class CarrierCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * @since 1.5.0
+	 * @see ObjectModel::delete()
+	 */
 	public function delete()
 	{
 		if (!parent::delete())
@@ -640,8 +644,9 @@ class CarrierCore extends ObjectModel
 	}
 
 	/**
-	 * Get a specific group
+	 * Gets a specific group
 	 *
+	 * @since 1.5.0
 	 * @return array Group
 	 */
 	public function getGroups()
@@ -680,6 +685,7 @@ class CarrierCore extends ObjectModel
 	 * Add new delivery prices
 	 *
 	 * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
+	 * @param Shop $shop Optionnal
 	 * @return boolean Insertion result
 	 */
 	public function addDeliveryPrice($price_list, Shop $shop = null)
@@ -859,6 +865,10 @@ class CarrierCore extends ObjectModel
 		return $suffix;
 	}
 
+	/**
+	 *
+	 * @param int $id_carrier
+	 */
 	public static function getIdTaxRulesGroupByIdCarrier($id_carrier)
 	{
 		if (!isset(self::$cache_tax_rule[(int)$id_carrier]))
@@ -874,10 +884,11 @@ class CarrierCore extends ObjectModel
 
 
 	/**
-	 * Return the taxes rate associated to the carrier
+	 * Returns the taxes rate associated to the carrier
 	 *
 	 * @since 1.5
 	 * @param Address $address
+	 * @return
 	 */
 	public function getTaxesRate(Address $address)
 	{
@@ -887,7 +898,7 @@ class CarrierCore extends ObjectModel
 	}
 
 	/**
-	 * This tricky method generate a sql clause to check if ranged data are overloaded by multishop
+	 * This tricky method generates a sql clause to check if ranged data are overloaded by multishop
 	 *
 	 * @since 1.5.0
 	 * @param string $rangeTable
@@ -923,8 +934,10 @@ class CarrierCore extends ObjectModel
 	}
 
 	/**
-	 * Move a carrier
-	 * @param boolean $way Up (1)  or Down (0)
+	 * Moves a carrier
+	 *
+	 * @since 1.5.0
+	 * @param boolean $way Up (1) or Down (0)
 	 * @param integer $position
 	 * @return boolean Update result
 	 */
@@ -962,9 +975,10 @@ class CarrierCore extends ObjectModel
 	}
 
 	/**
-	 * Reorder carrier position.
-	 * Call it after deleting a carrier.
+	 * Reorders carrier positions.
+	 * Called after deleting a carrier.
 	 *
+	 * @since 1.5.0
 	 * @return bool $return
 	 */
 	public static function cleanPositions()
@@ -988,11 +1002,10 @@ class CarrierCore extends ObjectModel
 	}
 
 	/**
-	 * getHigherPosition
+	 * Gets the highest carrier position
 	 *
-	 * Get the higher carrier position
-	 *
-	 * @return integer $position
+	 * @since 1.5.0
+	 * @return int $position
 	 */
 	public static function getHigherPosition()
 	{
@@ -1000,17 +1013,19 @@ class CarrierCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'carrier`
 				WHERE `deleted` = 0';
 		$position = DB::getInstance()->getValue($sql);
-		return ($position !== false) ? $position : -1;
+		return ($position !== false) ? (int)$position : -1;
 	}
 
 	/**
 	 * For a given {product, warehouse}, gets the carrier available
 	 *
+	 * @since 1.5.0
 	 * @param $product integer The id of the product, or an array with at least the package size and weight
+	 * @return array
 	 */
 	public static function getAvailableCarrierList($product, $id_warehouse, $id_shop = null)
 	{
-		if(is_numeric($product))
+		if (is_numeric($product))
 			$product = new Product((int)$product);
 		else if (is_array($product))
 		{
@@ -1026,7 +1041,7 @@ class CarrierCore extends ObjectModel
 		$query->select('id_carrier');
 		$query->from('product_carrier', 'pc');
 		$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
-		$query->where('id_product = '.(int)($product->id));
+		$query->where('id_product = '.(int)$product->id);
 		$query->where('id_shop = '.(int)$id_shop);
 		$carriers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		if (!empty($carriers))
@@ -1066,8 +1081,7 @@ class CarrierCore extends ObjectModel
 				if (($carrier->max_width > 0 && $carrier->max_width < $product->width)
 					|| ($carrier->max_height > 0 && $carrier->max_height > $product->height)
 					|| ($carrier->max_depth > 0 && $carrier->max_depth > $product->depth)
-					|| ($carrier->max_weight > 0 && $carrier->max_weight > $product->weight)
-				)
+					|| ($carrier->max_weight > 0 && $carrier->max_weight > $product->weight))
 					unset($carrier_list[$key]);
 			}
 		}
