@@ -237,7 +237,7 @@ ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT 
 /* PHP:add_carrier_position();*/;
 
 ALTER TABLE `PREFIX_order_state` ADD COLUMN `shipped` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 AFTER `delivery`;
-UPDATE `PREFIX_order_state` SET `shipped` = 1 WHERE id_order_states IN (4, 5);
+UPDATE `PREFIX_order_state` SET `shipped` = 1 WHERE id_order_state IN (4, 5);
 
 CREATE TABLE `PREFIX_order_invoice` (
   `id_order_invoice` int(11) NOT NULL AUTO_INCREMENT,
@@ -419,8 +419,8 @@ INSERT INTO `PREFIX_cart_rule` (
 );
 
 RENAME TABLE `PREFIX_discount_lang` TO `PREFIX_cart_rule_lang`;
-ALTER TABLE `PREFIX_discount_lang` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
-ALTER TABLE `PREFIX_discount_lang` CHANGE `description` `name` varchar(254) NOT NULL;
+ALTER TABLE `PREFIX_cart_rule_lang` CHANGE `id_discount` `id_cart_rule` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_cart_rule_lang` CHANGE `description` `name` varchar(254) NOT NULL;
 RENAME TABLE `PREFIX_discount_category` TO `PREFIX_cart_rule_product_rule_value`;
 ALTER TABLE `PREFIX_cart_rule_product_rule_value` CHANGE `id_category` `id_item` int(10) unsigned NOT NULL;
 ALTER TABLE `PREFIX_cart_rule_product_rule_value` CHANGE `id_discount` `id_product_rule` int(10) unsigned NOT NULL;

@@ -238,11 +238,9 @@ PRIMARY KEY ( `id_shop` , `id_product` ),
 INSERT INTO `PREFIX_product_shop` (id_shop, id_product) (SELECT 1, id_product FROM PREFIX_product);
 
 ALTER TABLE `PREFIX_category_lang` ADD `id_shop` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_category`;
-ALTER TABLE `PREFIX_category_lang` DROP INDEX `category_lang_index`;
 ALTER TABLE `PREFIX_category_lang` ADD UNIQUE KEY( `id_category`, `id_shop`, `id_lang`);
 
 ALTER TABLE `PREFIX_product_lang` ADD `id_shop` INT( 11 ) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_product`;
-ALTER TABLE `PREFIX_product_lang` DROP INDEX `product_lang_index` ;
 ALTER TABLE `PREFIX_product_lang` ADD UNIQUE KEY ( `id_product`, `id_shop` , `id_lang`);
 
 ALTER TABLE `PREFIX_specific_price` CHANGE `id_shop` `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1';
@@ -277,7 +275,6 @@ ALTER TABLE `PREFIX_module_group` DROP PRIMARY KEY;
 ALTER TABLE `PREFIX_module_group` ADD PRIMARY KEY (`id_module`, `id_shop`, `id_group`);
 
 ALTER TABLE `PREFIX_carrier_lang` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_carrier`;
-ALTER TABLE `PREFIX_carrier_lang` DROP INDEX `shipper_lang_index`;
 ALTER TABLE `PREFIX_carrier_lang` ADD UNIQUE `shipper_lang_index` (`id_carrier`, `id_shop`, `id_lang`);
 
 ALTER TABLE `PREFIX_search_word` ADD `id_shop` INT(11) NOT NULL DEFAULT '1' AFTER `id_word`;
