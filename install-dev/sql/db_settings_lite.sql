@@ -938,7 +938,7 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (4, 'AdminPayment', 0, 4),(5, 'AdminShipping', 0, 5),(6, 'AdminStats', 0, 6),(7, 'AdminModules', 0, 7),(29, 'AdminEmployees', 0, 8),(8, 'AdminPreferences', 0, 9),
 (9, 'AdminTools', 0, 10),(82, 'AdminStores', 9, 11),(60, 'AdminTracking', 1, 3),(10, 'AdminManufacturers', 1, 4),(34, 'AdminSuppliers', 1, 5),(11, 'AdminAttributesGroups', 1, 6),
 (36, 'AdminFeatures', 1, 7),(58, 'AdminScenes', 1, 8),(66, 'AdminTags', 1, 9),(68, 'AdminAttachments', 1, 10),(12, 'AdminAddresses', 2, 1),(63, 'AdminGroups', 2, 2),
-(65, 'AdminCarts', 2, 3),(42, 'AdminInvoices', 3, 1),(55, 'AdminDeliverySlip', 3, 2),(47, 'AdminReturn', 3, 3),(49, 'AdminSlip', 3, 4),(59, 'AdminMessages', 3, 5),
+(65, 'AdminCarts', 2, 3),(42, 'AdminInvoices', 3, 1),(55, 'AdminDeliverySlip', 3, 2),(47, 'AdminReturn', 3, 3),(49, 'AdminSlip', 3, 4),
 (13, 'AdminStatuses', 3, 6),(54, 'AdminOrderMessage', 3, 7),(14, 'AdminCartRules', 4, 4),(15, 'AdminCurrencies', 4, 1),(16, 'AdminTaxes', 4, 2),
 (17, 'AdminCarriers', 5, 1),(46, 'AdminStates', 5, 2),(18, 'AdminCountries', 5, 3),(19, 'AdminZones', 5, 5),(20, 'AdminRangePrice', 5, 6),
 (21, 'AdminRangeWeight', 5, 7),(61, 'AdminSearchEngines', 6, 2),(62, 'AdminReferrers', 6, 3),
