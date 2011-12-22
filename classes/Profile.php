@@ -43,6 +43,8 @@ class ProfileCore extends ObjectModel
 		),
 	);
 
+	private static $_cache_accesses = array();
+
 	/**
 	* Get all available profiles
 	*
@@ -102,7 +104,6 @@ class ProfileCore extends ObjectModel
 		return (isset($accesses[$id_tab]) ? $accesses[$id_tab] : false);
 	}
 
-	private static $_cache_accesses = array();
 	public static function getProfileAccesses($id_profile)
 	{
 		if (!isset(self::$_cache_accesses[$id_profile]))
