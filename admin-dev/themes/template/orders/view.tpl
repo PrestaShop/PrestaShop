@@ -291,9 +291,8 @@
 									<td><input type="text" name="payment_date" class="datepicker" size="17" value="{date('Y-m-d H:i:s')}" /></td>
 									<td>
 										<select name="payment_method">
-										{foreach from=PaymentModule::getInstalledPaymentModules() item=payment_method}
-											{assign var=payment_name value=Module::getInstanceByName($payment_method.name)->displayName}
-											<option value="{$payment_name}">{$payment_name}</option>
+										{foreach from=$payment_methods item=payment_method}
+											<option value="{$payment_method}">{$payment_method}</option>
 										{/foreach}
 										</select>
 									</td>
