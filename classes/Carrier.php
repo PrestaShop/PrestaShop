@@ -1020,18 +1020,11 @@ class CarrierCore extends ObjectModel
 	 * For a given {product, warehouse}, gets the carrier available
 	 *
 	 * @since 1.5.0
-	 * @param $product integer The id of the product, or an array with at least the package size and weight
+	 * @param Product $product The id of the product, or an array with at least the package size and weight
 	 * @return array
 	 */
-	public static function getAvailableCarrierList($product, $id_warehouse, $id_shop = null)
+	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null)
 	{
-		if (is_numeric($product))
-			$product = new Product((int)$product);
-		else if (is_array($product))
-		{
-			$product['id'] = $product['id_product'];
-			$product = (object)$product;
-		}
 
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
@@ -1065,7 +1058,7 @@ class CarrierCore extends ObjectModel
 		if (empty($carrier_list)) // No carriers defined, get all available carriers
 		{
 			$carrier_list = array();
-			$id_address = ((isset($product->id_address_delivery) && $product->id_address_delivery != 0) ? $product->id_address_delivery : Context::getContext()->cart->id_address_delivery);
+			$id_address = (!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery : Context::getContext()->cart->id_address_delivery;
 			$address = new Address($id_address);
 			$id_zone = Address::getZoneById($address->id);
 			$carriers = Carrier::getCarriersForOrder($id_zone, Context::getContext()->customer->getGroups());
