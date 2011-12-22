@@ -474,6 +474,7 @@ class AdminOrdersControllerCore extends AdminController
 							}
 
 							// Delete product
+							$orderDetail = new OrderDetail((int)($id_order_detail));
 							if (!$order->deleteProduct($order, $orderDetail, $qtyCancelProduct))
 								$this->_errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
 							Hook::exec('cancelProduct', array('order' => $order, 'id_order_detail' => $id_order_detail));
@@ -512,7 +513,8 @@ class AdminOrdersControllerCore extends AdminController
 					// Generate voucher
 					if (isset($_POST['generateDiscount']) AND !sizeof($this->_errors))
 					{
-						if (!$voucher = Discount::createOrderDiscount($order, $full_product_list, $full_quantity_list, $this->l('Credit Slip concerning the order #'), isset($_POST['shippingBack'])))
+						// @todo generate a voucher using cartrules
+						if (true || !$voucher = Discount::createOrderDiscount($order, $full_product_list, $full_quantity_list, $this->l('Credit Slip concerning the order #'), isset($_POST['shippingBack'])))
 							$this->_errors[] = Tools::displayError('Cannot generate voucher');
 						else
 						{

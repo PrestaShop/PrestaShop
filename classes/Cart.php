@@ -1933,10 +1933,10 @@ class CartCore extends ObjectModel
 			if (!isset($delivery_option[$id_address]))
 				foreach ($options as $key => $option)
 					if ($option['is_best_price'])
-								{
-									$delivery_option[$id_address] = $key;
-									break;
-								}
+					{
+						$delivery_option[$id_address] = $key;
+						break;
+					}
 
 		if (count($delivery_option) == 1)
 			$this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);

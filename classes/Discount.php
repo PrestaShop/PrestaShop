@@ -204,7 +204,7 @@ class DiscountCore extends CartRule
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
 	{
 		// Todo
-		die ('TODO');
+		//die ('TODO');
 		
 		$languages = Language::getLanguages($order);
 		$products = $order->getProducts(false, $productList, $qtyList);
