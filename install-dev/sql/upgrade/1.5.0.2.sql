@@ -357,6 +357,8 @@ INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_ex
 	WHERE `invoice_number` != 0
 );
 
+ALTER TABLE `PREFIX_tab` ADD `active` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1';
+
 UPDATE `PREFIX_order_detail` od
 SET od.`id_order_invoice` =  (
 	SELECT oi.`id_order_invoice`
@@ -393,3 +395,19 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
 /* PHP:update_modules_multishop.php; */;
+
+UPDATE `PREFIX_tab`
+SET `position` = (
+	SELECT MAX(`position`)+1
+	FROM `PREFIX_tab`
+	WHERE `id_parent` = 0
+)
+WHERE `class_name` = 'AdminStock';
+
+UPDATE `PREFIX_tab`
+SET `position` = (
+	SELECT MAX(`position`)+1
+	FROM `PREFIX_tab`
+	WHERE `id_parent` = 0
+)
+WHERE `class_name` = 'AdminAccounting';
