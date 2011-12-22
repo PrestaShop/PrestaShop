@@ -69,7 +69,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		// If no mcrypt, do not use RIJNDAEL algorithm
 		if (!function_exists('mcrypt'))
-			Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', 0);
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` = \'PS_CIPHER_ALGORITHM\'');
 
 		return true;
 	}
