@@ -331,16 +331,6 @@ ALTER TABLE `PREFIX_specific_price` ADD `id_group_shop` INT(11) UNSIGNED NOT NUL
 /* Generate order references */
 /* PHP:generate_order_reference(); */;
 
-CREATE TABLE `PREFIX_category_shop` (
-  `id_category` int(11) NOT NULL,
-  `id_shop` int(11) NOT NULL,
-  PRIMARY KEY (`id_category`, `id_shop`),
-  UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-
-INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
-(1, 1);
-
 ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsigned NOT NULL default '0' AFTER `product_weight`;
 
 /* PHP:migrate_orders(); */;
@@ -435,3 +425,5 @@ CREATE TABLE `PREFIX_webservice_account_shop` (
 PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_group` ADD `show_prices` tinyint(1) unsigned NOT NULL DEFAULT '1' AFTER `price_display_method`;
