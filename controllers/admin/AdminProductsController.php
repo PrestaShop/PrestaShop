@@ -3521,9 +3521,9 @@ class AdminProductsControllerCore extends AdminController
 			if ($advanced_stock_management_warning)
 			{
 				$this->displayWarning($this->l('If you wish to use the advanced stock management, you have to:'));
-				$this->displayWarning('- '.$this->l('associates your products with warehouses.'));
-				$this->displayWarning('- '.$this->l('associates your warehouses with carriers'));
-				$this->displayWarning('- '.$this->l('associates your warehouses with the appropriates shops'));
+				$this->displayWarning('- '.$this->l('associate your products with warehouses'));
+				$this->displayWarning('- '.$this->l('associate your warehouses with carriers'));
+				$this->displayWarning('- '.$this->l('associate your warehouses with the appropriates shops'));
 			}
 
 			$data->assign(array(
