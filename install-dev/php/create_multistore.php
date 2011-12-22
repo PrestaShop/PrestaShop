@@ -1,5 +1,7 @@
 <?php
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php');
+
 function create_multistore()
 {
 	$res = true;
@@ -8,7 +10,14 @@ function create_multistore()
 	foreach ($themes AS $theme)
 		if (is_dir(dirname(__FILE__).'/../../themes/'.$theme) && $theme != '.' &&  $theme != '..' && $theme != 'prestashop')
 			$res &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'theme (`id_theme`, `name`) VALUES(\'\', \''.pSQL($theme).'\')');
-	$res &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'shop SET id_theme = (SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE name=\''.pSQL(_THEME_NAME_).'\') WHERE id_shop = 1');
+	$res &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'shop 
+		SET
+			name = (SELECT value 
+				FROM '._DB_PREFIX_.'configuration 
+				WHERE name = "PS_SHOP_NAME"
+			),
+			id_theme = (SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE name=\''.pSQL(_THEME_NAME_).'\') 
+		WHERE id_shop = 1');
 	$shop_domain = Db::getInstance()->getValue('SELECT `value`
 															FROM `'._DB_PREFIX_.'_configuration` 
 															WHERE `name`=\'PS_SHOP_DOMAIN\'');
