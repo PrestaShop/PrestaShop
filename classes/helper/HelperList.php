@@ -142,7 +142,7 @@ class HelperListCore extends Helper
 		/* Append when we get a syntax error in SQL query */
 		if ($list === false)
 		{
-			$this->displayWarning($this->l('Bad SQL query'));
+			$this->displayWarning($this->l('Bad SQL query', 'helper'));
 			return false;
 		}
 
@@ -349,10 +349,10 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_duplicate.tpl');
 		if (!array_key_exists('Duplicate', self::$cache_lang))
-			self::$cache_lang['Duplicate'] = $this->l('Duplicate');
+			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'helper');
 
 		if (!array_key_exists('Copy images too?', self::$cache_lang))
-			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, true, false);
+			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', 'helper');
 
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
@@ -391,7 +391,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_details.tpl');
 		if (!array_key_exists('Details', self::$cache_lang))
-			self::$cache_lang['Details'] = $this->l('Details');
+			self::$cache_lang['Details'] = $this->l('Details', 'helper');
 		$tpl->assign(array(
 			'id' => $id,
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
@@ -409,7 +409,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_view.tpl');
 		if (!array_key_exists('View', self::$cache_lang))
-			self::$cache_lang['View'] = $this->l('View');
+			self::$cache_lang['View'] = $this->l('View', 'helper');
 
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -427,7 +427,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_edit.tpl');
 		if (!array_key_exists('Edit', self::$cache_lang))
-			self::$cache_lang['Edit'] = $this->l('Edit');
+			self::$cache_lang['Edit'] = $this->l('Edit', 'helper');
 
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -447,20 +447,20 @@ class HelperListCore extends Helper
 		$tpl = $this->createTemplate('list_action_delete.tpl');
 
 		if (!array_key_exists('Delete', self::$cache_lang))
-			self::$cache_lang['Delete'] = $this->l('Delete');
+			self::$cache_lang['Delete'] = $this->l('Delete', 'helper');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item ?', __CLASS__, true, false);
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item ?', 'helper');
 
 		if (!array_key_exists('Name', self::$cache_lang))
-			self::$cache_lang['Name'] = $this->l('Name:');
+			self::$cache_lang['Name'] = $this->l('Name:', 'helper');
 
 		if (!is_null($name))
 			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name.' \n'.$this->l('ID:').' '.$id),
+			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name.' \n'.$this->l('ID:', 'helper').' '.$id),
 			'action' => self::$cache_lang['Delete'],
 			'id' => $id,
 		)));
@@ -475,7 +475,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_default.tpl');
 		if (!array_key_exists('Default', self::$cache_lang))
-			self::$cache_lang['Default'] = $this->l('Default');
+			self::$cache_lang['Default'] = $this->l('Default', 'helper');
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),

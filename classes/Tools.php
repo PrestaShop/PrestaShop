@@ -2077,6 +2077,37 @@ FileETag INode MTime Size
 
 		return false;
 	}
+	
+
+	/**
+	 * @params string $path Path to scan
+	 * @params string $ext Extention to filter files
+	 * @params string $dir Add this to prefix output for example /path/dir/*
+	 *
+	 * @return array List of file found
+	 * @since 1.5.0
+	 */
+	public static function scandir($path, $ext = 'php', $dir = '')
+	{
+		$real_path = $path.$dir;
+		$files = scandir($real_path);
+		if (!$files)
+			return array();
+		
+		$filtered_files = array();
+		
+		$real_ext =  '';
+		if (!empty($ext))
+			$real_ext = '.' . $ext;
+		
+		$real_ext_length = strlen($real_ext);
+		
+		foreach ($files as $file)
+			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
+				$filtered_files[] = $dir . '/' . $file;
+		//elog($filtered_files);
+		return $filtered_files;
+	}
 }
 
 /**
@@ -2104,4 +2135,3 @@ function cmpPriceDesc($a,$b)
 		return (-1);
 	return (0);
 }
-
