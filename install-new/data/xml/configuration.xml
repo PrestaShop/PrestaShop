@@ -192,13 +192,13 @@
       <value>0</value>
     </configuration>
     <configuration id="PS_1_3_UPDATE_DATE" name="PS_1_3_UPDATE_DATE">
-      <value>2011-12-22 23:15:16</value>
+      <value>2011-12-22 23:47:41</value>
     </configuration>
     <configuration id="PS_PRICE_ROUND_MODE" name="PS_PRICE_ROUND_MODE">
       <value>2</value>
     </configuration>
     <configuration id="PS_1_3_2_UPDATE_DATE" name="PS_1_3_2_UPDATE_DATE">
-      <value>2011-12-22 23:15:16</value>
+      <value>2011-12-22 23:47:41</value>
     </configuration>
     <configuration id="PS_CONDITIONS_CMS_ID" name="PS_CONDITIONS_CMS_ID">
       <value>3</value>
@@ -342,7 +342,7 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_IMG_UPDATE_TIME" name="PS_IMG_UPDATE_TIME">
-      <value>1324592116</value>
+      <value>1324594061</value>
     </configuration>
     <configuration id="PS_BACKUP_DROP_TABLE" name="PS_BACKUP_DROP_TABLE">
       <value>1</value>

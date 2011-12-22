@@ -34,9 +34,9 @@
     <access id="access_1_23" id_profile="SuperAdmin" id_tab="Database" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_24" id_profile="SuperAdmin" id_tab="E-mail" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_26" id_profile="SuperAdmin" id_tab="Images" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_27" id_profile="SuperAdmin" id_tab="Products" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_27" id_profile="SuperAdmin" id_tab="Products_1" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_28" id_profile="SuperAdmin" id_tab="Contacts" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_29" id_profile="SuperAdmin" id_tab="tab_29" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_29" id_profile="SuperAdmin" id_tab="Employees" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_30" id_profile="SuperAdmin" id_tab="Profiles" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_31" id_profile="SuperAdmin" id_tab="Permissions" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_32" id_profile="SuperAdmin" id_tab="Languages" view="1" add="1" edit="1" delete="1"/>
@@ -45,7 +45,7 @@
     <access id="access_1_35" id_profile="SuperAdmin" id_tab="Tabs" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_36" id_profile="SuperAdmin" id_tab="Features" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_37" id_profile="SuperAdmin" id_tab="Quick_Access" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_38" id_profile="SuperAdmin" id_tab="Themes" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_38" id_profile="SuperAdmin" id_tab="Themes_1" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_39" id_profile="SuperAdmin" id_tab="Contact_Information" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_40" id_profile="SuperAdmin" id_tab="Keyword_Typos" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_41" id_profile="SuperAdmin" id_tab="CSV_Import" view="1" add="1" edit="1" delete="1"/>
@@ -80,7 +80,7 @@
     <access id="access_1_80" id_profile="SuperAdmin" id_tab="Modules_Themes_Catalog" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_81" id_profile="SuperAdmin" id_tab="My_Account" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_82" id_profile="SuperAdmin" id_tab="Stores" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_83" id_profile="SuperAdmin" id_tab="Themes_1" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_83" id_profile="SuperAdmin" id_tab="Themes" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_84" id_profile="SuperAdmin" id_tab="Geolocation" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_85" id_profile="SuperAdmin" id_tab="Tax_Rules" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_86" id_profile="SuperAdmin" id_tab="Logs" view="1" add="1" edit="1" delete="1"/>
@@ -90,9 +90,9 @@
     <access id="access_1_90" id_profile="SuperAdmin" id_tab="Shop_Urls" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_91" id_profile="SuperAdmin" id_tab="Genders" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_92" id_profile="SuperAdmin" id_tab="SQL_Manager" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_93" id_profile="SuperAdmin" id_tab="Products_1" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_93" id_profile="SuperAdmin" id_tab="Products" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_94" id_profile="SuperAdmin" id_tab="Categories" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_95" id_profile="SuperAdmin" id_tab="tab_95" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_95" id_profile="SuperAdmin" id_tab="Stock" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_96" id_profile="SuperAdmin" id_tab="Warehouses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_97" id_profile="SuperAdmin" id_tab="Stock_Management" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_98" id_profile="SuperAdmin" id_tab="Stock_instant_state" view="1" add="1" edit="1" delete="1"/>

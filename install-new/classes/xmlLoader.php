@@ -692,6 +692,9 @@ class InstallXmlLoader
 		if ($xml->fields['sql'])
 			$info['config']['sql'] = (string)$xml->fields['sql'];
 
+		if ($xml->fields['ordersql'])
+			$info['config']['ordersql'] = (string)$xml->fields['ordersql'];
+
 		if ($xml->fields['image'])
 			$info['config']['image'] = (string)$xml->fields['image'];
 
@@ -737,19 +740,18 @@ class InstallXmlLoader
 		unset($xml->fields);
 
 		// Fill <fields> attributes (config)
-		$xml->addChild('fields');
+		$xml_fields = $xml->addChild('fields');
 		foreach ($config as $k => $v)
 			if ($v)
-				$xml->fields[$k] = $v;
+				$xml_fields[$k] = $v;
 
 		// Create list of fields
 		foreach ($fields as $column => $info)
 		{
-			$field = $xml->fields->addChild('field');
+			$field = $xml_fields->addChild('field');
 			$field['name'] = $column;
 			if (isset($info['relation']))
 				$field['relation'] = $info['relation'];
-
 		}
 
 		$this->writeNiceAndSweetXML($xml, $this->data_path.$entity.'.xml');
