@@ -1652,6 +1652,7 @@ CREATE TABLE `PREFIX_tab` (
   `class_name` varchar(64) NOT NULL,
   `module` varchar(64) NULL,
   `position` int(10) unsigned NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id_tab`),
   KEY `class_name` (`class_name`),
   KEY `id_parent` (`id_parent`)
