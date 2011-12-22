@@ -8,7 +8,7 @@ function create_multistore()
 
 	$themes = scandir(dirname(__FILE__).'/../../themes');
 	foreach ($themes AS $theme)
-		if (is_dir(dirname(__FILE__).'/../../themes/'.$theme) && $theme != '.' &&  $theme != '..' && $theme != 'prestashop')
+		if (is_dir(dirname(__FILE__).'/../../themes/'.$theme) && $theme[0] != '.' && $theme != 'prestashop')
 			$res &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'theme (`id_theme`, `name`) VALUES(\'\', \''.pSQL($theme).'\')');
 	$res &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'shop 
 		SET
