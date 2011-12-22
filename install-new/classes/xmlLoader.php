@@ -433,7 +433,7 @@ class InstallXmlLoader
 	public function createEntityConfiguration(array $data, array $data_lang = array())
 	{
 		if (!Configuration::get($data['name']))
-			Configuration::updateValue($data['name'], ($data_lang) ? $data_lang['value'] : $data['value']);
+			Configuration::updateGlobalValue($data['name'], ($data_lang) ? $data_lang['value'] : $data['value']);
 		return Configuration::getIdByName($data['name']);
 	}
 
