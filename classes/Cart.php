@@ -828,6 +828,12 @@ class CartCore extends ObjectModel
 
 				$result2 = Db::getInstance()->getRow($sql);
 
+				// Quantity for product pack
+				if (Pack::isPack($id_product))
+				{
+					$result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
+				}
+
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
 					if ((int)$quantity > $result2['quantity'])
 						return false;
