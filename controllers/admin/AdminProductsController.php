@@ -2909,6 +2909,9 @@ class AdminProductsControllerCore extends AdminController
 		</script>
 		';
 
+		// Not use id_customer
+		unset($specific_price_priorities[0]);
+		sort($specific_price_priorities);
 		$content .= '
 		<div class="separation"></div>
 		<h4>'.$this->l('Priorities management').'</h4>
