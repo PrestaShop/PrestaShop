@@ -37,6 +37,7 @@ $_MODULE['<{blockcms}prestashop>blockcms_1acef6bfa7dc3360eed6bf44851fa6a4'] = 'A
 $_MODULE['<{blockcms}prestashop>blockcms_93cba07454f06a4a960172bbd6e2a435'] = 'Oui';
 $_MODULE['<{blockcms}prestashop>blockcms_bafd7322c6e97d25b6299b5d6fe8920b'] = 'Non';
 $_MODULE['<{blockcms}prestashop>blockcms_08f3899ad165f85f8596199966b8c673'] = 'Afficher \"Nos Boutiques\" en bas du block';
+$_MODULE['<{blockcms}prestashop>blockcms_f16b5952df8d25ea30b25ff95ee8fedf'] = 'Association des boutiques:';
 $_MODULE['<{blockcms}prestashop>blockcms_ea4788705e6873b424c65e91c2846b19'] = 'Retour';
 $_MODULE['<{blockcms}prestashop>blockcms_f7df0009efd65cec8e54cf4ef30abf5e'] = 'Champ \"afficher la boutique\" invalide';
 $_MODULE['<{blockcms}prestashop>blockcms_903d12e7aa8c380c290b78c1898e01b7'] = 'Emplacement invalide';
