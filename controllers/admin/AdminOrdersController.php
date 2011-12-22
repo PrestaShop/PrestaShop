@@ -1008,6 +1008,14 @@ class AdminOrdersControllerCore extends AdminController
 			}
 		}
 
+		$payment_methods = array();
+		foreach(PaymentModule::getInstalledPaymentModules() as $payment)
+		{
+			$module = Module::getInstanceByName($payment['name']);
+			if (Validate::isLoadedObject($module))
+				$payment_methods[] = $module->displayName;
+		}
+
 		// Smarty assign
 		$this->tpl_view_vars = array(
 			'order' => $order,
@@ -1046,6 +1054,7 @@ class AdminOrdersControllerCore extends AdminController
 			'current_id_lang' => $this->context->language->id,
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
+			'payment_methods' => $payment_methods,
 			'HOOK_INVOICE' => Hook::exec('invoice', array('id_order' => $order->id)),
 			'HOOK_ADMIN_ORDER' => Hook::exec('adminOrder', array('id_order' => $order->id))
 		);
