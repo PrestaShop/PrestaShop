@@ -255,8 +255,9 @@ class AdminModulesPositionsControllerCore extends AdminController
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
 			// If modules were found, link to the previously created Module instances
 			if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
-				foreach($hooks[$key]['modules'] as $module_key => $module)
-					$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+				foreach($hooks[$key]['modules'] as $module_key => $module) 
+					if (isset($assoc_modules_id[$module['id_module']]))
+						$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
 		}
 
 		$this->addJqueryPlugin("tablednd");
