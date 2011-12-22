@@ -151,12 +151,12 @@ class CartRuleCore extends ObjectModel
 	}
 
 	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null)
-    {
+	{
 		if (!CartRule::isFeatureActive())
 			return array();
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT *
+		SELECT *
 		FROM `'._DB_PREFIX_.'cart_rule` cr
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
 		WHERE (
