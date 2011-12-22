@@ -464,4 +464,21 @@ class AdminGroupsControllerCore extends AdminController
 				'.($group->show_prices ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
+
+	public function renderList()
+	{
+		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
+		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
+		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
+
+		$unidentified_group_information = sprintf($this->l('%s - This group is for visitors.'), "<b>".$unidentified->name[$this->context->language->id]."</b>");
+		$guest_group_information = sprintf($this->l('%s - This group is for the guest customers. They have ordered a cart as guest.'), "<b>".$guest->name[$this->context->language->id]."</b>");
+		$default_group_information = sprintf($this->l('%s - This group is the default group customer.'), "<b>".$default->name[$this->context->language->id]."</b>");
+
+		$this->displayInformation($this->l('You have now three default customer groups.'));
+		$this->displayInformation($unidentified_group_information);
+		$this->displayInformation($guest_group_information);
+		$this->displayInformation($default_group_information);
+		return parent::renderList();
+	}
 }

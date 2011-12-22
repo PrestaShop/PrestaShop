@@ -171,6 +171,13 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
 		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
+		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
+		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
+		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
+
+		$unidentified_group_information = sprintf($this->l('%s - This group is for visitors.'), "<b>".$unidentified->name[$this->context->language->id]."</b>");
+		$guest_group_information = sprintf($this->l('%s - This group is for the guest customers. They have ordered a cart as guest.'), "<b>".$guest->name[$this->context->language->id]."</b>");
+		$default_group_information = sprintf($this->l('%s - This group is the default group customer.'), "<b>".$default->name[$this->context->language->id]."</b>");
 
 		$this->fields_form = array(
 			'tinymce' => true,
@@ -277,6 +284,10 @@ class AdminCategoriesControllerCore extends AdminController
 					'label' => $this->l('Group access:'),
 					'name' => 'groupBox',
 					'values' => Group::getGroups(Context::getContext()->language->id),
+					'info_introduction' => $this->l('You have now three default customer groups.'),
+					'unidentified' => $unidentified_group_information,
+					'guest' => $guest_group_information,
+					'customer' => $default_group_information,
 					'desc' => $this->l('Mark all groups you want to give access to this category')
 				)
 			),
