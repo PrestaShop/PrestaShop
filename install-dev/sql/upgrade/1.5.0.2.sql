@@ -379,7 +379,7 @@ INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`
 	FROM `PREFIX_orders` o
 );
 
-INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) (
+INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) VALUES (
 	SELECT (
 		SELECT oi.`id_order_invoice`
 		  FROM `PREFIX_order_invoice` oi
