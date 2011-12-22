@@ -330,7 +330,8 @@ class AdminGroupsControllerCore extends AdminController
 
 		$unauth_modules_tmp = array();
 		foreach ($unauth_modules as $key => $val)
-			$unauth_modules_tmp[] = Module::getInstanceById($val['id_module']);
+			if (($tmp_obj = Module::getInstanceById($val['id_module'])))
+				$unauth_modules_tmp[] = $tmp_obj;
 
 		$unauth_modules = $unauth_modules_tmp;
 
