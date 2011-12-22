@@ -42,7 +42,7 @@ function migrate_orders()
 	VALUES ';
 
 	$values_order = array();
-	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`id_order`, `reference`, `id_group_shop`, `id_shop`, `id_carrier`, `id_lang`, `id_customer`, `id_cart`, `id_currency`, `id_address_delivery`, `id_address_invoice`, `secure_key`, `payment`, `conversion_rate`, `module`, `recyclable`, `gift`, `gift_message`, `shipping_number`, `total_discounts`, `total_discount_tax_incl`, `total_discount_tax_excl`, `total_paid`, `total_paid_tax_incl`, `total_paid_tax_excl`, `total_paid_real`, `total_products`, `total_products_wt`, `total_shipping`, `total_shipping_tax_incl`, `total_shipping_tax_excl`, `carrier_tax_rate`, `total_wrapping`, `total_wrapping_tax_incl`, `total_wrapping_tax_excl`, `invoice_number`, `delivery_number`, `invoice_date`, `delivery_date`, `valid`, `date_add`, `date_upd`) VALUES ';
+	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`id_order`, `reference`, `id_group_shop`, `id_shop`, `id_carrier`, `id_lang`, `id_customer`, `id_cart`, `id_currency`, `id_address_delivery`, `id_address_invoice`, `secure_key`, `payment`, `conversion_rate`, `module`, `recyclable`, `gift`, `gift_message`, `shipping_number`, `total_discounts`, `total_discounts_tax_incl`, `total_discounts_tax_excl`, `total_paid`, `total_paid_tax_incl`, `total_paid_tax_excl`, `total_paid_real`, `total_products`, `total_products_wt`, `total_shipping`, `total_shipping_tax_incl`, `total_shipping_tax_excl`, `carrier_tax_rate`, `total_wrapping`, `total_wrapping_tax_incl`, `total_wrapping_tax_excl`, `invoice_number`, `delivery_number`, `invoice_date`, `delivery_date`, `valid`, `date_add`, `date_upd`) VALUES ';
 
 	// create temporary tables
 	mo_duplicateTables();
@@ -97,15 +97,15 @@ function migrate_orders()
 
 		 $total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
 
-		$order['total_discount_tax_incl'] = (float)$order['total_discounts'];
-		$order['total_discount_tax_excl'] = (float)$total_discount_tax_excl;
+		$order['total_discounts_tax_incl'] = (float)$order['total_discounts'];
+		$order['total_discounts_tax_excl'] = (float)$total_discount_tax_excl;
 		$order['total_paid_tax_incl'] = (float)$order['total_paid'];
 		$order['total_paid_tax_excl'] = (float)$order['total_paid'];
 		$order['total_shipping_tax_incl'] = (float)$order['total_shipping'];
 		$order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
 		$order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
 		$order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
-		$values_order[] = '(\''.$order['id_order'].'\', \''.$order['reference'].'\', \''.$order['id_group_shop'].'\', \''.$order['id_shop'].'\', \''.$order['id_carrier'].'\', \''.$order['id_lang'].'\', \''.$order['id_customer'].'\', \''.$order['id_cart'].'\', \''.$order['id_currency'].'\', \''.$order['id_address_delivery'].'\', \''.$order['id_address_invoice'].'\', \''.$order['secure_key'].'\', \''.$order['payment'].'\', \''.$order['conversion_rate'].'\', \''.$order['module'].'\', \''.$order['recyclable'].'\', \''.$order['gift'].'\', \''.$order['gift_message'].'\', \''.$order['shipping_number'].'\', \''.$order['total_discounts'].'\', \''.$order['total_discount_tax_incl'].'\', \''.$order['total_discount_tax_excl'].'\', \''.$order['total_paid'].'\', \''.$order['total_paid_tax_incl'].'\', \''.$order['total_paid_tax_excl'].'\', \''.$order['total_paid_real'].'\', \''.$order['total_products'].'\', \''.$order['total_products_wt'].'\', \''.$order['total_shipping'].'\', \''.$order['total_shipping_tax_incl'].'\', \''.$order['total_shipping_tax_excl'].'\', \''.$order['carrier_tax_rate'].'\', \''.$order['total_wrapping'].'\', \''.$order['total_wrapping_tax_incl'].'\', \''.$order['total_wrapping_tax_excl'].'\', \''.$order['invoice_number'].'\', \''.$order['delivery_number'].'\', \''.$order['invoice_date'].'\', \''.$order['delivery_date'].'\', \''.$order['valid'].'\', \''.$order['date_add'].'\', \''.$order['date_upd'].'\')';
+		$values_order[] = '(\''.$order['id_order'].'\', \''.$order['reference'].'\', \''.$order['id_group_shop'].'\', \''.$order['id_shop'].'\', \''.$order['id_carrier'].'\', \''.$order['id_lang'].'\', \''.$order['id_customer'].'\', \''.$order['id_cart'].'\', \''.$order['id_currency'].'\', \''.$order['id_address_delivery'].'\', \''.$order['id_address_invoice'].'\', \''.$order['secure_key'].'\', \''.$order['payment'].'\', \''.$order['conversion_rate'].'\', \''.$order['module'].'\', \''.$order['recyclable'].'\', \''.$order['gift'].'\', \''.$order['gift_message'].'\', \''.$order['shipping_number'].'\', \''.$order['total_discounts'].'\', \''.$order['total_discounts_tax_incl'].'\', \''.$order['total_discounts_tax_excl'].'\', \''.$order['total_paid'].'\', \''.$order['total_paid_tax_incl'].'\', \''.$order['total_paid_tax_excl'].'\', \''.$order['total_paid_real'].'\', \''.$order['total_products'].'\', \''.$order['total_products_wt'].'\', \''.$order['total_shipping'].'\', \''.$order['total_shipping_tax_incl'].'\', \''.$order['total_shipping_tax_excl'].'\', \''.$order['carrier_tax_rate'].'\', \''.$order['total_wrapping'].'\', \''.$order['total_wrapping_tax_incl'].'\', \''.$order['total_wrapping_tax_excl'].'\', \''.$order['invoice_number'].'\', \''.$order['delivery_number'].'\', \''.$order['invoice_date'].'\', \''.$order['delivery_date'].'\', \''.$order['valid'].'\', \''.$order['date_add'].'\', \''.$order['date_upd'].'\')';
 
 		unset($order);
 		$cpt++;
