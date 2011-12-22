@@ -79,14 +79,14 @@ class AdminCartsControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
-				'width' => 120,
+				'width' => 150,
 				'align' => 'right',
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
 			),
 			'id_guest' => array(
 				'title' => $this->l('Online'),
-				'width' => 25,
+				'width' => 40,
 				'align' => 'center',
 				'type' => 'bool',
 				'filter_key' => 'id_guest',

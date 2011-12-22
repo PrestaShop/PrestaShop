@@ -65,7 +65,7 @@ class AdminStoresControllerCore extends AdminController
 			'name' => array('title' => $this->l('Name'), 'width' => 120, 'filter_key' => 'a!name'),
 			'phone' => array('title' => $this->l('Phone'), 'width' => 70),
 			'fax' => array('title' => $this->l('Fax'), 'width' => 70),
-			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
+			'active' => array('title' => $this->l('Enabled'), 'width' => 70, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false)
 		);
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));

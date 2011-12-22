@@ -57,7 +57,6 @@ class AdminGroupsControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 80,
 				'filter_key' => 'b!name'
 			),
 			'reduction' => array(
@@ -81,7 +80,7 @@ class AdminGroupsControllerCore extends AdminController
 			),
 			'date_add' => array(
 				'title' => $this->l('Creation date'),
-				'width' => 60,
+				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
 			)

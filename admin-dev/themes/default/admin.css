@@ -115,7 +115,9 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table a:hover{text-decoration:none}
 .table tr th{ background-color: #F1F1F1; text-shadow:0 1px 0 #fff; padding:4px 6px;
 	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
-	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;}
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	font-size:13px; text-align:left;}
+.table tr th.right { text-align:center;}
 .table tr td{border-bottom:1px solid #ccc;color:#333;font-size:12px;padding: 4px 4px 4px 6px;}
 .table tr:hover td{background:#fff1b5}
 .table tr.filter:hover td{background:#F1F9FF}
@@ -161,8 +163,8 @@ a.module_toggle_all{color: #268CCD;}
 /*toolbarBox*/
 .toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
 .toolbarBox .pageTitle { margin-left:10px; line-height:48px}
-.toolbarBox .pageTitle h3 {font-size: 2em; font-weight: normal; line-height: 48px; margin: 0; padding: 0;}
-.toolbarBox ul.cc_button {float:right;margin:0;padding:0;}
+.toolbarBox .pageTitle h3 {font-size: 2em; font-weight: normal; line-height: 52px; margin: 0; padding: 0;}
+.toolbarBox ul.cc_button {float:right;margin:0 5px 0 0;padding:0;}
 .toolbarBox ul.cc_button li {color: #666666; float: left; height: 48px; list-style: none outside none; padding: 1px 1px 3px 4px; text-align: center;}
 .toolbarBox a.toolbar_btn {   border:1px solid #f8f8f8; min-width:50px; border-width: 1px; font-size:11px;cursor: pointer; display: block; float: left; padding: 3px 5px; white-space: nowrap; text-shadow: 0 1px 0 #ffffff;}
 .toolbarBox a.toolbar_btn:hover { background-color:#fff; border:1px inset #ccc; border-radius:3px;}
