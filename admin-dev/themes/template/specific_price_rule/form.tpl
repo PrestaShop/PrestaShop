@@ -28,27 +28,31 @@
 {block name="other_fieldsets"}
 
 <div class="clear">&nbsp;</div>
-<fieldset id="conditions">
+<div id="conditions" class="Bloc">
 	<div id="condition_group_list">
 	</div>
 	<a class="button bt-icon" href="#" id="add_condition_group">
 		<img src="../img/admin/add.gif" />
 		{l s='Add a new condition group'}
 	</a>
-	<div id="condition_list" class="clear">
-		<legend>{l s='Conditions'}</legend>
-		<label for="id_category">{l s='Category:'}</label>
-		<div class="margin-form">
-			<select id="id_category" name="id_category">
-				{foreach from=$categories item='category'}
-					<option value="{$category.id_category}">{$category.name}</option>
-				{/foreach}
-			</select>
-			<a class="button bt-icon" href="#" id="add_condition_category">
-				<img src="../img/admin/add.gif" />
-				{l s='Add condition'}
-			</a>
+	<div id="condition_list">
+		<h3>{l s='Conditions'}</h3>
+		<div class="row">
+			<label for="id_category">{l s='Category:'}</label>
+				<div class="margin-form">
+					<select id="id_category" name="id_category">
+						{foreach from=$categories item='category'}
+						<option value="{$category.id_category}">{$category.name}</option>
+						{/foreach}
+					</select>
+					<a class="button bt-icon" href="#" id="add_condition_category">
+						<img src="../img/admin/add.gif" />
+							{l s='Add condition'}
+						</a>
+				</div>
 		</div>
+		
+		<div class="row">
 		<label for="id_manufacturer">{l s='Manufacturer:'}</label>
 		<div class="margin-form">
 			<select id="id_manufacturer" name="id_manufacturer">
@@ -61,7 +65,10 @@
 				{l s='Add condition'}
 			</a>
 		</div>
-		<label for="id_supplier">{l s='Supplier:'}
+		</div>
+		
+		<div class="row">
+		<label for="id_supplier">{l s='Supplier:'}</label>
 		<div class="margin-form">
 			<select id="id_supplier" name="id_supplier">
 				{foreach from=$suppliers item='supplier'}
@@ -73,7 +80,10 @@
 				{l s='Add condition'}
 			</a>
 		</div>
-		<label for="id_attribute">{l s='Attributes:'}
+		</div>
+		
+		<div class="row">
+		<label for="id_attribute">{l s='Attributes:'}</label>
 		<div class="margin-form">
 			<select id="id_attribute_group">
 				{foreach from=$attributes_group item='attribute_group'}
@@ -93,7 +103,10 @@
 				{l s='Add condition'}
 			</a>
 		</div>
-		<label for="id_attribute">{l s='Features:'}
+		</div>
+		
+		<div class="row">
+		<label for="id_attribute">{l s='Features:'}</label>
 		<div class="margin-form">
 			<select id="id_feature">
 				{foreach from=$features item='feature'}
@@ -113,8 +126,9 @@
 				{l s='Add condition'}
 			</a>
 		</div>
+		</div>
 	</div>
-</fieldset>
+</div>
 {if !$is_multishop}
 	<input type="hidden" name="id_shop" value=1 />
 {/if}
@@ -141,9 +155,9 @@ function add_condition(id_condition_group, type, value)
 function new_condition_group()
 {
 	last_condition_group++;
-	var html = '<fieldset class="condition_group" id="condition_group_'+last_condition_group+'"><legend>{l s='Condition group'} '+last_condition_group+'</legend>';
-		html += '<table class="table"><thead><tr><th>{l s='Type'}</th><th>{l s='Value'}</th></tr></thead><tbody></tbody></table>';
-		html += '</fieldset><div style="font-weight:bold;">{l s='OR'}</div>';
+	var html = '<div class="condition_group" id="condition_group_'+last_condition_group+'"><h3>{l s='Condition group'} '+last_condition_group+'</h3>';
+		html += '<table cellspacing="0" cellpadding="0" class="table width2"><thead><tr><th height="39">{l s='Type'}</th><th>{l s='Value'}</th></tr></thead><tbody></tbody></table>';
+		html += '</div><div class="condition_separator">{l s='OR'}</div><div class="separation"></div>';
 	toggle_condition_group(last_condition_group);
 	$('#condition_group_list').append(html);
 }
