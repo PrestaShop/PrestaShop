@@ -82,25 +82,27 @@ function update_stock_mvt_reason()
 	");
 
 	//Add custom movements
-	foreach ($mvts as $mvt)
+	if (is_array($mvts))
 	{
-		Db::getInstance()->execute('
-			INSERT INTO `PREFIX_stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
-			VALUES ("'.(int)$mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
-		');
-
-		$row_id = Db::getInstance()->Insert_ID();
-
-		foreach ($mvts_lang as $mvt_lang)
+		foreach ($mvts as $mvt)
 		{
-			if ($mvt_lang['id_stock_mvt_reason'] != $mvt['id'])
-				continue;
-
 			Db::getInstance()->execute('
-				INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
-				VALUES ("'.(int)$row_id.'", "'.(int)$mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
+				INSERT INTO `PREFIX_stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
+				VALUES ("'.(int)$mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
 			');
+
+			$row_id = Db::getInstance()->Insert_ID();
+
+			foreach ($mvts_lang as $mvt_lang)
+			{
+				if ($mvt_lang['id_stock_mvt_reason'] != $mvt['id'])
+					continue;
+
+				Db::getInstance()->execute('
+					INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
+					VALUES ("'.(int)$row_id.'", "'.(int)$mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
+				');
+			}
 		}
 	}
-
 }

@@ -156,6 +156,11 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_default_restrictions_modules_gr
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_carrier_position.php');
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_groups.php');
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_stock_tab.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'set_stock_available.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'set_product_suppliers.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_stock_mvt_reason.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_modules_multishop.php');
+
 
 //old version detection
 global $oldversion, $logger;
