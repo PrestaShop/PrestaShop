@@ -317,8 +317,6 @@ class LinkCore
 				$uri_path = _THEME_PROD_DIR_.$ids.($type ? '-'.$type : '').$theme.'.jpg';
 		}
 		else
-			$uri_path = _THEME_PROD_DIR_.$ids.($type ? '-'.$type : '').'.jpg';
-		}else
 		{
 			// if ids if of the form id_product-id_image, we want to extract the id_image part
 			$split_ids = explode('-', $ids);
