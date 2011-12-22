@@ -21,4 +21,14 @@ function update_modules_multishop()
 		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'cms_block_shop (cms_block, id_shop) 
 			(SELECT id_cms_block, 1 FROM '._DB_PREFIX_.'cms_block)');
 	}
+	$block_cms = Module::getInstanceByName('blocklink');
+	Db::getInstance()->execute('
+			CREATE TABLE '._DB_PREFIX_.'blocklink_shop (
+			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT, 
+			`id_shop` varchar(255) NOT NULL,
+			PRIMARY KEY(`id_blocklink`, `id_shop`))
+			ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
+	Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'blocklink_shop (id_blocklink, id_shop) 
+			(SELECT id_blocklink, 1 FROM '._DB_PREFIX_.'blocklink)');
 }
+
