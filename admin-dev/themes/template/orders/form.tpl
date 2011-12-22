@@ -850,7 +850,7 @@
 	</div>
 	<div class="separation"></div>
 	<div id="carts">
-		<p><a href="#" id="show_old_carts"></a></p>
+		<p><a href="#" id="show_old_carts" class="button"></a></p>
 		<div id="old_carts_orders">
 			<div id="nonOrderedCarts">
 				<h3>{l s='Carts:'}</h3>
@@ -975,12 +975,14 @@
 	<legend><img src="../img/t/AdminPayment.gif" />{l s='Summary'}</legend>
 	<div id="send_email_feedback"></div>
 	<div id="cart_summary" style="clear:both;float:left;">
-		<p><b>{l s='Total products:'}</b>&nbsp;<span id="total_products"></span><span class="currency_sign"></span></p>
-		<p><b>{l s='Total vouchers:'}</b>&nbsp;<span id="total_vouchers"></span><span class="currency_sign"></span></p>
-		<p><b>{l s='Total shipping:'}</b>&nbsp;<span id="total_shipping"></span><span class="currency_sign"></span></p>
-		<p><b>{l s='Total without taxes:'}</b>&nbsp;<span id="total_without_taxes"></span><span class="currency_sign"></span></p>
-		<p><b>{l s='Total taxes:'}</b>&nbsp;<span id="total_taxes"></span><span class="currency_sign"></span></p>
-		<p><b>{l s='Total with taxes:'}</b> <span id="total_with_taxes"></span><span class="currency_sign"></span></p>
+		<ul>
+			<li><span class="total_cart">{l s='Total products:'}</span><span id="total_products"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total vouchers:'}</span><span id="total_vouchers"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total shipping:'}</span><span id="total_shipping"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total without taxes:'}</span><span id="total_without_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total taxes:'}</span><span id="total_taxes"></span><span class="currency_sign"></span></li>
+			<li><span class="total_cart">{l s='Total with taxes:'}</span><span id="total_with_taxes"></span><span class="currency_sign"></span></li>
+		</ul>
 	</div>
 	<div class="order_message_right">
 		<label for="order_message">{l s='Order message:'}</label>
@@ -988,10 +990,10 @@
 			<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
 		</div>
 		<div class="margin-form">
-			<a href="#" id="send_email_to_customer">{l s='Send an email to the customer with the link to process the payment.'}</a>
+			<a href="#" id="send_email_to_customer" class="button">{l s='Send an email to the customer with the link to process the payment.'}</a>
 		</div>
 		<div class="margin-form">
-			<a target="_blank" id="go_order_process" href="">{l s='Go on payment page to process the payment.'}</a>
+			<a target="_blank" id="go_order_process" href="" class="button">{l s='Go on payment page to process the payment.'}</a>
 		</div>
 		<label>{l s='Payment:'}</label>
 		<div class="margin-form">
