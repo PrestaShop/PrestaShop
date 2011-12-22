@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_store>
-  <fields id="name" class="Store" image="st">
-    <field name="id_country" relation="country"/>
-    <field name="id_state" relation="state"/>
-    <field name="name"/>
-    <field name="address1"/>
-    <field name="address2"/>
-    <field name="city"/>
-    <field name="postcode"/>
-    <field name="latitude"/>
-    <field name="longitude"/>
-    <field name="hours"/>
-    <field name="phone"/>
-    <field name="fax"/>
-    <field name="email"/>
-    <field name="note"/>
-    <field name="active"/>
-  </fields>
   <entities>
     <store id="Dade_County" id_country="US" id_state="FL" postcode=" 33135" latitude="25.76500500" longitude="-80.24379700" phone="" fax="" active="1">
       <name>Dade County</name>
@@ -64,4 +47,21 @@
       <note/>
     </store>
   </entities>
+  <fields id="name" class="Store" image="st">
+    <field name="id_country" relation="country"/>
+    <field name="id_state" relation="state"/>
+    <field name="name"/>
+    <field name="address1"/>
+    <field name="address2"/>
+    <field name="city"/>
+    <field name="postcode"/>
+    <field name="latitude"/>
+    <field name="longitude"/>
+    <field name="hours"/>
+    <field name="phone"/>
+    <field name="fax"/>
+    <field name="email"/>
+    <field name="note"/>
+    <field name="active"/>
+  </fields>
 </entity_store>

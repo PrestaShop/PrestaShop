@@ -85,8 +85,13 @@ class DeliveryCore extends ObjectModel
 		// @todo add null management in definitions
 		if ($this->id_shop)
 			$fields['id_shop'] = (int)$this->id_shop;
+		else
+			$fields['id_shop'] = null;
+
 		if ($this->id_group_shop)
 			$fields['id_group_shop'] = (int)$this->id_group_shop;
+		else
+			$fields['id_group_shop'] = null;
 
 		return $fields;
 	}
