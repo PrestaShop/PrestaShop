@@ -512,7 +512,8 @@ class DispatcherCore
 				}
 			}
 			$url = preg_replace('#\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
-			$url .= '?'.http_build_query($add_param);
+			if (count($add_param))
+				$url .= '?'.http_build_query($add_param);
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
