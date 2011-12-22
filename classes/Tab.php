@@ -41,6 +41,9 @@ class TabCore extends ObjectModel
 	/** @var integer position */
 	public $position;
 
+	/** @var integer active */
+	public $active;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -53,6 +56,7 @@ class TabCore extends ObjectModel
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'module' => 	array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
 			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
+			'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 32),

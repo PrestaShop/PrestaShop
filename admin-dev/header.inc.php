@@ -297,7 +297,7 @@ $echoLis = '';
 $mainsubtablist = '';
 
 foreach ($tabs AS $t)
-	if (checkTabRights($t['id_tab']) === true)
+	if (checkTabRights($t['id_tab']) === true AND (bool)$t['active'])
 	{
 		$img = (Tools::file_exists_cache(_PS_ADMIN_DIR_.'/themes/'.Context::getContext()->employee->bo_theme.'/img/t/'.$t['class_name'].'.gif') ? 'themes/'.Context::getContext()->employee->bo_theme.'/img/' : _PS_IMG_).'t/'.$t['class_name'].'.gif';
 		if (trim($t['module']) != '')
@@ -316,13 +316,13 @@ foreach ($tabs AS $t)
 			array_unshift($subTabs, $t);
 
 		foreach ($subTabs AS $t2)
-			if (checkTabRights($t2['id_tab']) === true)
+			if (checkTabRights($t2['id_tab']) === true AND (bool)$t2['active'])
 				echo '<li><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
 
 		echo '</ul></li>';
 		$echoLi = '';
 		foreach ($subTabs AS $t2)
-			if (checkTabRights($t2['id_tab']) === true)
+			if (checkTabRights($t2['id_tab']) === true AND (bool)$t2['active'])
 				$echoLi .= '<li class="subitem"><a href="index.php?controller='.$t2['class_name'].'&token='.Tools::getAdminTokenLite($t2['class_name']).'">'.$t2['name'].'</a></li>';
 
 		if ($current)
