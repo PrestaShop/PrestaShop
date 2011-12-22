@@ -295,7 +295,7 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 ALTER TABLE  `PREFIX_order_detail`
 ADD `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
 ADD `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
-ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,,
+ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,
 ADD `total_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_incl`,
 ADD `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_excl`,
 ADD `unit_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `unit_price_tax_incl`,
@@ -395,6 +395,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
 /* PHP:update_modules_multishop.php; */;
+
 
 UPDATE `PREFIX_tab`
 SET `position` = (
