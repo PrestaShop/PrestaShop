@@ -213,8 +213,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'country[]',
 					'id' => 'country',
-					'multiple' => true,
-					'size' => 15,
 					'options' => array(
 						'query' => Country::getCountries((int)$this->context->language->id),
 						'id' => 'id_country',
