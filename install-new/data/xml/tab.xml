@@ -168,9 +168,6 @@
     <tab id="Image_Mapping" id_parent="Catalog" active="1">
       <class_name>AdminScenes</class_name>
     </tab>
-    <tab id="Customer_Messages" id_parent="Orders" active="1">
-      <class_name>AdminMessages</class_name>
-    </tab>
     <tab id="Monitoring" id_parent="Catalog" active="1">
       <class_name>AdminTracking</class_name>
     </tab>
