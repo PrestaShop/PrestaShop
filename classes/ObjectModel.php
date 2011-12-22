@@ -233,7 +233,10 @@ abstract class ObjectModelCore
 	public function getFields()
 	{
 		$this->validateFields();
-		return $this->formatFields();
+		$fields = $this->formatFields();
+		if (!$fields)
+			$fields[$this->def['primary']] = $this->id;
+		return $fields;
 	}
 
 	/**
