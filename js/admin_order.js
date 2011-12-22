@@ -768,7 +768,7 @@ function init()
 var flagRefund = '';
 
 $(document).ready(function() {
-	$('.standard_refund').click(function() {
+	$('#desc-order-standard_refund').click(function() {
 
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
@@ -791,7 +791,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('.partial_refund').click(function() {
+	$('#desc-order-partial_refund').click(function() {
 
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
