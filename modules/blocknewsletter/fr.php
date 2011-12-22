@@ -11,6 +11,7 @@ $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_f4f70727dc34561dfde1a3c52
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a3399c10bd24eba0b78fbd595c51f81a'] = 'Afficher la configuration dans une nouvelle page ?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_a6105c0a611b41b08f1209506350279e'] = 'Oui';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_7fa3b767c460b54a2be4d49030b349c7'] = 'Non';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b3312ef4387a841f89a86a49774cc17f'] = 'Envoyer un email de vérification après inscription?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b68ae6efae2fca059754c27ff94494cd'] = 'Envoyer un mail de confirmation après inscription ?';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_506e58042922bff5bd753dc612e84f5b'] = 'Code de réduction offert';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_de3bd7faad12c79178b1b22bf6119e35'] = 'Laissez vide pour désactiver';
@@ -21,7 +22,10 @@ $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_29003419c075963848f190717
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_f7dc297e2a139ab4f5a771825b46df43'] = 'Votre désinscription est effective';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_8dc3b88902df97bb96930282e56ed381'] = 'Adresse e-mail déjà inscrite';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b7d9eb38dd2e375648ab08e224e22e43'] = 'Une erreur est survenue lors de votre inscription';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b2485e09e6a72c45d35286d3fc63e128'] = 'Un email de vérification a été envoyé. Merci de vérifier cet email.';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ed3cd7b3cc134222fa70602921ec27e1'] = 'Votre inscription est effective';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_9e1f0c4c3f90d775eafbb0854ec63808'] = 'Email déjà enregistré ou invalide';
+$_MODULE['<{blocknewsletter}prestashop>blocknewsletter_4e1c51e233f1ed368c58db9ef09010ba'] = 'Merci d\'avoir souscris à notre newsletter.';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_ffb7e666a70151215b4c55c6268d7d72'] = 'Newsletter';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_416f61a2ce16586f8289d41117a2554e'] = 'votre e-mail';
 $_MODULE['<{blocknewsletter}prestashop>blocknewsletter_b26917587d98330d93f87808fc9d7267'] = 'Inscription';

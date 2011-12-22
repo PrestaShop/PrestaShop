@@ -28,6 +28,7 @@ $_MODULE['<{statsproduct}prestashop>statsproduct_3303da9d5241177588a06ad60d7edab
 $_MODULE['<{statsproduct}prestashop>statsproduct_6ccf03bc05e4b749b74b5d577c7e7d3a'] = 'Produits disponibles';
 $_MODULE['<{statsproduct}prestashop>statsproduct_12d3c7a4296542c62474856ec452c045'] = 'Ref.';
 $_MODULE['<{statsproduct}prestashop>statsproduct_49ee3087348e8d44e1feda1917443987'] = 'Nom';
+$_MODULE['<{statsproduct}prestashop>statsproduct_7bd5825a187064017975513b95d7f7de'] = 'Quantité disponible à la vente';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6602bbeb2956c035fb4cb5e844a4861b'] = 'Guide';
 $_MODULE['<{statsproduct}prestashop>statsproduct_6c1a8292e4da90e1ef19ae9444226d8f'] = 'Comparaison du nombre d\'achat et du nombre de consultations';
 $_MODULE['<{statsproduct}prestashop>statsproduct_1d0ba341c7847cbff109276485417a1c'] = 'Après avoir choisi une catégorie et sélectionné un produit disponible dans cette catégorie, des graphiques apparaissent. Vous pouvez ensuite les analyser.';
