@@ -697,7 +697,7 @@ class AdminModulesControllerCore extends AdminController
 		if ($module->id AND $module->active)
 			$return .= (!empty($result) ? '|' : '').' <span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
 
-		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable) OR Shop::isFeatureActive()))
+		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable)))
 			$return .= (!empty($result) ? '|' : '').' <span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
 
 		$hrefDelete = self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
@@ -877,7 +877,8 @@ class AdminModulesControllerCore extends AdminController
 					'name' => (string)$module->name,
 					'author' => (string)$module->author,
 					'image' => (isset($module->image) ? (string)$module->image : ''),
-					'option' => $this->displayModuleOptions($module)
+					//'option' => $this->displayModuleOptions($module),
+					'option' => '',
 				)).', ';
 			}
 			unset($object);
