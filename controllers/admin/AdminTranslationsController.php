@@ -733,7 +733,7 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				if ($group == 'core_mail' || $group == 'module_mail')
 					$array_subjects['core_and_modules']['translations'] = array_merge($array_subjects['core_and_modules']['translations'], $subject_translation);
-				else if ( isset($array_subjects['themes_and_modules']) && ($group == 'theme_mail' || $group == 'theme_module_mail')) {
+				elseif ( isset($array_subjects['themes_and_modules']) && ($group == 'theme_mail' || $group == 'theme_module_mail')) {
 					$array_subjects['themes_and_modules']['translations'] = array_merge($array_subjects['themes_and_modules']['translations'], $subject_translation);
 				}
 			}
@@ -911,11 +911,11 @@ class AdminTranslationsControllerCore extends AdminController
 		$tabs = scandir(_PS_ADMIN_CONTROLLER_DIR_);
 		$tabs = array_merge($tabs, Tools::scandir(_PS_ADMIN_CONTROLLER_DIR_, 'php', '../../classes/helper'));
 		$tabs[] = '../../classes/AdminController.php';
-		
+
 		$files = array();
 		$i=0;
 		foreach ($tabs as $tab)
-			if (preg_match('/^(.*)\.php$/', $tab) AND file_exists($tpl = _PS_ADMIN_CONTROLLER_DIR_.$tab))
+			if (preg_match('/^(.*)\.php$/', $tab) && file_exists($tpl = _PS_ADMIN_CONTROLLER_DIR_.$tab))
 			{
 				// -4 becomes -14 to remove the ending "Controller.php" from the filename
 				$prefix_key = basename(substr($tab, 0, -14));
@@ -923,6 +923,8 @@ class AdminTranslationsControllerCore extends AdminController
 				// @todo this is retrocompatible, but we should not leave this
 				if ( $prefix_key == 'Admin')
 					$prefix_key = 'AdminController';
+				elseif ($prefix_key == 'helper' || $prefix_key == 'Hel')
+					$prefix_key = 'Helper';
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
 				fclose($fd);
