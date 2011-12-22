@@ -505,8 +505,14 @@ class AdminModulesControllerCore extends AdminController
 								$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
 								foreach ($xml->module as $modaddons)
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
-										if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
-											$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
+									{
+										if ($f['loggedOnAddons'] == 0)
+											if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/', '../modules/'.$modaddons->name.'.zip'))
+												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
+										if ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
+											if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
+												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
+									}
 							}
 
 					}
