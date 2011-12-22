@@ -206,8 +206,29 @@ class OrderSlipCore extends ObjectModel
 
 	public function addPartialSlipDetail($order_detail_list)
 	{
-		foreach ($order_detail_list as $id_order_detail => $amount)
-			Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_slip_detail', array('id_order_slip' => (int)($this->id), 'id_order_detail' => (int)($id_order_detail), 'product_quantity' => 0, 'amount' => (float)($amount)), 'INSERT');
+		foreach ($order_detail_list as $id_order_detail => $tab)
+		{
+			$tab['amount_tax_excl'] = $tab['amount_tax_incl'] = $tab['amount'];
+			$id_tax = (int)Db::getInstance()->getValue('SELECT `id_tax` FROM `'._DB_PREFIX_.'order_detail_tax` WHERE `id_order_detail` = '.(int)$id_order_detail);
+			if ($id_tax > 0)
+			{
+				$rate = (float)Db::getInstance()->getValue('SELECT `rate` FROM `'._DB_PREFIX_.'tax` WHERE `id_tax` = '.(int)$id_tax);
+				if ($rate > 0)
+				{
+					$rate = 1 + ($rate / 100);
+					$tab['amount_tax_excl'] = $tab['amount_tax_excl'] / $rate;
+				}
+			}
+			
+			$insertOrderSlip = array(
+				'id_order_slip' => (int)($this->id),
+				'id_order_detail' => (int)($id_order_detail),
+				'product_quantity' => (int)($tab['quantity']),
+				'amount_tax_excl' => (float)($tab['amount_tax_excl']),
+				'amount_tax_incl' => (float)($tab['amount_tax_incl']),
+			);
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_slip_detail', $insertOrderSlip, 'INSERT');
+		}
 	}
 
 }

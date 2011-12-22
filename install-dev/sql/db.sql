@@ -1234,7 +1234,8 @@ CREATE TABLE `PREFIX_order_slip_detail` (
   `id_order_slip` int(10) unsigned NOT NULL,
   `id_order_detail` int(10) unsigned NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL default '0',
-  `amount` DECIMAL(10,2) NOT NULL,
+  `amount_tax_excl` DECIMAL(10,2) default NULL,
+  `amount_tax_incl` DECIMAL(10,2) default NULL,
   PRIMARY KEY  (`id_order_slip`,`id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
