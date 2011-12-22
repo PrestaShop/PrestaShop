@@ -57,8 +57,7 @@ class AdminSpecificPriceRuleController extends AdminController
 				'width' => 200
 			),
 			'shop_name' => array(
-				'title' => $this->l('Shop'),
-				'width' => 300
+				'title' => $this->l('Shop')
 			),
 			'currency_name' => array(
 				'title' => $this->l('Currency'),

@@ -41,7 +41,7 @@ class AdminImagesControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_image_type' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Name'), 'width' => 140, 'size' => 16),
+			'name' => array('title' => $this->l('Name'), 'size' => 16),
 			'width' => array('title' => $this->l('Width'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5),
 			'height' => array('title' => $this->l('Height'), 'align' => 'right', 'suffix' => ' px', 'width' => 50, 'size' => 5)
 		);
