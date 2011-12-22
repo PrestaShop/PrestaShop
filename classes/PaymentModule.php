@@ -118,7 +118,7 @@ abstract class PaymentModuleCore extends Module
 			$id_currency = $currency_special ? (int)($currency_special) : (int)($cart->id_currency);
 			$currency = new Currency($id_currency);
 
-			$this->context->cart->order_reference = $reference;
+			$cart->order_reference = $reference;
 
 			$orderCreationFailed = false;
 			$cart_total_paid = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
@@ -441,7 +441,8 @@ abstract class PaymentModuleCore extends Module
 						// Join PDF invoice
 						if ((int)(Configuration::get('PS_INVOICE')) && $order_status->invoice && $order->invoice_number)
 						{
-							$fileAttachment['content'] = PDF::invoice($order, 'S');
+                            $pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
+							$fileAttachment['content'] = $pdf->render(false);
 							$fileAttachment['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)($order->id_lang)).sprintf('%06d', $order->invoice_number).'.pdf';
 							$fileAttachment['mime'] = 'application/pdf';
 						}

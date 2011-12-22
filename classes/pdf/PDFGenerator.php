@@ -121,15 +121,18 @@ class PDFGeneratorCore extends TCPDF
 	 * Render the pdf file
 	 *
 	 * @param string $filename
+     * @param boolean $inline
 	 * @throws PrestashopException
 	 */
-	public function render($filename)
+	public function render($filename, $display = true)
 	{
 		if (empty($filename))
 			throw new PrestashopException('Missing filename.');
 
 		$this->lastPage();
-		$this->output($filename, 'I');
+
+        $output = $display ? 'I' : 'S';
+        return $this->output($filename, $output);
 	}
 
 	/**
