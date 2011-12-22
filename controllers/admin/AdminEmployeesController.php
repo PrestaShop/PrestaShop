@@ -113,9 +113,10 @@ class AdminEmployeesControllerCore extends AdminController
 		$available_profiles = Profile::getProfiles($this->context->language->id);
 		
 		if ($obj->id_profile == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
+		{
 			$this->_errors[] = Tools::displayError('You cannot edit SuperAdmin profile.');
-
-		return parent::renderForm();
+			return parent::renderForm();
+		}
 
 
 		$path = _PS_ADMIN_DIR_.'/themes/';
@@ -238,7 +239,7 @@ class AdminEmployeesControllerCore extends AdminController
 			// if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
 			if ($this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
 				 foreach ($available_profiles as $i => $profile)
-				 	if ($available_profile['id_profile'] == _PS_ADMIN_PROFILE_)
+				 	if ($available_profiles[$i]['id_profile'] == _PS_ADMIN_PROFILE_)
 					{
 						unset($available_profiles[$i]);
 						break;
