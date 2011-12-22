@@ -1371,7 +1371,7 @@ class CartCore extends ObjectModel
 			{
 				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute'], $this->id_shop);
 				if (count($warehouse_list) == 0)
-				   $warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
+					$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
 				// Does the product is in stock ?
 				// If yes, get only warehouse where the product is in stock
 				$warehouse_in_stock = array();
@@ -1435,10 +1435,12 @@ class CartCore extends ObjectModel
 
 			// Determine the warehouse to use for this product in order to reduce the number of package
 			$id_warehouse = 0;
-			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_warehouse)
-				if (in_array($id_warehouse, $product['warehouse_list']))
+			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_warehouse => $val)
+				if (in_array((int)$id_warehouse, $product['warehouse_list']))
 					break;
-
+			
+			$id_warehouse = (int)$id_warehouse;
+			
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))
 			{
 				$grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse] = array();
