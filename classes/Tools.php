@@ -2000,16 +2000,27 @@ FileETag INode MTime Size
 	{
 		$memory_limit = @ini_get('memory_limit');
 
-		if (preg_match('/[0-9]+k/i', $memory_limit))
-			return 1024 * (int)$memory_limit;
+		return self::getOctets($memory_limit);
+	}
 
-		if (preg_match('/[0-9]+m/i', $memory_limit))
-			return 1024 * 1024 * (int)$memory_limit;
+	/**
+	 * getOctet allow to gets the value of a configuration option in octet
+	 *
+	 * @since 1.5.0
+	 * @return int the value of a configuration option in octet
+	 */
+	public static function getOctets($option)
+	{
+		if (preg_match('/[0-9]+k/i', $option))
+			return 1024 * (int)$option;
 
-		if (preg_match('/[0-9]+g/i', $memory_limit))
-			return 1024 * 1024 * 1024 * (int)$memory_limit;
+		if (preg_match('/[0-9]+m/i', $option))
+			return 1024 * 1024 * (int)$option;
 
-		return $memory_limit;
+		if (preg_match('/[0-9]+g/i', $option))
+			return 1024 * 1024 * 1024 * (int)$option;
+
+		return $option;
 	}
 
 	/**

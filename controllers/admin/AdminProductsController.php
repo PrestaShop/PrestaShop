@@ -2116,7 +2116,13 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$id_product;
 		$this->tpl_form_vars['id_product'] = $id_product;
 
-		$this->tpl_form_vars['upload_max_filesize'] = ini_get('upload_max_filesize');
+		// Transform configuration option 'upload_max_filesize' in octets
+		$upload_max_filesize = Tools::getOctets(ini_get('upload_max_filesize'));
+
+		// Transform configuration option 'upload_max_filesize' in MegaOctets
+		$upload_max_filesize = ($upload_max_filesize / 1024) / 1024;
+
+		$this->tpl_form_vars['upload_max_filesize'] = $upload_max_filesize;
 		$this->tpl_form_vars['country_display_tax_label'] = $this->context->country->display_tax_label;
 
 		// let's calculate this once for all
