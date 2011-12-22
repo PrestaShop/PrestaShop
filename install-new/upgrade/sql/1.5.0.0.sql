@@ -311,14 +311,6 @@ PRIMARY KEY (`id_scene`, `id_shop`),
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_scene_shop` (id_shop, id_scene) (SELECT 1, id_scene FROM PREFIX_scene);
 
-CREATE TABLE `PREFIX_discount_shop` (
-`id_discount` INT( 11 ) UNSIGNED NOT NULL ,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-PRIMARY KEY (`id_discount`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_discount_shop` (id_shop, id_discount) (SELECT 1, id_discount FROM PREFIX_discount);
-
 ALTER TABLE `PREFIX_delivery` ADD `id_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_delivery`, ADD `id_group_shop` INT UNSIGNED NULL DEFAULT NULL AFTER `id_shop`;
 
 /* PHP:create_multistore(); */;
