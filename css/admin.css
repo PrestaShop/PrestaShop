@@ -2057,3 +2057,15 @@ div#scrollTop a:hover{
 .edit-note { width: 98%; height: 100px; }
 
 .payment_information { background-color: #BDE5F8 }
+
+
+/*conditions*/
+#conditions .condition_group {}
+#conditions .condition_separator { font-size:16px; margin:10px 0;}
+#conditions .condition_group h3 { margin:0 0 10px 0;}
+#conditions a#add_condition_group { font-size:16px;}
+#conditions #condition_list {}
+#conditions #condition_list .row { position:relative; height:25px; padding:10px 0; background-color:transparent;}
+#conditions #condition_list h4 { margin:0 0 10px 0;}
+#conditions #condition_list select { float:left; margin-right:10px;  width: 200px;}
+#conditions #condition_list a { float:left;}
