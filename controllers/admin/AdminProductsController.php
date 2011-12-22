@@ -1397,6 +1397,13 @@ class AdminProductsControllerCore extends AdminController
 					Hook::exec('addProduct', array('product' => $object));
 					Search::indexation(false, $object->id);
 				}
+				
+				// If the product is virtual, set out_of_stock = 1 (allow sales when out of stock)
+				if (Tools::getValue('type_product') == 2)
+					StockAvailable::setProductOutOfStock($object->id, 1);
+				else
+					StockAvailable::setProductOutOfStock($object->id, 2);
+				
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 				{
