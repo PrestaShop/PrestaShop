@@ -197,8 +197,6 @@ class InstallXmlLoader
 		}
 		while ($current != $sort_entities);
 
-		$start = microtime(true);
-
 		// Populate entities
 		foreach ($sort_entities as $entity)
 		{
