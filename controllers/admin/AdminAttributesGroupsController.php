@@ -38,18 +38,21 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'id_attribute_group' => array(
 				'title' => $this->l('ID'),
-				'width' => 25
+				'width' => 25,
+				'align' => 'center'
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
 				'width' => 'auto',
-				'filter_key' => 'b!name'
+				'filter_key' => 'b!name',
+				'align' => 'left'
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
 				'filter_key' => 'cp!position',
-				'position' => 'position'
+				'position' => 'position',
+				'align' => 'center'
 			)
 		);
 
