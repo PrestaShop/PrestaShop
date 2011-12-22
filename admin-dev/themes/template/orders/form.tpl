@@ -361,9 +361,9 @@
 				{
 					var html = '<ul>';
 					$.each(res.customers, function() {
-						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a> - '+this.birthday+'</div>';
+						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a><span class="customerBirthday"> '+this.birthday+'</span></div>';
 						html += '<div class="customerEmail"><a href="mailto:'+this.email+'">'+this.email+'</div>';
-						html += '<a onclick="setupCustomer('+ this.id_customer+');" href="#" class="id_customer">{l s='Choose'}</a></li>';
+						html += '<a onclick="setupCustomer('+ this.id_customer+');" href="#" class="id_customer button">{l s='Choose'}</a></li>';
 					});
 					html += '</ul>';
 				}
@@ -803,10 +803,18 @@
 	</div>
 	<div id="products_err" class="warn" style="display:none;"></div>
 	<div>
-		<table class="table" id="customer_cart">
+		<table cellspacing="0" cellpadding="0" class="table width5" id="customer_cart">
+				<colgroup>
+					<col width="50px"></col>
+					<col width=""></col>
+					<col width="90px"></col>
+					<col width="100px"></col>
+					<col width="50px"></col>
+					<col width="50px"></col>
+				</colgroup>
 			<thead>
 				<tr>
-					<th>{l s='Product'}</th>
+					<th height="39px">{l s='Product'}</th>
 					<th>{l s='Description'}</th>
 					<th>{l s='Ref'}</th>
 					<th>{l s='Unit price'}</th>
@@ -846,13 +854,19 @@
 		<div id="old_carts_orders">
 			<div id="nonOrderedCarts">
 				<h3>{l s='Carts:'}</h3>
-				<table class="table">
+				<table cellspacing="0" cellpadding="0" class="table  width5">
+					<colgroup>
+						<col width="10px"></col>
+						<col width=""></col>
+						<col width="70px"></col>
+						<col width="50px"></col>
+					</colgroup>
 				<thead>
 					<tr>
-						<th class="center">{l s='ID'}</th>
-						<th class="center">{l s='Date'}</th>
-						<th class="center">{l s='Total'}</th>
-						<th class="center">{l s='Action'}</th>
+						<th height="39px" class="left">{l s='ID'}</th>
+						<th class="left">{l s='Date'}</th>
+						<th class="left">{l s='Total'}</th>
+						<th class="left">{l s='Action'}</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -861,16 +875,25 @@
 			</div>
 			<div id="lastOrders">
 				<h3>{l s='Orders:'}</h3>
-				<table class="table">
+				<table cellspacing="0" cellpadding="0" class="table  width5">
+					<colgroup>
+						<col width="10px"></col>
+						<col width="50px"></col>
+						<col width=""></col>
+						<col width="90px"></col>
+						<col width="100px"></col>
+						<col width="250px"></col>
+						<col width="50px"></col>
+					</colgroup>
 					<thead>
 						<tr>
-							<th class="center">{l s='ID'}</th>
-							<th class="center">{l s='Date'}</th>
-							<th class="center">{l s='Produits'}</th>
-							<th class="center">{l s='Total paid'}</th>
-							<th class="center">{l s='Payment'}</th>
-							<th class="center">{l s='Status'}</th>
-							<th class="center">{l s='Action'}</th>
+							<th height=39px" class="left">{l s='ID'}</th>
+							<th class="left">{l s='Date'}</th>
+							<th class="left">{l s='Produits'}</th>
+							<th class="left">{l s='Total paid'}</th>
+							<th class="left">{l s='Payment'}</th>
+							<th class="left">{l s='Status'}</th>
+							<th class="left">{l s='Action'}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -889,13 +912,13 @@
 		<a class="fancybox button" href="{$link->getAdminLink('AdminDiscounts')}&adddiscount&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
 	</p>
 	<div class="margin-form">
-		<table class="table" id="voucher_list">
+		<table cellspacing="0" cellpadding="0" class="table" id="voucher_list">
 			<thead>
 				<tr>
-					<th class="center">{l s='Name'}</th>
-					<th class="center">{l s='Description'}</th>
-					<th class="center">{l s='Value'}</th>
-					<th class="center">{l s='Action'}</th>
+					<th class="left">{l s='Name'}</th>
+					<th class="left">{l s='Description'}</th>
+					<th class="left">{l s='Value'}</th>
+					<th class="left">{l s='Action'}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -926,7 +949,7 @@
 <br />
 <fieldset id="carriers_part" style="display:none;">
 	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Carriers'}</legend>
-	<div style="float:left;width:440px;">
+	<div>
 		<p>
 			<label>{l s='Carriers:'} </label>
 			<select name="id_carrier" id="id_carrier">
@@ -934,7 +957,7 @@
 		</p>
 		<p>
 			<label for="shipping_price">{l s='Shipping price:'}</label> <input type="text" id="shipping_price"  name="shipping_price" size="7" />&nbsp;<span class="currency_sign"></span>&nbsp;
-			<a href="#" onclick="resetShippingPrice()">{l s='Reset shipping price'}</a>
+			<a class="button" href="#" onclick="resetShippingPrice()">{l s='Reset shipping price'}</a>
 		</p>
 	</div>
 	<div id="float:left;">
@@ -952,14 +975,14 @@
 	<legend><img src="../img/t/AdminPayment.gif" />{l s='Summary'}</legend>
 	<div id="send_email_feedback"></div>
 	<div id="cart_summary" style="clear:both;float:left;">
-		<p><b>{l s='Total products:'}</b>&nbsp;<span style="font-weight:bold;" id="total_products"></span>&nbsp;<span class="currency_sign"></span></p>
-		<p><b>{l s='Total vouchers:'}</b>&nbsp;<span style="font-weight:bold;" id="total_vouchers"></span>&nbsp;<span class="currency_sign"></span></p>
-		<p><b>{l s='Total shipping:'}</b>&nbsp;<span style="font-weight:bold;" id="total_shipping"></span>&nbsp;<span class="currency_sign"></span></p>
-		<p><b>{l s='Total without taxes:'}</b>&nbsp;<span style="font-weight:bold;" id="total_without_taxes"></span>&nbsp;<span class="currency_sign"></span></p>
-		<p><b>{l s='Total taxes:'}</b>&nbsp;<span style="font-weight:bold;" id="total_taxes"></span>&nbsp;<span class="currency_sign"></span></p>
-		<p><b>{l s='Total with taxes:'}</b> <span style="font-weight:bold;" id="total_with_taxes"></span>&nbsp;<span class="currency_sign"></span></p>
+		<p><b>{l s='Total products:'}</b>&nbsp;<span id="total_products"></span><span class="currency_sign"></span></p>
+		<p><b>{l s='Total vouchers:'}</b>&nbsp;<span id="total_vouchers"></span><span class="currency_sign"></span></p>
+		<p><b>{l s='Total shipping:'}</b>&nbsp;<span id="total_shipping"></span><span class="currency_sign"></span></p>
+		<p><b>{l s='Total without taxes:'}</b>&nbsp;<span id="total_without_taxes"></span><span class="currency_sign"></span></p>
+		<p><b>{l s='Total taxes:'}</b>&nbsp;<span id="total_taxes"></span><span class="currency_sign"></span></p>
+		<p><b>{l s='Total with taxes:'}</b> <span id="total_with_taxes"></span><span class="currency_sign"></span></p>
 	</div>
-	<div style="float:right;">
+	<div class="order_message_right">
 		<label for="order_message">{l s='Order message:'}</label>
 		<div class="margin-form">
 			<textarea name="order_message" id="order_message" rows="3" cols="45"></textarea>
