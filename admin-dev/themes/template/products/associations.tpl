@@ -113,7 +113,7 @@
 		{/if}
 		<option disabled="disabled">----------</option>
 		</select>&nbsp;&nbsp;&nbsp;
-		<a href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer" onclick="return confirm('{l s='Are you sure you want to delete product information entered?' js=1} ')">
+		<a href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer" class="confirm_leave">
 		<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
 		</a>
 		</td>

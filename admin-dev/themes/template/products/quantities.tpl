@@ -125,10 +125,8 @@
 										<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
 											Default:
 											<i>Deny orders</i>
-											{assign var=confirm value="Are you sure you want to delete entered product information?"}
-											<a onclick="return confirm(' {$confirm} ');"
-												href="index.php?tab=AdminPPreferences&token={$token_preferences}">
-													{l s='as set in Preferences'}
+											<a class="confirm_leave" href="index.php?tab=AdminPPreferences&token={$token_preferences}">
+												{l s='as set in Preferences'}
 											</a>
 										</label>
 									</td>

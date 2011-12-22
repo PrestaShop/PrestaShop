@@ -77,7 +77,8 @@
 	<script type="text/javascript">
 		var toload = new Array();
 		var tabs_preloaded = new Array();
-		$(document).ready(function(){
+		$(document).ready(function()
+		{
 			{foreach $tabs_preloaded as $k => $tab}
 				tabs_preloaded['{$k}'] = '{$tab}';
 			{/foreach}
@@ -207,6 +208,11 @@
 			{if $show_product_tab_content}
 				$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
 			{/if}
+
+			$('.confirm_leave').live('click', function(){
+				// Double quotes are necessary when the translated string has single quotes
+				return confirm("{l s='You will lose all unsaved modifications, do you want to proceed?' js=1}");
+			});
 
 		});
 	</script>
