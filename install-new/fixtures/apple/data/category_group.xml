@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <entity_category_group>
-  <fields primary="id_category, id_group" sql="a.id_category &gt; 1">
-    <field name="id_category" relation="category"/>
-    <field name="id_group" relation="group"/>
-  </fields>
   <entities>
     <category_group id="category_group_2_1" id_category="iPods" id_group="Unidentified"/>
     <category_group id="category_group_2_2" id_category="iPods" id_group="Guest"/>
@@ -15,4 +11,8 @@
     <category_group id="category_group_4_2" id_category="Laptops" id_group="Guest"/>
     <category_group id="category_group_4_3" id_category="Laptops" id_group="Default"/>
   </entities>
+  <fields primary="id_category, id_group" sql="a.id_category &gt; 1">
+    <field name="id_category" relation="category"/>
+    <field name="id_group" relation="group"/>
+  </fields>
 </entity_category_group>
