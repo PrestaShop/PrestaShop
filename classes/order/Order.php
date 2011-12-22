@@ -311,7 +311,7 @@ class OrderCore extends ObjectModel
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
 
 		$product_list = array();
-		foreach ($cart->getProducts() as $product)
+		foreach ($this->getProducts() as $product)
 		{
 			$key = $this->id_address_delivery.'_'
 				.$product['id_product'].'_'
@@ -1482,7 +1482,7 @@ class OrderCore extends ObjectModel
 
 		return Tools::ps_round($total, 2);
 	}
-	
+
 	/**
 	 * Get the sum of total_paid_tax_incl of the orders with similar reference
 	 *
