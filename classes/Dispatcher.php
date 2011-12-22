@@ -492,9 +492,9 @@ class DispatcherCore
 					$replace = $route['keywords'][$key]['prepend'].$params[$key].$route['keywords'][$key]['append'];
 				else
 					$replace = '';
-				$url = preg_replace('#(*UTF8)\{([^{}]+:)?'.$key.'(:[^{}])?\}#', $replace, $url);
+				$url = preg_replace('#\{([^{}]+:)?'.$key.'(:[^{}])?\}#', $replace, $url);
 			}
-			$url = preg_replace('#(*UTF8)\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
+			$url = preg_replace('#\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
