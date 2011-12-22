@@ -177,6 +177,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-refresh-cache  { background-image: url(process-icon-refresh-cache.png);}
 .toolbarBox .process-icon-save-calendar { background-image: url(process-icon-save-calendar.png);}
 .toolbarBox .process-icon-new-module { background-image: url(process-icon-new-module.png);}
+.toolbarBox .process-icon-new-url { background-image: url(process-icon-new-url.png);}
 .toolbarBox .process-icon-new-module-addon { background-image: url(process-icon-new-module-addon.png);}
 .toolbarBox .process-icon-save-and-preview { background-image: url(process-icon-preview.png);}
 .toolbarBox .process-icon-export-stock-state-quantities-csv { background-image: url(process-icon-export-csv.png);}
