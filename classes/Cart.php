@@ -858,7 +858,7 @@ class CartCore extends ObjectModel
 		CartRule::autoAddToCart($context);
 
 		if ($product->customizable)
-			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, $operator);
+			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery , $operator);
 		else
 			return true;
 	}
@@ -866,7 +866,7 @@ class CartCore extends ObjectModel
 	/*
 	** Customization management
 	*/
-	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $operator = 'up')
+	protected function _updateCustomizationQuantity($quantity, $id_customization, $id_product, $id_product_attribute, $id_address_delivery, $operator = 'up')
 	{
 		// Link customization to product combination when it is first added to cart
 		if (empty($id_customization))
@@ -880,6 +880,7 @@ class CartCore extends ObjectModel
 					UPDATE `'._DB_PREFIX_.'customization`
 					SET `quantity` = '.(int)$quantity.',
 						`id_product_attribute` = '.(int)$id_product_attribute.',
+						`id_address_delivery` = '.(int)$id_address_delivery.',
 						`in_cart` = 1
 					WHERE `id_customization` = '.(int)$field['id_customization']);
 				}
@@ -901,11 +902,17 @@ class CartCore extends ObjectModel
 
 				return Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'customization`
-					SET `quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)$quantity.'
+					SET
+						`quantity` = `quantity` '.($operator == 'up' ? '+ ' : '- ').(int)$quantity.',
+						`id_address_delivery` = '.(int)$id_address_delivery.'
 					WHERE `id_customization` = '.(int)$id_customization);
 			}
+			else
+				Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'customization`
+					SET `id_address_delivery` = '.(int)$id_address_delivery.'
+					WHERE `id_customization` = '.(int)$id_customization);
 		}
-
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
 		$this->update(true);
@@ -3010,6 +3017,13 @@ class CartCore extends ObjectModel
 			WHERE `id_cart` = '.(int)$this->id.'
 				AND (`id_address_delivery` = 0 OR `id_address_delivery` IS NULL)
 				AND `id_shop` = '.(int)$this->id_shop;
+		
+		$sql = 'UPDATE `'._DB_PREFIX_.'customization`
+			SET `id_address_delivery` = '.(int)$id_address_delivery.'
+			WHERE `id_cart` = '.(int)$this->id.'
+				AND (`id_address_delivery` = 0 OR `id_address_delivery` IS NULL)
+				AND `id_shop` = '.(int)$this->id_shop;
+	
 		Db::getInstance()->execute($sql);
 	}
 
