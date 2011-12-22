@@ -786,6 +786,11 @@ class CartCore extends ObjectModel
 
 					$result2 = Db::getInstance()->getRow($sql);
 					$product_qty = (int)$result2['quantity'];
+					// Quantity for product pack
+					if (Pack::isPack($id_product))
+					{
+						$product_qty = Pack::getQuantity($id_product, $id_product_attribute);
+					}
 					$new_qty = (int)$result['quantity'] + (int)$quantity;
 					$qty = '+ '.(int)$quantity;
 
