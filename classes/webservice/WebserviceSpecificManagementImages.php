@@ -982,8 +982,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						{
 							$imagesTypes = ImageType::getImagesTypes('products');
 							foreach ($imagesTypes AS $imageType)
-								if (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+							{
+								$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
+								if (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 									$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+							}
 						}
 						@unlink($tmpName);
 						$this->imgToDisplay = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format;

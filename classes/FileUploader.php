@@ -154,8 +154,11 @@ class qqUploadedFileXhr
 		{
 			$imagesTypes = ImageType::getImagesTypes('products');
 			foreach ($imagesTypes AS $k => $imageType)
-				if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+			{
+				$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
+				if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 					return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
+			}
 		}
 		unlink($tmpName);
 		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
