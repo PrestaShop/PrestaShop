@@ -341,6 +341,8 @@ CREATE TABLE `PREFIX_category_shop` (
 INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
 (1, 1);
 
+ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsigned NOT NULL default '0' AFTER `product_weight`;
+
 /* PHP:migrate_orders(); */;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop` (
@@ -426,8 +428,6 @@ WHERE `class_name` = 'AdminAccounting';
 
 ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount` `amount_tax_excl` DECIMAL( 10, 2 ) default NULL;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount_tax_incl` DECIMAL(10,2) default NULL AFTER `amount_tax_excl`;
-
-ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsigned NOT NULL default '0' AFTER `product_weight`;
 
 CREATE TABLE `PREFIX_webservice_account_shop` (
 `id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
