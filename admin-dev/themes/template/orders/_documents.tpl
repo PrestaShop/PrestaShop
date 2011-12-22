@@ -15,7 +15,7 @@
 	{*/if*}
 		<td class="document_date">{dateFormat date=$document->date_add}</td>
 		<td class="document_type">Invoice</td>
-		<td class="document_number"><a href="pdf.php?pdf&id_order_invoice={$document->id}">{$document->getInvoiceNumberFormatted($current_id_lang)} <img src="../img/admin/details.gif" alt="{l s='See the invoice'}" /></a></td>
+		<td class="document_number"><a target="_blank" href="pdf.php?pdf&id_order_invoice={$document->id}">{$document->getInvoiceNumberFormatted($current_id_lang)} <img src="../img/admin/details.gif" alt="{l s='See the invoice'}" /></a></td>
 		<td class="document_amount">
 		{*if TYPE DOCUMENT = INVOICE *}
 			{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
