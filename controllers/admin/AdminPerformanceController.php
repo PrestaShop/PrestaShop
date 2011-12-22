@@ -709,7 +709,7 @@ class AdminPerformanceControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('To use CacheFS the directory').' '.
 						realpath(_PS_CACHEFS_DIRECTORY_).' '.Tools::displayError('must be writable');
 
-				if ($caching_system == 'CacheFs')
+				if ($caching_system == 'CacheFs' && $cache_active)
 				{
 					if (!($depth = Tools::getValue('ps_cache_fs_directory_depth')))
 						$this->_errors[] = Tools::displayError('Please set a directory depth');
@@ -720,6 +720,9 @@ class AdminPerformanceControllerCore extends AdminController
 						Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
 					}
 				}
+				else if($caching_system == 'MCached' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'MCached')
+					Cache::getInstance()->flush();
+
 				if (!count($this->_errors))
 				{
 					$settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([0-9])\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $settings);
