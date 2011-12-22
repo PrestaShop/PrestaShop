@@ -1844,8 +1844,8 @@ div.progressBarImage
 .submenu li{float:none;clear:left;}
 
 #fancybox-content { text-align:left;}
+
 /*customer_form*/
-.blocTitle {background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
 #customers { display:block; position:relative;}
 #customer_form #fieldset_0 { text-align:left;}
 #customer_part #customers ul {
@@ -1860,31 +1860,40 @@ div.progressBarImage
 	border:1px solid #ccc;
 	padding:5px;
 	width:200px;
+	border-radius:3px;
 	}
-#customer_part #customers ul li div.customerName { font-size:13px;}
+#customer_part #customers ul li div.customerName { background-color:#eee; font-size:14px; text-shadow:0 1px 0 #fff; padding:2px; }
+#customer_part #customers ul li div.customerName a {  font-weight:bold;}
+#customer_part #customers ul li div.customerName .customerBirthday { font-size:12px;float:right;}
+#customer_part #customers ul li div.customerEmail a { font-size:12px; color:#666666;display: block; line-height: 20px;}
+#customer_part #customers ul li a.id_customer.button {float:right;}
+#customer_part #customers ul li .id_customer {}
 
-#customer_part #customers ul li .id_customer {
-	font-weight:bold;
-	color:green;
-}
-#products_part #products_found {
-	display:none;
-}
-#vouchers_part #voucher_list {
-	display:none;
-}
-#vouchers_part #vouchers_err {
-	display:none;
-}
+#products_part #products_found {display:none;}
+#vouchers_part #voucher_list {display:none;}
+#vouchers_part #vouchers_err {display:none;}
 
 /*address_part*/
 #address_part #address_delivery, #address_part #address_invoice { width:400px; float:left;}
 #address_part #address_delivery h3, #address_part #address_invoice h3 { margin-top:0;}
 #address_part #address_delivery {border-right:1px solid #cccccc;}
 #address_part #address_invoice { border-left: 1px solid #ffffff; padding-left:20px;}
-#address_part #address_delivery_detail, #address_invoice #address_invoice_detail { font-size:12px; color:#585A69; padding:10px 0;}
+#address_part #address_delivery_detail, #address_invoice #address_invoice_detail { font-size:12px; line-height:18px; color:#585A69; padding:10px 0;}
 #address_part a#new_address {clear:both; float:left; margin:20px 0;}
 
+
+/*summary_part*/
+#summary_part #total_products,
+#summary_part #total_vouchers,
+#summary_part #total_shipping,
+#summary_part #total_without_taxes,
+#summary_part #total_taxes,
+#summary_part #total_with_taxes { font-size:16px; font-weight:normal;}
+#summary_part .currency_sign { font-weight:normal;}
+#summary_part .order_message_right { float:left; border-left: 1px solid #ccc; }
+
+/*cart_summary*/
+#cart_summary { float:left; border-right: 1px solid #fff; width:400px;}
 
 
 #loader_container {
