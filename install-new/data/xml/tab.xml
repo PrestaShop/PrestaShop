@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <fields id="name" class="Tab" image="t">
+  <fields id="name" class="Tab" ordersql="a.id_parent, a.position" image="t">
     <field name="id_parent" relation="tab"/>
     <field name="class_name"/>
     <field name="active"/>
   </fields>
   <entities>
+    <tab id="Home" id_parent="-1" active="1">
+      <class_name>AdminHome</class_name>
+    </tab>
+    <tab id="tab_107" id_parent="-1" active="1">
+      <class_name>AdminLogin</class_name>
+    </tab>
+    <tab id="CMS_pages" id_parent="-1" active="1">
+      <class_name>AdminCms</class_name>
+    </tab>
+    <tab id="CMS_categories" id_parent="-1" active="1">
+      <class_name>AdminCmsCategories</class_name>
+    </tab>
+    <tab id="Combinations_generator" id_parent="-1" active="1">
+      <class_name>AdminAttributeGenerator</class_name>
+    </tab>
+    <tab id="Search" id_parent="-1" active="1">
+      <class_name>AdminSearch</class_name>
+    </tab>
     <tab id="Catalog" id_parent="" active="1">
       <class_name>AdminCatalog</class_name>
     </tab>
@@ -27,26 +45,92 @@
     <tab id="Modules" id_parent="" active="1">
       <class_name>AdminModules</class_name>
     </tab>
+    <tab id="Employees" id_parent="" active="1">
+      <class_name>AdminEmployees</class_name>
+    </tab>
     <tab id="Preferences" id_parent="" active="1">
       <class_name>AdminPreferences</class_name>
     </tab>
     <tab id="Tools" id_parent="" active="1">
       <class_name>AdminTools</class_name>
     </tab>
+    <tab id="Shops" id_parent="" active="1">
+      <class_name>AdminShop</class_name>
+    </tab>
+    <tab id="Stock" id_parent="" active="1">
+      <class_name>AdminStock</class_name>
+    </tab>
+    <tab id="Accounting" id_parent="" active="1">
+      <class_name>AdminAccounting</class_name>
+    </tab>
+    <tab id="Products" id_parent="Catalog" active="1">
+      <class_name>AdminProducts</class_name>
+    </tab>
+    <tab id="Categories" id_parent="Catalog" active="1">
+      <class_name>AdminCategories</class_name>
+    </tab>
+    <tab id="Monitoring" id_parent="Catalog" active="1">
+      <class_name>AdminTracking</class_name>
+    </tab>
     <tab id="Manufacturers" id_parent="Catalog" active="1">
       <class_name>AdminManufacturers</class_name>
+    </tab>
+    <tab id="Suppliers" id_parent="Catalog" active="1">
+      <class_name>AdminSuppliers</class_name>
     </tab>
     <tab id="Attributes_and_Groups" id_parent="Catalog" active="1">
       <class_name>AdminAttributesGroups</class_name>
     </tab>
+    <tab id="Features" id_parent="Catalog" active="1">
+      <class_name>AdminFeatures</class_name>
+    </tab>
+    <tab id="Image_Mapping" id_parent="Catalog" active="1">
+      <class_name>AdminScenes</class_name>
+    </tab>
+    <tab id="Tags" id_parent="Catalog" active="1">
+      <class_name>AdminTags</class_name>
+    </tab>
+    <tab id="Attachments" id_parent="Catalog" active="1">
+      <class_name>AdminAttachments</class_name>
+    </tab>
+    <tab id="Catalog_price_rules" id_parent="Catalog" active="1">
+      <class_name>AdminSpecificPriceRule</class_name>
+    </tab>
     <tab id="Addresses" id_parent="Customers" active="1">
       <class_name>AdminAddresses</class_name>
+    </tab>
+    <tab id="Groups" id_parent="Customers" active="1">
+      <class_name>AdminGroups</class_name>
+    </tab>
+    <tab id="Shopping_Carts" id_parent="Customers" active="1">
+      <class_name>AdminCarts</class_name>
+    </tab>
+    <tab id="Genders" id_parent="Customers" active="1">
+      <class_name>AdminGenders</class_name>
+    </tab>
+    <tab id="Outstanding" id_parent="Customers" active="0">
+      <class_name>AdminOutstanding</class_name>
+    </tab>
+    <tab id="Invoices" id_parent="Orders" active="1">
+      <class_name>AdminInvoices</class_name>
+    </tab>
+    <tab id="Delivery_Slips" id_parent="Orders" active="1">
+      <class_name>AdminDeliverySlip</class_name>
+    </tab>
+    <tab id="Merchandise_Returns" id_parent="Orders" active="1">
+      <class_name>AdminReturn</class_name>
+    </tab>
+    <tab id="Credit_Slips" id_parent="Orders" active="1">
+      <class_name>AdminSlip</class_name>
     </tab>
     <tab id="Statuses" id_parent="Orders" active="1">
       <class_name>AdminStatuses</class_name>
     </tab>
-    <tab id="Cart_Rules" id_parent="Payment" active="1">
-      <class_name>AdminCartRules</class_name>
+    <tab id="Order_Messages" id_parent="Orders" active="1">
+      <class_name>AdminOrderMessage</class_name>
+    </tab>
+    <tab id="PDF" id_parent="Orders" active="1">
+      <class_name>AdminPdf</class_name>
     </tab>
     <tab id="Currencies" id_parent="Payment" active="1">
       <class_name>AdminCurrencies</class_name>
@@ -54,8 +138,17 @@
     <tab id="Taxes" id_parent="Payment" active="1">
       <class_name>AdminTaxes</class_name>
     </tab>
+    <tab id="Tax_Rules" id_parent="Payment" active="1">
+      <class_name>AdminTaxRulesGroup</class_name>
+    </tab>
+    <tab id="Cart_Rules" id_parent="Payment" active="1">
+      <class_name>AdminCartRules</class_name>
+    </tab>
     <tab id="Carriers" id_parent="Shipping" active="1">
       <class_name>AdminCarriers</class_name>
+    </tab>
+    <tab id="States" id_parent="Shipping" active="1">
+      <class_name>AdminStates</class_name>
     </tab>
     <tab id="Countries" id_parent="Shipping" active="1">
       <class_name>AdminCountries</class_name>
@@ -69,146 +162,11 @@
     <tab id="Weight_Ranges" id_parent="Shipping" active="1">
       <class_name>AdminRangeWeight</class_name>
     </tab>
-    <tab id="Positions" id_parent="Modules" active="1">
-      <class_name>AdminModulesPositions</class_name>
-    </tab>
-    <tab id="Database" id_parent="Preferences" active="1">
-      <class_name>AdminDb</class_name>
-    </tab>
-    <tab id="E-mail" id_parent="Preferences" active="1">
-      <class_name>AdminEmails</class_name>
-    </tab>
-    <tab id="Images" id_parent="Preferences" active="1">
-      <class_name>AdminImages</class_name>
-    </tab>
-    <tab id="Products" id_parent="Preferences" active="1">
-      <class_name>AdminPPreferences</class_name>
-    </tab>
-    <tab id="Contacts" id_parent="tab_29" active="1">
-      <class_name>AdminContacts</class_name>
-    </tab>
-    <tab id="tab_29" id_parent="" active="1">
-      <class_name>AdminEmployees</class_name>
-    </tab>
-    <tab id="Profiles" id_parent="tab_29" active="1">
-      <class_name>AdminProfiles</class_name>
-    </tab>
-    <tab id="Permissions" id_parent="tab_29" active="1">
-      <class_name>AdminAccess</class_name>
-    </tab>
-    <tab id="Languages" id_parent="Tools" active="1">
-      <class_name>AdminLanguages</class_name>
-    </tab>
-    <tab id="Translations" id_parent="Tools" active="1">
-      <class_name>AdminTranslations</class_name>
-    </tab>
-    <tab id="Suppliers" id_parent="Catalog" active="1">
-      <class_name>AdminSuppliers</class_name>
-    </tab>
-    <tab id="Tabs" id_parent="tab_29" active="1">
-      <class_name>AdminTabs</class_name>
-    </tab>
-    <tab id="Features" id_parent="Catalog" active="1">
-      <class_name>AdminFeatures</class_name>
-    </tab>
-    <tab id="Quick_Access" id_parent="Tools" active="1">
-      <class_name>AdminQuickAccesses</class_name>
-    </tab>
-    <tab id="Themes" id_parent="Preferences" active="1">
-      <class_name>AdminThemes</class_name>
-    </tab>
-    <tab id="Contact_Information" id_parent="Preferences" active="1">
-      <class_name>AdminContact</class_name>
-    </tab>
-    <tab id="Keyword_Typos" id_parent="Preferences" active="1">
-      <class_name>AdminAliases</class_name>
-    </tab>
-    <tab id="CSV_Import" id_parent="Tools" active="1">
-      <class_name>AdminImport</class_name>
-    </tab>
-    <tab id="Invoices" id_parent="Orders" active="1">
-      <class_name>AdminInvoices</class_name>
-    </tab>
-    <tab id="Search" id_parent="-1" active="1">
-      <class_name>AdminSearch</class_name>
-    </tab>
-    <tab id="Localization" id_parent="Preferences" active="1">
-      <class_name>AdminLocalization</class_name>
-    </tab>
-    <tab id="States" id_parent="Shipping" active="1">
-      <class_name>AdminStates</class_name>
-    </tab>
-    <tab id="Merchandise_Returns" id_parent="Orders" active="1">
-      <class_name>AdminReturn</class_name>
-    </tab>
-    <tab id="PDF" id_parent="Orders" active="1">
-      <class_name>AdminPdf</class_name>
-    </tab>
-    <tab id="Credit_Slips" id_parent="Orders" active="1">
-      <class_name>AdminSlip</class_name>
-    </tab>
-    <tab id="Subdomains" id_parent="Tools" active="1">
-      <class_name>AdminSubDomains</class_name>
-    </tab>
-    <tab id="DB_Backup" id_parent="Tools" active="1">
-      <class_name>AdminBackup</class_name>
-    </tab>
-    <tab id="Order_Messages" id_parent="Orders" active="1">
-      <class_name>AdminOrderMessage</class_name>
-    </tab>
-    <tab id="Delivery_Slips" id_parent="Orders" active="1">
-      <class_name>AdminDeliverySlip</class_name>
-    </tab>
-    <tab id="SEO_URLs" id_parent="Preferences" active="1">
-      <class_name>AdminMeta</class_name>
-    </tab>
-    <tab id="CMS" id_parent="Tools" active="1">
-      <class_name>AdminCmsContent</class_name>
-    </tab>
-    <tab id="Image_Mapping" id_parent="Catalog" active="1">
-      <class_name>AdminScenes</class_name>
-    </tab>
-    <tab id="Monitoring" id_parent="Catalog" active="1">
-      <class_name>AdminTracking</class_name>
-    </tab>
     <tab id="Search_Engines" id_parent="Stats" active="1">
       <class_name>AdminSearchEngines</class_name>
     </tab>
     <tab id="Referrers" id_parent="Stats" active="1">
       <class_name>AdminReferrers</class_name>
-    </tab>
-    <tab id="Groups" id_parent="Customers" active="1">
-      <class_name>AdminGroups</class_name>
-    </tab>
-    <tab id="Generators" id_parent="Tools" active="1">
-      <class_name>AdminGenerator</class_name>
-    </tab>
-    <tab id="Shopping_Carts" id_parent="Customers" active="1">
-      <class_name>AdminCarts</class_name>
-    </tab>
-    <tab id="Tags" id_parent="Catalog" active="1">
-      <class_name>AdminTags</class_name>
-    </tab>
-    <tab id="Search_1" id_parent="Preferences" active="1">
-      <class_name>AdminSearchConf</class_name>
-    </tab>
-    <tab id="Attachments" id_parent="Catalog" active="1">
-      <class_name>AdminAttachments</class_name>
-    </tab>
-    <tab id="Configuration_Information" id_parent="Tools" active="1">
-      <class_name>AdminInformation</class_name>
-    </tab>
-    <tab id="Performance" id_parent="Preferences" active="1">
-      <class_name>AdminPerformance</class_name>
-    </tab>
-    <tab id="Customer_Service" id_parent="tab_29" active="1">
-      <class_name>AdminCustomerThreads</class_name>
-    </tab>
-    <tab id="Webservice" id_parent="Tools" active="1">
-      <class_name>AdminWebservice</class_name>
-    </tab>
-    <tab id="Stock_Movement" id_parent="tab_95" active="1">
-      <class_name>AdminStockMvt</class_name>
     </tab>
     <tab id="Modules_Themes_Catalog" id_parent="Modules" active="1">
       <class_name>AdminAddonsCatalog</class_name>
@@ -216,26 +174,101 @@
     <tab id="My_Account" id_parent="Modules" active="1">
       <class_name>AdminAddonsMyAccount</class_name>
     </tab>
-    <tab id="Stores" id_parent="Tools" active="1">
-      <class_name>AdminStores</class_name>
-    </tab>
-    <tab id="Themes_1" id_parent="Modules" active="1">
+    <tab id="Themes" id_parent="Modules" active="1">
       <class_name>AdminThemes</class_name>
+    </tab>
+    <tab id="Positions" id_parent="Modules" active="1">
+      <class_name>AdminModulesPositions</class_name>
+    </tab>
+    <tab id="Contact_Information" id_parent="Preferences" active="1">
+      <class_name>AdminContact</class_name>
+    </tab>
+    <tab id="Themes_1" id_parent="Preferences" active="1">
+      <class_name>AdminThemes</class_name>
+    </tab>
+    <tab id="SEO_URLs" id_parent="Preferences" active="1">
+      <class_name>AdminMeta</class_name>
+    </tab>
+    <tab id="Products_1" id_parent="Preferences" active="1">
+      <class_name>AdminPPreferences</class_name>
+    </tab>
+    <tab id="Keyword_Typos" id_parent="Preferences" active="1">
+      <class_name>AdminAliases</class_name>
+    </tab>
+    <tab id="E-mail" id_parent="Preferences" active="1">
+      <class_name>AdminEmails</class_name>
+    </tab>
+    <tab id="Images" id_parent="Preferences" active="1">
+      <class_name>AdminImages</class_name>
+    </tab>
+    <tab id="Database" id_parent="Preferences" active="1">
+      <class_name>AdminDb</class_name>
+    </tab>
+    <tab id="Localization" id_parent="Preferences" active="1">
+      <class_name>AdminLocalization</class_name>
+    </tab>
+    <tab id="Search_1" id_parent="Preferences" active="1">
+      <class_name>AdminSearchConf</class_name>
+    </tab>
+    <tab id="Performance" id_parent="Preferences" active="1">
+      <class_name>AdminPerformance</class_name>
     </tab>
     <tab id="Geolocation" id_parent="Preferences" active="1">
       <class_name>AdminGeolocation</class_name>
     </tab>
-    <tab id="Tax_Rules" id_parent="Payment" active="1">
-      <class_name>AdminTaxRulesGroup</class_name>
+    <tab id="Languages" id_parent="Tools" active="1">
+      <class_name>AdminLanguages</class_name>
+    </tab>
+    <tab id="Translations" id_parent="Tools" active="1">
+      <class_name>AdminTranslations</class_name>
+    </tab>
+    <tab id="Quick_Access" id_parent="Tools" active="1">
+      <class_name>AdminQuickAccesses</class_name>
+    </tab>
+    <tab id="Configuration_Information" id_parent="Tools" active="1">
+      <class_name>AdminInformation</class_name>
+    </tab>
+    <tab id="CSV_Import" id_parent="Tools" active="1">
+      <class_name>AdminImport</class_name>
+    </tab>
+    <tab id="Subdomains" id_parent="Tools" active="1">
+      <class_name>AdminSubDomains</class_name>
+    </tab>
+    <tab id="DB_Backup" id_parent="Tools" active="1">
+      <class_name>AdminBackup</class_name>
+    </tab>
+    <tab id="CMS" id_parent="Tools" active="1">
+      <class_name>AdminCmsContent</class_name>
+    </tab>
+    <tab id="Generators" id_parent="Tools" active="1">
+      <class_name>AdminGenerator</class_name>
+    </tab>
+    <tab id="Stores" id_parent="Tools" active="1">
+      <class_name>AdminStores</class_name>
+    </tab>
+    <tab id="Webservice" id_parent="Tools" active="1">
+      <class_name>AdminWebservice</class_name>
     </tab>
     <tab id="Logs" id_parent="Tools" active="1">
       <class_name>AdminLogs</class_name>
     </tab>
-    <tab id="Home" id_parent="-1" active="1">
-      <class_name>AdminHome</class_name>
+    <tab id="SQL_Manager" id_parent="Tools" active="1">
+      <class_name>AdminRequestSql</class_name>
     </tab>
-    <tab id="Shops" id_parent="" active="1">
-      <class_name>AdminShop</class_name>
+    <tab id="Profiles" id_parent="Employees" active="1">
+      <class_name>AdminProfiles</class_name>
+    </tab>
+    <tab id="Permissions" id_parent="Employees" active="1">
+      <class_name>AdminAccess</class_name>
+    </tab>
+    <tab id="Contacts" id_parent="Employees" active="1">
+      <class_name>AdminContacts</class_name>
+    </tab>
+    <tab id="Tabs" id_parent="Employees" active="1">
+      <class_name>AdminTabs</class_name>
+    </tab>
+    <tab id="Customer_Service" id_parent="Employees" active="1">
+      <class_name>AdminCustomerThreads</class_name>
     </tab>
     <tab id="Group_Shops" id_parent="Shops" active="1">
       <class_name>AdminGroupShop</class_name>
@@ -243,65 +276,32 @@
     <tab id="Shop_Urls" id_parent="Shops" active="1">
       <class_name>AdminShopUrl</class_name>
     </tab>
-    <tab id="Genders" id_parent="Customers" active="1">
-      <class_name>AdminGenders</class_name>
-    </tab>
-    <tab id="SQL_Manager" id_parent="Tools" active="1">
-      <class_name>AdminRequestSql</class_name>
-    </tab>
-    <tab id="Products_1" id_parent="Catalog" active="1">
-      <class_name>AdminProducts</class_name>
-    </tab>
-    <tab id="Categories" id_parent="Catalog" active="1">
-      <class_name>AdminCategories</class_name>
-    </tab>
-    <tab id="tab_95" id_parent="" active="1">
-      <class_name>AdminStock</class_name>
-    </tab>
-    <tab id="Warehouses" id_parent="tab_95" active="1">
+    <tab id="Warehouses" id_parent="Stock" active="1">
       <class_name>AdminWarehouses</class_name>
     </tab>
-    <tab id="Stock_Management" id_parent="tab_95" active="1">
+    <tab id="Stock_Management" id_parent="Stock" active="1">
       <class_name>AdminStockManagement</class_name>
     </tab>
-    <tab id="Stock_instant_state" id_parent="tab_95" active="1">
+    <tab id="Stock_Movement" id_parent="Stock" active="1">
+      <class_name>AdminStockMvt</class_name>
+    </tab>
+    <tab id="Stock_instant_state" id_parent="Stock" active="1">
       <class_name>AdminStockInstantState</class_name>
     </tab>
-    <tab id="Stock_cover" id_parent="tab_95" active="1">
+    <tab id="Stock_cover" id_parent="Stock" active="1">
       <class_name>AdminStockCover</class_name>
     </tab>
-    <tab id="Supply_orders" id_parent="tab_95" active="1">
+    <tab id="Supply_orders" id_parent="Stock" active="1">
       <class_name>AdminSupplyOrders</class_name>
     </tab>
-    <tab id="Combinations_generator" id_parent="-1" active="1">
-      <class_name>AdminAttributeGenerator</class_name>
-    </tab>
-    <tab id="Accounting" id_parent="" active="1">
-      <class_name>AdminAccounting</class_name>
+    <tab id="Configuration" id_parent="Stock" active="1">
+      <class_name>AdminStockConfiguration</class_name>
     </tab>
     <tab id="Account_Number_Management" id_parent="Accounting" active="1">
       <class_name>AdminAccountingManagement</class_name>
     </tab>
     <tab id="Export" id_parent="Accounting" active="1">
       <class_name>AdminAccountingExport</class_name>
-    </tab>
-    <tab id="CMS_categories" id_parent="-1" active="1">
-      <class_name>AdminCmsCategories</class_name>
-    </tab>
-    <tab id="CMS_pages" id_parent="-1" active="1">
-      <class_name>AdminCms</class_name>
-    </tab>
-    <tab id="tab_107" id_parent="-1" active="1">
-      <class_name>AdminLogin</class_name>
-    </tab>
-    <tab id="Configuration" id_parent="tab_95" active="1">
-      <class_name>AdminStockConfiguration</class_name>
-    </tab>
-    <tab id="Catalog_price_rules" id_parent="Catalog" active="1">
-      <class_name>AdminSpecificPriceRule</class_name>
-    </tab>
-    <tab id="Outstanding" id_parent="Customers" active="0">
-      <class_name>AdminOutstanding</class_name>
     </tab>
   </entities>
 </entity_tab>
