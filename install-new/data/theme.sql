@@ -1,38 +1,5 @@
 SET NAMES 'utf8';
 
-INSERT INTO `ps_homeslider` (id_homeslider_slides, id_shop) VALUES (1, 1),(2, 1), (3, 1), (4, 1), (5, 1);
-
-INSERT INTO `ps_homeslider_slides` (id_homeslider_slides, position, active)
-VALUES (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1);
-
-INSERT INTO `ps_homeslider_slides_lang` (id_homeslider_slides, id_lang, title, description, legend, url, image) VALUES
-(1, 1, "Sample 1", "This is a sample picture", "sample-1", "http://www.prestashop.com", "sample-1.jpg"),
-(2, 1, "Sample 2", "This is a sample picture", "sample-2", "http://www.prestashop.com", "sample-2.jpg"),
-(3, 1, "Sample 3", "This is a sample picture", "sample-3", "http://www.prestashop.com", "sample-3.jpg"),
-(4, 1, "Sample 4", "This is a sample picture", "sample-4", "http://www.prestashop.com", "sample-4.jpg"),
-(5, 1, "Sample 5", "This is a sample picture", "sample-5", "http://www.prestashop.com", "sample-5.jpg"),
-(1, 2, "Sample 1", "This is a sample picture", "sample-1", "http://www.prestashop.com", "sample-1.jpg"),
-(2, 2, "Sample 2", "This is a sample picture", "sample-2", "http://www.prestashop.com", "sample-2.jpg"),
-(3, 2, "Sample 3", "This is a sample picture", "sample-3", "http://www.prestashop.com", "sample-3.jpg"),
-(4, 2, "Sample 4", "This is a sample picture", "sample-4", "http://www.prestashop.com", "sample-4.jpg"),
-(5, 2, "Sample 5", "This is a sample picture", "sample-5", "http://www.prestashop.com", "sample-5.jpg"),
-(1, 3, "Sample 1", "This is a sample picture", "sample-1", "http://www.prestashop.com", "sample-1.jpg"),
-(2, 3, "Sample 2", "This is a sample picture", "sample-2", "http://www.prestashop.com", "sample-2.jpg"),
-(3, 3, "Sample 3", "This is a sample picture", "sample-3", "http://www.prestashop.com", "sample-3.jpg"),
-(4, 3, "Sample 4", "This is a sample picture", "sample-4", "http://www.prestashop.com", "sample-4.jpg"),
-(5, 3, "Sample 5", "This is a sample picture", "sample-5", "http://www.prestashop.com", "sample-5.jpg"),
-(1, 4, "Sample 1", "This is a sample picture", "sample-1", "http://www.prestashop.com", "sample-1.jpg"),
-(2, 4, "Sample 2", "This is a sample picture", "sample-2", "http://www.prestashop.com", "sample-2.jpg"),
-(3, 4, "Sample 3", "This is a sample picture", "sample-3", "http://www.prestashop.com", "sample-3.jpg"),
-(4, 4, "Sample 4", "This is a sample picture", "sample-4", "http://www.prestashop.com", "sample-4.jpg"),
-(5, 4, "Sample 5", "This is a sample picture", "sample-5", "http://www.prestashop.com", "sample-5.jpg"),
-(1, 5, "Sample 1", "This is a sample picture", "sample-1", "http://www.prestashop.com", "sample-1.jpg"),
-(2, 5, "Sample 2", "This is a sample picture", "sample-2", "http://www.prestashop.com", "sample-2.jpg"),
-(3, 5, "Sample 3", "This is a sample picture", "sample-3", "http://www.prestashop.com", "sample-3.jpg"),
-(4, 5, "Sample 4", "This is a sample picture", "sample-4", "http://www.prestashop.com", "sample-4.jpg"),
-(5, 5, "Sample 5", "This is a sample picture", "sample-5", "http://www.prestashop.com", "sample-5.jpg");
-
-
 UPDATE `PREFIX_configuration` SET value = '1' WHERE name = 'PS_CONDITIONS';
 UPDATE `PREFIX_configuration` SET value = '10' WHERE name = 'PS_PRODUCTS_PER_PAGE';
 UPDATE `PREFIX_configuration` SET value = '0' WHERE name = 'PS_PRODUCTS_ORDER_WAY';
