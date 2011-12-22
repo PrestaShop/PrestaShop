@@ -36,6 +36,7 @@ $functionArray = array(
 	'pdf' => 'generateInvoicePDF',
 	'id_order_slip' => 'generateOrderSlipPDF',
 	'id_delivery' => 'generateDeliverySlipPDF',
+	'delivery' => 'generateDeliverySlipPDF',
 	'invoices' => 'generateInvoicesPDF',
 	'invoices2' => 'generateInvoicesPDF2',
 	'slips' => 'generateOrderSlipsPDF',
@@ -66,10 +67,10 @@ function generateSupplyOrderFormPDF()
 
 function generateInvoicePDF()
 {
-    if (Tools::isSubmit('id_order'))
-    	generateInvoicePDFByIdOrder(Tools::getValue('id_order'));
-    elseif (Tools::isSubmit('id_order_invoice'))
-    	generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
+	if (Tools::isSubmit('id_order'))
+		generateInvoicePDFByIdOrder(Tools::getValue('id_order'));
+	elseif (Tools::isSubmit('id_order_invoice'))
+		generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
 	else
 		die (Tools::displayError('Missing order ID or invoice order ID'));
 	exit;
@@ -110,11 +111,37 @@ function generateOrderSlipPDF()
 
 function generateDeliverySlipPDF()
 {
-	$order = Order::getByDelivery((int)($_GET['id_delivery']));
-	if (!Validate::isLoadedObject($order))
-		die(Tools::displayError('Cannot find order in database'));
+	if (Tools::isSubmit('id_order'))
+		generateDeliverySlipPDFByIdOrder(Tools::getValue('id_order'));
+	elseif (Tools::isSubmit('id_order_invoice'))
+		generateDeliverySlipPDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
+	elseif (Tools::isSubmit('id_delivery'))
+	{
+		$order = Order::getByDelivery(Tools::getValue('id_delivery'));
+		generateDeliverySlipPDFByIdOrder($order->id);
+	}
+	else
+		die (Tools::displayError('Missing order ID or invoice order ID'));
+	exit;
+}
 
-    generatePDF($order, PDF::TEMPLATE_DELIVERY_SLIP);
+function generateDeliverySlipPDFByIdOrder($id_order)
+{
+	$order = new Order($id_order);
+	if (!Validate::isLoadedObject($order))
+		throw new PrestashopException('Can\'t load Order object');
+
+	$order_invoice_collection = $order->getInvoicesCollection();
+	generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
+}
+
+function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
+{
+	$order_invoice = new OrderInvoice($id_order_invoice);
+	if (!Validate::isLoadedObject($order_invoice))
+		throw new PrestashopException('Can\'t load Order Invoice object');
+
+	generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
 }
 
 function generateInvoicesPDF()
@@ -176,4 +203,3 @@ function generatePDF($object, $template)
     $pdf = new PDF($object, $template, $smarty);
     $pdf->render();
 }
-

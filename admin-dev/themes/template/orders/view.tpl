@@ -63,13 +63,13 @@
 	<fieldset style="width:98%; margin-bottom: 10px;">
 		<div style="width:50%; float: left;">
 			{if (count($invoices_collection))}
-			<a href="pdf.php?id_order={$order->id}&pdf"><img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}</a>
+			<a href="pdf.php?id_order={$order->id}&pdf" target="_blank"><img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}</a>
 			{else}
 			<img src="../img/admin/charged_ko.gif" alt="{l s='No invoice'}" /> {l s='No invoice'}
 			{/if}
 			 -
 			{if ($currentState->delivery || $order->delivery_number)}
-			<a target="_blank" href="pdf.php?id_delivery={$order->delivery_number}"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
+			<a href="pdf.php?id_order={$order->id}&delivery" target="_blank"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
 			{else}
 			<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" /> {l s='No delivery slip'}
 			{/if}

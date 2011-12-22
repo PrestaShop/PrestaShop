@@ -312,7 +312,6 @@ ADD `total_shipping_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_shippi
 ADD `purchase_supplier_price` DECIMAL(20, 6) NOT NULL AFTER  `total_shipping_price_tax_excl`,
 ADD `original_product_price` DECIMAL(20, 6) NOT NULL AFTER  `purchase_supplier_price`;
 
-
 ALTER TABLE  `PREFIX_orders`
 ADD `total_discount_tax_excl` decimal(17,2) NOT NULL AFTER  `total_discounts`,
 ADD `total_discount_tax_incl` decimal(17,2) NOT NULL AFTER  `total_discount_tax_excl`,
@@ -350,6 +349,9 @@ CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
 	`label` VARCHAR( 128 ) NOT NULL ,
 	INDEX ( `id_link` , `id_lang`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_order_invoice` ADD `delivery_number` int(0) NOT NULL DEFAULT '0' AFTER `number`;
+ALTER TABLE `PREFIX_order_invoice` ADD `delivery_date` datetime AFTER `delivery_number`;
 
 INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, `note`, `date_add`) (
 	SELECT `id_order`, `invoice_number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
