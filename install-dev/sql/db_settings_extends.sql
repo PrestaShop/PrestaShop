@@ -272,7 +272,6 @@ CREATE TABLE `PREFIX_sekeyword` (
 
 CREATE TABLE `PREFIX_cms_block` (
 	`id_cms_block` int(10) unsigned NOT NULL auto_increment,
-	`id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
 	`id_cms_category` int(10) unsigned NOT NULL,
 	`name` varchar(40) NOT NULL,
 	`location` tinyint(1) unsigned NOT NULL,
@@ -294,6 +293,12 @@ CREATE TABLE `PREFIX_cms_block_lang` (
 	`id_lang` int(10) unsigned NOT NULL,
 	`name` varchar(40) NOT NULL default '',
 	PRIMARY KEY (`id_cms_block`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_cms_block_shop` (
+	`id_cms_block` int(10) unsigned NOT NULL auto_increment,
+	`id_shop` int(10) unsigned NOT NULL,
+	PRIMARY KEY (`id_cms_block`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 INSERT INTO `PREFIX_range_price` (`id_range_price`, `id_carrier`, `delimiter1`, `delimiter2`) VALUES (1, 2, 0, 10000);
@@ -654,7 +659,7 @@ Cordialmente,');
 INSERT INTO `PREFIX_cms_block` (`id_cms_block`, `id_cms_category`, `name`, `location`, `position`) VALUES(1, 1, '', 0, 0);
 INSERT INTO `PREFIX_cms_block_page` (`id_cms_block_page`, `id_cms_block`, `id_cms`, `is_category`) VALUES(1, 1, 1, 0), (2, 1, 2, 0), (3, 1, 3, 0), (4, 1, 4, 0), (5, 1, 5, 0);
 INSERT INTO `PREFIX_cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES (1, 1, 'Information'),(1, 2, 'Informations'),(1, 3, 'Informaciónes'),(1, 4, 'Information'),(1, 5, 'Informazioni');
-
+INSERT INTO `PREFIX_cms_block_shop` (`id_cms_block`, `id_shop`) VALUES(1, 1);
 /* Currency/Country module */
 INSERT INTO `PREFIX_module_currency` (`id_module`, `id_currency`) VALUES (3, 1),(3, 2),(3, 3),(4, 1),(4, 2),(4, 3),(6, 1),(6, 2),(6, 3);
 
