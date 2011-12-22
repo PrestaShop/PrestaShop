@@ -27,7 +27,7 @@
 {* Generate HTML code for printing Invoice Icon with link *}
 <span style="width:20px; margin-right:5px;">
 {if (($order_state->invoice && $order->invoice_number) && $tr['product_number'])}
-	<a href="pdf.php?id_order={$order->id}&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>
+	<a target="_blank" href="pdf.php?id_order={$order->id}&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>
 {else}
 	-
 {/if}
@@ -36,7 +36,7 @@
 {* Generate HTML code for printing Delivery Icon with link *}
 <span style="width:20px;">
 {if ($order_state->delivery && $order->delivery_number)}
-	<a href="pdf.php?id_delivery={$order->delivery_number}"><img src="../img/admin/delivery.gif" alt="delivery" /></a>
+	<a target="_blank" href="pdf.php?id_delivery={$order->delivery_number}"><img src="../img/admin/delivery.gif" alt="delivery" /></a>
 {else}
 	-
 {/if}
