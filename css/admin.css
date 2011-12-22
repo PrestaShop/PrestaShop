@@ -816,6 +816,11 @@ tr.deleted td {
 .hint p {
 	color: #00529B;
 }
+
+.hint .addImageDescription {
+	font-weight:bold;
+	font-size:16px;
+}
 div.hint {
 	position: relative;
 }

@@ -69,7 +69,7 @@ class AdminOrdersControllerCore extends AdminController
 		'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'prefix' => '<b>', 'suffix' => '</b>', 'type' => 'price', 'currency' => true),
 		'payment' => array('title' => $this->l('Payment'), 'width' => 100),
 		'osname' => array('title' => $this->l('Status'), 'color' => 'color', 'width' => 230, 'type' => 'select', 'list' => $statesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int'),
-		'date_add' => array('title' => $this->l('Date'), 'width' => 120, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
+		'date_add' => array('title' => $this->l('Date'), 'width' => 150, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'width' => 35, 'align' => 'center', 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false, 'remove_onclick' => true));
 
 		$this->shopLinkType = 'shop';

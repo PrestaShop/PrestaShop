@@ -40,11 +40,11 @@ class AdminLogsControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'id_log' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'severity' => array('title' => $this->l('Severity (1-4)'), 'align' => 'center', 'width' => 50),
-			'message' => array('title' => $this->l('Message'), 'width' => 377),
+			'message' => array('title' => $this->l('Message')),
 			'object_type' => array('title' => $this->l('Object type'), 'width' => 75),
 			'object_id' => array('title' => $this->l('Object ID'), 'width' => 50),
 			'error_code' => array('title' => $this->l('Error code'), 'width' => 75, 'prefix' => '0x'),
-			'date_add' => array('title' => $this->l('Date'), 'width' => 35, 'align' => 'right', 'type' => 'datetime')
+			'date_add' => array('title' => $this->l('Date'), 'width' => 150, 'align' => 'right', 'type' => 'datetime')
 		);
 
 		$this->options = array(

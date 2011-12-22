@@ -48,7 +48,7 @@ class AdminProfilesControllerCore extends AdminController
 						'align' => 'center', 
 						'width' => 25
 						),
-			'name' => array('title' => $this->l('Name'), 'width' => 200)
+			'name' => array('title' => $this->l('Name'))
 			);
 			
 		$this->identifier = 'id_profile';
