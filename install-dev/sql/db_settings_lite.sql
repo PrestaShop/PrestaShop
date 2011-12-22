@@ -341,7 +341,9 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW()),
 (165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW()),
 (166, 'PS_B2B_ENABLE', '0', NOW(), NOW()),
-(167, 'PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
+(167, 'PS_INVOICE_MODEL', 'invoice', NOW(), NOW()),
+(168, 'PS_LIMIT_UPLOAD_IMAGE_VALUE', '2', NOW(), NOW()),
+(169, 'PS_LIMIT_UPLOAD_FILE_VALUE', '2', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
