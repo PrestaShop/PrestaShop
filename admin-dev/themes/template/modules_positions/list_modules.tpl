@@ -99,8 +99,9 @@
 	<span style="color:grey;">({l s='Technical name: '}{$hook['name']})</span></th></tr>
 	{if $hook['module_count']}
 		{foreach $hook['modules'] as $position => $module}
+			{if isset($module['instance'])}
 			<tr id="{$hook['id_hook']}_{$module['instance']->id}" {cycle values='class="alt_row",'} style="height: 42px;">
-			<td align=center >				<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/></td>
+			<td align=center ><input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/></td>
 			{if !$display_key}
 				<td align=center  class="positions">{$module@iteration}</td>
 				<td {if $can_move && $hook['module_count'] >= 2} align=center class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
@@ -129,6 +130,7 @@
 					</a>
 				</td>
 			</tr>
+			{/if}
 		{/foreach}
 	{else}
 		<tr><td colspan="5">{l s='No module for this hook'}</td></tr>
