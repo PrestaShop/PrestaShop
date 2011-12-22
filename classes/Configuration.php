@@ -53,8 +53,8 @@ class ConfigurationCore extends ObjectModel
 		'multilang' => true,
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
-			'id_group_shop' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_shop' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_group_shop' => 	array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+			'id_shop' => 		array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
 			'value' => 			array('type' => self::TYPE_STRING),
 			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),

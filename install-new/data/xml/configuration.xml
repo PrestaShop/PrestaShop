@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_configuration>
-  <fields id="name" class="Configuration">
-    <field name="name"/>
-    <field name="value"/>
-  </fields>
   <entities>
     <configuration id="PS_LANG_DEFAULT" name="PS_LANG_DEFAULT">
       <value>2</value>
@@ -852,4 +848,8 @@
       <value>0</value>
     </configuration>
   </entities>
+  <fields id="name" class="Configuration" null="1">
+    <field name="name"/>
+    <field name="value"/>
+  </fields>
 </entity_configuration>

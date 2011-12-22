@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_country>
-  <fields id="iso_code" class="Country">
-    <field name="id_zone" relation="zone"/>
-    <field name="iso_code"/>
-    <field name="call_prefix"/>
-    <field name="active"/>
-    <field name="contains_states"/>
-    <field name="need_identification_number"/>
-    <field name="need_zip_code"/>
-    <field name="zip_code_format"/>
-    <field name="display_tax_label"/>
-  </fields>
   <entities>
     <country id="DE" id_zone="Europe" iso_code="DE" call_prefix="49" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="1"/>
     <country id="AT" id_zone="Europe" iso_code="AT" call_prefix="43" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
@@ -257,4 +246,15 @@
     <country id="TF" id_zone="Oceania" iso_code="TF" call_prefix="0" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>
     <country id="AX" id_zone="Europe_out_E_U" iso_code="AX" call_prefix="0" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="1"/>
   </entities>
+  <fields id="iso_code" class="Country">
+    <field name="id_zone" relation="zone"/>
+    <field name="iso_code"/>
+    <field name="call_prefix"/>
+    <field name="active"/>
+    <field name="contains_states"/>
+    <field name="need_identification_number"/>
+    <field name="need_zip_code"/>
+    <field name="zip_code_format"/>
+    <field name="display_tax_label"/>
+  </fields>
 </entity_country>
