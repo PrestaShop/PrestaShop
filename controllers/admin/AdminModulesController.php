@@ -54,6 +54,7 @@ class AdminModulesControllerCore extends AdminController
 	private $filter_configuration = array();
 
  	private $xml_modules_list = 'https://api.prestashop.com/xml/modules_list.xml';
+	private $addons_url_http = 'http://api.addons.prestashop.com/151/';
 	private $addons_url = 'https://api.addons.prestashop.com/151/';
 	private $logged_on_addons = false;
 	private $cache_file_modules_list = '/config/xml/modules_list.xml';
@@ -149,7 +150,10 @@ class AdminModulesControllerCore extends AdminController
 
 	public function refresh($file_to_refresh, $external_file)
 	{
-		return file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, Tools::file_get_contents($external_file));
+		$content = Tools::file_get_contents($external_file);
+		if ($content)
+			return file_put_contents(_PS_ROOT_DIR_.$file_to_refresh, $content);
+		return false;
 	}
 
 
@@ -172,7 +176,9 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (!$this->isFresh($this->cache_file_default_country_modules_list, 86400))
 			{
-				if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url.'listing/native/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
+				if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url_http.'listing/native/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
+					$this->status = 'refresh';
+				else if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url.'listing/native/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -507,8 +513,12 @@ class AdminModulesControllerCore extends AdminController
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 									{
 										if ($f['loggedOnAddons'] == 0)
-											if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/', '../modules/'.$modaddons->name.'.zip'))
+										{
+											if (@copy($this->addons_url_http.'module/'.pSQL($modaddons->id).'/', '../modules/'.$modaddons->name.'.zip'))
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
+											else if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/', '../modules/'.$modaddons->name.'.zip'))
+												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
+										}
 										if ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
 											if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
