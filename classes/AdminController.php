@@ -2302,13 +2302,14 @@ class AdminControllerCore extends Controller
 			return;
 
 		$assos = array();
-		foreach ($_POST['checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table] as $id_asso_object => $row)
-		{
-			if (!(int)$id_asso_object)
-				$id_asso_object = $id_object;
-			foreach ($row as $id_shop => $value)
-				$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
-		}
+		if (isset($_POST['checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table]))
+			foreach ($_POST['checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table] as $id_asso_object => $row)
+			{
+				if (!(int)$id_asso_object)
+					$id_asso_object = $id_object;
+				foreach ($row as $id_shop => $value)
+					$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
+			}
 		return array($assos, $type);
 	}
 
