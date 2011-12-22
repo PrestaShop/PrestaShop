@@ -1148,18 +1148,14 @@ class AdminProductsControllerCore extends AdminController
 					$combinations[$key]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
 
 					// Added fields virtual product
-					if (count($product_download))
-					{
-						$combinations[$key]['id_product_download'] = $product_download[0]['id_product_download'];
-						$combinations[$key]['display_filename'] = $product_download[0]['display_filename'];
-						$combinations[$key]['filename'] = $product_download[0]['filename'];
-						$combinations[$key]['date_expiration'] = $product_download[0]['date_expiration'];
-						$combinations[$key]['nb_days_accessible'] = $product_download[0]['nb_days_accessible'];
-						$combinations[$key]['nb_downloadable'] = $product_download[0]['nb_downloadable'];
-						$combinations[$key]['is_shareable'] = $product_download[0]['is_shareable'];
-					}
+					$combinations[$key]['id_product_download'] = count($product_download) ? $product_download[0]['id_product_download'] : '';
+					$combinations[$key]['display_filename'] = count($product_download) ? $product_download[0]['display_filename'] : '';
+					$combinations[$key]['filename'] = count($product_download) ? $product_download[0]['filename'] : '';
+					$combinations[$key]['date_expiration'] = count($product_download) ? $product_download[0]['date_expiration'] : '0000-00-00';
+					$combinations[$key]['nb_days_accessible'] = count($product_download) ? $product_download[0]['nb_days_accessible'] : 0;
+					$combinations[$key]['nb_downloadable'] = count($product_download) ? $product_download[0]['nb_downloadable'] : 0;
+					$combinations[$key]['is_shareable'] = count($product_download) ? $product_download[0]['is_shareable'] : 0;
 				}
-
 
 				die(Tools::jsonEncode($combinations));
 			}
