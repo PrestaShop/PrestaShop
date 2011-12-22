@@ -230,7 +230,7 @@ class AdminControllerCore extends Controller
 	protected $_redirect = true;
 
 	/** @var array Name and directory where class image are located */
-	public $fieldImageSettings = null;
+	public $fieldImageSettings = array();
 
 	/** @var string Image type */
 	public $imageType = 'jpg';
@@ -544,7 +544,7 @@ class AdminControllerCore extends Controller
 			{
 				if ($this->deleted)
 				{
-					if (isset($this->fieldImageSettings))
+					if (!empty($this->fieldImageSettings))
 						$res = $object->deleteImage();
 					
 					if (!$res)
@@ -2310,6 +2310,7 @@ class AdminControllerCore extends Controller
 				foreach ($row as $id_shop => $value)
 					$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
 			}
+
 		return array($assos, $type);
 	}
 
