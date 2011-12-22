@@ -226,7 +226,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$specific_price->from_quantity = (int)$rule->from_quantity;
 		$specific_price->price = (int)$rule->price;
 		$specific_price->reduction_type = pSQL($rule->reduction_type);
-		$specific_price->reduction = (float)$rule->reduction;
+		$specific_price->reduction = ($rule->reduction_type == 'percentage' ? (float)($rule->reduction / 100) : (float)$rule->reduction);
 		$specific_price->from = $rule->from;
 		$specific_price->to = $rule->to;
 
