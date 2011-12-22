@@ -149,6 +149,14 @@ require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'generate_order_reference.php');
 
 require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_orders.php');
 
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_attribute_position.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_group_attribute_position.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_feature_position.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_default_restrictions_modules_groups.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_carrier_position.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_groups.php');
+require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_stock_tab.php');
+
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;
