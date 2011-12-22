@@ -99,4 +99,5 @@
   <tab id="tab_107" name=""/>
   <tab id="Configuration" name="Configuration"/>
   <tab id="Catalog_price_rules" name="Catalog price rules"/>
+  <tab id="Outstanding" name="Outstanding"/>
 </entity_tab>

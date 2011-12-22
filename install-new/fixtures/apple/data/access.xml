@@ -108,6 +108,7 @@
     <access id="access_2_107" id_profile="Administrator" id_tab="tab_107" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_108" id_profile="Administrator" id_tab="Configuration" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_109" id_profile="Administrator" id_tab="Catalog_price_rules" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_2_110" id_profile="Administrator" id_tab="Outstanding" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_1" id_profile="Logistician" id_tab="Catalog" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_2" id_profile="Logistician" id_tab="Customers" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_3" id_profile="Logistician" id_tab="Orders" view="1" add="1" edit="1" delete="1"/>
