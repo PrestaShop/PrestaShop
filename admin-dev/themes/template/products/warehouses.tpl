@@ -87,7 +87,7 @@
 						<td colspan="3">&nbsp;</td>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="check_all_suppliers" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
+						<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
 						<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
 					</tr>
 				</table>
@@ -98,12 +98,11 @@
 
 	<script type="text/javascript">
 		$(function() {
-			$('#check_all_suppliers').click(function() {
+			$('.check_all_warehouse').click(function() {
 				var check = $(this);
-
 				//get all checkboxes of current warehouse
 				var checkboxes = $('input[name*="'+check.val()+'"]');
-
+				
 				for (i=0; i<checkboxes.length; i++)
 				{
 					var item = $(checkboxes[i]);
