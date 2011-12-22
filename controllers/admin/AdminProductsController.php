@@ -1239,22 +1239,33 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessDeleteProductImage()
 	{
+		$this->json = true;
+		$this->display = 'content';
+		$res = true;
+		/* Delete product image */
 		$image = new Image((int)Tools::getValue('id_image'));
-		$image->delete();
+		$this->content['id'] = $image->id;
+		$res &= $image->delete();
+		// if deleted image was the cover, change it to the first one
 		if (!Image::getCover($image->id_product))
 		{
-			$first_img = Db::getInstance()->getRow('
-			SELECT `id_image` FROM `'._DB_PREFIX_.'image`
-			WHERE `id_product` = '.(int)$image->id_product);
-			Db::getInstance()->Execute('
+			$res &= Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = 1
-			WHERE `id_image` = '.(int)$first_img['id_image']);
+			WHERE `id_product` = '.(int)$image->id_product.' LIMIT 1');
 		}
-		@unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
 
-		$this->content = '{"status":"ok"}';
+		if(file_exists(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg'))
+			$res &= @unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
+		if(file_exists(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg'))
+			$res &= @unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
+
+		if ($res)
+			$this->confirmations[] = $this->_conf[7];
+		else
+			$this->_errors[] = Tools::displayError('Error on deleting product image');
+
+		$this->status = 'ok';
 	}
 
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to)

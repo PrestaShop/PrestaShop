@@ -219,41 +219,44 @@
 					$("#listImage").append("<li id='img"+id+"'><div class=\"float\" >" + filename + "</div></div><a style=\"margin-left:10px\"href=\"javascript:delQueue(" + id +");\"><img src=\"../img/admin/disabled.gif\" alt=\"\" border=\"0\"></a><p class=\"errorImg\"></p></li>");
 				}
 			});
-			
+
+			/**
+			 * on success function 
+			 */
+			function afterDeleteProductImage(data)
+			{
+				data = $.parseJSON(data);
+				if (data)
+				{
+					cover = 0;
+					id = data.content.id;
+					if(data.status == 'ok')
+					{
+						if ($("#" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
+							cover = 1;
+						$("#" + id).remove();
+					}
+					if (cover)
+						$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
+					$("#countImage").html(parseInt($("#countImage").html()) - 1);
+					refreshImagePositions($("#imageTable"));
+				}
+			}
+
 			$('.delete_product_image').die().live('click', function(e)
 			{
 				e.preventDefault();
 				id = $(this).parent().parent().attr('id');
 				if (confirm("{/literal}{l s='Are you sure?' js=1}{literal}"))
-				$.ajax(
-				{
-					url : "ajax-tab.php",
-					data : {"action":"deleteProductImage",
+				doAdminAjax({
+						"action":"deleteProductImage",
 						"id_image":id,
 						"id_product" : {/literal}{$id_product}{literal},
 						"id_category" : {/literal}{$id_category_default}{literal},
 						"token" : "{/literal}{$token}{literal}",
 						"tab" : "AdminProducts",
-						"ajax" : 1 },
-					success : function (data)
-					{
-						data = jQuery.parseJSON(data);
-						if (data)
-						{
-							cover = 0;
-							if(data.status == 'ok')
-							{
-								if ($("#" + id).find(".covered").attr("src") == "../img/admin/enabled.gif")
-									cover = 1;
-								$("#" + id).remove();
-							}
-							if (cover)
-								$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
-							$("#countImage").html(parseInt($("#countImage").html()) - 1);
-							refreshImagePositions($("#imageTable"));
-						}
-					}
-				});
+						"ajax" : 1 }, afterDeleteProductImage
+				);
 			});
 			
 			$('.covered').die().live('click', function(e)
@@ -298,7 +301,7 @@
 			function updateImagePositon(json)
 			{
 				doAdminAjax(
-				 {
+				{
 					"action":"updateImagePosition",
 					"json":json,
 					"token" : "{/literal}{$token}{literal}",
