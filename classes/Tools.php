@@ -633,7 +633,7 @@ class ToolsCore
 	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
 		global $_ERRORS;
-		
+
 		if (is_null($context))
 			$context = Context::getContext();
 		
@@ -1681,8 +1681,8 @@ FileETag INode MTime Size
 				trigger_error($message, E_USER_WARNING);
 			else
 			{
-				trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
-				$message = self::displayError('The function').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
+				trigger_error('Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />', E_USER_WARNING);
+				$message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
 			}
 			$class = isset($callee['class']) ? $callee['class'] : null;
 			Logger::addLog($message, 3, $class);
@@ -1696,9 +1696,10 @@ FileETag INode MTime Size
 	{
 		$backtrace = debug_backtrace();
 		$callee = next($backtrace);
-		$error = 'Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />';
-		$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
+		$error = 'Parameter <b>'.$parameter.'</b> in function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['Line'].'</b><br />';
+		$message = 'The parameter '.$parameter.' in function '.$callee['function'].' (Line '.$callee['Line'].') is deprecated and will be removed in the next major version.';
 
+		trigger_error($message, E_WARNING); 
 		$class = isset($callee['class']) ? $callee['class'] : null;
 		self::throwDeprecated($error, $message, $class);
 	}
@@ -1707,8 +1708,8 @@ FileETag INode MTime Size
 	{
 		$backtrace = debug_backtrace();
 		$callee = current($backtrace);
-		$error = 'File <strong>'.$callee['file'].'</strong> is deprecated<br />';
-		$message = Tools::displayError('The file').' '.$callee['file'].' '.Tools::displayError('is deprecated and will be removed in the next major version.');
+		$error = 'File <b>'.$callee['file'].'</b> is deprecated<br />';
+		$message = 'The file '.$callee['file'].' is deprecated and will be removed in the next major version.';
 
 		$class = isset($callee['class']) ? $callee['class'] : null;
 		self::throwDeprecated($error, $message, $class);
