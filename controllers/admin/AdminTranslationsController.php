@@ -909,7 +909,9 @@ class AdminTranslationsControllerCore extends AdminController
 		$missing_translations = array();
 		// parsing .php files
 		$tabs = scandir(_PS_ADMIN_CONTROLLER_DIR_);
+		$tabs = array_merge($tabs, Tools::scandir(_PS_ADMIN_CONTROLLER_DIR_, 'php', '../../classes/helper'));
 		$tabs[] = '../../classes/AdminController.php';
+		
 		$files = array();
 		$i=0;
 		foreach ($tabs as $tab)
