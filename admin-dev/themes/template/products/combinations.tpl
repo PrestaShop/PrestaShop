@@ -70,7 +70,7 @@
 	</script>
 	<h4>{l s='Add or modify combinations for this product'}</h4>
 	<div class="separation"></div> {l s='or go to'}
-			&nbsp;<a class="button bt-icon" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}" onclick="return confirm('{l s='Are you sure you want to delete entered product information?'}');"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a>
+		&nbsp;<a class="button bt-icon confirm_leave" href="index.php?tab=AdminAttributeGenerator&id_product={$product->id}&attributegenerator&token={$token_generator}"><img src="../img/admin/appearance.gif" alt="combinations_generator" class="middle" title="{l s='Product combinations generator'}" /><span>{l s='Product combinations generator'}</span></a>
 	<div class="separation"></div>
 	
 	<div id="add_new_combination" style="display: none;">
@@ -83,7 +83,7 @@
 					<select name="attribute_group" id="attribute_group" style="width: 200px;" onchange="populate_attrs();">
 						{if isset($attributes_groups)}
 							{foreach from=$attributes_groups key=k item=attribute_group}
-										<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|htmlentitiesUTF8}&nbsp;&nbsp;</option>
+								<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name|htmlentitiesUTF8}&nbsp;&nbsp;</option>
 							{/foreach}
 						{/if}
 					</select>
@@ -143,11 +143,11 @@
 						<div id="upload-confirmation2">
 				
 							<p id="gethtmlink" style="display: none;">{l s='This is the link'} :&nbsp;{$product->productDownload->getHtmlLink(false, true)}
-									<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file'}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
+									<a id="make_downloadable_product_attribute" onclick="return confirm('{l s='Delete this file' js=1}')" href="index.php?tab=AdminProducts&id_product={$product->productDownload->id_product}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
 							</p>
 						
 						</div>
-						<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file'}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
+						<a id="delete_downloadable_product_attribute" style="display:none;" onclick="return confirm('{l s='Delete this file' js=1}')" href="index.php?tab=AdminProducts&id_product={$product->id}&id_category={$id_category}&token={$token}&deleteVirtualProductAttribute=true" class="red">{l s='Delete this file'}</a>
 						{if $up_filename}
 							<input type="hidden" id="virtual_product_filename_attribute" name="virtual_product_filename_attribute" value="{$up_filename}" />
 						{/if}
