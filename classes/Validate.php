@@ -311,7 +311,7 @@ class ValidateCore
 	*/
 	public static function isLinkRewrite($link)
 	{
-		return preg_match("/^[a-zA-Z0-9\s\-\pL]+$/u", $link);
+		return preg_match("/^[a-zA-Z0-9\-\pL]+$/u", $link);
 	}
 
 	/**
