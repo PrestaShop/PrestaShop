@@ -1,5 +1,5 @@
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -39,7 +39,7 @@ function verifyMail(testMsg, testSubject)
 		return false;
 	}
 	else if (!verifMailREGEX.test( $("#testEmail").val() ))
-	{ 
+	{
 		$("#mailResultCheck").addClass("fail").removeClass("ok").removeClass('userInfos').html(errorMail);
 		return false;
 	}
@@ -51,13 +51,13 @@ function verifyMail(testMsg, testSubject)
 		   url: "ajax_send_mail_test.php",
 		   cache: false,
 		   data:
-				"mailMethod="+(($("input#PS_MAIL_METHOD").val() == 2) ? "smtp" : "native")+
-				"&smtpSrv="+ $("input#PS_MAIL_SERVER").val()+
+				"mailMethod="+(($("input[name=PS_MAIL_METHOD]:checked").val() == 2) ? "smtp" : "native")+
+				"&smtpSrv="+ $("input[name=PS_MAIL_SERVER]").val()+
 				"&testEmail="+ $("#testEmail").val()+
-		   		"&smtpLogin="+ $("input#PS_MAIL_USER").val()+
-		   		"&smtpPassword="+ $("input#PS_MAIL_PASSWD").val()+
-				"&smtpPort="+ $("input#PS_MAIL_SMTP_PORT").val()+
-				"&smtpEnc="+ $("select#PS_MAIL_SMTP_ENCRYPTION").val()+
+		   		"&smtpLogin="+ $("input[name=PS_MAIL_USER]").val()+
+		   		"&smtpPassword="+ $("input[name=PS_MAIL_PASSWD]").val()+
+				"&smtpPort="+ $("input[name=PS_MAIL_SMTP_PORT]").val()+
+				"&smtpEnc="+ $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val()+
 				"&testMsg="+textMsg+
 				"&testSubject="+textSubject
 			,
@@ -78,3 +78,4 @@ function verifyMail(testMsg, testSubject)
 		 );
 	}
 }
+
