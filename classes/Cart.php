@@ -1459,7 +1459,7 @@ class CartCore extends ObjectModel
 			else
 				$key = (!$product['out_of_stock']) ? 'in_stock' : 'out_of_stock';
 
-			$product['carrier_list'] = Carrier::getAvailableCarrierList($product, $id_warehouse);
+			$product['carrier_list'] = Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_warehouse, $product['id_address_delivery']);
 
 			if (empty($product['carrier_list']))
 				$product['carrier_list'] = array(0);
