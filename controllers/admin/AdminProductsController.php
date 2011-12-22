@@ -3720,6 +3720,8 @@ class AdminProductsControllerCore extends AdminController
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+				if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1)
+					return Tools::jsonEncode(array('error' => 'Not possible if advanced stock management is not enabled'));
 
 				StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
 				break;
@@ -3746,6 +3748,9 @@ class AdminProductsControllerCore extends AdminController
 					return Tools::jsonEncode(array('error' => 'Undefined value'));
 				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
 					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
+					return Tools::jsonEncode(array('error' => 'Not possible if advanced stock management is not enabled'));
+
 				$product->advanced_stock_management = (int)Tools::getValue('value');
 				$product->save();
 				if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0)
