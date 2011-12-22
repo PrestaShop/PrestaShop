@@ -356,7 +356,7 @@ class AuthControllerCore extends FrontController
 		if (!Validate::isEmail($email = Tools::getValue('email')) || empty($email))
 			$this->errors[] = Tools::displayError('Invalid e-mail address');
 		elseif (Customer::customerExists($email))
-			$this->errors[] = Tools::displayError('An account is already registered with this e-mail.');
+			$this->errors[] = Tools::displayError('An account is already registered with this e-mail.', false);
 		// Preparing customer
 		$customer = new Customer();
 		$_POST['lastname'] = Tools::getValue('customer_lastname');
@@ -482,7 +482,7 @@ class AuthControllerCore extends FrontController
 		if (!count($this->errors))
 		{
 			if (Customer::customerExists(Tools::getValue('email')))
-				$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.');
+				$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.', false);
 			if (Tools::isSubmit('newsletter'))
 			{
 				$customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
@@ -600,7 +600,7 @@ class AuthControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Invalid e-mail address');
 		elseif (Customer::customerExists($email))
 		{
-			$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.');
+			$this->errors[] = Tools::displayError('An account is already registered with this e-mail, please fill in the password or request a new one.', false);
 			$_POST['email'] = $_POST['email_create'];
 			unset($_POST['email_create']);
 		}
