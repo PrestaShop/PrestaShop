@@ -52,7 +52,7 @@ class PDFCore
 			$this->objects = array($objects);
 	}
 
-	public function render()
+	public function render($display = true)
 	{
 		$render =  false;
 		$this->pdf_renderer->setFontForLang('fr');
@@ -81,7 +81,7 @@ class PDFCore
 		}
 
 		if ($render)
-	      $this->pdf_renderer->render($this->filename);
+            return $this->pdf_renderer->render($this->filename, $display);
 	}
 
     public function getTemplateObject($object)
