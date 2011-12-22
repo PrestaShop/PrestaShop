@@ -590,8 +590,8 @@ abstract class ModuleCore
 
 		// Retrocompatibility
 		Hook::preloadHookAlias();
-		if (isset(Hook::$_hook_alias[$hook_name]))
-			$hook_name = Hook::$_hook_alias[$hook_name];
+		if (isset(Hook::$_hook_alias[strtolower($hook_name)]))
+			$hook_name = Hook::$_hook_alias[strtolower($hook_name)];
 
 		// Get hook id
 		$sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook_name).'\'';
@@ -662,8 +662,8 @@ abstract class ModuleCore
 		{
 			// Retrocompatibility
 			Hook::preloadHookAlias();
-			if (isset(Hook::$_hook_alias[$hook_id]))
-				$hook_id = Hook::$_hook_alias[$hook_id];
+			if (isset(Hook::$_hook_alias[strtolower($hook_id)]))
+				$hook_id = Hook::$_hook_alias[strtolower($hook_id)];
 
 			// Unregister module on hook by name
 			$sql = 'SELECT `id_hook`
