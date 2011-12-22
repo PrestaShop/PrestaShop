@@ -224,7 +224,7 @@
 			{
 				e.preventDefault();
 				id = $(this).parent().parent().attr('id');
-				if (confirm("{/literal}{l s='Are you sure?'}{literal}"))
+				if (confirm("{/literal}{l s='Are you sure?' js=1}{literal}"))
 				$.ajax(
 				{
 					url : "ajax-tab.php",
