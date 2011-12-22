@@ -1394,10 +1394,18 @@ class OrderCore extends ObjectModel
 	 */
 	public function getDocuments()
 	{
-		// TODO
-		$invoices = $this->getInvoicesCollection();
+		$invoices = $this->getInvoicesCollection()->getResults();
+		$order_slips = $this->getOrderSlipsCollection()->getResults();
+		$documents = array_merge($invoices, $order_slips);
+		function sortDocuments($a, $b)
+		{
+		    if ($a->date_add == $b->date_add)
+			return 0;
+		    return ($a->date_add < $b->date_add) ? -1 : 1;
+		}
+		usort($documents, "sortDocuments");
 
-		return $invoices;
+		return $documents;
 	}
 
 	public function getReturn()
@@ -1423,6 +1431,21 @@ class OrderCore extends ObjectModel
 				ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE o.`id_order` = '.(int)$this->id);
 	}
+
+
+	/**
+	 *
+	 * Get all order_slips for the current order
+	 * @since 1.5.0.1
+	 * @return Collection of Order slip
+	 */
+	public function getOrderSlipsCollection()
+	{
+		$order_slips = new Collection('OrderSlip');
+		$order_slips->where('id_order', '=', $this->id);
+		return $order_slips;
+	}
+
 
 	/**
 	 *

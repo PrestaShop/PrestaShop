@@ -692,18 +692,7 @@
 	{/if}
 	</div>
 
-	<div style="float: left; margin-left: 40px">
-		<fieldset style="width: 400px;">
-			<legend><img src="../img/admin/slip.gif" alt="{l s='Credit slip'}" />{l s='Credit slip'}</legend>
-	{if (!sizeof($slips))}
-		{l s='No slip for this order.'}
-	{else}
-		{foreach from=$slips item=slip}
-			({dateFormat date=$slip['date_upd']}) : <b><a href="pdf.php?id_order_slip={$slip['id_order_slip']}">{l s='#'}{'%06d'|sprintf:$slip['id_order_slip']}</a></b><br />
-		{/foreach}
-	{/if}
-		</fieldset>
-	</div>
+
 	<div class="clear">&nbsp;</div>
 	<br /><br /><a href="{$currentIndex}&token={$smarty.get.token}"><img src="../img/admin/arrow2.gif" /> {l s='Back to list'}</a><br />
 

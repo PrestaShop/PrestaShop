@@ -238,6 +238,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	 */
 	public function getResults()
 	{
+		$this->getAll();
 		return $this->results;
 	}
 
