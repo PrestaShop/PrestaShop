@@ -230,7 +230,7 @@ class AdminControllerCore extends Controller
 	protected $_redirect = true;
 
 	/** @var array Name and directory where class image are located */
-	public $fieldImageSettings = array();
+	public $fieldImageSettings = null;
 
 	/** @var string Image type */
 	public $imageType = 'jpg';
@@ -528,8 +528,9 @@ class AdminControllerCore extends Controller
 	 */
 	public function processDelete($token)
 	{
-		if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
+		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			$res = true;
 			// check if request at least one object with noZeroObject
 			if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 			{
@@ -543,7 +544,12 @@ class AdminControllerCore extends Controller
 			{
 				if ($this->deleted)
 				{
-					$object->deleteImage();
+					if (isset($this->fieldImageSettings))
+						$res = $object->deleteImage();
+					
+					if (!$res)
+						$this->_errors[] = Tools::displayError('Unable to delete associated images');
+
 					$object->deleted = 1;
 					if ($object->update())
 						$this->redirect_after = self::$currentIndex.'&conf=1&token='.$token;
