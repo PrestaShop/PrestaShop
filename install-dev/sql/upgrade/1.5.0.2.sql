@@ -9,12 +9,6 @@ DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` = 59 AND `id_lang` = 5;
 
 ALTER TABLE `PREFIX_module` ADD `version` VARCHAR( 8 ) NOT NULL;
 
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('1', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('2', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('3', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('4', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 0, 0, 0, 0);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('5', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 0, 0, 0, 0);
-
 CREATE TABLE IF NOT EXISTS `PREFIX_specific_price_rule` (
 	`id_specific_price_rule` int(10) unsigned NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255) NOT NULL,
@@ -66,6 +60,14 @@ ADD INDEX `id_product` (`id_product`, `id_shop`, `id_currency`, `id_country`, `i
 *************************/
 
 /* PHP:add_stock_tab(); */;
+
+UPDATE `PREFIX_access` SET `view` = '1' WHERE `id_profile` = 5 AND `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStock' LIMIT 1);
+
+
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1) AND `id_profile` = '4';
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1) AND `id_profile` = '5';
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1) AND `id_profile` = '4';
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1) AND `id_profile` = '5';
 
 /* New tables */
 CREATE TABLE IF NOT EXISTS `PREFIX_product_supplier` (
@@ -302,7 +304,7 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 ALTER TABLE  `PREFIX_order_detail`
 ADD `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
 ADD `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
-ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,,
+ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,
 ADD `total_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_incl`,
 ADD `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_excl`,
 ADD `unit_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `unit_price_tax_incl`,
@@ -359,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, `note`, `date_add`) (
-	SELECT `id_order`, `invoice_number`, `total_discounts_tax_excl`, `total_discounts_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
+	SELECT `id_order`, `invoice_number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
 	FROM `PREFIX_orders`
 	WHERE `invoice_number` != 0
 );
@@ -386,7 +388,7 @@ INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`
 	FROM `PREFIX_orders` o
 );
 
-INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) VALUES (
+INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) (
 	SELECT (
 		SELECT oi.`id_order_invoice`
 		  FROM `PREFIX_order_invoice` oi
@@ -395,7 +397,7 @@ INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency
 	FROM `PREFIX_orders` o
 	LEFT JOIN `PREFIX_order_payment` op ON (op.`id_order` = o.`id_order`)
 	WHERE op.`id_order_payment` IS NULL
-)
+);
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_SMARTY_CONSOLE', '0', NOW(), NOW(),('PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
