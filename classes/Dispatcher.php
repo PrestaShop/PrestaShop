@@ -497,18 +497,22 @@ class DispatcherCore
 		if ($this->use_routes && $use_routes)
 		{
 			$url = $route['rule'];
+			$add_param = array();
 			foreach ($params as $key => $value)
 			{
 				if (!isset($route['keywords'][$key]))
-					continue;
-				$data = $route['keywords'][$key];
-				if ($params[$key])
-					$replace = $route['keywords'][$key]['prepend'].$params[$key].$route['keywords'][$key]['append'];
+					$add_param[$key] = $value;
 				else
-					$replace = '';
-				$url = preg_replace('#\{([^{}]+:)?'.$key.'(:[^{}])?\}#', $replace, $url);
+				{
+					if ($params[$key])
+						$replace = $route['keywords'][$key]['prepend'].$params[$key].$route['keywords'][$key]['append'];
+					else
+						$replace = '';
+					$url = preg_replace('#\{([^{}]+:)?'.$key.'(:[^{}])?\}#', $replace, $url);
+				}
 			}
 			$url = preg_replace('#\{([^{}]+:)?[a-z0-9_]+?(:[^{}])?\}#', '', $url);
+			$url .= '?'.http_build_query($add_param);
 		}
 		// Build a classic url index.php?controller=foo&...
 		else
