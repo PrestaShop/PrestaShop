@@ -286,7 +286,7 @@ ALTER TABLE `PREFIX_stock_mvt_reason` ADD COLUMN `deleted` tinyint(1) unsigned N
 ALTER TABLE `PREFIX_product` ADD COLUMN `advanced_stock_management` tinyint(1) default '0' NOT NULL;
 
 /* Update records after alter tables */
-/* PHP:update_stock_mvt_reasons(); */;
+/* PHP:update_stock_mvt_reason(); */;
 
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_ENCODING';
 DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
@@ -394,7 +394,7 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 ('PS_SMARTY_CONSOLE', '0', NOW(), NOW(),('PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
-/* PHP:update_modules_multishop.php; */;
+/* PHP:update_modules_multishop(); */;
 
 UPDATE `PREFIX_tab`
 SET `position` = (
