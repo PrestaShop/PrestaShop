@@ -28,6 +28,7 @@
 define('_PS_INSTALL_VERSION_', '1.5.0.0');
 
 // Generate common constants
+define('PS_INSTALLATION_IN_PROGRESS', true);
 define('_PS_INSTALL_PATH_', dirname(__FILE__).'/');
 define('_PS_INSTALL_DATA_PATH_', _PS_INSTALL_PATH_.'data/');
 define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_.'controllers/');

@@ -1302,7 +1302,7 @@ class ToolsCore
 	public static function simplexml_load_file($url, $class_name = null)
 	{
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return simplexml_load_string(Tools::file_get_contents($url), $class_name);
+			return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
 		else
 			return false;
 	}
@@ -1495,6 +1495,9 @@ class ToolsCore
 
 	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '', $disable_multiviews = false)
 	{
+		if (defined('PS_INSTALLATION_IN_PROGRESS'))
+			return;
+
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
 		if (file_exists($path))
