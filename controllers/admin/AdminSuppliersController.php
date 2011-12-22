@@ -368,6 +368,7 @@ class AdminSuppliersControllerCore extends AdminController
 			return parent::postProcess();
 		}
 		else if (Tools::isSubmit('delete'.$this->table))
+		{
 			if (!($obj = $this->loadObject(true)))
 				return;
 			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
@@ -379,6 +380,9 @@ class AdminSuppliersControllerCore extends AdminController
 				$address->save();
 				return parent::postProcess();
 			}
+		}
+		else
+			return parent::postProcess();
 	}
 
 	/**
