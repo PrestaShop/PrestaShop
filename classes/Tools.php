@@ -2117,7 +2117,6 @@ FileETag INode MTime Size
 		foreach ($files as $file)
 			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
 				$filtered_files[] = $dir . '/' . $file;
-		//elog($filtered_files);
 		return $filtered_files;
 	}
 }

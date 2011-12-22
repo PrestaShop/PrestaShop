@@ -395,7 +395,8 @@ var ajaxCart = {
 
 	// Update product quantity
 	updateProductQuantity : function (product, quantity) {
-		$('dt#cart_block_product_' + product.id + (product.idCombination ? '_' + product.idCombination : '') + ' .quantity').fadeTo('fast', 0, function() {
+	
+		$('dt#cart_block_product_' + product.id + '_' + (product.idCombination ? product.idCombination : '0')+ '_' + (product.idAddressDelivery ? product.idAddressDelivery : '0') + ' .quantity').fadeTo('fast', 0, function() {
 			$(this).text(quantity);
 			$(this).fadeTo('fast', 1, function(){
 				$(this).fadeTo('fast', 0, function(){
@@ -425,7 +426,8 @@ var ajaxCart = {
 					$('p#cart_block_no_products').hide();
 				}
 				//if product is not in the displayed cart, add a new product's line
-				var domIdProduct = this.id + (this.idCombination ? '_' + this.idCombination : '');
+				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
+				
 				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
 				if($('#cart_block dt#cart_block_product_'+ domIdProduct ).length == 0)
 				{
@@ -511,7 +513,7 @@ var ajaxCart = {
 					$(this.datas).each(function(){
 						if (this['index'] == 0)
 						{
-							content += this.truncatedValue.replace(/<br \/>/g, ' ');
+							content += ' ' + this.truncatedValue.replace(/<br \/>/g, ' ');
 							done = 1;
 							return false;
 						}

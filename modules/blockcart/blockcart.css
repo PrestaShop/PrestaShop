@@ -1,19 +1,19 @@
 /* Special style for block cart*/
 #cart_block {
-   z-index: 10;
+	z-index: 10;
 	display:none;
-   position: absolute;
-   right: 0;
-   top: 65px;
-   height: auto;
-   width: 200px;
+	position: absolute;
+	right: 0;
+	top: 65px;
+	height: auto;
+	width: 200px;
 	-moz-border-radius-bottomright: 3px;
 	-moz-border-radius-bottomleft: 3px;
 	-webkit-border-radius-bottomright: 3px;
 	-webkit-border-radius-bottomleft: 3px;
 	border-bottom-right-radius: 3px;
 	border-bottom-left-radius: 3px;
-   box-shadow: 0 1px 0 #C6C6C6;
+	box-shadow: 0 1px 0 #C6C6C6;
 	background:#eee
 }
 #cart_block.cart_block_hover {display:block}
@@ -24,11 +24,11 @@
 }
 #cart_block h4 span {
 	float: right;
-   padding-left: 10px;
-   text-transform: none;
-   background-position: left top;
-   background-repeat: no-repeat;
-   cursor: pointer
+	padding-left: 10px;
+	text-transform: none;
+	background-position: left top;
+	background-repeat: no-repeat;
+	cursor: pointer
 }
 #cart_block h4 span#block_cart_collapse {background-image: url(img/icon/sort_asc_white.png) }
 #cart_block h4 span#block_cart_expand {background-image: url(img/icon/sort_desc_white.png) }
@@ -65,7 +65,6 @@
 #cart_block #cart_block_list dt {padding:4px 0}
 #cart_block #cart_block_list dt a {font-weight:bold}
 #cart_block #cart_block_list dd {
-	display:none;
 	margin-left:20px
 }
 
