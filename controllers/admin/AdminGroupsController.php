@@ -117,6 +117,7 @@ class AdminGroupsControllerCore extends AdminController
 
 		$this->tpl_view_vars = array(
 			'group' => $group,
+			'language' => $this->context->language,
 			'customerList' => $this->renderCustomersList($group),
 			'categorieReductions' => $this->formatCategoryDiscountList($group->id)
 		);
