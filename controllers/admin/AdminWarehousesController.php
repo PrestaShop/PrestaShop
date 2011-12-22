@@ -389,8 +389,7 @@ class AdminWarehousesControllerCore extends AdminController
 				$obj->setShops(Tools::getValue('ids_shops'));
 
 			// handles carriers associations
-			if (Tools::isSubmit('ids_carriers'))
-				$obj->setCarriers(Tools::getValue('ids_carriers'));
+			$obj->setCarriers(Tools::getValue('ids_carriers'));
 
 			// updates/creates address if it does not exist
 			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)

@@ -3497,6 +3497,35 @@ class AdminProductsControllerCore extends AdminController
 			if (Combination::isFeatureActive())
 				$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
 
+			// if advanced stock management is active, checks associations : product and warehouse, product/warehouse and carriers
+			$advanced_stock_management_warning = false;
+			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management)
+			{
+				$attributes = Product::getProductAttributesIds($obj->id);
+				$warehouses = array();
+				foreach ($attributes as $attribute)
+					$warehouses[] = Warehouse::getProductWarehouseList($obj->id, $attribute['id_product_attribute']);
+				$warehouses = array_unique($warehouses);
+
+				$carriers = array();
+				foreach ($warehouses as $warehouse_list)
+				{
+					foreach ($warehouse_list as $warehouse)
+						$carriers[] = Carrier::getAvailableCarrierList($obj->id, $warehouse['id_warehouse']);
+				}
+				$carriers = array_unique($carriers);
+
+				if (empty($warehouses) || empty($carriers))
+					$advanced_stock_management_warning = true;
+			}
+			if ($advanced_stock_management_warning)
+			{
+				$this->displayWarning($this->l('If you wish to use the advanced stock management, you have to:'));
+				$this->displayWarning('- '.$this->l('associates your products with warehouses.'));
+				$this->displayWarning('- '.$this->l('associates your warehouses with carriers'));
+				$this->displayWarning('- '.$this->l('associates your warehouses with the appropriates shops'));
+			}
+
 			$data->assign(array(
 				'attributes' => $attributes,
 				'available_quantity' => $available_quantity,
@@ -3506,11 +3535,11 @@ class AdminProductsControllerCore extends AdminController
 				'show_quantities' => $show_quantities,
 				'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 				'token' => $this->token,
-				'languages' => $languages
+				'languages' => $languages,
 			));
 		}
 		else
-			$this->displayWarning($this->l('You must save this product before manage quantities.'));
+			$this->displayWarning($this->l('You must save this product before managing quantities.'));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
@@ -3582,7 +3611,7 @@ class AdminProductsControllerCore extends AdminController
 			));
 		}
 		else
-			$this->displayWarning($this->l('You must save this product before manage suppliers'));
+			$this->displayWarning($this->l('You must save this product before managing suppliers'));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
@@ -3627,7 +3656,7 @@ class AdminProductsControllerCore extends AdminController
 			));
 		}
 		else
-			$this->displayWarning($this->l('You must save this product before manage warehouses'));
+			$this->displayWarning($this->l('You must save this product before managing warehouses'));
 
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
