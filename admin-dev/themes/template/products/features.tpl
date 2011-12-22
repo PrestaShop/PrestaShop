@@ -32,10 +32,6 @@
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
-
-		$('.confirm_leave').bind('click', function(){
-			return confirm('{l s='You will lose all unsaved modifications, do you want to proceed?' js=1}');
-		});
 	});
 
 </script>

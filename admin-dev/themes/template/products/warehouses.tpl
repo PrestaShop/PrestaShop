@@ -46,9 +46,7 @@
 	</div>
 	<p>{l s='Please choose the warehouses associated to this product, and the default one.'}</p>
 
-	{assign var=confirm value="Are you sure you want to delete entered product information?"}
-
-	<a class="button bt-icon" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse" onclick="return confirm(' {$confirm} ')">
+	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminWarehouses')}&addwarehouse">
 		<img src="../img/admin/add.gif" alt="{l s='Create new warehouse'}" title="{l s='Create new warehouse'}" /><span>{l s='Create new warehouse'}</span>
 	</a>
 

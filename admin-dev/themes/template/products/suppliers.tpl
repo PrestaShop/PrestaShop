@@ -47,8 +47,7 @@
 		<p>{l s='When using the advanced stock management (see Preferences/Products), the values you fill here (prices, references) will be used in the supply orders.'}</p>
 	</div>
 	<p>{l s='Please choose the suppliers associated to this product, and the default one.'}</p>
-	{assign var=confirm value="Are you sure you want to delete entered product information?"}
-	<a class="button bt-icon" href="{$link->getAdminLink('AdminSuppliers')}&addsupplier" onclick="return confirm(' {$confirm} ')">
+	<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminSuppliers')}&addsupplier">
 		<img src="../img/admin/add.gif" alt="{l s='Create new supplier'}" title="{l s='Create new supplier'}" /><span>{l s='Create new supplier'}</span>
 	</a>
 	<table cellpadding="5" style="width:100%">
