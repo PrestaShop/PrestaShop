@@ -74,6 +74,28 @@
 <form enctype="multipart/form-data" method="post" id="generator" action="{$url_generator}">
 	<fieldset style="margin-bottom: 35px;">
 		<legend><img src="../img/admin/asterisk.gif" />{l s='Attributes generator'}</legend>
+		<div style="float: left; margin-right:50px;">
+			<div>
+				<select multiple name="attributes[]" id="attribute_group" style="width: 200px; height: 350px; margin-bottom: 10px;">
+					{foreach $attribute_groups as $k => $attribute_group}
+						{if isset($attribute_js[$attribute_group['id_attribute_group']])}
+							<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'htmlall':'UTF-8'}">
+								{foreach $attribute_js[$attribute_group['id_attribute_group']] as $k => $v}
+									<option name="{$k}" id="attr_{$k}" value="{$v|escape:'quotes':'UTF-8'}" title="{$v|escape:'quotes':'UTF-8'}">{$v|escape:'quotes':'UTF-8'}</option>
+								{/foreach}
+							</optgroup>
+						{/if}
+					{/foreach}
+				</select>
+			</div>
+			<div>
+				<p style="text-align: center;">
+					<input class="button" type="button" style="margin: 0 0 10px 20px;" value="{l s='Add'}" class="button" onclick="add_attr_multiple();" />
+					<input class="button" type="button" style="margin: 0 0 10px 20px;" value="{l s='Delete'}" class="button" onclick="del_attr_multiple();" /><br />
+				</p>
+			</div>
+		</div>
+		<br />
 		{l s='Add or modify attributes for product:'} <b>{$product_name}</b>
 		<br /><br />
 		<div style="padding-top:10px; float: left; width: 570px;">
@@ -118,27 +140,5 @@
 				{/foreach}
             </div>
 		</div>
-		<div style="float: left; margin-left: 60px;">
-			<div>
-				<select multiple name="attributes[]" id="attribute_group" style="width: 200px; height: 350px; margin-bottom: 10px;">
-					{foreach $attribute_groups as $k => $attribute_group}
-						{if isset($attribute_js[$attribute_group['id_attribute_group']])}
-							<optgroup name="{$attribute_group['id_attribute_group']}" id="{$attribute_group['id_attribute_group']}" label="{$attribute_group['name']|escape:'htmlall':'UTF-8'}">
-								{foreach $attribute_js[$attribute_group['id_attribute_group']] as $k => $v}
-									<option name="{$k}" id="attr_{$k}" value="{$v|escape:'quotes':'UTF-8'}" title="{$v|escape:'quotes':'UTF-8'}">{$v|escape:'quotes':'UTF-8'}</option>
-								{/foreach}
-							</optgroup>
-						{/if}
-					{/foreach}
-				</select>
-			</div>
-			<div>
-				<p style="text-align: center;">
-					<input class="button" type="button" style="margin: 0 0 10px 20px;" value="{l s='Add'}" class="button" onclick="add_attr_multiple();" />
-					<input class="button" type="button" style="margin: 0 0 10px 20px;" value="{l s='Delete'}" class="button" onclick="del_attr_multiple();" /><br />
-				</p>
-			</div>
-		</div>
-		<br />
 	</fieldset>
 </form>
