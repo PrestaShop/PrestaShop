@@ -313,8 +313,8 @@ ADD `purchase_supplier_price` DECIMAL(20, 6) NOT NULL AFTER  `total_shipping_pri
 ADD `original_product_price` DECIMAL(20, 6) NOT NULL AFTER  `purchase_supplier_price`;
 
 ALTER TABLE  `PREFIX_orders`
-ADD `total_discount_tax_excl` decimal(17,2) NOT NULL AFTER  `total_discounts`,
-ADD `total_discount_tax_incl` decimal(17,2) NOT NULL AFTER  `total_discount_tax_excl`,
+ADD `total_discounts_tax_excl` decimal(17,2) NOT NULL AFTER  `total_discounts`,
+ADD `total_discounts_tax_incl` decimal(17,2) NOT NULL AFTER  `total_discounts_tax_excl`,
 ADD `total_paid_tax_excl` decimal(17,2) NOT NULL AFTER  `total_paid`,
 ADD `total_paid_tax_incl` decimal(17,2) NOT NULL AFTER  `total_paid_tax_excl`,
 ADD `total_shipping_tax_excl` decimal(17,2) NOT NULL AFTER  `total_shipping`,
@@ -354,7 +354,7 @@ ALTER TABLE `PREFIX_order_invoice` ADD `delivery_number` int(0) NOT NULL DEFAULT
 ALTER TABLE `PREFIX_order_invoice` ADD `delivery_date` datetime AFTER `delivery_number`;
 
 INSERT INTO `PREFIX_order_invoice` (`id_order`, `number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, `note`, `date_add`) (
-	SELECT `id_order`, `invoice_number`, `total_discount_tax_excl`, `total_discount_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
+	SELECT `id_order`, `invoice_number`, `total_discounts_tax_excl`, `total_discounts_tax_incl`, `total_paid_tax_excl`, `total_paid_tax_incl`, `total_products`, `total_products_wt`, `total_shipping_tax_excl`, `total_shipping_tax_incl`, `total_wrapping_tax_excl`, `total_wrapping_tax_incl`, '', `invoice_date`
 	FROM `PREFIX_orders`
 	WHERE `invoice_number` != 0
 );
