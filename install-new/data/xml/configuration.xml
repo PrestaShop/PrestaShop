@@ -192,13 +192,13 @@
       <value>0</value>
     </configuration>
     <configuration id="PS_1_3_UPDATE_DATE" name="PS_1_3_UPDATE_DATE">
-      <value>2011-12-21 19:11:28</value>
+      <value>2011-12-22 10:17:01</value>
     </configuration>
     <configuration id="PS_PRICE_ROUND_MODE" name="PS_PRICE_ROUND_MODE">
       <value>2</value>
     </configuration>
     <configuration id="PS_1_3_2_UPDATE_DATE" name="PS_1_3_2_UPDATE_DATE">
-      <value>2011-12-21 19:11:28</value>
+      <value>2011-12-22 10:17:01</value>
     </configuration>
     <configuration id="PS_CONDITIONS_CMS_ID" name="PS_CONDITIONS_CMS_ID">
       <value>3</value>
@@ -342,7 +342,7 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_IMG_UPDATE_TIME" name="PS_IMG_UPDATE_TIME">
-      <value>1324491088</value>
+      <value>1324545421</value>
     </configuration>
     <configuration id="PS_BACKUP_DROP_TABLE" name="PS_BACKUP_DROP_TABLE">
       <value>1</value>
@@ -840,7 +840,7 @@
       <value>1.5.0.2</value>
     </configuration>
     <configuration id="PS_SHOP_NAME" name="PS_SHOP_NAME">
-      <value>PrestaShop</value>
+      <value>Test</value>
     </configuration>
     <configuration id="PS_SHOP_EMAIL" name="PS_SHOP_EMAIL">
       <value>raphael.malie@gmail.com</value>
@@ -849,7 +849,7 @@
       <value>1</value>
     </configuration>
     <configuration id="PS_SHOP_ACTIVITY" name="PS_SHOP_ACTIVITY">
-      <value>10</value>
+      <value>2</value>
     </configuration>
   </entities>
 </entity_configuration>

@@ -828,9 +828,9 @@ class InstallXmlLoader
 				if (!is_dir($this->lang_path.$iso.'/data'))
 					mkdir($this->lang_path.$iso.'/data');
 
-				$xml = new SimpleXMLElement('<entity_'.$entity.' />');
-				$this->createXmlEntityNodes($entity, $nodes, $xml);
-				$this->writeNiceAndSweetXML($xml, $this->lang_path.$iso.'/data/'.$entity.'.xml');
+				$xml_node = new SimpleXMLElement('<entity_'.$entity.' />');
+				$this->createXmlEntityNodes($entity, $nodes, $xml_node);
+				$this->writeNiceAndSweetXML($xml_node, $this->lang_path.$iso.'/data/'.$entity.'.xml');
 			}
 
 		if ($xml->fields['image'])
