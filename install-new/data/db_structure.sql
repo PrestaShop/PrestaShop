@@ -516,6 +516,10 @@ CREATE TABLE `PREFIX_customer` (
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_gender` int(10) unsigned NOT NULL,
   `id_default_group` int(10) unsigned NOT NULL DEFAULT '1',
+  `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
+  `company` varchar(64),
+  `siret` varchar(14),
+  `ape` varchar(5),
   `firstname` varchar(32) NOT NULL,
   `lastname` varchar(32) NOT NULL,
   `email` varchar(128) NOT NULL,
@@ -526,6 +530,10 @@ CREATE TABLE `PREFIX_customer` (
   `ip_registration_newsletter` varchar(15) default NULL,
   `newsletter_date_add` datetime default NULL,
   `optin` tinyint(1) unsigned NOT NULL default '0',
+  `website` varchar(128),
+  `outstanding_allow_amount` DECIMAL( 10,6 ) NOT NULL default '0.00',
+  `show_public_prices` tinyint(1) unsigned NOT NULL default '0',
+  `max_payment_days` int(10) unsigned NOT NULL default '60',
   `secure_key` varchar(32) NOT NULL default '-1',
   `note` text,
   `active` tinyint(1) unsigned NOT NULL default '0',
@@ -1226,7 +1234,8 @@ CREATE TABLE `PREFIX_order_slip_detail` (
   `id_order_slip` int(10) unsigned NOT NULL,
   `id_order_detail` int(10) unsigned NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL default '0',
-  `amount` DECIMAL(10,2) NOT NULL,
+  `amount_tax_excl` DECIMAL(10,2) default NULL,
+  `amount_tax_incl` DECIMAL(10,2) default NULL,
   PRIMARY KEY  (`id_order_slip`,`id_order_detail`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1652,6 +1661,7 @@ CREATE TABLE `PREFIX_tab` (
   `class_name` varchar(64) NOT NULL,
   `module` varchar(64) NULL,
   `position` int(10) unsigned NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id_tab`),
   KEY `class_name` (`class_name`),
   KEY `id_parent` (`id_parent`)
@@ -2338,3 +2348,18 @@ CREATE TABLE `PREFIX_specific_price_rule_condition` (
 PRIMARY KEY (`id_specific_price_rule_condition`),
 INDEX (`id_specific_price_rule_condition_group`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_risk` (
+  `id_risk` int(11) NOT NULL AUTO_INCREMENT,
+  `percent` tinyint(3) NOT NULL,
+  `color` varchar(32) NULL,
+  PRIMARY KEY (`id_risk`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
+  `id_risk` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id_risk`,`id_lang`),
+  KEY `id_risk` (`id_risk`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
