@@ -1883,17 +1883,20 @@ div.progressBarImage
 
 
 /*summary_part*/
+#summary_part b { float:left; display:block; border:1px solid red;}
 #summary_part #total_products,
 #summary_part #total_vouchers,
 #summary_part #total_shipping,
 #summary_part #total_without_taxes,
 #summary_part #total_taxes,
-#summary_part #total_with_taxes { font-size:16px; font-weight:normal;}
+#summary_part #total_with_taxes { font-size:20px; font-weight:normal; color:#000;}
 #summary_part .currency_sign { font-weight:normal;}
 #summary_part .order_message_right { float:left; border-left: 1px solid #ccc; }
 
 /*cart_summary*/
 #cart_summary { float:left; border-right: 1px solid #fff; width:400px;}
+#cart_summary ul li  { float:left; position: relative; width:185px; margin-bottom:20px; padding:5px;}
+#cart_summary ul li .total_cart { display:block; font-size:12px;}
 
 
 #loader_container {
