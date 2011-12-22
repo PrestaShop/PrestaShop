@@ -31,13 +31,13 @@
 				<li>
 					<a id="desc-module-new" class="toolbar_btn" href="#top_container" onclick="$('#module_install').slideToggle();" title="Add new">
 						<span class="process-icon-new-module" ></span>
-						<div>Add new module</div>
+						<div>{l s='Add new module'}</div>
 					</a>
 				</li>
 				<li>
 					<a id="desc-module-addon-new" class="toolbar_btn" href="{$addonsUrl}" title="Add new">
 						<span class="process-icon-new-module-addon" ></span>
-						<div>Add new via Addons</div>
+						<div>{l s='Add new via Addons'}</div>
 					</a>
 				</li>
 			</ul>
