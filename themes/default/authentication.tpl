@@ -450,6 +450,27 @@ $(function(){ldelim}
 		</p>
 		{/if}
 	</fieldset>
+	{if $b2b_enable}
+	<fieldset class="account_creation">
+		<h3>{l s='Your company informations'}</h3>
+		<p class="text">
+			<label for="">{l s='Company'}</label>
+			<input type="text" class="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
+		</p>
+		<p class="text">
+			<label for="siret">{l s='SIRET'}</label>
+			<input type="text" class="text" id="siret" name="siret" value="{if isset($smarty.post.siret)}{$smarty.post.siret}{/if}" />
+		</p>
+		<p class="text">
+			<label for="ape">{l s='APE'}</label>
+			<input type="text" class="text" id="ape" name="ape" value="{if isset($smarty.post.ape)}{$smarty.post.ape}{/if}" />
+		</p>
+		<p class="text">
+			<label for="website">{l s='Website'}</label>
+			<input type="text" class="text" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
+		</p>
+	</fieldset>
+	{/if}
 	{if isset($PS_REGISTRATION_PROCESS_TYPE) && $PS_REGISTRATION_PROCESS_TYPE}
 	<fieldset class="account_creation">
 		<h3>{l s='Your address'}</h3>

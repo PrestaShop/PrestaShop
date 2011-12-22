@@ -375,6 +375,93 @@ class AdminCustomersControllerCore extends AdminController
 			);
 		}
 
+		if (Configuration::get('PS_B2B_ENABLE')) {
+			$risks = Risk::getRisks();
+
+			$list_risks = array();
+			foreach ($risks as $key => $risk)
+			{
+				$list_risks[$key]['id_risk'] = (int) $risk->id;
+				$list_risks[$key]['name'] = $risk->name;
+			}
+
+			$this->fields_form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('Company:'),
+				'name' => 'company',
+				'size' => 33
+			);
+			$this->fields_form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('SIRET:'),
+				'name' => 'siret',
+				'size' => 14
+			);
+			$this->fields_form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('APE:'),
+				'name' => 'ape',
+				'size' => 5
+			);
+			$this->fields_form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('Website:'),
+				'name' => 'website',
+				'size' => 33
+			);
+			$this->fields_form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('Outstanding allow:'),
+				'name' => 'outstanding_allow_amount',
+				'size' => 10,
+				'hint' => $this->l('Valid characters:').' 0-9',
+				'suffix' => '¤'
+			);
+			/*
+			@todo RC Version
+			$this->fields_form['input'][] = array(
+				'type' => 'radio',
+				'label' => $this->l('Show public prices:'),
+				'name' => 'show_public_prices',
+				'required' => false,
+				'class' => 't',
+				'is_bool' => true,
+				'values' => array(
+					array(
+						'id' => 'show_public_prices_on',
+						'value' => 1,
+						'label' => $this->l('Enabled')
+					),
+					array(
+						'id' => 'show_public_prices_off',
+						'value' => 0,
+						'label' => $this->l('Disabled')
+					)
+				),
+				'desc' => $this->l('Show public prices on the front office if specific prices have been set ')
+			);
+			*/
+			$this->fields_form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('Max payment days:'),
+				'name' => 'max_payment_days',
+				'size' => 10,
+				'hint' => $this->l('Valid characters:').' 0-9'
+			);
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'label' => $this->l('Risk:'),
+				'name' => 'id_risk',
+				'required' => false,
+				'class' => 't',
+				'options' => array(
+					'query' => $list_risks,
+					'id' => 'id_risk',
+					'name' => 'name'
+				),
+			);
+		}
+
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('   Save   '),
 			'class' => 'button'

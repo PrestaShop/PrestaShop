@@ -295,7 +295,7 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_PDF_FONT';
 ALTER TABLE  `PREFIX_order_detail`
 ADD `reduction_amount_tax_incl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount` ,
 ADD `reduction_amount_tax_excl` FLOAT( 20.6 ) NOT NULL AFTER  `reduction_amount_tax_incl`,
-ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,
+ADD `total_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `download_deadline`,,
 ADD `total_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_incl`,
 ADD `unit_price_tax_incl` DECIMAL(20, 6) NOT NULL AFTER  `total_price_tax_excl`,
 ADD `unit_price_tax_excl` DECIMAL(20, 6) NOT NULL AFTER  `unit_price_tax_incl`,
@@ -391,11 +391,10 @@ INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency
 )
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
-('PS_SMARTY_CONSOLE', '0', NOW(), NOW());
+('PS_SMARTY_CONSOLE', '0', NOW(), NOW(),('PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
 /* PHP:update_modules_multishop.php; */;
-
 
 UPDATE `PREFIX_tab`
 SET `position` = (
@@ -412,7 +411,3 @@ SET `position` = (
 	WHERE `id_parent` = 0
 )
 WHERE `class_name` = 'AdminAccounting';
-
-ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount` `amount_tax_excl` DECIMAL( 10, 2 ) NOT NULL;
-ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount_tax_incl` DECIMAL(10,2) NOT NULL AFTER `amount_tax_excl`;
-

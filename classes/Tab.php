@@ -226,6 +226,76 @@ class TabCore extends ObjectModel
 		return (isset(self::$_getIdFromClassName[$class_name]) ? (int)self::$_getIdFromClassName[$class_name] : false);
 	}
 
+	/**
+	 * Get collection from module name
+	 * @static
+	 * @param $module string Module name
+	 * @param null $id_lang integer Language ID
+	 * @return array|Collection Collection of tabs (or empty array)
+	 */
+	public static function getCollectionFromModule($module, $id_lang = null)
+	{
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+
+		if (!Validate::isModuleName($module))
+			return array();
+
+		$tabs = new Collection('Tab', (int)$id_lang);
+		$tabs->where('module', '=', $module);
+		return $tabs;
+	}
+
+	/**
+	 * Enabling tabs for module
+	 * @static
+	 * @param $module string Module Name
+	 * @return bool Status
+	 */
+	public static function enablingForModule($module)
+	{
+		$tabs = self::getCollectionFromModule($module);
+		if (!empty($tabs)) {
+			foreach ($tabs as $tab) {
+				$tab->active = 1;
+				$tab->save();
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Disabling tabs for module
+	 * @static
+	 * @param $module string Module name
+	 * @return bool Status
+	 */
+	public static function disablingForModule($module)
+	{
+		$tabs = self::getCollectionFromModule($module);
+		if (!empty($tabs)) {
+			foreach ($tabs as $tab) {
+				$tab->active = 0;
+				$tab->save();
+			}
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Get Instance from tab class name
+	 * @static
+	 * @param $class_name Name of tab class
+	 * @return Tab Tab object (empty if bad id or class name)
+	 */
+	public static function getInstanceFromClassName($class_name)
+	{
+		$id_tab = (int)self::getIdFromClassName($class_name);
+		return new self($id_tab);
+	}
+
 	public static function getNbTabs($id_parent = null)
 	{
 		return (int)Db::getInstance()->getValue('
