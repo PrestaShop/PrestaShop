@@ -35,6 +35,7 @@ class ModuleChequeController extends ModuleController
 	 */
 	public function postProcess()
 	{
+		$this->display_column_left = false;
 		if ($this->process == 'validation')
 			$this->processValidation();
 	}
