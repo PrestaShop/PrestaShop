@@ -235,7 +235,8 @@ abstract class InstallControllerHttp
 	 */
 	public function l($str)
 	{
-		return call_user_func_array(array($this->language, 'l'), func_get_args());
+		$args = func_get_args();
+		return call_user_func_array(array($this->language, 'l'), $args);
 	}
 
 	/**
