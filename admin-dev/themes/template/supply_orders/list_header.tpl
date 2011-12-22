@@ -26,7 +26,7 @@
 {extends file="helper/list/list_header.tpl"}
 {block name=override_header}
 {if isset($warehouses) && count($warehouses) > 0 && isset($filter_status)}
-<div class="filter-stock">
+<div class="filter-stock-extended">
 	<form id="supply_orders" type="get">
 		<input type="hidden" name="controller" value="AdminSupplyOrders" />
 		<input type="hidden" name="token" value="{$token}" />
