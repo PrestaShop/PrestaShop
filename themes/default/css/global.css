@@ -596,6 +596,7 @@ ul.idTabs li {
 #more_info_sheets ul,
 #more_info_sheets ol,
 #more_info_sheets dl {margin-left:20px}
+#more_info_sheets em {font-style:italic}
 
 .block_hidden_only_for_screen {display:none}
 
