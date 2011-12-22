@@ -95,7 +95,10 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields current-edit" style="text-align:right;display:none"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</td>
+	<td class="partial_refund_fields current-edit" style="text-align:left;display:none">
+		<div style="width:40%;margin-top:5px;float:left">{l s='Quantity:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProductQuantity[{$k}]" value="0" /> 0/{$productQuantity-$product['product_quantity_refunded']}</div>
+		<div style="width:40%;margin-top:5px;float:left">{l s='Amount:'}</div> <div style="width:60%;margin-top:2px;float:left"><input type="text" size="3" name="partialRefundProduct[{$k}]" /> &euro;</div>
+	</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" colspan="2" style="display: none;text-align:center;">
 		{if sizeof($invoices_collection)}
