@@ -67,6 +67,10 @@ class InstallModelInstall extends InstallAbstractModel
 			return false;
 		}
 
+		// If no mcrypt, do not use RIJNDAEL algorithm
+		if (!function_exists('mcrypt'))
+			Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', 0);
+
 		return true;
 	}
 
@@ -112,8 +116,6 @@ class InstallModelInstall extends InstallAbstractModel
 			$settings_constants['_RIJNDAEL_KEY_'] = Tools::passwdGen(mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB));
 			$settings_constants['_RIJNDAEL_IV_'] = base64_encode(mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND));
 		}
-		else
-			Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', 0);
 
 		$settings_content = "<?php\n";
 		foreach ($settings_constants as $constant => $value)
