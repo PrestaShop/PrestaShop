@@ -69,7 +69,7 @@
 			{/if}
 			 -
 			{if ($currentState->delivery || $order->delivery_number)}
-			<a href="pdf.php?id_delivery={$order->delivery_number}"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
+			<a target="_blank" href="pdf.php?id_delivery={$order->delivery_number}"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
 			{else}
 			<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" /> {l s='No delivery slip'}
 			{/if}
