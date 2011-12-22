@@ -95,7 +95,7 @@
 {else}
 	<h3 class="carrier_title">{l s='Choose your delivery method'}</h3>
 	
-	<div id="HOOK_BEFORECARRIER">{if isset($carriers)}{$HOOK_BEFORECARRIER}{/if}</div>
+	<div id="HOOK_BEFORECARRIER">{if isset($carriers) && isset($HOOK_BEFORECARRIER)}{$HOOK_BEFORECARRIER}{/if}</div>
 	{if isset($isVirtualCart) && $isVirtualCart}
 	<p class="warning">{l s='No carrier needed for this order'}</p>
 	{else}
