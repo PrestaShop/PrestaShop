@@ -123,15 +123,15 @@ class AdminEmployeesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Last name:'),
-					'name' => 'lastname',
+					'label' => $this->l('First name:'),
+					'name' => 'firstname',
 					'size' => 33,
 					'required' => true
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('First name:'),
-					'name' => 'firstname',
+					'label' => $this->l('Last name:'),
+					'name' => 'lastname',
 					'size' => 33,
 					'required' => true
 				),
