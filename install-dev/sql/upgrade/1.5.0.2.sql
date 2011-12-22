@@ -63,7 +63,6 @@ ADD INDEX `id_product` (`id_product`, `id_shop`, `id_currency`, `id_country`, `i
 
 UPDATE `PREFIX_access` SET `view` = '1' WHERE `id_profile` = 5 AND `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStock' LIMIT 1);
 
-
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1) AND `id_profile` = '4';
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1) AND `id_profile` = '5';
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1) AND `id_profile` = '4';
@@ -400,27 +399,39 @@ INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency
 );
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
-('PS_SMARTY_CONSOLE', '0', NOW(), NOW(),('PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
+('PS_SMARTY_CONSOLE', '0', NOW(), NOW()),('PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
 ALTER TABLE `PREFIX_specific_price` ADD `id_cart` INT(11) UNSIGNED NOT NULL AFTER `id_specific_price_rule`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_cart` (`id_cart`);
 /* PHP:update_modules_multishop(); */;
 
-UPDATE `PREFIX_tab`
+UPDATE `ps_tab`
 SET `position` = (
-	SELECT MAX(`position`)+1
-	FROM `PREFIX_tab`
-	WHERE `id_parent` = 0
+	SELECT `position` FROM (
+		SELECT MAX(`position`)+1 as `position`
+		FROM `ps_tab`
+		WHERE `id_parent` = 0
+	) tmp
 )
 WHERE `class_name` = 'AdminStock';
 
-UPDATE `PREFIX_tab`
+UPDATE `ps_tab`
 SET `position` = (
-	SELECT MAX(`position`)+1
-	FROM `PREFIX_tab`
-	WHERE `id_parent` = 0
+	SELECT `position` FROM (
+		SELECT MAX(`position`)+1 as `position`
+		FROM `ps_tab`
+		WHERE `id_parent` = 0
+	) tmp
 )
 WHERE `class_name` = 'AdminAccounting';
 
-
 ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount` `amount_tax_excl` DECIMAL( 10, 2 ) default NULL;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount_tax_incl` DECIMAL(10,2) default NULL AFTER `amount_tax_excl`;
+
+ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsigned NOT NULL default '0' AFTER `product_weight`;
+
+CREATE TABLE `PREFIX_webservice_account_shop` (
+`id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
+`id_shop` INT( 11 ) UNSIGNED NOT NULL,
+PRIMARY KEY (`id_webservice_account` , `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
