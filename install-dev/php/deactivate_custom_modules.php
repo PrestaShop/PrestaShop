@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function desactivate_custom_modules()
+function deactivate_custom_modules()
 {
 	$db = Db::getInstance();
 	$modulesDirOnDisk = Module::getModulesDirOnDisk();

@@ -40,127 +40,6 @@ else if (!defined('_PS_MODULE_DIR_'))
 if(!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
 	define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  INSTALL_PATH.DIRECTORY_SEPARATOR.'php/');
 
-// Only if loyalty module is installed
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_loyalty.php');
-// desactivate non-native module
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'desactivatecustommodules.php');
-// utf-8 conversion if needed (before v0.9.8.1 utf-8 was badly supported)
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'utf8.php');
-// Configuration cleaner in order to get unique configuration names
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'confcleaner.php');
-// Order number in goal to add a number to each old orders
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'invoicenumber.php');
-// Order number in goal to add a number to each old orders
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deliverynumber.php');
-// Set all groups for home category
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'setallgroupsonhomecategory.php');
-// Set payment module for each currency/country
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'setpaymentmodule.php');
-// Set payment module for each group
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'setpaymentmodulegroup.php');
-// Set discount for all categories
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'setdiscountcategory.php');
-// Module installation tools
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'module_tools.php');
-// Customizations
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'customizations.php');
-// Block newsletter
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'blocknewsletter.php');
-// Reorder product positions for drag an drop
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'reorderpositions.php');
-// Clean some module sql structures
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'updatemodulessql.php');
-// Clean carrier URL
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'updatecarrierurl.php');
-// Convert prices to the new 1.3 rounding system
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'price_converter.php');
-// Update editorial module to delete all xml methods
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'editorial_update.php');
-// Update logo and editorial image size
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_image_size_in_db.php');
-// Update product comments
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'updateproductcomments.php');
-// Update order details
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_details.php');
-// Update database structure (use algorithms requiring PHP)
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'database_structure.php');
-// Update cms block
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'cms_block.php');
-// Move crossselling
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'move_crossselling.php');
-// generate_tax_rules
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'generate_tax_rules.php');
-// generate_ntree
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'generate_ntree.php');
-// Before version 1.3.3 ecotax are not calculated into the price
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_products_ecotax_v133.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'shop_url.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'gridextjs_deprecated.php');
-// generate level depth
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'regenerate_level_depth.php');
-// add a new tab
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_tab.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_module_to_hook.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_for_13version.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_cms_block.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_blocklink.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'alter_productcomments_guest_index.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_loyalty.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_module_followup.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_module_from_hook.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'updatetabicon_from_11version.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'check_webservice_account_table.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_missing_rewrite_value.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_duplicate_category_groups.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_block_info_to_cms_block.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'create_multistore.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_order_state.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'remove_tab.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_detail_taxes.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_feature_detachable_cache.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_accounting_tab.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'hook_blocksearch_on_header.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_order_canada.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'generate_order_reference.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_orders.php');
-
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_attribute_position.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_group_attribute_position.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_feature_position.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_default_restrictions_modules_groups.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_carrier_position.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_new_groups.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'add_stock_tab.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'set_stock_available.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'set_product_suppliers.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_stock_mvt_reason.php');
-require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'update_modules_multishop.php');
-
 
 //old version detection
 global $oldversion, $logger;
@@ -301,7 +180,10 @@ if(!defined('_MYSQL_ENGINE_'))
 
 $sqlContent = '';
 if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
-	desactivate_custom_modules();
+{
+	require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
+	deactivate_custom_modules();
+}
 
 foreach($neededUpgradeFiles AS $version)
 {
@@ -313,7 +195,7 @@ foreach($neededUpgradeFiles AS $version)
 	}
 	if (!$sqlContent .= file_get_contents($file))
 	{
-		$logger->logError('Error while loading sql upgrade file.');
+		$logger->logError(sprintf('Error while loading sql upgrade file %s.', $version));
 		die('<action result="fail" error="33" />'."\n");
 	}
 	$sqlContent .= "\n";
@@ -369,7 +251,7 @@ $warningExist = false;
 
 Configuration::loadConfiguration();
 
-foreach($sqlContent as $query)
+foreach ($sqlContent as $query)
 {
 	$query = trim($query);
 	if(!empty($query))
@@ -394,10 +276,17 @@ foreach($sqlContent as $query)
 
 			/* Call a simple function */
 			if (strpos($phpString, '::') === false)
-				$phpRes = call_user_func_array(str_replace($pattern[0], '', $php[0]), $parameters);
+			{
+				$func_name = str_replace($pattern[0], '', $php[0]);
+				require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
+				$phpRes = call_user_func_array($func_name, $parameters);
+			}
 			/* Or an object method */
 			else
-				$phpRes = call_user_func_array(array($php[0], str_replace($pattern[0], '', $php[1])), $parameters);
+			{
+				$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
+				$phpRes = call_user_func_array($func_name, $parameters);
+			}
 			if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
 			{
 				$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
