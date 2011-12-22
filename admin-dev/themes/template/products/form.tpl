@@ -197,6 +197,11 @@
 					$('#desc-product-newCombination').show();
 					populate_attrs();
 				}
+				else if (btn_name == "Attachments")
+				{
+					$('#desc-product-save-and-stay').hide();
+					$('#desc-product-save').hide();
+				}
 				else
 				{
 					$('#desc-product-newCombination').hide();
