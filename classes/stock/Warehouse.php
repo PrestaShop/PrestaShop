@@ -250,13 +250,13 @@ class WarehouseCore extends ObjectModel
 	public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
 	{
 		Db::getInstance()->execute('
-			DELETE FROM '._DB_PREFIX_.'`warehouse_product_location` wpl
+			DELETE FROM `'._DB_PREFIX_.'warehouse_product_location` wpl
 			WHERE wpl.`id_product` = '.(int)$id_product.'
 			AND wpl.`id_product_attribute` = '.(int)$id_product_attribute.'
 			AND wpl.`id_warehouse` = '.(int)$id_warehouse);
 
 		$query = '
-			UPDATE '._DB_PREFIX_.'`warehouse_product_location`
+			UPDATE `'._DB_PREFIX_.'warehouse_product_location`
 			SET `location` = \''.pSQL($location).'\'
 			WHERE `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
