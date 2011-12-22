@@ -392,30 +392,14 @@ class ThemeInstallator extends Module
 		}
 	}
 
-	private function updateImages()
+	private function updateImages($id_theme)
 	{
 		foreach ($this->xml->images->image as $row)
 		{
-			$foo = Db::getInstance()->getRow('
-				SELECT name FROM `'._DB_PREFIX_.'image_type` i
-				WHERE i.name LIKE \''.pSQL($row['name']).'\'');
-			if ((int)(Tools::getValue('imagesConfig')) == 1 AND $foo)
-				continue ;
-			if ($foo)
-				Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'image_type` i
-					SET `width` = '.(int)($row['width']).',
-					`height` = '.(int)($row['height']).',
-					`products` = '.($row['products'] == 'true' ? 1 : 0).',
-					`categories` = '.($row['categories'] == 'true' ? 1 : 0).',
-					`manufacturers` = '.($row['manufacturers'] == 'true' ? 1 : 0).',
-					`suppliers` = '.($row['suppliers'] == 'true' ? 1 : 0).',
-					`scenes` = '.($row['scenes'] == 'true' ? 1 : 0).'
-					WHERE i.name LIKE \''.pSQL($row['name']).'\'');
-			else
-				Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
-					VALUES (
+
+			Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'image_type` (`id_theme`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
+					VALUES ('.(int)$id_theme.',
 						\''.pSQL($row['name']).'\',
 						'.(int)($row['width']).',
 						'.(int)($row['height']).',
@@ -540,12 +524,13 @@ class ThemeInstallator extends Module
 						}
 				}
 		}
-		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages())
-			$msg .= '<br /><b>'.$this->l('Images have been correctly updated in database').'</b><br />';
-
 		$theme = new Theme();
 		$theme->name = (string)$this->xml['name'];
 		$theme->add();
+		
+		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages((int)$theme->id))
+			$msg .= '<br /><b>'.$this->l('Images have been correctly updated in database').'</b><br />';
+			
 		$this->_msg .= parent::displayConfirmation($msg);
 		$this->_html .= '
 			<input type="submit" class="button" name="submitThemes" value="'.$this->l('Previous').'" />

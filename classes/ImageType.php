@@ -29,6 +29,9 @@ class ImageTypeCore extends ObjectModel
 {
 	public		$id;
 
+	/** @var string id_theme */
+	public		$id_theme;
+	
 	/** @var string Name */
 	public		$name;
 
@@ -63,6 +66,7 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
+			'id_theme' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
 			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
@@ -88,16 +92,17 @@ class ImageTypeCore extends ObjectModel
 	* @param string|null Image type
 	* @return array Image type definitions
 	*/
-	public static function getImagesTypes($type = NULL)
+	public static function getImagesTypes($type = NULL, $id_theme = false)
 	{
-		if (!isset(self::$images_types_cache[$type]))
+		if (!isset(self::$images_types_cache[$type.($id_theme ? '-'.$id_theme : '')]))
 		{
+			$where = 'WHERE 1';
+			if ($id_theme)
+				$where .= ' AND id_theme='.(int)$id_theme;
 			if (!empty($type))
-				$where = 'WHERE ' . pSQL($type) . ' = 1 ';
-			else
-				$where = '';
+				$where .= ' AND ' . pSQL($type) . ' = 1 ';
 
-			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.'ORDER BY `name` ASC';
+			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.' ORDER BY `name` ASC';
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 
@@ -114,7 +119,7 @@ class ImageTypeCore extends ObjectModel
 	{
 		if (!Validate::isImageTypeName($typeName))
 			die(Tools::displayError());
-			
+
 		Db::getInstance()->executeS('
 		SELECT `id_image_type`
 		FROM `'._DB_PREFIX_.'image_type`

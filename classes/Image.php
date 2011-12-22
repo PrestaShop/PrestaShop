@@ -238,12 +238,13 @@ class ImageCore extends ObjectModel
 				$new_path = $image_new->getPathForCreation();
 				foreach ($images_types as $image_type)
 				{
-					if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg'))
+					$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
+					if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].$theme.'.jpg'))
 					{
 						if (!Configuration::get('PS_LEGACY_IMAGES'))
 						$image_new->createImgFolder();
-						copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg',
-						$new_path.'-'.$image_type['name'].'.jpg');
+						copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].$theme.'.jpg',
+						$new_path.'-'.$image_type['name'].$theme.'.jpg');
 					}
 				}
 			if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg'))
@@ -401,8 +402,10 @@ class ImageCore extends ObjectModel
 		// Delete auto-generated images
 		$image_types = ImageType::getImagesTypes();
 		foreach ($image_types as $image_type)
-			$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'.'.$this->image_format;
-
+		{
+			$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
+			$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].$theme.'.'.$this->image_format;
+		}
 		// Delete watermark image
 		$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-watermark.'.$this->image_format;
 		// delete index.php

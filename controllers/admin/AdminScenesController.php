@@ -74,10 +74,11 @@ class AdminScenesControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes('scenes');
 			foreach ($images_types as $k => $image_type)
 			{
+				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
 				if ($image_type['name'] == 'large_scene' && isset($_FILES['image']))
 					imageResize(
 						$_FILES['image']['tmp_name'],
-						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
+						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).$theme.'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
 					);
@@ -89,7 +90,7 @@ class AdminScenesControllerCore extends AdminController
 						$tmp_name = $_FILES['image']['tmp_name'];
 					imageResize(
 						$tmp_name,
-						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
+						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).$theme.'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
 					);

@@ -373,10 +373,13 @@ class AdminStoresControllerCore extends AdminController
 		{
 			$images_types = ImageType::getImagesTypes('stores');
 			foreach ($images_types as $k => $image_type)
+			{
+				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
 				imageResize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
-							_PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
+							_PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).$theme.'.jpg',
 							(int)$image_type['width'], (int)$image_type['height']
 				);
+			}
 		}
 		return $ret;
 	}
