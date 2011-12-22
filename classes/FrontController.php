@@ -464,16 +464,11 @@ class FrontControllerCore extends Controller
 
  		$this->context->smarty->assign('css_files', $this->css_files);
 		$this->context->smarty->assign('js_files', array_unique($this->js_files));
-
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
-			'template' => $this->context->smarty->fetch($this->template),
 		));
-		
-
-
 
 		if (Tools::isSubmit('live_edit'))
 		{
@@ -482,14 +477,18 @@ class FrontControllerCore extends Controller
 		
 		// handle 1.4 theme (with layout.tpl missing)
 		if (file_exists(_PS_THEME_DIR_.'layout.tpl'))
+		{
+			if ($this->template)
+				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template));
 			$this->context->smarty->display(_PS_THEME_DIR_.'layout.tpl');
+		}
 		else
 		{
 			// BEGIN - 1.4 retrocompatibility - will be removed in 1.6
 			Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
 			if ($this->display_header)
 				$this->context->smarty->display(_PS_THEME_DIR_.'header.tpl');
-		
+
 			if ($this->template)
 				$this->context->smarty->display($this->template);
 		

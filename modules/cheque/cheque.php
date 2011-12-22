@@ -147,16 +147,11 @@ class Cheque extends PaymentModule
 		return $this->_html;
 	}
 
-	public function execPayment($cart)
-	{
-		return $this->actionPayment(true);
-	}
-
 	public function hookPayment($params)
 	{
 		if (!$this->active)
 			return ;
-		if (!$this->_checkCurrency($params['cart']))
+		if (!$this->checkCurrency($params['cart']))
 			return ;
 
 		$this->context->smarty->assign(array(
@@ -189,7 +184,7 @@ class Cheque extends PaymentModule
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 
-	private function _checkCurrency($cart)
+	public function checkCurrency($cart)
 	{
 		$currency_order = new Currency((int)($cart->id_currency));
 		$currencies_module = $this->getCurrency((int)$cart->id_currency);
@@ -199,76 +194,5 @@ class Cheque extends PaymentModule
 				if ($currency_order->id == $currency_module['id_currency'])
 					return true;
 		return false;
-	}
-
-	/**
-	 * This action display payment form
-	 *
-	 * @param bool $direct_call For retrocompatibility
-	 */
-	public function actionPayment($direct_call = false)
-	{
-		if (!$this->active)
-			return ;
-
-		$cart = $this->context->cart;
-		if (!$this->_checkCurrency($cart))
-			Tools::redirect('index.php?controller=order');
-		$this->context->smarty->assign(array(
-			'nbProducts' => $cart->nbProducts(),
-			'cust_currency' => $cart->id_currency,
-			'currencies' => $this->getCurrency((int)$cart->id_currency),
-			'total' => $cart->getOrderTotal(true, Cart::BOTH),
-			'isoCode' => $this->context->language->iso_code,
-			'chequeName' => $this->chequeName,
-			'chequeAddress' => Tools::nl2br($this->address),
-			'cheque_path' => $this->_path,
-			'cheque_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
-		));
-
-		if (!$direct_call)
-			return $this->getTemplatePath('payment_execution.tpl');
-		else
-			// For retrocompatibility
-			return $this->display(__FILE__, 'payment_execution.tpl');
-	}
-
-	/**
-	 * This action validate the payment
-	 */
-	public function actionValidation($direct_call = false)
-	{
-		$cart = $this->context->cart;
-
-		if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->active)
-			Tools::redirect('index.php?controller=order&step=1');
-
-		// Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
-		$authorized = false;
-		foreach (Module::getPaymentModules() as $module)
-			if ($module['name'] == 'cheque')
-			{
-				$authorized = true;
-				break;
-			}
-		if (!$authorized)
-			die(Tools::displayError('This payment method is not available.'));
-
-		$customer = new Customer($cart->id_customer);
-
-		if (!Validate::isLoadedObject($customer))
-			Tools::redirect('index.php?controller=order&step=1');
-
-		$currency = Tools::isSubmit('currency_payement') ? new Currency(Tools::getValue('currency_payement')) : $this->context->currency;
-		$total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-
-		$mailVars =	array(
-			'{cheque_name}' => Configuration::get('CHEQUE_NAME'),
-			'{cheque_address}' => Configuration::get('CHEQUE_ADDRESS'),
-			'{cheque_address_html}' => str_replace("\n", '<br />', Configuration::get('CHEQUE_ADDRESS')));
-
-		$this->validateOrder((int)$cart->id, Configuration::get('PS_OS_CHEQUE'), $total, $this->displayName, NULL, $mailVars, (int)$currency->id, false, $customer->secure_key);
-
-		Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)($cart->id).'&id_module='.(int)$this->id.'&id_order='.$this->currentOrder.'&key='.$customer->secure_key);
 	}
 }

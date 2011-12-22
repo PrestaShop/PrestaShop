@@ -26,38 +26,32 @@
 */
 
 /**
- * The module controller call a module action. Module action method need to have the name :
- * 		public function actionMyAction(FrontController $controller)
- *
  * @since 1.5.0
  */
 class ModuleControllerCore extends FrontController
 {
 	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::initContent()
+	 * @var Module
 	 */
-	public function initContent()
+	public $module;
+
+	public function __construct()
 	{
-		// Check module existence
-		$name = Tools::getValue('module');
-		if (!Validate::isModuleName($name) || !file_exists(_PS_MODULE_DIR_.$name))
+		$this->module = Module::getInstanceByName(Tools::getValue('module'));
+		if (!$this->module->active)
 			Tools::redirect('index');
+		$this->process = Tools::getValue('process');
 
-		$module = Module::getInstanceByName($name);
-		if (!$module->active)
-			Tools::redirect('index');
+		parent::__construct();
+	}
 
-		// Trigger module action
-		$action = Tools::getValue('action');
-		$method = 'action'.$action;
-
-		$this->context->smarty->assign('page_name', 'module-'.$name.'-'.$action);
-
-		if ($action && method_exists($module, $method))
-			$this->setTemplate($module->$method());
-		else
-			die('Module action not found');
-		parent::initContent();
+	/**
+	 * Assign module template
+	 *
+	 * @param string $template
+	 */
+	public function setTemplate($template)
+	{
+		$this->template = $this->module->getTemplatePath($template);
 	}
 }
