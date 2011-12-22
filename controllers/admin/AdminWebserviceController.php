@@ -72,6 +72,12 @@ class AdminWebserviceControllerCore extends AdminController
 												</ol>',
 							'cast' => 'intval',
 							'type' => 'bool'),
+						'PS_WEBSERVICE_CGI_HOST' => array(
+							'title' => $this->l('Active mode CGI for PHP:'),
+							'desc' => $this->l('Be sure PHP is not configured as an Apache module on your server'),
+							'cast' => 'intval',
+							'type' => 'bool'
+						),
 					),
 					'submit' => array()
 				),
