@@ -78,6 +78,17 @@ class AdminImagesControllerCore extends AdminController
 					'desc' => $this->l('Letters only (e.g., small, medium, large, extra-large)')
 				),
 				array(
+					'type' => 'select',
+					'label' => $this->l('Theme:'),
+					'name' => 'id_theme',
+					'required' => true,
+					'options' => array(
+						'query' => Theme::getThemes(),
+						'id' => 'id_theme',
+						'name' => 'name'
+					)
+				),
+				array(
 					'type' => 'text',
 					'label' => $this->l('Width:'),
 					'name' => 'width',
