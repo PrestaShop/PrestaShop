@@ -1069,6 +1069,8 @@ CREATE TABLE `PREFIX_order_invoice` (
   `id_order_invoice` int(11) NOT NULL AUTO_INCREMENT,
   `id_order` int(11) NOT NULL,
   `number` int(11) NOT NULL,
+  `delivery_number` int(11) NOT NULL,
+  `delivery_date` datetime,
   `total_discount_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
   `total_discount_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
   `total_paid_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
