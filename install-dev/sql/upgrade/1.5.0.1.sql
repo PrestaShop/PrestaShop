@@ -1,5 +1,32 @@
 SET NAMES 'utf8';
 
+CREATE TABLE IF NOT EXISTS `PREFIX_module_access` (
+  `id_profile` int(10) unsigned NOT NULL,
+  `id_module` int(10) unsigned NOT NULL,
+  `view` tinyint(1) NOT NULL,
+  `configure` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_profile`,`id_module`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (5);
+
+/* Create SuperAdmin */
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 5 WHERE `id_profile` = 4;
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 4 WHERE `id_profile` = 3;
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 3 WHERE `id_profile` = 2;
+UPDATE `PREFIX_profile_lang` SET `id_profile` = 2 WHERE `id_profile` = 1;
+INSERT INTO `PREFIX_profile_lang` (`id_profile`, `id_lang`, `name`) VALUES (1, 1, 'SuperAdmin'),(1, 2, 'SuperAdmin'),(1, 3, 'SuperAdmin'),(1, 4, 'SuperAdmin'),(1, 5, 'SuperAdmin');
+UPDATE `PREFIX_access` SET `id_profile` = 5 WHERE `id_profile` = 4;
+UPDATE `PREFIX_access` SET `id_profile` = 4 WHERE `id_profile` = 3;
+UPDATE `PREFIX_access` SET `id_profile` = 3 WHERE `id_profile` = 2;
+UPDATE `PREFIX_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`,	`delete`) (SELECT 1, `id_tab`, 1, 1, 1, 1 FROM `PREFIX_tab`);
+UPDATE `PREFIX_module_access` SET `id_profile` = 5 WHERE `id_profile` = 4;
+UPDATE `PREFIX_module_access` SET `id_profile` = 4 WHERE `id_profile` = 3;
+UPDATE `PREFIX_module_access` SET `id_profile` = 3 WHERE `id_profile` = 2;
+UPDATE `PREFIX_module_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 1, `id_module`, 1, 1 FROM `PREFIX_module`);
+
 CREATE TABLE IF NOT EXISTS `PREFIX_accounting_zone_shop` (
   `id_accounting_zone_shop` int(11) NOT NULL AUTO_INCREMENT,
   `id_zone` int(11) NOT NULL,
@@ -21,27 +48,21 @@ CREATE TABLE IF NOT EXISTS `PREFIX_accounting_product_zone_shop` (
 
 /* PHP:add_accounting_tab(); */;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_module_access` (
-  `id_profile` int(10) unsigned NOT NULL,
-  `id_module` int(10) unsigned NOT NULL,
-  `view` tinyint(1) NOT NULL,
-  `configure` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id_profile`,`id_module`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
-	SELECT `id_profile`, `id_module`, 0, 1
-	FROM `PREFIX_access` a, PREFIX_module m
-	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminModules' LIMIT 1)
-	AND a.`view` = 0
-);
+-- INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
+-- 	SELECT `id_profile`, `id_module`, 0, 1
+-- 	FROM `PREFIX_access` a, PREFIX_module m
+-- 	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminModules' LIMIT 1)
+-- 	AND a.`view` = 0
+-- );
+--
+-- INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
+-- 	SELECT `id_profile`, `id_module`, 1, 1
+-- 	FROM `PREFIX_access` a, PREFIX_module m
+-- 	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminModules' LIMIT 1)
+-- 	AND a.`view` = 1
+-- );
 
-INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
-	SELECT `id_profile`, `id_module`, 1, 1
-	FROM `PREFIX_access` a, PREFIX_module m
-	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminModules' LIMIT 1)
-	AND a.`view` = 1
-);
 
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminThemes' WHERE `class_name` = 'AdminAppearance';
 
@@ -196,10 +217,7 @@ ALTER TABLE `PREFIX_product` ADD `is_virtual` TINYINT( 1 ) NOT NULL DEFAULT '0' 
 
 /* PHP:add_new_tab(AdminProducts, fr:Products|es:Products|en:Products|de:Products|it:Products, 1); */;
 /* PHP:add_new_tab(AdminCategories, fr:Categories|es:Categories|en:Categories|de:Categories|it:Categories, 1); */;
-/* PHP:add_new_tab(AdminStocks, fr:Stocks|es:Stocks|en:Stocks|de:Stocks|it:Stocks, 1); */;
 /* PHP:add_default_restrictions_modules_groups(); */;
-
-
 
 CREATE TABLE IF NOT EXISTS `PREFIX_employee_shop` (
 `id_employee` INT( 11 ) UNSIGNED NOT NULL ,
@@ -210,27 +228,6 @@ PRIMARY KEY ( `id_employee` , `id_shop` )
 INSERT INTO `PREFIX_employee_shop` (`id_employee`, `id_shop`) (SELECT `id_employee`, 1 FROM `PREFIX_employee`);
 
 UPDATE `PREFIX_access` SET `view` = 0, `add` = 0, `edit` = 0, `delete` = 0 WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminShop' LIMIT 1) AND `id_profile` != 1;
-
-INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (5);
-
-UPDATE `PREFIX_profile_lang` SET `id_profile` = 5 WHERE `id_profile` = 4;
-UPDATE `PREFIX_profile_lang` SET `id_profile` = 4 WHERE `id_profile` = 3;
-UPDATE `PREFIX_profile_lang` SET `id_profile` = 3 WHERE `id_profile` = 2;
-UPDATE `PREFIX_profile_lang` SET `id_profile` = 2 WHERE `id_profile` = 1;
-
-INSERT INTO `PREFIX_profile_lang` (`id_profile`, `id_lang`, `name`) VALUES (1, 1, 'SuperAdmin'),(1, 2, 'SuperAdmin'),(1, 3, 'SuperAdmin'),(1, 4, 'SuperAdmin'),(1, 5, 'SuperAdmin');
-
-UPDATE `PREFIX_access` SET `id_profile` = 5 WHERE `id_profile` = 4;
-UPDATE `PREFIX_access` SET `id_profile` = 4 WHERE `id_profile` = 3;
-UPDATE `PREFIX_access` SET `id_profile` = 3 WHERE `id_profile` = 2;
-UPDATE `PREFIX_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
-
-UPDATE `PREFIX_module_access` SET `id_profile` = 5 WHERE `id_profile` = 4;
-UPDATE `PREFIX_module_access` SET `id_profile` = 4 WHERE `id_profile` = 3;
-UPDATE `PREFIX_module_access` SET `id_profile` = 3 WHERE `id_profile` = 2;
-UPDATE `PREFIX_module_access` SET `id_profile` = 2 WHERE `id_profile` = 1;
-
-INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (SELECT 1, `id_module`, 1, 1 FROM `PREFIX_module`);
 
 ALTER TABLE `PREFIX_carrier` ADD `position` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0';
 
@@ -559,61 +556,11 @@ UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminCategories&
 
 UPDATE `PREFIX_quick_access` SET `link` = 'index.php?controller=AdminProducts&addproduct' WHERE `id_quick_access` = 4;
 
-UPDATE `PREFIX_access` SET `view` = '1' WHERE `id_profile` = 5 AND `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStock' LIMIT 1);
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1) AND `id_profile` = '3';
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1) AND `id_profile` = '5';
 
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('1', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('2', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('3', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('4', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1), 0, 0, 0, 0);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('5', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminSupplyOrders' LIMIT 1), 0, 0, 0, 0);
-
-INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
-	SELECT `id_profile`, (
-		SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminProducts' LIMIT 1
-	), 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-);
-
-INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
-	SELECT `id_profile`, (
-		SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCategories' LIMIT 1
-	), 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-);
-
-INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
-	SELECT `id_profile`, (
-		SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminAttributeGenerator' LIMIT 1
-	), 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-);
-
-INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
-	SELECT `id_profile`, (
-		SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminAccounting' LIMIT 1
-	), 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-);
-
-INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
-	SELECT `id_profile`, (
-		SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminAccountingManagement' LIMIT 1
-	), 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-);
-
-INSERT INTO `PREFIX_access` ( `id_profile` , `id_tab` , `view` , `add` , `edit` , `delete` ) (
-	SELECT `id_profile`, (
-		SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminAccountingExport' LIMIT 1
-	), 1, 1, 1, 1 FROM `PREFIX_profile` WHERE `id_profile` != 1 AND `id_profile` != 2
-);
-
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('1', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('2', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('3', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1), 0, 0, 0, 0);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('4', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('5', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCmsCategories' LIMIT 1), 0, 0, 0, 0);
-
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('1', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('2', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('3', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1), 0, 0, 0, 0);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('4', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1), 1, 1, 1, 1);
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('5', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1), 0, 0, 0, 0);
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1) AND `id_profile` = '3';
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminCms' LIMIT 1) AND `id_profile` = '5';
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_CUSTOMER_GROUP', '1', NOW(), NOW());
 
