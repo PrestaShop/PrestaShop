@@ -69,6 +69,30 @@ class CustomerCore extends ObjectModel
 	/** @var boolean Opt-in subscription */
 	public $optin;
 
+	/** @var string WebSite **/
+	public $website;
+
+	/** @var string Company */
+	public $company;
+
+	/** @var string SIRET */
+	public $siret;
+
+	/** @var string APE */
+	public $ape;
+
+	/** @var float Outstanding allow amount (B2B opt)  */
+	public $outstanding_allow_amount = 0;
+
+	/** @var integer Show public prices (B2B opt) */
+	public $show_public_prices = 0;
+
+	/** @var int Risk ID (B2B opt) */
+	public $id_risk;
+
+	/** @var integer Max payment day */
+	public $max_payment_days = 0;
+
 	/** @var integer Password */
 	public $passwd;
 
@@ -140,6 +164,14 @@ class CustomerCore extends ObjectModel
 			'newsletter_date_add' =>		array('type' => self::TYPE_DATE),
 			'ip_registration_newsletter' =>	array('type' => self::TYPE_STRING),
 			'optin' => 						array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'website' =>					array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
+			'company' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+			'siret' =>						array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
+			'ape' =>						array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
+			'outstanding_allow_amount' =>	array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
+			'show_public_prices' =>			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'id_risk' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'max_payment_days' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'note' => 						array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
@@ -692,5 +724,26 @@ class CustomerCore extends ObjectModel
 		$cart = array_shift($carts);
 		$cart = new Cart((int)$cart['id_cart']);
 		return ($cart->nbProducts() === 0 ? (int)$cart->id : false);
+	}
+
+	public function getOutstanding()
+	{
+		$query = new DbQuery();
+		$query->select('SUM(oi.total_paid_tax_incl)')
+			->from('order_invoice', 'oi')
+			->leftJoin('orders', 'o', 'oi.id_order = o.id_order')
+			->groupBy('o.id_customer')
+			->where('o.id_customer = '.(int)$this->id);
+		$total_paid = (float)Db::getInstance()->getValue($query->build());
+
+		$query = new DbQuery();
+		$query->select('SUM(op.amount)')
+			->from('order_payment', 'op')
+			->leftJoin('orders', 'o', 'op.id_order = o.id_order')
+			->groupBy('o.id_customer')
+			->where('o.id_customer = '.(int)$this->id);
+		$total_rest = (float)Db::getInstance()->getValue($query->build());
+
+		return $total_paid - $total_rest;
 	}
 }

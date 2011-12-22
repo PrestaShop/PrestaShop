@@ -339,7 +339,9 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (162, 'PS_UNIDENTIFIED_GROUP', '1', NOW(), NOW()),
 (163, 'PS_GUEST_GROUP', '2', NOW(), NOW()),
 (164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW()),
-(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW());
+(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW()),
+(166, 'PS_B2B_ENABLE', '0', NOW(), NOW()),
+(167, 'PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -931,6 +933,7 @@ INSERT INTO `PREFIX_contact_lang` (`id_contact`, `id_lang`, `name`, `description
 INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (1);
 INSERT INTO `PREFIX_profile_lang` (`id_profile`, `id_lang`, `name`) VALUES (1, 1, 'SuperAdmin'),(1, 2, 'SuperAdmin'),(1, 3, 'SuperAdmin'),(1, 4, 'SuperAdmin'),(1, 5, 'SuperAdmin');
 
+/* Active tabs */
 INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUES (1, 'AdminCatalog', 0, 1),(2, 'AdminCustomers', 0, 2),(3, 'AdminOrders', 0, 3),
 (4, 'AdminPayment', 0, 4),(5, 'AdminShipping', 0, 5),(6, 'AdminStats', 0, 6),(7, 'AdminModules', 0, 7),(29, 'AdminEmployees', 0, 8),(8, 'AdminPreferences', 0, 9),
 (9, 'AdminTools', 0, 10),(82, 'AdminStores', 9, 11),(60, 'AdminTracking', 1, 3),(10, 'AdminManufacturers', 1, 4),(34, 'AdminSuppliers', 1, 5),(11, 'AdminAttributesGroups', 1, 6),
@@ -966,6 +969,9 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (108, 'AdminStockConfiguration', 95, 7),
 (109, 'AdminSpecificPriceRule', 1, 11);
 
+/* Inactive tabs */
+INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`, `active`) VALUES (110, 'AdminOutstanding', 2, 5, 0);
+
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
@@ -997,7 +1003,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 105, 'CMS categories'),
 (1, 106, 'CMS pages'),
 (1, 108, 'Configuration'),
-(1, 109, 'Catalog price rules');
+(1, 109, 'Catalog price rules'),
+(1, 110, 'Outstanding');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -1028,7 +1035,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 105, 'Catégories CMS'),
 (2, 106, 'Pages CMS'),
 (2, 108, 'Configuration'),
-(2, 109, 'Règles de prix catalogue');
+(2, 109, 'Règles de prix catalogue'),
+(2, 110, 'Encours');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -1058,7 +1066,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 105, 'CMS categories'),
 (3, 106, 'CMS pages'),
 (3, 108, 'Configuration'),
-(3, 110, 'Catalog price rules');
+(3, 109, 'Catalog price rules'),
+(3, 110, 'Outstanding');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -1089,7 +1098,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 105, 'CMS categories'),
 (4, 106, 'CMS pages'),
 (4, 108, 'Configuration'),
-(4, 109, 'Catalog price rules');
+(4, 109, 'Catalog price rules'),
+(4, 110, 'Outstanding');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -1120,7 +1130,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 105, 'CMS categories'),
 (5, 106, 'CMS pages'),
 (5, 108, 'Configuration'),
-(5, 109, 'Catalog price rules');
+(5, 109, 'Catalog price rules'),
+(5, 110, 'Outstanding');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`
@@ -1606,3 +1617,31 @@ INSERT INTO `PREFIX_supply_order_state_lang` (`id_supply_order_state`, `id_lang`
 (6, 3, 'order fenced'),
 (6, 4, 'order fenced'),
 (6, 5, 'order fenced');
+
+INSERT INTO `PREFIX_risk` (`id_risk`, `percent`, `color`) VALUES
+(1, 0, 'LimeGreen'),
+(2, 35, 'DarkOrange'),
+(3, 75, 'Crimson'),
+(4, 100, '#ec2e15');
+
+INSERT INTO `PREFIX_risk_lang` (`id_risk`, `id_lang`, `name`) VALUES
+(1, 1, 'None'),
+(2, 1, 'Low'),
+(3, 1, 'Middle'),
+(4, 1, 'Hight'),
+(1, 2, 'Aucun'),
+(2, 2, 'Faible'),
+(3, 2, 'Moyen'),
+(4, 2, 'Élevé'),
+(1, 3, 'None'),
+(2, 3, 'Low'),
+(3, 3, 'Middle'),
+(4, 3, 'Hight'),
+(1, 4, 'None'),
+(2, 4, 'Low'),
+(3, 4, 'Middle'),
+(4, 4, 'Hight'),
+(1, 5, 'None'),
+(2, 5, 'Low'),
+(3, 5, 'Middle'),
+(4, 5, 'Hight');

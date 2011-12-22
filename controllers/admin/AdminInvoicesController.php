@@ -62,6 +62,13 @@ class AdminInvoicesControllerCore extends AdminController
 						'type' => 'textareaLang',
 						'cols' => 40,
 						'rows' => 8
+					),
+					'PS_INVOICE_MODEL' => array(
+						'title' => $this->l('Invoice model:'),
+						'desc' => $this->l('Choose an invoice model'),
+						'type' => 'select',
+						'identifier' => 'value',
+						'list' => $this->getInvoicesModels()
 					)
 				),
 				'submit' => array()
@@ -239,5 +246,22 @@ class AdminInvoicesControllerCore extends AdminController
 	{
 		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
 				$this->_errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber().')';
+	}
+
+	protected function getInvoicesModels()
+	{
+		$models = array(array('value'=>'invoice', 'name'=>'invoice'));
+		$d = dir(_PS_THEME_DIR_.'/pdf/');
+		while (false !== ($entry = $d->read()))
+		{
+			if (preg_match('`^(invoice-[a-z0-9]+)\.tpl$`', $entry, $matches)) {
+				$models[] = array(
+					'value' => $matches[1],
+					'name' => $matches[1]
+				);
+			}
+		}
+		$d->close();
+		return $models;
 	}
 }
