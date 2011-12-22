@@ -1033,6 +1033,7 @@ abstract class ModuleCore
 						$item->limited_countries = array();
 						$item->is_configurable = 0;
 						$item->need_instance = 0;
+						$item->not_on_disk = 1;
 						$item->available_on_addons = 1;
 						$item->active = 0;
 						if (isset($modaddons->img))

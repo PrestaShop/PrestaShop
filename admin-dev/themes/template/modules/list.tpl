@@ -66,7 +66,7 @@
 									<p class="desc">{l s='Description'} : {$module->description}</p>
 									{if isset($module->message)}<div class="conf">{$module->message}</div>{/if}
 									<div class="row-actions-module">
-										{$module->optionsHtml}
+										{if !isset($module->not_on_disk)}{$module->optionsHtml}{else}&nbsp;{/if}
 									</div>
 								</div>
 							</td>
