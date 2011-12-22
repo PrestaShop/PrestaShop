@@ -73,8 +73,40 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
 		$customer = new Customer($this->order->id_customer);
 
+
+		$this->order->total_products = 0;
+		$this->order->total_products_wt = 0;
+		foreach ($this->order->products as $k => $p)
+		{
+			$this->order->products[$k]['total_price_tax_excl'] = $this->order->products[$k]['unit_price_tax_excl'] * $this->order->products[$k]['product_quantity'];
+			$this->order->products[$k]['total_price_tax_incl'] = $this->order->products[$k]['unit_price_tax_incl'] * $this->order->products[$k]['product_quantity'];
+			if ($this->order_slip->partial == 1)
+			{
+				$order_slip_detail = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'order_slip_detail` WHERE `id_order_slip` = '.(int)$this->order_slip->id.' AND `id_order_detail` = '.(int)$p['id_order_detail']);
+				$this->order->products[$k]['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
+				$this->order->products[$k]['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
+			}
+			$this->order->total_products += $this->order->products[$k]['total_price_tax_excl'];
+			$this->order->total_products_wt += $this->order->products[$k]['total_price_tax_incl'];
+			$this->order->total_paid_tax_excl = $this->order->total_products;
+			$this->order->total_paid_tax_incl = $this->order->total_products_wt;
+		}
+		if ($this->order_slip->shipping_cost == 0)
+		{
+			$this->order->total_shipping_tax_incl = 0;
+			$this->order->total_shipping_tax_excl = 0;
+		}
+		if ($this->order_slip->partial == 1 && $this->order_slip->shipping_cost_amount > 0)
+		{
+			$this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
+			$this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
+		}
+		$this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
+		$this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
+
 		$this->smarty->assign(array(
 			'order' => $this->order,
+			'order_slip' => $this->order_slip,
 			'order_details' => $this->order->products,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
