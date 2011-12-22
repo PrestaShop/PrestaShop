@@ -72,12 +72,6 @@ class AdminImagesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Theme:'),
-					'name' => 'theme',
-					
-				),
-				array(
-					'type' => 'text',
 					'label' => $this->l('Type name:'),
 					'name' => 'name',
 					'required' => true,
