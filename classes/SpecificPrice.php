@@ -206,7 +206,7 @@ class SpecificPriceCore extends ObjectModel
 					AND
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
-				AND id_cart='.(int)$id_cart.'
+				AND id_cart IN (0, '.(int)$id_cart.')
 				ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `score` DESC');
 		}
 		return self::$_specificPriceCache[$key];
