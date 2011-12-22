@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <entity_delivery>
+  <entities/>
   <fields class="Delivery" sql="a.id_carrier = 1">
     <field name="id_shop"/>
     <field name="id_group_shop"/>
@@ -9,5 +10,4 @@
     <field name="id_zone" relation="zone"/>
     <field name="price"/>
   </fields>
-  <entities/>
 </entity_delivery>

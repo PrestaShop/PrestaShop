@@ -393,12 +393,14 @@ class InstallXmlLoader
 		}
 		else if ($classname)
 		{
+			$xml = $this->loadEntity($entity);
+
 			// Create entity with ObjectModel class
 			$object = new $classname();
 			$object->hydrate($data);
 			if ($data_lang)
 				$object->hydrate($data_lang);
-			$object->add();
+			$object->add(true, (isset($xml->fields['null'])) ? true : false);
 			$entity_id = $object->id;
 		}
 		else
@@ -669,6 +671,7 @@ class InstallXmlLoader
 				'sql' => 		'',
 				'ordersql' => 	'',
 				'image' => 		'',
+				'null' => 		'',
 			),
 			'fields' => 	array(),
 		);
@@ -694,6 +697,9 @@ class InstallXmlLoader
 
 		if ($xml->fields['ordersql'])
 			$info['config']['ordersql'] = (string)$xml->fields['ordersql'];
+
+		if ($xml->fields['null'])
+			$info['config']['null'] = (string)$xml->fields['null'];
 
 		if ($xml->fields['image'])
 			$info['config']['image'] = (string)$xml->fields['image'];
