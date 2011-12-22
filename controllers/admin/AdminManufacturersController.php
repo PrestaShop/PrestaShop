@@ -683,15 +683,12 @@ class AdminManufacturersControllerCore extends AdminController
 		{
 			$images_types = ImageType::getImagesTypes('manufacturers');
 			foreach ($images_types as $k => $image_type)
-			{
-				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
 				imageResize(
 					_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
-					_PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).$theme.'.jpg',
+					_PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'.jpg',
 					(int)$image_type['width'],
 					(int)$image_type['height']
 				);
-			}
 		}
 	}
 }

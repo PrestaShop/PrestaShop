@@ -92,7 +92,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->_defaultOrderBy = 'position';
 		$this->max_file_size = (Configuration::get('PS_LIMIT_UPLOAD_IMAGE_VALUE') * 1000000);
 		$this->max_image_size = (Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
-		
+
 		$categoriesArray = array();
 		$categories = Category::getSimpleCategories($this->context->language->id);
 
@@ -1370,11 +1370,8 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$imagesTypes = ImageType::getImagesTypes('products');
 				foreach ($imagesTypes as $k => $image_type)
-				{
-					$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-					if (!imageResize($tmpName, $new_path.'-'.stripslashes($image_type['name']).$theme.'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
+					if (!imageResize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
 						$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($image_type['name']);
-				}
 			}
 
 			@unlink($tmpName);

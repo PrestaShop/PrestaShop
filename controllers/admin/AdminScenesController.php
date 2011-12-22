@@ -74,11 +74,10 @@ class AdminScenesControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes('scenes');
 			foreach ($images_types as $k => $image_type)
 			{
-				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
 				if ($image_type['name'] == 'large_scene' && isset($_FILES['image']))
 					imageResize(
 						$_FILES['image']['tmp_name'],
-						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).$theme.'.jpg',
+						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
 					);
@@ -90,7 +89,7 @@ class AdminScenesControllerCore extends AdminController
 						$tmp_name = $_FILES['image']['tmp_name'];
 					imageResize(
 						$tmp_name,
-						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).$theme.'.jpg',
+						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
 					);
@@ -190,7 +189,7 @@ class AdminScenesControllerCore extends AdminController
 				.(Tools::getMaxUploadSize() / 1024).''.$this->l('KB max.').' '
 				.$this->l('If larger than the image size setting, the image will be reduced to ')
 				.' '.$large_scene_image_type['width'].'x'.$large_scene_image_type['height'].'px '
-				.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the 
+				.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the
 					correct image size.').'.<br />'.
 				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg'))
@@ -204,7 +203,7 @@ class AdminScenesControllerCore extends AdminController
 			$image_to_map_desc .= '
 						<div id="ajax_choose_product" style="display:none; padding:6px; padding-top:2px; width:600px;">
 							'.$this->l('Begin typing the first letters of the product name, then select the product from the drop-down list:').'
-								<br /><input type="text" value="" id="product_autocomplete_input" /> 
+								<br /><input type="text" value="" id="product_autocomplete_input" />
 								<input type="button" class="button" value="'.$this->l('OK').'" onclick="$(this).prev().search();" />
 								<input type="button" class="button" value="'.$this->l('Delete').'" onclick="undoEdit();" />
 						</div>

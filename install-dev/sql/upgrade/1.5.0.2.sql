@@ -420,10 +420,6 @@ WHERE `class_name` = 'AdminAccounting';
 
 ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount` `amount_tax_excl` DECIMAL( 10, 2 ) default NULL;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount_tax_incl` DECIMAL(10,2) default NULL AFTER `amount_tax_excl`;
-ALTER TABLE `PREFIX_image_type` DROP INDEX `name`;
-ALTER TABLE `PREFIX_image_type` ADD `id_theme` INT(11) NOT NULL AFTER `id_image_type`;
-ALTER TABLE `PREFIX_image_type` ADD UNIQUE (`id_theme` ,`name`);
-UPDATE `PREFIX_image_type` SET `id_theme`=1;
 
 CREATE TABLE `PREFIX_webservice_account_shop` (
 `id_webservice_account` INT( 11 ) UNSIGNED NOT NULL,
