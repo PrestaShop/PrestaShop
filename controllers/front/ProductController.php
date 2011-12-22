@@ -105,7 +105,7 @@ class ProductControllerCore extends FrontController
 	{
 		if (!$this->errors)
 		{
-			// Assign to the tempate the id of the virtuale product. "0" if the product is not downloadable.
+			// Assign to the template the id of the virtual product. "0" if the product is not downloadable.
 			$this->context->smarty->assign('virtual', ProductDownload::getIdFromIdProduct((int)$this->product->id));
 
 			// If the product is not active, it's the admin preview mode
@@ -129,7 +129,7 @@ class ProductControllerCore extends FrontController
 				$this->textRecord($this->product, $this->context->cart);
 				$this->formTargetFormat();
 			}
-			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct((int)$this->product->id, (int)Tools::getValue('deletePicture')))
+			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deletePictureToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture');
 
 			$files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
@@ -470,7 +470,7 @@ class ProductControllerCore extends FrontController
 
 				$product_picture_width = (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
 				$product_picture_height = (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
-				if ($error || (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($file['tmp_name'], $tmp_name)))
+				if ($error || (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($file['tmp_name'], $tmp_name)))
 					return false;
 				/* Original file */
 				else if (!imageResize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
@@ -485,7 +485,7 @@ class ProductControllerCore extends FrontController
 					// Store customization in database
 					$cart->addPictureToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_FILE, $file_name);
 				}
-				@unlink($tmp_name);
+				unlink($tmp_name);
 			}
 		return true;
 	}

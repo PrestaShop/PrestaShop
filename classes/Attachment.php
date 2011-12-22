@@ -87,21 +87,41 @@ class AttachmentCore extends ObjectModel
 		);
 	}
 
+	/**
+	 * @static
+	 * @param $id_product
+	 * @return bool
+	 */
+	public static function deleteProductAttachments($id_product)
+	{
+		return Db::getInstance()->execute('
+			DELETE FROM '._DB_PREFIX_.'product_attachment
+			WHERE id_product = '.(int)$id_product);
+	}
+
+	/**
+	 * @static
+	 * @param $id_product
+	 * @param $array
+	 * @return bool
+	 */
 	public static function attachToProduct($id_product, $array)
 	{
-		$result1 = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_product = '.(int)$id_product);
+		$result1 = Attachment::deleteProductAttachments($id_product);
 		if (is_array($array))
 		{
 			$ids = array();
 			foreach ($array as $id_attachment)
-				$ids[] = '('.(int)$id_product.','.(int)$id_attachment.')';
+				if ((int)$id_attachment > 0)
+					$ids[] = '('.(int)$id_product.','.(int)$id_attachment.')';
 			Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'product
 				SET cache_has_attachments = '.(count($ids) ? '1' : '0').'
 				WHERE id_product = '.(int)$id_product.'
 				LIMIT 1
 			');
-			return ($result1 && Db::getInstance()->execute('
+
+			return ($result1 && count($ids) && Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.'product_attachment (id_product, id_attachment)
 				VALUES '.implode(',', $ids))
 			);
