@@ -95,29 +95,29 @@ class FileUploaderCore
 /**
  * Handle file uploads via XMLHttpRequest
  */
-class qqUploadedFileXhr 
+class qqUploadedFileXhr
 {
 	/**
 	* Save the file to the specified path
 	* @return boolean TRUE on success
 	*/
-	function upload($path) 
-	{    
+	function upload($path)
+	{
 		$input = fopen("php://input", "r");
 		$temp = tmpfile();
 		$realSize = stream_copy_to_stream($input, $temp);
 		fclose($input);
-		if ($realSize != $this->getSize())           
+		if ($realSize != $this->getSize())
 			return false;
-		$target = fopen($path, "w");        
+		$target = fopen($path, "w");
 		fseek($temp, 0, SEEK_SET);
 		stream_copy_to_stream($temp, $target);
 		fclose($target);
-		
+
 		return true;
 	}
-	
-	function save() 
+
+	function save()
 	{
 		$product = new Product($_GET['id_product']);
 		if (!Validate::isLoadedObject($product))
@@ -134,12 +134,12 @@ class qqUploadedFileXhr
 			if (!$image->add())
 				return array('error' => Tools::displayError('Error while creating additional image'));
 			else
-			{	
+			{
 				return $this->copyImage($product->id, $image->id);
 			}
 		}
 	}
-	
+
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
 		$image = new Image($id_image);
@@ -154,11 +154,8 @@ class qqUploadedFileXhr
 		{
 			$imagesTypes = ImageType::getImagesTypes('products');
 			foreach ($imagesTypes AS $k => $imageType)
-			{
-				$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
-				if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+				if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 					return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
-			}
 		}
 		unlink($tmpName);
 		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
@@ -169,17 +166,17 @@ class qqUploadedFileXhr
 		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover);
 		return array("success" => $img);
 	}
-	
-	function getName() 
+
+	function getName()
 	{
 		return $_GET['qqfile'];
 	}
 
-	function getSize() 
+	function getSize()
 	{
 		if (isset($_SERVER["CONTENT_LENGTH"]))
-			return (int)$_SERVER["CONTENT_LENGTH"];            
-		else 
-			throw new Exception('Getting content length is not supported.');     
-	}   
+			return (int)$_SERVER["CONTENT_LENGTH"];
+		else
+			throw new Exception('Getting content length is not supported.');
+	}
 }

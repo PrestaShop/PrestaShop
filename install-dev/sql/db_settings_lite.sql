@@ -339,7 +339,11 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (162, 'PS_UNIDENTIFIED_GROUP', '1', NOW(), NOW()),
 (163, 'PS_GUEST_GROUP', '2', NOW(), NOW()),
 (164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW()),
-(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW());
+(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW()),
+(166, 'PS_B2B_ENABLE', '0', NOW(), NOW()),
+(167, 'PS_INVOICE_MODEL', 'invoice', NOW(), NOW()),
+(168, 'PS_LIMIT_UPLOAD_IMAGE_VALUE', '2', NOW(), NOW()),
+(169, 'PS_LIMIT_UPLOAD_FILE_VALUE', '2', NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -904,15 +908,15 @@ INSERT INTO `PREFIX_currency` (`name`, `iso_code`, `iso_code_num`, `sign`, `blan
 ('Singapour Dollar', 'SGD', '702', '$', 1, 1.77, 2, 0, 0), ('Baht', 'THB', '764', '฿', 1, 40.96, 2, 0, 0), ('Rand', 'ZAR', '710', 'R', 1, 9.38, 2, 0, 0);*/
 INSERT INTO `PREFIX_currency_shop` (`id_currency`, `id_shop`) VALUES (1,1), (2,1), (3,1);
 
-INSERT INTO `PREFIX_image_type` (`id_image_type`, `id_theme`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`, `stores`) VALUES
-(1, 1, 'small', 45, 45, 1, 1, 1, 1, 0, 0),
-(2, 1, 'medium', 58, 58, 1, 1, 1, 1, 0, 1),
-(3, 1, 'large', 264, 264, 1, 1, 1, 1, 0, 0),
-(4, 1, 'thickbox', 600, 600, 1, 0, 0, 0, 0, 0),
-(5, 1, 'category', 500, 150, 0, 1, 0, 0, 0, 0),
-(6, 1, 'home', 124, 124, 1, 0, 0, 0, 0, 0),
-(7, 1, 'large_scene', 556, 200, 0, 0, 0, 0, 1, 0),
-(8, 1, 'thumb_scene', 161, 58, 0, 0, 0, 0, 1, 0);
+INSERT INTO `PREFIX_image_type` (`id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`, `stores`) VALUES
+(1, 'small', 45, 45, 1, 1, 1, 1, 0, 0),
+(2, 'medium', 58, 58, 1, 1, 1, 1, 0, 1),
+(3, 'large', 264, 264, 1, 1, 1, 1, 0, 0),
+(4, 'thickbox', 600, 600, 1, 0, 0, 0, 0, 0),
+(5, 'category', 500, 150, 0, 1, 0, 0, 0, 0),
+(6, 'home', 124, 124, 1, 0, 0, 0, 0, 0),
+(7, 'large_scene', 556, 200, 0, 0, 0, 0, 1, 0),
+(8, 'thumb_scene', 161, 58, 0, 0, 0, 0, 1, 0);
 
 INSERT INTO `PREFIX_contact_shop` (`id_contact`, `id_shop`) VALUES (1,1), (2,1);
 
@@ -931,11 +935,12 @@ INSERT INTO `PREFIX_contact_lang` (`id_contact`, `id_lang`, `name`, `description
 INSERT INTO `PREFIX_profile` (`id_profile`) VALUES (1);
 INSERT INTO `PREFIX_profile_lang` (`id_profile`, `id_lang`, `name`) VALUES (1, 1, 'SuperAdmin'),(1, 2, 'SuperAdmin'),(1, 3, 'SuperAdmin'),(1, 4, 'SuperAdmin'),(1, 5, 'SuperAdmin');
 
+/* Active tabs */
 INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUES (1, 'AdminCatalog', 0, 1),(2, 'AdminCustomers', 0, 2),(3, 'AdminOrders', 0, 3),
 (4, 'AdminPayment', 0, 4),(5, 'AdminShipping', 0, 5),(6, 'AdminStats', 0, 6),(7, 'AdminModules', 0, 7),(29, 'AdminEmployees', 0, 8),(8, 'AdminPreferences', 0, 9),
 (9, 'AdminTools', 0, 10),(82, 'AdminStores', 9, 11),(60, 'AdminTracking', 1, 3),(10, 'AdminManufacturers', 1, 4),(34, 'AdminSuppliers', 1, 5),(11, 'AdminAttributesGroups', 1, 6),
 (36, 'AdminFeatures', 1, 7),(58, 'AdminScenes', 1, 8),(66, 'AdminTags', 1, 9),(68, 'AdminAttachments', 1, 10),(12, 'AdminAddresses', 2, 1),(63, 'AdminGroups', 2, 2),
-(65, 'AdminCarts', 2, 3),(42, 'AdminInvoices', 3, 1),(55, 'AdminDeliverySlip', 3, 2),(47, 'AdminReturn', 3, 3),(49, 'AdminSlip', 3, 4),(59, 'AdminMessages', 3, 5),
+(65, 'AdminCarts', 2, 3),(42, 'AdminInvoices', 3, 1),(55, 'AdminDeliverySlip', 3, 2),(47, 'AdminReturn', 3, 3),(49, 'AdminSlip', 3, 4),
 (13, 'AdminStatuses', 3, 6),(54, 'AdminOrderMessage', 3, 7),(14, 'AdminCartRules', 4, 4),(15, 'AdminCurrencies', 4, 1),(16, 'AdminTaxes', 4, 2),
 (17, 'AdminCarriers', 5, 1),(46, 'AdminStates', 5, 2),(18, 'AdminCountries', 5, 3),(19, 'AdminZones', 5, 5),(20, 'AdminRangePrice', 5, 6),
 (21, 'AdminRangeWeight', 5, 7),(61, 'AdminSearchEngines', 6, 2),(62, 'AdminReferrers', 6, 3),
@@ -961,10 +966,13 @@ INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`) VALUE
 (103, 'AdminAccountingManagement', 102, 1),
 (104, 'AdminAccountingExport', 102, 2),
 (105, 'AdminCmsCategories', -1, 0),
-(106, 'AdminCms', -1, 0), 
+(106, 'AdminCms', -1, 0),
 (107, 'AdminLogin', -1 , 0),
 (108, 'AdminStockConfiguration', 95, 7),
 (109, 'AdminSpecificPriceRule', 1, 11);
+
+/* Inactive tabs */
+INSERT INTO `PREFIX_tab` (`id_tab`, `class_name`, `id_parent`, `position`, `active`) VALUES (110, 'AdminOutstanding', 2, 5, 0);
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) (SELECT 1, id_tab, 1, 1, 1, 1 FROM `PREFIX_tab`);
 
@@ -997,7 +1005,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (1, 105, 'CMS categories'),
 (1, 106, 'CMS pages'),
 (1, 108, 'Configuration'),
-(1, 109, 'Catalog price rules');
+(1, 109, 'Catalog price rules'),
+(1, 110, 'Outstanding');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 1, 'Catalogue'),(2, 2, 'Clients'),(2, 3, 'Commandes'),(2, 4, 'Paiement'),(2, 5, 'Transport'),
@@ -1028,7 +1037,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (2, 105, 'Catégories CMS'),
 (2, 106, 'Pages CMS'),
 (2, 108, 'Configuration'),
-(2, 109, 'Règles de prix catalogue');
+(2, 109, 'Règles de prix catalogue'),
+(2, 110, 'Encours');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 1, 'Catálogo'),(3, 2, 'Clientes'),(3, 3, 'Pedidos'),(3, 4, 'Pago'),(3, 5, 'Transporte'),
@@ -1058,7 +1068,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (3, 105, 'CMS categories'),
 (3, 106, 'CMS pages'),
 (3, 108, 'Configuration'),
-(3, 110, 'Catalog price rules');
+(3, 109, 'Catalog price rules'),
+(3, 110, 'Outstanding');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 1, 'Katalog'),(4, 2, 'Kunden'),(4, 3, 'Bestellungen'),(4, 4, 'Zahlung'),
@@ -1089,7 +1100,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (4, 105, 'CMS categories'),
 (4, 106, 'CMS pages'),
 (4, 108, 'Configuration'),
-(4, 109, 'Catalog price rules');
+(4, 109, 'Catalog price rules'),
+(4, 110, 'Outstanding');
 
 INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 1, 'Catalogo'),(5, 2, 'Clienti'),(5, 3, 'Ordini'),(5, 4, 'Pagamento'),
@@ -1120,7 +1132,8 @@ INSERT INTO `PREFIX_tab_lang` (`id_lang`, `id_tab`, `name`) VALUES
 (5, 105, 'CMS categories'),
 (5, 106, 'CMS pages'),
 (5, 108, 'Configuration'),
-(5, 109, 'Catalog price rules');
+(5, 109, 'Catalog price rules'),
+(5, 110, 'Outstanding');
 
 INSERT IGNORE INTO `PREFIX_tab_lang` (`id_tab`, `id_lang`, `name`)
 	(SELECT `id_tab`, id_lang, (SELECT tl.`name`
@@ -1452,7 +1465,7 @@ INSERT INTO `PREFIX_timezone` (`name`) VALUES ('Africa/Abidjan'),('Africa/Accra'
 
 INSERT INTO `PREFIX_group` (`id_group`, `reduction`, `date_add`, `date_upd`) VALUES	(1, 0, NOW(), NOW()), (2, 0, NOW(), NOW()), (3, 0, NOW(), NOW());
 
-INSERT INTO `PREFIX_group_lang` (`id_group`, `id_lang`, `name`) VALUES	
+INSERT INTO `PREFIX_group_lang` (`id_group`, `id_lang`, `name`) VALUES
 (1, 1, 'Unidentified'),(1, 2, 'Non identifié'),(1, 3, 'Unidentified'),(1, 4, 'Unidentified'),(1, 5, 'Unidentified'),
 (2, 1, 'Guest'),(2, 2, 'Invité'),(2, 3, 'Guest'),(2, 4, 'Guest'),(2, 5, 'Guest'),
 (3, 1, 'Default'),(3, 2, 'Défaut'),(3, 3, 'Predeterminado'),(3, 4, 'Default'),(3, 5, 'Default');
@@ -1461,13 +1474,13 @@ INSERT INTO `PREFIX_group_group_shop` (`id_group`, `id_group_shop`) (SELECT `id_
 INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) (SELECT 1, `id_group` FROM `PREFIX_group`);
 
 INSERT INTO `PREFIX_stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`) VALUES
-(1, 1, NOW(), NOW()), 
-(2, -1, NOW(), NOW()), 
-(3, -1, NOW(), NOW()), 
-(4, -1, NOW(), NOW()), 
-(5, 1, NOW(), NOW()), 
-(6, -1, NOW(), NOW()), 
-(7, 1, NOW(), NOW()), 
+(1, 1, NOW(), NOW()),
+(2, -1, NOW(), NOW()),
+(3, -1, NOW(), NOW()),
+(4, -1, NOW(), NOW()),
+(5, 1, NOW(), NOW()),
+(6, -1, NOW(), NOW()),
+(7, 1, NOW(), NOW()),
 (8, 1, NOW(), NOW());
 
 INSERT INTO `PREFIX_stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`) VALUES
@@ -1606,3 +1619,31 @@ INSERT INTO `PREFIX_supply_order_state_lang` (`id_supply_order_state`, `id_lang`
 (6, 3, 'order fenced'),
 (6, 4, 'order fenced'),
 (6, 5, 'order fenced');
+
+INSERT INTO `PREFIX_risk` (`id_risk`, `percent`, `color`) VALUES
+(1, 0, 'LimeGreen'),
+(2, 35, 'DarkOrange'),
+(3, 75, 'Crimson'),
+(4, 100, '#ec2e15');
+
+INSERT INTO `PREFIX_risk_lang` (`id_risk`, `id_lang`, `name`) VALUES
+(1, 1, 'None'),
+(2, 1, 'Low'),
+(3, 1, 'Middle'),
+(4, 1, 'Hight'),
+(1, 2, 'Aucun'),
+(2, 2, 'Faible'),
+(3, 2, 'Moyen'),
+(4, 2, 'Élevé'),
+(1, 3, 'None'),
+(2, 3, 'Low'),
+(3, 3, 'Middle'),
+(4, 3, 'Hight'),
+(1, 4, 'None'),
+(2, 4, 'Low'),
+(3, 4, 'Middle'),
+(4, 4, 'Hight'),
+(1, 5, 'None'),
+(2, 5, 'Low'),
+(3, 5, 'Middle'),
+(4, 5, 'Hight');
