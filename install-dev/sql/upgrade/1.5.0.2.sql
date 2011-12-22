@@ -412,3 +412,7 @@ SET `position` = (
 	WHERE `id_parent` = 0
 )
 WHERE `class_name` = 'AdminAccounting';
+
+ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount` `amount_tax_excl` DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount_tax_incl` DECIMAL(10,2) NOT NULL AFTER `amount_tax_excl`;
+
