@@ -1,4 +1,12 @@
 {extends file="helper/form/form.tpl"}
+{block name="end_field_block"}
+	{if ($input.type == "description")}
+		<p>
+			{$input.text}
+		</p>
+	{/if}
+	</div>
+{/block}
 {block name="after"}
 <script type="text/javascript">
 	startingData = new Array();
