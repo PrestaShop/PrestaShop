@@ -202,6 +202,9 @@
 										Ordre SQL
 										<input type="text" name="order[<?php echo $entity ?>]" value="<?php echo (isset($entity_info['config']['ordersql'])) ? $entity_info['config']['ordersql'] : '' ?>" />
 									</label>
+									<label>
+										Valeurs NULL <input type="checkbox" name="null[<?php echo $entity ?>]" value="1" <?php if (isset($entity_info['config']['null']) && $entity_info['config']['null']): ?>checked="checked"<?php endif; ?> />
+									</label>
 								</div>
 							</li>
 							<?php foreach ($this->loader->getColumns($entity) as $column => $is_text): ?>

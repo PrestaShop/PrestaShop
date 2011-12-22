@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_operating_system>
-  <fields id="name">
-    <field name="name"/>
-  </fields>
   <entities>
     <operating_system id="Windows_XP">
       <name>Windows XP</name>
@@ -17,4 +14,7 @@
       <name>Linux</name>
     </operating_system>
   </entities>
+  <fields id="name">
+    <field name="name"/>
+  </fields>
 </entity_operating_system>

@@ -54,6 +54,7 @@ class SynchronizeController extends InstallControllerHttp
 		$sqls = isset($_POST['sql']) ? (array)$_POST['sql'] : array();
 		$orders = isset($_POST['order']) ? (array)$_POST['order'] : array();
 		$images = isset($_POST['image']) ? (array)$_POST['image'] : array();
+		$nulls = isset($_POST['null']) ? (array)$_POST['null'] : array();
 
 		$entities = array();
 		foreach ($tables as $table)
@@ -76,6 +77,9 @@ class SynchronizeController extends InstallControllerHttp
 
 			if (isset($images[$table]) && $images[$table])
 				$config['image'] = $images[$table];
+
+			if (isset($nulls[$table]) && $nulls[$table])
+				$config['null'] = $nulls[$table];
 
 			$fields = array();
 			if (isset($columns[$table]))

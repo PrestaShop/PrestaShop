@@ -36,6 +36,7 @@ abstract class ObjectModelCore
 	const TYPE_FLOAT = 4;
 	const TYPE_DATE = 5;
 	const TYPE_HTML = 6;
+	const TYPE_NOTHING = 7;
 
 	/**
 	 * List of association types
@@ -337,6 +338,9 @@ abstract class ObjectModelCore
 				if ($with_quotes)
 					return '\''.pSQL($value, true).'\'';
 				return pSQL($value, true);
+
+			case self::TYPE_NOTHING :
+				return $value;
 
 			case self::TYPE_STRING :
 			default :

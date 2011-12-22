@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <fields id="name" class="Tab" ordersql="a.id_parent, a.position" image="t">
-    <field name="id_parent" relation="tab"/>
-    <field name="class_name"/>
-    <field name="active"/>
-  </fields>
   <entities>
     <tab id="Home" id_parent="-1" active="1">
       <class_name>AdminHome</class_name>
@@ -304,4 +299,9 @@
       <class_name>AdminAccountingExport</class_name>
     </tab>
   </entities>
+  <fields id="name" class="Tab" ordersql="a.id_parent, a.position" image="t">
+    <field name="id_parent" relation="tab"/>
+    <field name="class_name"/>
+    <field name="active"/>
+  </fields>
 </entity_tab>
