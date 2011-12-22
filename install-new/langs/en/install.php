@@ -18,6 +18,7 @@ return array(
    		'process_step_configureShop' => 'Configure shop informations',
    		'process_step_installModules' => 'Install default modules',
    		'process_step_installFixtures' => 'Install demonstration data',
+   		'process_step_installTheme' => 'Install theme',
    		'process_step_preactivation' => 'Preactivate modules',
 	),
 );

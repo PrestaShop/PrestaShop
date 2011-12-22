@@ -65,6 +65,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processInstallModules();
 		else if (Tools::getValue('installFixtures'))
 			$this->processInstallFixtures();
+		else if (Tools::getValue('installTheme'))
+			$this->processInstallTheme();
 		else if (Tools::getValue('preactivation'))
 			$this->processPreactivation();
 	}
@@ -98,6 +100,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	{
 		$this->initializeContext();
 
+		// @todo remove true in populateDatabase for 1.5.0 RC version
 		if (!$this->model_install->populateDatabase(true) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
@@ -177,6 +180,20 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	}
 
 	/**
+	 * PROCESS : installTheme
+	 * Install theme
+	 */
+	public function processInstallTheme()
+	{
+		$this->initializeContext();
+
+		$this->model_install->installTheme();
+		if ($this->model_install->getErrors())
+			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->ajaxJsonAnswer(true);
+	}
+
+	/**
 	 * PROCESS : preactivation
 	 * (currently not used)
 	 */
@@ -212,6 +229,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			'configureShop',
 			'installModules',
 			'installFixtures',
+			'installTheme',
 			//'preactivation',
 		);
 		$this->displayTemplate('process');

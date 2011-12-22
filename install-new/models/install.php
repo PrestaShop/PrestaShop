@@ -147,7 +147,6 @@ class InstallModelInstall extends InstallAbstractModel
 	{
 		if ($clear_database)
 			$this->clearDatabase(true);
-			$this->clearDatabase(true);
 
 		// Install first shop
 		if (!$this->createShop())
@@ -550,6 +549,7 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function installFixtures()
 	{
+		// @todo REMOVE THIS
 		Db::getInstance()->delete('prefix_manufacturer');
 		Db::getInstance()->delete('prefix_manufacturer_lang');
 		Db::getInstance()->delete('prefix_supplier');
@@ -639,5 +639,26 @@ class InstallModelInstall extends InstallAbstractModel
 		Search::indexation(true);
 
 		return true;
+	}
+
+	/**
+	 * PROCESS : installTheme
+	 * Install theme
+	 */
+	public function installTheme()
+	{
+		// @todo do a real install of the theme
+		$sql_loader = new InstallSqlLoader();
+		$sql_loader->setMetaData(array(
+			'PREFIX_' => _DB_PREFIX_,
+			'ENGINE_TYPE' => _MYSQL_ENGINE_,
+		));
+
+		$sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'theme.sql', false);
+		if ($errors = $sql_loader->getErrors())
+		{
+			$this->setError($errors);
+			return false;
+		}
 	}
 }
