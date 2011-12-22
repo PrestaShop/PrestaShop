@@ -339,11 +339,7 @@ INSERT INTO `PREFIX_configuration` (`id_configuration`, `name`, `value`, `date_a
 (162, 'PS_UNIDENTIFIED_GROUP', '1', NOW(), NOW()),
 (163, 'PS_GUEST_GROUP', '2', NOW(), NOW()),
 (164, 'PS_CUSTOMER_GROUP', '3', NOW(), NOW()),
-(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW()),
-(166, 'PS_B2B_ENABLE', '0', NOW(), NOW()),
-(167, 'PS_INVOICE_MODEL', 'invoice', NOW(), NOW()),
-(168, 'PS_LIMIT_UPLOAD_IMAGE_VALUE', '2', NOW(), NOW()),
-(169, 'PS_LIMIT_UPLOAD_FILE_VALUE', '2', NOW(), NOW());
+(165, 'PS_SMARTY_CONSOLE', 0, NOW(), NOW());
 
 INSERT INTO `PREFIX_configuration_lang` (`id_configuration`, `id_lang`, `value`, `date_upd`) VALUES
 (36, 1, 'IN', NOW()),(36, 2, 'FA', NOW()),(36, 3, 'CU', NOW()),(36, 4, 'FA', NOW()),(36, 5, 'FA', NOW()),
@@ -908,15 +904,15 @@ INSERT INTO `PREFIX_currency` (`name`, `iso_code`, `iso_code_num`, `sign`, `blan
 ('Singapour Dollar', 'SGD', '702', '$', 1, 1.77, 2, 0, 0), ('Baht', 'THB', '764', '฿', 1, 40.96, 2, 0, 0), ('Rand', 'ZAR', '710', 'R', 1, 9.38, 2, 0, 0);*/
 INSERT INTO `PREFIX_currency_shop` (`id_currency`, `id_shop`) VALUES (1,1), (2,1), (3,1);
 
-INSERT INTO `PREFIX_image_type` (`id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`, `stores`) VALUES
-(1, 'small', 45, 45, 1, 1, 1, 1, 0, 0),
-(2, 'medium', 58, 58, 1, 1, 1, 1, 0, 1),
-(3, 'large', 264, 264, 1, 1, 1, 1, 0, 0),
-(4, 'thickbox', 600, 600, 1, 0, 0, 0, 0, 0),
-(5, 'category', 500, 150, 0, 1, 0, 0, 0, 0),
-(6, 'home', 124, 124, 1, 0, 0, 0, 0, 0),
-(7, 'large_scene', 556, 200, 0, 0, 0, 0, 1, 0),
-(8, 'thumb_scene', 161, 58, 0, 0, 0, 0, 1, 0);
+INSERT INTO `PREFIX_image_type` (`id_image_type`, `id_theme`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`, `stores`) VALUES
+(1, 1, 'small', 45, 45, 1, 1, 1, 1, 0, 0),
+(2, 1, 'medium', 58, 58, 1, 1, 1, 1, 0, 1),
+(3, 1, 'large', 264, 264, 1, 1, 1, 1, 0, 0),
+(4, 1, 'thickbox', 600, 600, 1, 0, 0, 0, 0, 0),
+(5, 1, 'category', 500, 150, 0, 1, 0, 0, 0, 0),
+(6, 1, 'home', 124, 124, 1, 0, 0, 0, 0, 0),
+(7, 1, 'large_scene', 556, 200, 0, 0, 0, 0, 1, 0),
+(8, 1, 'thumb_scene', 161, 58, 0, 0, 0, 0, 1, 0);
 
 INSERT INTO `PREFIX_contact_shop` (`id_contact`, `id_shop`) VALUES (1,1), (2,1);
 
