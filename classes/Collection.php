@@ -232,6 +232,16 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	}
 
 	/**
+	 * Get results array
+	 *
+	 * @return array
+	 */
+	public function getResults()
+	{
+		return $this->results;
+	}
+
+	/**
 	 * This method is called when a foreach begin
 	 *
 	 * @see Iterator::rewind()
