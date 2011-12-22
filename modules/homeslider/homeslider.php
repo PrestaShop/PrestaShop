@@ -54,6 +54,9 @@ class HomeSlider extends Module
 		$this->description = $this->l('Adds an image slider to your homepage.');
 	}
 
+	/**
+	 * @see Module::install()
+	 */
 	public function install()
 	{
 		/* Adds Module */
@@ -65,11 +68,43 @@ class HomeSlider extends Module
 			$res &= Configuration::updateValue('HOMESLIDER_SPEED', '1300');
 			$res &= Configuration::updateValue('HOMESLIDER_PAUSE', '7700');
 			/* Creates tables */
-			return ($res && $this->createTables());
+			$res &= $this->createTables();
+
+			/* Adds samples */
+			if ($res)
+				$this->installSamples();
+
+			return $res;
 		}
 		return false;
 	}
 
+	/**
+	 * Adds samples
+	 */
+	private function installSamples()
+	{
+		$languages = Language::getLanguages(false);
+		for ($i = 1; $i <= 5; ++$i)
+		{
+			$slide = new HomeSlide();
+			$slide->position = $i;
+			$slide->active = 1;
+			foreach ($languages as $language)
+			{
+				$slide->title[$language['id_lang']] = 'Sample '.$i;
+				$slide->description[$language['id_lang']] = 'This is a sample picture';
+				$slide->legend[$language['id_lang']] = 'sample-'.$i;
+				$slide->url[$language['id_lang']] = 'http://www.prestashop.com';
+				$slide->image[$language['id_lang']] = 'sample-'.$i.'.jpg';
+			}
+			$slide->add();
+		}
+	}
+
+	/**
+	 * @see Module::uninstall()
+	 */
 	public function uninstall()
 	{
 		/* Deletes Module */
@@ -87,6 +122,9 @@ class HomeSlider extends Module
 		return false;
 	}
 
+	/**
+	 * Creates tables
+	 */
 	protected function createTables()
 	{
 		/* Slides */
@@ -125,6 +163,9 @@ class HomeSlider extends Module
 		return $res;
 	}
 
+	/**
+	 * deletes tables
+	 */
 	protected function deleteTables()
 	{
 		$slides = $this->getSlides();
@@ -134,7 +175,7 @@ class HomeSlider extends Module
 			$to_del->delete();
 		}
 		return Db::getInstance()->execute('
-			DROP TABLE `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
+			DROP TABLE IF EXISTS `'._DB_PREFIX_.'homeslider`, `'._DB_PREFIX_.'homeslider_slides`, `'._DB_PREFIX_.'homeslider_slides_lang`;
 		');
 	}
 
