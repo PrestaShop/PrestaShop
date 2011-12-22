@@ -263,7 +263,7 @@ class AdminModulesControllerCore extends AdminController
 		return $url;
 	}
 
-	private function extractArchive($file)
+	private function extractArchive($file, $redirect = true)
 	{
 		$success = false;
 		if (substr($file, -4) == '.zip')
@@ -283,7 +283,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 
 		@unlink($file);
-		if ($success)
+		if ($success && $redirect)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 
@@ -506,7 +506,7 @@ class AdminModulesControllerCore extends AdminController
 								foreach ($xml->module as $modaddons)
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 										if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
-											$this->extractArchive('../modules/'.$modaddons->name.'.zip');
+											$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
 							}
 
 					}
@@ -579,7 +579,6 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 							// Display module configuration
-							// TODO : Make something cleaner
 							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
 						elseif($echo === true)
