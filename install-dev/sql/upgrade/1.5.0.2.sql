@@ -1,5 +1,12 @@
 SET NAMES 'utf8';
 
+DELETE FROM `PREFIX_tab` WHERE `id_tab` = 59;
+DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` = 59 AND `id_lang` = 1;
+DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` = 59 AND `id_lang` = 2;
+DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` = 59 AND `id_lang` = 3;
+DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` = 59 AND `id_lang` = 4;
+DELETE FROM `PREFIX_tab_lang` WHERE `id_tab` = 59 AND `id_lang` = 5;
+
 ALTER TABLE `PREFIX_module` ADD `version` VARCHAR( 8 ) NOT NULL;
 
 INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('1', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
