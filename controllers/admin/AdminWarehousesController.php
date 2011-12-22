@@ -437,14 +437,21 @@ class AdminWarehousesControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 			else if ($obj->getQuantitiesOfProducts() > 0)
-				$this->_errors[] = $this->l('It is not possible to delete a Warehosue when there are products in it.');
+				$this->_errors[] = $this->l('It is not possible to delete a Warehouse when there are products in it.');
 			else if (SupplyOrder::warehouseHasPendingOrders($obj->id))
 				$this->_errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
 			else
 			{
+				// sets the address of the warehouse as deleted
 				$address = new Address($obj->id_address);
 				$address->deleted = 1;
 				$address->save();
+
+				// removes associations
+				$obj->setCarriers(array());
+				$obj->setShops(array());
+				$obj->resetProductsLocations();
+
 				return parent::postProcess();
 			}
 	}

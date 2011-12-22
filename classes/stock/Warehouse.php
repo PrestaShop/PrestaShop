@@ -134,6 +134,9 @@ class WarehouseCore extends ObjectModel
 	 */
 	public function setShops($ids_shop)
 	{
+		if (!is_array($ids_shop))
+			$ids_shop = array();
+
 		$row_to_insert = array();
 		foreach ($ids_shop as $id_shop)
 			$row_to_insert[] = array($this->def['primary'] => $this->id, 'id_shop' => (int)$id_shop);
@@ -263,6 +266,16 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
+	 * Reset all product locations for this warehouse
+	 */
+	public function resetProductsLocations()
+	{
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'warehouse_product_location`
+			WHERE `id_warehouse` = '.(int)$this->id);
+	}
+
+	/**
 	 * For a given {product, product attribute} gets its location in the given warehouse
 	 *
 	 * @param int $id_product
@@ -302,6 +315,7 @@ class WarehouseCore extends ObjectModel
 		$query->innerJoin('warehouse', 'w', 'ws.id_warehouse = w.id_warehouse');
 		$query->where('id_product = '.(int)$id_product);
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);
+		$query->where('w.deleted = 0');
 		$query->groupBy('wpl.id_warehouse');
 
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query));

@@ -25,7 +25,7 @@
 *}
 {extends file="helper/list/list_header.tpl"}
 {block name=override_header}
-<div class="filter-stock">
+<div class="filter-stock-extended">
 	<form id="stock_cover" type="get">
 		<input type="hidden" name="controller" value="AdminStockCover" />
 		<input type="hidden" name="token" value="{$token}" />
