@@ -1408,13 +1408,13 @@ class AdminProductsControllerCore extends AdminController
 					Hook::exec('addProduct', array('product' => $object));
 					Search::indexation(false, $object->id);
 				}
-				
+
 				// If the product is virtual, set out_of_stock = 1 (allow sales when out of stock)
 				if (Tools::getValue('type_product') == 2)
 					StockAvailable::setProductOutOfStock($object->id, 1);
 				else
 					StockAvailable::setProductOutOfStock($object->id, 2);
-				
+
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 				{
@@ -3521,25 +3521,21 @@ class AdminProductsControllerCore extends AdminController
 			if (Combination::isFeatureActive())
 				$data->assign('countAttributes', (int)Db::getInstance()->getValue('SELECT COUNT(id_product) FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$obj->id));
 
-			// if advanced stock management is active, checks associations : product and warehouse, product/warehouse and carriers
+			// if advanced stock management is active, checks associations
 			$advanced_stock_management_warning = false;
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management)
 			{
 				$attributes = Product::getProductAttributesIds($obj->id);
 				$warehouses = array();
 				foreach ($attributes as $attribute)
-					$warehouses[] = Warehouse::getProductWarehouseList($obj->id, $attribute['id_product_attribute']);
+				{
+					$ws = Warehouse::getProductWarehouseList($obj->id, $attribute['id_product_attribute']);
+					if ($ws)
+						$warehouses[] = $ws;
+				}
 				$warehouses = array_unique($warehouses);
 
-				$carriers = array();
-				foreach ($warehouses as $warehouse_list)
-				{
-					foreach ($warehouse_list as $warehouse)
-						$carriers[] = Carrier::getAvailableCarrierList($obj->id, $warehouse['id_warehouse']);
-				}
-				$carriers = array_unique($carriers);
-
-				if (empty($warehouses) || empty($carriers))
+				if (empty($warehouses))
 					$advanced_stock_management_warning = true;
 			}
 			if ($advanced_stock_management_warning)
