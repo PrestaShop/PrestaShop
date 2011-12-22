@@ -63,7 +63,6 @@
     <access id="access_2_56" id_profile="Administrator" id_tab="SEO_URLs" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_57" id_profile="Administrator" id_tab="CMS" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_58" id_profile="Administrator" id_tab="Image_Mapping" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_2_59" id_profile="Administrator" id_tab="Customer_Messages" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_60" id_profile="Administrator" id_tab="Monitoring" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_61" id_profile="Administrator" id_tab="Search_Engines" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_62" id_profile="Administrator" id_tab="Referrers" view="1" add="1" edit="1" delete="1"/>
@@ -164,7 +163,7 @@
     <access id="access_3_56" id_profile="Logistician" id_tab="SEO_URLs" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_57" id_profile="Logistician" id_tab="CMS" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_58" id_profile="Logistician" id_tab="Image_Mapping" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_3_59" id_profile="Logistician" id_tab="Customer_Messages" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_3_59" id_profile="Logistician" id_tab="59" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_60" id_profile="Logistician" id_tab="Monitoring" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_61" id_profile="Logistician" id_tab="Search_Engines" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_62" id_profile="Logistician" id_tab="Referrers" view="0" add="0" edit="0" delete="0"/>
@@ -261,7 +260,7 @@
     <access id="access_4_56" id_profile="Translator" id_tab="SEO_URLs" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_57" id_profile="Translator" id_tab="CMS" view="1" add="1" edit="1" delete="1"/>
     <access id="access_4_58" id_profile="Translator" id_tab="Image_Mapping" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_4_59" id_profile="Translator" id_tab="Customer_Messages" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_4_59" id_profile="Translator" id_tab="59" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_60" id_profile="Translator" id_tab="Monitoring" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_61" id_profile="Translator" id_tab="Search_Engines" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_62" id_profile="Translator" id_tab="Referrers" view="0" add="0" edit="0" delete="0"/>
@@ -359,7 +358,7 @@
     <access id="access_5_56" id_profile="Salesman" id_tab="SEO_URLs" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_57" id_profile="Salesman" id_tab="CMS" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_58" id_profile="Salesman" id_tab="Image_Mapping" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_5_59" id_profile="Salesman" id_tab="Customer_Messages" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_5_59" id_profile="Salesman" id_tab="59" view="1" add="1" edit="1" delete="1"/>
     <access id="access_5_60" id_profile="Salesman" id_tab="Monitoring" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_61" id_profile="Salesman" id_tab="Search_Engines" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_62" id_profile="Salesman" id_tab="Referrers" view="1" add="1" edit="1" delete="1"/>

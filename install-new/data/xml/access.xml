@@ -63,7 +63,6 @@
     <access id="access_1_56" id_profile="SuperAdmin" id_tab="SEO_URLs" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_57" id_profile="SuperAdmin" id_tab="CMS" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_58" id_profile="SuperAdmin" id_tab="Image_Mapping" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_59" id_profile="SuperAdmin" id_tab="Customer_Messages" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_60" id_profile="SuperAdmin" id_tab="Monitoring" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_61" id_profile="SuperAdmin" id_tab="Search_Engines" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_62" id_profile="SuperAdmin" id_tab="Referrers" view="1" add="1" edit="1" delete="1"/>
