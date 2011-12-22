@@ -74,7 +74,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
-          'tax_tab' => $this->getTaxTabContent()
+         	'tax_tab' => $this->getTaxTabContent(),
+			'customer' => $customer
 		));
 
 		return $this->smarty->fetch($this->getTemplate($country->iso_code));
@@ -109,9 +110,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	protected function getTemplate($iso_country)
 	{
-		$template = _PS_THEME_DIR_.'/pdf/invoice.tpl';
+		$file = Configuration::get('PS_INVOICE_MODEL');
+		$template = _PS_THEME_DIR_.'/pdf/'.$file.'.tpl';
 
-		$iso_template = _PS_THEME_DIR_.'/pdf/invoice.'.$iso_country.'.tpl';
+		$iso_template = _PS_THEME_DIR_.'/pdf/'.$file.'.'.$iso_country.'.tpl';
 		if (file_exists($iso_template))
 			$template = $iso_template;
 
