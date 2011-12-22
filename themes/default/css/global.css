@@ -664,12 +664,14 @@ table#cart_summary  td.cart_discount_price {border-bottom:1px solid #999}
 table#cart_summary tr:nth-child(odd),
 table#cart_summary tr.cart_total_delivery,
 table#cart_summary tr.cart_total_price {
-  background-color: #fff
+	background-color: #fff
 }
 table#cart_summary tr:nth-child(even) {
-  background-color: #f3f3f3
+	background-color: #f3f3f3
 }
-
+table#cart_summary tr ul {
+	list-style: none;
+}
 table#cart_summary  .cart_product {
 	width:80px;
 	text-align:center
