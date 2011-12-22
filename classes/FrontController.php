@@ -49,6 +49,9 @@ class FrontControllerCore extends Controller
 	protected $restrictedCountry = false;
 	protected $maintenance = false;
 
+	public $display_column_left = true;
+	public $display_column_right = true;
+
 	public static $initialized = false;
 
 	protected static $currentCustomerGroups;
@@ -236,6 +239,8 @@ class FrontControllerCore extends Controller
 		// Are we in a module ?
 		if (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
 			$page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
+		if (Tools::getValue('controller') == 'module' && Tools::getValue('module') != '')
+			$page_name = 'module-paypal-payment-submit';
 
 		$this->context->smarty->assign(Tools::getMetaTags($this->context->language->id, $page_name));
 		$this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
@@ -382,8 +387,8 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign(array(
 			'HOOK_HEADER' => Hook::exec('displayHeader'),
 			'HOOK_TOP' => Hook::exec('displayTop'),
-			'HOOK_LEFT_COLUMN' => Hook::exec('displayLeftColumn'),
-			'HOOK_RIGHT_COLUMN' => Hook::exec('displayRightColumn', array('cart' => $this->context->cart)),
+			'HOOK_LEFT_COLUMN' => ($this->display_column_left ? Hook::exec('displayLeftColumn') : ''),
+			'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
 		));
 	}
 
