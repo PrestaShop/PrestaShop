@@ -2,11 +2,11 @@ SET NAMES 'utf8';
 
 ALTER TABLE `PREFIX_module` ADD `version` VARCHAR( 8 ) NOT NULL;
 
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('1', '108', '1', '1', '1', '1');
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('2', '108', '1', '1', '1', '1');
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('3', '108', '1', '1', '1', '1');
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('4', '108', '0', '0', '0', '0');
-INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ('5', '108', '0', '0', '0', '0');
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('1', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('2', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('3', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 1, 1, 1, 1);
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('4', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 0, 0, 0, 0);
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, edit, `delete`) VALUES ('5', (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminStockConfiguration' LIMIT 1), 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `PREFIX_specific_price_rule` (
 	`id_specific_price_rule` int(10) unsigned NOT NULL AUTO_INCREMENT,
