@@ -76,7 +76,6 @@ class AdminImagesControllerCore extends AdminController
 					'name' => 'theme',
 					
 				),
-			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Type name:'),
