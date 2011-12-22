@@ -24,18 +24,18 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+/**
+ * @deprecated This file is deprecated, use moduleController instead
+ */
 
 /* SSL Management */
 $useSSL = true;
 
-include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/bankwire.php');
+require('../../config/config.inc.php');
+Tools::displayFileAsDeprecated();
 
-if (!Context::getContext()->customer->isLogged(true))
-    Tools::redirect('index.php?controller=authentication&back=order.php');
-$bankwire = new BankWire();
-echo $bankwire->execPayment($cart);
+// init front controller in order to use Tools::redirect
+$controller = new FrontController();
+$controller->init();
 
-include_once(dirname(__FILE__).'/../../footer.php');
-
+Tools::redirect('index.php?controller=module&module=bankwire&process=payment');

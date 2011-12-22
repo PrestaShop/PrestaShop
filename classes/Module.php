@@ -1588,16 +1588,35 @@ abstract class ModuleCore
 
 	/**
 	 * Get module errors
+	 *
 	 * @since 1.5.0
 	 * @return array errors
 	 */
-	public function getErrors() { return $this->_errors; }
+	public function getErrors()
+	{
+		return $this->_errors;
+	}
 
 	/**
 	 * Get module messages confirmation
-	 * @since 1.5.1
+	 *
+	 * @since 1.5.0
 	 * @return array conf
 	 */
-	public function getConfirmations() { return $this->_confirmations; }
+	public function getConfirmations()
+	{
+		return $this->_confirmations;
+	}
+
+	/**
+	 * Get uri path for module
+	 *
+	 * @since 1.5.0
+	 * @return string
+	 */
+	public function getPathUri()
+	{
+		return $this->_path;
+	}
 }
 

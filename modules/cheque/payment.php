@@ -32,18 +32,11 @@
 /* SSL Management */
 $useSSL = true;
 
-include(dirname(__FILE__).'/../../config/config.inc.php');
+require('../../config/config.inc.php');
 Tools::displayFileAsDeprecated();
 
-include(dirname(__FILE__).'/../../header.php');
-include(dirname(__FILE__).'/cheque.php');
+// init front controller in order to use Tools::redirect
+$controller = new FrontController();
+$controller->init();
 
-if (!Context::getContext()->customer->isLogged(true))
-    Tools::redirect('index.php?controller=authentication&back=order.php');
-
-$cheque = new Cheque();
-echo $cheque->execPayment($cart);
-
-include_once(dirname(__FILE__).'/../../footer.php');
-
-
+Tools::redirect('index.php?controller=module&module=cheque&process=payment');

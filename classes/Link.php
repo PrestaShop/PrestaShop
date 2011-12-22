@@ -266,11 +266,11 @@ class LinkCore
 	 *
 	 * @since 1.5.0
 	 * @param string $module Module name
-	 * @param string $action Action name
+	 * @param string $process Action name
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getModuleLink($module, $action, $ssl = false, $id_lang = null)
+	public function getModuleLink($module, $process, $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
@@ -280,7 +280,7 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['module'] = $module;
-		$params['action'] = $action;
+		$params['process'] = $process;
 
 		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
 	}
