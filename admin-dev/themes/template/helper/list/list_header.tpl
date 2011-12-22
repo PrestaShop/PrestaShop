@@ -94,7 +94,7 @@
 						{l s='Page '}<b>{$page}</b> / {$total_pages}
 						{if $page < $total_pages}
 							<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1}"/>&nbsp;
-							<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}'').value={$total_pages}"/>
+							<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
 						{/if}
 						| {l s='Display'}
 						<select name="pagination">
