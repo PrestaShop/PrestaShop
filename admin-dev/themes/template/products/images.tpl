@@ -240,6 +240,9 @@
 						$("#imageTable tr").eq(1).find(".covered").attr("src", "../img/admin/enabled.gif");
 					$("#countImage").html(parseInt($("#countImage").html()) - 1);
 					refreshImagePositions($("#imageTable"));
+					
+					showSuccessMessage(data.confirmations);
+
 				}
 			}
 
