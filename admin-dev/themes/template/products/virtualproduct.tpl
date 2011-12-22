@@ -184,7 +184,7 @@
 							<p class="block">
 							{if !$product->productDownload->checkFile()}
 								<div style="padding:5px;width:50%;float:left;margin-right:20px;border-right:1px solid #CCCCCC">
-								<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize}</p>
+								<p>{l s='Your server\'s maximum upload file size is'}:&nbsp;{$upload_max_filesize} {l s='Mo'}</p>
 								{if $show_file_input}
 									<label id="virtual_product_file_label" for="virtual_product_file" class="t">{l s='Upload a file'}</label>
 									<p><input type="file" id="virtual_product_file" name="virtual_product_file" onchange="uploadFile();" maxlength="{$upload_max_filesize}" /></p>
