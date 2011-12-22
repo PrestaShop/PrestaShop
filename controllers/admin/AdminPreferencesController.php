@@ -385,14 +385,15 @@ class AdminPreferencesControllerCore extends AdminController
 	/**
 	 * Update PS_ATTACHMENT_MAXIMUM_SIZE
 	 */
-	public function updateOptionPsAttachementMaximumSize($value)
+	public function updateOptionPsAttachmentMaximumSize($value)
 	{
 		if (!$value)
 			return;
 
-		$upload_max_size = (int)str_replace('M', '', ini_get('upload_max_filesize'));
-		$post_max_size = (int)str_replace('M', '', ini_get('post_max_size'));
-		$max_size = $upload_max_size < $post_max_size ? $upload_max_size : $post_max_size;
+		$upload_max_size = Tools::convertBytes(ini_get('upload_max_filesize'));
+		$post_max_size = Tools::convertBytes(ini_get('post_max_size'));
+		$max_size = ($upload_max_size < $post_max_size ? $upload_max_size : $post_max_size) / 1048576;
+		// at this point, all values are in megaBytes
 		$value = ($max_size < Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE')) ? $max_size : Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE');
 		Configuration::update('PS_ATTACHMENT_MAXIMUM_SIZE', $value);
 	}

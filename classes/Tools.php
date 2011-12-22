@@ -1916,7 +1916,7 @@ FileETag INode MTime Size
 		else
 		{
 			$value_length = strlen($value);
-			$qty = substr($value, 0, $value_length - 1 );
+			$qty = (int)substr($value, 0, $value_length - 1 );
 			$unit = strtolower(substr($value, $value_length - 1));
 			switch ($unit)
 			{
