@@ -338,7 +338,8 @@ class AdminOrdersControllerCore extends AdminController
 				if (isset($amount_detail) && !empty($amount_detail))
 				{
 					$amount += $amount_detail;
-					$order_detail_list[$id_order_detail] = $amount_detail;
+					$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
+					$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
 				}
 			$shipping_cost_amount = (float)(Tools::getValue('partialRefundShippingCost'));
 			if ($shipping_cost_amount > 0)
