@@ -108,5 +108,6 @@
     <access id="access_1_107" id_profile="SuperAdmin" id_tab="tab_107" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_108" id_profile="SuperAdmin" id_tab="Configuration" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_109" id_profile="SuperAdmin" id_tab="Catalog_price_rules" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_110" id_profile="SuperAdmin" id_tab="Outstanding" view="1" add="1" edit="1" delete="1"/>
   </entities>
 </entity_access>

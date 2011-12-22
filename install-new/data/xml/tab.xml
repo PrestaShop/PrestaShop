@@ -302,5 +302,8 @@
     <tab id="Catalog_price_rules" id_parent="Catalog">
       <class_name>AdminSpecificPriceRule</class_name>
     </tab>
+    <tab id="Outstanding" id_parent="Customers">
+      <class_name>AdminOutstanding</class_name>
+    </tab>
   </entities>
 </entity_tab>
