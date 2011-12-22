@@ -3016,7 +3016,8 @@ class CartCore extends ObjectModel
 			WHERE `id_cart` = '.(int)$this->id.'
 				AND (`id_address_delivery` = 0 OR `id_address_delivery` IS NULL)
 				AND `id_shop` = '.(int)$this->id_shop;
-		
+		Db::getInstance()->execute($sql);
+
 		$sql = 'UPDATE `'._DB_PREFIX_.'customization`
 			SET `id_address_delivery` = '.(int)$id_address_delivery.'
 			WHERE `id_cart` = '.(int)$this->id.'
