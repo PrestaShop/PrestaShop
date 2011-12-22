@@ -47,7 +47,7 @@ function migrate_orders()
 	// create temporary tables
 	mo_duplicateTables();
 
-	$order_res = Db::getInstance()->execute(
+	$order_res = Db::getInstance()->query(
 			'SELECT *
 			FROM `'._DB_PREFIX_.'orders`');
 
