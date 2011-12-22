@@ -25,85 +25,83 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
-include('config/config.inc.php');
-
-if (!defined('PS_TAX_EXC'))
-    define('PS_TAX_EXC', 1);
-
-if (!defined('PS_TAX_INC'))
-    define('PS_TAX_INC', 0);
-
-$sql = 'SELECT *
-        FROM `'._DB_PREFIX_.'orders`';
-
-$orders = Db::getInstance()->executeS($sql);
-
-foreach ($orders as $order)
+public function migrate_orders()
 {
-    $sum_total_products = 0;
-    $sum_tax_amount = 0;
-    $default_group_id = getCustomerDefaultGroup((int)$order['id_customer']);
-    $price_display_method = getPriceDisplayMethod((int)$default_group_id);
+	if (!defined('PS_TAX_EXC'))
+		define('PS_TAX_EXC', 1);
 
-    $order_details_list = Db::getInstance()->executeS('
-                    SELECT *
-                    FROM `'._DB_PREFIX_.'order_detail` od
-                    LEFT JOIN `'._DB_PREFIX_.'product` p
-                    ON p.id_product = od.product_id
-                    WHERE od.`id_order` = '.(int)($order['id_order']));
+	if (!defined('PS_TAX_INC'))
+		define('PS_TAX_INC', 0);
 
-    foreach ($order_details_list as $order_details)
-    {
-        // we don't want to erase order_details data in order to create the insert query
-        $products = setProductPrices($order_details, $price_display_method);
+	$sql = 'SELECT *
+			FROM `'._DB_PREFIX_.'orders`';
 
-        $tax_rate = 1 + ((float)$products['tax_rate'] / 100);
-        $reduction_amount_tax_incl = (float)$products['reduction_amount'];
+	$orders = Db::getInstance()->executeS($sql);
 
-        // cart::getTaxesAverageUsed equivalent
-        $sum_total_products += $products['total_wt'];
-        $sum_tax_amount += $products['total_wt'] - $products['total_price'];
+	foreach ($orders as $order)
+	{
+		$sum_total_products = 0;
+		$sum_tax_amount = 0;
+		$default_group_id = getCustomerDefaultGroup((int)$order['id_customer']);
+		$price_display_method = getPriceDisplayMethod((int)$default_group_id);
 
-        $sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
-                SET `reduction_amount_tax_incl` = '.$reduction_amount_tax_incl.',
-                    `reduction_amount_tax_excl` = '.(float)Tools::ps_round($reduction_amount_tax_incl / $tax_rate, 2).',
-                    `total_price_tax_incl` = '.(float)$products['total_wt'].',
-                    `total_price_tax_excl` = '.(float)$products['total_price'].',
-                    `unit_price_tax_incl` = '.(float)$products['product_price_wt'].',
-                    `unit_price_tax_excl` = '.(float)$products['product_price'].'
-                WHERE `id_order_detail` = '.(int)$products['id_order_detail'];
+		$order_details_list = Db::getInstance()->executeS('
+						SELECT *
+						FROM `'._DB_PREFIX_.'order_detail` od
+						LEFT JOIN `'._DB_PREFIX_.'product` p
+						ON p.id_product = od.product_id
+						WHERE od.`id_order` = '.(int)($order['id_order']));
 
-        Db::getInstance()->execute($sql);
-    }
+		foreach ($order_details_list as $order_details)
+		{
+			// we don't want to erase order_details data in order to create the insert query
+			$products = setProductPrices($order_details, $price_display_method);
 
-    $average_tax_used = 1;
-    if ($sum_total_products > 0)
-        $average_tax_used +=  ($sum_tax_amount / $sum_total_products) * 0.01;
+			$tax_rate = 1 + ((float)$products['tax_rate'] / 100);
+			$reduction_amount_tax_incl = (float)$products['reduction_amount'];
 
-    // this was done like that previously
-    $wrapping_tax_rate = 1 + ((float)Configuration::get('PS_GIFT_WRAPPING_TAX') / 100);
-    $carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
+			// cart::getTaxesAverageUsed equivalent
+			$sum_total_products += $products['total_wt'];
+			$sum_tax_amount += $products['total_wt'] - $products['total_price'];
 
-    $total_discount_tax_excl = $order['total_discount'] / $average_tax_used;
+			$sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
+					SET `reduction_amount_tax_incl` = '.$reduction_amount_tax_incl.',
+						`reduction_amount_tax_excl` = '.(float)Tools::ps_round($reduction_amount_tax_incl / $tax_rate, 2).',
+						`total_price_tax_incl` = '.(float)$products['total_wt'].',
+						`total_price_tax_excl` = '.(float)$products['total_price'].',
+						`unit_price_tax_incl` = '.(float)$products['product_price_wt'].',
+						`unit_price_tax_excl` = '.(float)$products['product_price'].'
+					WHERE `id_order_detail` = '.(int)$products['id_order_detail'];
 
-    $sql = 'UPDATE `'._DB_PREFIX_.'orders`
-            SET `total_discount_tax_incl` = '.(float)$order['total_discount'].',
-                `total_discount_tax_excl` = '.(float)$total_discount_tax_excl.',
-                `total_paid_tax_incl` = '.(float)$order['total_paid'].',
-                `total_paid_tax_excl` = '.(float)$order['total_paid'].',
-                `total_shipping_tax_incl` = '.(float)$order['total_shipping'].',
-                `total_shipping_tax_excl` = '.(float)($order['total_shipping'] / $carrier_tax_rate).',
-                `total_wrapping_tax_incl` = '.(float)$order['total_wrapping'].',
-                `total_wrapping_tax_excl` = '.((float)$order['total_wrapping'] / $wrapping_tax_rate).'
-            WHERE `id_order` = '.(int)$order['id_order'];
+			Db::getInstance()->execute($sql);
+		}
 
-    Db::getInstance()->execute($sql);
+		$average_tax_used = 1;
+		if ($sum_total_products > 0)
+			$average_tax_used +=  ($sum_tax_amount / $sum_total_products) * 0.01;
 
-    unset($order);
+		// this was done like that previously
+		$wrapping_tax_rate = 1 + ((float)Configuration::get('PS_GIFT_WRAPPING_TAX') / 100);
+		$carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
+
+		$total_discount_tax_excl = $order['total_discount'] / $average_tax_used;
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'orders`
+				SET `total_discount_tax_incl` = '.(float)$order['total_discount'].',
+					`total_discount_tax_excl` = '.(float)$total_discount_tax_excl.',
+					`total_paid_tax_incl` = '.(float)$order['total_paid'].',
+					`total_paid_tax_excl` = '.(float)$order['total_paid'].',
+					`total_shipping_tax_incl` = '.(float)$order['total_shipping'].',
+					`total_shipping_tax_excl` = '.(float)($order['total_shipping'] / $carrier_tax_rate).',
+					`total_wrapping_tax_incl` = '.(float)$order['total_wrapping'].',
+					`total_wrapping_tax_excl` = '.((float)$order['total_wrapping'] / $wrapping_tax_rate).'
+				WHERE `id_order` = '.(int)$order['id_order'];
+
+		Db::getInstance()->execute($sql);
+
+		unset($order);
+	}
 }
-
-
 
 function getCustomerDefaultGroup($id_customer)
 {
