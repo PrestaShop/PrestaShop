@@ -23,6 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a class="pointer edit" onclick="javascript:editProductAttribute('{$id}', '{getAdminToken tab='AdminProducts'}');" title="{l s='Modify this combination'}" ids="'{$id}'">
+<a class="pointer edit" onclick="javascript:editProductAttribute('{$id}', '{getAdminToken tab='AdminProducts'}');" title="{l s='Modify this combination'}" ids="{$id}" token="{getAdminToken tab='AdminProducts'}">
 	<img src="../img/admin/edit.gif" alt="{l s='Modify this combination'}" />
 </a>
