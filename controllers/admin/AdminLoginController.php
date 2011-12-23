@@ -70,7 +70,9 @@ class AdminLoginControllerCore extends AdminController
 		
 		
 		
-		if(file_exists(_PS_ADMIN_DIR_.'/../install') OR file_exists(_PS_ADMIN_DIR_.'/../admin'))
+		if(file_exists(_PS_ADMIN_DIR_.'/../install') || file_exists(_PS_ADMIN_DIR_.'/../admin')
+		|| file_exists(_PS_ADMIN_DIR_.'/../install-new') 
+		)
 			$this->context->smarty->assign(
 				array(
 				'randomNb' => rand(100, 999),

@@ -78,6 +78,7 @@
 			<p><span>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}<br /><br />
 				<ul>
 					<li>{l s='delete the /install folder'}</li>
+					<li>{l s='delete the /install-new folder'}</li>
 					<li>{l s='renamed the /admin folder (eg.) /admin'}{$randomNb}</li>
 				</ul>
 			<br />{l s='Please then access this page by the new url (eg.) http://www.domain.tld/admin'}{$randomNb}</span></p>
