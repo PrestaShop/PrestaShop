@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.7';
+		$this->version = '1.7.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -1091,7 +1091,7 @@ class BlockLayered extends Module
 		if (!empty($title))
 		{
 			$smarty->assign('meta_title', $categoryTitle.$categoryMetas['meta_title']); 
-			$smarty->assign('meta_description', $categoryTitle.$categoryMetas['meta_description']);
+			$smarty->assign('meta_description', $categoryTitle.' '.$title.' '.$categoryMetas['meta_description']);
 		}
 		else
 			$smarty->assign('meta_title', $categoryMetas['meta_title']);
