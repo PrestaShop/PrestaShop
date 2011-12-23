@@ -406,7 +406,11 @@ class InstallXmlLoader
 		else
 		{
 			// Create entity in database);
-			if (!Db::getInstance()->autoExecute(_DB_PREFIX_.$entity, array_map('pSQL', $data), 'INSERT IGNORE'))
+			$execute_type = 'INSERT IGNORE';
+			if ($entity == 'access')
+				$execute_type = 'REPLACE';
+
+			if (!Db::getInstance()->autoExecute(_DB_PREFIX_.$entity, array_map('pSQL', $data), $execute_type))
 				$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
 			$entity_id = Db::getInstance()->Insert_ID();
 
