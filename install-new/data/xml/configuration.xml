@@ -847,6 +847,9 @@
     <configuration id="PS_SHOP_ACTIVITY" name="PS_SHOP_ACTIVITY">
       <value>0</value>
     </configuration>
+    <configuration id="PS_INVOICE_MODEL" name="PS_INVOICE_MODEL">
+        <value>invoice</value>
+    </configuration>
   </entities>
   <fields id="name" class="Configuration" null="1">
     <field name="name"/>
