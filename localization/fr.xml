@@ -7,9 +7,6 @@
 		<language iso_code="fr" />
 	</languages>
 
-	<states>
-		<state name="Corse" iso_code="CO" country="FR" zone="France Corse" />
-	</states>
 	<taxes>
         <tax id="1" name="TVA FR 19.6%" rate="19.6" />
         <tax id="2" name="TVA FR 5.5%" rate="5.5" />
