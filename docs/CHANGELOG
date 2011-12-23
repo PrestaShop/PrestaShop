@@ -24,6 +24,144 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.2 - 11742 (2011-12-23)  #
+####################################
+
+	Added Features:
+
+	[+] Project : Add Smarty console options
+	[+] Project : Add specific prices to a specific customer
+	[+] Project : Added the ability for groups to show or hide prices for their members
+	[+] Project : B2B Features
+	[+] Project : Possibility to enable or disable tabs
+
+	[+] FO : new theme file for front-office layout.tpl, designers have now more possibilities
+
+	[+] BO : Add a note on invoice
+	[+] BO : You can now have UTF-8 URL Rewriting
+	[+] BO : on order edition, you can add a discount
+	[+] BO : on order edition, you can delete a discount
+
+	[+] MO : homeslider is now replacing editorial in default installation
+
+	Improved/changed features:
+
+	[*] PROJECT : Moving partner module to another repository
+
+	[*] BO : Addons modules are now downloaded and installed at the same time (when you click on install button)
+	[*] BO : Improvement invoices management
+	[*] BO : Native modules are now downloadable without login on addons
+	[*] BO : New category management with multi shop
+	[*] BO : Partial refund now handle quantity
+	[*] BO : Required fields improved (with a white list)
+	[*] BO : no payment is registered on order creation for check and bankwire payment
+	[*] BO : optimization of liveEdit system
+	[*] BO : you can now affect a zone to multiple countries and to multiple states
+	[*] BO : you can now generate manually the invoice
+
+	[*] MO : Vatnumber - a warning is now displayed if the field "Your country" is empty (related #PSCFI-4200)
+	[*] MO : mailjet is now in advertising_marketing category (instead of front_office_features)
+
+	[*] PDF : Display Hook
+	[*] PDF : Licenses + Hook in templates
+	[*] PDF : New hook actionPDFInvoiceRender
+	[*] PDF : PDF could now be returned as a string
+	[*] PDF : TCPDF Tweak
+	[*] PDF : You can now enable diskcache
+
+	Fixed bugs:
+
+	[-] PROJECT : Class Hook cleaned
+	[-] PROJECT : Cleaning Class Module
+	[-] PROJECT : Fixing register hook retrocompatibility
+	[-] PROJECT : Merge cache exec in class Hook (to maintain retrocompatibility)
+	[-] PROJECT : Module controller now handle the column display (time to go to MacDo :)
+	[-] PROJECT : Modules now handle PrestaShop version compliancy and dependencies check
+	[-] PROJECT : Moving xml files to xml directory
+	[-] PROJECT : PDF Order Slip now handle partial refund
+	[-] PROJECT : Replacing some Context::getContext() by $context in class Hook
+	[-] PROJECT : You can now execute hook in the tpl
+	[-] PROJECT : isHookableOn function is now retrocompatible with old hook
+	[-] Project : fix on template
+
+	[-] Installer : #PSCFI-4383 : BugFix SQL installation script corrected, unique key for specific_price_priority
+
+	[-] FO : #PSCFI-3865 - Block Layered translation issues
+	[-] FO : #PSCFI-4421 : bug fixed : error in adressess links update and delete
+	[-] FO : #PSTEST-104 : delete button add in AdminCartsController.php
+	[-] FO : #PSTEST-54 : price pack
+	[-] FO : #PSTEST-72 : delete specific price in product tab
+	[-] FO : #PSTEST-74 : change the condition of product if is a virtual product
+	[-] FO : #PSTEST-81 : delete tab shipping if is virtual product
+	[-] FO : #PSTEST-92 : added display of size fields in attachments.tpl
+	[-] FO : #PSTEST-95 : change default combination in AdminProductsController
+	[-] FO : Specific price + id_cart
+	[-] FO : Unable to checkout
+	[-] FO :#PSTEST-145 : fixed a translation bug
+
+	[-] BO : #PSCFI-4393 : Andre Silva UTF-8 comments
+	[-] BO : #PSTEST-102: Texte d'une fen?\195?\170tre de message en anglais
+	[-] BO : #PSTEST-129 : FO - Erreur lors de l'upload de fichiers personnalis?\195?\169s
+	[-] BO : #PSTEST-14 : translations
+	[-] BO : #PSTEST-15 : translations
+	[-] BO : #PSTEST-18 : smalls improvements
+	[-] BO : #PSTEST-22 : Orthographe ?\195?\160 revoir dans combinaisons de la fiche produit
+	[-] BO : #PSTEST-24 : BugFix date picker for combinations products (display & date format)
+	[-] BO : #PSTEST-31 : update in AdminProductsController : available_date
+	[-] BO : #PSTEST-37 : Documents joints - deux boutons redondants
+	[-] BO : #PSTEST-52 : update display of pack.tpl
+	[-] BO : #PSTEST-53 : fixed added quantities maximal for a pack
+	[-] BO : #PSTEST-56 : fixed incorrect request in shop filters
+	[-] BO : #PSTEST-70 : Orthographe d?\195?\169fectueuse dans fenetre de confirmation
+	[-] BO : #PSTEST-8 : Changed prices.tpl digits precision //last commit omit modification
+	[-] BO : #PSTEST-8 : H.T prices precision changed (2 digits instead of 6)
+	[-] BO : #PSTEST-8 : Javascript - Rounded prices (2 digits only)
+	[-] BO : #PSTEST-84 : Bouton g?\195?\169n?\195?\169rer une d?\195?\169clinaison noy?\195?\169 dans la masse
+	[-] BO : Admin Modules now handle simple http request for download (for server which do not handle ssl connection)
+	[-] BO : BugFix : Search index re-build
+	[-] BO : BugFix : Specific prices select menu template edited
+	[-] BO : Bulk action management repaired
+	[-] BO : Cannot send test email
+	[-] BO : Credit slips now appear in document section
+	[-] BO : Filter modules system repaired and now in ajax
+	[-] BO : Fix on pagination system
+	[-] BO : Incorrect CartRule value
+	[-] BO : Missing display methods in AdminGroup
+	[-] BO : Now display a question mark when there is no module logo
+	[-] BO : Reinitialized H.T prices precision (decimals)
+	[-] BO : Upload zip module is repaired
+	[-] BO : Warnings are now displayed on Modules Tab
+	[-] BO : You can now download native modules even when you logged on Addons
+	[-] BO : fixed bug -> product/combination ergonomics
+	[-] BO : fixed calculation error on Product addition
+	[-] BO : fixed js global conflict for categories tree
+	[-] BO : fixed notice error on message addition
+
+	[-] Classes : #PSCFI-3880 : BugFix mbstring overload on Rijndael encrypt-decrypt
+	[-] Classes : #PSCFI-4464, #PSCFI-4494 : BugFix : smarty plugin edited, check if function mb_split exists (Ajax, add or delete into/from cart)
+	[-] Classes : #PSCFI-4477 : BugFix GSiteMap priority - Decimals no longer take care about local numeric separator
+	[-] Classes : fixed notice error on Cart class
+
+	[-] MO : #PSCFI-4015 - layered navigation module on IE7 creates scripterror / empty query
+	[-] MO : #PSCFI-4389 : Block Advertising hookHeader added
+	[-] MO : #PSTEST-41 : update ProcessAttachment method
+	[-] MO : #PSTEST-44 : Category cannot be parent of herself
+	[-] MO : CarrierCompare, merge 1.4 => 1.5
+	[-] MO : Carriercompare (shipping estimation), merge 1.4 => 1.5
+	[-] MO : Mondialrelay, merge 1.4 => 1.5
+	[-] MO : Mondialrelay, merge 1.4 => 1.5
+	[-] MO : blocksupplier updated hookname
+	[-] MO : eKomi (1.3) - fix on warnings (PS 1.5)
+	[-] MO : editorial : bugfix on install/uninstall, norm
+	[-] MO : homeslider bugfix multishop + add samples
+
+	[-] WS : Fixed norm on WebserviceRequest
+
+	[-] PDF : Can't display invoice due to Collection
+	[-] PDF : Logo path
+
+
+####################################
 #   v1.5.0.1 - 10642 (2011-11-24)  #
 ####################################
 
