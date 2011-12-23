@@ -549,7 +549,7 @@ class InstallModelInstall extends InstallAbstractModel
 	public function installFixtures()
 	{
 		// @todo REMOVE THIS
-		Db::getInstance()->delete('prefix_manufacturer');
+		/*Db::getInstance()->delete('prefix_manufacturer');
 		Db::getInstance()->delete('prefix_manufacturer_lang');
 		Db::getInstance()->delete('prefix_supplier');
 		Db::getInstance()->delete('prefix_supplier_lang');
@@ -595,7 +595,7 @@ class InstallModelInstall extends InstallAbstractModel
 		Db::getInstance()->delete('prefix_range_weight');
 		Db::getInstance()->delete('prefix_delivery');
 		Db::getInstance()->delete('prefix_specific_price');
-		Db::getInstance()->delete('prefix_tag');
+		Db::getInstance()->delete('prefix_tag');*/
 
 		// Load class (use fixture class if one exists, or use InstallXmlLoader)
 		if (file_exists(_PS_INSTALL_FIXTURES_PATH_.'apple/install.php'))
