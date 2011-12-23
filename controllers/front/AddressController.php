@@ -114,8 +114,8 @@ class AddressControllerCore extends FrontController
 	 */
 	protected function processSubmitAddress()
 	{
-		if ($this->context->customer->is_guest)
-			Tools::redirect('index.php?controller=addresses');
+		/*if ($this->context->customer->is_guest)
+			Tools::redirect('index.php?controller=addresses');*/
 
 		$address = new Address();
 		$this->errors = $address->validateController();
@@ -177,7 +177,7 @@ class AddressControllerCore extends FrontController
 			$address->dni = NULL;
 
 		// Don't continue this process if we have errors !
-		if ($this->errors)
+		if ($this->errors && !Tools::isSubmit('ajax'))
 			return;
 
 		// If we edit this address, delete old address and create a new one
