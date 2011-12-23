@@ -250,7 +250,7 @@ abstract class DbCore
 	 *
 	 * @param string $table Table where insert/update data
 	 * @param string $data Data to insert/update
-	 * @param string $type INSERT or INSERT IGNORE or UPDATE
+	 * @param string $type INSERT or INSERT IGNORE or REPLACE or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
 	 * @param int $limit LIMIT clause (optional)
 	 * @param bool $use_cache
@@ -263,7 +263,7 @@ abstract class DbCore
 			return true;
 
 		$type = strtoupper($type);
-		if ($type == 'INSERT' || $type == 'INSERT IGNORE')
+		if ($type == 'INSERT' || $type == 'INSERT IGNORE' || $type == 'REPLACE')
 		{
 			// Check if $data is a list of row
 			$current = current($data);
