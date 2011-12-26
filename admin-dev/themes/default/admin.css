@@ -27,6 +27,7 @@ select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disab
 /*BUTTON*/
 .button{background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent; 
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
+	
 	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;margin: 0; outline: medium none;padding: 3px 8px;text-align: center;vertical-align: middle;white-space: nowrap; text-shadow:0 1px 0 #fff;}
 .button[disabled=disabled]{color:#8C8C8C}
 .button.bt-icon { display:inline-block; margin-bottom:7px;}
@@ -56,7 +57,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #header_search{ float:left; margin-top:15px; position:relative;  }
 #header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 #fff;  border:1px solid #000; border-radius:4px;  padding: 5px 25px 5px 4px; width: 180px; box-shadow: 0 1px 0 #666;}
 #header #header_search #bo_search_type{ font-size:13px; float:left; margin:0 10px 0 0; padding:3px 0 4px; vertical-align:middle;width:auto; border-color: #666666 #CCCCCC #CCCCCC;border-style:solid solid solid none; height:27px; border-width: 1px;}
-#header #header_search #bo_search_submit { background: transparent url(icon-search.png) no-repeat scroll center; border:none; width:27px; height:27px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0;}
+#header #header_search #bo_search_submit { background: transparent url(icon-search.png) no-repeat scroll center; border:none; width:27px; height:27px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; /*hacking ie7*/ font-size:0 !ie7; color: transparent !ie;}
 #header #header_quick{float:right; display:block; margin-top:15px;}
 #header #header_quick #quick_select{ font-size:13px; margin:0 10px 0 0; padding:3px 0 4px; vertical-align:middle;width:140px; height:27px;}
 #header #header_shoplist{ background-image:none; clear:both; float: right; color:#fff; margin-top:10px; margin-right:15px;}
@@ -114,8 +115,9 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table th a{text-decoration:underline}
 .table a:hover{text-decoration:none}
 .table tr th{ background-color: #F1F1F1; text-shadow:0 1px 0 #fff; padding:4px 6px;
-	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
-	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	background: #ececec url(bg-degrade-table.png) repeat-x scroll left top;
+	/*background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;*/
 	font-size:13px; text-align:left;}
 .table tr th.right { text-align:center;}
 .table tr td{border-bottom:1px solid #ccc;color:#333;font-size:12px;padding: 4px 4px 4px 6px;}
@@ -200,7 +202,7 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 		background: #e4e4e4 url(bg-button-degrade.png) repeat-x scroll left top;
 		background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
 		background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
-		color:#333; width:160px; font-weight:bold; text-shadow: 0 1px 0 #fff;
+		color:#333; width:10px; font-weight:bold; text-shadow: 0 1px 0 #fff;
 	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;}
 .qq-upload-button:hover { border:1px solid #939393;}
 /*leadin*/
@@ -387,7 +389,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .blocLiveEdit a.button {float: left; margin:10px; display: inline-block;}
 
 
-#modulePosition { width:100%; float:left; clear:left; margin-right:270px;}
+#modulePosition { width:100%; float:left; clear:left;}
 #modulePosition .table tr th { height:40px;}
 #modulePosition form{ margin-right:270px;}
 #modulePosition .lab_modules_positions h3 { color:#3A6EA7; margin:0 0 0 10px; float:left;}
