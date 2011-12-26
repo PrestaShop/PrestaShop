@@ -1842,9 +1842,10 @@ div.progressBarImage
 #createImageDescription ul li{
 	list-style-type: none;
 	display: block;
-	width: 50px;
+	width: 90px;
 	text-align: center;
 	float: left;
+	margin-bottom:15px;
 }
 #menu .submenu_size .submenu { display: none; position:absolute}
 #menu .submenu_size:hover > .submenu { display: block; }
