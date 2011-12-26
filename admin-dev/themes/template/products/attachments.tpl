@@ -40,7 +40,7 @@
 
 	<h4>{l s='Attachment'}</h4>
 	<div class="separation"></div>
-	<fieldset>
+	<fieldset style="border:none;">
 		<label>{l s='Filename:'} </label>
 		<div class="margin-form translatable">
 			{foreach $languages as $language}
@@ -72,6 +72,7 @@
 		</div>
 		<div class="small"><sup>*</sup> {l s='Required field'}</div>
 	</fieldset>
+	<div class="separation"></div>
 	<div class="clear">&nbsp;</div>
 	<table>
 		<tr>

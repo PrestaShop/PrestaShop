@@ -49,11 +49,11 @@ class AdminScenesControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Image Maps'),
-				'width' => 150,
 				'filter_key' => 'b!name'
 			),
 			'active' => array(
 				'title' => $this->l('Activated'),
+				'width' => 70,
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
