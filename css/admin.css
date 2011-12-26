@@ -1313,6 +1313,8 @@ html[xmlns] .clearfix {
 .tr_odd {
 	background-color:#eff4f9;
 }
+
+
 .table_info_details tr td.td_align_left{
 	font-weight:normal;
 	text-align: left;
@@ -1954,28 +1956,56 @@ ul.connectedSortable li.module_list {
 
 /* Customer Thread */
 #CustomerThreadContacts{
-	float:left;
-	border:0;
+
 }
-#CustomerThreadContacts div {
-	background-color:#EFEFEF;
+
+#CustomerThreadContacts div.blocSAV {
 	float:left;
 	margin:0 10px 10px 0;
-	border:1px solid #CFCFCF;
+	min-height:178px;
+	width:24%;
+	border:1px solid #ccc;
+	background-color:#f8f8f8;
 }
+
+#MeaningStatus {
+float:left;
+}
+
 #CustomerThreadContacts p {
+	font-family: Georgia,Arial, Helvetica;
+	font-style:italic;
 	overflow:hidden;
-	line-height:15px;
+	font-size:13px;
+	line-height:18px;
 	height:45px;
 	margin:0;
-	padding:0 5px;
+	padding:10px;
+	border-top:1px solid #fff;
+	border-bottom:1px solid #ccc;
+	text-align:center;
+	margin:0 auto;
 }
+
+#CustomerThreadContacts .message-mail {
+	display:block;
+	text-align:center;
+	padding:25px 10px;
+	border-top:1px solid #fff;
+	margin: 0 auto;
+}
+
 #CustomerThreadContacts h3 {
+	font-size:16px;
+	font-weight:normal;
 	overflow:hidden;
 	line-height:25px;
-	color:#812143;
 	height:25px;
 	margin:0;
+	padding:5px 10px;
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
+	border-bottom: 1px solid #ccc;
 }
 #CustomerThreadContacts a {
 	padding:0 5px;
@@ -1992,12 +2022,12 @@ ul.connectedSortable li.module_list {
 	padding:0 5px;
 }
 #CustomerThreadContacts div#CustomerService {
-	width:300px;
+	float:left;
 	background:none;
 	border:none;
 }
 #CustomerThreadContacts div#CustomerService table.table {
-	width:300px;
+
 }
 #CustomerThreadContacts div#CustomerService table.table thead{
 	margin:0;
@@ -2008,13 +2038,29 @@ ul.connectedSortable li.module_list {
 	font-weight:bold;
 	text-align:center;
 }
+#CustomerThreadContacts div#CustomerService table.table tr td span{
+	font-weight:bold;
+	font-size:14px;
+}
+
 #CustomerThreadContacts div#MeaningStatus{
-	width:300px
+	float:left;
 }
 #ChangeStatus{
 	position:absolute;
 	margin:20px 20px 0 0;
 	right:10px;
+}
+#CustomerService table {
+border-collapse: collapse;
+}
+
+#CustomerService .table tr.alt_row {
+  background-color: #EFF4F9;
+}
+
+#CustomerService .table tr td {
+	border:none;
 }
 
 /* ScrollTop */

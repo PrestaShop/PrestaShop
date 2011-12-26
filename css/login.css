@@ -7,9 +7,12 @@ body {
 	font-size: 13px;
 	color: #333;
 	text-align: center;
-	background-image: url('../img/admin/bg-admin-gradient.png'),url('../img/admin/bg-admin.jpg');
+	background-image: url('../img/admin/bg-admin.jpg');
 	background-position: center center;
 }
+
+body #main {
+	}
 
 h1 {
 	color: #902F52;
