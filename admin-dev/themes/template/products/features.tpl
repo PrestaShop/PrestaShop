@@ -50,13 +50,13 @@
 	<br />
 	<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:900px;">
 		<tr>
-			<th>{l s='Feature'}</td>
+			<th height="30px">{l s='Feature'}</td>
 			<th style="width:30%">{l s='Pre-defined value'}</td>
 			<th style="width:40%"><u>{l s='or'}</u> {l s='Customized value'}</td>
 		</tr>
 	</table>
 	{foreach from=$available_features item=available_feature}
-	<table cellpadding="5" style="width: 900px; margin-top: 10px">
+	<table cellpadding="5" style="background-color:#fff; width: 900px; padding:10px 5px; border:1px solid #ccc; border-top:none;">
 	<tr>
 		<td>{$available_feature.name}</td>
 		<td style="width: 30%">
@@ -95,8 +95,8 @@
 	
 	</table>
 	<div class="separation"></div>
-	<div style="text-align:center;">
-		<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature" class="confirm_leave">
+	<div>
+		<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature" class="confirm_leave button">
 			<img src="../img/admin/add.gif" alt="new_features" title="{l s='Add a new feature'}" />&nbsp;{l s='Add a new feature'}
 		</a>
 	</div>

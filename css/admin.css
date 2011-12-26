@@ -2026,8 +2026,10 @@ float:left;
 	float:left;
 	background:none;
 	border:none;
+	width:24%;
 }
 #CustomerThreadContacts div#CustomerService table.table {
+width:100%;
 
 }
 #CustomerThreadContacts div#CustomerService table.table thead{
