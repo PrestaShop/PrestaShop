@@ -195,11 +195,12 @@ class CustomerCore extends ObjectModel
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
-		if (empty($this->id_default_group))
+
+		if ($this->id_default_group == _PS_DEFAULT_CUSTOMER_GROUP_)
 			if ($this->is_guest)
-				$this->id_default_group = 2;
+				$this->id_default_group = Configuration::get('PS_GUEST_GROUP');
 			else
-				$this->id_default_group = 3;
+				$this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
 
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
@@ -638,7 +639,7 @@ class CustomerCore extends ObjectModel
 		$this->is_guest = 0;
 		$this->passwd = Tools::encrypt($password);
 		$this->cleanGroups();
-		$this->addGroups(array(3)); // add default customer group
+		$this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP'))); // add default customer group
 		if ($this->update())
 		{
 			$vars = array(

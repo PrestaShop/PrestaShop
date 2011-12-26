@@ -396,7 +396,7 @@ class AuthControllerCore extends FrontController
 						if (!$customer->is_guest)
 						{
 							$customer->cleanGroups();
-							// we add the guest customer in the default customer group
+							// we add the customer in the default customer group
 							$customer->addGroups(array((int)Configuration::get('PS_CUSTOMER_GROUP')));
 							if (!$this->sendConfirmationMail($customer))
 								$this->errors[] = Tools::displayError('Cannot send email');
