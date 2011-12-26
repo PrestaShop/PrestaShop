@@ -1465,9 +1465,9 @@ INSERT INTO `PREFIX_timezone` (`name`) VALUES ('Africa/Abidjan'),('Africa/Accra'
 INSERT INTO `PREFIX_group` (`id_group`, `reduction`, `date_add`, `date_upd`) VALUES	(1, 0, NOW(), NOW()), (2, 0, NOW(), NOW()), (3, 0, NOW(), NOW());
 
 INSERT INTO `PREFIX_group_lang` (`id_group`, `id_lang`, `name`) VALUES
-(1, 1, 'Unidentified'),(1, 2, 'Non identifié'),(1, 3, 'Unidentified'),(1, 4, 'Unidentified'),(1, 5, 'Unidentified'),
+(1, 1, 'Visitor'),(1, 2, 'Visiteur'),(1, 3, 'Visitor'),(1, 4, 'Visitor'),(1, 5, 'Visitor'),
 (2, 1, 'Guest'),(2, 2, 'Invité'),(2, 3, 'Guest'),(2, 4, 'Guest'),(2, 5, 'Guest'),
-(3, 1, 'Default'),(3, 2, 'Défaut'),(3, 3, 'Predeterminado'),(3, 4, 'Default'),(3, 5, 'Default');
+(3, 1, 'Customer'),(3, 2, 'Client'),(3, 3, 'Customer'),(3, 4, 'Customer'),(3, 5, 'Customer');
 INSERT INTO `PREFIX_group_group_shop` (`id_group`, `id_group_shop`) (SELECT `id_group`, 1 FROM `PREFIX_group`);
 
 INSERT INTO `PREFIX_category_group` (`id_category`, `id_group`) (SELECT 1, `id_group` FROM `PREFIX_group`);
