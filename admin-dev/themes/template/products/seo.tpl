@@ -49,7 +49,7 @@
 				languages=$languages
 				input_name='meta_title'
 				input_value=$product->meta_title}
-			<p class="clear">{l s='Product page title; leave blank to use product name'}</p>
+			<p class="preference_description">{l s='Product page title; leave blank to use product name'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -62,7 +62,7 @@
 				input_name='meta_description'
 				input_value=$product->meta_description
 				input_hint='{l s=\'Forbidden characters:\'\} <>;=#{\}'}
-			<p class="clear">{l s='A single sentence for HTML header'}</p>
+			<p class="preference_description">{l s='A single sentence for HTML header'}</p>
 		</td>
 	</tr>
 	<tr>
@@ -73,7 +73,7 @@
 			{include file="products/input_text_lang.tpl" languages=$languages
 				input_value=$product->meta_keywords
 				input_name='meta_keywords'}
-			<p class="clear">{l s='Keywords for HTML header, separated by a comma'}</p>
+			<p class="preference_description">{l s='Keywords for HTML header, separated by a comma'}</p>
 		</td>
 	</tr>
 	<tr>

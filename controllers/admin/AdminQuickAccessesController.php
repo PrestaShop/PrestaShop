@@ -60,6 +60,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 			),
 			'new_window' => array(
 				'title' => $this->l('New window'),
+				'width' => 70,
 				'align' => 'center',
 				'type' => 'bool',
 				'activeVisu' => 'new_window'
