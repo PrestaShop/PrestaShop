@@ -564,7 +564,7 @@ UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_CUSTOMER_GROUP', '1', NOW(), NOW());
 
-/* PHP:add_new_groups('Non identifié', 'Unidentified'); */;
+/* PHP:add_new_groups('Visiteur', 'Visitor'); */;
 /* PHP:add_new_groups('Invité', 'Guest'); */;
 
 UPDATE `PREFIX_employee` SET `bo_theme` = 'default';
