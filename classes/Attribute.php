@@ -320,9 +320,9 @@ class AttributeCore extends ObjectModel
 
 		// when delete, you must use $use_last_attribute
 		if ($use_last_attribute)
-			$sql .= 'AND `id_attribute` != '.(int)$this->id;
+			$sql .= ' AND `id_attribute` != '.(int)$this->id;
 
-		$sql .= 'ORDER BY `position`';
+		$sql .= ' ORDER BY `position`';
 
 		$result = Db::getInstance()->executeS($sql);
 
