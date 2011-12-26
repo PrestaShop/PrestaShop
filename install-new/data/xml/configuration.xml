@@ -850,6 +850,12 @@
     <configuration id="PS_INVOICE_MODEL" name="PS_INVOICE_MODEL">
         <value>invoice</value>
     </configuration>
+    <configuration id="PS_LIMIT_UPLOAD_IMAGE_VALUE" name="PS_LIMIT_UPLOAD_IMAGE_VALUE">
+        <value>2</value>
+    </configuration>
+    <configuration id="PS_LIMIT_UPLOAD_FILE_VALUE" name="PS_LIMIT_UPLOAD_FILE_VALUE">
+        <value>2</value>
+    </configuration>
   </entities>
   <fields id="name" class="Configuration" null="1">
     <field name="name"/>
