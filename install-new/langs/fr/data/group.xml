@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <entity_group>
-  <group id="Unidentified" name="Non identifi&#xE9;"/>
+  <group id="Visitor" name="Visiteur"/>
   <group id="Guest" name="Invit&#xE9;"/>
-  <group id="Default" name="D&#xE9;faut"/>
+  <group id="Customer" name="Client"/>
 </entity_group>
