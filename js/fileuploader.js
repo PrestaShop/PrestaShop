@@ -696,7 +696,7 @@ qq.UploadButton.prototype = {
             top: 0,
             fontFamily: 'Arial',
             // 4 persons reported this, the max values that worked for them were 243, 236, 236, 118
-            fontSize: '118px',
+            fontSize: '18px',
             margin: 0,
             padding: 0,
             cursor: 'pointer',
