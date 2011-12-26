@@ -361,6 +361,15 @@ class AdminCustomersControllerCore extends AdminController
 			)
 		);
 
+		// if customer is a guest customer, password hasn't to be there
+		if ($obj->id && ($obj->is_guest && $obj->id_default_group == Configuration::get('PS_GUEST_GROUP')))
+		{
+			foreach ($this->fields_form['input'] as $k => $field)
+				if ($field['type'] == 'password')
+					array_splice($this->fields_form['input'], $k, 1);
+		}
+
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
