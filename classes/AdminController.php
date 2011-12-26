@@ -580,10 +580,10 @@ class AdminControllerCore extends Controller
 	 */
 	public function processSave($token)
 	{
-		if ($this->id_object)
-			return $this->processUpdate($token);
-		else
+		if ((!$this->id_object) || (!Tools::getValue('submitAdd'.$this->table)))
 			return $this->processAdd($token);
+		else
+			return $this->processUpdate($token);
 	}
 
 	/**
@@ -642,7 +642,7 @@ class AdminControllerCore extends Controller
 		/* Checking fields validity */
 		$this->validateRules();
 
-		if (!count($this->_errors))
+		if (count($this->_errors) <= 0)
 		{
 			$id = (int)Tools::getValue($this->identifier);
 
@@ -713,7 +713,6 @@ class AdminControllerCore extends Controller
 						' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 		}
-
 		$this->_errors = array_unique($this->_errors);
 		if (count($this->_errors) > 0)
 			return;
