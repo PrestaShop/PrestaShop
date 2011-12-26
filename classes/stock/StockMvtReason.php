@@ -46,6 +46,7 @@ class StockMvtReasonCore extends ObjectModel
 	public $deleted = 0;
 
 	/**
+	 * @since 1.5.0
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
@@ -61,6 +62,9 @@ class StockMvtReasonCore extends ObjectModel
 		),
 	);
 
+	/**
+	 * @see ObjectModel::$webserviceParameters
+	 */
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'stock_movement_reasons',
 		'objectNodeName' => 'stock_movement_reason',
@@ -69,6 +73,13 @@ class StockMvtReasonCore extends ObjectModel
 		),
 	);
 
+	/**
+	 * Gets Stock Mvt Reasons
+	 *
+	 * @param int $id_lang
+	 * @param int $sign Optionnal
+	 * @return array
+	 */
 	public static function getStockMvtReasons($id_lang, $sign = null)
 	{
 		$query = new DbQuery();
@@ -112,8 +123,9 @@ class StockMvtReasonCore extends ObjectModel
 	}
 
 	/**
-	 * @since 1.5.0
+	 * For a given id_stock_mvt_reason, tells if it exists
 	 *
+	 * @since 1.5.0
 	 * @param int $id_stock_mvt_reason
 	 * @return bool
 	 */

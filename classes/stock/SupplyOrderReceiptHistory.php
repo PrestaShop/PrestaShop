@@ -81,4 +81,19 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
+
+	/**
+	 * @see ObjectModel::$webserviceParameters
+	 */
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'supply_order_receipt_histories',
+		'objectNodeName' => 'supply_order_receipt_history',
+		'fields' => array(
+			'id_supply_order_detail' => array('xlink_resource' => 'supply_order_details'),
+			'id_employee' => array('xlink_resource' => 'employees'),
+			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
+		),
+	);
+
 }
+

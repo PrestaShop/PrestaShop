@@ -76,7 +76,41 @@ class ProductSupplierCore extends ObjectModel
 	);
 
 	/**
-	 * For a given product and supplier, get the product reference
+	 * @see ObjectModel::$webserviceParameters
+	 */
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'product_suppliers',
+		'objectNodeName' => 'product_supplier',
+		'fields' => array(
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+			'id_supplier' => array('xlink_resource' => 'suppliers'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+		),
+	);
+
+	/**
+	 * @see ObjectModel::delete()
+	 */
+	public function delete()
+	{
+		$res = parent::delete();
+
+		if ($res && $this->id_product_attribute == 0)
+		{
+			$items = self::getSupplierCollection($this->id_product, false);
+			foreach ($items as $item)
+			{
+				if ($item->id_product_attribute > 0)
+					$item->delete();
+			}
+		}
+
+		return $res;
+	}
+
+	/**
+	 * For a given product and supplier, gets the product supplier reference
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
@@ -98,7 +132,7 @@ class ProductSupplierCore extends ObjectModel
 	}
 
 	/**
-	 * For a given product and supplier, get the product unit price
+	 * For a given product and supplier, gets the product supplier unit price
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
@@ -120,7 +154,7 @@ class ProductSupplierCore extends ObjectModel
 	}
 
 	/**
-	 * For a given product and supplier, get the ProductSupplier corresponding ID
+	 * For a given product and supplier, gets corresponding ProductSupplier ID
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
@@ -157,23 +191,6 @@ class ProductSupplierCore extends ObjectModel
 			$suppliers->groupBy('id_supplier');
 
 		return $suppliers;
-	}
-
-	public function delete()
-	{
-		$res = parent::delete();
-
-		if ($res && $this->id_product_attribute == 0)
-		{
-			$items = self::getSupplierCollection($this->id_product, false);
-			foreach ($items as $item)
-			{
-				if ($item->id_product_attribute > 0)
-					$item->delete();
-			}
-		}
-
-		return $res;
 	}
 
 	/**
