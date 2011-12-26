@@ -29,8 +29,8 @@ class FileUploaderCore
 {
 
 	private $allowedExtensions = array();
-	private $sizeLimit = 10485760;
 	private $file;
+	private $sizeLimit;
 
 	function __construct(array $allowedExtensions = array(), $sizeLimit = 10485760)
 	{
@@ -39,12 +39,14 @@ class FileUploaderCore
 		$this->allowedExtensions = $allowedExtensions;
 		$this->sizeLimit = $sizeLimit;
 
-		if (isset($_GET['qqfile']))
-			$this->file = new qqUploadedFileXhr();
-		else
-			$this->file = false;
+        if (isset($_GET['qqfile'])) {
+            $this->file = new qqUploadedFileXhr();
+        } elseif (isset($_FILES['qqfile'])) {
+            $this->file = new qqUploadedFileForm();
+        } else {
+            $this->file = false; 
+        }
 	}
-
 
 	private function toBytes($str)
 	{
@@ -72,7 +74,6 @@ class FileUploaderCore
 		if ($size == 0) {
 			return array('error' => Tools::displayError('File is empty'));
 		}
-
 		if ($size > $this->sizeLimit) {
 			return array('error' => Tools::displayError('File is too large'));
 		}
@@ -92,6 +93,70 @@ class FileUploaderCore
 	}
 }
 
+class qqUploadedFileForm {  
+    /**
+     * Save the file to the specified path
+     * @return boolean TRUE on success
+     */
+	function save()
+	{
+		$product = new Product($_GET['id_product']);
+		if (!Validate::isLoadedObject($product))
+			return array('error' => Tools::displayError('Cannot add image because product add failed.'));
+		else
+		{
+			$image = new Image();
+			$image->id_product = (int)($product->id);
+			$image->position = Image::getHighestPosition($product->id) + 1;
+			if (!Image::getCover($image->id_product))
+				$image->cover = 1;
+			else
+				$image->cover = 0;
+			if (!$image->add())
+				return array('error' => Tools::displayError('Error while creating additional image'));
+			else
+			{
+				return $this->copyImage($product->id, $image->id);
+			}
+		}
+	}
+
+	public function copyImage($id_product, $id_image, $method = 'auto')
+	{
+		$image = new Image($id_image);
+		$p = new Product($id_product);
+		if (!$new_path = $image->getPathForCreation())
+			return array('error' => Tools::displayError('An error occurred during new folder creation'));
+		if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName))
+			return array('error' => Tools::displayError('An error occurred during the image upload'));
+		elseif (!imageResize($tmpName, $new_path.'.'.$image->image_format))
+			return array('error' => Tools::displayError('An error occurred while copying image.'));
+		elseif($method == 'auto')
+		{
+			$imagesTypes = ImageType::getImagesTypes('products');
+			foreach ($imagesTypes AS $k => $imageType)
+			{
+				$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
+				if (!imageResize($tmpName, $new_path.'-'.stripslashes($imageType['name']).$theme.'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+					return array('error' => Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']));
+			}
+		}
+		unlink($tmpName);
+		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
+		$lang = Context::getContext()->employee->id_lang;
+
+		if (!$image->update())
+			return array('error' => Tools::displayError('Error while updating status'));
+		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName());
+		return array("success" => $img);
+	}
+    function getName() {
+        return $_FILES['qqfile']['name'];
+    }
+    function getSize() {
+        return $_FILES['qqfile']['size'];
+    }
+}
 /**
  * Handle file uploads via XMLHttpRequest
  */
@@ -166,7 +231,7 @@ class qqUploadedFileXhr
 
 		if (!$image->update())
 			return array('error' => Tools::displayError('Error while updating status'));
-		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover);
+		$img = array('id_image' => $image->id, 'position' => $image->position, 'cover' => $image->cover, 'name' => $this->getName());
 		return array("success" => $img);
 	}
 
