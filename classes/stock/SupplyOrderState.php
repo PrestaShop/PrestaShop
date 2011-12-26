@@ -79,9 +79,17 @@ class SupplyOrderStateCore extends ObjectModel
 			'pending_receipt' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'enclosed' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-
-			// Lang fields
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+		),
+	);
+
+	/**
+	 * @see ObjectModel::$webserviceParameters
+	 */
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'supply_order_states',
+		'objectNodeName' => 'supply_order_state',
+		'fields' => array(
 		),
 	);
 

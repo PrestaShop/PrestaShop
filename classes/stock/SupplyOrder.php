@@ -153,6 +153,32 @@ class SupplyOrderCore extends ObjectModel
 	);
 
 	/**
+	 * @see ObjectModel::$webserviceParameters
+	 */
+ 	protected $webserviceParameters = array(
+ 		'fields' => array(
+ 			'id_supplier' => array('xlink_resource' => 'suppliers'),
+ 			'id_lang' => array('xlink_resource' => 'languages'),
+ 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+ 			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
+ 			'id_currency' => array('xlink_resource' => 'currencies'),
+ 		),
+ 		'hidden_fields' => array(
+ 			'id_ref_currency',
+ 		),
+ 		'associations' => array(
+			'supply_order_details' => array(
+				'resource' => 'supply_order_detail',
+				'fields' => array(
+					'id' => array(),
+ 					'supplier_reference' => array(),
+ 					'product_name' => array(),
+				),
+			),
+		),
+ 	);
+
+	/**
 	 * @see ObjectModel::update()
 	 */
 	public function update($null_values = false)
@@ -401,6 +427,20 @@ class SupplyOrderCore extends ObjectModel
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 		return ($res > 0);
+	}
+
+	/**
+	 * Webservice : gets the ids supply_order_detail associated to this order
+	 * @return array
+	 */
+	public function getWsSupplyOrderDetails()
+	{
+		$query = new DbQuery();
+		$query->select('sod.id_supply_order_detail as id, sod.name as product_name, supplier_reference');
+		$query->from('supply_order_detail', 'sod');
+		$query->where('id_supply_order = '.(int)$this->id);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
 }
