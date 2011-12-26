@@ -205,7 +205,7 @@ jQuery(document).ready(Customer.init);
 		<tr id="tr_unit_price">
 			<td class="col-left"><label>{l s='Unit price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price}"
+				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|number_format:6}"
 					onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
 				{l s='/'} <!--<input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/> -->
 				<select onchange="unitySecond();" name="unity" id="unity">
