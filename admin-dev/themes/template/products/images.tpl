@@ -118,6 +118,7 @@
 		var upbutton = '{l s='Upload a file'}';
 		var token = '{$token}';
 		var come_from = '{$table}';
+		var success_add =  '{l s='image has been successfully added'}';
 		var id_tmp = 0;
 		{literal}
 		//Ready Function
@@ -173,7 +174,7 @@
 					token : "{/literal}{$token}{literal}",
 					tab : "AdminProducts",
 					action : 'addImage',
-					ajax: 1,
+					ajax: 1
 				},
 				onComplete: function(id, fileName, responseJSON)
 				{
@@ -204,6 +205,7 @@
 						$("#countImage").html(parseInt($("#countImage").html()) + 1);
 						$("#img" + id).remove();
 						$("#imageTable").tableDnDUpdate();
+						showSuccessMessage(responseJSON.name + " " + success_add);
 					}
 					else
 					{
