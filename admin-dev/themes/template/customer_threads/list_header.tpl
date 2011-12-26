@@ -46,16 +46,16 @@
 				{/if}
 			{/foreach}
 
-			<div style="width:{if $nb_categories > 6}200{else}300{/if}px;">
+			<div class="blocSAV">
 
-					<h3>&nbsp;{$val.name}</h3>
+					<h3>{$val.name}</h3>
 
 					{if $nb_categories < 6}
 						<p>{$val.description}</p>
 					{/if}
 
 					{if $total_thread == 0}
-						<h4>{l s='No new message'}</h4>
+						<span class="message-mail">{l s='No new message'}</span>
 					{else}
 						<a href="{$currentIndex}&token={$token}&id_customer_thread={$id_customer_thread}&viewcustomer_thread" class="button">
 							{$total_thread} 
@@ -65,7 +65,7 @@
 			</div>
 		{/foreach}
 
-		<div id="MeaningStatus">
+		<div id="MeaningStatus" class="blocSAV">
 			<h3>&nbsp;{l s='Meaning of status'}</h3>
 			<ul>
 				<li><img src="../img/admin/status_green.png" alt="{l s='Open'}">{l s='Open'}</li>
@@ -76,10 +76,10 @@
 		</div>
 	
 		<div id="CustomerService">
-			<table cellspacing="1" class="table">
+			<table ccellspacing="0" cellpadding="0" class="table">
 				<thead>
 					<tr>
-						<td colspan="2">{l s='Customer service'} : {l s='Statistics'}</td>
+						<th colspan="2">{l s='Customer service'} : {l s='Statistics'}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -88,7 +88,7 @@
 						{assign var=count value=$count+1}
 						<tr {if $count % 2 == 0}class="alt_row"{/if}>
 							<td>{$key}</td>
-							<td>{$val}</td>
+							<td><span>{$val}</span></td>
 						</tr>
 					{/foreach}
 				</tbody>
