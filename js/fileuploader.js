@@ -25,7 +25,7 @@
 */
 
 var qq = qq || {};
-
+var nbfile = 1;
 /**
  * Adds all missing properties from second obj to first obj
  */ 
@@ -207,7 +207,6 @@ qq.getByClass = function(element, className){
  * @param  String current querystring-part
  * @return String encoded querystring
  */
-var nbfile = 0;
 qq.obj2url = function(obj, temp, prefixDone){
     var uristrings = [],
         prefix = '&',
