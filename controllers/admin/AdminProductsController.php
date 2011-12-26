@@ -1041,13 +1041,14 @@ class AdminProductsControllerCore extends AdminController
 		self::$currentIndex = 'index.php?tab=AdminProducts';
 		$allowedExtensions = array("jpeg", "gif", "png", "jpg");
 		// max file size in bytes
-		$sizeLimit = $this->max_file_size;
+		$sizeLimit = $this->max_file_size == 0 ? 10485760 : $this->max_file_size;
 		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
 		$result = $uploader->handleUpload();
 		if (isset($result['success']))
 		{
 			$obj = new Image($result['success']['id_image']);
 			$json = array(
+				'name' => $result['success']['name'],
 				'status' => 'ok',
 				'id'=>$obj->id,
 				'path' => $obj->getExistingImgPath(),
@@ -1269,7 +1270,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->status = 'ok';
 	}
-
+	
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer))
@@ -2697,7 +2698,7 @@ class AdminProductsControllerCore extends AdminController
 			$input_namepack_items = Tools::getValue('namePackItems');
 		else
 			foreach ($product->packItems as $pack_item)
-				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
+				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¬§';
 
 		$data->assign(array(
 			'product' => $product,
@@ -2979,7 +2980,7 @@ class AdminProductsControllerCore extends AdminController
 		$j = 0;
 		for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++)
 			$customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
-		return implode('¤', $customizableFieldIds);
+		return implode('¬§', $customizableFieldIds);
 	}
 
 	private function _displayLabelField(&$label, $languages, $default_language, $type, $fieldIds, $id_customization_field)
@@ -3833,7 +3834,7 @@ class AdminProductsControllerCore extends AdminController
 			$input_namepack_items = Tools::getValue('namePackItems');
 		else
 			foreach ($product->packItems as $pack_item)
-				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
+				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¬§';
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 
