@@ -271,6 +271,12 @@ class WebserviceRequestCore
 			'stocks' => array('description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'available_quantities' => array('description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'warehouse_product_locations' => array('description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'supply_orders' => array('description' => 'Supply Orders', 'class' => 'SupplyOrder', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'supply_order_details' => array('description' => 'Supply Order Details', 'class' => 'SupplyOrderDetail', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'supply_order_states' => array('description' => 'Supply Order States', 'class' => 'SupplyOrderState', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'supply_order_histories' => array('description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'supply_order_receipt_histories' => array('description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 		);
 		ksort($resources);
 		return $resources;
