@@ -281,7 +281,15 @@ class AuthControllerCore extends FrontController
 			{
 				// Handle brute force attacks
 				sleep(1);
-				$this->errors[] = Tools::displayError('Authentication failed');
+
+				if (!Customer::customerExists($email))
+				{
+					$this->create_account = true;
+					$this->context->smarty->assign('email_create', Tools::safeOutput($email));
+					$_POST['email'] = $email;
+				}
+				else
+					$this->errors[] = Tools::displayError('Authentication failed');
 			}
 			else
 			{

@@ -151,7 +151,7 @@ $(function(){ldelim}
 	}
 	{/literal}
 	</script>
-	{if isset($authentification_error)}
+	<!--{if isset($authentification_error)}
 	<div class="error">
 		{if {$authentification_error|@count} == 1}
 			<p>{l s='There is one error'} :</p>
@@ -164,7 +164,7 @@ $(function(){ldelim}
 			{/foreach}
 		</ol>
 	</div>
-	{/if}
+	{/if}-->
 	<form action="{$link->getPageLink('authentication', true)}" method="post" id="create-account_form" class="std">
 		<fieldset>
 			<h3>{l s='Create your account'}</h3>
@@ -362,7 +362,7 @@ $(function(){ldelim}
 		</form>
 	{/if}
 {else}
-	{if isset($account_error)}
+	<!--{if isset($account_error)}
 	<div class="error">
 		{if {$account_error|@count} == 1}
 			<p>{l s='There is one error'} :</p>
@@ -375,7 +375,7 @@ $(function(){ldelim}
 			{/foreach}
 		</ol>
 	</div>
-	{/if}
+	{/if}-->
 <form action="{$link->getPageLink('authentication', true)}" method="post" id="account-creation_form" class="std">
 	{$HOOK_CREATE_ACCOUNT_TOP}
 	<fieldset class="account_creation">
