@@ -526,7 +526,6 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 					}
-
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->_errors[] = $this->l('module not found');
@@ -545,6 +544,7 @@ class AdminModulesControllerCore extends AdminController
 						// If we install a module, force temporary global context for multishop
 						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL)
 						{
+
 							// If we install a module, force temporary global context for multishop
 							if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && $method != 'getContent')
 							{
@@ -553,6 +553,10 @@ class AdminModulesControllerCore extends AdminController
 								Configuration::updateValue('RSS_FEED_TITLE', 'lol');
 							}
 						}
+
+						//retrocompatibility
+						if (Tools::getValue('controller') != '')
+							$_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
 
 						if (((method_exists($module, $method) && ($echo = $module->{$method}()))) AND $key == 'configure' AND Module::isInstalled($module->name))
 						{
@@ -593,7 +597,6 @@ class AdminModulesControllerCore extends AdminController
 								Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
 								unset(Context::getContext()->tmpOldShop);
 							}
-
 							// Display module configuration
 							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
@@ -601,7 +604,6 @@ class AdminModulesControllerCore extends AdminController
 							$return = ($method == 'install' ? 12 : 13);
 						elseif ($echo === false)
 							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
-
 						if (Shop::isFeatureActive() && Context::shop() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop))
 						{
 							Context::getContext()->shop = clone(Context::getContext()->tmpOldShop);
@@ -926,7 +928,6 @@ class AdminModulesControllerCore extends AdminController
 
 		if ($this->logged_on_addons)
 			$tpl_vars['logged_on_addons'] = 1;
-
 		$smarty->assign($tpl_vars);
 	}
 
