@@ -56,7 +56,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="text-align:center;">
+			<td><div class="clear">&nbsp;</div></td>
+		</tr>
+		<tr>
+			<td style="width:150px;"></td>
+			<td>
 				<input type="submit" name="submitCustomizationConfiguration" value="{l s='Update settings'}" class="button" onclick="this.form.action += '&addproduct&tabs=5';" />
 			</td>
 		</tr>
