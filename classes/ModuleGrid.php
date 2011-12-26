@@ -112,7 +112,7 @@ abstract class ModuleGridCore extends Module
 			$params['height'] = 920;
 		if (!isset($params['start']) OR !Validate::IsUnsignedInt($params['start']))
 			$params['start'] = 0;
-		if (!isset($params['limit']) OR !Validate::IsUnsignedInt($params['height']))
+		if (!isset($params['limit']) OR !Validate::IsUnsignedInt($params['limit']))
 			$params['limit'] = 40;
 
 		$grider .= '&width='.$params['width'];
