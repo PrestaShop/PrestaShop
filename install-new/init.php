@@ -53,6 +53,8 @@ require_once _PS_INSTALL_PATH_.'classes/sqlLoader.php';
 require_once _PS_INSTALL_PATH_.'classes/xmlLoader.php';
 require_once _PS_INSTALL_PATH_.'classes/simplexml.php';
 
+@set_time_limit(300);
+
 class InstallLog
 {
 	/**
@@ -68,8 +70,9 @@ class InstallLog
 	}
 
 	protected $fd;
-	protected $start_time = array();
+	protected $data = array();
 	protected $last_time;
+	protected $depth = 0;
 
 	public function __construct()
 	{
@@ -79,20 +82,28 @@ class InstallLog
 
 	public function write($id)
 	{
-		$str = "[$id]";
-		$str .= ' - [Time: '.round(microtime(true) - $this->last_time, 4).']';
-		if (isset($this->start_time[$id]))
-			$str .= ' - [Length: '.round(microtime(true) - $this->start_time[$id], 4).']';
-		fwrite($this->fd, "$str\n");
+		$str = str_pad("[$id]", 35, ' ');
+		if (isset($this->data[$id]['start']))
+			$str .= str_pad(round(microtime(true) - $this->data[$id]['start'], 4).'ms', 10, ' ');
+		$str .= str_pad(round(microtime(true) - $this->last_time, 4).'ms', 10, ' ');
+		$this->data[$id]['str'] = str_repeat("\t", $this->depth - 1)."$str\n";
+		$this->depth--;
 	}
 
 	public function start($id)
 	{
-		$this->start_time[$id] = microtime(true);
+		$this->data[$id] = array('start' => microtime(true));
+		$this->depth++;
 	}
 
 	public function __destruct()
 	{
+		foreach ($this->data as $k => $info)
+			if (!isset($info['str']))
+				$this->write($k);
+
+		foreach ($this->data as $info)
+			fwrite($this->fd, $info['str']);
 		fclose($this->fd);
 	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_configuration>
-  <fields id="name" class="Configuration" null="1">
+  <fields id="name" null="1">
     <field name="name"/>
     <field name="value"/>
   </fields>
