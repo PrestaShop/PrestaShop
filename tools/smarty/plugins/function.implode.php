@@ -23,7 +23,7 @@
  */
 function smarty_function_implode($params, $template)
 {
-    if (empty($params['value']))
+    if (!isset($params['value']))
     {
         trigger_error("[plugin] implode parameter 'value' cannot be empty", E_USER_NOTICE);
         return;
