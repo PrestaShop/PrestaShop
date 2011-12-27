@@ -43,6 +43,11 @@ class HookCore extends ObjectModel
 	public $description;
 
 	/**
+	 * @var bool
+	 */
+	public $position = false;
+
+	/**
 	 * @var bool Is this hook usable with live edit ?
 	 */
 	public $live_edit = false;
