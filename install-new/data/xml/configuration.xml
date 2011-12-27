@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_configuration>
-  <fields id="name" null="1">
+  <fields id="name" sql="a.name &lt;&gt; 'PS_LANG_DEFAULT'" null="1">
     <field name="name"/>
     <field name="value"/>
   </fields>
   <entities>
-    <configuration id="PS_LANG_DEFAULT" name="PS_LANG_DEFAULT">
-      <value>2</value>
-    </configuration>
     <configuration id="PS_CURRENCY_DEFAULT" name="PS_CURRENCY_DEFAULT">
       <value>1</value>
     </configuration>
