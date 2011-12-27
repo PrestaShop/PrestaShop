@@ -501,7 +501,7 @@ class InstallXmlLoader
 			}
 		}
 
-		$this->storeId($entity, $identifier, $entity_id);
+		return $entity_id;
 	}
 
 	public function generatePrimary($entity, $primary)
