@@ -54,6 +54,10 @@ class InstallXmlLoader
 
 	protected $ids = array();
 
+	protected $primaries = array();
+
+	protected $delayed_inserts = array();
+
 	public function __construct()
 	{
 		$this->language = InstallLanguages::getInstance();
@@ -290,6 +294,8 @@ class InstallXmlLoader
 					$this->copyImages($entity, $identifier, (string)$xml->fields['image'], $data);
 			}
 		}
+
+		$this->flushDelayedInserts();
 	}
 
 	/**
@@ -373,6 +379,20 @@ class InstallXmlLoader
 		return $data;
 	}
 
+	public function flushDelayedInserts()
+	{
+		foreach ($this->delayed_inserts as $entity => $queries)
+		{
+			$type = 'INSERT IGNORE';
+			if ($entity == 'access')
+				$type = 'REPLACE';
+
+			if (!Db::getInstance()->autoExecute(_DB_PREFIX_.$entity, $queries, $type))
+				$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
+			unset($this->delayed_inserts[$entity]);
+		}
+	}
+
 	/**
 	 * Create a simple entity with all its data and lang data
 	 * If a methode createEntity$entity exists, use it. Else if $classname is given, use it. Else do a simple insert in database.
@@ -385,16 +405,15 @@ class InstallXmlLoader
 	 */
 	public function createEntity($entity, $identifier, $classname, array $data, array $data_lang = array())
 	{
+		$xml = $this->loadEntity($entity);
 		if (method_exists($this, 'createEntity'.Tools::toCamelCase($entity)))
 		{
 			// Create entity with custom method in current class
 			$method = 'createEntity'.Tools::toCamelCase($entity);
-			$entity_id = $this->$method($data, $data_lang);
+			$entity_id = $this->$method($identifier, $data, $data_lang);
 		}
 		else if ($classname)
 		{
-			$xml = $this->loadEntity($entity);
-
 			// Create entity with ObjectModel class
 			$object = new $classname();
 			$object->hydrate($data);
@@ -405,15 +424,22 @@ class InstallXmlLoader
 		}
 		else
 		{
-			// Create entity in database);
-			$execute_type = 'INSERT IGNORE';
-			if ($entity == 'access')
-				$execute_type = 'REPLACE';
+			// Generate primary key manually
+			$primary = '';
+			$entity_id = 0;
+			if (!$xml->fields['primary'])
+				$primary = 'id_'.$entity;
+			else if (strpos((string)$xml->fields['primary'], ',') === false)
+				$primary = (string)$xml->fields['primary'];
 
-			if (!Db::getInstance()->autoExecute(_DB_PREFIX_.$entity, array_map('pSQL', $data), $execute_type))
-				$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
-			$entity_id = Db::getInstance()->Insert_ID();
+			if ($primary)
+			{
+				$entity_id = $this->generatePrimary($entity, $primary);
+				$data[$primary] = $entity_id;
+			}
 
+			// Store INSERT queries in order to optimize install with grouped inserts
+			$this->delayed_inserts[$entity][] = array_map('pSQL', $data);
 			if ($data_lang)
 			{
 				$real_data_lang = array();
@@ -425,8 +451,7 @@ class InstallXmlLoader
 				{
 					$insert_data_lang['id_'.$entity] = $entity_id;
 					$insert_data_lang['id_lang'] = $id_lang;
-					if (!Db::getInstance()->autoExecute(_DB_PREFIX_.$entity.'_lang',  array_map('pSQL', $insert_data_lang), 'INSERT IGNORE'))
-						$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
+					$this->delayed_inserts[$entity.'_lang'][] = array_map('pSQL', $insert_data_lang);
 				}
 			}
 		}
@@ -434,11 +459,56 @@ class InstallXmlLoader
 		$this->storeId($entity, $identifier, $entity_id);
 	}
 
-	public function createEntityConfiguration(array $data, array $data_lang = array())
+	public function createEntityTab($identifier, array $data, array $data_lang)
 	{
-		if (!Configuration::get($data['name']))
-			Configuration::updateGlobalValue($data['name'], ($data_lang) ? $data_lang['value'] : $data['value']);
-		return Configuration::getIdByName($data['name']);
+		static $position = array();
+
+		$entity = 'tab';
+		$xml = $this->loadEntity($entity);
+
+		if (!isset($position[$data['id_parent']]))
+			$position[$data['id_parent']] = 0;
+		$data['position'] = $position[$data['id_parent']]++;
+
+		// Generate primary key manually
+		$primary = '';
+		$entity_id = 0;
+		if (!$xml->fields['primary'])
+			$primary = 'id_'.$entity;
+		else if (strpos((string)$xml->fields['primary'], ',') === false)
+			$primary = (string)$xml->fields['primary'];
+
+		if ($primary)
+		{
+			$entity_id = $this->generatePrimary($entity, $primary);
+			$data[$primary] = $entity_id;
+		}
+
+		// Store INSERT queries in order to optimize install with grouped inserts
+		$this->delayed_inserts[$entity][] = array_map('pSQL', $data);
+		if ($data_lang)
+		{
+			$real_data_lang = array();
+			foreach ($data_lang as $field => $list)
+				foreach ($list as $id_lang => $value)
+					$real_data_lang[$id_lang][$field] = $value;
+
+			foreach ($real_data_lang as $id_lang => $insert_data_lang)
+			{
+				$insert_data_lang['id_'.$entity] = $entity_id;
+				$insert_data_lang['id_lang'] = $id_lang;
+				$this->delayed_inserts[$entity.'_lang'][] = array_map('pSQL', $insert_data_lang);
+			}
+		}
+
+		$this->storeId($entity, $identifier, $entity_id);
+	}
+
+	public function generatePrimary($entity, $primary)
+	{
+		if (!isset($this->primaries[$entity]))
+			$this->primaries[$entity] = (int)Db::getInstance()->getValue('SELECT '.$primary.' FROM '._DB_PREFIX_.$entity.' ORDER BY '.$primary.' DESC');
+		return ++$this->primaries[$entity];
 	}
 
 	public function copyImages($entity, $identifier, $path, array $data, $extension = 'jpg')

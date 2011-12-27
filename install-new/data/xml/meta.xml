@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_meta>
-  <fields id="page" class="Meta">
+  <fields id="page">
     <field name="page"/>
   </fields>
   <entities>
