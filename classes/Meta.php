@@ -132,18 +132,6 @@ class MetaCore extends ObjectModel
 									);
 	}
 
-	public function add($autodate = true, $nullValues = false)
-	{
-		if (!parent::add($autodate, $nullValues));
-
-		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)Configuration::get('PS_REWRITING_SETTINGS'),
-									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
-									'',
-									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-									);
-	}
-
 	public function delete()
 	{
 		if (!parent::delete())
