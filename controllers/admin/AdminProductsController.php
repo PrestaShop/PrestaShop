@@ -2441,21 +2441,21 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$params = explode('_', $key);
 
-				$wpl_id = WarehouseProductLocation::getIdByProductAndWarehouse($params[1], $params[2], $params[0]);
+				$wpl_id = (int)WarehouseProductLocation::getIdByProductAndWarehouse((int)$params[1], (int)$params[2], (int)$params[0]);
 
 				if (empty($wpl_id))
 				{
 					//create new record
 					$warehouse_location_entity = new WarehouseProductLocation();
-					$warehouse_location_entity->id_product = $params[1];
-					$warehouse_location_entity->id_product_attribute = $params[2];
-					$warehouse_location_entity->id_warehouse = $params[0];
+					$warehouse_location_entity->id_product = (int)$params[1];
+					$warehouse_location_entity->id_product_attribute = (int)$params[2];
+					$warehouse_location_entity->id_warehouse = (int)$params[0];
 					$warehouse_location_entity->location = pSQL($location);
 					$warehouse_location_entity->save();
 				}
 				else
 				{
-					$warehouse_location_entity = new WarehouseProductLocation($wpl_id);
+					$warehouse_location_entity = new WarehouseProductLocation((int)$wpl_id);
 
 					$location = pSQL($location);
 
@@ -2464,10 +2464,8 @@ class AdminProductsControllerCore extends AdminController
 						$warehouse_location_entity->location = pSQL($location);
 						$warehouse_location_entity->update();
 					}
-					break;
 				}
 			}
-
 			$this->confirmations[] = $this->l('Warehouses and location(s) of the product have been updated');
 		}
 	}
