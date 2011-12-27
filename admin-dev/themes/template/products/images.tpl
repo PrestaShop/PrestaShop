@@ -208,11 +208,7 @@
 						showSuccessMessage(responseJSON.name + " " + success_add);
 					}
 					else
-					{
-						$("#img" + id).addClass("red");
-						$("#img" + id + " .errorImg").html(responseJSON.error);
-						$("#img" + id + " .errorImg").show();
-					}
+						showErrorMessage(responseJSON.error);
 					filecheck++;
 				},
 				onSubmit: function(id, filename)
