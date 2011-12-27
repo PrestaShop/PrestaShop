@@ -121,7 +121,7 @@ class HelperCore
 	 * @param type $input_name name of input
 	 * @return string
 	 */
-	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false, $use_search = false, $disabled_categories = array())
+	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false, $use_search = false, $disabled_categories = array(), $use_in_popup = false)
 	{
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
@@ -156,11 +156,15 @@ class HelperCore
 		$html .= '
 			var selectedLabel = \''.$trads['selected'].'\';
 			var home = \''.$trads['Home'].'\';
-			var use_radio = '.(int)$use_radio.';
+			var use_radio = '.(int)$use_radio.';';
+		if (!$use_in_popup)
+			$html .= '
 			$(document).ready(function(){
 				buildTreeView();
-			});
-		</script>';
+			});';
+		else
+			$html .= 'buildTreeView();';
+		$html .= '</script>';
 
 		$html .= '
 		<div class="category-filter">
