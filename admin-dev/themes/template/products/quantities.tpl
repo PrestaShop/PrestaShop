@@ -168,36 +168,36 @@
 			</td>
 		</tr>
 	{/if}
-		<tr>
-			<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
-			<td style="padding-bottom:5px;">
-					{include file="products/input_text_lang.tpl"
-						languages=$languages
-						input_value=$product->available_now
-						input_name='available_now'}
-				<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
-		</td>
-		</tr>
-		<tr>
-			<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
-			<td style="padding-bottom:5px;">
-					{include file="products/input_text_lang.tpl"
-						languages=$languages
-						input_value=$product->available_later
-						input_name='available_later'}
-				<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+	<tr>
+		<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
+		<td style="padding-bottom:5px;">
+				{include file="products/input_text_lang.tpl"
+					languages=$languages
+					input_value=$product->available_now
+					input_name='available_now'}
+			<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
 	</td>
-		</tr>
-{if $countAttributes}
-			<tr>
-				<td class="col-left"><label>{l s='Available date:'}</label></td>
-				<td style="padding-bottom:5px;">
+	</tr>
+	<tr>
+		<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
+		<td style="padding-bottom:5px;">
+				{include file="products/input_text_lang.tpl"
+					languages=$languages
+					input_value=$product->available_later
+					input_name='available_later'}
+			<span class="hint" name="help_box">{l s='Forbidden characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span></span>
+		</td>
+	</tr>
+	{if !$countAttributes}
+		<tr>
+			<td class="col-left"><label>{l s='Available date:'}</label></td>
+			<td style="padding-bottom:5px;">
 				<input id="available_date" name="available_date" value="{$product->available_date}" class="datepicker"
-				style="text-align: center;" type="text" />
-					<p>{l s='The available date when this product is out of stock'}</p>
+					style="text-align: center;" type="text" />
+				<p>{l s='The available date when this product is out of stock'}</p>
 			</td>
-			</tr>
-{/if}
+		</tr>
+	{/if}
 </table>
 
 	<script type="text/javascript">
