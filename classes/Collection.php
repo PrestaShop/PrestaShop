@@ -415,7 +415,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	}
 
 	/**
-	 * Obtain some informations on a field (alias, name, type, etc.)
+	 * Obtain some information on a field (alias, name, type, etc.)
 	 *
 	 * @param string $field Field name
 	 * @return array
@@ -433,14 +433,21 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 			}
 
 			$fieldname = $split[$i];
-			if (!isset($definition['fields'][$fieldname]))
-				throw new PrestashopException('Field '.$fieldname.' not found in class '.$this->classname);
+			if ($fieldname == $definition['primary'])
+				$type = ObjectMode::TYPE_INT;
+			else
+			{
+				if (!isset($definition['fields'][$fieldname]))
+					throw new PrestashopException('Field '.$fieldname.' not found in class '.$this->classname);
+
+				$type = $definition['fields'][$fieldname]['type'];
+			}
 
 			$this->fields[$field] = array(
 				'name' => 			$fieldname,
 				'association' =>	$association,
 				'alias' =>			$this->generateAlias($association),
-				'type' =>			$definition['fields'][$fieldname]['type'],
+				'type' =>			$type,
 			);
 		}
 		return $this->fields[$field];
