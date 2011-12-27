@@ -30,6 +30,7 @@ class AdminProductsControllerCore extends AdminController
 	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 **/
+	protected $max_file_size = NULL;
 	protected $max_image_size = NULL;
 
 	private $_category;
@@ -88,6 +89,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->imageType = 'jpg';
 		$this->context = Context::getContext();
 		$this->_defaultOrderBy = 'position';
+		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 
 		$categoriesArray = array();
