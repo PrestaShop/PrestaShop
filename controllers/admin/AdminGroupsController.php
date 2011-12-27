@@ -254,7 +254,7 @@ class AdminGroupsControllerCore extends AdminController
 			'Uncheck All'  => $this->l('Uncheck All'),
 			'search' => $this->l('Search a category')
 		);
-		$this->tpl_form_vars['categoryTreeView'] = Helper::renderAdminCategorieTree($trads, array(), 'id_category', true);
+		$this->tpl_form_vars['categoryTreeView'] = Helper::renderAdminCategorieTree($trads, array(), 'id_category', true, false, array(), true);
 
 		return parent::renderForm();
 
