@@ -101,22 +101,6 @@ var Customer = {
 };
 jQuery(document).ready(Customer.init);
 </script>
-<style type="text/css">
-#content #customers .warn {
-	margin: 10px 0 0 0;
-}
-#customers li {
-	background-color: #ABDFF7;
-	border: 1px solid #ccc;
-	float: left;
-	margin: 5px;
-	padding: 5px;
-}
-#customers li .button {
-	display: block;
-	margin-top: 5px;
-}
-</style>
 {/literal}
 {* END CUSTOMER AUTO-COMPLETE / TO REFACTO *}
 

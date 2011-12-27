@@ -2123,3 +2123,7 @@ div#scrollTop a:hover{
 #conditions #condition_list h4 { margin:0 0 10px 0;}
 #conditions #condition_list select { float:left; margin-right:10px;  width: 200px;}
 #conditions #condition_list a { float:left;}
+
+#content #customers .warn {margin:10px 0 0 0;}
+#customers li {background-color:#ABDFF7;border:1px solid #ccc;float:left;margin:5px;padding:5px;}
+#customers li .button {display:block;margin-top:5px;}
