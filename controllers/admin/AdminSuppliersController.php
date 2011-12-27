@@ -327,7 +327,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
-			if (!($obj = $this->loadObject(true)))
+			if (Tools::isSubmit('id_supplier') && !($obj = $this->loadObject(true)))
 				return;
 
 			// updates/creates address if it does not exist
