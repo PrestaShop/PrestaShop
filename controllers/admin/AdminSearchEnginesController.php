@@ -46,8 +46,8 @@ class AdminSearchEnginesControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_search_engine' => array('title' => $this->l('ID'), 'width' => 25),
-			'server' => array('title' => $this->l('Server'), 'width' => 200),
-			'getvar' => array('title' => $this->l('GET variable'), 'width' => 40)
+			'server' => array('title' => $this->l('Server')),
+			'getvar' => array('title' => $this->l('GET variable'), 'width' => 100)
 		);
 
 		$this->fields_form = array(

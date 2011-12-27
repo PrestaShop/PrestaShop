@@ -40,12 +40,11 @@ class AdminSlipControllerCore extends AdminController
  			),
 			'id_order' => array(
 				'title' => $this->l('ID Order'),
-				'width' => 75,
-				'align' => 'center'
+				'align' => 'left'
  			),
 			'date_add' => array(
 				'title' => $this->l('Date issued'),
-				'width' => 60,
+				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
  			)
