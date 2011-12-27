@@ -656,13 +656,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false,
 			),
 			'quantity_received_today' => array(
-				'title' => $this->l('Quantity received today'),
+				'title' => $this->l('Quantity to receive today ?'),
 				'align' => 'center',
 				'width' => 20,
 				'type' => 'editable',
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
+				'hint' => $this->l('Enter here the quantity you received today'),
 			),
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
@@ -671,6 +672,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
+				'hint' => 'Note that you can see details on the receptions - per products',
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
@@ -681,12 +683,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'search' => false,
 			),
 			'quantity_left' => array(
-				'title' => $this->l('Quantity left to receive'),
+				'title' => $this->l('Quantity left'),
 				'align' => 'center',
 				'width' => 20,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
+				'hint' => $this->l('This is the quantity left to receive'),
 			)
 		);
 
@@ -724,11 +727,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// defines action for POST
 		$action = '&id_supply_order='.$id_supply_order;
 
+		// unsets some buttons
+		unset($this->toolbar_btn['export-csv-orders']);
+		unset($this->toolbar_btn['export-csv-details']);
+		unset($this->toolbar_btn['new']);
+
 		// renders list
 		$helper = new HelperList();
 		$this->setHelperDisplay($helper);
 		$helper->actions = array('details');
 		$helper->override_folder = 'supply_orders_receipt_history/';
+		$helper->toolbar_btn = $this->toolbar_btn;
 
 		$helper->currentIndex = self::$currentIndex.$action;
 
