@@ -125,13 +125,13 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 			{
 				case '=' :
 				case 'in' :
-					$this->query->where($this->parseField($field).' IN('.implode(', ', $this->formatValue($value, $field)));
+					$this->query->where($this->parseField($field).' IN('.implode(', ', $this->formatValue($value, $field)).')');
 				break;
 
 				case '!=' :
 				case '<>' :
 				case 'notin' :
-					$this->query->where($this->parseField($field).' NOT IN('.implode(', ', $this->formatValue($value, $field)));
+					$this->query->where($this->parseField($field).' NOT IN('.implode(', ', $this->formatValue($value, $field)).')');
 				break;
 
 				default :
@@ -434,7 +434,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 			$fieldname = $split[$i];
 			if ($fieldname == $definition['primary'])
-				$type = ObjectMode::TYPE_INT;
+				$type = ObjectModel::TYPE_INT;
 			else
 			{
 				if (!isset($definition['fields'][$fieldname]))
