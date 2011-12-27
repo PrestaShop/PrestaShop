@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_product_attribute_combination>
+  <fields primary="id_attribute, id_product_attribute">
+    <field name="id_attribute" relation="attribute"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+  </fields>
   <entities>
     <product_attribute_combination id="product_attribute_combination_4_7" id_attribute="Blue" id_product_attribute="product_attribute_7"/>
     <product_attribute_combination id="product_attribute_combination_6_8" id_attribute="Green" id_product_attribute="product_attribute_8"/>
@@ -53,8 +57,4 @@
     <product_attribute_combination id="product_attribute_combination_15_42" id_attribute="8Go" id_product_attribute="product_attribute_42"/>
     <product_attribute_combination id="product_attribute_combination_18_42" id_attribute="Purple" id_product_attribute="product_attribute_42"/>
   </entities>
-  <fields primary="id_attribute, id_product_attribute">
-    <field name="id_attribute" relation="attribute"/>
-    <field name="id_product_attribute" relation="product_attribute"/>
-  </fields>
 </entity_product_attribute_combination>

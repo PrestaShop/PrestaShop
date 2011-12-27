@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_address_format>
+  <fields primary="id_country" class="AddressFormat">
+    <field name="id_country" relation="country"/>
+    <field name="format"/>
+  </fields>
   <entities>
     <address_format id="address_format_1" id_country="DE">
       <format>firstname lastname
@@ -2440,8 +2444,4 @@ Country:name
 phone</format>
     </address_format>
   </entities>
-  <fields primary="id_country" class="AddressFormat">
-    <field name="id_country" relation="country"/>
-    <field name="format"/>
-  </fields>
 </entity_address_format>

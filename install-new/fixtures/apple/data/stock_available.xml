@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_stock_available>
+  <fields class="StockAvailable">
+    <field name="id_product" relation="product"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_shop"/>
+    <field name="id_group_shop"/>
+    <field name="quantity"/>
+    <field name="depends_on_stock"/>
+    <field name="out_of_stock"/>
+  </fields>
   <entities>
     <stock_available id="stock_available_1" id_product="iPod_Nano" id_product_attribute="product_attribute_25" id_shop="1" id_group_shop="0" quantity="10" depends_on_stock="0" out_of_stock="0"/>
     <stock_available id="stock_available_2" id_product="iPod_Nano" id_product_attribute="" id_shop="1" id_group_shop="0" quantity="160" depends_on_stock="0" out_of_stock="0"/>
@@ -36,13 +45,4 @@
     <stock_available id="stock_available_33" id_product="iPod_touch" id_product_attribute="product_attribute_22" id_shop="1" id_group_shop="0" quantity="40" depends_on_stock="0" out_of_stock="0"/>
     <stock_available id="stock_available_34" id_product="iPod_touch" id_product_attribute="product_attribute_23" id_shop="1" id_group_shop="0" quantity="40" depends_on_stock="0" out_of_stock="0"/>
   </entities>
-  <fields class="StockAvailable">
-    <field name="id_product" relation="product"/>
-    <field name="id_product_attribute" relation="product_attribute"/>
-    <field name="id_shop"/>
-    <field name="id_group_shop"/>
-    <field name="quantity"/>
-    <field name="depends_on_stock"/>
-    <field name="out_of_stock"/>
-  </fields>
 </entity_stock_available>

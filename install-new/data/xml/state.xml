@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_state>
+  <fields id="iso_code" class="State">
+    <field name="id_country" relation="country"/>
+    <field name="id_zone" relation="zone"/>
+    <field name="name"/>
+    <field name="iso_code"/>
+    <field name="tax_behavior"/>
+    <field name="active"/>
+  </fields>
   <entities>
     <state id="AL" id_country="US" id_zone="North_America" iso_code="AL" tax_behavior="0" active="1">
       <name>Alabama</name>
@@ -938,12 +946,4 @@
       <name>Yamanashi</name>
     </state>
   </entities>
-  <fields id="iso_code" class="State">
-    <field name="id_country" relation="country"/>
-    <field name="id_zone" relation="zone"/>
-    <field name="name"/>
-    <field name="iso_code"/>
-    <field name="tax_behavior"/>
-    <field name="active"/>
-  </fields>
 </entity_state>

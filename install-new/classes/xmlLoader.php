@@ -346,7 +346,7 @@ class InstallXmlLoader
 			if (!file_exists($path))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml not found');
 
-			if (!$this->cache_xml_entity[$this->path_type][$cache_id] = @simplexml_load_file($path))
+			if (!$this->cache_xml_entity[$this->path_type][$cache_id] = @simplexml_load_file($path, 'InstallSimplexmlElement'))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml invalid');
 		}
 
@@ -683,7 +683,7 @@ class InstallXmlLoader
 		if (!$this->entityExists($entity))
 			return $info;
 
-		$xml = @simplexml_load_file($this->data_path.$entity.'.xml');
+		$xml = @simplexml_load_file($this->data_path.$entity.'.xml', 'InstallSimplexmlElement');
 		if (!$xml)
 			return $info;
 
@@ -764,7 +764,12 @@ class InstallXmlLoader
 				$field['relation'] = $info['relation'];
 		}
 
-		$this->writeNiceAndSweetXML($xml, $this->data_path.$entity.'.xml');
+		// Recreate entities nodes, in order to have the <entities> node after the <fields> node
+		$store_entities = clone $xml->entities;
+		unset($xml->entities);
+		$xml->addChild('entities', $store_entities);
+
+		$xml->asXML($this->data_path.$entity.'.xml');
 	}
 
 	/**
@@ -825,7 +830,7 @@ class InstallXmlLoader
 		unset($xml->entities);
 		$entities = $xml->addChild('entities');
 		$this->createXmlEntityNodes($entity, $content['nodes'], $entities);
-		$this->writeNiceAndSweetXML($xml, $this->data_path.$entity.'.xml');
+		$xml->asXML($this->data_path.$entity.'.xml');
 
 		// Generate multilang XML files
 		if ($content['nodes_lang'])
@@ -840,7 +845,7 @@ class InstallXmlLoader
 
 				$xml_node = new SimpleXMLElement('<entity_'.$entity.' />');
 				$this->createXmlEntityNodes($entity, $nodes, $xml_node);
-				$this->writeNiceAndSweetXML($xml_node, $this->lang_path.$iso.'/data/'.$entity.'.xml');
+				$xml_node->asXML($this->lang_path.$iso.'/data/'.$entity.'.xml');
 			}
 
 		if ($xml->fields['image'])
@@ -1048,8 +1053,7 @@ class InstallXmlLoader
 			foreach ($node as $k => $v)
 			{
 				if (isset($types[$k]) && $types[$k])
-					// Sadly SimpleXML is really stupid ...
-					$entity_node->addChild($k, str_replace('&', '&amp;', $v));
+					$entity_node->addChild($k, $v);
 				else
 					$entity_node[$k] = $v;
 			}
@@ -1136,17 +1140,5 @@ class InstallXmlLoader
 		foreach ($xml->entities->tab as $tab)
 			if (file_exists($from_path.$tab->class_name.'.gif'))
 				copy($from_path.$tab->class_name.'.gif', $backup_path.$tab->class_name.'.gif');
-	}
-
-	/**
-	 * ONLY FOR DEVELOPMENT PURPOSE
-	 */
-	public function writeNiceAndSweetXML(SimpleXMLElement $xml, $filename)
-	{
-		$dom = new DOMDocument('1.0');
-		$dom->preserveWhiteSpace = false;
-		$dom->formatOutput = true;
-		$dom->loadXML($xml->asXML());
-		file_put_contents($filename, $dom->saveXML());
 	}
 }

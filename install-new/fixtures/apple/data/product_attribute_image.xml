@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <entity_product_attribute_image>
+  <fields primary="id_product_attribute, id_image">
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_image" relation="image"/>
+  </fields>
   <entities>
     <product_attribute_image id="product_attribute_image_12_0" id_product_attribute="product_attribute_12" id_image=""/>
     <product_attribute_image id="product_attribute_image_13_0" id_product_attribute="product_attribute_13" id_image=""/>
@@ -29,8 +33,4 @@
     <product_attribute_image id="product_attribute_image_10_48" id_product_attribute="product_attribute_10" id_image="iPod_shuffle_2"/>
     <product_attribute_image id="product_attribute_image_9_49" id_product_attribute="product_attribute_9" id_image="iPod_shuffle_3"/>
   </entities>
-  <fields primary="id_product_attribute, id_image">
-    <field name="id_product_attribute" relation="product_attribute"/>
-    <field name="id_image" relation="image"/>
-  </fields>
 </entity_product_attribute_image>

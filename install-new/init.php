@@ -51,6 +51,7 @@ require_once _PS_INSTALL_PATH_.'classes/model.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
 require_once _PS_INSTALL_PATH_.'classes/sqlLoader.php';
 require_once _PS_INSTALL_PATH_.'classes/xmlLoader.php';
+require_once _PS_INSTALL_PATH_.'classes/simplexml.php';
 
 class InstallLog
 {
