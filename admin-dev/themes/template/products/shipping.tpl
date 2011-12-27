@@ -79,10 +79,10 @@
 			<label>{l s='Carriers:'}</label>
 		</td>
 		<td class="padding-bottom:5px;">
-			<select name="carriers[]" multiple="multiple" size="4">
-			{foreach $carrier_list as $carrier}
-				<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
-			{/foreach}
+			<select name="carriers[]" multiple="multiple" size="4" style="height:100px;width:200px;">
+				{foreach $carrier_list as $carrier}
+					<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
+				{/foreach}
 			</select>
 		</td>
 	</tr>
