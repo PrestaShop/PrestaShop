@@ -39,7 +39,7 @@
 	var loadFail = '{l s='Failed to load module list'}';
 </script>
 
-<div style="width:100%;height:30px;padding-top:10px;background-color:#D0D3D8;border:solid 1px gray;position:fixed;bottom:0;left:0;opacity:0.7" onmouseover="$(this).css('opacity', 1);" onmouseout="$(this).css('opacity', 0.7);">
+<div style=" background-color:000; background-color: rgba(0,0,0, 0.7); border-bottom: 1px solid #000; width:100%;height:30px; padding:5px 10px;; position:fixed;top:0;left:0;z-index:9999;">
 <form id="liveEdit-action-form" action="./{$ad}/ajax.php" method="POST" >
 	<input type="hidden" name="ajax" value="true" />
 	<input type="hidden" name="id_shop" value="{$id_shop}" />
@@ -47,8 +47,11 @@
 		<input class="hook_list" type="hidden" name="hook_list[{$hook_id}]" 
 			value="{$hook_name}" />
 	{/foreach}
-	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="exclusive" style="float:left">
-	<input type="submit" value="{l s='Close Live edit'}" id="closeLiveEdit" class="button" style="float:left">
+<div class="toto">
+	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="exclusive" style=" background-color:#4FB106; background: -moz-linear-gradient(#4FB106, #157402) repeat scroll 0 0 transparent; border:1px solid #4FB106; color:#fff;float:right; text-shadow: 0 -1px 0 #157402; margin-right:20px;">
+	<input type="submit" value="{l s='Close Live edit'}" id="closeLiveEdit" class="button" style="background: #333 none; color:#fff; border:1px solid #000; float:right; margin-right:10px;">
+
+</div>
 </form>
 	<div style="float:right;margin-right:20px;" id="live_edit_feed_back"></div>
 </div>
