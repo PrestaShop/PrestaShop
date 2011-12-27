@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
-  <fields id="name" class="Tab" ordersql="a.id_parent, a.position" image="t">
+  <fields id="name" ordersql="a.id_parent, a.position" image="t">
     <field name="id_parent" relation="tab"/>
     <field name="class_name"/>
     <field name="active"/>

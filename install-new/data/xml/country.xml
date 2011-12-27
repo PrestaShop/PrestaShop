@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_country>
-  <fields id="iso_code" class="Country">
+  <fields id="iso_code">
     <field name="id_zone" relation="zone"/>
     <field name="iso_code"/>
     <field name="call_prefix"/>

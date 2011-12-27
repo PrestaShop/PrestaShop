@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_hook>
-  <fields id="name" class="Hook">
+  <fields id="name">
     <field name="name"/>
     <field name="title"/>
     <field name="description"/>

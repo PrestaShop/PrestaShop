@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_address_format>
-  <fields primary="id_country" class="AddressFormat">
+  <fields primary="id_country">
     <field name="id_country" relation="country"/>
     <field name="format"/>
   </fields>

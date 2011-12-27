@@ -196,7 +196,7 @@ class InstallModelInstall extends InstallAbstractModel
 			}
 		}
 
-		// Copy language default images (we do this action after database in populated because we need image types informations)
+		// Copy language default images (we do this action after database in populated because we need image types information)
 		foreach ($languages as $iso)
 			$this->copyLanguageImages($iso);
 
