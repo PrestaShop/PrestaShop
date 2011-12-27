@@ -195,6 +195,13 @@ class AdminCustomersControllerCore extends AdminController
 			LIMIT 1
 		) as connect';
 
+		if (Tools::isSubmit('submitBulkdelete'.$this->table) OR Tools::isSubmit('delete'.$this->table))
+			$this->tpl_list_vars = array(
+				'delete_customer' => true,
+				'REQUEST_URI' => $_SERVER['REQUEST_URI'],
+				'POST' => $_POST
+			);
+
 		return parent::renderList();
 	}
 
@@ -703,25 +710,6 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		parent::processDelete($token);
-	}
-
-	public function processBulkDelete($token)
-	{
-		if ($this->delete_mode == 'real')
-		{
-			$this->deleted = false;
-			foreach (Tools::getValue('customerBox') as $id_customer)
-				Discount::deleteByIdCustomer((int)$id_customer);
-		}
-		elseif ($this->delete_mode == 'deleted')
-			$this->deleted = true;
-		else
-		{
-			$this->_errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
-			return;
-		}
-
-		parent::processBulkDelete($token);
 	}
 
 	public function processSave($token)
