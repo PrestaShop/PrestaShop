@@ -765,6 +765,18 @@ class AdminCustomersControllerCore extends AdminController
 		parent::processSave($token);
 	}
 
+	public function afterDelete($object, $oldId)
+	{
+		$customer = new Customer($oldId);
+		$addresses = $customer->getAddresses($this->default_form_language);
+		foreach ($addresses as $k => $v)
+		{
+			$address = new Address($v['id_address']);
+			$address->id_customer = $object->id;
+			$address->save();
+		}
+		return true;
+	}
 	/**
 	 * Transform a guest account into a registered customer account
 	 *
