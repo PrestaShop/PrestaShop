@@ -580,10 +580,10 @@ class AdminControllerCore extends Controller
 	 */
 	public function processSave($token)
 	{
-		if ((!$this->id_object) || (!Tools::getValue('submitAdd'.$this->table)))
-			return $this->processAdd($token);
-		else
+		if ($this->id_object)
 			return $this->processUpdate($token);
+		else
+			return $this->processAdd($token);
 	}
 
 	/**
@@ -596,12 +596,13 @@ class AdminControllerCore extends Controller
 		/* Checking fields validity */
 		$this->validateRules();
 
-		if (!count($this->_errors))
+		if (count($this->_errors) <= 0)
 		{
 			$object = new $this->className();
+
 			$this->copyFromPost($object, $this->table);
 			$this->beforeAdd($object);
-			if (!$object->add())
+			if (method_exists($object, 'add') && !$object->add())
 			{
 				$this->_errors[] = Tools::displayError('An error occurred while creating object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
@@ -625,8 +626,9 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->_errors = array_unique($this->_errors);
-		if (count($this->_errors) > 0)
+		if (count($this->_errors) > 0) {
 			return;
+		}
 
 		return $object;
 	}

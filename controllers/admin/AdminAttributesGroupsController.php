@@ -435,6 +435,22 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * Call the right method for creating or updating object
+	 *
+	 * @param $token
+	 * @return mixed
+	 */
+	public function processSave()
+	{
+		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+
+		if ((int)Tools::getValue('id_attribute') <= 0)
+			return $this->processAdd($token);
+		else
+			return $this->processUpdate($token);
+	}
+
 	public function postProcess()
 	{
 		if (!Combination::isFeatureActive())
@@ -486,7 +502,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					$_POST['position'] = DB::getInstance()->getValue($sql);
 				}
 				$_POST['id_parent'] = 0;
-				parent::postProcess();
+				$this->processSave();
 			}
 		}
 		else
