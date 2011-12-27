@@ -491,6 +491,14 @@ class AdminCustomersControllerCore extends AdminController
 		if (is_array($customer_groups))
 			foreach ($customer_groups as $customer_group)
 				$customer_groups_ids[] = $customer_group;
+
+		// if empty $carrier_groups_ids : object creation : we set the default groups
+		if (empty($customer_groups_ids))
+		{
+			$preselected = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
+			$customer_groups_ids = array_merge($customer_groups_ids, $preselected);
+		}
+
 		foreach ($groups as $group)
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], in_array($group['id_group'], $customer_groups_ids));
 
