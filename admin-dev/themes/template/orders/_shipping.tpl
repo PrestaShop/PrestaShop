@@ -1,12 +1,19 @@
 <table class="table" width="100%" cellspacing="0" cellpadding="0" id="shipping_table">
+<colgroup>
+	<col width="10%"></col>
+	<col width="15%"></col>
+	<col width=""></col>
+	<col width="10%"></col>
+	<col width="20%"></col>
+</colgroup>
 	<thead>
 	<tr>
-		<th style="width:30%">{l s='Date:'}</th>
+		<th>{l s='Date:'}</th>
 		<th>{l s='Type'}</th>
-		<th style="width:20%">{l s='Carrier'}</th>
+		<th>{l s='Carrier'}</th>
 		<th>{l s='Weight'}</th>
-		<th style="width:15%">{l s='Shipping cost'}</th>
-		<th style="width:30%">{l s='Tracking number'}</th>
+		<th>{l s='Shipping cost'}</th>
+		<th>{l s='Tracking number'}</th>
 	</tr>
 	</thead>
 	<tbody>

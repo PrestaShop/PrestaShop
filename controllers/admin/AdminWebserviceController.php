@@ -50,11 +50,12 @@ class AdminWebserviceControllerCore extends AdminController
 				'align' => 'center',
 				'active' => 'status',
 				'type' => 'bool',
-				'orderby' => false
+				'orderby' => false,
+				'width' => 32
 			),
 			'description' => array(
 				'title' => $this->l('Key description'),
-				'align' => 'center',
+				'align' => 'left',
 				'orderby' => false
 			)
 		);

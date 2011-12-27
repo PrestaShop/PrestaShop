@@ -2124,6 +2124,32 @@ div#scrollTop a:hover{
 #conditions #condition_list select { float:left; margin-right:10px;  width: 200px;}
 #conditions #condition_list a { float:left;}
 
+/*commandes*/
+.container-command {width:100%}
+.bloc-command {background-color:#F8F8F8; margin-bottom:10px;}
+.button-command {float:right; padding:10px;}
+
+/*history status*/
+.history-status { border-radius:0;}
+.history-status tr th {
+	background: #eee none;
+}
+.metadata-command {}
+.metadata-command dl {
+	float:left;
+	margin-left:10px;
+}
+.metadata-command dl dt, .metadata-command dl dd {
+	color:#color: #585A69;
+	float:left;
+	margin:0;
+	padding-right:10px;
+}
+.metadata-command dl dd {
+	font-weight:bold;
+}
+
+
 #content #customers .warn {margin:10px 0 0 0;}
 #customers li {background-color:#ABDFF7;border:1px solid #ccc;float:left;margin:5px;padding:5px;}
 #customers li .button {display:block;margin-top:5px;}

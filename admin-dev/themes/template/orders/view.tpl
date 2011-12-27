@@ -60,38 +60,47 @@
 	<div style="float: right; margin: -40px 40px 10px 0;">{$HOOK_INVOICE}</div><br class="clear" />';
 	{/if}
 
-	<fieldset style="width:98%; margin-bottom: 10px;">
-		<div style="width:50%; float: left;">
+<div class="bloc-command">
+	<div class="button-command">
 			{if (count($invoices_collection))}
-			<a href="pdf.php?id_order={$order->id}&pdf" target="_blank"><img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}</a>
+			<a class="button" href="pdf.php?id_order={$order->id}&pdf" target="_blank"><img src="../img/admin/charged_ok.gif" alt="{l s='View invoice'}" /> {l s='View invoice'}</a>
 			{else}
 			<img src="../img/admin/charged_ko.gif" alt="{l s='No invoice'}" /> {l s='No invoice'}
 			{/if}
-			 -
+			 |
 			{if ($currentState->delivery || $order->delivery_number)}
-			<a href="pdf.php?id_order={$order->id}&delivery" target="_blank"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
+			<a class="button"  href="pdf.php?id_order={$order->id}&delivery" target="_blank"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
 			{else}
 			<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" /> {l s='No delivery slip'}
 			{/if}
-			 -
-			<a href="javascript:window.print()"><img src="../img/admin/printer.gif" alt="{l s='Print order'}" title="{l s='Print order'}" /> {l s='Print order'}</a>
+			 |
+			<a class="button" href="javascript:window.print()"><img src="../img/admin/printer.gif" alt="{l s='Print order'}" title="{l s='Print order'}" /> {l s='Print order'}</a>
 		</div>
-		<div style="width:50%; float: left;text-align:right;">
-			<ul style="margin:0;padding:0;list-style-type:none;">
-				<li style="display: inline;">{l s='Date'}: <b>{dateFormat date=$order->date_add full=true}</b> |</li>
-				<li style="display: inline;"><b>{sizeof($messages)}</b> {if (sizeof($messages) > 1)}{l s='messages'}{else}{l s='message'}{/if} |</li>
-				<li style="display: inline;"><span id="product_number" style="font-weight: bold;">{sizeof($products)}</b> {if (sizeof($products) > 1)}{l s='products'}{else}{l s='product'}{/if} |</li>
-				<li style="display: inline;">{l s='Total'}: <span class="total_paid" style="font-weight: bold;">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span></li>
-			</ul>
-		</div>
+		<div class="metadata-command">
+			<dl>
+				<dt>{l s='Date'}: </dt>
+				<dd>{dateFormat date=$order->date_add full=true}</dd>
+			|</dl>
+			<dl>
+				<dt>{if (sizeof($messages) > 1)}{l s='messages'}{else}{l s='message'}{/if}: </dt>
+				<dd>{sizeof($messages)}</dd>
+			|</dl>
+			<dl>
+				<dt>{if (sizeof($products) > 1)}{l s='products'}{else}{l s='product'}{/if}: </dt>
+				<dd>{sizeof($products)}</dd>
+			|</dl>
+			<dl>
+				<dt>{l s='Total'}: </dt>
+				<dd>{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</dd>
+			</dl>
 		<div class="clear"></div>
-	</fieldset>
-
-	<div style="width: 98%">
+	</div>
+</div>
+	<div class="container-command">
 		<!-- Left column -->
-		<div style="width: 48%; float:left;">
+		<div style="width: 49%; float:left;">
 			<!-- Change status form -->
-			<form action="{$currentIndex}&viewOrder&token={$smarty.get.token}" method="post" style="text-align:center;">
+			<form action="{$currentIndex}&viewOrder&token={$smarty.get.token}" method="post">
 				<select id="id_order_state" name="id_order_state">
 				{foreach from=$states item=state}
 					<option value="{$state['id_order_state']}" {if $state['id_order_state'] == $currentState->id}selected="selected"{/if}>{$state['name']|stripslashes}</option>
@@ -103,21 +112,27 @@
 			<br />
 
 			<!-- History of status -->
-			<table cellspacing="0" cellpadding="0" class="table" style="width: 100%;">
+			<table cellspacing="0" cellpadding="0" class="table history-status" style="width: 100%;">
+				<colgroup>
+					<col width="1%"></col>
+					<col width=""></col>
+					<col width="20%"></col>
+					<col width="20%"></col>
+				</colgroup>
 			{foreach from=$history item=row key=key}
 				{if ($key == 0)}
 				<tr>
-					<th>{dateFormat date=$row['date_add'] full=true}</th>
 					<th><img src="../img/os/{$row['id_order_state']}.gif" /></th>
 					<th>{$row['ostate_name']|stripslashes}</th>
 					<th>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</th>
+					<th>{dateFormat date=$row['date_add'] full=true}</th>
 				</tr>
 				{else}
 				<tr class="{if ($key % 2)}alt_row{/if}">
-					<td>{dateFormat date=$row['date_add'] full=true}</td>
 					<td><img src="../img/os/{$row['id_order_state']}.gif" /></td>
 					<td>{$row['ostate_name']|stripslashes}</td>
 					<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
+					<td>{dateFormat date=$row['date_add'] full=true}</td>
 				</tr>
 				{/if}
 			{/foreach}
@@ -126,7 +141,7 @@
 			{if $customer->id}
 			<!-- Customer informations -->
 			<br />
-			<fieldset style="width: 100%;">
+			<fieldset>
 				<legend><img src="../img/admin/tab-customers.gif" /> {l s='Customer information'}</legend>
 				<span style="font-weight: bold; font-size: 14px;"><a href="?tab=AdminCustomers&id_customer={$customer->id}&viewcustomer&token={getAdminToken tab='AdminCustomers'}"> {$customer->firstname} {$customer->lastname}</a></span> ({l s='#'}{$customer->id})<br />
 				(<a href="mailto:{$customer->email}">{$customer->email}</a>)<br /><br />
@@ -152,7 +167,7 @@
 			<!-- Sources block -->
 			{if (sizeof($sources))}
 			<br />
-			<fieldset style="width: 100%;">
+			<fieldset>
 				<legend><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</legend>
 				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll; width: 360px;"{/if}>
 				{foreach from=$sources item=source}
@@ -175,9 +190,9 @@
 		<!-- END Left column -->
 
 		<!-- Right column -->
-		<div style="width: 48%; float:right;">
+		<div style="width: 49%; float:right;">
 			<!-- Documents block -->
-			<fieldset style="width: 100%">
+			<fieldset>
 				<legend><img src="../img/admin/details.gif" /> {l s='Documents'}</legend>
 
 				{* Include document template *}
@@ -186,7 +201,7 @@
 			<br />
 
 			<!-- Payments block -->
-			<fieldset style="width: 100%;">
+			<fieldset>
 				<legend><img src="../img/admin/money.gif" /> {l s='Payment'}</legend>
 
 				{if !$order->valid}
@@ -212,14 +227,24 @@
 
 				<form id="formAddPayment" method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
+						<colgroup>
+							<col width="10%"></col>
+							<col width=""></col>
+							<col width="20%"></col>
+							<col width="10%"></col>
+							<col width="10%"></col>
+							<col width="1%"></col>
+
+
+						</colgroup>
 						<thead>
 							<tr>
-								<th style="width:28%">{l s='Date'}</th>
+								<th>{l s='Date'}</th>
 								<th>{l s='Payment method'}</th>
-								<th style="width:15%">{l s='Transaction ID'}</th>
-								<th style="width:25%">{l s='Amount'}</th>
-								<th style="width:15%">{l s='Invoice'}</th>
-								<th style="width:10%">&nbsp;</th>
+								<th>{l s='Transaction ID'}</th>
+								<th>{l s='Amount'}</th>
+								<th>{l s='Invoice'}</th>
+								<th>&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -324,11 +349,11 @@
 			<br />
 
 			<!-- Shipping block -->
-			<fieldset style="width: 100%">
+			<fieldset>
 				<legend><img src="../img/admin/delivery.gif" /> {l s='Shipping'}</legend>
 
 				<div class="clear" style="float: left; margin-right: 10px;">
-					<span class="bold">{l s='Recycled package:'}</span>
+					<span>{l s='Recycled package:'}</span>
 					{if $order->recyclable}
 					<img src="../img/admin/enabled.gif" />
 					{else}
@@ -336,7 +361,7 @@
 					{/if}
 				</div>
 				<div style="float: left;">
-					<span class="bold">{l s='Gift wrapping:'}</span>
+					<span>{l s='Gift wrapping:'}</span>
 					{if $order->gift}
 					<img src="../img/admin/enabled.gif" />
 					</div>
@@ -359,7 +384,7 @@
 			<br />
 
 			<!-- Return block -->
-			<fieldset style="width: 100%">
+			<fieldset>
 				<legend><img src="../img/admin/delivery.gif" /> {l s='Merchandise returns'}</legend>
 
 				{if $order->getReturn()|count > 0}
@@ -408,17 +433,17 @@
 		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
 
-	<div style="width: 98%">
+	<div class="container-command">
 		<!-- Addresses -->
-		<div style="width: 48%; float:left;"></contact>
+		<div style="width: 49%; float:left;"></contact>
 			<!-- Shipping address -->
-			<fieldset style="width: 100%;">
+			<fieldset>
 				<legend><img src="../img/admin/delivery.gif" alt="{l s='Shipping address'}" />{l s='Shipping address'}</legend>
 
 				{if $can_edit}
 				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
-					<div style="margin-bottom:5px;border-bottom:1px solid black;">
-						<p style="text-align:center;">
+					<div style="margin-bottom:5px;">
+						<p>
 							<select name="id_address">
 								{foreach from=$customer_addresses item=address}
 								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_delivery} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
@@ -440,15 +465,15 @@
 			</fieldset>
 		</div>
 
-		<div style="width: 48%; float:right;"></contact>
+		<div style="width: 49%; float:right;"></contact>
 			<!-- Invoice address -->
-			<fieldset style="width: 100%;">
+			<fieldset>
 				<legend><img src="../img/admin/invoice.gif" alt="{l s='Invoice address'}" />{l s='Invoice address'}</legend>
 
 				{if $can_edit}
 				<form method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
-					<div style="margin-bottom:5px;border-bottom:1px solid black;">
-						<p style="text-align:center;">
+					<div style="margin-bottom:5px;">
+						<p>
 							<select name="id_address">
 								{foreach from=$customer_addresses item=address}
 								<option value="{$address['id_address']}"{if $address['id_address'] == $order->id_address_invoice} selected="selected"{/if}>{$address['alias']} - {$address['address1']} {$address['postcode']} {$address['city']}{if !empty($address['state'])} {$address['state']}{/if}, {$address['country']}</option>
@@ -480,7 +505,7 @@
 			<legend><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Products'}</legend>
 			<div style="float:left;width: 100%;">
 				{if $can_edit}
-				{if !$order->hasBeenDelivered()}<div style="float: left;"><a href="#" class="add_product"><img src="../img/admin/add.gif" alt="{l s='Add a product'}" /> {l s='Add a product'}</a></div>{/if}
+				{if !$order->hasBeenDelivered()}<div style="float: left;"><a href="#" class="add_product button"><img src="../img/admin/add.gif" alt="{l s='Add a product'}" /> {l s='Add a product'}</a></div>{/if}
 				<div style="float: right; margin-right: 10px" id="refundForm">
 				<!--
 					<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Proceed a standard refund'}" /> {l s='Proceed a standard refund'}</a>

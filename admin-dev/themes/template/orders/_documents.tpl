@@ -1,11 +1,11 @@
 <table class="table" width="100%;" cellspacing="0" cellpadding="0" id="documents_table">
 	<thead>
 	<tr>
-		<th style="width:20%">{l s='Date'}</th>
-		<th style="width:25%">{l s='Document'}</th>
+		<th style="width:10%">{l s='Date'}</th>
+		<th style="">{l s='Document'}</th>
 		<th style="width:20%">{l s='Number'}</th>
-		<th>{l s='Amount'}</th>
-		<th style="width:42px"></th>
+		<th style="width:10%">{l s='Amount'}</th>
+		<th style="width:1%"></th>
 	</tr>
 	</thead>
 	<tbody>
