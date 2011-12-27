@@ -308,15 +308,21 @@ class AdminCategoriesControllerCore extends AdminController
 		);
 
 		// Added values of object Group
-		$carrier_groups = $obj->getGroups();
-		$carrier_groups_ids = array();
-		if (is_array($carrier_groups))
-			foreach ($carrier_groups as $carrier_group)
-				$carrier_groups_ids[] = $carrier_group['id_group'];
+		$category_groups = $obj->getGroups();
+		$category_groups_ids = array();
+		if (is_array($category_groups))
+			foreach ($category_groups as $category_group)
+				$category_groups_ids[] = $category_group['id_group'];
 
 		$groups = Group::getGroups($this->context->language->id);
+		// if empty $carrier_groups_ids : object creation : we set the default groups
+		if (empty($category_groups_ids))
+		{
+			$preselected = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
+			$category_groups_ids = array_merge($category_groups_ids, $preselected);
+		}
 		foreach ($groups as $group)
-			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids)));
+			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $category_groups_ids)));
 
 		return parent::renderForm();
 	}
