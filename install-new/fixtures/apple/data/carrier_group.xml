@@ -5,8 +5,8 @@
     <field name="id_group" relation="group"/>
   </fields>
   <entities>
-    <carrier_group id="carrier_group_2_1" id_carrier="My_carrier" id_group="Unidentified"/>
+    <carrier_group id="carrier_group_2_1" id_carrier="My_carrier" id_group="Visitor"/>
     <carrier_group id="carrier_group_2_2" id_carrier="My_carrier" id_group="Guest"/>
-    <carrier_group id="carrier_group_2_3" id_carrier="My_carrier" id_group="Default"/>
+    <carrier_group id="carrier_group_2_3" id_carrier="My_carrier" id_group="Customer"/>
   </entities>
 </entity_carrier_group>
