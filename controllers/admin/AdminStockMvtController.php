@@ -61,6 +61,12 @@ class AdminStockMvtControllerCore extends AdminController
 				'title' => $this->l('Name'),
 				'havingFilter' => true
 			),
+			'warehouse_name' => array(
+				'title' => $this->l('Warehouse'),
+				'havingFilter' => false,
+				'orderby' => true,
+				'search' => false,
+			),
 			'sign' => array(
 				'title' => $this->l('Sign'),
 				'width' => 100,
@@ -123,12 +129,13 @@ class AdminStockMvtControllerCore extends AdminController
 		// overrides select
 		$this->_select = '
 			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name,
-			CONCAT(a.employee_lastname, \' \', a.employee_firstname) AS employee,
-			mrl.name AS reason,
-			stock.reference AS product_reference,
-			stock.ean13 AS product_ean13,
-			stock.upc AS product_upc,
-			w.id_currency AS id_currency';
+			CONCAT(a.employee_lastname, \' \', a.employee_firstname) as employee,
+			mrl.name as reason,
+			stock.reference as product_reference,
+			stock.ean13 as product_ean13,
+			stock.upc as product_upc,
+			w.id_currency as id_currency,
+			w.name as warehouse_name';
 
 		// overrides join
 		$this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock

@@ -312,7 +312,7 @@ class AdminImportControllerCore extends AdminController
 				//Overwrite validators AS name is not MultiLangField
 				self::$validators = array(
 					'description' => array('AdminImportController', 'createMultiLangField'),
-					'description_short' => array('AdminImportController', 'createMultiLangField'),
+					'short_description' => array('AdminImportController', 'createMultiLangField'),
 					'meta_title' => array('AdminImportController', 'createMultiLangField'),
 					'meta_keywords' => array('AdminImportController', 'createMultiLangField'),
 					'meta_description' => array('AdminImportController', 'createMultiLangField'),
