@@ -27,9 +27,25 @@
 
 class HookCore extends ObjectModel
 {
-	/** @var string Name and Title */
+	/**
+	 * @var string Hook name identifier
+	 */
 	public $name;
+
+	/**
+	 * @var string Hook title (displayed in BO)
+	 */
 	public $title;
+
+	/**
+	 * @var string Hook description
+	 */
+	public $description;
+
+	/**
+	 * @var bool Is this hook usable with live edit ?
+	 */
+	public $live_edit = false;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -38,8 +54,11 @@ class HookCore extends ObjectModel
 		'table' => 'hook',
 		'primary' => 'id_hook',
 		'fields' => array(
-			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 32),
-			'title' => 	array('type' => self::TYPE_STRING),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 32),
+			'title' => 			array('type' => self::TYPE_STRING),
+			'description' => 	array('type' => self::TYPE_HTML),
+			'position' => 		array('type' => self::TYPE_BOOL),
+			'live_edit' => 		array('type' => self::TYPE_BOOL),
 		),
 	);
 
@@ -47,9 +66,6 @@ class HookCore extends ObjectModel
 	protected static $_hook_modules_cache = null;
 	protected static $_hook_modules_cache_exec = null;
 	static $_hook_alias = null;
-
-
-
 
 	/**
 	 * Preload hook alias list
@@ -110,7 +126,6 @@ class HookCore extends ObjectModel
 		return ($result ? $result['id_hook'] : false);
 	}
 
-
 	/**
 	 * Return Hooks List
 	 *
@@ -123,7 +138,6 @@ class HookCore extends ObjectModel
 		SELECT * FROM `'._DB_PREFIX_.'hook` h
 		'.($position ? 'WHERE h.`position` = 1' : ''));
 	}
-
 
 	/**
 	 * Preload hook modules cache
@@ -164,7 +178,6 @@ class HookCore extends ObjectModel
 		return true;
 	}
 
-
 	/**
 	 * Return Hooks List
 	 *
@@ -181,8 +194,6 @@ class HookCore extends ObjectModel
 			return (isset($list[$moduleID])) ? array($list[$moduleID]) : array();
 		return $list;
 	}
-
-
 
 	/**
 	 * Get Hook Module Cache Exec, testing hook name and retrocompatible hook name
@@ -206,8 +217,6 @@ class HookCore extends ObjectModel
 			return $return;
 		return false;
 	}
-
-
 
 	/**
 	 * Execute modules for specified hook
@@ -358,8 +367,6 @@ class HookCore extends ObjectModel
 		return $return;
 	}
 
-
-
 	public static function orderConfirmation($id_order)
 	{
 		if (Validate::isUnsignedId($id_order))
@@ -426,10 +433,6 @@ class HookCore extends ObjectModel
 		return Hook::exec('updateCarrier', array('id_carrier' => $id_carrier, 'carrier' => $carrier));
 	}
 
-
-
-
-
 	/**
 	 * Return hook ID from name
 	 *
@@ -452,7 +455,6 @@ class HookCore extends ObjectModel
 		return ($result ? $result['id_hook'] : false);
 	}
 
-
 	/**
 	 * Called when quantity of a product is updated.
 	 *
@@ -470,47 +472,67 @@ class HookCore extends ObjectModel
 			'orderStatus' => $orderStatus));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function updateQuantity($product, $order = null)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('updateQuantity', array('product' => $product, 'order' => $order));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function productFooter($product, $category)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('productFooter', array('product' => $product, 'category' => $category));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function productOutOfStock($product)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('productOutOfStock', array('product' => $product));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function addProduct($product)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('addProduct', array('product' => $product));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function updateProduct($product)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('updateProduct', array('product' => $product));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function deleteProduct($product)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('deleteProduct', array('product' => $product));
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function updateProductAttribute($id_product_attribute)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
 	}
-
 }
 

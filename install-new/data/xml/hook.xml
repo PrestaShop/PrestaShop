@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_hook>
+  <fields id="name" class="Hook">
+    <field name="name"/>
+    <field name="title"/>
+    <field name="description"/>
+    <field name="live_edit"/>
+  </fields>
   <entities>
     <hook id="displayPayment" live_edit="1" is_native="0">
       <name>displayPayment</name>
@@ -432,11 +438,4 @@
       <description>Display extra informations inside the "my account" block</description>
     </hook>
   </entities>
-  <fields id="name" class="Hook">
-    <field name="name"/>
-    <field name="title"/>
-    <field name="description"/>
-    <field name="live_edit"/>
-    <field name="is_native"/>
-  </fields>
 </entity_hook>
