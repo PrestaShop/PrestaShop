@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_customer>
-  <entities>
-    <customer id="John" id_gender="Mr" id_default_group="3" firstname="John" lastname="DOE" passwd="3b804a99e990bdc8d8788f72a1ff355b" last_passwd_gen="2011-12-22 23:47:41" birthday="1970-01-15" newsletter="1" ip_registration_newsletter="" newsletter_date_add="" optin="1" secure_key="47ce86627c1f3c792a80773c5d2deaf8" active="1" is_guest="0">
-      <email>pub@prestashop.com</email>
-      <note/>
-    </customer>
-  </entities>
   <fields id="firstname" class="Customer">
     <field name="id_gender" relation="gender"/>
     <field name="id_default_group"/>
@@ -24,4 +18,10 @@
     <field name="active"/>
     <field name="is_guest"/>
   </fields>
+  <entities>
+    <customer id="John" id_gender="Mr" id_default_group="3" firstname="John" lastname="DOE" passwd="3b804a99e990bdc8d8788f72a1ff355b" last_passwd_gen="2011-12-22 23:47:41" birthday="1970-01-15" newsletter="1" ip_registration_newsletter="" newsletter_date_add="" optin="1" secure_key="47ce86627c1f3c792a80773c5d2deaf8" active="1" is_guest="0">
+      <email>pub@prestashop.com</email>
+      <note/>
+    </customer>
+  </entities>
 </entity_customer>

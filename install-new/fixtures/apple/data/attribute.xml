@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_attribute>
+  <fields id="name" class="Attribute">
+    <field name="id_attribute_group" relation="attribute_group"/>
+    <field name="color"/>
+  </fields>
   <entities>
     <attribute id="2GB" id_attribute_group="Disk_space" color=""/>
     <attribute id="4GB" id_attribute_group="Disk_space" color=""/>
@@ -22,8 +26,4 @@
     <attribute id="Yellow" id_attribute_group="Color" color="#F6EF04"/>
     <attribute id="Red" id_attribute_group="Color" color="#F60409"/>
   </entities>
-  <fields id="name" class="Attribute">
-    <field name="id_attribute_group" relation="attribute_group"/>
-    <field name="color"/>
-  </fields>
 </entity_attribute>

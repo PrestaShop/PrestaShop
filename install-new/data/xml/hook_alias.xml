@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_hook_alias>
+  <fields id="alias">
+    <field name="alias"/>
+    <field name="name"/>
+  </fields>
   <entities>
     <hook_alias id="payment">
       <alias>payment</alias>
@@ -342,8 +346,4 @@
       <name>actionTaxManager</name>
     </hook_alias>
   </entities>
-  <fields id="alias">
-    <field name="alias"/>
-    <field name="name"/>
-  </fields>
 </entity_hook_alias>

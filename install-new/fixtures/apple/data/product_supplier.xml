@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
 <entity_product_supplier>
+  <fields class="ProductSupplier">
+    <field name="id_product" relation="product"/>
+    <field name="id_product_attribute" relation="product_attribute"/>
+    <field name="id_supplier" relation="supplier"/>
+    <field name="product_supplier_reference"/>
+    <field name="product_supplier_price_te"/>
+  </fields>
   <entities>
     <product_supplier id="product_supplier_1" id_product="iPod_Nano" id_product_attribute="" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
     <product_supplier id="product_supplier_2" id_product="iPod_Nano" id_product_attribute="product_attribute_25" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
@@ -36,11 +43,4 @@
     <product_supplier id="product_supplier_34" id_product="iPod_touch" id_product_attribute="product_attribute_23" id_supplier="AppleStore" product_supplier_reference="" product_supplier_price_te="0.000000"/>
     <product_supplier id="product_supplier_35" id_product="Shure_SE210_Sound-Isolating_Earphones_for_iPod_and_iPhone" id_product_attribute="" id_supplier="Shure_Online_Store" product_supplier_reference="" product_supplier_price_te="0.000000"/>
   </entities>
-  <fields class="ProductSupplier">
-    <field name="id_product" relation="product"/>
-    <field name="id_product_attribute" relation="product_attribute"/>
-    <field name="id_supplier" relation="supplier"/>
-    <field name="product_supplier_reference"/>
-    <field name="product_supplier_price_te"/>
-  </fields>
 </entity_product_supplier>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_quick_access>
+  <fields id="name" class="QuickAccess">
+    <field name="new_window"/>
+    <field name="link"/>
+  </fields>
   <entities>
     <quick_access id="Home" new_window="0">
       <link>index.php</link>
@@ -17,8 +21,4 @@
       <link>index.php?controller=AdminCartRules&amp;addcart_rule</link>
     </quick_access>
   </entities>
-  <fields id="name" class="QuickAccess">
-    <field name="new_window"/>
-    <field name="link"/>
-  </fields>
 </entity_quick_access>

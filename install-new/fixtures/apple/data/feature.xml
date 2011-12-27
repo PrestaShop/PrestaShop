@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_feature>
+  <fields id="name" class="Feature"/>
   <entities>
     <feature id="Height"/>
     <feature id="Width"/>
@@ -7,5 +8,4 @@
     <feature id="Weight"/>
     <feature id="Headphone"/>
   </entities>
-  <fields id="name" class="Feature"/>
 </entity_feature>

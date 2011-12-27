@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_stock_mvt_reason>
+  <fields id="name" class="StockMvtReason">
+    <field name="sign"/>
+  </fields>
   <entities>
     <stock_mvt_reason id="Increase" sign="1"/>
     <stock_mvt_reason id="Decrease" sign="-1"/>
@@ -10,7 +13,4 @@
     <stock_mvt_reason id="Transfer_from_another_warehouse" sign="1"/>
     <stock_mvt_reason id="Supply_Order" sign="1"/>
   </entities>
-  <fields id="name" class="StockMvtReason">
-    <field name="sign"/>
-  </fields>
 </entity_stock_mvt_reason>
