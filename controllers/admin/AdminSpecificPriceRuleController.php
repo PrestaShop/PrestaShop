@@ -27,11 +27,18 @@
 
 class AdminSpecificPriceRuleController extends AdminController
 {
+	public $list_reduction_type;
+
 	public function __construct()
 	{
 	 	$this->table = 'specific_price_rule';
 		$this->className = 'SpecificPriceRule';
 	 	$this->lang = false;
+
+	 	$this->list_reduction_type = array(
+			'percentage' => $this->l('Percentage'),
+			'amount' => $this->l('Amount')
+		);
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -43,9 +50,9 @@ class AdminSpecificPriceRuleController extends AdminController
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int)$this->context->language->id.')
 		LEFT JOIN '._DB_PREFIX_.'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang='.(int)$this->context->language->id.')';
-		
+
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
-	 	
+
 		$this->fieldsDisplay = array(
 			'id_specific_price_rule' => array(
 				'title' => $this->l('ID'),
@@ -80,14 +87,12 @@ class AdminSpecificPriceRuleController extends AdminController
 				'align' => 'center',
 				'type' => 'select',
 				'filter_key' => 'a!reduction_type',
-				'list' => array(
-					'percentage' => $this->l('Percentage'),
-					'amount' => $this->l('Amount')
-				),
+				'list' => $this->list_reduction_type,
 			),
 			'reduction' => array(
 				'title' => $this->l('Reduction'),
 				'align' => 'center',
+				'type' => 'percent'
 			),
 			'from' => array(
 				'title' => $this->l('From'),
@@ -98,9 +103,21 @@ class AdminSpecificPriceRuleController extends AdminController
 				'align' => 'center',
 			),
 		);
-		
+
 		parent::__construct();
 	}
+
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		foreach ($this->_list as $k => $list)
+			if ($list['reduction_type'] == 'amount')
+				$this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
+			else if ($list['reduction_type'] == 'percentage')
+				$this->_list[$k]['reduction_type'] = $this->list_reduction_type['percentage'];
+	}
+
 	public function renderForm()
 	{
 		$this->fields_form = array(
@@ -228,9 +245,9 @@ class AdminSpecificPriceRuleController extends AdminController
 																										);
 		}
 		$features = Feature::getFeatures((int)$this->context->language->id);
-		foreach ($features AS &$feature)
+		foreach ($features as &$feature)
 			$feature['values'] = FeatureValue::getFeatureValuesWithLang((int)$this->context->language->id, $feature['id_feature'], true);
-				
+
 		$this->tpl_form_vars = array(
 										'manufacturers' => Manufacturer::getManufacturers(),
 										'suppliers' => Supplier::getSuppliers(),
@@ -240,10 +257,10 @@ class AdminSpecificPriceRuleController extends AdminController
 										'conditions' => $this->object->getConditions(),
 										'is_multishop' => Shop::isFeatureActive()
 										);
-		
+
 		return parent::renderForm();
 	}
-	
+
 	public function processSave($token)
 	{
 		$conditions = array();
