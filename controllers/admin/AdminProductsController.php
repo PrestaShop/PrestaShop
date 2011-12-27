@@ -27,8 +27,6 @@
 
 class AdminProductsControllerCore extends AdminController
 {
-	protected $max_file_size = NULL;
-
 	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 **/
@@ -90,8 +88,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->imageType = 'jpg';
 		$this->context = Context::getContext();
 		$this->_defaultOrderBy = 'position';
-		$this->max_file_size = (Configuration::get('PS_LIMIT_UPLOAD_IMAGE_VALUE') * 1000000);
-		$this->max_image_size = (Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
+		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 
 		$categoriesArray = array();
 		$categories = Category::getSimpleCategories($this->context->language->id);
@@ -1041,8 +1038,7 @@ class AdminProductsControllerCore extends AdminController
 		self::$currentIndex = 'index.php?tab=AdminProducts';
 		$allowedExtensions = array("jpeg", "gif", "png", "jpg");
 		// max file size in bytes
-		$sizeLimit = $this->max_file_size == 0 ? 10485760 : $this->max_file_size;
-		$uploader = new FileUploader($allowedExtensions, $sizeLimit);
+		$uploader = new FileUploader($allowedExtensions, $this->max_image_size);
 		$result = $uploader->handleUpload();
 		if (isset($result['success']))
 		{
@@ -1270,7 +1266,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->status = 'ok';
 	}
-	
+
 	protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to)
 	{
 		if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer))
@@ -2698,7 +2694,7 @@ class AdminProductsControllerCore extends AdminController
 			$input_namepack_items = Tools::getValue('namePackItems');
 		else
 			foreach ($product->packItems as $pack_item)
-				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¬§';
+				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
 
 		$data->assign(array(
 			'product' => $product,
@@ -2980,7 +2976,7 @@ class AdminProductsControllerCore extends AdminController
 		$j = 0;
 		for ($i = $alreadyGenerated[Product::CUSTOMIZE_TEXTFIELD]; $i < (int)($this->getFieldValue($obj, 'text_fields')); $i++)
 			$customizableFieldIds[] = 'newLabel_'.Product::CUSTOMIZE_TEXTFIELD.'_'.$j++;
-		return implode('¬§', $customizableFieldIds);
+		return implode('¤', $customizableFieldIds);
 	}
 
 	private function _displayLabelField(&$label, $languages, $default_language, $type, $fieldIds, $id_customization_field)
@@ -3240,7 +3236,7 @@ class AdminProductsControllerCore extends AdminController
 
 			$data->assign('token', $this->token);
 			$data->assign('table', $this->table);
-			$data->assign('max_image_size', (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1000);
+			$data->assign('max_image_size', $this->max_image_size / 1000);
 
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
 			$data->assign('currency', $this->context->currency);
@@ -3834,7 +3830,7 @@ class AdminProductsControllerCore extends AdminController
 			$input_namepack_items = Tools::getValue('namePackItems');
 		else
 			foreach ($product->packItems as $pack_item)
-				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¬§';
+				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 

@@ -314,7 +314,7 @@ class HelperCore
 	 */
 	public function renderAssoShop($type = 'shop')
 	{
-		if (!Shop::isFeatureActive() || (!$this->id && $this->context->shop->getContextType() != Shop::CONTEXT_ALL))
+		if (!Shop::isFeatureActive())
 			return;
 
 		if ($type != 'shop' && $type != 'group_shop')
