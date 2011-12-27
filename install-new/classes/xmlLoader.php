@@ -746,7 +746,7 @@ class InstallXmlLoader
 		if ($this->entityExists($entity))
 			$xml = $this->loadEntity($entity);
 		else
-			$xml = new SimpleXMLElement('<entity_'.$entity.' />');
+			$xml = new InstallSimplexmlElement('<entity_'.$entity.' />');
 		unset($xml->fields);
 
 		// Fill <fields> attributes (config)
@@ -843,7 +843,7 @@ class InstallXmlLoader
 				if (!is_dir($this->lang_path.$iso.'/data'))
 					mkdir($this->lang_path.$iso.'/data');
 
-				$xml_node = new SimpleXMLElement('<entity_'.$entity.' />');
+				$xml_node = new InstallSimplexmlElement('<entity_'.$entity.' />');
 				$this->createXmlEntityNodes($entity, $nodes, $xml_node);
 				$xml_node->asXML($this->lang_path.$iso.'/data/'.$entity.'.xml');
 			}
@@ -1120,9 +1120,12 @@ class InstallXmlLoader
 		{
 			$image = new Image($image['id_image']);
 			$image_path = $image->getExistingImgPath();
-			copy($from_path.$image_path.'.'.$image->image_format, $backup_path.$this->generateId('image', $image->id).'.'.$image->image_format);
+			if (file_exists($from_path.$image_path.'.'.$image->image_format))
+				copy($from_path.$image_path.'.'.$image->image_format, $backup_path.$this->generateId('image', $image->id).'.'.$image->image_format);
+
 			foreach ($types as $type)
-				copy($from_path.$image_path.'-'.$type.'.'.$image->image_format, $backup_path.$this->generateId('image', $image->id).'-'.$type.'.'.$image->image_format);
+				if (file_exists($from_path.$image_path.'-'.$type.'.'.$image->image_format))
+					copy($from_path.$image_path.'-'.$type.'.'.$image->image_format, $backup_path.$this->generateId('image', $image->id).'-'.$type.'.'.$image->image_format);
 		}
 	}
 

@@ -5,8 +5,8 @@
     <field name="id_group" relation="group"/>
   </fields>
   <entities>
-    <category_group id="category_group_1_1" id_category="Home" id_group="Unidentified"/>
+    <category_group id="category_group_1_1" id_category="Home" id_group="Visitor"/>
     <category_group id="category_group_1_2" id_category="Home" id_group="Guest"/>
-    <category_group id="category_group_1_3" id_category="Home" id_group="Default"/>
+    <category_group id="category_group_1_3" id_category="Home" id_group="Customer"/>
   </entities>
 </entity_category_group>
