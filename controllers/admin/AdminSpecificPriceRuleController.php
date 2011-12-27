@@ -92,7 +92,7 @@ class AdminSpecificPriceRuleController extends AdminController
 			'reduction' => array(
 				'title' => $this->l('Reduction'),
 				'align' => 'center',
-				'type' => 'percent'
+				'type' => 'decimal'
 			),
 			'from' => array(
 				'title' => $this->l('From'),
