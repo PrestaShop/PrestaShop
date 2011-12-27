@@ -202,6 +202,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$query->select('SUM(price_te * physical_quantity) as valuation');
 			$query->from('stock');
 			$query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
+			if ($this->getCurrentCoverageWarehouse() != -1)
+				$query->where('id_warehouse = '.(int)$this->getCurrentCoverageWarehouse());
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
 
 			$item['physical_quantity'] = $res['physical_quantity'];
