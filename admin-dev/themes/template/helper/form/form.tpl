@@ -227,7 +227,7 @@
 										<div id="image">
 											{$fields_value.image}
 											<p align="center">{l s='File size'} {$fields_value.size}kb</p>
-											<a href="{$current}&id_category={$form_id}&token={$token}&deleteImage=1">
+											<a href="{$current}&id_{$table}={$form_id}&token={$token}&deleteImage=1">
 												<img src="../img/admin/delete.gif" alt="{l s='Delete'}" /> {l s='Delete'}
 											</a>
 										</div><br />
