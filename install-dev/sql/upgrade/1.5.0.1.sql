@@ -544,8 +544,6 @@ ALTER TABLE `PREFIX_orders` ADD COLUMN `id_warehouse` int(10) unsigned DEFAULT 0
 ALTER TABLE `PREFIX_cart` ADD COLUMN `order_reference` varchar(9) AFTER `id_cart`;
 ALTER TABLE `PREFIX_cart` ADD COLUMN `delivery_option` varchar(100) AFTER `id_carrier`;
 
-ALTER TABLE `PREFIX_hook` ADD `is_native` TINYINT( 1 ) NOT NULL DEFAULT '0';
-
 ALTER TABLE `PREFIX_tax` ADD COLUMN `account_number` VARCHAR(64) NOT NULL;
 
 /* PHP:add_new_tab(AdminAttributeGenerator, fr:Générateur de déclinaisons|es:Combinations generator|en:Combinations generator|de:Combinations generator|it:Combinations generator, -1); */;
