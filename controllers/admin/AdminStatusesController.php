@@ -75,7 +75,7 @@ class AdminStatusesControllerCore extends AdminController
 					'1' => 'enabled.gif',
 					'0' => 'disabled.gif'
 				),
-				'width' => 25,
+				'width' => 190,
 				'type' => 'bool',
 				'orderby' => false
 			),
@@ -92,7 +92,7 @@ class AdminStatusesControllerCore extends AdminController
 			),
 			'template' => array(
 				'title' => $this->l('E-mail template'),
-				'width' => 100
+				'width' => 120
 			)
 		);
 

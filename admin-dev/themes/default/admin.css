@@ -14,7 +14,7 @@ ul li {color:#585A69;}
 
 /*FORM*/
 label {color:#585a69;text-shadow:0 1px 0#fff;}
-fieldset{background-color:#EBEDF4; border:1px solid #CCCED7;font-size:1.1em;margin:0;padding:1em}
+fieldset{background-color:#EBEDF4; border:1px solid #CCCED7; color:#585A69; font-size:1.1em;margin:0;padding:1em}
 .Bloc {background-color:#EBEDF4; border:1px solid #CCCED7;font-size:1.1em;margin:0;padding:1em}
 legend{background:#EBEDF4;border:1px solid #CCCED7;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
 input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #ccc;}
@@ -118,7 +118,7 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 	background: #ececec url(bg-degrade-table.png) repeat-x scroll left top;
 	/*background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;*/
-	font-size:13px; text-align:left;}
+	font-size:13px; text-align:left; color:#333;}
 .table tr th.right { text-align:center;}
 .table tr td{border-bottom:1px solid #ccc;color:#333;font-size:12px;padding: 4px 4px 4px 6px;}
 .table tr:hover td{background:#fff1b5}

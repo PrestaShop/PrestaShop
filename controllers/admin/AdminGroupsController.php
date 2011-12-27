@@ -72,7 +72,7 @@ class AdminGroupsControllerCore extends AdminController
 			),
 			'show_prices' => array(
 				'title' => $this->l('Show prices'),
-				'width' => 25,
+				'width' => 120,
 				'align' => 'center',
 				'type' => 'bool',
 				'callback' => 'printShowPricesIcon',
