@@ -43,9 +43,6 @@
 			}
 		});
 	</script>
-	<style type="text/css">
-		.toolbarBox .process-icon-save-calendar { background-image: url(themes/default/process-icon-save.png);}
-	</style>
 
 		{if $enable_calendar}
 			{$calendar_form}
