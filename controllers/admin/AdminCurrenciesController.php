@@ -35,11 +35,11 @@ class AdminCurrenciesControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 			'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Currency'), 'width' => 100),
-			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 35),
-			'iso_code_num' => array('title' => $this->l('ISO code num'), 'align' => 'center', 'width' => 35),
+			'name' => array('title' => $this->l('Currency')),
+			'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'width' => 80),
+			'iso_code_num' => array('title' => $this->l('ISO code num'), 'align' => 'center', 'width' => 120),
 			'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false),
-			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'float' => true, 'align' => 'center', 'width' => 50, 'search' => false),
+			'conversion_rate' => array('title' => $this->l('Conversion rate'), 'float' => true, 'align' => 'center', 'width' => 130, 'search' => false),
 			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
