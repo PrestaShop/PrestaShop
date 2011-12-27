@@ -87,7 +87,6 @@ class FileUploaderCore
 		if($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions))
 			return array('error' => Tools::displayError('File has an invalid extension, it should be one of '). $these . '.');
 
-
 		return $this->file->save();
 
 	}
