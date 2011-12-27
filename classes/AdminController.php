@@ -2218,7 +2218,7 @@ class AdminControllerCore extends Controller
 	 */
 	protected function beforeDelete($object)
 	{
-		return true;
+		return false;
 	}
 
 	/**
