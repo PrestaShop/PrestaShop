@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_category_product>
+  <fields primary="id_category, id_product">
+    <field name="id_category" relation="category"/>
+    <field name="id_product" relation="product"/>
+  </fields>
   <entities>
     <category_product id="category_product_1_1" id_category="Home" id_product="iPod_Nano"/>
     <category_product id="category_product_1_2" id_category="Home" id_product="iPod_shuffle"/>
@@ -13,8 +17,4 @@
     <category_product id="category_product_4_5" id_category="Laptops" id_product="MacBook_Air"/>
     <category_product id="category_product_4_6" id_category="Laptops" id_product="MacBook"/>
   </entities>
-  <fields primary="id_category, id_product">
-    <field name="id_category" relation="category"/>
-    <field name="id_product" relation="product"/>
-  </fields>
 </entity_category_product>

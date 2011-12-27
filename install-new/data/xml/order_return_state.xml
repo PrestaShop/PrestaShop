@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_order_return_state>
+  <fields id="name" class="OrderReturnState">
+    <field name="color"/>
+  </fields>
   <entities>
     <order_return_state id="Waiting_for_confirmation" color="RoyalBlue"/>
     <order_return_state id="Waiting_for_package" color="BlueViolet"/>
@@ -7,7 +10,4 @@
     <order_return_state id="Return_denied" color="Crimson"/>
     <order_return_state id="Return_completed" color="#108510"/>
   </entities>
-  <fields id="name" class="OrderReturnState">
-    <field name="color"/>
-  </fields>
 </entity_order_return_state>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_zone>
+  <fields id="name" class="Zone">
+    <field name="name"/>
+    <field name="active"/>
+  </fields>
   <entities>
     <zone id="Europe" active="1">
       <name>Europe</name>
@@ -26,8 +30,4 @@
       <name>Centrale America/Antilla</name>
     </zone>
   </entities>
-  <fields id="name" class="Zone">
-    <field name="name"/>
-    <field name="active"/>
-  </fields>
 </entity_zone>

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_access>
+  <fields primary="id_profile, id_tab" sql="a.id_profile = 1">
+    <field name="id_profile" relation="profile"/>
+    <field name="id_tab" relation="tab"/>
+    <field name="view"/>
+    <field name="add"/>
+    <field name="edit"/>
+    <field name="delete"/>
+  </fields>
   <entities>
     <access id="access_1_1" id_profile="SuperAdmin" id_tab="Catalog" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_2" id_profile="SuperAdmin" id_tab="Customers" view="1" add="1" edit="1" delete="1"/>
@@ -101,12 +109,4 @@
     <access id="access_1_109" id_profile="SuperAdmin" id_tab="Catalog_price_rules" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_110" id_profile="SuperAdmin" id_tab="Outstanding" view="1" add="1" edit="1" delete="1"/>
   </entities>
-  <fields primary="id_profile, id_tab" sql="a.id_profile = 1">
-    <field name="id_profile" relation="profile"/>
-    <field name="id_tab" relation="tab"/>
-    <field name="view"/>
-    <field name="add"/>
-    <field name="edit"/>
-    <field name="delete"/>
-  </fields>
 </entity_access>

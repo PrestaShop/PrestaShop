@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_search_engine>
+  <fields id="server" class="SearchEngine">
+    <field name="server"/>
+    <field name="getvar"/>
+  </fields>
   <entities>
     <search_engine id="google" getvar="q">
       <server>google</server>
@@ -116,8 +120,4 @@
       <server>rambler</server>
     </search_engine>
   </entities>
-  <fields id="server" class="SearchEngine">
-    <field name="server"/>
-    <field name="getvar"/>
-  </fields>
 </entity_search_engine>

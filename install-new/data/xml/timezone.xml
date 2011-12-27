@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_timezone>
+  <fields id="name">
+    <field name="name"/>
+  </fields>
   <entities>
     <timezone id="Africa_Abidjan" name="Africa/Abidjan"/>
     <timezone id="Africa_Accra" name="Africa/Accra"/>
@@ -562,7 +565,4 @@
     <timezone id="WET" name="WET"/>
     <timezone id="Zulu" name="Zulu"/>
   </entities>
-  <fields id="name">
-    <field name="name"/>
-  </fields>
 </entity_timezone>

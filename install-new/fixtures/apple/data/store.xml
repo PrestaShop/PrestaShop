@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_store>
+  <fields id="name" class="Store" image="st">
+    <field name="id_country" relation="country"/>
+    <field name="id_state" relation="state"/>
+    <field name="name"/>
+    <field name="address1"/>
+    <field name="address2"/>
+    <field name="city"/>
+    <field name="postcode"/>
+    <field name="latitude"/>
+    <field name="longitude"/>
+    <field name="hours"/>
+    <field name="phone"/>
+    <field name="fax"/>
+    <field name="email"/>
+    <field name="note"/>
+    <field name="active"/>
+  </fields>
   <entities>
     <store id="Dade_County" id_country="US" id_state="FL" postcode=" 33135" latitude="25.76500500" longitude="-80.24379700" phone="" fax="" active="1">
       <name>Dade County</name>
@@ -32,7 +49,7 @@
       <name>Coconut Grove</name>
       <address1>2999 SW 32nd Avenue</address1>
       <address2/>
-      <city> Miami</city>
+      <city>Miami</city>
       <hours>a:7:{i:0;s:13:"09:00 - 19:00";i:1;s:13:"09:00 - 19:00";i:2;s:13:"09:00 - 19:00";i:3;s:13:"09:00 - 19:00";i:4;s:13:"09:00 - 19:00";i:5;s:13:"10:00 - 16:00";i:6;s:13:"10:00 - 16:00";}</hours>
       <email/>
       <note/>
@@ -47,21 +64,4 @@
       <note/>
     </store>
   </entities>
-  <fields id="name" class="Store" image="st">
-    <field name="id_country" relation="country"/>
-    <field name="id_state" relation="state"/>
-    <field name="name"/>
-    <field name="address1"/>
-    <field name="address2"/>
-    <field name="city"/>
-    <field name="postcode"/>
-    <field name="latitude"/>
-    <field name="longitude"/>
-    <field name="hours"/>
-    <field name="phone"/>
-    <field name="fax"/>
-    <field name="email"/>
-    <field name="note"/>
-    <field name="active"/>
-  </fields>
 </entity_store>

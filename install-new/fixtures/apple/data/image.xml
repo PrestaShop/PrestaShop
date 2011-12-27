@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_image>
+  <fields id="legend" class="Image" image="p">
+    <field name="id_product" relation="product"/>
+    <field name="cover"/>
+  </fields>
   <entities>
     <image id="MacBook_Air" id_product="MacBook_Air" cover="1"/>
     <image id="MacBook_Air_1" id_product="MacBook_Air" cover="0"/>
@@ -28,8 +32,4 @@
     <image id="iPod_shuffle_2" id_product="iPod_shuffle" cover="0"/>
     <image id="iPod_shuffle_3" id_product="iPod_shuffle" cover="0"/>
   </entities>
-  <fields id="legend" class="Image" image="p">
-    <field name="id_product" relation="product"/>
-    <field name="cover"/>
-  </fields>
 </entity_image>
