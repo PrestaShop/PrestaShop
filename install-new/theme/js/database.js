@@ -6,12 +6,15 @@ $(document).ready(function()
 		$("#dbResultCheck").slideUp('slow');
 		$.ajax({
 			url: 'index.php',
-			data: 'checkDb=true&dbServer='+$('#dbServer').val()
-					+'&dbName='+$('#dbName').val()
-					+'&dbLogin='+$('#dbLogin').val()
-					+'&dbPassword='+$('#dbPassword').val()
-					+'&dbEngine='+$('#dbEngine').val()
-					+'&db_prefix='+$('#db_prefix').val(),
+			data: {
+                'checkDb': 'true',
+                'dbServer': $('#dbServer').val(),
+                'dbName': $('#dbName').val(),
+                'dbLogin': $('#dbLogin').val(),
+                'dbPassword': $('#dbPassword').val(),
+                'dbEngine': $('#dbEngine').val(),
+                'db_prefix': $('#db_prefix').val()
+            },
 			dataType: 'json',
 			cache: false,
 			success: function(json)
@@ -21,7 +24,15 @@ $(document).ready(function()
 					.removeClass((json.success) ? 'errorBlock' : 'okBlock')
 					.html(json.message)
 					.slideDown('slow');
-			}
+			},
+            error: function(xhr)
+            {
+                $("#dbResultCheck")
+                    .addClass('errorBlock')
+                    .removeClass('okBlock')
+                    .html('An error occurred:<br /><br />'+xhr.responseText)
+                    .slideDown('slow');
+            }
 		});
 	});
 	
@@ -43,13 +54,17 @@ $(document).ready(function()
 		$("#mailResultCheck").slideUp('slow');
 		$.ajax({
 			url: 'index.php',
-			data: 'sendMail=true&smtpSrv='+$('#smtpSrv').val()
-					+'&smtpEnc='+$('#smtpEnc').val()
-					+'&smtpPort='+$('#smtpPort').val()
-					+'&smtpLogin='+$('#smtpLogin').val()
-					+'&smtpPassword='+$('#smtpPassword').val()
-					+'&testEmail='+$('#testEmail').val()
-					+'&smtpChecked='+($('#set_stmp').attr('checked') ? 'true' : 'false'),
+			data: {
+                'sendMail': 'true',
+                'smtpSrv': $('#smtpSrv').val(),
+                'smtpEnc': $('#smtpEnc').val(),
+                'smtpPort': $('#smtpPort').val(),
+                'smtpLogin': $('#smtpLogin').val(),
+                'smtpPassword': $('#smtpPassword').val(),
+                'testEmail': $('#smtpSrv').val(),
+                'testEmail': $('#testEmail').val(),
+                'smtpChecked': ($('#set_stmp').attr('checked') ? 'true' : 'false')
+            },
 			dataType: 'json',
 			cache: false,
 			success: function(json)
@@ -59,7 +74,15 @@ $(document).ready(function()
 					.removeClass((json.success) ? 'errorBlock' : 'infosBlock')
 					.html(json.message)
 					.slideDown('slow');
-			}
+			},
+            error: function(xhr)
+            {
+                $("#mailResultCheck")
+                    .addClass('errorBlock')
+                    .removeClass('infosBlock')
+                    .html('An error occurred:<br /><br />'+xhr.responseText)
+                    .slideDown('slow');
+            }
 		});
 	});
 });
