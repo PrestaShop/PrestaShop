@@ -933,7 +933,6 @@ class AdminControllerCore extends Controller
 							}
 						}
 					}
-					//d('after ');
 				}
 			}
 			if (count($this->_errors) <= 0)

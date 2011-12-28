@@ -1407,7 +1407,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 				else if (!$this->updateTags($languages, $object))
 					$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
-				else if ($id_image = $this->addProductImage($object))
+				else
 				{
 					Hook::exec('addProduct', array('product' => $object));
 					Search::indexation(false, $object->id);
@@ -1489,7 +1489,7 @@ class AdminProductsControllerCore extends AdminController
 						$this->_errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
 					else if (!$this->updateTags($languages, $object))
 						$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
-					else //if (Tools::getValue('id_image') && $id_image = $this->addProductImage($object, Tools::getValue('resizer')))
+					else
 					{
 						//self::$currentIndex .= '&image_updated='.$id_image;
 						Hook::exec('updateProduct', array('product' => $object));
