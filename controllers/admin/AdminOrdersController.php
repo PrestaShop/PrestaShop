@@ -539,23 +539,7 @@ class AdminOrdersControllerCore extends AdminController
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		elseif (isset($_GET['messageReaded']))
-		{
 			Message::markAsReaded($_GET['messageReaded'], $this->context->employee->id);
-		}
-		// TODO clean PaymentCC
-		else if (Tools::isSubmit('setTransactionId') && ((int)Tools::getValue('id_order')))
-		{
-			$order = new Order((int)(Tools::getValue('id_order')));
-			$pcc = new PaymentCC((int)Tools::getValue('id_payment_cc'));
-
-			$pcc->id_order = $order->id;
-			$pcc->transaction_id = (string)Tools::getValue('transaction_id');
-			$pcc->id_currency = $order->id_currency;
-			$pcc->amount = $order->total_paid;
-			$pcc->save();
-
-			unset($order, $pcc);
-		}
 		else if (Tools::isSubmit('submitAddPayment'))
 		{
 			if ($this->tabAccess['edit'] === '1')
