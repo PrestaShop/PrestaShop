@@ -1,6 +1,6 @@
 <table class="table" width="100%" cellspacing="0" cellpadding="0" id="shipping_table">
 <colgroup>
-	<col width="10%"></col>
+	<col width="15%"></col>
 	<col width="15%"></col>
 	<col width=""></col>
 	<col width="10%"></col>

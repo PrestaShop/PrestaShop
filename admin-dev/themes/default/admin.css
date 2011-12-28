@@ -25,9 +25,9 @@ select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disab
 .double_select a{text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px}
 
 /*BUTTON*/
-.button{background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent; 
+.button{background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
 	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
-	
+
 	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;margin: 0; outline: medium none;padding: 3px 8px;text-align: center;vertical-align: middle;white-space: nowrap; text-shadow:0 1px 0 #fff;}
 .button[disabled=disabled]{color:#8C8C8C}
 .button.bt-icon { display:inline-block; margin-bottom:7px;}
@@ -194,6 +194,8 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-export-csv-details { background-image: url(process-icon-export-csv-details.png);}
 .toolbarBox .process-icon-export-stock-mvt-csv { background-image: url(process-icon-export-csv.png);}
 .toolbarBox .process-icon-newAttributes, .toolbarBox .toolbar-new{ background-image: url(process-icon-new.png);}
+.toolbarBox .process-icon-partialRefund{ background-image: url(process-icon-partial-refund.png);}
+.toolbarBox .process-icon-standardRefund{ background-image: url(process-icon-standard-refund.png);}
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
