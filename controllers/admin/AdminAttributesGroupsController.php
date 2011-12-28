@@ -242,7 +242,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Attributes group'),
+				'title' => $this->l('Attribute'),
 				'image' => '../img/admin/asterisk.gif'
 			),
 			'input' => array(
@@ -433,6 +433,40 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'class' => 'toolbar-new'
 				);
 		}
+	}
+
+	public function initToolbarTitle()
+	{
+		// Breadcrumbs
+		$tabs = array();
+		$tabs = Tab::recursiveTab($this->id, $tabs);
+		$tabs = array_reverse($tabs);
+
+		$bread = '';
+		switch ($this->display)
+		{
+			case 'edit':
+				$current_tab = array_pop($tabs);
+				$tabs[] = array('name' => $this->l('Edit new Group'));
+				break;
+
+			case 'add':
+				$current_tab = array_pop($tabs);
+				$tabs[] = array('name' => $this->l('Add new Group'));
+				break;
+
+			case 'editAttributes':
+				$current_tab = array_pop($tabs);
+				$tabs[] = array('name' => $this->l('Add new Attribute'));
+				break;
+		}
+		// note : this should use a tpl file
+		foreach ($tabs as $key => $item)
+			$bread .= '<span class="breadcrumb item-'.$key.' ">'.$item['name'].'</span> : ';
+
+		$bread = rtrim($bread, ': ');
+
+		$this->toolbar_title = $bread;
 	}
 
 	/**
