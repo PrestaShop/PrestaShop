@@ -1,0 +1,3 @@
+"ID";"Supplier ID *";"Lang ID";"Warehouse ID*";"Currency ID";"Supply Order Reference *";"Expected Delivery Date";"Discount Rate"
+;1;1;1;;"ref import 1";"2012-11-31";
+;1;;1;;"ref import 2";"2012-12-30";15

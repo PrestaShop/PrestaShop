@@ -30,8 +30,8 @@
 	<script type="text/javascript">
 		var errorEmpty = "{l s='Please enter a name to save.'}"
 	</script>
-	<h2>{l s='Your data'}</h2>
-	<div style="float:right">
+	<h2>{l s='View your data'}</h2>
+	<div>
 		<b>{l s='Save and load your matching configuration'} : </b><br><br>
 		<input type="text" name="newImportMatchs" id="newImportMatchs">
 		<a id="saveImportMatchs" class="button" href="#">{l s='Save'}</a><br><br>
