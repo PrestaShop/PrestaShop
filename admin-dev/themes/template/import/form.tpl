@@ -48,6 +48,11 @@
 
 	$(document).ready(function(){
 		activeClueTip();
+		$("a#upload_file_import_link").fancybox({
+				'titleShow' : false,
+				'transitionIn' : 'elastic',
+				'transitionOut' : 'elastic',
+		});
 	});
 
 	function activeClueTip()
@@ -74,38 +79,12 @@
 </script>
 
 {** 
- * Samples fieldset 
+ * Upload fancybox 
  *}
-<fieldset>
-	<legend><img src="../img/admin/excel_file.png">{l s='Sample files'}</legend>
-		<a href="#" onClick="$('#sample_files_import').slideToggle();">{l s='Click here to view the samples.'}</a>
-		<div>&nbsp;</div>
-		<ul id="sample_files_import" style="display:none;">
-			<li><a href="../docs/csv_import/categories_import.csv">{l s='Categories sample file'}</a></li>
-			<li><a href="../docs/csv_import/products_import.csv">{l s='Products sample file'}</a></li>
-			<li><a href="../docs/csv_import/combinations_import.csv">{l s='Combinations sample file'}</a></li>
-			<li><a href="../docs/csv_import/customers_import.csv">{l s='Customers sample file'}</a></li>
-			<li><a href="../docs/csv_import/addresses_import.csv">{l s='Addresses sample file'}</a></li>
-			<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Manufacturers sample file'}</a></li>
-			<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Suppliers sample file'}</a></li>
-			<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
-		</ul>
-</fieldset>
-
-<div>&nbsp;</div>
-
-{** 
- * Upload fieldset 
- *}
-<fieldset>
-	<legend><img src="../img/admin/import.gif" />{l s='Upload'}</legend>
-	<a href="#" onClick="$('#upload_file_import').slideToggle();">
-		{l s='You can either click here to upload your own CSV file, or choose to use an existing one in the form below.'}
-	</a>
-	<div>&nbsp;</div>
-	<div id="upload_file_import" style="display: none;">
-		<form action="{$current}&token={$token}" method="POST" enctype="multipart/form-data">
-			
+<div style="display: none">
+	<div id="upload_file_import" style="background-color: #EBEDF4; border: 1px solid #CCCED7">
+		<div class="clear">&nbsp;</div>
+		<form action="{$current}&token={$token}" method="POST" enctype="multipart/form-data">	
 			<label class="clear" style="width:160px; text-align: left;">{l s='Select your CSV file:'} </label>	
 			<div class="margin-form" style="padding-left:190px;">
 				<input name="file" type="file" />
@@ -120,10 +99,25 @@
 					{l s='Allowed files are only UTF-8 and iso-8859-1 encoded ones'}
 				</p>
 			</div>
-			
 		</form>
-	</div>	
-</fieldset>
+		<div class="clear">&nbsp;</div>
+		<div style="width:50%; margin: 0 auto;">
+			{l s='Note that our samples our available, below.'}
+			<div class="clear">&nbsp;</div>
+			<ul id="sample_files_import">
+				<li><a href="../docs/csv_import/categories_import.csfav">{l s='Categories sample file'}</a></li>
+				<li><a href="../docs/csv_import/products_import.csv">{l s='Products sample file'}</a></li>
+				<li><a href="../docs/csv_import/combinations_import.csv">{l s='Combinations sample file'}</a></li>
+				<li><a href="../docs/csv_import/customers_import.csv">{l s='Customers sample file'}</a></li>
+				<li><a href="../docs/csv_import/addresses_import.csv">{l s='Addresses sample file'}</a></li>
+				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Manufacturers sample file'}</a></li>
+				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Suppliers sample file'}</a></li>
+				<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
+			</ul>
+		</div>
+		<div class="clear">&nbsp;</div>
+	</div>
+</div>
 
 <div class="clear">&nbsp;</div>
 
@@ -159,6 +153,8 @@
 						<option value="{$filename}">{$filename}</option>
 					{/foreach}
 				</select>
+				&nbsp;&nbsp;<img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />
+				<b><a href="#upload_file_import" id="upload_file_import_link">{l s='Upload'}</a></b>
 			</div>
 			<br />
 				

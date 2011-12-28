@@ -397,6 +397,10 @@ class AdminImportControllerCore extends AdminController
 		$this->toolbar_fix = false;
 		$this->toolbar_btn = array();
 
+		// adds fancybox
+		$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'screen');
+		$this->addJqueryPlugin(array('fancybox'));
+
 		$this->tpl_form_vars = array(
 			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => _PS_ADMIN_DIR_.'/import/',
@@ -1668,6 +1672,16 @@ class AdminImportControllerCore extends AdminController
 		$this->closeCsvFile($handle);
 	}
 
+	/**
+	 * @since 1.5.0
+	 */
+	public function supplyOrdersImport()
+	{
+		$handle = $this->openCsvFile();
+		//@TODO
+		$this->closeCsvFile($handle);
+	}
+
 	public function utf8EncodeArray($array)
 	{
 		if (is_array($array))
@@ -1853,6 +1867,8 @@ class AdminImportControllerCore extends AdminController
 				case $this->entities[$this->l('Suppliers')]:
 					$this->supplierImport();
 				break;
+				case $this->entities[$this->l('Supply Orders')]:
+					$this->supplyOrdersImport();
 				default:
 					$this->_errors[] = $this->l('no entity selected');
 			}
