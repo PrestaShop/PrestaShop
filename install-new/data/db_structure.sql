@@ -2304,7 +2304,7 @@ CREATE TABLE `PREFIX_accounting_product_zone_shop` (
   UNIQUE KEY `id_product` (`id_product`,`id_shop`,`id_zone`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_order_carrierhaystack` (
+CREATE TABLE `PREFIX_order_carrier` (
   `id_order_carrier` int(11) NOT NULL AUTO_INCREMENT,
   `id_order` int(11) unsigned NOT NULL,
   `id_carrier` int(11) unsigned NOT NULL,
