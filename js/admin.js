@@ -371,7 +371,7 @@ function formSubmit(e, button)
 		getE(button).click();
 	}
 }
-function	noComma(elem)
+function noComma(elem)
 {
  	getE(elem).value = getE(elem).value.replace(new RegExp(',', 'g'), '.');
 }
