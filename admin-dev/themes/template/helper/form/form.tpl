@@ -204,7 +204,7 @@
 									<div class="translatable">
 										{foreach $languages as $language}
 											<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-												<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]}</textarea>
+												<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]}</textarea>
 											</div>
 										{/foreach}
 									</div>
