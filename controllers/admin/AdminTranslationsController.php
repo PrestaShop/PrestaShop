@@ -1128,7 +1128,7 @@ class AdminTranslationsControllerCore extends AdminController
 				continue;
 			include_once(_PS_CLASS_DIR_.$classFile);
 			$prefix_key = substr($classFile, 0, -4);
-			if (!class_exists($prefix_key, false))
+			if (!class_exists($prefix_key, false) && !class_exists($prefix_key.'Core', false))
 				continue;
 			if (!is_subclass_of($prefix_key, 'ObjectModel'))
 				continue;

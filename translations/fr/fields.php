@@ -2,6 +2,7 @@
 
 global $_FIELDS;
 $_FIELDS = array();
+$_FIELDS['Address_71581233bcc121fcc409ecce9317fbde'] = 'Id client';
 $_FIELDS['AddressFormat_1ddcb92ade31c8fbd370001f9b29a7d9'] = 'format';
 $_FIELDS['Configuration_b068931cc450442b63f5b3d276ea4297'] = 'nom';
 $_FIELDS['Configuration_c79c16c41a33108866a9a4c785c73f4f'] = 'ID de groupe de la boutique';
@@ -99,6 +100,7 @@ $_FIELDS['Profile_b068931cc450442b63f5b3d276ea4297'] = 'nom';
 $_FIELDS['QuickAccess_2a304a1348456ccd2234cd71a81bd338'] = 'lien';
 $_FIELDS['QuickAccess_48df2d0e8fcf6f9fe7809d5ea0cd2691'] = 'nouvelle_fenêtre';
 $_FIELDS['QuickAccess_b068931cc450442b63f5b3d276ea4297'] = 'nom';
+$_FIELDS['SpecificPriceRule_dc99776458b68786a9e903854e23a483'] = 'A partir de la quantité';
 $_FIELDS['Tab_672070865d6470b0b9c251e275faaa30'] = 'ID de l\'onglet mère';
 $_FIELDS['Tab_4757fe07fd492a8be0ea6a760d683d6e'] = 'position';
 $_FIELDS['Tab_22884db148f0ffb0d830ba431102b0b5'] = 'module';
