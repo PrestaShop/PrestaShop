@@ -326,14 +326,14 @@ class blocktopmenu extends Module
 		{
 			if (!Configuration::isOverridenByCurrentContext('MOD_BLOCKTOPMENU_ITEMS'))
 			{
-				$items_shop = Configuration::get('MOD_BLOCKTOPMENU_ITEMS', NULL, (int)$this->context->shop->id_group_shop, (int)$this->context->shop->id);
+				$items_shop = Configuration::get('MOD_BLOCKTOPMENU_ITEMS');
 			}
 		}
 		if (!isset($items_shop))
 			$items_shop = '';
 		
 		$items_shop = explode(',', $items_shop);
-		$items_global = Configuration::get('MOD_BLOCKTOPMENU_ITEMS', NULL, (int)$this->context->shop->id_group_shop, (int)$this->context->shop->id);
+		$items_global = Configuration::getGlobalValue('MOD_BLOCKTOPMENU_ITEMS');
 		$items_global = explode(',', $items_global);
 
 		$items_global = array_diff($items_global, $items_shop);
