@@ -386,19 +386,19 @@ function init()
 
 		if ($('input#add_product_product_id').val() == 0)
 		{
-			alert(txt_add_product_no_product);
+			jAlert(txt_add_product_no_product);
 			go = false;
 		}
 
 		if ($('input#add_product_product_quantity').val() == 0)
 		{
-			alert(txt_add_product_no_product_quantity);
+			jAlert(txt_add_product_no_product_quantity);
 			go = false;
 		}
 
 		if ($('input#add_product_product_price_excl').val() == 0)
 		{
-			alert(txt_add_product_no_product_price);
+			jAlert(txt_add_product_no_product_price);
 			go = false;
 		}
 
@@ -444,7 +444,7 @@ function init()
 							$('.partial_refund_fields').hide();
 						}
 						else
-							alert(data.error);
+							jAlert(data.error);
 					}
 				});
 				ajaxQueries.push(ajax_query);
@@ -545,7 +545,7 @@ function init()
 					$('.partial_refund_fields').hide();
 				}
 				else
-					alert(data.error);
+					jAlert(data.error);
 			}
 		});
 
@@ -578,13 +578,13 @@ function init()
 	$('input[name=submitProductChange]').click(function() {
 		if ($(this).parent().parent().find('td .edit_product_quantity').val() <= 0)
 		{
-			alert(txt_add_product_no_product_quantity);
+			jAlert(txt_add_product_no_product_quantity);
 			return false;
 		}
 
 		if ($(this).parent().parent().find('td .edit_product_price').val() <= 0)
 		{
-			alert(txt_add_product_no_product_price);
+			jAlert(txt_add_product_no_product_price);
 			return false;
 		}
 
@@ -618,7 +618,7 @@ function init()
 						$('.partial_refund_fields').hide();
 					}
 					else
-						alert(data.error);
+						jAlert(data.error);
 				}
 			});
 		}
@@ -687,7 +687,7 @@ function init()
 					updateDiscountForm(data.discount_form_html);
 				}
 				else
-					alert(data.error);
+					jAlert(data.error);
 			}
 		});
 		return false;

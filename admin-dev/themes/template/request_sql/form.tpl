@@ -90,8 +90,8 @@
 		$('#add_table').click(function(){
 			var table = $('#selectTables select').val();
 
-			if (table == 'null')
-				alert("{l s='Please, choose table.'}");
+			if (!table)
+				jAlert("{l s='Please, choose table.'}");
 			else
 				AddRequestSql(table);
 		});

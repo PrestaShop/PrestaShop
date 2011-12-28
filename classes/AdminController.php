@@ -1574,7 +1574,7 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo'));
+		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo', 'alerts'));
 
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',

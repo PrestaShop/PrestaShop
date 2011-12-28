@@ -54,7 +54,7 @@ echo '			<tr>
 							$(document).ready(function() {
 								$(\'div#categoryList input.categoryBox\').click(function (){
 									if ($(this).is(\':not(:checked)\') && $(\'div#categoryList input.id_category_default\').val() == $(this).val())
-										alert(\''.utf8_encode(html_entity_decode($adminProducts->getL('Consider changing the default category.'))).'\');
+										jAlert(\''.utf8_encode(html_entity_decode($adminProducts->getL('Consider changing the default category.'))).'\');
 								});
 							});
 							</script>
