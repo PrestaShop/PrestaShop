@@ -258,6 +258,13 @@ class AdminShopUrlControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
+		else if (Tools::isSubmit('submitAdd'.$this->table) && $this->tabAccess['add'] === '1')
+		{
+			if (ShopUrl::virtualUriExists(Tools::getValue('virtual_uri'), Tools::getValue('id_shop')))
+				$this->_errors[] = Tools::displayError('Virtual URI already used.');
+			else
+				return parent::postProcess();
+		}
 		else
 			return parent::postProcess();
 	}
