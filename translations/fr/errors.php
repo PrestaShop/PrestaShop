@@ -426,6 +426,7 @@ $_ERRORS['f8a19b1a94a0625cf7640c18e45ff349'] = 'Impossible de charger la facture
 $_ERRORS['6be4d7beb4c4e0261b1bdf289e000d9a'] = 'Vous ne pouvez pas changer la devise';
 $_ERRORS['b37ad9280cb571455ff98bb80ddfd170'] = 'Cette commande a déjà une facture';
 $_ERRORS['4e89fbb8dfa4d1d9f8dcd5ed9245847b'] = 'Impossible d\'éditer cette règle de prix panier pour cette commande';
+$_ERRORS['a551c1b1a24beff63aa3cc70ea172351'] = 'Vous devez spécifier un nom afin de créer un bon de réduction';
 $_ERRORS['221cbaf37b5e5d712e9d100c75e7477a'] = 'La valeur de la remise est invalide';
 $_ERRORS['af73fac5b8c832cae5e6e70eb70ab886'] = 'La valeur de la remise est supérieure au montant totale de la facture';
 $_ERRORS['d5440008a3bd5b061072af8724ba2941'] = 'La valeur de la remise est supérieure au montant totale de la facture (Facture:';
