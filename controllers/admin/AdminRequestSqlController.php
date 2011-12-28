@@ -169,7 +169,7 @@ class AdminRequestSqlControllerCore extends AdminController
 	/**
 	 * Display export action link
 	 */
-	public function displayExportLink($token = null, $id)
+	public function displayExportLink($token, $id)
 	{
 		$tpl = $this->context->smarty->createTemplate('request_sql/list_action_export.tpl');
 
