@@ -91,8 +91,8 @@ class AdminThemesControllerCore extends AdminController
 
 	public function __construct()
 	{
-		$this->className = 'Configuration';
-		$this->table = 'configuration';
+		$this->className = 'Theme';
+		$this->table = 'theme';
 
 		parent::__construct();
 
@@ -118,6 +118,92 @@ class AdminThemesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
  			),
  		);
+
+		$this->fieldsDisplay = array(
+			'id_theme' => array(
+				'title' => $this->l('ID'),
+				'align' => 'center',
+				'width' => 20,
+			),
+			'name' => array(
+				'title' => $this->l('Name'),
+				'width' => 'auto',
+			),
+			'directory' => array(
+				'title' => $this->l('Directory'),
+				'width' => 'auto',
+			),
+		);
+
+		$getAvailableThemes = Theme::getAvailable(true);
+		$available_theme_directories = array();
+		foreach($getAvailableThemes as $k => $dirname)
+		{
+			$available_theme_directories[$k]['value'] = $dirname;
+			$available_theme_directories[$k]['label'] = $dirname;
+			$available_theme_directories[$k]['id'] = $dirname;
+		};
+		$selected_theme_directory = null;
+		if ($this->loadObject(true))
+			$selected_theme_directory = $this->object->directory;
+/*		'		array(	'id' => 'active_on',
+							'value' => 1,
+							'label' => $this->l('Enabled')
+						),
+						*/
+		$this->fields_form = array(
+			'tinymce' => false,
+			'legend' => array(
+				'title' => $this->l('Theme'),
+				'image' => '../img/admin/tab-themes.gif'
+			),
+			'input' => array(
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'size' => 48,
+					'required' => true,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}',
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Directory:'),
+					'name' => 'directory',
+					'required' => true,
+					'br' => true,
+					'class' => 't',
+					'values' => $available_theme_directories,
+					'selected' => $selected_theme_directory,
+					'desc' => $this->l('Note: only the existence of the directory is checked. Please be sure to select a valid theme directory.'),
+				),
+			),
+			'submit' => array(
+				'title' => $this->l('   Save   '),
+				'class' => 'button'
+			)
+		);
+	}
+
+	public function renderList(){
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
+
+	//	$this->_filter .= ' AND `id_parent` = '.(int)$this->_category->id.' ';
+	//	$this->_select = 'position ';
+
+		return parent::renderList();
+	}
+
+	public function processDelete($token){
+		$obj = $this->loadObject();
+		if ($obj && $obj->isUsed())
+		{
+			$this->_errors[] = $this->l('This theme is used by at least one shop. Please choose another theme first.');
+			return false;
+		}
+
+		return parent::processDelete($token);
 	}
 
 	public function initContent()

@@ -28,6 +28,7 @@
 class ThemeCore extends ObjectModel
 {
 	public $name;
+	public $directory;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -36,7 +37,8 @@ class ThemeCore extends ObjectModel
 		'table' => 'theme',
 		'primary' => 'id_theme',
 		'fields' => array(
-			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64, 'required' => true),
+			'directory' => array('type' => self::TYPE_STRING, 'validate' => 'isValidThemeDir', 'size' => 64, 'required' => true),
 		),
 	);
 
@@ -46,5 +48,50 @@ class ThemeCore extends ObjectModel
 				FROM '._DB_PREFIX_.'theme
 				ORDER BY name';
 		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
+	 * return an array of all available theme (installed or not)
+	 * 
+	 * @param boolean $installed 
+	 * @return array string (directory)
+	 */
+	public static function getAvailable($installed_only = true){
+		static $dirlist = array();
+		$available_theme = array();
+		
+		if (empty($dirlist))
+		{
+			$themes = scandir(_PS_ALL_THEMES_DIR_);
+			foreach ($themes AS $theme)
+				if (is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$theme) && $theme[0] != '.')
+					$dirlist[] = $theme;
+		}
+		
+		if ($installed_only)
+		{
+			$themes = Theme::getThemes();
+			foreach($themes as $theme_obj)
+				$themes_dir[] = $theme_obj['directory'];
+			foreach( $dirlist as $theme)
+				if (false !== array_search($theme, $themes_dir))
+					$available_theme[] = $theme;
+		}
+		else
+			$available_theme = $dirlist;
+
+		return $available_theme;
+
+	}
+
+	/**
+	 * check if a theme is used by a shop
+	 * 
+	 * @return boolean
+	 */
+	public function isUsed()
+	{
+		return Db::getInstance()->getValue('SELECT count(*) 
+			FROM '._DB_PREFIX_.'shop WHERE id_theme = '.(int)$this->id);
 	}
 }
