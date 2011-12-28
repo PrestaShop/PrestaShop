@@ -100,7 +100,7 @@ class RequestSqlCore extends ObjectModel
 			return $this->validateSql($tab, $in, $sql);
 	}
 
-	public function validateSql($tab, $in = false, $sql)
+	public function validateSql($tab, $in, $sql)
 	{
 		if (!$this->testedRequired($tab))
 			return false;
@@ -154,7 +154,7 @@ class RequestSqlCore extends ObjectModel
 
 	public function getAttributesByTable($table)
 	{
-		return Db::getInstance()->executeS(sprintf('DESCRIBE `%s`', $table));
+		return Db::getInstance()->executeS(sprintf('DESCRIBE %s', $table));
 	}
 
 	public function cutJoin($attrs, $from)
