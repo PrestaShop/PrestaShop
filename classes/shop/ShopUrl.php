@@ -159,4 +159,22 @@ class ShopUrlCore extends ObjectModel
 		}
 		return	self::$main_domain_ssl;
 	}
+
+	/**
+	 * @static
+	 * @param string $virtual_uri
+	 * @param int $id_shop_tested
+	 * @return bool
+	 */
+	public static function virtualUriExists($virtual_uri, $id_shop_tested)
+	{
+		$virtual_uri = trim($virtual_uri);
+		if (substr($virtual_uri, -1) != '/')
+			$virtual_uri .= '/';
+		return (bool) Db::getInstance()->getValue('
+		SELECT `virtual_uri`
+		FROM `'._DB_PREFIX_.'shop_url`
+		WHERE `id_shop` != '.(int)$id_shop_tested.'
+		AND `virtual_uri` = "'.pSQL($virtual_uri).'"');
+	}
 }
