@@ -155,7 +155,7 @@ class MediaCore
 		return false;
 	}
 
-	public static function minifyCSS($css_content, $fileuri = false)
+	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
 	{
 		global $current_css_file;
 
@@ -186,6 +186,14 @@ class MediaCore
 			$css_content = str_replace(' 0pt', ' 0', $css_content);
 			$css_content = str_replace(':0%', ':0', $css_content);
 			$css_content = str_replace(' 0%', ' 0', $css_content);
+
+			// Store all import url
+			preg_match_all('#@import .*?;#i', $css_content, $m);
+			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
+			{
+				$import_url[] = $m[0][$i];
+				$css_content = str_replace($m[0][$i], '', $css_content);
+			}
 
 			return trim($css_content);
 		}
@@ -418,17 +426,19 @@ class MediaCore
 				'date' => file_exists($filename) ? filemtime($filename) : 0
 			);
 		}
+
 		// aggregate and compress css files content, write new caches files
+		$import_url = array();
 		foreach ($css_files_by_media as $media => $media_infos)
 		{
 			$cache_filename = _PS_THEME_DIR_.'cache/'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
-			if ($media_infos['date'] > $compressed_css_files_infos[$media]['date'])
+			if (1||$media_infos['date'] > $compressed_css_files_infos[$media]['date'])
 			{
 				$compressed_css_files[$media] = '';
 				foreach ($media_infos['files'] as $file_infos)
 				{
 					if (file_exists($file_infos['path']))
-						$compressed_css_files[$media] .= self::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri']);
+						$compressed_css_files[$media] .= self::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri'], $import_url);
 					else
 						$compressed_css_files_not_found[] = $file_infos['path'];
 				}
@@ -438,6 +448,8 @@ class MediaCore
 						'" */'."\n".$compressed_css_files[$media];
 				else
 					$content = $compressed_css_files[$media];
+
+				$content = implode('', $import_url).$content;
 				file_put_contents($cache_filename, $content);
 				chmod($cache_filename, 0777);
 			}
