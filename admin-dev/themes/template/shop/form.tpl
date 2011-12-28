@@ -43,7 +43,7 @@
 		{foreach $input.values as $theme}
 			<div class="select_theme {if $theme.checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				{$theme.name}<br />
-				<img src="../themes/{$theme.name}/preview.jpg" alt="{$theme.name}" /><br />
+				<img src="../themes/{$theme.directory}/preview.jpg" alt="{$theme.directory}" /><br />
 				<input type="radio" name="id_theme" value="{$theme.id_theme}" {if $theme.checked}checked="checked"{/if} />
 			</div>
 		{/foreach}

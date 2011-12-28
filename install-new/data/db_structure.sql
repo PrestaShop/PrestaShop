@@ -1895,6 +1895,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
 CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `id_theme` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
+  `directory` varchar(64) NOT NULL,
   PRIMARY KEY (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
@@ -2303,7 +2304,7 @@ CREATE TABLE `PREFIX_accounting_product_zone_shop` (
   UNIQUE KEY `id_product` (`id_product`,`id_shop`,`id_zone`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-CREATE TABLE `PREFIX_order_carrier` (
+CREATE TABLE `PREFIX_order_carrierhaystack` (
   `id_order_carrier` int(11) NOT NULL AUTO_INCREMENT,
   `id_order` int(11) unsigned NOT NULL,
   `id_carrier` int(11) unsigned NOT NULL,

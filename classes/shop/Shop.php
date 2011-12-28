@@ -38,6 +38,7 @@ class ShopCore extends ObjectModel
 	public	$deleted;
 
 	public $theme_name;
+	public $theme_directory;
 	public $physical_uri;
 	public $virtual_uri;
 	public $domain;
@@ -122,7 +123,7 @@ class ShopCore extends ObjectModel
 
 		if ($this->id)
 		{
-			$sql = 'SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.name
+			$sql = 'SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.name, t.directory
 					FROM '._DB_PREFIX_.'shop s
 					LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
 					LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
@@ -134,6 +135,7 @@ class ShopCore extends ObjectModel
 				return;
 
 			$this->theme_name = $row['name'];
+			$this->theme_directory = $row['directory'];
 			$this->physical_uri = $row['physical_uri'];
 			$this->virtual_uri = $row['virtual_uri'];
 			$this->domain = $row['domain'];
@@ -324,7 +326,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function getTheme()
 	{
-		return $this->theme_name;
+		return $this->theme_directory;
 	}
 
 	/**
