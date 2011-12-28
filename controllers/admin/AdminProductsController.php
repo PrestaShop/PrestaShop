@@ -2218,7 +2218,7 @@ class AdminProductsControllerCore extends AdminController
 	*/
 	public function processSuppliers($token)
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			// Get all id_product_attribute
 			$attributes = $product->getAttributesResume($this->context->language->id);
@@ -2396,7 +2396,7 @@ class AdminProductsControllerCore extends AdminController
 	*/
 	public function processWarehouses($token)
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			// Get all id_product_attribute
 			$attributes = $product->getAttributesResume($this->context->language->id);
