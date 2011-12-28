@@ -1732,11 +1732,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$item['id_currency'] = $currency->id;
 			}
 
+			// unsets some buttons
+			unset($this->toolbar_btn['export-csv-orders']);
+			unset($this->toolbar_btn['export-csv-details']);
+			unset($this->toolbar_btn['new']);
+
 			// renders list
 			$helper = new HelperList();
 			$this->setHelperDisplay($helper);
 			$helper->actions = array();
 			$helper->show_toolbar = false;
+			$helper->toolbar_btn = $this->toolbar_btn;
 
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
