@@ -546,7 +546,7 @@ class AdminControllerCore extends Controller
 				{
 					if (!empty($this->fieldImageSettings))
 						$res = $object->deleteImage();
-					
+
 					if (!$res)
 						$this->_errors[] = Tools::displayError('Unable to delete associated images');
 
@@ -1573,7 +1573,7 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo', 'alerts'));
+		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo'));
 
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
