@@ -1677,15 +1677,42 @@ class AdminImportControllerCore extends AdminController
 	 */
 	public function supplyOrdersImport()
 	{
+		// opens CSV & sets locale
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		self::setLocale();
 
+		// main loop, for each lines
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
-			//@TODO
+			// if convert requested
+			if (Tools::getValue('convert'))
+				$line = $this->utf8EncodeArray($line);
+			$info = self::getMaskedRow($line);
+
+			// sets default values if needed
+			self::setDefaultValues($info);
+
+			// if an id is set, instanciates a supply order with this id if possible
+			if (array_key_exists('id', $info) && (int)$info['id'] && SupplyOrder::exists((int)$info['id']))
+				$supply_order = new Supplier((int)$info['id']);
+			// if an reference is set, instanciates a supply order with this reference if possible
+			else if (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference'])))
+				$supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['reference']));
+			else // new supply order
+				$supply_order = new SupplyOrder();
+
+			/*
+			 * @TODO Checks $info
+			 *
+			 */
+
+			/**
+			 * @TODO If check is OK, sets the Supply Order
+			 */
 		}
 
+		// closes
 		$this->closeCsvFile($handle);
 	}
 
