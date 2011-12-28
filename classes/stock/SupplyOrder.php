@@ -430,6 +430,24 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
+	 * For a given id or reference, tells if the supply order exists
+	 * @param int|string $match
+	 */
+	public static function exists($match)
+	{
+		if (!$match)
+			return false;
+
+		$query = new DbQuery();
+		$query->select('id_supply_order');
+		$query->from('supply_order', 'so');
+		$query->where('so.id_supply_order = '.(int)$match.' OR so.reference = "'.pSQL($match).'"');
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		return ($res > 0);
+	}
+
+	/**
 	 * Webservice : gets the ids supply_order_detail associated to this order
 	 * @return array
 	 */
