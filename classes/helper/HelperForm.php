@@ -95,12 +95,12 @@ class HelperFormCore extends Helper
 							{
 								// Added Jquery plugin treeview (css and js files)
 								$this->context->controller->addJqueryPlugin('treeview');
-	
+
 								// Added JS files
 								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js');
 								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js');
 								$this->context->controller->addJS(_PS_JS_DIR_.'admin-categories-tree.js');
-	
+
 								if (isset($params['use_search']) && $params['use_search'])
 									$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 								$categories = false;
@@ -129,7 +129,7 @@ class HelperFormCore extends Helper
 								$this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
 								$this->tpl_vars['ad'] = dirname($_SERVER['PHP_SELF']);
 								$this->tpl_vars['tinymce'] = true;
-	
+
 								$this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
 								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 								$tinymce = false;
@@ -141,7 +141,7 @@ class HelperFormCore extends Helper
 		$this->tpl->assign(array(
 			'title' => $this->title,
 			'toolbar_btn' => $this->toolbar_btn,
-			
+
 			'ps_help_context' => $this->ps_help_context,
 			'class_name' => get_class($this->context->controller),
 			'iso_user' => $this->context->language->id,

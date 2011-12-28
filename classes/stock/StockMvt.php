@@ -211,4 +211,27 @@ class StockMvtCore extends ObjectModel
 		return $mvts;
 	}
 
+	/**
+	 * For a given product, gets the last positive stock mvt
+	 * @param int $id_product
+	 * @param int $id_product_attribute
+	 * @return bool|array
+	 */
+	public static function getLastPositiveStockMvt($id_product, $id_product_attribute)
+	{
+		$query = new DbQuery();
+		$query->select('sm.*, w.id_currency, (s.usable_quantity = sm.physical_quantity) as is_usable');
+		$query->from('stock_mvt', 'sm');
+		$query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
+		$query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
+		$query->where('sm.sign = 1');
+		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+		$query->orderBy('date_add DESC');
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		if ($res !== false)
+			return $res['0'];
+		return false;
+	}
+
 }
