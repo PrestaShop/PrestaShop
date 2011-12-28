@@ -2,8 +2,7 @@
 
 global $_FIELDS;
 $_FIELDS = array();
-$_FIELDS['Address_71581233bcc121fcc409ecce9317fbde'] = 'Id client';
-$_FIELDS['AddressFormat_1ddcb92ade31c8fbd370001f9b29a7d9'] = 'format';
+$_FIELDS['CMSCategory_b068931cc450442b63f5b3d276ea4297'] = 'Nom';
 $_FIELDS['Configuration_b068931cc450442b63f5b3d276ea4297'] = 'nom';
 $_FIELDS['Configuration_c79c16c41a33108866a9a4c785c73f4f'] = 'ID de groupe de la boutique';
 $_FIELDS['Configuration_5a0971a207e75dd040db8b6a3425a8bf'] = 'ID de la boutique';
@@ -100,11 +99,6 @@ $_FIELDS['Profile_b068931cc450442b63f5b3d276ea4297'] = 'nom';
 $_FIELDS['QuickAccess_2a304a1348456ccd2234cd71a81bd338'] = 'lien';
 $_FIELDS['QuickAccess_48df2d0e8fcf6f9fe7809d5ea0cd2691'] = 'nouvelle_fenêtre';
 $_FIELDS['QuickAccess_b068931cc450442b63f5b3d276ea4297'] = 'nom';
-$_FIELDS['SpecificPriceRule_b068931cc450442b63f5b3d276ea4297'] = 'nom';
-$_FIELDS['SpecificPriceRule_dc99776458b68786a9e903854e23a483'] = 'A partir de la quantité';
-$_FIELDS['SpecificPriceRule_9477e24c78f1ca8ee9b03111f6227fc2'] = 'Réduction';
-$_FIELDS['SpecificPriceRule_d98a07f84921b24ee30f86fd8cd85c3c'] = 'A partir de';
-$_FIELDS['SpecificPriceRule_01b6e20344b68835c5ed1ddedf20d531'] = 'Jusqu\'à';
 $_FIELDS['Tab_672070865d6470b0b9c251e275faaa30'] = 'ID de l\'onglet mère';
 $_FIELDS['Tab_4757fe07fd492a8be0ea6a760d683d6e'] = 'position';
 $_FIELDS['Tab_22884db148f0ffb0d830ba431102b0b5'] = 'module';
