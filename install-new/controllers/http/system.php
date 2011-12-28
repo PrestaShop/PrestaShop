@@ -112,10 +112,10 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'title' => $this->l('PHP parameters:'),
 					'checks' => array(
 						'fopen' => $this->l('Can open external URLs ?'),
-						'register_globals' => $this->l('Is PHP register global option desactivated (recommended) ?'),
+						'register_globals' => $this->l('Is PHP register global option deactivated (recommended) ?'),
 						'gz' => $this->l('Is GZIP compression activated (recommended) ?'),
 						'mcrypt' => $this->l('Is Mcrypt extension available (recommended) ?'),
-						'magicquotes' => $this->l('Is PHP magic quotes option desactivated (recommended) ?'),
+						'magicquotes' => $this->l('Is PHP magic quotes option deactivated (recommended) ?'),
 						'dom' => $this->l('Is Dom extension loaded ?'),
 						'pdo_mysql' => $this->l('Is PDO MySQL extension loaded ?'),
 					)
