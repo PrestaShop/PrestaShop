@@ -264,6 +264,7 @@ class AdminCustomersControllerCore extends AdminController
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'size' => 33,
+					'required' => ($obj->id ? false : true),
 					'desc' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
 				),
 				array(
@@ -720,7 +721,8 @@ class AdminCustomersControllerCore extends AdminController
 		{
 			$customer_email = strval(Tools::getValue('email'));
 			$customer = new Customer();
-			$customer->getByEmail($customer_email);
+			if (Validate::isEmail($customer_email))
+				$customer->getByEmail($customer_email);
 			if ($customer->id)
 				$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 		}
