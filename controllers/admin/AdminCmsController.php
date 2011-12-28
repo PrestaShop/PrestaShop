@@ -124,6 +124,7 @@ class AdminCmsControllerCore extends AdminController
 					'type' => 'textarea',
 					'label' => $this->l('Page content'),
 					'name' => 'content',
+					'autoload_rte' => true,
 					'lang' => true,
 					'rows' => 5,
 					'cols' => 40,
