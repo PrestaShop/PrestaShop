@@ -204,7 +204,7 @@ class GroupCore extends ObjectModel
 	 * @param $has_active_column
 	 * @return bool
 	 */
-	public static function isCurrentlyUsed($table = null, $has_active_column = false)
+	public static function isCurrentlyUsed($table, $has_active_column = false)
 	{
 		// We don't use the parent method, for specific clause reason (id_group != 3)
 		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
