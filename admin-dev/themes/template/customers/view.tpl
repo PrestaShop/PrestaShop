@@ -124,7 +124,7 @@
 	
 	<h2>{l s='Messages'} ({count($messages)})</h2>
 	{if count($messages)}
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 			<tr>
 				<th class="center">{l s='Status'}</th>
 				<th class="center">{l s='Message'}</th>
@@ -220,29 +220,37 @@
 				</table>
 			</div>
 		{/if}
-		<div class="clear">&nbsp;</</div>
 		{assign var=count_ko value=count($orders_ko)}
 		{if $count_ko}
 			<div>
 				<h3 style="color:red;font-weight:700">{l s='Invalid orders:'} {$count_ko}</h3>
-				<table cellspacing="0" cellpadding="0" class="table">
+				<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
+					<colgroup>
+						<col width="10px"></col>
+						<col width="100px"></col>
+						<col width=""></col>
+						<col width=""></col>
+						<col width="100px"></col>
+						<col width="100px"></col>
+						<col width="52px"></col>
+					</colgroup>
 					<tr>
-						<th class="center">{l s='ID'}</th>
+						<th height="39px" class="center">{l s='ID'}</th>
 						<th class="center">{l s='Date'}</th>
-						<th class="center">{l s='Products'}</th>
-						<th class="center">{l s='Total paid'}</th>
 						<th class="center">{l s='Payment'}</th>
 						<th class="center">{l s='State'}</th>
+						<th class="center">{l s='Products'}</th>
+						<th class="center">{l s='Total paid'}</th>
 						<th class="center">{l s='Actions'}</th>
 					</tr>
 					{foreach $orders_ko AS $key => $order}
 						<tr {if $key %2}class="alt_row"{/if} style="cursor: pointer" onclick="document.location = '?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
 							<td class="center">{$order['id_order']}</td>
 							<td>{$order['date_add']}</td>
-							<td align="right">{$order['nb_products']}</td>
-							<td align="right">{$order['total_paid_real']}</td>
 							<td>{$order['payment']}</td>
 							<td>{$order['order_state']}</td>
+														<td align="right">{$order['nb_products']}</td>
+							<td align="right">{$order['total_paid_real']}</td>
 							<td align="center"><a href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}"><img src="../img/admin/details.gif" /></a></td>
 						</tr>
 					{/foreach}
@@ -389,9 +397,14 @@
 	</div>
 	
 	{if count($interested)}
-		<div style="float:left;margin-left:20px">
+		<div>
 		<h2>{l s='Products'} ({count($interested)})</h2>
-			<table cellspacing="0" cellpadding="0" class="table">
+			<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
+				<colgroup>
+					<col width="10px"></col>
+					<col width=""></col>
+					<col width="50px"></col>
+				</colgroup>
 				{foreach $interested as $key => $p}
 					<tr {if $key %2}class="alt_row"{/if} style="cursor: pointer" onclick="document.location = '{$p['url']}'">
 						<td>{$p['id']}</td>
