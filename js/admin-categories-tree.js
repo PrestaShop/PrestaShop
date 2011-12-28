@@ -303,7 +303,7 @@ function getParentCategoriesIdAndOpen(id_category)
 			interval = setInterval(openParentCategories, 10);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            alert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+            jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
         }
     });
 }

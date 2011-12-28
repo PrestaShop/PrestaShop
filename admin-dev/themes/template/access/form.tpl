@@ -75,7 +75,7 @@
 					}
 					catch(e)
 					{
-						alert('oups');
+						jAlert('Technical error');
 					}
 				}
 			});
@@ -123,7 +123,7 @@
 					}
 					catch(e)
 					{
-						alert("oups");
+						jAlert('Technical error');
 					}
 				}
 			});

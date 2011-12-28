@@ -67,17 +67,17 @@ $(document).ready(function() {
 				url: 'ajax-tab.php',
 				dataType : 'json',
 				success: function(data) {
-					if(!data)
-						alert("TECHNICAL ERROR - no return status found");
-					else if(data.status != "ok")
-						alert("TECHNICAL ERROR: "+data.msg);
+					if (!data)
+						jAlert("TECHNICAL ERROR - no return status found");
+					else if (data.status != "ok")
+						jAlert("TECHNICAL ERROR: "+data.msg);
 
 					$('#adminpresentation').slideUp('slow');
 					
 				},
 				error: function(data, textStatus, errorThrown)
 				{
-					alert("TECHNICAL ERROR: "+data);
+					jAlert("TECHNICAL ERROR: "+data);
 				}
 			});
 		}
@@ -131,10 +131,10 @@ $(document).ready(function() {
 			url: 'ajax-tab.php',
 			dataType : 'json',
 			success: function(data) {
-				if(!data)
-					alert("TECHNICAL ERROR - no return status found");
-				else if(data.status != "ok")
-					alert("TECHNICAL ERROR: "+data.msg);
+				if (!data)
+					jAlert("TECHNICAL ERROR - no return status found");
+				else if (data.status != "ok")
+					jAlert("TECHNICAL ERROR: "+data.msg);
 				if(data.upgrade.need_upgrade)
 				{
 					$('#blockNewVersionCheck').children("a").attr('href',data.upgrade.link);
@@ -146,7 +146,7 @@ $(document).ready(function() {
 			},
 			error: function(data, textStatus, errorThrown)
 			{
-				alert("TECHNICAL ERROR: "+data);
+				jAlert("TECHNICAL ERROR: "+data);
 			}
 		});
 	}

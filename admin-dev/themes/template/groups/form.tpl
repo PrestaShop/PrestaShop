@@ -107,7 +107,7 @@
 				if ($(this).attr('name') == 'category_reduction['+$('[name="id_category"]:checked').val()+']')
 				{
 					exist = true;
-					alert('{l s='This category already exist for this group'}');
+					jAlert('{l s='This category already exist for this group'}');
 					return false;
 				}
 				
@@ -137,7 +137,7 @@
 								//IE6 bug fix
 								if(error != 'indexOf')
 									errors += jsonData.errors[error] + "\n";
-							alert(errors);
+							jAlert(errors);
 						}
 						else
 						{

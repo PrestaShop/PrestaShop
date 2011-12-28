@@ -312,7 +312,7 @@ function delAccessory(id)
 	var nameCut = name.value.split('¤');
 
 	if (inputCut.length != nameCut.length)
-		return alert('Bad size');
+		return jAlert('Bad size');
 
 	// Reset all hidden fields
 	input.value = '';
@@ -641,7 +641,7 @@ function orderDeleteProduct(txtConfirm, txtExplain)
 			totalAvailable = totalQty - totalQtyReturn;
 			if (totalCancel > totalAvailable)
 			{
-				alert(txtConfirm + ' : \'' + ' ' + productName + '\' ! \n\n' + txtExplain + ' ('+ totalCancel + ' > ' + totalAvailable +')' + '\n ');
+				jAlert(txtConfirm + ' : \'' + ' ' + productName + '\' ! \n\n' + txtExplain + ' ('+ totalCancel + ' > ' + totalAvailable +')' + '\n ');
 				ret = false;
 			}
 		}
@@ -958,7 +958,7 @@ function doAdminAjax(data, success_func, error_func)
 			if (error_func)
 				return error_func(data);
 
-			alert("[TECHNICAL ERROR]");
+			jAlert("[TECHNICAL ERROR]");
 		}
 	});
 }

@@ -13,7 +13,8 @@
 		</fieldset><br/>
 		<script type="text/javascript"> 
 			var ajaxQueries = new Array();
-			function run_sync () {
+			function run_sync()
+			{
 				$('#ajax_error').html('');
 				$('#ajax_error').hide();
 				$('#ajax_conf').html('');
@@ -47,8 +48,9 @@
 							
 						$('#ajax_loader').html('');
 					},
-					error: function(XMLHttpRequest, textStatus, errorThrown) {
-						alert("TECHNICAL ERROR: unable to sync.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+					error: function(XMLHttpRequest, textStatus, errorThrown)
+					{
+						jAlert("TECHNICAL ERROR: unable to sync.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 					}
 				});
 				ajaxQueries.push(ajaxQuery);
