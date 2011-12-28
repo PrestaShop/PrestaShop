@@ -37,7 +37,7 @@ if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '')
 if ($tmp = strpos($_SERVER['REQUEST_URI'], '?'))
 	$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
 
-define('INSTALL_VERSION', '1.5.0.2');
+define('INSTALL_VERSION', '1.5.0.3');
 define('MINIMUM_VERSION_TO_UPDATE', '0.8.5');
 define('INSTALL_PATH', dirname(__FILE__));
 if (version_compare(phpversion(), '5.0.0', '<'))
