@@ -84,7 +84,7 @@ class AdminImportControllerCore extends AdminController
 			$this->l('Addresses'),
 			$this->l('Manufacturers'),
 			$this->l('Suppliers'),
-			$this->l('Supply Orders'),
+			$this->l('SupplyOrders'),
 		));
 
 		switch ((int)Tools::getValue('entity'))
@@ -340,7 +340,7 @@ class AdminImportControllerCore extends AdminController
 				);
 			break;
 			// @since 1.5.0
-			case $this->entities[$this->l('Supply Orders')]:
+			case $this->entities[$this->l('SupplyOrders')]:
 				// required fields
 				$this->required_fields = array(
 					'id_supplier',
@@ -1677,8 +1677,15 @@ class AdminImportControllerCore extends AdminController
 	 */
 	public function supplyOrdersImport()
 	{
+		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		//@TODO
+		self::setLocale();
+
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		{
+			//@TODO
+		}
+
 		$this->closeCsvFile($handle);
 	}
 
@@ -1867,8 +1874,9 @@ class AdminImportControllerCore extends AdminController
 				case $this->entities[$this->l('Suppliers')]:
 					$this->supplierImport();
 				break;
-				case $this->entities[$this->l('Supply Orders')]:
+				case $this->entities[$this->l('SupplyOrders')]:
 					$this->supplyOrdersImport();
+				break;
 				default:
 					$this->_errors[] = $this->l('no entity selected');
 			}
