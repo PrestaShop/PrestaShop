@@ -78,20 +78,20 @@
 		</div>
 		<div class="metadata-command">
 			<dl>
-				<dt>{l s='Date'}: </dt>
+				<dt>{l s='Date:'} </dt>
 				<dd>{dateFormat date=$order->date_add full=true}</dd>
 			|</dl>
 			<dl>
-				<dt>{if (sizeof($messages) > 1)}{l s='messages'}{else}{l s='message'}{/if}: </dt>
+				<dt>{l s='Message:'}</dt>
 				<dd>{sizeof($messages)}</dd>
 			|</dl>
 			<dl>
-				<dt>{if (sizeof($products) > 1)}{l s='products'}{else}{l s='product'}{/if}: </dt>
-				<dd>{sizeof($products)}</dd>
+				<dt>{l s='Product:'}</dt>
+				<dd id="product_number">{sizeof($products)}</dd>
 			|</dl>
 			<dl>
-				<dt>{l s='Total'}: </dt>
-				<dd>{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</dd>
+				<dt>{l s='Total:'}</dt>
+				<dd class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</dd>
 			</dl>
 		<div class="clear"></div>
 	</div>
@@ -228,14 +228,12 @@
 				<form id="formAddPayment" method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<table class="table" width="100%" cellspacing="0" cellpadding="0">
 						<colgroup>
-							<col width="10%"></col>
+							<col width="15%"></col>
 							<col width=""></col>
 							<col width="20%"></col>
 							<col width="10%"></col>
 							<col width="10%"></col>
 							<col width="1%"></col>
-
-
 						</colgroup>
 						<thead>
 							<tr>
