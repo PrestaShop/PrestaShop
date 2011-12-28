@@ -135,22 +135,19 @@ class AdminThemesControllerCore extends AdminController
 			),
 		);
 
-		$getAvailableThemes = Theme::getAvailable(true);
+		$getAvailableThemes = Theme::getAvailable(false);
 		$available_theme_directories = array();
+		
+		$selected_theme_directory = null;
+		if ($this->loadObject(true))
+			$selected_theme_directory = $this->object->directory;
+
 		foreach($getAvailableThemes as $k => $dirname)
 		{
 			$available_theme_directories[$k]['value'] = $dirname;
 			$available_theme_directories[$k]['label'] = $dirname;
 			$available_theme_directories[$k]['id'] = $dirname;
 		};
-		$selected_theme_directory = null;
-		if ($this->loadObject(true))
-			$selected_theme_directory = $this->object->directory;
-/*		'		array(	'id' => 'active_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						*/
 		$this->fields_form = array(
 			'tinymce' => false,
 			'legend' => array(
