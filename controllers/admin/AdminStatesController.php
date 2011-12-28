@@ -57,13 +57,12 @@ class AdminStatesControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'width' => 140,
 				'filter_key' => 'a!name'
 			),
 			'iso_code' => array(
 				'title' => $this->l('ISO code'),
 				'align' => 'center',
-				'width' => 50
+				'width' => 75
 			),
 			'zone' => array(
 				'title' => $this->l('Zone'),

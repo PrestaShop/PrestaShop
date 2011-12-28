@@ -54,9 +54,11 @@
 			});
 		}
 	</script>
-	
-	<fieldset style="width:400px;float: left">
-		<div style="float: right">
+
+<div id="container-customer">
+
+	<div class="info-customer-left">
+			<div style="float: right">
 			<a href="{$current}&addcustomer&id_customer={$customer->id}&token={$token}">
 				<img src="../img/admin/edit.gif" />
 			</a>
@@ -72,9 +74,9 @@
 		{l s='Last visit:'} {if $customer_stats['last_visit']}{$last_visit}{else}{l s='never'}{/if}<br />
 		{if $count_better_customers != '-'}{l s='Rank: #'} {$count_better_customers}<br />{/if}
 		{if $shop_is_feature_active}{l s='Shop:'} {$name_shop}<br />{/if}
-	</fieldset>
+	</div>
 	
-	<fieldset style="width:300px;float:left;margin-left:50px">
+	<div class="info-customer-right">
 		<div style="float: right">
 			<a href="{$current}&addcustomer&id_customer={$customer->id}&token={$token}">
 				<img src="../img/admin/edit.gif" />
@@ -100,23 +102,24 @@
 				{/if}
 			</div>
 		{/if}
-	</fieldset>
+
+</div>
+<div class="clear"></div>
+	<div class="separation"></div>
 	
-	<div class="clear">&nbsp;</div>
-	
-	<fieldset style="height:190px">
-		<legend>
+	<div>
+		<h2>
 			<img src="../img/admin/cms.gif" /> {l s='Add a private note'}
-		</legend>
+		</h2>
 		<p>{l s='This note will be displayed to all the employees but not to the customer.'}</p>
 		<form action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" id="customer_note">
 			<textarea name="note" id="noteContent" style="width:600px;height:100px" onkeydown="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea><br />
 			<input type="submit" id="submitCustomerNote" class="button" value="{l s='   Save   '}" style="float:left;margin-top:5px" disabled="disabled" />
-			<span id="note_feedback" style="float:left;margin:10px 0 0 10px"></span>
+			<span id="note_feedback" style="margin:10px 0 0 10px"></span>
 		</form>
-	</fieldset>
-	
-	<div class="clear">&nbsp;</div>
+	</div>
+	<div class="clear"></div>
+	<div class="separation"></div>
 	
 	
 	<h2>{l s='Messages'} ({count($messages)})</h2>
@@ -153,9 +156,14 @@
 	
 	<h2>{l s='Groups'} ({count($groups)})</h2>
 	{if $groups AND count($groups)}
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
+			<colgroup>
+				<col width="10px"></col>
+				<col width=""></col>
+				<col width="70px"></col>
+			</colgroup>
 			<tr>
-				<th class="center">{l s='ID'}</th>
+				<th height="39px" class="right">{l s='ID'}</th>
 				<th class="center">{l s='Name'}</th>
 				<th class="center">{l s='Actions'}</th>
 			</tr>
@@ -175,28 +183,37 @@
 	{if $orders AND count($orders)}
 		{assign var=count_ok value=count($orders_ok)}
 		{if $count_ok}
-			<div style="float:left;margin-right:20px">
+			<div>
 				<h3 style="color:green;font-weight:700">
 					{l s='Valid orders:'} {$count_ok} {l s='for'} {$total_ok}
 				</h3>
-				<table cellspacing="0" cellpadding="0" class="table float">
+				<table cellspacing="0" cellpadding="0" class="table" style="width:100%; text-align:left;">
+					<colgroup>
+						<col width="10px"></col>
+						<col width="100px"></col>
+						<col width="100px"></col>
+						<col width=""></col>
+						<col width="50px"></col>
+						<col width="80px"></col>
+						<col width="70px"></col>
+					</colgroup>
 					<tr>
-						<th class="center">{l s='ID'}</th>
-						<th class="center">{l s='Date'}</th>
-						<th class="center">{l s='Products'}</th>
-						<th class="center">{l s='Total paid'}</th>
-						<th class="center">{l s='Payment'}</th>
-						<th class="center">{l s='State'}</th>
+						<th height="39px" class="center">{l s='ID'}</th>
+						<th class="left">{l s='Date'}</th>
+						<th class="left">{l s='Payment'}</th>
+						<th class="left">{l s='State'}</th>
+						<th class="left">{l s='Products'}</th>
+						<th class="left">{l s='Total paid'}</th>
 						<th class="center">{l s='Actions'}</th>
 					</tr>
 					{foreach $orders_ok AS $key => $order}
 						<tr {if $key %2}class="alt_row"{/if} style="cursor: pointer" onclick="document.location = '?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
 							<td class="center">{$order['id_order']}</td>
 							<td>{$order['date_add']}</td>
-							<td align="right">{$order['nb_products']}</td>
-							<td align="right">{$order['total_paid_real']}</td>
 							<td>{$order['payment']}</td>
 							<td>{$order['order_state']}</td>
+							<td align="right">{$order['nb_products']}</td>
+							<td align="right">{$order['total_paid_real']}</td>
 							<td align="center"><a href="?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}"><img src="../img/admin/details.gif" /></a></td>
 						</tr>
 					{/foreach}
@@ -206,9 +223,9 @@
 		<div class="clear">&nbsp;</</div>
 		{assign var=count_ko value=count($orders_ko)}
 		{if $count_ko}
-			<div style="float:left;margin-right:20px">
+			<div>
 				<h3 style="color:red;font-weight:700">{l s='Invalid orders:'} {$count_ko}</h3>
-				<table cellspacing="0" cellpadding="0" class="table float">
+				<table cellspacing="0" cellpadding="0" class="table">
 					<tr>
 						<th class="center">{l s='ID'}</th>
 						<th class="center">{l s='Date'}</th>
@@ -240,9 +257,15 @@
 	{if $products AND count($products)}
 	<div class="clear">&nbsp;</div>
 		<h2>{l s='Products'} ({count($products)})</h2>
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
+					<colgroup>
+						<col width="50px"></col>
+						<col width=""></col>
+						<col width="60px"></col>
+						<col width="70px"></col>
+					</colgroup>
 			<tr>
-				<th class="center">{l s='Date'}</th>
+				<th height="39px" class="center">{l s='Date'}</th>
 				<th class="center">{l s='Name'}</th>
 				<th class="center">{l s='Quantity'}</th>
 				<th class="center">{l s='Actions'}</th>
@@ -261,9 +284,17 @@
 	
 	<h2>{l s='Addresses'} ({count($addresses)})</h2>
 	{if count($addresses)}
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
+					<colgroup>
+						<col width="120px"></col>
+						<col width="120px"></col>	
+						<col width=""></col>
+						<col width="100px"></col>
+						<col width="170px"></col>
+						<col width="70px"></col>
+					</colgroup>
 			<tr>
-				<th>{l s='Company'}</th>
+				<th height="39px">{l s='Company'}</th>
 				<th>{l s='Name'}</th>
 				<th>{l s='Address'}</th>
 				<th>{l s='Country'}</th>
@@ -276,7 +307,7 @@
 					<td>{$address['firstname']} {$address['lastname']}</td>
 					<td>{$address['address1']} {if $address['address2']}{$address['address2']}{/if} {$address['postcode']} {$address['city']}</td>
 					<td>{$address['country']}</td>
-					<td>
+					<td class="right">
 						{if $address['phone']}
 							{$address['phone']}
 							{if $address['phone_mobile']}<br />{$address['phone_mobile']}{/if}
@@ -324,23 +355,30 @@
 	{/if}
 	<div class="clear">&nbsp;</div>
 	
-	<div style="float:left">
+	<div>
 		<h2>{l s='Carts'} ({count($carts)})</h2>
 		{if $carts AND count($carts)}
-			<table cellspacing="0" cellpadding="0" class="table">
+			<table cellspacing="0" cellpadding="0" class="table" style="width:100%">
+				<colgroup>
+					<col width="50px"></col>
+					<col width="150px"></col>
+					<col width=""></col>
+					<col width="70px"></col>
+					<col width="50px"></col>
+				</colgroup>
 				<tr>
-					<th class="center">{l s='ID'}</th>
+					<th height="39px" class="center">{l s='ID'}</th>
 					<th class="center">{l s='Date'}</th>
-					<th class="center">{l s='Total'}</th>
 					<th class="center">{l s='Carrier'}</th>
+					<th class="center">{l s='Total'}</th>
 					<th class="center">{l s='Actions'}</th>
 				</tr>
 				{foreach $carts AS $key => $cart}
 					<tr {if $key %2}class="alt_row"{/if} style="cursor: pointer" onclick="document.location = '?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}'">
 						<td class="center">{$cart['id_cart']}</td>
 						<td>{$cart['date_add']}</td>
-						<td align="right">{$cart['total_price']}</td>
 						<td>{$cart['name']}</td>
+						<td align="right">{$cart['total_price']}</td>
 						<td align="center"><a href="index.php?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}"><img src="../img/admin/details.gif" /></a></td>
 					</tr>
 				{/foreach}
@@ -370,13 +408,20 @@
 	{* Last connections *}
 	{if count($connections)}
 		<h2>{l s='Last connections'}</h2>
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
+				<colgroup>
+					<col width="150px"></col>
+					<col width="100px"></col>
+					<col width="100px"></col>
+					<col width=""></col>
+					<col width="150px"></col>
+				</colgroup>
 			<tr>
-				<th style="width: 200px">{l s='Date'}</th>
-				<th style="width: 100px">{l s='Pages viewed'}</th>
-				<th style="width: 100px">{l s='Total time'}</th>
-				<th style="width: 100px">{l s='Origin'}</th>
-				<th style="width: 100px">{l s='IP Address'}</th>
+				<th height="39px;">{l s='Date'}</th>
+				<th>{l s='Pages viewed'}</th>
+				<th>{l s='Total time'}</th>
+				<th>{l s='Origin'}</th>
+				<th>{l s='IP Address'}</th>
 			</tr>
 			{foreach $connections as $connection}
 				<tr>
@@ -407,7 +452,7 @@
 				</tr>
 			{/foreach}
 		</table>
-		<div class="clear">&nbsp;</div>
 	{/if}
 {/block}
-
+</div>	
+		<div class="clear">&nbsp;</div>

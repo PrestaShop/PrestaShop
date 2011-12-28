@@ -18,7 +18,7 @@ fieldset{background-color:#EBEDF4; border:1px solid #CCCED7; color:#585A69; font
 .Bloc {background-color:#EBEDF4; border:1px solid #CCCED7;font-size:1.1em;margin:0;padding:1em}
 legend{background:#EBEDF4;border:1px solid #CCCED7;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
 input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #ccc;}
-select { border:1px solid #ccc; color: #666666; font-size: 12px;}
+select { border:1px solid #ccc; font-size: 12px;}
 select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
 .header_module{background:url(header_module.png);padding-left: 0.5em;padding-top: 0.8em;height:20px;color: #812143;border:solid 1px #CCC;}
 .double_select select{width:300px;height:160px;}

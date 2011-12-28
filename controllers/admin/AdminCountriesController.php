@@ -93,7 +93,7 @@ class AdminCountriesControllerCore extends AdminController
 			),
 			'call_prefix' => array(
 				'title' => $this->l('Call prefix'),
-				'width' => 40,
+				'width' => 150,
 				'align' => 'center',
 				'callback' => 'displayCallPrefix'
 			),
