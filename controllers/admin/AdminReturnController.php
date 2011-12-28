@@ -38,9 +38,9 @@ class AdminReturnControllerCore extends AdminController
 
  		$this->fieldsDisplay = array(
 			'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'id_order' => array('title' => $this->l('Order ID'), 'width' => 25, 'align' => 'center'),
+			'id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center'),
 			'name' => array('title' => $this->l('Status'), 'width' => 'auto', 'align' => 'left'),
-			'date_add' => array('title' => $this->l('Date issued'), 'width' => 120, 'type' => 'date', 'align' => 'right'),
+			'date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right'),
  		);
 
 		$this->options = array(
