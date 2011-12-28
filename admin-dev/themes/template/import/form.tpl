@@ -82,7 +82,7 @@
  * Upload fancybox 
  *}
 <div style="display: none">
-	<div id="upload_file_import" style="background-color: #EBEDF4; border: 1px solid #CCCED7">
+	<div id="upload_file_import" style="padding-left: 10px; background-color: #EBEDF4; border: 1px solid #CCCED7">
 		<div class="clear">&nbsp;</div>
 		<form action="{$current}&token={$token}" method="POST" enctype="multipart/form-data">	
 			<label class="clear" style="width:160px; text-align: left;">{l s='Select your CSV file:'} </label>	
