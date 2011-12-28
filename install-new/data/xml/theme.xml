@@ -2,10 +2,12 @@
 <entity_theme>
   <fields id="name" class="Theme">
     <field name="name"/>
+    <field name="directory"/>
   </fields>
   <entities>
     <theme id="default">
       <name>default</name>
+      <directory>default</directory>
     </theme>
   </entities>
 </entity_theme>

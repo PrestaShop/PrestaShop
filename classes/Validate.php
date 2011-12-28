@@ -965,5 +965,17 @@ class ValidateCore
 	{
 		return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
 	}
+
+	/**
+	 * Validate theme directory
+	 * We currently check if the item is a valid theme directory
+	 * 
+	 * @param string $dir 
+	 * @return boolean
+	 */
+	public static function isValidThemeDir($dir)
+	{
+		return ($dir[0] != '.') && is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$dir);
+	}
 }
 

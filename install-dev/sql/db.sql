@@ -1895,6 +1895,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
 CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `id_theme` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
+  `directory` varchar(64) NOT NULL,
   PRIMARY KEY (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
