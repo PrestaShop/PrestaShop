@@ -37,7 +37,7 @@ class OrderInvoiceCore extends ObjectModel
 	public $delivery_number;
 
 	/** @var integer */
-	public $delivery_date;
+	public $delivery_date = '0000-00-00 00:00:00';
 
 	/** @var float */
 	public $total_discount_tax_excl;
@@ -88,7 +88,7 @@ class OrderInvoiceCore extends ObjectModel
 			'id_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'number' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'delivery_number' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'delivery_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'delivery_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'total_discount_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_discount_tax_incl' =>array('type' => self::TYPE_FLOAT),
 			'total_paid_tax_excl' =>	array('type' => self::TYPE_FLOAT),
