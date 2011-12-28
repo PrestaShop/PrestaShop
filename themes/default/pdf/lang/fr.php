@@ -57,6 +57,7 @@ $_LANGPDF['PDF9e023503a19456d31f0760015d035e36'] = 'Merci d\'inscrire votre num�
 $_LANGPDF['PDF67606e3dd25c5effeb991c704b96d19c'] = 'Tous les produits doivent être retournés dans leur emballage d\'origine sans être altéré ou porté.';
 $_LANGPDF['PDF34bfda153cbe51eef5d4a88cdd7b616d'] = 'Merci d\'imprimer ces documents et avoir dans votre paquet.';
 $_LANGPDF['PDFc7711fbc0d8f010e06a306cc63ef5393'] = 'Le paquet devrait être envoyé à l\'adresse suivante:';
+$_LANGPDF['PDF77fd2b4393b379bedd30efcd5df02090'] = 'Remboursement partiel';
 $_LANGPDF['PDF66f6e4bbd0a0af1af6b54763871dd280'] = 'Produits commandés :';
 $_LANGPDF['PDF63d5049791d9d79d86e9a108b0a999ca'] = 'Référence';
 $_LANGPDF['PDFf107f5a9ee4ecea58d0f29ae7959baa8'] = 'Nom';

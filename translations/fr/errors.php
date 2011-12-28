@@ -536,6 +536,7 @@ $_ERRORS['7b8d91a16afd45d19a7b0997a48b901e'] = 'Vous ne pouvez pas désactiver l
 $_ERRORS['55d56a8de1af2dc393f6bf33e873f0b4'] = 'Impossible de charger cette boutique.';
 $_ERRORS['7f0203058c1f7dfd6cb859e0e581eaa0'] = 'Vous ne pouvez pas supprimer cette boutique (dépendance de client et/ou de commande)';
 $_ERRORS['1805109dba8b8a9fa89db3ae20f9d94d'] = 'Vous ne pouvez pas désactiver une URL principale';
+$_ERRORS['e19a64a663a1cc573ae8cd21b2ab1070'] = 'L\'URI virtuelle est déjà utilisée.';
 $_ERRORS['9854c4e9878d5d70f6f61cdd57b1e2ea'] = 'Vous ne pouvez pas changer une URL principale en URL non principale, vous devez enregistrer une autre URL comme URL principale pour la boutique sélectionnée';
 $_ERRORS['8ff6e5612e00baae79fe7a6f081cba32'] = 'Une URL de la boutique qui utilisent ce domaine et uri existe déjà';
 $_ERRORS['28c993bca90a1f5a4510d3a21ca2b705'] = 'Cet état est utilisé';
