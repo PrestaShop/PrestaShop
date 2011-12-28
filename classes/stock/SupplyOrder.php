@@ -444,7 +444,7 @@ class SupplyOrderCore extends ObjectModel
 		$query->where('so.id_supply_order = '.(int)$match.' OR so.reference = "'.pSQL($match).'"');
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-		return ($res > 0);
+		return ((int)$res);
 	}
 
 	/**
