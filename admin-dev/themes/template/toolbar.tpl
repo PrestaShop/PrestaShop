@@ -28,7 +28,7 @@
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
 			<li>
-				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}>
+				<a id="desc-{$table}-{$btn.imgclass|default:$k}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
 					<span class="process-icon-{$btn.imgclass|default:$k} {$btn.class|default:'' }" ></span>
 					<div>{$btn.desc}</div>
 				</a>
