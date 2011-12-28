@@ -119,13 +119,13 @@ class AdminOrdersControllerCore extends AdminController
 				'short' => 'Create',
 				'href' => '',
 				'desc' => $type,
-				'class' => 'process-icon-new standard_refund'
+				'class' => 'process-icon-standardRefund'
 			);
 			$this->toolbar_btn['partial_refund'] = array(
 				'short' => 'Create',
 				'href' => '',
 				'desc' => $this->l('Partial refund'),
-				'class' => 'process-icon-new partial_refund'
+				'class' => 'process-icon-partialRefund'
 			);
 		}
 		return parent::initToolbar();
@@ -1379,7 +1379,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $invoice_collection,
 			'current_id_lang' => Context::getContext()->language->id,
 			'link' => Context::getContext()->link,
-			'current_index' => self::$currentIndex
+			'currentIndex' => self::$currentIndex
 		));
 
 		die(Tools::jsonEncode(array(

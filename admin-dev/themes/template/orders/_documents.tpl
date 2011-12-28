@@ -75,7 +75,7 @@
 		{if !isset($document->is_delivery)}
 	<tr id="invoiceNote{$document->id}" style="display:none" class="current-edit">
 		<td colspan="5">
-			<form action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
+			<form action="{$currentIndex}&viewOrder&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}" method="post">
 				<p>
 					<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
 					<input type="hidden" name="id_order_invoice" value="{$document->id}" />
@@ -94,7 +94,7 @@
 	<tr>
 		<td colspan="5" class="center">
 			<h3>{l s='No document is available'}</h3>
-			<p><a class="button" href="{$currentIndex}&viewOrder&submitGenerateInvoice&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
+			<p><a class="button" href="{$currentIndex}&viewOrder&submitGenerateInvoice&id_order={$order->id}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">{l s='Generate invoice'}</a></p>
 		</td>
 	</tr>
 	{/foreach}
