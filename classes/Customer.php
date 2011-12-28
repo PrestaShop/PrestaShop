@@ -269,7 +269,7 @@ class CustomerCore extends ObjectModel
 				WHERE `active` = 1
 					AND `email` = \''.pSQL($email).'\'
 					'.$shop->addSqlRestriction(Shop::SHARE_CUSTOMER).'
-					'.(isset($passwd) ? 'AND `passwd` = \''.md5(_COOKIE_KEY_.$passwd).'\'' : '').'
+					'.(isset($passwd) ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : '').'
 					AND `deleted` = 0
 					AND `is_guest` = 0';
 		$result = Db::getInstance()->getRow($sql);

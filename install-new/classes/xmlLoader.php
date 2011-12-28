@@ -285,7 +285,15 @@ class InstallXmlLoader
 			}
 
 			$data = $this->rewriteRelationedData($entity, $data);
-			$this->createEntity($entity, $identifier, (string)$xml->fields['class'], $data, $data_lang);
+			if (method_exists($this, 'createEntity'.Tools::toCamelCase($entity)))
+			{
+				// Create entity with custom method in current class
+				$method = 'createEntity'.Tools::toCamelCase($entity);
+				$this->$method($identifier, $data, $data_lang);
+			}
+			else
+				$this->createEntity($entity, $identifier, (string)$xml->fields['class'], $data, $data_lang);
+
 			if ($xml->fields['image'])
 			{
 				if (method_exists($this, 'copyImages'.Tools::toCamelCase($entity)))
@@ -406,13 +414,7 @@ class InstallXmlLoader
 	public function createEntity($entity, $identifier, $classname, array $data, array $data_lang = array())
 	{
 		$xml = $this->loadEntity($entity);
-		if (method_exists($this, 'createEntity'.Tools::toCamelCase($entity)))
-		{
-			// Create entity with custom method in current class
-			$method = 'createEntity'.Tools::toCamelCase($entity);
-			$entity_id = $this->$method($identifier, $data, $data_lang);
-		}
-		else if ($classname)
+		if ($classname)
 		{
 			// Create entity with ObjectModel class
 			$object = new $classname();
@@ -501,7 +503,7 @@ class InstallXmlLoader
 			}
 		}
 
-		return $entity_id;
+		$this->storeId($entity, $identifier, $entity_id);
 	}
 
 	public function generatePrimary($entity, $primary)
