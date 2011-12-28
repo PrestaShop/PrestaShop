@@ -1122,43 +1122,53 @@ class AdminTranslationsControllerCore extends AdminController
 		$classArray = array();
 		$tabs_array = array();
 		$count = 0;
+
 		foreach (scandir(_PS_CLASS_DIR_) as $classFile)
 		{
 			if (!preg_match('/\.php$/', $classFile) OR $classFile == 'index.php')
 				continue;
 			include_once(_PS_CLASS_DIR_.$classFile);
 			$prefix_key = substr($classFile, 0, -4);
-			if (!class_exists($prefix_key, false) && !class_exists($prefix_key.'Core', false))
+			if (!class_exists($prefix_key))
 				continue;
 			if (!is_subclass_of($prefix_key, 'ObjectModel'))
 				continue;
 			$classArray[$prefix_key] = call_user_func(array($prefix_key, 'getValidationRules'), $prefix_key);
-
-			foreach ($classArray as $prefix_key => $rules)
-			{
-				if (isset($rules['validate']))
-					foreach ($rules['validate'] as $key => $value)
-						if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
-							// @todo check key : md5($key) was initially md5(addslashes($key))
-							$tabs_array[$prefix_key][$key] = html_entity_decode($_FIELDS[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');
-						else
-						{
-							$tabs_array[$prefix_key][$key] = '';
-							if (!isset($missing_translations[$prefix_key]))
-								$missing_translations[$prefix_key] = 1;
-							else
-								$missing_translations[$prefix_key]++;
-						}
-				if (isset($rules['validateLang']))
-					foreach ($rules['validateLang'] as $key => $value)
-						$tabs_array[$prefix_key][$key] = array_key_exists($prefix_key.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$prefix_key.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '';
-			}
-			if (isset($classArray[$prefix_key]['validate']))
-				$count += count($classArray[$prefix_key]['validate']);
-			if (isset($classArray[$prefix_key]['validateLang']))
-				$count += count($classArray[$prefix_key]['validateLang']);
 		}
 
+		foreach ($classArray as $prefix_key => $rules)
+		{
+			if (isset($rules['validate']))
+				foreach ($rules['validate'] as $key => $value)
+					if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
+						// @todo check key : md5($key) was initially md5(addslashes($key))
+						$tabs_array[$prefix_key][$key] = html_entity_decode($_FIELDS[$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8');
+					else
+					{
+						$tabs_array[$prefix_key][$key] = '';
+						if (!isset($missing_translations[$prefix_key]))
+							$missing_translations[$prefix_key] = 1;
+						else
+							$missing_translations[$prefix_key]++;
+					}
+			if (isset($rules['validateLang']))
+				foreach ($rules['validateLang'] as $key => $value)
+					if (isset($_FIELDS[$prefix_key.'_'.md5($key)]))
+						$tabs_array[$prefix_key][$key] = array_key_exists($prefix_key.'_'.md5(addslashes($key)), $_FIELDS) ? html_entity_decode($_FIELDS[$prefix_key.'_'.md5(addslashes($key))], ENT_COMPAT, 'UTF-8') : '';
+					else
+					{
+						$tabs_array[$prefix_key][$key] = '';
+						if (!isset($missing_translations[$prefix_key]))
+							$missing_translations[$prefix_key] = 1;
+						else
+							$missing_translations[$prefix_key]++;
+					}
+		}
+
+		if (isset($classArray[$prefix_key]['validate']))
+			$count += count($classArray[$prefix_key]['validate']);
+		if (isset($classArray[$prefix_key]['validateLang']))
+			$count += count($classArray[$prefix_key]['validateLang']);
 		$this->tpl_view_vars = array(
 			'lang' => Tools::strtoupper($lang),
 			'translation_type' => $this->l('Field name translations'),
