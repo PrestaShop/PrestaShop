@@ -204,7 +204,7 @@
 			<fieldset>
 				<legend><img src="../img/admin/money.gif" /> {l s='Payment'}</legend>
 
-				{if !$order->valid}
+				{if (!$order->valid && sizeof($currencies) > 1)}
 				<form method="post" action="{$currentIndex}&viewOrder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}&token={$smarty.get.token|escape:'htmlall':'UTF-8'}">
 					<p class="warn">{l s='Don\'t forget to update your conversion rate before make this change.'}</p>
 					<label>{l s='Change order\'s currency to:'}</label>
