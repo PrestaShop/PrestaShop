@@ -49,6 +49,15 @@ function formatPrice(price)
 	return (Math.round(fixedToSix) == fixedToSix + 0.000001 ? fixedToSix + 0.000001 : fixedToSix);
 }
 
+function calcPrice()
+{
+	var priceType = $('#priceType').val();
+	if (priceType == 'TE')
+		calcPriceTI();
+	else
+		calcPriceTE();
+}
+
 function calcPriceTI()
 {
 	var tax = getTax();
