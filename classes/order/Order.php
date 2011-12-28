@@ -1451,7 +1451,7 @@ class OrderCore extends ObjectModel
 				ON (oc.`id_carrier` = c.`id_carrier`)
 			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl
 				ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)Context::getContext()->language->id.')
-			WHERE o.`id_order` = '.(int)$this->id);
+			WHERE oc.`id_order` = '.(int)$this->id);
 	}
 
 
