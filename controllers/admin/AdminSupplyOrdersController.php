@@ -936,6 +936,18 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$this->_errors[] = Tools::displayError($this->l('You do not have the required permission to add a supply order.'));
 		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->tabAccess['edit'] === '1'))
 			$this->_errors[] = Tools::displayError($this->l('You do not have the required permission to edit an order.'));
+
+		// checks if supply order reference is unique
+		if (Tools::isSubmit('reference'))
+		{
+			$ref = pSQL(Tools::getValue('reference'));
+			if (SupplyOrder::exists($ref))
+				$this->_errors[] = Tools::displayError($this->l('The reference has to be unique.'));
+		}
+
+		if ($this->_errors)
+			return;
+
 		// Global checks when add / update a supply order
 		if (Tools::isSubmit('submitAddsupply_order') || Tools::isSubmit('submitAddsupply_orderAndStay'))
 		{
