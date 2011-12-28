@@ -90,7 +90,7 @@ class AdminCarriersControllerCore extends AdminController
 				),
 				'type' => 'bool',
 				'orderby' => false,
-				'width' => 25
+				'width' => 150
 			),
 			'position' => array(
 				'title' => $this->l('Position'),

@@ -47,7 +47,7 @@ class AdminShopUrlControllerCore extends AdminController
 			),
 			'shop_name' => array(
 				'title' => $this->l('Shop name'),
-				'width' => 70
+				'width' => 150
 			),
 			'domain' => array(
 				'title' => $this->l('Domain'),
@@ -71,7 +71,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'main',
-				'width' => 50,
+				'width' => 100,
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),

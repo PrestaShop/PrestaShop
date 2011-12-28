@@ -2153,3 +2153,34 @@ div#scrollTop a:hover{
 #content #customers .warn {margin:10px 0 0 0;}
 #customers li {background-color:#ABDFF7;border:1px solid #ccc;float:left;margin:5px;padding:5px;}
 #customers li .button {display:block;margin-top:5px;}
+
+
+/*container-customer*/
+#container-customer {
+	background-color:#EBEDF4;
+	border:1px solid #CCCED7;
+	color: #585A69;
+	padding:10px;
+}
+
+#container-customer h2 {
+color:#000;
+font-weight:normal;
+}
+
+#container-customer .info-customer-left {
+	float:left;
+	width:47%;
+	min-height:120px;
+	border-right:1px solid #fff;
+	padding-right:15px;
+}
+
+#container-customer .info-customer-right {
+	float:left;
+	width:49%;
+	border-left:1px solid #ccc;
+	min-height:120px;
+	padding-left:15px;
+
+}
