@@ -79,12 +79,12 @@
 		var curPackItemQty = $('#curPackItemQty').val();
 		if (curPackItemId == '' || curPackItemName == '')
 		{
-			alert(msg_select_one);
+			jAlert(msg_select_one);
 			return false;
 		}
 		else if (curPackItemId == '' || curPackItemQty == '')
 		{
-			alert(msg_set_quantity);
+			jAlert(msg_set_quantity);
 			return false;
 		}
 

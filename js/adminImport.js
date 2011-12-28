@@ -30,7 +30,7 @@ $(document).ready(function(){
 	
 	var newImportMatchs = $('#newImportMatchs').attr('value');
 	if (newImportMatchs == '')
-		alert(errorEmpty);
+		jAlert(errorEmpty);
 	else
 	{
 		var matchFields = '';
@@ -51,7 +51,7 @@ $(document).ready(function(){
 	       },
 	      error: function(XMLHttpRequest, textStatus, errorThrown) 
 	       {
-	       		alert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
+	       		jAlert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
 	       		
 	       }
 	   });
@@ -78,7 +78,7 @@ $(document).ready(function(){
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown) 
 		       {
-		       		alert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
+		       		jAlert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
 		       		
 		       }
 		   });
@@ -102,8 +102,7 @@ $(document).ready(function(){
 		       },
 		      error: function(XMLHttpRequest, textStatus, errorThrown) 
 		       {
-		       		alert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
-		       		
+		       		jAlert('TECHNICAL ERROR Details: '+XMLHttpRequest.responseText);
 		       }
 		   });
 	

@@ -146,7 +146,7 @@
 						},
 						error: function(res,textStatus,jqXHR)
 						{
-							//alert("TECHNICAL ERROR"+res);
+							//jAlert("TECHNICAL ERROR"+res);
 						}
 				});
 			}
@@ -176,7 +176,7 @@
 				},
 				error: function(res,textStatus,jqXHR)
 				{
-					//alert("TECHNICAL ERROR"+res);
+					//jAlert("TECHNICAL ERROR"+res);
 				}
 			});
 		}
@@ -221,7 +221,7 @@
 						},
 						error: function(res,textStatus,jqXHR)
 						{
-							//alert("TECHNICAL ERROR"+res);
+							//jAlert("TECHNICAL ERROR"+res);
 						}
 				});
 			}
@@ -263,7 +263,7 @@
 						},
 						error: function(res,textStatus,jqXHR)
 						{
-							//alert("TECHNICAL ERROR"+res);
+							//jAlert("TECHNICAL ERROR"+res);
 						}
 				});
 			}
