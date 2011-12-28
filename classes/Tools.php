@@ -879,7 +879,7 @@ class ToolsCore
 	*/
 	public static function encrypt($passwd)
 	{
-		return md5(pSQL(_COOKIE_KEY_.$passwd));
+		return md5(_COOKIE_KEY_.$passwd);
 	}
 
 	/**
