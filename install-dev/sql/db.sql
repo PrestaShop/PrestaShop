@@ -2184,7 +2184,7 @@ CREATE TABLE `PREFIX_supply_order` (
   PRIMARY KEY (`id_supply_order`),
   KEY `id_supplier` (`id_supplier`),
   KEY `id_warehouse` (`id_warehouse`),
-  KEY `reference` (`reference`)
+  UNIQUE KEY `reference` (`reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_supply_order_detail` (
