@@ -432,6 +432,7 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * For a given id or reference, tells if the supply order exists
 	 * @param int|string $match
+	 * @return int id
 	 */
 	public static function exists($match)
 	{
@@ -463,6 +464,9 @@ class SupplyOrderCore extends ObjectModel
 		$query->from('supply_order', 'so');
 		$query->where('so.reference = "'.pSQL($match).'"');
 		$id = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+
+		if ($id === false)
+			return false;
 
 		return (new SupplyOrder((int)$id));
 	}
