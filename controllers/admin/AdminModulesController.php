@@ -234,7 +234,7 @@ class AdminModulesControllerCore extends AdminController
 
 		$this->initContent();
 		$this->context->smarty->display('modules/list.tpl');
-		die('OK');
+		exit;
 	}
 
 	public function ajaxProcessSetFilter()

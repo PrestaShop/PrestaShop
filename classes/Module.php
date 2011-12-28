@@ -1050,6 +1050,15 @@ abstract class ModuleCore
 
 		//echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
 
+		// @TODO review
+		function sortModules($a, $b)
+		{
+			if ($a->displayName == $b->displayName)
+				return 0;
+			return ($a->displayName < $b->displayName) ? -1 : 1;
+		}
+		usort($moduleList, "sortModules");
+
 		if ($errors)
 		{
 			echo '<div class="alert error"><h3>'.Tools::displayError('The following module(s) couldn\'t be loaded').':</h3><ol>';
