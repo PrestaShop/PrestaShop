@@ -85,6 +85,7 @@ class AdminStockManagementControllerCore extends AdminController
 	 */
 	public function renderList()
 	{
+		// sets actions
 		$this->addRowAction('details');
 		$this->addRowAction('addstock');
 		$this->addRowAction('removestock');
@@ -93,12 +94,15 @@ class AdminStockManagementControllerCore extends AdminController
 		// no link on list rows
 		$this->list_no_link = true;
 
+		// inits toolbar
 		$this->toolbar_btn = array();
 
+		// overrides query
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)';
 		$this->_where = 'AND a.cache_is_pack = 0 AND a.is_virtual = 0';
 
+		// displays informations
 		$this->displayInformation($this->l('This interface allows you to manage the stocks of each of your products and their variations.').'<br />');
 		$this->displayInformation($this->l('Through this interface, you can increase quantities (add) and decrease quantities (delete) of products for a given warehouse.'));
 		$this->displayInformation($this->l('Furthermore, you can move quantities (transfer) of products between warehouses, or within one warehouse.').'<br />');
@@ -113,6 +117,7 @@ class AdminStockManagementControllerCore extends AdminController
 	 */
 	public function renderForm()
 	{
+		// gets the product
 		$id_product = (int)Tools::getValue('id_product');
 		$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 
@@ -120,11 +125,27 @@ class AdminStockManagementControllerCore extends AdminController
 		$warehouses_add = Warehouse::getWarehouses(true);
 		$warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
 
+		// gets the currencies
 		$currencies = Currency::getCurrencies();
 
+		// switch, in order to display the form corresponding to the current action
 		switch ($this->display)
 		{
 			case 'addstock' :
+				// gets the last stock mvt for this product, so we can display the last unit price te and the last quantity added
+				$last_sm_unit_price_te = $this->l('N/A');
+				$last_sm_quantity = $this->l('N/A');
+				$last_sm = StockMvt::getLastPositiveStockMvt($id_product, $id_product_attribute);
+				if ($last_sm !== false)
+				{
+					$last_sm_currency = new Currency((int)$last_sm['id_currency']);
+					$last_sm_quantity = (int)$last_sm['physical_quantity'];
+					$last_sm_quantity_is_usable = (int)$last_sm['is_usable'];
+					if (Validate::isLoadedObject($last_sm_currency))
+						$last_sm_unit_price_te = Tools::displayPrice((float)$last_sm['price_te'], $last_sm_currency);
+				}
+
+				// fields in the form
 				$this->fields_form[]['form'] = array(
 					'legend' => array(
 						'title' => $this->l('Add product to stock'),
@@ -189,7 +210,11 @@ class AdminStockManagementControllerCore extends AdminController
 							'size' => 10,
 							'maxlength' => 6,
 							'required' => true,
-							'desc' => $this->l('Physical quantity to add')
+							'desc' => $this->l('Physical quantity to add'),
+							'hint' => sprintf(
+										$this->l('Last physical quantity added : %s (%s)'),
+										$last_sm_quantity,
+										($last_sm_quantity_is_usable === 1 ? $this->l('usable') : $this->l('not usable'))),
 						),
 						array(
 							'type' => 'radio',
@@ -231,7 +256,8 @@ class AdminStockManagementControllerCore extends AdminController
 							'required' => true,
 							'size' => 10,
 							'maxlength' => 10,
-							'desc' => $this->l('Unit purchase price or unit manufacturing cost for this product, tax excluded')
+							'desc' => $this->l('Unit purchase price or unit manufacturing cost for this product, tax excluded'),
+							'hint' => sprintf($this->l('Last unit price (te) : %s'), $last_sm_unit_price_te),
 						),
 						array(
 							'type' => 'select',
@@ -265,6 +291,7 @@ class AdminStockManagementControllerCore extends AdminController
 						'class' => 'button'
 					)
 				);
+				$this->fields_value['usable'] = 1;
 			break;
 
 			case 'removestock' :
@@ -995,7 +1022,7 @@ class AdminStockManagementControllerCore extends AdminController
 						'check' => md5(_COOKIE_KEY_.$id_product.$id_product_attribute),
 						'quantity' => Tools::getValue('quantity', ''),
 						'id_warehouse' => Tools::getValue('id_warehouse', ''),
-						'usable' => Tools::getValue('usable', ''),
+						'usable' => ($this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', '')),
 						'price' => Tools::getValue('price', ''),
 						'id_currency' => Tools::getValue('id_currency', ''),
 						'id_stock_mvt_reason' => Tools::getValue('id_stock_mvt_reason', ''),
