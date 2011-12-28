@@ -941,7 +941,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('reference'))
 		{
 			$ref = pSQL(Tools::getValue('reference'));
-			if (SupplyOrder::exists($ref))
+			if ((int)SupplyOrder::exists($ref) != (int)Tools::getValue('id_supply_order'))
 				$this->_errors[] = Tools::displayError($this->l('The reference has to be unique.'));
 		}
 
