@@ -83,7 +83,8 @@ class AdminImportControllerCore extends AdminController
 			$this->l('Customers'),
 			$this->l('Addresses'),
 			$this->l('Manufacturers'),
-			$this->l('Suppliers')
+			$this->l('Suppliers'),
+			$this->l('Supply Orders'),
 		));
 
 		switch ((int)Tools::getValue('entity'))
@@ -338,6 +339,33 @@ class AdminImportControllerCore extends AdminController
 					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
 				);
 			break;
+			// @since 1.5.0
+			case $this->entities[$this->l('Supply Orders')]:
+				// required fields
+				$this->required_fields = array(
+					'id_supplier',
+					'id_warehouse',
+					'reference',
+					'date_delivery_expected',
+				);
+				// available fields
+				$this->available_fields = array(
+					'no' => array('label' => $this->l('Ignore this column')),
+					'id' => array('label' => $this->l('ID')),
+					'id_supplier' => array('label' => $this->l('Supplier ID *')),
+					'id_lang' => array('label' => $this->l('Lang ID')),
+					'id_warehouse' => array('label' => $this->l('Warehouse ID *')),
+					'id_currency' => array('label' => $this->l('Currency ID *')),
+					'reference' => array('label' => $this->l('Supply Order Reference *')),
+					'date_delivery_expected' => array('label' => $this->l('Delivery Date (Y-M-D)*')),
+					'discount_rate' => array('label' => $this->l('Discount Rate')),
+				);
+				// default values
+				self::$default_values = array(
+					'id_lang' => (int)Configuration::get('PS_LANG_DEFAULT'),
+					'id_currency' => Currency::getDefaultCurrency()->id,
+					'discount_rate' => '0',
+				);
 		}
 
 		parent::__construct();

@@ -71,51 +71,77 @@
 			}
 		});
 	};
-
 </script>
 
-<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; height: 160px;width: 666px;">
-	<legend><img src="../img/admin/import.gif" />{l s='Upload'}</legend>
-	<form action="{$current}&token={$token}" method="POST" enctype="multipart/form-data">
-		<label class="clear">{l s='Select a file:'} </label>
-		<div class="margin-form">
-			<input name="file" type="file" /><br />{l s='You can also upload your file by FTP and put it in'} {$path_import}.
-		</div>
-		<div class="margin-form">
-			<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="button" />
-		</div>
-		<div class="margin-form">
-			{l s='Allowed files are only UTF-8 and iso-8859-1 encoded ones'}
-		</div>
-	</form>
-</fieldset>
-
+{** 
+ * Samples fieldset 
+ *}
 <fieldset>
 	<legend><img src="../img/admin/excel_file.png">{l s='Sample files'}</legend>
-		<ul style="">
-			<li style="text-decoration: underline"><a href="../docs/csv_import/categories_import.csv">{l s='Categories sample file'}</a></li>
-			<li style="text-decoration: underline"><a href="../docs/csv_import/products_import.csv">{l s='Products sample file'}</a></li>
-			<li style="text-decoration: underline"><a href="../docs/csv_import/combinations_import.csv">{l s='Combinations sample file'}</a></li>
-			<li style="text-decoration: underline"><a href="../docs/csv_import/customers_import.csv">{l s='Customers sample file'}</a></li>
-			<li style="text-decoration: underline"><a href="../docs/csv_import/addresses_import.csv">{l s='Addresses sample file'}</a></li>
-			<li style="text-decoration: underline"><a href="../docs/csv_import/manufacturers_import.csv">{l s='Manufacturers sample file'}</a></li>
-			<li style="text-decoration: underline"><a href="../docs/csv_import/suppliers_import.csv">{l s='Suppliers sample file'}</a></li>
+		<a href="#" onClick="$('#sample_files_import').slideToggle();">{l s='Click here to view the samples.'}</a>
+		<div>&nbsp;</div>
+		<ul id="sample_files_import" style="display:none;">
+			<li><a href="../docs/csv_import/categories_import.csv">{l s='Categories sample file'}</a></li>
+			<li><a href="../docs/csv_import/products_import.csv">{l s='Products sample file'}</a></li>
+			<li><a href="../docs/csv_import/combinations_import.csv">{l s='Combinations sample file'}</a></li>
+			<li><a href="../docs/csv_import/customers_import.csv">{l s='Customers sample file'}</a></li>
+			<li><a href="../docs/csv_import/addresses_import.csv">{l s='Addresses sample file'}</a></li>
+			<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Manufacturers sample file'}</a></li>
+			<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Suppliers sample file'}</a></li>
+			<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
 		</ul>
+</fieldset>
+
+<div>&nbsp;</div>
+
+{** 
+ * Upload fieldset 
+ *}
+<fieldset>
+	<legend><img src="../img/admin/import.gif" />{l s='Upload'}</legend>
+	<a href="#" onClick="$('#upload_file_import').slideToggle();">
+		{l s='You can either click here to upload your own CSV file, or choose to use an existing one in the form below.'}
+	</a>
+	<div>&nbsp;</div>
+	<div id="upload_file_import" style="display: none;">
+		<form action="{$current}&token={$token}" method="POST" enctype="multipart/form-data">
+			
+			<label class="clear" style="width:160px; text-align: left;">{l s='Select your CSV file:'} </label>	
+			<div class="margin-form" style="padding-left:190px;">
+				<input name="file" type="file" />
+				<p class="preference_description">
+					{l s='You can also upload your file via FTP in the following directory:'} {$path_import}.
+				</p>
+			</div>
+			
+			<div class="margin-form" style="padding-left:190px;">
+				<input type="submit" name="submitFileUpload" value="{l s='Upload'}" class="button" />
+				<p class="preference_description">
+					{l s='Allowed files are only UTF-8 and iso-8859-1 encoded ones'}
+				</p>
+			</div>
+			
+		</form>
+	</div>	
 </fieldset>
 
 <div class="clear">&nbsp;</div>
 
+{** 
+ * Import fieldset 
+ *}
 <form id="preview_import"
 	action="{$current}&token={$token}"
 	method="post"
 	style="display:inline"
 	enctype="multipart/form-data"
 	class="clear">
-	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 666px;">
+	
+	<fieldset style="float: left; margin: 0pt 20px 0pt 0pt; width: 70%;">
 		<legend><img src="../img/admin/import.gif" />{l s='Import'}</legend>
-		<label class="clear">{l s='Select which entity to import:'} </label>
+		<label class="clear">{l s='What kind of Entity would you like to import ?'} </label>
 		<div class="margin-form">
-			<select name="entity" id="entity">';
+			<select name="entity" id="entity">
 				{foreach $entities AS $entity => $i}
 					<option value="{$i}"
 						{if $entity == $i}selected="selected"{/if}>
@@ -126,24 +152,26 @@
 		</div>
 
 		{if count($files_to_import)}
-			<label class="clear">{l s='Select your .CSV file:'} </label>
+			<label class="clear">{l s='Your CSV file'} ({count($files_to_import)} {if count($files_to_import) > 1} {l s='files'}{else}{l s='file'}{/if}{l s='):'}</label>
 			<div class="margin-form">
 				<select name="csv">
 					{foreach $files_to_import AS $filename}
 						<option value="{$filename}">{$filename}</option>
 					{/foreach}
 				</select>
-				({count($files_to_import)} {if count($files_to_import) > 1} {l s='files available'}{else}{l s='file available'}{/if})
 			</div>
-			<label class="clear">{l s='Select language of the file (the locale must be installed):'} </label>
+			<br />
+				
+			<label class="clear">{l s='Language of the file:'}</label>
 			<div class="margin-form">
-				<select name="iso_lang">';
+				<select name="iso_lang">
 					{foreach $languages AS $lang}
 						<option value="{$lang.iso_code}" {if $lang.id_lang == $id_language} selected="selected"{/if}>{$lang.name}</option>
 					{/foreach}
 				</select>
+				{l s='The locale must be installed'}
 			</div>
-			<label for="convert" class="clear">{l s='iso-8859-1 encoded file:'} </label>
+			<label for="convert" class="clear">{l s='iso-8859-1 encoded file?'} </label>
 			<div class="margin-form">
 				<input name="convert" id="convert" type="checkbox" style="margin-top: 6px;"/>
 			</div>
@@ -168,28 +196,28 @@
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button"/>
 			</div>
-			<div class="warn">
-				<p>{l s='Note that the category import does not support categories of the same name'}.</p>
-
-				<p>{l s='Note that references are not specified as UNIQUE in the database'}.</p>
+			<div class="warn import_products_categories" style="margin-top: 20px">
+				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
+				<p>{l s='Note that you can have serveral products with the same reference.'}</p>
 			</div>
 		{else}
-			<div class="warn">
-				{l s='No CSV file is available, please upload one file above.'}<br /><br />
-				{l s='You can get many informations about CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a><br /><br />
-				{l s='More about CSV format at: '} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+			<div class="warn" style="margin-top: 20px">
+				{l s='There is no CSV file available, please upload one using the form above.'}
+				<br /><br />
+				{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a><br /><br />
+				{l s='Read more about CSV format at: '} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
 			</div>
 		{/if}
 	</fieldset>
 </form>
 
-<fieldset>
+<fieldset style="display:block;">
 
 	<legend>
 		<img src="../img/admin/import.gif" />{l s='Fields available'}
 	</legend>
 
-	<div id="availableFields" style="min-height: 218px; width: 300px;">
+	<div id="availableFields">
 		{$available_fields}
 	</div>
 
@@ -204,15 +232,26 @@
 <script type="text/javascript">
 	$("select#entity").change( function() {
 
-		if ($("#entity > option:selected").val() != 1)
+		if ($("#entity > option:selected").val() == 7)
 		{
-			$("label[for=match_ref],#match_ref").hide();
+			$("label[for=truncate],#truncate").hide();
 		}
+		else
+			$("label[for=truncate],#truncate").show();
 
 		if ($("#entity > option:selected").val() == 1)
 		{
 			$("label[for=match_ref],#match_ref").show();
 		}
+		else
+			$("label[for=match_ref],#match_ref").hide();
+
+		if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 0)
+		{
+			$(".import_products_categories").show();
+		}
+		else
+			$(".import_products_categories").hide();
 
 		$("#entitie").html($("#entity > option:selected").text().toLowerCase());
 		$.getJSON("ajax.php",
