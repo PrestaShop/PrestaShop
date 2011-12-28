@@ -182,7 +182,7 @@ class AdminSpecificPriceRuleController extends AdminController
 					'size' => 6,
 					'maxlength' => 10,
 					'value' => '1',
-					'required' => true
+					'required' => true,
 				),
 				array(
 					'type' => 'text',
