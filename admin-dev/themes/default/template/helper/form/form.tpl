@@ -163,15 +163,28 @@
 											{/foreach}
 										{else}
 											{foreach $input.options.query AS $option}
-												<option value="{$option[$input.options.id]}"
-													{if isset($input.multiple)}
-														{foreach $fields_value[$input.name] as $field_value}
-															{if $field_value == $option[$input.options.id]}selected="selected"{/if}
-														{/foreach}
-													{else}
-														{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
-													{/if}
-												>{$option[$input.options.name]}</option>
+												{if is_object($option)}
+													<option value="{$option->$input.options.id}"
+														{if isset($input.multiple)}
+															{foreach $fields_value[$input.name] as $field_value}
+																{if $field_value == $option->$input.options.id}selected="selected"{/if}
+															{/foreach}
+														{else}
+															{if $fields_value[$input.name] == $option->$input.options.id}selected="selected"{/if}
+														{/if}
+													>{$option->$input.options.name}</option>
+												{else}
+													<option value="{$option[$input.options.id]}"
+														{if isset($input.multiple)}
+															{foreach $fields_value[$input.name] as $field_value}
+																{if $field_value == $option[$input.options.id]}selected="selected"{/if}
+															{/foreach}
+														{else}
+															{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
+														{/if}
+													>{$option[$input.options.name]}</option>
+
+												{/if}
 											{/foreach}
 										{/if}
 									</select>
