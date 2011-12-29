@@ -909,7 +909,7 @@
 	<p>
 		<label>{l s='Search a voucher:'} </label>
 		<input type="text" id="voucher" value="" />
-		<a class="fancybox button" href="{$link->getAdminLink('AdminDiscounts')}&adddiscount&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
+		<a class="fancybox button" href="{$link->getAdminLink('AdminCartRules')}&addcart_rule&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/>{l s='Add new voucher'}</a>
 	</p>
 	<div class="margin-form">
 		<table cellspacing="0" cellpadding="0" class="table" id="voucher_list">
