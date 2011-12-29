@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,40 +26,84 @@
 */
 
 /**
- * @deprecated 1.5.0 This file is deprecated, use moduleController instead
+ * @since 1.5.0
  */
-
-require_once(dirname(__FILE__).'/../../config/config.inc.php');
-require_once(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/FavoriteProduct.php');
-
-if (Tools::getValue('action') AND Tools::getValue('id_product') AND Context::getContext()->cookie->id_customer)
+class ModuleFavoriteproductsController extends ModuleController
 {
-	if (Tools::getValue('action') == 'remove')
+	/**
+	 * @var int
+	 */
+	public $id_product;
+
+	public function init()
+	{
+		parent::init();
+
+		require_once(dirname(__FILE__).'/FavoriteProduct.php');
+		$this->id_product = (int)Tools::getValue('id_product');
+	}
+
+	public function postProcess()
+	{
+		if ($this->process == 'remove')
+			$this->processRemove();
+		else if ($this->process == 'add')
+			$this->processAdd();
+	}
+
+	/**
+	 * Remove a favorite product
+	 */
+	public function processRemove()
 	{
 		// check if product exists
-		$product = new Product((int)Tools::getValue('id_product'));
+		$product = new Product($this->id_product);
 		if (!Validate::isLoadedObject($product))
 			die('0');
+
 		$favoriteProduct = FavoriteProduct::getFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id);
-		if ($favoriteProduct)
-			if ($favoriteProduct->delete())
-				die('0');
+		if ($favoriteProduct && $favoriteProduct->delete())
+			die('0');
+		die(1);
 	}
-	elseif (Tools::getValue('action') == 'add')
+
+	/**
+	 * Add a favorite product
+	 */
+	public function processAdd()
 	{
-		$product = new Product((int)Tools::getValue('id_product'));
+		$product = new Product($this->id_product);
 		// check if product exists
 		if (!Validate::isLoadedObject($product) || FavoriteProduct::isCustomerFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id))
 			die('1');
 		$favoriteProduct = new FavoriteProduct();
 		$favoriteProduct->id_product = $product->id;
 		$favoriteProduct->id_customer = (int)Context::getContext()->cookie->id_customer;
-		$favoriteProduct->id_shop = (int)Context::getContext()->shop->getID();
+		$favoriteProduct->id_shop = (int)Context::getContext()->shop->getID(true);
 		if ($favoriteProduct->add())
 			die('0');
+		die(1);
+	}
+
+	public function initContent()
+	{
+		parent::initContent();
+		if ($this->process == 'account')
+			$this->assignAccount();
+	}
+
+	/**
+	 * Prepare account page
+	 */
+	public function assignAccount()
+	{
+		if (!Context::getContext()->customer->isLogged())
+			Tools::redirect('index.php?controller=auth&redirect=module&module=favoriteproducts&action=account');
+
+		if (Context::getContext()->customer->id)
+		{
+			$this->context->smarty->assign('favoriteProducts', FavoriteProduct::getFavoriteProducts((int)Context::getContext()->customer->id, (int)Context::getContext()->language->id));
+			$this->setTemplate('favoriteproducts-account.tpl');
+		}
 	}
 }
-
-die('1');
-

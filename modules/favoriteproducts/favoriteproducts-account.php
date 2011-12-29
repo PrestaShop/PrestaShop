@@ -25,26 +25,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @deprecated 1.5.0 This file is deprecated, use moduleController instead
+ */
+
 /* SSL Management */
 $useSSL = true;
 
-require_once(dirname(__FILE__).'/../../config/config.inc.php');
-require_once(dirname(__FILE__).'/../../init.php');
+require('../../config/config.inc.php');
+Tools::displayFileAsDeprecated();
 
-require_once(dirname(__FILE__).'/FavoriteProduct.php');
-require_once(dirname(__FILE__).'/favoriteproducts.php');
+// init front controller in order to use Tools::redirect
+$controller = new FrontController();
+$controller->init();
 
-if (!Context::getContext()->customer->isLogged())
-	Tools::redirect('authentication.php?back=modules/favoriteproducts/favoriteproducts.php');
-
-include(dirname(__FILE__).'/../../header.php');
-
-if ((int)Context::getContext()->customer->id)
-{
-	$smarty->assign('favoriteProducts', FavoriteProduct::getFavoriteProducts((int)Context::getContext()->customer->id, (int)Context::getContext()->language->id));
-
-	$favoriteproducts = new FavoriteProducts();
-	echo $favoriteproducts->display(dirname(__FILE__).'/favoriteproducts.php', 'favoriteproducts-account.tpl');
-}
-
-include(dirname(__FILE__).'/../../footer.php');
+Tools::redirect('index.php?controller=module&module=favoriteproducts&process=account');

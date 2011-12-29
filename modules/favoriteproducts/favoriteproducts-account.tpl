@@ -25,21 +25,25 @@
 *}
 
 <script type="text/javascript">
-{literal}
-$('documnet').ready(function(){
-	$('img[rel^=ajax_id_favoriteproduct_]').click(function(){
-		
+$('document').ready(function()
+{
+	$('img[rel^=ajax_id_favoriteproduct_]').click(function()
+	{
 		var idFavoriteProduct =  $(this).attr('rel').replace('ajax_id_favoriteproduct_', '');
 		var parent = $(this).parent().parent(); 
 		
 		$.ajax({
-			url: "favoriteproducts-ajax.php",
-			post: "POST",
-			data: "id_product=" + idFavoriteProduct + "&action=remove",
-			success: function(result){
+			url: "{$link->getModuleLink('favoriteproducts', 'remove')}",
+			type: "POST",
+			data: {
+				'id_product': idFavoriteProduct
+			},
+			success: function(result)
+			{
 				if (result == '0')
 				{
-					parent.fadeOut("normal", function() {
+					parent.fadeOut("normal", function()
+					{
 						parent.remove();
 					});
 				}
@@ -47,7 +51,6 @@ $('documnet').ready(function(){
 		});
 	});
 });
-{/literal}
 </script>
 
 {capture name=path}<a href="{$link->getPageLink('my-account.php', true)}">{l s='My account' mod='favoriteproducts'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My favorite products' mod='favoriteproducts'}{/capture}
