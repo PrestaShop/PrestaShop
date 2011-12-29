@@ -1,5 +1,5 @@
 {*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -32,12 +32,14 @@
 			}
 		});
 	});*/
-	
+
 	$(function(){
 		$('input[@type=radio].star').rating();
-		$('.auto-submit-star').rating(callback: function(value, link));
+		$('.auto-submit-star').rating({
+			callback: function(value, link) {}
+		});
 	});
-		
+
 	//close  comment form
 	function closeCommentForm(){
 		$('#sendComment').slideUp('fast');
@@ -53,23 +55,23 @@
 				'warningNumber': 40,
 				'displayFormat': '#left'
 			};
-		
+
 		$('#commentContent').textareaCount(limitInputText);
-		
+
 		$('#new_comment_btn').fancybox({
 			'hideOnContentClick': false,
 			'onClosed': function(){
 			},
 		});
-	
+
 		$('a[href=#idTab5]').click(function(){
 			$('*[id^="idTab"]').addClass('block_hidden_only_for_screen');
 			$('div#idTab5').removeClass('block_hidden_only_for_screen');
-			
+
 			$('ul#more_info_tabs a[href^="#idTab"]').removeClass('selected');
 			$('a[href="#idTab5"]').addClass('selected');
 		});
-		
+
 		$('#submitMessage').click(function(){
 			var datas = [];
 			$('#fancybox-content').find('input, textarea, select').each(function(index){
@@ -88,7 +90,7 @@
 	 		 	}
 			});
 		});
-		
+
 		$('#submitNewMessage').click(function(){
 			var datas = [];
 			$('#fancybox-content').find('input, textarea, select').each(function(index){
@@ -106,7 +108,7 @@
 					$.fancybox.close();
 	 		 	}
 			});
-		});		
+		});
 	});
 </script>
 {/literal}
@@ -126,7 +128,7 @@
 		</div>
 	</div>
 	{/if}
-	
+
 	<div class="comments_advices">
 		{if $nbComments != 0}
 		<a href="#idTab5">{l s='Read user reviews' mod='productcomments'} ({$nbComments})</a><br/>
@@ -145,7 +147,7 @@
 					{$product->description_short}
 				</div>
 			</div>
-			
+
 			<div class="new_comment_form_content">
 				<p class="intro_form">{l s='Write your review' mod='productcomments'}</p>
 				{if $criterions|@count > 0}
