@@ -27,21 +27,21 @@
 
 class MenuTopLinks
 {
-  public static function gets($id_lang, $id_link = null, $id_shop)
+  public static function gets($id_lang, $id_linksmenutop = null, $id_shop)
   {
     return Db::getInstance()->executeS('
-    SELECT l.id_link, l.new_window, l.link, ll.label 
+    SELECT l.id_linksmenutop, l.new_window, l.link, ll.label 
     FROM '._DB_PREFIX_.'linksmenutop l 
-    LEFT JOIN '._DB_PREFIX_.'linksmenutop_lang ll ON (l.id_link = ll.id_link AND ll.id_lang = '.(int)$id_lang.' AND ll.id_shop='.(int)$id_shop.')
+    LEFT JOIN '._DB_PREFIX_.'linksmenutop_lang ll ON (l.id_linksmenutop = ll.id_linksmenutop AND ll.id_lang = '.(int)$id_lang.' AND ll.id_shop='.(int)$id_shop.')
     WHERE 1
-    '.((!is_null($id_link)) ? ' AND l.id_link = "'.(int)$id_link.'"' : '').'
+    '.((!is_null($id_linksmenutop)) ? ' AND l.id_linksmenutop = "'.(int)$id_linksmenutop.'"' : '').'
     AND l.id_shop IN (0, '.(int)$id_shop.')
     ');
   }
 
-  public static function get($id_link, $id_lang, $id_shop)
+  public static function get($id_linksmenutop, $id_lang, $id_shop)
   {
-    return self::gets($id_lang, $id_link, $id_shop);
+    return self::gets($id_lang, $id_linksmenutop, $id_shop);
   }
 
   public static function add($link, $label, $newWindow = 0, $id_shop)
@@ -58,13 +58,13 @@ class MenuTopLinks
       ),
       'INSERT'
     );
-    $id_link = Db::getInstance()->Insert_ID();
+    $id_linksmenutop = Db::getInstance()->Insert_ID();
     foreach($label as $id_lang=>$label)
     {
       Db::getInstance()->autoExecute(
         _DB_PREFIX_.'linksmenutop_lang',
         array(
-          'id_link'=>(int)$id_link,
+          'id_linksmenutop'=>(int)$id_linksmenutop,
           'id_lang'=>(int)$id_lang,
           'id_shop'=>(int)$id_shop,
           'label'=>pSQL($label)
@@ -74,10 +74,10 @@ class MenuTopLinks
     }
   }
 
-  public static function remove($id_link, $id_shop)
+  public static function remove($id_linksmenutop, $id_shop)
   {
-    Db::getInstance()->delete(_DB_PREFIX_.'linksmenutop', 'id_link = '.(int)$id_link.' AND id_shop = '.(int)$id_shop);
-    Db::getInstance()->delete(_DB_PREFIX_.'linksmenutop_lang', 'id_link = '.(int)$id_link);
+    Db::getInstance()->delete(_DB_PREFIX_.'linksmenutop', 'id_linksmenutop = '.(int)$id_linksmenutop.' AND id_shop = '.(int)$id_shop);
+    Db::getInstance()->delete(_DB_PREFIX_.'linksmenutop_lang', 'id_linksmenutop = '.(int)$id_linksmenutop);
   }
 }
 ?>
