@@ -77,6 +77,10 @@ class TabCore extends ObjectModel
 	public function add($autodate = true, $null_values = false)
 	{
 		$this->position = self::getNewLastPosition($this->id_parent);
+		// if you don't precise active or not, automatically set it
+		if (is_null($this->active))
+			$this->active = 1;
+
 		if (parent::add($autodate, $null_values))
 		{
 			// refresh cache when adding new tab
