@@ -526,6 +526,8 @@ class ThemeInstallator extends Module
 		}
 		$theme = new Theme();
 		$theme->name = (string)$this->xml['name'];
+		// temporary fix
+		$theme->directory = $theme->name;
 		$theme->add();
 		
 		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages((int)$theme->id))
