@@ -345,8 +345,8 @@ class AdminGroupsControllerCore extends AdminController
 		else
 		{
 			$this->updateCategoryReduction();
-			$this->updateRestrictions();
 			parent::processSave($token);
+			$this->updateRestrictions();
 		}
 	}
 

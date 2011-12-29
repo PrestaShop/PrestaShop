@@ -262,7 +262,7 @@ class GroupCore extends ObjectModel
 					$sql .= '("'.(int)$mod.'", "'.(int)$s.'", "'.(int)$id_group.'"),';
 			// removing last comma to avoid SQL error
 			$sql = substr($sql, 0, strlen($sql) - 1);
-			Db::getInstance()->execute($sql);
+			return (bool)Db::getInstance()->execute($sql);
 		}
 	}
 
