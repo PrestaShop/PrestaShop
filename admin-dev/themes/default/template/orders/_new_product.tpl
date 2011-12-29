@@ -1,3 +1,6 @@
+<<<<<<< .mine
+<tr id="new_product" height="52" style="display:none;background-color:#e9f1f6;">
+=======
 {*
 * 2007-2011 PrestaShop
 *
@@ -62,7 +65,7 @@
 		<input type="button" class="button" id="submitAddProduct" value="{l s='Add product'}" disabled="disabled" />
 	</td>
 </tr>
-<tr id="new_invoice" style="display:none;background-color:#E8EDC2">
+<tr id="new_invoice" style="display:none;background-color:#e9f1f6;">
 	<td colspan="10">
 		<h3>{l s='New invoice informations'}</h3>
 		<label>{l s='Carrier:'}</label>
