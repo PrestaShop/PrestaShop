@@ -27,44 +27,30 @@
 
 class FavoriteProduct extends ObjectModel
 {
-	public		$id;
+	public $id;
 
-	public 		$id_product;
+	public $id_product;
 
-	public 		$id_customer;
+	public $id_customer;
 
-	public 		$id_shop;
+	public $id_shop;
 
-	public 		$date_add;
+	public $date_add;
 
-	public 		$date_upd;
+	public $date_upd;
 
-	protected 	$fieldRequired = array(
-		'id_product',
-		'id_customer',
-		'id_shop'
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'favorite_product',
+		'primary' => 'id_favorite_product',
+		'fields' => array(
+			'id_product' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'id_customer' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'id_shop' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+		),
 	);
-
-	protected 	$fieldsValidate = array(
-		'id_product' => 'isUnsignedInt',
-		'id_customer' => 'isUnsignedInt',
-		'id_shop' => 'isUnsignedInt'
-	);
-
-	protected $table = 'favorite_product';
-
-	protected $identifier = 'id_favorite_product';
-
-	public function getFields()
-	{
-		$this->validateFields();
-
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_customer'] = (int)$this->id_customer;
-		$fields['id_shop'] = (int)$this->id_shop;
-
-		return $fields;
-	}
 
 	public static function getFavoriteProducts($id_customer, $id_lang, Shop $shop = null)
 	{

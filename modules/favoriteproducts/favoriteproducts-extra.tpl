@@ -25,13 +25,14 @@
 *}
 
 <script type="text/javascript">
-{literal}
 $('document').ready(function(){
 	$('#favoriteproducts_block_extra_add').click(function(){
 		$.ajax({
-			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
-			post: "POST",
-			{/literal}data: "id_product={$smarty.get.id_product}&action=add",{literal}
+			url: "{$link->getModuleLink('favoriteproducts', 'add')}",
+			type: "POST",
+			data: {
+				"id_product": {$smarty.get.id_product}
+			},
 			success: function(result){
 				if (result == '0')
 				{
@@ -45,54 +46,59 @@ $('document').ready(function(){
 	});
 	$('#favoriteproducts_block_extra_remove').click(function(){
 		$.ajax({
-			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
-			post: "POST",
-			{/literal}data: "id_product={$smarty.get.id_product}&action=remove",{literal}
+			url: "{$link->getModuleLink('favoriteproducts', 'remove')}",
+			type: "POST",
+			data: {
+				"id_product": {$smarty.get.id_product}
+			},
 			success: function(result){
 				if (result == '0')
 				{
 			    	$('#favoriteproducts_block_extra_remove').slideUp(function() {
 			    		$('#favoriteproducts_block_extra_removed').slideDown("slow");
 			    	});
-			    	
+
 				}
 		 	}
 		});
 	});
 	$('#favoriteproducts_block_extra_added').click(function(){
 		$.ajax({
-			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
-			post: "POST",
-			{/literal}data: "id_product={$smarty.get.id_product}&action=remove",{literal}
+			url: "{$link->getModuleLink('favoriteproducts', 'remove')}",
+			type: "POST",
+			data: {
+				"id_product": {$smarty.get.id_product}
+			},
 			success: function(result){
 				if (result == '0')
 				{
 			    	$('#favoriteproducts_block_extra_added').slideUp(function() {
 			    		$('#favoriteproducts_block_extra_removed').slideDown("slow");
 			    	});
-			    	
+
 				}
 		 	}
 		});
 	});
 	$('#favoriteproducts_block_extra_removed').click(function(){
 		$.ajax({
-			{/literal}url: "{$module_dir}favoriteproducts-ajax.php",{literal}
-			post: "POST",
-			{/literal}data: "id_product={$smarty.get.id_product}&action=add",{literal}
+			url: "{$link->getModuleLink('favoriteproducts', 'add')}",
+			type: "POST",
+			data: {
+				"id_product": {$smarty.get.id_product}
+			},
 			success: function(result){
 				if (result == '0')
 				{
 			    	$('#favoriteproducts_block_extra_removed').slideUp(function() {
 			    		$('#favoriteproducts_block_extra_added').slideDown("slow");
 			    	});
-			    	
+
 				}
 		 	}
 		});
 	});
 })
-{/literal}
 </script>
 
 {if !$isCustomerFavoriteProduct AND $isLogged}

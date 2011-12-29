@@ -90,7 +90,7 @@ class FavoriteProducts extends Module
 		return $this->hookDisplayCustomerAccount($params);
 	}
 
-	public function hookDisplayaLeftColumnProduct($params)
+	public function hookDisplayLeftColumnProduct($params)
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
 
