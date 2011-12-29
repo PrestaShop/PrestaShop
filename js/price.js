@@ -70,8 +70,8 @@ function calcPriceTI()
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(priceTE) == true || priceTE < 0) ? '' :
 		(ps_round(priceTE, 2) + getEcotaxTaxExcluded()).toFixed(2);
 	calcReduction();
-	document.getElementById('priceTI').value = (parseFloat(document.getElementById('priceTI').value) + getEcotaxTaxIncluded()).toFixed(2);
-	document.getElementById('finalPrice').innerHTML = parseFloat(document.getElementById('priceTI').value.toFixed(2));
+	$('#priceTI').value = (parseFloat($('#priceTI').val()) + getEcotaxTaxIncluded()).toFixed(2);
+	$('#finalPrice').innerHTML = parseFloat($('#priceTI').val()).toFixed(2);
 }
 
 function calcPriceTE()
