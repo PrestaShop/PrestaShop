@@ -113,6 +113,7 @@
 				<li><a href="../docs/csv_import/manufacturers_import.csv">{l s='Manufacturers sample file'}</a></li>
 				<li><a href="../docs/csv_import/suppliers_import.csv">{l s='Suppliers sample file'}</a></li>
 				<li><a href="../docs/csv_import/supply_orders_import.csv">{l s='Supply Orders sample file'}</a></li>
+				<li><a href="../docs/csv_import/supply_orders_details_import.csv">{l s='Supply Orders Details sample file'}</a></li>
 			</ul>
 		</div>
 		<div class="clear">&nbsp;</div>
@@ -197,7 +198,7 @@
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
 				<p>{l s='Note that you can have serveral products with the same reference.'}</p>
 			</div>
-			<div class="warn import_supply_orders_details" style="margin-top: 20px;">
+			<div class="warn import_supply_orders_details" style="margin-top: 20px; display:none">
 				<p>{l s='Importing Supply Order Details will first reset the products ordered.'}</p>
 			</div>
 		{if !count($files_to_import)}
@@ -242,12 +243,12 @@
 
 		if ($("#entity > option:selected").val() == 8)
 		{
-			$(".warn .import_supply_orders_details").show();
+			$(".import_supply_orders_details").show();
 			$('input[name=multiple_value_separator]').val('|');
 		}
 		else
 		{
-			$(".warn .import_supply_orders_details").hide();
+			$(".import_supply_orders_details").hide();
 			$('input[name=multiple_value_separator]').val(',');
 		}
 		
