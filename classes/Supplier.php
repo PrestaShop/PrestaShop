@@ -300,26 +300,29 @@ class SupplierCore extends ObjectModel
 			)
 			GROUP BY p.`id_product`';
 
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
 	/*
-	* Specify if a supplier already in base
+	* Tells if a supplier exists
 	*
 	* @param $id_supplier Supplier id
 	* @return boolean
 	*/
 	public static function supplierExists($id_supplier)
 	{
-		$row = Db::getInstance()->getRow('
-			SELECT `id_supplier`
-			FROM '._DB_PREFIX_.'supplier s
-			WHERE s.`id_supplier` = '.(int)$id_supplier
-		);
+		$query = new DbQuery();
+		$query->select('id_supplier');
+		$query->from('supplier');
+		$query->where('id_supplier = '.(int)$id_supplier);
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
-		return isset($row['id_supplier']);
+		return ($res > 0);
 	}
 
+	/**
+	 * @see ObjectModel::delete()
+	 */
 	public function delete()
 	{
 		if (parent::delete())
