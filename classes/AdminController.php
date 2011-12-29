@@ -1617,11 +1617,12 @@ class AdminControllerCore extends Controller
 		// For traductions in a tpl folder with an underscore
 		$class = str_replace('_', '', $class);
 
+        $class_name_controller = $class.'controller';
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		if (false && Module::getModuleNameFromClass($class))
+		if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
 		{
 			$string = str_replace('\'', '\\\'', $string);
-			return Module::findTranslation(Module::$classInModule[$class], $string, $class);
+			return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
 		}
 
 		$key = md5(str_replace('\'', '\\\'', $string));

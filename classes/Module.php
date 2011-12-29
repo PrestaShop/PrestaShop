@@ -769,7 +769,7 @@ abstract class ModuleCore
 	{
 		// Module can now define AdminTab keeping the module translations method,
 		// i.e. in modules/[module name]/[iso_code].php
-		if (!isset(self::$classInModule[$currentClass]))
+		if (!isset(self::$classInModule[$currentClass]) && class_exists($currentClass))
 		{
 			global $_MODULES;
 			$_MODULE = array();
