@@ -113,8 +113,7 @@ $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configur
 Context::getContext()->country = $defaultCountry;
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
-if (function_exists('date_default_timezone_set'))
-	@date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
+@date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Instantiate cookie */
 $cookieLifetime = (time() + (((int)Configuration::get('PS_COOKIE_LIFETIME_BO') > 0 ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : 1)* 3600));
