@@ -974,7 +974,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 
 		/* List templates to parse */
-		$templates = $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template');
+		$templates = $this->listFiles(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes');
 		foreach ($templates as $template)
 			if (preg_match('/^(.*).tpl$/', $template))
 			{
@@ -983,13 +983,16 @@ class AdminTranslationsControllerCore extends AdminController
 
 				// get controller name instead of file name
 				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR, '', $tpl), true);
-				$prefix_key = 'Admin'.substr($prefix_key, 0, strpos($prefix_key, DIRECTORY_SEPARATOR));
+				$pos = strrpos($prefix_key, DIRECTORY_SEPARATOR);
+				$tmp = substr($prefix_key, 0, $pos);
+				$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
+
 				if ($prefix_key == 'AdminHelper')
 					$prefix_key = 'Helper';
 
 				// @todo retrompatibility : we assume here than files directly in template/
 				// use the prefix "AdminController" (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
-				if ( $prefix_key == 'Admin')
+				if ( $prefix_key == 'Admin' || $prefix_key == 'AdminTemplate')
 					$prefix_key = 'AdminController';
 				// and helpers in helper
 

@@ -1306,7 +1306,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             'action' => self::$cache_lang['Receipt'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supply_order_receipt.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_supply_order_receipt.tpl');
     }
 
     /**
@@ -1327,7 +1327,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             'action' => self::$cache_lang['State'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supply_order_change_state.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_supply_order_change_state.tpl');
     }
 
     /**
@@ -1352,7 +1352,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             'action' => self::$cache_lang['CreateSupplyOrder'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_supply_order_create_from_template.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_supply_order_create_from_template.tpl');
     }
 
 	/**
