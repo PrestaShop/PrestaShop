@@ -1072,7 +1072,7 @@ class AdminStockManagementControllerCore extends AdminController
             'action' => self::$cache_lang['AddStock'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_addstock.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_addstock.tpl');
 	}
 
     /**
@@ -1093,7 +1093,7 @@ class AdminStockManagementControllerCore extends AdminController
             'action' => self::$cache_lang['RemoveStock'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_removestock.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_removestock.tpl');
     }
 
     /**
@@ -1114,6 +1114,6 @@ class AdminStockManagementControllerCore extends AdminController
             'action' => self::$cache_lang['TransferStock'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/helper/list/list_action_transferstock.tpl');
+        return $this->context->smarty->fetch('helper/list/list_action_transferstock.tpl');
     }
 }
