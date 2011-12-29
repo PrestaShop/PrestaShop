@@ -24,6 +24,54 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.3 - 11871 (2011-12-28)  #
+####################################
+
+	Improved/changed features:
+
+	[*] BO : fields name traduction in french in SpecificPriceRule table
+
+	Fixed bugs:
+
+	[-] FO : if th user doesn't have any account and he's still trying to log in, he will be redirected to the create account form
+
+	[-] BO : #PSFV-173 : indexing when adding a product
+	[-] BO : #PSTEST-150 : fix bug in AdminScenes
+	[-] BO : #PSTEST-165 : calculate price without or with tax
+	[-] BO : #PSTEST-166 : Digits precision on product prices changed
+	[-] BO : #PSTEST-180 : BugFix : Insert new attributes in groups
+	[-] BO : #PSTEST-181 : change title in AdminAttributesGroupsController
+	[-] BO : #PSTEST-197 : bug fixed when a supplier picture is about to be deleted
+	[-] BO : #PSTEST-202 : bug fixed, the translation was missing
+	[-] BO : #PSTEST-202 : fixed , the problem was from the adminTranslationController, all the fields were not listed in the fields traduction page
+	[-] BO : #PSTEST-210 : deleted customers
+	[-] BO : #PSTEST-214 : BugFix : Canceled, problem without multishop
+	[-] BO : #PSTEST-214 : BugFix : Get content using context shop
+	[-] BO : #PSTEST-220 : bug fixed, the fields number that has to be traduct is now correct
+	[-] BO : #PSTEST-225 : bug fixed
+	[-] BO : #PSTEST-230 : bug fixed
+	[-] BO : #PSTEST-230 : bug fixed
+	[-] BO : #PSTEST-230 : missing translation
+	[-] BO : #PSTEST-232 : Product pictures are now displayed with multishop
+	[-] BO : #PSTEST-95 : adding token
+	[-] BO : AdminModule now sort modules by alphabetical order
+	[-] BO : Attributes can now be deleted in Catalogue : Attributes and Groups
+	[-] BO : BugFix : Admin suppliers errors message (add) & Admin attributes add / update fix
+	[-] BO : PSTEST-200 : bug fixed : When an administrator made modifications on a customer about the newsletter option or the Opt-in option, customer's addresses were deleted
+	[-] BO : Translation updated in products quantities tab
+	[-] BO : When we are in module configuration, all modules are not loaded
+	[-] BO : add a validation on name of discount in order page
+	[-] BO : fixed bug on change currency feature in order page when we have only one currency
+	[-] BO : fixed bug on product addition
+	[-] BO : fixed bug on updating of document table when adding a product
+	[-] BO : retrocompatibility with adminModuleController 1.4 => 1.5. Some modules use $_GET['tab'],
+	[-] bo : #PSFV-273 : $max_file_size has been re-added
+
+	[-] Classes : #PSCFI-4523 : modified condition in ModuleGrid.php
+	[-] Classes : fixed little bug on getShipping method on Order class
+
+
+####################################
 #   v1.5.0.2 - 11746 (2011-12-23)  #
 ####################################
 
