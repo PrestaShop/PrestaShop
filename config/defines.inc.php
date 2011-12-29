@@ -70,6 +70,9 @@ define('_PS_TCPDF_PATH_',            _PS_TOOL_DIR_.'tcpdf/');
 define('_PS_TAASC_PATH_',            _PS_TOOL_DIR_.'taasc/');
 define('_PS_PEAR_XML_PARSER_PATH_', _PS_TOOL_DIR_.'pear_xml_parser/');
 define('_PS_CACHE_DIR_',			_PS_ROOT_DIR_.'/cache/');
+/* BO THEMES */
+if (defined('_PS_ADMIN_DIR_'))
+	define('_PS_BO_ALL_THEMES_DIR_',			_PS_ADMIN_DIR_.'/themes/');
 
 /* settings php */
 define('_PS_TRANS_PATTERN_',            '(.*[^\\\\])');
