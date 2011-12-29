@@ -223,7 +223,7 @@ class SupplyOrderDetailCore extends ObjectModel
 		$this->price_te = Tools::ps_round((float)$this->unit_price_te * (int)$this->quantity_expected, 6);
 
 		// calculates entry discount value
-		if ($this->discount_rate != null && is_float($this->discount_rate) && $this->discount_rate > 0)
+		if ($this->discount_rate != null && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0)
 			$this->discount_value_te = Tools::ps_round((float)$this->price_te * ($this->discount_rate / 100), 6);
 
 		// calculates entry price with discount
