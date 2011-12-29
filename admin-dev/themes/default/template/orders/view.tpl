@@ -169,7 +169,7 @@
 			<br />
 			<fieldset>
 				<legend><img src="../img/admin/tab-stats.gif" /> {l s='Sources'}</legend>
-				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll; width: 360px;"{/if}>
+				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
 				{foreach from=$sources item=source}
 					<li>
 						{dateFormat date=$source['date_add'] full=true}<br />
@@ -533,7 +533,7 @@
 								{l s='Cancel'}
 							{/if}
 						</th>
-						<th style="width: 8%;text-align:right;display:none" class="partial_refund_fields">
+						<th style="width: 12%;text-align:right;display:none" class="partial_refund_fields">
 							{l s='Partial refund'}
 						</th>
 						{if !$order->hasBeenDelivered()}

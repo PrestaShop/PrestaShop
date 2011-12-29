@@ -194,6 +194,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-export-csv-details { background-image: url('../img/process-icon-export-csv-details.png');}
 .toolbarBox .process-icon-export-stock-mvt-csv { background-image: url('../img/process-icon-export-csv.png');}
 .toolbarBox .process-icon-newAttributes, .toolbarBox .toolbar-new{ background-image: url('../img/process-icon-new.png');}
+.toolbarBox .process-icon-new.add_product{ background-image: url('../img/process-icon-addProduct.png');}
 .toolbarBox .process-icon-partialRefund{ background-image: url('../img/process-icon-partial-refund.png');}
 .toolbarBox .process-icon-standardRefund{ background-image: url('../img/process-icon-standard-refund.png');}
 
