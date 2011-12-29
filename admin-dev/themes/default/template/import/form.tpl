@@ -145,14 +145,15 @@
 			</select>
 		</div>
 
-		{if count($files_to_import)}
 			<label class="clear">{l s='Your CSV file'} ({count($files_to_import)} {if count($files_to_import) > 1} {l s='files'}{else}{l s='file'}{/if}{l s='):'}</label>
 			<div class="margin-form">
+			{if count($files_to_import)}
 				<select name="csv">
 					{foreach $files_to_import AS $filename}
 						<option value="{$filename}">{$filename}</option>
 					{/foreach}
 				</select>
+			{/if}
 				&nbsp;&nbsp;<img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />
 				<b><a href="#upload_file_import" id="upload_file_import_link">{l s='Upload'}</a></b>
 			</div>
@@ -192,12 +193,15 @@
 			<div class="space margin-form">
 				<input type="submit" name="submitImportFile" value="{l s='Next step'}" class="button"/>
 			</div>
-			<div class="warn import_products_categories" style="margin-top: 20px">
+			<div class="warn import_products_categories" style="margin-top: 20px;">
 				<p>{l s='Note that the category import does not support categories of the same name.'}</p>
 				<p>{l s='Note that you can have serveral products with the same reference.'}</p>
 			</div>
-		{else}
-			<div class="warn" style="margin-top: 20px">
+			<div class="warn import_supply_orders_details" style="margin-top: 20px;">
+				<p>{l s='Importing Supply Order Details will first reset the products ordered.'}</p>
+			</div>
+		{if !count($files_to_import)}
+			<div class="warn" style="margin-top: 20px;">
 				{l s='There is no CSV file available, please upload one using the form above.'}
 				<br /><br />
 				{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a><br /><br />
@@ -228,13 +232,26 @@
 <script type="text/javascript">
 	$("select#entity").change( function() {
 
-		if ($("#entity > option:selected").val() == 7)
+		if ($("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8)
 		{
 			$("label[for=truncate],#truncate").hide();
 		}
 		else
 			$("label[for=truncate],#truncate").show();
 
+
+		if ($("#entity > option:selected").val() == 8)
+		{
+			$(".warn .import_supply_orders_details").show();
+			$('input[name=multiple_value_separator]').val('|');
+		}
+		else
+		{
+			$(".warn .import_supply_orders_details").hide();
+			$('input[name=multiple_value_separator]').val(',');
+		}
+		
+		
 		if ($("#entity > option:selected").val() == 1)
 		{
 			$("label[for=match_ref],#match_ref").show();

@@ -115,7 +115,7 @@ class ProductSupplierCore extends ObjectModel
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $id_supplier
-	 * @return array
+	 * @return string
 	 */
 	public static function getProductSupplierReference($id_product, $id_product_attribute, $id_supplier)
 	{

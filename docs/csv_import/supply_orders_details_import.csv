@@ -1,0 +1,17 @@
+"Supply Order Reference *";"Product ID *";"Product Attribute ID";"Unit Price (te) *";"Quantity Expected *";"Discount Rate";"Tax Rate"
+"ref import demo";1;25;110;10;10;19,6
+"ref import demo";1;26;111;11;1;19,6
+"ref import demo";1;27;112;12;;19,6
+"ref import demo";1;28;113;13;3;19,6
+"ref import demo";1;29;114;14;;19,6
+"ref import demo";1;30;115;15;5;19,6
+"ref import demo";1;31;116;16;;19,6
+"ref import demo";1;32;117;17;7;19,6
+"ref import demo";1;33;118;18;;19,6
+"ref import demo";1;34;119;19;9;19,6
+"ref import demo";1;35;120;20;;19,6
+"ref import demo";1;39;121;21;11;19,6
+"ref import demo";1;40;122;22;;19,6
+"ref import demo";1;41;123;23;13;19,6
+"ref import demo";1;42;124;24;;19,6
+"ref import demo";6;;1000;28;18;19,6
