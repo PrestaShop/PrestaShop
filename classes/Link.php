@@ -134,9 +134,9 @@ class LinkCore
 	 */
 	public function getCategoryLink($category, $alias = null, $id_lang = null)
 	{
-		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($category))
 			$category = new Category($category, $id_lang);
@@ -161,9 +161,9 @@ class LinkCore
 	 */
 	public function getCMSCategoryLink($category, $alias = null, $id_lang = null)
 	{
-		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($category))
 			$category = new CMSCategory($category, $id_lang);
@@ -190,9 +190,10 @@ class LinkCore
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
-		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
+
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($cms))
 			$cms = new CMS($cms, $id_lang);
@@ -217,9 +218,9 @@ class LinkCore
 	 */
 	public function getSupplierLink($supplier, $alias = null, $id_lang = null)
 	{
-		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($supplier))
 			$supplier = new Supplier($supplier, $id_lang);
@@ -244,9 +245,9 @@ class LinkCore
 	 */
 	public function getManufacturerLink($manufacturer, $alias = null, $id_lang = null)
 	{
-		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		$url = _PS_BASE_URL_.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		if (!is_object($manufacturer))
 			$manufacturer = new Manufacturer($manufacturer, $id_lang);
@@ -262,7 +263,7 @@ class LinkCore
 	}
 
 	/**
-	 * Create a link to a supplier
+	 * Create a link to a module
 	 *
 	 * @since 1.5.0
 	 * @param string $module Module name
@@ -273,9 +274,10 @@ class LinkCore
 	public function getModuleLink($module, $process, $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
-		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
+
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		// Set available keywords
 		$params = array();
