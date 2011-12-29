@@ -59,7 +59,7 @@
 			</div>
 			<div>
 				<div id="submit">
-					<input type="submit" name="submitLogin" value="Log in" class="button" style="float:left"/>
+					<input type="submit" name="submitLogin" value="{l s='Log in'}" class="button" style="float:left"/>
 					<span style="float:left;width:30px">
 						<img id="ajax-loader" src="../img/loader.gif" style="float:left;margin:2px 0 0 5px;display:none">
 					</span>
