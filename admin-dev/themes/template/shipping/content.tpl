@@ -56,7 +56,7 @@
 							{foreach $ranges AS $range}
 								<td class="center">
 									{$currency->getSign('left')}
-									<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees('.$range[$rangeIdentifier].')}" style="width: 45px;" />
+									<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees({$range[$rangeIdentifier]})}" style="width: 45px;" />
 									{$currency->getSign('right')}
 								</td>
 							{/foreach}
