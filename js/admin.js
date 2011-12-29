@@ -958,7 +958,7 @@ function doAdminAjax(data, success_func, error_func)
 			if (error_func)
 				return error_func(data);
 
-			jAlert("[TECHNICAL ERROR]");
+			alert("[TECHNICAL ERROR]");
 		}
 	});
 }
@@ -966,19 +966,23 @@ function doAdminAjax(data, success_func, error_func)
 /** display a success message in a #ajax_confirmation container
  * @param string msg string to display
  */
-function showSuccessMessage(msg)
+function showSuccessMessage(msg, delay)
 {
+	if (!delay)
+		delay = 3000;
 	$("#ajax_confirmation")
-		.html("<div class=\"conf\">"+msg+"</div>").show().delay(3000).fadeOut("slow");
+		.html("<div class=\"conf\">"+msg+"</div>").show().delay(delay).fadeOut("slow");
 }
 			
 /** display a warning message in a #ajax_confirmation container
  * @param string msg string to display
  */
-function showErrorMessage(msg)
+function showErrorMessage(msg, delay)
 {
-	$("#ajax_confirmation").show()
-		.html("<div class=\"error\">"+msg+"</div>").delay(3000).fadeOut("slow");
+	if (!delay)
+		delay = 5000;
+	$("#ajax_confirmation")
+		.html("<div class=\"error\">"+msg+"</div>").show().delay(delay).fadeOut("slow");
 }
 
 $(document).ready(function(){
