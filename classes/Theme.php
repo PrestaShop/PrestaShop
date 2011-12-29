@@ -44,10 +44,9 @@ class ThemeCore extends ObjectModel
 
 	public static function getThemes()
 	{
-		$sql = 'SELECT *
-				FROM '._DB_PREFIX_.'theme
-				ORDER BY name';
-		return Db::getInstance()->executeS($sql);
+		$themes = new Collection('Theme');
+		$themes->orderBy('name');
+		return $themes;
 	}
 
 	/**
@@ -72,7 +71,7 @@ class ThemeCore extends ObjectModel
 		{
 			$themes = Theme::getThemes();
 			foreach($themes as $theme_obj)
-				$themes_dir[] = $theme_obj['directory'];
+				$themes_dir[] = $theme_obj->directory;
 			foreach( $dirlist as $theme)
 				if (false !== array_search($theme, $themes_dir))
 					$available_theme[] = $theme;
