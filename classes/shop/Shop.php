@@ -891,4 +891,12 @@ class ShopCore extends ObjectModel
 				$without[] = $shop;
 		return $without;
 	}
+
+	/**
+	 * @deprecated 1.5.0
+	 */
+	public static function getCurrentShop()
+	{
+		return Context::getContext()->shop->getID(true);
+	}
 }
