@@ -526,7 +526,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
-			if (!file_exists(_PS_MODULE_DIR_.$module_name))
+			if (!file_exists(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
 				continue;
 
 			$module = Module::getInstanceByName($module_name);
