@@ -227,7 +227,9 @@ class AdminControllerCore extends Controller
 	protected $_includeContainer = true;
 
 	public $tpl_folder;
-
+	
+	protected $bo_theme;
+	
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
 
@@ -252,6 +254,9 @@ class AdminControllerCore extends Controller
 			$controller = substr($controller, 0, -10);
 
 		parent::__construct();
+
+		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+		$this->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template');
 
 		$this->id = Tab::getIdFromClassName($controller);
 		$this->token = Tools::getAdminToken($controller.(int)$this->id.(int)$this->context->employee->id);
@@ -286,8 +291,7 @@ class AdminControllerCore extends Controller
 			$this->shopLinkType = '';
 
 		// Get the name of the folder containing the custom tpl files
-		$this->tpl_folder = substr($controller, 5);
-		$this->tpl_folder = Tools::toUnderscoreCase($this->tpl_folder).'/';
+		$this->tpl_folder = Tools::toUnderscoreCase(substr($controller, 5)).'/';
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 	}
@@ -1570,7 +1574,7 @@ class AdminControllerCore extends Controller
 	public function setMedia()
 	{
 		$this->addCSS(_PS_CSS_DIR_.'admin.css', 'all');
-		$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/default/admin.css', 'all');
+		$this->addCSS(__PS_BASE_URI__.str_replace(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, '', _PS_ADMIN_DIR_).'/themes/'.$this->bo_theme.'/css/admin.css', 'all');
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
