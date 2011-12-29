@@ -185,16 +185,7 @@ class LanguageCore extends ObjectModel
 		$resUpdateSQL = $this->loadUpdateSQL();
 		$resUpdateSQL = true;
 
-		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
-		if(!Configuration::get('PS_REWRITING_SETTINGS'))
-			return $resUpdateSQL;
-
-		return ($resUpdateSQL AND Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
-			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			'',
-			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-		));
+		return $resUpdateSQL && Tools::generateHtaccess();
 	}
 
 	public function toggleStatus()
@@ -202,15 +193,7 @@ class LanguageCore extends ObjectModel
 		if (!parent::toggleStatus())
 			return false;
 
-		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
-		if(!Configuration::get('PS_REWRITING_SETTINGS'))
-			return true;
-		return (Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-			(int)(Configuration::get('PS_REWRITING_SETTINGS')),
-			(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-			'',
-			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-		));
+		return Tools::generateHtaccess();
 	}
 
 	public function checkFiles()
@@ -470,16 +453,7 @@ class LanguageCore extends ObjectModel
 					unlink(dirname(__FILE__).'/../img/l/'.$this->id.'.jpg');
 			}
 
-		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
-		if(!Configuration::get('PS_REWRITING_SETTINGS'))
-			return true;
-
-		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)(Configuration::get('PS_REWRITING_SETTINGS')),
-									(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-									'',
-									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-								);
+		return Tools::generateHtaccess();
 	}
 
 
@@ -495,17 +469,7 @@ class LanguageCore extends ObjectModel
 			$result = $result AND $this->delete();
 		}
 
-		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
-		if(!Configuration::get('PS_REWRITING_SETTINGS'))
-			return true;
-
-		Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-			(int)Configuration::get('PS_REWRITING_SETTINGS'),
-			(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
-			'',
-			(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-		);
-
+		Tools::generateHtaccess();
 		return $result;
 	}
 
@@ -630,21 +594,10 @@ class LanguageCore extends ObjectModel
 
 	public function update($nullValues = false)
 	{
-
-
 		if (!parent::update($nullValues))
 			return false;
 
-		// If url_rewrite is not enabled, we don't need to regenerate .htaccess
-		if(!Configuration::get('PS_REWRITING_SETTINGS'))
-			return true;
-
-		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-							(int)(Configuration::get('PS_REWRITING_SETTINGS')),
-							(int)(Configuration::get('PS_HTACCESS_CACHE_CONTROL')),
-							'',
-							(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-							);
+		return Tools::generateHtaccess();
 	}
 
 	public static function checkAndAddLanguage($iso_code)

@@ -31,9 +31,9 @@ class AdminGeneratorControllerCore extends AdminController
 
 	public function __construct()
 	{
-		$this->ht_file = dirname(__FILE__).'/../../.htaccess';
-		$this->rb_file = dirname(__FILE__).'/../../robots.txt';
-		$this->sm_file = dirname(__FILE__).'/../../sitemap.xml';
+		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
+		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
+		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
 		$this->rb_data = $this->getRobotsContent();
 
 		return parent::__construct();
@@ -68,11 +68,7 @@ class AdminGeneratorControllerCore extends AdminController
 				Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL'));
 				Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
 				Configuration::updateValue('PS_HTACCESS_DISABLE_MULTIVIEWS', (int)Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'));
-				if (Tools::generateHtaccess(
-					$this->ht_file,
-					Configuration::get('PS_REWRITING_SETTINGS'),
-					Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '',
-					Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS')))
+				if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS')))
 					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				$this->_errors[] = $this->l('Cannot write into file:').' <b>'.$this->ht_file.'</b><br />'.$this->l('Please check write permissions.');
 			}

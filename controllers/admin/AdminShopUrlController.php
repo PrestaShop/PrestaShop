@@ -286,7 +286,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 			parent::processAdd($token);
 			if (!$this->_errors)
-				Tools::generateHtaccess(dirname(__FILE__).'/../../.htaccess', Configuration::get('PS_REWRITING_SETTINGS'), Configuration::get('PS_HTACCESS_CACHE_CONTROL'), '');
+				Tools::generateHtaccess();
 	}
 
 	protected function afterUpdate($object)

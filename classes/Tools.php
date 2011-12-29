@@ -1493,10 +1493,23 @@ class ToolsCore
 		return self::getHttpHost();
 	}
 
-	public static function generateHtaccess($path, $rewrite_settings, $cache_control, $specific = '', $disable_multiviews = false)
+	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null)
 	{
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
-			return;
+			return true;
+
+		if (!Configuration::get('PS_REWRITING_SETTINGS'))
+			return true;
+
+		// Default values for parameters
+		if (is_null($path))
+			$path = _PS_ROOT_DIR_.'/.htaccess';
+		if (is_null($rewrite_settings))
+			$rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
+		if (is_null($cache_control))
+			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		if (is_null($disable_multiviews))
+			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
 
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
