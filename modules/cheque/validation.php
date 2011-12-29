@@ -26,7 +26,7 @@
 */
 
 /**
- * @deprecated This file is deprecated, use moduleController instead
+ * @deprecated 1.5.0 This file is deprecated, use moduleController instead
  */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');

@@ -26,7 +26,7 @@
 */
 
 /**
- * @deprecated This file is deprecated, use moduleController instead
+ * @deprecated 1.5.0 This file is deprecated, use moduleController instead
  */
 
 /* SSL Management */
