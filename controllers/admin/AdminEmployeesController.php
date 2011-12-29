@@ -121,7 +121,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		$path = _PS_ADMIN_DIR_.'/themes/';
 		foreach (scandir($path) as $theme)
-			if (file_exists($path.$theme.'/admin.css'))
+			if (file_exists($path.$theme.'/css/admin.css'))
 				$this->themes[] = $theme;
 
 		$this->fields_form = array(

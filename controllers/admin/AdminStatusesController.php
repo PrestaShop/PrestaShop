@@ -173,7 +173,7 @@ class AdminStatusesControllerCore extends AdminController
             'action' => self::$cache_lang['editaddresses'],
         ));
 
-        return $this->context->smarty->fetch(_PS_ADMIN_DIR_.'/themes/template/manufacturers/list_action_edit_adresses.tpl');
+        return $this->context->smarty->fetch('manufacturers/list_action_edit_adresses.tpl');
 	}
 
 	public function renderForm()
