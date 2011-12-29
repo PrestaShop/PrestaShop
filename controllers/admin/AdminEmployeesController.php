@@ -92,6 +92,11 @@ class AdminEmployeesControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
+		
+		$path = _PS_ADMIN_DIR_.'/themes/';
+		foreach (scandir($path) as $theme)
+			if (file_exists($path.$theme.'/css/admin.css'))
+				$this->themes[] = $theme;
 
 		parent::__construct();
 	}
@@ -117,13 +122,7 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->_errors[] = Tools::displayError('You cannot edit SuperAdmin profile.');
 			return parent::renderForm();
 		}
-
-
-		$path = _PS_ADMIN_DIR_.'/themes/';
-		foreach (scandir($path) as $theme)
-			if (file_exists($path.$theme.'/css/admin.css'))
-				$this->themes[] = $theme;
-
+		
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Employees'),
@@ -346,7 +345,13 @@ class AdminEmployeesControllerCore extends AdminController
 					return false;
 				}
 			}
-
+			
+			if (!in_array(Tools::getValue('bo_theme'), $this->themes))
+			{
+				$this->_errors[] = Tools::displayError('Invalid theme.');
+					return false;
+			}
+			
 			$assos = self::getAssoShop($this->table);
 
 			if (count($assos[0]) == 0 && $this->table = 'employee')
