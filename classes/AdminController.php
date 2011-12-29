@@ -155,6 +155,8 @@ class AdminControllerCore extends Controller
 	/** @var array list of row ids associated with a given action for witch this action have to not be available */
 	protected $list_skip_actions = array();
 
+	/* @var boolean don't show header & footer */
+	protected $lite_display = false;
 	/** @var bool boolean List content lines are clickable if true */
 	protected $list_no_link = false;
 
@@ -968,11 +970,11 @@ class AdminControllerCore extends Controller
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
 				if (empty($back))
 					$back = self::$currentIndex.'&token='.$this->token;
-
-				$this->toolbar_btn['back'] = array(
-					'href' => $back,
-					'desc' => $this->l('Back to list')
-				);
+				if (!$this->lite_display)
+					$this->toolbar_btn['back'] = array(
+						'href' => $back,
+						'desc' => $this->l('Back to list')
+					);
 				break;
 			case 'options':
 				$this->toolbar_btn['save'] = array(
@@ -1696,6 +1698,7 @@ class AdminControllerCore extends Controller
 			$this->display_header = false;
 			$this->display_footer = false;
 			$this->content_only = false;
+			$this->lite_display = true;
 		}
 
 		// Change shop context ?

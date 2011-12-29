@@ -53,7 +53,7 @@
 				<div class="second-select margin-form format_{$k}" style="display:none;">
 					<select class="second-select format_{$k}" name="format_{$k}">
 						<option value="all">{l s='All'}</option>';
-						{foreach $formats AS $format}
+						{foreach $formats[$k] AS $format}
 							<option value="{$format['id_image_type']}">{$format['name']}</option>
 						{/foreach}
 					</select>
