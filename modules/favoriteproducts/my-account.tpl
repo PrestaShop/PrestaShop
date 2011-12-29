@@ -24,4 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<li class="favoriteproducts"><a href="{$base_dir_ssl}modules/favoriteproducts/favoriteproducts-account.php" title="{l s='My favorite products' mod='favoriteproducts'}"><img src="{$module_template_dir}img/favorites.png" class="icon" /> {l s='My favorite products' mod='favoriteproducts'}</a></li>
+<li class="favoriteproducts">
+	<a href="{$link->getModuleLink('favoriteproducts', 'account')}" title="{l s='My favorite products' mod='favoriteproducts'}">
+		<img src="{$module_template_dir}img/favorites.png" class="icon" />
+		{l s='My favorite products' mod='favoriteproducts'}
+	</a>
+</li>
