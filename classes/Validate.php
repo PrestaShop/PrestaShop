@@ -633,7 +633,7 @@ class ValidateCore
 	/**
 	* Check object validity
 	*
-	* @param integer $object Object to validate
+	* @param object $object Object to validate
 	* @return boolean Validity is ok or not
 	*/
 	public static function isLoadedObject($object)
