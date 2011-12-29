@@ -134,10 +134,12 @@ class AdminAddressesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
-
-		if (Validate::isLoadedObject($this->object))
+		$id_customer = (int)Tools::getValue('id_customer');
+		if (!$id_customer && Validate::isLoadedObject($this->object))
+			$id_customer = $this->object->id_customer;
+		if ($id_customer)
 		{
-			$customer = new Customer($this->object->id_customer);
+			$customer = new Customer((int)$id_customer);
 			$tokenCustomer = Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).(int)$this->context->employee->id);
 		}
 
@@ -270,6 +272,12 @@ class AdminAddressesControllerCore extends AdminController
 				);
 
 			}
+		}
+		
+		if (!Tools::isSubmit('submit'.strtoupper($this->table)) && Validate::isLoadedObject($customer) && !Validate::isLoadedObject($this->object))
+		{
+			$this->fields_value['lastname'] = $customer->lastname;
+			$this->fields_value['firstname'] = $customer->firstname;
 		}
 
 		// merge address format with the rest of the form
