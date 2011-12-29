@@ -124,12 +124,7 @@ class MetaCore extends ObjectModel
 		if (!parent::update($nullValues))
 			return false;
 
-		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)Configuration::get('PS_REWRITING_SETTINGS'),
-									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
-									'',
-									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-									);
+		return Tools::generateHtaccess();
 	}
 
 	public function delete()
@@ -137,12 +132,7 @@ class MetaCore extends ObjectModel
 		if (!parent::delete())
 			return false;
 
-		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-								(int)Configuration::get('PS_REWRITING_SETTINGS'),
-								(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
-								'',
-								(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-								);
+		return Tools::generateHtaccess();
 	}
 
 	public function deleteSelection($selection)
@@ -156,12 +146,7 @@ class MetaCore extends ObjectModel
 			$result = $result AND $this->delete();
 		}
 
-		return Tools::generateHtaccess(dirname(__FILE__).'/../.htaccess',
-									(int)Configuration::get('PS_REWRITING_SETTINGS'),
-									(int)Configuration::get('PS_HTACCESS_CACHE_CONTROL'),
-									'',
-									(int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS')
-									);
+		return Tools::generateHtaccess();
 	}
 
 	public static function getEquivalentUrlRewrite($new_id_lang, $id_lang, $url_rewrite)
