@@ -42,7 +42,7 @@ class TabCore extends ObjectModel
 	public $position;
 
 	/** @var integer active */
-	public $active;
+	public $active = true;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -56,7 +56,7 @@ class TabCore extends ObjectModel
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'module' => 	array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
 			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
-			'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 32),
@@ -77,10 +77,6 @@ class TabCore extends ObjectModel
 	public function add($autodate = true, $null_values = false)
 	{
 		$this->position = self::getNewLastPosition($this->id_parent);
-		// if you don't precise active or not, automatically set it
-		if (is_null($this->active))
-			$this->active = 1;
-
 		if (parent::add($autodate, $null_values))
 		{
 			// refresh cache when adding new tab
