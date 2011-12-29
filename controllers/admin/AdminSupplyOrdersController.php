@@ -1971,6 +1971,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$entries = $supply_order->getEntriesCollection($supply_order->id_lang);
 
 		// updates SupplyOrder so that it is not a template anymore
+		$ref = $supply_order->reference;
+		$ref .= ' ('.date('H:i:s').')';
+		$supply_order->reference = $ref;
 		$supply_order->is_template = 0;
 		$supply_order->id = (int)0;
 		$supply_order->save();

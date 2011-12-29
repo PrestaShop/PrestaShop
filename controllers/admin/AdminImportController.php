@@ -85,6 +85,7 @@ class AdminImportControllerCore extends AdminController
 			$this->l('Manufacturers'),
 			$this->l('Suppliers'),
 			$this->l('SupplyOrders'),
+			$this->l('SupplyOrdersDetails'),
 		));
 
 		switch ((int)Tools::getValue('entity'))
@@ -359,12 +360,40 @@ class AdminImportControllerCore extends AdminController
 					'reference' => array('label' => $this->l('Supply Order Reference *')),
 					'date_delivery_expected' => array('label' => $this->l('Delivery Date (Y-M-D)*')),
 					'discount_rate' => array('label' => $this->l('Discount Rate')),
+					'is_template' => array('label' => $this->l('Template')),
 				);
 				// default values
 				self::$default_values = array(
 					'id_lang' => (int)Configuration::get('PS_LANG_DEFAULT'),
 					'id_currency' => Currency::getDefaultCurrency()->id,
 					'discount_rate' => '0',
+					'is_template' => '0',
+				);
+			break;
+			// @since 1.5.0
+			case $this->entities[$this->l('SupplyOrdersDetails')]:
+				// required fields
+				$this->required_fields = array(
+					'supply_order_reference',
+					'id_product',
+					'unit_price_te',
+					'quantity_expected',
+				);
+				// available fields
+				$this->available_fields = array(
+					'no' => array('label' => $this->l('Ignore this column')),
+					'supply_order_reference' => array('label' => $this->l('Supply Order Reference *')),
+					'id_product' => array('label' => $this->l('Product ID *')),
+					'id_product_attribute' => array('label' => $this->l('Product Attribute ID')),
+					'unit_price_te' => array('label' => $this->l('Unit Price (te) *')),
+					'quantity_expected' => array('label' => $this->l('Quantity Expected *')),
+					'discount_rate' => array('label' => $this->l('Discount Rate')),
+					'tax_rate' => array('label' => $this->l('Tax Rate')),
+				);
+				// default values
+				self::$default_values = array(
+					'discount_rate' => '0',
+					'tax_rate' => '0',
 				);
 		}
 
@@ -1682,8 +1711,8 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		self::setLocale();
 
-		// main loop, for each lines
-		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
+		// main loop, for each supply orders to import
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); ++$current_line)
 		{
 			// if convert requested
 			if (Tools::getValue('convert'))
@@ -1695,21 +1724,193 @@ class AdminImportControllerCore extends AdminController
 
 			// if an id is set, instanciates a supply order with this id if possible
 			if (array_key_exists('id', $info) && (int)$info['id'] && SupplyOrder::exists((int)$info['id']))
-				$supply_order = new Supplier((int)$info['id']);
-			// if an reference is set, instanciates a supply order with this reference if possible
+				$supply_order = new SupplyOrder((int)$info['id']);
+			// if a reference is set, instanciates a supply order with this reference if possible
 			else if (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference'])))
 				$supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['reference']));
 			else // new supply order
 				$supply_order = new SupplyOrder();
 
-			/*
-			 * @TODO Checks $info
-			 *
-			 */
+			// gets parameters
+			$id_supplier = (int)$info['id_supplier'];
+			$id_lang = (int)$info['id_lang'];
+			$id_warehouse = (int)$info['id_warehouse'];
+			$id_currency = (int)$info['id_currency'];
+			$reference = pSQL($info['reference']);
+			$date_delivery_expected = pSQL($info['date_delivery_expected']);
+			$discount_rate = (float)$info['discount_rate'];
+			$is_template = (bool)$info['is_template'];
 
-			/**
-			 * @TODO If check is OK, sets the Supply Order
-			 */
+			// checks parameters
+			if (!Supplier::supplierExists($id_supplier))
+				$this->_errors[] = sprintf($this->l('Supplier ID (%d) is not valid (at line %d).'), $id_supplier, $current_line + 1);
+			if (!Language::getLanguage($id_lang))
+				$this->_errors[] = sprintf($this->l('Lang ID (%d) is not valid (at line %d).'), $id_lang, $current_line + 1);
+			if (!Warehouse::exists($id_warehouse))
+				$this->_errors[] = sprintf($this->l('Warehouse ID (%d) is not valid (at line %d).'), $id_warehouse, $current_line + 1);
+			if (!Currency::getCurrency($id_currency))
+				$this->_errors[] = sprintf($this->l('Currency ID (%d) is not valid (at line %d).'), $id_currency, $current_line + 1);
+			if (empty($supply_order->reference) && SupplyOrder::exists($reference))
+				$this->_errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
+			if (!empty($supply_order->reference) && ($supply_order->reference != $reference && SupplyOrder::exists($reference)))
+				$this->_errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
+			if (!Validate::isDateFormat($date_delivery_expected))
+				$this->_errors[] = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected,
+										   $current_line + 1, $this->l('YYYY-MM-DD'));
+			else if (new DateTime($date_delivery_expected) <= new DateTime('yesterday'))
+				$this->_errors[] = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected,
+										   $current_line + 1, $this->l('YYYY-MM-DD'));
+			if ($discount_rate < 0 || $discount_rate > 100)
+				$this->_errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
+										   $current_line + 1, $this->l('Format: between 0 and 100'));
+			if ($supply_order->id > 0 && !$supply_order->isEditable())
+				$this->_errors[] = sprintf($this->l('Supply Order (%d) is not editable (at line %d).'), $supply_order->id, $current_line + 1);
+
+			// if no errors, sets supply order
+			if (empty($this->_errors))
+			{
+				// adds parameters
+				$info['id_ref_currency'] = (int)Currency::getDefaultCurrency()->id;
+				$info['supplier_name'] = pSQL(Supplier::getNameById($id_supplier));
+				if ($supply_order->id > 0)
+				{
+					$info['id_supply_order_state'] = (int)$supply_order->id_supply_order_state;
+					$info['id'] = (int)$supply_order->id;
+				}
+				else
+					$info['id_supply_order_state'] = 1;
+
+				// sets parameters
+				self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order);
+
+				// updatesd($supply_order);
+				$res = true;
+				if ($supply_order->id > 0)
+					$res &= $supply_order->update();
+				else
+					$res &= $supply_order->add();
+
+				// errors
+				if (!$res)
+					$this->_errors[] = sprintf($this->l('Supply Order could not be saved (at line %d).'), $current_line + 1);
+			}
+		}
+
+		// closes
+		$this->closeCsvFile($handle);
+	}
+
+	public function supplyOrdersDetailsImport()
+	{
+		// opens CSV & sets locale
+		$this->receiveTab();
+		$handle = $this->openCsvFile();
+		self::setLocale();
+
+		$products = array();
+		$reset = true;
+		// main loop, for each supply orders details to import
+		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); ++$current_line)
+		{
+			// if convert requested
+			if (Tools::getValue('convert'))
+				$line = $this->utf8EncodeArray($line);
+			$info = self::getMaskedRow($line);
+
+			// sets default values if needed
+			self::setDefaultValues($info);
+
+			// gets the supply order
+			if (array_key_exists('supply_order_reference', $info) && pSQL($info['supply_order_reference']) && SupplyOrder::exists(pSQL($info['supply_order_reference'])))
+				$supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['supply_order_reference']));
+			else
+				$this->_errors[] = sprintf($this->l('Supply Order (%s) could not be loaded (at line %d).'), (int)$info['supply_order_reference'], $current_line + 1);
+
+			if (empty($this->_errors))
+			{
+				// sets parameters
+				$id_product = (int)$info['id_product'];
+				if (!$info['id_product_attribute'])
+					$info['id_product_attribute'] = 0;
+				$id_product_attribute = (int)$info['id_product_attribute'];
+				$unit_price_te = (float)$info['unit_price_te'];
+				$quantity_expected = (int)$info['quantity_expected'];
+				$discount_rate = (float)$info['discount_rate'];
+				$tax_rate = (float)$info['tax_rate'];
+
+				// checks if one product is there only once
+				if (isset($product['id_product']))
+				{
+					if ($product['id_product'] == $id_product_attribute)
+						$this->_errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
+											       $id_product_attribute, $current_line + 1);
+					else
+						$product['id_product'] = $id_product_attribute;
+				}
+				else
+					$product['id_product'] = 0;
+
+				// checks parameters
+				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
+					$this->_errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product,
+											   $id_product_attribute, $current_line + 1);
+				if ($unit_price_te < 0)
+					$this->_errors[] = sprintf($this->l('Unit Price (te) (%d) is not valid (at line %d).'), $unit_price_te, $current_line + 1);
+				if ($quantity_expected < 0)
+					$this->_errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
+				if ($discount_rate < 0 || $discount_rate > 100)
+				$this->_errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
+										   $current_line + 1, $this->l('Format: between 0 and 100'));
+				if ($tax_rate < 0 || $tax_rate > 100)
+				$this->_errors[] = sprintf($this->l('Tax rate (%d) is not valid (at line %d). %s.'), $tax_rate,
+										   $current_line + 1, $this->l('Format: between 0 and 100'));
+
+				// if no errors, sets supply order details
+				if (empty($this->_errors))
+				{
+					// resets order if needed
+					if ($reset)
+					{
+						$supply_order->resetProducts();
+						$reset = false;
+					}
+
+					// creates new product
+					$supply_order_detail = new SupplyOrderDetail();
+					self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order_detail);
+
+					// sets parameters
+					$supply_order_detail->id_supply_order = $supply_order->id;
+					$currency = new Currency($supply_order->id_ref_currency);
+					$supply_order_detail->id_currency = $currency->id;
+					$supply_order_detail->exchange_rate = $currency->conversion_rate;
+					$supply_order_detail->supplier_reference = $supplier_reference;
+					$supply_order_detail->name = Product::getProductName($id_product, $id_product_attribute, $supply_order->id_lang);
+
+					// gets ean13 / ref / upc
+					$query = new DbQuery();
+					$query->select('
+						IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
+						IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
+						IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc
+					');
+					$query->from('product', 'p');
+					$query->leftJoin('product_attribute', 'pa', 'pa.id_product = p.id_product AND id_product_attribute = '.(int)$id_product_attribute);
+					$query->where('p.id_product = '.(int)$id_product);
+					$query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
+					$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+					$product_infos = $res['0'];
+
+					$supply_order_detail->reference = $product_infos['reference'];
+					$supply_order_detail->ean13 = $product_infos['ean13'];
+					$supply_order_detail->upc = $product_infos['upc'];
+
+					$supply_order_detail->add();
+					$supply_order->update();
+					unset($supply_order_detail);
+
+				}
+			}
 		}
 
 		// closes
@@ -1901,8 +2102,13 @@ class AdminImportControllerCore extends AdminController
 				case $this->entities[$this->l('Suppliers')]:
 					$this->supplierImport();
 				break;
+				// @since 1.5.0
 				case $this->entities[$this->l('SupplyOrders')]:
 					$this->supplyOrdersImport();
+				break;
+				// @since 1.5.0
+				case $this->entities[$this->l('SupplyOrdersDetails')]:
+					$this->supplyOrdersDetailsImport();
 				break;
 				default:
 					$this->_errors[] = $this->l('no entity selected');

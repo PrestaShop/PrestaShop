@@ -1,3 +1,2 @@
-"ID";"Supplier ID *";"Lang ID";"Warehouse ID*";"Currency ID";"Supply Order Reference *";"Expected Delivery Date";"Discount Rate"
-;1;1;1;;"ref import 1";"2012-11-31";
-;1;;1;;"ref import 2";"2012-12-30";15
+"ID";"Supplier ID *";"Lang ID";"Warehouse ID*";"Currency ID";"Supply Order Reference *";"Expected Delivery Date *";"Discount Rate";"Template"
+;1;1;1;;"ref import demo";"2015-12-24";;
