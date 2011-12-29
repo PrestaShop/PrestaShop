@@ -33,11 +33,11 @@
 			<img src="../img/admin/error2.png" style="margin:-4px 5px 0 0;vertical-align:middle">
 			{l s='Invalid security token'}
 		</div>
-		<a href="{$url}" method="get" style="float:left;margin:10px">
-			<input type="button" value="{l s='I understand the risks and I really want to display this page'}" style="height:30px;margin-top:5px" />
+		<a href="{$url}" method="get" style="float:left;background: #E3E3E3;border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;margin: 20px 10px;padding:10px;text-align:center;vertical-align:middle;">
+			{l s='I understand the risks and I really want to display this page'}
 		</a>
-		<a href="index.php" method="get" style="float:left;margin:10px">
-			<input type="button" value="{l s='Take me out of here!'}" style="height:40px" />
+		<a href="index.php" method="get" style="float:left;background: #E3E3E3;border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;margin: 20px 10px;padding:10px;text-align:center;vertical-align:middle;">
+			{l s='Take me out of here!'}
 		</a>
 	</body>
 </html>
