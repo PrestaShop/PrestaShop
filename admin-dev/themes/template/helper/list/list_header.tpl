@@ -156,10 +156,11 @@
 							{if $shop_link_type}
 								<th>
 									{if $shop_link_type == 'shop'}
-										{l s='shop'}
+										{l s='Shop'}
 									{else}
 										{l s='Group shop'}
 									{/if}
+									<br />&nbsp;
 								</th>
 							{/if}
 							{if $has_actions}
