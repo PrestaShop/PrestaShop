@@ -60,7 +60,7 @@ class BlockSupplier extends Module
 
 	function hookDisplayLeftColumn($params)
 	{
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'suppliers' => Supplier::getSuppliers(false),
 			'link' => $this->context->link,
 			'text_list' => Configuration::get('SUPPLIER_DISPLAY_TEXT'),

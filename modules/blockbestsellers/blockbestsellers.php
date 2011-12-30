@@ -113,7 +113,7 @@ class BlockBestSellers extends Module
 				$best_sellers[] = $bestseller;
 			}
 
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'best_sellers' => $best_sellers,
 			'mediumSize' => Image::getSize('medium'),
 			'smallSize' => Image::getSize('small')
@@ -138,20 +138,20 @@ class BlockBestSellers extends Module
 		if (Configuration::get('PS_CATALOG_MODE'))
 			return ;
 
-		$currency = new Currency((int)($params['cookie']->id_currency));
-		$bestsellers = ProductSale::getBestSalesLight((int)($params['cookie']->id_lang), 0, 4);
-		if (!$bestsellers AND !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
+		$currency = new Currency($params['cookie']->id_currency);
+		$bestsellers = ProductSale::getBestSalesLight((int)$params['cookie']->id_lang, 0, 4);
+		if (!$bestsellers && !Configuration::get('PS_BLOCK_BESTSELLERS_DISPLAY'))
 			return;
 		$best_sellers = array();
 		
-		if($bestsellers)
+		if ($bestsellers)
 			foreach ($bestsellers AS $bestseller)
 			{
 				$bestseller['price'] = Tools::displayPrice(Product::getPriceStatic((int)($bestseller['id_product'])), $currency);
 				$best_sellers[] = $bestseller;
 }
 
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'best_sellers' => $best_sellers,
 			'homeSize' => Image::getSize('home')));
 		return $this->display(__FILE__, 'blockbestsellers-home.tpl');

@@ -61,23 +61,23 @@ class Feeder extends Module
 		$id_category = (int)(Tools::getValue('id_category'));
 		if (!$id_category)
 		{
-			if (isset($_SERVER['HTTP_REFERER']) AND preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs) AND !strstr($_SERVER['HTTP_REFERER'], '.html'))
+			if (isset($_SERVER['HTTP_REFERER']) && preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs) && !strstr($_SERVER['HTTP_REFERER'], '.html'))
 			{
-				if (isset($regs[2]) AND is_numeric($regs[2]))
+				if (isset($regs[2]) && is_numeric($regs[2]))
 					$id_category = (int)($regs[2]);
-				elseif (isset($regs[5]) AND is_numeric($regs[5]))
-					$id_category = (int)($regs[5]);
+				elseif (isset($regs[5]) && is_numeric($regs[5]))
+					$id_category = (int)$regs[5];
 			}
-			elseif ($id_product = (int)(Tools::getValue('id_product')))
+			elseif ($id_product = (int)Tools::getValue('id_product'))
 			{
 				$product = new Product($id_product);
 				$id_category = $product->id_category_default;
 			}
 		}
-		$category = new Category($id_category);
+
 		$orderBy = Tools::getProductsOrder('by', Tools::getValue('orderby'));
 		$orderWay = Tools::getProductsOrder('way', Tools::getValue('orderway'));
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'feedUrl' => Tools::getShopDomain(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/rss.php?id_category='.$id_category.'&amp;orderby='.$orderBy.'&amp;orderway='.$orderWay,
 		));
 		return $this->display(__FILE__, 'feederHeader.tpl');

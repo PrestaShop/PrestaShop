@@ -164,7 +164,7 @@ class productsCategory extends Module
 		}
 		
 		// Display tpl
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'categoryProducts' => $categoryProducts,
 			'middlePosition' => (int)$middlePosition,
 			'ProdDisplayPrice' => Configuration::get('PRODUCTSCATEGORY_DISPLAY_PRICE')));

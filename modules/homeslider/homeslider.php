@@ -616,8 +616,8 @@ class HomeSlider extends Module
 		if (!$slides)
 			return;
 
-		$this->context->smarty->assign('homeslider_slides', $slides);
-		$this->context->smarty->assign('homeslider', $slider);
+		$this->smarty->assign('homeslider_slides', $slides);
+		$this->smarty->assign('homeslider', $slider);
 
 		return $this->display(__FILE__, 'homeslider.tpl');
 	}

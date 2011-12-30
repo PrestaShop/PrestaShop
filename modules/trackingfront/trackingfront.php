@@ -93,7 +93,7 @@ class TrackingFront extends Module
 					Tools::redirect('modules/trackingfront/stats.php');
 				}
 			}
-			$this->context->smarty->assign('errors', $errors);
+			$this->smarty->assign('errors', $errors);
 		}
 
 		if (Tools::isSubmit('submitDatePicker'))
@@ -164,9 +164,9 @@ class TrackingFront extends Module
 		Referrer::refreshCache(array(array('id_referrer' => (int)($this->context->cookie->tracking_id))), $fakeEmployee);
 		
 		$referrer = new Referrer((int)($this->context->cookie->tracking_id));
-		$this->context->smarty->assign('referrer', $referrer);
-		$this->context->smarty->assign('datepickerFrom', $fakeEmployee->stats_date_from);
-		$this->context->smarty->assign('datepickerTo', $fakeEmployee->stats_date_to);
+		$this->smarty->assign('referrer', $referrer);
+		$this->smarty->assign('datepickerFrom', $fakeEmployee->stats_date_from);
+		$this->smarty->assign('datepickerTo', $fakeEmployee->stats_date_to);
 		
 		$displayTab = array(
 			'uniqs' => $this->l('Unique visitors'),
@@ -182,7 +182,7 @@ class TrackingFront extends Module
 			'cart' => $this->l('Average cart'),
 			'reg_rate' => $this->l('Registration rate'),
 			'order_rate' => $this->l('Order rate'));
-		$this->context->smarty->assign('displayTab', $displayTab);
+		$this->smarty->assign('displayTab', $displayTab);
 		
 		$products = Product::getSimpleProducts($this->context->language->id);
 		$productsArray = array();

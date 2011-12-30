@@ -203,15 +203,15 @@ class BlockCategories extends Module
 				$resultParents[$row['id_parent']][] = &$row;
 				$resultIds[$row['id_category']] = &$row;
 			}
-//p($resultParents);
+
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents, $resultIds);
-//d($blockCategTree);
+
 			$isDhtml = (Configuration::get('BLOCK_CATEG_DHTML') == 1 ? true : false);
 			if (Tools::isSubmit('id_category'))
 			{
 				$this->context->cookie->last_visited_category = $id_category;
-				$this->context->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
+				$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
 			}
 			if (Tools::isSubmit('id_product'))
 			{
@@ -221,15 +221,15 @@ class BlockCategories extends Module
 					if (isset($product) AND Validate::isLoadedObject($product))
 						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$this->context->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
+				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
 			}
-			$this->context->smarty->assign('blockCategTree', $blockCategTree);
+			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories.tpl'))
-				$this->context->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+				$this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
-				$this->context->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$this->context->smarty->assign('isDhtml', $isDhtml);
+				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$this->smarty->assign('isDhtml', $isDhtml);
 		//}
 		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories.tpl', $smartyCacheId);
@@ -279,8 +279,8 @@ class BlockCategories extends Module
 				$nbrColumns=3;
 			$numberColumn = abs(sizeof($result)/$nbrColumns);
 			$widthColumn= floor(100/$nbrColumns);
-			$this->context->smarty->assign('numberColumn', $numberColumn);
-			$this->context->smarty->assign('widthColumn', $widthColumn);
+			$this->smarty->assign('numberColumn', $numberColumn);
+			$this->smarty->assign('widthColumn', $widthColumn);
 
 			$blockCategTree = $this->getTree($resultParents, $resultIds, Configuration::get('BLOCK_CATEG_MAX_DEPTH'));
 			unset($resultParents, $resultIds);
@@ -290,7 +290,7 @@ class BlockCategories extends Module
 			if (Tools::isSubmit('id_category'))
 			{
 				$this->context->cookie->last_visited_category = $id_category;
-				$this->context->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
+				$this->smarty->assign('currentCategoryId', $this->context->cookie->last_visited_category);
 			}
 			if (Tools::isSubmit('id_product'))
 			{
@@ -300,15 +300,15 @@ class BlockCategories extends Module
 					if (isset($product) AND Validate::isLoadedObject($product))
 						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$this->context->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
+				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
 			}
-			$this->context->smarty->assign('blockCategTree', $blockCategTree);
+			$this->smarty->assign('blockCategTree', $blockCategTree);
 
 			if (file_exists(_PS_THEME_DIR_.'modules/blockcategories/blockcategories_footer.tpl'))
-				$this->context->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
+				$this->smarty->assign('branche_tpl_path', _PS_THEME_DIR_.'modules/blockcategories/category-tree-branch.tpl');
 			else
-				$this->context->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
-			$this->context->smarty->assign('isDhtml', $isDhtml);
+				$this->smarty->assign('branche_tpl_path', _PS_MODULE_DIR_.'blockcategories/category-tree-branch.tpl');
+			$this->smarty->assign('isDhtml', $isDhtml);
 		}
 		$this->context->smarty->cache_lifetime = 31536000; // 1 Year
 		$display = $this->display(__FILE__, 'blockcategories_footer.tpl', $smartyCacheId);

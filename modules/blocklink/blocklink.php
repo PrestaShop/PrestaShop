@@ -93,7 +93,7 @@ class BlockLink extends Module
 	{
 		$links = $this->getLinks();
 		
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'blocklink_links' => $links,
 			'title' => Configuration::get('PS_BLOCKLINK_TITLE', $this->context->language->id),
 			'url' => Configuration::get('PS_BLOCKLINK_URL'),
