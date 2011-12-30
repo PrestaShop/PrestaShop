@@ -236,6 +236,7 @@ table.table_block {
 table.std th,
 table.table_block th {
 	padding:14px 12px;
+	font-size:12px;
 	color:#fff;
 	text-transform:uppercase;
 	text-shadow:0 1px 0 #000;
@@ -1412,18 +1413,18 @@ form#add_adress {}
 /* ************************************************************************************************
       PAGE NEW-PRODUCTS
 ************************************************************************************************ */
-#new-products .sortPagiBar {margin-bottom:20px}
+#newproducts .sortPagiBar {margin-bottom:20px}
 
 
 /* ************************************************************************************************
       PAGE BEST SALES
 ************************************************************************************************ */
-#best-sales .sortPagiBar {margin-bottom:20px}
+#bestsales .sortPagiBar {margin-bottom:20px}
 
 /* ************************************************************************************************
       PAGE PRICES DROP SALES
 ************************************************************************************************ */
-#prices-drop .sortPagiBar {margin-bottom:20px}
+#pricesdrop .sortPagiBar {margin-bottom:20px}
 
 
 /* ************************************************************************************************
@@ -1527,7 +1528,7 @@ ul#suppliers_list li .right_side {float:right;}
 	font-size:13px;
 	background:#ffffe0
 }
-#search ul.product_list {margin-top:15px}
+#search .sortPagiBar {margin-bottom:20px}
 
 
 /* ************************************************************************************************
