@@ -178,8 +178,7 @@
 				}
 
 				$("#product-tab-content-wait").show();
-
-				if ($("#product-tab-content-"+id).hasClass('not-loaded'))
+				if ($("#product-tab-content-"+id).hasClass('not-loaded') && !$("#product-tab-content-"+id).hasClass('loading'))
 					displayTabProductById(this, id, true);
 				else
 				{

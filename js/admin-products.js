@@ -218,10 +218,12 @@ function editProductAttribute(ids, token)
 function displayTabProductById(el, id, selected)
 {
 	myurl = $(el).attr("href")+"&ajax=1";
+	// Used to check if the tab is already in the process of being loaded
+	$("#product-tab-content-"+id).addClass('loading');
 	$.ajax({
 		url : myurl,
 		async : true,
-		success :function(data)
+		success : function(data)
 		{
 			$("#product-tab-content-"+id).html(data);
 			$("#product-tab-content-"+id).removeClass('not-loaded');
@@ -231,6 +233,10 @@ function displayTabProductById(el, id, selected)
 				$("#link-"+id).addClass('selected');
 				$("#product-tab-content-"+id).show();
 			}
+		},
+		complete : function(data)
+		{
+			$("#product-tab-content-"+id).removeClass('loading');
 		}
 	});
 }
@@ -256,7 +262,7 @@ function getManufacturers()
 				if (j)
 				for (var i = 0; i < j.length; i++)
 					options += '<option value="' + j[i].optionValue + '">' + j[i].optionDisplay + '</option>';
-				$("select#id_manufacturer").replaceWith("<select id=\"id_manufacturer\">"+options+"</select>");
+				$("select#id_manufacturer").html(options);
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
 			{
