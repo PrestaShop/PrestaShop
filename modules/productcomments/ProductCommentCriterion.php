@@ -31,27 +31,23 @@ class ProductCommentCriterion extends ObjectModel
 	public		$id_product_comment_criterion_type;
 	
 	public		$name;
-	public		$active = 1;
-	protected	$fieldsRequiredLang = array('name');
-	protected	$fieldsSizeLang = array('name' => 128);
-	protected	$fieldsValidateLang = array('name' => 'isGenericName');
-	
-	protected	$table = 'product_comment_criterion';
-	protected	$identifier = 'id_product_comment_criterion';
-	
-	
-	public function getFields()
-	{
-		$this->validateFields();
-		return array('id_product_comment_criterion_type' => (int)$this->id_product_comment_criterion_type, 'active' => (int)$this->active);
-	}
-	
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array('name'));
-	}
-	
+	public		$active = true;
+
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'product_comment_criterion',
+		'primary' => 'id_product_comment_criterion',
+		'fields' => array(
+			'id_product_comment_criterion_type' =>	array('type' => self::TYPE_INT),
+			'active' =>								array('type' => self::TYPE_BOOL),
+
+			// Lang fields
+			'name' =>								array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+		)
+	);
+
 	public function delete()
 	{
 		if (!parent::delete())
