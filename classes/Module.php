@@ -632,18 +632,13 @@ abstract class ModuleCore
 				$position = 0;
 
 			// Register module in hook
-			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module', array(
+			$return &= Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module', array(
 				'id_module' => (int)$this->id,
 				'id_hook' => (int)$hookID,
 				'id_shop' => (int)$shopID,
 				'position' => (int)($position + 1),
 			), 'INSERT');
-			if (!$result)
-				$return &= false;
 		}
-
-		// Clean modules position
-		$this->cleanPositions($hookID, $shopList);
 
 		return $return;
 	}
