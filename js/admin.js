@@ -52,6 +52,7 @@ function str2url(str,encoding,ucfirst)
 	str = str.replace(/[\u0155]/g,'r');
 
 	str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
+	str = str.replace(/[\u0028\u0029\u0021\003F]/g,'');
 	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
 	str = str.replace(/[ ]/g,'-');
 	str = str.replace(/[\/]/g,'-');
@@ -100,6 +101,8 @@ function strToAltImgAttr(str,encoding,ucfirst)
 function copy2friendlyURL()
 {
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
+	if ($('#friendly-url'))
+		$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 	return;
 }
 
