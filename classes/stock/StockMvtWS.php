@@ -29,7 +29,7 @@
  * Webservice entity for stock movements
  * @since 1.5.0
  */
-class StockMvtWS extends ObjectModelCore
+class StockMvtWSCore extends ObjectModelCore
 {
 	public $id;
 
