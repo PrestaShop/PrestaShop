@@ -120,15 +120,19 @@ class HookCore extends ObjectModel
 	 	if (!Validate::isHookName($hook_name))
 	 		die(Tools::displayError());
 
-		$retro_hook_name = Hook::getRetroHookName($hook_name);
+		$cache_id = 'hook_idbyname_'.$hook_name;
+		if (!Cache::isStored($cache_id))
+		{
+			$retro_hook_name = Hook::getRetroHookName($hook_name);
+			Cache::store($cache_id, Db::getInstance()->getValue('
+				SELECT `id_hook`
+				FROM `'._DB_PREFIX_.'hook`
+				WHERE `name` = \''.pSQL($hook_name).'\'
+					OR `name` = \''.pSQL($retro_hook_name).'\'
+			'));
+		}
 
-		$result = Db::getInstance()->getRow('
-		SELECT `id_hook`, `name`
-		FROM `'._DB_PREFIX_.'hook`
-		WHERE `name` = \''.pSQL($hook_name).'\'
-		OR `name` = \''.pSQL($retro_hook_name).'\'');
-
-		return ($result ? $result['id_hook'] : false);
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
