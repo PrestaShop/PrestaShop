@@ -214,13 +214,13 @@ function WishlistVisibility(bought_class, id_button)
 	{
 		$('.' + bought_class).slideDown('fast');
 		$('#show' + id_button).hide();
-		$('#hide' + id_button).fadeIn('fast');
+		$('#hide' + id_button).css('display', 'block');
 	}
 	else
 	{
 		$('.' + bought_class).slideUp('fast');
 		$('#hide' + id_button).hide();
-		$('#show' + id_button).fadeIn('fast');
+		$('#show' + id_button).css('display', 'block');
 	}
 }
 
