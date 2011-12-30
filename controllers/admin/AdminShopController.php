@@ -313,8 +313,6 @@ class AdminShopControllerCore extends AdminController
 		);
 
 		$themes = Theme::getThemes();
-		foreach ($themes as $i => $theme)
-			$themes[$i]['checked'] = ((!$obj->id && $i == 0) || $obj->id_theme == $theme['id_theme']) ? true : false;
 
 		$this->fields_form['input'][] = array(
 			'type' => 'theme',
@@ -391,7 +389,8 @@ class AdminShopControllerCore extends AdminController
 
 		$this->fields_value = array(
 			'id_group_shop' => $obj->id_group_shop,
-			'active' => true
+			'active' => true,
+			'id_theme_checked' => isset($obj->id_theme) ? $obj->id_theme : 0
 		);
 
 		$this->tpl_form_vars = array(
