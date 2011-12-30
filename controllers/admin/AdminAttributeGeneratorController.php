@@ -113,6 +113,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 						foreach ($attributes as $attribute)
 							StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity, $this->context->shop->id);
 					}
+					Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&action=Combinations');
 				}
 				else
 					$this->_errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
