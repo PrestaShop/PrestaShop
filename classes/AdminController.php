@@ -1623,11 +1623,12 @@ class AdminControllerCore extends Controller
 
         $class_name_controller = $class.'controller';
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
+		// @TODO this makes the BO very slow on some systems, needs to be changed
+		/*if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
 		{
 			$string = str_replace('\'', '\\\'', $string);
 			return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
-		}
+		}*/
 
 		$key = md5(str_replace('\'', '\\\'', $string));
 
