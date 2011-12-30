@@ -29,6 +29,7 @@ class AdminControllerCore extends Controller
 {
 	public $path;
 
+
 	public static $currentIndex;
 	public $content;
 	public $warnings = array();
@@ -162,6 +163,9 @@ class AdminControllerCore extends Controller
 
 	/** @var array $cache_lang cache for traduction */
 	public static $cache_lang = array();
+
+	/** @var array list the the tab using under a module */
+	public static $tab_module_list = array();
 
 	/** @var array required_fields to display in the Required Fields form */
 	public $required_fields = array();
@@ -1606,6 +1610,8 @@ class AdminControllerCore extends Controller
 		// @todo remove global keyword in translations files and use static
 		global $_LANGADM;
 
+		self::initModuleCacheTab();
+
 		if (!is_array($_LANGADM))
 		{
 			$iso = Context::getContext()->language->iso_code;
@@ -1620,15 +1626,16 @@ class AdminControllerCore extends Controller
 		$class = strtolower($class);
 		// For traductions in a tpl folder with an underscore
 		$class = str_replace('_', '', $class);
-
-        $class_name_controller = $class.'controller';
-		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		// @TODO this makes the BO very slow on some systems, needs to be changed
-		/*if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
+		if (isset(self::$tab_module_list[$class]))
 		{
-			$string = str_replace('\'', '\\\'', $string);
-			return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
-		}*/
+			$class_name_controller = $class.'controller';
+			// if the class is extended by a module, use modules/[module_name]/xx.php lang file
+			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
+			{
+				$string = str_replace('\'', '\\\'', $string);
+				return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
+			}
+		}
 
 		$key = md5(str_replace('\'', '\\\'', $string));
 
@@ -1668,6 +1675,15 @@ class AdminControllerCore extends Controller
 		else if ($class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
 		return self::translate($string, $class, $addslashes, $htmlentities);
+	}
+
+	/**
+	 * Init a cache list of tab existing in a module
+	 */
+	public static function initModuleCacheTab()
+	{
+		if (!self::$tab_module_list)
+			self::$tab_module_list = Tab::getModuleTabList();
 	}
 
 	/**
