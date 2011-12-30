@@ -978,7 +978,6 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($templates as $template)
 			if (preg_match('/^(.*).tpl$/', $template))
 			{
-				//$tpl = _PS_ADMIN_DIR_.'/themes/template/'.$template;
 				$tpl = $template;
 
 				// get controller name instead of file name
