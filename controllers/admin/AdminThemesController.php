@@ -106,7 +106,6 @@ class AdminThemesControllerCore extends AdminController
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
-				'class' => 'width3',
 				'fields' =>	array(
 					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
 					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (file_exists(_PS_IMG_DIR_.'logo_mail'.$shop_suffix.'.jpg')) ? _PS_IMG_.'logo_mail'.$shop_suffix.'.jpg?date='.time() : _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),

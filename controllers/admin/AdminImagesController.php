@@ -50,7 +50,6 @@ class AdminImagesControllerCore extends AdminController
 			'images' => array(
 				'title' =>	$this->l('Images'),
 				'icon' =>	'tab-orders',
-				'class' =>	'width4',
 				'top' => '',
 				'bottom' => '',
 				'description' => $this->l('JPEG images have a small file size and standard quality. PNG images have a bigger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.').'
