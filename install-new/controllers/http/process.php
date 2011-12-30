@@ -224,13 +224,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function display()
 	{
 		$this->process_steps = array(
-			'installDatabase',
-			'populateDatabase',
-			'configureShop',
-			'installModules',
-			'installFixtures',
-			'installTheme',
-			//'preactivation',
+			array('key' => 'installDatabase', 'lang' => $this->l('Create database tables')),
+			array('key' => 'populateDatabase', 'lang' => $this->l('Populate database tables')),
+			array('key' => 'configureShop', 'lang' => $this->l('Configure shop informations')),
+			array('key' => 'installModules', 'lang' => $this->l('Install modules')),
+			array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data')),
+			array('key' => 'installTheme', 'lang' => $this->l('Install theme')),
 		);
 		$this->displayTemplate('process');
 	}
