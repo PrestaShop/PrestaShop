@@ -558,7 +558,12 @@ class AdminModulesControllerCore extends AdminController
 						if (Tools::getValue('controller') != '')
 							$_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
 
-						if (((method_exists($module, $method) && ($echo = $module->{$method}()))) AND $key == 'configure' AND Module::isInstalled($module->name))
+						if (!method_exists($module, $method))
+							throw new PrestashopException('Method can\'t be found');
+						
+						$echo = $module->{$method}();
+						
+						if ($key == 'configure' AND Module::isInstalled($module->name))
 						{
 							$backlink = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
 							$hooklink = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
