@@ -28,12 +28,14 @@ $(document).ready(function(){
 				else if ($(this).hasClass("fix-toolbar") && (!window_is_more_than_twice_the_toolbar || (viewTop <= placeholderTop)) )
 				{
 					$(this).removeClass("fix-toolbar");
+					$(this).removeAttr('style');
+					$(this).parent().removeAttr('style');
 				}
 			}
 		});
 	}); // end bind
 
-		// if count errors
+	// if count errors
 	$('#hideError').live('click', function(e)
 	{
 		e.preventDefault();
@@ -43,7 +45,7 @@ $(document).ready(function(){
 		return false;
 	});
 
-		// if count warnings
+	// if count warnings
 	$('#linkSeeMore').live('click', function(e){
 		e.preventDefault();
 		$('#seeMore').show('slow');
