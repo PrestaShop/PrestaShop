@@ -38,24 +38,22 @@ class LoyaltyModule extends ObjectModel
 	public $date_add;
 	public $date_upd;
 
-	protected $fieldsRequired = array('id_customer', 'points');
-	protected $fieldsValidate = array('id_loyalty_state' => 'isInt', 'id_customer' => 'isInt', 'id_cart_rule' => 'isInt', 'id_order' => 'isInt', 'points' => 'isInt');
-
-	protected $table = 'loyalty';
-	protected $identifier = 'id_loyalty';
-	
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_loyalty_state'] = (int)$this->id_loyalty_state;
-		$fields['id_customer'] = (int)$this->id_customer;
-		$fields['id_order'] = (int)$this->id_order;
-		$fields['id_cart_rule'] = (int)$this->id_cart_rule;
-		$fields['points'] = (int)$this->points;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return $fields;
-	}
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'loyalty',
+		'primary' => 'id_loyalty',
+		'fields' => array(
+			'id_loyalty_state' =>	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'id_customer' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'id_order' =>			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'id_cart_rule' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'points' =>				array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'date_add' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+		)
+	);
 
 	public function save($nullValues = false, $autodate = true)
 	{

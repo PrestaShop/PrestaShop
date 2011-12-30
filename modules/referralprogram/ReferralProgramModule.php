@@ -40,26 +40,24 @@ class ReferralProgramModule extends ObjectModel
 	public $date_add;
 	public $date_upd;
 
-	protected $fieldsRequired = array('id_sponsor', 'email', 'lastname', 'firstname');
-	protected $fieldsSize = array('id_sponsor' => 8, 'email' => 255, 'lastname' => 128, 'firstname' => 128, 'id_customer' => 8, 'id_discount' => 8, 'id_discount_sponsor' => 8);
-	protected $fieldsValidate = array( 'id_sponsor' => 'isUnsignedId', 'email' => 'isEmail', 'lastname' => 'isName', 'firstname' => 'isName', 'id_customer' => 'isUnsignedId', 'id_discount' => 'isUnsignedId', 'id_discount_sponsor' => 'isUnsignedId');
-	protected $table = 'referralprogram';
-	protected $identifier = 'id_referralprogram';
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_sponsor'] = (int)$this->id_sponsor;
-		$fields['email'] = pSQL($this->email);
-		$fields['lastname'] = pSQL($this->lastname);
-		$fields['firstname'] = pSQL($this->firstname);
-		$fields['id_customer'] = (int)$this->id_customer;
-		$fields['id_discount'] = (int)$this->id_discount;
-		$fields['id_discount_sponsor'] = (int)$this->id_discount_sponsor;
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return $fields;
-	}
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'referralprogram',
+		'primary' => 'id_referralprogram',
+		'fields' => array(
+			'id_sponsor' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'email' =>				array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255),
+			'lastname' =>			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 128),
+			'firstname' =>			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 128),
+			'id_customer' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_discount' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_discount_sponsor' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'date_add' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+		),
+	);
 
 	public static function getDiscountPrefix()
 	{
