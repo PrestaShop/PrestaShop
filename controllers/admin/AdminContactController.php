@@ -94,7 +94,6 @@ class AdminContactControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('Contact details'),
 				'icon' =>	'tab-contact',
-				'class' =>	'width3',
 				'fields' =>	$fields,
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),

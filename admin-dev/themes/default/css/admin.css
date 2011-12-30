@@ -212,6 +212,7 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 .qq-upload-button:hover { border:1px solid #939393;}
 
 /*leadin*/
+.leadin {}
 .leadin .bloc-leadin{ padding:10px 3px;}
 
 /*productBox*/
