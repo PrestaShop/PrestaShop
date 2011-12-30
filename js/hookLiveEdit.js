@@ -55,6 +55,7 @@ $(document).ready(function() {
 		$("#live_edit_feedback_str").html('<div style="padding:10px;"><p style="margin-bottom:10px;">' + confirmClose + '</p><p style="height:1.6em;display:block"><a style="margin:auto;float:left" class="button" href="#" onclick="closeLiveEdit();">' + confirm + '</a><a style="margin:auto;float:right;" class="button" href="#" onclick="closeFancybox();">' + cancel + '</a></p></div>');
 		$("#fancy").attr('href', '#live_edit_feedback');
 		$("#fancy").trigger("click");
+        return false;
 	});
 	$('.add_module_live_edit').unbind('click').click(function() {
 		$("#live_edit_feedback_str").html('<div style="padding:10px"><img src="img/loadingAnimation.gif"></div>');
