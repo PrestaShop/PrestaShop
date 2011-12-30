@@ -713,6 +713,17 @@ class ValidateCore
 	{
 		return preg_match('/^[a-zA-Z0-9_.-]*$/', $name);
 	}
+	
+	/**
+	 * Check for standard name directory validity 
+	 * 
+	 * @param string $name Name to validate
+   * @return boolean Validity is ok or not
+	 */
+	public static function isDirName($dir)
+	{
+		return (bool)preg_match('/^[a-zA-Z0-9_.-]*$/', $dir);
+	}
 
 	/**
 	* Check for admin panel tab name validity
@@ -966,16 +977,5 @@ class ValidateCore
 		return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
 	}
 
-	/**
-	 * Validate theme directory
-	 * We currently check if the item is a valid theme directory
-	 * 
-	 * @param string $dir 
-	 * @return boolean
-	 */
-	public static function isValidThemeDir($dir)
-	{
-		return ($dir[0] != '.') && is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$dir);
-	}
 }
 
