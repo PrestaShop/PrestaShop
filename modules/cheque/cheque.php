@@ -154,7 +154,7 @@ class Cheque extends PaymentModule
 		if (!$this->checkCurrency($params['cart']))
 			return ;
 
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'this_path' => $this->_path,
 			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 		));
@@ -169,7 +169,7 @@ class Cheque extends PaymentModule
 		$state = $params['objOrder']->getCurrentState();
 		if ($state == Configuration::get('PS_OS_CHEQUE') OR $state == Configuration::get('PS_OS_OUTOFSTOCK'))
 		{
-			$this->context->smarty->assign(array(
+			$this->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'chequeName' => $this->chequeName,
 				'chequeAddress' => Tools::nl2br($this->address),
@@ -177,10 +177,10 @@ class Cheque extends PaymentModule
 				'id_order' => $params['objOrder']->id
 			));
 			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
-				$this->context->smarty->assign('reference', $params['objOrder']->reference);
+				$this->smarty->assign('reference', $params['objOrder']->reference);
 		}
 		else
-			$this->context->smarty->assign('status', 'failed');
+			$this->smarty->assign('status', 'failed');
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
 

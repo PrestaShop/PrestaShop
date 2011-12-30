@@ -454,14 +454,14 @@ class Loyalty extends Module
 				if (!(int)(Configuration::get('PS_LOYALTY_NONE_AWARD')) AND Product::isDiscounted((int)$product->id))
 				{
 					$points = 0;
-					$this->context->smarty->assign('no_pts_discounted', 1);
+					$this->smarty->assign('no_pts_discounted', 1);
 				}
 				else			
 					$points = (int)(LoyaltyModule::getNbPointsByPrice($product->getPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true, (int)($product->getIdProductAttributeMostExpensive()))));
 				$pointsAfter = $points;
 				$pointsBefore = 0;
 			}
-			$this->context->smarty->assign(array(
+			$this->smarty->assign(array(
 				'points' => (int)($points),
 				'total_points' => (int)($pointsAfter),
 				'point_rate' => Configuration::get('PS_LOYALTY_POINT_RATE'),
@@ -520,14 +520,14 @@ class Loyalty extends Module
 		if (Validate::isLoadedObject($params['cart']))
 		{
 			$points = LoyaltyModule::getCartNbPoints($params['cart']);
-			$this->context->smarty->assign(array(
+			$this->smarty->assign(array(
 				 'points' => (int)$points, 
 				 'voucher' => LoyaltyModule::getVoucherValue((int)$points),
 				 'guest_checkout' => (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED')
 			));
-		} else {
-			$smarty->assign(array('points' => 0));
 		}
+		else
+			$this->smarty->assign(array('points' => 0));
 		
 		return $this->display(__FILE__, 'shopping-cart.tpl');
 	}

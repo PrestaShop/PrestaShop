@@ -84,10 +84,12 @@ class BlockSearch extends Module
 	 */
 	private function calculHookCommon($params)
 	{
-		$this->context->smarty->assign('ENT_QUOTES', ENT_QUOTES);
-		$this->context->smarty->assign('search_ssl', Tools::usingSecureMode());
-		$this->context->smarty->assign('ajaxsearch', Configuration::get('PS_SEARCH_AJAX'));
-		$this->context->smarty->assign('instantsearch', Configuration::get('PS_INSTANT_SEARCH'));
+		$this->smarty->assign(array(
+			'ENT_QUOTES' =>		ENT_QUOTES,
+			'search_ssl' =>		Tools::usingSecureMode(),
+			'ajaxsearch' =>		Configuration::get('PS_SEARCH_AJAX'),
+			'instantsearch' =>	Configuration::get('PS_INSTANT_SEARCH'),
+		));
 
 		return true;
 	}

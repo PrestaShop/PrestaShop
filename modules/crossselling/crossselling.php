@@ -161,7 +161,7 @@ class CrossSelling extends Module
 					$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], false, NULL);
 			}
 
-			$this->context->smarty->assign(array('order' => (count($pIds) > 1 ? true : false), 'orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
+			$this->smarty->assign(array('order' => (count($pIds) > 1 ? true : false), 'orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
 			'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')));
 		}
 		return $this->display(__FILE__, 'crossselling.tpl');
@@ -209,7 +209,7 @@ class CrossSelling extends Module
 					$orderProduct['displayed_price'] = Product::getPriceStatic((int)$orderProduct['product_id'], false, NULL);
 			}
 
-			$this->context->smarty->assign(array('order' => false, 'orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
+			$this->smarty->assign(array('order' => false, 'orderProducts' => $orderProducts, 'middlePosition_crossselling' => round(sizeof($orderProducts) / 2, 0),
 			'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')));
 		}
 		return $this->display(__FILE__, 'crossselling.tpl');

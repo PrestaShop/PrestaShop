@@ -153,7 +153,7 @@ class ProductToolTip extends Module
 			WHERE p.id_page_type = 1 AND p.id_object = '.(int)($id_product).' AND cp.time_start > \''.pSQL($date).'\'');
 
 			if (isset($nbPeople['nb']) AND $nbPeople['nb'] > 0)
-				$this->context->smarty->assign('nb_people', (int)($nbPeople['nb']));
+				$this->smarty->assign('nb_people', (int)($nbPeople['nb']));
 		}
 
 		/* Then, we try to display last sale */
@@ -170,7 +170,7 @@ class ProductToolTip extends Module
 			ORDER BY o.date_add DESC');
 
 			if (isset($order['date_add']) && Validate::isDateFormat($order['date_add'])  && $order['date_add'] != '0000-00-00 00:00:00')
-				$this->context->smarty->assign('date_last_order', $order['date_add']);
+				$this->smarty->assign('date_last_order', $order['date_add']);
 			else
 			{
 				/* No sale? display last cart add instead */
@@ -182,7 +182,7 @@ class ProductToolTip extends Module
 					WHERE cp.id_product = '.(int)($id_product));
 
 					if (isset($cart['date_add']) && Validate::isDateFormat($cart['date_add'])  && $cart['date_add'] != '0000-00-00 00:00:00')
-						$this->context->smarty->assign('date_last_cart', $cart['date_add']);
+						$this->smarty->assign('date_last_cart', $cart['date_add']);
 				}
 			}
 		}

@@ -226,9 +226,11 @@ class BlockAdvertising extends Module
 	*/
 	public function hookRightColumn($params)
 	{
-		$this->context->smarty->assign('image', $this->context->link->protocol_content.$this->adv_img);
-		$this->context->smarty->assign('adv_link', $this->adv_link);
-		$this->context->smarty->assign('adv_title', $this->adv_title);
+		$this->smarty->assign(array(
+			'image' =>		$this->context->link->protocol_content.$this->adv_img,
+			'adv_link' =>	$this->adv_link,
+			'adv_title' =>	$this->adv_title,
+		));
 
 		return $this->display(__FILE__, 'blockadvertising.tpl');
 	}

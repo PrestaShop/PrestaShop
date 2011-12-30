@@ -372,7 +372,7 @@ class ReferralProgram extends Module
 
 		if ($cartRule->checkValidity($this->context) === false)
 		{
-			$this->context->smarty->assign(array('discount_display' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency($params['cookie']->id_currency)), 'discount' => $cartRule));
+			$this->smarty->assign(array('discount_display' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency($params['cookie']->id_currency)), 'discount' => $cartRule));
 			return $this->display(__FILE__, 'shopping-cart.tpl');
 		}
 		return false;
@@ -580,7 +580,7 @@ class ReferralProgram extends Module
 			$cartRule = new CartRule((int)$referralprogram->id_cart_rule_sponsor);
 			if (!Validate::isLoadedObject($cartRule))
 				return false;
-			$this->context->smarty->assign(array('discount' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency((int)$params['objOrder']->id_currency)), 'sponsor_firstname' => $sponsor->firstname, 'sponsor_lastname' => $sponsor->lastname));
+			$this->smarty->assign(array('discount' => ReferralProgram::displayDiscount($cartRule->reduction_percent ? $cartRule->reduction_percent : $cartRule->reduction_amount, $cartRule->reduction_percent ? 1 : 2, new Currency((int)$params['objOrder']->id_currency)), 'sponsor_firstname' => $sponsor->firstname, 'sponsor_lastname' => $sponsor->lastname));
 			return $this->display(__FILE__, 'order-confirmation.tpl');
 		}
 		return false;
