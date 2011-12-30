@@ -22,9 +22,14 @@
 
 /* bloc */
 #wishlist_block #wishlist_block_list {
-	margin:10px 0;
+	margin:5px 0 10px 0;
 	padding-bottom:10px;
 	border-bottom:1px dotted #ccc
+}
+#wishlist_block_list dt {
+    position:relative;
+	margin-top:5px;
+	padding-right:20px
 }
 
 #wishlist_block_list .quantity-formated {
@@ -34,8 +39,10 @@
 }
 #wishlist_block_list .cart_block_product_name {font-weight:bold}
 #wishlist_block_list .ajax_cart_block_remove_link {
-	float:right;
 	display:inline-block;
+	position:absolute;
+    right:0;
+    top:0;
 	margin:1px 0 0 5px;
 	height:12px;
 	width:12px
