@@ -41,12 +41,13 @@
 	<div class="margin-form">
 	{if $input.type == 'theme'}
 		{foreach $input.values as $theme}
-			<div class="select_theme {if $theme.checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
-				{$theme.name}<br />
-				<img src="../themes/{$theme.directory}/preview.jpg" alt="{$theme.directory}" /><br />
-				<input type="radio" name="id_theme" value="{$theme.id_theme}" {if $theme.checked}checked="checked"{/if} />
+			<div class="select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
+				{$theme->name}<br />
+				<img src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}" /><br />
+				<input type="radio" name="id_theme" value="{$theme->id}" {if $theme->id == $fields_value.id_theme_checked}checked="checked"{/if} />
 			</div>
 		{/foreach}
+		<div class="clear">&nbsp;</div>
 	{/if}
 	{if $input.type == 'textGroupShop'}
 		{$input.value}
