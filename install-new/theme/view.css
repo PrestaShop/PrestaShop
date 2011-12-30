@@ -695,24 +695,28 @@ ul#optional_update {list-style-type:none;}
 #progress_bar {
 	display: none;
 }
-	#progress_bar table {
+	#progress_bar .total {
 		width: 100%;
+        height: 30px;
 		border: 1px solid #999999;
+        background-color: #eeeeee;
 	}
-		#progress_bar table td {
-		    background-color: #eeeeee;
-		    height: 25px;
-		    margin: 3px;
-		}
-		#progress_bar table td.complete {
-			background-color: #74A3DC;
-		}
+
+        #progress_bar .total .progress {
+            width: 0px;
+            height: 30px;
+            background-color: #74A3DC;
+        }
+
 	#progress_bar .installing {
-	    background: url("img/ajax-loader-small.gif") no-repeat scroll 0 0 transparent;
-	    font-size: 14px;
-	    font-style: italic;
-	    padding-left: 20px;
-		display: none;
+        background: url("img/ajax-loader-small.gif") no-repeat scroll 0 0 transparent;
+        display: none;
+        font-size: 18px;
+        font-style: italic;
+        font-weight: bold;
+        height: 26px;
+        padding-left: 36px;
+        padding-top: 6px;
 	}
 	
 	#progress_bar ol {

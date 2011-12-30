@@ -2,28 +2,24 @@
 
 <script type="text/javascript">
 <!--
+var install_is_done = '<?php echo addslashes($this->l('Done !')) ?>';
 var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
+var process_percent = <?php echo 100 / count($this->process_steps) ?>;
 -->
 </script>
 
 <div id="install_process_form">
 	<div id="progress_bar">
-		<div class="installing">
-			<?php echo $this->l('Installing') ?> <span></span>
-		</div>
+		<div class="installing"></div>
 
-		<table>
-			<tr>
-				<?php foreach ($this->process_steps as $item): ?>
-					<td id="progress_bar_<?php echo $item ?>" style="width: <?php floor(100 / count($this->process_steps)) ?>%">&nbsp;</td>
-				<?php endforeach; ?>
-			</tr>
-		</table>
+		<div class="total">
+			<div class="progress"></div>
+		</div>
 
 		<ol class="process_list">
 			<?php foreach ($this->process_steps as $item): ?>
-				<li id="process_step_<?php echo $item ?>" class="process_step">
-					<?php echo $this->l('process_step_'.$item) ?>
+				<li id="process_step_<?php echo $item['key'] ?>" class="process_step">
+					<?php echo $item['lang'] ?>
 					<div class="error_log"></div>
 				</li>
 			<?php endforeach; ?>
