@@ -66,7 +66,6 @@ class AdminEmailsControllerCore extends AdminController
  			'test' => array(
 				'title' =>	$this->l('Test your e-mail configuration'),
 				'icon' =>	'email',
-				'class' =>	'width2',
 				'fields' =>	array(
 				 	'PS_SHOP_EMAIL' => array('title' => $this->l('Send a test e-mail to'), 'type' => 'text', 'size' => 40, 'id' => 'testEmail'),
 				),
