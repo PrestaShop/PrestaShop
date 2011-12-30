@@ -135,18 +135,20 @@ class AdminThemesControllerCore extends AdminController
 			),
 		);
 
-		$getAvailableThemes = Theme::getAvailable(false);
-		$available_theme_directories = array();
-		
-		$selected_theme_directory = null;
-		if ($this->loadObject(true))
-			$selected_theme_directory = $this->object->directory;
+	}
 
+	public function renderForm(){
+		$getAvailableThemes = Theme::getAvailable(false);
+		$available_theme_dir = array();
+		$selected_theme_dir = null;
+		if ($this->object)
+			$selected_theme_dir= $this->object->directory;
+		
 		foreach($getAvailableThemes as $k => $dirname)
 		{
-			$available_theme_directories[$k]['value'] = $dirname;
-			$available_theme_directories[$k]['label'] = $dirname;
-			$available_theme_directories[$k]['id'] = $dirname;
+			$available_theme_dir[$k]['value'] = $dirname;
+			$available_theme_dir[$k]['label'] = $dirname;
+			$available_theme_dir[$k]['id'] = $dirname;
 		};
 		$this->fields_form = array(
 			'tinymce' => false,
@@ -163,25 +165,48 @@ class AdminThemesControllerCore extends AdminController
 					'required' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Directory:'),
-					'name' => 'directory',
-					'required' => true,
-					'br' => true,
-					'class' => 't',
-					'values' => $available_theme_directories,
-					'selected' => $selected_theme_directory,
-					'desc' => $this->l('Note: only the existence of the directory is checked. Please be sure to select a valid theme directory.'),
-				),
 			),
 			'submit' => array(
 				'title' => $this->l('   Save   '),
 				'class' => 'button'
 			)
 		);
-	}
+		// adding a new theme, you can create a directory, and copy from an existing theme
+		if ($this->display == 'add' || !$this->object->id)
+		{
+			$this->fields_form['input'][] = array(
+					'type' => 'text',
+					'label' => $this->l('Directory:'),
+					'name' => 'directory',
+					'required' => true,
+					'desc' => $this->l('Note: only the existence of the directory is checked. Please be sure to select a valid theme directory.'),
+				);
+			$this->fields_form['input'][] = array(
+				'type' => 'select',
+				'name' => 'based_on',
+				'label' => $this->l('Based on'),
+				'options' => array(
+				'id' => 'id', 'name' => 'name', 
+				'default' => array('value' => 0, 'label' => ' - '),
+				'query' => Theme::getThemes(),
+				)
+			);
+		}
+		else
+			$this->fields_form['input'][] = array(
+					'type' => 'radio',
+					'label' => $this->l('Directory:'),
+					'name' => 'directory',
+					'required' => true,
+					'br' => true,
+					'class' => 't',
+					'values' => $available_theme_dir,
+					'selected' => $selected_theme_dir,
+					'desc' => $this->l('Note: only the existence of the directory is checked. Please be sure to select a valid theme directory.'),
+				);
 
+		return parent::renderForm();
+	}
 	public function renderList(){
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -190,6 +215,59 @@ class AdminThemesControllerCore extends AdminController
 	//	$this->_select = 'position ';
 
 		return parent::renderList();
+	}
+	
+	/**
+	 * copy $base_theme_dir into $target_theme_dir.
+	 *
+	 * @param string $base_theme_dir relative path to base dir 
+	 * @param string $target_theme_dir relative path to target dir
+	 * @return boolean true if success
+	 */
+	private static function copyTheme($base_theme_dir, $target_theme_dir)
+	{
+		$res = true;
+		$base_theme_dir = rtrim($base_theme_dir, '/').'/';
+		$base_dir = _PS_ALL_THEMES_DIR_ . $base_theme_dir;
+		$target_theme_dir = rtrim($target_theme_dir, '/').'/';
+		$target_dir = _PS_ALL_THEMES_DIR_ . $target_theme_dir;
+		$files = scandir($base_dir);
+
+		foreach ($files as $file)
+			if (!in_array($file[0], array('.', '..', '.svn')))
+			{
+				if (is_dir($base_dir.$file))
+				{
+					if (!is_dir($target_dir.$file))
+						mkdir($target_dir.$file, Theme::$access_rights);
+					
+					$res &= self::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
+				}
+				elseif (!file_exists($target_theme_dir.$file))
+					$res &= copy($base_dir.$file, $target_dir.$file);
+			}
+		
+		return $res;
+	}
+
+	public function processAdd($token){
+		$new_dir = Tools::getValue('directory');
+		$res = true;
+		if (Validate::isDirName($new_dir) && !is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
+		{
+			$res &= mkdir(_PS_ALL_THEMES_DIR_.$new_dir, Theme::$access_rights);
+			if ($res)
+				$this->confirmations[] = $this->l('Directory successfully created');
+		}
+	
+		if (0 !== $id_based = (int)Tools::getValue('based_on'))
+		{
+			$base_theme = new Theme($id_based);
+			$res = $this->copyTheme($base_theme->directory, $new_dir);
+			$base_theme = new Theme((int)Tools::getValue('based_on'));
+		}
+
+		return parent::processAdd($token);
 	}
 
 	public function processDelete($token){
@@ -449,7 +527,6 @@ class AdminThemesControllerCore extends AdminController
 
 	protected function uploadIco($name, $dest)
 	{
-
 		if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name']))
 		{
 			/* Check ico validity */
