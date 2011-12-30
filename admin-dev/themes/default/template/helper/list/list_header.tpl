@@ -58,8 +58,6 @@
 
 {/if}{* End if simple_header *}
 
-<a name="{$table}">&nbsp;</a>
-
 {if $show_toolbar}
 	<div class="toolbar-placeholder">
 		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
