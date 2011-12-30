@@ -339,6 +339,7 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 				$combinations[$row['id_product_attribute']]['attributes'][] = (int)$row['id_attribute'];
 				$combinations[$row['id_product_attribute']]['price'] = (float)$row['price'];
+				// Call getPriceStatic in order to set $combination_specific_price
 				Product::getPriceStatic((int)$this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
 				$combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
 				$combinations[$row['id_product_attribute']]['ecotax'] = (float)$row['ecotax'];
