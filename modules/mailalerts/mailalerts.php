@@ -259,7 +259,7 @@ class MailAlerts extends Module
 		$id_product_attribute = 0;
 
 		if (!$this->context->customer->isLogged())
-			$this->context->smarty->assign('email', 1);
+			$this->smarty->assign('email', 1);
 		else
 		{
 			$id_customer = (int)($params['cookie']->id_customer);
@@ -267,7 +267,7 @@ class MailAlerts extends Module
 				return ;
 		}
 
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'id_product' => $id_product,
 			'id_product_attribute' => $id_product_attribute));
 

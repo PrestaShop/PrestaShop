@@ -117,7 +117,7 @@ class BlockPaymentLogo extends Module
 		$cms = new CMS(Configuration::get('PS_PAYMENT_LOGO_CMS_ID'), $this->context->language->id);
 		if (!Validate::isLoadedObject($cms))
 			return;
-		$this->context->smarty->assign('cms_payement_logo', $cms);
+		$this->smarty->assign('cms_payement_logo', $cms);
 		return $this->display(__FILE__, 'blockpaymentlogo.tpl');
 	}
 

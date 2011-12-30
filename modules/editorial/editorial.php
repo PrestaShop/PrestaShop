@@ -300,7 +300,7 @@ class Editorial extends Module
 	{
 
 		$editorial = new EditorialClass(1, $this->context->language->id);
-		$this->context->smarty->assign(array(
+		$this->smarty->assign(array(
 			'editorial' => $editorial,
 			'default_lang' => (int)$this->context->language->id,
 			'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),

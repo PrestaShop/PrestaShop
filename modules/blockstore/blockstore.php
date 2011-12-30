@@ -63,9 +63,7 @@ class BlockStore extends Module
 
 	function hookRightColumn($params)
 	{
-
-
-		$this->context->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
+		$this->smarty->assign('store_img', Configuration::get('BLOCKSTORE_IMG'));
 		return $this->display(__FILE__, 'blockstore.tpl');
 	}
 
@@ -78,7 +76,7 @@ class BlockStore extends Module
 	{
 		if (Tools::isSubmit('submitStoreConf'))
 		{
-			if (isset($_FILES['store_img']) AND isset($_FILES['store_img']['tmp_name']) AND !empty($_FILES['store_img']['tmp_name']))
+			if (isset($_FILES['store_img']) && isset($_FILES['store_img']['tmp_name']) && !empty($_FILES['store_img']['tmp_name']))
 			{
 				if ($error = checkImage($_FILES['store_img'], 4000000))
 					return $this->displayError($this->l('invalid image'));
