@@ -45,15 +45,17 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #header_infos{ position:relative; margin: 0; padding:0; height:84px; }
 #header #header_shopname {float: left; margin:15px 20px 0 20px;}
 #header #employee_links {float: right; display:block; margin:15px 15px 0 15px; }
-#header #employee_links a{ float:left; color:#fff; text-transform:capitalize;}
+#header #employee_links a{ float:left; color:#BABABA; text-transform:capitalize;}
+#header #employee_links a:hover {color:#fff;}
 #header #employee_links .employee_name { float:left; color:#fff;}
 #header .separator { background: transparent url('../img/separator.png') no-repeat scroll center top; display: block;float: left;height: 19px; width: 16px;}
 #header #header_infos #header_shopname span{display:block; font-size:24px; height:28px; overflow:hidden;margin:0; color:#fff; text-shadow: 0 1px 0 #000000;}
-#header #header_infos #header_logout { background: transparent url('../img/logout.png') no-repeat scroll left top; float:left; padding-left:20px; color:#fff !important; }
-#header #header_infos #header_logout a { color:#fff !important;}
-#header #header_infos #header_logout a span {color:#fff;}
-#header #header_infos #header_foaccess{ text-decoration:none; color:#fff;}
-#header #header_infos #header_foaccess a {color:#fff !important;}
+#header #header_infos a#header_logout { background: transparent url('../img/logout.png') no-repeat scroll left top; float:left; padding-left:20px; color:#bababa;}
+#header #header_infos a#header_logout:hover {color:#fff;}
+#header #header_infos #header_logout a span {color:#bababa}
+#header #header_infos #header_foaccess{ text-decoration:none; color:#bababa;}
+#header #header_infos #header_foaccess a {color:#bababa !important;}
+#header #header_infos a#header_foaccess:hover { color:#fff;}
 #header #header_search{ float:left; margin-top:15px; position:relative;  }
 #header #header_search #bo_query{ font: 13px Arial,sans-serif; float:left;background: none repeat scroll 0 0 #fff;  border:1px solid #000; border-radius:4px;  padding: 5px 25px 5px 4px; width: 180px; box-shadow: 0 1px 0 #666;}
 #header #header_search #bo_search_type{ font-size:13px; float:left; margin:0 10px 0 0; padding:3px 0 4px; vertical-align:middle;width:auto; border-color: #666666 #CCCCCC #CCCCCC;border-style:solid solid solid none; height:27px; border-width: 1px;}
@@ -208,8 +210,9 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 		color:#333; width:180px; font-weight:bold; text-shadow: 0 1px 0 #fff;
 	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;}
 .qq-upload-button:hover { border:1px solid #939393;}
+
 /*leadin*/
-.leadin { padding:10px;}
+.leadin .bloc-leadin{ padding:10px 3px;}
 
 /*productBox*/
 #productBox { position:relative; width:100%; float:left;}
