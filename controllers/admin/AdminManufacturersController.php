@@ -360,7 +360,7 @@ class AdminManufacturersControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function initFormAddress()
+	public function renderFormAddress()
 	{
 		// Change table and className for addresses
 	 	$this->table = 'address';
@@ -617,7 +617,7 @@ class AdminManufacturersControllerCore extends AdminController
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
 		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
-			$this->content .= $this->initFormAddress();
+			$this->content .= $this->renderFormAddress();
 		else if ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
@@ -661,7 +661,7 @@ class AdminManufacturersControllerCore extends AdminController
 			$this->action = 'delete';
 	}
 
-	public function postProcess()
+	public function initProcess()
 	{
 		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress'))
 		{
@@ -670,7 +670,7 @@ class AdminManufacturersControllerCore extends AdminController
 	 		$this->identifier = 'id_address';
 			$this->deleted = true;
 		}
-		parent::postProcess();
+		parent::initProcess();
 	}
 
 	public function afterImageUpload()
