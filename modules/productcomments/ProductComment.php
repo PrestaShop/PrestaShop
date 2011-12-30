@@ -62,34 +62,25 @@ class ProductComment extends ObjectModel
 	/** @var string Object creation date */
 	public $date_add;
 
-	protected $fieldsRequired = array('id_product', 'id_customer', 'content');
-	protected $fieldsSize = array('content' => 65535);
-	protected $fieldsValidate = array(
-		'id_product' => 'isUnsignedId',
-		'id_customer' => 'isUnsignedId',
-		'content' => 'isMessage',
-		'grade' => 'isFloat',
-		'validate' => 'isBool'
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'product_comment',
+		'primary' => 'id_product_comment',
+		'fields' => array(
+			'id_product' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_customer' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_guest' =>		array('type' => self::TYPE_INT),
+			'customer_name' =>	array('type' => self::TYPE_STRING),
+			'title' =>			array('type' => self::TYPE_STRING),
+			'content' =>		array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'size' => 65535, 'required' => true),
+			'grade' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+			'validate' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'deleted' =>		array('type' => self::TYPE_BOOL),
+			'date_add' =>		array('type' => self::TYPE_DATE),
+		)
 	);
-
-	protected $table = 'product_comment';
-	protected $identifier = 'id_product_comment';
-
-	public	function getFields()
-	{
-	 	$this->validateFields(false);
-		$fields['id_product'] = (int)$this->id_product;
-		$fields['id_customer'] = (int)$this->id_customer;
-		$fields['id_guest'] = (int)$this->id_guest;
-		$fields['customer_name'] = pSQL($this->customer_name);
-		$fields['title'] = pSQL($this->title);
-		$fields['content'] = pSQL($this->content);
-		$fields['grade'] = (float)$this->grade;
-		$fields['validate'] = (int)$this->validate;
-		$fields['deleted'] = (int)$this->deleted;
-		$fields['date_add'] = pSQL($this->date_add);
-		return ($fields);
-	}
 
 	/**
 	 * Get comments by IdProduct

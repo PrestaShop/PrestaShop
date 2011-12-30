@@ -28,43 +28,40 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 	
-class		WishList extends ObjectModel
+class WishList extends ObjectModel
 {
 	/** @var integer Wishlist ID */
-	public		$id;
+	public $id;
 
 	/** @var integer Customer ID */
-	public 		$id_customer;
+	public $id_customer;
 
 	/** @var integer Token */
-	public 		$token;
+	public $token;
 
 	/** @var integer Name */
-	public 		$name;
+	public $name;
 
 	/** @var string Object creation date */
-	public 		$date_add;
+	public $date_add;
 
 	/** @var string Object last modification date */
-	public 		$date_upd;
+	public $date_upd;
 
-	protected	$fieldsSize = array('name' => 64, 'token' => 64);
-	protected	$fieldsRequired = array('id_customer', 'name', 'token');
-	protected	$fieldsValidate = array('id_customer' => 'isUnsignedId', 'name' => 'isMessage',
-		'token' => 'isMessage');
-	protected 	$table = 'wishlist';
-	protected 	$identifier = 'id_wishlist';
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_customer'] = (int)($this->id_customer);
-		$fields['token'] = pSQL($this->token);
-		$fields['name'] = pSQL($this->name);
-		$fields['date_add'] = pSQL($this->date_add);
-		$fields['date_upd'] = pSQL($this->date_upd);
-		return ($fields);
-	}
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'wishlist',
+		'primary' => 'id_wishlist',
+		'fields' => array(
+			'id_customer' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'token' =>			array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'required' => true),
+			'name' =>			array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'required' => true),
+			'date_add' =>		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' =>		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+		)
+	);
 
 	public function delete()
 	{
@@ -86,15 +83,18 @@ class		WishList extends ObjectModel
 		if (!Validate::isUnsignedId($id_wishlist))
 			die (Tools::displayError());
 		$result = Db::getInstance()->getRow('
-		SELECT `counter`
-		  FROM `'._DB_PREFIX_.'wishlist`
-		WHERE `id_wishlist` = '.(int)($id_wishlist));
-		if ($result == false OR !sizeof($result) OR empty($result) === true)
+			SELECT `counter`
+			FROM `'._DB_PREFIX_.'wishlist`
+			WHERE `id_wishlist` = '.(int)$id_wishlist
+		);
+		if ($result == false || !count($result) || empty($result) === true)
 			return (false);
-		return (Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'wishlist` SET
-		`counter` = '.(int)($result['counter'] + 1).'
-		WHERE `id_wishlist` = '.(int)($id_wishlist)));
+
+		return Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'wishlist` SET
+			`counter` = '.(int)($result['counter'] + 1).'
+			WHERE `id_wishlist` = '.(int)$id_wishlist
+		);
 	}
 
 	
@@ -102,10 +102,10 @@ class		WishList extends ObjectModel
 	{
 		$context = Context::getContext();
 		return Db::getInstance()->getValue('
-		SELECT COUNT(*) AS total
-		FROM `'._DB_PREFIX_.'wishlist` 
-		WHERE `name` = \''.pSQL($name).'\'
-		AND `id_customer` = '.(int)$context->customer->id
+			SELECT COUNT(*) AS total
+			FROM `'._DB_PREFIX_.'wishlist`
+			WHERE `name` = \''.pSQL($name).'\'
+				AND `id_customer` = '.(int)$context->customer->id
 		);
 	}
 	

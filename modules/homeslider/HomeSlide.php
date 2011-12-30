@@ -35,54 +35,24 @@ class HomeSlide extends ObjectModel
 	public $active;
 	public $position;
 
-	protected $fieldsValidate = array(
-		 'active' => 'isunsignedInt',
-		 'position' => 'isunsignedInt'
-	);
-	protected $fieldsRequired = array(
-		 'active',
-		 'position'
-	);
-	protected $fieldsRequiredLang = array('title', 'url', 'legend');
-	protected $fieldsSizeLang = array(
-		 'description' => 4000,
-		 'title' => 255,
-		 'legend' => 255,
-		 'url' => 255,
-		 'image' => 255
-	);
-	protected $fieldsValidateLang = array(
-		 'title' => 'isCleanHtml',
-		 'description' => 'isCleanHtml',
-		 'url' => 'isUrl',
-		 'legend' => 'isCleanHtml',
-		 'image' => 'isCleanHtml'
-	);
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'homeslider_slides',
+		'primary' => 'id_homeslider_slides',
+		'fields' => array(
+			'active' =>			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+			'position' =>		array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt', 'required' => true),
 
-	protected $tables = array('homeslider_slides, homeslider_slides_lang');
-	protected $table = 'homeslider_slides';
-	protected $identifier = 'id_homeslider_slides';
-
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_homeslider_slides'] = (int)$this->id;
-		$fields['active'] = (int)$this->active;
-		$fields['position'] = (int)$this->position;
-		return $fields;
-	}
-
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
-		return $this->getTranslationsFields(array(
-			'title',
-			'description',
-			'url',
-			'legend',
-			'image'
-		));
-	}
+			// Lang fields
+			'description' =>	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4000),
+			'title' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 255),
+			'legend' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 255),
+			'url' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isUrl', 'required' => true, 'size' => 255),
+			'image' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
+		)
+	);
 
 	public	function __construct($id_slide = null, $id_lang = null, $id_shop = null, Context $context = null)
 	{

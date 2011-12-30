@@ -25,68 +25,43 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class		EditorialClass extends ObjectModel
+class EditorialClass extends ObjectModel
 {
 	/** @var integer editorial id*/
-	public		$id = 1;
+	public $id = 1;
 	
 	/** @var string body_title*/
-	public		$body_home_logo_link;
+	public $body_home_logo_link;
 
 	/** @var string body_title*/
-	public		$body_title;
+	public $body_title;
 
 	/** @var string body_title*/
-	public		$body_subheading;
+	public $body_subheading;
 
 	/** @var string body_title*/
-	public		$body_paragraph;
+	public $body_paragraph;
 
 	/** @var string body_title*/
-	public		$body_logo_subheading;
-	
-	protected 	$table = 'editorial';
-	protected 	$identifier = 'id_editorial';
-	
-	protected 	$fieldsValidate = array('body_home_logo_link' => 'isUrl');
-	protected 	$fieldsValidateLang = array(
-		'body_title' => 'isGenericName',
-		'body_subheading' => 'isGenericName',
-		'body_paragraph' => 'isCleanHtml',
-		'body_logo_subheading' => 'isGenericName');
-	
+	public $body_logo_subheading;
+
 	/**
-	  * Check then return multilingual fields for database interaction
-	  *
-	  * @return array Multilingual fields
-	  */
-	public function getTranslationsFieldsChild()
-	{
-		$this->validateFieldsLang();
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'editorial',
+		'primary' => 'id_editorial',
+		'fields' => array(
+			'body_home_logo_link' =>	array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
 
-		$fieldsArray = array('body_title', 'body_subheading', 'body_paragraph', 'body_logo_subheading');
-		$fields = array();
-		$languages = Language::getLanguages(false);
-		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-		foreach ($languages as $language)
-		{
-			$fields[$language['id_lang']]['id_lang'] = (int)($language['id_lang']);
-			$fields[$language['id_lang']][$this->identifier] = (int)($this->id);
-			foreach ($fieldsArray as $field)
-			{
-				if (!Validate::isTableOrIdentifier($field))
-					die(Tools::displayError());
-				if (isset($this->{$field}[$language['id_lang']]) AND !empty($this->{$field}[$language['id_lang']]))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$language['id_lang']], true);
-				elseif (in_array($field, $this->fieldsRequiredLang))
-					$fields[$language['id_lang']][$field] = pSQL($this->{$field}[$defaultLanguage], true);
-				else
-					$fields[$language['id_lang']][$field] = '';
-			}
-		}
-		return $fields;
-	}
-	
+			// Lang fields
+			'body_title' =>				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
+			'body_subheading' =>		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
+			'body_paragraph' =>			array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+			'body_logo_subheading' =>	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
+		)
+	);
+
 	public function copyFromPost()
 	{
 		/* Classical fields */
@@ -103,13 +78,5 @@ class		EditorialClass extends ObjectModel
 					if (isset($_POST[$field.'_'.(int)($language['id_lang'])]))
 						$this->{$field}[(int)($language['id_lang'])] = $_POST[$field.'_'.(int)($language['id_lang'])];
 		}
-	}
-	
-	public function getFields()
-	{
-		$this->validateFields();
-		$fields['id_editorial'] = (int)($this->id);
-		$fields['body_home_logo_link'] = pSQL($this->body_home_logo_link);
-		return $fields;
 	}
 }
