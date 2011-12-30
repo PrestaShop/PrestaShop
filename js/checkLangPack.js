@@ -24,27 +24,34 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function checkLangPack(){
-	$('p#resultCheckLangPack').hide();
+function checkLangPack(token){
 	if ($('#iso_code').val().length == 2)
 	{
-		$.ajax(
-		{
-			url: "ajax_lang_packs.php",
-			cache: false,
-			data: {iso_lang:$('#iso_code').val(), ps_version:$('#ps_version').val()},
-			dataType : 'json',
-			success: function(ret)
+		doAdminAjax(
 			{
-				if(typeof ret == 'object')
-					$('p#resultCheckLangPack').html(langPackOk+' <b>'+ret.name+'</b>) :'+'<br />'+langPackVersion+''+ret.version+' <a href="http://www.prestashop.com/download/lang_packs/gzip/'+ret.version+'/'+$('#iso_code').val()+'.gzip" target="_blank" class="link">'+download+'</a><br />'+langPackInfo).show("slow");
-				else if (ret == "offline")
-					$('p#resultCheckLangPack').show('slow');
+				controller:'AdminLanguages',
+				action:'checkLangPack',
+				token:token,
+				ajax:1,
+				iso_lang:$('#iso_code').val(), 
+				ps_version:$('#ps_version').val()
+			},
+			function(ret)
+			{
+				ret = $.parseJSON(ret);
+				if( ret.status == 'ok')
+				{
+					content = $.parseJSON(ret.content);
+					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
+						+'<br />' + langPackVersion + ' ' + content['version']
+						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+						+ $('#iso_code').val()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+					showSuccessMessage(message);
+				}
+				else
+					showErrorMessage(ret.error);
 			}
-		 });
+		 );
 	 }
 }
 
-$(document).ready(function() {
-	$('p#resultCheckLangPack').hide();
-});
