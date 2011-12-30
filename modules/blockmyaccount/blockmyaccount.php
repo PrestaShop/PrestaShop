@@ -64,7 +64,7 @@ class BlockMyAccount extends Module
 		$this->smarty->assign(array(
 			'voucherAllowed' => (int)Configuration::get('PS_VOUCHERS'),
 			'returnAllowed' => (int)Configuration::get('PS_ORDER_RETURN'),
-			'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('myAccountBlock'),
+			'HOOK_BLOCK_MY_ACCOUNT' => Hook::exec('displayMyAccountBlock'),
 		));
 		return $this->display(__FILE__, $this->name.'.tpl');
 	}
