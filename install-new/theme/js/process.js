@@ -100,7 +100,6 @@ function install_error(step, errors)
 function install_success()
 {
 	$('.installing').html(install_is_done);
-	return;
 	is_installing = false;
 	$('#install_process_form').slideUp();
 	$('#install_process_success').slideDown();
