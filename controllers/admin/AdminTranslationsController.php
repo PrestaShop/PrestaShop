@@ -986,14 +986,22 @@ class AdminTranslationsControllerCore extends AdminController
 				$tmp = substr($prefix_key, 0, $pos);
 				$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
 
-				if ($prefix_key == 'AdminHelper')
+				// Adding list, form, option in Helper Translations
+				if ($prefix_key == 'AdminHelper' || $prefix_key == 'AdminList' || $prefix_key == 'AdminOptions' || $prefix_key == 'AdminForm')
 					$prefix_key = 'Helper';
+
+				// Adding the folder products/combinaison/ in AdminProducts Translations
+				if ($prefix_key == 'AdminCombinaison')
+					$prefix_key = 'AdminProducts';
+
+				// Adding the folder backup/download/ in AdminBackup Translations
+				if ($prefix_key == 'AdminDownload')
+					$prefix_key = 'AdminBackup';
 
 				// @todo retrompatibility : we assume here than files directly in template/
 				// use the prefix "AdminController" (like old php files 'header', 'footer.inc', 'index', 'login', 'password', 'functions'
 				if ( $prefix_key == 'Admin' || $prefix_key == 'AdminTemplate')
 					$prefix_key = 'AdminController';
-				// and helpers in helper
 
 				$new_lang = array();
 				$fd = fopen($tpl, 'r');
