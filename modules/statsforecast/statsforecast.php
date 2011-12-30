@@ -305,8 +305,11 @@ class StatsForecast extends Module
 
 		$this->_html .= '<br />
 		<div class="blocStats"><h2 class="icon-conversion"><span></span>'.$this->l('Conversion').'</h2>
-			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Visitors').'<br />'.$visitors.'</span>
-			<span style="float:left;text-align:center;margin-right:10px">
+		<br/>
+		
+		<div class="blocConversion">
+			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px; width:100px;">'.$this->l('Visitors').'<br />'.$visitors.'</span>
+			<span style="float:left;text-align:center;margin-right:10px;">
 				<img src="../modules/'.$this->name.'/next.png"><br />'.round(100 * $customers / max(1, $visitors)).' %<br />
 				<img src="../modules/'.$this->name.'/next.png"><br />'.round(100 * $carts / max(1, $visitors)).' %
 			</span>
@@ -321,23 +324,33 @@ class StatsForecast extends Module
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Full carts').'<br />'.$fullcarts.'</span>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px"><img src="../modules/'.$this->name.'/next.png"><br />'.round(100 * $orders / max(1, $fullcarts)).' %</span>
 			<span style="float:left;text-align:center;margin-right:10px;padding-top:15px">'.$this->l('Orders').'<br />'.$orders.'</span>
-			<br class="clear" />
-			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Registered visitors').'</span>
+			</div>
+			
+			<div class="separation"></div>
+		<div class="blocConversion">
+			<span style="float:left;text-align:center;margin-right:10px; width:100px;">'.$this->l('Registered visitors').'</span>
 			<span style="float:left;text-align:center;margin-right:10px">
 				<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $customers), 2).' % <img src="../modules/'.$this->name.'/next.png">
 			</span>
 			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Orders').'</span>
-			<br class="clear" />
-			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Visitors').'</span>
+			</div>
+			
+						<div class="separation"></div>
+			
+			<div class="blocConversion">
+			<span style="float:left;text-align:center;margin-right:10px; width:100px;">'.$this->l('Visitors').'</span>
 			<span style="float:left;text-align:center;margin-right:10px">
-				<img src="../modules/'.$this->name.'/next.png"> <b>'.round(100 * $orders / max(1, $visitors), 2).' %</b> <img src="../modules/'.$this->name.'/next.png">
+				<img src="../modules/'.$this->name.'/next.png"> '.round(100 * $orders / max(1, $visitors), 2).' % <img src="../modules/'.$this->name.'/next.png">
 			</span>
 			<span style="float:left;text-align:center;margin-right:10px">'.$this->l('Orders').'</span>
 			
+			</div>
+					<div class="separation"></div>
+					<p>
 			'.$this->l('Turn your visitors into money:').'
-			<br />'.$this->l('Each visitor yields').' <b>'.Tools::displayPrice($ca['ventil']['total'] / max(1, $visitors), $currency).'.</b>
-			<br />'.$this->l('Each registered visitor yields').' <b>'.Tools::displayPrice($ca['ventil']['total'] / max(1, $customers), $currency).'</b>.
-		</div>';
+			<br />'.$this->l('Each visitor yields').' <b style="color:#000;">'.Tools::displayPrice($ca['ventil']['total'] / max(1, $visitors), $currency).'.</b>
+			<br />'.$this->l('Each registered visitor yields').' <b style="color:#000;">'.Tools::displayPrice($ca['ventil']['total'] / max(1, $customers), $currency).'</b>.
+		</p></div>';
 
 		$from = strtotime($employee->stats_date_from.' 00:00:00');
 		$to = strtotime($employee->stats_date_to.' 23:59:59');

@@ -116,8 +116,8 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 .table a:hover{text-decoration:none}
 .table tr th{ background-color: #F1F1F1; text-shadow:0 1px 0 #fff; padding:4px 6px;
 	background: #ececec url('../img/bg-degrade-table.png') repeat-x scroll left top;
-	/*background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
-	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;*/
+	background-image: -moz-linear-gradient(center top , #F9F9F9, #ECECEC);
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#ECECEC)) repeat scroll 0 0 transparent;
 	font-size:13px; text-align:left; color:#333;}
 .table tr th.right { text-align:center;}
 .table tr td{border-bottom:1px solid #ccc;color:#333;font-size:12px;padding: 4px 4px 4px 6px;}
@@ -286,17 +286,25 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 
 /*STATCONTAINER*/
 #statsContainer {margin-left:220px; padding:0 0 0 20px;}
-#statsContainer #calendar {   background-color: #EEEEEE;border-top: 1px solid #CCCCCC; display: block; margin: 10px 0;min-height: 25px; padding: 5px;}
-#statsContainer #calendar form {float:left;}
-#statsContainer #calendar input, #statsContainer #calendar p { float:left;}
-#statsContainer #calendar input.submitDateDay { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
-#statsContainer #calendar input.submitDateMonth { border-radius:0px;}
-#statsContainer #calendar input.submitDateYear { border-top-left-radius: 0px; border-bottom-left-radius:0px; border-left:none; margin-right:10px;}
-#statsContainer #calendar input.submitDateDayPrev { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
-#statsContainer #calendar input.submitDateMonthPrev { border-radius:0px;}
-#statsContainer #calendar input.submitDateYearPrev { border-top-left-radius: 0px; border-bottom-left-radius:0px; border-left:none; margin-right:10px;}
-#statsContainer #calendar p { margin:2px;}
-#statsContainer #calendar p span { float:left; display:block; padding:3px;}
+#statsContainer #calendar,
+#referrersContainer #calendar{   background-color: #EEEEEE;border-top: 1px solid #CCCCCC; display: block; margin: 10px 0;min-height: 25px; padding: 5px;}
+#statsContainer #calendar form,
+#referrersContainer #calendar form {float:left;}
+#statsContainer #calendar input, #statsContainer #calendar p,
+#referrersContainer #calendar input, #referrersContainer #calendar p { float:left;}
+#statsContainer #calendar input.submitDateDay, #referrersContainer #calendar input.submitDateDay { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
+#statsContainer #calendar input.submitDateMonth, #statsContainer #calendar input.submitDateMonth,
+#referrersContainer #calendar input.submitDateMonth, #referrersContainer #calendar input.submitDateMonth { border-radius:0px;}
+#statsContainer #calendar input.submitDateYear,
+#referrersContainer #calendar input.submitDateYear { border-top-left-radius: 0px; border-bottom-left-radius:0px; border-left:none; margin-right:10px;}
+#statsContainer #calendar input.submitDateDayPrev,
+#referrersContainer #calendar input.submitDateDayPrev { border-top-right-radius: 0px; border-bottom-right-radius:0px; border-right:none;}
+#statsContainer #calendar input.submitDateMonthPrev,
+#referrersContainer #calendar input.submitDateMonthPrev { border-radius:0px;}
+#statsContainer #calendar input.submitDateYearPrev,
+#referrersContainer #calendar input.submitDateYearPrev { border-top-left-radius: 0px; border-bottom-left-radius:0px; border-left:none; margin-right:10px;}
+#statsContainer #calendar p, #referrersContainer #calendar p { margin:2px;}
+#statsContainer #calendar p span, #referrersContainer #calendar p span { float:left; display:block; padding:3px;}
 #statsContainer .blocStats { background-color: #EBEDF4;border: 1px solid #C2C4D9; display: block; position:relative; padding: 10px;}
 #statsContainer .blocStats h2 { font-weight:normal; margin:0;}
 #statsContainer .blocStats h2.icon-statsproduct span,
@@ -357,6 +365,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 #statsContainer .blocStats form { position:absolute; top:10px; right:5px;}
 #statsContainer .blocStats form.checkup { position:relative; top:0; left:0;}
 #statsContainer .totalStats { font-size:16px; font-weight:bold;}
+#statsContainer .blocStats .blocConversion { display:block; display:inline-table; min-height:80px !ie; }
 
 /*MODULECONTAINER*/
 #moduleContainer { margin-left:220px; padding:13px 0 0 20px;}
