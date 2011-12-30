@@ -353,12 +353,34 @@ class AdminReferrersControllerCore extends AdminController
 
 	public function displayCalendar($action = null, $table = null, $identifier = null, $id = null)
 	{
-		return AdminStatsTabController::displayCalendarForm(array(
+		return self::displayCalendarForm(array(
 			'Calendar' => $this->l('Calendar'),
 			'Day' => $this->l('Today'),
 			'Month' => $this->l('Month'),
 			'Year' => $this->l('Year')
 		), $this->token, $action, $table, $identifier, $id);
+	}
+
+	public static function displayCalendarForm($translations, $token, $action = null, $table = null, $identifier = null, $id = null)
+	{
+		$context = Context::getContext();
+		$tpl = $context->smarty->createTemplate('referrers/calendar.tpl');
+
+		$context->controller->addJqueryUI('ui.datepicker');
+
+		$tpl->assign(array(
+			'current' => self::$currentIndex,
+			'token' => $token,
+			'action' => $action,
+			'table' => $table,
+			'identifier' => $identifier,
+			'id' => $id,
+			'translations' => $translations,
+			'datepickerFrom' => Tools::getValue('datepickerFrom', $context->employee->stats_date_from),
+			'datepickerTo' => Tools::getValue('datepickerTo', $context->employee->stats_date_to)
+		));
+
+		return $tpl->fetch();
 	}
 
 	public function displaySettings()
