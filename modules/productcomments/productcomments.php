@@ -761,8 +761,6 @@ class ProductComments extends Module
 			'nbComments' => (int)ProductComment::getCommentNumber((int)Tools::getValue('id_product'))
 		));
 
-
-
 		return ($this->display(__FILE__, '/productcomments.tpl'));
 	}
 
