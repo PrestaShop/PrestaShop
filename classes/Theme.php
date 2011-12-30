@@ -30,6 +30,8 @@ class ThemeCore extends ObjectModel
 	public $name;
 	public $directory;
 
+	/** @var int access rights of created folders (octal) */
+	public static $access_rights = 0775;
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -38,7 +40,7 @@ class ThemeCore extends ObjectModel
 		'primary' => 'id_theme',
 		'fields' => array(
 			'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64, 'required' => true),
-			'directory' => array('type' => self::TYPE_STRING, 'validate' => 'isValidThemeDir', 'size' => 64, 'required' => true),
+			'directory' => array('type' => self::TYPE_STRING, 'validate' => 'isDirName', 'size' => 64, 'required' => true),
 		),
 	);
 
@@ -92,5 +94,20 @@ class ThemeCore extends ObjectModel
 	{
 		return Db::getInstance()->getValue('SELECT count(*) 
 			FROM '._DB_PREFIX_.'shop WHERE id_theme = '.(int)$this->id);
+	}
+
+	/**
+	 * add only theme if the directory exists
+	 * 
+	 * @param bool $null_values
+	 * @param bool $autodate
+	 * @return boolean Insertion result
+	 */
+	public function add($autodate = true, $null_values = false)
+	{
+		if (!is_dir(_PS_ALL_THEMES_DIR_.$this->directory))
+			return false;
+
+		return parent::add($autodate, $null_values);
 	}
 }
