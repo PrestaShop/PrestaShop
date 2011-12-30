@@ -48,6 +48,7 @@ class FavoriteProducts extends Module
 	{
 			if (!parent::install()
 				|| !$this->registerHook('displayMyAccountBlock')
+				|| !$this->registerHook('displayCustomerAccount')
 				|| !$this->registerHook('displayLeftColumnProduct')
 				|| !$this->registerHook('displayHeader'))
 					return false;
