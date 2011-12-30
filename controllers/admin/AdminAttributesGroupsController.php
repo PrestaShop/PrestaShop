@@ -475,10 +475,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 * @param $token
 	 * @return mixed
 	 */
-	public function processSave()
+	public function processSave($token)
 	{
-		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
-
 		if ((int)Tools::getValue('id_attribute') <= 0)
 			return $this->processAdd($token);
 		else
