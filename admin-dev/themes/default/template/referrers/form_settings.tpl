@@ -26,7 +26,7 @@
 
 </div>
 
-<div style="margin-left:280px">
+<div>
 	<fieldset>
 		<legend>
 			<img src="../img/admin/tab-preferences.gif" /> {l s='Settings'}
