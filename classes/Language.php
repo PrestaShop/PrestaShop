@@ -144,33 +144,39 @@ class LanguageCore extends ObjectModel
 				rename(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php', _PS_MODULE_DIR_.$moduleDir.'/'.$newIso.'.php');
 		}
 
-		foreach ($this->_getThemesList() as $theme => $data)
+		foreach (Theme::getThemes() as $theme)
 		{
-			if (file_exists(_PS_ALL_THEMES_DIR_.$theme.'/lang/'.$this->iso_code.'.php'))
-				rename(_PS_ALL_THEMES_DIR_.$theme.'/lang/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme.'/lang/'.$newIso.'.php');
+			$theme_dir = $theme->directory;
+			if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php'))
+				rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$newIso.'.php');
 
-			if (file_exists(_PS_ALL_THEMES_DIR_.$theme.'/mails/'.$this->iso_code))
-				rename(_PS_ALL_THEMES_DIR_.$theme.'/mails/'.$this->iso_code, _PS_ALL_THEMES_DIR_.$theme.'/mails/'.$newIso);
+			if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$this->iso_code))
+				rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$this->iso_code, _PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$newIso);
 
 			foreach ($modulesList as $module)
-				if (file_exists(_PS_ALL_THEMES_DIR_.$theme.'/modules/'.$module.'/'.$this->iso_code.'.php'))
-					rename(_PS_ALL_THEMES_DIR_.$theme.'/modules/'.$module.'/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme.'/modules/'.$module.'/'.$newIso.'.php');
-	}
+				if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$this->iso_code.'.php'))
+					rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$newIso.'.php');
+		}
 	}
 
 	/**
-	  * Return an array with themes and thumbnails
+	  * Return an array of theme 
 	  *
-	  * @return array
+	  * @return array([theme dir] => array('name' => [theme name]))
+		* @deprecated will be removed in 1.6
 	  */
 	private function _getThemesList()
 	{
-		$dir = opendir(_PS_ALL_THEMES_DIR_);
-		while ($folder = readdir($dir))
-			if ($folder != '.' AND $folder != '..' AND file_exists(_PS_ALL_THEMES_DIR_.'/'.$folder.'/preview.jpg'))
-				$themes[$folder]['name'] = $folder;
-		closedir($dir);
-		return isset($themes) ? $themes : array();
+		Tools::displayAsDeprecated();
+		static $themes = array();
+
+		if (empty($themes))
+		{
+			$installed_themes = Theme::getThemes();
+			foreach($installed_themes as $theme)
+				$themes[$theme->directory] = array('name' => $theme->name);
+		}
+		return $themes;
 	}
 
 	public function add($autodate = true, $nullValues = false)
