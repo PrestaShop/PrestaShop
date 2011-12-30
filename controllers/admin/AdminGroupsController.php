@@ -35,6 +35,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
+	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_select = '
 		(SELECT COUNT(jcg.`id_customer`)
@@ -472,9 +473,18 @@ class AdminGroupsControllerCore extends AdminController
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-		$unidentified_group_information = sprintf($this->l('%s - All persons without a customer account or unauthenticated.'), "<b>".$unidentified->name[$this->context->language->id]."</b>");
-		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), "<b>".$guest->name[$this->context->language->id]."</b>");
-		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), "<b>".$default->name[$this->context->language->id]."</b>");
+		$unidentified_group_information = sprintf(
+			$this->l('%s - All persons without a customer account or unauthenticated.'),
+			'<b>'.$unidentified->name[$this->context->language->id].'</b>'
+		);
+		$guest_group_information = sprintf(
+			$this->l('%s - Customer who placed an order with the Guest Checkout.'),
+			'<b>'.$guest->name[$this->context->language->id].'</b>'
+		);
+		$default_group_information = sprintf(
+			$this->l('%s - All persons who created an account on this site.'),
+			'<b>'.$default->name[$this->context->language->id].'</b>'
+		);
 
 		$this->displayInformation($this->l('You have now three default customer groups.'));
 		$this->displayInformation($unidentified_group_information);
