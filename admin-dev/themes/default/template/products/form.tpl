@@ -177,7 +177,6 @@
 					$("#product-tab-content-"+currentId).hide();
 				}
 
-				$("#product-tab-content-wait").show();
 				if ($("#product-tab-content-"+id).hasClass('not-loaded') && !$("#product-tab-content-"+id).hasClass('loading'))
 					displayTabProductById(this, id, true);
 				else
@@ -185,7 +184,6 @@
 					$("#product-tab-content-"+id).show();
 					$("#link-"+id).addClass('selected');
 				}
-				$("#product-tab-content-wait").hide();
 
 				var languages = new Array();
 				if (btn_name == "Combinations")
@@ -234,7 +232,9 @@
 	    	tb_pathToImage = "../img/loadingAnimation.gif";
 	    //]]>
 	</script>
-	
+
+    <div id="product-tab-content-wait" style="display:none"><div id="loading">{l s='Loading...'}</div></div>
+
 	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
 		<input type="hidden" name="id_product" value="{$id_product}" />
 		<div class="tab-pane" id="tabPane1">
@@ -250,7 +250,6 @@
 				</div>
 		{/if}
 		{* all input are here *}
-			<div id="product-tab-content-wait" style="display:none" >{l s='loading ...'}</div>
 			{foreach $product_tabs key=numStep item=tab}
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
