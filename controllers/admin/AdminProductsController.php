@@ -3889,7 +3889,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->addJqueryUI(array(
 				'ui.core',
 				'ui.widget',
-				'ui.accordion'
+                'ui.accordion'
 			));
 
 			$this->addJS(array(
