@@ -49,7 +49,7 @@ class AdminSearchControllerCore extends AdminController
 				/* Handle product ID */
 				if ($searchType == 1 AND (int)$this->query AND Validate::isUnsignedInt((int)$this->query))
 					if ($product = new Product((int)$this->query) AND Validate::isLoadedObject($product))
-						Tools::redirectAdmin('index.php?tab=AdminCatalog&id_product='.(int)($product->id).'&addproduct'.'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id));
+						Tools::redirectAdmin('index.php?tab=AdminProducts&id_product='.(int)($product->id).'&addproduct'.'&token='.Tools::getAdminTokenLite('AdminProducts'));
 
 				/* Normal catalog search */
 				$this->searchCatalog();
@@ -190,15 +190,15 @@ class AdminSearchControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 		$this->fieldsDisplay['customers'] = (array(
-			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center'),
-			'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders),
-			'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
-			'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
-			'email' => array('title' => $this->l('E-mail address'), 'align' => 'center'),
-			'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date'),
-			'date_add' => array('title' => $this->l('Register date'), 'align' => 'center', 'type' => 'date'),
-			'orders' => array('title' => $this->l('Orders'), 'align' => 'center'),
-			'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool'),
+			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
+			'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
+			'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
+			'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
+			'email' => array('title' => $this->l('E-mail address'), 'align' => 'left', 'width' => 250),
+			'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+			'date_add' => array('title' => $this->l('Register date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
+			'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),
+			'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool', 'width' => 25),
 		));
 	}
 
@@ -206,13 +206,13 @@ class AdminSearchControllerCore extends AdminController
 	{
 		$this->show_toolbar = false;
 		$this->fieldsDisplay['products'] = (array(
-			'id_product' => array('title' => $this->l('ID')),
-			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center'),
-			'reference' => array('title' => $this->l('Reference'), 'align' => 'center'),
-			'name' => array('title' => $this->l('Name')),
-			'price_tax_excl' => array('title' => $this->l('Price tax excl'), 'align' => 'right', 'type' => 'price'),
-			'price_tax_incl' => array('title' => $this->l('Price tax incl'), 'align' => 'right', 'type' => 'price'),
-			'status' => array('title' => $this->l('Status'), 'align' => 'center'),
+			'id_product' => array('title' => $this->l('ID'), 'width' => 25),
+			'manufacturer_name' => array('title' => $this->l('Manufacturer'), 'align' => 'center', 'width' => 200),
+			'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 150),
+			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
+			'price_tax_excl' => array('title' => $this->l('Price tax excl'), 'align' => 'right', 'type' => 'price', 'width' => 60),
+			'price_tax_incl' => array('title' => $this->l('Price tax incl'), 'align' => 'right', 'type' => 'price', 'width' => 60),
+			'status' => array('title' => $this->l('Status'), 'align' => 'center', 'width' => 25),
 		));
 	}
 
@@ -241,27 +241,30 @@ class AdminSearchControllerCore extends AdminController
 			return parent::renderView();
 		else
 		{
-			$helper = new HelperList();
-			$helper->currentIndex = self::$currentIndex;
-			$helper->token = $this->token;
-			$helper->shopLinkType = '';
-			$helper->simple_header = true;
 			if (isset($this->_list['features']))
 				$this->tpl_view_vars['features'] = $this->_list['features'];
 			if (isset($this->_list['categories']))
 			{
 				$categories = array();
 				foreach($this->_list['categories'] as $category)
-					$categories[] = getPath(self::$currentIndex.'?tab=AdminCatalog', (int)$category['id_category']);
+					$categories[] = getPath($this->context->link->getAdminLink('AdminCategories', false), $category['id_category']);
 				$this->tpl_view_vars['categories'] = $categories;
 			}
 			if (isset($this->_list['products']))
 			{
 				$view = '';
 				$this->initProductList();
+
+				$helper = new HelperList();
+				$helper->shopLinkType = '';
+				$helper->simple_header = true;
 				$helper->identifier = 'id_product';
-				$helper->actions = array('edit', 'view');
+				$helper->actions = array('edit');
 				$helper->show_toolbar = false;
+				$helper->table = 'product';
+				$helper->currentIndex = $this->context->link->getAdminLink('AdminProducts', false);
+				$helper->token = Tools::getAdminTokenLite('AdminProducts');
+
 				if ($this->_list['products'])
 					$view = $helper->generateList($this->_list['products'], $this->fieldsDisplay['products']);
 
@@ -271,8 +274,17 @@ class AdminSearchControllerCore extends AdminController
 			{
 				$view = '';
 				$this->initCustomerList();
+
+				$helper = new HelperList();
+				$helper->shopLinkType = '';
+				$helper->simple_header = true;
 				$helper->identifier = 'id_customer';
 				$helper->actions = array('edit', 'view');
+				$helper->show_toolbar = false;
+				$helper->table = 'customer';
+				$helper->currentIndex = $this->context->link->getAdminLink('AdminCustomers', false);
+				$helper->token = Tools::getAdminTokenLite('AdminCustomers');
+
 				if ($this->_list['customers'])
 				{
 					foreach($this->_list['customers'] as $key => $val)
