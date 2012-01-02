@@ -217,9 +217,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 			if (!count($this->_errors))
 			{
-				$order_invoice_list = OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
-
-				if (count($order_invoice_list))
+				if (count(OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
 					Tools::redirectAdmin('pdf.php?invoices&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
 
 				$this->_errors[] = $this->l('No invoice found for this period');
@@ -232,7 +230,7 @@ class AdminInvoicesControllerCore extends AdminController
 			else
 			{
 				foreach ($status_array as $id_order_state)
-					if (count($orders = Order::getOrderIdsByStatus((int)$id_order_state)))
+					if (count(OrderInvoice::getByStatus((int)$id_order_state)))
 						Tools::redirectAdmin('pdf.php?invoices2&id_order_state='.implode('-', $status_array).'&token='.$this->token);
 
 				$this->_errors[] = $this->l('No invoice found for this status');
