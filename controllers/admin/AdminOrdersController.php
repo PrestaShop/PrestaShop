@@ -478,7 +478,7 @@ class AdminOrdersControllerCore extends AdminController
 							$orderDetail = new OrderDetail((int)($id_order_detail));
 							if (!$order->deleteProduct($order, $orderDetail, $qtyCancelProduct))
 								$this->_errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
-							Hook::exec('cancelProduct', array('order' => $order, 'id_order_detail' => $id_order_detail));
+							Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => $id_order_detail));
 						}
 					if (!sizeof($this->_errors) AND $customizationList)
 						foreach ($customizationList AS $id_customization => $id_order_detail)
@@ -504,7 +504,7 @@ class AdminOrdersControllerCore extends AdminController
 							$this->_errors[] = Tools::displayError('Cannot generate credit slip');
 						else
 						{
-							Hook::exec('orderSlip', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
+							Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
 							@Mail::Send((int)$order->id_lang, 'credit_slip', Mail::l('New credit slip regarding your order', $order->id_lang),
 							$params, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,
 							_PS_MAIL_DIR_, true);
@@ -1044,8 +1044,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
-			'HOOK_INVOICE' => Hook::exec('invoice', array('id_order' => $order->id)),
-			'HOOK_ADMIN_ORDER' => Hook::exec('adminOrder', array('id_order' => $order->id))
+			'HOOK_INVOICE' => Hook::exec('displayInvoice', array('id_order' => $order->id)),
+			'HOOK_ADMIN_ORDER' => Hook::exec('displayAdminOrder', array('id_order' => $order->id))
 		);
 
 		return parent::renderView();

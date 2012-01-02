@@ -165,7 +165,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				$module_instance = Module::getInstanceByName($module_name);
 
 			if ($module_instance && $module_instance->active)
-				$hook = Hook::exec('AdminStatsModules', NULL, $module_instance->id);
+				$hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
 		}
 
 		$tpl->assign(array(

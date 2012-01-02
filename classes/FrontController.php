@@ -433,7 +433,7 @@ class FrontControllerCore extends Controller
 		Tools::displayAsDeprecated();
 		$this->context->smarty->assign(array(
 			'HOOK_RIGHT_COLUMN' => Hook::exec('displayRightColumn', array('cart' => $this->context->cart)),
-			'HOOK_FOOTER' => Hook::exec('footer'),
+			'HOOK_FOOTER' => Hook::exec('displayFooter'),
 		));
 		$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 	}
@@ -652,7 +652,7 @@ class FrontControllerCore extends Controller
 	public function initFooter()
 	{
 		$this->context->smarty->assign(array(
-			'HOOK_FOOTER' => Hook::exec('footer'),
+			'HOOK_FOOTER' => Hook::exec('displayFooter'),
 		));
 
 	}

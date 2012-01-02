@@ -164,7 +164,7 @@ class FeatureValueCore extends ObjectModel
 	{
 		$return = parent::add($autodate, $nullValues);
 		if ($return)
-			Hook::exec('afterSaveFeatureValue', array('id_feature_value' => $this->id));
+			Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
 		return $return;
 	}
 
@@ -178,7 +178,7 @@ class FeatureValueCore extends ObjectModel
 		$return = parent::delete();
 
 		if ($return)
-			Hook::exec('afterDeleteFeatureValue', array('id_feature_value' => $this->id));
+			Hook::exec('actionFeatureValueDelete', array('id_feature_value' => $this->id));
 		return $return;
 	}
 
@@ -186,7 +186,7 @@ class FeatureValueCore extends ObjectModel
 	{
 		$return = parent::update($nullValues);
 		if ($return)
-			Hook::exec('afterSaveFeatureValue', array('id_feature_value' => $this->id));
+			Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
 		return $return;
 	}
 }

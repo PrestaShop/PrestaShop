@@ -268,12 +268,12 @@ class CartControllerCore extends FrontController
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
 				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
 
-				$result['HOOK_EXTRACARRIER'] = Hook::exec('extraCarrier', array('address' => (isset($deliveryAddress) && (int)$deliveryAddress->id) ? $deliveryAddress : null));
+				$result['HOOK_EXTRACARRIER'] = Hook::exec('displayCarrierList', array('address' => (isset($deliveryAddress) && (int)$deliveryAddress->id) ? $deliveryAddress : null));
 			}
 			$result['summary'] = $this->context->cart->getSummaryDetails();
 			$result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
-			$result['HOOK_SHOPPING_CART'] = Hook::exec('shoppingCart', $result['summary']);
-			$result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('shoppingCartExtra', $result['summary']);
+			$result['HOOK_SHOPPING_CART'] = Hook::exec('displayShoppingCartFooter', $result['summary']);
+			$result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('displayShoppingCart', $result['summary']);
 
 			// Display reduced price (or not) without quantity discount
 			if (Tools::getIsset('getproductprice'))

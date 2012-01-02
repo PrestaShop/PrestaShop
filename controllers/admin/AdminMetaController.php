@@ -208,7 +208,7 @@ class AdminMetaControllerCore extends AdminController
 					else
 						$_POST['url_rewrite_'.$lang['id_lang']] = Tools::getValue('url_rewrite_1');
 			}
-			Hook::exec('afterSaveAdminMeta');
+			Hook::exec('actionAdminMetaSave');
 		}
 
 		return parent::postProcess();

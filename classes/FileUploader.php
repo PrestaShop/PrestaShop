@@ -141,7 +141,7 @@ class qqUploadedFileForm {
 			}
 		}
 		unlink($tmpName);
-		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
+		Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
 		$lang = Context::getContext()->employee->id_lang;
 
 		if (!$image->update())
@@ -229,8 +229,7 @@ class qqUploadedFileXhr
 			}
 		}
 		unlink($tmpName);
-		Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
-		$lang = Context::getContext()->employee->id_lang;
+		Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
 
 		if (!$image->update())
 			return array('error' => Tools::displayError('Error while updating status'));

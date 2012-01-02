@@ -1656,7 +1656,7 @@ FileETag INode MTime Size
 		fwrite($write_fd, "\n\n".trim($specific_after));
 		fclose($write_fd);
 
-		Hook::exec('afterCreateHtaccess');
+		Hook::exec('actionHtaccessCreate');
 
 		return true;
 	}
