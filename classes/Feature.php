@@ -114,7 +114,7 @@ class FeatureCore extends ObjectModel
 			$this->position = Feature::getHigherPosition() + 1;
 
 		$return = parent::add($autodate, true);
-		Hook::exec('afterSaveFeature', array('id_feature' => $this->id));
+		Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
 		return $return;
 	}
 
@@ -137,7 +137,7 @@ class FeatureCore extends ObjectModel
 
 		$return = parent::delete();
 		if ($return)
-			Hook::exec('afterDeleteFeature', array('id_feature' => $this->id));
+			Hook::exec('actionFeatureDelete', array('id_feature' => $this->id));
 
 		/* Reinitializing position */
 		$this->cleanPositions();
@@ -169,7 +169,7 @@ class FeatureCore extends ObjectModel
 				'`'.$this->def['primary'].'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']
 			);
 		}
-		Hook::exec('afterSaveFeature', array('id_feature' => $this->id));
+		Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
 		return $result;
 	}
 

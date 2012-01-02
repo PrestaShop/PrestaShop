@@ -236,7 +236,7 @@ class ParentOrderControllerCore extends FrontController
 			}
 		}
 
-		Hook::exec('processCarrier', array('cart' => $this->context->cart));
+		Hook::exec('actionCarrierProcess', array('cart' => $this->context->cart));
 
 		if (!$this->context->cart->update())
 			return false;
@@ -309,10 +309,12 @@ class ParentOrderControllerCore extends FrontController
 			'currencySign' => $this->context->currency->sign,
 			'currencyRate' => $this->context->currency->conversion_rate,
 			'currencyFormat' => $this->context->currency->format,
-			'currencyBlank' => $this->context->currency->blank));
+			'currencyBlank' => $this->context->currency->blank,
+		));
+
 		$this->context->smarty->assign(array(
-			'HOOK_SHOPPING_CART' => Hook::exec('shoppingCart', $summary),
-			'HOOK_SHOPPING_CART_EXTRA' => Hook::exec('shoppingCartExtra', $summary)
+			'HOOK_SHOPPING_CART' => Hook::exec('displayShoppingCartFooter', $summary),
+			'HOOK_SHOPPING_CART_EXTRA' => Hook::exec('displayShoppingCart', $summary)
 		));
 	}
 
@@ -405,8 +407,8 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option' => $this->context->cart->getDeliveryOption()
 		));
 		$this->context->smarty->assign(array(
-			'HOOK_EXTRACARRIER' => Hook::exec('extraCarrier', array('address' => $address)),
-			'HOOK_BEFORECARRIER' => Hook::exec('beforeCarrier', array(
+			'HOOK_EXTRACARRIER' => Hook::exec('displayCarrierList', array('address' => $address)),
+			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
@@ -451,8 +453,8 @@ class ParentOrderControllerCore extends FrontController
 	protected function _assignPayment()
 	{
 		$this->context->smarty->assign(array(
-			'HOOK_TOP_PAYMENT' => Hook::exec('paymentTop'),
-			'HOOK_PAYMENT' => Hook::exec('payment'),
+			'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
+			'HOOK_PAYMENT' => Hook::exec('displayPayment'),
 		));
 	}
 

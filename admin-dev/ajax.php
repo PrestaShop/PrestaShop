@@ -240,7 +240,7 @@ if (Tools::isSubmit('ajaxCategoriesPositions'))
 	{
 		if (isset($position) && $category->updatePosition($way, $position))
 		{
-			Hook::exec('categoryUpdate');
+			Hook::exec('actionCategoryUpdate');
 			die(true);
 		}
 		else

@@ -64,7 +64,7 @@ class SearchControllerCore extends FrontController
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
-			Hook::exec('search', array('expr' => $query, 'total' => $search['total']));
+			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
 			$this->context->smarty->assign(array(
@@ -81,7 +81,7 @@ class SearchControllerCore extends FrontController
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
-			Hook::exec('search', array('expr' => $query, 'total' => $search['total']));
+			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);
 			$this->context->smarty->assign(array(
@@ -96,7 +96,7 @@ class SearchControllerCore extends FrontController
 			$nbProducts = (int)(Search::searchTag($this->context->language->id, $tag, true));
 			$this->pagination($nbProducts);
 			$result = Search::searchTag($this->context->language->id, $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
-			Hook::exec('search', array('expr' => $tag, 'total' => count($result)));
+			Hook::exec('actionSearch', array('expr' => $tag, 'total' => count($result)));
 			$this->context->smarty->assign(array(
 				'search_tag' => $tag,
 				'products' => $result, // DEPRECATED (since to 1.4), not use this: conflict with block_cart module

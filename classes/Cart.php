@@ -170,7 +170,7 @@ class CartCore extends ObjectModel
 			$this->id_lang = Configuration::get('PS_LANG_DEFAULT');
 
 		$return = parent::add($autodate);
-		Hook::exec('cart');
+		Hook::exec('actionCartSave');
 
 		return $return;
 	}
@@ -185,7 +185,7 @@ class CartCore extends ObjectModel
 
 		$this->_products = null;
 		$return = parent::update();
-		Hook::exec('cart');
+		Hook::exec('actionCartSave');
 
 		return $return;
 	}

@@ -27,7 +27,7 @@
 
 echo '			</div>
 			</div>
-			'.Hook::exec('backOfficeFooter').'
+			'.Hook::exec('displayBackOfficeFooter').'
 			<div id="footer">
 				<div style="float:left;margin-left:10px;padding-top:6px">
 					<a href="http://www.prestashop.com/" target="_blank" style="font-weight:700;color:#666666">PrestaShop&trade; '._PS_VERSION_.'</a><br />

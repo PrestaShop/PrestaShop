@@ -264,7 +264,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
 
 		$this->tpl_vars = array(
-			'hook' => Hook::exec('featureValueForm', array('id_feature_value' => $feature_value->id))
+			'hook' => Hook::exec('displayFeatureValueForm', array('id_feature_value' => $feature_value->id))
 		);
 
 		$this->getlanguages();
@@ -350,8 +350,8 @@ class AdminFeaturesControllerCore extends AdminController
 
 		if (Tools::isSubmit('deletefeature_value') || Tools::isSubmit('submitAddfeature_value'))
 		{
-			Hook::exec('postProcessFeatureValue',
-				array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessFeatureValue to stop saving process
+			Hook::exec('displayFeatureValuePostProcess',
+				array('errors' => &$this->_errors)); // send _errors as reference to allow displayFeatureValuePostProcess to stop saving process
 
 			if (Tools::isSubmit('deletefeature_value'))
 			{
@@ -407,8 +407,8 @@ class AdminFeaturesControllerCore extends AdminController
 		}
 		else
 		{
-			Hook::exec('postProcessFeature',
-				array('errors' => &$this->_errors)); // send _errors as reference to allow postProcessFeature to stop saving process
+			Hook::exec('displayFeaturePostProcess',
+				array('errors' => &$this->_errors)); // send _errors as reference to allow displayFeaturePostProcess to stop saving process
 
 			if (Tools::getValue('submitDel'.$this->table))
 			{

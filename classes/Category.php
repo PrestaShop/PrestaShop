@@ -149,7 +149,7 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 			self::regenerateEntireNtree();
 		$this->updateGroup($this->groupBox);
-		Hook::exec('categoryAddition', array('category' => $this));
+		Hook::exec('actionCategoryAdd', array('category' => $this));
 		return $ret;
 	}
 
@@ -176,7 +176,7 @@ class CategoryCore extends ObjectModel
 			self::regenerateEntireNtree();
 			$this->recalculateLevelDepth($this->id_category);
 		}
-		Hook::exec('categoryUpdate', array('category' => $this));
+		Hook::exec('actionCategoryUpdate', array('category' => $this));
 		return $ret;
 	}
 
@@ -186,7 +186,7 @@ class CategoryCore extends ObjectModel
 	public function toggleStatus()
 	{
 		$result = parent::toggleStatus();
-		Hook::exec('categoryUpdate');
+		Hook::exec('actionCategoryUpdate');
 		return $result;
 	}
 
@@ -316,7 +316,7 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 			self::regenerateEntireNtree();
 
-		Hook::exec('categoryDeletion', array('category' => $this));
+		Hook::exec('actionCategoryDelete', array('category' => $this));
 
 		/* Delete Categories in GroupReduction */
 		foreach ($to_delete as $category)
@@ -1029,7 +1029,7 @@ class CategoryCore extends ObjectModel
 			SET `position` = '.(int)$position.'
 			WHERE `id_parent` = '.(int)$moved_category['id_parent'].'
 			AND `id_category`='.(int)$moved_category['id_category']));
-		Hook::exec('categoryUpdate');
+		Hook::exec('actionCategoryUpdate');
 		return $result;
 	}
 

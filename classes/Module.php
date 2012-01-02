@@ -1135,7 +1135,7 @@ abstract class ModuleCore
 	public static function hookExecPayment()
 	{
 		Tools::displayAsDeprecated();
-		return Hook::exec('payment');
+		return Hook::exec('displayPayment');
 	}
 
 

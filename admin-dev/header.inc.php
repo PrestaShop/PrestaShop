@@ -54,7 +54,7 @@ echo '
 		<script type="text/javascript" src="'._PS_JS_DIR_.'tools.js"></script>
 		<script type="text/javascript" src="'._PS_JS_DIR_.'ajax.js"></script>
 		<link rel="shortcut icon" href="'._PS_IMG_.'favicon.ico" />
-		'.Hook::exec('backOfficeHeader').'
+		'.Hook::exec('displayBackOfficeHeader').'
 		<!--[if IE]>
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin-ie.css" />
 		<![endif]-->
@@ -283,7 +283,7 @@ echo '			</select>
 			echo '<div id="header_shoplist">'.translate('Select your shop:').' '.generateShopList().'</div>';
 
 		echo '</div>';
-			echo Hook::exec('backOfficeTop');
+			echo Hook::exec('displayBackOfficeTop');
 			echo '<ul id="menu">';
 
 if (empty($tab))

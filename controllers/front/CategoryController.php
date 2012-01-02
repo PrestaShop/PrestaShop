@@ -162,7 +162,7 @@ class CategoryControllerCore extends FrontController
 	public function assignProductList()
 	{
 		$hookExecuted = false;
-		Hook::exec('productListAssign', array(
+		Hook::exec('actionProductListOverride', array(
 			'nbProducts' => &$this->nbProducts,
 			'catProducts' => &$this->cat_products,
 			'hookExecuted' => &$hookExecuted,

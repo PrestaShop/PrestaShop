@@ -353,7 +353,14 @@ abstract class PaymentModuleCore extends Module
 					}
 
 					// Hook validate order
-					Hook::exec('newOrder', array('cart' => $cart, 'order' => $order, 'customer' => $customer, 'currency' => $currency, 'orderStatus' => $order_status));
+					Hook::exec('actionValidateOrder', array(
+						'cart' => $cart,
+						'order' => $order,
+						'customer' => $customer,
+						'currency' => $currency,
+						'orderStatus' => $order_status
+					));
+
 					foreach ($cart->getProducts() AS $product)
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);

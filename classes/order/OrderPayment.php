@@ -66,7 +66,7 @@ class OrderPaymentCore extends ObjectModel
 	{
 		if (parent::add($autodate, $nullValues))
 		{
-			Hook::exec('paymentCCAdded', array('paymentCC' => $this));
+			Hook::exec('actionPaymentCCAdd', array('paymentCC' => $this));
 			return true;
 		}
 		return false;
