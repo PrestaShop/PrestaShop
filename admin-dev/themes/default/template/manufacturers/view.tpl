@@ -60,7 +60,6 @@
 			</table><br />
 		{/foreach}
 	{/if}
-	<br /><br />
 
 	<h3>{l s='Total products:'} {count($products)}</h3>
 	{foreach $products AS $product}
@@ -70,9 +69,10 @@
 				<a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}" class="button">{l s='Edit'}</a>
 				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
 			</div>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:80%;margin-left:10%;">
+			<br/><br/>
+			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
 				<tr>
-					<th>{$product->name}</th>
+					<th height="39">{$product->name}</th>
 					{if !empty($product->reference)}<th width="150">{l s='Ref:'} {$product->reference}</th>{/if}
 					{if !empty($product->ean13)}<th width="120">{l s='EAN13:'} {$product->ean13}</th>{/if}
 					{if !empty($product->upc)}<th width="120">{l s='UPC:'} {$product->upc}</th>{/if}
@@ -85,9 +85,9 @@
 				<a href="?tab=AdminProducts&id_product={$product->id}&deleteproduct&token={getAdminToken tab='AdminProducts'}" class="button" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">{l s='Delete'}</a>
 			</div>
 			<h3><a href="?tab=AdminProducts&id_product={$product->id}&updateproduct&token={getAdminToken tab='AdminProducts'}">{$product->name}</a></h3>
-			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:80%;margin-left:10%;">
+			<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
 				<tr>
-					<th>{l s='Attribute name'}</th>
+					<th height="39">{l s='Attribute name'}</th>
 					<th width="80">{l s='Reference'}</th>
 					<th width="80">{l s='EAN13'}</th>
 					<th width="80">{l s='UPC'}</th>
