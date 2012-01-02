@@ -1512,9 +1512,6 @@ class ToolsCore
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
 			return true;
 
-		if (!Configuration::get('PS_REWRITING_SETTINGS'))
-			return true;
-
 		// Default values for parameters
 		if (is_null($path))
 			$path = _PS_ROOT_DIR_.'/.htaccess';
@@ -1524,6 +1521,9 @@ class ToolsCore
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))
 			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
+
+		if (!$rewrite_settings && !Shop::isFeatureActive())
+			return true;
 
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
