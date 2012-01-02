@@ -67,7 +67,7 @@
 			{$customer->firstname} {$customer->lastname}
 		</span>
 		<img src="{$gender_image}" style="margin-bottom: 5px" /><br />
-		<a href="mailto:{$customer->email}" style="text-decoration: underline; color: blue">{$customer->email}</a>
+		<a href="mailto:{$customer->email}" style="text-decoration: underline; color:#268CCD;">{$customer->email}</a>
 		<br /><br />
 		{l s='ID:'} {$customer->id|string_format:"%06d"}<br />
 		{l s='Registration date:'} {$registration_date}<br />
@@ -115,7 +115,7 @@
 		<form action="ajax.php" method="post" onsubmit="saveCustomerNote();return false;" id="customer_note">
 			<textarea name="note" id="noteContent" style="width:600px;height:100px" onkeydown="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea><br />
 			<input type="submit" id="submitCustomerNote" class="button" value="{l s='   Save   '}" style="float:left;margin-top:5px" disabled="disabled" />
-			<span id="note_feedback" style="margin:10px 0 0 10px"></span>
+			<span id="note_feedback" style="position:relative; top:10px; left:10px;"></span>
 		</form>
 	</div>
 	<div class="clear"></div>
@@ -223,7 +223,7 @@
 		{assign var=count_ko value=count($orders_ko)}
 		{if $count_ko}
 			<div>
-				<h3 style="color:red;font-weight:700">{l s='Invalid orders:'} {$count_ko}</h3>
+				<h3 style="color:red;font-weight:normal;">{l s='Invalid orders:'} {$count_ko}</h3>
 				<table cellspacing="0" cellpadding="0" class="table" style="width:100%;">
 					<colgroup>
 						<col width="10px"></col>

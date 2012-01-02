@@ -117,8 +117,7 @@ class AdminFeaturesControllerCore extends AdminController
 					'width' => 25
 				),
 				'value' => array(
-					'title' => $this->l('Value'),
-					'width' => 100
+					'title' => $this->l('Value')
 				)
 			);
 
