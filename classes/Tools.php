@@ -418,10 +418,24 @@ class ToolsCore
 		// if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
 		elseif (is_int($currency))
 			$currency = Currency::getCurrencyInstance((int)($currency));
-		$c_char = (is_array($currency) ? $currency['sign'] : $currency->sign);
-		$c_format = (is_array($currency) ? $currency['format'] : $currency->format);
-		$c_decimals = (is_array($currency) ? (int)($currency['decimals']) : (int)($currency->decimals)) * _PS_PRICE_DISPLAY_PRECISION_;
-		$c_blank = (is_array($currency) ? $currency['blank'] : $currency->blank);
+			
+		if (is_array($currency))
+		{
+			$c_char = $currency['sign'];
+			$c_format = $currency['format'];
+			$c_decimals = (int)$currency['decimals'] * _PS_PRICE_DISPLAY_PRECISION_;
+			$c_blank = $currency['blank'];
+		}
+		elseif (is_object($currency))
+		{
+			$c_char = $currency->sign;
+			$c_format = $currency->format;
+			$c_decimals = (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_;
+			$c_blank = $currency->blank;
+		}
+		else
+			return false;
+			
 		$blank = ($c_blank ? ' ' : '');
 		$ret = 0;
 		if (($isNegative = ($price < 0)))
