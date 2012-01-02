@@ -880,8 +880,16 @@ class OrderCore extends ObjectModel
 		return $orders;
 	}
 
+	/**
+	 * @deprecated 1.5.0.3
+	 *
+	 * @static
+	 * @param $id_order_state
+	 * @return array
+	 */
 	public static function getOrderIdsByStatus($id_order_state)
 	{
+		Tools::displayAsDeprecated();
 		$sql = 'SELECT id_order
 				FROM '._DB_PREFIX_.'orders o
 				WHERE '.(int)$id_order_state.' = (

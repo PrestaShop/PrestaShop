@@ -146,34 +146,25 @@ function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
 
 function generateInvoicesPDF()
 {
-	$id_orders_list = OrderInvoice::getByDateInterval($_GET['date_from'], $_GET['date_to'], NULL, 'invoice');
+	$order_invoice_collection = OrderInvoice::getByDateInterval($_GET['date_from'], $_GET['date_to'], NULL, 'invoice');
 
-	if (!is_array($id_orders_list))
-		die (Tools::displayError('No invoices found'));
+	if (!sizeof($order_invoice_collection))
+		die(Tools::displayError('No invoices found'));
 
- 	 generateOrderInvoicesPDF($id_orders_list);
+	generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
 }
 
 function generateInvoicesPDF2()
 {
-	$id_orders_list = array();
+	$order_invoice_collection = array();
 	foreach (explode('-', Tools::getValue('id_order_state')) as $id_order_state)
-		if (is_array($id_orders = Order::getOrderIdsByStatus((int)$id_order_state)))
-			$id_orders_list = array_merge($id_orders_list, $id_orders);
+		if (is_array($order_invoices = OrderInvoice::getByStatus($id_order_state)))
+			$order_invoice_collection = array_merge($order_invoices, $order_invoice_collection);
 
- 	 generateOrderInvoicesPDF($id_orders_list);
-}
+	if (!sizeof($order_invoice_collection))
+		die(Tools::displayError('No invoices found'));
 
-function generateOrderInvoicesPDF($id_orders_list)
-{
-    $orders_invoices = array();
-    foreach ($id_orders_list as $id_order)
-    {
-			$order = new Order((int)$id_order);
-			$orders_invoices = array_merge($orders_invoices, $order->getInvoicesCollection());
-	 }
-
-    generatePDF($orders_invoices, PDF::TEMPLATE_INVOICE);
+	generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
 }
 
 function generateOrderSlipsPDF()
@@ -182,24 +173,23 @@ function generateOrderSlipsPDF()
 	if (!count($id_order_slips_list))
 		die (Tools::displayError('No order slips found'));
 
-    $order_slips = array();
-    foreach ($id_order_slips_list as $id_order_slips)
-        $order_slips[] = new OrderSlip((int)$id_order_slips);
+	$order_slips = array();
+	foreach ($id_order_slips_list as $id_order_slips)
+		$order_slips[] = new OrderSlip((int)$id_order_slips);
 
-    generatePDF($order_slips, PDF::TEMPLATE_ORDER_SLIP);
+	generatePDF($order_slips, PDF::TEMPLATE_ORDER_SLIP);
 }
 
 function generateDeliverySlipsPDF()
 {
 	$slips = unserialize(urldecode($_GET['deliveryslips']));
 	if (is_array($slips))
-        generatePDF($slips, PDF::TEMPLATE_DELIVERY_SLIP);
+		generatePDF($slips, PDF::TEMPLATE_DELIVERY_SLIP);
 }
-
 
 function generatePDF($object, $template)
 {
-    global $smarty;
-    $pdf = new PDF($object, $template, $smarty);
-    $pdf->render();
+	global $smarty;
+	$pdf = new PDF($object, $template, $smarty);
+	$pdf->render();
 }
