@@ -122,17 +122,14 @@
 						<table class="resume">
 							<tr>
 								<td class="delivery_option_logo">
-									{* If there is only one carrier, show the logo of the carrier *}
-									{if $option.unique_carrier}
-										{foreach $option.carrier_list as $carrier}
-											{if $carrier.logo}
-												<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
-											{else}
-												{$carrier.instance->name}
-											{/if}
-										{/foreach}
-									{else}
-									{/if}
+									{foreach $option.carrier_list as $carrier}
+										{if $carrier.logo}
+											<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+										{else}
+											{$carrier.instance->name}
+											{if !$carrier@last} - {/if}
+										{/if}
+									{/foreach}
 								</td>
 								<td>
 								{if $option.is_best_grade}
