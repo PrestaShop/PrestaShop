@@ -759,27 +759,24 @@ abstract class ObjectModelCore
 	public function validateController($htmlentities = true)
 	{
 		$errors = array();
-
-		/* Checking for required fields */
-		$fieldsRequired = array_merge($this->fieldsRequired, (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array()));
-		foreach ($fieldsRequired AS $field)
-		if (($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
-			if (!$this->id OR $field != 'passwd')
-				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
-
-
-		/* Checking for maximum fields sizes */
-		foreach ($this->fieldsSize AS $field => $maxLength)
-			if (($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $maxLength)
-				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is too long.').' ('.Tools::displayError('Maximum length:').' '.$maxLength.')';
-
-		/* Checking for fields validity */
-		foreach ($this->fieldsValidate AS $field => $function)
+		foreach ($this->def['fields'] as $field => $data)
 		{
+			if (!isset($data['copy_from_front']) || !$data['copy_from_front'])
+				continue;
+			/* Checking for required fields */
+			if (isset($data['required']) && $data['required'] && ($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
+				if (!$this->id OR $field != 'passwd')
+					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is required.');
+			
+			/* Checking for maximum fields sizes */
+			if (isset($data['size']) && ($value = Tools::getValue($field, $this->{$field})) && Tools::strlen($value) > $data['size'])
+				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is too long.').' ('.Tools::displayError('Maximum length:').' '.$data['size'].')';
+		
+			/* Checking for fields validity */
 			// Hack for postcode required for country which does not have postcodes
 			if ($value = Tools::getValue($field, $this->{$field}) OR ($field == 'postcode' AND $value == '0'))
 			{
-				if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
+				if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required']))
 					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 				{
