@@ -165,7 +165,7 @@ class AdminControllerCore extends Controller
 	public static $cache_lang = array();
 
 	/** @var array list the the tab using under a module */
-	public static $tab_module_list = array();
+	public static $tab_module_list;
 
 	/** @var array required_fields to display in the Required Fields form */
 	public $required_fields = array();
@@ -1682,7 +1682,7 @@ class AdminControllerCore extends Controller
 	 */
 	public static function initModuleCacheTab()
 	{
-		if (!self::$tab_module_list)
+		if (!isset(self::$tab_module_list))
 			self::$tab_module_list = Tab::getModuleTabList();
 	}
 
