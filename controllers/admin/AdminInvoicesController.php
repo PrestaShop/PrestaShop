@@ -49,7 +49,7 @@ class AdminInvoicesControllerCore extends AdminController
 					),
 					'PS_INVOICE_START_NUMBER' => array(
 						'title' => $this->l('Invoice number:'),
-						'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. 
+						'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice.
 							Set to 0 if you want to keep the current number (#').(Order::getLastInvoiceNumber() + 1).').',
 						'size' => 6,
 						'type' => 'text',
@@ -150,7 +150,7 @@ class AdminInvoicesControllerCore extends AdminController
 		);
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT COUNT(*) as nbOrders, (
+			SELECT COUNT(o.id_order) as nbOrders, (
 				SELECT oh.id_order_state
 				FROM '._DB_PREFIX_.'order_history oh
 				WHERE oh.id_order = oi.id_order
