@@ -112,7 +112,7 @@
 					{l s='Total vouchers:'}
 				{/if}
 				</td>
-				<td colspan="2" class="price-discount" id="total_discount">
+				<td colspan="2" class="price-discount price" id="total_discount">
 				{if $use_taxes}
 					{if $priceDisplay}
 						{displayPrice price=$total_discounts_tax_exc}
@@ -136,7 +136,7 @@
 					{l s='Total gift-wrapping:'}
 				{/if}
 				</td>
-				<td colspan="2" class="price-discount" id="total_wrapping">
+				<td colspan="2" class="price-discount price" id="total_wrapping">
 				{if $use_taxes}
 					{if $priceDisplay}
 						{displayPrice price=$total_wrapping_tax_exc}
@@ -189,7 +189,7 @@
 						<fieldset>
 							<h4><label for="discount_name">{l s='Vouchers'}</label></h4>
 							<p>
-								<input type="text" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
+								<input type="text" class="discount_name" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
 							</p>
 							<p class="submit"><input type="hidden" name="submitDiscount" /><input type="submit" name="submitAddDiscount" value="{l s='ok'}" class="button" /></p>
 						{if $displayVouchers}
@@ -205,12 +205,12 @@
 				{/if}
 				</td>
 				{if $use_taxes}
-				<td colspan="2" class="price" id="total_price_container">
+				<td colspan="2" class="price total_price_container" id="total_price_container">
 					<p>{l s='Total:'}</p>
 					<span id="total_price">{displayPrice price=$total_price}</span>
 				</td>
 				{else}
-				<td colspan="2" class="price" id="total_price_container">
+				<td colspan="2" class="price total_price_container" id="total_price_container">
 					<p>{l s='Total:'}</p>
 					<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
 				</td>
@@ -259,7 +259,7 @@
 							{if isset($cannotModify) AND $cannotModify == 1}
 								<span style="float:left">{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
 							{else}
-								<div id="cart_quantity_button" style="float:left">
+								<div id="cart_quantity_button" class="cart_quantity_button" style="float:left">
 								<a rel="nofollow" class="cart_quantity_up" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;token={$token_cart}")}" title="{l s='Add'}"><img src="{$img_dir}icon/quantity_up.gif" alt="{l s='Add'}" width="14" height="9" /></a><br />
 								{if $product.minimal_quantity < ($customization.quantity -$quantityDisplayed) OR $product.minimal_quantity <= 1}
 								<a rel="nofollow" class="cart_quantity_down" id="cart_quantity_down_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery}&amp;id_customization={$id_customization}&amp;op=down&amp;token={$token_cart}")}" title="{l s='Subtract'}">
@@ -301,7 +301,7 @@
 				</span></td>
 				<td class="cart_discount_delete">1</td>
 				<td class="cart_discount_price">
-					<span class="price-discount">{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}</span>
+					<span class="price-discount price">{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}</span>
 				</td>
 				<td class="price_discount_del">
 					<a href="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}?deleteDiscount={$discount.id_discount}" class="price_discount_delete" title="{l s='Delete'}">{l s='Delete'}</a>
