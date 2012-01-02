@@ -245,19 +245,19 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Last name:'),
-					'name' => 'lastname',
-					'size' => 33,
-					'required' => true,
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
-				),
-				array(
-					'type' => 'text',
 					'label' => $this->l('First name:'),
 					'name' => 'firstname',
 					'size' => 33,
 					'required' => true,
 					'hint' => $this->l('Forbidden characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Last name:'),
+					'name' => 'lastname',
+					'size' => 33,
+					'required' => true,
+					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
 				),
 				array(
 					'type' => 'password',
