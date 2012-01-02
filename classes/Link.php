@@ -116,6 +116,14 @@ class LinkCore
 		if ($dispatcher->hasKeyword('product_rule', 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 
+		if ($dispatcher->hasKeyword('product_rule', 'categories'))
+		{
+			$cats = array();
+			foreach ($product->getParentCategories() as $cat)
+				$cats[] = $cat['link_rewrite'];
+			$params['categories'] = implode('/', $cats);
+		}
+
 		if ($ipa)
 			$anchor = $product->getAnchor($ipa);
 		else
