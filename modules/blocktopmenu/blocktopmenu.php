@@ -49,8 +49,8 @@ class blocktopmenu extends Module
 	{
 		if(!parent::install() ||
 			!$this->registerHook('top') ||
-			!Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
-			!Configuration::updateValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
+			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_ITEMS', 'CAT1,CMS1,CMS2,PRD1') ||
+			!Configuration::updateGlobalValue('MOD_BLOCKTOPMENU_SEARCH', '1') ||
 			!$this->installDB())
 			return false;
 		return true;
@@ -98,7 +98,7 @@ class blocktopmenu extends Module
 		global $cookie;
 		if(Tools::isSubmit('submitBlocktopmenu'))
 		{
-			if (Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', Tools::getValue('items'), null, (int)Shop::getGroupID(), (int)$this->context->shop->id))
+			if (Configuration::updateValue('MOD_BLOCKTOPMENU_ITEMS', Tools::getValue('items')))
 				$this->_html .= $this->displayConfirmation($this->l('Settings Updated'));
 			else
 				$this->_html .= $this->displayError($this->l('Unable to update settings'));
@@ -322,17 +322,8 @@ class blocktopmenu extends Module
 
 	private function getMenuItems()
 	{
-		$group_id = ((int)Shop::getGroupID() == 0) ? null : (int)Shop::getGroupID();
-		$shop_id = ((int)$this->context->shop->id == 0) ? null : (int)$this->context->shop->id;
-		$items_shop = Configuration::get('MOD_BLOCKTOPMENU_ITEMS', null, $group_id, $shop_id);
-
-		$items_shop = explode(',', $items_shop);
-		$items_global = Configuration::getGlobalValue('MOD_BLOCKTOPMENU_ITEMS');
-		$items_global = explode(',', $items_global);
-
-		$items_global = array_diff($items_global, $items_shop);
-
-		return array('global' => $items_global, 'shop' => $items_shop);
+		// @todo why this ?
+		return array('global' => explode(',', Configuration::get('MOD_BLOCKTOPMENU_ITEMS')));
 	}
 
 	private function makeMenuOption()
