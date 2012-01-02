@@ -19,7 +19,7 @@
     <field name="is_guest"/>
   </fields>
   <entities>
-    <customer id="John" id_gender="gender_1" id_default_group="3" firstname="John" lastname="DOE" passwd="57d7eb4436e6ba5ae8f95ee8b0f7e46a" last_passwd_gen="2012-01-02 05:00:33" birthday="1970-01-15" newsletter="1" ip_registration_newsletter="" newsletter_date_add="0000-00-00 00:00:00" optin="1" secure_key="702c16f53b5f9c4353628705cc5759e7" active="1" is_guest="0">
+    <customer id="John" id_gender="" id_default_group="3" firstname="John" lastname="DOE" passwd="291ef87dd3531037a5f81c19036f2510" last_passwd_gen="2012-01-02 05:14:05" birthday="1970-01-15" newsletter="1" ip_registration_newsletter="" newsletter_date_add="0000-00-00 00:00:00" optin="1" secure_key="ec04c88d18dc5f8d86ff2a3754daa421" active="1" is_guest="0">
       <email>pub@prestashop.com</email>
       <note/>
     </customer>

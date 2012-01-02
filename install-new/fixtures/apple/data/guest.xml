@@ -17,6 +17,6 @@
     <field name="accept_language"/>
   </fields>
   <entities>
-    <guest id="guest_1" id_operating_system="operating_system_1" id_web_browser="web_browser_3" id_customer="John" javascript="1" screen_resolution_x="1680" screen_resolution_y="1050" screen_color="32" sun_java="1" adobe_flash="1" adobe_director="0" apple_quicktime="1" real_player="1" windows_media="0" accept_language="en-us"/>
+    <guest id="guest_1" id_operating_system="" id_web_browser="" id_customer="John" javascript="1" screen_resolution_x="1680" screen_resolution_y="1050" screen_color="32" sun_java="1" adobe_flash="1" adobe_director="0" apple_quicktime="1" real_player="1" windows_media="0" accept_language="en-us"/>
   </entities>
 </entity_guest>
