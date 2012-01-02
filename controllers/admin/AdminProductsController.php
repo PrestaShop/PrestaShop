@@ -502,8 +502,8 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					$productId = (int)(Tools::getValue('id_product'));
-					@unlink(_PS_TMP_IMG_DIR_.'/product_'.$productId.'.jpg');
-					@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$productId.'.jpg');
+					@unlink(_PS_TMP_IMG_DIR_.'product_'.$productId.'.jpg');
+					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'.jpg');
 					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&action=Images&addproduct'.'&token='.($token ? $token : $this->token);
 				}
 			}
@@ -1053,6 +1053,8 @@ class AdminProductsControllerCore extends AdminController
 				'position' => $obj->position,
 				'cover' => $obj->cover,
 			);
+			@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$obj->id_product.'.jpg');
+			@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$obj->id_product.'.jpg');
 			die(Tools::jsonEncode($json));
 		}
 		else
@@ -1232,6 +1234,10 @@ class AdminProductsControllerCore extends AdminController
 		Image::deleteCover((int)$_GET['id_product']);
 		$img = new Image((int)$_GET['id_image']);
 		$img->cover = 1;
+
+		@unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$img->id_product.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'.jpg');
+
 		if ($img->update())
 			$this->confirmations[] = $this->_conf[26];
 		else
@@ -1256,10 +1262,10 @@ class AdminProductsControllerCore extends AdminController
 			WHERE `id_product` = '.(int)$image->id_product.' LIMIT 1');
 		}
 
-		if(file_exists(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg'))
-			$res &= @unlink(_PS_TMP_IMG_DIR_.'/product_'.$image->id_product.'.jpg');
-		if(file_exists(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg'))
-			$res &= @unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$image->id_product.'.jpg');
+		if(file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
+			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg');
+		if(file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg'))
+			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg');
 
 		if ($res)
 			$this->confirmations[] = $this->_conf[7];
@@ -1339,8 +1345,8 @@ class AdminProductsControllerCore extends AdminController
 			$image->delete();
 		if (count($this->_errors))
 			return false;
-		@unlink(_PS_TMP_IMG_DIR_.'/product_'.$product->id.'.jpg');
-		@unlink(_PS_TMP_IMG_DIR_.'/product_mini_'.$product->id.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_'.$product->id.'.jpg');
+		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'.jpg');
 		return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
 	}
 	/**
