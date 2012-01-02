@@ -2884,14 +2884,26 @@ class CartCore extends ObjectModel
 
 		if (!$keep_quantity)
 		{
-			$sql = 'UPDATE '._DB_PREFIX_.'cart_product
-				SET `quantity` = `quantity` - '.(int)$quantity.'
-				WHERE id_cart = '.(int)$this->id.'
-				AND id_product = '.(int)$id_product.'
-				AND id_shop = '.(int)$this->id_shop.'
-				AND id_product_attribute = '.(int)$id_product_attribute.'
-				AND id_address_delivery = '.(int)$id_address_delivery;
-			Db::getInstance()->execute($sql);
+			$sql = new DbQuery();
+			$sql->select('quantity');
+			$sql->from('cart_product', 'c');
+			$sql->where('id_product = '.(int)$id_product);
+			$sql->where('id_product_attribute = '.(int)$id_product_attribute);
+			$sql->where('id_address_delivery = '.(int)$id_address_delivery);
+			$sql->where('id_cart = '.(int)$this->id);
+			$duplicatedQuantity = Db::getInstance()->getValue($sql);
+			
+			if ($duplicatedQuantity > $quantity) {
+			
+				$sql = 'UPDATE '._DB_PREFIX_.'cart_product
+					SET `quantity` = `quantity` - '.(int)$quantity.'
+					WHERE id_cart = '.(int)$this->id.'
+					AND id_product = '.(int)$id_product.'
+					AND id_shop = '.(int)$this->id_shop.'
+					AND id_product_attribute = '.(int)$id_product_attribute.'
+					AND id_address_delivery = '.(int)$id_address_delivery;
+				Db::getInstance()->execute($sql);
+			}
 		}
 
 		// Checking if there is customizations
