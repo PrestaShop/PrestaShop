@@ -29,19 +29,19 @@
 class TaxCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
+	public $name;
 
 	/** @var float Rate (%) */
-	public 		$rate;
+	public $rate;
 
 	/** @var bool active state */
-	public 		$active;
+	public $active;
 
 	/** @var boolean true if the tax has been historized */
-	public 		$deleted = 0;
+	public $deleted = 0;
 
 	/** @var string Account Number */
-	public 		$account_number;
+	public $account_number;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -49,6 +49,7 @@ class TaxCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'tax',
 		'primary' => 'id_tax',
+		'multilang' => true,
 		'fields' => array(
 			'rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'account_number' => array('type' => self::TYPE_STRING),
