@@ -707,8 +707,21 @@ function multishippingMode(it)
 				cleanSelectAddressDelivery();
 				$('#fancybox-content').append($('<div class="multishipping_close_container"><a id="multishipping-close" class="button_large" href="#">' + CloseTxt + '</a></div>'));
 				$('#multishipping-close').click(function() {
+					var newTotalQty = 0;
+					$('#fancybox-content .cart_quantity_input').each(function(){
+						newTotalQty += parseInt($(this).val());
+					});
+					if (newTotalQty != totalQty) {
+						if(!confirm(QtyChanged)) {
+							return false;
+						}
+					}
 					$.fancybox.close();
 					return false;
+				});
+				totalQty = 0;
+				$('#fancybox-content .cart_quantity_input').each(function(){
+					totalQty += parseInt($(this).val());
 				});
 			}
 		});
