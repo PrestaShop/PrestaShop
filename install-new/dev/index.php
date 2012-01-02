@@ -14,7 +14,7 @@ class SynchronizeController extends InstallControllerHttp
 	 */
 	protected $loader;
 
-	public function displayTemplate($template)
+	public function displayTemplate($template, $get_output = false, $path = null)
 	{
 		parent::displayTemplate($template, false, _PS_INSTALL_PATH_.'dev/');
 	}
