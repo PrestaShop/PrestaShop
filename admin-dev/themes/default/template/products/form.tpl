@@ -212,6 +212,7 @@
 			{foreach $tabs_preloaded as $k => $tab}
 				tabs_preloaded['{$k}'] = '{$tab}';
 			{/foreach}
+			var stack = new Array();
 
 			$('.product-tab-content').each(function(){
 				var id = $(this).attr('id').substr(20);
@@ -220,8 +221,11 @@
 
 				if (tabs_preloaded[btn_name])
 					if ($("#product-tab-content-"+id).hasClass('not-loaded'))
-						displayTabProductById('#link-'+id, id, false);
+						stack.push(id);
 			});
+
+			displayTabProductById2(0, false, stack);
+
 			$('.productTabs').show();
 			$('#product_form').show();
 			$('#product-tab-content-wait').hide();
