@@ -10,13 +10,7 @@
     <field name="tracking_number"/>
   </fields>
   <entities>
-    <order_carrier id="order_carrier_1" id_order="1" id_carrier="My_carrier" id_order_invoice="" weight="" shipping_cost_tax_excl="" shipping_cost_tax_incl="">
-      <tracking_number/>
-    </order_carrier>
-    <order_carrier id="order_carrier_2" id_order="2" id_carrier="My_carrier" id_order_invoice="0" weight="0.5" shipping_cost_tax_excl="7.000000" shipping_cost_tax_incl="8.370000">
-      <tracking_number/>
-    </order_carrier>
-    <order_carrier id="order_carrier_3" id_order="3" id_carrier="My_carrier" id_order_invoice="0" weight="0.5" shipping_cost_tax_excl="7.000000" shipping_cost_tax_incl="8.370000">
+    <order_carrier id="order_carrier_1" id_order="1" id_carrier="My_carrier" id_order_invoice="0" weight="0" shipping_cost_tax_excl="0.000000" shipping_cost_tax_incl="0.000000">
       <tracking_number/>
     </order_carrier>
   </entities>
