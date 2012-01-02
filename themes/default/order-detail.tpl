@@ -409,7 +409,7 @@
 			</ol>
 		</div>
 	{/if}
-	<form action="{$link->getPageLink('order-detail.php', true)}" method="post" class="std" id="sendOrderMessage">
+	<form action="{$link->getPageLink('order-detail', true)}" method="post" class="std" id="sendOrderMessage">
 		<h3>{l s='Add a message:'}</h3>
 		<p>{l s='If you would like to add a comment about your order, please write it below.'}</p>
 		<p>

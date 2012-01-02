@@ -27,14 +27,8 @@
 //show the order-details with ajax
 function showOrder(mode, var_content, file)
 {
-	var url;
-	if (file.match(/^https?:\/\//))
-		url = file;
-	else
-		url = baseDir + file + '.php';
-
 	$.get(
-		url,
+		file,
 		((mode == 1) ? {'id_order': var_content, 'ajax': true} : {'id_order_return': var_content, 'ajax': true}),
 		function(data)
 		{
@@ -87,7 +81,8 @@ function showOrder(mode, var_content, file)
 	});
 }
 
-function updateOrderLineDisplay(domCheckbox){
+function updateOrderLineDisplay(domCheckbox)
+{
 	var lineQuantitySpan = $(domCheckbox).parent().parent().find('span.order_qte_span');
 	var lineQuantityInput = $(domCheckbox).parent().parent().find('input.order_qte_input');
 	if($(domCheckbox).is(':checked'))
@@ -104,14 +99,15 @@ function updateOrderLineDisplay(domCheckbox){
 }
 
 //send a message in relation to the order with ajax
-function sendOrderMessage (){
+function sendOrderMessage ()
+{
 	paramString = "ajax=true";
 	$('form#sendOrderMessage').find('input, textarea').each(function(){
 		paramString += '&' + $(this).attr('name') + '=' + encodeURI($(this).val());
 	});
 	$.ajax({
 		type: "POST",
-		url: baseDir + "order-detail.php",
+		url: baseDir + "index.php?controller=order-detail",
 		data: paramString,
 		success: function (msg){
 			$('#block-order-detail').fadeOut('slow', function() {
