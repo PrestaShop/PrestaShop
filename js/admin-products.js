@@ -249,8 +249,8 @@ function displayTabProductById(el, id, selected)
 
 function displayTabProductById2(index, selected, stack)
 {
-	id = stack[index];
-	myurl = $('#link-'+id).attr("href")+"&ajax=1";
+	var id = stack[index];
+	var myurl = $('#link-'+id).attr("href")+"&ajax=1";
 	// Used to check if the tab is already in the process of being loaded
 	$("#product-tab-content-"+id).addClass('loading');
 
