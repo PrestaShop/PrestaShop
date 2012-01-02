@@ -41,6 +41,7 @@ class HomeSlide extends ObjectModel
 	public static $definition = array(
 		'table' => 'homeslider_slides',
 		'primary' => 'id_homeslider_slides',
+		'multilang' => true,
 		'fields' => array(
 			'active' =>			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'position' =>		array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt', 'required' => true),
