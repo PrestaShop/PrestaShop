@@ -27,14 +27,8 @@
 //show the order-details with ajax
 function showOrder(mode, var_content, file)
 {
-	var url;
-	if (file.match(/^https?:\/\//))
-		url = file;
-	else
-		url = baseDir + file + '.php';
-
 	$.get(
-		url,
+		file,
 		((mode == 1) ? {'id_order': var_content, 'ajax': true} : {'id_order_return': var_content, 'ajax': true}),
 		function(data)
 		{
