@@ -295,7 +295,7 @@ class OrderControllerCore extends ParentOrderController
 		global $orderTotal;
 
 		// Redirect instead of displaying payment modules if any module are grefted on
-		Hook::backBeforePayment('order.php?step=3');
+		Hook::exec('displayBeforePayment', array('module' => 'order.php?step=3'));
 
 		/* We may need to display an order summary */
 		$this->context->smarty->assign($this->context->cart->getSummaryDetails());
