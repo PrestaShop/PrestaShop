@@ -64,7 +64,7 @@
 
 {block name="defaultForm"}
 	<div>
-	 	<div class="productTabs">
+	 	<div class="productTabs" style="display:none;">
 			<ul class="tab">
 			{foreach $product_tabs key=numStep item=tab}
 				<li class="tab-row">
@@ -76,23 +76,11 @@
 	</div>
 	<script type="text/javascript">
 		var toload = new Array();
-		var tabs_preloaded = new Array();
+		$('#product-tab-content-wait').show();
+
 		$(document).ready(function()
 		{
-			{foreach $tabs_preloaded as $k => $tab}
-				tabs_preloaded['{$k}'] = '{$tab}';
-			{/foreach}
-
-			$('.product-tab-content').each(function(){
-				var id = $(this).attr('id').substr(20);
-				var split_position = id.indexOf('-') + 1;
-				var btn_name = id.substr(split_position);
-
-			if (tabs_preloaded[btn_name])
-				if ($("#product-tab-content-"+id).hasClass('not-loaded'))
-					displayTabProductById('#link-'+id, id, false);
-			});
-
+			$('#product-tab-content-wait').show();
 			{if $is_pack}
 				$('#pack_product').attr('checked', 'checked');
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
@@ -217,6 +205,27 @@
 			});
 
 		});
+
+		var tabs_preloaded = new Array();
+
+		$(window).bind("load", function() {
+			{foreach $tabs_preloaded as $k => $tab}
+				tabs_preloaded['{$k}'] = '{$tab}';
+			{/foreach}
+
+			$('.product-tab-content').each(function(){
+				var id = $(this).attr('id').substr(20);
+				var split_position = id.indexOf('-') + 1;
+				var btn_name = id.substr(split_position);
+
+				if (tabs_preloaded[btn_name])
+					if ($("#product-tab-content-"+id).hasClass('not-loaded'))
+						displayTabProductById('#link-'+id, id, false);
+			});
+			$('.productTabs').show();
+			$('#product_form').show();
+			$('#product-tab-content-wait').hide();
+		});
 	</script>
 	
 	{***********************************************}
@@ -235,7 +244,7 @@
 
     <div id="product-tab-content-wait" style="display:none"><div id="loading">{l s='Loading...'}</div></div>
 
-	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product">
+	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
 		<input type="hidden" name="id_product" value="{$id_product}" />
 		<div class="tab-pane" id="tabPane1">
 		{if !$product->active}
