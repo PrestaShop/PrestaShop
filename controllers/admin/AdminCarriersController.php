@@ -29,9 +29,9 @@ class AdminCarriersControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'carrier';
+		$this->table = 'carrier';
 		$this->className = 'Carrier';
-	 	$this->lang = false;
+		$this->lang = false;
 		$this->deleted = true;
 
 		$this->addRowAction('edit');
@@ -42,11 +42,11 @@ class AdminCarriersControllerCore extends AdminController
 
 		$this->context = Context::getContext();
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
-			'dir' => 'st'
+			'dir' => 's'
 		);
 
 		$this->fieldsDisplay = array(
@@ -449,7 +449,7 @@ class AdminCarriersControllerCore extends AdminController
 	{
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
-		 	/* Checking fields validity */
+			/* Checking fields validity */
 			$this->validateRules();
 			if (!count($this->_errors))
 			{
