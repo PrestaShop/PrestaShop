@@ -65,7 +65,7 @@
 	<div class="margin-form">
 		{if $input.type == 'checkboxStatuses'}
 			{foreach $input.values.query as $value}
-				{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]|intval}
+				{assign var=id_checkbox value=$input.name|cat:'_'|cat:intval($value[$input.values.id])}
 				<input type="checkbox"
 					name="{$input.name}[]"
 					id="{$id_checkbox}"

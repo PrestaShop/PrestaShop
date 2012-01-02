@@ -430,6 +430,32 @@ class OrderInvoiceCore extends ObjectModel
 	}
 
 	/**
+	 * @since 1.5.0.3
+	 * @static
+	 * @param $id_order_state
+	 * @return array collection of OrderInvoice
+	 */
+	public static function getByStatus($id_order_state)
+	{
+		$order_invoice_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT oi.*
+			FROM `'._DB_PREFIX_.'order_invoice` oi
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+			WHERE '.(int)$id_order_state.' = (
+				SELECT id_order_state
+				FROM '._DB_PREFIX_.'order_history oh
+				WHERE oh.id_order = o.id_order
+				ORDER BY date_add DESC, id_order_history DESC
+				LIMIT 1
+			)
+			'.Context::getContext()->shop->addSqlRestriction(false, 'o').'
+			ORDER BY oi.`date_add` ASC
+		');
+
+		return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
+	}
+
+	/**
 	 * @since 1.5
 	 * @static
 	 * @param $id_order_invoice
