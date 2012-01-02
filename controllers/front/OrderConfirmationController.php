@@ -72,8 +72,8 @@ class OrderConfirmationControllerCore extends FrontController
 	{
 		$this->context->smarty->assign(array(
 			'is_guest' => $this->context->customer->is_guest,
-			'HOOK_ORDER_CONFIRMATION' => Hook::orderConfirmation((int)($this->id_order)),
-			'HOOK_PAYMENT_RETURN' => Hook::paymentReturn((int)($this->id_order), (int)($this->id_module))
+			'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
+			'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
 		));
 
 		if ($this->context->customer->is_guest)
@@ -88,6 +88,56 @@ class OrderConfirmationControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'order-confirmation.tpl');
 		parent::initContent();
+	}
+
+	/**
+	 * Execute the hook displayPaymentReturn
+	 */
+	public function displayPaymentReturn()
+	{
+		if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module))
+		{
+			$params = array();
+			$order = new Order($this->id_order);
+			$currency = new Currency($order->id_currency);
+
+			if (Validate::isLoadedObject($order))
+			{
+				$cart = new Cart((int)$order->id_cart);
+				$params['total_to_pay'] = $cart->getOrderTotal();
+				$params['currency'] = $currency->sign;
+				$params['objOrder'] = $order;
+				$params['currencyObj'] = $currency;
+
+				return Hook::exec('displayPaymentReturn', $params, $this->id_module);
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Execute the hook displayOrderConfirmation
+	 */
+	public function displayOrderConfirmation()
+	{
+		if (Validate::isUnsignedId($this->id_order))
+		{
+			$params = array();
+			$order = new Order($this->id_order);
+			$currency = new Currency($order->id_currency);
+
+			if (Validate::isLoadedObject($order))
+			{
+				$cart = new Cart($order->id_cart);
+				$params['total_to_pay'] = $cart->getOrderTotal();
+				$params['currency'] = $currency->sign;
+				$params['objOrder'] = $order;
+				$params['currencyObj'] = $currency;
+
+				return Hook::exec('displayOrderConfirmation', $params);
+			}
+		}
+		return false;
 	}
 }
 
