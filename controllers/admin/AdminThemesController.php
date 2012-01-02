@@ -158,7 +158,7 @@ class AdminThemesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name of the theme:'),
 					'name' => 'name',
 					'size' => 48,
 					'required' => true,
@@ -175,19 +175,22 @@ class AdminThemesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 					'type' => 'text',
-					'label' => $this->l('Directory:'),
+					'label' => $this->l('Name of the theme\'s directory:'),
 					'name' => 'directory',
 					'required' => true,
-					'desc' => $this->l('Note: only the existence of the directory is checked. Please be sure to select a valid theme directory.'),
+					'desc' => $this->l('If the directory does not exists, it will be created.'),
 				);
+
+			$theme_query = Theme::getThemes();
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'name' => 'based_on',
-				'label' => $this->l('Based on'),
+				'label' => $this->l('Copy missing files from existing theme:'),
+				'desc' => $this->l('If you create a new theme, it\'s recommended to use  default theme files for basic.'),
 				'options' => array(
-				'id' => 'id', 'name' => 'name', 
-				'default' => array('value' => 0, 'label' => ' - '),
-				'query' => Theme::getThemes(),
+					'id' => 'id', 'name' => 'name', 
+					'default' => array('value' => 0, 'label' => '&nbsp;-&nbsp;'),
+					'query' => $theme_query,
 				)
 			);
 		}
@@ -201,7 +204,7 @@ class AdminThemesControllerCore extends AdminController
 					'class' => 't',
 					'values' => $available_theme_dir,
 					'selected' => $selected_theme_dir,
-					'desc' => $this->l('Note: only the existence of the directory is checked. Please be sure to select a valid theme directory.'),
+					'desc' => $this->l('Please select a valid theme directory.'),
 				);
 
 		return parent::renderForm();
