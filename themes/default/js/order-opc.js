@@ -705,6 +705,11 @@ function multishippingMode(it)
 			'onComplete': function()
 			{
 				cleanSelectAddressDelivery();
+				$('#fancybox-content').append($('<div class="multishipping_close_container"><a id="multishipping-close" class="button_large" href="#">' + CloseTxt + '</a></div>'));
+				$('#multishipping-close').click(function() {
+					$.fancybox.close();
+					return false;
+				});
 			}
 		});
 	}
