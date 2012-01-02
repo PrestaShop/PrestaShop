@@ -761,8 +761,6 @@ abstract class ObjectModelCore
 		$errors = array();
 		foreach ($this->def['fields'] as $field => $data)
 		{
-			if (!isset($data['copy_from_front']) || !$data['copy_from_front'])
-				continue;
 			/* Checking for required fields */
 			if (isset($data['required']) && $data['required'] && ($value = Tools::getValue($field, $this->{$field})) == false && (string)$value != '0')
 				if (!$this->id OR $field != 'passwd')
@@ -780,6 +778,8 @@ abstract class ObjectModelCore
 					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 				{
+					if (!isset($data['copy_from_front']) || !$data['copy_from_front'])
+						continue;
 					if ($field == 'passwd')
 					{
 						if ($value = Tools::getValue($field))
