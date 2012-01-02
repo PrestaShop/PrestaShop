@@ -841,7 +841,7 @@
 		</p>
 		<p>
 		<label for="id_lang">{l s='Language:'}</label>
-		<select id="id_lang" name="id_lang">';
+		<select id="id_lang" name="id_lang">
 			{foreach from=$langs item='lang'}
 				<option value="{$lang.id_lang}">{$lang.name}</option>
 			{/foreach}
