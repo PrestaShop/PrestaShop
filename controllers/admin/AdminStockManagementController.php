@@ -125,6 +125,10 @@ class AdminStockManagementControllerCore extends AdminController
 		$warehouses_add = Warehouse::getWarehouses(true);
 		$warehouses_remove = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
 
+		// displays warning if no warehouses
+		if (!$warehouses_add)
+			$this->displayWarning($this->l('You have to have Warehouses before adding stock. See Stock/Warehouses'));
+
 		// gets the currencies
 		$currencies = Currency::getCurrencies();
 
@@ -134,9 +138,10 @@ class AdminStockManagementControllerCore extends AdminController
 			case 'addstock' :
 				// gets the last stock mvt for this product, so we can display the last unit price te and the last quantity added
 				$last_sm_unit_price_te = $this->l('N/A');
-				$last_sm_quantity = $this->l('N/A');
+				$last_sm_quantity = 0;
+				$last_sm_quantity_is_usable = -1;
 				$last_sm = StockMvt::getLastPositiveStockMvt($id_product, $id_product_attribute);
-				if ($last_sm !== false)
+				if ($last_sm != false)
 				{
 					$last_sm_currency = new Currency((int)$last_sm['id_currency']);
 					$last_sm_quantity = (int)$last_sm['physical_quantity'];
@@ -213,8 +218,8 @@ class AdminStockManagementControllerCore extends AdminController
 							'desc' => $this->l('Physical quantity to add'),
 							'hint' => sprintf(
 										$this->l('Last physical quantity added : %s (%s)'),
-										$last_sm_quantity,
-										($last_sm_quantity_is_usable === 1 ? $this->l('usable') : $this->l('not usable'))),
+										($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
+										($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('usable') : $this->l('not usable')) : $this->l('N/A'))),
 						),
 						array(
 							'type' => 'radio',
@@ -648,6 +653,13 @@ class AdminStockManagementControllerCore extends AdminController
 				if ($stock_manager->addProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $price, $usable))
 				{
 					StockAvailable::synchronize($id_product);
+					if (Tools::isSubmit('addstockAndStay'))
+					{
+						$redirect = self::$currentIndex.'&id_product='.(int)$id_product;
+						if ($id_product_attribute)
+							$redirect .= '&id_product_attribute='.(int)$id_product_attribute;
+						$redirect .= '&addstock&token='.$token;
+					}
 					Tools::redirectAdmin($redirect.'&conf=1');
 				}
 				else
@@ -734,6 +746,11 @@ class AdminStockManagementControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'addstock':
+				$this->toolbar_btn['save-and-stay'] = array(
+						'short' => 'SaveAndStay',
+						'href' => '#',
+						'desc' => $this->l('Save and stay'),
+					);
 			case 'removestock':
 			case 'transferstock':
 				$this->toolbar_btn['save'] = array(
