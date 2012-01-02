@@ -23,7 +23,7 @@
     <field name="active"/>
   </fields>
   <entities>
-    <address id="manufacturer" id_country="US" id_state="state_5" id_customer="" id_manufacturer="Apple_Computer_Inc" id_supplier="" id_warehouse="0" alias="manufacturer" company="" lastname="JOBS" firstname="STEVE" postcode="95014" phone="(800) 275-2273" phone_mobile="" vat_number="" dni="" active="1">
+    <address id="manufacturer" id_country="US" id_state="" id_customer="" id_manufacturer="Apple_Computer_Inc" id_supplier="" id_warehouse="0" alias="manufacturer" company="" lastname="JOBS" firstname="STEVE" postcode="95014" phone="(800) 275-2273" phone_mobile="" vat_number="" dni="" active="1">
       <address1>1 Infinite Loop</address1>
       <address2/>
       <city>Cupertino</city>
