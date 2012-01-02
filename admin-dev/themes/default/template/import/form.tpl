@@ -199,7 +199,7 @@
 				<p>{l s='Note that you can have serveral products with the same reference.'}</p>
 			</div>
 			<div class="warn import_supply_orders_details" style="margin-top: 20px; display:none">
-				<p>{l s='Importing Supply Order Details will first reset the products ordered.'}</p>
+				<p>{l s='Importing Supply Order Details will first reset the products ordered, if any.'}</p>
 			</div>
 		{if !count($files_to_import)}
 			<div class="warn" style="margin-top: 20px;">
