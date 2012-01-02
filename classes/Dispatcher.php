@@ -47,6 +47,7 @@ class DispatcherCore
 				'rewrite' =>		array('regexp' => '[a-zA-Z0-9-\pL]*'),
 				'ean13' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
 				'category' =>		array('regexp' => '[a-zA-Z0-9-\pL]*'),
+				'categories' =>		array('regexp' => '[/a-zA-Z0-9-\pL]*'),
 				'reference' =>		array('regexp' => '[a-zA-Z0-9-\pL]*'),
 				'meta_keywords' =>	array('regexp' => '[a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[a-zA-Z0-9-\pL]*'),
