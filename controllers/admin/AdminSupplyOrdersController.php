@@ -179,6 +179,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			//get warehouses list
 			$warehouses = Warehouse::getWarehouses(true);
 
+			// displays warning if there are no warehouses
+			if (!$warehouses)
+				$this->displayWarning($this->l('You must have at least one warehouse. See Stock/Warehouses'));
+
 			//get currencies list
 			$currencies = Currency::getCurrencies();
 
