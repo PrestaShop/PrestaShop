@@ -511,6 +511,10 @@ select optgroup option {
 	min-height:32px;
 }
 
+#content .warn a {
+	color:#9e6014;
+}
+
 #content .error ol {
 	clear: both;
 	margin-top: 5px;

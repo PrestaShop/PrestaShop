@@ -141,9 +141,10 @@
 				{/if}
 				</div>
 				<span id="employee_links">
+				<span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
+						<span class="separator"></span>
 						<a class="employee" href="index.php?controller=AdminEmployees&id_employee={$employee->id}&updateemployee&token={getAdminToken tab='AdminEmployees'}"  alt="" /> {l s='My preferences'}</a>
-					<span class="separator"></span><span class="employee_name">{$first_name}&nbsp;{$last_name}</span>
-						<span class="separator"></span><a href="index.php?logout" id="header_logout">
+					<span class="separator"></span><a href="index.php?logout" id="header_logout">
 						<span>{l s='logout'}</span>
 					</a>
 				{if {$base_url}}

@@ -514,7 +514,7 @@
 				{/if}
 				<table style="width: 100%;" cellspacing="0" cellpadding="0" class="table" id="orderProducts">
 					<tr>
-						<th align="center" style="width: 7%">&nbsp;</th>
+						<th height="39" align="center" style="width: 7%">&nbsp;</th>
 						<th>{l s='Product'}</th>
 						<th style="width: 15%; text-align: center">{l s='UP'} <sup>*</sup></th>
 						<th style="width: 4%; text-align: center">{l s='Qty'}</th>

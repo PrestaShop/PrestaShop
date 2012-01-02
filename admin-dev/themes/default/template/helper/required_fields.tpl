@@ -26,7 +26,7 @@
 
 <br />
 <p>
-	<a href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;"><img src="../img/admin/duplicate.gif" alt="" /> {l s='Set required fields for this section'}</a>
+	<a class="button" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;"><img src="../img/admin/duplicate.gif" alt="" /> {l s='Set required fields for this section'}</a>
 </p>
 <fieldset style="display:none" class="width1 requiredFieldsParameters">
 	<legend>{l s='Required Fields'}</legend>
