@@ -422,8 +422,8 @@ class OrderInvoiceCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.date_add >= \''.pSQL($date_from).'\'
-			'.Context::getContext()->shop->addSqlRestriction().
-			' ORDER BY oi.date_add ASC
+			'.Context::getContext()->shop->addSqlRestriction().'
+			ORDER BY oi.date_add ASC
 		');
 
 		return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
@@ -450,6 +450,28 @@ class OrderInvoiceCore extends ObjectModel
 			)
 			'.Context::getContext()->shop->addSqlRestriction(false, 'o').'
 			ORDER BY oi.`date_add` ASC
+		');
+
+		return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
+	}
+
+	/**
+	 * @since 1.5.0.3
+	 * @static
+	 * @param $date_from
+	 * @param $date_to
+	 * @return array collection of invoice
+	 */
+	public static function getByDeliveryDateInterval($date_from, $date_to)
+	{
+		$order_invoice_list = Db::getInstance()->ExecuteS('
+			SELECT oi.*
+			FROM `'._DB_PREFIX_.'order_invoice` oi
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+			WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
+			AND oi.date_add >= \''.pSQL($date_from).'\'
+			'.Context::getContext()->shop->addSqlRestriction().'
+			ORDER BY oi.delivery_date ASC
 		');
 
 		return ObjectModel::hydrateCollection('OrderInvoice', $order_invoice_list);
