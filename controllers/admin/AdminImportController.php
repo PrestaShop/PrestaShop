@@ -76,7 +76,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function __construct()
 	{
-		$this->entities = array_flip(array(
+		$this->entities = array(
 			$this->l('Categories'),
 			$this->l('Products'),
 			$this->l('Combinations'),
@@ -84,9 +84,21 @@ class AdminImportControllerCore extends AdminController
 			$this->l('Addresses'),
 			$this->l('Manufacturers'),
 			$this->l('Suppliers'),
-			$this->l('SupplyOrders'),
-			$this->l('SupplyOrdersDetails'),
-		));
+		);
+
+		// @since 1.5.0
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+		{
+			$this->entities = array_merge(
+				$this->entities,
+				array(
+					$this->l('SupplyOrders'),
+					$this->l('SupplyOrdersDetails'),
+				)
+			);
+		}
+
+		$this->entities = array_flip($this->entities);
 
 		switch ((int)Tools::getValue('entity'))
 		{
@@ -342,59 +354,65 @@ class AdminImportControllerCore extends AdminController
 			break;
 			// @since 1.5.0
 			case $this->entities[$this->l('SupplyOrders')]:
-				// required fields
-				$this->required_fields = array(
-					'id_supplier',
-					'id_warehouse',
-					'reference',
-					'date_delivery_expected',
-				);
-				// available fields
-				$this->available_fields = array(
-					'no' => array('label' => $this->l('Ignore this column')),
-					'id' => array('label' => $this->l('ID')),
-					'id_supplier' => array('label' => $this->l('Supplier ID *')),
-					'id_lang' => array('label' => $this->l('Lang ID')),
-					'id_warehouse' => array('label' => $this->l('Warehouse ID *')),
-					'id_currency' => array('label' => $this->l('Currency ID *')),
-					'reference' => array('label' => $this->l('Supply Order Reference *')),
-					'date_delivery_expected' => array('label' => $this->l('Delivery Date (Y-M-D)*')),
-					'discount_rate' => array('label' => $this->l('Discount Rate')),
-					'is_template' => array('label' => $this->l('Template')),
-				);
-				// default values
-				self::$default_values = array(
-					'id_lang' => (int)Configuration::get('PS_LANG_DEFAULT'),
-					'id_currency' => Currency::getDefaultCurrency()->id,
-					'discount_rate' => '0',
-					'is_template' => '0',
-				);
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+				{
+					// required fields
+					$this->required_fields = array(
+						'id_supplier',
+						'id_warehouse',
+						'reference',
+						'date_delivery_expected',
+					);
+					// available fields
+					$this->available_fields = array(
+						'no' => array('label' => $this->l('Ignore this column')),
+						'id' => array('label' => $this->l('ID')),
+						'id_supplier' => array('label' => $this->l('Supplier ID *')),
+						'id_lang' => array('label' => $this->l('Lang ID')),
+						'id_warehouse' => array('label' => $this->l('Warehouse ID *')),
+						'id_currency' => array('label' => $this->l('Currency ID *')),
+						'reference' => array('label' => $this->l('Supply Order Reference *')),
+						'date_delivery_expected' => array('label' => $this->l('Delivery Date (Y-M-D)*')),
+						'discount_rate' => array('label' => $this->l('Discount Rate')),
+						'is_template' => array('label' => $this->l('Template')),
+					);
+					// default values
+					self::$default_values = array(
+						'id_lang' => (int)Configuration::get('PS_LANG_DEFAULT'),
+						'id_currency' => Currency::getDefaultCurrency()->id,
+						'discount_rate' => '0',
+						'is_template' => '0',
+					);
+				}
 			break;
 			// @since 1.5.0
 			case $this->entities[$this->l('SupplyOrdersDetails')]:
-				// required fields
-				$this->required_fields = array(
-					'supply_order_reference',
-					'id_product',
-					'unit_price_te',
-					'quantity_expected',
-				);
-				// available fields
-				$this->available_fields = array(
-					'no' => array('label' => $this->l('Ignore this column')),
-					'supply_order_reference' => array('label' => $this->l('Supply Order Reference *')),
-					'id_product' => array('label' => $this->l('Product ID *')),
-					'id_product_attribute' => array('label' => $this->l('Product Attribute ID')),
-					'unit_price_te' => array('label' => $this->l('Unit Price (te) *')),
-					'quantity_expected' => array('label' => $this->l('Quantity Expected *')),
-					'discount_rate' => array('label' => $this->l('Discount Rate')),
-					'tax_rate' => array('label' => $this->l('Tax Rate')),
-				);
-				// default values
-				self::$default_values = array(
-					'discount_rate' => '0',
-					'tax_rate' => '0',
-				);
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+				{
+					// required fields
+					$this->required_fields = array(
+						'supply_order_reference',
+						'id_product',
+						'unit_price_te',
+						'quantity_expected',
+					);
+					// available fields
+					$this->available_fields = array(
+						'no' => array('label' => $this->l('Ignore this column')),
+						'supply_order_reference' => array('label' => $this->l('Supply Order Reference *')),
+						'id_product' => array('label' => $this->l('Product ID *')),
+						'id_product_attribute' => array('label' => $this->l('Product Attribute ID')),
+						'unit_price_te' => array('label' => $this->l('Unit Price (te) *')),
+						'quantity_expected' => array('label' => $this->l('Quantity Expected *')),
+						'discount_rate' => array('label' => $this->l('Discount Rate')),
+						'tax_rate' => array('label' => $this->l('Tax Rate')),
+					);
+					// default values
+					self::$default_values = array(
+						'discount_rate' => '0',
+						'tax_rate' => '0',
+					);
+				}
 		}
 
 		parent::__construct();
@@ -438,7 +456,7 @@ class AdminImportControllerCore extends AdminController
 			'files_to_import' => $files_to_import,
 			'languages' => Language::getLanguages(false),
 			'id_language' => $this->context->language->id,
-			'available_fields' => $this->getAvailableFields()
+			'available_fields' => $this->getAvailableFields(),
 		);
 
 		return parent::renderForm();
@@ -2104,11 +2122,13 @@ class AdminImportControllerCore extends AdminController
 				break;
 				// @since 1.5.0
 				case $this->entities[$this->l('SupplyOrders')]:
-					$this->supplyOrdersImport();
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+						$this->supplyOrdersImport();
 				break;
 				// @since 1.5.0
 				case $this->entities[$this->l('SupplyOrdersDetails')]:
-					$this->supplyOrdersDetailsImport();
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+						$this->supplyOrdersDetailsImport();
 				break;
 				default:
 					$this->_errors[] = $this->l('no entity selected');
