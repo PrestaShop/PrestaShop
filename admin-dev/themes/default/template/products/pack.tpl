@@ -58,16 +58,13 @@
 			multipleSeparator:'||',
 			formatItem: function(item) {
 				return item[1]+' - '+item[0];
-			}
-		}).result(function(event, item){
-			$('#curPackItemId').val(item[1]);
-		});
-
-		$('#curPackItemName').setOptions({
+			},
 			extraParams: {
 				excludeIds : getSelectedIds(),
 				excludeVirtuals : 1
 			}
+		}).result(function(event, item){
+			$('#curPackItemId').val(item[1]);
 		});
 
 	});
@@ -152,9 +149,8 @@
 
 	function getSelectedIds()
 	{
-		// input lines QTY x ID-
 		var ids = id_product + ',';
-		ids += $('#inputPackItems').val().replace(/\d+x/g, '').replace(/\-/g,',');
+		ids += $('#inputPackItems').val().replace(/\d*x/g, '').replace(/\-/g,',');
 		ids = ids.replace(/\,$/,'');
 		return ids;
 	}
