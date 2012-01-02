@@ -31,12 +31,12 @@
 class SupplyOrderHistoryCore extends ObjectModel
 {
 	/**
-	 * @var int Supply order
+	 * @var int Supply order Id
 	 */
 	public $id_supply_order;
 
 	/**
-	 * @var int Employee
+	 * @var int Employee Id
 	 */
 	public $id_employee;
 
@@ -51,7 +51,7 @@ class SupplyOrderHistoryCore extends ObjectModel
 	public $employee_lastname;
 
 	/**
-	 * @var int State
+	 * @var int State of the supply order
 	 */
 	public $id_state;
 

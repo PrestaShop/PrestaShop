@@ -51,7 +51,7 @@ class SupplyOrderCore extends ObjectModel
 	public $id_warehouse;
 
 	/**
-	 * @var int State of the order
+	 * @var int Current state of the order
 	 */
 	public $id_supply_order_state;
 
@@ -120,10 +120,6 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	public $is_template = 0;
 
-	/**
-	 * @var array Contains object definition
-	 * @see ObjectModel::definition
-	 */
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -209,10 +205,8 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Check all products in this order and calculate prices
-	 * Apply global discount if necessary
-	 *
-	 * @return array
+	 * Checks all products in this order and calculate prices
+	 * Applies the global discount if necessary
 	 */
 	protected function calculatePrices()
 	{
@@ -249,6 +243,7 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * Retrieves the product entries for the current order
 	 *
+	 * @param int $id_lang Optional Id Lang - Uses Context::language::id by default
 	 * @return array
 	 */
 	public function getEntries($id_lang = null)
@@ -283,9 +278,9 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Retrieves the product entries collection for the current order
+	 * Retrieves the details entries (i.e. products) collection for the current order
 	 *
-	 * @return Collection
+	 * @return Collection of SupplyOrderDetail
 	 */
 	public function getEntriesCollection()
 	{
@@ -298,7 +293,7 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * Check if the order has entries
 	 *
-	 * @return bool
+	 * @return bool Has/Has not
 	 */
 	public function hasEntries()
 	{
@@ -311,13 +306,12 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Check if the current state allow to edit the current order
+	 * Check if the current state allows to edit the current order
 	 *
 	 * @return bool
 	 */
 	public function isEditable()
 	{
-		// build query
 		$query = new DbQuery();
 		$query->select('s.editable');
 		$query->from('supply_order_state', 's');
@@ -333,7 +327,6 @@ class SupplyOrderCore extends ObjectModel
 	 */
 	public function isDeliveryNoteAvailable()
 	{
-		// build query
 		$query = new DbQuery();
 		$query->select('s.delivery_note');
 		$query->from('supply_order_state', 's');
@@ -343,13 +336,12 @@ class SupplyOrderCore extends ObjectModel
 	}
 
 	/**
-	 * Checks if the current state allows add products in stock
+	 * Checks if the current state allows to add products in stock
 	 *
 	 * @return bool
 	 */
 	public function isInReceiptState()
 	{
-		// build query
 		$query = new DbQuery();
 		$query->select('s.receipt_state');
 		$query->from('supply_order_state', 's');
@@ -410,7 +402,7 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * For a given $id_supplier, tells if it has pending supply orders
 	 *
-	 * @param int $id_supplier
+	 * @param int $id_supplier Id Supplier
 	 * @return bool
 	 */
 	public static function supplierHasPendingOrders($id_supplier)
@@ -431,8 +423,9 @@ class SupplyOrderCore extends ObjectModel
 
 	/**
 	 * For a given id or reference, tells if the supply order exists
-	 * @param int|string $match
-	 * @return int id
+	 *
+	 * @param int|string $match Either the reference of the order, or the Id of the order
+	 * @return int SupplyOrder Id
 	 */
 	public static function exists($match)
 	{
@@ -451,7 +444,7 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * For a given reference, returns the corresponding supply order
 	 *
-	 * @param striing $reference
+	 * @param string $reference Reference of the order
 	 * @return bool|SupplyOrder
 	 */
 	public static function getSupplyOrderByReference($reference)
@@ -465,11 +458,17 @@ class SupplyOrderCore extends ObjectModel
 		$query->where('so.reference = "'.pSQL($reference).'"');
 		$id = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
-		if ($id === false)
+		if ($id == false)
 			return false;
 
 		return (new SupplyOrder((int)$id));
 	}
+
+	/*********************************\
+	 *
+	 * Webservices Specific Methods
+	 *
+	 *********************************/
 
 	/**
 	 * Webservice : gets the ids supply_order_detail associated to this order

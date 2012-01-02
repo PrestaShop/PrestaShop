@@ -178,7 +178,7 @@ class StockMvtCore extends ObjectModel
 	 * @since 1.5.0
 	 * @param int $id_order
 	 * @param int $id_product
-	 * @param int $id_product_attribute
+	 * @param int $id_product_attribute Use 0 if the product does not have attributes
 	 * @param int $quantity
 	 * @param int $id_warehouse Optional
 	 * @return Array mvts
@@ -213,8 +213,10 @@ class StockMvtCore extends ObjectModel
 
 	/**
 	 * For a given product, gets the last positive stock mvt
+	 *
+	 * @since 1.5.0
 	 * @param int $id_product
-	 * @param int $id_product_attribute
+	 * @param int $id_product_attribute Use 0 if the product does not have attributes
 	 * @return bool|array
 	 */
 	public static function getLastPositiveStockMvt($id_product, $id_product_attribute)

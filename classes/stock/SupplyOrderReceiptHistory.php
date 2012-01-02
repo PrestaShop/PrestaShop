@@ -26,12 +26,13 @@
 */
 
 /**
+ * History of receipts
  * @since 1.5.0
  */
 class SupplyOrderReceiptHistoryCore extends ObjectModel
 {
 	/**
-	 * @var int Detail of the supply order
+	 * @var int Detail of the supply order (i.e. One particular product)
 	 */
 	public $id_supply_order_detail;
 
