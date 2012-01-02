@@ -1,6 +1,4 @@
-<<<<<<< .mine
 <tr id="new_product" height="52" style="display:none;background-color:#e9f1f6;">
-=======
 {*
 * 2007-2011 PrestaShop
 *
