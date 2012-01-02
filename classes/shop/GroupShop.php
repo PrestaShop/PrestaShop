@@ -90,7 +90,7 @@ class GroupShopCore extends ObjectModel
 		if (!$res = parent::delete())
 			return false;
 
-		foreach (Shop::getAssoTables() as $table_name => $row)
+		foreach (GroupShop::getAssoTables() as $table_name => $row)
 		{
 			$id = 'id_'.$row['type'];
 			if ($row['type'] == 'fk_group_shop')
