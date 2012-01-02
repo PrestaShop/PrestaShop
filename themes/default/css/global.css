@@ -690,13 +690,13 @@ table#cart_summary  .cart_quantity {width:130px}
 	width: 20px;
 	border:1px solid #fff
 }
-.cart_quantity #cart_quantity_button {
+.cart_quantity .cart_quantity_button {
 	float:left;
 	position: relative;
    top: -5px
 }
-table#cart_summary  .cart_total {width:120px}
-table#cart_summary  .cart_delete {
+table#cart_summary .cart_total {width:120px}
+table#cart_summary .cart_delete {
 	width:64px;
 	text-align:center
 }
@@ -716,18 +716,7 @@ a.price_discount_delete {
 
 .cart_total_tax {display:none}
 
-.cart_total_delivery #total_shipping,
-.cart_total_price #total_product,
-.cart_total_price #total_price_without_tax,
-.cart_total_price #total_tax,
-.cart_total_voucher #total_discount,
-.cart_total_voucher #total_wrapping,
-.cart_total_tax #total_tax {
-	border-right:none;
-	text-align: right
-}
-
-.cart_total_price #total_price_container {
+.cart_total_price .total_price_container {
 	border-right:none;
 }
 
@@ -736,14 +725,14 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	border-bottom:1px solid #999;
 	vertical-align:middle
 }
-#cart_voucher h4, 
-#cart_voucher p {float:left;}
-#cart_voucher h4 {
+.cart_voucher h4, 
+.cart_voucher p {float:left;}
+.cart_voucher h4 {
 	margin-right:12px;
 	padding:5px 0;
 	font-size:13px
 }
-#cart_voucher p {padding-bottom:0;}
+.cart_voucher p {padding-bottom:0;}
 .cart_voucher #display_cart_vouchers {
 	clear:both;
 	line-height: 16px;
@@ -753,7 +742,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 }
 .cart_voucher #display_cart_vouchers .title_offers {margin-top:10px}
 .cart_voucher #display_cart_vouchers span {font-weight:bold}
-#cart_voucher input#discount_name {
+.cart_voucher input.discount_name {
 	padding:0 5px;
 	height:22px;
 	width:170px;/* 180 */
@@ -761,7 +750,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	font-weight:normal;
 	background:url(../img/bg_discount_name.png) repeat-x 0 0 #fff
 }
-#cart_voucher .submit input.button {
+.cart_voucher .submit input.button {
 	margin-left:2px;
 	padding:2px;
 	height:24px;
@@ -775,15 +764,18 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	background:url(../img/bg_cart_voucher_submit.png) repeat-x 0 0 #000
 }
 
-.cart_total_price #total_product,
-.cart_total_price #total_price_without_tax,
-.cart_total_price #total_tax,
-.cart_total_price #total_shipping {text-align:right}
-.cart_total_price #total_price_container {
-	padding:0;
-	border-bottom:1px solid #999
+#cart_summary .price {
+	border-right:none;
+	text-align: right;
 }
-.cart_total_price #total_price_container p {
+.total_price_container p {text-align: left}
+
+table#cart_summary .cart_total_price .total_price_container {
+	padding:0;
+	border-bottom:1px solid #999;
+	border-right:1px solid #999;
+}
+.cart_total_price .total_price_container p {
 	display:block;
 	padding:8px;
 	font-weight:bold;
@@ -791,7 +783,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	text-transform:uppercase;
 	background:#333
 }
-.cart_total_price #total_price_container span {
+.cart_total_price .total_price_container span {
 	display:block;
 	padding:15px;
 	font-weight:bold;
@@ -821,6 +813,11 @@ table#cart_summary .cart_total_price td.cart_voucher {
 }
 
 .order_delivery .first_item {margin-right:35px;}
+
+.multishipping_close_container {
+	text-align: center;
+	margin-top: -30px;
+}
 
 /* step 2 - authentification ******************************************************************* */
 #create-account_form, #authentication #login_form {
