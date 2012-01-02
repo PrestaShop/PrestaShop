@@ -138,6 +138,7 @@ $_ERRORS['4e377ef9ed6efd76fbf2441eb124862f'] = 'trop long';
 $_ERRORS['bfbc475ebfb3b560ee71e24a9e621109'] = 'longueur maximale :';
 $_ERRORS['ed9b5732158eef63ac4d236e04101d2b'] = 'Aucun mode pour les devises du module du paiement';
 $_ERRORS['b9c1228a8e8c3412befae5d854508114'] = 'Une commande a déjà été passée avec ce panier';
+$_ERRORS['d704b4ce33aa79cae671701d42136c15'] = 'Attention : La clé de sécurité est vide, vérifiez votre compte de paiement avant validation';
 $_ERRORS['1d744a9ad1dac20645cfc4a36b77323b'] = 'image(s)';
 $_ERRORS['b08d3867be98e6fff3233cd40ab8134a'] = 'La création de la commande a échoué';
 $_ERRORS['a0db299e2909bf7fc86ed75bf66f9079'] = 'Le panier ne peut pas être chargé ou une commande a déjà été placé en utilisant ce panier';
