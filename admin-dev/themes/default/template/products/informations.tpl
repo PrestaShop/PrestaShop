@@ -27,8 +27,8 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		$('input').keypress(function(e) { 
-			var code = null; 
+		$('input').keypress(function(e) {
+			var code = null;
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
@@ -74,7 +74,7 @@
 			<input type="radio" name="type_product" id="pack_product" value="1" />
 			{l s='Pack'}
 		</label>
-		<label style="width:100px;text-align:center;">
+		<label style="width:500px;text-align:center;">
 			<input type="radio" name="type_product" id="virtual_product" value="2" />
 			{l s='Virtual product'}
 		</label>
@@ -97,7 +97,7 @@
 					</span>
 				</div>
 			{/foreach}
-	
+
 			</td>
 		</tr>
 		<tr>
@@ -177,7 +177,7 @@
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
 
 
-		<table cellspacing="0" cellpadding="5" border="0">	
+		<table cellspacing="0" cellpadding="5" border="0">
 			<tr>
 				<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
 				<td style="padding-bottom:5px;">
