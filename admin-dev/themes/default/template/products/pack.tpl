@@ -108,8 +108,7 @@
 
 		$('#curPackItemName').setOptions({
 			extraParams: {
-				excludeIds :  getSelectedIds(),
-				q: curPackItemName
+				excludeIds :  getSelectedIds()
 			}
 		});
 	}
@@ -155,7 +154,7 @@
 	{
 		// input lines QTY x ID-
 		var ids = id_product + ',';
-		ids += $('#inputPackItems').val().replace(/\\d+x/g, '').replace(/\-/g,',');
+		ids += $('#inputPackItems').val().replace(/\d+x/g, '').replace(/\-/g,',');
 		ids = ids.replace(/\,$/,'');
 		return ids;
 	}
