@@ -288,13 +288,16 @@ class LinkCore
 	}
 
 	/**
-	 * use controller name to create link with correct token
+	 * Use controller name to create a link
 	 *
 	 * @param string $controller
+	 * @param boolean $with_token include or not the token in the url
+	 * @return controller url
 	 */
-	public function getAdminLink($controller)
+	public function getAdminLink($controller, $with_token = true)
 	{
-		return Dispatcher::getInstance()->createUrl($controller, array('token' => Tools::getAdminTokenLite($controller)), false);
+		$params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
+		return Dispatcher::getInstance()->createUrl($controller, $params, false);
 	}
 
 	/**
