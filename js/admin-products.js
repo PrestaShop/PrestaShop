@@ -215,41 +215,16 @@ function editProductAttribute(ids, token)
 }
 /* END Combination */
 
-function displayTabProductById(el, id, selected)
+/**
+ * Get a single tab or recursively get tabs in stack then display them
+ *
+ * @param int id position of the tab in the product page
+ * @param boolean selected is the tab selected
+ * @param int index current index in the stack (or 0)
+ * @param array stack list of tab ids to load (or null)
+ */
+function displayTabProductById(id, selected, index, stack)
 {
-	myurl = $(el).attr("href")+"&ajax=1";
-	// Used to check if the tab is already in the process of being loaded
-	$("#product-tab-content-"+id).addClass('loading');
-
-	if (selected)
-		$('#product-tab-content-wait').show();
-
-	$.ajax({
-		url : myurl,
-		async : true,
-		success : function(data)
-		{
-			$("#product-tab-content-"+id).html(data);
-			$("#product-tab-content-"+id).removeClass('not-loaded');
-
-			if (selected)
-			{
-				$("#link-"+id).addClass('selected');
-				$("#product-tab-content-"+id).show();
-			}
-		},
-		complete : function(data)
-		{
-			$("#product-tab-content-"+id).removeClass('loading');
-			if (selected)
-				$('#product-tab-content-wait').hide();
-		}
-	});
-}
-
-function displayTabProductById2(index, selected, stack)
-{
-	var id = stack[index];
 	var myurl = $('#link-'+id).attr("href")+"&ajax=1";
 	// Used to check if the tab is already in the process of being loaded
 	$("#product-tab-content-"+id).addClass('loading');
@@ -276,8 +251,8 @@ function displayTabProductById2(index, selected, stack)
 			$("#product-tab-content-"+id).removeClass('loading');
 			if (selected)
 				$('#product-tab-content-wait').hide();
-			if (stack[index + 1])
-				displayTabProductById2(index + 1, selected, stack);
+			if (stack && stack[index + 1])
+				displayTabProductById(stack[index + 1], selected, index + 1, stack);
 		}
 	});
 }
