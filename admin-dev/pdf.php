@@ -146,7 +146,7 @@ function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
 
 function generateInvoicesPDF()
 {
-	$order_invoice_collection = OrderInvoice::getByDateInterval($_GET['date_from'], $_GET['date_to'], NULL, 'invoice');
+	$order_invoice_collection = OrderInvoice::getByDateInterval($_GET['date_from'], $_GET['date_to']);
 
 	if (!sizeof($order_invoice_collection))
 		die(Tools::displayError('No invoices found'));
@@ -182,9 +182,12 @@ function generateOrderSlipsPDF()
 
 function generateDeliverySlipsPDF()
 {
-	$slips = unserialize(urldecode($_GET['deliveryslips']));
-	if (is_array($slips))
-		generatePDF($slips, PDF::TEMPLATE_DELIVERY_SLIP);
+	$order_invoice_collection = OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
+
+	if (!sizeof($order_invoice_collection))
+		die(Tools::displayError('No invoices found'));
+
+	generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
 }
 
 function generatePDF($object, $template)

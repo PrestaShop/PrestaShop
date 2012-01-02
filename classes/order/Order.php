@@ -851,17 +851,17 @@ class OrderCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
-    /**
-     * @deprecated since 1.5.0.2
-     *
-     * @static
-     * @param $date_from
-     * @param $date_to
-     * @param $id_customer
-     * @param $type
-     *
-     * @return array
-     */
+	/**
+	 * @deprecated since 1.5.0.2
+	 *
+	 * @static
+	 * @param $date_from
+	 * @param $date_to
+	 * @param $id_customer
+	 * @param $type
+	 *
+	 * @return array
+	 */
 	public static function getOrdersIdInvoiceByDate($date_from, $date_to, $id_customer = NULL, $type = NULL)
 	{
         Tools::displayAsDeprecated();
