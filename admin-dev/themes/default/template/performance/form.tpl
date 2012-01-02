@@ -70,7 +70,7 @@
 	{if $key == 'memcachedServers'}
 		<div id="memcachedServers">
 			<div class="margin-form">
-				<a id="addMemcachedServer" href="#" ><img src="../img/admin/add.gif" />{l s='Add server'}</a>
+				<a id="addMemcachedServer"  class="button" href="#" ><img src="../img/admin/add.gif" />{l s='Add server'}</a>
 			</div>
 			<div id="formMemcachedServer" style="margin-top: 10px; display:none;">
 				<form action="{$current}&token={$token}" method="post">

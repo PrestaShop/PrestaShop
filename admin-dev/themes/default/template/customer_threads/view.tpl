@@ -40,7 +40,7 @@
 			</div>
 
 			<p>
-				<img src="../img/admin/msg-forward.png" alt="" style="vertical-align: middle;" /> 
+				<img src="../img/admin/email_go.png" alt="" style="vertical-align: middle;" /> 
 				{l s='Forward this discussion to an employee:'}
 				<select name="id_employee_forward" style="vertical-align: middle;">
 					<option value="-1">{l s='-- Choose --'}</option>

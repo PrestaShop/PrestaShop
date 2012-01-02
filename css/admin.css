@@ -2188,3 +2188,10 @@ font-weight:normal;
 	padding-left:15px;
 
 }
+
+
+/*infoCustomer*/
+.infoCustomer {}
+.infoCustomer dl {   margin: 7px 0;}
+.infoCustomer dl dt {font-weight:bold; float:left; padding-right:5px;}
+.infoCustomer dl dd { margin:0; padding:0;}

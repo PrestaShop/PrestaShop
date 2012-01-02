@@ -45,43 +45,60 @@
 			{/if}
 		</legend>
 
-		<div style="font-size:11px">
+		<div class="infoCustomer">
 			{if !empty($message.id_customer) && empty($message.employee_name)}
-				<b>{l s='Customer ID:'}</b> 
-				<a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
+			<dl>
+				<dt>{l s='Customer ID:'}&#32;:</dd> 
+				<dd><a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
 					{$message.id_customer} <img src="../img/admin/search.gif" alt="{l s='view'}" />
-				</a><br />
+				</a>
+				</dd>
+			</dl>
 			{/if}
+			
+			<dl>			
+				<dt>{l s='Sent on:'}&#32;:</dt>
+				<dd>{$message.date_add}</dd> 
+			
+			</dl>
 
-			<b>{l s='Sent on:'}</b> {$message.date_add}<br />
 			{if empty($message.employee_name)}
-				<b>{l s='Browser:'}</b> {$message.user_agent}<br />
+			<dl>
+				<dt>{l s='Browser:'}&#32;:</dt>
+				<dd>{$message.user_agent}</dd>
+			</dl>
 			{/if}
 
 			{if !empty($message.file_name) && $file_name}
-				<b>{l s='File attachment'}</b> 
-				<a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}&filename={$message.file_name}"
+			<dl>
+				<dt>{l s='File attachment'}&#32;:</dt> 
+				<dd><a href="index.php?tab=AdminCustomerThreads&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread&token={getAdminToken tab='AdminCustomerThreads'}&filename={$message.file_name}"
 					title="{l s='View file'}">
 						<img src="../img/admin/search.gif" alt="{l s='view'}" />
-				</a><br />
+				</a>
+				</dd>
+			</dl>
 			{/if}
 
 			{if !empty($message.id_order) && empty($message.employee_name)}
-				<b>{l s='Order #'}</b> 
-				<a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
+				<dl>
+					<dt>{l s='Order #'}&#32;:</dt> 
+					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
 					{$message.id_order} <img src="../img/admin/search.gif" alt="{l s='view'}" />
-				</a><br />
+				</a></dd>
+				</dl>
 			{/if}
 
 			{if !empty($message.id_product) && empty($message.employee_name)}
-				<b>{l s='Product #'}</b> 
-				<a href="index.php?tab=AdminOrders&id_order={$id_order_product}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
+				<dl>
+					<dt>{l s='Product #'}&#32;:</dt> 
+					<dd><a href="index.php?tab=AdminOrders&id_order={$id_order_product}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
 					{$message.id_product} <img src="../img/admin/search.gif" alt="{l s='view'}" />
-				</a><br />
+				</a></dd>
+				</dl>
 			{/if}
-			<br />
-
-			<form action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post">
+			
+				<form action="{$current}&token={$token}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread" method="post">
 				<b>{l s='Subject:'}</b>
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
 				<select name="id_contact" onchange="this.form.submit();">
@@ -93,9 +110,10 @@
 				</select>
 			</form>
 
+
 {else}
 
-	<div style="font-size:11px">
+	<div class="infoEmployee">
 		{if $id_employee}
 			<a href="{$current}&token={getAdminToken tab='AdminCustomerThreads'}&id_customer_thread={$message.id_customer_thread}&viewcustomer_thread">'.
 				{l s='View this thread'}
@@ -124,11 +142,18 @@
 		<br /><b>{l s='Subject:'}</b> {$message.subject}
 
 {/if}
-		<br /><br />
-		<b>{l s='Thread ID:'}</b> {$message.id_customer_thread}<br />
-		<b>{l s='Message ID:'}</b> {$message.id_customer_message}<br />
-		<b>{l s='Message:'}</b><br />
-		{$message.message}
+		<dl>
+			<dt>{l s='Thread ID:'}&#32;:</dt>
+			<dd>{$message.id_customer_thread}</dd>
+		</dl>
+		<dl>
+			<dt>{l s='Message ID:'}&#32;:</dt>
+			<dd>{$message.id_customer_message}</dd>
+		</dl>
+		<dl>
+			<dt>{l s='Message:'}&#32;:</dt>
+			<dd>{$message.message}</dd>
+		</dl>
 	</div>
 
 
@@ -136,12 +161,10 @@
 
 	{if empty($message.employee_name)}
 
-		<p style="text-align:right">
-			<button style="font-family: Verdana; font-size: 11px; font-weight:bold; height: 65px; width: 120px;" 
+			<button class="button" style="font-size:12px;"
 				onclick="$('#reply_to_{$message.id_customer_message}').show(500); $(this).hide();">
-				<img src="../img/admin/contact.gif" alt="" style="margin-bottom: 5px;" /><br />{l s='Reply to this message'}
+				<img src="../img/admin/contact.gif" alt=""/>{l s='Reply to this message'}
 			</button>
-		</p>
 
 	{/if}
 
