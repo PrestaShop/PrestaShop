@@ -2072,14 +2072,17 @@ class ProductCore extends ObjectModel
 		return $ret;
 	}
 
-	public static function getProductCategoriesFull($id_product = '', $id_lang)
+	public static function getProductCategoriesFull($id_product = '', $id_lang = null)
 	{
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+
 		$ret = array();
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT cp.`id_category`, cl.`name`, cl.`link_rewrite` FROM `'._DB_PREFIX_.'category_product` cp
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cp.`id_category` = cl.`id_category`'.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
 			WHERE cp.`id_product` = '.(int)$id_product.'
-			AND cl.`id_lang` = '.(int)$id_lang
+				AND cl.`id_lang` = '.(int)$id_lang
 		);
 
 		foreach ($row as $val)
@@ -4696,11 +4699,33 @@ class ProductCore extends ObjectModel
 	/**
 	 * This method allows to flush price cache
 	 * @static
-	 * @since 1.5.0.2
+	 * @since 1.5.0
 	 */
 	public static function flushPriceCache()
 	{
 		self::$_prices = array();
 		self::$_pricesLevel2 = array();
+	}
+
+	/**
+	 * Get list of parent categories
+	 *
+	 * @since 1.5.0
+	 * @param int $id_lang
+	 * @return array
+	 */
+	public function getParentCategories($id_lang = null)
+	{
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+
+		$interval = Category::getInterval($this->id_category_default);
+		$sql = new DbQuery();
+		$sql->from('category', 'c');
+		$sql->leftJoin('category_lang', 'cl', 'c.id_category = cl.id_category AND id_lang = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl'));
+		$sql->where('c.nleft <= '.(int)$interval['nleft'].' AND c.nright >= '.(int)$interval['nright']);
+		$sql->orderBy('c.nleft');
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 }
