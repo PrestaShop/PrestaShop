@@ -61,7 +61,7 @@
 					<a class="color-myaccount" href="javascript:showOrder(1, {$order.id_order|intval}, 'order-detail');">{l s='#'}{$order.id_order|string_format:"%06d"}</a>
 				</td>
 				<td class="history_date bold">{dateFormat date=$order.date_add full=0}</td>
-				<td class="history_price"><span class="price">{displayPrice price=$order.total_paid_real currency=$order.id_currency no_utf8=false convert=false}</span></td>
+				<td class="history_price"><span class="price">{displayPrice price=$order.total_paid currency=$order.id_currency no_utf8=false convert=false}</span></td>
 				<td class="history_method">{$order.payment|escape:'htmlall':'UTF-8'}</td>
 				<td class="history_state">{if isset($order.order_state)}{$order.order_state|escape:'htmlall':'UTF-8'}{/if}</td>
 				<td class="history_invoice">
