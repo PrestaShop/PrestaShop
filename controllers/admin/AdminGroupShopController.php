@@ -36,6 +36,9 @@ class AdminGroupShopControllerCore extends AdminController
 
 		$this->addRowAction('edit');
 
+		$this->addRowAction('delete');
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
+
 		$this->context = Context::getContext();
 
 		if (!Tools::getValue('realedit'))
@@ -233,6 +236,21 @@ class AdminGroupShopControllerCore extends AdminController
 			'active' => true
 			);
 		return parent::renderForm();
+	}
+
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+		$group_shop_delete_list = array();
+
+		// test store authorized to remove
+		foreach ($this->_list as $group_shop)
+		{
+			$shops = Shop::getShops(true, $group_shop['id_group_shop']);
+			if (!empty($shops))
+				$group_shop_delete_list[] = $group_shop['id_group_shop'];
+		}
+		$this->addRowActionSkipList('delete', $group_shop_delete_list);
 	}
 
 	public function postProcess()
