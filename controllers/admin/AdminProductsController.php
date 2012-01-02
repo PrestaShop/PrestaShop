@@ -41,8 +41,6 @@ class AdminProductsControllerCore extends AdminController
 
 	protected $available_tabs = array(
 		'Informations',
-		'Pack',
-		'VirtualProduct',
 		'Prices',
 		'Seo',
 		'Associations',
@@ -55,7 +53,9 @@ class AdminProductsControllerCore extends AdminController
 		'Quantities',
 		'Suppliers',
 		'Warehouses',
-		'Accounting'
+		'Accounting',
+		'Pack',
+		'VirtualProduct'
 	);
 
 	protected $available_tabs_lang = array ();
