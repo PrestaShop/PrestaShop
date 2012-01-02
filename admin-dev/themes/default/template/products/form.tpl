@@ -166,7 +166,7 @@
 				}
 
 				if ($("#product-tab-content-"+id).hasClass('not-loaded') && !$("#product-tab-content-"+id).hasClass('loading'))
-					displayTabProductById(this, id, true);
+					displayTabProductById(id, true, 0, null);
 				else
 				{
 					$("#product-tab-content-"+id).show();
@@ -223,8 +223,8 @@
 					if ($("#product-tab-content-"+id).hasClass('not-loaded'))
 						stack.push(id);
 			});
-
-			displayTabProductById2(0, false, stack);
+			// Recursively get tabs starting with the first element of stack
+			displayTabProductById(stack[0], false, 0, stack);
 
 			$('.productTabs').show();
 			$('#product_form').show();
