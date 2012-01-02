@@ -67,7 +67,7 @@ function cleanSelectAddressDelivery()
 			if (address_count < 2) // Need at least two address to allow skipping products to multiple address
 				$($(item).find('option[value=-2]')).remove();
 			else if($($(item).find('option[value=-2]')).length == 0)
-				$(item).append($('<option value="-2">Ship to an other address</option>')); // @todo add translation
+				$(item).append($('<option value="-2">' + ShipToAnOtherAddress + '</option>'));
 		});
 	}
 }

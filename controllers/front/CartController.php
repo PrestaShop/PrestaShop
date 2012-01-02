@@ -153,9 +153,7 @@ class CartControllerCore extends FrontController
 				$this->id_product,
 				$this->id_product_attribute,
 				$this->id_address_delivery,
-				(int)Tools::getValue('new_id_address_delivery'),
-				1,
-				true
+				(int)Tools::getValue('new_id_address_delivery')
 			)
 		)
 		{
