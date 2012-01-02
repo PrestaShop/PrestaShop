@@ -221,8 +221,8 @@ function displayTabProductById(el, id, selected)
 	// Used to check if the tab is already in the process of being loaded
 	$("#product-tab-content-"+id).addClass('loading');
 
-    if (selected)
-        $('#product-tab-content-wait').show();
+	if (selected)
+		$('#product-tab-content-wait').show();
 
 	$.ajax({
 		url : myurl,
@@ -241,7 +241,8 @@ function displayTabProductById(el, id, selected)
 		complete : function(data)
 		{
 			$("#product-tab-content-"+id).removeClass('loading');
-            $('#product-tab-content-wait').hide();
+			if (selected)
+				$('#product-tab-content-wait').hide();
 		}
 	});
 }
