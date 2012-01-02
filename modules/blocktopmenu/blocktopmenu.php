@@ -65,7 +65,7 @@ class blocktopmenu extends Module
 			`new_window` TINYINT( 1 ) NOT NULL,
 			`link` VARCHAR( 128 ) NOT NULL,
 			INDEX (`id_shop`)
-		) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;') AND
+		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;') AND
 		Db::getInstance()->execute('
 			 CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'linksmenutop_lang` (
 			`id_linksmenutop` INT NOT NULL,
@@ -73,12 +73,12 @@ class blocktopmenu extends Module
 			`id_shop` INT NOT NULL,
 			`label` VARCHAR( 128 ) NOT NULL ,
 			INDEX ( `id_linksmenutop` , `id_lang`, `id_shop`)
-		) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;'));
+		) ENGINE = '._MYSQL_ENGINE_.' CHARACTER SET utf8 COLLATE utf8_general_ci;'));
 	}
 
 	public function uninstall()
 	{
-		if(!parent::uninstall() ||
+		if (!parent::uninstall() ||
 			!Configuration::deleteByName('MOD_BLOCKTOPMENU_ITEMS') ||
 			!Configuration::deleteByName('MOD_BLOCKTOPMENU_SEARCH') ||
 			!$this->uninstallDB())
