@@ -56,7 +56,7 @@ function getPush(refresh)
 			html = "";
 			nb_notifs = 0;
 			$.each(json.order, function(property, value) {
-				html += "<li>" + new_order_msg + "<br />" + order_number_msg + "<strong>#" + parseInt(value.id_order) + "</strong><br />" + total_msg + "<strong>" + value.total_paid_real + "</strong><br />" + from_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_order_msg + "</a></li>";
+				html += "<li>" + new_order_msg + "<br />" + order_number_msg + "<strong>#" + parseInt(value.id_order) + "</strong><br />" + total_msg + "<strong>" + value.total_paid + "</strong><br />" + from_msg + "<strong>" + value.customer_name + "</strong><br /><a href=\"index.php?tab=AdminOrders&token=" + token_admin_orders + "&vieworder&id_order=" + parseInt(value.id_order) + "\">" + see_order_msg + "</a></li>";
 			});
 			if (html != "")
 			{

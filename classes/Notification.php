@@ -76,7 +76,7 @@ class NotificationCore
 	{
 
 		if ($type == 'order' || $type == 'customer_message')
-			$sql = 'SELECT '.(($type == 'order') ? 'id_order, id_customer, total_paid_real' : 'c.id_customer_message as id_customer_message, ct.id_customer as id_customer, ct.id_customer_thread as id_customer_thread, ct.email as email').'
+			$sql = 'SELECT '.(($type == 'order') ? 'id_order, id_customer, total_paid' : 'c.id_customer_message as id_customer_message, ct.id_customer as id_customer, ct.id_customer_thread as id_customer_thread, ct.email as email').'
 					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s`' : bqSQL($type).'` as c LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON c.id_customer_thread = ct.id_customer_thread').'
 					WHERE '.(($type == 'customer_message') ? 'c.' : '').'`id_'.bqSQL($type).'` > '.(int)$id_last_element.
 					(($type == 'customer_message') ? ' AND c.`id_employee` = 0' : '').'
@@ -106,7 +106,7 @@ class NotificationCore
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),				
-				'total_paid_real' => ((!empty($value['total_paid_real']) && $currency != NULL) ? Tools::displayPrice((float)$value['total_paid_real'], $currency, false) : 0),
+				'total_paid' => ((!empty($value['total_paid']) && $currency != NULL) ? Tools::displayPrice((float)$value['total_paid'], $currency, false) : 0),
 				'customer_name' => (($customer != NULL) ? $customer->firstname.' '.$customer->lastname : (isset($value['email']) ? $value['email'] : ''))
 			);
 		}
