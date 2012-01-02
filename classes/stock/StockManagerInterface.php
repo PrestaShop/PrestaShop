@@ -105,8 +105,8 @@ interface StockManagerInterface
 	 * @param int $quantity
 	 * @param int $warehouse_from
 	 * @param int $warehouse_to
-	 * @param bool $usable_from true by default
-	 * @param bool $usable_to true by default
+	 * @param bool $usable_from Optional, true by default
+	 * @param bool $usable_to Optional, true by default
 	 * @return bool
 	 */
 	public function transferBetweenWarehouses($id_product, $id_product_attribute, $quantity, $warehouse_from, $warehouse_to, $usable_from = true, $usable_to = true);
@@ -118,8 +118,9 @@ interface StockManagerInterface
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $coverage
-	 * @param int $id_warehouse optional
+	 * @param int $id_warehouse Optional
 	 * @return int time
 	 */
 	public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null);
+
 }

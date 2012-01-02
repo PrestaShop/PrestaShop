@@ -30,22 +30,22 @@
 class WarehouseProductLocationCore extends ObjectModel
 {
 	/**
-	 * @var integer product ID
+	 * @var int product ID
 	 * */
 	public $id_product;
 
 	/**
-	 * @var integer product attribute ID
+	 * @var int product attribute ID
 	 * */
 	public $id_product_attribute;
 
 	/**
-	 * @var integer the warehouse ID
+	 * @var int warehouse ID
 	 * */
 	public $id_warehouse;
 
 	/**
-	 * @var string The location of the product
+	 * @var string location of the product
 	 * */
 	public $location;
 
@@ -77,12 +77,12 @@ class WarehouseProductLocationCore extends ObjectModel
  	);
 
 	/**
-	 * For a given product and warehouse, get the location
+	 * For a given product and warehouse, gets the location
 	 *
-	 * @param int $id_product
-	 * @param int $id_product_attribute
-	 * @param int $id_warehouse
-	 * @return array
+	 * @param int $id_product product ID
+	 * @param int $id_product_attribute product attribute ID
+	 * @param int $id_warehouse warehouse ID
+	 * @return string $location Location of the product
 	 */
 	public static function getProductLocation($id_product, $id_product_attribute, $id_warehouse)
 	{
@@ -99,12 +99,12 @@ class WarehouseProductLocationCore extends ObjectModel
 	}
 
 	/**
-	 * For a given product and warehouse, get the WarehouseProductLocation corresponding ID
+	 * For a given product and warehouse, gets the WarehouseProductLocation corresponding ID
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $id_supplier
-	 * @return array
+	 * @return int $id_warehouse_product_location ID of the WarehouseProductLocation
 	 */
 	public static function getIdByProductAndWarehouse($id_product, $id_product_attribute, $id_warehouse)
 	{
@@ -121,11 +121,10 @@ class WarehouseProductLocationCore extends ObjectModel
 	}
 
 	/**
-	 * For a given product, retrieves its warehouses
+	 * For a given product, gets its warehouses
 	 *
 	 * @param int $id_product
-	 * @param int $id_lang
-	 * @return Collection
+	 * @return Collection The type of the collection is WarehouseProductLocation
 	 */
 	public static function getCollection($id_product)
 	{

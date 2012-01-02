@@ -607,7 +607,7 @@ class StockManagerCore implements StockManagerInterface
 	 * @param float $price_te
 	 * @return int WA
 	 */
-	protected function calculateWA($stock, $quantity, $price_te)
+	protected function calculateWA(Stock $stock, $quantity, $price_te)
 	{
 		return (float)Tools::ps_round(((($stock->physical_quantity * $stock->price_te) + ($quantity * $price_te)) / ($stock->physical_quantity + $quantity)), 6);
 	}
@@ -617,7 +617,9 @@ class StockManagerCore implements StockManagerInterface
 	 *
 	 * @param int $id_product
 	 * @param int $id_product_attribute
-	 * @return Collection
+	 * @param int $id_warehouse Optional
+	 * @param int $price_te Optional
+	 * @return Collection of Stock
 	 */
 	protected function getStockCollection($id_product, $id_product_attribute, $id_warehouse = null, $price_te = null)
 	{

@@ -26,6 +26,7 @@
 */
 
 /**
+ * Represents one product ordered
  * @since 1.5.0
  */
 class SupplyOrderDetailCore extends ObjectModel
@@ -211,11 +212,9 @@ class SupplyOrderDetailCore extends ObjectModel
 	}
 
 	/**
-	 * Determines all prices for this product based on its quantity and unit price
+	 * Calculates all prices for this product based on its quantity and unit price
 	 * Applies discount if necessary
-	 * Calculates tax value in function of tax rate
-	 *
-	 * @return array
+	 * Calculates tax value, function of tax rate
 	 */
 	protected function calculatePrices()
 	{
@@ -239,7 +238,8 @@ class SupplyOrderDetailCore extends ObjectModel
 	}
 
 	/**
-	 * Applies a global order discount rate on the current product entity
+	 * Applies a global order discount rate, for the current product (i.e detail)
+	 * Calls ObjectModel::update()
 	 *
 	 * @param $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
 	 */
@@ -261,6 +261,9 @@ class SupplyOrderDetailCore extends ObjectModel
 
 	/**
 	 * @see ObjectModel::validateController()
+	 *
+	 * @param $htmlentities Optional
+	 * @return $errors If any..
 	 */
 	public function validateController($htmlentities = true)
 	{
