@@ -50,7 +50,7 @@ class WarehouseCore extends ObjectModel
 	/** @var int Id of the valuation currency of the warehouse */
 	public $id_currency;
 
-	/** @var boolean True if warehouse has been deleted (hence, no deletion in DB) */
+	/** @var bool True if warehouse has been deleted (hence, no deletion in DB) */
 	public $deleted = 0;
 
 	/**
@@ -111,9 +111,9 @@ class WarehouseCore extends ObjectModel
  	);
 
 	/**
-	 * Gets the shops (id and name) associated to the current warehouse
+	 * Gets the shops associated to the current warehouse
 	 *
-	 * @return array
+	 * @return array Shops (id, name)
 	 */
 	public function getShops()
 	{
@@ -130,7 +130,7 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * Sets the shops associated to the current warehouse
 	 *
-	 * @param array $ids_shop
+	 * @param array $ids_shop Ids to set
 	 */
 	public function setShops($ids_shop)
 	{
@@ -151,7 +151,7 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * Gets the carriers associated to the current warehouse
 	 *
-	 * @return array ids
+	 * @return array Ids of the associated carriers
 	 */
 	public function getCarriers()
 	{
@@ -197,8 +197,8 @@ class WarehouseCore extends ObjectModel
 	 * For a given carrier, removes it from the warehouse/carrier association
 	 * If $id_warehouse is set, it only removes the carrier for this warehouse
 	 *
-	 * @param int $id_carrier
-	 * @param int $id_warehouse optional
+	 * @param int $id_carrier Id of the carrier to remove
+	 * @param int $id_warehouse optional Id of the warehouse to filter
 	 */
 	public static function removeCarrier($id_carrier, $id_warehouse = null)
 	{
@@ -209,7 +209,7 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Checks if a warehouse is empty - i.e. holds no stock
+	 * Checks if a warehouse is empty - i.e. has no stock
 	 *
 	 * @return bool
 	 */
@@ -226,7 +226,7 @@ class WarehouseCore extends ObjectModel
 	 * Checks if the given warehouse exists
 	 *
 	 * @param int $id_warehouse
-	 * @return bool
+	 * @return bool Exists/Does not exist
 	 */
 	public static function exists($id_warehouse)
 	{
@@ -240,33 +240,34 @@ class WarehouseCore extends ObjectModel
 
 	/**
 	 * For a given {product, product attribute} sets its location in the given warehouse
+	 * First, for the given parameters, it cleans the database before updating
 	 *
-	 * @param int $id_product
-	 * @param int $id_product_attribute
-	 * @param int $id_warehouse
-	 * @param string $location
-	 * @return bool
+	 * @param int $id_product ID of the product
+	 * @param int $id_product_attribute Use 0 if this product does not have attributes
+	 * @param int $id_warehouse ID of the warehouse
+	 * @param string $location Describes the location (no lang id required)
+	 * @return bool Success/Failure
 	 */
 	public static function setProductLocation($id_product, $id_product_attribute, $id_warehouse, $location)
 	{
 		Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'warehouse_product_location` wpl
-			WHERE wpl.`id_product` = '.(int)$id_product.'
-			AND wpl.`id_product_attribute` = '.(int)$id_product_attribute.'
-			AND wpl.`id_warehouse` = '.(int)$id_warehouse);
-
-		$query = '
-			UPDATE `'._DB_PREFIX_.'warehouse_product_location`
-			SET `location` = \''.pSQL($location).'\'
+			DELETE FROM `'._DB_PREFIX_.'warehouse_product_location`
 			WHERE `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
-			AND `id_warehouse` = '.(int)$id_warehouse;
+			AND `id_warehouse` = '.(int)$id_warehouse);
 
-		return (Db::getInstance()->execute($query));
+		$row_to_insert = array(
+			'id_product' => (int)$id_product,
+			'id_product_attribute' => (int)$id_product_attribute,
+			'id_warehouse' => (int)$id_warehouse,
+			'location' => pSQL($location),
+		);
+
+		return Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_product_location', $row_to_insert, 'INSERT');
 	}
 
 	/**
-	 * Reset all product locations for this warehouse
+	 * Resets all product locations for this warehouse
 	 */
 	public function resetProductsLocations()
 	{
@@ -278,10 +279,10 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * For a given {product, product attribute} gets its location in the given warehouse
 	 *
-	 * @param int $id_product
-	 * @param int $id_product_attribute
-	 * @param int $id_warehouse
-	 * @return string
+	 * @param int $id_product ID of the product
+	 * @param int $id_product_attribute Use 0 if this product does not have attributes
+	 * @param int $id_warehouse ID of the warehouse
+	 * @return string Location of the product
 	 */
 	public static function getProductLocation($id_product, $id_product_attribute, $id_warehouse)
 	{
@@ -298,10 +299,10 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * For a given {product, product attribute} gets warehouse list
 	 *
-	 * @param int $id_product
-	 * @param int $id_product_attribute
-	 * @param int $id_shop
-	 * @return array
+	 * @param int $id_product ID of the product
+	 * @param int $id_product_attribute Optional, uses 0 if this product does not have attributes
+	 * @param int $id_shop Optional, ID of the shop. Uses the context shop id (@see Context::shop)
+	 * @return array Warehouses (ID, reference/name concatenated)
 	 */
 	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
@@ -325,9 +326,9 @@ class WarehouseCore extends ObjectModel
 	 * Gets available warehouses
 	 * It is possible via ignore_shop and id_shop to filter the list with shop id
 	 *
-	 * @param bool $ignore_shop false by default
-	 * @param int $id_shop null by default
-	 * @return array
+	 * @param bool $ignore_shop Optional, false by default - Allows to get only the warehouses that are associated to one/some shops (@see $id_shop)
+	 * @param int $id_shop Optional, Context::shop::Id by default - Allows to define a specific shop to filter.
+	 * @return array Warehouses (ID, reference/name concatenated)
 	 */
 	public static function getWarehouses($ignore_shop = false, $id_shop = null)
 	{
@@ -347,9 +348,9 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * Gets ids of warehouses, grouped by ids of shops
+	 * Gets warehouses grouped by shops
 	 *
-	 * @return array
+	 * @return array (of array) Warehouses ID are grouped by shops ID
 	 */
 	public static function getWarehousesGroupedByShops()
 	{
@@ -369,7 +370,7 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * Gets the number of products in the current warehouse
 	 *
-	 * @return int
+	 * @return int Number of different id_stock
 	 */
 	public function getNumberOfProducts()
 	{
@@ -389,7 +390,7 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * Gets the number of quantities - for all products - in the current warehouse
 	 *
-	 * @return int
+	 * @return int Total Quantity
 	 */
 	public function getQuantitiesOfProducts()
 	{
@@ -406,7 +407,7 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * Gets the value of the stock in the current warehouse
 	 *
-	 * @return int
+	 * @return int Value of the stock
 	 */
 	public function getStockValue()
 	{
@@ -419,10 +420,10 @@ class WarehouseCore extends ObjectModel
 	}
 
 	/**
-	 * For a given employee, gets the warehouse(s) he manages
+	 * For a given employee, gets the warehouse(s) he/she manages
 	 *
-	 * @param int $id_employee
-	 * @return array ids_warehouse
+	 * @param int $id_employee Manager ID
+	 * @return array ids_warehouse Ids of the warehouses
 	 */
 	public static function getWarehousesByEmployee($id_employee)
 	{
@@ -437,9 +438,9 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * For a given product, returns the warehouses it is stored in
 	 *
-	 * @param int $id_product
-	 * @param int $id_product_attribute
-	 * @return array
+	 * @param int $id_product Product Id
+	 * @param int $id_product_attribute Optional, Product Attribute Id - 0 by default (no attribues)
+	 * @return array Warehouses Ids and names
 	 */
 	public static function getWarehousesByProductId($id_product, $id_product_attribute = 0)
 	{
@@ -461,8 +462,9 @@ class WarehouseCore extends ObjectModel
 
 	/**
 	 * For a given $id_warehouse, returns its name
-	 * @param int $id_warehouse
-	 * @return string name
+	 *
+	 * @param int $id_warehouse Warehouse Id
+	 * @return string Name
 	 */
 	public static function getWarehouseNameById($id_warehouse)
 	{
@@ -472,6 +474,12 @@ class WarehouseCore extends ObjectModel
 		$query->where('id_warehouse = '.(int)$id_warehouse);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
+
+	/*********************************\
+	 *
+	 * Webservices Specific Methods
+	 *
+	 *********************************/
 
 	/**
 	 * Webservice : gets the value of the warehouse
