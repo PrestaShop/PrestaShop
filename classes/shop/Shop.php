@@ -387,7 +387,7 @@ class ShopCore extends ObjectModel
 	{
 		if (defined('_PS_ADMIN_DIR_'))
 			return Shop::getContextGroupID();
-		return (int)$this->id_group_shop;
+		return (isset($this->id_group_shop)) ? (int)$this->id_group_shop : NULL;
 	}
 
 	/**
