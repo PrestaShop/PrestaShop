@@ -39,6 +39,7 @@ class LoyaltyStateModule extends ObjectModel
 	public static $definition = array(
 		'table' => 'loyalty_state',
 		'primary' => 'id_loyalty_state',
+		'multilang' => true,
 		'fields' => array(
 			'id_order_state' =>	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 

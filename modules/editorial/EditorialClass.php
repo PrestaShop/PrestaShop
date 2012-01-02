@@ -51,6 +51,7 @@ class EditorialClass extends ObjectModel
 	public static $definition = array(
 		'table' => 'editorial',
 		'primary' => 'id_editorial',
+		'multilang' => true,
 		'fields' => array(
 			'body_home_logo_link' =>	array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
 
