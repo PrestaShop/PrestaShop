@@ -476,9 +476,7 @@ class FrontControllerCore extends Controller
 		));
 
 		if (Tools::isSubmit('live_edit'))
-		{
 			$this->context->smarty->assign('live_edit', $this->getLiveEditFooter());
-		}
 		
 		// handle 1.4 theme (with layout.tpl missing)
 		if (file_exists(_PS_THEME_DIR_.'layout.tpl'))
@@ -659,7 +657,8 @@ class FrontControllerCore extends Controller
 
 	}
 
-	public function getLiveEditFooter(){
+	public function getLiveEditFooter()
+	{
 		if (Tools::isSubmit('live_edit') 
 			&& ($ad = Tools::getValue('ad'))
 			&& (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_))
@@ -669,7 +668,7 @@ class FrontControllerCore extends Controller
 			$data->assign(array(
 				'ad' => $ad, 
 				'live_edit' => true,
-				'hook_list' => $this->hook_list,
+				'hook_list' => Hook::$executed_hooks,
 				'id_shop' => $this->context->shop->getId(true)
 			));
 			return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();

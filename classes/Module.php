@@ -584,28 +584,26 @@ abstract class ModuleCore
 	{
 		// Check hook name validation and if module is installed
 		if (!Validate::isHookName($hook_name))
-			die(Tools::displayError());
-		if (!isset($this->id) OR !is_numeric($this->id))
+			throw new PrestashopException('Invalid hook name');
+		if (!isset($this->id) || !is_numeric($this->id))
 			return false;
 
 		// Retrocompatibility
-		Hook::preloadHookAlias();
-		if (isset(Hook::$_hook_alias[strtolower($hook_name)]))
-			$hook_name = Hook::$_hook_alias[strtolower($hook_name)];
+		if ($alias = Hook::getRetroHookName($hook_name))
+			$hook_name = $alias;
 
 		// Get hook id
-		$sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook_name).'\'';
-		$hookID = Db::getInstance()->getValue($sql);
+		$id_hook = Hook::getIdByName($hook_name);
 
 		// If hook does not exist, we create it
-		if (!$hookID)
+		if (!$id_hook)
 		{
-			$newHook = new Hook();
-			$newHook->name = pSQL($hook_name);
-			$newHook->title = pSQL($hook_name);
-			$newHook->add();
-			$hookID = $newHook->id;
-			if (!$hookID)
+			$new_hook = new Hook();
+			$new_hook->name = pSQL($hook_name);
+			$new_hook->title = pSQL($hook_name);
+			$new_hook->add();
+			$id_hook = $new_hook->id;
+			if (!$id_hook)
 				return false;
 		}
 
@@ -619,7 +617,7 @@ abstract class ModuleCore
 			// Check if already register
 			$sql = 'SELECT hm.`id_module`
 				FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
-				WHERE hm.`id_module` = '.(int)($this->id).' AND h.`id_hook` = '.$hookID.'
+				WHERE hm.`id_module` = '.(int)($this->id).' AND h.`id_hook` = '.$id_hook.'
 				AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)($shopID);
 			if (Db::getInstance()->getRow($sql))
 				continue;
@@ -627,14 +625,14 @@ abstract class ModuleCore
 			// Get module position in hook
 			$sql = 'SELECT MAX(`position`) AS position
 				FROM `'._DB_PREFIX_.'hook_module`
-				WHERE `id_hook` = '.(int)$hookID.' AND `id_shop` = '.(int)$shopID;
+				WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shopID;
 			if (!$position = Db::getInstance()->getValue($sql))
 				$position = 0;
 
 			// Register module in hook
 			$return &= Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module', array(
 				'id_module' => (int)$this->id,
-				'id_hook' => (int)$hookID,
+				'id_hook' => (int)$id_hook,
 				'id_shop' => (int)$shopID,
 				'position' => (int)($position + 1),
 			), 'INSERT');
@@ -646,7 +644,7 @@ abstract class ModuleCore
 	/**
 	  * Unregister module from hook
 	  *
-	  * @param int $id_hook Hook id (can be a hook name since 1.5.0)
+	  * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
 	  * @param array $shopList List of shop
 	  * @return boolean result
 	  */
@@ -656,15 +654,7 @@ abstract class ModuleCore
 		if (!is_numeric($hook_id))
 		{
 			// Retrocompatibility
-			Hook::preloadHookAlias();
-			if (isset(Hook::$_hook_alias[strtolower($hook_id)]))
-				$hook_id = Hook::$_hook_alias[strtolower($hook_id)];
-
-			// Unregister module on hook by name
-			$sql = 'SELECT `id_hook`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `name` = \''.pSQL($hook_id).'\'';
-			$hook_id = Db::getInstance()->getValue($sql);
+			$hook_id = Hook::getIdByName($hook_id);
 			if (!$hook_id)
 				return false;
 		}
@@ -738,14 +728,14 @@ abstract class ModuleCore
 	  * @param array $excepts List of shopID and file name
 	  * @return boolean result
 	  */
-	public function editExceptions($hookID, $excepts)
+	public function editExceptions($id_hook, $excepts)
 	{
 		$result = true;
 		foreach ($excepts as $shopID => $except)
 		{
 			$shopList = ($shopID == 0) ? Context::getContext()->shop->getListOfID() : array($shopID);
-			$this->unregisterExceptions($hookID, $shopList);
-			$result &= $this->registerExceptions($hookID, $except, $shopList);
+			$this->unregisterExceptions($id_hook, $shopList);
+			$result &= $this->registerExceptions($id_hook, $except, $shopList);
 		}
 
 		return $result;
@@ -1165,7 +1155,6 @@ abstract class ModuleCore
 	public static function getPaymentModules()
 	{
 		$context = Context::getContext();
-		$id_customer = $context->customer->id;
 		$billing = new Address((int)$context->cart->id_address_invoice);
 		if (isset($context->customer))
 			$groups = $context->customer->getGroups();

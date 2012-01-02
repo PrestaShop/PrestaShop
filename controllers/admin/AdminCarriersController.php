@@ -474,7 +474,10 @@ class AdminCarriersControllerCore extends AdminController
 							if (Validate::isLoadedObject($object_new))
 							{
 								$this->afterDelete($object_new, $object->id);
-								Hook::updateCarrier((int)$object->id, $object_new);
+								Hook::exec('actionCarrierUpdate', array(
+									'id_carrier' => (int)$object->id,
+									'carrier' => $object_new,
+								));
 							}
 							$this->changeGroups($object_new->id);
 							if (!$result)
