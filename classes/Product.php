@@ -418,14 +418,14 @@ class ProductCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-		Hook::exec('afterSaveProduct', array('id_product' => $this->id));
+		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return true;
 	}
 
 	public function update($null_values = false)
 	{
 		$return = parent::update($null_values);
-		Hook::exec('afterSaveProduct', array('id_product' => $this->id));
+		Hook::exec('actionProductSave', array('id_product' => $this->id));
 		return $return;
 	}
 
@@ -626,7 +626,7 @@ class ProductCore extends ObjectModel
 		if (!GroupReduction::deleteProductReduction($this->id))
 			return false;
 
-		Hook::exec('deleteProduct', array('product' => $this));
+		Hook::exec('actionProductDelete', array('product' => $this));
 		if (!parent::delete() ||
 			!$this->deleteCategories(true) ||
 			!$this->deleteImages() ||
@@ -1282,7 +1282,7 @@ class ProductCore extends ObjectModel
 			return false;
 
 		//if ($quantity)
-			Hook::exec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
+			Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
 
 		Product::updateDefaultAttribute($this->id);
 
@@ -1322,7 +1322,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteProductAttributes()
 	{
-		Hook::exec('deleteProductAttribute', array('id_product_attribute' => 0, 'id_product' => $this->id, 'deleteAllAttributes' => true));
+		Hook::exec('actionProductAttributeDelete', array('id_product_attribute' => 0, 'id_product' => $this->id, 'deleteAllAttributes' => true));
 
 		$result = Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`

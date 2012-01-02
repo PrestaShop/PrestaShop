@@ -125,8 +125,8 @@ class AuthControllerCore extends FrontController
 
 		// Call a hook to display more information on form
 		$this->context->smarty->assign(array(
-			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('createAccountForm'),
-			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('createAccountTop')
+			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
+			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
 		));
 		
 		if ($this->ajax)
@@ -260,7 +260,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitLogin()
 	{
-		Hook::exec('beforeAuthentication');
+		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
 		if (empty($email))
@@ -319,7 +319,7 @@ class AuthControllerCore extends FrontController
 				$this->context->cart->update();
 				$this->context->cart->autosetProductAddress();
 
-				Hook::exec('authentication');
+				Hook::exec('actionAuthentication');
 
 				// Login information have changed, so we check if the cart rules still apply
 				CartRule::autoRemoveFromCart();
@@ -411,7 +411,7 @@ class AuthControllerCore extends FrontController
 						$this->updateContext($customer);
 
 						$this->context->cart->update();
-						Hook::exec('createAccount', array(
+						Hook::exec('actionCustomerAccountAdd', array(
 							'_POST' => $_POST,
 							'newCustomer' => $customer
 						));
@@ -546,7 +546,7 @@ class AuthControllerCore extends FrontController
 
 							// If a logged guest logs in as a customer, the cart secure key was already set and needs to be updated
 							$this->context->cart->update();
-							Hook::exec('createAccount', array(
+							Hook::exec('actionCustomerAccountAdd', array(
 								'_POST' => $_POST,
 								'newCustomer' => $customer
 							));

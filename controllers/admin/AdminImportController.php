@@ -784,7 +784,7 @@ class AdminImportControllerCore extends AdminController
 				imageResize($tmpfile, $path.'-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']);
 			}
 			if (in_array($image_type['id_image_type'], $watermark_types))
-				Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_entity));
+				Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 		}
 		else
 		{

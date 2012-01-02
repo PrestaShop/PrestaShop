@@ -178,12 +178,12 @@ class ProductControllerCore extends FrontController
 				'attachments' => (($this->product->cache_has_attachments) ? $this->product->getAttachments($this->context->language->id) : array()),
 				'allow_oosp' => $this->product->isAvailableWhenOutOfStock((int)$this->product->out_of_stock),
 				'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
-				'HOOK_EXTRA_LEFT' => Hook::exec('extraLeft'),
-				'HOOK_EXTRA_RIGHT' => Hook::exec('extraRight'),
-				'HOOK_PRODUCT_OOS' => Hook::exec('productOutOfStock', array('product' => $this->product)),
-				'HOOK_PRODUCT_ACTIONS' => Hook::exec('productActions'),
-				'HOOK_PRODUCT_TAB' =>  Hook::exec('productTab'),
-				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('productTabContent'),
+				'HOOK_EXTRA_LEFT' => Hook::exec('displayLeftColumnProduct'),
+				'HOOK_EXTRA_RIGHT' => Hook::exec('displayRightColumnProduct'),
+				'HOOK_PRODUCT_OOS' => Hook::exec('actionProductOutOfStock', array('product' => $this->product)),
+				'HOOK_PRODUCT_ACTIONS' => Hook::exec('displayProductButtons'),
+				'HOOK_PRODUCT_TAB' =>  Hook::exec('displayProductTab'),
+				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('displayProductTabContent'),
 				'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
 				'display_ht' => !Tax::excludeTaxeOption(),
 				'currencySign' => $this->context->currency->sign,
@@ -437,7 +437,7 @@ class ProductControllerCore extends FrontController
 			$this->context->smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
 
 		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
-		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('productFooter', array('product' => $this->product, 'category' => $category))));
+		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $category))));
 	}
 
 	public function transformDescriptionWithImg($desc)

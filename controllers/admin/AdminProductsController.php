@@ -438,7 +438,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('An error occurred while copying images.');
 				else
 				{
-					Hook::exec('addProduct', array('product' => $product));
+					Hook::exec('actionProductAdd', array('product' => $product));
 					Search::indexation(false, $product->id);
 					$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=19&token='.($token ? $token : $this->token);
 				}
@@ -611,7 +611,7 @@ class AdminProductsControllerCore extends AdminController
 									if (!$product->addStockMvt(Tools::getValue('attribute_mvt_quantity'), $id_reason, $id_product_attribute, null, $this->context->employee->id))
 										$this->_errors[] = Tools::displayError('An error occurred while updating qty.');
 								}
-								Hook::exec('updateProductAttribute', array('id_product_attribute' => (int)$id_product_attribute));
+								Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 								$this->updateDownloadProduct($product, 1, $id_product_attribute);
 							}
 							else
@@ -1383,7 +1383,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			@unlink($tmpName);
-			Hook::exec('watermark', array('id_image' => $id_image, 'id_product' => $id_product));
+			Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
 		}
 	}
 
@@ -1415,7 +1415,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('An error occurred while adding tags.');
 				else
 				{
-					Hook::exec('addProduct', array('product' => $object));
+					Hook::exec('actionProductAdd', array('product' => $object));
 					Search::indexation(false, $object->id);
 				}
 
@@ -1498,7 +1498,7 @@ class AdminProductsControllerCore extends AdminController
 					else
 					{
 						//self::$currentIndex .= '&image_updated='.$id_image;
-						Hook::exec('updateProduct', array('product' => $object));
+						Hook::exec('actionProductUpdate', array('product' => $object));
 						Search::indexation(false, $object->id);
 						//if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
 						//	$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') || Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token));

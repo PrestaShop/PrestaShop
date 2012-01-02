@@ -104,7 +104,7 @@ class AttributeCore extends ObjectModel
 
 		$return = parent::delete();
 		if ($return)
-			Hook::exec('afterDeleteAttribute', array('id_attribute' => $this->id));
+			Hook::exec('actionAttributeDelete', array('id_attribute' => $this->id));
 
 		return $return;
 	}
@@ -114,7 +114,7 @@ class AttributeCore extends ObjectModel
 		$return = parent::update($null_values);
 
 		if ($return)
-			Hook::exec('afterSaveAttribute', array('id_attribute' => $this->id));
+			Hook::exec('actionAttributeSave', array('id_attribute' => $this->id));
 
 		return $return;
 	}
@@ -127,7 +127,7 @@ class AttributeCore extends ObjectModel
 		$return = parent::add($autodate, $null_values);
 
 		if ($return)
-			Hook::exec('afterSaveAttribute', array('id_attribute' => $this->id));
+			Hook::exec('actionAttributeSave', array('id_attribute' => $this->id));
 
 		return $return;
 	}
