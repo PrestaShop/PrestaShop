@@ -76,7 +76,6 @@ class CartControllerCore extends FrontController
 				$this->processAllowSeperatedPackage();
 			else if(Tools::getIsset('duplicate'))
 				$this->processDuplicateProduct();
-
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
 			{
@@ -247,7 +246,8 @@ class CartControllerCore extends FrontController
 	public function initContent()
 	{
 		$this->setTemplate(_PS_THEME_DIR_.'errors.tpl');
-		parent::initContent();
+		if (!$this->ajax)
+			parent::initContent();
 	}
 
 	/**
