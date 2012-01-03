@@ -86,6 +86,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function renderForm()
 	{
 		parent::renderForm();
+		unset($this->toolbar_btn['save']);
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
 		$cart = new Cart((int)Tools::getValue('id_cart'));
 		$this->context->smarty->assign(array(
@@ -95,7 +96,11 @@ class AdminOrdersControllerCore extends AdminController
 			'currencies' => Currency::getCurrencies(),
 			'langs' => Language::getLanguages(true, Context::getContext()->shop->id),
 			'payment_modules' => PaymentModule::getInstalledPaymentModules(),
-			'order_states' => OrderState::getOrderStates((int)Context::getContext()->cookie->id_lang)));
+			'order_states' => OrderState::getOrderStates((int)Context::getContext()->cookie->id_lang),
+			'show_toolbar' => $this->show_toolbar,
+			'toolbar_btn' => $this->toolbar_btn,
+			'title' => $this->l('Orders : create order'),
+		));
 		$this->content .= $this->context->smarty->fetch('orders/form.tpl');
 	}
 
