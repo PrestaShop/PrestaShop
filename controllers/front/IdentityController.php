@@ -44,7 +44,6 @@ class IdentityControllerCore extends FrontController
 	 */
 	public function postProcess()
 	{
-
 		if (isset($_POST['years']) && isset($_POST['months']) && isset($_POST['days']))
 			$this->customer->birthday = (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']);
 
@@ -71,6 +70,10 @@ class IdentityControllerCore extends FrontController
 				{
 					$this->customer->id_default_group = (int)($prev_id_default_group);
 					$this->customer->firstname = Tools::ucfirst(Tools::strtolower($this->customer->firstname));
+					if (!isset($_POST['newsletter']))
+						$this->customer->newsletter = 0;
+					if (!isset($_POST['optin']))
+						$this->customer->optin = 0;
 					if (Tools::getValue('passwd'))
 						$this->context->cookie->passwd = $this->customer->passwd;
 					if ($this->customer->update())
