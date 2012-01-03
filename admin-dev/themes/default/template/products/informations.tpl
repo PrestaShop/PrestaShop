@@ -76,7 +76,7 @@
 		</label>
 		<label style="width:500px;text-align:center;">
 			<input type="radio" name="type_product" id="virtual_product" value="2" />
-			{l s='Virtual product'}
+			{l s='Virtual Product (services, booking and downloadable products)'}
 		</label>
 	</div>
 	<br />
