@@ -74,6 +74,7 @@
 <form enctype="multipart/form-data" method="post" id="generator" action="{$url_generator}">
 	<fieldset style="margin-bottom: 35px;">
 		<legend><img src="../img/admin/asterisk.gif" />{l s='Attributes generator'}</legend>
+        <div style="display: block; margin-bottom: 20px;" class="hint">{l s='To generate the attributes, click on the "Ctrl", select your attributes and click "Add".'}</div>
 		<div style="float: left; margin-right:50px;">
 			<div>
 				<select multiple name="attributes[]" id="attribute_group" style="width: 200px; height: 350px; margin-bottom: 10px;">
