@@ -29,10 +29,10 @@ class AdminStatusesControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'order_state';
+		$this->table = 'order_state';
 		$this->className = 'OrderState';
-	 	$this->lang = true;
-	 	$this->deleted = false;
+		$this->lang = true;
+		$this->deleted = true;
 		$this->colorOnBackground = false;
 		$this->context = Context::getContext();
 		$this->imageType = 'gif';
@@ -96,7 +96,7 @@ class AdminStatusesControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -106,23 +106,23 @@ class AdminStatusesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-	 	$list_orders_status = parent::renderList();
+		$list_orders_status = parent::renderList();
 
-	 	// Added new list
+		// Added new list
 
 		// reset actions and query vars
 		$this->actions = array();
 		unset($this->fieldsDisplay, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter, $this->identifier);
 
 		$this->table = 'order_return_state';
-	 	$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
+		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
 		$this->deleted = false;
 		$this->toolbar_btn = array();
 		$this->bulk_actions = array();
 
 		$this->addRowAction('editstatus');
 
-	 	// test if a filter is applied for this list
+		// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
 
@@ -155,7 +155,7 @@ class AdminStatusesControllerCore extends AdminController
 		return $list_orders_status.$list_orders_returns_status;
 	}
 
-	 /**
+	/**
 	 * Display editaddresses action link
 	 * @param string $token the token to add to the link
 	 * @param int $id the identifier to add to the link
@@ -163,17 +163,17 @@ class AdminStatusesControllerCore extends AdminController
 	 */
 	public function displayEditaddressesLink($token = null, $id)
 	{
-        if (!array_key_exists('editaddresses', self::$cache_lang))
-            self::$cache_lang['editaddresses'] = $this->l('Edit Adresses');
+		if (!array_key_exists('editaddresses', self::$cache_lang))
+			self::$cache_lang['editaddresses'] = $this->l('Edit Adresses');
 
-        $this->context->smarty->assign(array(
-            'href' => self::$currentIndex.
-            	'&'.$this->identifier.'='.$id.
-            	'&editaddresses&token='.($token != null ? $token : $this->token),
-            'action' => self::$cache_lang['editaddresses'],
-        ));
+		$this->context->smarty->assign(array(
+			'href' => self::$currentIndex.
+				'&'.$this->identifier.'='.$id.
+				'&editaddresses&token='.($token != null ? $token : $this->token),
+			'action' => self::$cache_lang['editaddresses'],
+		));
 
-        return $this->context->smarty->fetch('manufacturers/list_action_edit_adresses.tpl');
+		return $this->context->smarty->fetch('manufacturers/list_action_edit_adresses.tpl');
 	}
 
 	public function renderForm()
@@ -337,7 +337,7 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$id_order_return_state = Tools::getValue('id_order_return_state');
 
-	 	// Create Object OrderReturnState
+		// Create Object OrderReturnState
 		$order_return_state = new OrderReturnState($id_order_return_state);
 
 		$this->fields_form[0]['form'] = array(
@@ -458,7 +458,7 @@ class AdminStatusesControllerCore extends AdminController
 			return parent::initContent();
 	}
 
-	 /**
+	/**
 	 * Display editaddresses action link
 	 * @param string $token the token to add to the link
 	 * @param int $id the identifier to add to the link
@@ -466,17 +466,17 @@ class AdminStatusesControllerCore extends AdminController
 	 */
 	public function displayEditstatusLink($token = null, $id)
 	{
-        if (!array_key_exists('editstatus', self::$cache_lang))
-            self::$cache_lang['editstatus'] = $this->l('Edit Status');
+		if (!array_key_exists('editstatus', self::$cache_lang))
+			self::$cache_lang['editstatus'] = $this->l('Edit Status');
 
-        $this->context->smarty->assign(array(
-            'href' => self::$currentIndex.
-            	'&'.$this->identifier.'='.$id.
-            	'&editstatus&token='.($token != null ? $token : $this->token),
-            'action' => self::$cache_lang['editstatus'],
-        ));
+		$this->context->smarty->assign(array(
+			'href' => self::$currentIndex.
+				'&'.$this->identifier.'='.$id.
+				'&editstatus&token='.($token != null ? $token : $this->token),
+			'action' => self::$cache_lang['editstatus'],
+		));
 
-        return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
+		return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
 	}
 
 	public function postProcess()
@@ -485,7 +485,7 @@ class AdminStatusesControllerCore extends AdminController
 		{
 			$id_order_return_state = (int)Tools::getValue('id_order_return_state');
 
-		 	// Create Object OrderReturnState
+			// Create Object OrderReturnState
 			$order_return_state = new OrderReturnState($id_order_return_state);
 
 			$order_return_state->name = array();
@@ -502,6 +502,7 @@ class AdminStatusesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table))
 		{
+			$this->deleted = false; // Disabling saving historisation
 			$_POST['invoice'] = (int)Tools::getValue('invoice_on');
 			$_POST['logable'] = (int)Tools::getValue('logable_on');
 			$_POST['send_email'] = (int)Tools::getValue('send_email_on');
@@ -519,23 +520,23 @@ class AdminStatusesControllerCore extends AdminController
 		}
 		else if (isset($_GET['delete'.$this->table]))
 		{
-		 	$order_state = new OrderState($_GET['id_order_state'], $this->context->language->id);
-		 	if (!$order_state->isRemovable())
-		 		$this->_errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
-		 	else
-		 		return parent::postProcess();
+			$order_state = new OrderState($_GET['id_order_state'], $this->context->language->id);
+			if (!$order_state->isRemovable())
+				$this->_errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
+			else
+				return parent::postProcess();
 		}
 		else if (isset($_POST['submitDelorder_state']))
 		{
-		 	foreach ($_POST[$this->table.'Box'] as $selection)
-		 	{
-			 	$order_state = new OrderState($selection, $this->context->language->id);
-			 	if (!$order_state->isRemovable())
-			 	{
-			 		$this->_errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
-			 		break;
-			 	}
-			 }
+			foreach ($_POST[$this->table.'Box'] as $selection)
+			{
+				$order_state = new OrderState($selection, $this->context->language->id);
+				if (!$order_state->isRemovable())
+				{
+					$this->_errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
+					break;
+				}
+			}
 			if (empty($this->_errors))
 				return parent::postProcess();
 		}
