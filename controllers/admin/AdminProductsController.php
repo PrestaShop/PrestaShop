@@ -1888,7 +1888,7 @@ class AdminProductsControllerCore extends AdminController
 						continue;
 
 					$product_tabs[$product_tab] = array(
-						'id' => ++$i.'-'.$product_tab,
+						'id' => $product_tab,
 						'selected' => (strtolower($product_tab) == strtolower($this->tab_display)),
 						'name' => $this->available_tabs_lang[$product_tab],
 						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.Tools::getValue('id_product').'&amp;action='.$product_tab,

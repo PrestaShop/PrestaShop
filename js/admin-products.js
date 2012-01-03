@@ -251,6 +251,8 @@ function displayTabProductById(id, selected, index, stack)
 			$("#product-tab-content-"+id).removeClass('loading');
 			if (selected)
 				$('#product-tab-content-wait').hide();
+
+			$("#product-tab-content-"+id).trigger('loaded');
 			if (stack && stack[index + 1])
 				displayTabProductById(stack[index + 1], selected, index + 1, stack);
 		}
