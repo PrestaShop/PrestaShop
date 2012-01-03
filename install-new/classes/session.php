@@ -41,6 +41,7 @@ class InstallSession
 
 	public function __construct()
 	{
+		session_name('install_'.md5(__PS_BASE_URI__));
 		session_start();
 	}
 
