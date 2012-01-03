@@ -68,7 +68,7 @@
 		</div>
 		<div class="clear">&nbsp;</div>
 		<div class="margin-form">
-			<input type="submit" value="{l s='Add a new attachment file'}" name="submitAddAttachments" class="button" />
+			<input type="submit" value="{l s='Download a attachment file'}" name="submitAddAttachments" class="button" />
 		</div>
 		<div class="small"><sup>*</sup> {l s='Required field'}</div>
 	</fieldset>
