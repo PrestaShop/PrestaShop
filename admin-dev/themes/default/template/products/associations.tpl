@@ -65,6 +65,7 @@
 						<option value="{$cat.id_category}" {if $product->id_category_default == $cat.id_category}selected="selected"{/if} >{$cat.name}</option>
 					{/foreach}
 				</select>
+                <div class="hint" style="display:block;">{l s='The default category is the category who is displayed by default.'}</div>
 			</td>
 		</tr>
 	</table>
