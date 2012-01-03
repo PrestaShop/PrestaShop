@@ -37,6 +37,40 @@
 			<input type="hidden" name="id_customer" value="{$customer->id}" />
 			<input type="hidden" name="email" value="{$customer->email}" />
 		{else}
+			<script type="text/javascript">
+			$('input[name=email]').live('blur', function(e)
+			{
+				var email = $(this).val();
+				if (email.length > 5)
+				{
+					var data = {};
+					data.email = email;
+					data.token = "{$token}";
+					data.ajax = 1;
+					data.controller = "AdminAddresses";
+					data.action = "loadNames";
+					$.ajax({
+						type: "POST",
+						url: "ajax-tab.php",
+						data: data,
+						dataType: 'json',
+						async : true,
+						success: function(msg)
+						{
+							if (msg)
+							{
+								var infos = msg.infos.split('_');
+								$('input[name=firstname]').val(infos[0]);
+								$('input[name=lastname]').val(infos[1]);
+							}
+						},
+						error: function(msg)
+						{
+						}
+					});
+				}
+			});
+			</script>
 			<label>{l s='Customer e-mail'}</label>
 			<div class="margin-form">
 				<input type="text" size="33" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" style="text-transform: lowercase;" /> <sup>*</sup>
