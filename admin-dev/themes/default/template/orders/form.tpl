@@ -778,6 +778,21 @@
 		});
 	}
 </script>
+{if $show_toolbar}
+	<div class="toolbar-placeholder">
+		<div class="toolbarBox {if $toolbar_fix}toolbarHead{/if}">
+				{include file="toolbar.tpl"}
+				<div class="pageTitle">
+				<h3>
+					{block name=pageTitle}
+						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+					{/block}
+				</h3>
+				</div>
+		</div>
+	</div>
+	<div class="leadin">{block name="leadin"}{/block}</div>
+{/if}
 <fieldset id="customer_part"><legend><img src="../img/admin/tab-customers.gif" />{l s='Customer'}</legend>
 	<p><label>{l s='Search customers:'}</label><input type="text" id="customer" value="" />
 	<a class="fancybox button" href="{$link->getAdminLink('AdminCustomers')}&addcustomer&liteDisplaying=1&submitFormAjax=1#"><img src="../img/admin/add.gif" title="new"/><span>{l s='Add new customer'}</span></a></p>
