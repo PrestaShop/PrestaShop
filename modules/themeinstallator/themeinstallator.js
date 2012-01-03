@@ -102,7 +102,4 @@ $('document').ready(function()
 		while (themes_id[count] != null && count < 10)
 			addVariation(themes_id[count++]);
 	}
-	else
-		addVariation(0);
-	addDocumentation(0);
 });
