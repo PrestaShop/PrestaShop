@@ -29,10 +29,10 @@ include_once('../../init.php');
 include_once('homeslider.php');
 
 $context = Context::getContext();
-$homeSlider = new HomeSlider();
+$home_slider = new HomeSlider();
 $slides = array();
 
-if (!Tools::isSubmit('secure_key') || Tools::getValue('secure_key') != $homeSlider->secure_key || !Tools::getValue('action'))
+if (!Tools::isSubmit('secure_key') || Tools::getValue('secure_key') != $home_slider->secure_key || !Tools::getValue('action'))
 	die(1);
 
 if (Tools::getValue('action') == 'updateSlidesPosition' && Tools::getValue('slides'))
