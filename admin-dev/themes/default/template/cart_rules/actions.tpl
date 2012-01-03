@@ -40,7 +40,7 @@
 	<label class="t" for="apply_discount_percent"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /> {l s='Percent (%)'}</label>
 	&nbsp;&nbsp;
 	<input type="radio" name="apply_discount" id="apply_discount_amount" value="amount"  {if $currentTab->getFieldValue($currentObject, 'reduction_amount')|intval}checked="checked"{/if} />
-	<label class="t" for="apply_discount_amount"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /> {l s='Amount (¤)'}</label>
+	<label class="t" for="apply_discount_amount"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /> {l s='Amount'}</label>
 	&nbsp;&nbsp;
 	<input type="radio" name="apply_discount" id="apply_discount_off" value="off"  {if !$currentTab->getFieldValue($currentObject, 'reduction_amount')|intval && !$currentTab->getFieldValue($currentObject, 'reduction_percent')|intval}checked="checked"{/if} />
 	<label class="t" for="apply_discount_off"> <img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="cursor:pointer" /> {l s='None'}</label>
@@ -53,7 +53,7 @@
 	</div>
 </div>
 <div id="apply_discount_amount_div">
-	<label>{l s='Value (¤)'}</label>
+	<label>{l s='Value'}</label>
 	<div class="margin-form">
 		<input type="text" id="reduction_amount" name="reduction_amount" value="{$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval}" />
 		<select name="reduction_currency">

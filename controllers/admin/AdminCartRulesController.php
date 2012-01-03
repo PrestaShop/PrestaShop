@@ -343,12 +343,6 @@ class AdminCartRulesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function setMedia()
-	{
-		parent::setMedia();
-		$this->addJS(_PS_JS_DIR_.'admin_cart_rules.js');
-	}
-
 	public function displayAjaxSearchCartRuleVouchers()
 	{
 		$found = false;
