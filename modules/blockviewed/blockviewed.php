@@ -132,6 +132,8 @@ class BlockViewed extends Module
 					$obj->description_short = $productsImagesArray[$productViewed]['description_short'];
 					$obj->link_rewrite = $productsImagesArray[$productViewed]['link_rewrite'];
 					$obj->category_rewrite = $productsImagesArray[$productViewed]['category_rewrite'];
+					// $obj is not a real product so it cannot be used as argument for getProductLink()
+					$obj->product_link = $this->context->link->getProductLink($obj->id, $obj->link_rewrite, $obj->category_rewrite);
 
 					if (!isset($obj->cover) || !$productsImagesArray[$productViewed]['id_image'])
 					{
