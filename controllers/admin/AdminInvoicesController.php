@@ -226,7 +226,7 @@ class AdminInvoicesControllerCore extends AdminController
 		else if (Tools::isSubmit('submitAddinvoice_status'))
 		{
 			if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array))
-				$this->_errors[] = $this->l('Invalid order statuses');
+				$this->_errors[] = $this->l('You must select at least one order status');
 			else
 			{
 				foreach ($status_array as $id_order_state)
@@ -243,21 +243,25 @@ class AdminInvoicesControllerCore extends AdminController
 	public function beforeUpdateOptions()
 	{
 		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
-				$this->_errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber().')';
+			$this->_errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber().')';
 	}
 
 	protected function getInvoicesModels()
 	{
-		$models = array(array('value'=>'invoice', 'name'=>'invoice'));
+		$models = array(
+			array(
+				'value' => 'invoice',
+				'name' => 'invoice'
+			)
+		);
 		$d = dir(_PS_THEME_DIR_.'/pdf/');
 		while (false !== ($entry = $d->read()))
 		{
-			if (preg_match('`^(invoice-[a-z0-9]+)\.tpl$`', $entry, $matches)) {
+			if (preg_match('`^(invoice-[a-z0-9]+)\.tpl$`', $entry, $matches))
 				$models[] = array(
 					'value' => $matches[1],
 					'name' => $matches[1]
 				);
-			}
 		}
 		$d->close();
 		return $models;
