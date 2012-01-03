@@ -66,15 +66,15 @@
 
 	<div>
 		<label>{l s='Type:'}</label>
-		<label style="width:100px;text-align:center;">
+		<label style="font-weight:normal;width:100px;text-align:center;">
 			<input type="radio" name="type_product" id="simple_product" value="0" />
 			{l s='Product'}
 		</label>
-		<label style="width:100px;text-align:center;">
+		<label style="font-weight:normal;width:100px;text-align:center;">
 			<input type="radio" name="type_product" id="pack_product" value="1" />
 			{l s='Pack'}
 		</label>
-		<label style="width:500px;text-align:center;">
+		<label style="font-weight:normal;width:500px;text-align:center;">
 			<input type="radio" name="type_product" id="virtual_product" value="2" />
 			{l s='Virtual Product (services, booking and downloadable products)'}
 		</label>

@@ -28,8 +28,8 @@
 
 {if !$email}
 
-	<fieldset style="margin-top:10px;{if !empty($message.employee_name)}background: rgb(255,236,242){/if}">
-		<legend {if !empty($message.employee_name)}style="background:rgb(255,210,225)"{/if}>
+	<fieldset style="margin-top:10px;{if !empty($message.employee_name)}background-color:#F0F8E6;border:1px solid #88D254{/if}">
+		<legend {if !empty($message.employee_name)}style="background-color:#F0F8E6;color:#000;border:1px solid #88D254;"{/if}>
 			{if !empty($message.employee_name)}
 				<img src="../img/t/AdminCustomers.gif" alt="{$PS_SHOP_NAME}" />
 					{$PS_SHOP_NAME} - {$message.employee_name}
@@ -192,10 +192,12 @@
 
 {/if}
 
-		</div>
+	
 
 
 
 
 
 	</fieldset>
+	
+	

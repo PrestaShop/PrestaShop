@@ -142,7 +142,7 @@
 			{$message}
 		{/foreach}
 	</div>
-	<div class="clear">&nbsp;</div>
+
 
 
 	
