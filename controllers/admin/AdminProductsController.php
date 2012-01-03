@@ -1046,7 +1046,7 @@ class AdminProductsControllerCore extends AdminController
 	public function postProcess($token = null)
 	{
 		if (!$this->redirect_after)
-			parent::postProcess(true);
+			parent::postProcess();
 	}
 
 	// @todo rename to processaddproductimage
@@ -2139,7 +2139,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
 		$id_product = Tools::getvalue('id_product');
-		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$id_product;
+		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&amp;'.($id_product ? 'id_product='.$id_product : 'addproduct');
 		$this->tpl_form_vars['id_product'] = $id_product;
 
 		// Transform configuration option 'upload_max_filesize' in octets
