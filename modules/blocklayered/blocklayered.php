@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.7.3';
+		$this->version = '1.7.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -2015,12 +2015,15 @@ class BlockLayered extends Module
 				$queryFiltersFrom .= ' INNER JOIN '._DB_PREFIX_.'category_product cp
 				ON p.id_product = cp.id_product
 				INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND
-				'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).')';
+				'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+				AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+				AND c.active = 1)';
 			else
 				$queryFiltersFrom .= ' INNER JOIN '._DB_PREFIX_.'category_product cp
 				ON p.id_product = cp.id_product
 				INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category
-				AND c.id_category = '.(int)$id_parent.')';
+				AND c.id_category = '.(int)$id_parent.'
+				AND c.active = 1)';
 		}
 
 		foreach ($selectedFilters as $key => $filterValues)
@@ -2200,7 +2203,9 @@ class BlockLayered extends Module
 			LEFT JOIN '._DB_PREFIX_.'image_lang il ON (i.id_image = il.id_image AND il.id_lang = '.(int)($cookie->id_lang).')
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer)
 			WHERE p.`active` = 1 AND
-			'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+			'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+			AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+			AND c.active = 1
 			AND pl.id_lang = '.(int)$cookie->id_lang.'
 			AND p.id_product IN ('.implode(',', $productIdList).')'
 			.' GROUP BY p.id_product ORDER BY '.Tools::getProductsOrder('by', Tools::getValue('orderby'), true).' '.Tools::getProductsOrder('way', Tools::getValue('orderway')).
@@ -2282,7 +2287,9 @@ class BlockLayered extends Module
 					$sqlQuery['join'] = '
 					INNER JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)
 					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND
-					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).') ';
+					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+					AND c.active = 1) ';
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 						$sqlQuery['join'] .= 'LEFT JOIN '._DB_PREFIX_.'stock_available sa
 							ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)$this->context->shop->getID(true).') ';
@@ -2298,7 +2305,9 @@ class BlockLayered extends Module
 					INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = cp.id_product AND p.active = 1)
 					INNER JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer) ';
 					$sqlQuery['where'] = 'WHERE 
-					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).' ';
+					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+					AND c.active = 1 ';
 					$sqlQuery['group'] = ' GROUP BY p.id_manufacturer ';
 					break;
 
@@ -2331,7 +2340,9 @@ class BlockLayered extends Module
 					SELECT id_product
 					FROM '._DB_PREFIX_.'category_product cp
 					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND 
-					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).')) ';
+					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+					AND c.active = 1)) ';
 					$sqlQuery['group'] = '
 					GROUP BY lpa.id_attribute
 					ORDER BY id_attribute_group, id_attribute ';
@@ -2357,7 +2368,9 @@ class BlockLayered extends Module
 					SELECT id_product
 					FROM '._DB_PREFIX_.'category_product cp
 					INNER JOIN '._DB_PREFIX_.'category c ON (c.id_category = cp.id_category AND
-					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.' AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).')) ';
+					'.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+					AND c.active = 1)) ';
 					$sqlQuery['group'] = 'GROUP BY fv.id_feature_value ';
 					break;
 
@@ -3327,6 +3340,7 @@ class BlockLayered extends Module
 		$smarty->assign('comparator_max_item', (int)(Configuration::get('PS_COMPARATOR_MAX_ITEM')));
 		$smarty->assign('products', $products);
 		$smarty->assign('products_per_page', (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
+		$smarty->assign('static_token', Tools::getToken(false));
 		
 		// Prevent bug with old template where category.tpl contain the title of the category and category-count.tpl do not exists
 		if (file_exists(_PS_THEME_DIR_.'category-count.tpl'))
