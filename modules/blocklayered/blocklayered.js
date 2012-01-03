@@ -293,7 +293,10 @@ function reloadContent(params_plus)
 	});
 	
 	$('#layered_form .select option:checked').each( function () {
-		data += '&'+$(this).attr('id') + '=' + $(this).val();
+		if($(this).attr('id'))
+		{
+			data += '&'+$(this).attr('id') + '=' + $(this).val();
+		}
 	});
 	
 	if ($('#selectPrductSort').length)
