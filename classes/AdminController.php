@@ -847,7 +847,7 @@ class AdminControllerCore extends Controller
 
 			$languages = Language::getLanguages(false);
 
-			foreach ($this->options as $category => $category_data)
+			foreach ($this->options as $category_data)
 			{
 				if (!isset($category_data['fields']))
 					continue;
@@ -855,6 +855,7 @@ class AdminControllerCore extends Controller
 				$fields = $category_data['fields'];
 
 				foreach ($fields as $field => $values)
+				{
 					if (isset($values['type']) && $values['type'] == 'selectLang')
 					{
 						foreach ($languages as $lang)
@@ -866,9 +867,16 @@ class AdminControllerCore extends Controller
 									'list' => $values['list']
 								);
 					}
+				}
 
-				/* Check required fields */
+				// Validate fields
 				foreach ($fields as $field => $values)
+				{
+					// We don't validate fields with no visibility
+					if (Shop::isFeatureActive() && isset($values['visibility']) && ($values['visibility'] > Context::getContext()->shop->getContextType()))
+						continue;
+
+					// Check if field is required
 					if (isset($values['required']) && $values['required'] && !isset($_POST['configUseDefault'][$field]))
 						if (isset($values['type']) && $values['type'] == 'textLang')
 						{
@@ -879,8 +887,7 @@ class AdminControllerCore extends Controller
 						else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
 							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 
-				/* Check fields validity */
-				foreach ($fields as $field => $values)
+					// Check field validator
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
 						foreach ($languages as $language)
@@ -892,10 +899,10 @@ class AdminControllerCore extends Controller
 						if (!Validate::$values['validation'](Tools::getValue($field)))
 							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
 
-				/* Default value if null */
-				foreach ($fields as $field => $values)
+					// Set default value
 					if (!Tools::getValue($field) && isset($values['default']))
 						$_POST[$field] = $values['default'];
+				}
 
 				if (!count($this->_errors))
 				{
