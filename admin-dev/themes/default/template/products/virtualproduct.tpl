@@ -144,7 +144,7 @@
 
 </script>
 
-<h4>{l s='Virtual Product'}</h4>
+<h4>{l s='Virtual Product (services, booking and downloadable products)'}</h4>
 <div class="separation"></div>
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;">
 	<tr>
