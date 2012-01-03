@@ -289,10 +289,26 @@ function getManufacturers()
 	});
 }
 
+function disableSave()
+{
+	if ($('#product-tab-content-Associations').hasClass('not-loaded'))
+	{
+		$('#desc-product-save').hide();
+		$('#desc-product-save-and-stay').hide();
+
+		$('#product-tab-content-Associations').bind('loaded', function()
+		{
+			$('#desc-product-save').show();
+			$('#desc-product-save-and-stay').show();
+		});
+	}
+}
+
 /* function autocomplete */
 urlToCall = null;
 
 $(document).ready(function() {
 	updateCurrentText();
 	updateFriendlyURL();
+	disableSave();
 });
