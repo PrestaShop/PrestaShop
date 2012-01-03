@@ -418,35 +418,35 @@ class LinkCore
 
 	public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
 	{
-		if ($type AND $id_object)
-			$url = $this->{'get'.$type.'Link'}($id_object, NULL);
+		if ($type && $id_object)
+			$url = $this->{'get'.$type.'Link'}($id_object, null);
 		else
 		{
 			$url = $this->url;
 			if (Configuration::get('PS_REWRITING_SETTINGS'))
 				$url = $this->getPageLink(basename($url));
 		}
-		$vars = (!$array ? '' : array());
+		$vars = (!$array) ? '' : array();
 		$varsNb = array('n', 'search_query');
 		$varsSort = array('orderby', 'orderway');
 		$varsPagination = array('p');
 
 		$n = 0;
-		foreach ($_GET AS $k => $value)
-			if ($k != 'id_'.$type)
+		foreach ($_GET as $k => $value)
+			if ($k != 'id_'.$type && $k != 'controller')
 			{
-				if (Configuration::get('PS_REWRITING_SETTINGS') AND ($k == 'isolang' OR $k == 'id_lang'))
+				if (Configuration::get('PS_REWRITING_SETTINGS') && ($k == 'isolang' || $k == 'id_lang'))
 					continue;
-				$ifNb = (!$nb || ($nb AND !in_array($k, $varsNb)));
-				$ifSort = (!$sort OR ($sort AND !in_array($k, $varsSort)));
+				$ifNb = (!$nb || ($nb && !in_array($k, $varsNb)));
+				$ifSort = (!$sort || ($sort && !in_array($k, $varsSort)));
 				$ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination)));
-				if ($ifNb && $ifSort && $ifPagination AND !is_array($value))
+				if ($ifNb && $ifSort && $ifPagination && !is_array($value))
 					!$array ? ($vars .= ((!$n++ && ($this->allow == 1 || $url == $this->url)) ? '?' : '&').urlencode($k).'='.urlencode($value)) : ($vars[urlencode($k)] = urlencode($value));
 			}
 		if (!$array)
 			return $url.$vars;
 		$vars['requestUrl'] = $url;
-		if ($type AND $id_object)
+		if ($type && $id_object)
 			$vars['id_'.$type] = (is_object($id_object) ? (int)$id_object->id : (int)$id_object);
 		return $vars;
 	}
