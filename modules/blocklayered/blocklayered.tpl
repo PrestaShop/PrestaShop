@@ -125,7 +125,7 @@ param_product_url = '';
 								<select class="select" {if $filter.filter_show_limit > 1}multiple="multiple" size="{$filter.filter_show_limit}"{/if}>
 									<option value="">{l s='No filters' mod='blocklayered'}</option>
 									{foreach from=$filter.values key=id_value item=value}
-										<option style="color: {if isset($value.color)}{$value.color}{/if}" id="layered_id_attribute_group_{$id_value}" value="{$id_value}_{$filter.id_key}" {if isset($value.checked) && $value.checked}selected="selected"{/if}>
+										<option style="color: {if isset($value.color)}{$value.color}{/if}" id="layered_{$filter.type_lite}{if $id_value || $filter.type == 'quantity'}_{$id_value}{/if}" value="{$id_value}_{$filter.id_key}" {if isset($value.checked) && $value.checked}selected="selected"{/if}>
 											{$value.name|escape:html:'UTF-8'}{if $layered_show_qties}<span> ({$value.nbr})</span>{/if}</a>
 										</option>
 									{/foreach}
