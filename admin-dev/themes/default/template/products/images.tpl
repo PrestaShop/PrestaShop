@@ -89,7 +89,7 @@
 	<table id="lineType" style="display:none;">
 		<tr id="image_id">
 			<td style="padding: 4px;">
-				<a href="image_path.jpg" target="_blank">
+				<a href="{$smarty.const._THEME_PROD_DIR_}image_path.jpg" target="_blank">
 					<img src="{$smarty.const._THEME_PROD_DIR_}en-default-small.jpg" alt="image_id" title="image_id" />
 				</a>
 			</td>
@@ -322,7 +322,8 @@
 			{
 				line = $("#lineType").html();
 				line = line.replace(/image_id/g, id);
-				line = line.replace(/en-default/g, path);
+			line = line.replace(/en-default/g, path);
+			line = line.replace(/image_path/g, path);
 				line = line.replace(/image_position/g, position);
 				line = line.replace(/blank/g, cover);
 				line = line.replace("<tbody>", "");
