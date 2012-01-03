@@ -94,15 +94,14 @@ class LinkCore
 				throw new PrestashopException('Invalid product vars');
 		}
 
-
 		// Set available keywords
 		$params = array();
 		$params['id'] = $product->id;
-		$params['rewrite'] = (!$alias) ? $product->link_rewrite : $alias;
+		$params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
 		$params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
 		$params['category'] = (!$category) ? $product->category : $category;
-		$params['meta_keywords'] =	Tools::str2url($product->meta_keywords);
-		$params['meta_title'] = Tools::str2url($product->meta_title);
+		$params['meta_keywords'] =	Tools::str2url($product->getFieldByLang('meta_keywords'));
+		$params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
 
 		if ($dispatcher->hasKeyword('product_rule', 'manufacturer'))
 			$params['manufacturer'] = Tools::str2url($product->isFullyLoaded ? $product->manufacturer_name : Manufacturer::getNameById($product->id_manufacturer));
