@@ -87,7 +87,7 @@ class CmsControllerCore extends FrontController
 		if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category)
 			$path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
 		else
-			$path = Tools::getFullPath(1, $this->cms->meta_title, 'CMS');
+			$path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
 		if ($this->assignCase == 1)
 		{
 			$this->context->smarty->assign(array(
