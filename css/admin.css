@@ -2199,11 +2199,12 @@ font-weight:normal;
 
 #ajax_running {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 40%;
 	z-index: 10000;
 	background-color: #FFF1A8;
+	border: 1px solid #FFD96F;
 	color: #000;
 	font-weight: bold;
 	font-size: 14px;
