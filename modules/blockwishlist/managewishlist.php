@@ -63,7 +63,7 @@ if ($context->customer->isLogged())
 					continue;
 				else
 				{
-					if ($products[$i]['id_product_attribute'] != 0)
+					if ($products[$i]['id_product_attribute'] != 0 && isset($combination_imgs[$products[$i]['id_product_attribute']][0]))
 					{
 						$combination_imgs = $obj->getCombinationImages($context->language->id);
 						$products[$i]['cover'] = $obj->id.'-'.$combination_imgs[$products[$i]['id_product_attribute']][0]['id_image'];
