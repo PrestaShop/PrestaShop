@@ -375,9 +375,9 @@ abstract class ObjectModelCore
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
 
 		// Automatically fill dates
-		if ($autodate && array_key_exists('date_add', $this))
+		if ($autodate && property_exists($this, 'date_add'))
 			$this->date_add = date('Y-m-d H:i:s');
-		if ($autodate && array_key_exists('date_upd', $this))
+		if ($autodate && property_exists($this, 'date_upd'))
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		// Database insertion
