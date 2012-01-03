@@ -1717,7 +1717,7 @@ class AdminControllerCore extends Controller
 			$this->redirect_after = $this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '?redirect='.$_SERVER['REQUEST_URI'] : '');
 
 		// Set current index
-		$current_index = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
+		$current_index = dirname($_SERVER['SCRIPT_NAME']).'/index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');
 		if ($back = Tools::getValue('back'))
 			$current_index .= '&back='.urlencode($back);
 		self::$currentIndex = $current_index;
