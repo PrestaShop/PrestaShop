@@ -3078,6 +3078,7 @@ $_LANGADM['AdminControllere30d2e2e3e089445907ea440d5f0d901'] = 'Cliquez ici pour
 $_LANGADM['AdminControllera546b4ed60fa82d6e50475370c228979'] = 'Un nouveau message a été envoyé sur votre boutique.';
 $_LANGADM['AdminControllerc3c0ad440e89fbca4e80ecb16691259c'] = 'Extrait :';
 $_LANGADM['AdminController3c40bce8d041e25000f92477f7f8ab31'] = 'Cliquez ici pour voir ce message';
+$_LANGADM['AdminController8524de963f07201e5c086830d370797f'] = 'Chargement en cours...';
 $_LANGADM['AdminController529a53abbdf42a64cb2d149c0aeced04'] = 'Dernières commandes';
 $_LANGADM['AdminController050a0d11da7943317186f76a36b14a6c'] = 'Pas de nouvelle commande passée sur votre boutique';
 $_LANGADM['AdminControllerad0750ccecf0c31c43ce46ea7e665ea5'] = 'Voir toutes les commandes';

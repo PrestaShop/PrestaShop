@@ -23,6 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+var ajax_running_timeout = null;
+var ajax_running_nb_queries = 0;
+
 if (!id_language)
 	var id_language = Number(1);
 
@@ -410,11 +413,11 @@ if (helpboxes)
 		if ($('input'))
 		{
 			//Display by rollover
-			$('input').mouseover(function() { 
-			$(this).parent().find('.hint:first').css('display', 'block'); 
+			$('input').mouseover(function() {
+			$(this).parent().find('.hint:first').css('display', 'block');
 			});
 			$('input').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
-			
+
 			//display when you press the tab key
 			$('input').keydown(function (e) {
 				if ( e.keyCode === 9 ){
@@ -422,15 +425,15 @@ if (helpboxes)
 					$('input').blur(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
 				}
 			});
-		}		
+		}
 		if ($('select'))
 		{
 			//Display by rollover
-			$('select').mouseover(function() { 
-			$(this).parent().find('.hint:first').css('display', 'block'); 
+			$('select').mouseover(function() {
+			$(this).parent().find('.hint:first').css('display', 'block');
 			});
 			$('select').mouseout(function() { $(this).parent().find('.hint:first').css('display', 'none'); });
-			
+
 			//display when you press the tab key
 			$('select').keydown(function (e) {
 				if ( e.keyCode === 9 ){
@@ -442,26 +445,26 @@ if (helpboxes)
 		if ($('span.title_box'))
 		{
 			//Display by rollover
-			$('span.title_box').mouseover(function() { 
+			$('span.title_box').mouseover(function() {
 				//get reference to the hint box
 				var parent = $(this).parent();
-				var box = parent.find('.hint:first'); 
+				var box = parent.find('.hint:first');
 
 				if (box.length > 0)
 				{
 					//gets parent position
 					var left_position = parent.offset().left;
-				
+
 					//gets width of the box
 					var box_width = box.width();
-				
+
 					//gets width of the screen
 					var document_width = $(document).width();
-			
+
 					//changes position of the box if needed
 					if (document_width < (left_position + box_width))
 						box.css('margin-left', '-' + box_width + 'px');
-				
+
 					//shows the box
 					box.css('display', 'block');
 				}
@@ -473,7 +476,7 @@ if (helpboxes)
 
 /**
  * Deprecated
- * 
+ *
  * @param id_product
  * @param id_image
  */
@@ -894,20 +897,6 @@ function trackClickOnHelp(label, doc_version)
 	});
 }
 
-$(document).ready(function()
-{
-	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
-	$('.isInvisible label.conf_title').addClass('isDisabled');
-	
-	// Disable options fields for each row with a multishop default checkbox
-	$('.preference_default_multishop input[type=checkbox]').each(function(k, v)
-	{
-		var key = $(v).attr('name');
-		var len = key.length;
-		checkMultishopDefaultValue(v, key.substr(17, len - 18));
-	});
-});
-
 function checkMultishopDefaultValue(obj, key)
 {
 	if ($(obj).attr('checked') || $('#'+key).hasClass('isInvisible'))
@@ -924,7 +913,7 @@ function checkMultishopDefaultValue(obj, key)
 }
 /**
  * Update the product image list position buttons
- * 
+ *
  * @param DOM table imageTable
  */
 function refreshImagePositions(imageTable)
@@ -976,7 +965,7 @@ function showSuccessMessage(msg, delay)
 	$("#ajax_confirmation")
 		.html("<div class=\"conf\">"+msg+"</div>").show().delay(delay).fadeOut("slow");
 }
-			
+
 /** display a warning message in a #ajax_confirmation container
  * @param string msg string to display
  */
@@ -989,11 +978,22 @@ function showErrorMessage(msg, delay)
 }
 
 $(document).ready(function(){
+	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
+	$('.isInvisible label.conf_title').addClass('isDisabled');
+
+	// Disable options fields for each row with a multishop default checkbox
+	$('.preference_default_multishop input[type=checkbox]').each(function(k, v)
+	{
+		var key = $(v).attr('name');
+		var len = key.length;
+		checkMultishopDefaultValue(v, key.substr(17, len - 18));
+	});
+
 	$(".copy2friendlyUrl").live('keyup',function(e){
 		if(!isArrowKey(e))
 			return copy2friendlyURL()
 	});
-	
+
 	// on live will make this binded for dynamic content
 	$(".updateCurrentText").live('keyup change',function(e){
 		if(typeof e == KeyboardEvent)
@@ -1024,6 +1024,29 @@ $(document).ready(function(){
 		else
 			scroll.hide();
 	});
+
+	$('#ajax_running').ajaxStart(function() {
+		ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 500);
+	});
+
+	$('#ajax_running').ajaxSend(function() {
+		ajax_running_nb_queries += 1;
+	});
+
+	$('#ajax_running').ajaxComplete(function() {
+		ajax_running_nb_queries -= 1;
+		if (ajax_running_nb_queries <= 0)
+		{
+			$(this).slideUp('fast');
+			clearTimeout(ajax_running_timeout);
+		}
+	});
+
+	$('#ajax_running').ajaxError(function() {
+		ajax_running_nb_queries = 0;
+		$(this).slideUp('fast');
+		clearTimeout(ajax_running_timeout);
+	});
 });
 
 // Delete all tags HTML
@@ -1043,4 +1066,10 @@ function stripHTML(oldString)
 		if(!inTag) newString += oldString.charAt(i);
 	}
 	return newString;
+}
+
+function showAjaxOverlay()
+{
+	$('#ajax_running').slideDown('fast');
+	clearTimeout(ajax_running_timeout);
 }
