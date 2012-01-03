@@ -35,7 +35,8 @@ define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_.'controllers/');
 define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
 define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
 define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
-define('__PS_BASE_URI__', dirname(substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/'))).'/');
+
+define('__PS_BASE_URI__', dirname(substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], DIRECTORY_SEPARATOR))).'/');
 define('_THEME_NAME_', 'prestashop');
 require_once dirname(_PS_INSTALL_PATH_).'/config/defines.inc.php';
 require_once dirname(_PS_INSTALL_PATH_).'/config/defines_uri.inc.php';
