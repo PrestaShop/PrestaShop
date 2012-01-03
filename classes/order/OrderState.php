@@ -58,6 +58,9 @@ class OrderStateCore extends ObjectModel
 
 	/** @var boolean Paid */
 	public $paid;
+	
+	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
+	public $deleted = 0;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -76,6 +79,7 @@ class OrderStateCore extends ObjectModel
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'deleted' =>	array('type' => self::TYPE_BOOL, 'validade' => 'isBool'),
 
 			// Lang fields
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
