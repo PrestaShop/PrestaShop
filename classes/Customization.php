@@ -133,7 +133,7 @@ class CustomizationCore
 	 * @param $has_active_column
 	 * @return bool
 	 */
-	public static function isCurrentlyUsed()
+	public static function isCurrentlyUsed($table = null, $has_active_column = false)
 	{
 		return (bool)Db::getInstance()->getValue('
 			SELECT `id_customization_field`
