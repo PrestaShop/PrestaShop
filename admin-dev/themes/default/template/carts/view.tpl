@@ -28,16 +28,17 @@
 
 {block name="override_tpl"}
 	
-	<h2>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"} {l s='from'} {$cart->date_upd}</h2>
+	<div id="container-customer">
+		<h2><img src="../img/admin/basket.png" /><span>{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} - {l s='Cart #'}{$cart->id|string_format:"%06d"}</span><span style="color:#585A69;padding-left:10px;">{l s='from'} {$cart->date_upd}</span></h2>
+				<div class="separation"></div>
 	
-	<br />
-	<div style="float: left;">
-	<fieldset style="width: 400px">
-		<legend><img src="../img/admin/tab-customers.gif" />{l s='Customer information'}</legend>
-		<span style="font-weight: bold; font-size: 14px;">
+	<div class="info-customer-left">
+		<h2><img src="../img/admin/vcard.png" />{l s='Customer information'}</h2>
+		<span style="font-size: 14px;">
 		{if $customer->id}
-			<a href={$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id}&viewcustomer">{$customer->firstname} {$customer->lastname}</a></span> {l s='#'}{$customer->id}<br />
-			<a href="mailto:{$customer->email}">{$customer->email}</a>	<br /><br />
+			<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id}&viewcustomer">{$customer->firstname} {$customer->lastname}</a></span>
+			{l s='#'}{$customer->id}<br />
+			<a style="text-decoration: underline; color:#268CCD;" href="mailto:{$customer->email}">{$customer->email}</a>	<br /><br />
 			{l s='Account registered:'} {dateFormat date=$customer->date_add}<br />
 			{l s='Valid orders placed:'} <b>{$customer_stats.nb_orders}</b><br />
 			{l s='Total paid since registration:'} <b>{displayWtPriceWithCurrency price=$customer_stats.total_orders currency=$currency}</b><br />
@@ -45,30 +46,29 @@
 			{l s='Guest not registered'}
 		{/if}
 		</span>
-	</fieldset>
 	</div>
-	<div style="float: left; margin-left: 40px">
-	<fieldset style="width: 400px">
-		<legend><img src="../img/admin/cart.gif" /> {l s='Order information'}</legend>
-		<span style="font-weight: bold; font-size: 14px;">
+	<div class="info-customer-right">
+		<h2><img src="../img/admin/cart.gif" /> {l s='Order information'}</h2>
+		<span>
 		{if $order->id}
 			<a href="{$link->getAdminLink('AdminOrders')}&id_order={$order->id}&vieworder"> {l s='Order #'}{$order->id|string_format:"%06d"}</a></span>
 			<br /><br />
 			{l s='Made on:'} {dateFormat date=$order->date_add}<br /><br /><br /><br />
 		{else}
 			{l s='No order created from this cart'}</span>
-			<p><a href="{$link->getAdminLink('AdminOrders')}&id_cart={$cart->id}&addorder">{l s='Create an order with this cart'}</a></p>
+			<p><a class="button" href="{$link->getAdminLink('AdminOrders')}&id_cart={$cart->id}&addorder">{l s='Create an order with this cart'}</a></p>
 		{/if}
-	</fieldset>
 	</div>
 	<br style="clear:both;" />
-	<fieldset style="margin-top:25px; width: 715px; ">
-	<legend><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Cart summary'}</legend>
-	<div style="float:left;">
-		<table style="width: 700px;" cellspacing="0" cellpadding="0" class="table" id="orderProducts">
+				<div class="separation"></div>
+				
+
+	<h2><img src="../img/admin/cart.gif" alt="{l s='Products'}" />{l s='Cart summary'}</h2>
+	<br/>
+		<table style="width:100%;" cellspacing="0" cellpadding="0" class="table" id="orderProducts">
 		<thead>
 			<tr>
-			<th align="center" style="width: 60px">&nbsp;</th>
+			<th height="39" align="center" style="width: 60px">&nbsp;</th>
 			<th>{l s='Product'}</th>
 			<th style="width: 80px; text-align: center">{l s='UP'}</th>
 			<th style="width: 20px; text-align: center">{l s='Qty'}</th>
@@ -183,8 +183,9 @@
 	{/if}
 	<div style="float:left; margin-top:15px;">
 	{l s='According to the group of this customer, prices are printed:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='tax excluded'}{else}{l s='tax included'}{/if}</b>
-	</div></div>
+</div>
 	
-	</fieldset>
 	<div class="clear" style="height:20px;">&nbsp;</div>
 {/block}
+
+</div>
