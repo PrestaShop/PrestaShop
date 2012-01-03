@@ -401,13 +401,13 @@ class LinkCore
 			$request = str_replace($rewrite, $url_rewrite, $request);
 		}
 
-		parse_str($_SERVER['QUERY_STRING'], $queryTab);
-		unset($queryTab['isolang'], $queryTab['controller']);
+		$params = $_GET;
+		unset($params['isolang'], $params['controller']);
 
 		if (!$this->allow)
-			$queryTab['id_lang'] = $id_lang;
+			$params['id_lang'] = $id_lang;
 
-		return $this->getPageLink(Dispatcher::getInstance()->getController(), false, $id_lang, $queryTab);
+		return $this->getPageLink(Dispatcher::getInstance()->getController(), false, $id_lang, $params);
 	}
 
 	public function goPage($url, $p)
