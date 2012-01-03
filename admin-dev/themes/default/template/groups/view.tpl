@@ -28,12 +28,11 @@
 
 {block name="override_tpl"}
 
-	<fieldset style="width: 400px">
-		<span style="font-weight: bold; font-size: 14px;">{l s='Name:'}</span> {$group->name[$language->id]}
-		<div class="clear">&nbsp;</div>
-		<span style="font-weight: bold; font-size: 14px;">{l s='Discount:'}</span> {$group->reduction} {l s='%'}
-		<div class="clear">&nbsp;</div>
-		<span style="font-weight: bold; font-size: 14px;">{l s='Current category discount:'}</span>
+	<fieldset>
+		<ul>
+			<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Name:'}</span> {$group->name[$language->id]}</li>
+		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Discount:'}</span> {$group->reduction} {l s='%'}</li>
+		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Current category discount:'}</span>
 			{if !$categorieReductions}
 				{l s='None'}
 			{else}
@@ -46,16 +45,18 @@
 					{/foreach}
 				</table>
 			{/if}
-		<div class="clear">&nbsp;</div>
-		<span style="font-weight: bold; font-size: 14px;">{l s='Price display method:'}</span>
+			</li>
+			
+		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Price display method:'}</span>
 			{if $group->price_display_method}
 				{l s='Tax excluded'}
 			{else}
 				{l s='Tax included'}
 				{/if}
-		<div class="clear">&nbsp;</div>
-		<span style="font-weight: bold; font-size: 14px;">{l s='Show prices:'}</span> {if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}
-		<div class="clear">&nbsp;</div>
+		</li>
+		<li><span style="font-weight: bold; font-size: 13px; color:#000;">{l s='Show prices:'}</span> {if $group->show_prices}{l s='Yes'}{else}{l s='No'}{/if}
+		</li>
+		</ul>
 	</fieldset>
 	<h2>{l s='Customer members of this group'}</h2>
 	{$customerList}

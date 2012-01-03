@@ -269,6 +269,7 @@ input, textarea, option {
 
 input[type="text"], input[type="password"], input[type="file"], textarea {
 	padding: 2px 4px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
 }
 
 input[type="text"], input[type="password"], input[type="file"], textarea, select, option {
@@ -2170,6 +2171,11 @@ div#scrollTop a:hover{
 #container-customer h2 {
 color:#000;
 font-weight:normal;
+margin:0;
+}
+
+#container-customer h2 img {
+margin-right:5px;
 }
 
 #container-customer .info-customer-left {
@@ -2189,6 +2195,14 @@ font-weight:normal;
 
 }
 
+#container-customer .info-customer-left h2,
+#container-customer .info-customer-right h2 {
+margin-bottom:7px;
+}
+
+#container-customer a {
+
+}
 
 /*infoCustomer*/
 .infoCustomer {}
@@ -2196,21 +2210,5 @@ font-weight:normal;
 .infoCustomer dl dt {font-weight:bold; float:left; padding-right:5px;}
 .infoCustomer dl dd { margin:0; padding:0;}
 
-
-#ajax_running {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 40%;
-	z-index: 10000;
-	background-color: #FFF1A8;
-	border: 1px solid #FFD96F;
-	color: #000;
-	font-weight: bold;
-	font-size: 14px;
-	padding: 5px 20px;
-	border-radius: 0 0 3px 3px;
-	-webkit-border-bottom-left-radius: 3px;
-	-webkit-border-bottom-right-radius: 3px;
-	width: 300px;
-}
+/*container-carts*/
+#container-carts { background-color:#EBEDF4; border:1px solid #CCCED7; padding:10px;}

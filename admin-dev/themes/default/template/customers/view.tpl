@@ -63,7 +63,7 @@
 				<img src="../img/admin/edit.gif" />
 			</a>
 		</div>
-		<span style="font-weight: bold; font-size: 14px;">
+		<span style="font-size: 14px;">
 			{$customer->firstname} {$customer->lastname}
 		</span>
 		<img src="{$gender_image}" style="margin-bottom: 5px" /><br />
