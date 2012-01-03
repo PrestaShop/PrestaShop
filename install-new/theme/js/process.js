@@ -60,13 +60,13 @@ function process_install(step)
 			// An error occured during this step
 			else
 			{
-				install_error(step.key, json.message);
+				install_error(step, json.message);
 			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
 		error: function()
 		{
-			install_error(step.key);
+			install_error(step);
 		}
 	});
 }
@@ -75,12 +75,11 @@ function install_error(step, errors)
 {
 	current_step = 0;
 	is_installing = false;
+
 	$('#process_step_'+step.key).show().addClass('fail');
-	$.each(process_steps, function(k, v)
-	{
-		$('#progress_bar_'+v.key).removeClass('complete');
-	});
-	
+	$('#progress_bar .total .progress').stop().css('width', '0px');
+	$('#progress_bar .installing').hide();
+
 	if (errors)
 	{
 		var list_errors = errors;
