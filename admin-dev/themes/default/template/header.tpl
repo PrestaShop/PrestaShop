@@ -94,6 +94,8 @@
 	</head>
 	<body{if $bo_color} style="background:{$bo_color}"{/if}>
 {if $display_header}
+	<div id="ajax_running"><img src="../img/admin/ajax-loader-yellow.gif" alt="" /> {l s='Loading...'}</div>
+
 	<div id="top_container">
 		<div id="container">
 			{* begin  HEADER *}

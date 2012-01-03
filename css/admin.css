@@ -2195,3 +2195,21 @@ font-weight:normal;
 .infoCustomer dl {   margin: 7px 0;}
 .infoCustomer dl dt {font-weight:bold; float:left; padding-right:5px;}
 .infoCustomer dl dd { margin:0; padding:0;}
+
+
+#ajax_running {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 40%;
+	z-index: 10000;
+	background-color: #FFF1A8;
+	color: #000;
+	font-weight: bold;
+	font-size: 14px;
+	padding: 5px 20px;
+	border-radius: 0 0 3px 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	width: 300px;
+}
