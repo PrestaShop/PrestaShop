@@ -783,14 +783,17 @@ abstract class ModuleCore
 	  */
 	public static function getInstanceByName($moduleName)
 	{
-		if (!Tools::file_exists_cache(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php'))
-			return false;
-		include_once(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php');
-		if (!class_exists($moduleName, false))
-			return false;
-
 		if (!isset(self::$_INSTANCE[$moduleName]))
-			self::$_INSTANCE[$moduleName] = new $moduleName;
+		{
+			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php'))
+			{
+				include_once(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php');
+				
+				if (class_exists($moduleName, false))
+					return self::$_INSTANCE[$moduleName] = new $moduleName;
+			}
+			return false;
+		}
 		return self::$_INSTANCE[$moduleName];
 	}
 
