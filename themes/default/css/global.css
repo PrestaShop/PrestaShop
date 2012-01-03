@@ -1178,10 +1178,7 @@ a.iframe {font-weight:bold}
 	width: 680px;
 	background: white;
 }
-#orderopc .delivery_option_carrier .first_item {
-	padding:0 0 0 5px;
-	background:url(../img/arrow_right_2.png) no-repeat 0 2px
-}
+#orderopc .delivery_option_carrier .first_item {padding:0 0 0 5px}
 
 
 /* ************************************************************************************************
