@@ -52,7 +52,7 @@ function str2url(str,encoding,ucfirst)
 	str = str.replace(/[\u0155]/g,'r');
 
 	str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
-	str = str.replace(/[\u0028\u0029\u0021\003F]/g,'');
+	str = str.replace(/[\u0028\u0029\u0021\u003F\u002E\u0026\u005E\u007E]/g,'');
 	str = str.replace(/[\s\'\:\/\[\]-]+/g,' ');
 	str = str.replace(/[ ]/g,'-');
 	str = str.replace(/[\/]/g,'-');
