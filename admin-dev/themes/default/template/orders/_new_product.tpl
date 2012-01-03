@@ -1,4 +1,3 @@
-<tr id="new_product" height="52" style="display:none;background-color:#e9f1f6;">
 {*
 * 2007-2011 PrestaShop
 *
@@ -24,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<tr id="new_product" height="52" style="display:none;background-color:#E8EDC2">
+<tr id="new_product" height="52" style="display:none;background-color:#e9f1f6">
 	<td style="display:none;" colspan="2">
 		<input type="hidden" id="add_product_product_id" name="add_product[product_id]" value="0" />
 		{l s='Product:'} <input type="text" id="add_product_product_name" value="" size="42" />
