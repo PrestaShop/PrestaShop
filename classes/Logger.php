@@ -58,7 +58,6 @@ class	LoggerCore extends ObjectModel
 		'table' => 'log',
 		'primary' => 'id_log',
 		'fields' => array(
-			'id_log' => 		array('type' => self::TYPE_STRING, 'validate' => 'isUnsignedId'),
 			'severity' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
 			'error_code' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'message' => 		array('type' => self::TYPE_STRING, 'validate' => 'isMessage', 'required' => true),
