@@ -62,14 +62,14 @@
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="1" checked="checked"{else}value="0"{/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
 								type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
-						<label style="float:none;font-weight:normal" for="advanced_stock_management">{l s='I want to use the advanced stock management system for this product'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled'}</b>{/if}</label>
+						<label style="float:none;font-weight:normal" for="advanced_stock_management">{l s='I want to use the advanced stock management system for this product'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management.'}</b>{/if}</label>
 						<br /><br />
 					</td>
 				</tr>
 				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
 						<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}&nbsp;-&nbsp;<b>{l s='Not possible if stock management is not enabled AND/OR if this product does not use the stock management'}</b>{/if}</label>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management globaly/for this product.'}</b>{/if}</label>
 						<br /><br />
 					</td>
 				</tr>
