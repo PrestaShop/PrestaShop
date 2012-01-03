@@ -1023,6 +1023,21 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	/**
+	 * Override parent to add stock data to object
+	 * We don't want to make a "full" product load because of side effects to prices
+	 *
+	 * @param boolean $opt Return an empty object if load fail
+	 * @return object
+	 */
+	protected function loadObject($opt = false)
+	{
+		$result = parent::loadObject($opt);
+		if ($result)
+			$this->object->loadStockData();
+		return $result;
+	}
+
+	/**
 	 * postProcess handle every checks before saving products information
 	 *
 	 * @param mixed $token

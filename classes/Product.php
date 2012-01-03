@@ -391,12 +391,9 @@ class ProductCore extends ObjectModel
 			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
 			if ($this->id)
 				$this->tags = Tag::getProductTags((int)$this->id);
-		}
 
-		// By default, the product quantity correspond to the available quantity to sell in the current shop
-		$this->quantity = StockAvailable::getQuantityAvailableByProduct($id_product, 0);
-		$this->out_of_stock = StockAvailable::outOfStock($this->id);
-		$this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
+			$this->loadStockData();
+		}
 
 		if ($this->id_category_default)
 			$this->category = Category::getLinkRewrite((int)$this->id_category_default, (int)$id_lang);
@@ -4728,5 +4725,16 @@ class ProductCore extends ObjectModel
 		$sql->orderBy('c.nleft');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+	}
+
+	/**
+	 * Fill the variables used for stock management
+	 */
+	public function loadStockData()
+	{
+		// By default, the product quantity correspond to the available quantity to sell in the current shop
+		$this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
+		$this->out_of_stock = StockAvailable::outOfStock($this->id);
+		$this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
 	}
 }

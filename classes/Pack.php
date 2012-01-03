@@ -78,7 +78,8 @@ class PackCore extends Product
 		$arrayResult = array();
 		foreach ($result AS $row)
 		{
-			$p = new Product($row['id_product_item'], false, (int)($id_lang));
+			$p = new Product($row['id_product_item'], false, $id_lang);
+			$p->loadStockData();
 			$p->pack_quantity = $row['quantity'];
 			$arrayResult[] = $p;
 		}

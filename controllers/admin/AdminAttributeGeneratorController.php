@@ -79,6 +79,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	public function postProcess()
 	{
 		$this->product = new Product((int)Tools::getValue('id_product'));
+		$this->product->loadStockData();
 
 		if (isset($_POST['generate']))
 		{
