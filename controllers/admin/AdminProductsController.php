@@ -2165,7 +2165,7 @@ class AdminProductsControllerCore extends AdminController
 			return false;
 
 		$preview_url = $this->context->link->getProductLink(
-		$this->getFieldValue($product, 'id'),
+			$product,
 			$this->getFieldValue($product, 'link_rewrite', $this->context->language->id),
 			Category::getLinkRewrite($product->id_category_default, $this->context->language->id), null, null, Context::getContext()->shop->getID());
 		if (!$product->active)
@@ -2175,7 +2175,7 @@ class AdminProductsControllerCore extends AdminController
 		$token = Tools::encrypt('PreviewProduct'.$product->id);
 		if (strpos($preview_url, '?') === false)
 			$preview_url .= '?';
-			$preview_url = ($this->context->link->getProductLink($this->getFieldValue($product, 'id'), $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id)));
+			$preview_url = ($this->context->link->getProductLink($product, $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id)));
 			if (!$product->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);

@@ -1267,4 +1267,32 @@ abstract class ObjectModelCore
 	{
 
 	}
+
+	/**
+	 * Return the field value for the specified language if the field is multilang, else the field value.
+	 *
+	 * @param $field_name
+	 * @param null $id_lang
+	 * @return mixed
+	 * @throws PrestashopException
+	 * @since 1.5
+	 */
+	public function getFieldByLang($field_name, $id_lang = null)
+	{
+		$definition = ObjectModel::getDefinition($this);
+		// Is field in definition?
+		if ($definition && isset($definition['fields'][$field_name]))
+		{
+			$field = $definition['fields'][$field_name];
+			// Is field multilang?
+			if (isset($field['lang']) && $field['lang'])
+			{
+				if (is_array($this->{$field_name}))
+					return $this->{$field_name}[$id_lang ? $id_lang : Context::getContext()->language->id];
+			}
+			return $this->{$field_name};
+		}
+		else
+			throw new PrestashopException('Could not load field from definition.');
+	}
 }
