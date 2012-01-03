@@ -2216,8 +2216,9 @@ class ProductCore extends ObjectModel
 			die(Tools::displayError());
 		// Initializations
 		$id_group = (isset($context->customer) ? $context->customer->id_default_group : _PS_DEFAULT_CUSTOMER_GROUP_);
-		//var_dump($id_group);
-		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart))
+
+		// If there is cart in context or if the specified id_cart is different from the context cart id
+		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart))
 		{
 			/*
 			* When a user (e.g., guest, customer, Google...) is on PrestaShop, he has already its cart as the global (see /init.php)

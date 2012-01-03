@@ -150,7 +150,10 @@ class CartCore extends ObjectModel
 		parent::__construct($id, $id_lang);
 		if ($this->id_customer)
 		{
-			$customer = new Customer((int)$this->id_customer);
+			if (isset(Context::getContext()->customer) && Context::getContext()->customer->id == $this->id_customer)
+				$customer = Context::getContext()->customer;
+			else
+				$customer = new Customer((int)$this->id_customer);
 			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
 			if ((!$this->secure_key || $this->secure_key == '-1') && $customer->secure_key)
