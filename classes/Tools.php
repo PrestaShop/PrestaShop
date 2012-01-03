@@ -140,8 +140,7 @@ class ToolsCore
 	 */
 	public static function getShopProtocol()
 	{
-		$id_shop = Context::getContext()->shop()->id;
-		$protocol = (Configuration::get('PS_SSL_ENABLED', null, null, $id_shop) || (!empty($_SERVER['HTTPS'])
+		$protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
 			&& strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 		return $protocol;
 	}
