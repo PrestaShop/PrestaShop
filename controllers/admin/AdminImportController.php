@@ -774,7 +774,9 @@ class AdminImportControllerCore extends AdminController
 			break;
 		}
 		$url = str_replace(' ', '%20', trim($url));
-		if (file_exists($url) && copy($url, $tmpfile))
+		// 'file_exists' doesn't work on distant file, and getimagesize make the import slower.
+		// Just hide the warning, the traitment will be the same.
+		if (@copy($url, $tmpfile))
 		{
 			imageResize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
@@ -808,6 +810,9 @@ class AdminImportControllerCore extends AdminController
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
 			$info = self::getMaskedRow($line);
+
+			if (!isset($info['id']) || (int)$info['id'] < 2)
+								continue;
 
 			self::setDefaultValues($info);
 			$category = new Category();
