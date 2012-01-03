@@ -553,10 +553,13 @@ class HomeSlider extends Module
 					$slide->description[$language['id_lang']] = pSQL(Tools::getValue('description_'.$language['id_lang']));
 				/* Uploads image and sets slide */
 				$type = strtolower(substr(strrchr($_FILES['image_'.$language['id_lang']]['name'], '.'), 1));
+				$imagesize = array();
+				$imagesize = @getimagesize($_FILES['image_'.$language['id_lang']]['tmp_name']);
 				if (isset($_FILES['image_'.$language['id_lang']]) &&
 					isset($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
 					!empty($_FILES['image_'.$language['id_lang']]['tmp_name']) &&
-					in_array(strtolower(substr(strrchr($_FILES['image_'.$language['id_lang']]['type'], '/'), 1)), array('jpg', 'gif', 'jpeg', 'png')) &&
+					!empty($imagesize) &&
+					in_array(strtolower(substr(strrchr($imagesize['mime'], '/'), 1)), array('jpg', 'gif', 'jpeg', 'png')) &&
 					in_array($type, array('jpg', 'gif', 'jpeg', 'png')))
 				{
 					$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
@@ -568,21 +571,25 @@ class HomeSlider extends Module
 					else if (!imageResize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).$type))
 						$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
-						unlink($temp_name);
+						@unlink($temp_name);
 					$slide->image[$language['id_lang']] = pSQL(Tools::encrypt($_FILES['image_'.($language['id_lang'])]['name'].$salt).$type);
 				}
 				if (Tools::getValue('image_old_'.$language['id_lang']) != '')
 					$slide->image[$language['id_lang']] = pSQL(Tools::getValue('image_old_'.$language['id_lang']));
 			}
 
-			/* Adds */
-			if (!Tools::getValue('id_slide'))
+			/* Processes if no errors  */
+			if (!$errors)
 			{
-				if (!$slide->add())
-					$errors .= $this->displayError($this->l('Slide could not be added'));
-			} /* Update */
-			else if (!$slide->update())
-				$errors .= $this->displayError($this->l('Slide could not be updated'));
+				/* Adds */
+				if (!Tools::getValue('id_slide'))
+				{
+					if (!$slide->add())
+						$errors .= $this->displayError($this->l('Slide could not be added'));
+				} /* Update */
+				else if (!$slide->update())
+					$errors .= $this->displayError($this->l('Slide could not be updated'));
+			}
 		} /* Deletes */
 		else if (Tools::isSubmit('delete_id_slide'))
 		{
