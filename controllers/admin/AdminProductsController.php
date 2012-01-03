@@ -2176,7 +2176,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function getPreviewUrl(Product $product)
 	{
-		if (!(bool)$this->context->shop->virtual_uri && $this->context->shop->theme_name != 'default')
+		if (!ShopUrl::getMainShopDomain())
 			return false;
 
 		$preview_url = $this->context->link->getProductLink(
