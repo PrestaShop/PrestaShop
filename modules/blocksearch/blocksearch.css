@@ -7,12 +7,13 @@
 #search_block_top p {padding:0;}
 #search_block_top #search_query_top {
 	padding:0 5px;
-	height:24px;
+	height:23px;
 	width:300px;/* 310 */
 	border:1px solid #666;
-	border-right:1px solid #fff !important;
+	border-right: 0 !important;
 	color:#666;
 	background:url(img/bg_search_input.png) repeat-x 0 0 #fff;
+	float: left;
 }
 
 #search_block_top .button {
@@ -21,6 +22,8 @@
 	color:#fff;
 	text-transform:uppercase;
 	background:url(img/bg_search_submit.png) repeat-x 0 0 #101010;
+	float: left;
+	height: 25px;
 }
 
 /*\*//*/div.madiv {
