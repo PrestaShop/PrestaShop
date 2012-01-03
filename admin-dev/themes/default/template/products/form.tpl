@@ -114,6 +114,15 @@
 					$('li.tab-row a[id*="Pack"]').show();
 					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
 					$('#ppackdiv').show();
+					// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
+					$("#product-tab-content-Pack").bind('loaded', function(){
+						$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
+						$('#ppackdiv').show();
+					});
+					$("#product-tab-content-Quantities").bind('loaded', function(){
+						$('.stockForVirtualProduct').show();
+					});
+
 					$('li.tab-row a[id*="Shipping"]').show();
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
@@ -126,6 +135,15 @@
 					$('#virtual_good').show();
 					$('#is_virtual').val(1);
 					$("#virtual_good_attributes").show();
+					// If the virtual product tab has not finished loaded the changes will be made when the loading event is triggered
+					$("#product-tab-content-VirtualProduct").bind('loaded', function(){
+						$('#virtual_good').show();
+						$('#is_virtual').val(1);
+						$("#virtual_good_attributes").show();
+					});
+					$("#product-tab-content-Quantities").bind('loaded', function(){
+						$('.stockForVirtualProduct').hide();
+					});
 					$('li.tab-row a[id*="Shipping"]').hide();
 					$('#condition').attr('disabled', 'disabled');
 					$('#condition option[value=refurbished]').removeAttr('selected');
