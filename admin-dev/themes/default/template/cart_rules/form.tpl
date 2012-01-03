@@ -82,7 +82,118 @@
 	var product_rules_counter = {if isset($product_rules_counter)}{$product_rules_counter}{else}0{/if};
 	var currentToken = '{$currentToken}';
 	var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape}{else}informations{/if}';
-	
+
+	$('.cart_rule_tab').hide();
+	$('.tab-page').removeClass('selected');
+	$('#cart_rule_' + currentFormTab).show();
+	$('#cart_rule_link_' + currentFormTab).addClass('selected');
+
+	$('#giftProductFilter')
+		.autocomplete(
+				'ajax-tab.php', {
+				minChars: 2,
+				max: 50,
+				width: 500,
+				selectFirst: false,
+				scroll: false,
+				dataType: 'json',
+				formatItem: function(data, i, max, value, term) {
+					return value;
+				},
+				parse: function(data) {
+					var mytab = new Array();
+					for (var i = 0; i < data.length; i++)
+						mytab[mytab.length] = { data: data[i], value: (data[i].reference + ' ' + data[i].name).trim() };
+					return mytab;
+				},
+				extraParams: {
+					controller: 'AdminCartRules',
+					token: currentToken,
+					giftProductFilter: 1
+				}
+			}
+		)
+		.result(function(event, data, formatted) {
+			$('#gift_product').val(data.id_product);
+			$('#giftProductFilter').val((data.reference + ' ' + data.name).trim());
+		});
+		
+	$('#reductionProductFilter')
+		.autocomplete(
+				'ajax-tab.php', {
+				minChars: 2,
+				max: 50,
+				width: 500,
+				selectFirst: false,
+				scroll: false,
+				dataType: 'json',
+				formatItem: function(data, i, max, value, term) {
+					return value;
+				},
+				parse: function(data) {
+					var mytab = new Array();
+					for (var i = 0; i < data.length; i++)
+						mytab[mytab.length] = { data: data[i], value: (data[i].reference + ' ' + data[i].name).trim() };
+					return mytab;
+				},
+				extraParams: {
+					controller: 'AdminCartRules',
+					token: currentToken,
+					reductionProductFilter: 1
+				}
+			}
+		)
+		.result(function(event, data, formatted) {
+			$('#reduction_product').val(data.id_product);
+			$('#reductionProductFilter').val((data.reference + ' ' + data.name).trim());
+		});
+		
+	$('#customerFilter')
+		.autocomplete(
+				'ajax-tab.php', {
+				minChars: 2,
+				max: 50,
+				width: 500,
+				selectFirst: false,
+				scroll: false,
+				dataType: 'json',
+				formatItem: function(data, i, max, value, term) {
+					return value;
+				},
+				parse: function(data) {
+					var mytab = new Array();
+					for (var i = 0; i < data.length; i++)
+						mytab[mytab.length] = { data: data[i], value: data[i].cname + ' (' + data[i].email + ')' };
+					return mytab;
+				},
+				extraParams: {
+					controller: 'AdminCartRules',
+					token: currentToken,
+					customerFilter: 1
+				}
+			}
+		)
+		.result(function(event, data, formatted) {
+			$('#id_customer').val(data.id_customer);
+			$('#customerFilter').val(data.cname + ' (' + data.email + ')');
+		});
+
+	var date = new Date();
+	var hours = date.getHours();
+	if (hours < 10)
+		hours = "0" + hours;
+	var mins = date.getMinutes();
+	if (mins < 10)
+		mins = "0" + mins;
+	var secs = date.getSeconds();
+	if (secs < 10)
+		secs = "0" + secs;
+	$('.datepicker').datepicker({
+		prevText: '',
+		nextText: '',
+		dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+	});
+
 	var languages = new Array();
 	{foreach from=$languages item=language key=k}
 		languages[{$k}] = {
@@ -93,4 +204,3 @@
 	{/foreach}
 	displayFlags(languages, {$defaultLanguage});
 </script>
-<script type="text/javascript" src="themes/template/cart_rules/form.js"></script>
