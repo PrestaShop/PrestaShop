@@ -1523,6 +1523,16 @@ class AdminOrdersControllerCore extends AdminController
 		// Get the last product
 		$product = $products[$order_detail->id];
 
+		// Get invoices collection
+		$invoice_collection = $order->getInvoicesCollection();
+
+		$invoice_array = array();
+		foreach($invoice_collection as $invoice)
+		{
+			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
+			$invoice_array[] = $invoice;
+		}
+
 		// Assign to smarty informations in order to show the new product line
 		$this->context->smarty->assign(array(
 			'product' => $product,
@@ -1534,16 +1544,6 @@ class AdminOrdersControllerCore extends AdminController
 			'link' => Context::getContext()->link,
 			'current_index' => self::$currentIndex
 		));
-
-		// Get invoices collection
-		$invoice_collection = $order->getInvoicesCollection();
-
-		$invoice_array = array();
-		foreach($invoice_collection as $invoice)
-		{
-			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id);
-			$invoice_array[] = $invoice;
-		}
 
 		if (!$res)
 			die(Tools::jsonEncode(array(
