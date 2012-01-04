@@ -83,7 +83,7 @@
 				</tr>
 				<tr>
 					<td valign="top" style="text-align:left;vertical-align:top;">
-						<table class="table" cellpadding="0" cellspacing="0" style="width:50%;">
+						<table class="table" cellpadding="0" cellspacing="0" style="width:100%;">
 								<colgroup>
 									<col width="50"></col>
 									<col></col>
@@ -115,12 +115,16 @@
 								<tr>
 									<td class="col-left"><label>{l s='When out of stock:'}</label></td>
 									<td style="padding-bottom:5px;">
+										<ul class="listForm">
+											<li>
 										<input {if $product->out_of_stock == 0} checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_1" class="t" for="out_of_stock_1">{l s='Deny orders'}</label>
-										<br>
+											</li>
+											<li>
 										<input {if $product->out_of_stock == 1} checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_2" class="t" for="out_of_stock_2">{l s='Allow orders'}</label>
-										<br>
+										</li>
+										<li>
 										<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
 										<label id="label_out_of_stock_3" class="t" for="out_of_stock_3">
 											{l s='Default'}:
@@ -129,6 +133,8 @@
 												{l s='as set in Preferences'}
 											</a>
 										</label>
+										</li>
+										</ul>
 									</td>
 								</tr>
 							</tbody>

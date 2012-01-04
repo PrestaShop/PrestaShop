@@ -225,6 +225,7 @@ div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0
 /*tab-pane*/
 form#product_form, form#access_form, form#cart_rule_form { background-color:#ebedf4; border:1px solid #ccced7; min-height:404px; padding: 5px 10px 10px; margin-left:140px;}
 #content form.adminstockmanagement {margin-left:0px;}
+form#product_form h3 { font-size:14px; font-weight:normal;}
 form#product_form h4 { font-size:18px; font-weight:normal;}
 .tab-row {}
 .tab-row .tab {background:#EFEFEF;width:100px;}
@@ -420,6 +421,7 @@ select#show_modules { font-size:12px;}
 
 label.text { padding:1px 12px 0 0;}
 label.radioCheck {font-weight:normal; padding:0; float:none; margin:0 1em 0 0.25em}
+
 .listForm {}
 ul.listForm {}
 ul.listForm li {padding-bottom:3px;}
