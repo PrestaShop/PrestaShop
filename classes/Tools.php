@@ -576,7 +576,7 @@ class ToolsCore
 			return '';
 
 		if (!Validate::isDate($date) || !Validate::isBool($full))
-			throw new PrestashopException('Invalid date');
+			throw new PrestaShopException('Invalid date');
 
 		$context = Context::getContext();
 		$date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);

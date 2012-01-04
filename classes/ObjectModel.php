@@ -165,7 +165,7 @@ abstract class ObjectModelCore
 			$this->id_shop = Context::getContext()->shop->getID(true);
 
 	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
-			throw new PrestashopException('Identifier or table format not valid for class '.get_class($this));
+			throw new PrestaShopException('Identifier or table format not valid for class '.get_class($this));
 
 		if ($id)
 		{
@@ -403,7 +403,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) AS $key)
 						if (!Validate::isTableOrIdentifier($key))
-							throw new PrestashopException('key '.$key.' is not table or identifier, ');
+							throw new PrestaShopException('key '.$key.' is not table or identifier, ');
 					$field[$this->def['primary']] = (int)$this->id;
 
 					if (isset($assos[$this->def['table'].'_lang']) && $assos[$this->def['table'].'_lang']['type'] == 'fk_shop')
@@ -470,7 +470,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) as $key)
 						if (!Validate::isTableOrIdentifier($key))
-							throw new PrestashopException('key '.$key.' is not a valid table or identifier');
+							throw new PrestaShopException('key '.$key.' is not a valid table or identifier');
 
 					// If this table is linked to multishop system, update / insert for all shops from context
 					if ($this->isLangMultishop())
@@ -570,7 +570,7 @@ abstract class ObjectModelCore
 	{
 	 	// Object must have a variable called 'active'
 	 	if (!array_key_exists('active', $this))
-			throw new PrestashopException('property "active is missing in object '.get_class($this));
+			throw new PrestaShopException('property "active is missing in object '.get_class($this));
 
 	 	// Update active status on object
 	 	$this->active = !(int)$this->active;
@@ -620,7 +620,7 @@ abstract class ObjectModelCore
 
 			/* Check fields validity */
 			if (!Validate::isTableOrIdentifier($fieldName))
-				throw new PrestashopException('identifier is not table or identifier : '.$fieldName);
+				throw new PrestaShopException('identifier is not table or identifier : '.$fieldName);
 
 			/* Copy the field, or the default language field if it's both required and empty */
 			if ((!$this->id_lang && isset($this->{$fieldName}[$id_language]) && !empty($this->{$fieldName}[$id_language]))
@@ -651,7 +651,7 @@ abstract class ObjectModelCore
 			if ($message !== true)
 			{
 				if ($die)
-					throw new PrestashopException($message);
+					throw new PrestaShopException($message);
 				return $error_return ? $message : false;
 			}
 		}
@@ -683,7 +683,7 @@ abstract class ObjectModelCore
 				if ($message !== true)
 				{
 					if ($die)
-						throw new PrestashopException($message);
+						throw new PrestaShopException($message);
 					return $error_return ? $message : false;
 				}
 			}
@@ -728,7 +728,7 @@ abstract class ObjectModelCore
 		if (!empty($data['validate']))
 		{
 			if (!method_exists('Validate', $data['validate']))
-				throw new PrestashopException('Validation function not found. '.$data['validate']);
+				throw new PrestaShopException('Validation function not found. '.$data['validate']);
 
 			if (!empty($value) && !call_user_func(array('Validate', $data['validate']), $value))
 				return 'Property '.get_class($this).'->'.$field.' is not valid';
@@ -1164,7 +1164,7 @@ abstract class ObjectModelCore
 	public static function hydrateCollection($class, array $datas, $id_lang = null)
 	{
 		if (!class_exists($class))
-			throw new PrestashopException("Class '$class' not found");
+			throw new PrestaShopException("Class '$class' not found");
 
 		$collection = array();
 		$rows = array();
@@ -1172,7 +1172,7 @@ abstract class ObjectModelCore
 		{
 			$definition = ObjectModel::getDefinition($class);
 			if (!array_key_exists($definition['primary'], $datas[0]))
-				throw new PrestashopException("Identifier '{$definition['primary']}' not found for class '$class'");
+				throw new PrestaShopException("Identifier '{$definition['primary']}' not found for class '$class'");
 
 			foreach ($datas as $row)
 			{
@@ -1203,10 +1203,25 @@ abstract class ObjectModelCore
 		return $collection;
 	}
 
+	/**
+	 * Get object definition
+	 *
+	 * @param string $class Name of object
+	 * @param string $field Name of field if we want the definition of one field only
+	 * @return array
+	 */
 	public static function getDefinition($class, $field = null)
 	{
 		$reflection = new ReflectionClass($class);
 		$definition = $reflection->getStaticPropertyValue('definition');
+		$definition['classname'] = $class;
+		if (!empty($definition['multilang']))
+			$definition['associations'][Collection::LANG_ALIAS] = array(
+				'type' => self::HAS_MANY,
+				'field' => $definition['primary'],
+				'foreign_field' => $definition['primary'],
+			);
+
 		if ($field)
 			return isset($definition['fields'][$field]) ? $definition['fields'][$field] : null;
 		return $definition;
@@ -1263,18 +1278,13 @@ abstract class ObjectModelCore
 		}
 	}
 
-	public function getEntity($entity)
-	{
-
-	}
-
 	/**
 	 * Return the field value for the specified language if the field is multilang, else the field value.
 	 *
 	 * @param $field_name
 	 * @param null $id_lang
 	 * @return mixed
-	 * @throws PrestashopException
+	 * @throws PrestaShopException
 	 * @since 1.5
 	 */
 	public function getFieldByLang($field_name, $id_lang = null)
@@ -1293,6 +1303,6 @@ abstract class ObjectModelCore
 			return $this->{$field_name};
 		}
 		else
-			throw new PrestashopException('Could not load field from definition.');
+			throw new PrestaShopException('Could not load field from definition.');
 	}
 }

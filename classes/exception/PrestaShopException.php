@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class PrestashopExceptionCore extends Exception
+class PrestaShopExceptionCore extends Exception
 {
 	/**
 	 * This method acts like an error handler, if dev mode is on, display the error else use a better silent way

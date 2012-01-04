@@ -227,15 +227,15 @@ class OrderOpcControllerCore extends ParentOrderController
 							die();
 							break;
 						default:
-							throw new PrestashopException('Unknown method "'.Tools::getValue('method').'"');
+							throw new PrestaShopException('Unknown method "'.Tools::getValue('method').'"');
 					}
 				}
 				else
-					throw new PrestashopException('Method is not defined');
+					throw new PrestaShopException('Method is not defined');
 			}
 		}
 		elseif (Tools::isSubmit('ajax'))
-			throw new PrestashopException('Method is not defined');
+			throw new PrestaShopException('Method is not defined');
 	}
 
 	public function setMedia()

@@ -560,7 +560,7 @@ class AdminModulesControllerCore extends AdminController
 
 						// We check if method of module exists
 						if (!method_exists($module, $method))
-							throw new PrestashopException('Method of module can\'t be found');
+							throw new PrestaShopException('Method of module can\'t be found');
 						
 						// Get the return value of current method
 						$echo = $module->{$method}();

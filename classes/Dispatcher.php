@@ -342,7 +342,7 @@ class DispatcherCore
 		{
 			Controller::getController($controller_class)->run();
 		}
-		catch (PrestashopException $e)
+		catch (PrestaShopException $e)
 		{
 			$e->displayMessage();
 		}

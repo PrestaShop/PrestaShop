@@ -188,7 +188,7 @@ class ConfigurationCore extends ObjectModel
 	static public function getMultiple($keys, $langID = NULL, $shopGroupID = NULL, $shopID = NULL)
 	{
 	 	if (!is_array($keys))
-	 		throw new PrestashopException('keys var is not an array');
+	 		throw new PrestaShopException('keys var is not an array');
 
 		$langID = (int)$langID;
 		self::getShopFromContext($shopGroupID, $shopID);
