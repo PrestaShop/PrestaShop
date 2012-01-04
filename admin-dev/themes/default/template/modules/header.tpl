@@ -43,7 +43,7 @@
 			</ul>
 
 			<div class="pageTitle">
-				<h3><span id="current_obj" style="font-weight: normal;"><span class="breadcrumb item-0">Module</span> : <span class="breadcrumb item-1">Liste de modules</span></span></h3>
+				<h3><span id="current_obj" style="font-weight: normal;"><span class="breadcrumb item-0">Module</span> : <span class="breadcrumb item-1">{l s='List of modules'}</span></span></h3>
 			</div>
 
 		</div>
