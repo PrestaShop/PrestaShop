@@ -234,7 +234,8 @@ class SearchCore
 			if (!count($eligibleProducts))
 				return ($ajax ? array() : array('total' => 0, 'result' => array()));
 		}
-		array_unique($eligibleProducts);
+
+		$eligibleProducts = array_unique($eligibleProducts);
 
 		$productPool = '';
 		foreach ($eligibleProducts as $id_product)
