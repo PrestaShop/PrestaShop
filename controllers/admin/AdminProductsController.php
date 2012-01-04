@@ -2284,10 +2284,10 @@ class AdminProductsControllerCore extends AdminController
 			}
 
 			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
-
 			// Manage references and prices
 			foreach ($attributes as $attribute)
 				foreach ($associated_suppliers as $supplier)
+				{
 					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
 						||
 						(
@@ -2311,6 +2311,7 @@ class AdminProductsControllerCore extends AdminController
 								0
 							)
 						);
+
 						$price = Tools::ps_round($price, 6);
 
 						$id_currency = (int)Tools::getValue(
@@ -2321,59 +2322,56 @@ class AdminProductsControllerCore extends AdminController
 						if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
 							$this->_errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
 
-						if (!empty($reference))
+						// Save product-supplier data
+						$existing_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
+						if ($existing_id <= 0)
 						{
-							$existing_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
+							//create new record
+							$product_supplier_entity = new ProductSupplier();
+							$product_supplier_entity->id_product = $product->id;
+							$product_supplier_entity->id_product_attribute = $attribute['id_product_attribute'];
+							$product_supplier_entity->id_supplier = (int)$supplier->id_supplier;
+							$product_supplier_entity->product_supplier_reference = $reference;
+							$product_supplier_entity->id_currency = $id_currency;
+							$product_supplier_entity->product_supplier_price_te = $price;
+							$product_supplier_entity->save();
+						}
+						else
+						{
+							//update existing record
+							$product_supplier_entity = new ProductSupplier($existing_id);
 
-							if ($existing_id <= 0)
+							if (($product_supplier_entity->product_supplier_reference != $reference)
+								||
+								($product_supplier_entity->product_supplier_price_te != $price)
+								||
+								($product_supplier_entity->id_currency != $id_currency))
 							{
-								//create new record
-								$product_supplier_entity = new ProductSupplier();
-								$product_supplier_entity->id_product = $product->id;
-								$product_supplier_entity->id_product_attribute = $attribute['id_product_attribute'];
-								$product_supplier_entity->id_supplier = (int)$supplier->id_supplier;
 								$product_supplier_entity->product_supplier_reference = $reference;
 								$product_supplier_entity->id_currency = $id_currency;
 								$product_supplier_entity->product_supplier_price_te = $price;
-								$product_supplier_entity->save();
+								$product_supplier_entity->update();
+							}
+						}
+
+						if ($product->id_supplier == $supplier->id_supplier)
+						{
+							if ((int)$attribute['id_product_attribute'] > 0)
+							{
+								Db::getInstance()->execute('
+									UPDATE '._DB_PREFIX_.'product_attribute
+									SET supplier_reference = "'.$reference.'",
+									wholesale_price = '.(float)Tools::convertPrice($price, $id_currency).'
+									WHERE id_product = '.(int)$product->id.'
+									AND id_product_attribute = '.(int)$attribute['id_product_attribute'].'
+									LIMIT 1
+								');
 							}
 							else
 							{
-								//update existing record
-								$product_supplier_entity = new ProductSupplier($existing_id);
-
-								if (($product_supplier_entity->product_supplier_reference != $reference)
-									||
-									($product_supplier_entity->product_supplier_price_te != $price)
-									||
-									($product_supplier_entity->id_currency != $id_currency))
-								{
-									$product_supplier_entity->product_supplier_reference = $reference;
-									$product_supplier_entity->id_currency = $id_currency;
-									$product_supplier_entity->product_supplier_price_te = $price;
-									$product_supplier_entity->update();
-								}
-							}
-
-							if ($product->id_supplier == $supplier->id_supplier)
-							{
-								if ((int)$attribute['id_product_attribute'] > 0)
-								{
-									Db::getInstance()->execute('
-										UPDATE '._DB_PREFIX_.'product_attribute
-										SET supplier_reference = "'.$reference.'",
-										wholesale_price = '.(float)Tools::convertPrice($price, $id_currency).'
-										WHERE id_product = '.(int)$product->id.'
-										AND id_product_attribute = '.(int)$attribute['id_product_attribute'].'
-										LIMIT 1
-									');
-								}
-								else
-								{
-									$product->wholesale_price = Tools::convertPrice($price, $id_currency); //converted in the default currency
-									$product->supplier_reference = $reference;
-									$update_product = true;
-								}
+								$product->wholesale_price = Tools::convertPrice($price, $id_currency); //converted in the default currency
+								$product->supplier_reference = $reference;
+								$update_product = true;
 							}
 						}
 					}
@@ -2389,7 +2387,7 @@ class AdminProductsControllerCore extends AdminController
 							$product_supplier->save();
 						}
 					}
-
+				}
 			// Manage defaut supplier for product
 			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
 			{
