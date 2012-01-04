@@ -1000,6 +1000,7 @@ margin: 10px 0 0 0;*/
 #order .delivery_option.alternate_item, #orderopc .delivery_option.alternate_item {
 	border-top: 1px solid #bdc2c9;
 	background: #f1f2f4;
+	border-bottom: 1px solid #bdc2c9;
 }
 #order .delivery_option label > table.resume td, #orderopc .delivery_option label > table.resume td {
 	padding: 0 8px;
@@ -1018,7 +1019,7 @@ margin: 10px 0 0 0;*/
 	padding-left:10px;
 	width: 160px;
 }
-#order .delivery_options_address .delivery_option_logo img, #orderopc .delivery_options_address .delivery_option_logo img { height: 40px; }
+#order .delivery_options_address .delivery_option_logo img, #orderopc .delivery_options_address .delivery_option_logo img { /*height: 40px;*/ }
 #orderopc .delivery_option_carrier {
 	margin: 0 0 0 45px;
 	padding: 5px;
@@ -1032,10 +1033,10 @@ margin: 10px 0 0 0;*/
 
 .order_carrier_content {
 	padding:15px;
-   border:1px solid #ccc;
+	border:1px solid #ccc;
 	font-size:12px;
 	color:#000;
-   background:#f8f8f8
+	background:#f8f8f8
 }
 .order_carrier_content h3 {
 	padding:15px 0 10px 0;
@@ -1609,8 +1610,8 @@ ul#suppliers_list li .right_side {float:right;}
 /* ************************************************************************************************
       addons paypal
 ************************************************************************************************ */
-#module-paypal-payment-submit #left_column {display:none}
-#module-paypal-payment-submit #center_column{width:757px}
+#module-payment-submit #left_column {display:none}
+#module-payment-submit #center_column{width:757px}
 
 
 /* ************************************************************************************************
