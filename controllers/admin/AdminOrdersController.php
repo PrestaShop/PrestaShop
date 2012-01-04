@@ -1050,8 +1050,6 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices_collection' => $order->getInvoicesCollection(),
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
-			'HOOK_INVOICE' => Hook::exec('displayInvoice', array('id_order' => $order->id)),
-			'HOOK_ADMIN_ORDER' => Hook::exec('displayAdminOrder', array('id_order' => $order->id))
 		);
 
 		return parent::renderView();

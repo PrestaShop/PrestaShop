@@ -263,7 +263,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
 
 		$this->tpl_vars = array(
-			'hook' => Hook::exec('displayFeatureValueForm', array('id_feature_value' => $feature_value->id))
+			'feature_value' => $feature_value,
 		);
 
 		$this->getlanguages();

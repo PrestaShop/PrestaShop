@@ -110,16 +110,16 @@ $(document).ready(function() {
 	<div id="partner_preactivation"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 	</div>
-	{$HOOK_BACKOFFICEHOME}
+	{hook h="displayBackOfficeHome"}
 </div>
 	<div class="clear">&nbsp;</div>
 <script type="text/javascript">
 $(document).ready(function() {
 
-	if({$refresh_check_version})
+	if ({$refresh_check_version})
 	{
 		$('#blockNewVersionCheck').hide();
-	$.ajax({
+		$.ajax({
 			type : 'POST',
 			data : {
 				ajax : '1',

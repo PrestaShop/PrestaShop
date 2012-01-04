@@ -148,9 +148,7 @@
 	{/if}
 	
 	{* display hook specified to this page : AdminCustomers *}
-	{if $hook !== false}
-		<div>{$hook}</div>
-	{/if}
+	<div>{hook h="displayAdminCustomers" id_customer=$customer->id}</div>
 	
 	<div class="clear">&nbsp;</div>
 	
