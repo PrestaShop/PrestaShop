@@ -28,7 +28,7 @@
 
 {block name="after"}
 
-	<div class="hint clear" style="display:block">
+	<div class="hint" style="display:block">
 		<ul>
 			<li>{l s='The row in blue is the default combination.'}</li>
 			<li>{l s='A default combination must be designated for each product.'}</li>
