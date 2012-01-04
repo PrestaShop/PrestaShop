@@ -3344,7 +3344,7 @@ class AdminProductsControllerCore extends AdminController
 		$color_by_default = '#BDE5F8';
 
 		$this->fieldsDisplay = array(
-			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left', 'width' => 70),
+			'attributes' => array('title' => $this->l('Attributes'), 'align' => 'left'),
 			'price' => array('title' => $this->l('Impact'), 'type' => 'price', 'align' => 'left', 'width' => 70),
 			'weight' => array('title' => $this->l('Weight'), 'align' => 'left', 'width' => 70),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'left', 'width' => 70),

@@ -65,21 +65,20 @@
 	<div class="separation"></div>
 
 	<div>
-		<label>{l s='Type:'}</label>
-		<label style="font-weight:normal;width:100px;text-align:center;">
+		<label class="text">{l s='Type:'}</label>
+
 			<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" />
-			{l s='Product'}
-		</label>
-		<label style="font-weight:normal;width:100px;text-align:center;">
+					<label class="radioCheck">{l s='Product'}</label>
+		
+
 			<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $is_pack}checked="checked"{/if} />
-			{l s='Pack'}
-		</label>
-		<label style="font-weight:normal;width:500px;text-align:center;">
+					<label class="radioCheck">{l s='Pack'}</label>
+	
+		
 			<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" />
-			{l s='Virtual Product (services, booking and downloadable products)'}
-		</label>
+			<label class="radioCheck">{l s='Virtual Product (services, booking and downloadable products)'}</label>
+		
 	</div>
-	<br />
 
 	<div class="separation"></div>
 	<br />
@@ -123,20 +122,30 @@
 	{* status informations *}
 	<table cellpadding="5" style="width: 40%; float: left; margin-left: 10px;">
 	<tr>
-		<td class="col-left"><label>{l s='Status:'}</label></td>
+		<td class="col-left">
+		
+
+		<label class="text">{l s='Status:'}</label></td>
 		<td style="padding-bottom:5px;">
-			<input style="float:left;" onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
-			<label for="active_on" class="t">
+			<ul class="listForm">
+				<li>
+					<input onclick="toggleDraftWarning(false);showOptions(true);" type="radio" name="active" id="active_on" value="1" {if $product->active}checked="checked" {/if} />
+			<label for="active_on" class="radioCheck">
 			{l s='Enabled'}</label>
-			<br class="clear" />
-			<input style="float:left;" onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
-			<label for="active_off" class="t">{l s='Disabled'} </label>
+			</li>
+
+				<li>
+					<input onclick="toggleDraftWarning(true);showOptions(false);"  type="radio" name="active" id="active_off" value="0" {if !$product->active}checked="checked"{/if} />
+			<label for="active_off" class="radioCheck">{l s='Disabled'} </label>
+				</li>
+			</ul>
 		</td>
 	</tr>
 	<tr id="product_options" {if !$product->active}style="display:none"{/if} >
 		<td class="col-left"><label>{l s='Options:'}</label></td>
 		<td style="padding-bottom:5px;">
-			<input style="float: left;" type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
+			<ul class="listForm">
+				<li><input  type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
 			<script type="text/javascript">
 			$(document).ready(function()
 			{
@@ -153,13 +162,15 @@
 				});
 			});
 			</script>
-			<label for="available_for_order" class="t">{l s='available for order'}</label>
-			<br class="clear" />
-			<input style="float: left;" type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
+			<label for="available_for_order" class="t">{l s='available for order'}</label></li>
+			<li>
+			<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
 			<label for="show_price" class="t">{l s='show price'}</label>
-			<br class="clear" />
-			<input style="float: left;" type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
+			</li>
+			<li>
+			<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
 			<label for="online_only" class="t">{l s='online only (not sold in store)'}</label>
+			</li>
 		</td>
 	</tr>
 	<tr>
@@ -172,6 +183,7 @@
 			</select>
 		</td>
 	</tr>
+	</ul>
 </table>
 
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
