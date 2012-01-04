@@ -306,13 +306,4 @@ urlToCall = null;
 $(document).ready(function() {
 	updateCurrentText();
 	updateFriendlyURL();
-
-	// disable save if Associations tab is not loaded
-	if ($('#product-tab-content-Associations').hasClass('not-loaded'))
-		disableSave();
-
-	$('#product-tab-content-Associations').bind('loaded', function()
-	{
-		enableSave();
-	});
 });
