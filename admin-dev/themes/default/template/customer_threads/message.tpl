@@ -28,8 +28,8 @@
 
 {if !$email}
 
-	<fieldset style="margin-top:10px;{if !empty($message.employee_name)}background-color:#F0F8E6;border:1px solid #88D254{/if}">
-		<legend {if !empty($message.employee_name)}style="background-color:#F0F8E6;color:#000;border:1px solid #88D254;"{/if}>
+	<fieldset style="margin-top:10px;{if !empty($message.id_employee)}background-color:#F0F8E6;border:1px solid #88D254{/if}">
+		<legend {if !empty($message.id_employee)}style="background-color:#F0F8E6;color:#000;border:1px solid #88D254;"{/if}>
 			{if !empty($message.employee_name)}
 				<img src="../img/t/AdminCustomers.gif" alt="{$PS_SHOP_NAME}" />
 					{$PS_SHOP_NAME} - {$message.employee_name}
@@ -46,7 +46,7 @@
 		</legend>
 
 		<div class="infoCustomer">
-			{if !empty($message.id_customer) && empty($message.employee_name)}
+			{if !empty($message.id_customer) && empty($message.id_employee)}
 			<dl>
 				<dt>{l s='Customer ID:'}&#32;:</dd> 
 				<dd><a href="index.php?tab=AdminCustomers&id_customer={$message.id_customer}&viewcustomer&token={getAdminToken tab='AdminCustomers'}" title="{l s='View customer'}">
@@ -62,7 +62,7 @@
 			
 			</dl>
 
-			{if empty($message.employee_name)}
+			{if empty($message.id_employee)}
 			<dl>
 				<dt>{l s='Browser:'}&#32;:</dt>
 				<dd>{$message.user_agent}</dd>
@@ -80,7 +80,7 @@
 			</dl>
 			{/if}
 
-			{if !empty($message.id_order) && empty($message.employee_name)}
+			{if !empty($message.id_order) && empty($message.id_employee)}
 				<dl>
 					<dt>{l s='Order #'}&#32;:</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$message.id_order}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
@@ -89,7 +89,7 @@
 				</dl>
 			{/if}
 
-			{if !empty($message.id_product) && empty($message.employee_name)}
+			{if !empty($message.id_product) && empty($message.id_employee)}
 				<dl>
 					<dt>{l s='Product #'}&#32;:</dt> 
 					<dd><a href="index.php?tab=AdminOrders&id_order={$id_order_product}&vieworder&token={getAdminToken tab='AdminOrders'}" title="{l s='View order'}">
@@ -127,15 +127,15 @@
 			{$message.email}
 		{/if}
 
-		{if !empty($message.id_customer) && empty($message.employee_name)}
+		{if !empty($message.id_customer) && empty($message.id_employee)}
 			<br /><b>{l s='Customer ID:'}</b> {$message.id_customer}<br />
 		{/if}
 
-		{if !empty($message.id_order) && empty($message.employee_name)}
+		{if !empty($message.id_order) && empty($message.id_employee)}
 			<br /><b>{l s='Order #'}:</b> {$message.id_order}<br />
 		{/if}
 
-		{if !empty($message.id_product) && empty($message.employee_name)}
+		{if !empty($message.id_product) && empty($message.id_employee)}
 			<br /><b>{l s='Product #'}:</b> {$message.id_product}<br />
 		{/if}
 
@@ -156,16 +156,12 @@
 		</dl>
 	</div>
 
-
 {if !$email}
-
-	{if empty($message.employee_name)}
-
+	{if empty($message.id_employee)}
 			<button class="button" style="font-size:12px;"
 				onclick="$('#reply_to_{$message.id_customer_message}').show(500); $(this).hide();">
 				<img src="../img/admin/contact.gif" alt=""/>{l s='Reply to this message'}
 			</button>
-
 	{/if}
 
 	<div id="reply_to_{$message.id_customer_message}" style="display: none; margin-top: 20px;"">
@@ -192,12 +188,4 @@
 
 {/if}
 
-	
-
-
-
-
-
 	</fieldset>
-	
-	
