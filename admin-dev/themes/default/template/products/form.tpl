@@ -227,22 +227,18 @@
 		var tabs_preloaded = new Array();
 
 		$(window).bind("load", function() {
-			{foreach $tabs_preloaded as $k => $tab}
-				tabs_preloaded['{$k}'] = '{$tab}';
+			{* Fill an array with tabs that need to be preloaded *}
+			var tabs_to_preload = new Array();
+			{foreach $tabs_preloaded as $tab_name => $value}
+				{* If the tab was not given a loading priority number it will not be preloaded *}
+				{if (is_numeric($value))}
+					if ($("#product-tab-content-"+'{$tab_name}').hasClass('not-loaded'))
+						tabs_to_preload.push('{$tab_name}');
+				{/if}
 			{/foreach}
-			var stack = new Array();
 
-			$('.product-tab-content').each(function(){
-				var id = $(this).attr('id').substr(20);
-				var split_position = id.indexOf('-') + 1;
-				var btn_name = id.substr(split_position);
-
-				if (tabs_preloaded[btn_name])
-					if ($("#product-tab-content-"+id).hasClass('not-loaded'))
-						stack.push(id);
-			});
-			// Recursively get tabs starting with the first element of stack
-			displayTabProductById(stack[0], false, 0, stack);
+			// Recursively load tabs starting with the first element of stack
+			displayTabProductById(tabs_to_preload[0], false, 0, tabs_to_preload);
 
 			$('.productTabs').show();
 			$('#product_form').show();
