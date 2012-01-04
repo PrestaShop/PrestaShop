@@ -2099,7 +2099,7 @@ class AdminControllerCore extends Controller
 		foreach ($this->fields_form as $fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
-					if (empty($this->fields_value[$input['name']]))
+					if (!isset($this->fields_value[$input['name']]))
 						if (isset($input['type']) && ($input['type'] == 'group_shop' || $input['type'] == 'shop'))
 						{
 							if ($obj->id)

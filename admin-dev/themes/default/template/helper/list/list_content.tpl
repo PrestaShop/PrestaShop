@@ -89,8 +89,10 @@
 				{$tr.$key}
 			{elseif isset($params.type) && $params.type == 'datetime'}
 				{$tr.$key}
-			{elseif isset($params.type) && $params.type == 'decimal'}
-				{$tr.$key|string_format:"%.2f"}
+            {elseif isset($params.type) && $params.type == 'decimal'}
+                {$tr.$key|string_format:"%.2f"}
+            {elseif isset($params.type) && $params.type == 'percent'}
+                {$tr.$key} {l s='%'}
 			{* If type is 'editable', an input is created *}
 			{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
 				<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key}" class="{$key}" />

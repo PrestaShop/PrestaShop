@@ -99,6 +99,7 @@ class AdminOrdersControllerCore extends AdminController
 			'order_states' => OrderState::getOrderStates((int)Context::getContext()->cookie->id_lang),
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
+			'toolbar_fix' => $this->toolbar_fix,
 			'title' => $this->l('Orders : create order'),
 		));
 		$this->content .= $this->context->smarty->fetch('orders/form.tpl');
