@@ -261,6 +261,11 @@ class AdminSuppliersControllerCore extends AdminController
 			$combinaisons = $products[$i]->getAttributeCombinaisons($this->context->language->id);
 			foreach ($combinaisons as $k => $combinaison)
 			{
+				$comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,
+																		 $products[$i]->id,
+																		 $combinaison['id_product_attribute']);
+				$comb_array[$combinaison['id_product_attribute']]['product_supplier_reference'] = $comb_infos['product_supplier_reference'];
+				$comb_array[$combinaison['id_product_attribute']]['product_supplier_price_te'] = Tools::displayPrice($comb_infos['product_supplier_price_te'], new Currency($comb_infos['id_currency']));
 				$comb_array[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
 				$comb_array[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 				$comb_array[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
@@ -283,6 +288,14 @@ class AdminSuppliersControllerCore extends AdminController
 				}
 				isset($comb_array) ? $products[$i]->combinaison = $comb_array : '';
 				unset($comb_array);
+			}
+			else
+			{
+				$product_infos = Supplier::getProductInformationsBySupplier($this->object->id,
+																		 	$products[$i]->id,
+																		 	0);
+				$products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
+				$products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($product_infos['id_currency']));
 			}
 		}
 
