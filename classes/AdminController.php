@@ -1941,7 +1941,7 @@ class AdminControllerCore extends Controller
 		}
 
 		if (!Validate::isTableOrIdentifier($this->table))
-			throw new PrestashopException(sprintf('Table name %s is invalid:', $this->table));
+			throw new PrestaShopException(sprintf('Table name %s is invalid:', $this->table));
 
 		if (empty($order_by))
 			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
@@ -1955,7 +1955,7 @@ class AdminControllerCore extends Controller
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)
 			|| !is_numeric($start) || !is_numeric($limit)
 			|| !Validate::isUnsignedId($id_lang))
-			throw new PrestashopException('get list params is not valid');
+			throw new PrestaShopException('get list params is not valid');
 
 		/* Determine offset from current page */
 		if ((isset($_POST['submitFilter'.$this->table]) ||

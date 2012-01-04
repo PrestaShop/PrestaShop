@@ -93,7 +93,7 @@ class PDFCore
 		{
 			$class = new $classname($object, $this->smarty);
 			if (!($class instanceof HTMLTemplate))
-				throw new PrestashopException('Invalid class. It should be an instance of HTMLTemplate');
+				throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
 		}
 
         return $class;

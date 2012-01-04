@@ -283,7 +283,7 @@ class ShopCore extends ObjectModel
 				$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 				// Hmm there is something really bad in your Prestashop !
 				if (!Validate::isLoadedObject($default_shop))
-					throw new PrestashopException('Shop not found');
+					throw new PrestaShopException('Shop not found');
 
 				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().ltrim($_SERVER['SCRIPT_NAME'], '/').'?'.$_SERVER['QUERY_STRING'];
 				header('location: '.$url);
@@ -294,7 +294,7 @@ class ShopCore extends ObjectModel
 			if (defined('INSTALL_VERSION'))
 				$shop = new Shop();
 			else
-				throw new PrestashopException('Shop not found');
+				throw new PrestaShopException('Shop not found');
 
 		return $shop;
 	}

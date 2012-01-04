@@ -514,7 +514,7 @@ class OrderInvoiceCore extends ObjectModel
 	{
 		$order_invoice = new OrderInvoice($id);
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestashopException('Can\'t load Order Invoice object for id: '.$id);
+			throw new PrestaShopException('Can\'t load Order Invoice object for id: '.$id);
 		return $order_invoice;
 	}
 

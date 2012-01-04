@@ -195,9 +195,9 @@ class AdminOrdersControllerCore extends AdminController
 						$customer = new Customer((int)$order->id_customer);
 						$carrier = new Carrier((int)$order->id_carrier);
 						if (!Validate::isLoadedObject($customer))
-							throw new PrestashopException('Can\'t load Customer object');
+							throw new PrestaShopException('Can\'t load Customer object');
 						if (!Validate::isLoadedObject($carrier))
-							throw new PrestashopException('Can\'t load Carrier object');
+							throw new PrestaShopException('Can\'t load Carrier object');
 						$templateVars = array(
 							'{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
 							'{firstname}' => $customer->firstname,
@@ -644,14 +644,14 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$order = new Order(Tools::getValue('id_order'));
 				if (!Validate::isLoadedObject($order))
-					throw new PrestashopException('Con\'t load Order object');
+					throw new PrestaShopException('Con\'t load Order object');
 
 				if (Tools::getValue('new_currency') != $order->id_currency && !$order->valid)
 				{
 					$old_currency = new Currency($order->id_currency);
 					$currency = new Currency(Tools::getValue('new_currency'));
 					if (!Validate::isLoadedObject($currency))
-						throw new PrestashopException('Can\'t load Currency object');
+						throw new PrestaShopException('Can\'t load Currency object');
 
 					// Update order detail amount
 					foreach($order->getOrderDetailList() as $row)
@@ -718,7 +718,7 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))
-				throw new PrestashopException('Order can\'t be loaded');
+				throw new PrestaShopException('Order can\'t be loaded');
 
 			if ($order->hasInvoice())
 				$this->_errors[] = Tools::displayError('This order has already invoice');
@@ -740,7 +740,7 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						$order_invoice = new OrderInvoice($order_cart_rule->id_order_invoice);
 						if (!ValidateCore::isLoadedObject($order_invoice))
-							throw new PrestashopException('Can\'t load Order Invoice object');
+							throw new PrestaShopException('Can\'t load Order Invoice object');
 
 						// Update amounts of Order Invoice
 						$order_invoice->total_discount_tax_excl -= $order_cart_rule->value_tax_excl;
@@ -783,7 +783,7 @@ class AdminOrdersControllerCore extends AdminController
 				{
 					$order = new Order(Tools::getValue('id_order'));
 					if (!Validate::isLoadedObject($order))
-						throw new PrestashopException('Can\'t load Order object');
+						throw new PrestaShopException('Can\'t load Order object');
 
 					if ($order->hasInvoice())
 					{
@@ -792,7 +792,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$order_invoice = new OrderInvoice(Tools::getValue('discount_invoice'));
 							if (!Validate::isLoadedObject($order_invoice))
-								throw new PrestashopException('Can\'t load Order Invoice object');
+								throw new PrestaShopException('Can\'t load Order Invoice object');
 						}
 					}
 
@@ -947,7 +947,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$order = new Order(Tools::getValue('id_order'));
 		if (!Validate::isLoadedObject($order))
-			throw new PrestashopException('object can\'t be loaded');
+			throw new PrestaShopException('object can\'t be loaded');
 
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);

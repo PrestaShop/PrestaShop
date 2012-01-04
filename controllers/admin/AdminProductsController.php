@@ -2153,7 +2153,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->tpl_form_vars['product'] = $this->object;
 			if ($this->ajax)
 				if (!isset($this->tpl_form_vars['custom_form']))
-					throw new PrestashopException('custom_form empty for action '.$this->tab_display);
+					throw new PrestaShopException('custom_form empty for action '.$this->tab_display);
 				else
 					return $this->tpl_form_vars['custom_form'];
 		}

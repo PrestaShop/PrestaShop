@@ -91,7 +91,7 @@ class LinkCore
 			else if(is_numeric($product))
 					$product = new Product((int)$product, false, $id_lang);
 			else
-				throw new PrestashopException('Invalid product vars');
+				throw new PrestaShopException('Invalid product vars');
 		}
 
 		// Set available keywords

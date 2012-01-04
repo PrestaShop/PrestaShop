@@ -783,7 +783,7 @@ class ThemeInstallator extends Module
 		$id_theme = (int)Tools::getValue('id_theme');
 		$theme = new Theme($id_theme);
 		if (!$theme->id)
-			throw new PrestashopException('Unable to load theme');
+			throw new PrestaShopException('Unable to load theme');
 		
 		$this->_html .=	'<input type="hidden" name="id_theme" value="'.$id_theme.'" />';
 		if ($this->error === false AND class_exists('ZipArchive', false) AND ($zip = new ZipArchive()))

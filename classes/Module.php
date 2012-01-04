@@ -584,7 +584,7 @@ abstract class ModuleCore
 	{
 		// Check hook name validation and if module is installed
 		if (!Validate::isHookName($hook_name))
-			throw new PrestashopException('Invalid hook name');
+			throw new PrestaShopException('Invalid hook name');
 		if (!isset($this->id) || !is_numeric($this->id))
 			return false;
 
@@ -1073,7 +1073,7 @@ abstract class ModuleCore
 			if (is_dir(_PS_MODULE_DIR_.$name) && Tools::file_exists_cache(_PS_MODULE_DIR_.$name.'/'.$name.'.php'))
 			{
 				if (!Validate::isModuleName($name))
-					throw new PrestashopException(sprintf('Module %s is not a valid module name', $name));
+					throw new PrestaShopException(sprintf('Module %s is not a valid module name', $name));
 				$moduleList[] = $name;
 			}
 		}

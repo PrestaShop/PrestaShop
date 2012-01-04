@@ -281,7 +281,7 @@ abstract class DbCore
 					{
 						// Check if row array mapping are the same
 						if (!in_array("`$key`", $keys))
-							throw new PrestashopDatabaseException('Keys form $data subarray don\'t match');
+							throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
 					}
 					else
 						$keys[] = "`$key`";
@@ -323,7 +323,7 @@ abstract class DbCore
 			return (bool)$this->q($sql, $use_cache);
 		}
 		else
-			throw new PrestashopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
+			throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
 
 		return false;
 	}
@@ -414,7 +414,7 @@ abstract class DbCore
 		if (!preg_match('#^\s*(select|show|explain|describe)\s#i', $sql))
 		{
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
-				throw new PrestashopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
+				throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
 			return $this->execute($sql, $use_cache);
 		}
 
@@ -546,8 +546,8 @@ abstract class DbCore
 		else if (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS'))
 		{
 			if ($sql)
-				throw new PrestashopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
-			throw new PrestashopDatabaseException($this->getMsgError());
+				throw new PrestaShopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
+			throw new PrestaShopDatabaseException($this->getMsgError());
 		}
 	}
 

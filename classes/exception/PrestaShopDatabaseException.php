@@ -28,7 +28,7 @@
 /**
  * @since 1.5.0
  */
-class PrestashopDatabaseExceptionCore extends PrestashopException
+class PrestaShopDatabaseExceptionCore extends PrestaShopException
 {
 
 }
