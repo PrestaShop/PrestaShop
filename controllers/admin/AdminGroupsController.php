@@ -63,8 +63,8 @@ class AdminGroupsControllerCore extends AdminController
 			'reduction' => array(
 				'title' => $this->l('Discount'),
 				'width' => 50,
-				'align' =>
-				'right'
+				'align' => 'right',
+				'type' => 'percent'
 			),
 			'nb' => array(
 				'title' => $this->l('Members'),
@@ -184,7 +184,7 @@ class AdminGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Discount:'),
+					'label' => $this->l('Discount (%):'),
 					'name' => 'reduction',
 					'size' => 33,
 					'desc' => $this->l('Will automatically apply this value as a discount on ALL shop\'s products for this group\'s members.')
@@ -246,6 +246,8 @@ class AdminGroupsControllerCore extends AdminController
 			)
 		);
 
+		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
+
 		$trads = array(
 			'Home' => $this->l('Home'),
 			'selected' => $this->l('selected'),
@@ -255,10 +257,10 @@ class AdminGroupsControllerCore extends AdminController
 			'Uncheck All'  => $this->l('Uncheck All'),
 			'search' => $this->l('Search a category')
 		);
+
 		$this->tpl_form_vars['categoryTreeView'] = Helper::renderAdminCategorieTree($trads, array(), 'id_category', true, false, array(), true);
 
 		return parent::renderForm();
-
 	}
 
 	protected function formatCategoryDiscountList($id)
