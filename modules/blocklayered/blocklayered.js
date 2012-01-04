@@ -330,8 +330,12 @@ function reloadContent(params_plus)
 			$('#layered_block_left').replaceWith(result.filtersBlock);
 			
 			$('.category-product-count').html(result.categoryCount);
+			
+			if (result.productList)
+				$('#product_list').replaceWith(utf8_decode(result.productList));
+			else
+				$('#product_list').html('');
 
-			$('#product_list').replaceWith(result.productList);
 			$('#product_list').css('opacity', '1');
 			$('div#pagination').html(result.pagination);
 			paginationButton();
@@ -432,4 +436,33 @@ function updateProductUrl()
 	$.each($('ul#product_list li.ajax_block_product .product_img_link, ul#product_list li.ajax_block_product h3 a, ul#product_list li.ajax_block_product .product_desc a'), function() {
 		$(this).attr('href', $(this).attr('href') + param_product_url);
 	});
+}
+/**
+ * Copy of the php function utf8_decode()
+ */
+function utf8_decode (utfstr) {
+	var res = '';
+	for (var i = 0; i < utfstr.length;) {
+		var c = utfstr.charCodeAt(i);
+
+		if (c < 128)
+		{
+			res += String.fromCharCode(c);
+			i++;
+		}
+		else if((c > 191) && (c < 224))
+		{
+			var c1 = utfstr.charCodeAt(i+1);
+			res += String.fromCharCode(((c & 31) << 6) | (c1 & 63));
+			i += 2;
+		}
+		else
+		{
+			var c1 = utfstr.charCodeAt(i+1);
+			var c2 = utfstr.charCodeAt(i+2);
+			res += String.fromCharCode(((c & 15) << 12) | ((c1 & 63) << 6) | (c2 & 63));
+			i += 3;
+		}
+	}
+	return res;
 }
