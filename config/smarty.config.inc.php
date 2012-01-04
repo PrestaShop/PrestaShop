@@ -156,7 +156,7 @@ function smartyHook($params, &$smarty)
 {
 	if (isset($params['h']) && !empty($params['h']))
 	{
-		unset($hook_params['h']);d($hook_params);
+		unset($hook_params['h']);
 		return Hook::exec($params['h'], $hook_params);
 	}
 }
