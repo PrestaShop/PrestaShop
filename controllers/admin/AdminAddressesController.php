@@ -234,7 +234,7 @@ class AdminAddressesControllerCore extends AdminController
 					'label' => $this->l('Postcode/ Zip Code'),
 					'name' => 'postcode',
 					'size' => 33,
-					'required' => false,
+					'required' => true,
 				);
 			}
 			else if ($addr_field_item == 'city')
