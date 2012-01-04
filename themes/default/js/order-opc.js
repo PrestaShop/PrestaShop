@@ -737,7 +737,7 @@ function multishippingMode(it)
 			url: orderOpcUrl,
 			async: true,
 			cache: false,
-			data: 'ajax=true&method=noMultiAddressDelivery',
+			data: 'ajax=true&method=noMultiAddressDelivery'
 		});
 		
 		// Reload the cart
