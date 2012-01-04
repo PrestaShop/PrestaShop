@@ -28,6 +28,6 @@
 {block name="end_field_block"}
 	</div>
 	{if $input.name == 'id_feature'}
-		{if isset($hook)}{$hook}{/if}
+		{hook h="displayFeatureValueForm" id_feature_value=$feature_value->id}
 	{/if}
 {/block}

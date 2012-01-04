@@ -1336,10 +1336,6 @@ class AdminControllerCore extends Controller
 			'is_multishop' => $is_multishop,
 			'pic_dir' => _THEME_PROD_PIC_DIR_
 		));
-		$this->context->smarty->assign(array(
-			'HOOK_HEADER' => Hook::exec('displayBackOfficeHeader'),
-			'HOOK_TOP' => Hook::exec('displayBackOfficeTop'),
-		));
 	}
 
 	/**
@@ -1425,10 +1421,6 @@ class AdminControllerCore extends Controller
 			'ps_version' => _PS_VERSION_,
 			'end_time' => number_format(microtime(true) - $this->timerStart, 3, '.', ''),
 			'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
-		));
-
-		$this->context->smarty->assign(array(
-			'HOOK_FOOTER' => Hook::exec('displayBackOfficeFooter'),
 		));
 	}
 
