@@ -85,7 +85,7 @@
 			<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
 				<span>{l s='N/A'} -
 				<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
-				 class="confirm_leave button">{l s='Add pre-defined values first'}</a>
+				 class="confirm_leave button"><img src="../img/admin/add.gif" alt="values_first" title="{l s='Add pre-defined values first'}" />&nbsp;{l s='Add pre-defined values first'}</a>
 			</span>
 		{/if}
 		</td>

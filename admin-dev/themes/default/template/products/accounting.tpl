@@ -43,11 +43,10 @@
 	{if !empty($error)}
 		<div class="hint" style="display:block">{$error}</div>
 	{else}
-		<fieldset>
-			<legend>{l s='Account number'}</legend>
 			<div class="hint" style="display:block">
 				{l s='Configure the account number of the product for each zone, if a field is empty, it will use the default one of the shop set in the Accounting Management tab'}
 			</div>
+			<h3>{l s='Account number'}</h3>
 			<br />
 				{foreach from=$productAccountNumberList['zones'] key=id_zone item=currentZone}
 					<label>{$currentZone['name']}</label>
@@ -60,7 +59,6 @@
 				<i>{l s='These fields are used for the accounting export'}</i>
 			</div>
 			<div class="separation"></div>
-		</fieldset>
 	{/if}
 
 {/if}
