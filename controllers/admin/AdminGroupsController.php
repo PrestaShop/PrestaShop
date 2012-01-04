@@ -134,15 +134,15 @@ class AdminGroupsControllerCore extends AdminController
 			$genders[$gender->id] = $gender->name;
 		}
 		$customer_fields_display = (array(
-				'id_customer' => array('title' => $this->l('ID'), 'align' => 'center'),
-				'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders),
+				'id_customer' => array('title' => $this->l('ID'), 'width' => 15, 'align' => 'center'),
+				'id_gender' => array('title' => $this->l('Gender'), 'align' => 'center', 'width' => 50,'icon' => $genders_icon, 'list' => $genders),
 				'firstname' => array('title' => $this->l('Name'), 'align' => 'center'),
 				'lastname' => array('title' => $this->l('Name'), 'align' => 'center'),
-				'email' => array('title' => $this->l('E-mail address'), 'align' => 'center'),
-				'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date'),
-				'date_add' => array('title' => $this->l('Register date'), 'align' => 'center', 'type' => 'date'),
+				'email' => array('title' => $this->l('E-mail address'), 'width' => 150, 'align' => 'center'),
+				'birthday' => array('title' => $this->l('Birth date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
+				'date_add' => array('title' => $this->l('Register date'), 'width' => 150, 'align' => 'right', 'type' => 'date'),
 				'orders' => array('title' => $this->l('Orders'), 'align' => 'center'),
-				'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool')
+				'active' => array('title' => $this->l('Enabled'),'align' => 'center','width' => 20, 'active' => 'status','type' => 'bool')
 			));
 
 		$customer_list = $group->getCustomers(false);

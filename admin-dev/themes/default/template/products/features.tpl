@@ -48,18 +48,28 @@
 		</tr>
 	</table>
 	<br />
-	<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:900px;">
+	<table border="0" cellpadding="0" cellspacing="0" class="table" style="width:100%;">
+		<colgroup>
+			<col width="300"></col>
+			<col width=""></col>
+			<col width="300"></col>
+		</colgroup>
 		<tr>
-			<th height="30px">{l s='Feature'}</td>
-			<th style="width:30%">{l s='Pre-defined value'}</td>
-			<th style="width:40%"><u>{l s='or'}</u> {l s='Customized value'}</td>
+			<th height="39px">{l s='Feature'}</td>
+			<th>{l s='Pre-defined value'}</td>
+			<th><u>{l s='or'}</u> {l s='Customized value'}</td>
 		</tr>
 	</table>
 	{foreach from=$available_features item=available_feature}
-	<table cellpadding="5" style="background-color:#fff; width: 900px; padding:10px 5px; border:1px solid #ccc; border-top:none;">
+	<table cellpadding="5" style="background-color:#fff; width: 100%;border:1px solid #ccc; border-top:none;  padding:4px 6px;">
+			<colgroup>
+			<col width="300"></col>
+			<col width=""></col>
+			<col width="300"></col>
+		</colgroup>
 	<tr>
 		<td>{$available_feature.name}</td>
-		<td style="width: 30%">
+		<td>
 		{if sizeof($available_feature.featureValues)}
 			<select id="feature_{$available_feature.id_feature}_value" name="feature_{$available_feature.id_feature}_value"
 				onchange="$('.custom_{$available_feature.id_feature}_').val('');">
@@ -73,13 +83,13 @@
 			</select>
 		{else}
 			<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
-				<span style="font-size: 10px; color: #666;">{l s='N/A'} -
+				<span>{l s='N/A'} -
 				<a href="{$link->getAdminLink('AdminFeatures')}&amp;addfeature_value&id_feature={$available_feature.id_feature}"
-				 style="color: #666; text-decoration: underline;" class="confirm_leave">{l s='Add pre-defined values first'}</a>
+				 class="confirm_leave button">{l s='Add pre-defined values first'}</a>
 			</span>
 		{/if}
 		</td>
-		<td style="width:40%" class="translatable">
+		<td class="translatable">
 		{foreach from=$languages key=k item=language}
 			<div class="lang_{$language.id_lang}" style="{if $language.id_lang != $default_form_language}display:none;{/if}float: left;">
 			<textarea class="custom_{$available_feature.id_feature}_" name="custom_{$available_feature.id_feature}_{$language.id_lang}" cols="40" rows="1"

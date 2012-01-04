@@ -161,7 +161,7 @@ jQuery(document).ready(Customer.init);
 							</option>
 						{/foreach}
 					</select>
-					<a href="{$link->getAdminLink('AdminTaxRulesGroup')}&addtax_rules_group&id_product={$product->id}" class="confirm_leave">
+					<a class="button" href="{$link->getAdminLink('AdminTaxRulesGroup')}&addtax_rules_group&id_product={$product->id}" class="confirm_leave">
 					<img src="../img/admin/add.gif" alt="{l s='Create'}" title="{l s='Create'}" /> <b>{l s='Create'}</b>
 					</a>
 				</span>
