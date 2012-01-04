@@ -418,6 +418,13 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 
 select#show_modules { font-size:12px;}
 
+label.text { padding:1px 12px 0 0;}
+label.radioCheck {font-weight:normal; padding:0; float:none; margin:0 1em 0 0.25em}
+.listForm {}
+ul.listForm {}
+ul.listForm li {padding-bottom:3px;}
+
+
 /*FOOTER*/
 #footer {height:40px; font-size:12px;clear:both;font-size:0.9em;color:#666666}
 #footer .footerLeft { float:left; margin-left:10px;}
