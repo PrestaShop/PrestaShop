@@ -55,15 +55,16 @@ class blockcontact extends Module
 	
 	public function getContent()
 	{
+		$html = '';
 		// If we try to update the settings
 		if (isset($_POST['submitModule']))
 		{				
 			Configuration::updateValue('blockcontact_telnumber', (preg_match('/^[0-9]+/', $_POST['telnumber']) ? $_POST['telnumber']: ''));
 			Configuration::updateValue('blockcontact_email', (($_POST['email'] != '') ? $_POST['email']: ''));
-			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"/>'.$this->l('Configuration updated').'</div>';
+			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
 		}
-		
-		return '
+
+		$html .= '
 		<h2>'.$this->displayName.'</h2>
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>			
@@ -77,8 +78,9 @@ class blockcontact extends Module
 					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
 				</div>
 			</fieldset>
-		</form>
-		';
+		</form>';
+
+		return $html;
 	}
 
 	public function hookDisplayHeader()

@@ -64,6 +64,7 @@ class blockcontactinfos extends Module
 	
 	public function getContent()
 	{
+		$html = '';
 		// If we try to update the settings
 		if (isset($_POST['submitModule']))
 		{	
@@ -72,10 +73,10 @@ class blockcontactinfos extends Module
 			Configuration::updateValue('blockcontactinfos_phone', ((isset($_POST['phone']) AND $_POST['phone'] != '') ? $_POST['phone'] : ''));
 			Configuration::updateValue('blockcontactinfos_email', ((isset($_POST['email']) AND $_POST['email'] != '') ? $_POST['email'] : Configuration::get('PS_SHOP_EMAIL')));
 			
-			echo '<div class="conf confirm"><img src="../img/admin/ok.gif"/>'.$this->l('Configuration updated').'</div>';
+			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
 		}
-		
-		$content = '
+
+		$html .= '
 		<h2>'.$this->displayName.'</h2>
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>	
@@ -94,7 +95,7 @@ class blockcontactinfos extends Module
 		</form>
 		';
 		
-		return $content;
+		return $html;
 	}
 	
 	public function hookHeader()
