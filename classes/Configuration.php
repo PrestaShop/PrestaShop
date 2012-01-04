@@ -281,7 +281,7 @@ class ConfigurationCore extends ObjectModel
 		$result = true;
 		foreach ($values as $lang => $value)
 		{
-			if ($value == Configuration::get($key, $lang, $shopGroupID, $shopID))
+			if ($value === Configuration::get($key, $lang, $shopGroupID, $shopID))
 				continue;
 
 			// If key already exists, update value
