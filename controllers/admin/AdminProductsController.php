@@ -1398,6 +1398,7 @@ class AdminProductsControllerCore extends AdminController
 		$object = new $this->className();
 		$this->_removeTaxFromEcotax();
 		$this->copyFromPost($object, $this->table);
+
 		if ($object->add())
 		{
 			$this->addCarriers();
@@ -1421,7 +1422,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 
 				// If the product is virtual, set out_of_stock = 1 (allow sales when out of stock)
-				if (Tools::getValue('type_product') == 2)
+				if (Tools::getValue('type_product') == Product::PTYPE_VIRTUAL)
 					StockAvailable::setProductOutOfStock($object->id, 1);
 				else
 					StockAvailable::setProductOutOfStock($object->id, 2);
@@ -1546,6 +1547,7 @@ class AdminProductsControllerCore extends AdminController
 	public function checkProduct()
 	{
 		$className = 'Product';
+		// @todo : the call_user_func seems to contains only statics values (clasName = "Product")
 		$rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
 		$default_language = new Language((int)(Configuration::get('PS_LANG_DEFAULT')));
 		$languages = Language::getLanguages(false);
@@ -3843,12 +3845,19 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 
+	/**
+	 * delete all items in pack, then check if type_product value is 2.
+	 * if yes, add the pack items from input "inputPackItems"
+	 * 
+	 * @param Product $product 
+	 * @return boolean
+	 */
 	public function updatePackItems($product)
 	{
 		Pack::deleteItems($product->id);
 
 		// lines format: QTY x ID-QTY x ID
-		if (Tools::getValue('type_product') == 1)
+		if (Tools::getValue('type_product') == Product::PTYPE_PACK)
 		{
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));
