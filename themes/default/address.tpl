@@ -23,12 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-// <![CDATA[
-	var baseDir = '{$base_dir_ssl}';
-//]]>
-</script>
-
 {*
 ** Compatibility code for Prestashop older than 1.4.2 using a recent theme
 ** Ignore list isn't require here
