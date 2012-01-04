@@ -39,7 +39,7 @@ function smartyTranslate($params, &$smarty)
 		global $_LANGPDF;
 		$iso = Context::getContext()->language->iso_code;
 		if (!Validate::isLanguageIsoCode($iso))
-			throw PrestashopException('Invalid iso lang!');
+			throw PrestaShopException('Invalid iso lang!');
 
         $translationsFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
 

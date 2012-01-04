@@ -758,10 +758,10 @@ class AdminTranslationsControllerCore extends AdminController
 		${$var} = array();
 		if (!file_exists($dir))
 			if (!mkdir($dir, 0700))
-				throw new PrestashopException('Directory '.$dir.' cannot be created.');
+				throw new PrestaShopException('Directory '.$dir.' cannot be created.');
 		if (!file_exists($dir.DIRECTORY_SEPARATOR.$file))
 			if (!file_put_contents($dir.'/'.$file, "<?php\n\nglobal \$".$var.";\n\$".$var." = array();\n\n?>"))
-				throw new PrestashopException('File "'.$file.'" doesn\'t exists and cannot be created in '.$dir);
+				throw new PrestaShopException('File "'.$file.'" doesn\'t exists and cannot be created in '.$dir);
 		if (!is_writable($dir.DIRECTORY_SEPARATOR.$file))
 			$this->displayWarning(Tools::displayError('This file must be writable:').' '.$dir.'/'.$file);
 		include($dir.DIRECTORY_SEPARATOR.$file);

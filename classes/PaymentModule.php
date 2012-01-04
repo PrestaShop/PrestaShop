@@ -132,7 +132,7 @@ abstract class PaymentModuleCore extends Module
 
 			$order_status = new OrderState((int)$id_order_state, (int)$cart->id_lang);
 			if (!Validate::isLoadedObject($order_status))
-				throw new PrestashopException('Can\'t load Order state status');
+				throw new PrestaShopException('Can\'t load Order state status');
 
 			foreach ($cart_delivery_option as $id_address => $key_carriers)
 				foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data)
@@ -202,7 +202,7 @@ abstract class PaymentModuleCore extends Module
 						if ($result && $order_status->logable)
 						{
 							if (!$order->addOrderPayment($amountPaid))
-								throw new PrestashopException('Can\'t save Order Payment');
+								throw new PrestaShopException('Can\'t save Order Payment');
 						}
 
 						$order_list[] = $order;

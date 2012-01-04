@@ -105,7 +105,7 @@ class HookCore extends ObjectModel
 	public static function getIdByName($hook_name)
 	{
 		if (!Validate::isHookName($hook_name))
-			throw new PrestashopException('Invalid hook name');
+			throw new PrestaShopException('Invalid hook name');
 
 		$cache_id = 'hook_idbyname_'.$hook_name;
 		if (!Cache::isStored($cache_id))
@@ -321,7 +321,7 @@ class HookCore extends ObjectModel
 		// Check arguments validity
 		$context = Context::getContext();
 		if (($id_module && !Validate::isUnsignedId($id_module)) || !Validate::isHookName($hook_name))
-			throw new PrestashopException('Invalid id_module or hook_name');
+			throw new PrestaShopException('Invalid id_module or hook_name');
 
 		// Check if hook exists
 		if (!$id_hook = Hook::getIdByName($hook_name))
