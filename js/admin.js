@@ -24,7 +24,6 @@
 */
 
 var ajax_running_timeout = null;
-var ajax_running_nb_queries = 0;
 
 if (!id_language)
 	var id_language = Number(1);
@@ -1026,24 +1025,15 @@ $(document).ready(function(){
 	});
 
 	$('#ajax_running').ajaxStart(function() {
-		ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 500);
+		ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 1000);
 	});
 
-	$('#ajax_running').ajaxSend(function() {
-		ajax_running_nb_queries += 1;
-	});
-
-	$('#ajax_running').ajaxComplete(function() {
-		ajax_running_nb_queries -= 1;
-		if (ajax_running_nb_queries <= 0)
-		{
-			$(this).slideUp('fast');
-			clearTimeout(ajax_running_timeout);
-		}
+	$('#ajax_running').ajaxStop(function() {
+		$(this).slideUp('fast');
+		clearTimeout(ajax_running_timeout);
 	});
 
 	$('#ajax_running').ajaxError(function() {
-		ajax_running_nb_queries = 0;
 		$(this).slideUp('fast');
 		clearTimeout(ajax_running_timeout);
 	});
