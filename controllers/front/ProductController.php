@@ -546,9 +546,10 @@ class ProductControllerCore extends FrontController
 			{
 				if ($row['reduction_type'] == 'amount')
 				{
-					$reduction_amount = $row['reduction'];
-					if (!$row['id_currency'])
-						$reduction_amount = Tools::convertPrice($reduction_amount, $this->context->currency->id);
+					// Commenting unused code, delete if useless
+//					$reduction_amount = $row['reduction'];
+//					if (!$row['id_currency'])
+//						$reduction_amount = Tools::convertPrice($reduction_amount, $this->context->currency->id);
 					$row['real_value'] = Product::$_taxCalculationMethod == PS_TAX_INC ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
 				}
 				else

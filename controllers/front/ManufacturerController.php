@@ -110,8 +110,6 @@ class ManufacturerControllerCore extends FrontController
 			$nbProducts = count($data);
 			$this->pagination($nbProducts);
 
-			$manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false, $id_current_group_shop);
-			$imgDir = _PS_MANU_IMG_DIR_;
 			foreach ($data as &$item)
 				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.'/'.$item['id_manufacturer'].'-medium.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
