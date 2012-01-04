@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
-
 class PdfInvoiceControllerCore extends FrontController
 {
 	protected $display_header = false;
@@ -58,9 +56,6 @@ class PdfInvoiceControllerCore extends FrontController
 
 		if (!OrderState::invoiceAvailable($order->getCurrentState()) && !$order->invoice_number)
 			die(Tools::displayError('No invoice available'));
-
-		// assignments
-		$country = new Country((int)$order->id_address_invoice);
 
 		$this->order = $order;
 	}
