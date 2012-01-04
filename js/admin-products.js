@@ -289,11 +289,24 @@ function getManufacturers()
 	});
 }
 
+/**
+ * hide save and save-and-stay buttons
+ * 
+ * @access public
+ * @return void
+ */
 function disableSave()
 {
 		$('#desc-product-save').hide();
 		$('#desc-product-save-and-stay').hide();
 }
+
+/**
+ * hide save and save-and-stay buttons
+ *
+ * @access public
+ * @return void
+ */
 function enableSave()
 {
 		$('#desc-product-save').show();
