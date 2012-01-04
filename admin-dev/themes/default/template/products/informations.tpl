@@ -185,7 +185,7 @@
 						languages=$languages
 						input_name='description_short'
 						input_value=$product->description_short
-						max=400}
+						max=$PS_PRODUCT_SHORT_DESC_LIMIT}
 
 					<p class="clear"></p>
 				</td>
