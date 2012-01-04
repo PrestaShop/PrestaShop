@@ -30,21 +30,21 @@ if (!defined('_PS_VERSION_'))
 
 class Blocknewsletter extends Module
 {
-	 const GUEST_NOT_REGISTERED = -1;
-	 const CUSTOMER_NOT_REGISTERED = 0;
- 	 const GUEST_REGISTERED = 1;
-	 const CUSTOMER_REGISTERED = 2;
+	const GUEST_NOT_REGISTERED = -1;
+	const CUSTOMER_NOT_REGISTERED = 0;
+	const GUEST_REGISTERED = 1;
+	const CUSTOMER_REGISTERED = 2;
 
- 	public function __construct()
- 	{
- 	 	$this->name = 'blocknewsletter';
- 	 	$this->tab = 'front_office_features';
+	public function __construct()
+	{
+		$this->name = 'blocknewsletter';
+		$this->tab = 'front_office_features';
 		$this->need_instance = 0;
 
-	 	parent::__construct();
+		parent::__construct();
 
- 	 	$this->displayName = $this->l('Newsletter block');
- 	 	$this->description = $this->l('Adds a block for newsletter subscription.');
+		$this->displayName = $this->l('Newsletter block');
+		$this->description = $this->l('Adds a block for newsletter subscription.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete all your contacts ?');
 
 		$this->version = '1.4';
@@ -58,20 +58,20 @@ class Blocknewsletter extends Module
 				1 => 'txt'
 			)
 		);
- 	}
+	}
 
- 	public function install()
- 	{
- 	 	if (parent::install() == false OR $this->registerHook('leftColumn') == false OR $this->registerHook('header') == false)
- 	 		return false;
+	public function install()
+	{
+		if (parent::install() == false OR $this->registerHook('leftColumn') == false OR $this->registerHook('header') == false)
+			return false;
 
- 	 	Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
+		Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
 
- 	 	return Db::getInstance()->execute('
+		return Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'newsletter` (
 			`id` int(6) NOT NULL AUTO_INCREMENT,
 			`id_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
-		  	`id_group_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
+			`id_group_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 			`email` varchar(255) NOT NULL,
 			`newsletter_date_add` DATETIME NULL,
 			`ip_registration_newsletter` varchar(15) NOT NULL,
@@ -79,14 +79,14 @@ class Blocknewsletter extends Module
 			`active` TINYINT(1) NOT NULL DEFAULT \'0\',
 			PRIMARY KEY(`id`)
 		) ENGINE='._MYSQL_ENGINE_.' default CHARSET=utf8');
- 	}
+	}
 
- 	public function uninstall()
- 	{
- 	 	if (!parent::uninstall())
- 	 		return false;
- 	 	return Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
- 	}
+	public function uninstall()
+	{
+		if (!parent::uninstall())
+			return false;
+		return Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'newsletter');
+	}
 
 	public function getContent()
 	{
@@ -159,19 +159,19 @@ class Blocknewsletter extends Module
 	 * 				1 = registered in block
 	 * 				2 = registered in customer
 	 */
- 	private function isNewsletterRegistered($customerEmail)
- 	{
- 		$sql = 'SELECT `email`
- 				FROM '._DB_PREFIX_.'newsletter
- 				WHERE `email` = \''.pSQL($customerEmail).'\'
- 				AND id_shop = '.$this->context->shop->getID(true);
+	private function isNewsletterRegistered($customerEmail)
+	{
+		$sql = 'SELECT `email`
+				FROM '._DB_PREFIX_.'newsletter
+				WHERE `email` = \''.pSQL($customerEmail).'\'
+				AND id_shop = '.$this->context->shop->getID(true);
 
- 	 	if (Db::getInstance()->getRow($sql))
- 	 		return self::GUEST_REGISTERED;
+		if (Db::getInstance()->getRow($sql))
+			return self::GUEST_REGISTERED;
 
- 		$sql = 'SELECT `newsletter`
- 				FROM '._DB_PREFIX_.'customer
- 				WHERE `email` = \''.pSQL($customerEmail).'\'
+		$sql = 'SELECT `newsletter`
+				FROM '._DB_PREFIX_.'customer
+				WHERE `email` = \''.pSQL($customerEmail).'\'
 				AND id_shop = '.$this->context->shop->getID(true);
 
 		if (!$registered = Db::getInstance()->getRow($sql))
@@ -181,44 +181,44 @@ class Blocknewsletter extends Module
 			return self::CUSTOMER_REGISTERED;
 
 		return self::CUSTOMER_NOT_REGISTERED;
- 	}
+	}
 
- 	/**
- 	 * Register in block newsletter
- 	 */
- 	private function newsletterRegistration()
- 	{
-	 	if (empty($_POST['email']) OR !Validate::isEmail($_POST['email']))
+	/**
+	 * Register in block newsletter
+	 */
+	private function newsletterRegistration()
+	{
+		if (empty($_POST['email']) OR !Validate::isEmail($_POST['email']))
 			return $this->error = $this->l('Invalid e-mail address');
 
-	 	/* Unsubscription */
+		/* Unsubscription */
 		else if ($_POST['action'] == '1')
 		{
- 		 	$register_status = $this->isNewsletterRegistered($_POST['email']);
-	 	 	if ($register_status < 1)
-	 	 		return $this->error = $this->l('E-mail address not registered');
-	 	 	else if ($register_status == self::GUEST_REGISTERED)
-	 	 	{
-			  	if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
-	 	 			return $this->error = $this->l('Error during unsubscription');
-	 	 		return $this->valid = $this->l('Unsubscription successful');
-	 	 	}
+			$register_status = $this->isNewsletterRegistered($_POST['email']);
+			if ($register_status < 1)
+				return $this->error = $this->l('E-mail address not registered');
+			else if ($register_status == self::GUEST_REGISTERED)
+			{
+				if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'newsletter WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
+					return $this->error = $this->l('Error during unsubscription');
+				return $this->valid = $this->l('Unsubscription successful');
+			}
 			else if ($register_status == self::CUSTOMER_REGISTERED)
 			{
-	 	 		if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
-	 	 			return $this->error = $this->l('Error during unsubscription');
-	 	 		return $this->valid = $this->l('Unsubscription successful');
+				if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer SET `newsletter` = 0 WHERE `email` = \''.pSQL($_POST['email']).'\' AND id_shop = '.$this->context->shop->getID(true)))
+					return $this->error = $this->l('Error during unsubscription');
+				return $this->valid = $this->l('Unsubscription successful');
 			}
 		}
-	 	/* Subscription */
+		/* Subscription */
 		else if ($_POST['action'] == '0')
 		{
-	 	 	$register_status = $this->isNewsletterRegistered($_POST['email']);
-			if ($register_status > 0)
-				return $this->error = $this->l('E-mail address already registered');
+			$register_status = $this->isNewsletterRegistered($_POST['email']);
+			//if ($register_status > 0)
+			//	return $this->error = $this->l('E-mail address already registered');
 
 			$email = pSQL($_POST['email']);
-			if (!$this->isRegistered($register_status))
+			if (true || !$this->isRegistered($register_status))
 			{
 				if (Configuration::get('NW_VERIFICATION_EMAIL'))
 				{
@@ -229,49 +229,48 @@ class Blocknewsletter extends Module
 					if (!$token = $this->getToken($email, $register_status))
 						return $this->error = $this->l('Error during subscription');
 
-					$this->sendVerificationEmail($email, $token);
 					return $this->valid = $this->l('A verification email has been sent. Please check your email.');
 				}
 				else
 				{
-	 				if ($this->register($email, $register_status))
-	 					$this->valid = $this->l('Subscription successful');
-	 				else
-	 					return $this->error = $this->l('Error during subscription');
+					if ($this->register($email, $register_status))
+						$this->valid = $this->l('Subscription successful');
+					else
+						return $this->error = $this->l('Error during subscription');
 
- 	 				if ($code = Configuration::get('NW_VOUCHER_CODE'))
-		 	 			$this->sendVoucher($email, $code);
+					if ($code = Configuration::get('NW_VOUCHER_CODE'))
+						$this->sendVoucher($email, $code);
 
-	 	 			if (Configuration::get('NW_CONFIRMATION_EMAIL'))
+					if (Configuration::get('NW_CONFIRMATION_EMAIL'))
 						$this->sendConfirmationEmail($email);
 				}
 			}
 		}
- 	}
+	}
 
- 	/**
- 	 * Return true if the registered status correspond to a registered user
- 	 * @param int $register_status
- 	 * @return bool
- 	 */
- 	protected function isRegistered($register_status)
- 	{
- 		return in_array(
- 					$register_status,
- 					array(self::GUEST_REGISTERED, self::CUSTOMER_REGISTERED)
- 				);
- 	}
+	/**
+	 * Return true if the registered status correspond to a registered user
+	 * @param int $register_status
+	 * @return bool
+	 */
+	protected function isRegistered($register_status)
+	{
+		return in_array(
+					$register_status,
+					array(self::GUEST_REGISTERED, self::CUSTOMER_REGISTERED)
+				);
+	}
 
 
- 	/**
- 	 * Subscribe an email to the newsletter. It will create an entry in the newsletter table
- 	 * or update the customer table depending of the register status
- 	 *
- 	 * @param unknown_type $email
- 	 * @param unknown_type $register_status
- 	 */
- 	protected function register($email, $register_status)
- 	{
+	/**
+	 * Subscribe an email to the newsletter. It will create an entry in the newsletter table
+	 * or update the customer table depending of the register status
+	 *
+	 * @param unknown_type $email
+	 * @param unknown_type $register_status
+	 */
+	protected function register($email, $register_status)
+	{
 		if ($register_status == self::GUEST_NOT_REGISTERED)
 		{
 			if (!$this->registerGuest(Tools::getValue('email')))
@@ -280,38 +279,38 @@ class Blocknewsletter extends Module
 		else if ($register_status == self::CUSTOMER_NOT_REGISTERED)
 		{
 		 	if (!$this->registerUser(Tools::getValue('email')))
- 	 			return false;
+	 			return false;
 		}
 
 		return true;
- 	}
+	}
 
- 	/**
- 	 * Subscribe a customer to the newsletter
- 	 *
- 	 * @param string $email
- 	 * @return bool
- 	 */
- 	protected function registerUser($email)
- 	{
+	/**
+	 * Subscribe a customer to the newsletter
+	 *
+	 * @param string $email
+	 * @return bool
+	 */
+	protected function registerUser($email)
+	{
 		$sql = 'UPDATE '._DB_PREFIX_.'customer
 				SET `newsletter` = 1, newsletter_date_add = NOW(), `ip_registration_newsletter` = \''.pSQL(Tools::getRemoteAddr()).'\'
 				WHERE `email` = \''.pSQL($email).'\'
 				AND id_shop = '.$this->context->shop->getID(true);
 
 	 	return Db::getInstance()->execute($sql);
- 	}
+	}
 
- 	/**
- 	 * Subscribe a guest to the newsletter
- 	 *
- 	 * @param string $email
- 	 * @param bool $active
- 	 * @return bool
- 	 */
- 	protected function registerGuest($email, $active = true)
- 	{
- 		$sql = 'INSERT INTO '._DB_PREFIX_.'newsletter (id_shop, id_group_shop, email, newsletter_date_add, ip_registration_newsletter, http_referer, active)
+	/**
+	 * Subscribe a guest to the newsletter
+	 *
+	 * @param string $email
+	 * @param bool $active
+	 * @return bool
+	 */
+	protected function registerGuest($email, $active = true)
+	{
+		$sql = 'INSERT INTO '._DB_PREFIX_.'newsletter (id_shop, id_group_shop, email, newsletter_date_add, ip_registration_newsletter, http_referer, active)
 				VALUES
 				('.$this->context->shop->getID().',
 				'.$this->context->shop->getGroupID().',
@@ -328,55 +327,55 @@ class Blocknewsletter extends Module
 				)';
 
 		return Db::getInstance()->execute($sql);
- 	}
+	}
 
 
- 	public function activateGuest($email)
- 	{
- 		return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'newsletter`
- 						SET `active` = 1
- 						WHERE `email` = \''.pSQL($email).'\''
- 				);
- 	}
-
- 	/**
- 	 * Returns a guest email by token
- 	 * @param string $token
- 	 * @return string email
- 	 */
- 	protected function getGuestEmailByToken($token)
- 	{
- 		$sql = 'SELECT `email`
- 				FROM `'._DB_PREFIX_.'newsletter`
- 				WHERE MD5(CONCAT( `email` , `newsletter_date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) = \''.pSQL($token).'\'
- 				AND `active` = 0';
-
- 		return Db::getInstance()->getValue($sql);
- 	}
+	public function activateGuest($email)
+	{
+		return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'newsletter`
+						SET `active` = 1
+						WHERE `email` = \''.pSQL($email).'\''
+				);
+	}
 
 	/**
- 	 * Returns a customer email by token
- 	 * @param string $token
- 	 * @return string email
- 	 */
- 	protected function getUserEmailByToken($token)
- 	{
- 		$sql = 'SELECT `email`
- 				FROM `'._DB_PREFIX_.'customer`
- 				WHERE MD5(CONCAT( `email` , `date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) = \''.pSQL($token).'\'
- 				AND `newsletter` = 0';
+	 * Returns a guest email by token
+	 * @param string $token
+	 * @return string email
+	 */
+	protected function getGuestEmailByToken($token)
+	{
+		$sql = 'SELECT `email`
+				FROM `'._DB_PREFIX_.'newsletter`
+				WHERE MD5(CONCAT( `email` , `newsletter_date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) = \''.pSQL($token).'\'
+				AND `active` = 0';
 
- 		return Db::getInstance()->getValue($sql);
- 	}
+		return Db::getInstance()->getValue($sql);
+	}
 
- 	/**
- 	 * Return a token associated to an user
- 	 *
- 	 * @param string $email
- 	 * @param string $register_status
- 	 */
- 	protected function getToken($email, $register_status)
- 	{
+	/**
+	 * Returns a customer email by token
+	 * @param string $token
+	 * @return string email
+	 */
+	protected function getUserEmailByToken($token)
+	{
+		$sql = 'SELECT `email`
+				FROM `'._DB_PREFIX_.'customer`
+				WHERE MD5(CONCAT( `email` , `date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) = \''.pSQL($token).'\'
+				AND `newsletter` = 0';
+
+		return Db::getInstance()->getValue($sql);
+	}
+
+	/**
+	 * Return a token associated to an user
+	 *
+	 * @param string $email
+	 * @param string $register_status
+	 */
+	protected function getToken($email, $register_status)
+	{
 		if (in_array($register_status, array(self::GUEST_NOT_REGISTERED, self::GUEST_REGISTERED)))
 		{
 			$sql = 'SELECT MD5(CONCAT( `email` , `newsletter_date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) as token
@@ -393,40 +392,40 @@ class Blocknewsletter extends Module
 		}
 
 		return Db::getInstance()->getValue($sql);
- 	}
+	}
 
- 	/**
- 	 * Ends the registration process to the newsletter
- 	 *
- 	 * @param string $token
- 	 */
- 	public function confirmEmail($token)
- 	{
- 		$activated = false;
+	/**
+	 * Ends the registration process to the newsletter
+	 *
+	 * @param string $token
+	 */
+	public function confirmEmail($token)
+	{
+		$activated = false;
 
- 		if ($email = $this->getGuestEmailByToken($token))
- 			$activated = $this->activateGuest($email);
- 		else if ($email = $this->getUserEmailByToken($token))
- 			$activated = $this->registerUser($email);
+		if ($email = $this->getGuestEmailByToken($token))
+			$activated = $this->activateGuest($email);
+		else if ($email = $this->getUserEmailByToken($token))
+			$activated = $this->registerUser($email);
 
- 		if (!$activated)
- 			return $this->l('Email already registered or invalid');
+		if (!$activated)
+			return $this->l('Email already registered or invalid');
 
- 		if ($discount = Configuration::get('NW_VOUCHER_CODE'))
+		if ($discount = Configuration::get('NW_VOUCHER_CODE'))
 			$this->sendVoucher($email, $discount);
 
- 		if (Configuration::get('NW_CONFIRMATION_EMAIL'))
+		if (Configuration::get('NW_CONFIRMATION_EMAIL'))
 			$this->sendConfirmationEmail($email);
 
- 		return $this->l('Thank you for subscribing to our newsletter.');
- 	}
+		return $this->l('Thank you for subscribing to our newsletter.');
+	}
 
- 	/**
- 	 * Send an email containing a voucher code
- 	 * @param string $email
- 	 * @param string $discount
+	/**
+	 * Send an email containing a voucher code
+	 * @param string $email
+	 * @param string $discount
 	 * @return bool
- 	 */
+	 */
 	protected function sendVoucher($email, $code)
 	{
 		return Mail::Send($this->context->language->id, 'newsletter_voucher', Mail::l('Newsletter voucher', $this->context->language->id), array('{discount}' => $code), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
@@ -450,7 +449,7 @@ class Blocknewsletter extends Module
 	 */
 	protected function sendVerificationEmail($email, $token)
 	{
-		$verif_url = Tools::getShopDomain(true)._MODULE_DIR_.$this->name.'/verification.php?token='.$token;
+		$verif_url = Context::getContext()->link->getModuleLink('blocknewsletter', 'verification').'&token='.$token;
 		return Mail::Send($this->context->language->id, 'newsletter_verif', Mail::l('Email verification', $this->context->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 
@@ -482,7 +481,7 @@ class Blocknewsletter extends Module
 			}
 		}
 		$this->smarty->assign('this_path', $this->_path);
- 	 	return $this->display(__FILE__, 'blocknewsletter.tpl');
+		return $this->display(__FILE__, 'blocknewsletter.tpl');
 	}
 
 	public function hookDisplayHeader($params)

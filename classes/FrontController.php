@@ -232,15 +232,19 @@ class FrontControllerCore extends Controller
 		setlocale(LC_NUMERIC, 'en_US.UTF-8');
 
 		/* get page name to display it in body id */
-		// @todo check here
-		$page_name = Dispatcher::getInstance()->getController();
-		$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
-
-		// Are we in a module ?
-		if (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
+		
+		// Are we in a payment module 
+		$module_name = Tools::getValue('module');
+		if (Tools::getValue('controller') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
+			$page_name = 'module-payment-submit';
+		// Are we in a module 
+		else if (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
 			$page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
-		if (Tools::getValue('controller') == 'module' && Tools::getValue('module') != '')
-			$page_name = 'module-paypal-payment-submit';
+		else
+		{
+			$page_name = Dispatcher::getInstance()->getController();
+			$page_name = (preg_match('/^[0-9]/', $page_name)) ? 'page_'.$page_name : $page_name;
+		}
 
 		$this->context->smarty->assign(Tools::getMetaTags($this->context->language->id, $page_name));
 		$this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
@@ -272,7 +276,7 @@ class FrontControllerCore extends Controller
 			'page_name' => $page_name,
 			'base_dir' => _PS_BASE_URL_.__PS_BASE_URI__,
 			'base_dir_ssl' => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
-			'content_dir' => $protocol_content.(($useSSL)?Tools::getShopDomainSsl():Tools::getShopDomain()).__PS_BASE_URI__,
+			'content_dir' => $protocol_content.Tools::getServerName().__PS_BASE_URI__,
 			'tpl_dir' => _PS_THEME_DIR_,
 			'modules_dir' => _MODULE_DIR_,
 			'mail_dir' => _MAIL_DIR_,
