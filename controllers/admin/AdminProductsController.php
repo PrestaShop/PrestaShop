@@ -3169,6 +3169,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('currency', $currency);
 		$data->assign($this->tpl_form_vars);
 		$data->assign('link', $this->context->link);
+		$data->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
 		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
 	}
