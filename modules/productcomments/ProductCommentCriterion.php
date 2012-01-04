@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,7 +29,7 @@ class ProductCommentCriterion extends ObjectModel
 {
 	public		$id;
 	public		$id_product_comment_criterion_type;
-	
+
 	public		$name;
 	public		$active = true;
 
@@ -39,12 +39,13 @@ class ProductCommentCriterion extends ObjectModel
 	public static $definition = array(
 		'table' => 'product_comment_criterion',
 		'primary' => 'id_product_comment_criterion',
+		'multilang' => true,
 		'fields' => array(
 			'id_product_comment_criterion_type' =>	array('type' => self::TYPE_INT),
 			'active' =>								array('type' => self::TYPE_BOOL),
 
 			// Lang fields
-			'name' =>								array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'name' =>								array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		)
 	);
 
@@ -64,7 +65,7 @@ class ProductCommentCriterion extends ObjectModel
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 														WHERE `id_product_comment_criterion` = '.(int)$this->id);
 	}
-	
+
 	public function update($nullValues = false)
 	{
 		$previousUpdate = new self((int)$this->id);
@@ -81,7 +82,7 @@ class ProductCommentCriterion extends ObjectModel
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Link a Comment Criterion to a product
 	 *
@@ -91,10 +92,10 @@ class ProductCommentCriterion extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_product))
 			die(Tools::displayError());
-		return (Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_comment_criterion_product` (`id_product_comment_criterion`, `id_product`) 
+		return (Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_comment_criterion_product` (`id_product_comment_criterion`, `id_product`)
 														VALUES('.(int)$this->id.','.(int)$id_product.')'));
 	}
-	
+
 	/**
 	 * Link a Comment Criterion to a category
 	 *
@@ -104,10 +105,10 @@ class ProductCommentCriterion extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_category))
 			die(Tools::displayError());
-		return (Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_comment_criterion_category` (`id_product_comment_criterion`, `id_category`) 
+		return (Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_comment_criterion_category` (`id_product_comment_criterion`, `id_category`)
 														VALUES('.(int)$this->id.','.(int)$id_category.')'));
 	}
-	
+
 	/**
 	 * Add grade to a criterion
 	 *
@@ -128,7 +129,7 @@ class ProductCommentCriterion extends ObjectModel
 		'.(int)$this->id.',
 		'.(int)($grade).')'));
 	}
-	
+
 	/**
 	 * Get criterion by Product
 	 *
@@ -149,7 +150,7 @@ class ProductCommentCriterion extends ObjectModel
 		WHERE pccl.`id_lang` = '.(int)($id_lang).' AND (pccp.id_product IS NOT NULL OR p.id_product IS NOT NULL OR pcc.id_product_comment_criterion_type = 1) AND pcc.active = 1
 		GROUP BY pcc.id_product_comment_criterion');
 	}
-	
+
 	/**
 	 * Get Criterions
 	 *
@@ -166,7 +167,7 @@ class ProductCommentCriterion extends ObjectModel
 		WHERE pccl.`id_lang` = '.(int)$id_lang.($active ? ' AND active = 1' : '').($type ? ' AND id_product_comment_criterion_type = '.(int)$type : '').'
 		ORDER BY pccl.`name` ASC'));
 	}
-	
+
 	public function getProducts()
 	{
 		$res = Db::getInstance()->executeS('
@@ -179,7 +180,7 @@ class ProductCommentCriterion extends ObjectModel
 				$products[] = (int)$row['id_product'];
 		return $products;
 	}
-	
+
 	public function getCategories()
 	{
 		$res = Db::getInstance()->executeS('
@@ -192,17 +193,17 @@ class ProductCommentCriterion extends ObjectModel
 				$criterions[] = (int)$row['id_category'];
 		return $criterions;
 	}
-	
+
 	public function deleteCategories()
 	{
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_comment_criterion_category` WHERE `id_product_comment_criterion` = '.(int)$this->id);
 	}
-	
+
 	public function deleteProducts()
 	{
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_comment_criterion_product` WHERE `id_product_comment_criterion` = '.(int)$this->id);
 	}
-	
+
 	public static function getTypes()
 	{
 		return array(1 => Tools::displayError('Valid for the entire catalog'), 2 => Tools::displayError('Restricted to some categories'), 3 => Tools::displayError('Restricted to some products'));
