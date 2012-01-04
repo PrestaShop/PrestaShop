@@ -302,13 +302,17 @@ function disableSave()
 }
 
 /**
- * hide save and save-and-stay buttons
+ * show save and save-and-stay buttons
  *
  * @access public
  * @return void
  */
 function enableSave()
 {
+		// if no item left in the pack, disable save buttons
+		if ($("#disablePackMessage").length)
+			$("#disablePackMessage").remove();
+
 		$('#desc-product-save').show();
 		$('#desc-product-save-and-stay').show();
 }
