@@ -1200,7 +1200,7 @@ class BlockLayered extends Module
 						}
 					}
 					else
-						$shop_list = array(0);
+						$shop_list = array(Context::getContext()->shop->getID(true));
 				}
 				else
 					$shop_list = array(0);
