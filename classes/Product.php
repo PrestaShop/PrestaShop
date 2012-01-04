@@ -365,6 +365,12 @@ class ProductCore extends ObjectModel
 
 	const CUSTOMIZE_FILE = 0;
 	const CUSTOMIZE_TEXTFIELD = 1;
+	
+	
+	// Note:  prefix is "PTYPE" because TYPE_ is used in ObjectModel (definition)
+	const PTYPE_SIMPLE = 0;
+	const PTYPE_PACK = 1;
+	const PTYPE_VIRTUAL = 2;
 
 	public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
 	{
