@@ -507,7 +507,9 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 		<!-- product's features -->
 		<ul id="idTab2" class="bullet">
 		{foreach from=$features item=feature}
-			<li><span>{$feature.name|escape:'htmlall':'UTF-8'}</span> {$feature.value|escape:'htmlall':'UTF-8'}</li>
+            {if isset($feature.value)}
+			    <li><span>{$feature.name|escape:'htmlall':'UTF-8'}</span> {$feature.value|escape:'htmlall':'UTF-8'}</li>
+            {/if}
 		{/foreach}
 		</ul>
 	{/if}
