@@ -107,11 +107,14 @@
 				$('#is_virtual').val(0);
 				$("#virtual_good_attributes").hide();
 
-				var val = $(this).val();
+				var product_type = $(this).val();
 
-				if (val == 1)
+				// until a product is added in the pack
+				// if product is PTYPE_PACK, save buttons will be disabled 
+				if (product_type == {Product::PTYPE_PACK})
 				{
-					$('li.tab-row a[id*="Pack"]').show();
+					//when you change the type of the product, directly go to the pack tab
+					$('li.tab-row a[id*="Pack"]').show().click();
 					$('#ppack').val(1).attr('checked', true).attr('disabled', 'disabled');
 					$('#ppackdiv').show();
 					// If the pack tab has not finished loaded the changes will be made when the loading event is triggered
@@ -127,9 +130,13 @@
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
 					$('.stockForVirtualProduct').show();
+					// if pack is enabled, if you choose pack, automatically switch to pack page
+					if ($("#link-Pack:visible").length)
+						handleSaveForPack();
 				}
-				else if (val == 2)
+				else if (product_type == {Product::PTYPE_VIRTUAL})
 				{
+					enableSave();
 					$('li.tab-row a[id*="VirtualProduct"]').show();
 					$('#is_virtual_good').attr('checked', true);
 					$('#virtual_good').show();
@@ -152,6 +159,8 @@
 				}
 				else
 				{
+					// 3rd case : product_type is PTYPE_SIMPLE (0)
+					enableSave();
 					$('li.tab-row a[id*="Shipping"]').show();
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
@@ -195,21 +204,22 @@
 				if (btn_name == "Combinations")
 				{
 					$('#desc-product-new').hide();
-					$('#desc-product-save-and-stay').hide();
-					$('#desc-product-save').hide();
+					disableSave();
 					$('#desc-product-newCombination').show();
 					populate_attrs();
 				}
 				else if (btn_name == "Attachments")
 				{
-					$('#desc-product-save-and-stay').hide();
-					$('#desc-product-save').hide();
+					disableSave();
 				}
 				else
 				{
 					$('#desc-product-newCombination').hide();
-					$('#desc-product-save-and-stay').show();
-					$('#desc-product-save').show();
+					// if pack is enabled, save button are visible only if pack is valid
+					if ($("#link-Pack:visible").length)
+						handleSaveForPack();
+					else
+						enableSave();
 				}
 			});
 

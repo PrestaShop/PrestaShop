@@ -92,8 +92,9 @@
 		divContent += '<span onclick="delPackItem(' + curPackItemId + ');" style="cursor: pointer;"><img src="../img/admin/delete.gif" /></span><br />';
 
 		// QTYxID-QTYxID
+		// @todo : it should be better to create input for each items and each qty
+		// instead of only one separated by x, - and ¤
 		var line = curPackItemQty+ 'x' +curPackItemId;
-
 
 		$('#inputPackItems').val($('#inputPackItems').val() + line  + '-');
 		$('#divPackItems').html(divContent);
@@ -108,6 +109,8 @@
 				excludeIds :  getSelectedIds()
 			}
 		});
+		// show / hide save buttons
+		handleSaveForPack();
 	}
 
 	function delPackItem(id)
@@ -145,6 +148,9 @@
 				excludeIds :  getSelectedIds()
 			}
 		});
+
+		// if no item left in the pack, disable save buttons
+		handleSaveForPack();
 	}
 
 	function getSelectedIds()
@@ -154,6 +160,19 @@
 		ids = ids.replace(/\,$/,'');
 		return ids;
 	}
+
+	function handleSaveForPack()
+	{
+		// if no item left in the pack, disable save buttons
+		$("#disablePackMessage").remove();
+		if ($("#inputPackItems").val() == "")
+		{
+			disableSave();
+			$(".leadin").append('<div id="disablePackMessage" class="warn">{l s='Pack is empty. Please at at least one product in the pack tab.'}</div>');
+		}
+		else
+			enableSave();
+}
 
 </script>
 
