@@ -256,9 +256,6 @@ class AdminGroupShopControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitAdd'.$this->table))
-			if (!isset($_POST['name']) || empty($_POST['name']))
-				$this->_errors[] = Tools::displayError('A group name is required.');
 		if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
 		{
 			$object = $this->loadObject();
