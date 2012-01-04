@@ -164,8 +164,6 @@ class OrderOpcControllerCore extends ParentOrderController
 						case 'updateAddressesSelected':
 							if ($this->context->customer->isLogged(true))
 							{
-								$id_address_delivery = (int)(Tools::getValue('id_address_delivery'));
-								$id_address_invoice = (int)(Tools::getValue('id_address_invoice'));
 								$address_delivery = new Address((int)(Tools::getValue('id_address_delivery')));
 								$address_invoice = ((int)(Tools::getValue('id_address_delivery')) == (int)(Tools::getValue('id_address_invoice')) ? $address_delivery : new Address((int)(Tools::getValue('id_address_invoice'))));
 								if ($address_delivery->id_customer != $this->context->customer->id || $address_invoice->id_customer != $this->context->customer->id)
@@ -183,10 +181,6 @@ class OrderOpcControllerCore extends ParentOrderController
 
 									if (!sizeof($this->errors))
 									{
-										if ($this->context->customer->id)
-											$groups = $this->context->customer->getGroups();
-										else
-											$groups = array(1);
 										$result = $this->_getCarrierList();
 										// Wrapping fees
 										$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
