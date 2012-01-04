@@ -183,9 +183,9 @@ class ThemeInstallator extends Module
 		define('DEFAULT_COMPATIBILITY_FROM', _PS_VERSION_);
 		define('DEFAULT_COMPATIBILITY_TO', _PS_VERSION_);
 		define('DEFAULT_T_VER', '1.0');
-		define('MAX_NAME_LENGTH', 32);
+		define('MAX_NAME_LENGTH', 128);
 		define('MAX_EMAIL_LENGTH', 128);
-		define('MAX_WEBSITE_LENGTH', 64);
+		define('MAX_WEBSITE_LENGTH', 128);
 		define('MAX_DESCRIPTION_LENGTH', 64);
 		define('MAX_T_VER_LENGTH', 3);
 		define('MAX_COMPATIBILITY_VER', 7);
