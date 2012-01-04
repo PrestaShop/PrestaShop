@@ -128,7 +128,7 @@ class SupplyOrderCore extends ObjectModel
 		'primary' => 'id_supply_order',
 		'fields' => array(
 			'id_supplier' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'supplier_name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true),
+			'supplier_name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => false),
 			'id_lang' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_warehouse' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_supply_order_state' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
@@ -140,7 +140,7 @@ class SupplyOrderCore extends ObjectModel
 			'total_with_discount_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_ti' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_tax' =>				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-			'discount_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'discount_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => false),
 			'discount_value_te' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'is_template' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -167,6 +167,8 @@ class SupplyOrderCore extends ObjectModel
 				'resource' => 'supply_order_detail',
 				'fields' => array(
 					'id' => array(),
+ 					'id_product' => array(),
+ 					'id_product_attribute' => array(),
  					'supplier_reference' => array(),
  					'product_name' => array(),
 				),
@@ -472,12 +474,15 @@ class SupplyOrderCore extends ObjectModel
 
 	/**
 	 * Webservice : gets the ids supply_order_detail associated to this order
+	 *
 	 * @return array
 	 */
 	public function getWsSupplyOrderDetails()
 	{
 		$query = new DbQuery();
-		$query->select('sod.id_supply_order_detail as id, sod.name as product_name, supplier_reference');
+		$query->select('sod.id_supply_order_detail as id, sod.id_product,
+						sod.id_product_attribute,
+					    sod.name as product_name, supplier_reference');
 		$query->from('supply_order_detail', 'sod');
 		$query->where('id_supply_order = '.(int)$this->id);
 
