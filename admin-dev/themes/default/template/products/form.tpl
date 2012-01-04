@@ -217,6 +217,15 @@
 				$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
 			{/if}
 
+			// disable save if Associations tab is not loaded
+			if ($('#product-tab-content-Associations').hasClass('not-loaded'))
+				disableSave();
+
+			$('#product-tab-content-Associations').bind('loaded', function()
+			{
+				enableSave();
+			});
+
 			$('.confirm_leave').live('click', function(){
 				// Double quotes are necessary when the translated string has single quotes
 				return confirm("{l s='You will lose all unsaved modifications, do you want to proceed?' js=1}");
