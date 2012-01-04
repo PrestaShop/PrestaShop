@@ -27,7 +27,7 @@
 					</div>
 				</div>
 		{if $display_footer}
-				{$HOOK_FOOTER}
+				{hook h="displayBackOfficeFooter"}
 				<div id="footer">
 					<div class="footerLeft">
 						<a href="http://www.prestashop.com/" target="_blank">PrestaShop&trade; {$ps_version}</a><br />

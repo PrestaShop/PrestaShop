@@ -81,7 +81,7 @@
 
 		<link rel="shortcut icon" href="{$img_dir}favicon.ico" />
 		{if $display_header}
-			{$HOOK_HEADER}
+			{hook h="displayBackOfficeHeader"}
 		{/if}
 		<!--[if IE]>
 		<link type="text/css" rel="stylesheet" href="{$base_url}css/admin-ie.css" />
@@ -191,7 +191,7 @@
 	{if $multi_shop}
 		<div id="header_shoplist"><span>{l s='Select your shop:'}</span>{$shop_list}</div>
 	{/if}
-	{$HOOK_TOP}
+	{hook h="displayBackOfficeTop"}
 	</div>
 	<ul id="menu">
 		{if !$tab}
