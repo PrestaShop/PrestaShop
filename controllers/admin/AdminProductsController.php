@@ -39,45 +39,31 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	protected $tab_display;
 
+	/**
+	 * The order in the array decides the order in the list of tab. If an element's value is a number, it will be preloaded.
+	 * The tabs are preloaded from the smallest to the highest number.
+	 * @var array Product tabs.
+	 */
 	protected $available_tabs = array(
-		'Informations',
-		'Prices',
-		'Seo',
-		'Associations',
-		'Images',
-		'Shipping',
-		'Combinations',
-		'Features',
-		'Customization',
-		'Attachments',
-		'Quantities',
-		'Suppliers',
-		'Warehouses',
-		'Accounting',
-		'Pack',
-		'VirtualProduct'
-	);
-
-	protected $available_tabs_lang = array ();
-
-	protected $tabs_preloaded = array(
-		'Informations' => true,
-		'Prices' => true,
-		'Seo' => true,
-		'Associations' => true,
+		'Informations' => 0,
+		'Pack' => 7,
+		'VirtualProduct' => 8,
+		'Prices' => 1,
+		'Seo' => 2,
+		'Associations' => 3,
 		'Images' => false,
-		'Shipping' => true,
-		'Combinations' => true,
+		'Shipping' => 4,
+		'Combinations' => 5,
 		'Features' => false,
 		'Customization' => false,
 		'Attachments' => false,
-		'Quantities' => true,
+		'Quantities' => 6,
 		'Suppliers' => false,
 		'Warehouses' => false,
 		'Accounting' => false,
-		'Pack' => true,
-		'VirtualProduct' => true,
 	);
+
+	protected $available_tabs_lang = array ();
 
 	public function __construct()
 	{
@@ -998,7 +984,7 @@ class AdminProductsControllerCore extends AdminController
 		// Set tab to display
 		if ($this->action)
 		{
-			if (in_array($this->action, $this->available_tabs))
+			if (in_array($this->action, array_keys($this->available_tabs)))
 			$this->tab_display = $this->action;
 			elseif ($this->action == 'new' || $this->action == 'save')
 			$this->tab_display = 'Informations';
@@ -1877,7 +1863,7 @@ class AdminProductsControllerCore extends AdminController
 				$advanced_stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
 				$stock_management_active = Configuration::get('PS_STOCK_MANAGEMENT');
 
-				foreach ($this->available_tabs as $product_tab)
+				foreach ($this->available_tabs as $product_tab => $value)
 				{
 					// if it's the quantities tab and stock management is disabled, continue
 					if ($stock_management_active == 0 && $product_tab == 'Quantities')
@@ -2124,8 +2110,9 @@ class AdminProductsControllerCore extends AdminController
 		if(!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
-		// Used for loading each tab
-		$this->tpl_form_vars['tabs_preloaded'] = $this->tabs_preloaded;
+		// Sort the tabs that need to be preloaded by their priority number
+		asort($this->available_tabs, SORT_NUMERIC);
+		$this->tpl_form_vars['tabs_preloaded'] = $this->available_tabs;
 
 		$this->addJqueryUI('ui.datepicker');
 		// getLanguages init this->_languages
