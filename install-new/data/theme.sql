@@ -55,7 +55,7 @@ UPDATE `PREFIX_configuration` SET value = 'http://www.facebook.com/prestashop' W
 UPDATE `PREFIX_configuration` SET value = 'http://www.twitter.com/prestashop' WHERE name = 'blocksocial_twitter';
 UPDATE `PREFIX_configuration` SET value = 'RSS' WHERE name = 'blocksocial_rss';
 UPDATE `PREFIX_configuration` SET value = 'Prestashop' WHERE name = 'blockcontactinfos_company';
-UPDATE `PREFIX_configuration` SET value = '41, boulevard des capucines, 75002 Paris, France' WHERE name = 'blockcontactinfos_address';
+UPDATE `PREFIX_configuration` SET value = '41, boulevard des capucines\n75002 Paris\nFrance' WHERE name = 'blockcontactinfos_address';
 UPDATE `PREFIX_configuration` SET value = '+33 (0)1.40.18.30.04' WHERE name = 'blockcontactinfos_phone';
 UPDATE `PREFIX_configuration` SET value = 'pub@prestashop.com' WHERE name = 'blockcontactinfos_email';
 UPDATE `PREFIX_configuration` SET value = '+33 (0)1.40.18.30.04' WHERE name = 'blockcontact_telnumber';
@@ -81,7 +81,6 @@ INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VAL
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms'), 5);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockstore'), 6);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcontact'), 7);
-INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayRightColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewsletter'), 8);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktags'), 2);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcategories'), 3);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockviewed'), 4);
@@ -90,6 +89,7 @@ INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VAL
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcms'), 6);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockadvertising'), 7);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo'), 8);
+INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayLeftColumn'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocknewsletter'), 9);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'homeslider'), 1);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'homefeatured'), 2);
 INSERT IGNORE INTO `PREFIX_hook_module` (`id_hook`, `id_module`, `position`) VALUES ((SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHeader'), (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockpaymentlogo'), 2);
