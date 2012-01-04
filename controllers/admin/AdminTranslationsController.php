@@ -992,7 +992,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 				// Adding the folder products/combinaison/ in AdminProducts Translations
 				if ($prefix_key == 'AdminCombinaison')
-					$prefix_key = 'AdminProducts';
+					$prefix_key = 'AdminProducts/combinaison';
 
 				// Adding the folder backup/download/ in AdminBackup Translations
 				if ($prefix_key == 'AdminDownload')
