@@ -86,6 +86,10 @@ class CountryCore extends ObjectModel
 			// Lang fields
 			'name' => 						array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
+		'associations' => array(
+			'zone' => 						array('type' => self::HAS_ONE),
+			'currency' => 					array('type' => self::HAS_ONE),
+		)
 	);
 
 	protected $webserviceParameters = array(
