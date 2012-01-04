@@ -27,7 +27,7 @@
 		<tax id="4" name="HST 15%" rate="15" />
 		<tax id="5" name="PST 7%" rate="7" />
 		<tax id="6" name="PST 10%" rate="10" />
-		<tax id="7" name="PST 8.5%" rate="8.5" />
+		<tax id="7" name="PST 9.5%" rate="9.5" />
 		<tax id="8" name="PST 5%" rate="5" />
 
 		<taxRulesGroup name="CA Standard Rate">
