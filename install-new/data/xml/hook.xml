@@ -339,8 +339,8 @@
     </hook>
     <hook id="displayAttributeGroupForm" live_edit="0">
       <name>displayAttributeGroupForm</name>
-      <title>Add fileds to the form "attribute group"</title>
-      <description>Add fileds to the form "attribute group"</description>
+      <title>Add fields to the form "attribute group"</title>
+      <description>Add fields to the form "attribute group"</description>
     </hook>
     <hook id="actionAttributeGroupSave" live_edit="0">
       <name>actionAttributeGroupSave</name>
@@ -389,8 +389,8 @@
     </hook>
     <hook id="displayFeatureValueForm" live_edit="0">
       <name>displayFeatureValueForm</name>
-      <title>Add fileds to the form "feature value"</title>
-      <description>Add fileds to the form "feature value"</description>
+      <title>Add fields to the form "feature value"</title>
+      <description>Add fields to the form "feature value"</description>
     </hook>
     <hook id="displayFeatureValuePostProcess" live_edit="0">
       <name>displayFeatureValuePostProcess</name>
@@ -409,8 +409,8 @@
     </hook>
     <hook id="displayAttributeForm" live_edit="0">
       <name>displayAttributeForm</name>
-      <title>Add fileds to the form "feature value"</title>
-      <description>Add fileds to the form "feature value"</description>
+      <title>Add fields to the form "attribute value"</title>
+      <description>Add fields to the form "attribute value"</description>
     </hook>
     <hook id="actionAttributePostProcess" live_edit="0">
       <name>actionAttributePostProcess</name>
