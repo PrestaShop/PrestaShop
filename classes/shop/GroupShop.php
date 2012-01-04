@@ -44,7 +44,7 @@ class GroupShopCore extends ObjectModel
 		'table' => 'group_shop',
 		'primary' => 'id_group_shop',
 		'fields' => array(
-			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 			'share_customer' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'share_order' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'share_stock' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
