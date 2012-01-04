@@ -3356,7 +3356,7 @@ class BlockLayered extends Module
 		/* We are sending an array in jSon to the .js controller, it will update both the filters and the products zones */
 		return Tools::jsonEncode(array(
 		'filtersBlock' => $this->generateFiltersBlock($selectedFilters),
-		'productList' => $product_list,
+		'productList' => utf8_encode($product_list),
 		'pagination' => $smarty->fetch(_PS_THEME_DIR_.'pagination.tpl'),
 		'categoryCount' => $categoryCount));
 	}
