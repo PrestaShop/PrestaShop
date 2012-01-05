@@ -53,6 +53,8 @@ class FrontControllerCore extends Controller
 	public $display_column_right = true;
 
 	public static $initialized = false;
+	
+	protected $page_name = null;
 
 	protected static $currentCustomerGroups;
 
@@ -235,7 +237,9 @@ class FrontControllerCore extends Controller
 		
 		// Are we in a payment module 
 		$module_name = Tools::getValue('module');
-		if (Tools::getValue('controller') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
+		if (!is_null($this->page_name))
+			$page_name = $this->page_name;
+		else if (Tools::getValue('controller') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
 			$page_name = 'module-payment-submit';
 		// Are we in a module 
 		else if (preg_match('#^'.preg_quote($this->context->shop->getPhysicalURI(), '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
