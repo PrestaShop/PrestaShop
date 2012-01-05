@@ -241,8 +241,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('For this status, you have to define if it is possible to edit the order.
-												An editable order is an order not valid to send to the supplier.')
+							'desc' => $this->l('For this status, you have to define if it is possible to edit the order. An editable order is an order not valid to send to the supplier.')
 						),
 						array(
 							'type' => 'radio',
@@ -284,8 +283,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'desc' => $this->l('For this status, you have to define if products have been partially/completely received.
-												This allows to know if the products ordered have to be added to the corresponding warehouse.'),
+							'desc' => $this->l('For this status, you have to define if products have been partially/completely received. This allows to know if the products ordered have to be added to the corresponding warehouse.'),
 						),
 						array(
 							'type' => 'radio',

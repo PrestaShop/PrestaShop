@@ -144,8 +144,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'size' => 3,
 					'maxlength' => 11,
 					'required' => true,
-					'desc' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. 
-						For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
+					'desc' => $this->l('Conversion rate from one unit of your shop\'s default currency (for example, 1€) to this currency. For example, if the default currency is euros and this currency is dollars, type \'1.20\'').' 1&euro; = $1.20',
 				),
 				array(
 					'type' => 'select',
