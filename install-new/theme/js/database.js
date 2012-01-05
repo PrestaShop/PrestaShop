@@ -13,7 +13,8 @@ $(document).ready(function()
                 'dbLogin': $('#dbLogin').val(),
                 'dbPassword': $('#dbPassword').val(),
                 'dbEngine': $('#dbEngine').val(),
-                'db_prefix': $('#db_prefix').val()
+                'db_prefix': $('#db_prefix').val(),
+                'clear': $('#db_clear').attr('checked') ? '1' : '0'
             },
 			dataType: 'json',
 			cache: false,

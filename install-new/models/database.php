@@ -36,9 +36,10 @@ class InstallModelDatabase extends InstallAbstractModel
 	 * @param string $password
 	 * @param string $prefix
 	 * @param string $engine
+	 * @param bool $clear
 	 * @return array List of errors
 	 */
-	public function testDatabaseSettings($server, $database, $login, $password, $prefix, $engine)
+	public function testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear)
 	{
 		$errors = array();
 
@@ -68,7 +69,7 @@ class InstallModelDatabase extends InstallAbstractModel
 						$errors[] = $this->language->l('Cannot convert database data to utf-8');
 
 					// Check if a table with same prefix already exists
-					if (Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
+					if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
 						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
 				break;
 
