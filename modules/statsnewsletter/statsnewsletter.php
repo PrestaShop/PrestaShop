@@ -62,13 +62,14 @@ class StatsNewsletter extends ModuleGraph
 			if (Tools::getValue('export'))
 				$this->csvExport(array('type' => 'line', 'layers' => 3));
 			$this->_html = '
-			<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</legend>
+			<div class="blocStats">
+				<h2><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->displayName.'</h2>
 				<p>'.$this->l('Registrations from customers:').' '.(int)$totals['customers'].'</p>
 				<p>'.$this->l('Registrations from visitors:').' '.(int)$totals['visitors'].'</p>
 				<p>'.$this->l('Both:').' '.(int)$totals['both'].'</p>
 				<div>'.$this->engine(array('type' => 'line', 'layers' => 3)).'</div>
-				<p><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><img src="../img/admin/asterisk.gif" />'.$this->l('CSV Export').'</a></p>
-			</fieldset>';
+				<p><a class="button export-csv" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&export=1"><span>'.$this->l('CSV Export').'</span></a></p>
+			</div>';
 		}
 		else
 			$this->_html = '<p>'.$this->l('Module Newsletter Block must be installed').'</p>';

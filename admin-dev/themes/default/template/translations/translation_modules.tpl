@@ -29,7 +29,8 @@
 {block name="override_tpl"}
 	
 	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Expressions to translate'} : <b>{$count}</b>. {l s='Click on the titles to open fieldsets'}.<br /><br />
+	{l s='Expressions to translate'} : <b>{$count}</b>.
+	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br />
 	{$limit_warning}
 	{if !$suoshin_exceeded}
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
@@ -37,7 +38,7 @@
 		{*{include file="translations/auto_translate.tpl"}*}
 		<input type="hidden" name="lang" value="{$lang}" />
 		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
-		<br /><br />
+		<br />
 	
 		{if count($modules_translations) > 1}
 			<h3 style="padding:0;margin:0;">{l s='List of Themes - Click to access theme translation:'}</h3>
@@ -51,7 +52,7 @@
 		{foreach $modules_translations as $theme_name => $theme}
 			<h2>&gt;{l s='Theme:'} <a name="{$theme_name}">{if $theme_name === $default_theme_name}{l s='default'}{else}{$theme_name}{/if} </h2>
 			{foreach $theme as $module_name => $module}
-				{l s='Module:'} <a name="{$module_name}" style="font-style:italic">{$module_name}</a>
+				<h3>{l s='Module:'} <a name="{$module_name}" style="font-style:italic">{$module_name}</a></h3>
 				{foreach $module as $template_name => $newLang}
 					{if !empty($newLang)}
 						{$occurrences = $newLang|array_count_values}

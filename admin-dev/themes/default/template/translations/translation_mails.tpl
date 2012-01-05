@@ -31,7 +31,7 @@
 	{$tinyMCE}
 	
 	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Click on the titles to open fieldsets'}.<br /><br />
+		<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br />
 	{if !$suoshin_exceeded}
 		<form method="post" id="{$table}_form" action="{$url_submit}" class="form">
 		{$toggle_button}
@@ -39,23 +39,22 @@
 		<input type="hidden" name="type" value="{$type}" />
 		<input type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" value="{l s='Update translations'}" class="button" />
 		{*<input type="submit" name="submitTranslations{$type|ucfirst}AndStay" value="{l s='Update and stay'}" class="button" />*}
-		<br /><br />
 	
-		{l s='Core e-mails:'}
+		<h2>{l s='Core e-mails:'}</h2>
 		{$mail_content}
-		
-		{l s='Modules e-mails:'}
+
+		<h2>{l s='Modules e-mails:'}</h2>
 		{foreach $module_mails as $module_name => $mails}
 			{$mails['display']}
 		{/foreach}
 		
 		{if !empty($theme_mails)}
-			{l s='Themes e-mails:'}
+			<h2>{l s='Themes e-mails:'}</h2>
 			{$bool_title = false}
 			{foreach $theme_mails as $theme_or_module_name => $mails}
 				{if $theme_or_module_name != 'theme_mail' && !$bool_title}
 					{$bool_title = true}
-					{l s='E-mails modules in theme:'}
+					<h2>{l s='E-mails modules in theme:'}</h2>
 				{/if}
 				{$mails['display']}
 			{/foreach}
