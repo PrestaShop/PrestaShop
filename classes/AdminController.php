@@ -2350,8 +2350,6 @@ class AdminControllerCore extends Controller
 		if (!Shop::isFeatureActive())
 			return;
 
-		$shop_asso = Shop::getAssoTables();
-		$group_shop_asso = GroupShop::getAssoTables();
 		$assos_data = $this->getAssoShop($this->table, $id_object);
 		$assos = $assos_data[0];
 		$type = $assos_data[1];
