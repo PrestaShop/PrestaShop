@@ -56,16 +56,13 @@ class AdminPerformanceControllerCore extends AdminController
 							'id' => 'smarty_force_compile_'._PS_SMARTY_CHECK_COMPILE_,
 							'value' => _PS_SMARTY_CHECK_COMPILE_,
 							'label' => $this->l('Compile cache if templates are updated'),
-							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles 
-								when you update your templates files, you should use force compile instead of this option. 
-								It should never be used in a production environment.')
+							'desc' => $this->l('Templates are recompiled when they are updated, if you experience compilation troubles when you update your templates files, you should use force compile instead of this option. It should never be used in a production environment.')
 						),
 						array(
 							'id' => 'smarty_force_compile_'._PS_SMARTY_FORCE_COMPILE_,
 							'value' => _PS_SMARTY_FORCE_COMPILE_,
 							'label' => $this->l('Force compile'),
-							'desc' => $this->l('This forces Smarty to (re)compile templates on every invocation. 
-								This is handy for development and debugging. It should never be used in a production environment.')
+							'desc' => $this->l('This forces Smarty to (re)compile templates on every invocation. This is handy for development and debugging. It should never be used in a production environment.')
 						)
 					)
 				),
@@ -191,9 +188,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('CCC (Combine, Compress and Cache)'),
 				'image' => '../img/admin/arrow_in.png'
 			),
-			'desc' => $this->l('CCC allows you to reduce the loading time of your page. 
-				With these settings you will gain performance without even touching the code of your theme. 
-				Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
+			'desc' => $this->l('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
@@ -322,24 +317,21 @@ class AdminPerformanceControllerCore extends AdminController
 					'label' => $this->l('Media server #1:'),
 					'name' => '_MEDIA_SERVER_1_',
 					'size' => 30,
-					'desc' => $this->l('Name of the second domain of your shop, (e.g., myshop-media-server-1.com). 
-						If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the second domain of your shop, (e.g., myshop-media-server-1.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #2:'),
 					'name' => '_MEDIA_SERVER_2_',
 					'size' => 30,
-					'desc' => $this->l('Name of the third domain of your shop, (e.g., myshop-media-server-2.com). 
-						If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the third domain of your shop, (e.g., myshop-media-server-2.com). If you do not have another domain, leave this field blank')
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Media server #3:'),
 					'name' => '_MEDIA_SERVER_3_',
 					'size' => 30,
-					'desc' => $this->l('Name of the fourth domain of your shop, (e.g., myshop-media-server-3.com). 
-						If you do not have another domain, leave this field blank')
+					'desc' => $this->l('Name of the fourth domain of your shop, (e.g., myshop-media-server-3.com). If you do not have another domain, leave this field blank')
 				),
 			)
 		);
@@ -356,8 +348,7 @@ class AdminPerformanceControllerCore extends AdminController
 				'title' => $this->l('Ciphering'),
 				'image' => '../img/admin/computer_key.png'
 			),
-			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". 
-				If you change this configuration, all cookies will be reset.'),
+			'desc' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the PHP extension "mcrypt". If you change this configuration, all cookies will be reset.'),
 			'input' => array(
 				array(
 					'type' => 'hidden',
