@@ -981,7 +981,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$tpl = $template;
 
 				// get controller name instead of file name
-				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR, '', $tpl), true);
+				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes', '', $tpl), true);
 				$pos = strrpos($prefix_key, DIRECTORY_SEPARATOR);
 				$tmp = substr($prefix_key, 0, $pos);
 				$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
