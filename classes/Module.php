@@ -996,44 +996,45 @@ abstract class ModuleCore
 				$file = $f['file'];
 				$content = Tools::file_get_contents($file);
 				$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
-				foreach ($xml->module as $modaddons)
-				{
-					$flagFound = 0;
-					foreach ($moduleList as $k => $m)
-						if ($m->name == $modaddons->name && !isset($m->available_on_addons))
-						{
-							$flagFound = 1;
-							if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
-								$moduleList[$k]->version_addons = $modaddons->version;
-						}
-					if ($flagFound == 0)
+				if ($xml && isset($xml->module))
+					foreach ($xml->module as $modaddons)
 					{
-						$item = new stdClass();
-						$item->id = 0;
-						$item->warning = '';
-						$item->type = strip_tags((string)$f['type']);
-						$item->name = strip_tags((string)$modaddons->name);
-						$item->version = strip_tags((string)$modaddons->version);
-						$item->tab = strip_tags((string)$modaddons->tab);
-						$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
-						$item->description = strip_tags((string)$modaddons->description);
-						$item->author = strip_tags((string)$modaddons->author);
-						$item->limited_countries = array();
-						$item->is_configurable = 0;
-						$item->need_instance = 0;
-						$item->not_on_disk = 1;
-						$item->available_on_addons = 1;
-						$item->active = 0;
-						if (isset($modaddons->img))
+						$flagFound = 0;
+						foreach ($moduleList as $k => $m)
+							if ($m->name == $modaddons->name && !isset($m->available_on_addons))
+							{
+								$flagFound = 1;
+								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
+									$moduleList[$k]->version_addons = $modaddons->version;
+							}
+						if ($flagFound == 0)
 						{
-							if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-								copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
-							if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
-								$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+							$item = new stdClass();
+							$item->id = 0;
+							$item->warning = '';
+							$item->type = strip_tags((string)$f['type']);
+							$item->name = strip_tags((string)$modaddons->name);
+							$item->version = strip_tags((string)$modaddons->version);
+							$item->tab = strip_tags((string)$modaddons->tab);
+							$item->displayName = strip_tags((string)$modaddons->displayName).' (Addons)';
+							$item->description = strip_tags((string)$modaddons->description);
+							$item->author = strip_tags((string)$modaddons->author);
+							$item->limited_countries = array();
+							$item->is_configurable = 0;
+							$item->need_instance = 0;
+							$item->not_on_disk = 1;
+							$item->available_on_addons = 1;
+							$item->active = 0;
+							if (isset($modaddons->img))
+							{
+								if (!file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+									copy($modaddons->img, '../img/tmp/'.md5($modaddons->name).'.jpg');
+								if (file_exists('../img/tmp/'.md5($modaddons->name).'.jpg'))
+									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+							}
+							$moduleList[] = $item;
 						}
-						$moduleList[] = $item;
 					}
-				}
 			}
 
 		//echo round($current_memory / 1024 / 1024, 2).'Mo<br />';
