@@ -61,7 +61,6 @@ $_PS_DIRECTORY_ = trim(str_replace(' ', '%20', INSTALLER__PS_BASE_URI), '/');
 $_PS_DIRECTORY_ = ($_PS_DIRECTORY_) ? '/'.$_PS_DIRECTORY_.'/' : '/';
 $datas = array(
 	array('_DB_SERVER_', trim($_GET['server'])),
-	array('_DB_TYPE_', 'MySQL'),
 	array('_DB_NAME_', trim($_GET['name'])),
 	array('_DB_USER_', trim($_GET['login'])),
 	array('_DB_PASSWD_', trim($_GET['password'])),
@@ -103,120 +102,114 @@ require_once(SETTINGS_FILE);
 //-----------
 //import SQL data
 //-----------
-switch (_DB_TYPE_)
+$filePrefix = 'PREFIX_';
+$engineType = 'ENGINE_TYPE';
+//send the SQL structure file requests
+$structureFile = dirname(__FILE__).'/../sql/db.sql';
+if(!file_exists($structureFile))
 {
-	case 'MySQL':
-
-		$filePrefix = 'PREFIX_';
-		$engineType = 'ENGINE_TYPE';
-		//send the SQL structure file requests
-		$structureFile = dirname(__FILE__).'/../sql/db.sql';
-		if(!file_exists($structureFile))
+	$logger->logError('Impossible to access to a MySQL content file. ('.$structureFile.')');
+	die('<action result="fail" error="10" />'."\n");
+}
+$db_structure_settings = '';
+if ( !$db_structure_settings .= file_get_contents($structureFile) )
+{
+	$logger->logError('Impossible to read the content of a MySQL content file. ('.$structureFile.')');
+	die('<action result="fail" error="9" />'."\n");
+}
+$db_structure_settings = str_replace(array($filePrefix, $engineType), array($_GET['tablePrefix'], $_GET['engine']), $db_structure_settings);
+$db_structure_settings = preg_split("/;\s*[\r\n]+/",$db_structure_settings);
+if (isset($_GET['dropAndCreate']) && $_GET['dropAndCreate'] == 'true')
+{
+	array_unshift($db_structure_settings, 'USE `'.trim($_GET['name']).'`;');
+	array_unshift($db_structure_settings, 'CREATE DATABASE `'.trim($_GET['name']).'`;');
+	array_unshift($db_structure_settings, 'DROP DATABASE `'.trim($_GET['name']).'`;');
+}
+foreach ($db_structure_settings as $query)
+{
+	$query = trim($query);
+	if (!empty($query))
+	{
+		if (!Db::getInstance()->Execute($query))
 		{
-			$logger->logError('Impossible to access to a MySQL content file. ('.$structureFile.')');
-			die('<action result="fail" error="10" />'."\n");
-		}
-		$db_structure_settings = '';
-		if ( !$db_structure_settings .= file_get_contents($structureFile) )
-		{
-			$logger->logError('Impossible to read the content of a MySQL content file. ('.$structureFile.')');
-			die('<action result="fail" error="9" />'."\n");
-		}
-		$db_structure_settings = str_replace(array($filePrefix, $engineType), array($_GET['tablePrefix'], $_GET['engine']), $db_structure_settings);
-		$db_structure_settings = preg_split("/;\s*[\r\n]+/",$db_structure_settings);
-		if (isset($_GET['dropAndCreate']) && $_GET['dropAndCreate'] == 'true')
-		{
-			array_unshift($db_structure_settings, 'USE `'.trim($_GET['name']).'`;');
-			array_unshift($db_structure_settings, 'CREATE DATABASE `'.trim($_GET['name']).'`;');
-			array_unshift($db_structure_settings, 'DROP DATABASE `'.trim($_GET['name']).'`;');
-		}
-		foreach ($db_structure_settings as $query)
-		{
-			$query = trim($query);
-			if (!empty($query))
+			if (Db::getInstance()->getNumberError() == 1050)
 			{
-				if (!Db::getInstance()->Execute($query))
-				{
-					if (Db::getInstance()->getNumberError() == 1050)
-					{
-						$logger->logError('A Prestashop database already exists, please drop it or change the prefix.');
-						die('<action result="fail" error="14" />'."\n");
-					}
-					else
-					{
-						$logger->logError('SQL query: '."\r\n".$query);
-						$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
-						die(
-							'<action
-							result="fail"
-							error="11"
-							sqlMsgError="'.addslashes(htmlentities(Db::getInstance()->getMsgError())).'"
-							sqlNumberError="'.htmlentities(Db::getInstance()->getNumberError()).'"
-							sqlQuery="'.addslashes(htmlentities($query)).'"
-							/>'
-						);
-					}
-				}
+				$logger->logError('A Prestashop database already exists, please drop it or change the prefix.');
+				die('<action result="fail" error="14" />'."\n");
+			}
+			else
+			{
+				$logger->logError('SQL query: '."\r\n".$query);
+				$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
+				die(
+					'<action
+					result="fail"
+					error="11"
+					sqlMsgError="'.addslashes(htmlentities(Db::getInstance()->getMsgError())).'"
+					sqlNumberError="'.htmlentities(Db::getInstance()->getNumberError()).'"
+					sqlQuery="'.addslashes(htmlentities($query)).'"
+					/>'
+				);
 			}
 		}
+	}
+}
 
-		//send the SQL data file requests
-		$db_data_settings = '';
+//send the SQL data file requests
+$db_data_settings = '';
 
-		$liteFile = dirname(__FILE__).'/../sql/db_settings_lite.sql';
-		if(!file_exists($liteFile))
-			die('<action result="fail" error="10" />'."\n");
-		if ( !$db_data_settings .= file_get_contents( $liteFile ) )
-			die('<action result="fail" error="9" />'."\n");
+$liteFile = dirname(__FILE__).'/../sql/db_settings_lite.sql';
+if(!file_exists($liteFile))
+	die('<action result="fail" error="10" />'."\n");
+if ( !$db_data_settings .= file_get_contents( $liteFile ) )
+	die('<action result="fail" error="9" />'."\n");
 
-		if ($_GET['mode'] == 'full')
+if ($_GET['mode'] == 'full')
+{
+	$fullFile = dirname(__FILE__).'/../sql/db_settings_extends.sql';
+	if(!file_exists($fullFile))
+	{
+		$logger->logError('Impossible to access to a MySQL content file. ('.$fullFile.')');
+		die('<action result="fail" error="10" />'."\n");
+	}
+	if (!$db_data_settings .= file_get_contents($fullFile))
+	{
+		$logger->logError('Impossible to read the content of a MySQL content file. ('.$fullFile.')');
+		die('<action result="fail" error="9" />'."\n");
+	}
+}
+$db_data_settings .= "\n".'INSERT INTO `PREFIX_shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`,  `active`) VALUES(1, \''.pSQL(Tools::getHttpHost()).'\', \''.pSQL(Tools::getHttpHost()).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1);';
+$db_data_settings .= "\n".'UPDATE `PREFIX_customer` SET `passwd` = \''.md5(_COOKIE_KEY_.'123456789').'\' WHERE `id_customer` =1;';
+$db_data_settings .= "\n".'INSERT INTO `PREFIX_configuration` (name, value, date_add, date_upd) VALUES (\'PS_VERSION_DB\', \'' . INSTALL_VERSION . '\', NOW(), NOW());';
+$db_data_settings = str_replace(array($filePrefix, $engineType), array($_GET['tablePrefix'], $_GET['engine']), $db_data_settings);
+$db_data_settings = preg_split("/;\s*[\r\n]+/",$db_data_settings);
+/* UTF-8 support */
+array_unshift($db_data_settings, 'SET NAMES \'utf8\';');
+foreach ($db_data_settings as $query)
+{
+	$query = trim($query);
+	if (!empty($query))
+	{
+		if (!Db::getInstance()->Execute($query))
 		{
-			$fullFile = dirname(__FILE__).'/../sql/db_settings_extends.sql';
-			if(!file_exists($fullFile))
+			if (Db::getInstance()->getNumberError() == 1050)
+				die('<action result="fail" error="14" />'."\n");
+			else
 			{
-				$logger->logError('Impossible to access to a MySQL content file. ('.$fullFile.')');
-				die('<action result="fail" error="10" />'."\n");
-			}
-			if (!$db_data_settings .= file_get_contents($fullFile))
-			{
-				$logger->logError('Impossible to read the content of a MySQL content file. ('.$fullFile.')');
-				die('<action result="fail" error="9" />'."\n");
+				$logger->logError('SQL query: '."\r\n".$query);
+				$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
+				die(
+					'<action
+					result="fail"
+					error="11"
+					sqlMsgError="'.addslashes(htmlentities(Db::getInstance()->getMsgError())).'"
+					sqlNumberError="'.htmlentities(Db::getInstance()->getNumberError()).'"
+					sqlQuery="'.addslashes(htmlentities($query)).'"
+					/>'
+				);
 			}
 		}
-		$db_data_settings .= "\n".'INSERT INTO `PREFIX_shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`,  `active`) VALUES(1, \''.pSQL(Tools::getHttpHost()).'\', \''.pSQL(Tools::getHttpHost()).'\', \''.pSQL($_PS_DIRECTORY_).'\', \'\', 1, 1);';
-		$db_data_settings .= "\n".'UPDATE `PREFIX_customer` SET `passwd` = \''.md5(_COOKIE_KEY_.'123456789').'\' WHERE `id_customer` =1;';
-		$db_data_settings .= "\n".'INSERT INTO `PREFIX_configuration` (name, value, date_add, date_upd) VALUES (\'PS_VERSION_DB\', \'' . INSTALL_VERSION . '\', NOW(), NOW());';
-		$db_data_settings = str_replace(array($filePrefix, $engineType), array($_GET['tablePrefix'], $_GET['engine']), $db_data_settings);
-		$db_data_settings = preg_split("/;\s*[\r\n]+/",$db_data_settings);
-		/* UTF-8 support */
-		array_unshift($db_data_settings, 'SET NAMES \'utf8\';');
-		foreach ($db_data_settings as $query)
-		{
-			$query = trim($query);
-			if (!empty($query))
-			{
-				if (!Db::getInstance()->Execute($query))
-				{
-					if (Db::getInstance()->getNumberError() == 1050)
-						die('<action result="fail" error="14" />'."\n");
-					else
-					{
-						$logger->logError('SQL query: '."\r\n".$query);
-						$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
-						die(
-							'<action
-							result="fail"
-							error="11"
-							sqlMsgError="'.addslashes(htmlentities(Db::getInstance()->getMsgError())).'"
-							sqlNumberError="'.htmlentities(Db::getInstance()->getNumberError()).'"
-							sqlQuery="'.addslashes(htmlentities($query)).'"
-							/>'
-						);
-					}
-				}
-			}
-		}
-	break;
+	}
 }
 
 $xml = '<result><action result="ok" error="" />'."\n";

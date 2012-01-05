@@ -152,7 +152,6 @@ $oldLevel = error_reporting(E_ALL);
 $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 $datas = array(
 	array('_DB_SERVER_', _DB_SERVER_),
-	array('_DB_TYPE_', _DB_TYPE_),
 	array('_DB_NAME_', _DB_NAME_),
 	array('_DB_USER_', _DB_USER_),
 	array('_DB_PASSWD_', _DB_PASSWD_),
