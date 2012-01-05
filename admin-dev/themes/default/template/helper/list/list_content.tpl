@@ -79,7 +79,7 @@
 				{/if}
 			{elseif isset($params.image)}
 				{$tr.$key}
-			{elseif (isset($params.icon))}
+			{elseif isset($params.icon)}
 				<img src="../img/admin/{$tr[$key]}" alt="{$tr[$key]}" title="{$tr[$key]}" />
 			{elseif isset($params.price)}
 				{$tr.$key}

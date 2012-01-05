@@ -51,7 +51,11 @@ class AdminCustomersControllerCore extends AdminController
 		$genders = array(0 => $this->l('?'));
 		foreach (Gender::getGenders() as $gender)
 		{
-			$genders_icon[$gender->id] = '../genders/'.$gender->id.'.jpg';
+			$gender_file = 'genders/'.$gender->id.'.jpg';
+			if (file_exists(_PS_IMG_DIR_.$gender_file))
+				$genders_icon[$gender->id] = '../'.$gender_file;
+			else
+				$genders_icon[$gender->id] = $gender->name;
 			$genders[$gender->id] = $gender->name;
 		}
 
