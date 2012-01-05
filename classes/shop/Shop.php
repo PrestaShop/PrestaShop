@@ -273,7 +273,7 @@ class ShopCore extends ObjectModel
 				}
 		}
 
-		if($id_shop)
+		if ($id_shop)
 		{
 			// Get instance of found shop
 			$shop = new Shop($id_shop);
@@ -281,6 +281,7 @@ class ShopCore extends ObjectModel
 			{
 				// No shop found ... too bad, let's redirect to default shop
 				$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+
 				// Hmm there is something really bad in your Prestashop !
 				if (!Validate::isLoadedObject($default_shop))
 					throw new PrestaShopException('Shop not found');
@@ -293,6 +294,13 @@ class ShopCore extends ObjectModel
 		else
 			if (defined('INSTALL_VERSION'))
 				$shop = new Shop();
+			else if (defined('_PS_ADMIN_DIR_'))
+			{
+				// If in admin, we can access to the shop without right URL
+				$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+				$shop->physical_uri = str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME'])));
+				$shop->virtual_uri = '';
+			}
 			else
 				throw new PrestaShopException('Shop not found');
 
