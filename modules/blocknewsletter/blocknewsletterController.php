@@ -43,7 +43,7 @@ class ModuleBlocknewsletterController extends ModuleController
 	}
 	
 	/**
-	 * Validate cheque payment
+	 * Process email confirmation
 	 */
 	public function processVerification()
 	{
@@ -63,7 +63,7 @@ class ModuleBlocknewsletterController extends ModuleController
 	}
 	
 	/**
-	 * Assign cheque payment template
+	 * Assign verification return message
 	 */
 	public function assignVerificationExecution()
 	{
