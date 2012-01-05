@@ -147,7 +147,13 @@ else
 		}
 	}
 	else
+	{
 		$customer = new Customer();
+		
+		// Change the default group 
+		if (Group::isFeatureActive())
+			$customer->id_default_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+	}
 
 	$customer->id_guest = $cookie->id_guest;
 	Context::getContext()->customer = $customer;
