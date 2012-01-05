@@ -41,11 +41,11 @@
 	var use_taxes = {$order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
 	var token = "{$smarty.get.token|escape:'htmlall':'UTF-8'}";
 
-	var txt_add_product_stock_issue = "{l s='You want to add more product than available in stock, are you sure you want to add this quantity?'}";
-	var txt_add_product_new_invoice = "{l s='Are you sure you want to create a new invoice?'}";
-	var txt_add_product_no_product = "{l s='Error: No product has been selected'}";
-	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of product must be set'}";
-	var txt_add_product_no_product_price = "{l s='Error: Price of product must be set'}";
+	var txt_add_product_stock_issue = "{l s='You want to add more product than available in stock, are you sure you want to add this quantity?' js=1}";
+	var txt_add_product_new_invoice = "{l s='Are you sure you want to create a new invoice?' js=1}";
+	var txt_add_product_no_product = "{l s='Error: No product has been selected' js=1}";
+	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of product must be set' js=1}";
+	var txt_add_product_no_product_price = "{l s='Error: Price of product must be set' js=1}";
 	var txt_confirm = "{l s='Are you sure?' js=1}";
 
 	var statesShipped = new Array();
