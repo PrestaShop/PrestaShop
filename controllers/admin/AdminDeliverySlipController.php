@@ -47,6 +47,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 						'title' => $this->l('Delivery number:'),
 						'desc' => $this->l('The next delivery slip will begin with this number, and then increase with each additional slip'),
 						'size' => 6,
+						'cast' => 'intval',
 						'type' => 'text'
 					)
 				),
