@@ -235,6 +235,7 @@ function displayTabProductById(id, selected, index, stack)
 	$.ajax({
 		url : myurl,
 		async : true,
+		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 		success : function(data)
 		{
 			$("#product-tab-content-"+id).html(data);
