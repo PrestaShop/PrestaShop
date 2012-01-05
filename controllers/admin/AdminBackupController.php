@@ -114,37 +114,6 @@ class AdminBackupControllerCore extends AdminController
 		}
 	}
 
-	public function initContent()
-	{
-		// toolbar (save, cancel, new, ..)
-		$this->initToolbar();
-		if ($this->display == 'edit' || $this->display == 'add')
-		{
-			if (!$this->loadObject(true))
-				return;
-
-			$this->content .= $this->initViewDownload();
-		}
-		else if ($this->display == 'view')
-		{
-			// Some controllers use the view action without an object
-			if ($this->className)
-				$this->loadObject(true);
-			$this->content .= $this->renderView();
-		}
-		else if (!$this->ajax)
-		{
-			$this->content .= $this->renderList();
-			$this->content .= $this->renderOptions();
-		}
-
-		$this->context->smarty->assign(array(
-			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,
-		));
-		parent::initContent();
-	}
-
 	/**
 	 * Load class object using identifier in $_GET (if possible)
 	 * otherwise return an empty object
