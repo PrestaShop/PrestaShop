@@ -375,7 +375,10 @@ class AdminControllerCore extends Controller
 		$version = Tools::getValue('version');
 
 		if (isset($item) && isset($iso_user) && isset($country))
-			$this->content = HelpAccess::getHelp($item, $iso_user, $country, $version);
+        {
+            $helper = new HelperHelpAccess($item, $iso_user, $country, $version);
+            $this->content = $helper->generate();
+        }
 		else
 			$this->content = 'none';
 		$this->display = 'content';
@@ -1218,20 +1221,8 @@ class AdminControllerCore extends Controller
 			);
 		}
 
-			// Multishop
-		$is_multishop = Shop::isFeatureActive();// && Context::shop() != Shop::CONTEXT_ALL;
-		/*if ($is_multishop)
-		{
-			if (Context::shop() == Shop::CONTEXT_GROUP)
-			{
-				$shop_context = 'group';
-				$shop_name = $this->context->shop->getGroup()->name;
-			}
-			else if (Context::shop() == Shop::CONTEXT_SHOP)
-			{
-				$shop_context = 'shop';
-				$shop_name = $this->context->shop->name;
-			}*/
+		// Multishop
+		$is_multishop = Shop::isFeatureActive();
 
 		// Quick access
 		$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
@@ -1303,7 +1294,7 @@ class AdminControllerCore extends Controller
 			'img_dir' => _PS_IMG_,
 			'iso' => $this->context->language->iso_code,
 			'class_name' => $this->className,
-			'iso_user' => $this->context->language->id,
+			'iso_user' => $this->context->language->iso_code,
 			'country_iso_code' => $this->context->country->iso_code,
 			'version' => _PS_VERSION_,
 			'autorefresh_notifications' => Configuration::get('PS_ADMIN_REFRESH_NOTIFICATION'),
@@ -1334,7 +1325,8 @@ class AdminControllerCore extends Controller
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
 			'is_multishop' => $is_multishop,
-			'pic_dir' => _THEME_PROD_PIC_DIR_
+			'pic_dir' => _THEME_PROD_PIC_DIR_,
+            'controller_name' => Tools::getValue('controller'),
 		));
 	}
 
@@ -1438,7 +1430,9 @@ class AdminControllerCore extends Controller
 			return false;
 
 		$helper = new HelperList();
+
 		$this->setHelperDisplay($helper);
+        $this->tpl_list_vars['img_dir'] = 'toto';
 		$helper->tpl_vars = $this->tpl_list_vars;
 		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 		// Check if list templates have been overriden
@@ -1542,7 +1536,6 @@ class AdminControllerCore extends Controller
 		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
 
-		$helper->ps_help_context = !Configuration::get('PS_NO_HELP_CONTEXT');
 		$helper->show_toolbar = $this->show_toolbar;
 		$helper->toolbar_fix = $this->toolbar_fix;
 		$helper->override_folder = $this->tpl_folder;
@@ -1590,9 +1583,11 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
 			_PS_JS_DIR_.'notifications.js',
-			_PS_JS_DIR_.'helpAccess.js',
 			_PS_JS_DIR_.'toolbar.js'
 		));
+
+        if (Configuration::get('PS_HELPBOX'))
+            $this->addJS(_PS_JS_DIR_.'helpAccess.js');
 	}
 	/**
 	 * use translations files to replace english expression.

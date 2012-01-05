@@ -23,7 +23,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {block name=toolbarBox}
 	<ul class="cc_button">
 		{foreach from=$toolbar_btn item=btn key=k}
@@ -34,17 +33,22 @@
 				</a>
 			</li>
 		{/foreach}
-		{if isset($ps_help_context) && $ps_help_context}
-			<li class="help-context" style="display:none">
-				<a id="desc-{$table}-help" class="toolbar_btn" href="#" title="{l s='Help'}">
-					<span class="process-icon-help"></span>
-					<div>{l s='Help'}</div>
-				</a>
-			</li>
-		{/if}
 	</ul>
 
 	<script language="javascript">
+        if (helpboxes > 0)
+        {
+            $(document).ready(function (){
+                button = getHelpButton(help_class_name);
+
+                if (button != '')
+                {
+                    $('ul.cc_button').append(button);
+                    $('.help-context-'+help_class_name).fadeIn("fast").show();
+                }
+            });
+        }
+
 		$(function() {
 			//get reference on save link
 			btn_save = $('span[class~="process-icon-save"]').parent();

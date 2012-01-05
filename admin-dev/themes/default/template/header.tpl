@@ -31,7 +31,7 @@
 		<title>{$meta_title} - PrestaShop&trade;</title>
 		{if $display_header}
 			<script type="text/javascript">
-				var class_name = '{$class_name}';
+				var help_class_name = '{$controller_name}';
 				var iso_user = '{$iso_user}';
 				var country_iso_code = '{$country_iso_code}';
 				var _PS_VERSION_ = '{$smarty.const._PS_VERSION_}';
