@@ -124,7 +124,7 @@
 
 {if $transformation_allowed}
 <p style="text-align:center; margin-top:20px">
-	<a href="{$base_dir}modules/loyalty/loyalty-program.php?transform-points=true" onclick="return confirm('{l s='Are you sure you want to transform your points into vouchers?' mod='loyalty' js=1}');">{l s='Transform my points into a voucher of' mod='loyalty'} <span class="price">{convertPrice price=$voucher}</span>.</a>
+	<a href="{$link->getModuleLink('loyalty', 'transformpoints')}" onclick="return confirm('{l s='Are you sure you want to transform your points into vouchers?' mod='loyalty' js=1}');">{l s='Transform my points into a voucher of' mod='loyalty'} <span class="price">{convertPrice price=$voucher}</span>.</a>
 </p>
 {/if}
 
@@ -149,14 +149,14 @@
 		{foreach from=$discounts item=discount name=myLoop}
 			<tr class="alternate_item">
 				<td class="history_date">{dateFormat date=$discount->date_add}</td>
-				<td class="history_price"><span class="price">{if $discount->id_discount_type == 1}
-						{$discount->value}%
-					{elseif $discount->id_discount_type == 2}
-						{displayPrice price=$discount->value currency=$discount->id_currency}
+				<td class="history_price"><span class="price">{if $discount->reduction_percent > 0}
+						{$discount->reduction_percent}%
+					{elseif $discount->reduction_amount}
+						{displayPrice price=$discount->reduction_amount currency=$discount->reduction_currency}
 					{else}
 						{l s='Free shipping' mod='loyalty'}
 					{/if}</span></td>
-				<td class="history_method bold">{$discount->name}</td>
+				<td class="history_method bold">{$discount->code}</td>
 				<td class="history_date">{dateFormat date=$discount->date_from}</td>
 				<td class="history_date">{dateFormat date=$discount->date_to}</td>
 				<td class="history_method bold">{if $discount->quantity > 0}{l s='To use' mod='loyalty'}{else}{l s='Used' mod='loyalty'}{/if}</td>

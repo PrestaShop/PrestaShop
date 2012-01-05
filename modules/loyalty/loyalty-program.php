@@ -35,6 +35,8 @@ include_once(dirname(__FILE__).'/LoyaltyModule.php');
 include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
 include_once(dirname(__FILE__).'/loyalty.php');
 
+Tools::displayFileAsDeprecated();
+
 $context = Context::getContext();
 if (!$context->customer->isLogged())
 	Tools::redirect('index.php?controller=authentication&back=modules/loyalty/loyalty-program.php');
@@ -98,7 +100,7 @@ if (Tools::getValue('transform-points') == 'true' AND $customerPoints > 0)
 		$cartRule->add();
 
 	/* Register order(s) which contributed to create this voucher */
-	LoyaltyModule::registerDiscount($voucher);
+	LoyaltyModule::registerDiscount($cartRule);
 
 	Tools::redirect('modules/loyalty/loyalty-program.php');
 }
