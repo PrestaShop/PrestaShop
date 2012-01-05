@@ -87,7 +87,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			$this->session->database_login,
 			$this->session->database_password,
 			$this->session->database_prefix,
-			$this->session->database_engine
+			$this->session->database_engine,
+			$this->session->database_clear
 		);
 
 		return count($this->errors) ? false : true;
@@ -112,8 +113,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$password = Tools::getValue('dbPassword');
 		$prefix = Tools::getValue('db_prefix');
 		$engine = Tools::getValue('dbEngine');
+		$clear = Tools::getValue('clear');
 
-		$errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $engine);
+		$errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $engine, $clear);
 
 		$this->ajaxJsonAnswer(
 			(count($errors)) ? false : true,
