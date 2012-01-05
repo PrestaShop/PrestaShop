@@ -121,15 +121,11 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	public function getFooter()
 	{
 		$this->address = $this->address_warehouse;
-		$shop_address = '';
-		if (isset($this->address) && $this->address instanceof Address)
-			$shop_address = AddressFormat::generateAddress($this->address, array(), ' - ', ' ');
-
 		$free_text = self::l('DE: Discount excluded ');
 		$free_text .= self::l(' DI: Discount included');
 
 		$this->smarty->assign(array(
-			'shop_address' => $shop_address,
+			'shop_address' => $this->getShopAddress(),
 			'shop_fax' => Configuration::get('PS_SHOP_FAX'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
 			'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
