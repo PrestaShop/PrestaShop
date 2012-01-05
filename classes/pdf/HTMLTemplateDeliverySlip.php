@@ -43,8 +43,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		$this->title = self::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
 
 		// footer informations
-		$shop = new Shop((int)$this->order->id_shop);
-		$this->address = $shop->getAddress();
+		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
 	/**
