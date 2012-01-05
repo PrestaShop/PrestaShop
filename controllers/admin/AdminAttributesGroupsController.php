@@ -321,14 +321,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if (!$obj = new Attribute((int)Tools::getValue($this->identifier)))
 			return;
 
-		// known fields are filled
-		$this->fields_value = array(
-			'id_attribute_group' => $this->getFieldValue($obj, 'id_attribute_group'),
-			'name' => $this->getFieldValue($obj, 'name'),
-			'color' => $this->getFieldValue($obj, 'color'),
-			'id_attribute' => $this->getFieldValue($obj, 'id'),
-		);
-
 		$str_attributes_groups = '';
 		foreach ($attributes_groups as $attribute_group)
 			$str_attributes_groups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ) .', ';
@@ -534,7 +526,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					$_POST['position'] = DB::getInstance()->getValue($sql);
 				}
 				$_POST['id_parent'] = 0;
-				$this->processSave();
+				$this->processSave($this->token);
 			}
 		}
 		else
