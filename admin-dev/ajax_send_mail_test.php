@@ -31,13 +31,13 @@ include_once(dirname(__FILE__).'/../config/config.inc.php');
 require_once(dirname(__FILE__).'/init.php');
 
 $smtpServer = $_POST['smtpSrv'];
-$content = $_POST['testMsg'];
-$subject = $_POST['testSubject'];
+$content = urldecode($_POST['testMsg']);
+$subject = urldecode($_POST['testSubject']);
 $type = 'text/html';
 $to =  $_POST['testEmail'];
 $from = Configuration::get('PS_SHOP_EMAIL');
 $smtpLogin = $_POST['smtpLogin'];
-$smtpPassword = $_POST['smtpPassword'];
+$smtpPassword = urldecode($_POST['smtpPassword']);
 $smtpPort = $_POST['smtpPort'];
 $smtpEncryption = $_POST['smtpEnc'];
 if (isset($_POST['mailMethod']))
