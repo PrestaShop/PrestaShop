@@ -136,6 +136,24 @@ class MySQLCore extends Db
 		return mysql_select_db($db_name, $this->link);
 	}
 
+	/**
+	 * @see Db::hasTableWithSamePrefix()
+	 */
+	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
+	{
+		if (!$link = @mysql_connect($server, $user, $pwd, true))
+			return false;
+		if (!@mysql_select_db($db, $link))
+			return false;
+
+		$sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
+		$result = mysql_query($sql);
+		return (bool)@mysql_fetch_assoc($result);
+	}
+
+	/**
+	 * @see Db::checkConnection()
+	 */
 	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
 	{
 		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
@@ -157,6 +175,9 @@ class MySQLCore extends Db
 		return 0;
 	}
 
+	/**
+	 * @see Db::checkEncoding()
+	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
 		$link = @mysql_connect($server, $user, $pwd);

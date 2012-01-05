@@ -66,6 +66,10 @@ class InstallModelDatabase extends InstallAbstractModel
 				case 0:
 					if (!Db::checkEncoding($server, $login, $password))
 						$errors[] = $this->language->l('Cannot convert database data to utf-8');
+
+					// Check if a table with same prefix already exists
+					if (Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
+						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
 				break;
 
 				case 1:
