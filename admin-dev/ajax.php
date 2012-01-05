@@ -75,13 +75,11 @@ if (Tools::isSubmit('ajaxProductManufacturers'))
 {
 	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
 	$manufacturers = Manufacturer::getManufacturers();
+	$jsonArray = array();
 	if ($manufacturers)
-	{
-		$jsonArray = array();
 		foreach ($manufacturers AS $manufacturer)
 			$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
-		die('['.implode(',', $jsonArray).']');
-	}
+	die('['.implode(',', $jsonArray).']');
 }
 
 
