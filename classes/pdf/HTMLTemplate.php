@@ -43,13 +43,17 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
+        $shop_name = '';
+        if (Validate::isLoadedObject($this->shop))
+            $shop_name = $this->shop->name;
+
 		$this->smarty->assign(array(
 			'logo_path' => $this->getLogo(),
 			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'title' => $this->title,
 			'date' => $this->date,
-			'shop_name' => $this->shop->name
+			'shop_name' => $shop_name
 		));
 
 		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/header.tpl');
@@ -61,14 +65,8 @@ abstract class HTMLTemplateCore
 	 */
 	public function getFooter()
 	{
-		$shop_address = '';
-        if (Validate::isLoadedObject($this->shop))
-        {
-            $shop_address_obj = $this->shop->getAddress();
-            if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
-                $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
-        }
-        
+        $shop_address = $this->getShopAddress();
+
 		$this->smarty->assign(array(
 			'available_in_your_account' => $this->available_in_your_account,
 			'shop_address' => $shop_address,
@@ -80,7 +78,25 @@ abstract class HTMLTemplateCore
 		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/footer.tpl');
 	}
 
-	/**
+    /**
+     * Returns the shop address
+     * @return string
+     */
+    protected function getShopAddress()
+    {
+        $shop_address = '';
+        if (Validate::isLoadedObject($this->shop))
+        {
+            $shop_address_obj = $this->shop->getAddress();
+            if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
+                $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');return $shop_address;
+            return $shop_address;
+        }
+
+        return $shop_address;
+    }
+
+    /**
 	 * Returns the invoice logo
 	 */
     protected function getLogo()
@@ -128,6 +144,8 @@ abstract class HTMLTemplateCore
 	 * @return string filename
 	 */
     abstract public function getBulkFilename();
+
+
 
 
 	/**
