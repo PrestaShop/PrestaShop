@@ -242,7 +242,7 @@ class StatsProduct extends ModuleGraph
 			$this->html .= '
 			<div class="margin-form">
 				<form action="" method="post" id="categoriesForm">
-				<label>'.$this->l('Choose a category').'</label>
+				<label class="t">'.$this->l('Choose a category').'</label>
 					<select name="id_category" onchange="$(\'#categoriesForm\').submit();">
 						<option value="0">'.$this->l('All').'</option>';
 			foreach ($categories as $category)
@@ -251,7 +251,8 @@ class StatsProduct extends ModuleGraph
 					</select>
 				</form>
 			</div>
-						'.$this->l('Click on a product to access its statistics.').'
+						<p>'.$this->l('Click on a product to access its statistics.').'</p>
+				
 			<h2>'.$this->l('Products available').'</h2>
 			<div>
 			<table class="table" border="0" cellspacing="0" cellspacing="0">

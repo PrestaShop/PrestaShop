@@ -221,14 +221,21 @@
 					<div style="display:block;width:620px;" class="hint clear">
 						{l s='Do you want an image associated with the product in your description?'}
 						<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
-						<table id="createImageDescription" style="display:none;">
+					</div>
+								<p class="clear"></p>
+				</td>
+			</tr>
+			
+			</table>
+	
+					<table id="createImageDescription" style="display:none;width:100%">
 							<tr>
 								<td colspan="2" height="10"></td>
 							</tr>
 							<tr>
 								<td class="col-left"><label>{l s='Select your image:'}</label></td>
 								<td style="padding-bottom:5px;">
-									<ul>
+									<ul class="smallImage">
 									{foreach from=$images item=image key=key}
 											<li>
 												<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
@@ -244,23 +251,27 @@
 							<tr>
 								<td class="col-left"><label>{l s='Where to place it?'}</label></td>
 								<td style="padding-bottom:5px;">
-									<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
+									<ul class="listForm">
+										<li><input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
 									<label for="leftRight_1" class="t">{l s='left'}</label>
-									<br />
+									</li>
+									<li>
 									<input type="radio" name="leftRight" id="leftRight_2" value="right">
 									<label for="leftRight_2" class="t">{l s='right'}</label>
-									<p class="clear"></p>
+									</li>
+									</ul>
 								</td>
 							</tr>
 							<tr>
 								<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
 								<td style="padding-bottom:5px;">
+									<ul class="listForm">
 									{foreach from=$imagesTypes key=key item=type}
-											<input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
+											<li><input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
 											<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
-											<br />
+											</li>
 									{/foreach}
-
+									</ul>
 									<p class="clear"></p>
 								</td>
 							</tr>
@@ -269,14 +280,19 @@
 								<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
 								<td style="padding-bottom:5px;">
 									<input type="text" id="resultImage" name="resultImage" />
-									<p>{l s='The tag is to copy / paste in the description.'}</p>
+									<p class="preference_description">{l s='The tag is to copy / paste in the description.'}</p>
 								</td>
 							</tr>
+							<tr>
+							<td colspan="2">
+								<div class="separation"></div>
+							</td>
+							</tr>
 						</table>
-					</div>
-					<p class="clear"></p>
-				</td>
-			</tr>
+
+
+
+
 
 			<script type="text/javascript">
 				$(function() {
@@ -310,7 +326,7 @@
 				}
 			</script>
 		{/if}
-
+		<table>
 		<tr>
 			<td class="col-left"><label>{l s='Tags:'}</label></td>
 			<td style="padding-bottom:5px;" class="translatable">
@@ -324,6 +340,7 @@
 				<p class="preference_description clear">{l s='Tags separated by commas (e.g., dvd, dvd player, hifi)'}</p>
 			</td>
 		</tr>
+		</table>
 	</table>
 	<br />
 </div>

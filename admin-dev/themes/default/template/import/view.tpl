@@ -30,6 +30,7 @@
 	<script type="text/javascript">
 		var errorEmpty = "{l s='Please enter a name to save.'}"
 	</script>
+	<div id="container-customer">
 	<h2>{l s='View your data'}</h2>
 	<div>
 		<b>{l s='Save and load your matching configuration'} : </b><br><br>
@@ -134,5 +135,6 @@
 		</table>
 		<script type="text/javascript">showTable(current);</script>
 	</form>
+	</div>
 {/block}
 

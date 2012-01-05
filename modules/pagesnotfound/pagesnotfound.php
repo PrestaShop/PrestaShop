@@ -109,7 +109,7 @@ class Pagesnotfound extends Module
 
 		$this->_html .= '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>';
 		if (!file_exists(dirname(__FILE__).'/../../.htaccess'))
-			$this->_html .= '<div class="warning warn">'.$this->l('You <b>must</b> use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
+			$this->_html .= '<br/><div class="warning warn">'.$this->l('You <b>must</b> use a .htaccess file to redirect 404 errors to the page "404.php"').'</div>';
 
 		$pages = $this->getPages();
 		if (count($pages))
