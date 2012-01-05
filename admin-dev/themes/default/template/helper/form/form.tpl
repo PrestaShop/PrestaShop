@@ -257,8 +257,22 @@
 									<select name="{$key}">
 										<option value="">-</option>
 										{if $key == 'months'}
+                                                {*
+                                                  {l s='January'}
+                                                  {l s='February'}
+                                                  {l s='March'}
+                                                  {l s='April'}
+                                                  {l s='May'}
+                                                  {l s='June'}
+                                                  {l s='July'}
+                                                  {l s='August'}
+                                                  {l s='September'}
+                                                  {l s='October'}
+                                                  {l s='November'}
+                                                  {l s='December'}
+                                              *}
 											{foreach $select as $k => $v}
-												<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{$v}</option>
+												<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{l s=$v}</option>
 											{/foreach}
 										{else}
 											{foreach $select as $v}
