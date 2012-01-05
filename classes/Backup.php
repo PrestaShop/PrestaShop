@@ -171,12 +171,6 @@ class BackupCore
 	 */
 	public function add()
 	{
-		if ( _DB_TYPE_ !== 'MySQL' )
-		{
-			$this->error = Tools::displayError('Sorry, backup currently only supports MySQL database types. You are using') . ' "' . _DB_TYPE_ . '"';
-			return false;
-		}
-
 		if (!$this->psBackupAll)
 			$ignore_insert_table = array(_DB_PREFIX_.'connections', _DB_PREFIX_.'connections_page', _DB_PREFIX_.'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
 		else
