@@ -114,6 +114,14 @@ class AdminBackupControllerCore extends AdminController
 		}
 	}
 
+	public function initContent()
+	{
+		if ($this->display == 'add')
+			$this->display = 'list';
+
+		parent::initContent();
+	}
+
 	/**
 	 * Load class object using identifier in $_GET (if possible)
 	 * otherwise return an empty object
@@ -150,11 +158,11 @@ class AdminBackupControllerCore extends AdminController
 				if (!$object->add())
 					$this->_errors[] = $object->error;
 				else
-					$this->tpl_view_vars = array(
+					$this->context->smarty->assign(array(
 						'conf' => $this->l('It appears that the Backup was successful, however, you must download and carefully verify the Backup file.'),
 						'backup_url' => $object->getBackupURL(),
 						'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
-					);
+					));
 			}
 		}
 
