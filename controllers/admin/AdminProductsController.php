@@ -1949,13 +1949,11 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessProductManufacturers()
 	{
 		$manufacturers = Manufacturer::getManufacturers();
-		if ($manufacturers)
-		{
 		$jsonArray = array();
-			foreach ($manufacturers AS $manufacturer)
-				$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
+			if ($manufacturers)
+				foreach ($manufacturers AS $manufacturer)
+					$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
 			die('['.implode(',', $jsonArray).']');
-		}
 	}
 
 	/**
