@@ -568,6 +568,9 @@ class AdminCustomersControllerCore extends AdminController
 		$orders_ko = array();
 		foreach ($orders as $order)
 		{
+			if (!isset($order['order_state']))
+				$order['order_state'] = $this->l('The state isn\'t still defined for this order');
+
 			if ($order['valid'])
 			{
 				$orders_ok[] = $order;
