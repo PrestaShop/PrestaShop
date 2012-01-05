@@ -71,7 +71,7 @@
 <table style="width: 100%">
 	<tr>
 		<td style="width: 15%; padding-right: 7px; text-align: right; vertical-align: top; font-size: 7pt;">
-			<!-- CUSTOMER INFORMATIONS -->
+			<!-- CUSTOMER INFORMATION -->
 			<b>{l s='Order Number:' pdf='true'}</b><br />
 			{'%06d'|sprintf:$order->id}<br />
 			<br />
@@ -92,7 +92,7 @@
 			{/foreach}
 			</table>
 			<br />
-			<!-- / CUSTOMER INFORMATIONS -->
+			<!-- / CUSTOMER INFORMATION -->
 		</td>
 		<td style="width: 85%; text-align: right">
 			<table style="width: 100%; font-size: 8pt;">
