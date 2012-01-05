@@ -53,6 +53,7 @@ function verifyMail(testMsg, testSubject)
 		   type : "POST",
 		   data:
 			{
+				"mailMethod"	: (($("input[name=PS_MAIL_METHOD]:checked").val() == 2) ? "smtp" : "native"),
 				"smtpSrv"		: $("input[name=PS_MAIL_SERVER]").val(),
 				"testEmail"		: $("#testEmail").val(),
 				"smtpLogin"		: $("input[name=PS_MAIL_USER]").val(),
