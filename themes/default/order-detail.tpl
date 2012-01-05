@@ -432,7 +432,3 @@
 {else}
 <p><img src="{$img_dir}icon/infos.gif" alt="" class="icon" />&nbsp;{l s='You can\'t make a merchandise return with a guest account'}</p>
 {/if}
-{if !isset($smarty.get.ajax)}
-	</div>
-</div>
-{/if}
