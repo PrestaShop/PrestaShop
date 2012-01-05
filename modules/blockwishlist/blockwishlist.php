@@ -269,7 +269,7 @@ class BlockWishList extends Module
 				$this->_html .= '
 				<tr>
 					<td class="first_item">
-						<img src="'.$link->getImageLink($product['link_rewrite'], $product['cover'], 'small').'" alt="'.htmlentities($product['name'], ENT_COMPAT, 'UTF-8').'" style="float:left;" />
+						<img src="'.$this->context->link->getImageLink($product['link_rewrite'], $product['cover'], 'small').'" alt="'.htmlentities($product['name'], ENT_COMPAT, 'UTF-8').'" style="float:left;" />
 						'.$product['name'];
 				if (isset($product['attributes_small']))
 					$this->_html .= '<br /><i>'.htmlentities($product['attributes_small'], ENT_COMPAT, 'UTF-8').'</i>';

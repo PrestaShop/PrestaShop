@@ -71,7 +71,7 @@ if (empty($token) === false)
 	}
 	WishList::incCounter((int)($wishlist['id_wishlist']));
 	$ajax = Configuration::get('PS_BLOCK_CART_AJAX');
-	$context->context->smarty->assign(array (
+	$context->smarty->assign(array (
 		'current_wishlist' => $wishlist,
 		'token' => $token,
 		'ajax' => ((isset($ajax) AND (int)($ajax) == 1) ? '1' : '0'),
