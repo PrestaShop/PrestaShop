@@ -601,20 +601,47 @@ abstract class DbCore
 		return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
 	}
 
+	/**
+	 * Try a connection to the database and check if at least one table with same prefix exists
+	 *
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param string $prefix Tables prefix
+	 * @return bool
+	 */
+	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
+	{
+		return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+	}
+
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function s($sql, $use_cache = true)
 	{
+		Tools::displayAsDeprecated();
 		return Db::getInstance()->executeS($sql, true, $use_cache);
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function ps($sql, $use_cache = 1)
 	{
+		Tools::displayAsDeprecated();
 		$ret = Db::s($sql, $use_cache);
 		p($ret);
 		return $ret;
 	}
 
+	/**
+	 * @deprecated 1.5.0
+	 */
 	public static function ds($sql, $use_cache = 1)
 	{
+		Tools::displayAsDeprecated();
 		Db::s($sql, $use_cache);
 		die();
 	}

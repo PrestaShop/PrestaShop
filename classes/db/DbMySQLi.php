@@ -138,6 +138,23 @@ class DbMySQLiCore extends Db
 		return $this->link->query('USE '.pSQL($db_name));
 	}
 
+	/**
+	 * @see Db::hasTableWithSamePrefix()
+	 */
+	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
+	{
+		$link = @new mysqli($server, $user, $pwd, $db);
+		if (mysqli_connect_error())
+			return false;
+
+		$sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
+		$result = $link->query($sql);
+		return (bool)$result->fetch_assoc();
+	}
+
+	/**
+	 * @see Db::checkConnection()
+	 */
 	static public function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
@@ -158,6 +175,9 @@ class DbMySQLiCore extends Db
 		return 0;
 	}
 
+	/**
+	 * @see Db::checkEncoding()
+	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
