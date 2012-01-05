@@ -2,15 +2,16 @@
 </div><!-- div id="sheets" -->
 
 <div id="buttons">
-	<?php if (!$this->isFirstStep()): ?>
-		<input id="btBack" class="button little" type="submit" name="submitPrevious" value="<?php echo $this->l('Back') ?>" />
-	<?php endif; ?>
 	<?php if (!$this->isLastStep()): ?>
 		<?php if ($this->next_button): ?>
 			<input id="btNext" class="button little" type="submit" name="submitNext" value="<?php echo $this->l('Next') ?>" />
 		<?php else: ?>
 			<input id="btNext" class="button little disabled" type="submit" name="submitNext" value="<?php echo $this->l('Next') ?>" disabled="disabled" />
 		<?php endif; ?>
+	<?php endif; ?>
+
+	<?php if (!$this->isFirstStep()): ?>
+		<input id="btBack" class="button little" type="submit" name="submitPrevious" value="<?php echo $this->l('Back') ?>" />
 	<?php endif; ?>
 </div>
 </form>
