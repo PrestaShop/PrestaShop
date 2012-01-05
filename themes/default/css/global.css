@@ -318,7 +318,7 @@ ul.footer_links li .icon {
 		color:#000;
 		border:1px solid #ccc
 	}
-	
+
 .sortPagiBar #bt_compare {
 	padding:3px 7px;
 	border:none;
@@ -330,7 +330,7 @@ ul.footer_links li .icon {
 .sortPagiBar #nbrItemPage {margin-left:40px;}
 
 .sortPagiBar .PrductSort {float:left;}
-	
+
 .sortPagiBar .nbrProduct {
 	display:inline-block;
 	padding:0 10px;
@@ -459,8 +459,8 @@ div.star_on a { background-position: 0 -16px }
 div.star_hover a, div.star a:hover { background-position: 0 -32px }
 .pack_content { margin: 10px 0 10px 0 }
 .pack_price {
-	float: right; 
-	margin-right: 3px; 
+	float: right;
+	margin-right: 3px;
 	font-size: 12px
 }
 .confirmation {
@@ -701,7 +701,7 @@ table#cart_summary .cart_delete {
 	width:64px;
 	text-align:center
 }
-.cart_delete a.cart_quantity_delete, 
+.cart_delete a.cart_quantity_delete,
 a.price_discount_delete {
 	display:inline-block;
 	padding:1px 2px;
@@ -715,8 +715,6 @@ a.price_discount_delete {
 	border-radius: 3px
 }
 
-.cart_total_tax {display:none}
-
 .cart_total_price .total_price_container {
 	border-right:none;
 }
@@ -726,7 +724,7 @@ table#cart_summary .cart_total_price td.cart_voucher {
 	border-bottom:1px solid #999;
 	vertical-align:middle
 }
-.cart_voucher h4, 
+.cart_voucher h4,
 .cart_voucher p {float:left;}
 .cart_voucher h4 {
 	margin-right:12px;
@@ -829,7 +827,7 @@ table#cart_summary .cart_total_price .total_price_container {
 }
 #create-account_form {margin-right: 11px;}
 
-#authentication #create-account_form fieldset, 
+#authentication #create-account_form fieldset,
 #authentication #login_form fieldset {
 	height: 170px
 }
@@ -963,7 +961,7 @@ table#cart_summary .cart_total_price .total_price_container {
 
 /* step 4 - paiement ************************************************************************** */
 
-/* #################### CSS MAXENCE  ######################## 
+/* #################### CSS MAXENCE  ########################
 #order .delivery_options_address, #orderopc .delivery_options_address {
 width: 541px;
 margin-left: 7px;
@@ -1203,11 +1201,11 @@ a.iframe {font-weight:bold}
 }
 #new_account_form p.required {color:#222}
 #new_account_form p.required sup {color:#990000}
-#new_account_form p.radio span, 
-#new_account_form p.text label, 
-#new_account_form p.password label, 
-#new_account_form p.select label, 
-#new_account_form p.select span, 
+#new_account_form p.radio span,
+#new_account_form p.text label,
+#new_account_form p.password label,
+#new_account_form p.select label,
+#new_account_form p.select span,
 #new_account_form p.textarea label {
 	display: inline-block;
    padding: 6px 15px;
