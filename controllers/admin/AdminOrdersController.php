@@ -167,31 +167,36 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		// If id_order is sent, we instanciate a new Order object
+		if (Tools::isSubmit('id_order'))
+		{
+			$order = new Order(Tools::getValue('id_order'));
+			if (!Validate::isLoadedObject($order))
+				throw new PrestaShopException('Can\'t load Order object');
+		}
+
 		/* Update shipping number */
-		if (Tools::isSubmit('submitShippingNumber') AND ($id_order = (int)Tools::getValue('id_order')) AND Validate::isLoadedObject($order = new Order($id_order)))
+		if (Tools::isSubmit('submitShippingNumber') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (Validate::isUrl(Tools::getValue('tracking_number')))
+				$order_carrier = new OrderCarrier(Tools::getValue('id_order_carrier'));
+				if (!Validate::isLoadedObject($order_carrier))
+					$this->_errors[] = Tools::displayError('Order carrier ID is invalid');
+				elseif (!Validate::isUrl(Tools::getValue('tracking_number')))
+					$this->_errors[] = Tools::displayError('Tracking number is incorrect');
+				else
 				{
 					// update shipping number
+					// Keep these two following lines for backward compatibility, remove on 1.6 version
 					$order->shipping_number = Tools::getValue('tracking_number');
-					if ($order->update())
-					{
-						// Update order_carrier
-						$id_order_invoice = Tools::getValue('id_order_invoice');
-						$id_carrier = Tools::getValue('id_carrier');
-						$id_order_carrier = Db::getInstance()->getValue('
-							SELECT `id_order_carrier`
-							FROM `'._DB_PREFIX_.'order_carrier`
-							WHERE `id_order` = '.(int)$order->id.
-							' AND `id_carrier` = '.(int)$id_carrier.
-							($id_order_invoice ? ' AND `id_order_invoice` = '.(int)$id_order_invoice : ''));
-						$order_carrier = new OrderCarrier($id_order_carrier);
-						$order_carrier->tracking_number = pSQL(Tools::getValue('tracking_number'));
-						$order_carrier->update();
+					$order->update();
 
-						global $_LANGMAIL;
+					// Update order_carrier
+					$order_carrier->tracking_number = pSQL(Tools::getValue('tracking_number'));
+					if ($order_carrier->update())
+					{
+						// Send mail to customer
 						$customer = new Customer((int)$order->id_customer);
 						$carrier = new Carrier((int)$order->id_carrier);
 						if (!Validate::isLoadedObject($customer))
@@ -202,53 +207,56 @@ class AdminOrdersControllerCore extends AdminController
 							'{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
 							'{firstname}' => $customer->firstname,
 							'{lastname}' => $customer->lastname,
-							'{id_order}' => (int)$order->id
+							'{id_order}' => $order->id
 						);
 						@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
-							$customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL,
+							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true);
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					}
 					else
-						$this->_errors[] = Tools::displayError('An error occured on updating of order');
+						$this->_errors[] = Tools::displayError('Order carrier can\'t be updated');
 				}
-				else
-					$this->_errors[] = Tools::displayError('Shipping number is incorrect');
 			}
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		/* Change order state, add a new entry in order history and send an e-mail to the customer if needed */
-		elseif (Tools::isSubmit('submitState') AND ($id_order = (int)(Tools::getValue('id_order'))) AND Validate::isLoadedObject($order = new Order($id_order)))
+		elseif (Tools::isSubmit('submitState') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$_GET['view'.$this->table] = true;
-				if (!$newOrderStatusId = (int)(Tools::getValue('id_order_state')))
+				$order_state = new OrderState(Tools::getValue('id_order_state'));
+
+				if (!Validate::isLoadedObject($order_state))
 					$this->_errors[] = Tools::displayError('Invalid new order status');
 				else
 				{
+					// Create new OrderHistory
 					$history = new OrderHistory();
-					$history->id_order = (int)$id_order;
+					$history->id_order = $order->id;
 					$history->id_employee = (int)$this->context->employee->id;
-					$history->changeIdOrderState((int)($newOrderStatusId), (int)($id_order));
-					$order = new Order((int)$order->id);
-					$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
+					$history->changeIdOrderState($order_state->id, $order->id);
+
+					$carrier = new Carrier($order->id_carrier, $order->id_lang);
 					$templateVars = array();
-					if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') AND $order->shipping_number)
+					if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
 						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-					else if ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
+					elseif ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
 						$templateVars = array(
 							'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
-							'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : ''));
+							'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : '')
+						);
 					elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
 						$templateVars = array(
 							'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
 							'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
-							'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : ''));
+							'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : '')
+						);
+					// Save all changes
 					if ($history->addWithemail(true, $templateVars))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder'.'&token='.$this->token);
 					$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 				}
 			}
@@ -257,18 +265,19 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		/* Add a new message for the current order and send an e-mail to the customer if needed */
-		elseif (isset($_POST['submitMessage']))
+		elseif (Tools::isSubmit('submitMessage') && isset($order))
 		{
-			$_GET['view'.$this->table] = true;
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (!($id_order = (int)(Tools::getValue('id_order'))) OR !($id_customer = (int)(Tools::getValue('id_customer'))))
-					$this->_errors[] = Tools::displayError('An error occurred before sending message');
+				$customer = new Customer(Tools::getValue('id_customer'));
+				if (!Validate::isLoadedObject($customer))
+					$this->_errors[] = Tools::displayError('Customer is invalid');
 				elseif (!Tools::getValue('message'))
 					$this->_errors[] = Tools::displayError('Message cannot be blank');
 				else
 				{
 					/* Get message rules and and check fields validity */
+					// TODO review
 					$rules = call_user_func(array('Message', 'getValidationRules'), 'Message');
 					foreach ($rules['required'] AS $field)
 						if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
@@ -281,51 +290,51 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::getValue($field))
 							if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8')))
 								$this->_errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is invalid.');
+
 					if (!sizeof($this->_errors))
 					{
-						$order = new Order((int)(Tools::getValue('id_order')));
-						$customer = new Customer((int)$order->id_customer);
 						//check if a thread already exist
 						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, $order->id);
-						$cm = new CustomerMessage();
 						if (!$id_customer_thread)
 						{
-							$ct = new CustomerThread();
-							$ct->id_contact = 0;
-							$ct->id_customer = (int)$order->id_customer;
-							$ct->id_shop = (int)$this->context->shop->getId(true);
-							$ct->id_order = (int)$order->id;
-							$ct->id_lang = (int)$this->context->language->id;
-							$ct->email = $customer->email;
-							$ct->status = 'open';
-							$ct->token = Tools::passwdGen(12);
-							$ct->add();
+							$customer_thread = new CustomerThread();
+							$customer_thread->id_contact = 0;
+							$customer_thread->id_customer = (int)$order->id_customer;
+							$customer_thread->id_shop = (int)$this->context->shop->getId(true);
+							$customer_thread->id_order = (int)$order->id;
+							$customer_thread->id_lang = (int)$this->context->language->id;
+							$customer_thread->email = $customer->email;
+							$customer_thread->status = 'open';
+							$customer_thread->token = Tools::passwdGen(12);
+							$customer_thread->add();
 						}
 						else
-							$ct = new CustomerThread((int)$id_customer_thread);
-						$cm->id_customer_thread = $ct->id;
-						$cm->id_employee = (int)$this->context->employee->id;
-						$cm->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
-						$cm->private = Tools::getValue('visibility');
-						if (!$cm->add())
+							$customer_thread = new CustomerThread((int)$id_customer_thread);
+						$customer_message = new CustomerMessage();
+						$customer_message->id_customer_thread = $customer_thread->id;
+						$customer_message->id_employee = (int)$this->context->employee->id;
+						$customer_message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
+						$customer_message->private = Tools::getValue('visibility');
+						if (!$customer_message->add())
 							$this->_errors[] = Tools::displayError('An error occurred while sending message.');
-						elseif ($cm->private)
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
-						elseif (Validate::isLoadedObject($customer = new Customer($id_customer)))
+						elseif ($customer_message->private)
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
+						else
 						{
-							if (Validate::isLoadedObject($order))
-							{
-								$varsTpl = array(
-									'{lastname}' => $customer->lastname,
-									'{firstname}' => $customer->firstname,
-									'{id_order}' => $order->id,
-									'{message}' => (Configuration::get('PS_MAIL_TYPE') == 2 ? $cm->message : Tools::nl2br($cm->message))
-								);
-								if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
-									Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
-									$customer->firstname.' '.$customer->lastname, NULL, NULL, NULL, NULL, _PS_MAIL_DIR_, true))
-									Tools::redirectAdmin(self::$currentIndex.'&id_order='.$id_order.'&vieworder&conf=11'.'&token='.$this->token);
-							}
+							$message = $customer_message->message;
+							if (Configuration::get('PS_MAIL_TYPE') != 2)
+								$message = Tools::nl2br($customer_message->message);
+
+							$varsTpl = array(
+								'{lastname}' => $customer->lastname,
+								'{firstname}' => $customer->firstname,
+								'{id_order}' => $order->id,
+								'{message}' => $message
+							);
+							if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
+								Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
+								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true))
+								Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						}
 						$this->_errors[] = Tools::displayError('An error occurred while sending e-mail to customer.');
 					}
@@ -336,36 +345,41 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		/* Partial refund from order */
-		elseif (Tools::isSubmit('partialRefund') AND Validate::isLoadedObject($order = new Order((int)(Tools::getValue('id_order')))))
+		elseif (Tools::isSubmit('partialRefund') && isset($order))
 		{
-			$amount = 0;
-			$order_detail_list = array();
-			foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
-				if (isset($amount_detail) && !empty($amount_detail))
-				{
-					$amount += $amount_detail;
-					$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
-					$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
-				}
-			$shipping_cost_amount = (float)(Tools::getValue('partialRefundShippingCost'));
-			if ($shipping_cost_amount > 0)
-				$amount += $shipping_cost_amount;
-
-			if ($amount > 0)
+			if ($this->tabAccess['edit'] == '1')
 			{
-				if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
-					$this->_errors[] = Tools::displayError('Cannot generate partial credit slip');
+				$amount = 0;
+				$order_detail_list = array();
+				foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
+					if (isset($amount_detail) && !empty($amount_detail))
+					{
+						$amount += $amount_detail;
+						$order_detail_list[$id_order_detail]['quantity'] = (int)$_POST['partialRefundProductQuantity'][$id_order_detail];
+						$order_detail_list[$id_order_detail]['amount'] = (float)$amount_detail;
+					}
+				$shipping_cost_amount = (float)Tools::getValue('partialRefundShippingCost');
+				if ($shipping_cost_amount > 0)
+					$amount += $shipping_cost_amount;
+
+				if ($amount > 0)
+				{
+					if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
+						$this->_errors[] = Tools::displayError('Cannot generate partial credit slip');
+				}
+				else
+					$this->_errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
+
+				// Redirect if no errors
+				if (!sizeof($this->_errors))
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
 			}
 			else
-				$this->_errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
-
-			// Redirect if no errors
-			if (!sizeof($this->_errors))
-				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
+				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 
 		/* Cancel product from order */
-		elseif (Tools::isSubmit('cancelProduct') AND Validate::isLoadedObject($order = new Order((int)(Tools::getValue('id_order')))))
+		elseif (Tools::isSubmit('cancelProduct') && isset($order))
 		{
 		 	if ($this->tabAccess['delete'] === '1')
 			{
@@ -378,13 +392,11 @@ class AdminOrdersControllerCore extends AdminController
 				$full_quantity_list = $qtyList;
 
 				if ($customizationList)
-				{
 					foreach ($customizationList as $key => $id_order_detail)
 					{
 						$full_product_list[$id_order_detail] = $id_order_detail;
 						$full_quantity_list[$id_order_detail] = $customizationQtyList[$key];
 					}
-				}
 
 				if ($productList OR $customizationList)
 				{
@@ -403,7 +415,7 @@ class AdminOrdersControllerCore extends AdminController
 							$order_detail = new OrderDetail($id_order_detail);
 							$customization_quantity = 0;
 							if (array_key_exists($order_detail->product_id, $customization_quantities) && array_key_exists($order_detail->product_attribute_id, $customization_quantities[$order_detail->product_id]))
-								$customization_quantity =  (int) $customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
+								$customization_quantity = (int)$customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
 
 							if (($order_detail->product_quantity - $customization_quantity - $order_detail->product_quantity_refunded - $order_detail->product_quantity_return) < $qtyCancelProduct)
 								$this->_errors[] = Tools::displayError('Invalid quantity selected for product.');
@@ -453,7 +465,8 @@ class AdminOrdersControllerCore extends AdminController
 										$order_detail->id_order,
 										$order_detail->product_id,
 										$order_detail->product_attribute_id,
-										$quantity_to_reinject);
+										$quantity_to_reinject
+									);
 
 									foreach ($mvts as $mvt)
 									{
@@ -471,10 +484,12 @@ class AdminOrdersControllerCore extends AdminController
 								}
 								else if ($order_detail->id_warehouse == 0)
 								{
-									StockAvailable::updateQuantity($order_detail->product_id,
-																   $order_detail->product_attribute_id,
-																   $quantity_to_reinject,
-																   $order->id_shop);
+									StockAvailable::updateQuantity(
+										$order_detail->product_id,
+										$order_detail->product_attribute_id,
+										$quantity_to_reinject,
+										$order->id_shop
+									);
 								}
 								else
 									$this->_errors[] = Tools::displayError('Cannot re-stock product');
@@ -544,13 +559,12 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		elseif (isset($_GET['messageReaded']))
+		elseif (Tools::isSubmit('messageReaded'))
 			Message::markAsReaded($_GET['messageReaded'], $this->context->employee->id);
-		else if (Tools::isSubmit('submitAddPayment'))
+		else if (Tools::isSubmit('submitAddPayment') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$order = new Order(Tools::getValue('id_order'));
 				$amount = str_replace(',', '.', Tools::getValue('payment_amount'));
 				$currency = new Currency(Tools::getValue('payment_currency'));
 				if ($order->hasInvoice())
@@ -616,7 +630,7 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
 		}
-		elseif (Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice'))
+		elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -624,7 +638,6 @@ class AdminOrdersControllerCore extends AdminController
 				if (Validate::isLoadedObject($address))
 				{
 					// Update the address on order
-					$order = new Order(Tools::getValue('id_order'));
 					if (Tools::isSubmit('submitAddressShipping'))
 						$order->id_address_delivery = $address->id;
 					elseif (Tools::isSubmit('submitAddressInvoice'))
@@ -638,14 +651,10 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::isSubmit('submitChangeCurrency'))
+		elseif (Tools::isSubmit('submitChangeCurrency') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$order = new Order(Tools::getValue('id_order'));
-				if (!Validate::isLoadedObject($order))
-					throw new PrestaShopException('Con\'t load Order object');
-
 				if (Tools::getValue('new_currency') != $order->id_currency && !$order->valid)
 				{
 					$old_currency = new Currency($order->id_currency);
@@ -714,12 +723,8 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::isSubmit('submitGenerateInvoice'))
+		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
-			$order = new Order(Tools::getValue('id_order'));
-			if (!Validate::isLoadedObject($order))
-				throw new PrestaShopException('Order can\'t be loaded');
-
 			if ($order->hasInvoice())
 				$this->_errors[] = Tools::displayError('This order has already invoice');
 			else
@@ -728,13 +733,12 @@ class AdminOrdersControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 			}
 		}
-		elseif (Tools::isSubmit('submitDeleteVoucher'))
+		elseif (Tools::isSubmit('submitDeleteVoucher') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$order_cart_rule = new OrderCartRule(Tools::getValue('id_order_cart_rule'));
-				$order = new Order(Tools::getValue('id_order'));
-				if (Validate::isLoadedObject($order_cart_rule) && Validate::isLoadedObject($order) && $order_cart_rule->id_order == $order->id)
+				if (Validate::isLoadedObject($order_cart_rule) && $order_cart_rule->id_order == $order->id)
 				{
 					if ($order_cart_rule->id_order_invoice)
 					{
@@ -773,7 +777,7 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		elseif (Tools::getValue('submitNewVoucher'))
+		elseif (Tools::getValue('submitNewVoucher') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -781,10 +785,6 @@ class AdminOrdersControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('You must specify a name in order to create a new discount');
 				else
 				{
-					$order = new Order(Tools::getValue('id_order'));
-					if (!Validate::isLoadedObject($order))
-						throw new PrestaShopException('Can\'t load Order object');
-
 					if ($order->hasInvoice())
 					{
 						// If the discount is for only one invoice
