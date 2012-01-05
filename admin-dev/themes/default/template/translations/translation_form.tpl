@@ -29,7 +29,8 @@
 {block name="override_tpl"}
 
 	<h2>{l s='Language'} : {$lang} - {$translation_type}</h2>
-	{l s='Expressions to translate'} : <b>{$count}</b>. {l s='Click on the titles to open fieldsets'}.<br /><br />
+	{l s='Expressions to translate'} : <b>{$count}</b>.
+	<div class="hint" style="display:block;">{l s='Click on the titles to open fieldsets'}.</div><br /><br />
 	<p>{l s='total missing expresssions:'} {$missing_translations|array_sum} </p>
 	{$limit_warning}
 	{if !$suoshin_exceeded}

@@ -155,8 +155,8 @@
 					{/foreach}
 				</select>
 			{/if}
-				&nbsp;&nbsp;<img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />
-				<b><a href="#upload_file_import" id="upload_file_import_link">{l s='Upload'}</a></b>
+				&nbsp;&nbsp;
+				<a href="#upload_file_import" id="upload_file_import_link" class="button"><img src="../img/admin/add.gif" alt="Uplaod" title="Upload" />{l s='Upload'}</a>
 			</div>
 			<br />
 				
@@ -203,10 +203,12 @@
 			</div>
 		{if !count($files_to_import)}
 			<div class="warn" style="margin-top: 20px;">
-				{l s='There is no CSV file available, please upload one using the form above.'}
-				<br /><br />
-				{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a><br /><br />
-				{l s='Read more about CSV format at: '} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+				<p>{l s='There is no CSV file available, please upload one using the form above.'}</p>
+				<ul>
+				<li>{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a></li>	
+					<li>
+				{l s='Read more about CSV format at: '} <a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a></li>
+				</ul>
 			</div>
 		{/if}
 	</fieldset>

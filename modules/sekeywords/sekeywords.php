@@ -106,7 +106,8 @@ class SEKeywords extends ModuleGraph
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->_query.ModuleGraph::getDateBetween().$this->_query2);
 		$total = count($result);
 		$this->html = '<div class="blocStats"><h2 class="icon-'.$this->name.'"><span></span>'.$this->displayName.'</h2>
-		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'';
+		<p>
+		'.$total.' '.($total == 1 ? $this->l('keyword matches your query.') : $this->l('keywords match your query.')).'</p>';
 		if ($result && $total)
 		{
 			$table = '

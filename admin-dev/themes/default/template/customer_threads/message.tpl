@@ -176,7 +176,7 @@
 			<div style="width: 450px; margin-top: 0px;">
 				<input type="file" name="joinFile"/>
 			<div>
-			<div style="width: 450px; text-align: center;">
+			<div>
 				<input type="submit" class="button" name="submitReply" value="{l s='Send my reply'}" style="margin-top:20px;" />
 				<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread}" />
 				<input type="hidden" name="msg_email" value="{$message.email}" />
