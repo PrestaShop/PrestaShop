@@ -129,7 +129,7 @@ function generateDeliverySlipPDFByIdOrder($id_order)
 {
 	$order = new Order($id_order);
 	if (!Validate::isLoadedObject($order))
-		throw new PrestashopException('Can\'t load Order object');
+		throw new PrestaShopException('Can\'t load Order object');
 
 	$order_invoice_collection = $order->getInvoicesCollection();
 	generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
@@ -139,7 +139,7 @@ function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
 {
 	$order_invoice = new OrderInvoice($id_order_invoice);
 	if (!Validate::isLoadedObject($order_invoice))
-		throw new PrestashopException('Can\'t load Order Invoice object');
+		throw new PrestaShopException('Can\'t load Order Invoice object');
 
 	generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
 }
