@@ -44,8 +44,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 		$this->title = 'Order Return '.sprintf('%06d', $this->order_return->id); // TODO
 
 		// footer informations
-		$shop = new Shop((int)$this->order->id_shop);
-		$this->address = $shop->getAddress();
+		$this->shop = new Shop((int)$this->order->id_shop);
     }
 
 	/**

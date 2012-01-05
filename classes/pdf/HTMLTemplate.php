@@ -33,9 +33,9 @@ abstract class HTMLTemplateCore
 {
 	public $title;
 	public $date;
-	public $address;
 	public $available_in_your_account = true;
 	public $smarty;
+    public $shop;
 
 	/**
 	 * Returns the template's HTML header
@@ -49,7 +49,7 @@ abstract class HTMLTemplateCore
 			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 			'title' => $this->title,
 			'date' => $this->date,
-			'shop_name' => Configuration::get('PS_SHOP_NAME')
+			'shop_name' => $this->shop->name
 		));
 
 		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/header.tpl');
@@ -62,9 +62,13 @@ abstract class HTMLTemplateCore
 	public function getFooter()
 	{
 		$shop_address = '';
-		if (isset($this->address) && $this->address instanceof Address)
-			$shop_address = AddressFormat::generateAddress($this->address, array(), ' - ', ' ');
-
+        if (Validate::isLoadedObject($this->shop))
+        {
+            $shop_address_obj = $this->shop->getAddress();
+            if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
+                $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
+        }
+        
 		$this->smarty->assign(array(
 			'available_in_your_account' => $this->available_in_your_account,
 			'shop_address' => $shop_address,
