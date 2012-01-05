@@ -51,7 +51,7 @@ class AdminMetaControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('URLs Setup'),
 				'fields' =>	array(
-					'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)').'<div class="optionsDescription">'.$this->l('If you turn on this feature, you must').' <a href="?tab=AdminGenerator&token='.Tools::getAdminToken('AdminGenerator'.(int)(Tab::getIdFromClassName('AdminGenerator')).(int)$this->context->employee->id).'">'.$this->l('generate a .htaccess file').'</a></div>', 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
+					'PS_REWRITING_SETTINGS' => array('title' => $this->l('Friendly URL'), 'desc' => $this->l('Enable only if your server allows URL rewriting (recommended)'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 					'PS_CANONICAL_REDIRECT' => array('title' => $this->l('Automatically redirect to Canonical url'), 'desc' => $this->l('Recommended but your theme must be compliant'), 'validation' => 'isBool', 'cast' => 'intval', 'type' => 'bool'),
 				),
 				'submit' => array()
@@ -245,6 +245,15 @@ class AdminMetaControllerCore extends AdminController
 		}
 		else
 			Configuration::updateValue('PS_ROUTE_'.$routeID, $rule);
+	}
+
+	/**
+	 * Called when PS_REWRITING_SETTINGS option is saved
+	 */
+	public function updateOptionPsRewritingSettings()
+	{
+		Configuration::updateValue('PS_REWRITING_SETTINGS', (int)Tools::getValue('PS_REWRITING_SETTINGS'));
+		Tools::generateHtaccess();
 	}
 
 	public function updateOptionPsRouteProductRule()
