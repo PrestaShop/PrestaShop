@@ -50,8 +50,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$this->title = self::l('Slip #').sprintf('%06d', $this->order_slip->id);
 
 		// footer informations
-		$shop = new Shop((int)$this->order->id_shop);
-		$this->address = $shop->getAddress();
+		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
 	/**
