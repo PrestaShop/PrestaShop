@@ -53,9 +53,8 @@ class AdminModulesControllerCore extends AdminController
 	private $iso_default_country;
 	private $filter_configuration = array();
 
- 	private $xml_modules_list = 'https://api.prestashop.com/xml/modules_list.xml';
-	private $addons_url_http = 'http://api.addons.prestashop.com/151/';
-	private $addons_url = 'https://api.addons.prestashop.com/151/';
+ 	private $xml_modules_list = 'api.prestashop.com/xml/modules_list.xml';
+	private $addons_url = 'api.addons.prestashop.com';
 	private $logged_on_addons = false;
 	private $cache_file_modules_list = '/config/xml/modules_list.xml';
 	private $cache_file_default_country_modules_list = '/config/xml/default_country_modules_list.xml';
@@ -156,13 +155,77 @@ class AdminModulesControllerCore extends AdminController
 		return false;
 	}
 
+	public function addonsRequest($request, $params = array())
+	{
+		// Config for each request
+		if ($request == 'native')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443, 'http://' => 80);
+			$postData = 'version=151&method=listing&action=native&iso_code='.strtolower(Configuration::get('PS_LOCALE_COUNTRY'));
+		}
+		if ($request == 'customer')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443);
+			$postData = 'version=151&method=listing&action=customer&username='.pSQL(trim($this->context->cookie->username_addons)).'&password='.pSQL(trim($this->context->cookie->password_addons));
+		}
+		if ($request == 'check_customer')
+		{
+			// Define protocol accepted and post data values for this request
+			$protocolsList = array('https://' => 443);
+			$postData = 'version=151&method=check_customer&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+		}
+		if ($request == 'module')
+		{
+			// Define protocol accepted and post data values for this request
+			if (isset($params['username_addons']) && isset($params['password_addons']))
+			{
+				$protocolsList = array('https://' => 443);
+				$postData = 'version=151&method=check_customer&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+			}
+			else
+			{
+				$protocolsList = array('https://' => 443, 'http://' => 80);
+				$postData = 'version=151&method=module&id_module='.pSQL($params['id_module']);
+			}
+		}
+
+		// Make the request
+		if (is_callable('curl_exec') && count($protocolsList) > 0)
+		{
+			foreach ($protocolsList as $protocol => $port)
+			{
+				// Curl Request
+				$ch = curl_init($protocol.$this->addons_url);
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+				curl_setopt($ch, CURLOPT_PORT, $port);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+				$content = curl_exec($ch);
+
+				// If content returned, we cache it
+				if ($content)
+					return $content;
+			}
+		}
+
+		// No content, return false
+		return false;
+	}
 
 	public function ajaxProcessRefreshModuleList()
 	{
 		// Refresh modules_list.xml every week
 		if (!$this->isFresh($this->cache_file_modules_list, 604800))
 		{
-			if ($this->refresh($this->cache_file_modules_list, $this->xml_modules_list))
+			if ($this->refresh($this->cache_file_modules_list, 'https://'.$this->xml_modules_list))
+				$this->status = 'refresh';
+			else if ($this->refresh($this->cache_file_modules_list, 'http://'.$this->xml_modules_list))
 				$this->status = 'refresh';
 			else
 				$this->status = 'error';
@@ -176,9 +239,7 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (!$this->isFresh($this->cache_file_default_country_modules_list, 86400))
 			{
-				if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url_http.'listing/native/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
-					$this->status = 'refresh';
-				else if ($this->refresh($this->cache_file_default_country_modules_list, $this->addons_url.'listing/native/'.strtolower(Configuration::get('PS_LOCALE_COUNTRY'))))
+				if (file_put_contents(_PS_ROOT_DIR_.$this->cache_file_default_country_modules_list, $this->addonsRequest('native')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -192,7 +253,7 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (!$this->isFresh($this->cache_file_customer_modules_list, 60))
 			{
-				if ($this->refresh($this->cache_file_customer_modules_list, $this->addons_url.'listing/customer/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons))))
+				if (file_put_contents(_PS_ROOT_DIR_.$this->cache_file_customer_modules_list, $this->addonsRequest('customer')))
 					$this->status = 'refresh';
 				else
 					$this->status = 'error';
@@ -210,7 +271,7 @@ class AdminModulesControllerCore extends AdminController
 
 	public function ajaxProcessLogOnAddonsWebservices()
 	{
-		$content = Tools::file_get_contents($this->addons_url.'check_customer/'.pSQL(trim(Tools::getValue('username_addons'))).'/'.pSQL(trim(Tools::getValue('password_addons'))));
+		$content = $this->addonsRequest('check_customer', array('username_addons' => pSQL(trim(Tools::getValue('username_addons'))), 'password_addons' => pSQL(trim(Tools::getValue('password_addons')))));
 		$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
 		if (!$xml)
 			die('KO');
@@ -513,14 +574,10 @@ class AdminModulesControllerCore extends AdminController
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 									{
 										if ($f['loggedOnAddons'] == 0)
-										{
-											if (@copy($this->addons_url_http.'module/'.pSQL($modaddons->id).'/', '../modules/'.$modaddons->name.'.zip'))
+											if (file_put_contents('../modules/'.$modaddons->name.'.zip', $this->addonsRequest('module', array('id_module' => pSQL($modaddons->id)))))
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
-											else if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/', '../modules/'.$modaddons->name.'.zip'))
-												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
-										}
 										if ($f['loggedOnAddons'] == 1 && $this->logged_on_addons)
-											if (@copy($this->addons_url.'module/'.pSQL($modaddons->id).'/'.pSQL(trim($this->context->cookie->username_addons)).'/'.pSQL(trim($this->context->cookie->password_addons)), '../modules/'.$modaddons->name.'.zip'))
+											if (file_put_contents('../modules/'.$modaddons->name.'.zip', $this->addonsRequest('module', array('id_module' => pSQL($modaddons->id), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
 												$this->extractArchive('../modules/'.$modaddons->name.'.zip', false);
 									}
 							}
