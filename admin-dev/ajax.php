@@ -543,18 +543,6 @@ if (Tools::isSubmit('toggleScreencast'))
 	}
 }
 
-if (Tools::isSubmit('helpAccess'))
-{
-	$item = Tools::getValue('item');
-	$isoUser = Tools::getValue('isoUser');
-	$country = Tools::getValue('country');
-	$version = Tools::getValue('version');
-
-	if (isset($item) AND isset($isoUser) AND isset($country))
-		die(HelpAccess::displayHelp($item, $isoUser,  $country, $version));
-	die('{nohelp}');
-}
-
 if (Tools::isSubmit('getHookableList'))
 {
 	/* PrestaShop demo mode */
@@ -654,8 +642,8 @@ if (Tools::isSubmit('saveHook'))
 			$i++;
 		}
 		$value = rtrim($value, ',');
-		$res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module` 
-			(id_module, id_shop, id_hook, position) 
+		$res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module`
+			(id_module, id_shop, id_hook, position)
 			VALUES '.$value);
 
 	}
@@ -1014,3 +1002,4 @@ if (Tools::isSubmit('getZones'))
 	$array = array('hasError' => false, 'errors' => '', 'data' => $html);
 	die(Tools::jsonEncode($html));
 }
+

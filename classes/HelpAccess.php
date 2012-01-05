@@ -30,10 +30,13 @@ class HelpAccessCore
 {
     const URL = 'http://help.prestashop.com';
 
-    protected static $_images = array(0 => 'none',
-                             1 => 'help2.png',
-                             2 => 'help-new.png');
-
+    /**
+     * Store in the local database that the user has seen a specific help page
+     *
+     * @static
+     * @param $label
+     * @param $version
+     */
     public static function trackClick($label, $version)
     {
         Db::getInstance()->execute('
@@ -42,6 +45,13 @@ class HelpAccessCore
         ');
     }
 
+    /**
+     * Returns the last version seen of a help page seen by the user
+     *
+     * @static
+     * @param $label
+     * @return mixed
+     */
     public static function getVersion($label)
     {
         return Db::getInstance()->getValue('
@@ -50,14 +60,26 @@ class HelpAccessCore
         ');
     }
 
+    /**
+     * Fetch information from the help website in order to know:
+     * - if the help page exists
+     * - his version
+     * - the associated tooltip
+     *
+     * @static
+     * @param $label
+     * @param $iso_lang
+     * @param $country
+     * @param $version
+     *
+     * @return array
+     */
     public static function retrieveInfos($label, $iso_lang, $country, $version)
     {
-   	    $image = self::$_images[0];
-	       $tooltip = '';
    	    $url = HelpAccess::URL.'/documentation/renderIcon?label='.$label.'&iso_lang='.$iso_lang.'&country='.$country.'&version='.$version;
+        $tooltip = '';
 
-	$ctx = @stream_context_create(array('http' => array('timeout' => 10)));
-
+        $ctx = @stream_context_create(array('http' => array('timeout' => 10)));
         $res = @file_get_contents($url, 0, $ctx);
 
 	    $infos = preg_split('/\|/', $res);
@@ -66,51 +88,12 @@ class HelpAccessCore
             $version = trim($infos[0]);
             if (!empty($version))
             {
-        	    $image = self::$_images[1];
-
                 if (sizeof($infos) > 1)
-                    $tooltip = trim('|'.$infos[1]);
+                    $tooltip = trim($infos[1]);
             }
 	    }
 
-        $last_version = HelpAccess::getVersion($label);
-
-        if (!empty($version) && $version != $last_version)
-            $image = self::$_images[2];
-
-	    return array('version' => $version, 'image' => $image, 'tooltip' => $tooltip);
+	    return array('version' => $version, 'tooltip' => $tooltip);
 	}
-
-    public static function displayHelp($label, $iso_lang, $country, $ps_version)
-		{
-			echo HelpAccess::getHelp($label, $iso_lang, $country, $ps_version);
-			return true;
-		}
-    public static function getHelp($label, $iso_lang, $country, $ps_version)
-    {
-	$content = '';
-        $infos = HelpAccess::retrieveInfos($label, $iso_lang, $country, $ps_version);
-        if (array_key_exists('image', $infos) && $infos['image'] != 'none')
-        {
-	        $content .= '
-			        <a class="help-button" href="#" onclick="showHelp(\''.HelpAccess::URL.'\',\''.Tools::safeOutput($label).'\',\''.Tools::safeOutput($iso_lang).'\',\''.Tools::safeOutput($ps_version).'\',\''.Tools::safeOutput($infos['version']).'\',\''.Tools::safeOutput($country).'\');" title="'.Tools::htmlentitiesUTF8($infos['tooltip']).'">
-			        <img id="help-'.$label.'" src="../img/admin/'.Tools::htmlentitiesUTF8($infos['image']).'" alt="" class="middle" style="margin-top: -5px"/> '.Tools::displayError('HELP').'
-			        </a>';
-		     if (!empty($infos['tooltip']))
-    		     $content .= ' <script type="text/javascript">
-			            $(document).ready(function() {
-              			      $("a.help-button").cluetip({
-				              	splitTitle: "|",
-				              	cluetipClass: "help-button",
-				                showTitle: false,
-				                arrows: true,
-				                dropShadow: false,
-				                positionBy: "auto"
-			                  });
-			            });
-		              </script>';
-		 }
-		 return $content;
-    }
 }
 
