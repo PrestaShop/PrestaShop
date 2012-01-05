@@ -62,7 +62,7 @@ $(document).ready(function() {
 					controller : 'AdminHome',
 					token : '{$token}',
 					id_employee : '{$employee->id}',
-					action : 'hideScreencast',
+					action : 'hideScreencast'
 				},
 				url: 'ajax-tab.php',
 				dataType : 'json',
@@ -126,7 +126,7 @@ $(document).ready(function() {
 				controller : 'AdminHome',
 				token : '{$token}',
 				id_employee : '{$employee->id}',
-				action : 'refreshCheckVersion',
+				action : 'refreshCheckVersion'
 			},
 			url: 'ajax-tab.php',
 			dataType : 'json',
