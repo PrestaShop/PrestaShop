@@ -99,9 +99,14 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
-			$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.Tools::getValue('iso_localization_pack').'.xml');
-			if (!$pack || !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
+            $version = str_replace('.', '', _PS_VERSION_);
+            $version = substr($version, 0, 2);
+
+			$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
+
+			if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
 				$this->_errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
+
 			if (!$selection = Tools::getValue('selection'))
 				$this->_errors[] = Tools::displayError('Please select at least one content item to import.');
 			else
