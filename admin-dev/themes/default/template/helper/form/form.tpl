@@ -98,7 +98,8 @@
 														{if isset($input.size)}size="{$input.size}"{/if}
 														{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 														{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-														{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+														{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+														{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 												{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 											</div>
 										{/foreach}
@@ -127,7 +128,8 @@
 											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 											{if isset($input.class)}class="{$input.class}"{/if}
 											{if isset($input.readonly) && $input.readonly}readonly="readonly"{/if}
-											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
+											{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 									{if isset($input.suffix)}{$input.suffix}{/if}
 									{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 								{/if}
@@ -251,7 +253,8 @@
 								<input type="password"
 										name="{$input.name}"
 										size="{$input.size}"
-										value="" />
+										value=""
+										{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 							{elseif $input.type == 'birthday'}
 								{foreach $input.options as $key => $select}
 									<select name="{$key}">
