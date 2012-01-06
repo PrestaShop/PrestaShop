@@ -183,7 +183,7 @@
 						</label>
 					</div>
 				{/if}
-				{if (isset($field['required']) && $field['required'])}
+				{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}
 					<sup>*</sup>
 				{/if}
 				{if isset($field['desc'])}<p class="preference_description">{$field['desc']}</p>{/if}
@@ -202,7 +202,7 @@
 				/>
 			</div>
 		{/if}
-		{if $required_fields}
+		{if isset($categoryData['required_fields']) && $categoryData['required_fields']}
 			<div class="small"><sup>*</sup> {l s='Required field'}</div>
 		{/if}
 		{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
