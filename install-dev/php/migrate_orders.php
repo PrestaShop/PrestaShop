@@ -33,9 +33,6 @@ function migrate_orders()
 	if (!defined('PS_TAX_INC'))
 		 define('PS_TAX_INC', 0);
 
-	Db::getInstance()->execute('DROP TABLE  `ps_orders_2`');
-	Db::getInstance()->execute('DROP TABLE `ps_order_detail_2`');
-
 	$values_order_detail = array();
 	$insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2`
 	(`id_order_detail`, `id_order`, `id_order_invoice`, `id_warehouse`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_in_stock`, `product_quantity_refunded`, `product_quantity_return`, `product_quantity_reinjected`, `product_price`, `reduction_percent`, `reduction_amount`, `reduction_amount_tax_incl`, `reduction_amount_tax_excl`, `group_reduction`, `product_quantity_discount`, `product_ean13`, `product_upc`, `product_reference`, `product_supplier_reference`, `product_weight`, `tax_computation_method`, `tax_name`, `tax_rate`, `ecotax`, `ecotax_tax_rate`, `discount_quantity_applied`, `download_hash`, `download_nb`, `download_deadline`, `total_price_tax_incl`, `total_price_tax_excl`, `unit_price_tax_incl`, `unit_price_tax_excl`, `total_shipping_price_tax_incl`, `total_shipping_price_tax_excl`, `purchase_supplier_price`, `original_product_price`)
