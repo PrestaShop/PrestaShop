@@ -264,19 +264,19 @@ class AdminCustomersControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:'
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('E-mail address:'),
+					'name' => 'email',
+					'size' => 33,
+					'required' => true
+				),
+				array(
 					'type' => 'password',
 					'label' => $this->l('Password:'),
 					'name' => 'passwd',
 					'size' => 33,
 					'required' => ($obj->id ? false : true),
 					'desc' => ($obj->id ? $this->l('Leave blank if no change') : $this->l('5 characters min., only letters, numbers, or').' -_')
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('E-mail address:'),
-					'name' => 'email',
-					'size' => 33,
-					'required' => true
 				),
 				array(
 					'type' => 'birthday',
