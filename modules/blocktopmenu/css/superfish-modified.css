@@ -60,7 +60,7 @@ ul.sf-menu li.sfHover li ul {
 }
 ul.sf-menu li li:hover ul,
 ul.sf-menu li li.sfHover ul {
-	left:			9.7em; /* match ul width */
+	left:			200px; /* match ul width */
 	top:			0;
 }
 ul.sf-menu li li:hover li ul,
@@ -168,4 +168,11 @@ li.sf-search input {
   padding-left: 20px;
   margin-top: 4px;
   background: #fff url(../img/search.gif) no-repeat left center;
+}
+
+/* hack IE7 */
+.sf-menu a, .sf-menu a:visited {height:34px !IE;}
+.sf-menu li li {
+	width:200px;
+	background:#726f72 !IE;
 }
