@@ -38,7 +38,7 @@ $type = 'text/html';
 $to =  $_POST['testEmail'];
 $from = Configuration::get('PS_SHOP_EMAIL');
 $smtpLogin = $_POST['smtpLogin'];
-$smtpPassword = urldecode($_POST['smtpPassword']);
+$smtpPassword = (!empty($_POST['smtpPassword'])) ? urldecode($_POST['smtpPassword']) : Configuration::get('PS_MAIL_PASSWD');
 $smtpPort = $_POST['smtpPort'];
 $smtpEncryption = $_POST['smtpEnc'];
 
