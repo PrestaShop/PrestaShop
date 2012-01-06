@@ -168,7 +168,7 @@
 		if ($("#inputPackItems").val() == "")
 		{
 			disableSave();
-			$(".leadin").append('<div id="disablePackMessage" class="warn">{l s='Pack is empty. Please at at least one product in the pack tab.'}</div>');
+			$(".leadin").append('<div id="disablePackMessage" class="warn">{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}</div>');
 		}
 		else
 			enableSave();
