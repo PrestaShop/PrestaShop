@@ -404,10 +404,15 @@
 					var html_carts = '';
 					var html_orders = '';
 					var addresses_options = '';
-					var address_detail = res.addresses[0].company+' '+res.addresses[0].firstname+' '+res.addresses[0].lastname+'<br />';
-					address_detail += res.addresses[0].address1+'<br />';
-					address_detail += res.addresses[0].address2+'<br />';
-					address_detail += res.addresses[0].postcode+' '+res.addresses[0].city+' '+res.addresses[0].country;
+					if (res.addresses.length > 0)
+					{
+						var address_detail = res.addresses[0].company+' '+res.addresses[0].firstname+' '+res.addresses[0].lastname+'<br />';
+						address_detail += res.addresses[0].address1+'<br />';
+						address_detail += res.addresses[0].address2+'<br />';
+						address_detail += res.addresses[0].postcode+' '+res.addresses[0].city+' '+res.addresses[0].country;
+					}
+					else
+						address_detail = '{l s='No addresses'}';
 					$.each(res.carts, function() {
 						html_carts += '<tr><td>'+this.id_cart+'</td><td>'+this.date_add+'</td><td>'+this.total_price+'</td>';
 						html_carts += '<td><a title="{l s='View this cart'}" class="fancybox" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><img src="../img/admin/details.gif" /></a>';
