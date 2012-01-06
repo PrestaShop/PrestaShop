@@ -542,7 +542,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getRestPaid()
 	{
-		return $this->total_paid_tax_incl - $this->getTotalPaid();
+		return round($this->total_paid_tax_incl - $this->getTotalPaid(), 2);
 	}
 
 	/**
