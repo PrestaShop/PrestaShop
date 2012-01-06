@@ -1241,6 +1241,15 @@ class ToolsCore
 		return ($field === '' OR $field === NULL);
 	}
 
+	/**
+	 * returns the rounded value of $value to specified precision, according to your configuration;
+	 *
+	 * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
+	 * 
+	 * @param float $value 
+	 * @param int $precision 
+	 * @return float
+	 */
 	public static function ps_round($value, $precision = 0)
 	{
 		$method = (int)(Configuration::get('PS_PRICE_ROUND_MODE'));
@@ -1251,6 +1260,13 @@ class ToolsCore
 		return round($value, $precision);
 	}
 
+	/**
+	 * returns the rounded value down of $value to specified precision
+	 * 
+	 * @param float $value 
+	 * @param int $precision 
+	 * @return float
+	 */
 	public static function ceilf($value, $precision = 0)
 	{
 		$precisionFactor = $precision == 0 ? 1 : pow(10, $precision);
@@ -1264,6 +1280,13 @@ class ToolsCore
 		return ceil($tmp) / $precisionFactor;
 	}
 
+	/**
+	 * returns the rounded value up of $value to specified precision
+	 * 
+	 * @param float $value 
+	 * @param int $precision 
+	 * @return float
+	 */
 	public static function floorf($value, $precision = 0)
 	{
 		$precisionFactor = $precision == 0 ? 1 : pow(10, $precision);
