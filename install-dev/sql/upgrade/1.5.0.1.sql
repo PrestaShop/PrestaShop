@@ -67,9 +67,18 @@ ALTER TABLE `PREFIX_tax_rule`
 
 ALTER TABLE `PREFIX_tax_rule` DROP INDEX tax_rule;
 
-INSERT INTO `PREFIX_tax_rule` (`id_tax_rules_group`, `id_country`, `id_state`, `id_tax`, `behavior`, `zipcode_from`, `zipcode_to`)
-	SELECT r.`id_tax_rules_group`, r.`id_country`, r.`id_state`, r.`id_tax`, 0, z.`from_zip_code`, z.`to_zip_code`
-	FROM `PREFIX_tax_rule` r INNER JOIN `PREFIX_county_zip_code` z ON (z.`id_county` = r.`id_county`);
+INSERT INTO `PREFIX_tax_rule` 
+	(`id_tax_rules_group`, `id_country`, `id_state`, `id_tax`, 
+	`behavior`, `zipcode_from`, `zipcode_to`, `id_county`, 
+	`description`, `state_behavior`, `county_behavior`)
+	SELECT r.`id_tax_rules_group`, r.`id_country`, r.`id_state`, r.`id_tax`, 
+	0, z.`from_zip_code`, z.`to_zip_code`, r.`id_county`, 
+	r.`description`, r.`state_behavior`, r.county_behavior
+	FROM 
+		`PREFIX_tax_rule` r 
+		INNER JOIN 
+		`PREFIX_county_zip_code` z 
+	ON (z.`id_county` = r.`id_county`);
 
 UPDATE `PREFIX_tax_rule` SET `behavior` = GREATEST(`state_behavior`, `county_behavior`);
 

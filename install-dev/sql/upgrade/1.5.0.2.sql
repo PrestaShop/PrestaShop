@@ -381,16 +381,19 @@ INSERT INTO `PREFIX_order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`
 	FROM `PREFIX_orders` o
 );
 
-INSERT INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) (
-	SELECT (
-		SELECT oi.`id_order_invoice`
-		  FROM `PREFIX_order_invoice` oi
-		  WHERE oi.`id_order` = o.`id_order`
-	), o.`id_order`, o.`id_currency`, o.`total_paid_real`, o.`payment`, o.`conversion_rate`, o.`date_add`
-	FROM `PREFIX_orders` o
-	LEFT JOIN `PREFIX_order_payment` op ON (op.`id_order` = o.`id_order`)
-	WHERE op.`id_order_payment` IS NULL
-);
+INSERT IGNORE INTO `PREFIX_order_payment` (`id_order_invoice`, `id_order`, `id_currency`, `amount`, `payment_method`, `conversion_rate`, `date_add`) 
+	(
+		SELECT
+		(
+			SELECT oi.`id_order_invoice`
+			  FROM `PREFIX_order_invoice` oi
+			  WHERE oi.`id_order` = o.`id_order`
+		), 
+		o.`id_order`, o.`id_currency`, o.`total_paid_real`, o.`payment`, o.`conversion_rate`, o.`date_add`
+		FROM `PREFIX_orders` o
+		LEFT JOIN `PREFIX_order_payment` op ON (op.`id_order` = o.`id_order`)
+		WHERE op.`id_order_payment` IS NULL
+	);
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_SMARTY_CONSOLE', '0', NOW(), NOW()),('PS_INVOICE_MODEL', 'invoice', NOW(), NOW());
@@ -420,7 +423,7 @@ WHERE `class_name` = 'AdminAccounting';
 
 ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount` `amount_tax_excl` DECIMAL( 10, 2 ) default NULL;
 ALTER TABLE `PREFIX_order_slip_detail` ADD COLUMN `amount_tax_incl` DECIMAL(10,2) default NULL AFTER `amount_tax_excl`;
-ALTER TABLE `PREFIX_image_type` DROP INDEX `name`;
+/* PHP:drop_image_type_non_unique_index(); */;
 ALTER TABLE `PREFIX_image_type` ADD `id_theme` INT(11) NOT NULL AFTER `id_image_type`;
 ALTER TABLE `PREFIX_image_type` ADD UNIQUE (`id_theme` ,`name`);
 UPDATE `PREFIX_image_type` SET `id_theme`=1;

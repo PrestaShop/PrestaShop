@@ -27,6 +27,11 @@
 
 function update_feature_detachable_cache()
 {
+	// $array_features = arary(
+	// 	'specific_price', 'scene', 
+	//	'product_download', 'customization_field', 'cart_rule',
+	//	'group', 'pack', 'alias');
+
 	Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', (int)SpecificPrice::isCurrentlyUsed('specific_price'));
 	Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', (int)Scene::isCurrentlyUsed('scene', true));
 	Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', (int)ProductDownload::isCurrentlyUsed('product_download', true));

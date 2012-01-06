@@ -76,7 +76,7 @@ function migrate_orders()
 				$sum_tax_amount += $products['total_wt'] - $products['total_price'];
 
 				$order_details['reduction_amount_tax_incl']= $reduction_amount_tax_incl;
-				$order_details['reduction_amount_tax_excl']= (float)Tools::ps_round($reduction_amount_tax_incl / $tax_rate, 2);
+				$order_details['reduction_amount_tax_excl']= (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
 				$order_details['total_price_tax_incl']= (float)$products['total_wt'];
 				$order_details['total_price_tax_excl']= (float)$products['total_price'];
 				$order_details['unit_price_tax_incl']= (float)$products['product_price_wt'];
@@ -89,7 +89,9 @@ function migrate_orders()
 		     $average_tax_used +=  ($sum_tax_amount / $sum_total_products) * 0.01;
 
 		 // this was done like that previously
-		 $wrapping_tax_rate = 1 + ((float)Configuration::get('PS_GIFT_WRAPPING_TAX') / 100);
+		  $wrapping_tax_rate = 1 + (float)Db::getInstance()->getValue('SELECT value 
+			FROM `'._DB_PREFIX_.'configuration`
+			WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100;
 		 $carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
 
 		 $total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
@@ -126,6 +128,34 @@ function migrate_orders()
 	mo_renameTables();
 }
 
+
+/**
+ * mo_ps_round is a simplification of Tools::ps_round:
+ * - round is always 2
+ * - no call to Configuration class
+ * 
+ * @param mixed $val 
+ * @return void
+ */
+function mo_ps_round($val){
+	static $ps_price_round_mode;
+	if (empty($ps_price_round_mode))
+	{
+		$ps_price_round_mode = Db::getInstance()->getValue('SELECT value 
+			FROM `'._DB_PREFIX_.'configuration`
+			WHERE name = "PS_PRICE_ROUND_MODE"');
+	}
+
+	switch ($ps_price_round_mode)
+	{
+		case PS_ROUND_UP:
+			return ceil($val * 100)/100;
+		case PS_ROUND_DOWN:
+			return floor($val * 100)/100;
+		default:
+			return round($val, 2);
+	}
+}
 
 function mo_duplicateTables()
 {
@@ -167,9 +197,9 @@ function mo_getPriceDisplayMethod($id_group)
 function mo_setProductPrices($row, $tax_calculation_method)
 {
     if ($tax_calculation_method == PS_TAX_EXC)
-        $row['product_price'] = Tools::ps_round($row['product_price'], 2);
+        $row['product_price'] = mo_ps_round($row['product_price']);
     else
-        $row['product_price_wt'] = Tools::ps_round($row['product_price'] * (1 + $row['tax_rate'] / 100), 2);
+        $row['product_price_wt'] = mo_ps_round($row['product_price'] * (1 + $row['tax_rate'] / 100));
 
     $group_reduction = 1;
     if ($row['group_reduction'] > 0)
@@ -181,8 +211,8 @@ function mo_setProductPrices($row, $tax_calculation_method)
             $row['product_price'] = ($row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01));
         else
         {
-            $reduction = Tools::ps_round($row['product_price_wt'] * ($row['reduction_percent'] * 0.01), 2);
-            $row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $reduction), 2);
+            $reduction = mo_ps_round($row['product_price_wt'] * ($row['reduction_percent'] * 0.01));
+            $row['product_price_wt'] = mo_ps_round(($row['product_price_wt'] - $reduction));
         }
     }
 
@@ -191,7 +221,7 @@ function mo_setProductPrices($row, $tax_calculation_method)
         if ($tax_calculation_method == PS_TAX_EXC)
             $row['product_price'] = ($row['product_price'] - ($row['reduction_amount'] / (1 + $row['tax_rate'] / 100)));
         else
-            $row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['reduction_amount']), 2);
+            $row['product_price_wt'] = mo_ps_round(($row['product_price_wt'] - $row['reduction_amount']));
     }
 
     if ($row['group_reduction'] > 0)
@@ -199,18 +229,18 @@ function mo_setProductPrices($row, $tax_calculation_method)
         if ($tax_calculation_method == PS_TAX_EXC)
             $row['product_price'] = $row['product_price'] * $group_reduction;
         else
-            $row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2);
+            $row['product_price_wt'] = mo_ps_round($row['product_price_wt'] * $group_reduction);
     }
 
     if (($row['reduction_percent'] OR $row['reduction_amount'] OR $row['group_reduction']) AND $tax_calculation_method == PS_TAX_EXC)
-        $row['product_price'] = Tools::ps_round($row['product_price'], 2);
+        $row['product_price'] = mo_ps_round($row['product_price']);
 
     if ($tax_calculation_method == PS_TAX_EXC)
-        $row['product_price_wt'] = Tools::ps_round($row['product_price'] * (1 + ($row['tax_rate'] * 0.01)), 2) + Tools::ps_round($row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
+        $row['product_price_wt'] = mo_ps_round($row['product_price'] * (1 + ($row['tax_rate'] * 0.01))) + mo_ps_round($row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100));
     else
     {
         $row['product_price_wt_but_ecotax'] = $row['product_price_wt'];
-        $row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] + $row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
+        $row['product_price_wt'] = mo_ps_round($row['product_price_wt'] + $row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100));
     }
 
     $row['total_wt'] = $row['product_quantity'] * $row['product_price_wt'];
