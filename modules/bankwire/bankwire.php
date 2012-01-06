@@ -162,6 +162,36 @@ class BankWire extends PaymentModule
 		return $this->_html;
 	}
 
+	public function execPayment($cart)
+	{
+		return $this->actionPayment(true);
+	}
+	
+	public function actionPayment($direct_call = false)
+	{
+		$cart = Context::getContext()->cart;
+		
+		if (!$this->active)
+			return ;
+		if (!$this->_checkCurrency($cart))
+			Tools::redirect('index.php?controller=order');
+
+		$this->context->smarty->assign(array(
+			'nbProducts' => $cart->nbProducts(),
+			'cust_currency' => $cart->id_currency,
+			'currencies' => $this->getCurrency((int)$cart->id_currency),
+			'total' => $cart->getOrderTotal(true, Cart::BOTH),
+			'this_path' => $this->_path,
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
+		));
+
+		if (!$direct_call)
+			return $this->getTemplatePath('payment_execution.tpl');
+		else
+			// For retrocompatibility
+			return $this->display(__FILE__, 'payment_execution.tpl');
+	}
+
 	public function hookPayment($params)
 	{
 		if (!$this->active)
