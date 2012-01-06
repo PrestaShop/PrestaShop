@@ -177,7 +177,7 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'bool'
 				),
 				'PS_SHIP_WHEN_AVAILABLE' => array(
-					'title' => $this->l('Allow shipping when available'),
+					'title' => $this->l('Delayed shipping'),
 					'desc' => $this->l('Allow the customer to split his order. One with the products "in stock", and an other with the other products. This option will transform the customer cart in two orders.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
