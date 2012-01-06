@@ -30,7 +30,7 @@ include_once(dirname(__FILE__).'/../config/config.inc.php');
 /* Getting cookie or logout */
 require_once(dirname(__FILE__).'/init.php');
 
-$smtpChecked = (trim($_GET['mailMethod']) ==  'smtp');
+$smtpChecked = (trim($_POST['mailMethod']) ==  'smtp');
 $smtpServer = $_POST['smtpSrv'];
 $content = urldecode($_POST['testMsg']);
 $subject = urldecode($_POST['testSubject']);
