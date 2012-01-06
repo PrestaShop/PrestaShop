@@ -133,8 +133,7 @@ class HelperOptionsCore extends Helper
 
 				// Is at least one required field present?
 				if (isset($field['required']) && $field['required'])
-					$required_fields = true;
-
+					$category_data['required_fields'] = true;
 			}
 			// Assign the modifications back to parent array
 			$option_list[$category] = $category_data;
@@ -150,7 +149,6 @@ class HelperOptionsCore extends Helper
 			'token' => $this->token,
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
-			'required_fields' => isset($required_fields) ? $required_fields : false,
 			'languages' => isset($languages) ? $languages : null,
 			'currency_left_sign' => $this->context->currency->getSign('left'),
 			'currency_right_sign' => $this->context->currency->getSign('right'),
