@@ -29,7 +29,9 @@ function add_new_groups($french, $standard)
 {
 	Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'group` (`id_group`, `date_add`, `date_upd`) VALUES (NULL, NOW(), NOW())');
 	$last_id = Db::getInstance()->Insert_ID();
-	$languages = Language::getLanguages(false);
+	
+	$languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
+
 	$sql = '';
 	foreach ($languages as $lang)
 		if (strtolower($lang['iso_code']) == 'fr')

@@ -24,7 +24,11 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   KEY `id_category` (`id_category`),
   KEY `id_theme` (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_shop` (`id_shop`, `id_group_shop`, `name`, `id_category`, `active`) VALUES (1, 1, 'Default', 1, 1);
+
+INSERT INTO `PREFIX_shop` 
+	(`id_shop`, `id_group_shop`, `name`, `id_category`, `id_theme`, `active`, `deleted`) 
+	VALUES 
+	(1, 1, (SELECT value FROM `PREFIX_configuration` WHERE name = 'PS_SHOP_NAME'), 1, 1, 1, 0);
 
 ALTER TABLE `PREFIX_configuration` ADD `id_group_shop` INT(11) UNSIGNED  DEFAULT  NULL AFTER `id_configuration` , ADD `id_shop` INT(11) UNSIGNED DEFAULT NULL AFTER `id_group_shop`;
 ALTER TABLE `PREFIX_configuration` DROP INDEX `name` , ADD INDEX `name` ( `name` ) ;
