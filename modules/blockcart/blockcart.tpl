@@ -111,22 +111,22 @@ var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' 
 		{/if}
 
 		<p id="cart-prices">
-			<span>{l s='Shipping' mod='blockcart'}</span>
 			<span id="cart_block_shipping_cost" class="price ajax_cart_shipping_cost">{$shipping_cost}</span>
+			<span>{l s='Shipping' mod='blockcart'}</span>
 			<br/>
 			{if $show_wrapping}
 				{assign var='cart_flag' value='Cart::ONLY_WRAPPING'|constant}
-				<span>{l s='Wrapping' mod='blockcart'}</span>
 				<span id="cart_block_wrapping_cost" class="price cart_block_wrapping_cost">{if $priceDisplay == 1}{convertPrice price=$cart->getOrderTotal(false, $cart_flag)}{else}{convertPrice price=$cart->getOrderTotal(true, $cart_flag)}{/if}</span>
+				<span>{l s='Wrapping' mod='blockcart'}</span>
 				<br/>
 			{/if}
 			{if $show_tax && isset($tax_cost)}
-				<span>{l s='Tax' mod='blockcart'}</span>
 				<span id="cart_block_tax_cost" class="price ajax_cart_tax_cost">{$tax_cost}</span>
+				<span>{l s='Tax' mod='blockcart'}</span>
 				<br/>
 			{/if}
-			<span>{l s='Total' mod='blockcart'}</span>
 			<span id="cart_block_total" class="price ajax_block_cart_total">{$total}</span>
+			<span>{l s='Total' mod='blockcart'}</span>
 		</p>
 		{if $use_taxes && $display_tax_label == 1 && $show_tax}
 			{if $priceDisplay == 0}
