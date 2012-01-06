@@ -88,7 +88,8 @@ class Followup extends Module
 	}
 	
 	public function getContent()
-	{	
+	{
+		$html = '';
 		/* Save settings */
 		if (Tools::isSubmit('submitFollowUp'))	
 			foreach ($this->confKeys AS $c)
@@ -106,7 +107,7 @@ class Followup extends Module
 		$n3 = $this->bestCustomer(true);
 		$n4 = $this->badCustomer(true);
 		
-		echo '
+		$html .= '
 		<h2>'.$this->l('Customer follow-up').'</h2>
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset style="width: 400px; float: left;">
@@ -211,7 +212,7 @@ class Followup extends Module
 				$statsArray[$stat['date_stat']][$stat['id_email_type']]['nb_used'] = (int)($stat['nb_used']);
 			}
 			
-			echo '
+			$html .= '
 			<tr>
 				<td class="center">'.$this->l('S').'</td>
 				<td class="center">'.$this->l('U').'</td>
@@ -228,7 +229,7 @@ class Followup extends Module
 			</tr>';
 			
 			if (!sizeof($statsArray))
-				echo '<tr><td colspan="13" style="font-weight: bold; text-align: center;">'.$this->l('No statistics at this time.').'</td></tr>';
+				$html .= '<tr><td colspan="13" style="font-weight: bold; text-align: center;">'.$this->l('No statistics at this time.').'</td></tr>';
 			foreach ($statsArray AS $date_stat => $array)
 			{
 				$rates = array();
@@ -236,27 +237,29 @@ class Followup extends Module
 					if (isset($statsArray[$date_stat][$i]['nb']) AND isset($statsArray[$date_stat][$i]['nb_used']) AND $statsArray[$date_stat][$i]['nb_used'] > 0)
 						$rates[$i] = number_format(($statsArray[$date_stat][$i]['nb_used'] / $statsArray[$date_stat][$i]['nb'])*100, 2, '.', '');
 				
-				echo '
+				$html .= '
 				<tr>
 					<td>'.$date_stat.'</td>';
 					
 				for ($i = 1; $i != 5; $i++)
 				{
-					echo '
+					$html .= '
 					<td>'.(isset($statsArray[$date_stat][$i]['nb']) ? (int)($statsArray[$date_stat][$i]['nb']) : 0).'</td>
 					<td>'.(isset($statsArray[$date_stat][$i]['nb_used']) ? (int)($statsArray[$date_stat][$i]['nb_used']) : 0).'</td>
 					<td>'.(isset($rates[$i]) ? '<b>'.$rates[$i].'</b>' : '0.00').'</td>';
 				}
 
-				echo '
+				$html .= '
 				</tr>';
 			}
 			
-			echo '
+			$html .= '
 				</table>
 			</fieldset>
 			<div class="clear"></div>
 		</form>';
+
+		return $html;
 	}
 	
 	/* Log each sent e-mail */
