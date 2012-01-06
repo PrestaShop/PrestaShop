@@ -34,7 +34,7 @@ class AdminPaymentControllerCore extends AdminController
 		$shop_id = Context::getContext()->shop->getID(true);
 
 		/* Get all modules then select only payment ones */
-		$modules = Module::getModulesOnDisk();
+		$modules = Module::getModulesOnDisk(true);
 
 		foreach ($modules as $module)
 			if ($module->tab == 'payments_gateways')
