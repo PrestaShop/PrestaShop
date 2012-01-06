@@ -56,6 +56,7 @@ ul#product_list {
 			text-transform: uppercase;
 			-moz-transform: rotate(45deg);
 			-webkit-transform: rotate(45deg);
+			-o-transform:rotate(45deg);
 			background-color: #990000
 		}
 	#product_list li h3 {
