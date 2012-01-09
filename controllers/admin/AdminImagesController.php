@@ -77,17 +77,6 @@ class AdminImagesControllerCore extends AdminController
 					'desc' => $this->l('Letters only (e.g., small, medium, large, extra-large)')
 				),
 				array(
-					'type' => 'select',
-					'label' => $this->l('Theme:'),
-					'name' => 'id_theme',
-					'required' => true,
-					'options' => array(
-						'query' => Theme::getThemes(),
-						'id' => 'id_theme',
-						'name' => 'name'
-					)
-				),
-				array(
 					'type' => 'text',
 					'label' => $this->l('Width:'),
 					'name' => 'width',
@@ -373,8 +362,6 @@ class AdminImagesControllerCore extends AdminController
 				if (preg_match('/^[0-9]*\.jpg$/', $image))
 					foreach ($type AS $k => $imageType)
 					{
-
-						$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
 						// Customizable writing dir
 						$newDir = $dir;
 						if ($imageType['name'] == 'thumb_scene')
@@ -382,7 +369,7 @@ class AdminImagesControllerCore extends AdminController
 						if (!file_exists($newDir))
 							continue;
 						if (!file_exists($newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg'))
-							if (!imageResize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).$theme.'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
+							if (!imageResize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 								$errors = true;
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
@@ -397,9 +384,8 @@ class AdminImagesControllerCore extends AdminController
 				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
 					foreach ($type AS $k => $imageType)
 					{
-						$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
 						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
-							if (!imageResize($dir.$imageObj->getExistingImgPath().'.jpg', $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).$theme.'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
+							if (!imageResize($dir.$imageObj->getExistingImgPath().'.jpg', $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 								$errors = true;
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
@@ -416,14 +402,13 @@ class AdminImagesControllerCore extends AdminController
 		$errors = false;
 		foreach ($type AS $k => $imageType)
 		{
-			$theme = (Shop::isFeatureActive() ? '-'.$imageType['id_theme'] : '');
 			foreach ($languages AS $language)
 			{
 				$file = $dir.$language['iso_code'].'.jpg';
 				if (!file_exists($file))
 					$file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT'))).'.jpg';
 				if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).'.jpg'))
-					if (!imageResize($file, $dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).$theme.'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
+					if (!imageResize($file, $dir.$language['iso_code'].'-default-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 						$errors = true;
 			}
 		}
