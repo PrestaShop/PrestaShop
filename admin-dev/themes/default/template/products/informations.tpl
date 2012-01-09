@@ -89,7 +89,7 @@
 			<td style="padding-bottom:5px;" class="translatable">
 			{foreach from=$languages item=language}
 				<div class="lang_{$language.id_lang}" style="{if !$language.is_default}display: none;{/if} float: left;">
-					<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text"
+					<input class="{if !$product->id}copy2friendlyUrl{/if} updateCurrentText" size="43" type="text" {if !$product->id}disabled="disabled"{/if}
 						id="name_{$language.id_lang}" name="name_{$language.id_lang}"
 						value="{$product->name[$language.id_lang]|htmlentitiesUTF8|default:''}"/><sup> *</sup>
 					<span class="hint" name="help_box">{l s='Invalid characters:'} <>;=#{}<span class="hint-pointer">&nbsp;</span>
