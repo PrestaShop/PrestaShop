@@ -182,7 +182,7 @@ class AdminModulesControllerCore extends AdminController
 			if (isset($params['username_addons']) && isset($params['password_addons']))
 			{
 				$protocolsList = array('https://' => 443);
-				$postData = 'version=151&method=check_customer&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
+				$postData = 'version=151&method=module&id_module='.pSQL($params['id_module']).'&username='.pSQL($params['username_addons']).'&password='.pSQL($params['password_addons']);
 			}
 			else
 			{
