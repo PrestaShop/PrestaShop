@@ -292,8 +292,8 @@ function reloadContent(params_plus)
 		}
 	});
 	
-	$('#layered_form .select option:checked').each( function () {
-		if($(this).attr('id'))
+	$('#layered_form .select option').each( function () {
+		if($(this).attr('id') && $(this).parent().val() == $(this).val())
 		{
 			data += '&'+$(this).attr('id') + '=' + $(this).val();
 		}
