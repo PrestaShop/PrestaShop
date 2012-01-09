@@ -3471,7 +3471,6 @@ class AdminProductsControllerCore extends AdminController
 				// Get available quantity for the current product attribute in the current shop
 				$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$obj->id,
 																														$attribute['id_product_attribute']);
-
 				// Get all product designation
 				$product_designation[$attribute['id_product_attribute']] = rtrim(
 					$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
@@ -3510,11 +3509,15 @@ class AdminProductsControllerCore extends AdminController
 			$advanced_stock_management_warning = false;
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management)
 			{
-				$attributes = Product::getProductAttributesIds($obj->id);
+				$p_attributes = Product::getProductAttributesIds($obj->id);
 				$warehouses = array();
-				foreach ($attributes as $attribute)
+
+				if (!$p_attributes)
+					$warehouses[] = Warehouse::getProductWarehouseList($obj->id, 0);
+
+				foreach ($p_attributes as $p_attribute)
 				{
-					$ws = Warehouse::getProductWarehouseList($obj->id, $attribute['id_product_attribute']);
+					$ws = Warehouse::getProductWarehouseList($obj->id, $p_attribute['id_product_attribute']);
 					if ($ws)
 						$warehouses[] = $ws;
 				}
@@ -3531,9 +3534,31 @@ class AdminProductsControllerCore extends AdminController
 				$this->displayWarning('- '.$this->l('associate your warehouses with the appropriates shops'));
 			}
 
+			$pack_quantity = null;
+			// if product is a pack
+			if (Pack::isPack($obj->id))
+			{
+				$items = Pack::getItems((int)$obj->id, Configuration::get('PS_LANG_DEFAULT'));
+
+				// gets an array of quantities (quantity for the product / quantity in pack)
+				$pack_quantities = array();
+				foreach ($items as $item)
+					if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
+						$pack_quantities[] = Product::getQuantity($item->id) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+
+				// gets the minimum
+				$pack_quantity = $pack_quantities[0];
+				foreach ($pack_quantities as $value)
+				{
+					if ($pack_quantity > $value)
+						$pack_quantity = $value;
+				}
+			}
+
 			$data->assign(array(
 				'attributes' => $attributes,
 				'available_quantity' => $available_quantity,
+				'pack_quantity' => $pack_quantity,
 				'stock_management_active' => Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 				'product_designation' => $product_designation,
 				'product' => $obj,
@@ -3715,46 +3740,50 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessProductQuantity()
 	{
 		if (!Tools::getValue('actionQty'))
-			return Tools::jsonEncode(array('error' => 'Undefined action'));
+			return Tools::jsonEncode(array('error' => $this->l('Undefined action')));
 
 		$product = new Product((int)Tools::getValue('id_product'));
 		switch (Tools::getValue('actionQty'))
 		{
 			case 'depends_on_stock':
 				if (Tools::getValue('value') === false)
-					return Tools::jsonEncode(array('error' => 'Undefined value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1)
-					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
 				if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1)
-					return Tools::jsonEncode(array('error' => 'Not possible if advanced stock management is not enabled'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is not enabled'))));
+				if ($product->advanced_stock_management && Pack::isPack($product->id))
+					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if the product is a pack'))));
 
 				StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
 				break;
 
 			case 'out_of_stock':
 				if (Tools::getValue('value') === false)
-					return Tools::jsonEncode(array('error' => 'Undefined value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (!in_array((int)Tools::getValue('value'), array(0, 1, 2)))
-					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
 
 				StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
 				break;
 
 			case 'set_qty':
 				if (Tools::getValue('value') === false)
-					return Tools::jsonEncode(array('error' => 'Undefined value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if (Tools::getValue('id_product_attribute') === false)
-					return Tools::jsonEncode(array('error' => 'Undefined id product attribute'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
 				break;
 			case 'advanced_stock_management' :
 				if (Tools::getValue('value') === false)
-					return Tools::jsonEncode(array('error' => 'Undefined value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
 				if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0)
-					return Tools::jsonEncode(array('error' => 'Uncorrect value'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Uncorrect value'))));
 				if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1)
-					return Tools::jsonEncode(array('error' => 'Not possible if advanced stock management is not enabled'));
+					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if advanced stock management is not enabled'))));
+				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Pack::isPack($product->id))
+					die (Tools::jsonEncode(array('error' =>  $this->l('Not possible if the product is a pack'))));
 
 				$product->advanced_stock_management = (int)Tools::getValue('value');
 				$product->save();
@@ -3817,8 +3846,8 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * delete all items in pack, then check if type_product value is 2.
 	 * if yes, add the pack items from input "inputPackItems"
-	 * 
-	 * @param Product $product 
+	 *
+	 * @param Product $product
 	 * @return boolean
 	 */
 	public function updatePackItems($product)
