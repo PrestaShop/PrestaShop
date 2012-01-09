@@ -351,17 +351,12 @@ class StockAvailableCore extends ObjectModel
 		if ($this->id_product_attribute == 0)
 			return true;
 
-		$id_stock_available = StockAvailable::getStockAvailableIdByProductId($this->id_product, 0, $this->id_shop);
-
-		$context = Context::getContext();
-
 		$total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(quantity) as quantity
 			FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$this->id_product.'
 			AND id_product_attribute <> 0 '.
-			StockAvailable::addSqlShopRestriction(null, $this->id_shop).'
-			'
+			StockAvailable::addSqlShopRestriction(null, $this->id_shop)
 		);
 
 		$this->setQuantity($this->id_product, 0, $total_quantity, $this->id_shop);
