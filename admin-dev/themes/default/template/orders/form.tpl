@@ -361,7 +361,7 @@
 				{
 					var html = '<ul>';
 					$.each(res.customers, function() {
-						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a><span class="customerBirthday"> '+this.birthday+'</span></div>';
+						html += '<li class="customerCard"><div class="customerName"><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a><span class="customerBirthday"> '+((this.birthday) ? this.birthday : '')+'</span></div>';
 						html += '<div class="customerEmail"><a href="mailto:'+this.email+'">'+this.email+'</div>';
 						html += '<a onclick="setupCustomer('+ this.id_customer+');" href="#" class="id_customer button">{l s='Choose'}</a></li>';
 					});
