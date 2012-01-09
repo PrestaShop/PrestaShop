@@ -278,7 +278,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getModuleLink($module, $process, $ssl = false, $id_lang = null)
+	public function getModuleLink($module, $process = '', $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 
