@@ -211,7 +211,7 @@
 	<tr>
 		<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
 		<td style="padding-bottom:5px;">
-				{include file="products/input_text_lang.tpl"
+				{include file="controllers/products/input_text_lang.tpl"
 					languages=$languages
 					input_value=$product->available_now
 					input_name='available_now'}
@@ -221,7 +221,7 @@
 	<tr>
 		<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
 		<td style="padding-bottom:5px;">
-				{include file="products/input_text_lang.tpl"
+				{include file="controllers/products/input_text_lang.tpl"
 					languages=$languages
 					input_value=$product->available_later
 					input_name='available_later'}

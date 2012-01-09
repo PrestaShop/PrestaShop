@@ -279,44 +279,19 @@ class StockAvailableCore extends ObjectModel
 		if (is_null($id_product_attribute))
 			$id_product_attribute = 0;
 
-		// if product is a pack
-		if (Pack::isPack($id_product))
-		{
-			$items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
+		$query = new DbQuery();
+		$query->select('SUM(quantity)');
+		$query->from('stock_available');
 
-			// gets an array of quantities (quantity for the product / quantity in pack)
-			$quantities = array();
-			foreach ($items as $item)
-				if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
-					$quantities[] = Product::getQuantity($item->id) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+		// if null, it's a product without attributes
+		if (!is_null($id_product))
+			$query->where('id_product = '.(int)$id_product);
 
-			// gets the minimum
-			$quantity = $quantities[0];
-			foreach ($quantities as $value)
-			{
-				if ($quantity > $value)
-					$quantity = $value;
-			}
+		$query->where('id_product_attribute = '.(int)$id_product_attribute);
 
-			// returns the number of pack available
-			return $quantity;
-		}
-		else // else
-		{
-			$query = new DbQuery();
-			$query->select('SUM(quantity)');
-			$query->from('stock_available');
+		$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 
-			// if null, it's a product without attributes
-			if (!is_null($id_product))
-				$query->where('id_product = '.(int)$id_product);
-
-			$query->where('id_product_attribute = '.(int)$id_product_attribute);
-
-			$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-
-			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-		}
+		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 
 	/**
@@ -382,10 +357,10 @@ class StockAvailableCore extends ObjectModel
 		// Update quantity of the pack products
 		if (Pack::isPack($id_product))
 		{
-			$products_pack = Pack::getItems((int)$product['id_product'], (int)Configuration::get('PS_LANG_DEFAULT'));
+			$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($products_pack as $product_pack)
 			{
-				$pack_id_product_attribute = Product::getDefaultAttribute($tab_product_pack['id_product'], 1);
+				$pack_id_product_attribute = Product::getDefaultAttribute($product_pack->id, 1);
 				StockAvailable::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
 			}
 		}
