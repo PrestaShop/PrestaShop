@@ -76,3 +76,10 @@
 					</tbody>
 				</table>
 
+				{if count($modules)}
+					<div style="margin-top: 12px;">
+						<input type="button" class="button big" value="{l s='Install the selection'}" onclick="modules_management('install')"/>
+						<input type="button" class="button big" value="{l s='Uninstall the selection'}" onclick="modules_management('uninstall')" />
+					</div>
+				{/if}
+
