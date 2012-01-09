@@ -1289,7 +1289,7 @@ class CategoryCore extends ObjectModel
 		'.(($active) ? 'AND `active` = 1': ''));
 	}
 
-	public function getCategoriesWithoutParent()
+	public static function getCategoriesWithoutParent()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.*
