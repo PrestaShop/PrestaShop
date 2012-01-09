@@ -95,6 +95,8 @@ class OrderHistoryCore extends ObjectModel
 					&& $oldOrderStatus->logable))
 				{
 					ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
+					if ($oldOrderStatus->id == Configuration::get('PS_OS_ERROR') || $oldOrderStatus->id == Configuration::get('PS_OS_CANCELED'))
+						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 				}
 				/* If becoming unlogable => removing sale */
 				else if (!$newOS->logable

@@ -365,8 +365,8 @@ class ProductCore extends ObjectModel
 
 	const CUSTOMIZE_FILE = 0;
 	const CUSTOMIZE_TEXTFIELD = 1;
-	
-	
+
+
 	// Note:  prefix is "PTYPE" because TYPE_ is used in ObjectModel (definition)
 	const PTYPE_SIMPLE = 0;
 	const PTYPE_PACK = 1;
@@ -1034,7 +1034,7 @@ class ProductCore extends ObjectModel
 
 		$price = str_replace(',', '.', $price);
 		$weight = str_replace(',', '.', $weight);
-		
+
 		$combination = new Combination();
 		$combination->id_product = (int)$this->id;
 		$combination->price = (float)$price;
@@ -1052,9 +1052,9 @@ class ProductCore extends ObjectModel
 
 		if (!$combination->id)
 			return false;
-						
+
 		Product::updateDefaultAttribute($this->id);
-		
+
 		if (!empty($id_images))
 			$combination->setImages($id_images);
 
@@ -1071,9 +1071,9 @@ class ProductCore extends ObjectModel
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, 0, $id_images,
 			$reference, $ean13, $default, $location, $upc, $minimal_quantity);
-		
+
 		$this->addSupplierReference($supplier_reference, $id_product_attribute);
-		
+
 		$result = Db::getInstance()->execute(
 			'UPDATE `'._DB_PREFIX_.'product_attribute`
 			SET `wholesale_price` = '.(float)$wholesale_price.'
@@ -1179,7 +1179,7 @@ class ProductCore extends ObjectModel
 		$this->addSupplierReference($supplier_reference, $id_product_attribute);
 		return $return;
 	}
-	
+
 	public function addSupplierReference($supplier_reference, $id_product_attribute = null, $id_currency = null)
 	{
 		//Try to set the default supplier reference
@@ -1245,10 +1245,10 @@ class ProductCore extends ObjectModel
 		$combination->minimal_quantity = (int)$minimal_quantity;
 		$combination->available_date = pSQL($available_date);
 		$combination->save();
-		
+
 		if (!empty($id_images))
 			$combination->setImages($id_images);
-		
+
 		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
 
 		Product::updateDefaultAttribute($this->id);
