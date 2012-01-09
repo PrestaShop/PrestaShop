@@ -1342,7 +1342,7 @@ abstract class ModuleCore
 	{
 	 	$output = '
 		<div class="module_error alert error">
-			<img src="'._PS_IMG_.'admin/warning.gif" alt="" title="" /> '.$error.'
+			'.$error.'
 		</div>';
 		$this->error = true;
 		return $output;
@@ -1352,7 +1352,7 @@ abstract class ModuleCore
 	{
 	 	$output = '
 		<div class="module_confirmation conf confirm">
-			<img src="'._PS_IMG_.'admin/ok.gif" alt="" title="" /> '.$string.'
+			'.$string.'
 		</div>';
 		return $output;
 	}

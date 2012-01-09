@@ -395,24 +395,40 @@ class ThemeInstallator extends Module
 		}
 	}
 
-	private function updateImages($id_theme)
+	private function updateImages()
 	{
+		$return = array();
 		foreach ($this->xml->images->image as $row)
 		{
-
-			Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'image_type` (`id_theme`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
-					VALUES ('.(int)$id_theme.',
-						\''.pSQL($row['name']).'\',
-						'.(int)($row['width']).',
-						'.(int)($row['height']).',
+			if ($result = (bool)Db::getInstance()->executes(sprintf('SELECT * FROM `'._DB_PREFIX_.'image_type` WHERE `name` = \'%s\' ', pSQL($row['name']))))
+			{
+				$return['error'][] = array(
+					'name' => $row['name'],
+					'width' => (int)$row['width'],
+					'height' => (int)$row['height']
+				);
+			}
+			else
+			{
+				Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
+					VALUES (\''.pSQL($row['name']).'\',
+						'.(int)$row['width'].',
+						'.(int)$row['height'].',
 						'.($row['products'] == 'true' ? 1 : 0).',
 						'.($row['categories'] == 'true' ? 1 : 0).',
 						'.($row['manufacturers'] == 'true' ? 1 : 0).',
 						'.($row['suppliers'] == 'true' ? 1 : 0).',
 						'.($row['scenes'] == 'true' ? 1 : 0).')');
+
+				$return['ok'][] = array(
+					'name' => $row['name'],
+					'width' => (int)$row['width'],
+					'height' => (int)$row['height']
+				);
+			}
 		}
-		return true;
+		return $return;
 	}
 
 	private function _displayForm4()
@@ -527,13 +543,28 @@ class ThemeInstallator extends Module
 						}
 				}
 		}
-		// note : theme was previously created at this point. 
+
+		// note : theme was previously created at this point.
 		// It is now created during displayForm3
-		// @todo : imageType generation should be handled in a better way
-		if ((int)(Tools::getValue('imagesConfig')) != 3 AND self::updateImages((int)$theme->id))
-			$msg .= '<br /><b>'.$this->l('Images have been correctly updated in database').'</b><br />';
-			
-		$this->_msg .= parent::displayConfirmation($msg);
+		$result = $this->updateImages();
+		if (!isset($result['error']))
+			$msg .= $this->l('Images have been correctly updated in database');
+		else
+		{
+			$errors = '<em><strong>'.$this->l('Warning: Copy/Paste your errors if you want to manually set the image type (in the tab Preferences > Images):').'</em></strong><br />';
+			$errors .= $this->l('Some kind of image could not be added because they exists. Here\'s the list:');
+			$errors .= '<ul>';
+			foreach ($result['error'] as $error)
+				$errors .= '<li style="color:#D8000C">'.$this->l('Name image type:').' <strong>'.$error['name'].'</strong> ('.$this->l('Width:').' '.$error['width'].'px, '.$this->l('Height:').' '.$error['height'].'px)</li>';
+			$errors .= '</ul>';
+		}
+
+		if (!empty($msg))
+			$this->_msg .= parent::displayConfirmation($msg);
+
+		if (isset($error))
+			$this->_msg .= parent::displayError($errors);
+
 		$this->_html .= '
 			<input type="submit" class="button" name="submitThemes" value="'.$this->l('Previous').'" />
 			<input type="submit" class="button" name="Finish" value="'.$this->l('Finish').'" />
@@ -612,15 +643,6 @@ class ThemeInstallator extends Module
 				</ul>
 			</fieldset>
 			<p>&nbsp;</p>';
-		$this->_html .= '
-			<fieldset>
-				<legend>'.$this->l('Theme images configuration').'</legend>
-				<ul class="margin-form" style="list-style:none">
-					<li><input type="radio" name="imagesConfig" value="1" id="imageconfig1" checked /> <label style="display:bock;float:none" for="imageconfig1">'.$this->l('Add new configuration').'</label>
-					<li><input type="radio" name="imagesConfig" value="2" id="imageconfig2" /> <label style="display:bock;float:none" for="imageconfig2">'.$this->l('Add all (you may lose your current config)').'</label>
-					<li><input type="radio" name="imagesConfig" value="3" id="imageconfig3" /> <label style="display:bock;float:none" for="imageconfig3">'.$this->l('Don\'t change anything').'</label>
-				</ul>
-			</fieldset>';
 		$this->_html .= '
 			<p class="clear">&nbsp;</p>
 			<input type="submit" class="button" name="prevThemes" value="'.$this->l('Previous').'" />
