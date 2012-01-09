@@ -148,7 +148,8 @@ class AdminHomeControllerCore extends AdminController
 		}
 		$this->context->smarty->assign('opti_list',$opti_list);
 		$this->context->smarty->assign('content',$content);
-		return $this->context->smarty->fetch('home/optimizationTips.tpl');
+		$template = $this->createTemplate('optimizationTips.tpl');
+		return $template->fetch();
 	}
 
 	public function setMedia()

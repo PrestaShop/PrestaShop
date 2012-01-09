@@ -135,7 +135,7 @@ class AdminOutstandingControllerCore  extends AdminController
 			'id_invoice' => $id_invoice
 		));
 
-		return $this->context->smarty->fetch('outstanding/_print_pdf_icon.tpl');
+		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
 
 	public function printOutstandingCalculation($id_invoice, $tr)

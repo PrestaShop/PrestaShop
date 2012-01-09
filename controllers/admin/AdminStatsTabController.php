@@ -74,7 +74,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public static function displayCalendarForm($translations, $token, $action = null, $table = null, $identifier = null, $id = null)
 	{
 		$context = Context::getContext();
-		$tpl = $context->smarty->createTemplate('stats/calendar.tpl');
+		$tpl = $context->controller->createTemplate('calendar.tpl');
 
 		$context->controller->addJqueryUI('ui.datepicker');
 
@@ -95,7 +95,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	protected function displayEngines()
 	{
-		$tpl = $this->context->smarty->createTemplate('stats/engines.tpl');
+		$tpl = $this->createTemplate('engines.tpl');
 
 		$autoclean_period = array(
 			'never' => 	$this->l('Never'),
@@ -120,7 +120,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function displayMenu()
 	{
-		$tpl = $this->context->smarty->createTemplate('stats/menu.tpl');
+		$tpl = $this->createTemplate('menu.tpl');
 
 		$modules = $this->getModules();
 		$module_instance = array();
@@ -152,7 +152,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function displayStats()
 	{
-		$tpl = $this->context->smarty->createTemplate('stats/stats.tpl');
+		$tpl = $this->createTemplate('stats.tpl');
 
 		if (!($module_name = Tools::getValue('module')) && $module_instance = Module::getInstanceByName('statsforecast') AND $module_instance->active)
 			$module_name = 'statsforecast';

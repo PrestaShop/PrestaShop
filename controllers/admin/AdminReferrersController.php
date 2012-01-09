@@ -364,7 +364,7 @@ class AdminReferrersControllerCore extends AdminController
 	public static function displayCalendarForm($translations, $token, $action = null, $table = null, $identifier = null, $id = null)
 	{
 		$context = Context::getContext();
-		$tpl = $context->smarty->createTemplate('referrers/calendar.tpl');
+		$tpl = $context->controller->createTemplate('calendar.tpl');
 
 		$context->controller->addJqueryUI('ui.datepicker');
 
@@ -387,7 +387,7 @@ class AdminReferrersControllerCore extends AdminController
 	{
 		if (!Tools::isSubmit('viewreferrer'))
 		{
-			$tpl = $this->context->smarty->createTemplate($this->tpl_folder.'form_settings.tpl');
+			$tpl = $this->createTemplate('form_settings.tpl');
 
 			$tpl->assign(array(
 				'current' => self::$currentIndex,

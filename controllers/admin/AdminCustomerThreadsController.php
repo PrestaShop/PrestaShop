@@ -524,7 +524,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 	private function displayMessage($message, $email = false, $id_employee = null)
 	{
-		$tpl = $this->context->smarty->createTemplate($this->tpl_folder.'message.tpl');
+		$tpl = $this->createTemplate('message.tpl');
 
 		$contacts = Contact::getContacts($this->context->language->id);
 

@@ -102,7 +102,7 @@ class AdminOrdersControllerCore extends AdminController
 			'toolbar_fix' => $this->toolbar_fix,
 			'title' => $this->l('Orders : create order'),
 		));
-		$this->content .= $this->context->smarty->fetch('orders/form.tpl');
+		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
 
 	public function initToolbar()
@@ -162,7 +162,7 @@ class AdminOrdersControllerCore extends AdminController
 			'tr' => $tr
 		));
 
-		return $this->context->smarty->fetch('orders/_print_pdf_icon.tpl');
+		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
 
 	public function postProcess()
@@ -1393,13 +1393,13 @@ class AdminOrdersControllerCore extends AdminController
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
-			'view' => $this->context->smarty->fetch('orders/_product_line.tpl'),
+			'view' => $this->createTemplate('_product_line.tpl')->fetch(),
 			'can_edit' => $this->tabAccess['add'],
 			'order' => $order,
 			'invoices' => $invoice_array,
-			'documents_html' => $this->context->smarty->fetch('orders/_documents.tpl'),
-			'shipping_html' => $this->context->smarty->fetch('orders/_shipping.tpl'),
-			'discount_form_html' => $this->context->smarty->fetch('orders/_discount_form.tpl')
+			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
+			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
+			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch()
 		)));
 	}
 
@@ -1552,13 +1552,13 @@ class AdminOrdersControllerCore extends AdminController
 
 		die(Tools::jsonEncode(array(
 			'result' => $res,
-			'view' => $this->context->smarty->fetch('orders/_product_line.tpl'),
+			'view' => $this->createTemplate('_product_line.tpl')->fetch(),
 			'can_edit' => $this->tabAccess['add'],
 			'invoices_collection' => $invoice_collection,
 			'order' => $order,
 			'invoices' => $invoice_array,
-			'documents_html' => $this->context->smarty->fetch('orders/_documents.tpl'),
-			'shipping_html' => $this->context->smarty->fetch('orders/_shipping.tpl')
+			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
+			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch()
 		)));
 	}
 
@@ -1624,8 +1624,8 @@ class AdminOrdersControllerCore extends AdminController
 			'result' => $res,
 			'order' => $order,
 			'invoices' => $invoice_array,
-			'documents_html' => $this->context->smarty->fetch('orders/_documents.tpl'),
-			'shipping_html' => $this->context->smarty->fetch('orders/_shipping.tpl')
+			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
+			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch()
 		)));
 	}
 
