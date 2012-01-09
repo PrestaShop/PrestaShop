@@ -203,7 +203,7 @@ class HelperCore
 		$html .= '
 			<ul id="categories-treeview" class="filetree">
 				<li id="'.$trads['Root']['id_category'].'" class="hasChildren">
-					<span class="folder"> <input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'.$input_name.'" value="1" '.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '.$trads['Root']['name'].'</span>
+					<span class="folder"> <input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'.$input_name.'" value="'.$trads['Root']['id_category'].'" '.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '.$trads['Root']['name'].'</span>
 					<ul>
 						<li><span class="placeholder">&nbsp;</span></li>
 				  </ul>
