@@ -74,6 +74,9 @@ class CategoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
+	/** @var boolean is Category Root */
+	public $is_root_category;
+
 	public $groupBox;
 
 	protected static $_links = array();
@@ -92,6 +95,7 @@ class CategoryCore extends ObjectModel
 			'level_depth' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 			'id_parent' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'is_root_category' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'position' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -639,12 +643,24 @@ class CategoryCore extends ObjectModel
 
 	public static function getRootCategory($id_lang = null, Shop $shop = null)
 	{
+		$context = Context::getContext();
 		if (is_null($id_lang))
-			$id_lang = Context::getContext()->language->id;
+			$id_lang = $context->language->id;
 		if (!$shop)
-			$shop = Context::getContext()->shop;
+			$shop = $context->shop;
 
-		return new Category($shop->getCategory(), $id_lang);
+		// context : no multishop
+		if (count(Shop::getShops()) == 1)
+			if (count(Category::getCategoriesWithoutParent()) > 1)
+				$category = new Category();
+			else
+				$category = new Category($shop->getCategory(), $id_lang);
+		else // context : multishop
+			if (count(Category::getCategoriesWithoutParent()) > 1 && $context->shop() != Shop::CONTEXT_SHOP)
+				$category = new Category();
+			else
+				$category = new Category($shop->getCategory(), $id_lang);
+		return $category;
 	}
 
 	/**
@@ -663,7 +679,9 @@ class CategoryCore extends ObjectModel
 		SELECT c.`id_category`, cl.`name`, cl.`link_rewrite`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Context::getContext()->shop->addSqlRestrictionOnLang('cl').'
+		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON c.`id_category` = cs.`id_category`
 		WHERE `id_lang` = '.(int)$id_lang.'
+		AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true).'
 		AND c.`id_parent` = '.(int)$id_parent.'
 		'.($active ? 'AND `active` = 1' : '').'
 		ORDER BY `position` ASC');
@@ -694,7 +712,7 @@ class CategoryCore extends ObjectModel
 	 * @param int $id_lang
 	 * @return array
 	 */
-	public static function getChildrenWithNbSelectedSubCat($id_parent, $selected_cat, $id_lang, Shop $shop = null)
+	public static function getChildrenWithNbSelectedSubCat($id_parent, $selected_cat, $id_lang, Shop $shop = null, $use_shop_context = true)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -712,8 +730,16 @@ class CategoryCore extends ObjectModel
 			AND c3.`id_category`  IN ('.implode(',', array_map('intval', $selected_cat)).')
 					)' : '0').' AS nbSelectedSubCat
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->addSqlRestrictionOnLang('cl').'
-				WHERE `id_lang` = '.(int)$id_lang.'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.$shop->addSqlRestrictionOnLang('cl');
+		if (Context::getContext()->shop() == Shop::CONTEXT_SHOP && $use_shop_context)
+			$sql .= '
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON c.`id_category` = cs.`id_category`';
+		$sql .= '
+				WHERE `id_lang` = '.(int)$id_lang;
+		if (Context::getContext()->shop() == Shop::CONTEXT_SHOP && $use_shop_context)
+			$sql .= '
+					AND cs.`id_shop` = '.(int)$shop->getID(true);
+		$sql .= '
 					AND c.`id_parent` = '.(int)$id_parent.'
 				ORDER BY `position` ASC';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -870,25 +896,41 @@ class CategoryCore extends ObjectModel
 	  */
 	public function getParentsCategories($id_lang = null)
 	{
+		$context = Context::getContext();
 		if (is_null($id_lang))
-			$id_lang = Context::getContext()->language->id;
+			$id_lang = $context->language->id;
 
 		$categories = null;
 		$id_current = $this->id;
 		while (true)
 		{
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT c.*, cl.*
-				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-					ON (c.`id_category` = cl.`id_category`
-					AND `id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
-				WHERE c.`id_category` = '.(int)$id_current.'
-					AND c.`id_parent` != 0
-			');
+			$sql = '
+			SELECT c.*, cl.*
+			FROM `'._DB_PREFIX_.'category` c
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
+				ON (c.`id_category` = cl.`id_category`
+				AND `id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').')';
+			if (count(Shop::getShops()) > 1 && $context->shop() == Shop::CONTEXT_SHOP)
+				$sql .= '
+			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+				ON c.`id_category` = cs.`id_category`';
+			$sql .= '
+			WHERE c.`id_category` = '.(int)$id_current;
+			if (count(Shop::getShops()) > 1 && $context->shop() == Shop::CONTEXT_SHOP)
+				$sql .= '
+				AND cs.`id_shop` = '.(int)$context->shop->getID(true);
+			$root_category = Category::getRootCategory();
+			if ($context->shop() == Shop::CONTEXT_SHOP && (!Tools::isSubmit('id_category') || (int)Tools::getValue('id_category') == (int)$root_category->id_category || (int)$root_category->id_category == (int)$context->shop->id_category))
+				$sql .= '
+					AND c.`id_parent` != 0';
 
-			isset($result[0]) ? $categories[] = $result[0] : $categories = array();
-			if (!$result || $result[0]['id_parent'] == 1)
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+
+			if (isset($result[0]))
+				$categories[] = $result[0];
+			else if (!$categories)
+				$categories = array();
+			if (!$result || $result[0]['id_category'] == $context->shop->id_category)
 				return $categories;
 			$id_current = $result[0]['id_parent'];
 		}
@@ -1196,6 +1238,65 @@ class CategoryCore extends ObjectModel
 			$categories[$category['id_category']] = $category;
 
 		return $categories;
+	}
+
+	/**
+	 * @param $id_shop
+	 * @return bool
+	 */
+	public function isParentCategoryAvailable($id_shop)
+	{
+		return (bool)Db::getInstance()->getValue('
+		SELECT c.`id_category`
+		FROM `'._DB_PREFIX_.'category` c
+		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+			ON c.`id_category` = cs.`id_category`
+		WHERE cs.`id_shop` = '.(int)$id_shop.'
+		AND c.`id_parent` = '.(int)$this->id_parent);
+	}
+
+	/**
+	 * Add association between shop and cateogries
+	 * @param int $id_shop
+	 * @return bool
+	 */
+	public function addShop($id_shop)
+	{
+		$sql = '';
+		if (!$id_shop)
+		{
+			foreach (Shop::getShops(true) as $shop)
+				$sql .= '('.(int)$this->id.', '.(int)$shop['id_shop'].'),';
+			// removing last comma to avoid SQL error
+			$sql = substr($sql, 0, strlen($sql) - 1);
+		} else
+			$sql .= '('.(int)$this->id.', '.(int)$id_shop.')';
+
+		return Db::getInstance()->execute('
+		INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`) VALUES
+		'.$sql);
+	}
+
+	public function getRootCategories($id_lang = null, $active = true)
+	{
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT DISTINCT(c.`id_category`), cl.`name`
+		FROM `'._DB_PREFIX_.'category` c
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = c.`id_category` AND cl.`id_lang`='.(int)$id_lang.')
+		WHERE `is_root_category` = 1
+		'.(($active) ? 'AND `active` = 1': ''));
+	}
+
+	public function getCategoriesWithoutParent()
+	{
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT c.*
+		FROM `'._DB_PREFIX_.'category` c
+		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
+		WHERE `id_parent` = 0
+		');
 	}
 }
 

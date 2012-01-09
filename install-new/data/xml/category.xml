@@ -5,6 +5,6 @@
     <field name="active"/>
   </fields>
   <entities>
-    <category id="Home" id_parent="" active="1"/>
+    <category id="Home" id_parent="" active="1" is_root_category="1"/>
   </entities>
 </entity_category>

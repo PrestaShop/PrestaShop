@@ -1746,3 +1746,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_linksmenutop_lang` (
 	`label` VARCHAR( 128 ) NOT NULL ,
 	INDEX ( `id_link` , `id_lang`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
+(2, 1),
+(3, 1),
+(4, 1);

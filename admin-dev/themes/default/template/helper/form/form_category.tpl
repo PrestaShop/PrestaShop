@@ -29,7 +29,7 @@
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 		var selectedCat = '{implode value=$categories.selected_cat}';
 		var selectedLabel = '{$categories.trads.selected}';
-		var home = '{$categories.trads.Home}';
+		var home = '{$categories.trads.Root.name}';
 		var use_radio = {if $categories.use_radio}1{else}0{/if};
 		$(document).ready(function(){
 			buildTreeView();
@@ -60,13 +60,13 @@
 
 	{foreach $categories.selected_cat AS $cat}
 		{if is_array($cat)}
-			{if $cat.id_category != 1}
+			{if $cat.id_category != $categories.trads.Root.id_category}
 				<input {if in_array($cat.id_category, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat.id_category}" >
 			{else}
 				{assign var=home_is_selected value=true}
 			{/if}
 		{else}
-			{if $cat != 1}
+			{if $cat != $categories.trads.Root.id_category}
 				<input {if in_array($cat, $categories.disabled_categories)}disabled="disabled"{/if} type="hidden" name="{$categories.input_name}" value="{$cat}" >
 			{else}
 				{assign var=home_is_selected value=true}
@@ -74,14 +74,14 @@
 		{/if}
 	{/foreach}
 	<ul id="categories-treeview" class="filetree">
-		<li id="1" class="hasChildren">
+		<li id="$categories.trads.Root.id_category" class="hasChildren">
 			<span class="folder">
 				<input type="{if !$categories.use_radio}checkbox{else}radio{/if}"
 						name="{$categories.input_name}"
-						value="1"
+						value="$categories.trads.Root.id_category"
 						{if $home_is_selected}checked{/if}
 						onclick="clickOnCategoryBox($(this));" />
-					{$categories.trads.Home}
+					{$categories.trads.Root.name}
 			</span>
 			<ul>
 				<li><span class="placeholder">&nbsp;</span></li>

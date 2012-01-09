@@ -291,6 +291,8 @@
 								{include file='helper/assoshop.tpl' input=$input fields_value=$fields_value}
 							{elseif $input.type == 'categories'}
 								{include file='helper/form/form_category.tpl' categories=$input.values}
+							{elseif $input.type == 'categories_select'}
+								{$input.category_tree}
 							{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}
 									{$asso_shop}
 							{elseif $input.type == 'color'}
