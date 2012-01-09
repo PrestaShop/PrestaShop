@@ -559,11 +559,11 @@ class ThemeInstallator extends Module
 			$errors .= '</ul>';
 		}
 
-		if (!empty($msg))
-			$this->_msg .= parent::displayConfirmation($msg);
-
 		if (isset($error))
 			$this->_msg .= parent::displayError($errors);
+
+		if (!empty($msg))
+			$this->_msg .= parent::displayConfirmation($msg);
 
 		$this->_html .= '
 			<input type="submit" class="button" name="submitThemes" value="'.$this->l('Previous').'" />
