@@ -1277,7 +1277,7 @@ class CategoryCore extends ObjectModel
 		'.$sql);
 	}
 
-	public function getRootCategories($id_lang = null, $active = true)
+	public static function getRootCategories($id_lang = null, $active = true)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
