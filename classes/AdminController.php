@@ -294,6 +294,8 @@ class AdminControllerCore extends Controller
 		if (!Shop::isFeatureActive())
 			$this->shopLinkType = '';
 
+		//$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
+		$this->override_folder = Tools::toUnderscoreCase(substr($controller, 5)).'/';
 		// Get the name of the folder containing the custom tpl files
 		$this->tpl_folder = Tools::toUnderscoreCase(substr($controller, 5)).'/';
 
@@ -1108,6 +1110,7 @@ class AdminControllerCore extends Controller
 		// Template override
 		$tpl = $this->tpl_folder.'content.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
+
 		// Check if action template has been override
 
 		// new smarty : template_dir is an array.
@@ -1121,11 +1124,8 @@ class AdminControllerCore extends Controller
 
 		if (!$this->ajax)
 		{
-			// Check if content template has been override
-			if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$tpl))
-				$page = $this->context->smarty->fetch($tpl);
-			else
-				$page = $this->context->smarty->fetch($this->template);
+			$template = $this->createTemplate($this->template);
+			$page = $template->fetch();
 		}
 		else
 			$page = $this->content;
@@ -2562,6 +2562,21 @@ class AdminControllerCore extends Controller
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
 		return $helper->renderRequiredFields($this->className, $this->identifier, $this->required_fields);
+	}
+
+	/**
+	 * Create a template from the override file, else from the base file.
+	 *
+	 * @param string $tpl_name filename
+	 * @return Template
+	 */
+	public function createTemplate($tpl_name)
+	{
+		// Overrides exists?
+		if ($this->override_folder && file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
+			return $this->context->smarty->createTemplate('controllers/'.$this->override_folder.$tpl_name, $this->context->smarty);
+
+		return $this->context->smarty->createTemplate($this->context->smarty->getTemplateDir(0).$tpl_name, $this->context->smarty);
 	}
 }
 

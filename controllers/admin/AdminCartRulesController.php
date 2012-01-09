@@ -176,7 +176,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$attributes[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $attributes);
-				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'products':
@@ -190,7 +190,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'categories':
@@ -204,14 +204,14 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
-				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			default:
 				die;
 		}
 
-		return Context::getContext()->smarty->fetch('cart_rules/product_rule.tpl');
+		return $this->createTemplate('product_rule.tpl')->fetch();
 	}
 
 	public function ajaxProcess()
@@ -337,7 +337,7 @@ class AdminCartRulesControllerCore extends AdminController
 			)
 		);
 
-		$this->content .= Context::getContext()->smarty->fetch('cart_rules/form.tpl');
+		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');
 		return parent::renderForm();

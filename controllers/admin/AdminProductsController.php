@@ -1850,7 +1850,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->tab_display = 'Informations';
 
 			if(method_exists($this, 'initForm'.$this->tab_display))
-				$this->tpl_form = 'products/'.strtolower($this->tab_display).'.tpl';
+				$this->tpl_form = strtolower($this->tab_display).'.tpl';
 
 			if ($this->ajax)
 				$this->content_only = true;
@@ -2144,13 +2144,9 @@ class AdminProductsControllerCore extends AdminController
 			$this->_errors[] = 'Unable to load object';
 		else
 		{
-			if ($this->object->id && !Shop::isProductAvailable($this->object->id))
-				$this->_displayUnavailableProductWarning();
-
 			$this->_displayDraftWarning($this->object->active);
 
 			$this->initPack($this->object);
-
 			$this->{'initForm'.$this->tab_display}($this->object, $languages, $default_language);
 			$this->tpl_form_vars['product'] = $this->object;
 			if ($this->ajax)
@@ -2159,7 +2155,6 @@ class AdminProductsControllerCore extends AdminController
 				else
 					return $this->tpl_form_vars['custom_form'];
 		}
-
 		$parent = parent::renderForm();
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
 		return $parent;
@@ -2460,12 +2455,11 @@ class AdminProductsControllerCore extends AdminController
 	*/
 	public function initFormAccounting($obj)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ($obj->id)
 		{
 			$error = '';
-			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 			$detail = array();
 
 			if (count($this->context->shop->getListOfID()) > 1)
@@ -2498,13 +2492,13 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before manage accounting.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormAssociations($obj)
 	{
 		$product = $obj;
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 		// Prepare Categories tree for display in Associations tab
 		$default_category = Tools::getValue('id_category', 1);
 
@@ -2518,15 +2512,8 @@ class AdminProductsControllerCore extends AdminController
 				$selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
 		}
 
-		if ($this->context->shop() == Shop::CONTEXT_SHOP)
-		{
-			$root_category = Category::getRootCategory();
-			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
-		}
-		else
-			$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
 		$translations = array(
-			'Root' => $root_category,
+			'Home' => $this->l('Home'),
 			'selected' => $this->l('selected'),
 			'Collapse All' => $this->l('Collapse All'),
 			'Expand All' => $this->l('Expand All'),
@@ -2569,12 +2556,12 @@ class AdminProductsControllerCore extends AdminController
 					'link' => $this->context->link
 		));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormPrices($obj)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 		$product = $obj;
 		if ($obj->id)
 		{
@@ -2651,12 +2638,12 @@ class AdminProductsControllerCore extends AdminController
 			'token' => $this->token
 		));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormSeo($product, $languages, $default_language)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		$data->assign(array(
 			'product' => $product,
@@ -2665,12 +2652,12 @@ class AdminProductsControllerCore extends AdminController
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED')
 		));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormPack($product, $languages, $default_language)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
@@ -2698,12 +2685,12 @@ class AdminProductsControllerCore extends AdminController
 			'input_namepack_items' => $input_namepack_items
 		));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormVirtualProduct($product, $languages, $default_language)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		$currency = $this->context->currency;
 
@@ -2775,7 +2762,7 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign($this->tpl_form_vars);
 		$data->assign('link', $this->context->link);
 		$this->tpl_form_vars['product'] = $product;
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	private function _getFinalPrice($specific_price, $productPrice, $taxRate)
@@ -3009,7 +2996,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormCustomization($obj, $languages, $default_language)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ((bool)$obj->id)
 		{
@@ -3033,12 +3020,12 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding customization.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormAttachments($obj, $languages, $default_language)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ((bool)$obj->id)
 		{
@@ -3065,12 +3052,12 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding attachements.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormInformations($product)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		// autoload rich text editor (tiny mce)
 		$iso = $this->context->language->iso_code;
@@ -3152,12 +3139,12 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('link', $this->context->link);
 		$data->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
 		$this->tpl_form_vars['product'] = $product;
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormShipping($obj)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 		$data->assign(array(
 						  'product' => $obj,
 						  'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
@@ -3166,7 +3153,7 @@ class AdminProductsControllerCore extends AdminController
 						  'currency' => $this->context->currency,
 						  'country_display_tax_label' =>  $this->context->country->display_tax_label
 					  ));
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	protected function getCarrierList()
@@ -3200,7 +3187,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormImages($obj)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ((bool)$obj->id)
 		{
@@ -3237,7 +3224,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding images.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormCombinations($obj, $languages, $default_language)
@@ -3254,7 +3241,7 @@ class AdminProductsControllerCore extends AdminController
 			return;
 		}
 
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 		if ((bool)$product->id)
 		{
 			$attribute_js = array();
@@ -3314,7 +3301,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding combinations.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function renderListAttributes($id_product_download, $product, $currency)
@@ -3463,7 +3450,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initFormQuantities($obj, $languages)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ($obj->id)
 		{
@@ -3559,12 +3546,12 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before managing quantities.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormSuppliers($obj)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ($obj->id)
 		{
@@ -3631,12 +3618,12 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before managing suppliers'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormWarehouses($obj)
 	{
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 
 		if ($obj->id)
 		{
@@ -3676,7 +3663,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before managing warehouses'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function initFormFeatures($obj)
@@ -3687,7 +3674,7 @@ class AdminProductsControllerCore extends AdminController
 			return;
 		}
 
-		$data = $this->context->smarty->createData();
+		$data = $this->createTemplate($this->tpl_form);
 		if ($obj->id)
 		{
 			$features = Feature::getFeatures($this->context->language->id);
@@ -3722,7 +3709,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$this->displayWarning($this->l('You must save this product before adding features.'));
 
-		$this->tpl_form_vars['custom_form'] = $this->context->smarty->createTemplate($this->tpl_form, $data)->fetch();
+		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
 	public function ajaxProcessProductQuantity()

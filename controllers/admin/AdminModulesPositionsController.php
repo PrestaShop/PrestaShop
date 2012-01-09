@@ -285,7 +285,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'can_move' => (Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP) ? false : true,
 		));
 
-		return $this->context->smarty->fetch('modules_positions/list_modules.tpl');
+		return $this->createTemplate('list_modules.tpl')->fetch();
 	}
 
 	public function renderForm()
@@ -344,7 +344,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		foreach ($exceptsList as $shopID => $fileList)
 			$exception_list_diff[] = $this->displayModuleExceptionList($fileList, $shopID);
 
-		$tpl = $this->context->smarty->createTemplate('modules_positions/form.tpl');
+		$tpl = $this->createTemplate('form.tpl');
 		$tpl->assign(array(
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
 			'edit_graft' => Tools::isSubmit('editGraft'),
