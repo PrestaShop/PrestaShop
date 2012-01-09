@@ -171,7 +171,7 @@ class AdminRequestSqlControllerCore extends AdminController
 	 */
 	public function displayExportLink($token, $id)
 	{
-		$tpl = $this->context->smarty->createTemplate('request_sql/list_action_export.tpl');
+		$tpl = $this->createTemplate('list_action_export.tpl');
 
 		$tpl->assign(array(
 			'href' => self::$currentIndex.'&token='.$this->token.'&'.$this->identifier.'='.$id.'&export'.$this->table.'=1',

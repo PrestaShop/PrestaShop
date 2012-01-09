@@ -59,7 +59,6 @@ class AdminAccountingExportControllerCore extends AdminController
 	{
 		$this->className = 'Accounting';
 
-		$this->pathAccountExportTpl = _PS_ADMIN_DIR_.'/themes/default/template/accounting_export/';
 	 	$this->content = '';
 	 	$this->downloadDir = _PS_ADMIN_DIR_.'/export/';
 	 	$this->exportSelected = 'global_export';
@@ -118,8 +117,8 @@ class AdminAccountingExportControllerCore extends AdminController
 			'preventList' => $this->prevent
 			)
 		);
-		
-		$this->content .= $this->context->smarty->fetch($this->pathAccountExportTpl.'menu.tpl');
+
+		$this->content .= $this->createTemplate('menu.tpl')->fetch();
 	}
 	
 	/**
@@ -155,23 +154,18 @@ class AdminAccountingExportControllerCore extends AdminController
 			'journal' => Configuration::get('ACCOUNTING_JOURNAL_EXPORT'),
 			'begin_date' => Tools::getValue('beginDate'),
 			'end_date' => Tools::getValue('endDate'),
-			'pathAccountExportTpl' => $this->pathAccountExportTpl,
 			'urlDownload' => Tools::getShopDomain().'/download/'
 		));
 		
 		foreach($this->exportTypeList as $exportType)
 		{
-			$pathTpl = $this->pathAccountExportTpl.$exportType['type'].'.tpl';
-			$pathExportedFile = $this->downloadDir.$exportType['file'];
-			
 			$this->context->smarty->assign(array(
 				'title' => $exportType['name'],
 				'type' => $exportType['type'],
 				'existingExport' => file_exists($this->downloadDir.$exportType['file']) ? true : false
 			));
-			
-			if (file_exists($pathTpl))
-				$this->content .= $this->context->smarty->fetch($pathTpl);
+
+			$this->content .= $this->createTemplate($exportType['type'].'.tpl')->fetch();
 		}
 		parent::initContent();
 	}
