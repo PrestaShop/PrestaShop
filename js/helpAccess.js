@@ -1,4 +1,13 @@
-function getHelpButton(label){
+$(document).ready(function (){
+    displayHelpButton(
+        help_class_name,
+        iso_user,
+        country_iso_code,
+        _PS_VERSION_
+    );
+});
+
+function displayHelpButton(label, iso_user, country_iso_code, _PS_VERSION_){
     var button = '';
     $.ajax({
         type: 'POST',
@@ -12,12 +21,12 @@ function getHelpButton(label){
             'version' : _PS_VERSION_
         },
         dataType: "json",
-        async : false,
         success: function(msg) {
             if(msg.content != 'none' && msg.content != '')
-                button = msg.content;
+            {
+                $('ul.cc_button').append(msg.content);
+                $('.help-context-'+help_class_name).fadeIn("fast").show();
+            }
         }
     });
-
-    return button;
 }
