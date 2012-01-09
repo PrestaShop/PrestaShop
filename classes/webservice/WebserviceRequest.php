@@ -738,9 +738,10 @@ class WebserviceRequestCore
 	{
 		$sql = 'SELECT 1
 				FROM '._DB_PREFIX_.'webservice_account wsa LEFT JOIN '._DB_PREFIX_.'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
-				WHERE wsa.key = \''.$key.'\'';
+				WHERE wsa.key = \''.pSQL($key).'\'';
+
 		foreach (self::$shopIDs as $id_shop)
-			$OR[] = ' wsas.id_shop = '.$id_shop.' ';
+			$OR[] = ' wsas.id_shop = '.(int)$id_shop.' ';
 		$sql .= ' AND ('.implode('OR', $OR).') ';
 		if (!Db::getInstance()->getValue($sql))
 		{
