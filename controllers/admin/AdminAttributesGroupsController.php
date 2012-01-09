@@ -236,7 +236,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function initFormAttributes()
+	public function renderFormAttributes()
 	{
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 
@@ -246,15 +246,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'image' => '../img/admin/asterisk.gif'
 			),
 			'input' => array(
-				array(
-					'type' => 'text',
-					'label' => $this->l('Name:'),
-					'name' => 'name',
-					'lang' => true,
-					'size' => 33,
-					'required' => true,
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
-				),
 				array(
 					'type' => 'select',
 					'label' => $this->l('Group type:'),
@@ -266,6 +257,15 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'desc' => $this->l('Choose the type of the attribute group')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Name:'),
+					'name' => 'name',
+					'lang' => true,
+					'size' => 33,
+					'required' => true,
+					'hint' => $this->l('Invalid characters:').' <>;=#{}'
 				)
 			)
 		);
@@ -377,7 +377,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if (!$this->object = new Attribute((int)Tools::getValue('id_attribute')))
 				return;
 
-			$this->content .= $this->initFormAttributes();
+			$this->content .= $this->renderFormAttributes();
 		}
 		else if ($this->display != 'view' && !$this->ajax)
 		{
