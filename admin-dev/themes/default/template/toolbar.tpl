@@ -36,19 +36,6 @@
 	</ul>
 
 	<script language="javascript">
-        if (helpboxes > 0)
-        {
-            $(document).ready(function (){
-                button = getHelpButton(help_class_name);
-
-                if (button != '')
-                {
-                    $('ul.cc_button').append(button);
-                    $('.help-context-'+help_class_name).fadeIn("fast").show();
-                }
-            });
-        }
-
 		$(function() {
 			//get reference on save link
 			btn_save = $('span[class~="process-icon-save"]').parent();
