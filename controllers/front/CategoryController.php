@@ -49,6 +49,11 @@ class CategoryControllerCore extends FrontController
 
 	public function canonicalRedirection($canonicalURL = '')
 	{
+		if (!Shop::isCategoryAvailable(Tools::getValue('id_category')))
+		{
+			$this->redirect_after = '404';
+			$this->redirect();
+		}
 		if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category))
 			parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
 	}

@@ -302,6 +302,7 @@ CREATE TABLE `PREFIX_category` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `position` int(10) unsigned NOT NULL default '0',
+  `is_root_category` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_category`),
   KEY `category_parent` (`id_parent`),
   KEY `nleftright` (`nleft`,`nright`)
@@ -2367,3 +2368,10 @@ CREATE TABLE IF NOT EXISTS `PREFIX_risk_lang` (
   PRIMARY KEY (`id_risk`,`id_lang`),
   KEY `id_risk` (`id_risk`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_category_shop` (
+  `id_category` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  PRIMARY KEY (`id_category`, `id_shop`),
+  UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;

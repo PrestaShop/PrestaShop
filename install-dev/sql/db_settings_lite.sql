@@ -1647,3 +1647,6 @@ INSERT INTO `PREFIX_risk_lang` (`id_risk`, `id_lang`, `name`) VALUES
 (2, 5, 'Low'),
 (3, 5, 'Middle'),
 (4, 5, 'Hight');
+
+INSERT INTO `PREFIX_category_shop` (`id_category`, `id_shop`) VALUES
+(1, 1);
