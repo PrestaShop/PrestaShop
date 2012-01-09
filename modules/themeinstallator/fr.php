@@ -18,6 +18,11 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_b857ef1f431c5f3290dc5b5
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_22c765d777eb4ca6b4292bcbb596872e'] = 'Les modules suivants ont été désactivés';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_e501dc865768ac08d49c129a23c3ae09'] = 'Les modules suivants ont été activés';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Les images ont bien été mises à jour dans la base de données';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_a525cd013f76b049acb0320987c0d325'] = 'Attention : Copier / Coller vos erreurs si vous souhaitez définir manuellement ces images types (Dans l\'onglet Préférences > Images) :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_203c5dff06c7565ffd6713a914c62d16'] = 'Certain type d\'image n’ont pu être ajouté, car ils existent. Voici la liste :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_3b90370ac32dead2af37eabe3bdbb97f'] = 'Nom de l\'image type :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_48ccf48dcf2218a413ce473262f21a0c'] = 'Largeur :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_e933dc24fb245d863a43b4fefe9b45f5'] = 'Hauteur :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_dd1f775e443ff3b9a89270713580a51b'] = 'Précédent';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a20ddccbb6f808ec42cd66323e6c6061'] = 'Terminer';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_33167fe8de7517798cf2e95c7680d6a4'] = 'Les thèmes suivants ont correctement été importés';
@@ -27,10 +32,6 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_7651cc4a979c5e21ee50de9
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_8ab378b3ad05e14cbe61bff60c50afa6'] = 'Configuration actuelle';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f94545e00cff9d0395194458b2245702'] = 'Configuration du thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_130c5b3473c57faa76e2a1c54e26f88e'] = 'Les deux';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_c90ba3aaed0a2bafed18233111062cf0'] = 'Configuration des images du thème';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_2a84d9915b12fcb0c1436709a77a8dd0'] = 'Ajouter la nouvelle configuration';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_dd3acd810b479275ce68d69e78ed7a95'] = 'Tout ajouter (vous risquez de perdre votre configuration actuelle)';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_332efbbfb2c4bd5a37fd7a55659b821a'] = 'Ne rien changer';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_10ac3d04253ef7e1ddc73e6091c0cd55'] = 'Suivant';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5138a89d1b730dacf446855e15c24496'] = 'Vous êtes sur le point d\'installer les thèmes suivants';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f364da141450380ae79d7a45528f4c06'] = 'Ce thème est pour Prestashop';
@@ -40,7 +41,10 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_caeedb303068f9915e8e5ce
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_2dd99d7426b4fe6dd04d7a98f5e32a62'] = 'Choisissez la déclinaison que vous souhaitez importer';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_f956917da1716add289f33a8869b85d4'] = 'Thème principal';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_1e3de51d693cd0c7e903bcf3769a0cdb'] = 'Décochez ce champs si vous ne souhaitez pas installer le thème principal';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_d0594793a76c7e694f6bf7d4fea06a99'] = 'Nom du thème';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_0205578268437a2c18d438b434b6d4cf'] = 'Répertoire du thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_c49fbf2b822fd14929fd1fd76cdb0c96'] = 'Sélectionnez les variations que vous souhaitez importer';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_dc87369c7dd7d760c8076a4e1a3805d0'] = 'Sélectionner le thème à exporter';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_d1baba351b02042982a133c4df5d4924'] = 'Exporter un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5092965125a28a17f49ee460fbc1f62c'] = 'Selectionner un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0557cae4cf5b379e665910d701210f69'] = 'Exporter ce thème';

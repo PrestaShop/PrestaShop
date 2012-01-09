@@ -28,9 +28,6 @@
 class ImageTypeCore extends ObjectModel
 {
 	public		$id;
-
-	/** @var string id_theme */
-	public		$id_theme;
 	
 	/** @var string Name */
 	public		$name;
@@ -66,7 +63,6 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
-			'id_theme' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 16),
 			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),

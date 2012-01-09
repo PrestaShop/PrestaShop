@@ -867,7 +867,6 @@ CREATE TABLE `PREFIX_image_lang` (
 
 CREATE TABLE `PREFIX_image_type` (
   `id_image_type` int(10) unsigned NOT NULL auto_increment,
-  `id_theme` INT(11) unsigned NOT NULL,
   `name` varchar(16) NOT NULL,
   `width` int(10) unsigned NOT NULL,
   `height` int(10) unsigned NOT NULL,
@@ -878,7 +877,7 @@ CREATE TABLE `PREFIX_image_type` (
   `scenes` tinyint(1) NOT NULL default '1',
   `stores` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id_image_type`),
-  UNIQUE KEY `image_type_name` (`id_theme`, `name`)
+  KEY `image_type_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_lang` (
