@@ -725,9 +725,9 @@ if (Tools::isSubmit('getAdminHomeElement'))
 	die(Tools::jsonEncode($result));
 }
 
-if (Tools::isSubmit('getChildrenCategories') && Tools::getValue('id_category_parent'))
+if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent'))
 {
-	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id);
+	$children_categories = Category::getChildrenWithNbSelectedSubCat(Tools::getValue('id_category_parent'), Tools::getValue('selectedCat'), Context::getContext()->language->id, null, Tools::getValue('use_shop_context'));
 	die(Tools::jsonEncode($children_categories));
 }
 

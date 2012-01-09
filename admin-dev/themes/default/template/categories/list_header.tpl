@@ -29,9 +29,17 @@
 {block name=leadin}
 <div class="cat_bar2">
 	{if count($categories_tree) == 0}
-		&nbsp;<img src="../img/admin/home.gif" alt="" /> {l s='Home'}
+		{if $category_root->id_category == 0}
+			&nbsp;<img src="../img/admin/home.gif" alt="" /> {$category_root->name}
+		{else}
+			&nbsp;<img src="../img/admin/home.gif" alt="" /> {$categories_name}
+		{/if}
 	{else}
-			&nbsp;<a href="{$currentIndex}&token={$token}"><img src="../img/admin/home.gif" alt="" /> {l s='Home'}</a>&nbsp;>&nbsp;
+		{if $category_root->id_category == 0}
+			&nbsp;<a href="{$currentIndex}&token={$token}"><img src="../img/admin/home.gif" alt="" /> {$category_root->name}</a>&nbsp;>&nbsp;
+		{else}
+			&nbsp;<a href="{$currentIndex}&id_category={$category_root->id_category}&token={$token}"><img src="../img/admin/home.gif" alt="" /> {$category_root->name}</a>&nbsp;>&nbsp;
+		{/if}
 
 		{foreach $categories_tree key=key item=category}
 			{if $key == 0}

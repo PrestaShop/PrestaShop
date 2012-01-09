@@ -39,7 +39,25 @@
 
 {block name="start_field_block"}
 	<div class="margin-form">
-	{if $input.type == 'theme'}
+	{if $input.type == 'select' && $input.name == 'id_category'}
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#id_category").change(function(){
+					$.ajax({
+						type: "POST",
+						url : "{$current}",
+						async: true,
+						dataType: "html",
+						data : "ajax=true&id_category="+$(this).val()+"&use_shop_context=false&getCategoriesFromRootCategory=true&token={$token}",
+						success : function(res)
+						{
+							$('#categories-treeview').parent().html(res);
+						}
+					});
+				});
+			});
+		</script>
+	{else if $input.type == 'theme'}
 		{foreach $input.values as $theme}
 			<div class="select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				{$theme->name}<br />

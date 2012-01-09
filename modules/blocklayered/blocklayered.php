@@ -1613,8 +1613,22 @@ class BlockLayered extends Module
 
 			$selectedCat = array();
 			// Translations are not automatic for the moment ;)
+			if (version_compare(_PS_VERSION_,'1.5','>'))
+			{
+				if ($this->context->shop() == Shop::CONTEXT_SHOP)
+				{
+					$root_category = Category::getRootCategory();
+					$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+				}
+				else
+					$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
+			}
+			else
+			{
+				$root_category = array('id_category' => '1', 'name' => $this->l('Home'));
+			}
 			$trads = array(
-				 'Home' => $this->l('Home'),
+				 'Root' => $root_category,
 				 'selected' => $this->l('selected'),
 				 'Collapse All' => $this->l('Collapse All'),
 				 'Expand All' => $this->l('Expand All'),

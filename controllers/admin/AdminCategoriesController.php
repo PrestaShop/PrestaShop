@@ -82,12 +82,18 @@ class AdminCategoriesControllerCore extends AdminController
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
+		parent::__construct();
+	}
+
+	public function init()
+	{
+		parent::init();
+
+		// context->shop is set in the init() function, so we move the _category instanciation after that
 		if ($id_category = Tools::getvalue('id_category'))
 			$this->_category = new Category($id_category);
 		else
-			$this->_category = new Category(1);
-
-		parent::__construct();
+			$this->_category = new Category($this->context->shop->id_category);
 	}
 
 	public function setMedia()
@@ -104,14 +110,43 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('add');
 		$this->addRowAction('view');
 
-		$this->_filter .= ' AND `id_parent` = '.(int)$this->_category->id.' ';
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
+		$nb_shop = count(Shop::getShops());
+		if (Tools::isSubmit('id_category'))
+			$id_parent = $this->_category->id;
+		else if ($nb_shop == 1 && $count_categories_without_parent > 1)
+			$id_parent = 0;
+		else
+			$id_parent = $this->context->shop->id_category;
+		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
 		$this->_select = 'position ';
+		// we add restriction for shop
+		if (Shop::CONTEXT_ALL == Context::getContext()->shop())
+		{
+			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON a.`id_category` = cs.`id_category`';
+			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true);
+		}
 
 		$categories_tree = $this->_category->getParentsCategories();
+		if (empty($categories_tree)
+			&& ($this->_category->id_category != 1 || Tools::isSubmit('id_category'))
+			&& (Shop::CONTEXT_SHOP == Context::getContext()->shop() && $nb_shop == 1 && $count_categories_without_parent > 1))
+			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
+
 		asort($categories_tree);
-		$categories_name = stripslashes($this->_category->getName());
+		if ($nb_shop == 1 && $count_categories_without_parent > 1)
+			$categories_name = $this->l('Root');
+		else
+			$categories_name = stripslashes($this->_category->getName());
+		$root = Category::getRootCategory();
+		if (!is_array($root->name) && empty($root->name))
+		{
+			$root->name = $this->l('Root');
+			$root->id = $root->id_category = 0;
+		}
 		$this->tpl_list_vars['categories_tree'] = $categories_tree;
 		$this->tpl_list_vars['categories_name'] = $categories_name;
+		$this->tpl_list_vars['category_root'] = $root;
 
 		return parent::renderList();
 	}
@@ -140,10 +175,16 @@ class AdminCategoriesControllerCore extends AdminController
 	public function initToolbar()
 	{
 		if (empty($this->display))
+		{
+			$this->toolbar_btn['new-url'] = array(
+				'href' => self::$currentIndex.'&amp;add'.$this->table.'root&amp;token='.$this->token,
+				'desc' => $this->l('Add new root category')
+			);
 			$this->toolbar_btn['new'] = array(
 				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
 				'desc' => $this->l('Add new')
 			);
+		}
 		if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory'))
 		{
 			$this->toolbar_btn['edit'] = array(
@@ -166,11 +207,22 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::initToolbar();
 	}
 
+	public function initProcess()
+	{
+		if (Tools::isSubmit('add'.$this->table.'root') && $this->tabAccess['add'])
+		{
+			$this->action = 'add'.$this->table.'root';
+			$this->display = 'edit';
+		}
+		return parent::initProcess();
+	}
+
 	public function renderForm()
 	{
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
-		$selected_cat = array(isset($obj->id_parent) ? $obj->id_parent : Tools::getValue('id_parent', 1));
+		$id_shop = Context::getContext()->shop->getID(true);
+		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', 1));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
@@ -178,7 +230,13 @@ class AdminCategoriesControllerCore extends AdminController
 		$unidentified_group_information = sprintf($this->l('%s - All persons without a customer account or unauthenticated.'), "<b>".$unidentified->name[$this->context->language->id]."</b>");
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), "<b>".$guest->name[$this->context->language->id]."</b>");
 		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), "<b>".$default->name[$this->context->language->id]."</b>");
-
+		if ($this->context->shop() == Shop::CONTEXT_SHOP)
+		{
+			$root_category = Category::getRootCategory();
+			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+		}
+		else
+			$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -222,7 +280,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'name' => 'id_parent',
 					'values' => array(
 						'trads' => array(
-							 'Home' => $this->l('Home'),
+							 'Root' => $root_category,
 							 'selected' => $this->l('selected'),
 							 'Collapse All' => $this->l('Collapse All'),
 							 'Expand All' => $this->l('Expand All')
@@ -232,6 +290,26 @@ class AdminCategoriesControllerCore extends AdminController
 						'use_radio' => true,
 						'use_search' => false,
 						'disabled_categories' => array(4),
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Root Category:'),
+					'name' => 'is_root_category',
+					'required' => false,
+					'is_bool' => true,
+					'class' => 't',
+					'values' => array(
+						array(
+							'id' => 'is_root_on',
+							'value' => 1,
+							'label' => $this->l('Yes')
+						),
+						array(
+							'id' => 'is_root_off',
+							'value' => 0,
+							'label' => $this->l('No')
+						)
 					)
 				),
 				array(
@@ -296,6 +374,8 @@ class AdminCategoriesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+		if (Tools::isSubmit('add'.$this->table.'root'))
+			unset($this->fields_form['input'][2],$this->fields_form['input'][3]);
 
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -335,6 +415,12 @@ class AdminCategoriesControllerCore extends AdminController
 		{
 			$id_category = (int)Tools::getValue('id_category');
 			$id_parent = (int)Tools::getValue('id_parent');
+			// if true, we are in a root category creation
+			if (!$id_parent && !Tools::isSubmit('is_root_category'))
+			{
+				$_POST['id_parent'] = $id_parent = 0;
+				$_POST['is_root_category'] = 1;
+			}
 			if ($id_category)
 			{
 				if ($id_category != $id_parent)

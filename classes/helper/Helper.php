@@ -142,7 +142,6 @@ class HelperCore
 		$html = '
 		<script type="text/javascript">
 			var inputName = "'.$input_name.'";
-			var use_radio = '.($use_radio ? '1' : '0').';
 		';
 		if (sizeof($selected_cat) > 0)
 		{
@@ -155,7 +154,7 @@ class HelperCore
 			$html .= 'var selectedCat = "";';
 		$html .= '
 			var selectedLabel = \''.$trads['selected'].'\';
-			var home = \''.$trads['Home'].'\';
+			var home = \''.$trads['Root']['name'].'\';
 			var use_radio = '.(int)$use_radio.';';
 		if (!$use_in_popup)
 			$html .= '
@@ -187,7 +186,7 @@ class HelperCore
 			if (is_array($cat))
 			{
 				$disabled = in_array($cat['id_category'], $disabled_categories);
-				if  ($cat['id_category'] != 1)
+				if  ($cat['id_category'] != $trads['Root']['id_category'])
 					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat['id_category'].'" >';
 				else
 					$home_is_selected = true;
@@ -195,7 +194,7 @@ class HelperCore
 			else
 			{
 				$disabled = in_array($cat, $disabled_categories);
-				if  ($cat != 1)
+				if  ($cat != $trads['Root']['id_category'])
 					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat.'" >';
 				else
 					$home_is_selected = true;
@@ -203,8 +202,8 @@ class HelperCore
 		}
 		$html .= '
 			<ul id="categories-treeview" class="filetree">
-				<li id="1" class="hasChildren">
-					<span class="folder"> <input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'.$input_name.'" value="1" '.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '.$trads['Home'].'</span>
+				<li id="'.$trads['Root']['id_category'].'" class="hasChildren">
+					<span class="folder"> <input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'.$input_name.'" value="1" '.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '.$trads['Root']['name'].'</span>
 					<ul>
 						<li><span class="placeholder">&nbsp;</span></li>
 				  </ul>

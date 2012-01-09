@@ -144,7 +144,7 @@ class AdminShopControllerCore extends AdminController
 	public function initContent()
 	{
 		$shops =  Shop::getShopWithoutUrls();
-		if (count($shops))
+		if (count($shops) && !$this->ajax)
 		{
 		 	$shop_url_configuration = '';
 			foreach ($shops as $shop)
@@ -170,8 +170,28 @@ class AdminShopControllerCore extends AdminController
 	 	return parent::renderList();
 	}
 
+	public function ajaxProcess()
+	{
+		if (Tools::isSubmit('getCategoriesFromRootCategory') && Tools::isSubmit('id_category'))
+		{
+			$root_category = new Category((int)Tools::getValue('id_category'));
+			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
+			$trads = array(
+				 'Root' => $root_category,
+				 'selected' => $this->l('selected'),
+				 'Collapse All' => $this->l('Collapse All'),
+				 'Check All' => $this->l('Check All'),
+				 'Uncheck All' => $this->l('Uncheck All'),
+				 'Expand All' => $this->l('Expand All')
+			);
+			echo Helper::renderAdminCategorieTree($trads, array($root_category['id_category']));
+		}
+	}
+
 	public function postProcess()
 	{
+		if (Tools::isSubmit('id_category_default'))
+			$_POST['id_category'] = Tools::getValue('id_category_default');
 		if ((Tools::isSubmit('status') ||
 			Tools::isSubmit('status'.$this->table) ||
 			(Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue($this->identifier) && !Tools::getValue('active'))) &&
@@ -193,7 +213,7 @@ class AdminShopControllerCore extends AdminController
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 			$this->_errors[] = Tools::displayError('Unable to load this shop.');
 		else if(!Shop::has_dependency($object->id))
-			return parent::processDelete($token);
+			return $object->deleteCategories() && parent::processDelete($token);
 		else
 			$this->_errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
 
@@ -279,7 +299,7 @@ class AdminShopControllerCore extends AdminController
 				)
 			);
 		}
-		$categories = Category::getCategories($this->context->language->id, false, false);
+		$categories = Category::getRootCategories($this->context->language->id);
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Category root:'),
@@ -289,6 +309,13 @@ class AdminShopControllerCore extends AdminController
 				'id' => 'id_category',
 				'name' => 'name'
 			)
+		);
+
+		$this->fields_form['input'][] = array(
+			'type' => 'categories_select',
+			'name' => 'categoryBox',
+			'label' => $this->l('Associated categories :'),
+			'category_tree' => $this->initCategoriesAssociation($categories[0]['id_category'])
 		);
 		$this->fields_form['input'][] = array(
 			'type' => 'radio',
@@ -419,6 +446,8 @@ class AdminShopControllerCore extends AdminController
 	 */
 	public function processAdd($token)
 	{
+		if (Tools::isSubmit('id_category_default'))
+			$_POST['id_category'] = (int)Tools::getValue('id_category_default');
 		/* Checking fields validity */
 		$this->validateRules();
 
@@ -455,6 +484,30 @@ class AdminShopControllerCore extends AdminController
 			return;
 
 		$shop = new Shop($object->id);
+		$shop->updateCategories(Tools::getValue('categoryBox'));
 		return $object;
+	}
+
+	public function initCategoriesAssociation($id_root = 1)
+	{
+		$id_shop = Tools::getValue('id_shop');
+		$selected_cat = Shop::getCategories($id_shop);
+
+		if ($this->context->shop() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
+			$root_category = new Category($id_shop);
+		else
+			$root_category = new Category($id_root);
+		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
+		$translations = array(
+			'Root' => $root_category,
+			'selected' => $this->l('selected'),
+			'Collapse All' => $this->l('Collapse All'),
+			'Expand All' => $this->l('Expand All'),
+			'Check All' => $this->l('Check All'),
+			'Uncheck All'  => $this->l('Uncheck All'),
+			'search' => $this->l('Search a category')
+		);
+
+		return Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true);
 	}
 }
