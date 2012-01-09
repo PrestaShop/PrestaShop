@@ -80,7 +80,7 @@ class HelperCore
 	public function createTemplate($tpl_name)
 	{
 		// Overrides exists?
-		if ($this->override_folder && file_exists($this->context->smarty->template_dir[0].$this->override_folder.$tpl_name))
+		if ($this->override_folder && file_exists($this->context->smarty->getTemplateDir(0).$this->override_folder.$tpl_name))
 			return $this->context->smarty->createTemplate($this->override_folder.$tpl_name);
 
 		return $this->context->smarty->createTemplate($this->base_folder.$tpl_name);

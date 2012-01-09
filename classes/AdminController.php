@@ -1112,7 +1112,7 @@ class AdminControllerCore extends Controller
 
 		// new smarty : template_dir is an array.
 		// @todo : add override path to the smarty config, and checking all array item
-		if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl_action) && $this->display != 'view' && $this->display != 'options')
+		if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$tpl_action) && $this->display != 'view' && $this->display != 'options')
 		{
 			if (method_exists($this, $this->display.Tools::toCamelCase($this->className)))
 				$this->{$this->display.Tools::toCamelCase($this->className)}();
@@ -1122,7 +1122,7 @@ class AdminControllerCore extends Controller
 		if (!$this->ajax)
 		{
 			// Check if content template has been override
-			if (file_exists($this->context->smarty->template_dir[0].'/'.$tpl))
+			if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$tpl))
 				$page = $this->context->smarty->fetch($tpl);
 			else
 				$page = $this->context->smarty->fetch($this->template);
@@ -1471,7 +1471,7 @@ class AdminControllerCore extends Controller
 	public function renderForm()
 	{
 		if (Tools::getValue('submitFormAjax'))
-			$this->content .= $this->context->smarty->fetch($this->context->smarty->template_dir[0].'form_submit_ajax.tpl');
+			$this->content .= $this->context->smarty->fetch('form_submit_ajax.tpl');
 		if ($this->fields_form && is_array($this->fields_form))
 		{
 			if (!$this->multiple_fieldsets)

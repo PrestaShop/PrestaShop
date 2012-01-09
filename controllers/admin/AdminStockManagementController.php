@@ -1018,7 +1018,7 @@ class AdminStockManagementControllerCore extends AdminController
 					$helper = new HelperForm();
 
 					// Check if form template has been overriden
-					if (file_exists($this->context->smarty->template_dir.'/'.$this->tpl_folder.'form.tpl'))
+					if (file_exists($this->context->smarty->getTemplateDir(0).'/'.$this->tpl_folder.'form.tpl'))
 						$helper->tpl = $this->tpl_folder.'form.tpl';
 
 					$this->setHelperDisplay($helper);
