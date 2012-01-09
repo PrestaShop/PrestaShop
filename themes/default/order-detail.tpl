@@ -151,13 +151,13 @@
 			{if $priceDisplay && $use_tax}
 				<tr class="item">
 					<td colspan="{if $return_allowed}6{else}5{/if}">
-						{l s='Total products (tax excl.):'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency convert=0}</span>
+						{l s='Total products (tax excl.):'} <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithoutTaxes() currency=$currency}</span>
 					</td>
 				</tr>
 			{/if}
 			<tr class="item">
 				<td colspan="{if $return_allowed}6{else}5{/if}">
-					{l s='Total products'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency convert=0}</span>
+					{l s='Total products'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price">{displayWtPriceWithCurrency price=$order->getTotalProductsWithTaxes() currency=$currency}</span>
 				</td>
 			</tr>
 			{if $order->total_discounts > 0}
@@ -170,22 +170,23 @@
 			{if $order->total_wrapping > 0}
 			<tr class="item">
 				<td colspan="{if $return_allowed}6{else}5{/if}">
-					{l s='Total gift-wrapping:'} <span class="price-wrapping">{displayWtPriceWithCurrency price=$order->total_wrapping currency=$currency convert=0}</span>
+					{l s='Total gift-wrapping:'} <span class="price-wrapping">{displayWtPriceWithCurrency price=$order->total_wrapping currency=$currency}</span>
 				</td>
 			</tr>
 			{/if}
 			<tr class="item">
 				<td colspan="{if $return_allowed}6{else}5{/if}">
-					{l s='Total shipping'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency convert=0}</span>
+					{l s='Total shipping'} {if $use_tax}{l s='(tax incl.)'}{/if}: <span class="price-shipping">{displayWtPriceWithCurrency price=$order->total_shipping currency=$currency}</span>
 				</td>
 			</tr>
 			<tr class="totalprice item">
 				<td colspan="{if $return_allowed}6{else}5{/if}">
-					{l s='Total:'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency convert=0}</span>
+					{l s='Total:'} <span class="price">{displayWtPriceWithCurrency price=$order->total_paid currency=$currency}</span>
 				</td>
 			</tr>
 		</tfoot>
 		<tbody>
+        GROUP={$group_use_tax}
 		{foreach from=$products item=product name=products}
 			{if !isset($product.deleted)}
 				{assign var='productId' value=$product.product_id}
@@ -207,9 +208,9 @@
 						<td>
 							<label for="cb_{$product.id_order_detail|intval}">
 								{if $group_use_tax}
-									{convertPriceWithCurrency price=$product.product_price_wt currency=$currency convert=0}
+									{convertPriceWithCurrency price=$product.unit_price_tax_incl currency=$currency}
 								{else}
-									{convertPriceWithCurrency price=$product.product_price currency=$currency convert=0}
+									{convertPriceWithCurrency price=$product.unit_price_tax_excl currency=$currency}
 								{/if}
 							</label>
 						</td>
@@ -217,15 +218,15 @@
 							<label for="cb_{$product.id_order_detail|intval}">
 								{if isset($customizedDatas.$productId.$productAttributeId)}
 									{if $group_use_tax}
-										{convertPriceWithCurrency price=$product.total_customization_wt currency=$currency convert=0}
+										{convertPriceWithCurrency price=$product.total_customization_wt currency=$currency}
 									{else}
-										{convertPriceWithCurrency price=$product.total_customization currency=$currency convert=0}
+										{convertPriceWithCurrency price=$product.total_customization currency=$currency}
 									{/if}
 								{else}
 									{if $group_use_tax}
-										{convertPriceWithCurrency price=$product.total_wt currency=$currency convert=0}
+										{convertPriceWithCurrency price=$product.total_price_tax_incl currency=$currency}
 									{else}
-										{convertPriceWithCurrency price=$product.total_price currency=$currency convert=0}
+										{convertPriceWithCurrency price=$product.total_price_tax_excl currency=$currency}
 									{/if}
 								{/if}
 							</label>
@@ -288,18 +289,18 @@
 						<td>
 							<label for="cb_{$product.id_order_detail|intval}">
 							{if $group_use_tax}
-								{convertPriceWithCurrency price=$product.product_price_wt currency=$currency convert=0}
+								{convertPriceWithCurrency price=$product.unit_price_tax_incl currency=$currency}
 							{else}
-								{convertPriceWithCurrency price=$product.product_price currency=$currency convert=0}
+								{convertPriceWithCurrency price=$product.unit_price_tax_excl currency=$currency}
 							{/if}
 							</label>
 						</td>
 						<td>
 							<label for="cb_{$product.id_order_detail|intval}">
 							{if $group_use_tax}
-								{convertPriceWithCurrency price=$product.total_wt currency=$currency convert=0}
+								{convertPriceWithCurrency price=$product.total_price_tax_incl currency=$currency}
 							{else}
-								{convertPriceWithCurrency price=$product.total_price currency=$currency convert=0}
+								{convertPriceWithCurrency price=$product.total_price_tax_excl currency=$currency}
 							{/if}
 							</label>
 						</td>
@@ -313,7 +314,7 @@
 				<td>{l s='Voucher:'} {$discount.name|escape:'htmlall':'UTF-8'}</td>
 				<td><span class="order_qte_span editable">1</span></td>
 				<td>&nbsp;</td>
-				<td>{if $discount.value != 0.00}{l s='-'}{/if}{convertPriceWithCurrency price=$discount.value currency=$currency convert=0}</td>
+				<td>{if $discount.value != 0.00}{l s='-'}{/if}{convertPriceWithCurrency price=$discount.value currency=$currency}</td>
 				{if $return_allowed}
 				<td>&nbsp;</td>
 				{/if}
