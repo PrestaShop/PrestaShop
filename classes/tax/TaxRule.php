@@ -54,6 +54,14 @@ class TaxRuleCore extends ObjectModel
 		),
 	);
 
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_tax_rules_group' => array('xlink_resource'=> 'tax_rules_group'),
+            'id_state' => array('xlink_resource'=> 'states'),
+            'id_country' => array('xlink_resource'=> 'countries')
+        ),
+    );
+
     public static function deleteByGroupId($id_group)
     {
         if (empty($id_group))
