@@ -922,6 +922,16 @@ class AdminModulesControllerCore extends AdminController
 			if (isset($module->warning) && !empty($module->warning))
 				$this->warnings[] = '<b>'.$module->displayName.' :</b> '.$module->warning;
 
+			// AutoComplete array
+			$autocompleteList .= Tools::jsonEncode(array(
+				'displayName' => (string)$module->displayName,
+				'desc' => (string)$module->description,
+				'name' => (string)$module->name,
+				'author' => (string)$module->author,
+				'image' => (isset($module->image) ? (string)$module->image : ''),
+				'option' => '',
+			)).', ';
+
 			// Apply filter
 			if ($this->isModuleFiltered($module))
 				unset($modules[$km]);
@@ -940,17 +950,6 @@ class AdminModulesControllerCore extends AdminController
 				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
 				if (Tools::getValue('module_name') == $module->name && (int)Tools::getValue('conf') > 0)
 					$modules[$km]->message = $this->_conf[(int)Tools::getValue('conf')];
-
-				// AutoComplete array
-				$autocompleteList .= Tools::jsonEncode(array(
-					'displayName' => (string)$module->displayName,
-					'desc' => (string)$module->description,
-					'name' => (string)$module->name,
-					'author' => (string)$module->author,
-					'image' => (isset($module->image) ? (string)$module->image : ''),
-					//'option' => $this->displayModuleOptions($module),
-					'option' => '',
-				)).', ';
 			}
 			unset($object);
 		}
