@@ -471,11 +471,11 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-     * Marked as deprecated but should not throw any "deprecated" message
+	 * Marked as deprecated but should not throw any "deprecated" message
 	 * This function is used in order to keep front office backward compatibility 14 -> 1.5
-     * (Order History)
-     *
-     * @deprecated
+	 * (Order History)
+	 *
+	 * @deprecated
 	 */
 	public function setProductPrices(&$row)
 	{
@@ -526,8 +526,8 @@ class OrderCore extends ObjectModel
 			$this->setProductImageInformations($row);
 			$this->setProductCurrentStock($row);
 
-            // Backward compatibility 1.4 -> 1.5
-            $this->setProductPrices($row);
+			// Backward compatibility 1.4 -> 1.5
+			$this->setProductPrices($row);
 
 			$this->setProductCustomizedDatas($row, $customized_datas);
 
