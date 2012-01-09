@@ -105,13 +105,13 @@ class CombinationCore extends ObjectModel
 			return false;
 		return true;
 	}
-
-	public function setWsProductOptionValues($values)
+	
+	public function setAttributes($ids_attribute)
 	{
 		if ($this->deleteAssociations())
 		{
 			$sqlValues = array();
-			foreach ($values as $value)
+			foreach ($ids_attribute as $value)
 				$sqlValues[] = '('.(int)$value['id'].', '.(int)$this->id.')';
 			$result = Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
@@ -120,6 +120,11 @@ class CombinationCore extends ObjectModel
 			return $result;
 		}
 		return false;
+	}
+	
+	public function setWsProductOptionValues($values)
+	{
+		return $this->setAttributes($values);
 	}
 
 	public function getWsProductOptionValues()
@@ -136,21 +141,26 @@ class CombinationCore extends ObjectModel
 		WHERE `id_product_attribute` = '.(int)($this->id).'
 		');
 	}
-
-	public function setWsImages($values)
+	
+	public function setImages($ids_image)
 	{
 		if (Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
 			WHERE `id_product_attribute` = '.(int)($this->id)) === false)
 		return false;
 		$sqlValues = array();
-		foreach ($values as $value)
+		foreach ($ids_image as $value)
 			$sqlValues[] = '('.(int)$this->id.', '.(int)$value['id'].')';
 		Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
 			VALUES '.implode(',', $sqlValues)
 		);
 		return true;
+	}
+
+	public function setWsImages($values)
+	{
+		return $this->setImages($values);
 	}
 	
 	public function getAttributesName($id_lang)
@@ -183,5 +193,3 @@ class CombinationCore extends ObjectModel
 		return parent::isCurrentlyUsed('product_attribute');
 	}
 }
-
-

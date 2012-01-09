@@ -1006,30 +1006,8 @@ class ProductCore extends ObjectModel
 			return false;
 
 		StockAvailable::setQuantity($this->id, $id_product_attribute, $quantity);
-
 		//Try to set the default supplier reference
-		if ($this->id_supplier > 0 && $supplier_reference != null)
-		{
-			$id_product_supplier = ProductSupplier::getIdByProductAndSupplier($this->id, $id_product_attribute, $this->id_supplier);
-
-			if (empty($id_product_supplier))
-			{
-				//create new record
-				$product_supplier_entity = new ProductSupplier();
-				$product_supplier_entity->id_product = $this->id;
-				$product_supplier_entity->id_product_attribute = $id_product_attribute;
-				$product_supplier_entity->id_supplier = $this->id_supplier;
-				$product_supplier_entity->product_supplier_reference = pSQL($supplier_reference);
-				$product_supplier_entity->save();
-			}
-			else
-			{
-				$product_supplier = new ProductSupplier($id_product_supplier);
-				$product_supplier->product_supplier_reference = pSql($supplier_reference);
-				$product_supplier->update();
-			}
-		}
-
+		$this->addSupplierReference($supplier_reference, $id_product_attribute);
 		return $id_product_attribute;
 	}
 
@@ -1056,37 +1034,31 @@ class ProductCore extends ObjectModel
 
 		$price = str_replace(',', '.', $price);
 		$weight = str_replace(',', '.', $weight);
+		
+		$combination = new Combination();
+		$combination->id_product = (int)$this->id;
+		$combination->price = (float)$price;
+		$combination->ecotax = (float)$ecotax;
+		$combination->quantity = 0;
+		$combination->weight = (float)$weight;
+		$combination->unit_price_impact = (float)$unit_impact;
+		$combination->reference = pSQL($reference);
+		$combination->location = pSQL($location);
+		$combination->ean13 = pSQL($ean13);
+		$combination->upc = pSQL($upc);
+		$combination->default_on = (int)$default;
+		$combination->minimal_quantity = (int)$minimal_quantity;
+		$combination->add();
 
-		Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute', array(
-			'id_product' => (int)$this->id,
-			'price' => (float)$price,
-			'ecotax' => (float)$ecotax,
-			'quantity' => 0,
-			'weight' => ($weight ? (float)$weight : 0),
-			'unit_price_impact' => ($unit_impact ? (float)$unit_impact : 0),
-			'reference' => pSQL($reference),
-			'location' => pSQL($location),
-			'ean13' => pSQL($ean13),
-			'upc' => pSQL($upc),
-			'default_on' => (int)$default,
-			'minimal_quantity' => (int)$minimal_quantity,
-		), 'INSERT');
-
-		$id_product_attribute = Db::getInstance()->Insert_ID();
-
+		if (!$combination->id)
+			return false;
+						
 		Product::updateDefaultAttribute($this->id);
-		if (!$id_product_attribute)
-			return false;
+		
+		if (!empty($id_images))
+			$combination->setImages($id_images);
 
-		if (empty($id_images))
-			return (int)$id_product_attribute;
-		$query = 'INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`) VALUES ';
-		foreach ($id_images as $id_image)
-			$query .= '('.(int)$id_product_attribute.', '.(int)$id_image.'), ';
-		$query = trim($query, ', ');
-		if (!Db::getInstance()->execute($query))
-			return false;
-		return (int)$id_product_attribute;
+		return (int)$combination->id;
 	}
 
 	/**
@@ -1096,11 +1068,12 @@ class ProductCore extends ObjectModel
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
 		$id_images, $reference, $supplier_reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
 	{
-		$id_product_attribute = $this->addProductAttribute(
-			$price, $weight, $unit_impact, $ecotax, $quantity, $id_images,
-			$reference, $supplier_reference, $ean13, $default, $location, $upc, $minimal_quantity
-		);
-
+		$id_product_attribute = $this->addAttribute(
+			$price, $weight, $unit_impact, $ecotax, 0, $id_images,
+			$reference, $ean13, $default, $location, $upc, $minimal_quantity);
+		
+		$this->addSupplierReference($supplier_reference, $id_product_attribute);
+		
 		$result = Db::getInstance()->execute(
 			'UPDATE `'._DB_PREFIX_.'product_attribute`
 			SET `wholesale_price` = '.(float)$wholesale_price.'
@@ -1203,7 +1176,12 @@ class ProductCore extends ObjectModel
 			$id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
 			$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date
 		);
-
+		$this->addSupplierReference($supplier_reference, $id_product_attribute);
+		return $return;
+	}
+	
+	public function addSupplierReference($supplier_reference, $id_product_attribute = null, $id_currency = null)
+	{
 		//Try to set the default supplier reference
 		if ($this->id_supplier > 0 && $supplier_reference != null)
 		{
@@ -1213,16 +1191,17 @@ class ProductCore extends ObjectModel
 			{
 				//create new record
 				$product_supplier_entity = new ProductSupplier();
-				$product_supplier_entity->id_product = $this->id;
-				$product_supplier_entity->id_product_attribute = $id_product_attribute;
-				$product_supplier_entity->id_supplier = $this->id_supplier;
+				$product_supplier_entity->id_product = (int)$this->id;
+				$product_supplier_entity->id_product_attribute = (int)$id_product_attribute;
+				$product_supplier_entity->id_supplier = (int)$this->id_supplier;
 				$product_supplier_entity->product_supplier_reference = pSQL($supplier_reference);
+				$product_supplier_entity->id_currency = (int)$id_currency;
 				$product_supplier_entity->save();
 			}
 			else
 			{
-				$product_supplier = new ProductSupplier($id_product_supplier);
-				$product_supplier->product_supplier_reference = pSql($supplier_reference);
+				$product_supplier = new ProductSupplier((int)$id_product_supplier);
+				$product_supplier->product_supplier_reference = pSQL($supplier_reference);
 				$product_supplier->update();
 			}
 		}
@@ -1248,57 +1227,33 @@ class ProductCore extends ObjectModel
 	public function updateAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
 		$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
 	{
-		Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
-		WHERE `id_product_attribute` = '.(int)$id_product_attribute);
 
 		$price = str_replace(',', '.', $price);
 		$weight = str_replace(',', '.', $weight);
-		$data = array(
-			'wholesale_price' => (float)$wholesale_price,
-			'price' => (float)$price,
-			'ecotax' => (float)$ecotax,
-			'weight' => ($weight ? (float)$weight : 0),
-			'unit_price_impact' => ($unit ? (float)$unit : 0),
-			'reference' => pSQL($reference),
-			'location' => pSQL($location),
-			'ean13' => pSQL($ean13),
-			'upc' => pSQL($upc),
-			'default_on' => (int)$default,
-			'minimal_quantity' => (int)$minimal_quantity,
-			'available_date' => pSQL($available_date)
-		);
 
-		$res1 = Db::getInstance()->AutoExecute(
-			_DB_PREFIX_.'product_attribute',
-			$data,
-			'UPDATE',
-			'`id_product_attribute` = '.(int)$id_product_attribute
-		);
-
-		$res2 = Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
-			WHERE `id_product_attribute` = '.(int)$id_product_attribute
-		);
-
-		if (!$res1 || !$res2)
-			return false;
-
-		//if ($quantity)
-			Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
+		$combination = new Combination((int)$id_product_attribute);
+		$combination->price = (float)$price;
+		$combination->wholesale_price = (float)$wholesale_price;
+		$combination->ecotax = (float)$ecotax;
+		$combination->weight = (float)$weight;
+		$combination->unit_price_impact = (float)$unit;
+		$combination->reference = pSQL($reference);
+		$combination->location = pSQL($location);
+		$combination->ean13 = pSQL($ean13);
+		$combination->upc = pSQL($upc);
+		$combination->default_on = (int)$default;
+		$combination->minimal_quantity = (int)$minimal_quantity;
+		$combination->available_date = pSQL($available_date);
+		$combination->save();
+		
+		if (!empty($id_images))
+			$combination->setImages($id_images);
+		
+		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
 
 		Product::updateDefaultAttribute($this->id);
 
-		if (empty($id_images))
-			return true;
-
-		$query = 'INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`) VALUES ';
-
-		foreach ($id_images as $id_image)
-			$query .= '('.(int)$id_product_attribute.', '.(int)$id_image.'), ';
-		$query = trim($query, ', ');
-
-		return Db::getInstance()->execute($query);
+		return true;
 	}
 
 	/**
@@ -1482,20 +1437,9 @@ class ProductCore extends ObjectModel
 			die(Tools::displayError());
 		if (!count($attributes))
 			return false;
-		$attributes_list = '';
-		foreach ($attributes as $id_attribute)
-			$attributes_list .= '('.(int)$id_product_attribute.','.(int)$id_attribute.'),';
-		$attributes_list = rtrim($attributes_list, ',');
 
-		if (!Validate::isValuesList($attributes_list))
-			die(Tools::displayError());
-
-		$result = Db::getInstance()->execute(
-			'INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_product_attribute`, `id_attribute`)
-			VALUES '.$attributes_list
-		);
-
-		return $result;
+		$combination = new Combination((int)$id_product_attribute);
+		return $combination->setAttributes($attributes);
 	}
 
 	public function addAttributeCombinationMultiple($id_attributes, $combinations)
