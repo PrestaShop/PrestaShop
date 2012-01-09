@@ -27,17 +27,23 @@
 
 function update_feature_detachable_cache()
 {
-	// $array_features = arary(
-	// 	'specific_price', 'scene', 
-	//	'product_download', 'customization_field', 'cart_rule',
-	//	'group', 'pack', 'alias');
+	$array_features = array(
+		'PS_SPECIFIC_PRICE_FEATURE_ACTIVE' => 'specific_price', 
+		'PS_SCENE_FEATURE_ACTIVE' => 'scene', 
+		'PS_PRODUCT_DOWNLOAD_FEATURE_ACTIVE' => 'product_download', 
+		'PS_CUSTOMIZATION_FEATURE_ACTIVE' => 'customization_field', 
+		'PS_CART_RULE_FEATURE_ACTIVE' => 'cart_rule',
+		'PS_GROUP_FEATURE_ACTIVE' => 'group', 
+		'PS_PACK_FEATURE_ACTIVE' => 'pack', 
+		'PS_ALIAS_FEATURE_ACTIVE' => 'alias',
+	);
+	$res = true;
+	foreach ($array_features as $config_key => $feature)
+	{
+		// array_features is an array defined above, so please don't add bqSql !
+		$count = (int)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.$feature.'`');
+		$res &= Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'configuration` (name, value) values ("'.$config_key.'", "'.$count.'"');
 
-	Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', (int)SpecificPrice::isCurrentlyUsed('specific_price'));
-	Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', (int)Scene::isCurrentlyUsed('scene', true));
-	Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', (int)ProductDownload::isCurrentlyUsed('product_download', true));
-	Configuration::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', (int)Customization::isCurrentlyUsed());
-	Configuration::updateGlobalValue('PS_DISCOUNT_FEATURE_ACTIVE', (int)Discount::isCurrentlyUsed('discount', true));
-	Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', (int)Group::isCurrentlyUsed());
-	Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', (int)Pack::isCurrentlyUsed());
-	Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', (int)Alias::isCurrentlyUsed('alias', true));
+	}
+	return $res;
 }
