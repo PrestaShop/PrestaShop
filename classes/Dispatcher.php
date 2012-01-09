@@ -418,7 +418,7 @@ class DispatcherCore
 			$keywords = $transform_keywords;
 		}
 
-		$regexp = '#^/'.$regexp.'#u';
+		$regexp = '#^/'.$regexp.'(\?.*)?$#u';
 		$this->routes[$route_id] = array(
 			'rule' =>		$rule,
 			'regexp' =>		$regexp,
@@ -552,7 +552,7 @@ class DispatcherCore
 		{
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
-			$controller = $this->default_controller;
+			$controller = $this->controller_not_found;
 
 			// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 			if ($this->empty_route)
