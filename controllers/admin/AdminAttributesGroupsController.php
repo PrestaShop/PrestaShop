@@ -56,7 +56,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+ 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -160,6 +160,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function renderForm()
 	{
+		$this->table = 'attribute_group';
+		
 		$group_type = array(
 			array(
 				'id' => 'select',
@@ -240,6 +242,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 
+		$this->table = 'attribute';
+			
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Attribute'),
@@ -345,6 +349,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('updateattribute'))
 			$this->display = 'editAttributes';
+		else if (Tools::isSubmit('submitAddattribute'))
+			$this->display = 'editAttributes';
+		else if (Tools::isSubmit('submitAddattribute_group'))
+			$this->display = 'add';
 
 		parent::init();
 	}
@@ -408,6 +416,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Save')
 				);
 				
+				$this->toolbar_btn['save-and-stay'] = array(
+					'short' => 'SaveAndStay',
+					'href' => '#',
+					'desc' => $this->l('Save and stay'),
+				);
+				
+				$this->toolbar_btn['save-and-stay'] = array(
+					'short' => 'SaveAndStay',
+					'href' => '#',
+					'desc' => $this->l('Save and stay'),
+				);
+				
 				$back = self::$currentIndex.'&token='.$this->token;
 				$this->toolbar_btn['cancel'] = array(
 					'href' => $back,
@@ -469,7 +489,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processSave($token)
 	{
-		if ((int)Tools::getValue('id_attribute') <= 0)
+		if ((int)Tools::getValue('id_attribute') <= 0 && (int)Tools::getValue('id_attribute_group') <= 0 )
 			return $this->processAdd($token);
 		else
 			return $this->processUpdate($token);
@@ -536,10 +556,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 			if (Tools::getValue('submitDel'.$this->table))
 			{
-			 	if ($this->tabAccess['delete'] === '1')
+				if ($this->tabAccess['delete'] === '1')
 				{
 					if (isset($_POST[$this->table.'Box']))
-				 	{
+					{
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
@@ -571,8 +591,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 				parent::postProcess();
 			}
-			else
+			else {
 				parent::postProcess();
+			}
 		}
 	}
 }
