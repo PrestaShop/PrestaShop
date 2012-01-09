@@ -103,6 +103,12 @@ class FrontControllerCore extends Controller
 			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
+		else if (Configuration::get('PS_SSL_ENABLED') AND Tools::usingSecureMode() AND !($this->ssl))
+		{
+			header('HTTP/1.1 301 Moved Permanently');
+			header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
+			exit();
+		}
 
 		if ($this->ajax)
 		{
