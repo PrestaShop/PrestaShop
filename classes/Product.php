@@ -2531,8 +2531,6 @@ class ProductCore extends ObjectModel
 	 */
 	public static function convertPriceWithCurrency($params, &$smarty)
 	{
-		if (!isset($params['convert']))
-			$params['convert'] = true;
 		return Tools::displayPrice($params['price'], $params['currency'], false);
 	}
 

@@ -144,7 +144,6 @@ class OrderInvoiceCore extends ObjectModel
 
 			$this->setProductImageInformations($row);
 			$this->setProductCurrentStock($row);
-			$this->setProductPrices($row, $order);
 			$this->setProductCustomizedDatas($row, $customized_datas);
 
 			// Add information for virtual product
@@ -216,60 +215,6 @@ class OrderInvoiceCore extends ObjectModel
 
 		if ($id_image)
 			$product['image'] = new Image($id_image);
-	}
-
-	public function setProductPrices(&$row, $order)
-	{
-		$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$row['id_order_detail']);
-		$row['tax_calculator'] = $tax_calculator;
-		$row['tax_rate'] = $tax_calculator->getTotalRate();
-
-		if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
-			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
-		else
-			$row['product_price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['product_price']), 2);
-
-		$group_reduction = 1;
-		if ($row['group_reduction'] > 0)
-			$group_reduction =  1 - $row['group_reduction'] / 100;
-
-		if ($row['reduction_percent'] != 0)
-		{
-			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
-				$row['product_price'] = ($row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01));
-			else
-				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['product_price_wt'] * ($row['reduction_percent'] * 0.01)), 2);
-		}
-
-		if ($row['reduction_amount'] != 0)
-		{
-			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
-				$row['product_price'] = ($row['product_price'] - ($tax_calculator->removeTaxes($row['reduction_amount'])));
-			else
-				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['reduction_amount']), 2);
-		}
-
-		if ($row['group_reduction'] > 0)
-		{
-			if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
-				$row['product_price'] = $row['product_price'] * $group_reduction;
-			else
-				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2);
-		}
-
-		if (($row['reduction_percent'] OR $row['reduction_amount'] OR $row['group_reduction']) AND $order->getTaxCalculationMethod() == PS_TAX_EXC)
-			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
-
-		if ($order->getTaxCalculationMethod() == PS_TAX_EXC)
-			$row['product_price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['product_price']), 2) + Tools::ps_round($row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
-		else
-		{
-			$row['product_price_wt_but_ecotax'] = $row['product_price_wt'];
-			$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] + $row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
-		}
-
-		$row['total_wt'] = $row['product_quantity'] * $row['product_price_wt'];
-		$row['total_price'] = $row['product_quantity'] * $row['product_price'];
 	}
 
 	/**
