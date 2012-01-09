@@ -109,10 +109,10 @@ class DispatcherCore
 		),
 		'module' => array(
 			'controller' =>	'module',
-			'rule' =>		'module/{module}/{process}',
+			'rule' =>		'module/{module}{/:process}',
 			'keywords' => array(
 				'module' =>			array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'module'),
-				'process' =>		array('regexp' => '[a-zA-Z0-9_-]+', 'param' => 'process'),
+				'process' =>		array('regexp' => '[a-zA-Z0-9_-]*', 'param' => 'process'),
 			),
 		),
 	);
