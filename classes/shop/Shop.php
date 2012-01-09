@@ -1012,7 +1012,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function isCategoryAvailable($id_category)
 	{
-		return (bool)Db::getInstance()->getValue('
+		d('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category_shop`
 		WHERE `id_category` = '.(int)$id_category.'
