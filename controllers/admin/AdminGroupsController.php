@@ -69,7 +69,8 @@ class AdminGroupsControllerCore extends AdminController
 			'nb' => array(
 				'title' => $this->l('Members'),
 				'width' => 25,
-				'align' => 'center'
+				'align' => 'center',
+				'havingFilter' => true,
 			),
 			'show_prices' => array(
 				'title' => $this->l('Show prices'),
@@ -128,6 +129,7 @@ class AdminGroupsControllerCore extends AdminController
 	protected function renderCustomersList($group)
 	{
 		$genders = array(0 => $this->l('?'));
+		$genders_icon = array('default' => 'unknown.gif');
 		foreach (Gender::getGenders() as $gender)
 		{
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
