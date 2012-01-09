@@ -51,7 +51,7 @@
 	<div class="separation"></div>
 
 
-	{if $show_quantities == true && !$product->cache_is_pack}
+	{if $show_quantities == true}
 		<div class="warn" id="available_quantity_ajax_msg" style="display: none;"></div>
 		<div class="error" id="available_quantity_ajax_error_msg" style="display: none;"></div>
 		<div class="conf" id="available_quantity_ajax_success_msg" style="display: none;"></div>
@@ -60,27 +60,65 @@
 			<tbody>
 				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
-						<input {if $product->advanced_stock_management == 1 && $stock_management_active == 1}value="1" checked="checked"{else}value="0"{/if} {if $stock_management_active == 0}disabled="disabled" {/if} 
-								type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
-						<label style="float:none;font-weight:normal" for="advanced_stock_management">{l s='I want to use the advanced stock management system for this product'} {if $stock_management_active == 0}&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management.'}</b>{/if}</label>
+						<input 
+							{if $product->advanced_stock_management == 1 && $stock_management_active == 1}
+								value="1" checked="checked"
+							{else}
+								value="0"
+							{/if} 
+							{if $stock_management_active == 0 || $product->cache_is_pack}
+								disabled="disabled" 
+							{/if} 
+							type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
+						<label style="float:none;font-weight:normal" for="advanced_stock_management">
+							{l s='I want to use the advanced stock management system for this product'} 
+							{if $stock_management_active == 0}
+							&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management.'}</b>
+							{/if}
+						</label>
 						<br /><br />
 					</td>
 				</tr>
 				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
-						<input {if $product->depends_on_stock == 1 && $stock_management_active == 1}checked="checked" {/if} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}disabled="disabled" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
-						<label style="float:none;font-weight:normal" for="depends_on_stock_1">{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} {if $stock_management_active == 0 || $product->advanced_stock_management == 0}&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management globaly/for this product.'}</b>{/if}</label>
+						<input 
+							{if $product->depends_on_stock == 1 && $stock_management_active == 1}
+								checked="checked" 
+							{/if} 
+							{if $stock_management_active == 0 || $product->advanced_stock_management == 0 || $product->cache_is_pack}
+								disabled="disabled" 
+							{/if} 
+							type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_1">
+							{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} 
+							{if $stock_management_active == 0 || $product->advanced_stock_management == 0}
+							&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management globaly/for this product.'}</b>
+							{/if}
+						</label>
 						<br /><br />
 					</td>
 				</tr>
 				
 				<tr {if $product->is_virtual}style="display:none;"{/if} class="stockForVirtualProduct">
 					<td valign="top" style="vertical-align:top;">
-						<input {if $product->depends_on_stock == 0 || $stock_management_active == 0}checked="checked" {/if} type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
-						<label style="float:none;font-weight:normal" for="depends_on_stock_0">{l s='I want to specify available quantities manually'}</label>
+						<input 
+							{if $product->depends_on_stock == 0 || $stock_management_active == 0}
+								checked="checked" 
+							{/if} 
+							type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"/>
+						<label style="float:none;font-weight:normal" for="depends_on_stock_0">
+							{l s='I want to specify available quantities manually'}
+						</label>
 						<br /><br />
 					</td>
 				</tr>
+				{if isset($pack_quantity)}
+				<tr>
+					<td valign="top" style="text-align:left;vertical-align:top;">
+						<p><b>{l s='Given the quantities of the products in this pack, the maximum quantity should be: '} {$pack_quantity}</b></p>
+					</td>
+				</tr>
+				{/if}
 				<tr>
 					<td valign="top" style="text-align:left;vertical-align:top;">
 						<table class="table" cellpadding="0" cellspacing="0" style="width:100%;">
@@ -143,10 +181,6 @@
 				</tr>
 			</tbody>
 		</table>
-	{elseif $product->cache_is_pack}
-		<div class="warn">
-			<p>{l s='It is not possible to manage quantities when you are managing a pack.'}</p>
-		</div>
 	{else}
 		<div class="warn">
 			<p>{l s='It is not possible to manage quantities when : '}</p>
@@ -177,7 +211,7 @@
 	<tr>
 		<td class="col-left"><label>{l s='Displayed text when in-stock:'}</label></td>
 		<td style="padding-bottom:5px;">
-				{include file="controllers/products/input_text_lang.tpl"
+				{include file="products/input_text_lang.tpl"
 					languages=$languages
 					input_value=$product->available_now
 					input_name='available_now'}
@@ -187,7 +221,7 @@
 	<tr>
 		<td class="col-left"><label>{l s='Displayed text when allowed to be back-ordered:'}</label></td>
 		<td style="padding-bottom:5px;">
-				{include file="controllers/products/input_text_lang.tpl"
+				{include file="products/input_text_lang.tpl"
 					languages=$languages
 					input_value=$product->available_later
 					input_name='available_later'}
@@ -250,14 +284,14 @@
 				{
 					if (msg.error)
 					{
-						showAjaxError('{l s='Error durring saving data'}');
+						showAjaxError(msg.error);
 						return;
 					}
 					showAjaxSuccess('{l s='Data saved'}');
 				},
 				error: function(msg)
 				{
-					showAjaxError('{l s='Error durring saving data'}');
+					showAjaxError(msg.error);
 				}
 			});
 		};
