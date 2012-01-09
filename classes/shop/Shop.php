@@ -908,6 +908,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function getCurrentShop()
 	{
+		Tools::displayAsDeprecated();
 		return Context::getContext()->shop->getID(true);
 	}
 
