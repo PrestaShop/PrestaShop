@@ -32,6 +32,9 @@
 			code = (e.keyCode ? e.keyCode : e.which);
 			return (code == 13) ? false : true;
 		});
+
+		// Enable product name field when the url rewrite field is loaded
+		$('.copy2friendlyUrl').removeAttr('disabled');
 	});
 
 </script>
