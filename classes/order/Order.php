@@ -471,63 +471,29 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 *
-	 * @deprecated 1.5.0.1
-	 * @see OrderInvoice::setProductPrices
+     * Marked as deprecated but should not throw any "deprecated" message
+	 * This function is used in order to keep front office backward compatibility 14 -> 1.5
+     * (Order History)
+     *
+     * @deprecated
 	 */
 	public function setProductPrices(&$row)
 	{
-		//Tools::displayAsDeprecated();
 		$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$row['id_order_detail']);
 		$row['tax_calculator'] = $tax_calculator;
 		$row['tax_rate'] = $tax_calculator->getTotalRate();
 
-		if ($this->_taxCalculationMethod == PS_TAX_EXC)
-			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
-		else
-			$row['product_price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['product_price']), 2);
+		$row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], 2);
+		$row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], 2);
 
 		$group_reduction = 1;
 		if ($row['group_reduction'] > 0)
 			$group_reduction =  1 - $row['group_reduction'] / 100;
 
-		if ($row['reduction_percent'] != 0)
-		{
-			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = ($row['product_price'] - $row['product_price'] * ($row['reduction_percent'] * 0.01));
-			else
-				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['product_price_wt'] * ($row['reduction_percent'] * 0.01)), 2);
-		}
+		$row['product_price_wt_but_ecotax'] = $row['product_price_wt'] - $row['ecotax'];
 
-		if ($row['reduction_amount'] != 0)
-		{
-			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = ($row['product_price'] - ($tax_calculator->removeTaxes($row['reduction_amount'])));
-			else
-				$row['product_price_wt'] = Tools::ps_round(($row['product_price_wt'] - $row['reduction_amount']), 2);
-		}
-
-		if ($row['group_reduction'] > 0)
-		{
-			if ($this->_taxCalculationMethod == PS_TAX_EXC)
-				$row['product_price'] = $row['product_price'] * $group_reduction;
-			else
-				$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] * $group_reduction , 2);
-		}
-
-		if (($row['reduction_percent'] OR $row['reduction_amount'] OR $row['group_reduction']) AND $this->_taxCalculationMethod == PS_TAX_EXC)
-			$row['product_price'] = Tools::ps_round($row['product_price'], 2);
-
-		if ($this->_taxCalculationMethod == PS_TAX_EXC)
-			$row['product_price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['product_price']), 2) + Tools::ps_round($row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
-		else
-		{
-			$row['product_price_wt_but_ecotax'] = $row['product_price_wt'];
-			$row['product_price_wt'] = Tools::ps_round($row['product_price_wt'] + $row['ecotax'] * (1 + $row['ecotax_tax_rate'] / 100), 2);
-		}
-
-		$row['total_wt'] = $row['product_quantity'] * $row['product_price_wt'];
-		$row['total_price'] = $row['product_quantity'] * $row['product_price'];
+		$row['total_wt'] = $row['total_price_tax_incl'];
+		$row['total_price'] = $row['total_price_tax_excl'];
 	}
 
 
@@ -552,14 +518,17 @@ class OrderCore extends ObjectModel
 				$row['product_quantity'] = 0;
 				foreach ($selectedProducts AS $key => $id_product)
 					if ($row['id_order_detail'] == $id_product)
-						$row['product_quantity'] = (int)($selectedQty[$key]);
+						$row['producsvt_quantity'] = (int)($selectedQty[$key]);
 				if (!$row['product_quantity'])
 					continue ;
 			}
 
 			$this->setProductImageInformations($row);
 			$this->setProductCurrentStock($row);
-			$this->setProductPrices($row);
+
+            // Backward compatibility 1.4 -> 1.5
+            $this->setProductPrices($row);
+
 			$this->setProductCustomizedDatas($row, $customized_datas);
 
 			// Add information for virtual product
