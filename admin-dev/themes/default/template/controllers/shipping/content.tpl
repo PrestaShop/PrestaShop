@@ -78,7 +78,7 @@
 										type="text" 
 										class="fees_{$range[$rangeIdentifier]}" 
 										onchange="this.value = this.value.replace(/,/g, \'.\');" name="fees_{$zone['id_zone']}_{$range[$rangeIdentifier]}" onkeyup="clearAllFees({$range[$rangeIdentifier]})" 
-										value="{$price}" 
+										value="{$price|string_format:"%.2f"}"
 										style="width: 45px;" 
 									/>
 									{$currency->getSign('right')}
