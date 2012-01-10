@@ -70,7 +70,7 @@ class AdminRangePriceControllerCore extends AdminController
 					'label' => $this->l('Carrier:'),
 					'name' => 'id_carrier',
 					'required' => false,
-					'desc' => $this->l('Carrier to which this range will be applied'),
+					'desc' => $this->l('You can apply this range to a different carrier by selecting its name.'),
 					'options' => array(
 						'query' => $carriers,
 						'id' => 'id_carrier',
