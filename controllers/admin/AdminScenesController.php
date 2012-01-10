@@ -238,8 +238,15 @@ class AdminScenesControllerCore extends AdminController
 				foreach (Scene::getIndexedCategories($obj->id) as $k => $row)
 					$selected_cat[] = $row['id_category'];
 
+			$root_category = Category::getRootCategory();
+			if (!$root_category->id_category)
+			{
+				$root_category->id_category = 0;
+				$root_category->name = $this->l('Root');
+			}
+			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
 			$trads = array(
-							'Home' => $this->l('Home'),
+							'Root' => $root_category,
 							'selected' => $this->l('selected'),
 							'Check all' => $this->l('Check all'),
 							'Check All' => $this->l('Check All'),
