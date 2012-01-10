@@ -511,8 +511,19 @@ select optgroup option {
 	min-height:32px;
 }
 
+#content .warn h2 {
+	margin:0;
+}
+
+
 #content .warn ul li, #content .warn p, #content .warn a {
 	color:#9e6014;
+}
+
+#content .warn ul li label {
+	font-weight:normal;
+	color:#9e6014;
+	text-shadow:none;
 }
 
 #content .error ol {
@@ -2211,6 +2222,10 @@ margin-bottom:7px;
 
 /*container-carts*/
 #container-carts { background-color:#EBEDF4; border:1px solid #CCCED7; padding:10px;}
+
+/*cart_rule_form*/
+#cart_rule_form {}
+#cart_rule_form h4 { margin-top:0;}
 
 #ajax_running {
 	display: none;
