@@ -29,16 +29,19 @@
 {block name=leadin}
 	{if isset($delete_customer) && $delete_customer}
 		<form action="{$REQUEST_URI}" method="post">
-			<fieldset><legend>{l s='How do you want to delete your customer(s)?'}</legend>
-				{l s='You have two ways to delete a customer, please choose what you want to do.'}
-				<p>
+			<div class="warn">
+				<h2>{l s='How do you want to delete your customer(s)?'}</h2>
+				<p>{l s='You have two ways to delete a customer, please choose what you want to do.'}</p>
+				<ul class="listForm">
+				<li>
 					<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-					<label for="deleteMode_real" style="float:none">{l s='I want to delete my customer(s) for real, all data will be removed from the database. A customer with the same e-mail address will be able to register again.'}</label>
-				</p>
-				<p>
+					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) for real, all data will be removed from the database. A customer with the same e-mail address will be able to register again.'}</label>
+				</li>
+				<li>
 					<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
 					<label for="deleteMode_deleted" style="float:none">{l s='I don\'t want my customer(s) to register again. The customer(s) will be removed from this list but all data will be kept in the database.'}</label>
-				</p>
+				</li>
+				</ul>
 				{foreach $POST as $key => $value}
 					{if is_array($value)}
 						{foreach $value as $val}
@@ -49,7 +52,7 @@
 					{/if}
 				{/foreach}
 				<br /><input type="submit" class="button" value="{l s='   Delete   '}" />
-			</fieldset>
+			</div>
 		</form>
 		<div class="clear">&nbsp;</div>
 	{/if}
