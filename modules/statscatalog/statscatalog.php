@@ -136,7 +136,7 @@ class StatsCatalog extends Module
 	public function hookAdminStatsModules($params)
 	{
 		$categories = Category::getCategories($this->context->language->id, true, false);
-		$productToken = Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)$this->context->employee->id);
+		$productToken = Tools::getAdminToken('AdminProducts'.(int)(Tab::getIdFromClassName('AdminProducts')).(int)$this->context->employee->id);
 		$irow = 0;
 
 		if ($id_category = (int)(Tools::getValue('id_category')))
@@ -216,7 +216,7 @@ class StatsCatalog extends Module
 						<td>'.$product['id_product'].'</td>
 						<td style="width: 400px;">'.$product['name'].'</td>
 						<td style="text-align: right">
-							<a href="index.php?tab=AdminCatalog&id_product='.$product['id_product'].'&addproduct&token='.$productToken.'" target="_blank"><img src="../modules/'.$this->name.'/page_edit.png" /></a>
+							<a href="index.php?tab=AdminProducts&id_product='.$product['id_product'].'&addproduct&token='.$productToken.'" target="_blank"><img src="../modules/'.$this->name.'/page_edit.png" /></a>
 							<a href="'.$this->context->link->getProductLink($product['id_product'], $product['link_rewrite']).'" target="_blank"><img src="../modules/'.$this->name.'/application_home.png" /></a>
 						</td>
 					</tr>';
