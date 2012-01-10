@@ -258,7 +258,7 @@ class AdminSuppliersControllerCore extends AdminController
 		{
 			$products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
 			// Build attributes combinaisons
-			$combinaisons = $products[$i]->getAttributeCombinaisons($this->context->language->id);
+			$combinaisons = $products[$i]->getAttributeCombinations($this->context->language->id);
 			foreach ($combinaisons as $k => $combinaison)
 			{
 				$comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,

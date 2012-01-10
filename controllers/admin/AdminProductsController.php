@@ -1074,7 +1074,7 @@ class AdminProductsControllerCore extends AdminController
 			$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 			{
-				$product->deleteAttributeCombinaison($id_product_attribute);
+				$product->deleteAttributeCombination($id_product_attribute);
 
 				$id_product_download = (int)ProductDownload::getIdFromIdAttribute($id_product, $id_product_attribute);
 				if ($id_product_download)
@@ -1146,11 +1146,11 @@ class AdminProductsControllerCore extends AdminController
 			$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 			{
-				$combinations = $product->getAttributeCombinaisonsById($id_product_attribute, $this->context->language->id);
+				$combinations = $product->getAttributeCombinationsById($id_product_attribute, $this->context->language->id);
 				$product_download = ProductDownload::getAttributeFromIdAttribute($id_product, $id_product_attribute);
-				foreach ($combinations as $key => $combinaison)
+				foreach ($combinations as $key => $combination)
 				{
-					$combinations[$key]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
+					$combinations[$key]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
 
 					// Added fields virtual product
 					$combinations[$key]['id_product_download'] = count($product_download) ? $product_download[0]['id_product_download'] : '';
@@ -2062,7 +2062,7 @@ class AdminProductsControllerCore extends AdminController
 						'desc' => $this->l('Product sales'),
 					);
 
-					// adding button for adding a new combination in Combinaition tab
+					// adding button for adding a new combination in Combination tab
 					$this->toolbar_btn['newCombination'] = array(
 						'short' => 'New combination',
 						'desc' => $this->l('New combination'),
@@ -3340,32 +3340,32 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($product->id)
 		{
-			/* Build attributes combinaisons */
-			$combinaisons = $product->getAttributeCombinaisons($this->context->language->id);
+			/* Build attributes combinations */
+			$combinations = $product->getAttributeCombinations($this->context->language->id);
 			$groups = array();
 			$comb_array = array();
-			if (is_array($combinaisons))
+			if (is_array($combinations))
 			{
 				$combination_images = $product->getCombinationImages($this->context->language->id);
-				foreach ($combinaisons as $k => $combinaison)
+				foreach ($combinations as $k => $combination)
 				{
-					$price = Tools::displayPrice($combinaison['price'], $currency);
+					$price = Tools::displayPrice($combination['price'], $currency);
 
-					$comb_array[$combinaison['id_product_attribute']]['id_combinaison_attribute'] = $product->id.'||'.$combinaison['id_product_attribute'];
-					$comb_array[$combinaison['id_product_attribute']]['id_product_attribute'] = $combinaison['id_product_attribute'];
-					$comb_array[$combinaison['id_product_attribute']]['attributes'][] = array($combinaison['group_name'], $combinaison['attribute_name'], $combinaison['id_attribute']);
-					$comb_array[$combinaison['id_product_attribute']]['wholesale_price'] = $combinaison['wholesale_price'];
-					$comb_array[$combinaison['id_product_attribute']]['price'] = $price;
-					$comb_array[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'].Configuration::get('PS_WEIGHT_UNIT');
-					$comb_array[$combinaison['id_product_attribute']]['unit_impact'] = $combinaison['unit_price_impact'];
-					$comb_array[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
-					$comb_array[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
-					$comb_array[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
-					$comb_array[$combinaison['id_product_attribute']]['id_image'] = isset($combination_images[$combinaison['id_product_attribute']][0]['id_image']) ? $combination_images[$combinaison['id_product_attribute']][0]['id_image'] : 0;
-					$comb_array[$combinaison['id_product_attribute']]['available_date'] = strftime($combinaison['available_date']);
-					$comb_array[$combinaison['id_product_attribute']]['default_on'] = $combinaison['default_on'];
-					if ($combinaison['is_color_group'])
-						$groups[$combinaison['id_attribute_group']] = $combinaison['group_name'];
+					$comb_array[$combination['id_product_attribute']]['id_combinaison_attribute'] = $product->id.'||'.$combination['id_product_attribute'];
+					$comb_array[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
+					$comb_array[$combination['id_product_attribute']]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
+					$comb_array[$combination['id_product_attribute']]['wholesale_price'] = $combination['wholesale_price'];
+					$comb_array[$combination['id_product_attribute']]['price'] = $price;
+					$comb_array[$combination['id_product_attribute']]['weight'] = $combination['weight'].Configuration::get('PS_WEIGHT_UNIT');
+					$comb_array[$combination['id_product_attribute']]['unit_impact'] = $combination['unit_price_impact'];
+					$comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
+					$comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
+					$comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
+					$comb_array[$combination['id_product_attribute']]['id_image'] = isset($combination_images[$combination['id_product_attribute']][0]['id_image']) ? $combination_images[$combination['id_product_attribute']][0]['id_image'] : 0;
+					$comb_array[$combination['id_product_attribute']]['available_date'] = strftime($combination['available_date']);
+					$comb_array[$combination['id_product_attribute']]['default_on'] = $combination['default_on'];
+					if ($combination['is_color_group'])
+						$groups[$combination['id_attribute_group']] = $combination['group_name'];
 				}
 			}
 
@@ -3449,7 +3449,7 @@ class AdminProductsControllerCore extends AdminController
 		$helper->actions = $this->actions;
 		$helper->list_skip_actions = $this->list_skip_actions;
 		$helper->colorOnBackground = true;
-		$helper->override_folder = $this->tpl_folder.'combinaison/';
+		$helper->override_folder = $this->tpl_folder.'combination/';
 
 		return $helper->generateList($comb_array, $this->fieldsDisplay);
 	}
