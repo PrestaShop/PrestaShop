@@ -71,121 +71,13 @@ function displayJavascriptAlert($s)
 	echo '<script type="text/javascript">alert(\''.addslashes($s).'\');</script>';
 }
 
-if (Tools::isSubmit('ajaxProductManufacturers'))
-{
-	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
-	$manufacturers = Manufacturer::getManufacturers();
-	$jsonArray = array();
-	if ($manufacturers)
-		foreach ($manufacturers AS $manufacturer)
-			$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
-	die('['.implode(',', $jsonArray).']');
-}
-
-
 if (Tools::isSubmit('ajaxReferrers'))
 {
 	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
 }
 
-if (Tools::isSubmit('ajaxProductSuppliers'))
-{
-	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
-	$suppliers = Supplier::getSuppliers();
-	if ($suppliers)
-	{
-		$jsonArray = array();
-		foreach ($suppliers AS $supplier)
-			$jsonArray[] = '{"optionValue": "'.$supplier['id_supplier'].'", "optionDisplay": "'.htmlspecialchars(trim($supplier['name'])).'"}';
-		die('['.implode(',', $jsonArray).']');
-	}
-}
-
-if (Tools::isSubmit('ajaxProductAccessories'))
-{
-	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
-	$jsonArray = array();
-
-	$products = Db::getInstance()->executeS('
-	SELECT p.`id_product`, pl.`name`
-	FROM `'._DB_PREFIX_.'product` p
-	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
-	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
-	'.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'
-	AND p.`id_product` != '.(int)(Tools::getValue('id_product')).'
-	AND p.`id_product` NOT IN (
-		SELECT a.`id_product_2`
-		FROM `'._DB_PREFIX_.'accessory` a
-		WHERE a.`id_product_1` = '.(int)(Tools::getValue('id_product')).')
-	ORDER BY pl.`name`');
-
-	foreach ($products AS $accessory)
-		$jsonArray[] = '{"value: "'.(int)($accessory['id_product']).'-'.addslashes($accessory['name']).'", "text":"'.(int)($accessory['id_product']).' - '.addslashes($accessory['name']).'"}';
-	die('['.implode(',', $jsonArray).']');
-}
-
-if (Tools::isSubmit('ajaxDiscountCustomers'))
-{
-	AdminTab::$currentIndex = 'index.php?tab=AdminDiscounts';
-	$jsonArray = array();
-	$filter = Tools::getValue('filter');
-
-	if (Validate::isBool_Id($filter))
-		$filterArray = explode('_', $filter);
-
-	$customers = Db::getInstance()->executeS('
-	SELECT `id_customer`, `email`, CONCAT(`lastname`, \' \', `firstname`) as name
-	FROM `'._DB_PREFIX_.'customer`
-	WHERE `deleted` = 0 AND is_guest = 0
-	AND '.(Validate::isUnsignedInt($filter) ? '`id_customer` = '.(int)($filter) : '(`email` LIKE "%'.pSQL($filter).'%"
-	'.((Validate::isBool_Id($filter) AND $filterArray[0] == 0) ? 'OR `id_customer` = '.(int)($filterArray[1]) : '').'
-	'.(Validate::isUnsignedInt($filter) ? '`id_customer` = '.(int)($filter) : '').'
-	OR CONCAT(`firstname`, \' \', `lastname`) LIKE "%'.pSQL($filter).'%"
-	OR CONCAT(`lastname`, \' \', `firstname`) LIKE "%'.pSQL($filter).'%")').'
-	ORDER BY CONCAT(`lastname`, \' \', `firstname`) ASC
-	LIMIT 50');
-
-	$groups = Db::getInstance()->executeS('
-	SELECT g.`id_group`, gl.`name`
-	FROM `'._DB_PREFIX_.'group` g
-	LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)($context->language->id).')
-	WHERE '.(Validate::isUnsignedInt($filter) ? 'g.`id_group` = '.(int)($filter) : 'gl.`name` LIKE "%'.pSQL($filter).'%"
-	'.((Validate::isBool_Id($filter) AND $filterArray[0] == 1) ? 'OR g.`id_group` = '.(int)($filterArray[1]) : '')).'
-	ORDER BY gl.`name` ASC
-	LIMIT 50');
-
-	$json = '{"customers" : ';
-	foreach ($customers AS $customer)
-		$jsonArray[] = '{"value":"0_'.(int)($customer['id_customer']).'", "text":"'.addslashes($customer['name']).' ('.addslashes($customer['email']).')"}';
-	$json .= '['.implode(',', $jsonArray).'],
-		"groups" : ';
-	$jsonArray = array();
-	foreach ($groups AS $group)
-		$jsonArray[] = '{"value":"1_'.(int)($group['id_group']).'", "text":"'.addslashes($group['name']).'"}';
-	$json .= '['.implode(',', $jsonArray).']}';
-	die($json);
-}
-
 if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
-
-if ($step = (int)(Tools::getValue('ajaxProductTab')))
-{
-	require_once(dirname(__FILE__).'/tabs/AdminCatalog.php');
-	$catalog = new AdminCatalog();
-	$admin = new AdminProducts();
-
-	$languages = Language::getLanguages(false);
-	$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
-	$product = new Product((int)(Tools::getValue('id_product')));
-	if (!Validate::isLoadedObject($product))
-		die (Tools::displayError('Product cannot be loaded'));
-
-	$switchArray = array(3 => 'displayFormPrices', 4 => 'displayFormAttributes', 5 => 'displayFormFeatures', 6 => 'displayFormCustomization', 7 => 'displayFormAttachments');
-	AdminTab::$currentIndex = 'index.php?tab=AdminCatalog';
-	if (key_exists($step, $switchArray))
-		$admin->{$switchArray[$step]}($product, $languages, $defaultLanguage);
-}
 
 if (Tools::isSubmit('getAvailableFields') AND Tools::isSubmit('entity'))
 {
