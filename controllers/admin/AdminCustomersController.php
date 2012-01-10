@@ -352,6 +352,14 @@ class AdminCustomersControllerCore extends AdminController
 					'desc' => $this->l('Customer will receive your ads via e-mail')
 				),
 				array(
+					'type' => 'group',
+					'label' => $this->l('Group access:'),
+					'name' => 'groupBox',
+					'values' => $groups,
+					'required' => true,
+					'desc' => $this->l('Check all the box(es) of groups of which the customer is to be a member')
+				),
+				array(
 					'type' => 'select',
 					'label' => $this->l('Default group:'),
 					'name' => 'id_default_group',
@@ -361,14 +369,6 @@ class AdminCustomersControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'hint' => $this->l('The group will be as applied by default.')
-				),
-				array(
-					'type' => 'group',
-					'label' => $this->l('Group access:'),
-					'name' => 'groupBox',
-					'values' => $groups,
-					'required' => true,
-					'desc' => $this->l('Check all the box(es) of groups of which the customer is to be a member')
 				)
 			)
 		);
