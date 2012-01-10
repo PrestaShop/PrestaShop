@@ -61,6 +61,7 @@ function smartyTranslate($params, &$smarty)
 	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 	// 1.5 admin : default filename is .tpl; test is made on dir
 	$dir_filename = dirname($filename);
+
 	// key is Helper if dir contains "helper"
 	// we may improve this later to get only the first directory everytime
 	if(strpos($dir_filename, 'helper') !== false)
@@ -69,10 +70,15 @@ function smartyTranslate($params, &$smarty)
 	switch ($dir_filename)
 	{
 		// note : this may be modified later
-		case '.': $class = 'index';break;
-		case 'helper' : $class = 'AdminTab';break;
-		default :
-			$class = 'Admin'.ucfirst($dir_filename);
+		case '.':
+			$class = 'index';
+			break;
+		case 'helper':
+			$class = 'AdminTab';
+			break;
+		default:
+			// Remove "controllers/" part from "controllers/XXX"
+			$class = 'Admin'.ucfirst(substr($dir_filename, 12));
 	}
 
 	if(in_array($class, array('header','footer','password','login')))
