@@ -58,6 +58,12 @@ class HelperHelpAccess extends Helper
 
         if (array_key_exists('version', $info) && $info['version'] != '')
         {
+            $last_version = HelpAccess::getVersion($this->label);
+
+            $tpl_vars['button_class'] = 'process-icon-help';
+            if ($last_version < $info['version'])
+                $tpl_vars['button_class'] = 'process-icon-help-new';
+
             $tpl_vars['label'] = $this->label;
             $tpl_vars['iso_lang'] = $this->iso_lang;
             $tpl_vars['country'] = $this->country;

@@ -879,22 +879,7 @@ function submitAddcmsAndPreview()
 	$('#cms').submit();
 }
 
-function showHelp(url, label, iso_lang, ps_version, doc_version, country)
-{
-    trackClickOnHelp(label, doc_version);
-    $('#help-'+label).attr('src','../img/admin/help2.png');
-    window.open(url +'/'+iso_lang+'/doc/'+label+'?version='+ps_version+'&country='+country+'#', '_blank', 'scrollbars=yes,menubar=no,toolbar=no,location=no,width=517,height=600');
-    return false;
-}
 
-
-function trackClickOnHelp(label, doc_version)
-{
-   	$.ajax({
-		url: 'ajax.php',
-		data: 'submitTrackClickOnHelp&label='+ label +'&version='+doc_version
-	});
-}
 
 function checkMultishopDefaultValue(obj, key)
 {
@@ -1073,3 +1058,4 @@ function showAjaxOverlay()
 	$('#ajax_running').slideDown('fast');
 	clearTimeout(ajax_running_timeout);
 }
+
