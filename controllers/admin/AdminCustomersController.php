@@ -368,7 +368,8 @@ class AdminCustomersControllerCore extends AdminController
 						'id' => 'id_group',
 						'name' => 'name'
 					),
-					'hint' => $this->l('The group will be as applied by default.')
+					'hint' => $this->l('The group will be as applied by default.'),
+					'desc' => $this->l('Apply the discount\'s price of this group.')
 				)
 			)
 		);
