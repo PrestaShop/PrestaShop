@@ -207,12 +207,14 @@ class StockManagerCore implements StockManagerInterface
 		// Special case of a pack
 		if (Pack::isPack($id_product))
 		{
+			// Gets items
 			$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
+			// Foreach item
 			foreach ($products_pack as $product_pack)
 			{
-				//@TODO is there a better way to retrieve the product attribute assciated to the pack ?
-				$pack_id_product_attribute = Product::getDefaultAttribute($id_product_attribute, 1);
-				$this->removeProduct($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $quantity, $warehouse, $id_order);
+				//TODO $pack_id_product_attribute = Product::getDefaultAttribute($id_product_attribute, 1);
+				if ($product_pack->advanced_stock_management == 1)
+					$this->removeProduct($product_pack->id, 0, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
 			}
 		}
 		else
@@ -633,4 +635,5 @@ class StockManagerCore implements StockManagerInterface
 
 		return $stocks;
 	}
+
 }
