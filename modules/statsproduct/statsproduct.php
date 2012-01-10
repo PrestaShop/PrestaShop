@@ -224,11 +224,11 @@ class StatsProduct extends ModuleGraph
 							<th>'.$this->l('Average price').'</th>
 						</tr>
 					</thead><tbody>';
-					$tokenProducts = Tools::getAdminToken('AdminCatalog'.(int)Tab::getIdFromClassName('AdminCatalog').(int)$this->context->employee->id);
+					$tokenProducts = Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)$this->context->employee->id);
 					foreach ($crossSelling as $selling)
 						$this->html .= '
 						<tr>
-							<td ><a href="?tab=AdminCatalog&id_product='.(int)$selling['id_product'].'&addproduct&token='.$tokenProducts.'">'.$selling['pname'].'</a></td>
+							<td ><a href="?tab=AdminProducts&id_product='.(int)$selling['id_product'].'&addproduct&token='.$tokenProducts.'">'.$selling['pname'].'</a></td>
 							<td align="center">'.(int)$selling['pqty'].'</td>
 							<td align="right">'.Tools::displayprice($selling['pprice'], $currency).'</td>
 						</tr>';
