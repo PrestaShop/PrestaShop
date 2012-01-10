@@ -241,13 +241,11 @@ class AdminCategoriesControllerCore extends AdminController
 		$unidentified_group_information = sprintf($this->l('%s - All persons without a customer account or unauthenticated.'), "<b>".$unidentified->name[$this->context->language->id]."</b>");
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), "<b>".$guest->name[$this->context->language->id]."</b>");
 		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), "<b>".$default->name[$this->context->language->id]."</b>");
-		if ($this->context->shop() == Shop::CONTEXT_SHOP)
-		{
-			$root_category = Category::getRootCategory();
-			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
-		}
-		else
+		$root_category = Category::getRootCategory();
+		if (!$root_category->id_category)
 			$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
+		else
+			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
