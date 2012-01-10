@@ -1,23 +1,3 @@
-{*
-** Compatibility code for Prestashop older than 1.4.2 using a recent theme
-** Ignore list isn't require here
-** $address exist in every PrestaShop version
-*}
-
-{* Will be deleted for 1.5 version and more *}
-{* If ordered_adr_fields doesn't exist, it's a PrestaShop older than 1.4.2 *}
-{if !isset($dlv_all_fields)}
-		{$dlv_all_fields.0 = 'company'}
-		{$dlv_all_fields.1 = 'firstname'}
-		{$dlv_all_fields.2 = 'lastname'}
-		{$dlv_all_fields.3 = 'address1'}
-		{$dlv_all_fields.4 = 'address2'}
-		{$dlv_all_fields.5 = 'postcode'}
-		{$dlv_all_fields.6 = 'city'}
-		{$dlv_all_fields.7 = 'country'}
-		{$dlv_all_fields.8 = 'state'}
-{/if}
-
 <div id="opc_new_account" class="opc-main-block">
 	<div id="opc_new_account-overlay" class="opc-overlay" style="display: none;"></div>
 	<h2><span>1</span> {l s='Account'}</h2>
@@ -178,7 +158,7 @@
 					<select id="months" name="months">
 						<option value="">-</option>
 						{foreach from=$months key=k item=month}
-							<option value="{$k|escape:'htmlall':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_month == $k)} selected="selected"{/if}>{l s="$month"}&nbsp;</option>
+							<option value="{$k|escape:'htmlall':'UTF-8'}" {if isset($guestInformations) && ($guestInformations.sl_month == $k)} selected="selected"{/if}>{$month}&nbsp;</option>
 						{/foreach}
 					</select>
 					<select id="years" name="years">
