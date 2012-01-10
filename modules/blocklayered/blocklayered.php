@@ -1096,7 +1096,7 @@ class BlockLayered extends Module
 		else
 			$smarty->assign('meta_title', $categoryMetas['meta_title']);
 		
-		$metaKeyWordsComplement = substr(str_replace(' – ', ', ', strtolower($title)), 1000);
+		$metaKeyWordsComplement = substr(str_replace(' – ', ', ', strtolower($title)), 0, 1000);
 		if (!empty($metaKeyWordsComplement))
 			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$metaKeyWordsComplement.', '.$categoryMetas['meta_keywords'], ', '));
 		
