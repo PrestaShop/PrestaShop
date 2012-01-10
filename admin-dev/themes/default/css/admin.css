@@ -204,6 +204,7 @@ a.module_toggle_all{color: #268CCD;}
 .toolbarBox .process-icon-partialRefund{ background-image: url('../img/process-icon-partial-refund.png');}
 .toolbarBox .process-icon-standardRefund{ background-image: url('../img/process-icon-standard-refund.png');}
 .toolbarBox .process-icon-help{ background-image: url('../img/process-icon-help.png');}
+.toolbarBox .process-icon-help-new{ background-image: url('../img/process-icon-help-new.png');}
 
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
@@ -434,3 +435,4 @@ ul.listForm li {padding-bottom:3px;}
 #footer .footerLeft { float:left; margin-left:10px;}
 #footer .footerRight {float:right; margin-right:10px;}
 #footer .footer_link, #footer .footer_link:hover { color:#268CCD;}
+
