@@ -45,6 +45,8 @@
 		<p>{l s='You can choose to use the advanced stock management system for this product or not.'}</p>
 		<p>{l s='You can manually specify the quantities for the product / each product combinations, or choose to automatically determine these quantities based on your stock (if advanced stock management is activated).'}</p>
 		<p>{l s='In this case, the quantities correspond to the quantitites of the real stock in the warehouses associated to the current shop or current group of shops.'}</p>
+		<br/>
+		<p>{l s='For packs, if it has products that use the advanced stock management, you have to specify a common warehouse for these products and the pack.'}</p>
 	</div>
 	<br />
 	<h4>{l s='Available quantities for sale'}</h4>
@@ -72,8 +74,10 @@
 							type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" />
 						<label style="float:none;font-weight:normal" for="advanced_stock_management">
 							{l s='I want to use the advanced stock management system for this product'} 
-							{if $stock_management_active == 0}
+							{if $stock_management_active == 0 && !$product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management.'}</b>
+							{else if $product->cache_is_pack}
+							&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
 							{/if}
 						</label>
 						<br /><br />
@@ -91,8 +95,10 @@
 							type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"/>
 						<label style="float:none;font-weight:normal" for="depends_on_stock_1">
 							{l s='Available quantities for current product and its combinations are based on stock in the warehouses'} 
-							{if $stock_management_active == 0 || $product->advanced_stock_management == 0}
+							{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack}
 							&nbsp;-&nbsp;<b>{l s='This requires to enable the advanced stock management globaly/for this product.'}</b>
+							{else if $product->cache_is_pack}
+							&nbsp;-&nbsp;<b>{l s='This parameter depends on the product(s) in the pack.'}</b>
 							{/if}
 						</label>
 						<br /><br />

@@ -95,8 +95,6 @@ class OrderHistoryCore extends ObjectModel
 					&& $oldOrderStatus->logable))
 				{
 					ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
-					if ($oldOrderStatus->id == Configuration::get('PS_OS_ERROR') || $oldOrderStatus->id == Configuration::get('PS_OS_CANCELED'))
-						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 				}
 				/* If becoming unlogable => removing sale */
 				else if (!$newOS->logable
@@ -124,7 +122,7 @@ class OrderHistoryCore extends ObjectModel
 					&& $oldOrderStatus instanceof OrderState
 					&& $oldOrderStatus->shipped == 0
 					&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-					&& (int)$product['advanced_stock_management'] == 1)
+					&& ((int)$product['advanced_stock_management'] == 1 || Pack::usesAdvancedStockManagement($product['product_id'])))
 				{
 					$manager = StockManagerFactory::getManager();
 					$warehouse = new Warehouse($product['id_warehouse']);
@@ -143,27 +141,54 @@ class OrderHistoryCore extends ObjectModel
 						StockAvailable::synchronize($product['product_id']);
 					else
 						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
+					//@TODO Synchronize for products in pack if needed ?!
 				}
 				else if ($newOS->shipped == 0
 					&& $oldOrderStatus instanceof OrderState
 					&& $oldOrderStatus->shipped == 1
 					&& Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
-					&& (int)$product['advanced_stock_management'] == 1
-				)
+					&& ((int)$product['advanced_stock_management'] == 1 || Pack::usesAdvancedStockManagement($product['product_id'])))
 				{
 					$manager = StockManagerFactory::getManager();
-					$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['product_quantity']);
-					foreach ($mvts as $mvt)
+					if (Pack::isPack($product['product_id']))
 					{
-						$manager->addProduct(
-							$product['product_id'],
-							$product['product_attribute_id'],
-							new Warehouse($mvt['id_warehouse']),
-							$mvt['physical_quantity'],
-							null,
-							$mvt['price_te'],
-							true
-						);
+						$pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT'));
+						foreach ($pack_products as $pack_product)
+						{
+							if ($pack_product->advanced_stock_management == 1)
+							{
+								$mvts = StockMvt::getNegativeStockMvts($order->id, $pack_product->id, 0, $pack_product->pack_quantity * $product['product_quantity']);
+								foreach ($mvts as $mvt)
+								{
+									$manager->addProduct(
+										$pack_product->id,
+										0,
+										new Warehouse($mvt['id_warehouse']),
+										$mvt['physical_quantity'],
+										null,
+										$mvt['price_te'],
+										true
+									);
+								}
+							}
+						}
+					}
+					else
+					{
+
+						$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['product_quantity']);
+						foreach ($mvts as $mvt)
+						{
+							$manager->addProduct(
+								$product['product_id'],
+								$product['product_attribute_id'],
+								new Warehouse($mvt['id_warehouse']),
+								$mvt['physical_quantity'],
+								null,
+								$mvt['price_te'],
+								true
+							);
+						}
 					}
 
 					if (StockAvailable::dependsOnStock($product['product_id'], $order->id_shop))
