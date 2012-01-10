@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 10659 $
+*  @version  Release: $Revision: 12319 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -1629,6 +1629,7 @@ class BlockLayered extends Module
 			}
 			$trads = array(
 				 'Root' => $root_category,
+				 'Home' => $root_category, // for retrocompatibility 1.4
 				 'selected' => $this->l('selected'),
 				 'Collapse All' => $this->l('Collapse All'),
 				 'Expand All' => $this->l('Expand All'),
