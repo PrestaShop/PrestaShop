@@ -341,7 +341,10 @@ class CategoryCore extends ObjectModel
 		foreach ($categories as $id_category)
 		{
 			$category = new Category($id_category);
-			$return &= $category->delete();
+			if ($category->isRootCategoryForAShop())
+				return false;
+			else
+				$return &= $category->delete();
 		}
 		return $return;
 	}
@@ -1297,6 +1300,14 @@ class CategoryCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
 		WHERE `id_parent` = 0
 		');
+	}
+
+	public function isRootCategoryForAShop()
+	{
+		return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT `id_shop`
+		FROM `'._DB_PREFIX_.'shop`
+		WHERE `id_category` = '.(int)$this->id);
 	}
 }
 

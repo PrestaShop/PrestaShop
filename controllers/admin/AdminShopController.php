@@ -227,6 +227,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function afterUpdate($new_shop)
 	{
+		$new_shop->updateCategories(Tools::getValue('categoryBox'));
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
 	}
