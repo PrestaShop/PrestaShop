@@ -186,7 +186,6 @@
 			</tr>
 		</tfoot>
 		<tbody>
-        GROUP={$group_use_tax}
 		{foreach from=$products item=product name=products}
 			{if !isset($product.deleted)}
 				{assign var='productId' value=$product.product_id}
