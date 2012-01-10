@@ -142,7 +142,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if ($nb_shop == 1 && $count_categories_without_parent > 1)
 			$categories_name = $this->l('Root');
 		else
-			if (empty($categories_name))
+			if ($this->_category->getName() == '')
 			{
 				$categories_name = new Category($id_parent);
 				$categories_name = stripslashes($categories_name->getName());
