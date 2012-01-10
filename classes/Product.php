@@ -1464,7 +1464,7 @@ class ProductCore extends ObjectModel
 	* @param integer $id_product_attribute Product attribute id
 	* @return array Deletion result
 	*/
-	public function deleteAttributeCombinaison($id_product_attribute)
+	public function deleteAttributeCombination($id_product_attribute)
 	{
 		if (!$this->id || !$id_product_attribute || !is_numeric($id_product_attribute))
 			return false;
@@ -1570,7 +1570,7 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id
 	* @return array Product attributes combinaisons
 	*/
-	public function getAttributeCombinaisons($id_lang)
+	public function getAttributeCombinations($id_lang)
 	{
 		if (!Combination::isFeatureActive())
 			return array();
@@ -1612,7 +1612,7 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id
 	* @return array Product attribute combinaison by id_product_attribute
 	*/
-	public function getAttributeCombinaisonsById($id_product_attribute, $id_lang)
+	public function getAttributeCombinationsById($id_product_attribute, $id_lang)
 	{
 		if (!Combination::isFeatureActive())
 			return array();
