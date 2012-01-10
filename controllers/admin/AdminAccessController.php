@@ -55,9 +55,15 @@ class AdminAccessControllerCore extends AdminController
 
 		// Deleted id_tab that do not have access
 		foreach ($tabs as $key => $tab)
+		{
+			// Don't allow permissions for unnamed tabs (ie. AdminLogin)
+			if (empty($tab['name']))
+				unset($tabs[$key]);
+
 			foreach ($this->accesses_black_list as $id_tab)
 				if ($tab['id_tab'] == (int)$id_tab)
 					unset($tabs[$key]);
+		}
 
 		$modules = array();
 		foreach ($profiles as $profile)
