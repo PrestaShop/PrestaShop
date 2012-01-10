@@ -9,7 +9,7 @@
                          '{$doc_version|escape:'htmlall':'UTF-8'}',
                          '{$country|escape:'htmlall':'UTF-8'}');"
         title="{$tooltip|escape:'htmlall':'UTF-8'}">
-        <span class="process-icon-help"></span>
+        <span class="{$button_class|escape:'htmlall':'UTF-8'}"></span>
         <div>{l s='Help'}</div>
     </a>
 </li>

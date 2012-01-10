@@ -30,3 +30,20 @@ function displayHelpButton(label, iso_user, country_iso_code, _PS_VERSION_){
         }
     });
 }
+
+function showHelp(url, label, iso_lang, ps_version, doc_version, country)
+{
+    trackClickOnHelp(label, doc_version);
+    $('.help-context-'+label+' span').removeClass().addClass('process-icon-help');
+    window.open(url +'/'+iso_lang+'/doc/'+label+'?version='+ps_version+'&country='+country+'#', '_blank', 'scrollbars=yes,menubar=no,toolbar=no,location=no,width=517,height=600');
+    return false;
+}
+
+
+function trackClickOnHelp(label, doc_version)
+{
+    $.ajax({
+        url: 'ajax.php',
+        data: 'submitTrackClickOnHelp&label='+ label +'&version='+doc_version
+    });
+}
