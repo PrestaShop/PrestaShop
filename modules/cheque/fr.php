@@ -34,8 +34,8 @@ $_MODULE['<{cheque}prestashop>payment_execution_a7a08622ee5c8019b57354b99b7693b2
 $_MODULE['<{cheque}prestashop>payment_execution_c4309902a6192747d56f3539941acc49'] = 'Nous acceptons la devise suivante pour votre paiement :';
 $_MODULE['<{cheque}prestashop>payment_execution_504be670f962fa7630863857a0085632'] = 'L\'ordre et l\'adresse du chèque seront affichés sur la page suivante.';
 $_MODULE['<{cheque}prestashop>payment_execution_0881a11f7af33bc1b43e437391129d66'] = 'Merci de confirmer votre commande en cliquant sur \"Je confirme ma commande\"';
-$_MODULE['<{cheque}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418'] = 'Autres moyens de paiement';
 $_MODULE['<{cheque}prestashop>payment_execution_46b9e3665f187c739c55983f757ccda0'] = 'Je confirme ma commande';
+$_MODULE['<{cheque}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418'] = 'Autres moyens de paiement';
 $_MODULE['<{cheque}prestashop>payment_return_2e2117b7c81aa9ea6931641ea2c6499f'] = 'Votre commande sur';
 $_MODULE['<{cheque}prestashop>payment_return_75fbf512d744977d62599cc3f0ae2bb4'] = 'est bien enregistrée.';
 $_MODULE['<{cheque}prestashop>payment_return_e4ee6e0eac588fe2611cc6fd195828af'] = 'Merci de nous envoyer un chèque :';

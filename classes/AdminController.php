@@ -836,7 +836,7 @@ class AdminControllerCore extends Controller
 			unset($this->context->cookie->{$this->table.'Orderway'});
 
 		unset($_POST);
-		$this->filter = false;
+		$this->_filter = false;
 	}
 
 	/**
