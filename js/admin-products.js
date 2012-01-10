@@ -256,6 +256,11 @@ function displayTabProductById(id, selected, index, stack)
 			$("#product-tab-content-"+id).trigger('loaded');
 			if (stack && stack[index + 1])
 				displayTabProductById(stack[index + 1], selected, index + 1, stack);
+		},
+		beforeSend : function(data)
+		{
+			// don't display the loading notification bar
+			clearTimeout(ajax_running_timeout);
 		}
 	});
 }

@@ -1058,6 +1058,16 @@ function stripHTML(oldString)
 	return newString;
 }
 
+/**
+ * Display a loading bar while an ajax call is ongoing.
+ *
+ * To prevent the loading bar display for a specific ajax call, set the beforeSend event in your ajax declaration:
+ * 		beforeSend : function(data)
+ 		{
+ 			// don't display the loading notification bar
+ 			clearTimeout(ajax_running_timeout);
+ 		}
+ */
 function showAjaxOverlay()
 {
 	$('#ajax_running').slideDown('fast');
