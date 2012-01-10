@@ -416,40 +416,59 @@ class AdminCategoriesControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
-	public function postProcess()
+	public function processAdd($token)
 	{
-		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
-
-		if (Tools::isSubmit('submitAdd'.$this->table))
+		$id_category = (int)Tools::getValue('id_category');
+		$id_parent = (int)Tools::getValue('id_parent');
+		// if true, we are in a root category creation
+		if (!$id_parent && !Tools::isSubmit('is_root_category'))
 		{
-			$id_category = (int)Tools::getValue('id_category');
-			$id_parent = (int)Tools::getValue('id_parent');
-			// if true, we are in a root category creation
-			if (!$id_parent && !Tools::isSubmit('is_root_category'))
+			$_POST['id_parent'] = $id_parent = 0;
+			$_POST['is_root_category'] = 1;
+		}
+		if ($id_category)
+		{
+			if ($id_category != $id_parent)
 			{
-				$_POST['id_parent'] = $id_parent = 0;
-				$_POST['is_root_category'] = 1;
+				if (!Category::checkBeforeMove($id_category, $id_parent))
+					$this->_errors[] = Tools::displayError($this->l('Category cannot be moved here'));
 			}
-			if ($id_category)
+			else
+				$this->_errors[] = Tools::displayError($this->l('Category cannot be parent of herself.'));
+		}
+		parent::processAdd($token);
+	}
+
+	public function processDelete($token)
+	{
+		if ($this->tabAccess['delete'] === '1')
+		{
+			if (Tools::isSubmit($this->table.'Box'))
 			{
-				if ($id_category != $id_parent)
+				if (isset($_POST[$this->table.'Box']))
 				{
-					if (!Category::checkBeforeMove($id_category, $id_parent))
-						$this->_errors[] = Tools::displayError($this->l('Category cannot be moved here'));
+					$category = new Category();
+					$result = true;
+					$result = $category->deleteSelection(Tools::getValue($this->table.'Box'));
+					if ($result)
+					{
+						$category->cleanPositions((int)Tools::getValue('id_category'));
+						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCategories').'&id_category='.(int)Tools::getValue('id_category'));
+					}
+					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
 				else
-					$this->_errors[] = Tools::displayError($this->l('Category cannot be parent of herself.'));
+					$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
 			}
-		}
-		/* Delete object */
-		else if (isset($_GET['delete'.$this->table]))
-		{
-			if ($this->tabAccess['delete'] === '1')
+			else
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
-					// check if request at least one object with noZeroObject
-					if (isset($object->noZeroObject) &&
+					if ($object->isRootCategoryForAShop())
+					{
+						$this->_errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
+					}// check if request at least one object with noZeroObject
+					elseif (isset($object->noZeroObject) &&
 						count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.
 							$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
@@ -471,50 +490,25 @@ class AdminCategoriesControllerCore extends AdminController
 					$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.
 						$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		else if (isset($_GET['position']))
-		{
-			if ($this->tabAccess['edit'] !== '1')
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
-			else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
-					$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
-				$this->_errors[] = Tools::displayError('Failed to update the position.');
-			else
-			{
-				$object->regenerateEntireNtree();
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
-			}
-		}
-		/* Delete multiple objects */
-		else if (Tools::getValue('submitDel'.$this->table))
-		{
-			if ($this->tabAccess['delete'] === '1')
-			{
-				if (isset($_POST[$this->table.'Box']))
-				{
-					$category = new Category();
-					$result = true;
-					$result = $category->deleteSelection(Tools::getValue($this->table.'Box'));
-					if ($result)
-					{
-						$category->cleanPositions((int)Tools::getValue('id_category'));
-						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCategories').'&id_category='.(int)Tools::getValue('id_category'));
-					}
-					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+		else
+			$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+	}
 
-				}
-				else
-					$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
-			}
-			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
-			return;
+	public function processPosition($token)
+	{
+		if ($this->tabAccess['edit'] !== '1')
+			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
+			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
+				$this->table.'</b> '.Tools::displayError('(cannot load object)');
+		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+			$this->_errors[] = Tools::displayError('Failed to update the position.');
+		else
+		{
+			$object->regenerateEntireNtree();
+			Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
 		}
-		parent::postProcess();
 	}
 
 	protected function postImage($id)
