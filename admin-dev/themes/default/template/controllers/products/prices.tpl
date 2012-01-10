@@ -118,6 +118,9 @@ jQuery(document).ready(Customer.init);
 
 <div class="block_specific_prices_modifications">
 	<h4>{l s='Product price'}</h4>
+    <div class="hint" style="display:block;min-height:0;">
+        {l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
+    </div>
 	<div class="separation"></div>
 	<table>
 		<tr>
@@ -131,7 +134,7 @@ jQuery(document).ready(Customer.init);
 		<tr>
 			<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="$('#priceType').val('TE');if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}<sup> *</sup>
+				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="$('#priceType').val('TE');if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}
 				<p class="preference_description">{l s='The pre-tax retail price to sell this product'}</p>
 			</td>
 		</tr>
@@ -174,7 +177,7 @@ jQuery(document).ready(Customer.init);
 		{if $ps_use_ecotax}
 			<tr>
 				<td class="col-left"><label>{l s='Eco-tax (tax incl.):'}</label></td>
-				<td style="padding-bottom:5px;">
+				<td>
 					{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
 					<span style="margin-left:10px">({l s='already included in price'})</span>
 				</td>
@@ -182,14 +185,14 @@ jQuery(document).ready(Customer.init);
 		{/if}
 		<tr {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none"{/if} >
 			<td class="col-left"><label>{l s='Retail price with tax:'}</label></td>
-			<td style="padding-bottom:5px;">
+			<td>
 				{$currency->prefix}<input size="11" maxlength="14" id="priceTI" type="text" value="" onchange="noComma('priceTI');" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />{$currency->suffix}
 				<input id="priceType" name="priceType" type="hidden" value="TE" />
 			</td>
 		</tr>
 		<tr id="tr_unit_price">
 			<td class="col-left"><label>{l s='Unit price:'}</label></td>
-			<td style="padding-bottom:5px;">
+			<td>
 				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|number_format:6}"
 					onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
 				{l s='/'} <!--<input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/> -->
@@ -209,13 +212,13 @@ jQuery(document).ready(Customer.init);
 		</tr>
 		<tr>
 			<td class="col-left"><label>&nbsp;</label></td>
-			<td style="padding-bottom:5px;">
+			<td>
 				<input type="checkbox" name="on_sale" id="on_sale" style="padding-top: 5px;" {if $product->on_sale}checked="checked"{/if} value="1" />&nbsp;<label for="on_sale" class="t">{l s='Display "on sale" icon on product page and text on product listing'}</label>
 			</td>
 		</tr>
 		<tr>
 			<td class="col-left"><label><b>{l s='Final retail price:'}</b></label></td>
-			<td style="padding-bottom:5px;">
+			<td>
 				<span {if !$country_display_tax_label}style="display:none"{/if} >
 				{$currency->prefix}<span id="finalPrice" style="font-weight: bold;"></span>{$currency->suffix}<span {if $ps_tax}style="display:none;"{/if}> ({l s='tax incl.'})</span>
 				</span>
