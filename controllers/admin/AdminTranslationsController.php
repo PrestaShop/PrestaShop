@@ -984,15 +984,19 @@ class AdminTranslationsControllerCore extends AdminController
 				$prefix_key = Tools::toCamelCase(str_replace(_PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes', '', $tpl), true);
 				$pos = strrpos($prefix_key, DIRECTORY_SEPARATOR);
 				$tmp = substr($prefix_key, 0, $pos);
-				$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
+
+				if (preg_match("#controllers#", $tmp))
+				{
+					$parentClass = explode('\\', $tmp);
+					$key = array_search('controllers', $parentClass);
+					$prefix_key = 'Admin'.ucfirst($parentClass[$key + 1]);
+				}
+				else
+					$prefix_key = 'Admin'.ucfirst(substr($tmp, strrpos($tmp, DIRECTORY_SEPARATOR) + 1, $pos));
 
 				// Adding list, form, option in Helper Translations
 				if ($prefix_key == 'AdminHelper' || $prefix_key == 'AdminList' || $prefix_key == 'AdminOptions' || $prefix_key == 'AdminForm')
 					$prefix_key = 'Helper';
-
-				// Adding the folder products/combinaison/ in AdminProducts Translations
-				if ($prefix_key == 'AdminCombinaison')
-					$prefix_key = 'AdminProducts/combinaison';
 
 				// Adding the folder backup/download/ in AdminBackup Translations
 				if ($prefix_key == 'AdminDownload')
