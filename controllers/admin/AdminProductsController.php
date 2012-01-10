@@ -2511,9 +2511,15 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
 		}
-
+		$root_category = Category::getRootCategory();
+		if (!$root_category->id_category)
+		{
+			$root_category->id_category = 0;
+			$root_category->name = $this->l('Root');
+		}
+		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
 		$translations = array(
-			'Home' => $this->l('Home'),
+			'Root' => $root_category,
 			'selected' => $this->l('selected'),
 			'Collapse All' => $this->l('Collapse All'),
 			'Expand All' => $this->l('Expand All'),
