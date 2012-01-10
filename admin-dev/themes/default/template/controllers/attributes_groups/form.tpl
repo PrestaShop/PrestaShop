@@ -19,40 +19,16 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {extends file="helper/form/form.tpl"}
 
-{block name="label"}
-	{if $input.type == 'color'}
-		<div id="colorAttributeProperties" style="display:{if $colorAttributeProperties}block{else}none{/if}";>
-	{/if}
-	{if isset($input.label)}
-		<label>{$input.label} </label>
-	{/if}
-{/block}
-
-
 {block name="end_field_block"}
-		{if $input.type == 'text' && $input.name == 'texture'}
-			</div>
+		</div>
+		{if $input.name == 'public_name'}
+			{hook h="displayAttributeGroupForm" id_attribute_group=$form_id}
 		{/if}
-	</div>
-		{if $input.name == 'name'}
-			{hook h="displayAttributeForm" id_attribute=$form_id}
-		{/if}
-{/block}
-
-{block name="script"}
-	var attributesGroups = {ldelim}{$strAttributesGroups}{rdelim};
-	$('#id_attribute_group').change(function() {
-		var val = $(this).val();
-		if (attributesGroups[val])
-			$('#colorAttributeProperties').show();
-		else
-			$('#colorAttributeProperties').hide();
-	});
 {/block}
