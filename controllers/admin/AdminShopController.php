@@ -491,10 +491,11 @@ class AdminShopControllerCore extends AdminController
 	public function initCategoriesAssociation($id_root = 1)
 	{
 		$id_shop = Tools::getValue('id_shop');
+		$shop = new Shop($id_shop);
 		$selected_cat = Shop::getCategories($id_shop);
 
 		if ($this->context->shop() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
-			$root_category = new Category($id_shop);
+			$root_category = new Category($shop->id_category);
 		else
 			$root_category = new Category($id_root);
 		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);

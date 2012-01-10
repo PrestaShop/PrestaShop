@@ -116,12 +116,17 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->_category->id;
 		else if ($nb_shop == 1 && $count_categories_without_parent > 1)
 			$id_parent = 0;
+		else if ($nb_shop > 1 && $count_categories_without_parent == 1)
+			$id_parent = 1;
+		else if ($nb_shop > 1 && $count_categories_without_parent > 1 && $this->context->shop() != Shop::CONTEXT_SHOP)
+			$id_parent = 0;
 		else
 			$id_parent = $this->context->shop->id_category;
+
 		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
 		$this->_select = 'position ';
 		// we add restriction for shop
-		if (Shop::CONTEXT_ALL == Context::getContext()->shop())
+		if (Shop::CONTEXT_SHOP == Context::getContext()->shop() && $nb_shop > 1)
 		{
 			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON a.`id_category` = cs.`id_category`';
 			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true);
@@ -137,7 +142,13 @@ class AdminCategoriesControllerCore extends AdminController
 		if ($nb_shop == 1 && $count_categories_without_parent > 1)
 			$categories_name = $this->l('Root');
 		else
-			$categories_name = stripslashes($this->_category->getName());
+			if (empty($categories_name))
+			{
+				$categories_name = new Category($id_parent);
+				$categories_name = stripslashes($categories_name->getName());
+			}
+			else
+				$categories_name = stripslashes($this->_category->getName());
 		$root = Category::getRootCategory();
 		if (!is_array($root->name) && empty($root->name))
 		{

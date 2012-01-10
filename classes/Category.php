@@ -1292,7 +1292,7 @@ class CategoryCore extends ObjectModel
 	public static function getCategoriesWithoutParent()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*
+		SELECT DISTINCT c.*
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
 		WHERE `id_parent` = 0
