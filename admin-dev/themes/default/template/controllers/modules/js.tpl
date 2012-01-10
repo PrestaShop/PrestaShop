@@ -170,9 +170,11 @@
 					controller : "AdminModules",
 					action : "refreshModuleList"
 				},
-				success : function(res,textStatus,jqXHR)
+				success : function(data)
 				{
 					// res.status  = cache or refresh
+					if (data == '{"status":"refresh"}')
+						window.location.href = window.location.href;
 				},
 				error: function(res,textStatus,jqXHR)
 				{
