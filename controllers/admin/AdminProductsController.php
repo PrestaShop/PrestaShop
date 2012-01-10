@@ -3499,7 +3499,8 @@ class AdminProductsControllerCore extends AdminController
 					$show_quantities = false;
 			}
 			// if we are in shop context
-			else {
+			else
+			{
 				// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
 				if ($group_shop->share_stock)
 					$show_quantities = false;
@@ -3549,8 +3550,10 @@ class AdminProductsControllerCore extends AdminController
 				// gets an array of quantities (quantity for the product / quantity in pack)
 				$pack_quantities = array();
 				foreach ($items as $item)
+				{
 					if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
 						$pack_quantities[] = Product::getQuantity($item->id) / ($item->pack_quantity !== 0 ? $item->pack_quantity : 1);
+				}
 
 				// gets the minimum
 				$pack_quantity = $pack_quantities[0];
@@ -3559,6 +3562,9 @@ class AdminProductsControllerCore extends AdminController
 					if ($pack_quantity > $value)
 						$pack_quantity = $value;
 				}
+
+				if (!Warehouse::getPackWarehouses((int)$obj->id))
+					$this->displayWarning($this->l('You have to have a common warehouse between this pack and its products because .'));
 			}
 
 			$data->assign(array(

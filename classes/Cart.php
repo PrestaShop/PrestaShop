@@ -739,7 +739,7 @@ class CartCore extends ObjectModel
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
-		
+
 		if (Context::getContext()->customer->id)
 		{
 			if ($id_address_delivery == 0) // The $id_address_delivery is null, get the default customer address
@@ -1388,13 +1388,15 @@ class CartCore extends ObjectModel
 
 			$product['warehouse_list'] = array();
 
-			if ($stock_management_active && (int)$product['advanced_stock_management'] == 1)
+			if ($stock_management_active &&
+				((int)$product['advanced_stock_management'] == 1 || Pack::usesAdvancedStockManagement((int)$product['id_product'])))
 			{
 				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute'], $this->id_shop);
 				if (count($warehouse_list) == 0)
 					$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute']);
 				// Does the product is in stock ?
 				// If yes, get only warehouse where the product is in stock
+
 				$warehouse_in_stock = array();
 				$manager = StockManagerFactory::getManager();
 
@@ -1407,7 +1409,7 @@ class CartCore extends ObjectModel
 						true
 					);
 
-					if ($product_real_quantities > 0)
+					if ($product_real_quantities > 0 || Pack::isPack((int)$product['id_product']))
 						$warehouse_in_stock[] = $warehouse;
 				}
 
@@ -1459,9 +1461,9 @@ class CartCore extends ObjectModel
 			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_warehouse => $val)
 				if (in_array((int)$id_warehouse, $product['warehouse_list']))
 					break;
-			
+
 			$id_warehouse = (int)$id_warehouse;
-			
+
 			if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse]))
 			{
 				$grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse] = array();
@@ -1575,7 +1577,7 @@ class CartCore extends ObjectModel
 			}
 		}
 
-		// Step 5 : Reduce deep of $package_list
+		// Step 5 : Reduce depth of $package_list
 		$final_package_list = array();
 		foreach ($package_list as $id_address_delivery => $products_in_stock_list)
 		{
@@ -1585,11 +1587,13 @@ class CartCore extends ObjectModel
 			foreach ($products_in_stock_list as $key => $warehouse_list)
 				foreach ($warehouse_list as $id_warehouse => $products_grouped_by_carriers)
 					foreach ($products_grouped_by_carriers as $data)
+					{
 						$final_package_list[$id_address_delivery][] = array(
 							'product_list' => $data['product_list'],
 							'carrier_list' => $data['carrier_list'],
 							'id_warehouse' => $id_warehouse,
 						);
+					}
 		}
 
 		$cache = $final_package_list;
@@ -1951,7 +1955,7 @@ class CartCore extends ObjectModel
 		}
 
 		$delivery_option_list = $this->getDeliveryOptionList(null , true);
-		
+
 		foreach ($delivery_option_list as $id_address => $options)
 			if (!isset($delivery_option[$id_address]))
 				foreach ($options as $key => $option)
@@ -2895,9 +2899,9 @@ class CartCore extends ObjectModel
 			$sql->where('id_address_delivery = '.(int)$id_address_delivery);
 			$sql->where('id_cart = '.(int)$this->id);
 			$duplicatedQuantity = Db::getInstance()->getValue($sql);
-			
+
 			if ($duplicatedQuantity > $quantity) {
-			
+
 				$sql = 'UPDATE '._DB_PREFIX_.'cart_product
 					SET `quantity` = `quantity` - '.(int)$quantity.'
 					WHERE id_cart = '.(int)$this->id.'
@@ -2955,7 +2959,7 @@ class CartCore extends ObjectModel
 				AND id_address_delivery = '.(int)$new_id_address_delivery;
 			Db::getInstance()->execute($sql);
 		}
-		
+
 		return true;
 	}
 
@@ -3032,10 +3036,10 @@ class CartCore extends ObjectModel
 			$id_address_delivery = (int)$this->id_address_delivery;
 		else
 			$id_address_delivery = (int)Address::getFirstCustomerAddressId(Context::getContext()->customer->id);
-		
+
 		if (!$id_address_delivery)
 			return;
-		
+
 		// Update
 		$sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 			SET `id_address_delivery` = '.(int)$id_address_delivery.'
@@ -3048,7 +3052,7 @@ class CartCore extends ObjectModel
 			SET `id_address_delivery` = '.(int)$id_address_delivery.'
 			WHERE `id_cart` = '.(int)$this->id.'
 				AND (`id_address_delivery` = 0 OR `id_address_delivery` IS NULL)';
-	
+
 		Db::getInstance()->execute($sql);
 	}
 

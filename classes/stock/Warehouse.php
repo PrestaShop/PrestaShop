@@ -309,6 +309,16 @@ class WarehouseCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
+		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
+		if (Pack::isPack($id_product))
+		{
+			$warehouses = self::getPackWarehouses($id_product);
+			$res = array();
+			foreach ($warehouses as $warehouse)
+				$res[]['id_warehouse'] = $warehouse;
+			return $res;
+		}
+
 		$query = new DbQuery();
 		$query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
 		$query->from('warehouse_product_location', 'wpl');
@@ -473,6 +483,50 @@ class WarehouseCore extends ObjectModel
 		$query->from('warehouse');
 		$query->where('id_warehouse = '.(int)$id_warehouse);
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	/**
+	 * For a given pack, returns the warehouse it can be shipped from
+	 *
+	 * @param int $id_product
+	 * @return int|bool id_warehouse or false
+	 */
+	public static function getPackWarehouses($id_product, $id_shop = null)
+	{
+		if (!Pack::isPack($id_product))
+			return false;
+
+		if (is_null($id_shop))
+			$id_shop = Context::getContext()->shop->getID(true);
+
+		// warehouses of the pack
+		$pack_warehouses = WarehouseProductLocation::getCollection((int)$id_product);
+		// products in the pack
+		$products = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
+
+		// array with all warehouses id to check
+		$list = array();
+
+		// fills $list
+		foreach ($pack_warehouses as $pack_warehouse)
+			$list['pack_warehouses'][] = (int)$pack_warehouse->id_warehouse;
+
+		// for each products in the pack
+		foreach ($products as $product)
+		{
+			if ($product->advanced_stock_management)
+			{
+				// gets the warehouses of one product
+				$product_warehouses = Warehouse::getProductWarehouseList((int)$product->id, 0, (int)$id_shop);
+				$list[(int)$product->id] = array();
+				// fills array with warehouses for this product
+				foreach ($product_warehouses as $product_warehouse)
+					$list[(int)$product->id][] = $product_warehouse['id_warehouse'];
+			}
+		}
+
+		// returns final list
+		return call_user_func_array('array_intersect', $list);
 	}
 
 	/*********************************\
