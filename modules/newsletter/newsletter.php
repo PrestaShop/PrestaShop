@@ -30,22 +30,22 @@ if (!defined('_PS_VERSION_'))
 
 class Newsletter extends Module
 {
-    private $_postErrors = array();
-    private $_html = '';
-    private $_postSucess;
+	private $_postErrors = array();
+	private $_html = '';
+	private $_postSucess;
 
-    public function __construct()
-    {
-        $this->name = 'newsletter';
-        $this->tab = 'administration';
-        $this->version = 2.0;
+	public function __construct()
+	{
+		$this->name = 'newsletter';
+		$this->tab = 'administration';
+		$this->version = 2.0;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
-        parent::__construct();
+		parent::__construct();
 
-        $this->displayName = $this->l('Newsletter');
-        $this->description = $this->l('Generates a .CSV file for mass mailings');
+		$this->displayName = $this->l('Newsletter');
+		$this->description = $this->l('Generates a .CSV file for mass mailings');
 
 		if ($this->id)
 		{
@@ -85,16 +85,16 @@ class Newsletter extends Module
 				),
 			);
 		}
-    }
+	}
 
 	public function install()
 	{
 		return (parent::install() AND Configuration::updateValue('PS_NEWSLETTER_RAND', rand().rand()));
 	}
 
-    private function _postProcess()
-    {
-       if (isset($_POST['submitExport']) AND isset($_POST['action']))
+	private function _postProcess()
+	{
+		if (isset($_POST['submitExport']) AND isset($_POST['action']))
 		{
 			if ($_POST['action'] == 'customers')
 				$result = $this->_getCustomers();
@@ -124,7 +124,7 @@ class Newsletter extends Module
 			else
 				$this->_html .= $this->displayError($this->l('Error: cannot write').' '.dirname(__FILE__).'/'.strval($_POST['action']).'_'.$this->_file.' !');
 		}
-    }
+	}
 
 	private function _getCustomers()
 	{
@@ -174,7 +174,7 @@ class Newsletter extends Module
 			$this->_postErrors[] = $this->l('Error: cannot write').' '.dirname(__FILE__).'/'.$this->_file.' !';
 	}
 
-    private function _displayFormExport()
+	private function _displayFormExport()
 	{
 		$this->_html .= '
 		<fieldset class="width3">
@@ -182,26 +182,26 @@ class Newsletter extends Module
 		<p><ol>
 			<li>
 				'.$this->l('Persons who have subscribed using the BlockNewsletter block in the front office.').'<br />
-                '.$this->l('This is a list of e-mail addresses of persons who come to your store that do not become customers, but have subscribed to your newsletter. Using the "Export Newsletter Subscribers" below will generate a .CSV file based on the BlockNewsletter subscribers data.').'<br /><br />'.'
-            </li>
-            <li>
-                '.$this->l('Customers that have checked "yes" to receive a newsletter in their customer profile.').'<br />
-                '.$this->l('The "Export Customers" section below filters which customers you want to send a newsletter to.').'
-            </li>
-        </ol>
+				'.$this->l('This is a list of e-mail addresses of persons who come to your store that do not become customers, but have subscribed to your newsletter. Using the "Export Newsletter Subscribers" below will generate a .CSV file based on the BlockNewsletter subscribers data.').'<br /><br />'.'
+			</li>
+			<li>
+				'.$this->l('Customers that have checked "yes" to receive a newsletter in their customer profile.').'<br />
+				'.$this->l('The "Export Customers" section below filters which customers you want to send a newsletter to.').'
+			</li>
+		</ol>
 		</p>
-        </fieldset><br />
-        <fieldset class="width3"><legend>'.$this->l('Export Newsletter Subscribers').'</legend>
-        <form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
+		</fieldset><br />
+		<fieldset class="width3"><legend>'.$this->l('Export Newsletter Subscribers from the BlockNewsletter').'</legend>
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<input type="hidden" name="action" value="blockNewsletter">
-			'.$this->l('Generate a .CSV file based on BlockNewsletter subscribers data.').'.<br /><br />';
+			'.$this->l('Generate a .CSV file based on BlockNewsletter subscribers data.').' '.$this->l('Only subscribers without an account on the shop will be exported.').'<br /><br />';
 		$this->_html .= '<br />
 		<center><input type="submit" class="button" name="submitExport" value="'.$this->l('Export .CSV file').'" /></center>
-        </form></fieldset><br />
+		</form></fieldset><br />
 		<fieldset class="width3"><legend>'.$this->l('Export customers').'</legend>
-        <form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
+		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<input type="hidden" name="action" value="customers">
-			'.$this->l('Generate a .CSV file from customer account data').'.<br /><br />';
+			'.$this->l('Generate a .CSV file from customer account data.').'<br /><br />';
 		foreach ($this->_fieldsExport as $key => $field)
 		{
 			$this->_html .= '
@@ -225,23 +225,23 @@ class Newsletter extends Module
 		}
 		$this->_html .= '<br />
 		<center><input type="submit" class="button" name="submitExport" value="'.$this->l('Export .CSV file').'" /></center>
-        </form></fieldset>';
+		</form></fieldset>';
 	}
 
-    private function _displayForm()
-    {
+	private function _displayForm()
+	{
 		$this->_displayFormExport();
-    }
+	}
 
-    public function getContent()
-    {
-        $this->_html .= '<h2>'.$this->displayName.'</h2>';
+	public function getContent()
+	{
+		$this->_html .= '<h2>'.$this->displayName.'</h2>';
 
-        if (!empty($_POST))
+		if (!empty($_POST))
 			$this->_html .= $this->_postProcess();
-        $this->_displayForm();
+		$this->_displayForm();
 
 		return $this->_html;
-    }
+	}
 }
 
