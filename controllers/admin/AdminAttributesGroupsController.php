@@ -422,12 +422,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Save and stay'),
 				);
 				
-				$this->toolbar_btn['save-and-stay'] = array(
-					'short' => 'SaveAndStay',
-					'href' => '#',
-					'desc' => $this->l('Save and stay'),
-				);
-				
 				$back = self::$currentIndex.'&token='.$this->token;
 				$this->toolbar_btn['cancel'] = array(
 					'href' => $back,
@@ -489,7 +483,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processSave($token)
 	{
-		if ((int)Tools::getValue('id_attribute') <= 0 && (int)Tools::getValue('id_attribute_group') <= 0 )
+		if ((int)Tools::getValue('id_attribute') <= 0 && $this->display != 'add'
+			|| (int)Tools::getValue('id_attribute_group') <= 0 && $this->display == 'add'
+		)
 			return $this->processAdd($token);
 		else
 			return $this->processUpdate($token);
@@ -591,9 +587,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
 				parent::postProcess();
 			}
-			else {
+			else
 				parent::postProcess();
-			}
 		}
 	}
 }
