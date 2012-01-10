@@ -74,11 +74,11 @@
 		{/if}
 	{/foreach}
 	<ul id="categories-treeview" class="filetree">
-		<li id="$categories.trads.Root.id_category" class="hasChildren">
+		<li id="{$categories.trads.Root.id_category}" class="hasChildren">
 			<span class="folder">
 				<input type="{if !$categories.use_radio}checkbox{else}radio{/if}"
 						name="{$categories.input_name}"
-						value="$categories.trads.Root.id_category"
+						value="{$categories.trads.Root.id_category}"
 						{if $home_is_selected}checked{/if}
 						onclick="clickOnCategoryBox($(this));" />
 					{$categories.trads.Root.name}
