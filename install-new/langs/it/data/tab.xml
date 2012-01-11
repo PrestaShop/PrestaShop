@@ -24,7 +24,7 @@
   <tab id="Monitoring" name="Rintracciare"/>
   <tab id="Manufacturers" name="Produttori"/>
   <tab id="Suppliers" name="Fornitori"/>
-  <tab id="Attributes_and_Groups" name="Attributi e Gruppi"/>
+  <tab id="Attributes_and_Values" name="Attributi e Valori"/>
   <tab id="Features" name="Caratteristiche"/>
   <tab id="Image_Mapping" name="Mappatura immagine"/>
   <tab id="Tags" name="Tag"/>

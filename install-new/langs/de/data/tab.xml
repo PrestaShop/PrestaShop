@@ -24,7 +24,7 @@
   <tab id="Monitoring" name="Tracking"/>
   <tab id="Manufacturers" name="Hersteller"/>
   <tab id="Suppliers" name="Zulieferer"/>
-  <tab id="Attributes_and_Groups" name="Attribute und Gruppen"/>
+  <tab id="Attributes_and_Values" name="Attribute und Werte"/>
   <tab id="Features" name="Funktionen"/>
   <tab id="Image_Mapping" name="Image Mapping"/>
   <tab id="Tags" name="Tags"/>

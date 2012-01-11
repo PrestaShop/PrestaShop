@@ -19,7 +19,7 @@
     <access id="access_2_8" id_profile="Administrator" id_tab="Preferences" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_9" id_profile="Administrator" id_tab="Tools" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_10" id_profile="Administrator" id_tab="Manufacturers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_2_11" id_profile="Administrator" id_tab="Attributes_and_Groups" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_2_11" id_profile="Administrator" id_tab="Attributes_and_Values" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_12" id_profile="Administrator" id_tab="Addresses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_13" id_profile="Administrator" id_tab="Statuses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_2_14" id_profile="Administrator" id_tab="Cart_Rules" view="1" add="1" edit="1" delete="1"/>
@@ -118,7 +118,7 @@
     <access id="access_3_8" id_profile="Logistician" id_tab="Preferences" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_9" id_profile="Logistician" id_tab="Tools" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_10" id_profile="Logistician" id_tab="Manufacturers" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_3_11" id_profile="Logistician" id_tab="Attributes_and_Groups" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_3_11" id_profile="Logistician" id_tab="Attributes_and_Values" view="0" add="0" edit="0" delete="0"/>
     <access id="access_3_12" id_profile="Logistician" id_tab="Addresses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_13" id_profile="Logistician" id_tab="Statuses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_3_14" id_profile="Logistician" id_tab="Cart_Rules" view="0" add="0" edit="0" delete="0"/>
@@ -215,7 +215,7 @@
     <access id="access_4_8" id_profile="Translator" id_tab="Preferences" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_9" id_profile="Translator" id_tab="Tools" view="1" add="0" edit="0" delete="0"/>
     <access id="access_4_10" id_profile="Translator" id_tab="Manufacturers" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_4_11" id_profile="Translator" id_tab="Attributes_and_Groups" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_4_11" id_profile="Translator" id_tab="Attributes_and_Values" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_12" id_profile="Translator" id_tab="Addresses" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_13" id_profile="Translator" id_tab="Statuses" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_14" id_profile="Translator" id_tab="Cart_Rules" view="0" add="0" edit="0" delete="0"/>
@@ -313,7 +313,7 @@
     <access id="access_5_8" id_profile="Salesman" id_tab="Preferences" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_9" id_profile="Salesman" id_tab="Tools" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_10" id_profile="Salesman" id_tab="Manufacturers" view="1" add="0" edit="0" delete="0"/>
-    <access id="access_5_11" id_profile="Salesman" id_tab="Attributes_and_Groups" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_5_11" id_profile="Salesman" id_tab="Attributes_and_Values" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_12" id_profile="Salesman" id_tab="Addresses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_5_13" id_profile="Salesman" id_tab="Statuses" view="0" add="0" edit="0" delete="0"/>
     <access id="access_5_14" id_profile="Salesman" id_tab="Cart_Rules" view="0" add="0" edit="0" delete="0"/>

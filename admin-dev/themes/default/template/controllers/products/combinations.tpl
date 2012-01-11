@@ -40,9 +40,9 @@
 		$('#virtual_good_attributes').hide();
 	{/if}
 
-	var msg_combination_1 = '{l s='Please choose a group'}';
-	var msg_combination_2 = '{l s='Please choose an attribute'}';
-	var msg_combination_3 = '{l s='You can only add one combination per type of group'}';
+	var msg_combination_1 = '{l s='Please choose an attribute'}';
+	var msg_combination_2 = '{l s='Please choose a value'}';
+	var msg_combination_3 = '{l s='You can only add one combination per type of attribute'}';
 
 </script>
 
@@ -77,7 +77,7 @@
 		<table cellpadding="5" style="width:100%">
 			<tr>
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					{l s='Group:'}
+					{l s='Attribute:'}
 				</td>
 				<td style="padding-bottom:5px;">
 					<select name="attribute_group" id="attribute_group" style="width: 200px;" onchange="populate_attrs();">
@@ -91,7 +91,7 @@
 			</tr>
 			<tr>
 				<td style="width:150px;vertical-align:top;text-align:right;padding-right:10px;font-weight:bold;" valign="top">
-					{l s='Attribute:'}
+					{l s='Value:'}
 				</td>
 				<td style="padding-bottom:5px;">
 					<select name="attribute" id="attribute" style="width: 200px;">
