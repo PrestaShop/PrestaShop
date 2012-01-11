@@ -169,7 +169,7 @@ class ProductCore extends ObjectModel
 	public $available_for_order = 1;
 
 	/** @var string Object available order date */
-	public $available_date;
+	public $available_date = '0000-00-00';
 
 	/** @var enum Product condition (new, used, refurbished) */
 	public $condition;
