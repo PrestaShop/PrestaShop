@@ -31,6 +31,7 @@ var interval = null;
 var intervalCheck = null;
 var id_tree = 0;
 var arrayCatToExpand = new Array();
+var id_category_root = 0;
 
 function buildTreeView()
 {
@@ -46,10 +47,10 @@ function buildTreeView()
 			}
 		}
 	});
-	
-	$('#categories-treeview li#1 span').trigger('click');
-	$('#categories-treeview li#1').children('div').remove();
-	$('#categories-treeview li#1').
+	id_category_root = $('#categories-treeview li:first').attr('id');
+	$('#categories-treeview li#'+id_category_root+' span').trigger('click');
+	$('#categories-treeview li#'+id_category_root).children('div').remove();
+	$('#categories-treeview li#'+id_category_root).
 		removeClass('collapsable lastCollapsable').
 		addClass('last static');
 	
@@ -100,7 +101,7 @@ function closeChildrenCategories(element)
 		arrayLevel[level].push($(this).attr('id'));
 	});
 
-	for(i=arrayLevel.length-1;i!=0;i--)
+	for(i=arrayLevel.length-1;i>=0;i--)
 		if (arrayLevel[i] != undefined)
 			for(j=0;j<arrayLevel[i].length;j++)
 			{
@@ -134,8 +135,8 @@ function expandAllCategories()
 	if (!needExpandAllCategories())
 		return;
 	// force to open main category
-	if ($('li#1').is('.expandable'))
-		$('li#1').children('span.folder').trigger('click');
+	if ($('li#'+id_category_root).is('.expandable'))
+		$('li#'+id_category_root).children('span.folder').trigger('click');
 	readyToExpand = true;
 	if (setCategoryToExpand())
 		interval = setInterval(openCategory, 10);
@@ -179,7 +180,7 @@ function openCategory()
 
 function collapseAllCategories()
 {
-	closeChildrenCategories($('li#1'));
+	closeChildrenCategories($('li#'+id_category_root));
 }
 
 function checkAllCategories()
