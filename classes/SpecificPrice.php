@@ -157,7 +157,7 @@ class SpecificPriceCore extends ObjectModel
     public static function getPriority($id_product)
     {
 		if (!self::isFeatureActive())
-			return Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
+			return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
 
     	if (!isset(self::$_cache_priorities[(int)$id_product]))
     	{
@@ -174,6 +174,7 @@ class SpecificPriceCore extends ObjectModel
 	    if (!$priority)
 	        $priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
 		$priority = 'id_customer;'.$priority;
+
 	    return preg_split('/;/', $priority);
     }
 

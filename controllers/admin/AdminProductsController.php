@@ -2591,7 +2591,6 @@ class AdminProductsControllerCore extends AdminController
 					), $this->context->currency
 				);
 			}
-
 			foreach ($combinations as &$combination)
 				$combination['attributes'] = rtrim($combination['attributes'], ' - ');
 			$data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm(
@@ -2611,7 +2610,6 @@ class AdminProductsControllerCore extends AdminController
 		}
 		else
 			$this->displayWarning($this->l('You must save this product before adding specific prices'));
-
 		// prices part
 		$data->assign('link', $this->context->link);
 		$data->assign('currency', $currency = $this->context->currency);
@@ -2619,24 +2617,20 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('taxesRatesByGroup', TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id));
 		$data->assign('ecotaxTaxRate', Tax::getProductEcotaxRate());
 		$data->assign('tax_exclude_taxe_option', Tax::excludeTaxeOption());
-
 		$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
 		if ($product->unit_price_ratio != 0)
 			$data->assign('unit_price', Tools::ps_round($product->price / $product->unit_price_ratio, 2));
 		else
 			$data->assign('unit_price', 0);
-
 		$data->assign('ps_tax', Configuration::get('PS_TAX'));
 
 		$data->assign('country_display_tax_label', $this->context->country->display_tax_label);
-
 		$unities = array(
 			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
 			'PS_DISTANCE_UNIT' => Configuration::get('PS_DISTANCE_UNIT'),
 			'PS_VOLUME_UNIT' => Configuration::get('PS_VOLUME_UNIT'),
 			'PS_DIMENSION_UNIT' => Configuration::get('PS_DIMENSION_UNIT')
 		);
-
 		$data->assign(array(
 			'currency', $this->context->currency,
 			'product' => $product,
@@ -2895,7 +2889,8 @@ class AdminProductsControllerCore extends AdminController
 		';
 
 		// Not use id_customer
-		unset($specific_price_priorities[0]);
+		if ($specific_price_priorities[0] == 'id_customer')
+			unset($specific_price_priorities[0]);
 		sort($specific_price_priorities);
 		$content .= '
 		<div class="separation"></div>
