@@ -393,7 +393,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					{
 
 						if (!$tr->save())
-							$this->_errors[] = Tools::displayError('An error has occured: Can\'t save the current tax rule');
+							$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current tax rule');
 					} else
 						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
 				}

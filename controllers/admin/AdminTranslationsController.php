@@ -172,7 +172,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!mkdir($path, 0777, true))
 			{
 				$bool &= false;
-				$this->_errors[] = $this->l('Cannot create the folder').' "'.$path.'". '.$this->l('Check directory writing permissions.');
+				$this->errors[] = $this->l('Cannot create the folder').' "'.$path.'". '.$this->l('Check directory writing permissions.');
 			}
 		}
 		return $bool;
@@ -204,14 +204,14 @@ class AdminTranslationsControllerCore extends AdminController
 	public function submitCopyLang()
 	{
 		if (!($from_lang = strval(Tools::getValue('fromLang'))) || !($to_lang = strval(Tools::getValue('toLang'))))
-			$this->_errors[] = $this->l('you must select 2 languages in order to copy data from one to another');
+			$this->errors[] = $this->l('you must select 2 languages in order to copy data from one to another');
 		else if (!($from_theme = strval(Tools::getValue('fromTheme'))) || !($to_theme = strval(Tools::getValue('toTheme'))))
-			$this->_errors[] = $this->l('you must select 2 themes in order to copy data from one to another');
+			$this->errors[] = $this->l('you must select 2 themes in order to copy data from one to another');
 		else if (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang)))
-			$this->_errors[] = $this->l('an error occurred while copying data');
+			$this->errors[] = $this->l('an error occurred while copying data');
 		else if ($from_lang == $to_lang && $from_theme == $to_theme)
-			$this->_errors[] = $this->l('nothing to copy! (same language and theme)');
-		if (count($this->_errors))
+			$this->errors[] = $this->l('nothing to copy! (same language and theme)');
+		if (count($this->errors))
 			return;
 
 		$bool = true;
@@ -226,7 +226,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		if ($bool)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=14&token='.$this->token);
-		$this->_errors[] = $this->l('a part of the data has been copied but some language files could not be found or copied');
+		$this->errors[] = $this->l('a part of the data has been copied but some language files could not be found or copied');
 	}
 
 	/**
@@ -262,9 +262,9 @@ class AdminTranslationsControllerCore extends AdminController
 			$gz = new Archive_Tar(_PS_TRANSLATIONS_DIR_.'/export/'.$lang.'.gzip', true);
 			if ($gz->createModify($items, null, _PS_ROOT_DIR_));
 				Tools::redirect('translations/export/'.$lang.'.gzip');
-			$this->_errors[] = Tools::displayError('An error occurred while creating archive.');
+			$this->errors[] = Tools::displayError('An error occurred while creating archive.');
 		}
-		$this->_errors[] = Tools::displayError('Please choose a language and theme.');
+		$this->errors[] = Tools::displayError('Please choose a language and theme.');
 	}
 
 	public function checkAndAddMailsFiles($iso_code, $files_list)
@@ -289,7 +289,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public function submitImportLang()
 	{
 		if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name'])
-			$this->_errors[] = Tools::displayError('No file selected');
+			$this->errors[] = Tools::displayError('No file selected');
 		else
 		{
 			$gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
@@ -305,7 +305,7 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 				Tools::redirectAdmin(self::$currentIndex.'&conf='.(isset($conf) ? $conf : '15').'&token='.$this->token);
 			}
-			$this->_errors[] = Tools::displayError('Archive cannot be extracted.');
+			$this->errors[] = Tools::displayError('Archive cannot be extracted.');
 		}
 	}
 
@@ -329,21 +329,21 @@ class AdminTranslationsControllerCore extends AdminController
 						if (!Language::checkAndAddLanguage($arr_import_lang[0]))
 							$conf = 20;
 						if (!unlink($file))
-							$this->_errors[] = Tools::displayError('Cannot delete archive');
+							$this->errors[] = Tools::displayError('Cannot delete archive');
 						Tools::redirectAdmin(self::$currentIndex.'&conf='.(isset($conf) ? $conf : '15').'&token='.$this->token);
 					}
-					$this->_errors[] = Tools::displayError('Archive cannot be extracted.');
+					$this->errors[] = Tools::displayError('Archive cannot be extracted.');
 					if (!unlink($file))
-						$this->_errors[] = Tools::displayError('Cannot delete archive');
+						$this->errors[] = Tools::displayError('Cannot delete archive');
 				}
 				else
-					$this->_errors[] = Tools::displayError('Server does not have permissions for writing.');
+					$this->errors[] = Tools::displayError('Server does not have permissions for writing.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('Language not found');
+				$this->errors[] = Tools::displayError('Language not found');
 		}
 		else
-			$this->_errors[] = Tools::displayError('Invalid parameter');
+			$this->errors[] = Tools::displayError('Invalid parameter');
 	}
 
 	/**
@@ -492,7 +492,7 @@ class AdminTranslationsControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
@@ -502,28 +502,28 @@ class AdminTranslationsControllerCore extends AdminController
 		 	if ($this->tabAccess['add'] === '1')
 				$this->submitCopyLang();
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (Tools::isSubmit('submitExport'))
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->submitExportLang();
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (Tools::isSubmit('submitImport'))
 		{
 		 	if ($this->tabAccess['add'] === '1')
 				$this->submitImportLang();
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (Tools::isSubmit('submitAddLanguage'))
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->submitAddLang();
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (Tools::isSubmit('submitTranslationsFront'))
 		{
@@ -534,7 +534,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->writeTranslationFile('Front', _PS_THEME_DIR_.'lang/'.Tools::strtolower(Tools::getValue('lang')).'.php');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitTranslationsPdf'))
 		{
@@ -545,7 +545,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->writeTranslationFile('PDF', _PS_THEME_DIR_.'pdf/lang/'.Tools::strtolower(Tools::getValue('lang')).'.php', 'PDF');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitTranslationsBack'))
 		{
@@ -556,7 +556,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->writeTranslationFile('Back', _PS_TRANSLATIONS_DIR_.Tools::strtolower(Tools::getValue('lang')).'/admin.php', 'ADM');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitTranslationsErrors'))
 		{
@@ -567,7 +567,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->writeTranslationFile('Errors', _PS_TRANSLATIONS_DIR_.Tools::strtolower(Tools::getValue('lang')).'/errors.php', false, 'ERRORS');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitTranslationsFields'))
 		{
@@ -578,7 +578,7 @@ class AdminTranslationsControllerCore extends AdminController
 				$this->writeTranslationFile('Fields', _PS_TRANSLATIONS_DIR_.Tools::strtolower(Tools::getValue('lang')).'/fields.php', false, 'FIELDS');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 
 		}
 		else if (Tools::isSubmit('submitTranslationsMails') || Tools::isSubmit('submitTranslationsMailsAndStay'))
@@ -586,7 +586,7 @@ class AdminTranslationsControllerCore extends AdminController
 		 	if ($this->tabAccess['edit'] === '1' && ($id_lang = Language::getIdByIso(Tools::getValue('lang'))) > 0)
 		 		$this->submitTranslationsMails($id_lang);
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitTranslationsModules'))
 		{
@@ -620,7 +620,7 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 	}
 
@@ -716,7 +716,7 @@ class AdminTranslationsControllerCore extends AdminController
 						chmod($path.$mail_name.'.'.$type_content, 0777);
 					}
 					else
-						$this->_errors[] = Tools::displayError('HTML e-mail templates cannot contain JavaScript code.');
+						$this->errors[] = Tools::displayError('HTML e-mail templates cannot contain JavaScript code.');
 				}
 			}
 		}
@@ -742,7 +742,7 @@ class AdminTranslationsControllerCore extends AdminController
 			foreach ($array_subjects as $type => $infos)
 				$this->writeSubjectTranslationFile($infos['translations'], $infos['path']);
 
-		if (count($this->_errors) == 0)
+		if (count($this->errors) == 0)
 			Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.$params_redirect);
 	}
 
@@ -856,7 +856,7 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					if (empty($key))
 					{
-						$this->_errors[] = $this->l('Empty string found, please edit:').' <br />'._PS_THEME_DIR_.''.$template;
+						$this->errors[] = $this->l('Empty string found, please edit:').' <br />'._PS_THEME_DIR_.''.$template;
 						$new_lang[$key] = '';
 					}
 					else
@@ -1020,7 +1020,7 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					if (empty($english_string))
 					{
-						$this->_errors[] = $this->l('Error in template - Empty string found, please edit:').' <br />'.$tpl;
+						$this->errors[] = $this->l('Error in template - Empty string found, please edit:').' <br />'.$tpl;
 						$new_lang[$english_string] = '';
 					}
 					else
@@ -1602,7 +1602,7 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
-			$this->_errors[] = $this->l('Subject mail translation file not found in').' '.$directory;
+			$this->errors[] = $this->l('Subject mail translation file not found in').' '.$directory;
 		return $subject_mail_content;
 	}
 

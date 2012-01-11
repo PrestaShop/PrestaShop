@@ -840,9 +840,9 @@ class AdminImportControllerCore extends AdminController
 						$category->id_parent = $category_to_create->id;
 					else
 					{
-						$this->_errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
+						$this->errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
 							' '.Tools::displayError('Cannot be saved');
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -891,7 +891,7 @@ class AdminImportControllerCore extends AdminController
 				if ($category->id && $category->categoryExists($category->id) && $category->id != 1)
 					$res = $category->update();
 				if ($category->id == 1)
-					$this->_errors[] = Tools::displayError('Root category cannot be modify');
+					$this->errors[] = Tools::displayError('Root category cannot be modify');
 				// If no id_category or update failed
 				if (!$res)
 					$res = $category->add();
@@ -903,8 +903,8 @@ class AdminImportControllerCore extends AdminController
 			// If both failed, mysql error
 			if (!$res)
 			{
-				$this->_errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
-				$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
 		}
@@ -970,8 +970,8 @@ class AdminImportControllerCore extends AdminController
 						$product->id_manufacturer = (int)$manufacturer->id;
 					else
 					{
-						$this->_errors[] = $manufacturer->name.(isset($manufacturer->id) ? ' ('.$manufacturer->id.')' : '').' '.Tools::displayError('Cannot be saved');
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = $manufacturer->name.(isset($manufacturer->id) ? ' ('.$manufacturer->id.')' : '').' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -992,8 +992,8 @@ class AdminImportControllerCore extends AdminController
 						$product->id_supplier = (int)$supplier->id;
 					else
 					{
-						$this->_errors[] = $supplier->name.(isset($supplier->id) ? ' ('.$supplier->id.')' : '').' '.Tools::displayError('Cannot be saved');
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = $supplier->name.(isset($supplier->id) ? ' ('.$supplier->id.')' : '').' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -1033,9 +1033,9 @@ class AdminImportControllerCore extends AdminController
 								$product->id_category[] = (int)$category_to_create->id;
 							else
 							{
-								$this->_errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
+								$this->errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
 									' '.Tools::displayError('Cannot be saved');
-								$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
 						}
@@ -1056,9 +1056,9 @@ class AdminImportControllerCore extends AdminController
 								$product->id_category[] = (int)$category_to_create->id;
 							else
 							{
-								$this->_errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
+								$this->errors[] = $category_to_create->name[$default_language_id].(isset($category_to_create->id) ? ' ('.$category_to_create->id.')' : '').
 									' '.Tools::displayError('Cannot be saved');
-								$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
 						}
@@ -1122,8 +1122,8 @@ class AdminImportControllerCore extends AdminController
 			// If both failed, mysql error
 			if (!$res)
 			{
-				$this->_errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
-				$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = $info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 
 			}
@@ -1229,7 +1229,7 @@ class AdminImportControllerCore extends AdminController
 							{
 								$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').
 									' '.Tools::displayError('Cannot be saved');
-								$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+								$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 									Db::getInstance()->getMsgError();
 							}
 						}
@@ -1309,7 +1309,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					$this->warnings[] = (isset($image->id_product) ? ' ('.$image->id_product.')' : '').
 						' '.Tools::displayError('Cannot be saved');
-					$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
+					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
 			}
 			else if (isset($info['image_position']) && $info['image_position'])
@@ -1371,7 +1371,7 @@ class AdminImportControllerCore extends AdminController
 						$groups[$group] = $obj->id;
 					}
 					else
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 				}
 			}
 			foreach (explode($fsep, $info['attribute']) as $attribute)
@@ -1396,7 +1396,7 @@ class AdminImportControllerCore extends AdminController
 						$attributes[$group.'_'.$attribute] = $obj->id;
 					}
 					else
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 
 				}
 			}
@@ -1455,8 +1455,8 @@ class AdminImportControllerCore extends AdminController
 			}
 			if (!$res)
 			{
-				$this->_errors[] = $info['email'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
-				$this->_errors[] = ($field_error !== true ? $field_error : ($lang_field_error !== true ? $lang_field_error : '')).
+				$this->errors[] = $info['email'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = ($field_error !== true ? $field_error : ($lang_field_error !== true ? $lang_field_error : '')).
 					Db::getInstance()->getMsgError();
 			}
 		}
@@ -1502,8 +1502,8 @@ class AdminImportControllerCore extends AdminController
 						$address->id_country = (int)$country->id;
 					else
 					{
-						$this->_errors[] = $country->name[$default_language_id].' '.Tools::displayError('Cannot be saved');
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = $country->name[$default_language_id].' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -1532,8 +1532,8 @@ class AdminImportControllerCore extends AdminController
 						$address->id_state = (int)$state->id;
 					else
 					{
-						$this->_errors[] = $state->name.' '.Tools::displayError('Cannot be saved');
-						$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+						$this->errors[] = $state->name.' '.Tools::displayError('Cannot be saved');
+						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 							Db::getInstance()->getMsgError();
 					}
 				}
@@ -1547,11 +1547,11 @@ class AdminImportControllerCore extends AdminController
 					if ($customer)
 						$address->id_customer = (int)$customer;
 					else
-						$this->_errors[] = Db::getInstance()->getMsgError().' '.$address->customer_email.' '.Tools::displayError('does not exist in database').' '.
+						$this->errors[] = Db::getInstance()->getMsgError().' '.$address->customer_email.' '.Tools::displayError('does not exist in database').' '.
 							(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
 				}
 				else
-					$this->_errors[] = '"'.$address->customer_email.'" :'.Tools::displayError('Is not a valid Email');
+					$this->errors[] = '"'.$address->customer_email.'" :'.Tools::displayError('Is not a valid Email');
 			}
 
 			if (isset($address->manufacturer) && is_numeric($address->manufacturer) && Manufacturer::manufacturerExists((int)$address->manufacturer))
@@ -1565,9 +1565,9 @@ class AdminImportControllerCore extends AdminController
 					$address->id_manufacturer = (int)$manufacturer->id;
 				else
 				{
-					$this->_errors[] = Db::getInstance()->getMsgError().' '.$manufacturer->name.(isset($manufacturer->id) ? ' ('.$manufacturer->id.')' : '').
+					$this->errors[] = Db::getInstance()->getMsgError().' '.$manufacturer->name.(isset($manufacturer->id) ? ' ('.$manufacturer->id.')' : '').
 						' '.Tools::displayError('Cannot be saved');
-					$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
 				}
 			}
@@ -1583,9 +1583,9 @@ class AdminImportControllerCore extends AdminController
 					$address->id_supplier = (int)$supplier->id;
 				else
 				{
-					$this->_errors[] = Db::getInstance()->getMsgError().' '.$supplier->name.(isset($supplier->id) ? ' ('.$supplier->id.')' : '').
+					$this->errors[] = Db::getInstance()->getMsgError().' '.$supplier->name.(isset($supplier->id) ? ' ('.$supplier->id.')' : '').
 						' '.Tools::displayError('Cannot be saved');
-					$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+					$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 						Db::getInstance()->getMsgError();
 				}
 			}
@@ -1601,8 +1601,8 @@ class AdminImportControllerCore extends AdminController
 			}
 			if (!$res)
 			{
-				$this->_errors[] = $info['alias'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
-				$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = $info['alias'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').' '.Tools::displayError('Cannot be saved');
+				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
 		}
@@ -1658,9 +1658,9 @@ class AdminImportControllerCore extends AdminController
 
 			if (!$res)
 			{
-				$this->_errors[] = Db::getInstance()->getMsgError().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').
+				$this->errors[] = Db::getInstance()->getMsgError().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').
 					' '.Tools::displayError('Cannot be saved');
-				$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
+				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '').
 					Db::getInstance()->getMsgError();
 			}
 		}
@@ -1696,7 +1696,7 @@ class AdminImportControllerCore extends AdminController
 					$res = $supplier->add();
 
 				if (!$res)
-					$this->_errors[] = Db::getInstance()->getMsgError().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').
+					$this->errors[] = Db::getInstance()->getMsgError().' '.$info['name'].(isset($info['id']) ? ' (ID '.$info['id'].')' : '').
 						' '.Tools::displayError('Cannot be saved');
 				else
 				{
@@ -1718,8 +1718,8 @@ class AdminImportControllerCore extends AdminController
 			}
 			else
 			{
-				$this->_errors[] = $this->l('Supplier not valid').' ('.$supplier->name.')';
-				$this->_errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+				$this->errors[] = $this->l('Supplier not valid').' ('.$supplier->name.')';
+				$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 			}
 		}
 		$this->closeCsvFile($handle);
@@ -1767,31 +1767,31 @@ class AdminImportControllerCore extends AdminController
 
 			// checks parameters
 			if (!Supplier::supplierExists($id_supplier))
-				$this->_errors[] = sprintf($this->l('Supplier ID (%d) is not valid (at line %d).'), $id_supplier, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Supplier ID (%d) is not valid (at line %d).'), $id_supplier, $current_line + 1);
 			if (!Language::getLanguage($id_lang))
-				$this->_errors[] = sprintf($this->l('Lang ID (%d) is not valid (at line %d).'), $id_lang, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Lang ID (%d) is not valid (at line %d).'), $id_lang, $current_line + 1);
 			if (!Warehouse::exists($id_warehouse))
-				$this->_errors[] = sprintf($this->l('Warehouse ID (%d) is not valid (at line %d).'), $id_warehouse, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Warehouse ID (%d) is not valid (at line %d).'), $id_warehouse, $current_line + 1);
 			if (!Currency::getCurrency($id_currency))
-				$this->_errors[] = sprintf($this->l('Currency ID (%d) is not valid (at line %d).'), $id_currency, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Currency ID (%d) is not valid (at line %d).'), $id_currency, $current_line + 1);
 			if (empty($supply_order->reference) && SupplyOrder::exists($reference))
-				$this->_errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
 			if (!empty($supply_order->reference) && ($supply_order->reference != $reference && SupplyOrder::exists($reference)))
-				$this->_errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
 			if (!Validate::isDateFormat($date_delivery_expected))
-				$this->_errors[] = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected,
+				$this->errors[] = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected,
 										   $current_line + 1, $this->l('YYYY-MM-DD'));
 			else if (new DateTime($date_delivery_expected) <= new DateTime('yesterday'))
-				$this->_errors[] = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected,
+				$this->errors[] = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected,
 										   $current_line + 1, $this->l('YYYY-MM-DD'));
 			if ($discount_rate < 0 || $discount_rate > 100)
-				$this->_errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
+				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
 										   $current_line + 1, $this->l('Format: between 0 and 100'));
 			if ($supply_order->id > 0 && !$supply_order->isEditable())
-				$this->_errors[] = sprintf($this->l('Supply Order (%d) is not editable (at line %d).'), $supply_order->id, $current_line + 1);
+				$this->errors[] = sprintf($this->l('Supply Order (%d) is not editable (at line %d).'), $supply_order->id, $current_line + 1);
 
 			// if no errors, sets supply order
-			if (empty($this->_errors))
+			if (empty($this->errors))
 			{
 				// adds parameters
 				$info['id_ref_currency'] = (int)Currency::getDefaultCurrency()->id;
@@ -1816,7 +1816,7 @@ class AdminImportControllerCore extends AdminController
 
 				// errors
 				if (!$res)
-					$this->_errors[] = sprintf($this->l('Supply Order could not be saved (at line %d).'), $current_line + 1);
+					$this->errors[] = sprintf($this->l('Supply Order could not be saved (at line %d).'), $current_line + 1);
 			}
 		}
 
@@ -1848,9 +1848,9 @@ class AdminImportControllerCore extends AdminController
 			if (array_key_exists('supply_order_reference', $info) && pSQL($info['supply_order_reference']) && SupplyOrder::exists(pSQL($info['supply_order_reference'])))
 				$supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['supply_order_reference']));
 			else
-				$this->_errors[] = sprintf($this->l('Supply Order (%s) could not be loaded (at line %d).'), (int)$info['supply_order_reference'], $current_line + 1);
+				$this->errors[] = sprintf($this->l('Supply Order (%s) could not be loaded (at line %d).'), (int)$info['supply_order_reference'], $current_line + 1);
 
-			if (empty($this->_errors))
+			if (empty($this->errors))
 			{
 				// sets parameters
 				$id_product = (int)$info['id_product'];
@@ -1866,7 +1866,7 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product['id_product']))
 				{
 					if ($product['id_product'] == $id_product_attribute)
-						$this->_errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
+						$this->errors[] = sprintf($this->l('Product (%d/%D) cannot be added twice (at line %d).'), $id_product,
 											       $id_product_attribute, $current_line + 1);
 					else
 						$product['id_product'] = $id_product_attribute;
@@ -1876,21 +1876,21 @@ class AdminImportControllerCore extends AdminController
 
 				// checks parameters
 				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
-					$this->_errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product,
+					$this->errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product,
 											   $id_product_attribute, $current_line + 1);
 				if ($unit_price_te < 0)
-					$this->_errors[] = sprintf($this->l('Unit Price (te) (%d) is not valid (at line %d).'), $unit_price_te, $current_line + 1);
+					$this->errors[] = sprintf($this->l('Unit Price (te) (%d) is not valid (at line %d).'), $unit_price_te, $current_line + 1);
 				if ($quantity_expected < 0)
-					$this->_errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
+					$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
 				if ($discount_rate < 0 || $discount_rate > 100)
-				$this->_errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
+				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
 										   $current_line + 1, $this->l('Format: between 0 and 100'));
 				if ($tax_rate < 0 || $tax_rate > 100)
-				$this->_errors[] = sprintf($this->l('Tax rate (%d) is not valid (at line %d). %s.'), $tax_rate,
+				$this->errors[] = sprintf($this->l('Tax rate (%d) is not valid (at line %d). %s.'), $tax_rate,
 										   $current_line + 1, $this->l('Format: between 0 and 100'));
 
 				// if no errors, sets supply order details
-				if (empty($this->_errors))
+				if (empty($this->errors))
 				{
 					// resets order if needed
 					if ($reset)
@@ -1975,7 +1975,7 @@ class AdminImportControllerCore extends AdminController
 		 $handle = fopen(_PS_ADMIN_DIR_.'/import/'.strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))), 'r');
 
 		if (!$handle)
-			$this->_errors[] = Tools::displayError('Cannot read the CSV file');
+			$this->errors[] = Tools::displayError('Cannot read the CSV file');
 
 		self::rewindBomAware($handle);
 
@@ -2054,7 +2054,7 @@ class AdminImportControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
@@ -2066,7 +2066,7 @@ class AdminImportControllerCore extends AdminController
 				switch ($_FILES['file']['error'])
 				{
 					case UPLOAD_ERR_INI_SIZE:
-						$this->_errors[] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini.
+						$this->errors[] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini.
 							If your server configuration allows it, you may add a directive in your .htaccess, for example:')
 						.'<br/><a href="?tab=AdminGenerator&amp;token='
 						.Tools::getAdminTokenLite('AdminGenerator').'" >
@@ -2074,7 +2074,7 @@ class AdminImportControllerCore extends AdminController
 						Tools::displayError('(clic to open Generator tab)').'</a>';
 						break;
 					case UPLOAD_ERR_FORM_SIZE:
-						$this->_errors[] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
+						$this->errors[] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
 							If your server configuration allows it, you may add a directive in your .htaccess, for example:')
 						.'<br/><a href="?tab=AdminGenerator&amp;token='
 						.Tools::getAdminTokenLite('AdminGenerator').'" >
@@ -2083,18 +2083,18 @@ class AdminImportControllerCore extends AdminController
 						break;
 					break;
 					case UPLOAD_ERR_PARTIAL:
-						$this->_errors[] = Tools::displayError('The uploaded file was only partially uploaded.');
+						$this->errors[] = Tools::displayError('The uploaded file was only partially uploaded.');
 						break;
 					break;
 					case UPLOAD_ERR_NO_FILE:
-						$this->_errors[] = Tools::displayError('No file was uploaded');
+						$this->errors[] = Tools::displayError('No file was uploaded');
 						break;
 					break;
 				}
 			}
 			else if (!file_exists($_FILES['file']['tmp_name']) ||
 				!@move_uploaded_file($_FILES['file']['tmp_name'], _PS_ADMIN_DIR_.'/import/'.$_FILES['file']['name'].'.'.date('Ymdhis')))
-				$this->_errors[] = $this->l('an error occurred while uploading and copying file');
+				$this->errors[] = $this->l('an error occurred while uploading and copying file');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=18');
 		}
@@ -2137,7 +2137,7 @@ class AdminImportControllerCore extends AdminController
 						$this->supplyOrdersDetailsImport();
 				break;
 				default:
-					$this->_errors[] = $this->l('no entity selected');
+					$this->errors[] = $this->l('no entity selected');
 			}
 		}
 

@@ -183,19 +183,19 @@ class AdminReturnControllerCore extends AdminController
 							if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int)(Tools::getValue('id_customization', 0))))
 								Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
 							else
-								$this->_errors[] = Tools::displayError('An error occurred while deleting an order return detail.');
+								$this->errors[] = Tools::displayError('An error occurred while deleting an order return detail.');
 						}
 						else
-							$this->_errors[] = Tools::displayError('You need at least one product.');
+							$this->errors[] = Tools::displayError('You need at least one product.');
 					}
 					else
-						$this->_errors[] = Tools::displayError('The order return is invalid.');
+						$this->errors[] = Tools::displayError('The order return is invalid.');
 				}
 				else
-					$this->_errors[] = Tools::displayError('The order return detail is invalid.');
+					$this->errors[] = Tools::displayError('The order return detail is invalid.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		elseif (Tools::isSubmit('submitAddorder_return'))
 		{
@@ -222,10 +222,10 @@ class AdminReturnControllerCore extends AdminController
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('No order return ID.');
+					$this->errors[] = Tools::displayError('No order return ID.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		parent::postProcess();
 	}

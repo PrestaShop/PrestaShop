@@ -116,7 +116,7 @@ class AdminRangeWeightControllerCore extends AdminController
 	public function postProcess()
 	{
 		if ($this->action == 'save' && Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
-			$this->_errors[] = Tools::displayError('Invalid range');
+			$this->errors[] = Tools::displayError('Invalid range');
 		else
 			parent::postProcess();
 	}

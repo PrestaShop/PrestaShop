@@ -182,9 +182,9 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$order_carrier = new OrderCarrier(Tools::getValue('id_order_carrier'));
 				if (!Validate::isLoadedObject($order_carrier))
-					$this->_errors[] = Tools::displayError('Order carrier ID is invalid');
+					$this->errors[] = Tools::displayError('Order carrier ID is invalid');
 				elseif (!Validate::isUrl(Tools::getValue('tracking_number')))
-					$this->_errors[] = Tools::displayError('Tracking number is incorrect');
+					$this->errors[] = Tools::displayError('Tracking number is incorrect');
 				else
 				{
 					// update shipping number
@@ -215,11 +215,11 @@ class AdminOrdersControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					}
 					else
-						$this->_errors[] = Tools::displayError('Order carrier can\'t be updated');
+						$this->errors[] = Tools::displayError('Order carrier can\'t be updated');
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		/* Change order state, add a new entry in order history and send an e-mail to the customer if needed */
@@ -230,7 +230,7 @@ class AdminOrdersControllerCore extends AdminController
 				$order_state = new OrderState(Tools::getValue('id_order_state'));
 
 				if (!Validate::isLoadedObject($order_state))
-					$this->_errors[] = Tools::displayError('Invalid new order status');
+					$this->errors[] = Tools::displayError('Invalid new order status');
 				else
 				{
 					// Create new OrderHistory
@@ -257,11 +257,11 @@ class AdminOrdersControllerCore extends AdminController
 					// Save all changes
 					if ($history->addWithemail(true, $templateVars))
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder'.'&token='.$this->token);
-					$this->_errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
+					$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		/* Add a new message for the current order and send an e-mail to the customer if needed */
@@ -271,9 +271,9 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$customer = new Customer(Tools::getValue('id_customer'));
 				if (!Validate::isLoadedObject($customer))
-					$this->_errors[] = Tools::displayError('Customer is invalid');
+					$this->errors[] = Tools::displayError('Customer is invalid');
 				elseif (!Tools::getValue('message'))
-					$this->_errors[] = Tools::displayError('Message cannot be blank');
+					$this->errors[] = Tools::displayError('Message cannot be blank');
 				else
 				{
 					/* Get message rules and and check fields validity */
@@ -282,16 +282,16 @@ class AdminOrdersControllerCore extends AdminController
 					foreach ($rules['required'] AS $field)
 						if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
 							if (!Tools::getValue('id_'.$this->table) OR $field != 'passwd')
-								$this->_errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is required.');
+								$this->errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is required.');
 					foreach ($rules['size'] AS $field => $maxLength)
 						if (Tools::getValue($field) AND Tools::strlen(Tools::getValue($field)) > $maxLength)
-							$this->_errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is too long.').' ('.$maxLength.' '.Tools::displayError('chars max').')';
+							$this->errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is too long.').' ('.$maxLength.' '.Tools::displayError('chars max').')';
 					foreach ($rules['validate'] AS $field => $function)
 						if (Tools::getValue($field))
 							if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8')))
-								$this->_errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is invalid.');
+								$this->errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is invalid.');
 
-					if (!sizeof($this->_errors))
+					if (!sizeof($this->errors))
 					{
 						//check if a thread already exist
 						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, $order->id);
@@ -316,7 +316,7 @@ class AdminOrdersControllerCore extends AdminController
 						$customer_message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
 						$customer_message->private = Tools::getValue('visibility');
 						if (!$customer_message->add())
-							$this->_errors[] = Tools::displayError('An error occurred while sending message.');
+							$this->errors[] = Tools::displayError('An error occurred while sending message.');
 						elseif ($customer_message->private)
 							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						else
@@ -336,12 +336,12 @@ class AdminOrdersControllerCore extends AdminController
 								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true))
 								Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						}
-						$this->_errors[] = Tools::displayError('An error occurred while sending e-mail to customer.');
+						$this->errors[] = Tools::displayError('An error occurred while sending e-mail to customer.');
 					}
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 
 		/* Partial refund from order */
@@ -365,17 +365,17 @@ class AdminOrdersControllerCore extends AdminController
 				if ($amount > 0)
 				{
 					if (!OrderSlip::createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list))
-						$this->_errors[] = Tools::displayError('Cannot generate partial credit slip');
+						$this->errors[] = Tools::displayError('Cannot generate partial credit slip');
 				}
 				else
-					$this->_errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
+					$this->errors[] = Tools::displayError('You have to write an amount if you want to do a partial credit slip');
 
 				// Redirect if no errors
-				if (!sizeof($this->_errors))
+				if (!sizeof($this->errors))
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 
 		/* Cancel product from order */
@@ -409,7 +409,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$qtyCancelProduct = abs($qtyList[$key]);
 							if (!$qtyCancelProduct)
-								$this->_errors[] = Tools::displayError('No quantity selected for product.');
+								$this->errors[] = Tools::displayError('No quantity selected for product.');
 
 							// check actionable quantity
 							$order_detail = new OrderDetail($id_order_detail);
@@ -418,7 +418,7 @@ class AdminOrdersControllerCore extends AdminController
 								$customization_quantity = (int)$customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
 
 							if (($order_detail->product_quantity - $customization_quantity - $order_detail->product_quantity_refunded - $order_detail->product_quantity_return) < $qtyCancelProduct)
-								$this->_errors[] = Tools::displayError('Invalid quantity selected for product.');
+								$this->errors[] = Tools::displayError('Invalid quantity selected for product.');
 
 						}
 					}
@@ -432,14 +432,14 @@ class AdminOrdersControllerCore extends AdminController
 							$customization_quantity = $customization_quantities[$id_customization];
 
 							if (!$qtyCancelProduct)
-								$this->_errors[] = Tools::displayError('No quantity selected for product.');
+								$this->errors[] = Tools::displayError('No quantity selected for product.');
 
 							if ($qtyCancelProduct > ($customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned'])))
-								$this->_errors[] = Tools::displayError('Invalid quantity selected for product.');
+								$this->errors[] = Tools::displayError('Invalid quantity selected for product.');
 						}
 					}
 
-					if (!sizeof($this->_errors) AND $productList)
+					if (!sizeof($this->errors) AND $productList)
 						foreach ($productList AS $key => $id_order_detail)
 						{
 							$qty_cancel_product = abs($qtyList[$key]);
@@ -492,25 +492,25 @@ class AdminOrdersControllerCore extends AdminController
 									);
 								}
 								else
-									$this->_errors[] = Tools::displayError('Cannot re-stock product');
+									$this->errors[] = Tools::displayError('Cannot re-stock product');
 							}
 
 							// Delete product
 							$orderDetail = new OrderDetail((int)($id_order_detail));
 							if (!$order->deleteProduct($order, $orderDetail, $qtyCancelProduct))
-								$this->_errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
+								$this->errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
 							Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => $id_order_detail));
 						}
-					if (!sizeof($this->_errors) AND $customizationList)
+					if (!sizeof($this->errors) AND $customizationList)
 						foreach ($customizationList AS $id_customization => $id_order_detail)
 						{
 							$orderDetail = new OrderDetail((int)($id_order_detail));
 							$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
 							if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $orderDetail))
-								$this->_errors[] = Tools::displayError('An error occurred during deletion of product customization.').' '.$id_customization;
+								$this->errors[] = Tools::displayError('An error occurred during deletion of product customization.').' '.$id_customization;
 						}
 					// E-mail params
-					if ((isset($_POST['generateCreditSlip']) OR isset($_POST['generateDiscount'])) AND !sizeof($this->_errors))
+					if ((isset($_POST['generateCreditSlip']) OR isset($_POST['generateDiscount'])) AND !sizeof($this->errors))
 					{
 						$customer = new Customer((int)($order->id_customer));
 						$params['{lastname}'] = $customer->lastname;
@@ -519,10 +519,10 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					// Generate credit slip
-					if (isset($_POST['generateCreditSlip']) AND !sizeof($this->_errors))
+					if (isset($_POST['generateCreditSlip']) AND !sizeof($this->errors))
 					{
 						if (!OrderSlip::createOrderSlip($order, $full_product_list, $full_quantity_list, isset($_POST['shippingBack'])))
-							$this->_errors[] = Tools::displayError('Cannot generate credit slip');
+							$this->errors[] = Tools::displayError('Cannot generate credit slip');
 						else
 						{
 							Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list));
@@ -533,11 +533,11 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					// Generate voucher
-					if (isset($_POST['generateDiscount']) AND !sizeof($this->_errors))
+					if (isset($_POST['generateDiscount']) AND !sizeof($this->errors))
 					{
 						// @todo generate a voucher using cartrules
 						if (true || !$voucher = Discount::createOrderDiscount($order, $full_product_list, $full_quantity_list, $this->l('Credit Slip concerning the order #'), isset($_POST['shippingBack'])))
-							$this->_errors[] = Tools::displayError('Cannot generate voucher');
+							$this->errors[] = Tools::displayError('Cannot generate voucher');
 						else
 						{
 							$currency = $this->context->currency;
@@ -550,14 +550,14 @@ class AdminOrdersControllerCore extends AdminController
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('No product or quantity selected.');
+					$this->errors[] = Tools::displayError('No product or quantity selected.');
 
 				// Redirect if no errors
-				if (!sizeof($this->_errors))
+				if (!sizeof($this->errors))
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=24&token='.$this->token);
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		elseif (Tools::isSubmit('messageReaded'))
 			Message::markAsReaded($_GET['messageReaded'], $this->context->employee->id);
@@ -572,29 +572,29 @@ class AdminOrdersControllerCore extends AdminController
 				else
 					$order_invoice = null;
 				if (!Validate::isLoadedObject($order))
-					$this->_errors[] = Tools::displayError('Order can\'t be found');
+					$this->errors[] = Tools::displayError('Order can\'t be found');
 				elseif (!Validate::isPrice($amount))
-					$this->_errors[] = Tools::displayError('Amount is invalid');
+					$this->errors[] = Tools::displayError('Amount is invalid');
 				elseif (!Validate::isString(Tools::getValue('payment_method')))
-					$this->_errors[] = Tools::displayError('Payment method is invalid');
+					$this->errors[] = Tools::displayError('Payment method is invalid');
 				elseif (!Validate::isString(Tools::getValue('payment_transaction_id')))
-					$this->_errors[] = Tools::displayError('Transaction ID is invalid');
+					$this->errors[] = Tools::displayError('Transaction ID is invalid');
 				elseif (!Validate::isLoadedObject($currency))
-					$this->_errors[] = Tools::displayError('Currency is invalid');
+					$this->errors[] = Tools::displayError('Currency is invalid');
 				elseif ($order->hasInvoice() && !Validate::isLoadedObject($order_invoice))
-					$this->_errors[] = Tools::displayError('Invoice is invalid');
+					$this->errors[] = Tools::displayError('Invoice is invalid');
 				elseif (!Validate::isDate(Tools::getValue('payment_date')))
-					$this->_errors[] = Tools::displayError('Date is invalid');
+					$this->errors[] = Tools::displayError('Date is invalid');
 				else
 				{
 					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice))
-						$this->_errors[] = Tools::displayError('An error occured on adding of order payment');
+						$this->errors[] = Tools::displayError('An error occured on adding of order payment');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		elseif (Tools::isSubmit('submitEditNote'))
 		{
@@ -609,13 +609,13 @@ class AdminOrdersControllerCore extends AdminController
 					if ($order_invoice->save())
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order_invoice->id_order.'&vieworder&conf=4&token='.$this->token);
 					else
-						$this->_errors[] = Tools::displayError('Unable to save invoice note.');
+						$this->errors[] = Tools::displayError('Unable to save invoice note.');
 				}
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('Unable to load invoice for edit note.');
+				$this->errors[] = Tools::displayError('Unable to load invoice for edit note.');
 		}
 		elseif (Tools::isSubmit('submitAddOrder') == 1 && ($id_cart = Tools::getValue('id_cart')) && ($module_name = pSQL(Tools::getValue('payment_module_name'))) && ($id_order_state = Tools::getValue('id_order_state')))
 		{
@@ -628,7 +628,7 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order))
 		{
@@ -646,10 +646,10 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
-					$this->_errors[] = Tools::displayErrror('This address can\'t be loaded');
+					$this->errors[] = Tools::displayErrror('This address can\'t be loaded');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		elseif (Tools::isSubmit('submitChangeCurrency') && isset($order))
 		{
@@ -718,15 +718,15 @@ class AdminOrdersControllerCore extends AdminController
 					$order->update();
 				}
 				else
-					$this->_errors[] = Tools::displayError('You can\'t change the currency');
+					$this->errors[] = Tools::displayError('You can\'t change the currency');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
 			if ($order->hasInvoice())
-				$this->_errors[] = Tools::displayError('This order has already invoice');
+				$this->errors[] = Tools::displayError('This order has already invoice');
 			else
 			{
 				$order->setInvoice();
@@ -772,17 +772,17 @@ class AdminOrdersControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
-					$this->_errors[] = Tools::displayError('Can\'t edit this Order Cart Rule');
+					$this->errors[] = Tools::displayError('Can\'t edit this Order Cart Rule');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		elseif (Tools::getValue('submitNewVoucher') && isset($order))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (!Tools::getValue('discount_name'))
-					$this->_errors[] = Tools::displayError('You must specify a name in order to create a new discount');
+					$this->errors[] = Tools::displayError('You must specify a name in order to create a new discount');
 				else
 				{
 					if ($order->hasInvoice())
@@ -830,14 +830,14 @@ class AdminOrdersControllerCore extends AdminController
 								}
 							}
 							else
-								$this->_errors[] = Tools::displayError('Discount value is invalid');
+								$this->errors[] = Tools::displayError('Discount value is invalid');
 							break;
 						// Amount type
 						case 2:
 							if (isset($order_invoice))
 							{
 								if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-									$this->_errors[] = Tools::displayError('Discount value is superior than the order invoice total');
+									$this->errors[] = Tools::displayError('Discount value is superior than the order invoice total');
 								else
 								{
 									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -853,7 +853,7 @@ class AdminOrdersControllerCore extends AdminController
 								foreach($order_invoices_collection as $order_invoice)
 								{
 									if (Tools::getValue('discount_value') > $order_invoice->total_paid_tax_incl)
-										$this->_errors[] = Tools::displayError('Discount value is superior than the order invoice total (Invoice: ').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id).')';
+										$this->errors[] = Tools::displayError('Discount value is superior than the order invoice total (Invoice: ').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id).')';
 									else
 									{
 										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -867,7 +867,7 @@ class AdminOrdersControllerCore extends AdminController
 							else
 							{
 								if (Tools::getValue('discount_value') > $order->total_paid_tax_incl)
-									$this->_errors[] = Tools::displayError('Discount value is superior than the order total');
+									$this->errors[] = Tools::displayError('Discount value is superior than the order total');
 								else
 								{
 									$cart_rules[0]['value_tax_incl'] = Tools::ps_round(Tools::getValue('discount_value'), 2);
@@ -904,7 +904,7 @@ class AdminOrdersControllerCore extends AdminController
 							}
 							break;
 						default:
-							$this->_errors[] = Tools::displayError('Discount type is invalid');
+							$this->errors[] = Tools::displayError('Discount type is invalid');
 					}
 
 					$res = true;
@@ -933,11 +933,11 @@ class AdminOrdersControllerCore extends AdminController
 					if ($res)
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					else
-						$this->_errors[] = Tools::displayError('An error occured on OrderCartRule creation');
+						$this->errors[] = Tools::displayError('An error occured on OrderCartRule creation');
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		parent::postProcess();

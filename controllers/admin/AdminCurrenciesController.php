@@ -257,14 +257,14 @@ class AdminCurrenciesControllerCore extends AdminController
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-				$this->_errors[] = $this->l('You can\'t delete the default currency');
+				$this->errors[] = $this->l('You can\'t delete the default currency');
 			else if ($object->delete())
 				Tools::redirectAdmin(self::$currentIndex.'&conf=1'.'&token='.$this->token);
 			else
-				$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 		}
 		else
-			$this->_errors[] = Tools::displayError('An error occurred while deleting object.').'
+			$this->errors[] = Tools::displayError('An error occurred while deleting object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
@@ -277,15 +277,15 @@ class AdminCurrenciesControllerCore extends AdminController
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-				$this->_errors[] = $this->l('You can\'t disable the default currency');
+				$this->errors[] = $this->l('You can\'t disable the default currency');
 			else if ($object->toggleStatus())
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category =
 					(int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$this->token);
 			else
-				$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+				$this->errors[] = Tools::displayError('An error occurred while updating status.');
 		}
 		else
-			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').'
+			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 	}
 
@@ -295,7 +295,7 @@ class AdminCurrenciesControllerCore extends AdminController
 	 */
 	public function processExchangeRates($token)
 	{
-		if (!$this->_errors[] = Currency::refreshCurrencies())
+		if (!$this->errors[] = Currency::refreshCurrencies())
 			Tools::redirectAdmin(self::$currentIndex . '&conf=6' . '&token=' . $this->token);
 	}
 
@@ -309,7 +309,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'exchangeRates';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		parent::initProcess();
 	}

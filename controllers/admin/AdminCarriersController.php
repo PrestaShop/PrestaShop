@@ -451,7 +451,7 @@ class AdminCarriersControllerCore extends AdminController
 		{
 			/* Checking fields validity */
 			$this->validateRules();
-			if (!count($this->_errors))
+			if (!count($this->errors))
 			{
 				$id = (int)Tools::getValue('id_'.$this->table);
 
@@ -481,7 +481,7 @@ class AdminCarriersControllerCore extends AdminController
 							}
 							$this->changeGroups($object_new->id);
 							if (!$result)
-								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
+								$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
 							else if ($this->postImage($object_new->id))
 							{
 								$this->changeZones($object_new->id);
@@ -489,11 +489,11 @@ class AdminCarriersControllerCore extends AdminController
 							}
 						}
 						else
-							$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.
+							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.
 												$this->table.'</b> '.Tools::displayError('(cannot load object)');
 					}
 					else
-						$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+						$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 				}
 
 				/* Object creation */
@@ -505,7 +505,7 @@ class AdminCarriersControllerCore extends AdminController
 						$this->copyFromPost($object, $this->table);
 						$object->position = Carrier::getHigherPosition() + 1;
 						if (!$object->add())
-							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+							$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 						else if (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
 						{
 							$this->changeZones($object->id);
@@ -515,7 +515,7 @@ class AdminCarriersControllerCore extends AdminController
 						}
 					}
 					else
-						$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+						$this->errors[] = Tools::displayError('You do not have permission to add here.');
 				}
 			}
 		}
@@ -524,18 +524,18 @@ class AdminCarriersControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-					$this->_errors[] = Tools::displayError('You can\'t disable the default carrier, please change your default carrier first.');
+					$this->errors[] = Tools::displayError('You can\'t disable the default carrier, please change your default carrier first.');
 				else
 					parent::postProcess();
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else
 		{
 			if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
 				|| (isset($_GET['delete'.$this->table]) && Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
-					$this->_errors[] = $this->l('Please set another carrier as default before deleting');
+					$this->errors[] = $this->l('Please set another carrier as default before deleting');
 			else
 			{
 				// if deletion : removes the carrier from the warehouse/carrier association

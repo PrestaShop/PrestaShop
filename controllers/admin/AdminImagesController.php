@@ -249,7 +249,7 @@ class AdminImagesControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&conf=9'.'&token='.$this->token);
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}elseif (Tools::getValue('submitMoveImages'.$this->table))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -258,26 +258,26 @@ class AdminImagesControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
 		 	}
 		else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}elseif (Tools::getValue('submitImagePreferences'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if ((int)Tools::getValue('PS_JPEG_QUALITY') < 0
 					|| (int)Tools::getValue('PS_JPEG_QUALITY') > 100)
-					$this->_errors[] = Tools::displayError('Incorrect value for JPEG image quality.');
+					$this->errors[] = Tools::displayError('Incorrect value for JPEG image quality.');
 				elseif ((int)Tools::getValue('PS_PNG_QUALITY') < 0
 					|| (int)Tools::getValue('PS_PNG_QUALITY') > 9)
-					$this->_errors[] = Tools::displayError('Incorrect value for PNG image quality.');
+					$this->errors[] = Tools::displayError('Incorrect value for PNG image quality.');
 				elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
 					|| !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
 					|| !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
-					$this->_errors[] = Tools::displayError('Unknown error.');
+					$this->errors[] = Tools::displayError('Unknown error.');
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		else
@@ -287,7 +287,7 @@ class AdminImagesControllerCore extends AdminController
 	protected function _childValidation()
 	{
 		if (!Tools::getValue('id_image_type') AND Validate::isImageTypeName($typeName = Tools::getValue('name')) AND ImageType::typeAlreadyExists($typeName))
-			$this->_errors[] = Tools::displayError('This name already exists.');
+			$this->errors[] = Tools::displayError('This name already exists.');
 	}
 
 	/**
@@ -479,20 +479,20 @@ class AdminImagesControllerCore extends AdminController
 			if ($deleteOldImages)
 				$this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
 			if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true)
-				$this->_errors[] = Tools::displayError('Cannot write ').$proc['type'].Tools::displayError(' images. Please check the folder\'s writing permissions.');
+				$this->errors[] = Tools::displayError('Cannot write ').$proc['type'].Tools::displayError(' images. Please check the folder\'s writing permissions.');
 			elseif ($return == 'timeout')
-				$this->_errors[] = Tools::displayError('Only part of the images have been regenerated, server timed out before finishing.');
+				$this->errors[] = Tools::displayError('Only part of the images have been regenerated, server timed out before finishing.');
 			else
 			{
 				if ($proc['type'] == 'products')
 					if ($this->_regenerateWatermark($proc['dir']) == 'timeout')
-						$this->_errors[] = Tools::displayError('Server timed out, the watermark may not have been applied on all your images.');
-				if (!count($this->_errors))
+						$this->errors[] = Tools::displayError('Server timed out, the watermark may not have been applied on all your images.');
+				if (!count($this->errors))
 					if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
-						$this->_errors[] = Tools::displayError('Cannot write no-picture image to').' ('.$proc['type'].') '.Tools::displayError('images folder. Please check the folder\'s writing permissions.');
+						$this->errors[] = Tools::displayError('Cannot write no-picture image to').' ('.$proc['type'].') '.Tools::displayError('images folder. Please check the folder\'s writing permissions.');
 			}
 		}
-		return (sizeof($this->_errors) > 0 ? false : true);
+		return (sizeof($this->errors) > 0 ? false : true);
 	}
 
 	/**
@@ -512,18 +512,18 @@ class AdminImagesControllerCore extends AdminController
 	private function _moveImagesToNewFileSystem()
 	{
 		if (!Image::testFileSystem())
-			$this->_errors[] =  Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
+			$this->errors[] =  Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
 		else
 		{
 			ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
 			$this->max_execution_time = (int)ini_get('max_execution_time');
 			$result = Image::moveToNewFileSystem($this->max_execution_time);
 			if ($result === 'timeout')
-				$this->_errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
+				$this->errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
 			else if ($result === false)
-				$this->_errors[] =  Tools::displayError('Error: some or all images could not be moved.');
+				$this->errors[] =  Tools::displayError('Error: some or all images could not be moved.');
 		}
-		return (sizeof($this->_errors) > 0 ? false : true);
+		return (sizeof($this->errors) > 0 ? false : true);
 	}
 
 	public function initContent()

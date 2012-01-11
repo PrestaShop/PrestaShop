@@ -194,7 +194,7 @@ class AdminMetaControllerCore extends AdminController
 
 			if (!$defaultLangIsValidated AND !$englishLangIsValidated)
 			{
-				$this->_errors[] = Tools::displayError('Url rewrite field must be filled at least in default or english language.');
+				$this->errors[] = Tools::displayError('Url rewrite field must be filled at least in default or english language.');
 				return false;
 			}
 
@@ -241,7 +241,7 @@ class AdminMetaControllerCore extends AdminController
 		if (!Dispatcher::getInstance()->validateRoute($routeID, $rule, $errors))
 		{
 			foreach ($errors as $error)
-				$this->_errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $routeID, htmlspecialchars($rule));
+				$this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $routeID, htmlspecialchars($rule));
 		}
 		else
 			Configuration::updateValue('PS_ROUTE_'.$routeID, $rule);

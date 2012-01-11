@@ -129,7 +129,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
@@ -141,12 +141,12 @@ class AdminAttachmentsControllerCore extends AdminController
 				$_POST['file'] = $a->file;
 				$_POST['mime'] = $a->mime;
 			}
-			if (!count($this->_errors))
+			if (!count($this->errors))
 			{
 				if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name']))
 				{
 					if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-						$this->_errors[] = $this->l('File too large, maximum size allowed:').' '.
+						$this->errors[] = $this->l('File too large, maximum size allowed:').' '.
 							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.
 							$this->l('File size you\'re trying to upload is:').number_format(($_FILES['file']['size'] / 1024), 2, '.', '').$this->l('kb');
 					else
@@ -154,7 +154,7 @@ class AdminAttachmentsControllerCore extends AdminController
 						do $uniqid = sha1(microtime());
 						while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
 						if (!copy($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
-							$this->_errors[] = $this->l('File copy failed');
+							$this->errors[] = $this->l('File copy failed');
 						$_POST['file_name'] = $_FILES['file']['name'];
 						@unlink($_FILES['file']['tmp_name']);
 						$_POST['file'] = $uniqid;
@@ -166,11 +166,11 @@ class AdminAttachmentsControllerCore extends AdminController
 					$max_upload = (int)ini_get('upload_max_filesize');
 					$max_post = (int)ini_get('post_max_size');
 					$upload_mb = min($max_upload, $max_post);
-					$this->_errors[] = $this->l('the File').' <b>'.$_FILES['file']['name'].'</b> '.
+					$this->errors[] = $this->l('the File').' <b>'.$_FILES['file']['name'].'</b> '.
 						$this->l('exceeds the size allowed by the server. This limit is set to').' <b>'.$upload_mb.$this->l('Mb').'</b>';
 				}
 				else if (!empty($_FILES['file']['tmp_name']))
-					$this->_errors[] = $this->l('No file or your file isn\'t uploadable, check your server configuration about the upload maximum size.');
+					$this->errors[] = $this->l('No file or your file isn\'t uploadable, check your server configuration about the upload maximum size.');
 			}
 			$this->validateRules();
 		}

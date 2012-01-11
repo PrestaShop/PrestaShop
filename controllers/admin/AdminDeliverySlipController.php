@@ -104,15 +104,15 @@ class AdminDeliverySlipControllerCore extends AdminController
 		if (Tools::isSubmit('submitAdddelivery'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->_errors[] = Tools::displayError('Invalid from date');
+				$this->errors[] = Tools::displayError('Invalid from date');
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->_errors[] = Tools::displayError('Invalid end date');
-			if (!count($this->_errors))
+				$this->errors[] = Tools::displayError('Invalid end date');
+			if (!count($this->errors))
 			{
 				if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
 					Tools::redirectAdmin('pdf.php?deliveryslips&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
 				else
-					$this->_errors[] = Tools::displayError('No delivery slip found for this period');
+					$this->errors[] = Tools::displayError('No delivery slip found for this period');
 			}
 		}
 		else

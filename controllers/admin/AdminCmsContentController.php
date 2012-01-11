@@ -108,11 +108,11 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && sizeof($this->adminCMSCategories->_errors))
+		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && sizeof($this->adminCMSCategories->errors))
 			|| isset($_GET['updatecms_category'])
 			|| isset($_GET['addcms_category']))
 			$this->display = 'edit_category';
-		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && sizeof($this->adminCMS->_errors))
+		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && sizeof($this->adminCMS->errors))
 			|| isset($_GET['updatecms'])
 			|| isset($_GET['addcms']))
 			$this->display = 'edit_page';

@@ -209,30 +209,30 @@ class AdminInvoicesControllerCore extends AdminController
 		if (Tools::getValue('submitAddinvoice_date'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->_errors[] = $this->l('Invalid from date');
+				$this->errors[] = $this->l('Invalid from date');
 
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->_errors[] = $this->l('Invalid end date');
+				$this->errors[] = $this->l('Invalid end date');
 
-			if (!count($this->_errors))
+			if (!count($this->errors))
 			{
 				if (count(OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
 					Tools::redirectAdmin('pdf.php?invoices&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
 
-				$this->_errors[] = $this->l('No invoice found for this period');
+				$this->errors[] = $this->l('No invoice found for this period');
 			}
 		}
 		else if (Tools::isSubmit('submitAddinvoice_status'))
 		{
 			if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array))
-				$this->_errors[] = $this->l('You must select at least one order status');
+				$this->errors[] = $this->l('You must select at least one order status');
 			else
 			{
 				foreach ($status_array as $id_order_state)
 					if (count(OrderInvoice::getByStatus((int)$id_order_state)))
 						Tools::redirectAdmin('pdf.php?invoices2&id_order_state='.implode('-', $status_array).'&token='.$this->token);
 
-				$this->_errors[] = $this->l('No invoice found for this status');
+				$this->errors[] = $this->l('No invoice found for this status');
 			}
 		}
 		else
@@ -242,7 +242,7 @@ class AdminInvoicesControllerCore extends AdminController
 	public function beforeUpdateOptions()
 	{
 		if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
-			$this->_errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber().')';
+			$this->errors[] = $this->l('Invalid invoice number (must be > ').Order::getLastInvoiceNumber().')';
 	}
 
 	protected function getInvoicesModels()

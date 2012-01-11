@@ -105,21 +105,21 @@ class AdminLocalizationControllerCore extends AdminController
 			$pack = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
 
 			if (!$pack && !($pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.Tools::getValue('iso_localization_pack').'.xml')))
-				$this->_errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
+				$this->errors[] = Tools::displayError('Cannot load localization pack (from prestashop.com and from your local folder "localization")');
 
 			if (!$selection = Tools::getValue('selection'))
-				$this->_errors[] = Tools::displayError('Please select at least one content item to import.');
+				$this->errors[] = Tools::displayError('Please select at least one content item to import.');
 			else
 			{
 				foreach ($selection as $selected)
 					if (!Validate::isLocalizationPackSelection($selected))
 					{
-						$this->_errors[] = Tools::displayError('Invalid selection');
+						$this->errors[] = Tools::displayError('Invalid selection');
 						return;
 					}
 				$localization_pack = new LocalizationPack();
 				if (!$localization_pack->loadLocalisationPack($pack, $selection))
-					$this->_errors = array_merge($this->_errors, $localization_pack->getErrors());
+					$this->errors = array_merge($this->errors, $localization_pack->getErrors());
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);
 			}
