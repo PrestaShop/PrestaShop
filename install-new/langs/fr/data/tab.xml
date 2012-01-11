@@ -24,7 +24,7 @@
   <tab id="Monitoring" name="Suivi"/>
   <tab id="Manufacturers" name="Marques"/>
   <tab id="Suppliers" name="Fournisseurs"/>
-  <tab id="Attributes_and_Groups" name="Attributs et groupes"/>
+  <tab id="Attributes_and_Values" name="Attributs et Valeurs"/>
   <tab id="Features" name="Caract&#xE9;ristiques"/>
   <tab id="Image_Mapping" name="Sc&#xE8;nes"/>
   <tab id="Tags" name="Tags"/>

@@ -19,7 +19,7 @@
     <access id="access_1_8" id_profile="SuperAdmin" id_tab="Preferences" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_9" id_profile="SuperAdmin" id_tab="Tools" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_10" id_profile="SuperAdmin" id_tab="Manufacturers" view="1" add="1" edit="1" delete="1"/>
-    <access id="access_1_11" id_profile="SuperAdmin" id_tab="Attributes_and_Groups" view="1" add="1" edit="1" delete="1"/>
+    <access id="access_1_11" id_profile="SuperAdmin" id_tab="Attributes_and_Values" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_12" id_profile="SuperAdmin" id_tab="Addresses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_13" id_profile="SuperAdmin" id_tab="Statuses" view="1" add="1" edit="1" delete="1"/>
     <access id="access_1_14" id_profile="SuperAdmin" id_tab="Cart_Rules" view="1" add="1" edit="1" delete="1"/>

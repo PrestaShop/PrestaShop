@@ -179,7 +179,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Attributes group'),
+				'title' => $this->l('Attributes'),
 				'image' => '../img/admin/asterisk.gif'
 			),
 			'input' => array(
@@ -204,7 +204,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Group type:'),
+					'label' => $this->l('Attribute type:'),
 					'name' => 'group_type',
 					'required' => true,
 					'options' => array(
@@ -212,7 +212,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Choose the type of the attribute group')
+					'desc' => $this->l('Choose the type of the attribute')
 				)
 			)
 		);
@@ -246,13 +246,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Attribute'),
+				'title' => $this->l('Values'),
 				'image' => '../img/admin/asterisk.gif'
 			),
 			'input' => array(
 				array(
 					'type' => 'select',
-					'label' => $this->l('Group type:'),
+					'label' => $this->l('Attribute type:'),
 					'name' => 'id_attribute_group',
 					'required' => true,
 					'options' => array(
@@ -260,7 +260,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id_attribute_group',
 						'name' => 'name'
 					),
-					'desc' => $this->l('Choose the type of the attribute group')
+					'desc' => $this->l('Choose the type of the attribute')
 				),
 				array(
 					'type' => 'text',
@@ -431,11 +431,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			default: // list
 				$this->toolbar_btn['new'] = array(
 					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
-					'desc' => $this->l('Add new Group')
+					'desc' => $this->l('Add new Attributes')
 				);
 				$this->toolbar_btn['newAttributes'] = array(
 					'href' => self::$currentIndex.'&amp;updateattribute&amp;token='.$this->token,
-					'desc' => $this->l('Add new Attributes'),
+					'desc' => $this->l('Add new Values'),
 					'class' => 'toolbar-new'
 				);
 		}
@@ -453,17 +453,17 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			case 'edit':
 				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => $this->l('Edit new Group'));
+				$tabs[] = array('name' => $this->l('Edit new Attribute'));
 				break;
 
 			case 'add':
 				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => $this->l('Add new Group'));
+				$tabs[] = array('name' => $this->l('Add new Attribute'));
 				break;
 
 			case 'editAttributes':
 				$current_tab = array_pop($tabs);
-				$tabs[] = array('name' => $this->l('Add new Attribute'));
+				$tabs[] = array('name' => $this->l('Add new Value'));
 				break;
 		}
 		// note : this should use a tpl file

@@ -78,7 +78,7 @@
     <tab id="Suppliers" id_parent="Catalog" active="1">
       <class_name>AdminSuppliers</class_name>
     </tab>
-    <tab id="Attributes_and_Groups" id_parent="Catalog" active="1">
+    <tab id="Attributes_and_Values" id_parent="Catalog" active="1">
       <class_name>AdminAttributesGroups</class_name>
     </tab>
     <tab id="Features" id_parent="Catalog" active="1">

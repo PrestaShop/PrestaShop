@@ -24,7 +24,7 @@
   <tab id="Monitoring" name="Rastreo"/>
   <tab id="Manufacturers" name="Fabricantes"/>
   <tab id="Suppliers" name="Proveedores"/>
-  <tab id="Attributes_and_Groups" name="Atributos y grupos"/>
+  <tab id="Attributes_and_Values" name="Atributos y Valores"/>
   <tab id="Features" name="Caracter&#xED;sticas"/>
   <tab id="Image_Mapping" name="Mapeo de la imagen"/>
   <tab id="Tags" name="Etiquetas"/>
