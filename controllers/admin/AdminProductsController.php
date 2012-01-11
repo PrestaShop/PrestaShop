@@ -366,11 +366,8 @@ class AdminProductsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Invalid file name');
 				if (Tools::strlen($attachment->file_name) > 128)
 					$this->errors[] = Tools::displayError('File name too long');
-				if (!count($this->errors))
-				{
+				if (empty($this->errors))
 					$attachment->add();
-					$this->confirmations[] = $this->l('Attachment successfully added');
-				}
 				else
 					$this->errors[] = Tools::displayError('Invalid file');
 			}
@@ -690,8 +687,6 @@ class AdminProductsControllerCore extends AdminController
 					}
 				}
 			}
-			if (!count($this->errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.(int)$product->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&add'.$this->table.'&action=Features&conf=4&token='.($token ? $token : $this->token);
 		}
 		else
 			$this->errors[] = Tools::displayError('Product must be created before adding features.');
@@ -784,8 +779,6 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice = new SpecificPrice((int)($id_specific_price));
 			if (!$specificPrice->delete())
 				$this->errors[] = Tools::displayError('An error occurred while deleting the specific price');
-			else
-				$this->confirmations[] = $this->l('Specific price successfully deleted');
 		}
 	}
 
@@ -986,27 +979,10 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->action)
 		{
 			if (in_array($this->action, array_keys($this->available_tabs)))
-			$this->tab_display = $this->action;
+				$this->tab_display = $this->action;
 			elseif ($this->action == 'new' || $this->action == 'save')
-			$this->tab_display = 'Informations';
+				$this->tab_display = 'Informations';
 		}
-
-		// Set type of display (edit-add-list)
-		if (Tools::getValue('id_product')
-			|| ((Tools::isSubmit('submitAddproduct')
-				|| Tools::isSubmit('submitAddproductAndPreview')
-				|| Tools::isSubmit('submitAddproductAndStay')
-				|| Tools::isSubmit('submitSpecificPricePriorities')
-				|| Tools::isSubmit('submitPriceAddition')
-				|| Tools::isSubmit('submitPricesModification'))
-			&& count($this->errors))
-			|| Tools::isSubmit('updateproduct')
-			|| Tools::isSubmit('addproduct'))
-			$this->display = 'edit';
-		elseif ($this->action == 'new')
-			$this->display = 'add';
-		else
-			$this->display = 'list';
 	}
 
 	/**
@@ -1169,7 +1145,11 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxPreProcess()
 	{
-		$this->action = Tools::getValue('action');
+		if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
+		{
+			$this->display = 'edit';
+			$this->action = Tools::getValue('action');
+		}
 	}
 
 	public function ajaxProcessUpdateProductImageShopAsso()
@@ -1462,12 +1442,10 @@ class AdminProductsControllerCore extends AdminController
 	public function processUpdate($token)
 	{
 		$this->checkProduct();
-
 		if (!empty($this->errors))
 			return false;
 
 		$id = (int)Tools::getValue('id_'.$this->table);
-		$tagError = true;
 		/* Update an existing product */
 		if (isset($id) && !empty($id))
 		{
@@ -1527,10 +1505,10 @@ class AdminProductsControllerCore extends AdminController
 						{
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&addproduct&conf=4&action='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
+								$this->confirmations[] = $this->l('Update successful');
 							else
-							// Default behavior (save and back)
-							$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
+								// Default behavior (save and back)
+								$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&conf=4&token='.($token ? $token : $this->token);
 						}
 					}
 				}
@@ -2211,11 +2189,9 @@ class AdminProductsControllerCore extends AdminController
 							'id_shop' => $id_shop,
 							'num' => $num);
 
-			// Save to the database the account
-			if (count($tab) && Accounting::saveProductAccountingInformations($tab))
-				$this->confirmations[] = $this->l('Account numbers have been updated');
-			else
-				$this->errors[] = $this->l('Account Numbers could not be updated or added in the database');
+				// Save to the database the account
+				if (empty($tab) || !Accounting::saveProductAccountingInformations($tab))
+					$this->errors[] = $this->l('Account Numbers could not be updated or added in the database');
 			}
 		}
 	}
@@ -2280,7 +2256,6 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 
-			$this->confirmations[] = $this->l('Suppliers of the product have been updated');
 			// Manage references and prices
 			foreach ($attributes as $attribute)
 				foreach ($associated_suppliers as $supplier)
@@ -2370,8 +2345,6 @@ class AdminProductsControllerCore extends AdminController
 				$product->id_supplier = $new_default_supplier;
 				$product->update();
 			}
-
-			$this->confirmations[] = $this->l('Supplier Reference(s) of the product have been updated');
 		}
 	}
 
@@ -2451,7 +2424,6 @@ class AdminProductsControllerCore extends AdminController
 					}
 				}
 			}
-			$this->confirmations[] = $this->l('Warehouses and location(s) of the product have been updated');
 		}
 	}
 

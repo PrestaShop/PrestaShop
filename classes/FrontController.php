@@ -69,11 +69,21 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
-	 * checkAccess
+	 * @see Controller::checkAccess()
 	 *
-	 * @return void
+	 * @return boolean
 	 */
 	public function checkAccess()
+	{
+		return true;
+	}
+
+	/**
+	 * @see Controller::viewAccess
+	 *
+	 * @return boolean
+	 */
+	public function viewAccess()
 	{
 		return true;
 	}
