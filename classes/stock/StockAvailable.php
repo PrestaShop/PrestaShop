@@ -611,6 +611,8 @@ class StockAvailableCore extends ObjectModel
 
 			$group_ok = true;
 		}
+		else
+			$params['id_group_shop'] = 0;
 
 		// if no group specific restriction, set simple shop restriction
 		if (!$group_ok)
