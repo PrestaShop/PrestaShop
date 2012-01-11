@@ -60,7 +60,7 @@ class AdminControllerCore extends Controller
 	/** @var integer Tab id */
 	public $id = -1;
 
-	/** @var array noTabLink array of admintab names witch have no content */
+	/** @var array noTabLink array of admintab names which have no content */
 	public $noTabLink = array('AdminCatalog', 'AdminTools', 'AdminStock', 'AdminAccounting');
 
 	public $required_database = false;
@@ -1238,47 +1238,48 @@ class AdminControllerCore extends Controller
 		$current_id = Tab::getCurrentParentId();
 		foreach ($tabs as $index => $tab)
 		{
-			if (Tab::checkTabRights($tab['id_tab']) === true AND (bool)$tab['active'])
+			if ($tab['name'] == 'Stock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 			{
-				if ($tab['name'] == 'Stock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
-				{
-					unset($tabs[$index]);
-					continue;
-				}
-
-				$img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
-				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
-				// retrocompatibility : change png to gif if icon not exists
-				if (!$img_exists_cache)
-					$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-				$img = $img_exists_cache ? $img_cache_url : _PS_IMG_.'t/'.$tab['class_name'].'.png';
-
-				if (trim($tab['module']) != '')
-					$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-
-				// retrocompatibility
-				if (!file_exists(dirname(_PS_ROOT_DIR_).$img))
-					$img = str_replace('png', 'gif', $img);
-				// tab[class_name] does not contains the "Controller" suffix
-				$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
-				$tabs[$index]['img'] = $img;
-				$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
-
-				$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
-				foreach ($sub_tabs as $index2 => $sub_tab)
-				{
-					// class_name is the name of the class controller
-					if (Tab::checkTabRights($sub_tab['id_tab']) === true AND (bool)$sub_tab['active'])
-						$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-					else
-						unset($sub_tabs[$index2]);
-				}
-				$tabs[$index]['sub_tabs'] = $sub_tabs;
-				// @todo need a better way than using noTabLink property, keeping the fact to avoid db modification
-				if (!in_array($tab['class_name'], $this->noTabLink))
-					array_unshift($tabs[$index]['sub_tabs'], $tabs[$index]);
+				unset($tabs[$index]);
+				continue;
 			}
-			else
+
+			$img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
+			$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
+			// retrocompatibility : change png to gif if icon not exists
+			if (!$img_exists_cache)
+				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
+			$img = $img_exists_cache ? $img_cache_url : _PS_IMG_.'t/'.$tab['class_name'].'.png';
+
+			if (trim($tab['module']) != '')
+				$img = _MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+
+			// retrocompatibility
+			if (!file_exists(dirname(_PS_ROOT_DIR_).$img))
+				$img = str_replace('png', 'gif', $img);
+			// tab[class_name] does not contains the "Controller" suffix
+			$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
+			$tabs[$index]['img'] = $img;
+			$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+
+			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
+			// Add parent tab to sub_tabs list
+			array_unshift($sub_tabs, $tab);
+
+			foreach ($sub_tabs as $index2 => $sub_tab)
+			{
+				// class_name is the name of the class controller
+				if (Tab::checkTabRights($sub_tab['id_tab']) === true
+						&& (bool)$sub_tab['active']
+						&& !in_array($sub_tab['class_name'], $this->noTabLink)) // check that tab is not in "do not display" list
+					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
+				else
+					unset($sub_tabs[$index2]);
+			}
+			$tabs[$index]['sub_tabs'] = $sub_tabs;
+
+			// If there are no subtabs, we don't want to display the parent tab in menu
+			if (empty($sub_tabs))
 				unset($tabs[$index]);
 		}
 
