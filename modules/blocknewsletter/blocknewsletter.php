@@ -229,6 +229,8 @@ class Blocknewsletter extends Module
 					if (!$token = $this->getToken($email, $register_status))
 						return $this->error = $this->l('Error during subscription');
 
+					$this->sendVerificationEmail($email, $token);
+
 					return $this->valid = $this->l('A verification email has been sent. Please check your email.');
 				}
 				else
