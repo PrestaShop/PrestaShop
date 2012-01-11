@@ -88,7 +88,7 @@ class Autoload
 		if (substr($classname, -4) != 'Core')
 		{
 			// If requested class does not exist, load associated core class
-			if (isset($this->index[$classname]) && !$this->indexTest[$classname])
+			if (isset($this->index[$classname]) && !$this->index[$classname])
 			{
 				require_once($this->root_dir.$this->index[$classname.'Core']);
 				if (file_exists($this->root_dir.'override/'.$this->index[$classname.'Core']))
