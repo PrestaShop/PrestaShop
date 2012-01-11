@@ -850,6 +850,30 @@ class AdminCustomersControllerCore extends AdminController
 				'.($customer->optin ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
+
+	/**
+	 * @param string $token
+	 * @param integer $id
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function displayDeleteLink($token = null, $id, $name = null)
+	{
+		$tpl = $this->createTemplate('helper/list/list_action_delete.tpl');
+
+		$customer = new Customer($id);
+		$name = $customer->lastname.' '.$customer->firstname;
+		$name = '\n\n'.$this->l('Name:', 'helper').' '.$name;
+
+		$tpl->assign(array(
+			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'confirm' => $this->l('Delete selected item ?').$name,
+			'action' => $this->l('Delete'),
+			'id' => $id,
+		));
+
+		return $tpl->fetch();
+	}
 }
 
 
