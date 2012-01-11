@@ -57,7 +57,7 @@
 								<td class="center">
 									{$currency->getSign('left')}
 									<input type="text" id="fees_all_{$range[$rangeIdentifier]}" onchange="this.value = this.value.replace(/,/g, \'.\');" onkeyup="if ((event.keyCode||event.which) != 9){ spreadFees({$range[$rangeIdentifier]})}" style="width: 45px;" />
-									{$currency->getSign('right')}
+									{$currency->getSign('right')} {l s='(tax excl.)'}
 								</td>
 							{/foreach}
 						</tr>
@@ -81,7 +81,7 @@
 										value="{$price|string_format:"%.2f"}"
 										style="width: 45px;" 
 									/>
-									{$currency->getSign('right')}
+									{$currency->getSign('right')} {l s='(tax excl.)'}
 								</td>
 							{/foreach}
 						</tr>
@@ -100,7 +100,6 @@
 					</td>
 				</tr>
 			</table>
-			<p>{l s='Prices do not include tax.'}</p>
 		{/if}
 		<input type="hidden" name="id_carrier" value="{$id_carrier}" />
 	</fieldset>
