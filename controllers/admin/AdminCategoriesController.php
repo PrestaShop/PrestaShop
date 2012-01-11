@@ -90,10 +90,22 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::init();
 
 		// context->shop is set in the init() function, so we move the _category instanciation after that
-		if ($id_category = Tools::getvalue('id_category'))
+		if (($id_category = Tools::getvalue('id_category')) && $this->action != 'select_delete')
 			$this->_category = new Category($id_category);
 		else
 			$this->_category = new Category($this->context->shop->id_category);
+	}
+	
+	public function initContent()
+	{
+		if ($this->action == 'select_delete')
+			$this->context->smarty->assign(array(
+				'delete_form' => true,
+				'url_delete' => htmlentities($_SERVER['REQUEST_URI']),
+				'boxes' => $this->boxes,
+			));
+
+		parent::initContent();
 	}
 
 	public function setMedia()
@@ -159,6 +171,11 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->tpl_list_vars['categories_name'] = $categories_name;
 		$this->tpl_list_vars['category_root'] = $root;
 
+		if (Tools::isSubmit('submitBulkdelete'.$this->table) OR Tools::isSubmit('delete'.$this->table))
+			$this->tpl_list_vars['delete_category'] = true;
+			$this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+			$this->tpl_list_vars['POST'] = $_POST;
+		
 		return parent::renderList();
 	}
 
@@ -225,7 +242,14 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->action = 'add'.$this->table.'root';
 			$this->display = 'edit';
 		}
-		return parent::initProcess();
+		
+		parent::initProcess();
+		
+		if ($this->action == 'delete' || $this->action == 'bulkdelete')
+			if (Tools::getValue('deleteMode') == 'link' || Tools::getValue('deleteMode') == 'linkanddisable' || Tools::getValue('deleteMode') == 'delete')
+				$this->delete_mode = Tools::getValue('deleteMode');
+			else
+				$this->action = 'select_delete';
 	}
 
 	public function renderForm()
@@ -443,6 +467,21 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if ($this->tabAccess['delete'] === '1')
 		{
+			if ($this->delete_mode == 'link' || $this->delete_mode == 'linkanddisable')
+			{
+				if (Validate::isLoadedObject($object = $this->loadObject()))
+				{
+					$object->remove_products = false;
+					if ($this->delete_mode == 'linkanddisable')
+						$object->disable_products = true;
+				}
+			}
+			else if ($this->delete_mode != 'delete')
+			{
+				$this->_errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+				return;
+			}
+		
 			if (Tools::isSubmit($this->table.'Box'))
 			{
 				if (isset($_POST[$this->table.'Box']))
