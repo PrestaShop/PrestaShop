@@ -207,6 +207,7 @@ class AdminTrackingControllerCore extends AdminController
 		$this->_defaultOrderBy = '';
 		$this->_defaultOrderWay = '';
 		$this->_filter = '';
+		$this->_group = '';
 		$this->list_no_filter = true;
 		$this->list_title = $this->l('Product disabled');
 	}
