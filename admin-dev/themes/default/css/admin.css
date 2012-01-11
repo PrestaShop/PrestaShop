@@ -240,7 +240,7 @@ form#product_form h4 { font-size:18px; font-weight:normal;}
 .productTabs ul li.tab-row a { display:block; font-weight:normal; color:#666;padding: 7px 10px; border-top:1px solid #CCCED7; border-right:1px solid #CCCED7;}
 .productTabs ul li.tab-row a.selected { background-color:#EBEDF4;font-weight:bold;color:#000; border-right:none;}
 .product-tab-content h4.tab { display:none;}
-
+#product_list {margin-bottom:0.5em}
 
 #categories-treeview { }
 #product-tab-content-3-Associations .Association td.col-left  { width:200px;}
