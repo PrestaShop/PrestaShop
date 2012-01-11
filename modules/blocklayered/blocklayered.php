@@ -548,7 +548,8 @@ class BlockLayered extends Module
 				<div class="margin-form">
 				<script type="text/javascript">
 					flag_fields += \'¤url_name¤meta_title\';
-				</script>';
+				</script>
+				<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
@@ -556,20 +557,26 @@ class BlockLayered extends Module
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>
 					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">';
+					<div class="margin-form">
+						<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
 							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+			
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>';
 		return $return;
@@ -620,7 +627,8 @@ class BlockLayered extends Module
 				<div class="margin-form">
 				<script type="text/javascript">
 					flag_fields += \'¤url_name¤meta_title\';
-				</script>';
+				</script>
+				<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
@@ -628,20 +636,25 @@ class BlockLayered extends Module
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>
 					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">';
+					<div class="margin-form">
+						<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
 							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>';
 		return $return;
@@ -733,7 +746,8 @@ class BlockLayered extends Module
 				<div class="margin-form">
 				<script type="text/javascript">
 					flag_fields += \'¤url_name¤meta_title\';
-				</script>';
+				</script>
+				<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
@@ -741,20 +755,25 @@ class BlockLayered extends Module
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>
 					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">';
+					<div class="margin-form">
+						<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
 							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>
 			<label>'.$this->l('Indexable:').' </label>
@@ -793,7 +812,8 @@ class BlockLayered extends Module
 				<div class="margin-form">
 				<script type="text/javascript">
 					flag_fields += \'¤url_name¤meta_title\';
-				</script>';
+				</script>
+				<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 					<div id="url_name_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
@@ -801,20 +821,25 @@ class BlockLayered extends Module
 						<span class="hint" name="help_box">'.$this->l('Invalid characters:').' <>;=#{}_<span class="hint-pointer">&nbsp;</span></span>
 						<p style="clear: both">'.$this->l('Specific format in url block layered generation').'</p>
 					</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'url_name', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>
 					<label>'.$this->l('Meta title:').' </label>
-					<div class="margin-form">';
+					<div class="margin-form">
+						<div class="translatable">';
 		foreach ($languages as $language)
 			$return .= '
 						<div id="meta_title_'.$language['id_lang'].'" style="display: '.($language['id_lang'] == $default_form_language ? 'block' : 'none').'; float: left;">
 							<input size="33" type="text" name="meta_title_'.$language['id_lang'].'" value="'.Tools::safeOutput(@$langValue[$language['id_lang']]['meta_title'], true).'" />
 							<p style="clear: both">'.$this->l('Specific format for meta title').'</p>
 						</div>';
-		$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
+		if (version_compare(_PS_VERSION_,'1.5','<'))
+			$return .= $this->displayFlags($languages, $default_form_language, 'flag_fields', 'meta_title', true, true);
 		$return .= '
+						</div>
 						<div class="clear"></div>
 					</div>
 			<label>'.$this->l('Indexable:').' </label>
