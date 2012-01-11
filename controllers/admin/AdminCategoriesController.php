@@ -242,6 +242,8 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->action = 'add'.$this->table.'root';
 			$this->display = 'edit';
 		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		
 		parent::initProcess();
 		
