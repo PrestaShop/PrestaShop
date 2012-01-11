@@ -2285,13 +2285,9 @@ class AdminProductsControllerCore extends AdminController
 			foreach ($attributes as $attribute)
 				foreach ($associated_suppliers as $supplier)
 				{
-					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
-						||
-						(
-							Tools::isSubmit('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
-							&&
-							Tools::isSubmit('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)
-						))
+					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier) ||
+						(Tools::isSubmit('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier) &&
+						 Tools::isSubmit('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)))
 					{
 						$reference = pSQL(
 							Tools::getValue(
@@ -2321,6 +2317,7 @@ class AdminProductsControllerCore extends AdminController
 
 						// Save product-supplier data
 						$existing_id = (int)ProductSupplier::getIdByProductAndSupplier($product->id, $attribute['id_product_attribute'], $supplier->id_supplier);
+
 						if ($existing_id <= 0)
 						{
 							$product->addSupplierReference($reference, (int)$attribute['id_product_attribute'], (int)$id_currency);
@@ -2339,11 +2336,19 @@ class AdminProductsControllerCore extends AdminController
 								}
 								else
 								{
-									$product->wholesale_price = Tools::convertPrice($price, $id_currency); //converted in the default currency
-									$product->supplier_reference = $reference;
+									$product->wholesale_price = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
+									$product->supplier_reference = pSQL($reference);
 									$update_product = true;
 								}
 							}
+						}
+						else
+						{
+							$product_supplier = new ProductSupplier($existing_id);
+							$product_supplier->product_supplier_price_te = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
+							$product_supplier->product_supplier_reference = pSQL($reference);
+							$product_supplier->update();
+
 						}
 					}
 					else if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier))
