@@ -350,7 +350,7 @@ class AdminFeaturesControllerCore extends AdminController
 		if (Tools::isSubmit('deletefeature_value') || Tools::isSubmit('submitAddfeature_value'))
 		{
 			Hook::exec('displayFeatureValuePostProcess',
-				array('errors' => &$this->errors)); // send _errors as reference to allow displayFeatureValuePostProcess to stop saving process
+				array('errors' => &$this->errors)); // send errors as reference to allow displayFeatureValuePostProcess to stop saving process
 
 			if (Tools::isSubmit('deletefeature_value'))
 			{
@@ -407,7 +407,7 @@ class AdminFeaturesControllerCore extends AdminController
 		else
 		{
 			Hook::exec('displayFeaturePostProcess',
-				array('errors' => &$this->errors)); // send _errors as reference to allow displayFeaturePostProcess to stop saving process
+				array('errors' => &$this->errors)); // send errors as reference to allow displayFeaturePostProcess to stop saving process
 
 			if (Tools::getValue('submitDel'.$this->table))
 			{
