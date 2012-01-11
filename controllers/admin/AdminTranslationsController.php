@@ -987,7 +987,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 				if (preg_match("#controllers#", $tmp))
 				{
-					$parentClass = explode('\\', $tmp);
+					$parentClass = explode(DIRECTORY_SEPARATOR, $tmp);
 					$key = array_search('controllers', $parentClass);
 					$prefix_key = 'Admin'.ucfirst($parentClass[$key + 1]);
 				}
