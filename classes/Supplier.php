@@ -350,7 +350,8 @@ class SupplierCore extends ObjectModel
 		$query->where('id_product_attribute = '.(int)$id_product_attribute);
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-		return $res[0];
+		if (count($res))
+			return $res[0];
 	}
 }
 
