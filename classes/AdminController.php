@@ -960,8 +960,6 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-
-		// todo : return value ?
 	}
 
 
@@ -1270,7 +1268,7 @@ class AdminControllerCore extends Controller
 				foreach ($sub_tabs as $index2 => $sub_tab)
 				{
 					// class_name is the name of the class controller
-					if (Tab::checkTabRights($sub_tab) === true AND (bool)$sub_tab['active'])
+					if (Tab::checkTabRights($sub_tab['id_tab']) === true AND (bool)$sub_tab['active'])
 						$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					else
 						unset($sub_tabs[$index2]);
@@ -2039,7 +2037,7 @@ class AdminControllerCore extends Controller
 		$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`');
 	}
 
-	public function getlanguages()
+	public function getLanguages()
 	{
 		$cookie = $this->context->cookie;
 		$this->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
