@@ -28,8 +28,6 @@
 class AdminControllerCore extends Controller
 {
 	public $path;
-
-
 	public static $currentIndex;
 	public $content;
 	public $warnings = array();
@@ -1860,9 +1858,8 @@ class AdminControllerCore extends Controller
 		}
 		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
-			if ($this->tabAccess['edit'] === '1')
-				$this->display = 'edit';
-			else
+			$this->display = 'edit';
+			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (isset($_GET['view'.$this->table]))

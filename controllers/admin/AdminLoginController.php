@@ -97,6 +97,16 @@ class AdminLoginControllerCore extends AdminController
 	{
 		return true;
 	}
+
+	/**
+	 * All BO users can access the login page
+	 *
+	 * @return bool
+	 */
+	public function viewAccess()
+	{
+		return true;
+	}
 	
 	public function postProcess()
 	{
