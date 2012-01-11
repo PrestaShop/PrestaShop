@@ -110,7 +110,7 @@
 		{foreach $delivery_option_list as $id_address => $option_list}
 			<h3>
 				{if isset($address_collection[$id_address])}
-					{$address_collection[$id_address]->alias}
+					{l s='Choose a shipping option for the address: '}{$address_collection[$id_address]->alias}
 				{else}
 				{/if}
 			</h3>
@@ -125,22 +125,30 @@
 									{foreach $option.carrier_list as $carrier}
 										{if $carrier.logo}
 											<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
-										{else}
+										{else if !$option.unique_carrier}
 											{$carrier.instance->name}
 											{if !$carrier@last} - {/if}
 										{/if}
 									{/foreach}
 								</td>
 								<td>
-								{if $option.is_best_grade}
-									{if $option.is_best_price}
-									<div class="delivery_option_best delivery_option_icon">{l s='The best price and grade'}</div>
+								
+								{if $option.unique_carrier}
+									{foreach $option.carrier_list as $carrier}
+										{$carrier.instance->name}
+									{/foreach}
+								{/if}
+								{if count($option_list) > 1}
+									{if $option.is_best_grade}
+										{if $option.is_best_price}
+										<div class="delivery_option_best delivery_option_icon">{l s='The best price and grade'}</div>
+										{else}
+										<div class="delivery_option_fast delivery_option_icon">{l s='The faster'}</div>
+										{/if}
 									{else}
-									<div class="delivery_option_fast delivery_option_icon">{l s='The faster'}</div>
-									{/if}
-								{else}
-									{if $option.is_best_price}
-									<div class="delivery_option_best_price delivery_option_icon">{l s='The best price'}</div>
+										{if $option.is_best_price}
+										<div class="delivery_option_best_price delivery_option_icon">{l s='The best price'}</div>
+										{/if}
 									{/if}
 								{/if}
 								</td>
@@ -162,15 +170,15 @@
 						<table class="delivery_option_carrier">
 							{foreach $option.carrier_list as $carrier}
 							<tr>
+								{if !$option.unique_carrier}
 								<td class="first_item">
-								{if $carrier.logo}
-									<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+									{if $carrier.logo}
+										<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
+									{/if}
+								</td>
+								<td>{$carrier.instance->name}</td>
 								{/if}
-								</td>
-								<td>
-									{$carrier.instance->name}
-								</td>
-								<td>
+								<td {if $option.unique_carrier}class="first_item" colspan="2"{/if}>
 									{if isset($carrier.instance->delay[$cookie->id_lang])}
 										{$carrier.instance->delay[$cookie->id_lang]}
 									{/if}
