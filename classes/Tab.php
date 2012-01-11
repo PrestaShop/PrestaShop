@@ -425,7 +425,7 @@ class TabCore extends ObjectModel
 		if (isset($tabAccesses[(int)$id_tab]['view']))
 			return ($tabAccesses[(int)$id_tab]['view'] === '1');
 		return false;
-}
+	}
 
 	public static function recursiveTab($id_tab, $tabs)
 	{
