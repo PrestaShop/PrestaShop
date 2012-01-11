@@ -260,7 +260,8 @@ function displayTabProductById(id, selected, index, stack)
 		beforeSend : function(data)
 		{
 			// don't display the loading notification bar
-			clearTimeout(ajax_running_timeout);
+			if (typeof(ajax_running_timeout) !== 'undefined')
+				clearTimeout(ajax_running_timeout);
 		}
 	});
 }
