@@ -35,6 +35,9 @@
 {/if}
 <h4>{l s='Welcome to your account. Here you can manage your addresses and orders.'}</h4>
 <ul class="myaccount_lnk_list">
+	{if $has_customer_an_address}
+	<li><a href="{$link->getPageLink('address', true)}" title="{l s='Add my first address'}"><img src="{$img_dir}icon/addrbook.gif" alt="{l s='Add my first address'}" class="icon" /> {l s='Add my first address'}</a></li>
+	{/if}
 	<li><a href="{$link->getPageLink('history', true)}" title="{l s='Orders'}"><img src="{$img_dir}icon/order.gif" alt="{l s='Orders'}" class="icon" /> {l s='History and details of my orders'}</a></li>
 	{if $returnAllowed}
 		<li><a href="{$link->getPageLink('order-follow', true)}" title="{l s='Merchandise returns'}"><img src="{$img_dir}icon/return.gif" alt="{l s='Merchandise returns'}" class="icon" /> {l s='My merchandise returns'}</a></li>
