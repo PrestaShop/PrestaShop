@@ -99,7 +99,7 @@ class AdminAddressesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Alias'),
+					'label' => $this->l('Address alias'),
 					'name' => 'alias',
 					'size' => 33,
 					'required' => true,
