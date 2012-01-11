@@ -99,6 +99,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'mails_dir' => '~/mails/',
 						'module_dir' => '~/modules/',
 						'theme_lang_dir' => '~/themes/prestashop/lang/',
+						'theme_pdf_lang_dir' => '~/themes/prestashop/pdf/lang/',
 						'theme_cache_dir' => '~/themes/prestashop/cache/',
 						'translations_dir' => '~/translations/',
 						'customizable_products_dir' => '~/upload/',
@@ -130,3 +131,4 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		$this->displayTemplate('system');
 	}
 }
+
