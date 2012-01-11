@@ -226,6 +226,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'id_state',
 					'required' => true,
 					'options' => array(
+						'query' => array(),
 						'id' => 'id_state',
 						'name' => 'name'
 					)
@@ -384,13 +385,6 @@ class AdminWarehousesControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 
-			// handles shops associations
-			if (Tools::isSubmit('ids_shops'))
-				$obj->setShops(Tools::getValue('ids_shops'));
-
-			// handles carriers associations
-			$obj->setCarriers(Tools::getValue('ids_carriers'));
-
 			// updates/creates address if it does not exist
 			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
 				$address = new Address((int)Tools::getValue('id_address')); // updates address
@@ -426,6 +420,18 @@ class AdminWarehousesControllerCore extends AdminController
 					$address->save();
 					$_POST['id_address'] = $address->id;
 				}
+			}
+
+			// if updating
+			if ($obj->id > 0)
+			{
+				// handles shops associations
+				if (Tools::isSubmit('ids_shops'))
+					$obj->setShops(Tools::getValue('ids_shops'));
+
+				// handles carriers associations
+				if (Tools::isSubmit('ids_carriers'))
+					$obj->setCarriers(Tools::getValue('ids_carriers'));
 			}
 
 			// hack for enable the possibility to update a warehouse without recreate new id
@@ -500,6 +506,15 @@ class AdminWarehousesControllerCore extends AdminController
 			$address->id_warehouse = $object->id_address;
 			$address->save();
 		}
+
+		// handles shops associations
+		if (Tools::isSubmit('ids_shops'))
+			$object->setShops(Tools::getValue('ids_shops'));
+
+		// handles carriers associations
+		if (Tools::isSubmit('ids_carriers'))
+			$object->setCarriers(Tools::getValue('ids_carriers'));
+
 		return true;
 	}
 }
