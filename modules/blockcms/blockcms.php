@@ -828,6 +828,7 @@ class BlockCms extends Module
 		$this->smarty->assign(array(
 			'block' => 1,
 			'cms_titles' => $cms_titles,
+			'contact_url' => (_PS_VERSION_ >= 1.5) ? 'contact' : 'contact-form'
 		));
 		return $this->display(__FILE__, 'blockcms.tpl');
 	}
