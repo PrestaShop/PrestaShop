@@ -276,7 +276,7 @@ class AdminThemesControllerCore extends AdminController
 		$obj = $this->loadObject();
 		if ($obj && $obj->isUsed())
 		{
-			$this->_errors[] = $this->l('This theme is used by at least one shop. Please choose another theme first.');
+			$this->errors[] = $this->l('This theme is used by at least one shop. Please choose another theme first.');
 			return false;
 		}
 
@@ -334,7 +334,7 @@ class AdminThemesControllerCore extends AdminController
 
 		if (!is_file(_PS_ALL_THEMES_DIR_ . $theme_dir . '/config.xml'))
 		{
-			$this->_errors[] = Tools::displayError('config.xml is missing in your theme path.').'<br/>';
+			$this->errors[] = Tools::displayError('config.xml is missing in your theme path.').'<br/>';
 			$xml=null;
 		}
 		else
@@ -342,7 +342,7 @@ class AdminThemesControllerCore extends AdminController
 			$xml=@simplexml_load_file(_PS_ALL_THEMES_DIR_.$theme_dir.'/config.xml');
 			if (!$xml)
 			{
-				$this->_errors[] = Tools::displayError('config.xml is not a valid xml file in your theme path.').'<br/>';
+				$this->errors[] = Tools::displayError('config.xml is not a valid xml file in your theme path.').'<br/>';
 			}
 		}
 		// will be set to false if any version node in xml is correct
@@ -367,7 +367,7 @@ class AdminThemesControllerCore extends AdminController
 		}
 		if ($xml_version_too_old AND !$this->_checkConfigForFeatures(array_keys(AdminThemes::$check_features)))
 		{
-			$this->_errors[] .= Tools::displayError('config.xml theme file has not been created for this version of prestashop.');
+			$this->errors[] .= Tools::displayError('config.xml theme file has not been created for this version of prestashop.');
 			$return = false;
 		}
 		return $return;
@@ -409,7 +409,7 @@ class AdminThemesControllerCore extends AdminController
 				$config_get = Configuration::get($config_key);
 				if ($config_get != $config_val)
 				{
-					$this->_errors[] = Tools::displayError(AdminThemes::$check_features[$feature]['error']).'.'
+					$this->errors[] = Tools::displayError(AdminThemes::$check_features[$feature]['error']).'.'
 					.(!empty(AdminThemes::$check_features[$feature]['tab'])
 						?' <a href="?tab='.AdminThemes::$check_features[$feature]['tab'].'&amp;token='
 						.Tools::getAdminTokenLite(AdminThemes::$check_features[$feature]['tab']).'" ><u>'
@@ -450,13 +450,13 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($_FILES['PS_LOGO']['tmp_name']) AND $_FILES['PS_LOGO']['tmp_name'])
 		{
 			if ($error = checkImage($_FILES['PS_LOGO'], 300000))
-				$this->_errors[] = $error;
+				$this->errors[] = $error;
 			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo.jpg'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo-'.(int)$id_shop.'.jpg'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 
 			unlink($tmpName);
 		}
@@ -471,13 +471,13 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($_FILES['PS_LOGO_MAIL']['tmp_name']) AND $_FILES['PS_LOGO_MAIL']['tmp_name'])
 		{
 			if ($error = checkImage($_FILES['PS_LOGO_MAIL'], 300000))
-				$this->_errors[] = $error;
+				$this->errors[] = $error;
 			if (!$tmpName == tempnam(_PS_TMP_IMG_DIR_, 'PS_MAIL') OR !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail.jpg'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 			unlink($tmpName);
 		}
 	}
@@ -491,13 +491,13 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($_FILES['PS_LOGO_INVOICE']['tmp_name']) AND $_FILES['PS_LOGO_INVOICE']['tmp_name'])
 		{
 			if ($error = checkImage($_FILES['PS_LOGO_INVOICE'], 300000))
-				$this->_errors[] = $error;
+				$this->errors[] = $error;
 			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_INVOICE') OR !move_uploaded_file($_FILES['PS_LOGO_INVOICE']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_invoice.jpg'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 
 			unlink($tmpName);
 		}
@@ -512,13 +512,13 @@ class AdminThemesControllerCore extends AdminController
 		if (isset($_FILES['PS_STORES_ICON']['tmp_name']) AND $_FILES['PS_STORES_ICON']['tmp_name'])
 		{
 			if ($error = checkImage($_FILES['PS_STORES_ICON'], 300000))
-				$this->_errors[] = $error;
+				$this->errors[] = $error;
 			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_STORES_ICON') OR !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop = Configuration::get('PS_SHOP_DEFAULT') && !@imageResize($tmpName, _PS_IMG_DIR_.'logo_stores.gif'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 			if (!@imageResize($tmpName, _PS_IMG_DIR_.'logo_stores-'.(int)$id_shop.'.gif'))
-				$this->_errors[] = 'an error occurred during logo copy';
+				$this->errors[] = 'an error occurred during logo copy';
 			unlink($tmpName);
 		}
 
@@ -533,12 +533,12 @@ class AdminThemesControllerCore extends AdminController
 		{
 			/* Check ico validity */
 			if ($error = checkIco($_FILES[$name]))
-				$this->_errors[] = $error;
+				$this->errors[] = $error;
 
 			/* Copy new ico */
 			elseif(!copy($_FILES[$name]['tmp_name'], $dest))
-				$this->_errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
+				$this->errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
 		}
-		return !count($this->_errors) ? true : false;
+		return !count($this->errors) ? true : false;
 	}
 }

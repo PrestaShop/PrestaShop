@@ -174,7 +174,7 @@ class AdminCustomersControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'guest_to_customer';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		elseif (Tools::isSubmit('changeNewsletterVal') && $this->id_object)
 			$this->action = 'change_newsletter_val';
 		elseif (Tools::isSubmit('changeOptinVal') && $this->id_object)
@@ -711,7 +711,7 @@ class AdminCustomersControllerCore extends AdminController
 			$this->deleted = true;
 		else
 		{
-			$this->_errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+			$this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
 			return;
 		}
 
@@ -729,7 +729,7 @@ class AdminCustomersControllerCore extends AdminController
 			if (Validate::isEmail($customer_email))
 				$customer->getByEmail($customer_email);
 			if ($customer->id)
-				$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+				$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 		}
 		// Case update
 		else
@@ -745,17 +745,17 @@ class AdminCustomersControllerCore extends AdminController
 					$customer = new Customer();
 					$customer->getByEmail($customer_email);
 					if ($customer->id)
-						$this->_errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+						$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('An error occurred while loading object.').'
+				$this->errors[] = Tools::displayError('An error occurred while loading object.').'
 					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
 
 		// Check that default group is selected
 		if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox')))
-			$this->_errors[] = $this->_errors[] = Tools::displayError('Default customer group must be selected in group box.');
+			$this->errors[] = Tools::displayError('Default customer group must be selected in group box.');
 
 		parent::processSave($token);
 	}
@@ -781,13 +781,13 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer((int)Tools::getValue('id_customer'));
 		if (!Validate::isLoadedObject($customer))
-			$this->_errors[] = Tools::displayError('This customer does not exist.');
+			$this->errors[] = Tools::displayError('This customer does not exist.');
 		if (Customer::customerExists($customer->email))
-			$this->_errors[] = Tools::displayError('This customer already exist as non-guest.');
+			$this->errors[] = Tools::displayError('This customer already exist as non-guest.');
 		else if ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id)))
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
 		else
-			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 	}
 
 	/**
@@ -799,10 +799,10 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
-			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
 		if (!$update)
-			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
@@ -815,10 +815,10 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
-			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
 		if (!$update)
-			$this->_errors[] = Tools::displayError('An error occurred while updating customer.');
+			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 

@@ -377,7 +377,7 @@ class AdminPreferencesControllerCore extends AdminController
 
 		if (Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE') > $max_size or Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE') > $max_size)
 		{
-			$this->_errors[] = Tools::displayError('The limit choosen is superior to the server\'s maximum upload file You need to improve the limit of your server.');
+			$this->errors[] = Tools::displayError('The limit choosen is superior to the server\'s maximum upload file You need to improve the limit of your server.');
 			return;
 		}
 		
@@ -411,7 +411,7 @@ class AdminPreferencesControllerCore extends AdminController
 		$sql = 'SELECT `id_cms` FROM `'._DB_PREFIX_.'cms`
 				WHERE id_cms = '.(int)Tools::getValue('PS_CONDITIONS_CMS_ID');
 		if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql)))
-			$this->_errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
+			$this->errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
 	}
 
 	/**

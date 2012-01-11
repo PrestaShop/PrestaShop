@@ -70,10 +70,10 @@ class AdminGeneratorControllerCore extends AdminController
 				Configuration::updateValue('PS_HTACCESS_DISABLE_MULTIVIEWS', (int)Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'));
 				if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS')))
 					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
-				$this->_errors[] = $this->l('Cannot write into file:').' <b>'.$this->ht_file.'</b><br />'.$this->l('Please check write permissions.');
+				$this->errors[] = $this->l('Cannot write into file:').' <b>'.$this->ht_file.'</b><br />'.$this->l('Please check write permissions.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		if (Tools::isSubmit('submitRobots'))
@@ -81,7 +81,7 @@ class AdminGeneratorControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (!$write_fd = @fopen($this->rb_file, 'w'))
-					$this->_errors[] = sprintf(Tools::displayError('Cannot write into file: %s. Please check write permissions.'), $this->rb_file);
+					$this->errors[] = sprintf(Tools::displayError('Cannot write into file: %s. Please check write permissions.'), $this->rb_file);
 				else
 				{
 					// PS Comments
@@ -128,7 +128,7 @@ class AdminGeneratorControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
 			} else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 	}
 

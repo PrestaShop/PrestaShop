@@ -189,7 +189,7 @@ class AdminTaxesControllerCore extends AdminController
 		{
 		 	/* Checking fields validity */
 			$this->validateRules();
-			if (!sizeof($this->_errors))
+			if (!sizeof($this->errors))
 			{
 				$id = (int)(Tools::getValue('id_'.$this->table));
 
@@ -203,14 +203,14 @@ class AdminTaxesControllerCore extends AdminController
 						$result = $object->update(false, false);
 
 						if (!$result)
-							$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
+							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
 						elseif ($this->postImage($object->id))
 							{
 								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
 							}
 					}
 					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+						$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 				}
 
 				/* Object creation */
@@ -219,7 +219,7 @@ class AdminTaxesControllerCore extends AdminController
 					$object = new $this->className();
 					$this->copyFromPost($object, $this->table);
 					if (!$object->add())
-						$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
+						$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 					elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
 					{
 						Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);

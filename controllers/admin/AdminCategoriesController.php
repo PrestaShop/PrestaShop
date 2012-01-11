@@ -431,10 +431,10 @@ class AdminCategoriesControllerCore extends AdminController
 			if ($id_category != $id_parent)
 			{
 				if (!Category::checkBeforeMove($id_category, $id_parent))
-					$this->_errors[] = Tools::displayError($this->l('Category cannot be moved here'));
+					$this->errors[] = Tools::displayError($this->l('Category cannot be moved here'));
 			}
 			else
-				$this->_errors[] = Tools::displayError($this->l('Category cannot be parent of herself.'));
+				$this->errors[] = Tools::displayError($this->l('Category cannot be parent of herself.'));
 		}
 		parent::processAdd($token);
 	}
@@ -455,10 +455,10 @@ class AdminCategoriesControllerCore extends AdminController
 						$category->cleanPositions((int)Tools::getValue('id_category'));
 						Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCategories').'&id_category='.(int)Tools::getValue('id_category'));
 					}
-					$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+					$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 				}
 				else
-					$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+					$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 			}
 			else
 			{
@@ -466,11 +466,11 @@ class AdminCategoriesControllerCore extends AdminController
 				{
 					if ($object->isRootCategoryForAShop())
 					{
-						$this->_errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
+						$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
 					}// check if request at least one object with noZeroObject
 					elseif (isset($object->noZeroObject) &&
 						count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.
+						$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.
 							$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 					else
 					{
@@ -483,27 +483,27 @@ class AdminCategoriesControllerCore extends AdminController
 						}
 						else if ($object->delete())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getValue('token').'&id_category='.(int)$object->id_parent);
-						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+						$this->errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.
+					$this->errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.
 						$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 		}
 		else
-			$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+			$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 	}
 
 	public function processPosition($token)
 	{
 		if ($this->tabAccess['edit'] !== '1')
-			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
-			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
+			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.
 				$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
-			$this->_errors[] = Tools::displayError('Failed to update the position.');
+			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 		{
 			$object->regenerateEntireNtree();

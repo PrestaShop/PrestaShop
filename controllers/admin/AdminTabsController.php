@@ -246,7 +246,7 @@ class AdminTabsControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
@@ -259,12 +259,12 @@ class AdminTabsControllerCore extends AdminController
 		else if (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table))
 		{
 			if ($this->tabAccess['edit'] !== '1')
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			else if (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier))))
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
 					' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
-				$this->_errors[] = Tools::displayError('Failed to update the position.');
+				$this->errors[] = Tools::displayError('Failed to update the position.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}

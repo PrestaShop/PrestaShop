@@ -246,22 +246,22 @@ class AdminShopUrlControllerCore extends AdminController
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->main)
-						$this->_errors[] = Tools::displayError('You can\'t disable a main url');
+						$this->errors[] = Tools::displayError('You can\'t disable a main url');
 					elseif ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
 					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+						$this->errors[] = Tools::displayError('An error occurred while updating status.');
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (Tools::isSubmit('submitAdd'.$this->table) && $this->tabAccess['add'] === '1')
 		{
 			if (ShopUrl::virtualUriExists(Tools::getValue('virtual_uri'), Tools::getValue('id_shop')))
-				$this->_errors[] = Tools::displayError('Virtual URI already used.');
+				$this->errors[] = Tools::displayError('Virtual URI already used.');
 			else
 				return parent::postProcess();
 		}
@@ -276,16 +276,16 @@ class AdminShopUrlControllerCore extends AdminController
 				$object->setMain();
 
 			if ($object->main && !Tools::getValue('main'))
-				$this->_errors[] = Tools::displayError('You can\'t change a main url to a non main url, you have to set an other url as main url for selected shop');
+				$this->errors[] = Tools::displayError('You can\'t change a main url to a non main url, you have to set an other url as main url for selected shop');
 
 			if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
-				$this->_errors[] = Tools::displayError('You can\'t disable a main url');
+				$this->errors[] = Tools::displayError('You can\'t disable a main url');
 
 			if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
-				$this->_errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
+				$this->errors[] = Tools::displayError('A shop url that use this domain and uri already exists');
 
 			parent::processAdd($token);
-			if (!$this->_errors)
+			if (!$this->errors)
 				Tools::generateHtaccess();
 	}
 

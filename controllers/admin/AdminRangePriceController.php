@@ -118,7 +118,7 @@ class AdminRangePriceControllerCore extends AdminController
 	public function postProcess()
 	{
 		if (isset($_POST['submitAdd'.$this->table]) AND Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
-			$this->_errors[] = Tools::displayError('Invalid range');
+			$this->errors[] = Tools::displayError('Invalid range');
 		else
 			parent::postProcess();
 	}

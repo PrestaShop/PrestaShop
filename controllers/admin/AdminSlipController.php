@@ -112,16 +112,16 @@ class AdminSlipControllerCore extends AdminController
 		if (Tools::getValue('submitAddorder_slip'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from')))
-				$this->_errors[] = $this->l('Invalid from date');
+				$this->errors[] = $this->l('Invalid from date');
 			if (!Validate::isDate(Tools::getValue('date_to')))
-				$this->_errors[] = $this->l('Invalid end date');
-			if (!count($this->_errors))
+				$this->errors[] = $this->l('Invalid end date');
+			if (!count($this->errors))
 			{
 				$order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
 				if (count($order_slips))
 					Tools::redirectAdmin(
 						'pdf.php?slips&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')).'&token='.$this->token);
-				$this->_errors[] = $this->l('No order slips found for this period');
+				$this->errors[] = $this->l('No order slips found for this period');
 			}
 		}
 		else

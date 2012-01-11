@@ -86,13 +86,13 @@ class AdminProfilesControllerCore extends AdminController
 	 	/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 		{
-			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
 		/* PrestaShop demo mode*/
 
 	 	if (isset($_GET['delete'.$this->table]) AND $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
-			$this->_errors[] = $this->l('For security reasons, you cannot delete the Administrator profile');
+			$this->errors[] = $this->l('For security reasons, you cannot delete the Administrator profile');
 		else
 			parent::postProcess();
 	}

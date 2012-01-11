@@ -180,7 +180,7 @@ class AdminGendersControllerCore extends AdminController
 		if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir']))
 		{
 			if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height')))
-				$this->_errors[] = Tools::displayError('Width and height must be a numeric');
+				$this->errors[] = Tools::displayError('Width and height must be a numeric');
 			else
 			{
 				if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0)
@@ -196,7 +196,7 @@ class AdminGendersControllerCore extends AdminController
 				return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/', false, $width, $height);
 			}
 		}
-		return !count($this->_errors) ? true : false;
+		return !count($this->errors) ? true : false;
 	}
 }
 

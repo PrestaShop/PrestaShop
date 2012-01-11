@@ -338,7 +338,7 @@ class AdminModulesControllerCore extends AdminController
 			if (Tools::ZipExtract($file, _PS_MODULE_DIR_))
 				$success = true;
 			else
-				$this->_errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
 		}
 		else
 		{
@@ -346,7 +346,7 @@ class AdminModulesControllerCore extends AdminController
 			if ($archive->extract(_PS_MODULE_DIR_))
 				$success = true;
 			else
-				$this->_errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
+				$this->errors[] = Tools::displayError('Error while extracting module (file may be corrupted).');
 		}
 
 		@unlink($file);
@@ -453,23 +453,23 @@ class AdminModulesControllerCore extends AdminController
 			if (Validate::isLoadedObject($module))
 			{
 				if (!$module->getPermission('configure'))
-					$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module');
 				else
 				{
 					if ($module->uninstall())
 						if ($module->install())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=21'.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor=anchor'.ucfirst($module->name));
 						else
-							$this->_errors[] = Tools::displayError('Cannot install module');
+							$this->errors[] = Tools::displayError('Cannot install module');
 					else
-						$this->_errors[] = Tools::displayError('Cannot uninstall module');
+						$this->errors[] = Tools::displayError('Cannot uninstall module');
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('Cannot load module object');
+				$this->errors[] = Tools::displayError('Cannot load module object');
 		}
 		else
-			$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+			$this->errors[] = Tools::displayError('You do not have permission to add here.');
 	}
 
 	public function postProcessDownload()
@@ -477,7 +477,7 @@ class AdminModulesControllerCore extends AdminController
 	 	// PrestaShop demo mode
 		if (_PS_MODE_DEMO_)
 		{
-			$this->_errors[] = Tools::displayError('This functionnality has been disabled.');
+			$this->errors[] = Tools::displayError('This functionnality has been disabled.');
 			return;
 		}
 
@@ -485,16 +485,16 @@ class AdminModulesControllerCore extends AdminController
 	 	if ($this->tabAccess['add'] === '1')
 		{
 			if (!isset($_FILES['file']['tmp_name']) OR empty($_FILES['file']['tmp_name']))
-				$this->_errors[] = $this->l('no file selected');
+				$this->errors[] = $this->l('no file selected');
 			elseif (substr($_FILES['file']['name'], -4) != '.tar' AND substr($_FILES['file']['name'], -4) != '.zip' AND substr($_FILES['file']['name'], -4) != '.tgz' AND substr($_FILES['file']['name'], -7) != '.tar.gz')
-				$this->_errors[] = Tools::displayError('Unknown archive type');
+				$this->errors[] = Tools::displayError('Unknown archive type');
 			elseif (!@copy($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
-				$this->_errors[] = Tools::displayError('An error occurred while copying archive to module directory.');
+				$this->errors[] = Tools::displayError('An error occurred while copying archive to module directory.');
 			else
 				$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
 		}
 		else
-			$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+			$this->errors[] = Tools::displayError('You do not have permission to add here.');
 	}
 
 	public function postProcessEnable()
@@ -505,7 +505,7 @@ class AdminModulesControllerCore extends AdminController
 			if (Validate::isLoadedObject($module))
 			{
 				if (!$module->getPermission('configure'))
-					$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module');
 				else
 				{
 					if (Tools::getValue('enable'))
@@ -516,10 +516,10 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('Cannot load module object');
+				$this->errors[] = Tools::displayError('Cannot load module object');
 		}
 		else
-			$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+			$this->errors[] = Tools::displayError('You do not have permission to add here.');
 	}
 
 	public function postProcessDelete()
@@ -530,7 +530,7 @@ class AdminModulesControllerCore extends AdminController
 				{
 					$module = Module::getInstanceByName(Tools::getValue('module_name'));
 					if (Validate::isLoadedObject($module) AND !$module->getPermission('configure'))
-						$this->_errors[] = Tools::displayError('You do not have the permission to use this module');
+						$this->errors[] = Tools::displayError('You do not have the permission to use this module');
 					else
 					{
 						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
@@ -540,7 +540,7 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 	}
 
 	public function postProcessCallback()
@@ -585,17 +585,17 @@ class AdminModulesControllerCore extends AdminController
 					}
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
-						$this->_errors[] = $this->l('module not found');
+						$this->errors[] = $this->l('module not found');
 					elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
-						$this->_errors[] = Tools::displayError('You do not have permission to install a module.');
+						$this->errors[] = Tools::displayError('You do not have permission to install a module.');
 					elseif ($key == 'uninstall' AND ($this->tabAccess['delete'] !== '1' OR !$module->getPermission('configure')))
-						$this->_errors[] = Tools::displayError('You do not have permission to delete this module.');
+						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
 					elseif ($key == 'configure' AND ($this->tabAccess['edit'] !== '1' OR !$module->getPermission('configure')))
-						$this->_errors[] = Tools::displayError('You do not have permission to configure this module.');
+						$this->errors[] = Tools::displayError('You do not have permission to configure this module.');
 					elseif ($key == 'install' AND Module::isInstalled($module->name))
-						$this->_errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
+						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
 					elseif ($key == 'uninstall' AND !Module::isInstalled($module->name))
-						$this->_errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
+						$this->errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -682,7 +682,7 @@ class AdminModulesControllerCore extends AdminController
 			{
 				// If error during module installation, no redirection
 				$html_error = $this->generateHtmlMessage($module_errors);
-				$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
+				$this->errors[] = sprintf(Tools::displayError('The following module(s) were not installed successfully: %s'), $html_error);
 			}
 		}
 		if ($return)
@@ -958,7 +958,7 @@ class AdminModulesControllerCore extends AdminController
 		if (count($module_errors))
 		{
 			$html = $this->generateHtmlMessage($module_errors);
-			$this->_errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s'), $html);
+			$this->errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s'), $html);
 		}
 		if (count($module_success))
 		{

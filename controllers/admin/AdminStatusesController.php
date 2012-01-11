@@ -495,7 +495,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			// Update object
 			if (!$order_return_state->save())
-				$this->_errors[] = Tools::displayError('An error has occured: Can\'t save the current order return state');
+				$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current order return state');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
@@ -522,7 +522,7 @@ class AdminStatusesControllerCore extends AdminController
 		{
 			$order_state = new OrderState($_GET['id_order_state'], $this->context->language->id);
 			if (!$order_state->isRemovable())
-				$this->_errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
+				$this->errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
 			else
 				return parent::postProcess();
 		}
@@ -533,11 +533,11 @@ class AdminStatusesControllerCore extends AdminController
 				$order_state = new OrderState($selection, $this->context->language->id);
 				if (!$order_state->isRemovable())
 				{
-					$this->_errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
+					$this->errors[] = $this->l('For security reasons, you cannot delete default order statuses.');
 					break;
 				}
 			}
-			if (empty($this->_errors))
+			if (empty($this->errors))
 				return parent::postProcess();
 		}
 		else
