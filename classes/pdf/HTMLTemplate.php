@@ -161,7 +161,7 @@ abstract class HTMLTemplateCore
             die('Invalid iso lang ('.$iso.')');
 
 		if (@!include(_PS_THEME_DIR_.'pdf/lang/'.$iso.'.php'))
-			die('Cannot include PDF translation language file : '._PS_THEME_DIR_.'pdf/'.$iso.'.php');
+			die('Cannot include PDF translation language file : '._PS_THEME_DIR_.'pdf/lang/'.$iso.'.php');
 
 		if (!isset($_LANGPDF) OR !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
