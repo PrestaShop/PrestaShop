@@ -312,11 +312,18 @@ class AdminShopControllerCore extends AdminController
 			)
 		);
 
+		if (Tools::isSubmit('id_shop'))
+		{
+			$shop = new Shop(Tools::getValue('id_shop'));
+			$parent = $shop->id_category;
+		}
+		else
+			$parent = $categories[0]['id_category'];
 		$this->fields_form['input'][] = array(
 			'type' => 'categories_select',
 			'name' => 'categoryBox',
 			'label' => $this->l('Associated categories :'),
-			'category_tree' => $this->initCategoriesAssociation($categories[0]['id_category'])
+			'category_tree' => $this->initCategoriesAssociation($parent)
 		);
 		$this->fields_form['input'][] = array(
 			'type' => 'radio',
