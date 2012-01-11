@@ -160,7 +160,7 @@ abstract class HTMLTemplateCore
         if (!Validate::isLangIsoCode($iso))
             die('Invalid iso lang ('.$iso.')');
 
-		if (@!include(_PS_THEME_DIR_.'pdf/'.$iso.'.php'))
+		if (@!include(_PS_THEME_DIR_.'pdf/lang/'.$iso.'.php'))
 			die('Cannot include PDF translation language file : '._PS_THEME_DIR_.'pdf/'.$iso.'.php');
 
 		if (!isset($_LANGPDF) OR !is_array($_LANGPDF))
