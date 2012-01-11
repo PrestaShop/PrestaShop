@@ -480,7 +480,7 @@ class AdminCategoriesControllerCore extends AdminController
 			}
 			else if ($this->delete_mode != 'delete')
 			{
-				$this->_errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+				$this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
 				return;
 			}
 		
