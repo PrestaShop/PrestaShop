@@ -68,6 +68,7 @@ function smartyTranslate($params, &$smarty)
 
 	switch ($dir_filename)
 	{
+
 		// note : this may be modified later
 		case '.': $class = 'index';break;
 		case 'helper' : $class = 'AdminTab';break;
@@ -75,7 +76,7 @@ function smartyTranslate($params, &$smarty)
 		{
 			$parentClass = explode('/', $filename);
 			$key = array_search('controllers', $parentClass);
-			$class = 'Admin'.ucfirst($parentClass[$key + 1]);
+			$class = 'Admin'.Tools::toCamelCase($parentClass[$key + 1], true);
 		}
 	}
 
