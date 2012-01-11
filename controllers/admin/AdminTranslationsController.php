@@ -1771,9 +1771,6 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
 		$i18n_file = $i18n_dir.$lang.'.php';
-		if (!file_exists($i18n_file))
-			if (!mkdir($i18n_dir, 0700))
-				die('Please create a "'.$lang.'" directory in '._PS_TRANSLATIONS_DIR_);
 
 		if (!file_exists($i18n_file))
 			if (!file_put_contents($i18n_file, "<?php\n\nglobal \$_LANGPDF;\n\$_LANGPDF = array();\n\n?>"))
