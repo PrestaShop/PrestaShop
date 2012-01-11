@@ -183,7 +183,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		if (Tools::isSubmit('submitDatePicker'))
 		{
 			if (!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo')))
-				$this->_errors[] = Tools::displayError('Date specified is invalid');
+				$this->errors[] = Tools::displayError('Date specified is invalid');
 		}
 		if (Tools::isSubmit('submitDateDay'))
 		{
@@ -218,7 +218,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			$from = (date('Y') - 1).date('-01-01');
 			$to = (date('Y') - 1).date('-12-31');
 		}
-		if (isset($from) && isset($to) && !count($this->_errors))
+		if (isset($from) && isset($to) && !count($this->errors))
 		{
 			$this->context->employee->stats_date_from = $from;
 			$this->context->employee->stats_date_to = $to;
@@ -235,7 +235,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 	}
 

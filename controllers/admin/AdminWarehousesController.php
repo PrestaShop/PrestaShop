@@ -375,7 +375,7 @@ class AdminWarehousesControllerCore extends AdminController
 		// checks access
 		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
 		{
-			$this->_errors[] = Tools::displayError('You do not have the required permissions to add warehouses.');
+			$this->errors[] = Tools::displayError('You do not have the required permissions to add warehouses.');
 			return parent::postProcess();
 		}
 
@@ -414,8 +414,8 @@ class AdminWarehousesControllerCore extends AdminController
 			if (count($validation) > 0)
 			{
 				foreach ($validation as $item)
-					$this->_errors[] = $item;
-				$this->_errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+					$this->errors[] = $item;
+				$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
 			}
 			else
 			{
@@ -437,9 +437,9 @@ class AdminWarehousesControllerCore extends AdminController
 			if (!($obj = $this->loadObject(true)))
 				return;
 			else if ($obj->getQuantitiesOfProducts() > 0)
-				$this->_errors[] = $this->l('It is not possible to delete a Warehouse when there are products in it.');
+				$this->errors[] = $this->l('It is not possible to delete a Warehouse when there are products in it.');
 			else if (SupplyOrder::warehouseHasPendingOrders($obj->id))
-				$this->_errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
+				$this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
 			else
 			{
 				// sets the address of the warehouse as deleted

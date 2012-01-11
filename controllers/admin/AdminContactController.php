@@ -109,13 +109,13 @@ class AdminContactControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
 			$isStateOk = Db::getInstance()->getValue($sql);
 			if ($isStateOk != 1)
-				$this->_errors[] = Tools::displayError('This state is not in this country.');
+				$this->errors[] = Tools::displayError('This state is not in this country.');
 		}
 	}
 
 	public function updateOptionPsShopCountryId($value)
 	{
-		if (!$this->_errors && $value)
+		if (!$this->errors && $value)
 		{
 			$country = new Country($value, $this->context->language->id);
 			if ($country->id)
@@ -128,7 +128,7 @@ class AdminContactControllerCore extends AdminController
 
 	public function updateOptionPsShopStateId($value)
 	{
-		if (!$this->_errors && $value)
+		if (!$this->errors && $value)
 		{
 			$state = new State($value);
 			if ($state->id)

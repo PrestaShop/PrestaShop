@@ -109,7 +109,7 @@ class AdminFeaturesControllerCore extends AdminController
 			$this->addRowAction('delete');
 
 			if (!Validate::isLoadedObject($obj = new Feature((int)$id)))
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			$this->fieldsDisplay = array(
 				'id_feature_value' => array(
@@ -350,7 +350,7 @@ class AdminFeaturesControllerCore extends AdminController
 		if (Tools::isSubmit('deletefeature_value') || Tools::isSubmit('submitAddfeature_value'))
 		{
 			Hook::exec('displayFeatureValuePostProcess',
-				array('errors' => &$this->_errors)); // send _errors as reference to allow displayFeatureValuePostProcess to stop saving process
+				array('errors' => &$this->errors)); // send _errors as reference to allow displayFeatureValuePostProcess to stop saving process
 
 			if (Tools::isSubmit('deletefeature_value'))
 			{
@@ -362,11 +362,11 @@ class AdminFeaturesControllerCore extends AdminController
 						if ($object->delete())
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
 						else
-							$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+							$this->errors[] = Tools::displayError('An error occurred during deletion.');
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+					$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 			}
 			else if (Tools::isSubmit('submitAddfeature_value'))
 			{
@@ -375,20 +375,20 @@ class AdminFeaturesControllerCore extends AdminController
 				$feature_value->value = array();
 
 				if (!Tools::getValue('value_'.$this->context->language->id))
-					$this->_errors[] = Tools::displayError('The value is required for the default language.');
+					$this->errors[] = Tools::displayError('The value is required for the default language.');
 
 				$languages = Language::getLanguages(false);
 					foreach ($languages as $language)
 						$feature_value->value[$language['id_lang']] = Tools::getValue('value_'.$language['id_lang']);
 				$feature_value->id_feature = Tools::getValue('id_feature');
 
-				if (count($this->_errors) > 0)
+				if (count($this->errors) > 0)
 					return false;
 				else if (isset($id) && !empty($id))
 				{
 					// Update
 					if (!$feature_value->update())
-						$this->_errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
+						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
@@ -396,7 +396,7 @@ class AdminFeaturesControllerCore extends AdminController
 				{
 					// Create
 					if (!$feature_value->add())
-						$this->_errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
+						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
@@ -407,7 +407,7 @@ class AdminFeaturesControllerCore extends AdminController
 		else
 		{
 			Hook::exec('displayFeaturePostProcess',
-				array('errors' => &$this->_errors)); // send _errors as reference to allow displayFeaturePostProcess to stop saving process
+				array('errors' => &$this->errors)); // send _errors as reference to allow displayFeaturePostProcess to stop saving process
 
 			if (Tools::getValue('submitDel'.$this->table))
 			{
@@ -418,13 +418,13 @@ class AdminFeaturesControllerCore extends AdminController
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
-						$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+						$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 					}
 					else
-						$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+						$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 				}
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+					$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 			}
 			else if (Tools::isSubmit('submitAdd'.$this->table))
 			{

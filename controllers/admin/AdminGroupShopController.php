@@ -260,11 +260,11 @@ class AdminGroupShopControllerCore extends AdminController
 		{
 			$object = $this->loadObject();
 			if (GroupShop::getTotalGroupShops() == 1)
-				$this->_errors[] = Tools::displayError('You cannot delete or disable the last groupshop.');
+				$this->errors[] = Tools::displayError('You cannot delete or disable the last groupshop.');
 			else if ($object->haveShops())
-				$this->_errors[] = Tools::displayError('You cannot delete or disable a groupshop which have this shops using it.');
+				$this->errors[] = Tools::displayError('You cannot delete or disable a groupshop which have this shops using it.');
 
-			if (count($this->_errors))
+			if (count($this->errors))
 				return false;
 		}
 		return parent::postProcess();

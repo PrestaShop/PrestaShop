@@ -301,9 +301,9 @@ class AdminScenesControllerCore extends AdminController
 		if (Tools::isSubmit('save_image_map'))
 		{
 			if (!Tools::isSubmit('categories') || !count(Tools::getValue('categories')))
-				$this->_errors[] = Tools::displayError('You should select at least one category');
+				$this->errors[] = Tools::displayError('You should select at least one category');
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
-				$this->_errors[] = Tools::displayError('You should make at least one zone');
+				$this->errors[] = Tools::displayError('You should make at least one zone');
 		}
 		parent::postProcess();
 	}

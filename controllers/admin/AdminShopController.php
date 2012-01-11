@@ -198,12 +198,12 @@ class AdminShopControllerCore extends AdminController
 			$this->loadObject() && $this->loadObject()->active)
 		{
 			if (Tools::getValue('id_shop') == Configuration::get('PS_SHOP_DEFAULT'))
-				$this->_errors[] = Tools::displayError('You cannot disable the default shop.');
+				$this->errors[] = Tools::displayError('You cannot disable the default shop.');
 			else if (Shop::getTotalShops() == 1)
-				$this->_errors[] = Tools::displayError('You cannot disable the last shop.');
+				$this->errors[] = Tools::displayError('You cannot disable the last shop.');
 		}
 
-		if ($this->_errors)
+		if ($this->errors)
 			return false;
 		return parent::postProcess();
 	}
@@ -211,11 +211,11 @@ class AdminShopControllerCore extends AdminController
 	public function processDelete($token)
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
-			$this->_errors[] = Tools::displayError('Unable to load this shop.');
+			$this->errors[] = Tools::displayError('Unable to load this shop.');
 		else if(!Shop::has_dependency($object->id))
 			return $object->deleteCategories() && parent::processDelete($token);
 		else
-			$this->_errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
+			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
 
 		return false;
 	}
@@ -452,18 +452,18 @@ class AdminShopControllerCore extends AdminController
 		/* Checking fields validity */
 		$this->validateRules();
 
-		if (!count($this->_errors))
+		if (!count($this->errors))
 		{
 			$object = new $this->className();
 			$this->copyFromPost($object, $this->table);
 			$this->beforeAdd($object);
 			if (!$object->add())
 			{
-				$this->_errors[] = Tools::displayError('An error occurred while creating object.').
+				$this->errors[] = Tools::displayError('An error occurred while creating object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
 			 /* voluntary do affectation here */
-			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
+			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);
@@ -480,8 +480,8 @@ class AdminShopControllerCore extends AdminController
 			}
 		}
 
-		$this->_errors = array_unique($this->_errors);
-		if (count($this->_errors) > 0)
+		$this->errors = array_unique($this->errors);
+		if (count($this->errors) > 0)
 			return;
 
 		$shop = new Shop($object->id);

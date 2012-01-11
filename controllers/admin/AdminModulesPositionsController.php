@@ -49,10 +49,10 @@ class AdminModulesPositionsControllerCore extends AdminController
 					Tools::redirectAdmin(self::$currentIndex.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 				else
-					$this->_errors[] = Tools::displayError('module cannot be loaded');
+					$this->errors[] = Tools::displayError('module cannot be loaded');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 
 		// Add new module in hook
@@ -67,18 +67,18 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$hook = new Hook($id_hook);
 
 				if (!$id_module OR !Validate::isLoadedObject($module))
-					$this->_errors[] = Tools::displayError('module cannot be loaded');
+					$this->errors[] = Tools::displayError('module cannot be loaded');
 				elseif (!$id_hook OR !Validate::isLoadedObject($hook))
-					$this->_errors[] = Tools::displayError('Hook cannot be loaded.');
+					$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 				elseif (Hook::getModulesFromHook($id_hook, $id_module))
-					$this->_errors[] = Tools::displayError('This module is already transplanted to this hook.');
+					$this->errors[] = Tools::displayError('This module is already transplanted to this hook.');
 				elseif (!$module->isHookableOn($hook->name))
-					$this->_errors[] = Tools::displayError('This module can\'t be transplanted to this hook.');
+					$this->errors[] = Tools::displayError('This module can\'t be transplanted to this hook.');
 				// Adding vars...
 				else
 				{
 					if (!$module->registerHook($hook->name, Context::getContext()->shop->getListOfID()))
-						$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
+						$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					else
 					{
 						$exceptions = Tools::getValue('exceptions');
@@ -87,18 +87,18 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 						foreach ($exceptions AS $except)
 							if (!Validate::isFileName($except))
-								$this->_errors[] = Tools::displayError('No valid value for field exceptions');
+								$this->errors[] = Tools::displayError('No valid value for field exceptions');
 
-						if (!$this->_errors && !$module->registerExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
-							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
+						if (!$this->errors && !$module->registerExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
+							$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 					}
 
-					if (!$this->_errors)
+					if (!$this->errors)
 						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 
 		// Edit module from hook
@@ -113,9 +113,9 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$hook = new Hook($id_hook);
 
 				if (!$id_module OR !Validate::isLoadedObject($module))
-					$this->_errors[] = Tools::displayError('module cannot be loaded');
+					$this->errors[] = Tools::displayError('module cannot be loaded');
 				elseif (!$id_hook OR !Validate::isLoadedObject($hook))
-					$this->_errors[] = Tools::displayError('Hook cannot be loaded.');
+					$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 				else
 				{
 					$exceptions = Tools::getValue('exceptions');
@@ -128,16 +128,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 							// Check files name
 							foreach ($exception AS $except)
 								if (!Validate::isFileName($except))
-									$this->_errors[] = Tools::displayError('No valid value for field exceptions');
+									$this->errors[] = Tools::displayError('No valid value for field exceptions');
 
 							$exceptions[$id] = $exception;
 						}
 
 						// Add files exceptions
 						if (!$module->editExceptions($id_hook, $exceptions))
-							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
+							$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 
-						if (!$this->_errors)
+						if (!$this->errors)
 							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 					}
 					else
@@ -147,18 +147,18 @@ class AdminModulesPositionsControllerCore extends AdminController
 						// Check files name
 						foreach ($exceptions AS $except)
 							if (!Validate::isFileName($except))
-								$this->_errors[] = Tools::displayError('No valid value for field exceptions');
+								$this->errors[] = Tools::displayError('No valid value for field exceptions');
 
 						// Add files exceptions
 						if (!$module->editExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
-							$this->_errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
+							$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						else
 							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 					}
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 
 		// Delete module from hook
@@ -171,24 +171,24 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$id_hook = (int)(Tools::getValue('id_hook'));
 				$hook = new Hook($id_hook);
 				if (!Validate::isLoadedObject($module))
-					$this->_errors[] = Tools::displayError('module cannot be loaded');
+					$this->errors[] = Tools::displayError('module cannot be loaded');
 				elseif (!$id_hook OR !Validate::isLoadedObject($hook))
-					$this->_errors[] = Tools::displayError('Hook cannot be loaded.');
+					$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 				else
 				{
 					if (!$module->unregisterHook($id_hook, Context::getContext()->shop->getListOfID()) OR !$module->unregisterExceptions($id_hook, Context::getContext()->shop->getListOfID()))
-						$this->_errors[] = Tools::displayError('An error occurred while deleting module from hook.');
+						$this->errors[] = Tools::displayError('An error occurred while deleting module from hook.');
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 				}
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		elseif (Tools::isSubmit('unhookform'))
 		{
 			if (!($unhooks = Tools::getValue('unhooks')) OR !is_array($unhooks))
-				$this->_errors[] = Tools::displayError('Select a module to unhook.');
+				$this->errors[] = Tools::displayError('Select a module to unhook.');
 			else
 			{
 				foreach ($unhooks as $unhook)
@@ -199,16 +199,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 					$module = Module::getInstanceById((int)($id_module));
 					$hook = new Hook((int)($id_hook));
 					if (!Validate::isLoadedObject($module))
-						$this->_errors[] = Tools::displayError('module cannot be loaded');
+						$this->errors[] = Tools::displayError('module cannot be loaded');
 					elseif (!$id_hook OR !Validate::isLoadedObject($hook))
-						$this->_errors[] = Tools::displayError('Hook cannot be loaded.');
+						$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 					else
 					{
 						if (!$module->unregisterHook((int)($id_hook)) OR !$module->unregisterExceptions((int)($id_hook)))
-							$this->_errors[] = Tools::displayError('An error occurred while deleting module from hook.');
+							$this->errors[] = Tools::displayError('An error occurred while deleting module from hook.');
 					}
 				}
-				if (!sizeof($this->_errors))
+				if (!sizeof($this->errors))
 					Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
 			}
 		}
@@ -216,7 +216,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 	public function initContent()
 	{
-		if (array_key_exists('addToHook', $_GET) OR array_key_exists('editGraft', $_GET) OR (Tools::isSubmit('submitAddToHook') AND $this->_errors))
+		if (array_key_exists('addToHook', $_GET) OR array_key_exists('editGraft', $_GET) OR (Tools::isSubmit('submitAddToHook') AND $this->errors))
 		{
 			$this->display = 'edit';
 			$this->content .= $this->renderForm();

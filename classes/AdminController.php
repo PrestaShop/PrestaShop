@@ -92,7 +92,7 @@ class AdminControllerCore extends Controller
 	public $fields_value = false;
 
 	/** @var array Errors displayed after post processing */
-	public $_errors = array();
+	public $errors = array();
 
 	/** @var define if the header of the list contains filter and sorting links or not */
 	protected $list_simple_header;
@@ -424,7 +424,7 @@ class AdminControllerCore extends Controller
 						if (isset($value[0]) && !empty($value[0]))
 						{
 							if (!Validate::isDate($value[0]))
-								$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+								$this->errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
 							else
 								$sql_filter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
 						}
@@ -432,7 +432,7 @@ class AdminControllerCore extends Controller
 						if (isset($value[1]) && !empty($value[1]))
 						{
 							if (!Validate::isDate($value[1]))
-								$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+								$this->errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
 							else
 								$sql_filter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
 						}
@@ -532,7 +532,7 @@ class AdminControllerCore extends Controller
 					$this->content = 'ok';
 			}
 		}
-		$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
+		$this->errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
 		return $object;
 	}
 
@@ -549,12 +549,12 @@ class AdminControllerCore extends Controller
 			// check if request at least one object with noZeroObject
 			if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 			{
-				$this->_errors[] = Tools::displayError('You need at least one object.').
+				$this->errors[] = Tools::displayError('You need at least one object.').
 					' <b>'.$this->table.'</b><br />'.
 					Tools::displayError('You cannot delete all of the items.');
 			}
 			else if (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) //check if some ids are in list_skip_actions and forbid deletion
-					$this->_errors[] = Tools::displayError('You cannot delete this items.');
+					$this->errors[] = Tools::displayError('You cannot delete this items.');
 			else
 			{
 				if ($this->deleted)
@@ -563,7 +563,7 @@ class AdminControllerCore extends Controller
 						$res = $object->deleteImage();
 
 					if (!$res)
-						$this->_errors[] = Tools::displayError('Unable to delete associated images');
+						$this->errors[] = Tools::displayError('Unable to delete associated images');
 
 					$object->deleted = 1;
 					if ($object->update())
@@ -575,12 +575,12 @@ class AdminControllerCore extends Controller
 						$object->cleanPositions();
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$token;
 				}
-				$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+				$this->errors[] = Tools::displayError('An error occurred during deletion.');
 			}
 		}
 		else
 		{
-			$this->_errors[] = Tools::displayError('An error occurred while deleting object.').
+			$this->errors[] = Tools::displayError('An error occurred while deleting object.').
 				' <b>'.$this->table.'</b> '.
 				Tools::displayError('(cannot load object)');
 		}
@@ -611,7 +611,7 @@ class AdminControllerCore extends Controller
 		/* Checking fields validity */
 		$this->validateRules();
 
-		if (count($this->_errors) <= 0)
+		if (count($this->errors) <= 0)
 		{
 			$object = new $this->className();
 
@@ -619,11 +619,11 @@ class AdminControllerCore extends Controller
 			$this->beforeAdd($object);
 			if (method_exists($object, 'add') && !$object->add())
 			{
-				$this->_errors[] = Tools::displayError('An error occurred while creating object.').
+				$this->errors[] = Tools::displayError('An error occurred while creating object.').
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
 			/* voluntary do affectation here */
-			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->_errors) && $this->_redirect)
+			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);
@@ -640,8 +640,8 @@ class AdminControllerCore extends Controller
 			}
 		}
 
-		$this->_errors = array_unique($this->_errors);
-		if (count($this->_errors) > 0) {
+		$this->errors = array_unique($this->errors);
+		if (count($this->errors) > 0) {
 			return;
 		}
 
@@ -659,7 +659,7 @@ class AdminControllerCore extends Controller
 		/* Checking fields validity */
 		$this->validateRules();
 
-		if (count($this->_errors) <= 0)
+		if (count($this->errors) <= 0)
 		{
 			$id = (int)Tools::getValue($this->identifier);
 
@@ -700,10 +700,10 @@ class AdminControllerCore extends Controller
 
 					if (!$result)
 					{
-						$this->_errors[] = Tools::displayError('An error occurred while updating object.').
+						$this->errors[] = Tools::displayError('An error occurred while updating object.').
 							' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 					}
-					else if ($this->postImage($object->id) && !count($this->_errors))
+					else if ($this->postImage($object->id) && !count($this->errors))
 					{
 						$parent_id = (int)Tools::getValue('id_parent', 1);
 						// Specific back redirect
@@ -726,12 +726,12 @@ class AdminControllerCore extends Controller
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating object.').
+					$this->errors[] = Tools::displayError('An error occurred while updating object.').
 						' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 			}
 		}
-		$this->_errors = array_unique($this->_errors);
-		if (count($this->_errors) > 0)
+		$this->errors = array_unique($this->errors);
+		if (count($this->errors) > 0)
 			return;
 		if (isset($object))
 			return $object;
@@ -750,7 +750,7 @@ class AdminControllerCore extends Controller
 
 		$object = new $this->className();
 		if (!$object->addFieldsRequiredDatabase($fields))
-			$this->_errors[] = Tools::displayError('Error in updating required fields');
+			$this->errors[] = Tools::displayError('Error in updating required fields');
 		else
 			$this->redirect_after = self::$currentIndex.'&conf=4&token='.$token;
 
@@ -772,10 +772,10 @@ class AdminControllerCore extends Controller
 				$this->redirect_after = self::$currentIndex.'&conf=5'.$id_category.'&token='.$token;
 			}
 			else
-				$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+				$this->errors[] = Tools::displayError('An error occurred while updating status.');
 		}
 		else
-			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
 				' <b>'.$this->table.'</b> '.
 				Tools::displayError('(cannot load object)');
 
@@ -791,11 +791,11 @@ class AdminControllerCore extends Controller
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 		{
-			$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').
+			$this->errors[] = Tools::displayError('An error occurred while updating status for object.').
 				' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		}
 		else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
-			$this->_errors[] = Tools::displayError('Failed to update the position.');
+			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 		{
 			$id_identifier_str = ($id_identifier = (int)Tools::getValue($this->identifier)) ? '&'.$this->identifier.'='.$id_identifier : '';
@@ -887,10 +887,10 @@ class AdminControllerCore extends Controller
 						{
 							foreach ($languages as $language)
 								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
-									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+									$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 						}
 						else if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+							$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
 
 					// Check field validator
 					if (isset($values['type']) && $values['type'] == 'textLang')
@@ -898,18 +898,18 @@ class AdminControllerCore extends Controller
 						foreach ($languages as $language)
 							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
 								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
-									$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+									$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
 					}
 					else if (Tools::getValue($field) && isset($values['validation']))
 						if (!Validate::$values['validation'](Tools::getValue($field)))
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+							$this->errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
 
 					// Set default value
 					if (!Tools::getValue($field) && isset($values['default']))
 						$_POST[$field] = $values['default'];
 				}
 
-				if (!count($this->_errors))
+				if (!count($this->errors))
 				{
 					foreach ($fields as $key => $options)
 					{
@@ -938,7 +938,7 @@ class AdminControllerCore extends Controller
 									if (Validate::isCleanHtml($val))
 										$list[$language['id_lang']] = $val;
 									else
-										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+										$this->errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
 								}
 							}
 							Configuration::updateValue($key, $list);
@@ -951,17 +951,17 @@ class AdminControllerCore extends Controller
 								if (Validate::isCleanHtml($val))
 									Configuration::updateValue($key, $val);
 								else
-									$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+									$this->errors[] = Tools::displayError('Can not add configuration '.$key);
 							}
 						}
 					}
 				}
 			}
-			if (count($this->_errors) <= 0)
+			if (count($this->errors) <= 0)
 				$this->redirect_after = self::$currentIndex.'&conf=6&token='.$token;
 		}
 		else
-			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 
 		// todo : return value ?
 	}
@@ -1030,7 +1030,7 @@ class AdminControllerCore extends Controller
 			if (Validate::isLoadedObject($this->object))
 				return $this->object;
 			// throw exception
-			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
+			$this->errors[] = Tools::displayError('Object cannot be loaded (not found)');
 			return false;
 		}
 		else if ($opt)
@@ -1040,7 +1040,7 @@ class AdminControllerCore extends Controller
 		}
 		else
 		{
-			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
+			$this->errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
 			return false;
 		}
 
@@ -1107,8 +1107,6 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign('display_footer', $this->display_footer);
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
-		// Template override
-		$tpl = $this->tpl_folder.'content.tpl';
 		$tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
 		// Check if action template has been override
@@ -1138,9 +1136,9 @@ class AdminControllerCore extends Controller
 
 
 		if ($this->json)
-			$this->context->smarty->assign('errors', Tools::jsonEncode($this->_errors));
+			$this->context->smarty->assign('errors', Tools::jsonEncode($this->errors));
 		else
-			$this->context->smarty->assign('errors', $this->_errors);
+			$this->context->smarty->assign('errors', $this->errors);
 
 		if ($this->json)
 			$this->context->smarty->assign('warnings', Tools::jsonEncode($this->warnings));
@@ -1802,7 +1800,7 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'delete_image';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		/* Delete object */
 		else if (isset($_GET['delete'.$this->table]))
@@ -1810,7 +1808,7 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'delete';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
 		/* Change object statuts (active, inactive) */
 		else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
@@ -1818,7 +1816,7 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'status';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		/* Move an object */
 		else if (isset($_GET['position']))
@@ -1826,7 +1824,7 @@ class AdminControllerCore extends Controller
 			if ($this->tabAccess['edit'] == '1')
 				$this->action = 'position';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if ($submitted_action = Tools::getValue('submitAction'.$this->table))
 				$this->action = $submitted_action;
@@ -1843,7 +1841,7 @@ class AdminControllerCore extends Controller
 					$this->display = 'edit';
 				}
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 			}
 			// case 2: creating new entry
 			else
@@ -1854,7 +1852,7 @@ class AdminControllerCore extends Controller
 					$this->display = 'edit';
 				}
 				else
-					$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+					$this->errors[] = Tools::displayError('You do not have permission to add here.');
 			}
 		}
 		else if (isset($_GET['add'.$this->table]))
@@ -1865,14 +1863,14 @@ class AdminControllerCore extends Controller
 				$this->display = 'add';
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
 		else if (isset($_GET['update'.$this->table]) && isset($_GET['id_'.$this->table]))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->display = 'edit';
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		else if (isset($_GET['view'.$this->table]))
 		{
@@ -1882,7 +1880,7 @@ class AdminControllerCore extends Controller
 				$this->action = 'view';
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to view here.');
+				$this->errors[] = Tools::displayError('You do not have permission to view here.');
 		}
 		/* Cancel all filters for this tab */
 		else if (isset($_POST['submitReset'.$this->table]))
@@ -2156,21 +2154,21 @@ class AdminControllerCore extends Controller
 		foreach ($rules['required'] as $field)
 			if (($value = Tools::getValue($field)) == false && (string)$value != '0')
 				if (!Tools::getValue($this->identifier) || ($field != 'passwd' && $field != 'no-picture'))
-					$this->_errors[] = $this->l('the field').
+					$this->errors[] = $this->l('the field').
 						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
 						$this->l('is required');
 
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] as $field_lang)
 			if (($empty = Tools::getValue($field_lang.'_'.$default_language->id)) === false || $empty !== '0' && empty($empty))
-				$this->_errors[] = $this->l('the field').
+				$this->errors[] = $this->l('the field').
 					' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name).'</b> '.
 					$this->l('is required at least in').' '.$default_language->name;
 
 		/* Checking for maximum fields sizes */
 		foreach ($rules['size'] as $field => $max_length)
 			if (Tools::getValue($field) !== false && Tools::strlen(Tools::getValue($field)) > $max_length)
-				$this->_errors[] = $this->l('the field').
+				$this->errors[] = $this->l('the field').
 					' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
 					$this->l('is too long').' ('.$max_length.' '.$this->l('chars max').')';
 
@@ -2180,7 +2178,7 @@ class AdminControllerCore extends Controller
 			{
 				$field_lang = Tools::getValue($field_lang.'_'.$language['id_lang']);
 				if ($field_lang !== false && Tools::strlen($field_lang) > $max_length)
-					$this->_errors[] = $this->l('the field').
+					$this->errors[] = $this->l('the field').
 						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name).' ('.$language['name'].')</b> '.
 						$this->l('is too long').' ('.$max_length.' '.$this->l('chars max, html chars including').')';
 			}
@@ -2191,7 +2189,7 @@ class AdminControllerCore extends Controller
 		foreach ($rules['validate'] as $field => $function)
 			if (($value = Tools::getValue($field)) !== false && ($field != 'passwd'))
 				if (!Validate::$function($value) && !empty($value))
-					$this->_errors[] = $this->l('the field').
+					$this->errors[] = $this->l('the field').
 						' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field, $class_name).'</b> '.
 						$this->l('is invalid');
 
@@ -2199,11 +2197,11 @@ class AdminControllerCore extends Controller
 		if (($value = Tools::getValue('passwd')) != false)
 		{
 			if ($class_name == 'Employee' && !Validate::isPasswdAdmin($value))
-				$this->_errors[] = $this->l('the field').
+				$this->errors[] = $this->l('the field').
 					' <b>'.call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name).'</b> '.
 					$this->l('is invalid');
 			else if ($class_name == 'Customer' && !Validate::isPasswd($value))
-				$this->_errors[] = $this->l('the field').
+				$this->errors[] = $this->l('the field').
 					' <b>'.call_user_func(array($class_name, 'displayFieldName'), 'passwd', $class_name).
 					'</b> '.$this->l('is invalid');
 		}
@@ -2213,7 +2211,7 @@ class AdminControllerCore extends Controller
 			foreach ($languages as $language)
 				if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value))
 					if (!Validate::$function($value))
-						$this->_errors[] = $this->l('the field').
+						$this->errors[] = $this->l('the field').
 							' <b>'.call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name).' ('.$language['name'].')</b> '.
 							$this->l('is invalid');
 	}
@@ -2368,7 +2366,7 @@ class AdminControllerCore extends Controller
 			{
 				if (!Validate::$field['validation']($value))
 				{
-					$this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
+					$this->errors[] = Tools::displayError($field['title'].' : Incorrect value');
 					return false;
 				}
 			}
@@ -2398,7 +2396,7 @@ class AdminControllerCore extends Controller
 			foreach ($this->fieldImageSettings as $image)
 				if (isset($image['name']) && isset($image['dir']))
 					$this->uploadImage($id, $image['name'], $image['dir'].'/');
-		return !count($this->_errors) ? true : false;
+		return !count($this->errors) ? true : false;
 	}
 
 	protected function uploadImage($id, $name, $dir, $ext = false, $width = null, $height = null)
@@ -2414,7 +2412,7 @@ class AdminControllerCore extends Controller
 			// Check image validity
 			$max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
 			if ($error = checkImage($_FILES[$name], Tools::getMaxUploadSize($max_size)))
-				$this->_errors[] = $error;
+				$this->errors[] = $error;
 			else if (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
 				return false;
 			else
@@ -2422,8 +2420,8 @@ class AdminControllerCore extends Controller
 				$tmp_name = $_FILES[$name]['tmp_name'];
 				// Copy new image
 				if (!imageResize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
-					$this->_errors[] = Tools::displayError('An error occurred while uploading image.');
-				if (count($this->_errors))
+					$this->errors[] = Tools::displayError('An error occurred while uploading image.');
+				if (count($this->errors))
 					return false;
 				if ($this->afterImageUpload())
 				{
@@ -2453,7 +2451,7 @@ class AdminControllerCore extends Controller
 
 				// Check if all object will be deleted
 				if ($objects_count <= 1 || count($this->boxes) == $objects_count)
-					$this->_errors[] = Tools::displayError('You need at least one object.').
+					$this->errors[] = Tools::displayError('You need at least one object.').
 						' <b>'.$this->table.'</b><br />'.
 						Tools::displayError('You cannot delete all of the items.');
 			}
@@ -2474,11 +2472,11 @@ class AdminControllerCore extends Controller
 
 				if ($result)
 					$this->redirect_after = self::$currentIndex.'&conf=2&token='.$token;
-				$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+				$this->errors[] = Tools::displayError('An error occurred while deleting selection.');
 			}
 		}
 		else
-			$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+			$this->errors[] = Tools::displayError('You must select at least one element to delete.');
 
 		return $result;
 	}
@@ -2492,10 +2490,10 @@ class AdminControllerCore extends Controller
 
 			if ($result)
 				$this->redirect_after = self::$currentIndex.'&conf=28&token='.$token;
-			$this->_errors[] = Tools::displayError('An error occurred while affecting a zone to the selection.');
+			$this->errors[] = Tools::displayError('An error occurred while affecting a zone to the selection.');
 		}
 		else
-			$this->_errors[] = Tools::displayError('You must select at least one element to affect a new zone.');
+			$this->errors[] = Tools::displayError('You must select at least one element to affect a new zone.');
 
 		return $result;
 	}

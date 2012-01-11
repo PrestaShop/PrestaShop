@@ -562,13 +562,13 @@ class AdminStockManagementControllerCore extends AdminController
 
 		// Checks access
 		if (Tools::isSubmit('addStock') && !($this->tabAccess['add'] === '1'))
-			$this->_errors[] = Tools::displayError('You do not have the required permission to add stock.');
+			$this->errors[] = Tools::displayError('You do not have the required permission to add stock.');
 		if (Tools::isSubmit('removeStock') && !($this->tabAccess['delete'] === '1'))
-			$this->_errors[] = Tools::displayError('You do not have the required permission to delete stock.');
+			$this->errors[] = Tools::displayError('You do not have the required permission to delete stock.');
 		if (Tools::isSubmit('transferStock') && !($this->tabAccess['edit'] === '1'))
-			$this->_errors[] = Tools::displayError('You do not have the required permission to transfer stock.');
+			$this->errors[] = Tools::displayError('You do not have the required permission to transfer stock.');
 
-		if (count($this->_errors))
+		if (count($this->errors))
 			return;
 
 		// Global checks when add / remove / transfer product
@@ -577,7 +577,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// get product ID
 			$id_product = (int)Tools::getValue('id_product', 0);
 			if ($id_product <= 0)
-				$this->_errors[] = Tools::displayError('The selected product is not valid.');
+				$this->errors[] = Tools::displayError('The selected product is not valid.');
 
 			// get product_attribute ID
 			$id_product_attribute = (int)Tools::getValue('id_product_attribute', 0);
@@ -586,13 +586,13 @@ class AdminStockManagementControllerCore extends AdminController
 			$check = Tools::getValue('check', '');
 			$check_valid = md5(_COOKIE_KEY_.$id_product.$id_product_attribute);
 			if ($check != $check_valid)
-				$this->_errors[] = Tools::displayError('The selected product is not valid.');
+				$this->errors[] = Tools::displayError('The selected product is not valid.');
 
 			// get quantity and check that the post value is really an integer
 			// If it's not, we have to do nothing.
 			$quantity = Tools::getValue('quantity', 0);
 			if (!is_numeric($quantity) || (int)$quantity <= 0)
-				$this->_errors[] = Tools::displayError('The quantity value is not valid.');
+				$this->errors[] = Tools::displayError('The quantity value is not valid.');
 			$quantity = (int)$quantity;
 
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
@@ -605,17 +605,17 @@ class AdminStockManagementControllerCore extends AdminController
 			// get warehouse id
 			$id_warehouse = (int)Tools::getValue('id_warehouse', 0);
 			if ($id_warehouse <= 0 || !Warehouse::exists($id_warehouse))
-				$this->_errors[] = Tools::displayError('The selected warehouse is not valid.');
+				$this->errors[] = Tools::displayError('The selected warehouse is not valid.');
 
 			// get stock movement reason id
 			$id_stock_mvt_reason = (int)Tools::getValue('id_stock_mvt_reason', 0);
 			if ($id_stock_mvt_reason <= 0 || !StockMvtReason::exists($id_stock_mvt_reason))
-				$this->_errors[] = Tools::displayError('The reason is not valid.');
+				$this->errors[] = Tools::displayError('The reason is not valid.');
 
 			// get usable flag
 			$usable = Tools::getValue('usable', null);
 			if (is_null($usable))
-				$this->_errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops.');
 			$usable = (bool)$usable;
 		}
 
@@ -624,16 +624,16 @@ class AdminStockManagementControllerCore extends AdminController
 			// get product unit price
 			$price = str_replace(',', '.', Tools::getValue('price', 0));
 			if (!is_numeric($price))
-				$this->_errors[] = Tools::displayError('The product price is not valid.');
+				$this->errors[] = Tools::displayError('The product price is not valid.');
 			$price = round(floatval($price), 6);
 
 			// get product unit price currency id
 			$id_currency = (int)Tools::getValue('id_currency', 0);
 			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
-				$this->_errors[] = Tools::displayError('The selected currency is not valid.');
+				$this->errors[] = Tools::displayError('The selected currency is not valid.');
 
 			// if all is ok, add stock
-			if (count($this->_errors) == 0)
+			if (count($this->errors) == 0)
 			{
 				$warehouse = new Warehouse($id_warehouse);
 
@@ -663,14 +663,14 @@ class AdminStockManagementControllerCore extends AdminController
 					Tools::redirectAdmin($redirect.'&conf=1');
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error occured. No stock was added.');
+					$this->errors[] = Tools::displayError('An error occured. No stock was added.');
 			}
 		}
 
 		if (Tools::isSubmit('removestock') && Tools::isSubmit('is_post'))
 		{
 			// if all is ok, remove stock
-			if (count($this->_errors) == 0)
+			if (count($this->errors) == 0)
 			{
 				$warehouse = new Warehouse($id_warehouse);
 
@@ -684,7 +684,7 @@ class AdminStockManagementControllerCore extends AdminController
 					Tools::redirectAdmin($redirect.'&conf=2');
 				}
 				else
-					$this->_errors[] = Tools::displayError('It is not possible to remove the specified quantity or an error occured. No stock was removed.');
+					$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity or an error occured. No stock was removed.');
 			}
 		}
 
@@ -693,27 +693,27 @@ class AdminStockManagementControllerCore extends AdminController
 			// get source warehouse id
 			$id_warehouse_from = (int)Tools::getValue('id_warehouse_from', 0);
 			if ($id_warehouse_from <= 0 || !Warehouse::exists($id_warehouse_from))
-				$this->_errors[] = Tools::displayError('The source warehouse is not valid.');
+				$this->errors[] = Tools::displayError('The source warehouse is not valid.');
 
 			// get destination warehouse id
 			$id_warehouse_to = (int)Tools::getValue('id_warehouse_to', 0);
 			if ($id_warehouse_to <= 0 || !Warehouse::exists($id_warehouse_to))
-				$this->_errors[] = Tools::displayError('The destination warehouse is not valid.');
+				$this->errors[] = Tools::displayError('The destination warehouse is not valid.');
 
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
 			if (is_null($usable_from))
-				$this->_errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in source warehouse.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in source warehouse.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
 			if (is_null($usable_to))
-				$this->_errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in destination warehouse.');
+				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops in destination warehouse.');
 			$usable_to = (bool)$usable_to;
 
 			// if all is ok, transfer stock
-			if (count($this->_errors) == 0)
+			if (count($this->errors) == 0)
 			{
 				// transfer stock
 				$stock_manager = StockManagerFactory::getManager();
@@ -731,7 +731,7 @@ class AdminStockManagementControllerCore extends AdminController
 				if ($is_transfer)
 					Tools::redirectAdmin($redirect.'&conf=3');
 				else
-					$this->_errors[] = Tools::displayError('It is not possible to transfer the specified quantity, or an error occured. No stock was transfered.');
+					$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity, or an error occured. No stock was transfered.');
 			}
 		}
 	}
@@ -1061,7 +1061,7 @@ class AdminStockManagementControllerCore extends AdminController
 					));
 				}
 				else
-					$this->_errors[] = Tools::displayError('The specified product is not valid');
+					$this->errors[] = Tools::displayError('The specified product is not valid');
 			}
 		}
 		else

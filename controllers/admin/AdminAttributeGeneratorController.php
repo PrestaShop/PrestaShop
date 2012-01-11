@@ -84,7 +84,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		if (isset($_POST['generate']))
 		{
 			if (!is_array(Tools::getValue('options')))
-				$this->_errors[] = Tools::displayError('Please choose at least 1 attribute.');
+				$this->errors[] = Tools::displayError('Please choose at least 1 attribute.');
 			else
 			{
 				$tab = array_values($_POST['options']);
@@ -117,7 +117,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 					Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&action=Combinations');
 				}
 				else
-					$this->_errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
+					$this->errors[] = Tools::displayError('Unable to initialize parameters, combination is missing or object cannot be loaded.');
 			}
 		}
 		else if (isset($_POST['back']))
@@ -231,7 +231,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'tax_rates' => $this->product->getTaxesRate(),
-			'generate' => isset($_POST['generate']) && !count($this->_errors),
+			'generate' => isset($_POST['generate']) && !count($this->errors),
 			'combinations_size' => count($this->combinations),
 			'product_name' => $this->product->name[$this->context->language->id],
 			'product_reference' => $this->product->reference,

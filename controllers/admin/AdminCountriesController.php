@@ -390,11 +390,11 @@ class AdminCountriesControllerCore extends AdminController
 				{
 					$error_list = $tmp_addr_format->getErrorList();
 					foreach ($error_list as $num_error => $error)
-						$this->_errors[] = $error;
+						$this->errors[] = $error;
 				}
 
 				if (!$save_status)
-					$this->_errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
+					$this->errors[] = Tools::displayError('Invalid address layout'.Db::getInstance()->getMsgError());
 			}
 			unset($tmp_addr_format);
 		}

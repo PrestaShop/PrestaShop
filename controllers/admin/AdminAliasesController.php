@@ -100,14 +100,14 @@ class AdminAliasesControllerCore extends AdminController
 			$string = strval(Tools::getValue('alias'));
 		 	$aliases = explode(',', $string);
 			if (empty($search) || empty($string))
-				$this->_errors[] = $this->l('aliases and result are both required');
+				$this->errors[] = $this->l('aliases and result are both required');
 			if (!Validate::isValidSearch($search))
-				$this->_errors[] = $search.' '.$this->l('is not a valid result');
+				$this->errors[] = $search.' '.$this->l('is not a valid result');
 		 	foreach ($aliases as $alias)
 				if (!Validate::isValidSearch($alias))
-					$this->_errors[] = $alias.' '.$this->l('is not a valid alias');
+					$this->errors[] = $alias.' '.$this->l('is not a valid alias');
 
-			if (!count($this->_errors))
+			if (!count($this->errors))
 			{
 			 	foreach ($aliases as $alias)
 			 	{

@@ -60,13 +60,13 @@ class AdminCartRulesControllerCore extends AdminController
 
 			// Idiot-proof control
 			if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to')))
-				$this->_errors[] = Tools::displayError('The voucher cannot end before it begins');
+				$this->errors[] = Tools::displayError('The voucher cannot end before it begins');
 			if ((int)Tools::getValue('minimum_amount') < 0)
-				$this->_errors[] = Tools::displayError('Minimum amount cannot be lower than 0');
+				$this->errors[] = Tools::displayError('Minimum amount cannot be lower than 0');
 			if ((float)Tools::getValue('reduction_percent') < 0 || (float)Tools::getValue('reduction_percent') > 100)
-				$this->_errors[] = Tools::displayError('Reduction percent must range from 0% to 100%');
+				$this->errors[] = Tools::displayError('Reduction percent must range from 0% to 100%');
 			if ((int)Tools::getValue('reduction_amount') < 0)
-				$this->_errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
+				$this->errors[] = Tools::displayError('Reduction amount cannot be lower than 0');
 		}
 
 		return parent::postProcess();
