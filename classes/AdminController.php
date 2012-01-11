@@ -1608,16 +1608,8 @@ class AdminControllerCore extends Controller
 		{
 			$iso = Context::getContext()->language->iso_code;
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
-
-			if (isset($_LANGADM))
-				$_LANGADM = array_change_key_case($_LANGADM);
-			else
-				$_LANGADM = array();
 		}
 
-		$class = strtolower($class);
-		// For traductions in a tpl folder with an underscore
-		$class = str_replace('_', '', $class);
 		if (isset(self::$tab_module_list[$class]))
 		{
 			$class_name_controller = $class.'controller';
@@ -1628,23 +1620,24 @@ class AdminControllerCore extends Controller
 				return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
 			}
 		}
-
 		$key = md5(str_replace('\'', '\\\'', $string));
-
 		// retrocomp :
 		// if value is not set, try with "AdminTab" as prefix.
 		// @todo : change AdminTab to Helper
+		//echo $class.$key.'<br />';
+
 		if (isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
-		else if (isset($_LANGADM['admincontroller'.$key]))
-			$str = $_LANGADM['admincontroller'.$key];
-		else if (isset($_LANGADM['helper'.$key]))
-			$str = $_LANGADM['helper'.$key];
-		else if (isset($_LANGADM['admintab'.$key]))
-			$str = $_LANGADM['admintab'.$key];
+		else if (isset($_LANGADM['AdminController'.$key]))
+			$str = $_LANGADM['AdminController'.$key];
+		else if (isset($_LANGADM['Helper'.$key]))
+			$str = $_LANGADM['Helper'.$key];
+		else if (isset($_LANGADM['AdminTab'.$key]))
+			$str = $_LANGADM['AdminTab'.$key];
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
 			$str = $string;
+
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
