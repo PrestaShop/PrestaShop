@@ -1180,6 +1180,13 @@ class ProductCore extends ObjectModel
 		return $return;
 	}
 
+	/**
+	 * Sets Supplier Reference
+	 *
+	 * @param string $supplier_reference
+	 * @param int $id_product_attribute
+	 * @param int $id_currency
+	 */
 	public function addSupplierReference($supplier_reference, $id_product_attribute = null, $id_currency = null)
 	{
 		//Try to set the default supplier reference
