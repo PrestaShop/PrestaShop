@@ -334,6 +334,7 @@ $_LANG['order-carrier_6f05787682585c32498e88bcd2ea88fc'] = 'Méthodes de livrais
 $_LANG['order-carrier_e085dcd05d73bdd5afe338e5b6e42a18'] = 'Choisissez votre mode de livraison';
 $_LANG['order-carrier_c8c4080207cd4f02548c8cb6285bd16b'] = 'Aucun transporteur nécessaire pour cette commande';
 $_LANG['order-carrier_0fce1189b263c211a8239fb0e9df004d'] = 'J\'accepte de recevoir ma commande dans un emballage recyclé';
+$_LANG['order-carrier_69e70bbb472f9c8d666a757f8f41c56d'] = 'Choisissez une option de livraison pour l\'adresse : ';
 $_LANG['order-carrier_a5615d41b8370f6b580e2e1baa606c7f'] = 'Le meilleur prix et meilleur note';
 $_LANG['order-carrier_1e19fde8ad9debeeeb7da6c581e63fd6'] = 'Le plus rapide';
 $_LANG['order-carrier_b1992d8f7c58180c1ebd461b7d502423'] = 'Le meilleur prix';
