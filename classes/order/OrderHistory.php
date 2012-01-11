@@ -170,6 +170,7 @@ class OrderHistoryCore extends ObjectModel
 										true
 									);
 								}
+								StockAvailable::updateQuantity($pack_product->id, 0, (int)$pack_product->pack_quantity * $product['product_quantity'], $order->id_shop);
 							}
 						}
 					}
@@ -189,12 +190,12 @@ class OrderHistoryCore extends ObjectModel
 								true
 							);
 						}
-					}
 
-					if (StockAvailable::dependsOnStock($product['product_id'], $order->id_shop))
-						StockAvailable::synchronize($product['product_id']);
-					else
-						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['physical_quantity'], $order->id_shop);
+						if (StockAvailable::dependsOnStock($product['product_id'], $order->id_shop))
+							StockAvailable::synchronize($product['product_id']);
+						else
+							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['physical_quantity'], $order->id_shop);
+					}
 				}
 			}
 
