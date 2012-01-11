@@ -112,7 +112,7 @@ class CombinationCore extends ObjectModel
 		{
 			$sqlValues = array();
 			foreach ($ids_attribute as $value)
-				$sqlValues[] = '('.(int)$value['id'].', '.(int)$this->id.')';
+				$sqlValues[] = '('.(int)$value.', '.(int)$this->id.')';
 			$result = Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sqlValues)
@@ -124,6 +124,9 @@ class CombinationCore extends ObjectModel
 	
 	public function setWsProductOptionValues($values)
 	{
+		$ids_attributes = array();
+		foreach ($values as $value)
+			$ids_attributes[] = $value['id'];
 		return $this->setAttributes($values);
 	}
 
