@@ -80,6 +80,11 @@ abstract class ControllerCore
 	abstract public function checkAccess();
 
 	/**
+	 * check that the current user/visitor has valid view permissions
+	 */
+	abstract public function viewAccess();
+
+	/**
 	 * Initialize the page
 	 */
 	public function init()
@@ -141,7 +146,6 @@ abstract class ControllerCore
 	public function run()
 	{
 		$this->init();
-
 		if ($this->checkAccess())
 		{
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
@@ -156,7 +160,10 @@ abstract class ControllerCore
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->initHeader();
 
-			$this->initContent();
+			if ($this->viewAccess())
+				$this->initContent();
+			else
+				$this->errors[] = Tools::displayError('Access denied.');
 
 			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
 				$this->initFooter();
