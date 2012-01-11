@@ -78,6 +78,12 @@ class CategoryCore extends ObjectModel
 	public $is_root_category;
 
 	public $groupBox;
+	
+	/** @var boolean does the product have to be removed during the delete process */
+	public $remove_products = true;
+	
+	/** @var boolean does the product have to be disable during the delete process */
+	public $disable_products = false;
 
 	protected static $_links = array();
 
@@ -195,15 +201,15 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Recursive scan of subcategories
-	  *
-	  * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
- 	  * @param integer $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
- 	  * @param integer $id_lang Specify the id of the language used
-	  * @param array $excluded_ids_array specify a list of ids to exclude of results
-	  *
- 	  * @return array Subcategories lite tree
-	  */
+	 * Recursive scan of subcategories
+	 *
+	 * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
+ 	 * @param integer $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
+ 	 * @param integer $id_lang Specify the id of the language used
+	 * @param array $excluded_ids_array specify a list of ids to exclude of results
+	 *
+	 * @return array Subcategories lite tree
+	 */
 	public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null)
 	{
 		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
@@ -245,15 +251,15 @@ class CategoryCore extends ObjectModel
 
 
 	/**
-	  * Recursively add specified category childs to $to_delete array
-	  *
-	  * @param array &$to_delete Array reference where categories ID will be saved
-	  * @param array $id_category Parent category ID
-	  */
+	 * Recursively add specified category childs to $to_delete array
+	 *
+	 * @param array &$to_delete Array reference where categories ID will be saved
+	 * @param array $id_category Parent category ID
+	 */
 	protected function recursiveDelete(&$to_delete, $id_category)
 	{
-	 	if (!is_array($to_delete) || !$id_category)
-	 		die(Tools::displayError());
+		if (!is_array($to_delete) || !$id_category)
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->executeS('
 		SELECT `id_category`
@@ -295,7 +301,7 @@ class CategoryCore extends ObjectModel
 			$tmp_category->deleteImage();
 		}
 
-		/* Delete products which were not in others categories */
+		/* Delete or link products which were not in others categories */
 		$result = Db::getInstance()->executeS('
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'product`
@@ -305,7 +311,20 @@ class CategoryCore extends ObjectModel
 		{
 			$product = new Product((int)$p['id_product']);
 			if (Validate::isLoadedObject($product))
-				$product->delete();
+			{
+				if ($this->remove_products)
+					$product->delete();
+				else
+				{
+					if ($this->disable_products)
+					{
+						$product->active = 0;
+					}
+					
+					$product->addToCategories($this->id_parent);
+					$product->save();
+				}
+			}
 		}
 
 		/* Set category default to 1 where categorie no more exists */
@@ -892,11 +911,11 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Get Each parent category of this category until the root category
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return array Corresponding categories
-	  */
+	 * Get Each parent category of this category until the root category
+	 *
+	 * @param integer $id_lang Language ID
+	 * @return array Corresponding categories
+	 */
 	public function getParentsCategories($id_lang = null)
 	{
 		$context = Context::getContext();
