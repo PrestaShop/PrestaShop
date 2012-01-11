@@ -460,7 +460,7 @@ class HelperListCore extends Helper
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name.' \n'.$this->l('ID:', 'helper').' '.$id),
+			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name),
 			'action' => self::$cache_lang['Delete'],
 			'id' => $id,
 		)));
