@@ -3220,7 +3220,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 
 		$data = $this->createTemplate($this->tpl_form);
-		if ((bool)$product->id)
+		if (Validate::isLoadedObject($product))
 		{
 			$attribute_js = array();
 			$attributes = Attribute::getAttributes($this->context->language->id, true);
@@ -3240,31 +3240,27 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign('currency', $currency);
 
 			$images = Image::getImages($this->context->language->id, $product->id);
-			if ($product->id)
+
+			$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
+			$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
+
+			$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
+			$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
+
+			$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
+			$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
+			$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
+			$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
+
+			$i = 0;
+			$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
+			$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
+			foreach ($images as $k => $image)
 			{
-				$data->assign('tax_exclude_option', Tax::excludeTaxeOption());
-				$data->assign('ps_weight_unit', Configuration::get('PS_WEIGHT_UNIT'));
-
-				$data->assign('ps_use_ecotax', Configuration::get('PS_USE_ECOTAX'));
-				$data->assign('field_value_unity', $this->getFieldValue($product, 'unity'));
-
-				$data->assign('reasons', $reasons = StockMvtReason::getStockMvtReasons($this->context->language->id));
-				$data->assign('ps_stock_mvt_reason_default', $ps_stock_mvt_reason_default = Configuration::get('PS_STOCK_MVT_REASON_DEFAULT'));
-				$data->assign('minimal_quantity', $this->getFieldValue($product, 'minimal_quantity') ? $this->getFieldValue($product, 'minimal_quantity') : 1);
-				$data->assign('available_date', ($this->getFieldValue($product, 'available_date') != 0) ? stripslashes(htmlentities(Tools::displayDate($this->getFieldValue($product, 'available_date'), $this->context->language->id))) : '0000-00-00');
-
-				$i = 0;
-				$data->assign('imageType', ImageType::getByNameNType('small', 'products'));
-				$data->assign('imageWidth', (isset($image_type['width']) ? (int)($image_type['width']) : 64) + 25);
-				foreach ($images as $k => $image)
-				{
-					$images[$k]['obj'] = new Image($image['id_image']);
-					++$i;
-				}
-				$data->assign('images', $images);
+				$images[$k]['obj'] = new Image($image['id_image']);
+				++$i;
 			}
-			else
-				$this->content .= '<b>'.$this->l('You must save this product before adding combinations').'.</b>';
+			$data->assign('images', $images);
 
 			// @todo
 			$data->assign('up_filename', strval(Tools::getValue('virtual_product_filename_attribute')));
@@ -3277,7 +3273,10 @@ class AdminProductsControllerCore extends AdminController
 			));
 		}
 		else
+		{
+			$data->assign('product', $product);
 			$this->displayWarning($this->l('You must save this product before adding combinations.'));
+		}
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
