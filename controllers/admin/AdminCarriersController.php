@@ -585,7 +585,7 @@ class AdminCarriersControllerCore extends AdminController
 
 		$groups = Group::getGroups($this->context->language->id);
 		// if empty $carrier_groups_ids : object creation : we set the default groups
-		if (empty($carrier_groups_ids))
+		if (empty($carrier_groups_ids) && !$obj->id)
 		{
 			$preselected = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
 			$carrier_groups_ids = array_merge($carrier_groups_ids, $preselected);
