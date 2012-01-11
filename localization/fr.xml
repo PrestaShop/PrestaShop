@@ -43,7 +43,7 @@
             <taxRule iso_code_country="uk" id_tax="1" />
         </taxRulesGroup>
 
-        <taxRulesGroup name="FR Taux réduit (5.5%)">
+        <taxRulesGroup name="FR Taux réduit (7%)">
             <taxRule iso_code_country="be" id_tax="2" />
             <taxRule iso_code_country="bg" id_tax="2" />
             <taxRule iso_code_country="cz" id_tax="2" />
