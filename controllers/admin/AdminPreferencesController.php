@@ -33,7 +33,7 @@ class AdminPreferencesControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
-		
+
 		$max_upload = (int)ini_get('upload_max_filesize');
 		$max_post = (int)ini_get('post_max_size');
 		$upload_mb = min($max_upload, $max_post);
@@ -159,6 +159,13 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'text',
 					'default' => '480',
 					'visibility' => Shop::CONTEXT_ALL
+				),
+				'PS_B2B_ENABLE' => array(
+					'title' => $this->l('Enable B2B mode'),
+					'desc' => $this->l('Activate or deactivate B2B mode. When this option is enable some features about B2B appear.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool'
 				),
 				'PS_ORDER_PROCESS_TYPE' => array(
 					'title' => $this->l('Order process type'),
@@ -319,24 +326,24 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
 					'title' => $this->l('Limit upload file value'),
-					'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).',$upload_mb), 
-					'validation' => 'isInt', 
-					'cast' => 'intval', 
-					'type' => 'text', 
+					'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).',$upload_mb),
+					'validation' => 'isInt',
+					'cast' => 'intval',
+					'type' => 'text',
 					'suffix' => $this->l('Megabits'),
 					'default' => '1'
 				),
 				'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
-					'title' => $this->l('Limit upload image value'), 
-					'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).',$upload_mb), 
-					'validation' => 'isInt', 
-					'cast' => 'intval', 
-					'type' => 'text', 
+					'title' => $this->l('Limit upload image value'),
+					'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).',$upload_mb),
+					'validation' => 'isInt',
+					'cast' => 'intval',
+					'type' => 'text',
 					'suffix' => $this->l('Megabits'),
 					'default' => '1'
 				),
 			);
-			
+
 			if (function_exists('date_default_timezone_set'))
 				$fields['PS_TIMEZONE'] = array(
 					'title' => $this->l('Time Zone:'),
@@ -361,7 +368,7 @@ class AdminPreferencesControllerCore extends AdminController
 					'icon' =>	'tab-preferences',
 					'fields' =>	$fields,
 					'submit' => array('title' => $this->l('   Save   '), 'class' => 'button'),
-					
+
 				),
 			);
 		}
@@ -380,13 +387,13 @@ class AdminPreferencesControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('The limit choosen is superior to the server\'s maximum upload file You need to improve the limit of your server.');
 			return;
 		}
-		
+
 		if (Tools::getIsset('PS_LIMIT_UPLOAD_FILE_VALUE') && !Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE'))
 			$_POST['PS_LIMIT_UPLOAD_FILE_VALUE'] = 1;
-			
+
 		if (Tools::getIsset('PS_LIMIT_UPLOAD_IMAGE_VALUE') && !Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE'))
 			$_POST['PS_LIMIT_UPLOAD_IMAGE_VALUE'] = 1;
-		
+
 		Tools::clearCache($this->context->smarty);
 		parent::postProcess();
 	}
@@ -427,5 +434,26 @@ class AdminPreferencesControllerCore extends AdminController
 		$max_size = $upload_max_size < $post_max_size ? $upload_max_size : $post_max_size;
 		$value = ($max_size < Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE')) ? $max_size : Tools::getValue('PS_ATTACHMENT_MAXIMUM_SIZE');
 		Configuration::update('PS_ATTACHMENT_MAXIMUM_SIZE', $value);
+	}
+
+	/**
+	 * Update PS_B2B_ENABLE and enables / disables the associated tabs
+	 * @param $value integer Value of option
+	 */
+	public function updateOptionPsB2bEnable($value)
+	{
+		$value = (int)$value;
+
+		$tabs_class_name = array('AdminOutstanding');
+		if (!empty($tabs_class_name)) {
+			foreach ($tabs_class_name as $tab_class_name) {
+				$tab = Tab::getInstanceFromClassName($tab_class_name);
+				if (Validate::isLoadedObject($tab)) {
+					$tab->active = $value;
+					$tab->save();
+				}
+			}
+		}
+		Configuration::updateValue('PS_B2B_ENABLE', $value);
 	}
 }
