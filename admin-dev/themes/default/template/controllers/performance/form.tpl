@@ -51,8 +51,8 @@
 	{if $input.type == 'radio' && $input.name == 'combination'}
 		<ul style="list-style-type:disc;margin:0 0 0 30px;">
 			<li>{l s='Combinations tab on product page'}</li>
+			<li>{l s='Value'}</li>
 			<li>{l s='Attribute'}</li>
-			<li>{l s='Group of attribute'}</li>
 		</ul>
 	{elseif $input.type == 'radio' && $input.name == 'feature'}
 		<ul style="list-style-type:disc;margin:0 0 0 30px;">
