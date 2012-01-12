@@ -701,7 +701,7 @@ class AdminControllerCore extends Controller
 						$this->errors[] = Tools::displayError('An error occurred while updating object.').
 							' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 					}
-					else if ($this->postImage($object->id) && !count($this->errors))
+					else if ($this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 					{
 						$parent_id = (int)Tools::getValue('id_parent', 1);
 						// Specific back redirect

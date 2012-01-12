@@ -199,11 +199,19 @@ class AdminFeaturesControllerCore extends AdminController
 		switch ($this->display)
 		{
 			case 'editFeatureValue':
+			case 'add':
+			case 'edit':
 				$this->toolbar_btn['save'] = array(
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
-
+				
+				$this->toolbar_btn['save-and-stay'] = array(
+					'short' => 'SaveAndStay',
+					'href' => '#',
+					'desc' => $this->l('Save and stay'),
+				);
+				
 				// Default cancel button - like old back link
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
 				if (empty($back))
@@ -226,6 +234,10 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function initFormFeatureValue()
 	{
+		$this->table = 'feature_value';
+		$this->className = 'FeatureValue';
+		$this->identifier = 'id_feature_value';
+		
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Feature value'),
@@ -368,8 +380,12 @@ class AdminFeaturesControllerCore extends AdminController
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 			}
-			else if (Tools::isSubmit('submitAddfeature_value'))
+			else if (Tools::isSubmit('submitAddfeature_value') || Tools::isSubmit('submitAddfeature_valueAndStay'))
 			{
+				$this->table = 'feature_value';
+				$this->className = 'FeatureValue';
+				$this->identifier = 'id_feature_value';
+				
 				$id = (int)Tools::getValue('id_feature_value');
 				$feature_value = new FeatureValue($id);
 				$feature_value->value = array();
@@ -383,12 +399,17 @@ class AdminFeaturesControllerCore extends AdminController
 				$feature_value->id_feature = Tools::getValue('id_feature');
 
 				if (count($this->errors) > 0)
-					return false;
+				{
+					$this->display = 'editFeatureValue';
+					parent::postProcess();
+				}
 				else if (isset($id) && !empty($id))
 				{
 					// Update
 					if (!$feature_value->update())
 						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
+					else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
+						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token);
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
@@ -397,6 +418,8 @@ class AdminFeaturesControllerCore extends AdminController
 					// Create
 					if (!$feature_value->add())
 						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
+					else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
+						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token);
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
@@ -450,5 +473,44 @@ class AdminFeaturesControllerCore extends AdminController
 			else
 				parent::postProcess();
 		}
+	}
+	
+	/**
+	 * Override processAdd to change SaveAndStay button action
+	 * @see classes/AdminControllerCore::processAdd()
+	 */
+	public function processAdd($token)
+	{
+		parent::processAdd($token);
+		
+		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+	}
+	
+	/**
+	 * Override processUpdate to change SaveAndStay button action
+	 * @see classes/AdminControllerCore::processUpdate()
+	 */
+	public function processUpdate($token)
+	{
+		parent::processUpdate($token);
+	
+		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+	}
+	
+	/**
+	 * Call the right method for creating or updating object
+	 *
+	 * @param $token
+	 * @return mixed
+	 */
+	public function processSave($token)
+	{
+		if ((int)Tools::getValue('id_feature_value') <= 0 && $this->display == 'add'
+			|| (int)Tools::getValue('id_feature') <= 0 && $this->display != 'add')
+			return $this->processAdd($token);
+		else
+			return $this->processUpdate($token);
 	}
 }

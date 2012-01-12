@@ -358,6 +358,30 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	}
 
 	/**
+	 * Override processAdd to change SaveAndStay button action
+	 * @see classes/AdminControllerCore::processUpdate()
+	 */
+	public function processAdd($token)
+	{
+		parent::processAdd($token);
+		
+		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+	}
+	
+	/**
+	 * Override processUpdate to change SaveAndStay button action
+	 * @see classes/AdminControllerCore::processUpdate()
+	 */
+	public function processUpdate($token)
+	{
+		parent::processUpdate($token);
+		
+		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
+			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+	}
+	
+	/**
 	 * AdminController::initContent() override
 	 * @see AdminController::initContent()
 	 */
@@ -483,9 +507,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processSave($token)
 	{
-		if ((int)Tools::getValue('id_attribute') <= 0 && $this->display != 'add'
-			|| (int)Tools::getValue('id_attribute_group') <= 0 && $this->display == 'add'
-		)
+		if ((int)Tools::getValue('id_attribute') <= 0 && $this->display == 'add'
+			|| (int)Tools::getValue('id_attribute_group') <= 0 && $this->display != 'add')
 			return $this->processAdd($token);
 		else
 			return $this->processUpdate($token);
