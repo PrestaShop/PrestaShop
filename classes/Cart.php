@@ -2497,7 +2497,10 @@ class CartCore extends ObjectModel
 			'total_price' => $this->getOrderTotal(),
 			'total_tax' => $total_tax,
 			'total_price_without_tax' => $this->getOrderTotal(false),
-			'is_multi_address_delivery' => $this->isMultiAddressDelivery());
+			'is_multi_address_delivery' => $this->isMultiAddressDelivery(),
+			'free_ship' => 0,
+			'carrier' => new Carrier($this->id_carrier, $id_lang),
+		);
 	}
 
 	public function checkQuantities()
