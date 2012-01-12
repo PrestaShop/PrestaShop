@@ -61,8 +61,8 @@ class AdminGroupsControllerCore extends AdminController
 				'filter_key' => 'b!name'
 			),
 			'reduction' => array(
-				'title' => $this->l('Discount'),
-				'width' => 50,
+				'title' => $this->l('Discount (%)'),
+				'width' => 100,
 				'align' => 'right',
 				'type' => 'percent'
 			),
