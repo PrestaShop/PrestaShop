@@ -835,6 +835,8 @@ class AdminControllerCore extends Controller
 
 		unset($_POST);
 		$this->_filter = false;
+		unset($this->_filterHaving);
+		unset($this->_having);
 	}
 
 	/**
