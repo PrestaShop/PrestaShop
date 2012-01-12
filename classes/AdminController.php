@@ -350,8 +350,6 @@ class AdminControllerCore extends Controller
 		if ($disable)
 			return true;
 
-		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
-
 		if ($this->tabAccess['view'] === '1')
 			return true;
 		return false;
