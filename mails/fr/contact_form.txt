@@ -4,6 +4,9 @@ Votre message:
 
 {message}
 
+Numéro de commande : {id_order}
+
+Fichié attaché : {attached_file}
 
 Nous vous répondrons dés que possible.
 
