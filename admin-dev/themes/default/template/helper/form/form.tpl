@@ -90,10 +90,11 @@
 													</script>
 													{/literal}
 												{/if}
+                                                {assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
 												<input type="text"
 														name="{$input.name}_{$language.id_lang}"
 														id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
-														value="{$fields_value[$input.name][$language.id_lang]}"
+														value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format}{else}{$value_text}{/if}"
 														class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 														{if isset($input.size)}size="{$input.size}"{/if}
 														{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
@@ -119,10 +120,11 @@
 										</script>
 										{/literal}
 									{/if}
+                                    {assign var='value_text' value=$fields_value[$input.name]}
 									<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{$fields_value[$input.name]}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format}{else}{$value_text}{/if}"
 											class="{if $input.type == 'tags'}tagify {/if}"
 											{if isset($input.size)}size="{$input.size}"{/if}
 											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}

@@ -80,7 +80,7 @@ function calcPriceTE()
 	var priceTI = parseFloat(document.getElementById('priceTI').value.replace(/,/g, '.'));
 	var newPrice = ps_round(priceTI - getEcotaxTaxIncluded(), 2) / ((tax / 100) + 1);
 	document.getElementById('priceTE').value =	(isNaN(newPrice) == true || newPrice < 0) ? '' :
-		ps_round(newPrice.toFixed(6), 6);
+		ps_round(newPrice.toFixed(2), 2);
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(priceTI.toFixed(2), 2);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
