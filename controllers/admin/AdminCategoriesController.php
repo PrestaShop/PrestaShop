@@ -237,16 +237,19 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		if (Tools::isSubmit('add'.$this->table.'root') && $this->tabAccess['add'])
+		if (Tools::isSubmit('add'.$this->table.'root'))
 		{
-			$this->action = 'add'.$this->table.'root';
-			$this->display = 'edit';
+			if ($this->tabAccess['add'])
+			{
+				$this->action = 'add'.$this->table.'root';
+				$this->display = 'edit';
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		else
-			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
-		
+
 		parent::initProcess();
-		
+
 		if ($this->action == 'delete' || $this->action == 'bulkdelete')
 			if (Tools::getValue('deleteMode') == 'link' || Tools::getValue('deleteMode') == 'linkanddisable' || Tools::getValue('deleteMode') == 'delete')
 				$this->delete_mode = Tools::getValue('deleteMode');
