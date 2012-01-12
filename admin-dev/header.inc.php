@@ -40,7 +40,7 @@ echo '
 		<link type="text/css" rel="stylesheet" href="'._PS_JS_DIR_.'jquery/datepicker/datepicker.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'admin.css" />
 		<link type="text/css" rel="stylesheet" href="'._PS_CSS_DIR_.'jquery.cluetip.css" />
-		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/admin.css" />
+		<link type="text/css" rel="stylesheet" href="themes/'.Context::getContext()->employee->bo_theme.'/css/admin.css" />
 		<title>PrestaShop&trade; - '.translate('Administration panel').'</title>
 		<script type="text/javascript">
 			var helpboxes = '.Configuration::get('PS_HELPBOX').';
