@@ -99,6 +99,13 @@ class AdminEmployeesControllerCore extends AdminController
 				$this->themes[] = $theme;
 
 		parent::__construct();
+
+		// An employee can edit its own profile
+		if ($this->context->employee->id == Tools::getValue('id_employee'))
+		{
+			$this->tabAccess['view'] = '1';
+			$this->tabAccess['edit'] = '1';
+		}
 	}
 
 	public function renderList()
@@ -361,7 +368,7 @@ class AdminEmployeesControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function initProcess()
+	/*public function initProcess()
 	{
 		// If employee is editing its own entry, its ok
 		if ($this->tabAccess['edit'] !== '1'
@@ -371,6 +378,14 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->tabAccess['edit'] = 1;
 
 		parent::initProcess();
+	}*/
+
+	public function initContent()
+	{
+		if ($this->context->employee->id == Tools::getValue('id_employee'))
+			$this->display = 'edit';
+
+		return parent::initContent();
 	}
 }
 
