@@ -86,6 +86,7 @@ class AdminRangePriceControllerCore extends AdminController
 					'required' => true,
 					'suffix' => $currency->getSign('right'),
 					'desc' => $this->l('Range start (included)'),
+					'string_format' => '%.2f'
 				),
 				array(
 					'type' => 'text',
@@ -95,6 +96,7 @@ class AdminRangePriceControllerCore extends AdminController
 					'required' => true,
 					'suffix' => $currency->getSign('right'),
 					'desc' => $this->l('Range end (excluded)'),
+					'string_format' => '%.2f'
 				),
 			),
 			'submit' => array(
