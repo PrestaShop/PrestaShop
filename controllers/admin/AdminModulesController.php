@@ -811,6 +811,17 @@ class AdminModulesControllerCore extends AdminController
 			return true;
 
 
+		// Filter on module name
+		$filter_name = Tools::getValue('filtername');
+		if (!empty($filter_name))
+		{
+			if (stristr($module->name, $filter_name) === false && stristr($module->displayName, $filter_name) === false && stristr($module->description, $filter_name) === false)
+				return true;
+			else
+				return false;
+		}
+
+
 		// Filter on module category
 		$categoryFiltered = array();
 		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
@@ -859,12 +870,6 @@ class AdminModulesControllerCore extends AdminController
 		// Filter on country
 		$show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
 		if ($show_country_modules AND (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($this->iso_default_country), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($this->iso_default_country) != strval($module->limited_countries)))))
-			return true;
-
-
-		// Filter on module name
-		$filter_name = Tools::getValue('filtername');
-		if (!empty($filter_name) AND (stristr($module->name, $filter_name) === false AND stristr($module->displayName, $filter_name) === false AND stristr($module->description, $filter_name) === false))
 			return true;
 
 
