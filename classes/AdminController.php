@@ -2559,8 +2559,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function createTemplate($tpl_name)
 	{
-		// Overrides exists?
-		if ($this->override_folder && file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
+		// Use override tpl if it exists
+		// If view access is denied, we want to use the default template that will be used to display an error
+		if ($this->viewAccess()
+			&& $this->override_folder
+			&& file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
 			return $this->context->smarty->createTemplate('controllers/'.$this->override_folder.$tpl_name, $this->context->smarty);
 
 		return $this->context->smarty->createTemplate($this->context->smarty->getTemplateDir(0).$tpl_name, $this->context->smarty);

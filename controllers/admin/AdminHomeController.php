@@ -535,12 +535,10 @@ class AdminHomeControllerCore extends AdminController
 
 		$this->warnDomainName();
 
-		$tab = get_class();
 		$protocol = Tools::usingSecureMode()?'https':'http';
 		$smarty->assign('protocol',$protocol);
 		$isoUser = $this->context->language->iso_code;
 		$smarty->assign('isoUser',$isoUser);
-		$currency = $this->context->currency;
 		$upgrade = null;
 		$tpl_vars['refresh_check_version'] = 0;
 		if (@ini_get('allow_url_fopen'))
