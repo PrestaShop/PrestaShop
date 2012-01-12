@@ -4,6 +4,9 @@ Tu mensaje:
 
 {message}
 
+Número de pedido : {id_order}
+
+fijación : {attached_file}
 
 Te responderemos cuanto antes. 
 

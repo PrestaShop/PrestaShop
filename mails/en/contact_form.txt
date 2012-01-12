@@ -6,6 +6,10 @@ Your message:
 
 {message}
 
+Order ID : {id_order}
+
+Attached file : {attached_file}
+
 We will respond as soon as possible.
 
 Regards,
