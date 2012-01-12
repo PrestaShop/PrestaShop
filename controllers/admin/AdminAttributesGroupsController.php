@@ -31,6 +31,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		$this->context = Context::getContext();
 		$this->table = 'attribute_group';
+		$this->identifier = 'id_attribute_group';
 		$this->className = 'AttributeGroup';
 		$this->lang = true;
 		$this->_defaultOrderBy = 'position';
@@ -161,6 +162,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	public function renderForm()
 	{
 		$this->table = 'attribute_group';
+		$this->identifier = 'id_attribute_group';
 		
 		$group_type = array(
 			array(
@@ -243,6 +245,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$attributes_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 
 		$this->table = 'attribute';
+		$this->identifier = 'id_attribute';
 			
 		$this->fields_form = array(
 			'legend' => array(
@@ -507,6 +510,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processSave($token)
 	{
+		if ($this->display == 'add')
+			$this->identifier = 'id_attribute_group';
+		else
+			$this->identifier = 'id_attribute_group';
+		
 		if ((int)Tools::getValue('id_attribute') <= 0 && $this->display == 'add'
 			|| (int)Tools::getValue('id_attribute_group') <= 0 && $this->display != 'add')
 			return $this->processAdd($token);
