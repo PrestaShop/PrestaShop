@@ -126,7 +126,7 @@ jQuery(document).ready(Customer.init);
 		<tr>
 			<td class="col-left"><label>{l s='Pre-tax wholesale price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{$product->wholesale_price}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
+				{$currency->prefix}<input size="11" maxlength="14" name="wholesale_price" type="text" value="{$product->wholesale_price|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />{$currency->suffix}
 				<p class="preference_description">{l s='The wholesale price at which you bought this product'}</p>
 			</td>
 		</tr>
@@ -134,7 +134,7 @@ jQuery(document).ready(Customer.init);
 		<tr>
 			<td class="col-left"><label>{l s='Pre-tax retail price:'}</label></td>
 			<td style="padding-bottom:5px;">
-				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="$('#priceType').val('TE');if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}
+				{$currency->prefix}<input size="11" maxlength="14" id="priceTE" name="price" type="text" value="{$product->price|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" onkeyup="$('#priceType').val('TE');if (isArrowKey(event)) return; calcPriceTI();" />{$currency->suffix}
 				<p class="preference_description">{l s='The pre-tax retail price to sell this product'}</p>
 			</td>
 		</tr>
@@ -178,7 +178,7 @@ jQuery(document).ready(Customer.init);
 			<tr>
 				<td class="col-left"><label>{l s='Eco-tax (tax incl.):'}</label></td>
 				<td>
-					{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
+					{$currency->prefix}<input size="11" maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:'%.2f'}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />{$currency->suffix}
 					<span style="margin-left:10px">({l s='already included in price'})</span>
 				</td>
 			</tr>
@@ -193,7 +193,7 @@ jQuery(document).ready(Customer.init);
 		<tr id="tr_unit_price">
 			<td class="col-left"><label>{l s='Unit price:'}</label></td>
 			<td>
-				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|number_format:6}"
+				{$currency->prefix} <input size="11" maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}"
 					onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>{$currency->suffix}
 				{l s='/'} <!--<input size="6" maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/> -->
 				<select onchange="unitySecond();" name="unity" id="unity">
