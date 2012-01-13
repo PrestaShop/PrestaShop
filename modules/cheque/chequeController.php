@@ -107,8 +107,8 @@ class ModuleChequeController extends ModuleController
 			'isoCode' => $this->context->language->iso_code,
 			'chequeName' => $this->module->chequeName,
 			'chequeAddress' => Tools::nl2br($this->module->address),
-			'cheque_path' => $this->module->getPathUri(),
-			'cheque_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/'
+			'this_path' => $this->module->getPathUri(),
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/'
 		));
 
 		$this->setTemplate('payment_execution.tpl');
