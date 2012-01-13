@@ -101,6 +101,9 @@ class AdminControllerCore extends Controller
 	/** @var array edit form to be generated */
 	protected $fields_form;
 
+	/** @var override of $fields_form */
+	protected $fields_form_override;
+
 	/** @var array list of option forms to be generated */
 	protected $options;
 
@@ -1471,6 +1474,10 @@ class AdminControllerCore extends Controller
 		{
 			if (!$this->multiple_fieldsets)
 				$this->fields_form = array(array('form' => $this->fields_form));
+
+			// For add a fields via an override of $fields_form, use $fields_form_override
+			if (is_array($this->fields_form_override) && !empty($this->fields_form_override))
+				$this->fields_form[0]['form']['input'][] = $this->fields_form_override;
 
 			$this->getlanguages();
 			$helper = new HelperForm($this);
