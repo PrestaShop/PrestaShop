@@ -67,6 +67,7 @@ class AdminAccessControllerCore extends AdminController
 
 		$modules = array();
 		foreach ($profiles as $profile)
+		{
 			$modules[$profile['id_profile']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT ma.`id_module`, m.`name`, ma.`view`, ma.`configure`
 				FROM '._DB_PREFIX_.'module_access ma
@@ -75,6 +76,12 @@ class AdminAccessControllerCore extends AdminController
 				WHERE id_profile = '.(int)$profile['id_profile'].'
 				ORDER BY m.name
 			');
+			foreach ($modules[$profile['id_profile']] as &$module)
+			{
+				$m = Module::getInstanceById($module['id_module']);
+				$module['name'] = $m->displayName;
+			}
+		}
 
 		$this->fields_form = array('');
 		$this->tpl_form_vars = array(
