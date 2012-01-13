@@ -2339,13 +2339,13 @@ CREATE TABLE IF NOT EXISTS `PREFIX_specific_price_rule` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_specific_price_rule_condition_group` (
-	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL,
+	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`id_specific_price_rule` INT(11) UNSIGNED NOT NULL,
 	PRIMARY KEY ( `id_specific_price_rule_condition_group`, `id_specific_price_rule` )
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_specific_price_rule_condition` (
-	`id_specific_price_rule_condition` INT(11) UNSIGNED NOT NULL,
+	`id_specific_price_rule_condition` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`id_specific_price_rule_condition_group` INT(11) UNSIGNED NOT NULL,
 	`type` VARCHAR(255) NOT NULL,
 	`value` VARCHAR(255) NOT NULL,

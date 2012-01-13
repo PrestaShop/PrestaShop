@@ -140,8 +140,8 @@ var last_condition_group = 0;
 var conditions = new Array();
 function toggle_condition_group(id_condition_group)
 {
-	$('.condition_group > table').fadeOut();
-	$('#condition_group_'+id_condition_group+' > table').fadeIn();
+	$('.condition_group > table').css('border', 'none');
+	$('#condition_group_'+id_condition_group+' > table').css('border', '2px solid');
 	current_id_condition_group = id_condition_group;
 }
 function add_condition(id_condition_group, type, value)
@@ -158,8 +158,8 @@ function new_condition_group()
 	var html = '<div class="condition_group" id="condition_group_'+last_condition_group+'"><h3>{l s='Condition group'} '+last_condition_group+'</h3>';
 		html += '<table cellspacing="0" cellpadding="0" class="table width2"><thead><tr><th height="39">{l s='Type'}</th><th>{l s='Value'}</th></tr></thead><tbody></tbody></table>';
 		html += '</div><div class="condition_separator">{l s='OR'}</div><div class="separation"></div>';
-	toggle_condition_group(last_condition_group);
 	$('#condition_group_list').append(html);
+	toggle_condition_group(last_condition_group);
 }
 $(document).ready(function() {
 	$('#specific_price_rule_form').live('submit', function(e) {
