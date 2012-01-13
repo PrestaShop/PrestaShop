@@ -157,12 +157,11 @@ class AdminSearchControllerCore extends AdminController
 			$key_match[strtolower($key)] = $key;
 		}
 		$this->_list['features'] = array();
-
 		foreach ($_LANGADM as $key => $value)
 		{
 			if (stripos($value, $this->query) !== false)
 			{
-				$key = substr($key, 0, -32);
+				$key = strtolower(substr($key, 0, -32));
 				if (in_array($key, array('AdminTab', 'index')))
 					continue;
 				// if class name doesn't exists, just ignore it
