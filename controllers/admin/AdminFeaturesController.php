@@ -409,7 +409,7 @@ class AdminFeaturesControllerCore extends AdminController
 					if (!$feature_value->update())
 						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
 					else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&id_feature='.(int)Tools::getValue('id_feature').'&conf=3&update'.$this->table.'&token='.$this->token);
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}
@@ -419,7 +419,7 @@ class AdminFeaturesControllerCore extends AdminController
 					if (!$feature_value->add())
 						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current feature value');
 					else if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'=&id_feature='.(int)Tools::getValue('id_feature').'&conf=3&update'.$this->table.'&token='.$this->token);
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 				}

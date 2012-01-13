@@ -369,7 +369,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		parent::processAdd($token);
 		
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+		{
+			if ($this->display == 'add')
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+			else
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
+		}
 	}
 	
 	/**
@@ -381,7 +386,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		parent::processUpdate($token);
 		
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+		{
+			if ($this->display == 'add')
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
+			else
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
+		}
 	}
 	
 	/**
@@ -513,7 +523,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		if ($this->display == 'add')
 			$this->identifier = 'id_attribute_group';
 		else
-			$this->identifier = 'id_attribute_group';
+			$this->identifier = 'id_attribute';
 		
 		if ((int)Tools::getValue('id_attribute_group') <= 0 && $this->display == 'add'
 			|| (int)Tools::getValue('id_attribute') <= 0 && $this->display != 'add')
