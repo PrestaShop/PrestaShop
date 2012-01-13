@@ -105,9 +105,8 @@ function changeAddressDelivery(obj)
 					updateCartSummary(jsonData.summary);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-					if (jsonData.carriers != null)
-						if (typeof(getCarrierListAndUpdate) != 'undefined')
-							getCarrierListAndUpdate();
+					if (typeof(getCarrierListAndUpdate) != 'undefined')
+						getCarrierListAndUpdate();
 
 					// @todo reverse the remove order
 					// This effect remove the current line, but it's better to remove the other one, and refresshing this one
@@ -225,6 +224,9 @@ function updateQty(val)
 	}
 	else
 		$('input[name='+ id +']').val($('input[name='+ id +'_hidden]').val());
+	
+	if (typeof(getCarrierListAndUpdate) != 'undefined')
+		getCarrierListAndUpdate();
 }
 
 function deleteProductFromSummary(id)
@@ -296,9 +298,8 @@ function deleteProductFromSummary(id)
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
 				updateCustomizedDatas(jsonData.customizedDatas);
-				if (jsonData.carriers != null)
-					if (typeof(getCarrierListAndUpdate) != 'undefined')
-						getCarrierListAndUpdate();
+				if (typeof(getCarrierListAndUpdate) != 'undefined')
+					getCarrierListAndUpdate();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
@@ -347,9 +348,8 @@ function upQuantity(id, qty)
 				updateCartSummary(jsonData.summary);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-				if (jsonData.carriers != null)
-					if (typeof(getCarrierListAndUpdate) != 'undefined')
-						getCarrierListAndUpdate();
+				if (typeof(getCarrierListAndUpdate) != 'undefined')
+					getCarrierListAndUpdate();
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
@@ -407,9 +407,8 @@ function downQuantity(id, qty)
 					updateCartSummary(jsonData.summary);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
-					if (jsonData.carriers != null)
-						if (typeof(getCarrierListAndUpdate) != 'undefined')
-							getCarrierListAndUpdate();
+					if (typeof(getCarrierListAndUpdate) != 'undefined')
+						getCarrierListAndUpdate();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {alert("TECHNICAL ERROR: unable to save update quantity \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);}
