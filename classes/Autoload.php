@@ -124,11 +124,12 @@ class Autoload
 	public function generateIndex()
 	{
 		$classes = array_merge(
-							$this->getClassesFromDir('classes/'),
-							$this->getClassesFromDir('override/classes/'),
-							$this->getClassesFromDir('controllers/'),
-							$this->getClassesFromDir('override/controllers/')
-						);
+			$this->getClassesFromDir('classes/'),
+			$this->getClassesFromDir('override/classes/'),
+			$this->getClassesFromDir('controllers/'),
+			$this->getClassesFromDir('override/controllers/')
+		);
+		ksort($classes);
 		$content = '<?php return '.var_export($classes, true).';';
 
 		// Write classes index on disc to cache it
@@ -175,3 +176,4 @@ class Autoload
 		return $classes;
 	}
 }
+
