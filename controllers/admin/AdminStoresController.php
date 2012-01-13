@@ -164,7 +164,8 @@ class AdminStoresControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Postcode/ Zip Code:'),
 					'name' => 'postcode',
-					'size' => 6
+					'size' => 6,
+					'required' => true
 				),
 				array(
 					'type' => 'text',
