@@ -247,6 +247,12 @@
 </table>
 
 	<script type="text/javascript">
+		$('.datepicker').datepicker({
+			prevText: '',
+			nextText: '',
+			dateFormat: 'yy-mm-dd'
+		});
+
 		var showAjaxError = function(msg)
 		{
 			$('#available_quantity_ajax_error_msg').html(msg);
