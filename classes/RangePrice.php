@@ -65,5 +65,33 @@ class RangePriceCore extends ObjectModel
 		WHERE `id_carrier` = '.(int)($id_carrier).' 
 		ORDER BY `delimiter1` ASC');
 	}
+	
+	/**
+	 * Override add to create delivery value for all zones
+	 * @see classes/ObjectModelCore::add()
+	 * 
+	 * @param bool $null_values
+	 * @param bool $autodate
+	 * @return boolean Insertion result
+	 */
+	public function add($autodate = true, $null_values = false)
+	{
+		if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
+			return false;
+		
+		$carrier = new Carrier((int)$this->id_carrier);
+		$priceList = array();
+		foreach ($carrier->getZones() as $zone)
+			$priceList[] = array(
+				'id_range_price' => (int)$this->id,
+				'id_range_weight' => 0,
+				'id_carrier' => (int)$this->id_carrier,
+				'id_zone' => (int)$zone['id_zone'],
+				'price' => 0,
+			);
+		$carrier->addDeliveryPrice($priceList);
+		
+		return true;
+	}
 }
 
