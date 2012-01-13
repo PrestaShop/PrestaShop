@@ -515,8 +515,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		else
 			$this->identifier = 'id_attribute_group';
 		
-		if ((int)Tools::getValue('id_attribute') <= 0 && $this->display == 'add'
-			|| (int)Tools::getValue('id_attribute_group') <= 0 && $this->display != 'add')
+		if ((int)Tools::getValue('id_attribute_group') <= 0 && $this->display == 'add'
+			|| (int)Tools::getValue('id_attribute') <= 0 && $this->display != 'add')
 			return $this->processAdd($token);
 		else
 			return $this->processUpdate($token);
