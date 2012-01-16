@@ -189,6 +189,12 @@ class ProductCore extends ObjectModel
 	public $tags;
 
 	/**
+	 * We keep this variable for retrocompatibility for themes
+	 * @deprecated 1.5.0
+	 */
+	public $id_color_default = 0;
+
+	/**
 	 * @since 1.5.0
 	 * @var boolean Tells if the product uses the advanced stock management
 	 */
