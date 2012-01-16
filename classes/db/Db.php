@@ -558,7 +558,7 @@ abstract class DbCore
 	 * @param boolean $html_ok Does data contain HTML code ? (optional)
 	 * @return string Sanitized data
 	 */
-	public function escape($string, $html_ok)
+	public function escape($string, $html_ok = false)
 	{
 		if (_PS_MAGIC_QUOTES_GPC_)
 			$string = stripslashes($string);
