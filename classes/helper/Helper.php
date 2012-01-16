@@ -138,7 +138,6 @@ class HelperCore
 		if ($use_search)
 			$context->controller->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 
-
 		$html = '
 		<script type="text/javascript">
 			var inputName = "'.$input_name.'";
