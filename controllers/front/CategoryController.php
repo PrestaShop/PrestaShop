@@ -185,6 +185,7 @@ class CategoryControllerCore extends FrontController
 		else
 			// Pagination must be call after "getProducts"
 			$this->pagination($this->nbProducts);
+			self::$smarty->assign('categoryNameComplement', '');
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
 	}
 }
