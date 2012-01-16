@@ -369,5 +369,10 @@ function openCloseLayer(whichLayer)
 }
 
 $(document).ready(function(){
-	$('#product_form').submit(function(){attr_selectall();console.log('couou');});
+	$('#product_form').submit(function(){
+		attr_selectall();
+		// If the new combination form is hidden, remove it so that empty fields are not submitted
+		if ($('#add_new_combination').is(':hidden'))
+			$('#add_new_combination').remove();
+	});
 });
