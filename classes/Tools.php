@@ -417,7 +417,7 @@ class ToolsCore
 		// if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
 		elseif (is_int($currency))
 			$currency = Currency::getCurrencyInstance((int)($currency));
-			
+
 		if (is_array($currency))
 		{
 			$c_char = $currency['sign'];
@@ -434,7 +434,7 @@ class ToolsCore
 		}
 		else
 			return false;
-			
+
 		$blank = ($c_blank ? ' ' : '');
 		$ret = 0;
 		if (($isNegative = ($price < 0)))
@@ -516,7 +516,7 @@ class ToolsCore
 	 */
 	public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
 	{
-		if ($currency_from == $currency_to)
+		if ($currency_from === $currency_to)
 			return $amount;
 
 		if ($currency_from === null)
@@ -1245,9 +1245,9 @@ class ToolsCore
 	 * returns the rounded value of $value to specified precision, according to your configuration;
 	 *
 	 * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
-	 * 
-	 * @param float $value 
-	 * @param int $precision 
+	 *
+	 * @param float $value
+	 * @param int $precision
 	 * @return float
 	 */
 	public static function ps_round($value, $precision = 0)
@@ -1262,9 +1262,9 @@ class ToolsCore
 
 	/**
 	 * returns the rounded value down of $value to specified precision
-	 * 
-	 * @param float $value 
-	 * @param int $precision 
+	 *
+	 * @param float $value
+	 * @param int $precision
 	 * @return float
 	 */
 	public static function ceilf($value, $precision = 0)
@@ -1282,9 +1282,9 @@ class ToolsCore
 
 	/**
 	 * returns the rounded value up of $value to specified precision
-	 * 
-	 * @param float $value 
-	 * @param int $precision 
+	 *
+	 * @param float $value
+	 * @param int $precision
 	 * @return float
 	 */
 	public static function floorf($value, $precision = 0)
