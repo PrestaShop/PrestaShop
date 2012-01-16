@@ -278,7 +278,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'name' => 'load_products',
 						'size' => 7,
 						'required' => false,
-						'hint' => 'This will reset the order',
+						'hint' => $this->l('This will reset the order'),
 						'desc' => $this->l('If specified, each product which quantity is less or equal to this value will be loaded.'),
 					),
 				),
@@ -1927,7 +1927,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$manager = StockManagerFactory::getManager();
 		foreach ($items as $item)
 		{
-			if ($manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true) <= $threshold)
+			$diff = (int)$threshold - (int)$manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true);
+			if ($diff > 0)
 			{
 				// sets supply_order_detail
 				$supply_order_detail = new SupplyOrderDetail();
@@ -1940,7 +1941,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$supply_order_detail->name = Product::getProductName($item['id_product'], $item['id_product_attribute'], $supply_order->id_lang);
 				$supply_order_detail->ean13 = $item['ean13'];
 				$supply_order_detail->upc = $item['upc'];
-				$supply_order_detail->quantity_expected = (int)$threshold;
+				$supply_order_detail->quantity_expected = (int)$diff;
 				$supply_order_detail->exchange_rate = $order_currency->conversion_rate;
 
 				$product_currency = new Currency($item['id_currency']);
@@ -1948,8 +1949,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $order_currency, $product_currency);
 				else
 					$supply_order_detail->unit_price_te = 0;
-
 				$supply_order_detail->save();
+				unset($product_currency);
 			}
 		}
 	}
