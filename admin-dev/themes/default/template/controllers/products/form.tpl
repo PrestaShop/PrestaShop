@@ -224,10 +224,6 @@
 
 			$(".productTabs a.selected").click();
 
-			{if $show_product_tab_content}
-				$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
-			{/if}
-
 			// disable save if Associations tab is not loaded
 			if ($('#product-tab-content-Associations').hasClass('not-loaded'))
 				disableSave();

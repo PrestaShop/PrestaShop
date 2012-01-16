@@ -1823,9 +1823,6 @@ class AdminProductsControllerCore extends AdminController
 
 	public function initContent($token = null)
 	{
-		// this is made to "save and stay" feature
-		$this->tpl_form_vars['show_product_tab_content'] = Tools::getValue('action');
-
 		if ($this->display == 'edit' || $this->display == 'add')
 		{
 			$this->addJS(_PS_JS_DIR_.'admin-products.js');
