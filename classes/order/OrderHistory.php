@@ -122,7 +122,11 @@ class OrderHistoryCore extends ObjectModel
 						($new_os->id == Configuration::get('PS_OS_ERROR') || $new_os->id == Configuration::get('PS_OS_CANCELED')))
 						StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 				}
+				// if waiting for payment => payment error/canceled
+				else if (!$new_os->logable && !$old_os->logable &&
+						 ($new_os->id == Configuration::get('PS_OS_ERROR') || $new_os->id == Configuration::get('PS_OS_CANCELED')))
 
+						 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 				// @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
 				// decrements the physical stock using $id_warehouse
 				if ($new_os->shipped == 1 && $old_os->shipped == 0 &&
