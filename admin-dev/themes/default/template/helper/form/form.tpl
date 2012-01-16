@@ -410,20 +410,21 @@
 		var id_language = {$defaultFormLanguage};
 		var languages = new Array();
 
+		// Multilang field setup must happen before document is ready so that calls to displayFlags() to avoid
+		// precedence conflicts with other document.ready() blocks
+		{foreach $languages as $k => $language}
+			languages[{$k}] = {
+				id_lang: {$language.id_lang},
+				iso_code: '{$language.iso_code}',
+				name: '{$language.name}',
+				is_default: "{$language.is_default}"
+			};
+		{/foreach}
+		// we need allowEmployeeFormLang var in ajax request
+		allowEmployeeFormLang = {$allowEmployeeFormLang};
+		displayFlags(languages, id_language, allowEmployeeFormLang);
+
 		$(document).ready(function() {
-
-			{foreach $languages as $k => $language}
-				languages[{$k}] = {
-					id_lang: {$language.id_lang},
-					iso_code: '{$language.iso_code}',
-					name: '{$language.name}',
-					is_default: "{$language.is_default}"
-				};
-			{/foreach}
-			// we need allowEmployeeFormLang var in ajax request
-			allowEmployeeFormLang = {$allowEmployeeFormLang};
-			displayFlags(languages, id_language, allowEmployeeFormLang);
-
 			{if isset($fields_value.id_state)}
 				if ($('#id_country') && $('#id_state'))
 				{

@@ -63,6 +63,8 @@ class AdminProductsControllerCore extends AdminController
 		'Accounting' => false,
 	);
 
+	protected $default_tab = 'Informations';
+
 	protected $available_tabs_lang = array ();
 
 	public function __construct()
@@ -976,14 +978,19 @@ class AdminProductsControllerCore extends AdminController
 		if (!$this->action)
 			parent::initProcess();
 
-		// Set tab to display
-		if ($this->action)
-		{
+		if ($this->action == 'save'
+			&& Tools::getValue('submitAdd'.$this->table.'AndStay')
+			&& isset($this->available_tabs[Tools::getValue('key_tab')]))
+			$this->tab_display = Tools::getValue('key_tab');
+
+		// Set tab to display if not decided already
+		if (!$this->tab_display && $this->action)
 			if (in_array($this->action, array_keys($this->available_tabs)))
 				$this->tab_display = $this->action;
-			elseif ($this->action == 'new' || $this->action == 'save')
-				$this->tab_display = 'Informations';
-		}
+
+		// And if still not set, use default
+		if (!$this->tab_display)
+			$this->tab_display = $this->default_tab;
 	}
 
 	/**
@@ -1427,10 +1434,7 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
 					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.($token ? $token : $this->token);
 				// Save and stay on same form
-				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1').'&addproduct&conf=3&action='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
-				else
-					// Default behavior (save and back)
+				if (!Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 					$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1').'&conf=3&token='.($token ? $token : $this->token);
 			}
 			else
@@ -1826,8 +1830,6 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
-			if (empty($this->tab_display))
-				$this->tab_display = 'Informations';
 
 			if(method_exists($this, 'initForm'.$this->tab_display))
 				$this->tpl_form = strtolower($this->tab_display).'.tpl';
@@ -1838,8 +1840,8 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$product_tabs = array();
 				// tab_display defines which tab to display first
-				if (empty($this->tab_display) || !method_exists($this, 'initForm'.$this->tab_display))
-					$this->tab_display = 'Informations';
+				if (!method_exists($this, 'initForm'.$this->tab_display))
+					$this->tab_display = $this->default_tab;
 
 				// i is used as product_tab id
 				$i = 0;
@@ -1866,9 +1868,6 @@ class AdminProductsControllerCore extends AdminController
 
 				$this->tpl_form_vars['product_tabs'] = $product_tabs;
 			}
-
-			/*$languages = Language::getLanguages(false);
-			$default_language = (int)Configuration::get('PS_LANG_DEFAULT');*/
 		}
 		else
 		{
