@@ -1614,11 +1614,11 @@ INSERT INTO `PREFIX_supply_order_state_lang` (`id_supply_order_state`, `id_lang`
 (5, 3, 'Order received completely'),
 (5, 4, 'Order received completely'),
 (5, 5, 'Order received completely'),
-(6, 1, 'order fenced'),
-(6, 2, 'Commande cloturée'),
-(6, 3, 'order fenced'),
-(6, 4, 'order fenced'),
-(6, 5, 'order fenced');
+(6, 1, 'order canceled'),
+(6, 2, 'Commande annulée'),
+(6, 3, 'order canceled'),
+(6, 4, 'order canceled'),
+(6, 5, 'order canceled');
 
 INSERT INTO `PREFIX_risk` (`id_risk`, `percent`, `color`) VALUES
 (1, 0, 'LimeGreen'),
