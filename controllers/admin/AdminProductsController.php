@@ -2311,13 +2311,14 @@ class AdminProductsControllerCore extends AdminController
 								{
 									$product->wholesale_price = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
 									$product->supplier_reference = pSQL($reference);
-									$update_product = true;
+									$product->update();
 								}
 							}
 						}
 						else
 						{
 							$product_supplier = new ProductSupplier($existing_id);
+							$product_supplier->id_currency = (int)$id_currency;
 							$product_supplier->product_supplier_price_te = (float)Tools::convertPrice($price, $id_currency); //converted in the default currency
 							$product_supplier->product_supplier_reference = pSQL($reference);
 							$product_supplier->update();
