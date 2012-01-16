@@ -59,7 +59,7 @@ function str2url(str,encoding,ucfirst)
 
 	// Add special char not used for url rewrite
 	str = str.replace(/[ ]/g, '-');
-	str = str.replace(/[\/\\"'|]*/g, '');
+	str = str.replace(/[\/\\"'|,;]*/g, '');
 
 	if (ucfirst == 1) {
 		var first_char = str.charAt(0);
