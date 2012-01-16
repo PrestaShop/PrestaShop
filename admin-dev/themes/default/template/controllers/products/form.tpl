@@ -204,7 +204,6 @@
 				if (btn_name == "Combinations")
 				{
 					$('#desc-product-new').hide();
-					disableSave();
 					$('#desc-product-newCombination').show();
 					populate_attrs();
 				}
