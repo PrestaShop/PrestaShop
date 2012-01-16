@@ -123,7 +123,7 @@
 				{/if}
 				<option disabled="disabled">----------</option>
 			</select>&nbsp;&nbsp;&nbsp;
-			<a class="button bt-icon confirm_leave" href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer">
+			<a class="button bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')}&addmanufacturer">
 				<img src="../img/admin/add.gif" alt="{l s='Create new manufacturer'}" title="{l s='Create new manufacturer'}" />
 				<span>{l s='Create new manufacturer'}</span>
 			</a>
