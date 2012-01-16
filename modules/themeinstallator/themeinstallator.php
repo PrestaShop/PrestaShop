@@ -624,7 +624,7 @@ class ThemeInstallator extends Module
 				if (file_exists(_IMPORT_FOLDER_.'modules/'.$row))
 				{
 					$module_already_exists = file_exists(_PS_MODULE_DIR_.$row);
-					$var .= '<input type="checkbox" name="modulesToExport[]" id="'.$row.'" value="'.$row.'" '.(($module_already_exists) ? '' : 'checked="checked"').' /> <label style="display:bock;float:none" for="'.$row.'">'.$row.
+					$var .= '<input type="checkbox" name="modulesToExport[]" id="'.$row.'" value="'.$row.'" checked="checked" /> <label style="display:bock;float:none" for="'.$row.'">'.$row.
 						($module_already_exists ? ' <span style="font-size:0.8em">-> '.$this->l('Warning: a module with the same name already exists').'</span>' : '').'</label><br />';
 				}
 
