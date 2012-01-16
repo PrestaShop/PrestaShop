@@ -543,16 +543,17 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processProductAttribute($token)
 	{
-		if (!Combination::isFeatureActive())
+		// Don't process if the combination fields have not been submitted
+		if (!Combination::isFeatureActive() || !isset($_POST['attribute']))
 			return;
 
 		$is_virtual = (int)Tools::getValue('is_virtual');
 
-		if (Validate::isLoadedObject($product = new Product((int)(Tools::getValue('id_product')))))
+		if (Validate::isLoadedObject($product = $this->object))
 		{
 			if (!isset($_POST['attribute_price']) || $_POST['attribute_price'] == null)
 				$this->errors[] = Tools::displayError('Attribute price required.');
-			if (!isset($_POST['attribute_combinaison_list']) || !count($_POST['attribute_combinaison_list']))
+			if (!isset($_POST['attribute_combinaison_list']) || empty($_POST['attribute_combinaison_list']))
 				$this->errors[] = Tools::displayError('You must add at least one attribute.');
 
 			if (!count($this->errors))
@@ -1450,10 +1451,13 @@ class AdminProductsControllerCore extends AdminController
 		if (isset($id) && !empty($id))
 		{
 			$object = new $this->className($id);
+			$this->object = $object;
+
 			if (Validate::isLoadedObject($object))
 			{
 				$this->_removeTaxFromEcotax();
 				$this->copyFromPost($object, $this->table);
+
 				if ($object->update())
 				{
 					$this->addCarriers();
@@ -1470,20 +1474,17 @@ class AdminProductsControllerCore extends AdminController
 					$this->processWarehouses($token);
 					$this->processFeatures($token);
 					$this->processProductAttribute($token);
-					$languages = Language::getLanguages(false);
+
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 					else if (!$object->updateCategories($_POST['categoryBox'], true))
 						$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-					else if (!$this->updateTags($languages, $object))
+					else if (!$this->updateTags(Language::getLanguages(false), $object))
 						$this->errors[] = Tools::displayError('An error occurred while adding tags.');
-					else
+					else if (empty($this->errors))
 					{
-						//self::$currentIndex .= '&image_updated='.$id_image;
 						Hook::exec('actionProductUpdate', array('product' => $object));
 						Search::indexation(false, $object->id);
-						//if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
-						//	$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category'])?$_REQUEST['id_category']:'1').'&edit='.strval(Tools::getValue('productCreated')).'&id_image='.$id_image.'&imageresize&toconf=4&submitAddAndStay='.((Tools::isSubmit('submitAdd'.$this->table.'AndStay') || Tools::getValue('productCreated') == 'on') ? 'on' : 'off').'&token='.(($token ? $token : $this->token));
 
 						// Save and preview
 						if (Tools::isSubmit('submitAddProductAndPreview'))
