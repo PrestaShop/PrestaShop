@@ -161,19 +161,6 @@
 		return ids;
 	}
 
-	function handleSaveForPack()
-	{
-		// if no item left in the pack, disable save buttons
-		$("#disablePackMessage").remove();
-		if ($("#inputPackItems").val() == "")
-		{
-			disableSave();
-			$(".leadin").append('<div id="disablePackMessage" class="warn">{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}</div>');
-		}
-		else
-			enableSave();
-}
-
 </script>
 
 <h4>{l s='Pack'}</h4>

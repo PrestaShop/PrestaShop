@@ -251,10 +251,12 @@ function init_elems()
 function attr_selectall()
 {
 	var elem = getE('product_att_list');
-	var i;
-
-	for (i = 0; i < elem.length; i++)
-		elem.options[i].selected = true;
+	if (elem)
+	{
+		var i;
+		for (i = 0; i < elem.length; i++)
+			elem.options[i].selected = true;
+	}
 }
 
 function del_attr_multiple()
