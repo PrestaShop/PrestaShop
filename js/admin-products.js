@@ -40,7 +40,6 @@ function removeButtonCombination(item)
 	$('#add_new_combination').show();
 	$('.process-icon-newCombination').removeClass('toolbar-new');
 	$('.process-icon-newCombination').addClass('toolbar-cancel');
-	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
 	$('#desc-product-newCombination div').html($('#ResetBtn').val());
 	$('id_product_attribute').val(0);
 	init_elems();
@@ -52,8 +51,7 @@ function addButtonCombination(item)
 	$('#add_new_combination').hide();
 	$('.process-icon-newCombination').removeClass('toolbar-cancel');
 	$('.process-icon-newCombination').addClass('toolbar-new');
-	$('#submitProductAttribute').val($('#submitProductAttribute').attr(item));
-	$('#desc-product-newCombination div').html($('#submitProductAttribute').val());
+	$('#desc-product-newCombination div').html(msg_new_combination);
 	posC = true;
 }
 
