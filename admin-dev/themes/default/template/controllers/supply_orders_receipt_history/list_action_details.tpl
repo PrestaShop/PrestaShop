@@ -36,6 +36,12 @@ $(document).ready(function() {
 					action: '{$action}',
 					ajax: true
 				},
+				beforeSend : function(data)
+				{
+				    // don't display the loading notification bar
+				    if (typeof(ajax_running_timeout) !== 'undefined')
+				        clearTimeout(ajax_running_timeout);
+				},
 				context: document.body,
 				dataType: 'json',
 				context: this,
@@ -99,7 +105,6 @@ $(document).ready(function() {
 					}
 					this.dataMaped = true;
 					this.opened = false;
-					initTableDnD('.details_{$id} table.tableDnD');
 				}
 			});
 		}

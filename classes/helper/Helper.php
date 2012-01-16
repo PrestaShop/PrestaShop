@@ -125,9 +125,9 @@ class HelperCore
 	{
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
-		
+
 		$context = Context::getContext();
-		
+
 		$context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
 
 		$context->controller->addJs(array(
@@ -137,8 +137,8 @@ class HelperCore
 			_PS_JS_DIR_.'admin-categories-tree.js'));
 		if ($use_search)
 			$context->controller->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
-			
-			
+
+
 		$html = '
 		<script type="text/javascript">
 			var inputName = "'.$input_name.'";
@@ -243,9 +243,9 @@ class HelperCore
 
 	/**
 	 * Render an area to determinate shop association
-	 * 
+	 *
 	 * @param string $type 'shop' or 'group_shop'
-	 * 
+	 *
 	 * @return string
 	 */
 	public function renderAssoShop($type = 'shop')
