@@ -43,6 +43,7 @@
 	var msg_combination_1 = '{l s='Please choose an attribute'}';
 	var msg_combination_2 = '{l s='Please choose a value'}';
 	var msg_combination_3 = '{l s='You can only add one combination per type of attribute'}';
+	var msg_new_combination = '{l s='New combination'}';
 
 </script>
 
@@ -322,9 +323,6 @@
 			<tr>
 				<td style="width:150px">&nbsp;</td>
 				<td style="padding-bottom:5px;">
-					<span style="float: left;">
-						<input type="submit" name="submitProductAttribute" id="submitProductAttribute" value="{l s='Add this combination'}" class="button" onclick="attr_selectall(); this.form.action += '&addproduct&tabs=3';" add="{l s='Add this combination'}" update="{l s='Update this combination'}" />
-					</span>
 					<span id="ResetSpan" style="float:left;margin-left:8px;display:none;">
 						<input type="reset" name="ResetBtn" id="ResetBtn" onclick="init_elems();getE('id_product_attribute').value = 0;" class="button" value="{l s='Cancel modification'}" />
 					</span>
@@ -332,6 +330,7 @@
 				</td>
 			</tr>
 		</table>
+		<div class="separation"></div>
 	</div>
 	
 	{$list}

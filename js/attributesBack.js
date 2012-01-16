@@ -51,7 +51,6 @@ virtual_product_nb_days, is_shareable)
 	
 	getE('attribute_ean13').value = ean;
 	getE('attribute_upc').value = upc;
-	getE('submitProductAttribute').value = modifyattributegroup;
 	getE('attribute_wholesale_price').value = Math.abs(wholesale_price);
 	getE('attribute_price').value = Math.abs(price_impact);
 	getE('attribute_weight').value = Math.abs(weight_impact);
@@ -120,8 +119,7 @@ virtual_product_nb_days, is_shareable)
 
 	$("#virtual_product_filename_attribute").val(virtual_product_filename_attribute);
 	$("#add_new_combination").show();
-	
-	
+
 	/* Reset all combination images */
 	combinationImages = $('#id_image_attr').find("input[id^=id_image_attr_]");
 	combinationImages.each(function() {
@@ -131,13 +129,13 @@ virtual_product_nb_days, is_shareable)
 	/* Check combination images */
 	if (typeof(combination_images[id_product_attribute]) != 'undefined')
 		for (i = 0; i < combination_images[id_product_attribute].length; i++)
-			getE('id_image_attr_' + combination_images[id_product_attribute][i]).checked = true;
-
+			$('#id_image_attr_' + combination_images[id_product_attribute][i]).attr('checked', 'checked');
 	check_impact();
 	check_weight_impact();
 	check_unit_impact();
 
 	var elem = getE('product_att_list');
+
 	for (var i = 0; i < old_attr.length; i++)
 	{
 		var opt = document.createElement('option');
@@ -370,3 +368,6 @@ function openCloseLayer(whichLayer)
 	style.display = style.display == 'none' ? 'block' : 'none';
 }
 
+$(document).ready(function(){
+	$('#product_form').submit(function(){attr_selectall();console.log('couou');});
+});
