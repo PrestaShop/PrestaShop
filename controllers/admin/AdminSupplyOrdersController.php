@@ -1148,10 +1148,18 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						  'price_with_order_discount_te', 'id_supply_order');
 			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $keys)));
 
+			// overrides keys (in order to add FORMAT calls)
+			$keys = array('sod.id_product', 'sod.id_product_attribute', 'sod.reference', 'sod.supplier_reference', 'sod.ean13',
+						  'sod.upc', 'sod.name',
+						  'FORMAT(sod.unit_price_te, 2)', 'sod.quantity_expected', 'sod.quantity_received', 'FORMAT(sod.price_te, 2)',
+						  'FORMAT(sod.discount_rate, 2)', 'FORMAT(sod.discount_value_te, 2)',
+						  'FORMAT(sod.price_with_discount_te, 2)', 'FORMAT(sod.tax_rate, 2)', 'FORMAT(sod.tax_value, 2)',
+						  'FORMAT(sod.price_ti, 2)', 'FORMAT(sod.tax_value_with_order_discount, 2)',
+						  'FORMAT(sod.price_with_order_discount_te, 2)', 'sod.id_supply_order');
 			foreach ($ids as $id)
 			{
 				$query = new DbQuery();
-				$query->select(implode(', sod.', $keys));
+				$query->select(implode(', ', $keys));
 				$query->from('supply_order_detail', 'sod');
 				$query->leftJoin('supply_order', 'so', 'so.id_supply_order = sod.id_supply_order');
 				$id_warehouse = $this->getCurrentWarehouse();

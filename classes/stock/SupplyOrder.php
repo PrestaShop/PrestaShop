@@ -466,6 +466,27 @@ class SupplyOrderCore extends ObjectModel
 		return (new SupplyOrder((int)$id));
 	}
 
+	/**
+	 * @see ObjectModel::hydrate()
+	 */
+	public function hydrate(array $data, $id_lang = null)
+	{
+		$this->id_lang = $id_lang;
+		if (isset($data[$this->def['primary']]))
+			$this->id = $data[$this->def['primary']];
+		foreach ($data as $key => $value)
+		{
+			if (array_key_exists($key, $this))
+			{
+				// formats prices and floats
+				if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
+					$this->def['fields'][$key]['validate'] == 'isPrice')
+					$value = number_format($value, 2);
+				$this->$key = $value;
+			}
+		}
+	}
+
 	/*********************************\
 	 *
 	 * Webservices Specific Methods
