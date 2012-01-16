@@ -1927,7 +1927,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$manager = StockManagerFactory::getManager();
 		foreach ($items as $item)
 		{
-			$diff = (int)$threshold - (int)$manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true);
+			$real_quantity = (int)$manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'], $supply_order->id_warehouse, true);
+			$diff = (int)$threshold - (int)$real_quantity;
 			if ($diff > 0)
 			{
 				// sets supply_order_detail
