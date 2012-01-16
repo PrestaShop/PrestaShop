@@ -44,23 +44,6 @@
 		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
 
 		{$combinationImagesJs}
-		$(document).ready(function(){
-
-			$('#id_mvt_reason').change(function(){
-				updateMvtStatus($(this).val());
-			});
-			updateMvtStatus($(this).val());
-		});
-		function updateMvtStatus(id_mvt_reason)
-		{
-			if (id_mvt_reason == -1)
-				return $('#mvt_sign').hide();
-			if ($('#id_mvt_reason option:selected').attr('rel') == -1)
-				$('#mvt_sign').html('<img src="../img/admin/arrow_down.png" /> {l s='Decrease your stock'}');
-			else
-				$('#mvt_sign').html('<img src="../img/admin/arrow_up.png" /> {l s='Increase your stock'}');
-			$('#mvt_sign').show();
-		}
 	</script>
 	<div class="separation"></div>
 

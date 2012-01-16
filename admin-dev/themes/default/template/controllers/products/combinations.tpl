@@ -49,14 +49,6 @@
 
 {if isset($product->id)}
 	<script type="text/javascript">
-		$(document).ready(function(){
-			$('#id_mvt_reason').change(function(){
-				updateMvtStatus($(this).val());
-			});
-			updateMvtStatus($(this).val());
-		});
-	</script>
-	<script type="text/javascript">
 		var attrs = new Array();
 		var modifyattributegroup = "{l s='Modify this attribute combination' js=1}";
 		attrs[0] = new Array(0, "---");
