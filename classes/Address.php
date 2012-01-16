@@ -156,7 +156,7 @@ class AddressCore extends ObjectModel
 	 */
 	public	function __construct($id_address = null, $id_lang = null)
 	{
-		parent::__construct($id_address, $id_lang);
+		parent::__construct($id_address);
 
 		/* Get and cache address country name */
 		if ($this->id)
