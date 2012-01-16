@@ -100,7 +100,9 @@
 </table>
 	
 <script type="text/javascript">
-	displayFlags(languages, id_language, allowEmployeeFormLang);
+	$(document).ready(function(){
+		displayFlags(languages, id_language, allowEmployeeFormLang);
+	});
 </script>
 
 

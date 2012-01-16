@@ -222,6 +222,8 @@
 				}
 			});
 
+			$(".productTabs a.selected").click();
+
 			{if $show_product_tab_content}
 				$("div.productTabs a[id$=-{$show_product_tab_content}]").click();
 			{/if}
