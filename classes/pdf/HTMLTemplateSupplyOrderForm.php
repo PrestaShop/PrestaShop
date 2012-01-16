@@ -47,7 +47,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
    		// header informations
 		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
-		$this->title = self::l('Supply order form').sprintf(' #%s', $supply_order->reference);
+		$this->title = self::l('Supply order form').sprintf(' %s', $supply_order->reference);
 	}
 
 	/**
