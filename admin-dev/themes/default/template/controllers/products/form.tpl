@@ -76,6 +76,7 @@
 	</div>
 	<script type="text/javascript">
 		var toload = new Array();
+		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}';
 		$('#product-tab-content-wait').show();
 
 		$(document).ready(function()

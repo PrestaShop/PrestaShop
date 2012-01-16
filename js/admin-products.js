@@ -322,6 +322,19 @@ function enableSave()
 		$('#desc-product-save-and-stay').show();
 }
 
+function handleSaveForPack()
+{
+	// if no item left in the pack, disable save buttons
+	$("#disablePackMessage").remove();
+	if ($("#inputPackItems").val() == "")
+	{
+		disableSave();
+		$(".leadin").append('<div id="disablePackMessage" class="warn">' + empty_pack_msg + '</div>');
+	}
+	else
+		enableSave();
+}
+
 /* function autocomplete */
 urlToCall = null;
 
