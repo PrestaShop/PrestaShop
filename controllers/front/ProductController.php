@@ -70,15 +70,15 @@ class ProductControllerCore extends FrontController
 		else
 			$this->canonicalRedirection();
 
-		if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
-			$this->product->quantity = 0;
-
-		$this->product->description = $this->transformDescriptionWithImg($this->product->description);
-
 		if (!Validate::isLoadedObject($this->product))
 			$this->errors[] = Tools::displayError('Product not found');
 		else
 		{
+			if (Pack::isPack((int)$this->product->id) && !Pack::isInStock((int)$this->product->id))
+				$this->product->quantity = 0;
+
+			$this->product->description = $this->transformDescriptionWithImg($this->product->description);
+
 			/*
 			 * If the product is associated to the shop
 			 * and is active or not active but preview mode (need token + file_exists)
