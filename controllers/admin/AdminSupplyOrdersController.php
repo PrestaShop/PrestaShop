@@ -352,7 +352,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				// if the current state doesn't allow order edit, skip the edit action
 				if ($this->_list[$i]['editable'] == 0)
 					$this->addRowActionSkipList('edit', $this->_list[$i]['id_supply_order']);
-				if ($this->_list[$i]['enclosed'] == 1)
+				if ($this->_list[$i]['enclosed'] == 1 && $this->_list[$i]['receipt_state'] == 0)
 					$this->addRowActionSkipList('changestate', $this->_list[$i]['id_supply_order']);
 				if (1 != $this->_list[$i]['pending_receipt'])
 					$this->addRowActionSkipList('updatereceipt', $this->_list[$i]['id_supply_order']);
@@ -500,9 +500,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('New status of the order:'),
+					'label' => $this->l('Status of the order:'),
 					'name' => 'id_supply_order_state',
-					'required' => true,
+					'required' => false,
 					'options' => array(
 						'query' => $states,
 						'id' => 'id_supply_order_state',
@@ -516,6 +516,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+
+		$this->displayInformation($this->l('Be careful when changing status. Some of them cannot be changed afterwards. (Canceled, for instance).'));
 
 		// sets up the helper
 		$helper = new HelperForm();
