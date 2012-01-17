@@ -101,9 +101,7 @@ class AdminDbControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. 
-			For all issues, check the config/settings.inc.php file.');
-
+		$this->warnings[] = $this->l('Be VERY CAREFUL with these settings, as changes may cause your PrestaShop online store to malfunction. For all issues, check the config/settings.inc.php file.');
 		$this->display = 'options';
 		$this->initToolbar();
 		$this->content .= $this->renderOptions();
