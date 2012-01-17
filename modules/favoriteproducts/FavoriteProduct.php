@@ -49,6 +49,8 @@ class FavoriteProduct extends ObjectModel
 			'id_product' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'id_customer' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'id_shop' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'date_add' =>		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' =>		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
@@ -58,15 +60,16 @@ class FavoriteProduct extends ObjectModel
 			$shop = Context::getContext()->shop;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT fp.`id_shop`, p.`id_product`, pl.`description_short`, pl.`link_rewrite`, pl.`name`, i.`id_image`, CONCAT(p.`id_product`, \'-\', i.`id_image`) as image
-		FROM `'._DB_PREFIX_.'favorite_product` fp
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = fp.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$shop->addSqlRestrictionOnLang('pl').')
-		LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
-		WHERE p.`active` = 1
-			'.$shop->addSqlRestriction(false, 'fp'));
+			SELECT fp.`id_shop`, p.`id_product`, pl.`description_short`, pl.`link_rewrite`, pl.`name`, i.`id_image`, CONCAT(p.`id_product`, \'-\', i.`id_image`) as image
+			FROM `'._DB_PREFIX_.'favorite_product` fp
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = fp.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$shop->addSqlRestrictionOnLang('pl').')
+			LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
+			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
+			WHERE p.`active` = 1
+				'.$shop->addSqlRestriction(false, 'fp')
+		);
 	}
 
 	public static function getFavoriteProduct($id_customer, $id_product, Shop $shop = null)
