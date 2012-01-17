@@ -224,9 +224,9 @@
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
-				cacheLength:0,
+				cacheLength:20,
 	            dataType: 'json',
 	            extraParams: {
 	                id_supplier: '{$supplier_id}',
@@ -237,6 +237,8 @@
 					action : 'searchProduct',
 	            },
 	            parse: function(data) {
+		            if (data == null)
+			        	return [];
 	            	var res = $.map(data, function(row) {
 		            	// filter the data to chaeck if the product is already added to the order
 	            		if (jQuery.inArray(row.id, product_ids) == -1)
