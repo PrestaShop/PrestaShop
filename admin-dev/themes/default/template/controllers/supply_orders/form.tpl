@@ -237,7 +237,7 @@
 					action : 'searchProduct',
 	            },
 	            parse: function(data) {
-		            if (data == null)
+		            if (data == null || data == 'undefined')
 			        	return [];
 	            	var res = $.map(data, function(row) {
 		            	// filter the data to chaeck if the product is already added to the order
