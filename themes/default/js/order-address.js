@@ -53,7 +53,9 @@ function updateAddressesDisplay(first_view)
 
 	if ($('input[type=checkbox]#addressesAreEquals:checked').length == 1)
 	{
-		$('#address_invoice_form:visible').hide('fast');
+		if ($('#multishipping_mode_checkbox:checked').length == 0) {
+			$('#address_invoice_form:visible').hide('fast');
+		}
 		$('ul#address_invoice').html($('ul#address_delivery').html());
 		$('ul#address_invoice li.address_title').html(txtInvoiceTitle);
 	}
