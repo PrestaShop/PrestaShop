@@ -41,8 +41,6 @@ class AdminGeneratorControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$languages = Language::getLanguages(false);
-
 		$this->tpl_option_vars['checkConfiguration_ht'] = $this->checkConfiguration($this->ht_file);
 		$this->tpl_option_vars['checkConfiguration_rb'] = $this->checkConfiguration($this->rb_file);
 		$this->tpl_option_vars['ps_htaccess_cache_control'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
@@ -140,14 +138,32 @@ class AdminGeneratorControllerCore extends AdminController
 		$tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/', Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')).'/');
 
 		// Files
-		$tab['Files'] = array('addresses.php', 'address.php', 'authentication.php', 'cart.php', 'discount.php', 'footer.php',
-		'get-file.php', 'header.php', 'history.php', 'identity.php', 'images.inc.php', 'init.php', 'my-account.php', 'order.php', 'order-opc.php',
-		'order-slip.php', 'order-detail.php', 'order-follow.php', 'order-return.php', 'order-confirmation.php', 'pagination.php', 'password.php',
-		'pdf-invoice.php', 'pdf-order-return.php', 'pdf-order-slip.php', 'product-sort.php', 'search.php', 'statistics.php','attachment.php', 'guest-tracking');
+		$disallow_controllers = array(
+			'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
+			'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order', 'order-opc',
+			'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
+			'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
+		);
+
+		// Rewrite files
+		$tab['Files'] = array();
+		if (Configuration::get('PS_REWRITING_SETTINGS'))
+		{
+			$sql = 'SELECT ml.url_rewrite
+					FROM '._DB_PREFIX_.'meta m
+					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
+					WHERE m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
+			if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
+				foreach ($results as $row)
+					$tab['Files'][] = $row['url_rewrite'];
+		}
 
 		$tab['GB'] = array(
 			'*orderby=','*orderway=','*tag=','*id_currency=','*search_query=','*id_lang=','*back=','*utm_source=','*utm_medium=','*utm_campaign=','*n='
 		);
+
+		foreach ($disallow_controllers as $controller)
+			$tab['GB'][] = '*controller='.$controller;
 
 		return $tab;
 	}
