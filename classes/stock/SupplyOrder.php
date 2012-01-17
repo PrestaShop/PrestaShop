@@ -481,7 +481,7 @@ class SupplyOrderCore extends ObjectModel
 				// formats prices and floats
 				if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
 					$this->def['fields'][$key]['validate'] == 'isPrice')
-					$value = number_format($value, 2);
+					$value = Tools::ps_round($value, 6);
 				$this->$key = $value;
 			}
 		}

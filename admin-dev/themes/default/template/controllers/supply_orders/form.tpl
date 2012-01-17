@@ -138,6 +138,9 @@
 				return false;
 			}
 
+			if (!product_infos.unit_price_te)
+				product_infos.unit_price_te = 0;
+
 			// add a new line in the products table
 			$('#products_in_supply_order > tbody:last').append(
 				'<tr style="height:50px;">'+
@@ -145,7 +148,7 @@
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
 				'<td>'+product_infos.upc+'<input type="hidden" name="input_upc_'+product_infos.id+'" value="'+product_infos.upc+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_displayed_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
-				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="0" size="8" />&nbsp;{$currency->suffix}</td>'+
+				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="'+product_infos.unit_price_te+'" size="8" />&nbsp;{$currency->suffix}</td>'+
 				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
 				'<td class="center"><input type="text" name="input_discount_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
 				'<td class="center"><input type="text" name="input_tax_rate_'+product_infos.id+'" value="0" size="5" />%</td>'+
@@ -184,8 +187,9 @@
 					product_ids.splice(position, 1);
 
 					var input_id = $('input[name~="input_id_'+product_id+'"]');
-					if (input_id.length > 0)
-						product_ids_to_delete.push(product_id);
+					if (input_id != 'undefined')
+						if (input_id.length > 0)
+							product_ids_to_delete.push(product_id);
 
 					// update the product_ids hidden field
 					$('#product_ids').val(product_ids.join('|'));
@@ -216,7 +220,7 @@
 			// set autocomplete on search field
 			$('#cur_product_name').autocomplete("ajax-tab.php", {
 				delay: 100,
-				minChars: 3,
+				minChars: 4,
 				autoFill: true,
 				max:20,
 				matchContains: true,
@@ -225,14 +229,15 @@
 				cacheLength:0,
 	            dataType: 'json',
 	            extraParams: {
-	                supplier_id: '{$supplier_id}',
+	                id_supplier: '{$supplier_id}',
+	                id_currency: '{$currency->id}',
 					ajax : '1',
 					controller : 'AdminSupplyOrders',
 					token : '{$token}',
 					action : 'searchProduct',
 	            },
 	            parse: function(data) {
-	            	return $.map(data, function(row) {
+	            	var res = $.map(data, function(row) {
 		            	// filter the data to chaeck if the product is already added to the order
 	            		if (jQuery.inArray(row.id, product_ids) == -1)
 		    				return {
@@ -241,12 +246,15 @@
 		    					value: row.id
 		    				}
 	    			});
+	    			return res;
 	            },
 	    		formatItem: function(item) {
 	    			return item.reference + ' - ' + item.name;
 	    		}
 	        }).result(function(event, item){
 				product_infos = item;
+	            if (typeof(ajax_running_timeout) !== 'undefined')
+	            	clearTimeout(ajax_running_timeout);
 			});
 		});
 	</script>
