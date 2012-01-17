@@ -525,8 +525,11 @@ class WarehouseCore extends ObjectModel
 			}
 		}
 
+		$res = false;
 		// returns final list
-		return call_user_func_array('array_intersect', $list);
+		if (count($list) > 1)
+			$res = call_user_func_array('array_intersect', $list);
+		return $res;
 	}
 
 	/*********************************\
