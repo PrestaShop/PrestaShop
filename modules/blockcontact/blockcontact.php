@@ -57,10 +57,10 @@ class blockcontact extends Module
 	{
 		$html = '';
 		// If we try to update the settings
-		if (isset($_POST['submitModule']))
+		if (Tools::isSubmit('submitModule'))
 		{				
-			Configuration::updateValue('blockcontact_telnumber', (preg_match('/^[0-9]+/', $_POST['telnumber']) ? $_POST['telnumber']: ''));
-			Configuration::updateValue('blockcontact_email', (($_POST['email'] != '') ? $_POST['email']: ''));
+			Configuration::updateValue('blockcontact_telnumber', Tools::getValue('telnumber'));
+			Configuration::updateValue('blockcontact_email', Tools::getValue('email'));
 			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
 		}
 
