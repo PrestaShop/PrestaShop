@@ -1034,7 +1034,8 @@ class AdminControllerCore extends Controller
 		}
 		else if ($opt)
 		{
-			$this->object = new $this->className();
+			if (!$this->object)
+				$this->object = new $this->className();
 			return $this->object;
 		}
 		else

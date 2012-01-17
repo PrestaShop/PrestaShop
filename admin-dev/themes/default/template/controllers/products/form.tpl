@@ -243,6 +243,7 @@
 
 		var tabs_preloaded = new Array();
 
+		// Listen to the load event that is fired each time an ajax call to load a tab has completed
 		$(window).bind("load", function() {
 			{* Fill an array with tabs that need to be preloaded *}
 			var tabs_to_preload = new Array();
