@@ -75,7 +75,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 
 		if (!isset($this->tests['optional']))
 			$this->tests['optional'] = $this->model_system->checkOptionalTests();
-
+//d($this->tests);
 		// Generate display array
 		$this->tests_render = array(
 			'required' => array(
