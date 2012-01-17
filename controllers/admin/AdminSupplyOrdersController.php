@@ -300,6 +300,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			//specific discount display
 			$this->object->discount_rate = Tools::ps_round($this->object->discount_rate, 4);
 
+			$this->displayInformation(
+				$this->l('Please note that if you wish to order products, they have to be available for the specified Supplier/Warehouse.')
+				.' '.
+				$this->l('See Catalog/Products/Your Product/Suppliers & Warehouses')
+				.'<br />'.
+				$this->l('Also, changing the currency or the supplier will reset the order.')
+			);
 			return parent::renderForm();
 		}
 
@@ -1560,9 +1567,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		{
 			$ids = explode('_', $item['id']);
 			$prices = ProductSupplier::getProductSupplierPrice($ids[0], $ids[1], $id_supplier, true);
-			$item['unit_price_te'] = Tools::convertPriceFull($prices['product_supplier_price_te'],
-														     new Currency((int)$prices['id_currency']),
-														     new Currency($id_currency));
+			if (count($prices))
+				$item['unit_price_te'] = Tools::convertPriceFull($prices['product_supplier_price_te'],
+															     new Currency((int)$prices['id_currency']),
+															     new Currency($id_currency));
 		}
 		if ($items)
 			die(Tools::jsonEncode($items));
