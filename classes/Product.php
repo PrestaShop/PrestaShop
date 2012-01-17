@@ -207,6 +207,11 @@ class ProductCore extends ObjectModel
 	public $is_virtual;
 	public $cache_default_attribute;
 
+	/**
+	 * @var string If product is populated, this property contain the rewrite link of the default category
+	 */
+	public $category;
+
 	public static $_taxCalculationMethod = PS_TAX_EXC;
 	protected static $_prices = array();
 	protected static $_pricesLevel2 = array();
