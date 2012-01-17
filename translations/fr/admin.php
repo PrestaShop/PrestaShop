@@ -4028,6 +4028,7 @@ $_LANGADM['AdminProducts22eb5599cf8ccde65128467443e72099'] = 'Aucune caractéris
 $_LANGADM['AdminProductsd6ae681fcd58f1e1936ca97da36528ff'] = 'Ajouter une nouvelle caractéristique';
 $_LANGADM['AdminProducts8321e79c278ec510f63675c040594892'] = 'Maximum';
 $_LANGADM['AdminProductsd076bfa965e6f3f48bba804b6faf1527'] = 'caractères';
+$_LANGADM['AdminProductscc03cb64219e991ece86973d6b272537'] = 'Le pack est vide. Vous devez ajouter au moins un produit à l\'emballage avant de pouvoir l\'enregistrer.';
 $_LANGADM['AdminProducts6453b853979579ed50ec58e2e7d13816'] = 'Vous perdrez toutes les modifications non enregistrées, voulez-vous continuer ?';
 $_LANGADM['AdminProductsbe53a0541a6d36f6ecb879fa2c584b08'] = 'Image';
 $_LANGADM['AdminProductsd3d2e617335f08df83599665eef8a418'] = 'Fermer';
