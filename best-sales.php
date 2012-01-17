@@ -28,8 +28,4 @@
 require(dirname(__FILE__).'/config/config.inc.php');
 Tools::displayFileAsDeprecated();
 
-// init front controller in order to use Tools::redirect
-$controller = new FrontController();
-$controller->init();
-
-Tools::redirect('index.php?controller=best-sales'.(($_SERVER['QUERY_STRING']) ? '&'.$_SERVER['QUERY_STRING'] : ''));
+Tools::redirect('index.php?controller=best-sales'.($_REQUEST ? '&'.http_build_query($_REQUEST) : ''), __PS_BASE_URI__, null, 'HTTP/1.1 301 Moved Permanently');

@@ -58,27 +58,32 @@ class ToolsCore
 		return $passwd;
 	}
 
-	public static function strReplaceFirst($search, $replace, $subject, $cur=0) {
+	public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
+	{
 		return (strpos($subject, $search, $cur))?substr_replace($subject, $replace, (int)strpos($subject, $search, $cur), strlen($search)):$subject;
 	}
 
 	/**
-	* Redirect user to another page
-	*
-	* @param string $url Desired URL
-	* @param string $baseUri Base URI (optional)
-	*/
-	public static function redirect($url, $baseUri = __PS_BASE_URI__, Link $link = null)
+	 * Redirect user to another page
+	 *
+	 * @param string $url Desired URL
+	 * @param string $baseUri Base URI (optional)
+	 * @param Link $link
+	 * @param string|array $headers A list of headers to send before redirection
+	 */
+	public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
-		if (strpos($url, 'http://') === FALSE && strpos($url, 'https://') === FALSE)
+
+		if (strpos($url, 'http://') === false && strpos($url, 'https://') === false && $link)
 		{
-			if (strpos($url, $baseUri) !== FALSE && strpos($url, $baseUri) == 0)
-				$url = substr($url, strlen($baseUri));
-			if (strpos($url, 'index.php?controller=') !== FALSE && strpos($url, 'index.php/') == 0) {
+			if (strpos($url, $base_uri) === 0)
+				$url = substr($url, strlen($base_uri));
+			if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0)
+			{
 				$url = substr($url, strlen('index.php?controller='));
-				if((int)(Configuration::get('PS_REWRITING_SETTINGS') == 1))
+				if (Configuration::get('PS_REWRITING_SETTINGS'))
 					$url = self::strReplaceFirst('&', '?' , $url);
 			}
 
@@ -89,13 +94,23 @@ class ToolsCore
 			$url = $link->getPageLink($explode[0], $useSSL);
 			if (isset($explode[1]))
 				$url .= '?'.$explode[1];
-			$baseUri = '';
+			$base_uri = '';
 		}
 
-		if (isset($_SERVER['HTTP_REFERER']) AND ($url == $_SERVER['HTTP_REFERER']))
+		// Send additional headers
+		if ($headers)
+		{
+			if (!is_array($headers))
+				$headers = array($headers);
+
+			foreach ($headers as $header)
+				header($header);
+		}
+
+		if (isset($_SERVER['HTTP_REFERER']) && $url == $_SERVER['HTTP_REFERER'])
 			header('Location: '.$_SERVER['HTTP_REFERER']);
 		else
-			header('Location: '.$baseUri.$url);
+			header('Location: '.$base_uri.$url);
 		exit;
 	}
 

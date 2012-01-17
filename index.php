@@ -26,4 +26,14 @@
 */
 
 require(dirname(__FILE__).'/config/config.inc.php');
+/*$countries = new Collection('Country', 1);
+$countries->where('zone.name', '=', 'Asia');
+
+echo '<pre>';
+$countries->getAll(true);
+exit;
+foreach ($countries->getAll(true) as $country)
+	echo $country->name.'<br />';
+
+exit;*/
 Dispatcher::getInstance()->dispatch();
