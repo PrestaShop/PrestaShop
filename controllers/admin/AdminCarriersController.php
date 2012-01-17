@@ -623,7 +623,7 @@ class AdminCarriersControllerCore extends AdminController
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
 			die (Tools::displayError('Object cannot be loaded'));
-		$zones = Zone::getZones(true);
+		$zones = Zone::getZones(false);
 		foreach ($zones as $zone)
 			if (count($carrier->getZone($zone['id_zone'])))
 			{
