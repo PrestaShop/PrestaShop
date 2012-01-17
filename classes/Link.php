@@ -87,9 +87,9 @@ class LinkCore
 		if (!is_object($product))
 		{
 			if (is_array($product) && isset($product['id_product']))
-					$product = new Product((int)$product['id_product'], false, $id_lang);
-			else if(is_numeric($product))
-					$product = new Product((int)$product, false, $id_lang);
+					$product = new Product($product['id_product'], false, $id_lang);
+			else if (is_numeric($product) || !$product)
+					$product = new Product($product, false, $id_lang);
 			else
 				throw new PrestaShopException('Invalid product vars');
 		}
@@ -110,7 +110,7 @@ class LinkCore
 			$params['supplier'] = Tools::str2url($product->isFullyLoaded ? $product->supplier_name : Supplier::getNameById($product->id_supplier));
 
 		if ($dispatcher->hasKeyword('product_rule', 'price'))
-			$params['supplier'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, NULL, 6, NULL, false, true, 1, false, NULL, NULL, NULL, $product->specificPrice);
+			$params['supplier'] = $product->isFullyLoaded ? $product->price : Product::getPriceStatic($product->id, false, null, 6, null, false, true, 1, false, null, null, null, $product->specificPrice);
 
 		if ($dispatcher->hasKeyword('product_rule', 'tags'))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
