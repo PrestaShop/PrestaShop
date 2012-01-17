@@ -978,8 +978,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!$this->action)
 			parent::initProcess();
 
-		if ($this->action == 'save'
-			&& Tools::getValue('submitAdd'.$this->table.'AndStay')
+		if ($this->action == 'save' || $this->action == 'new'
 			&& isset($this->available_tabs[Tools::getValue('key_tab')]))
 			$this->tab_display = Tools::getValue('key_tab');
 
@@ -1384,47 +1383,51 @@ class AdminProductsControllerCore extends AdminController
 		if (!empty($this->errors))
 			return false;
 
-		$object = new $this->className();
+		$this->object = new $this->className();
 		$this->_removeTaxFromEcotax();
-		$this->copyFromPost($object, $this->table);
+		$this->copyFromPost($this->object, $this->table);
 
-		if ($object->add())
+		if ($this->object->add())
 		{
 			$this->addCarriers();
-			$this->updateAssoShop((int)$object->id);
-			$this->updateAccessories($object);
-			if (!$this->updatePackItems($object))
+			$this->updateAssoShop((int)$this->object->id);
+			$this->updateAccessories($this->object);
+			if (!$this->updatePackItems($this->object))
 				$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
-			$this->updateDownloadProduct($object);
+			$this->updateDownloadProduct($this->object);
 
 			if (!count($this->errors))
 			{
 				$languages = Language::getLanguages(false);
-				if (!$object->updateCategories($_POST['categoryBox']))
+				if (!$this->object->updateCategories($_POST['categoryBox']))
 					$this->errors[] = Tools::displayError('An error occurred while linking object.').' <b>'.$this->table.'</b> '.Tools::displayError('To categories');
-				else if (!$this->updateTags($languages, $object))
+				else if (!$this->updateTags($languages, $this->object))
 					$this->errors[] = Tools::displayError('An error occurred while adding tags.');
 				else
 				{
-					Hook::exec('actionProductAdd', array('product' => $object));
-					Search::indexation(false, $object->id);
+					Hook::exec('actionProductAdd', array('product' => $this->object));
+					Search::indexation(false, $this->object->id);
 				}
 
 				// If the product is virtual, set out_of_stock = 1 (allow sales when out of stock)
 				if (Tools::getValue('type_product') == Product::PTYPE_VIRTUAL)
-					StockAvailable::setProductOutOfStock($object->id, 1);
+					StockAvailable::setProductOutOfStock($this->object->id, 1);
 				else
-					StockAvailable::setProductOutOfStock($object->id, 2);
+					StockAvailable::setProductOutOfStock($this->object->id, 2);
 
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 				{
-					$preview_url = ($this->context->link->getProductLink($this->getFieldValue($object, 'id'), $this->getFieldValue($object, 'link_rewrite', $this->context->language->id), Category::getLinkRewrite($this->getFieldValue($object, 'id_category_default'), $this->context->language->id)));
-					if (!$object->active)
+					$preview_url = ($this->context->link->getProductLink(
+										$this->getFieldValue($this->object, 'id'),
+										$this->getFieldValue($this->object, 'link_rewrite', $this->context->language->id),
+										Category::getLinkRewrite($this->getFieldValue($this->object, 'id_category_default'), $this->context->language->id)));
+
+					if (!$this->object->active)
 					{
 						$admin_dir = dirname($_SERVER['PHP_SELF']);
 						$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
-						$token = Tools::encrypt('PreviewProduct'.$object->id);
+						$token = Tools::encrypt('PreviewProduct'.$this->object->id);
 						$preview_url .= '&adtoken='.$token.'&ad='.$admin_dir;
 					}
 
@@ -1432,13 +1435,24 @@ class AdminProductsControllerCore extends AdminController
 				}
 
 				if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
-					$this->redirect_after = self::$currentIndex.'&id_product='.$object->id.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1').'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off').'&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$this->object->id
+						.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1')
+						.'&id_image='.$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off')
+						.'&token='.($token ? $token : $this->token);
+
 				// Save and stay on same form
-				if (!Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-					$this->redirect_after = self::$currentIndex.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1').'&conf=3&token='.($token ? $token : $this->token);
+				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+					$this->redirect_after = self::$currentIndex.'&id_product='.$this->object->id
+						.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1')
+						.'&addproduct&conf=3&key_tab='.Tools::getValue('key_tab').'&token='.($token ? $token : $this->token);
+				else
+					// Default behavior (save and back)
+					$this->redirect_after = self::$currentIndex
+						.'&id_category='.(!empty($_REQUEST['id_category_default'])?$_REQUEST['id_category_default']:'1')
+						.'&conf=3&token='.($token ? $token : $this->token);
 			}
 			else
-				$object->delete();
+				$this->object->delete();
 		}
 		else
 			$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
@@ -1840,8 +1854,6 @@ class AdminProductsControllerCore extends AdminController
 				if (!method_exists($this, 'initForm'.$this->tab_display))
 					$this->tab_display = $this->default_tab;
 
-				// i is used as product_tab id
-				$i = 0;
 				$advanced_stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
 				$stock_management_active = Configuration::get('PS_STOCK_MANAGEMENT');
 
@@ -2102,7 +2114,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->display = 'edit';
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
-		$id_product = Tools::getvalue('id_product');
+
+		if (Validate::isLoadedObject(($this->object)))
+			$id_product = $this->object->id;
+		else
+			$id_product = Tools::getvalue('id_product');
+
 		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&amp;'.($id_product ? 'id_product='.$id_product : 'addproduct');
 		$this->tpl_form_vars['id_product'] = $id_product;
 
@@ -3047,8 +3064,6 @@ class AdminProductsControllerCore extends AdminController
 		$data->assign('currency', $currency);
 		$this->object = $product;
 		$this->display = 'edit';
-
-		$cover = Product::getCover($product->id);
 		$this->_applyTaxToEcotax($product);
 
 		/*

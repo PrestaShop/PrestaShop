@@ -155,7 +155,9 @@
 
 	function getSelectedIds()
 	{
-		var ids = id_product + ',';
+		var ids = '';
+		if (typeof(id_product) != 'undefined')
+			ids += id_product + ',';
 		ids += $('#inputPackItems').val().replace(/\d*x/g, '').replace(/\-/g,',');
 		ids = ids.replace(/\,$/,'');
 		return ids;
