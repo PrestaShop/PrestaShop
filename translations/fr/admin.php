@@ -3919,6 +3919,7 @@ $_LANGADM['AdminProducts7997b2d65ef0a695f0b3af9ad560ed68'] = 'Si vous voulez uti
 $_LANGADM['AdminProducts7762accca5432f3fe7516ae914953190'] = 'associer vos produits avec des entrepôts';
 $_LANGADM['AdminProducts43880cea190f9b18389e53a50ebca906'] = 'associer vos entrepôts avec des transporteurs';
 $_LANGADM['AdminProducts363569b9334efa8fae8d78a46d93e527'] = 'associer vos entrepôts avec des boutiques';
+$_LANGADM['AdminProducts5d9f4d9294b21f54147183e8ea27bc12'] = 'Vous devez avoir un entrepôt en commun pour ce pack et les produits contenus dans celui-ci.';
 $_LANGADM['AdminProducts14377d303687283a740fe52370a2a35f'] = 'Vous devez enregistrer ce produit avant de gérer ses quantités';
 $_LANGADM['AdminProducts1280169553c08486626f41d112b79450'] = 'Vous devez enregistrer ce produit avant de gérer ses fournisseurs';
 $_LANGADM['AdminProducts4be43b96ad1eb377129a2263b49e251e'] = 'Vous devez enregistrer ce produit avant de gérer ses entrepôts';

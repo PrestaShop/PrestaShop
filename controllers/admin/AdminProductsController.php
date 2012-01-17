@@ -3549,7 +3549,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 
 				if (!Warehouse::getPackWarehouses((int)$obj->id))
-					$this->displayWarning($this->l('You have to have a common warehouse between this pack and its products because .'));
+					$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
 			}
 
 			$data->assign(array(
