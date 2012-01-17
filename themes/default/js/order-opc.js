@@ -734,7 +734,7 @@ function multishippingMode(it)
 		$('#address_invoice').removeClass('item').addClass('alternate_item');
 		$('#multishipping_mode_box').removeClass('on');
 		$('.addressesAreEquals').show();
-		if ($('.addressesAreEquals').find('input:checked')) {
+		if ($('.addressesAreEquals').find('input:checked').length) {
 			$('#address_invoice_form').hide();
 		} else {
 			$('#address_invoice_form').show();
