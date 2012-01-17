@@ -157,7 +157,10 @@ class ProductSupplierCore extends ObjectModel
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-		return $res[0];
+		if (isset($res[0]))
+			return $res[0];
+
+		return $res;
 	}
 
 	/**

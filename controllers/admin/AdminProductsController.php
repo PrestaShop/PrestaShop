@@ -2356,10 +2356,10 @@ class AdminProductsControllerCore extends AdminController
 					}
 				}
 			// Manage defaut supplier for product
-			if ($new_default_supplier != 0 && $new_default_supplier != $product->id_supplier && Supplier::supplierExists($new_default_supplier))
+			if ($new_default_supplier != $product->id_supplier)
 			{
-				$product->id_supplier = $new_default_supplier;
-				$product->update();
+				$this->object->id_supplier = $new_default_supplier;
+				$this->object->update();
 			}
 		}
 	}
