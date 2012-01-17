@@ -137,20 +137,27 @@ class ProductSupplierCore extends ObjectModel
 	 * @param int $id_product
 	 * @param int $id_product_attribute
 	 * @param int $id_supplier
+	 * @param bool $with_currency Optional
 	 * @return array
 	 */
-	public static function getProductSupplierPrice($id_product, $id_product_attribute, $id_supplier)
+	public static function getProductSupplierPrice($id_product, $id_product_attribute, $id_supplier, $with_currency = false)
 	{
 		// build query
 		$query = new DbQuery();
 		$query->select('ps.product_supplier_price_te');
+		if ($with_currency)
+			$query->select('ps.id_currency');
 		$query->from('product_supplier', 'ps');
 		$query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
 			AND ps.id_supplier = '.(int)$id_supplier
 		);
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		if (!$with_currency)
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		return $res[0];
 	}
 
 	/**

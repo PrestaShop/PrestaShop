@@ -972,7 +972,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			$id_currency = (int)Tools::getValue('id_currency', 0);
 			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
 				$this->errors[] = Tools::displayError($this->l('The selected currency is not valid.'));
-
 			// get delivery date
 			$delivery_expected = new DateTime(pSQL(Tools::getValue('date_delivery_expected')));
 			// converts date to timestamp
@@ -1002,6 +1001,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// manage each associated product
 			$this->manageOrderProducts();
+
+			// if the threshold is defined and we are saving the order
+			if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)
+				$this->loadProducts($quantity_threshold);
 		}
 
 		// Manage state change
@@ -1093,10 +1096,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		if ((!count($this->errors) && $this->is_editing_order) || !$this->is_editing_order)
 			parent::postProcess();
-
-		// if the threshold is defined and we are saving the order
-		if (Tools::isSubmit('submitAddsupply_order') && $quantity_threshold != null)
-			$this->loadProducts($quantity_threshold);
 	}
 
 	/**
@@ -1519,6 +1518,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// get supplier id
 		$id_supplier = (int)Tools::getValue('id_supplier', false);
 
+		// gets the currency
+		$id_currency = (int)Tools::getValue('id_currency', false);
+
 		// get lang from context
 		$id_lang = (int)Context::getContext()->language->id;
 
@@ -1552,10 +1554,18 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
+		foreach ($items as &$item)
+		{
+			$ids = explode('_', $item['id']);
+			$prices = ProductSupplier::getProductSupplierPrice($ids[0], $ids[1], $id_supplier, true);
+			$item['unit_price_te'] = Tools::convertPriceFull($prices['product_supplier_price_te'],
+														     new Currency((int)$prices['id_currency']),
+														     new Currency($id_currency));
+		}
 		if ($items)
 			die(Tools::jsonEncode($items));
 
-		die();
+		die(1);
 	}
 
 	/**
@@ -1920,7 +1930,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		// loads order currency
-		$order_currency = new Currency($supply_order->id_ref_currency);
+		$order_currency = new Currency($supply_order->id_currency);
 		if (!Validate::isLoadedObject($order_currency))
 			return;
 
@@ -1947,7 +1957,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 				$product_currency = new Currency($item['id_currency']);
 				if (Validate::isLoadedObject($product_currency))
-					$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $order_currency, $product_currency);
+					$supply_order_detail->unit_price_te = Tools::convertPriceFull($item['unit_price_te'], $product_currency, $order_currency);
 				else
 					$supply_order_detail->unit_price_te = 0;
 				$supply_order_detail->save();
