@@ -173,6 +173,7 @@ class InstallLanguages
 				$iso = strtolower((string)$country['iso_code']);
 				$countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
 			}
+			asort($countries);
 		}
 
 		return $countries;
