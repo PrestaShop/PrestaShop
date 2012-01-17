@@ -78,16 +78,16 @@ class AdminAccountingExportControllerCore extends AdminController
 				'type' => 'global_export',
 				'file' => 'accounting_global_export.csv',
 				'fields' => array(
-					'invoice_date' => $this->l('Invoice Date'),
-					'journal' => $this->l('Journal'),
-					'account' => $this->l('Account'),
-					'invoice_number' => $this->l('Invoice Number'),
-					'credit' => $this->l('Credit (TTC)'),
-					'debit' => $this->l('Debit (TVA+HT)'),
-					'transaction_id' => $this->l('Transaction Number'),
-					'payment_type' => $this->l('Payment Type'),
-					'currency_code' => $this->l('Currency Code'),
-					'wording' => $this->l('Wording')
+					'invoice_date' => $this->l('Invoice Date', 'AdminTab', false, false),
+					'journal' => $this->l('Journal', 'AdminTab', false, false),
+					'account' => $this->l('Account', 'AdminTab', false, false),
+					'invoice_number' => $this->l('Invoice Number', 'AdminTab', false, false),
+					'credit' => $this->l('Credit (TTC)', 'AdminTab', false, false),
+					'debit' => $this->l('Debit (TVA+HT)', 'AdminTab', false, false),
+					'transaction_id' => $this->l('Transaction Number', 'AdminTab', false, false),
+					'payment_type' => $this->l('Payment Type', 'AdminTab', false, false),
+					'currency_code' => $this->l('Currency Code', 'AdminTab', false, false),
+					'wording' => $this->l('Wording', 'AdminTab', false, false)
 				)
 			),
 			'reconciliation_export' => array(
@@ -95,12 +95,12 @@ class AdminAccountingExportControllerCore extends AdminController
 				'type' => 'reconciliation_export',
 				'file' => 'accounting_reconciliation_export.csv',
 				'fields' => array(
-					'invoice_number' => $this->l('Invoice Number'),
-					'wording' => $this->l('Wording'),
-					'total_paid_real' => $this->l('Total TTC'),
-					'invoice_date' => $this->l('Invoice Date'),
-					'transaction_id' => $this->l('Transaction Number'),
-					'account_client' => $this->l('Account client')
+					'invoice_number' => $this->l('Invoice Number', 'AdminTab', false, false),
+					'wording' => $this->l('Wording', 'AdminTab', false, false),
+					'total_paid_real' => $this->l('Total TTC', 'AdminTab', false, false),
+					'invoice_date' => $this->l('Invoice Date', 'AdminTab', false, false),
+					'transaction_id' => $this->l('Transaction Number', 'AdminTab', false, false),
+					'account_client' => $this->l('Account client', 'AdminTab', false, false)
 				)
 			) 
 	 	);
@@ -222,8 +222,8 @@ class AdminAccountingExportControllerCore extends AdminController
 		{
 			$buffer = '';
 			foreach($this->exportTypeList[$this->exportSelected]['fields'] as $key => $translation)
-				$buffer .= $translation.';';
-			fwrite($this->fd, rtrim($buffer, ';')."\r\n");
+				$buffer .= '"'.$translation.'";';
+			fwrite($this->fd, mb_convert_encoding(rtrim($buffer, ';')."\r\n", 'UTF-16LE'));
 			
 			// Bufferize line by line and write it to the file
 			// Todo :: Allow to configure the size of the buffer before flushing it
@@ -231,8 +231,8 @@ class AdminAccountingExportControllerCore extends AdminController
 			{
 				$buffer = '';
 				foreach ($row as $col => $val)
-					$buffer .= $val.';';
-				fwrite($this->fd, rtrim($buffer, ';')."\r\n");
+					$buffer .= '"'.$val.'";';
+				fwrite($this->fd, mb_convert_encoding(rtrim($buffer, ';')."\r\n", 'UTF-16LE'));
 			}
 			$this->confirmations[] = $this->l('Export has been successfully done');
 		}
