@@ -279,6 +279,7 @@ ALTER TABLE `PREFIX_module_group` DROP PRIMARY KEY;
 ALTER TABLE `PREFIX_module_group` ADD PRIMARY KEY (`id_module`, `id_shop`, `id_group`);
 
 ALTER TABLE `PREFIX_carrier_lang` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_carrier`;
+ALTER TABLE `PREFIX_carrier_lang` DROP KEY `shipper_lang_index`;
 ALTER TABLE `PREFIX_carrier_lang` ADD UNIQUE `shipper_lang_index` (`id_carrier`, `id_shop`, `id_lang`);
 
 ALTER TABLE `PREFIX_search_word` ADD `id_shop` INT(11) NOT NULL DEFAULT '1' AFTER `id_word`;
