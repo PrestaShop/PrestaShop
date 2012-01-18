@@ -65,8 +65,6 @@ ALTER TABLE `PREFIX_tax_rule`
 	ADD `behavior` INT NOT NULL AFTER `zipcode_to`,
 	ADD `description` VARCHAR( 100 ) NOT NULL AFTER `id_tax`;
 
-ALTER TABLE `PREFIX_tax_rule` DROP INDEX tax_rule;
-
 INSERT INTO `PREFIX_tax_rule` 
 	(`id_tax_rules_group`, `id_country`, `id_state`, `id_tax`, 
 	`behavior`, `zipcode_from`, `zipcode_to`, `id_county`, 
@@ -531,7 +529,7 @@ ALTER TABLE `PREFIX_specific_price` DROP INDEX `id_product`;
 ALTER TABLE `PREFIX_specific_price` ADD INDEX `id_product` (`id_product`, `id_product_attribute`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`);
 
 
-ALTER TABLE `PREFIX_orders` ADD COLUMN `reference` varchar(9) AFTER `id_order`;
+/* PHP:add_column_orders_reference_if_not_exists(); */;
 ALTER TABLE `PREFIX_orders` ADD COLUMN `id_warehouse` int(10) unsigned DEFAULT 0 AFTER `id_carrier`;
 
 ALTER TABLE `PREFIX_cart` ADD COLUMN `order_reference` varchar(9) AFTER `id_cart`;
