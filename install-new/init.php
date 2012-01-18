@@ -25,8 +25,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_INSTALL_VERSION_', '1.5.0.4');
-
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);
 define('_PS_INSTALL_PATH_', dirname(__FILE__).'/');
@@ -36,23 +34,31 @@ define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
 define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
 define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 
-define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev|-new)?)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
-define('_THEME_NAME_', 'prestashop');
-require_once dirname(_PS_INSTALL_PATH_).'/config/defines.inc.php';
-require_once dirname(_PS_INSTALL_PATH_).'/config/defines_uri.inc.php';
+require_once(_PS_INSTALL_PATH_ . 'install_version.php');
+
+// we check if theses constants are defined
+// in order to use init.php in upgrade.php script
+if (!defined('__PS_BASE_URI__'))
+	define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev|-new)?)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
+
+if (!defined('_THEME_NAME_'))
+	define('_THEME_NAME_', 'default');
+
+require_once(dirname(_PS_INSTALL_PATH_).'/config/defines.inc.php');
+require_once(dirname(_PS_INSTALL_PATH_).'/config/defines_uri.inc.php');
 
 // PrestaShop autoload is used to load some helpfull classes like Tools.
 // Add classes used by installer bellow.
-require_once _PS_ROOT_DIR_.'/config/autoload.php';
-require_once _PS_ROOT_DIR_.'/config/alias.php';
-require_once _PS_INSTALL_PATH_.'classes/exception.php';
-require_once _PS_INSTALL_PATH_.'classes/languages.php';
-require_once _PS_INSTALL_PATH_.'classes/language.php';
-require_once _PS_INSTALL_PATH_.'classes/model.php';
-require_once _PS_INSTALL_PATH_.'classes/session.php';
-require_once _PS_INSTALL_PATH_.'classes/sqlLoader.php';
-require_once _PS_INSTALL_PATH_.'classes/xmlLoader.php';
-require_once _PS_INSTALL_PATH_.'classes/simplexml.php';
+require_once(_PS_ROOT_DIR_.'/config/autoload.php');
+require_once(_PS_ROOT_DIR_.'/config/alias.php');
+require_once(_PS_INSTALL_PATH_.'classes/exception.php');
+require_once(_PS_INSTALL_PATH_.'classes/languages.php');
+require_once(_PS_INSTALL_PATH_.'classes/language.php');
+require_once(_PS_INSTALL_PATH_.'classes/model.php');
+require_once(_PS_INSTALL_PATH_.'classes/session.php');
+require_once(_PS_INSTALL_PATH_.'classes/sqlLoader.php');
+require_once(_PS_INSTALL_PATH_.'classes/xmlLoader.php');
+require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 
 @set_time_limit(300);
 
