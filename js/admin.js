@@ -1061,3 +1061,112 @@ function showAjaxOverlay()
 	clearTimeout(ajax_running_timeout);
 }
 
+function display_action_details(row_id, controller, token, action, params) {
+	var id = action+'_'+row_id;
+	var current_element = $('#details_'+id);
+	if (!current_element.data('dataMaped')) {
+		var ajax_params = {
+			'id': row_id,
+			'controller': controller,
+			'token': token,
+			'action': action,
+			'ajax': true
+		};
+
+		$.each(params, function(k, v)
+		{
+			ajax_params[k] = v;
+		});
+
+		$.ajax({
+			url: 'index.php',
+			data: ajax_params,
+			dataType: 'json',
+			context: current_element,
+			async: false,
+			success: function(data) {
+				if (typeof(data.use_parent_structure) == 'undefined' || (data.use_parent_structure == true))
+				{
+					if (current_element.parent().parent().hasClass('alt_row'))
+						var alt_row = true;
+					else
+						var alt_row = false;
+					current_element.parent().parent().after($('<tr class="details_'+id+' small '+(alt_row ? 'alt_row' : '')+'"></tr>')
+						.append($('<td style="border:none!important;" class="empty"></td>')
+						.attr('colspan', current_element.parent().parent().find('td').length)));
+					$.each(data.data, function(it, row)
+					{
+						var bg_color = ''; // Color
+						if (row.color)
+							bg_color = 'style="background:' + row.color +';"';
+
+						var content = $('<tr class="action_details details_'+id+' '+(alt_row ? 'alt_row' : '')+'"></tr>');
+						content.append($('<td class="empty"></td>'));
+						var first = true;
+						var count = 0; // Number of non-empty collum
+						$.each(row, function(it)
+						{
+							if(typeof(data.fields_display[it]) != 'undefined')
+								count++;
+						});
+						$.each(data.fields_display, function(it, line)
+						{
+							if (typeof(row[it]) == 'undefined')
+							{
+								if (first || count == 0)
+									content.append($('<td class="'+current_element.align+' empty"' + bg_color + '></td>'));
+								else
+									content.append($('<td class="'+current_element.align+'"' + bg_color + '></td>'));
+							}
+							else
+							{
+								count--;
+								if (first)
+								{
+									first = false;
+									content.append($('<td class="'+current_element.align+' first"' + bg_color + '>'+row[it]+'</td>'));
+								}
+								else if (count == 0)
+									content.append($('<td class="'+current_element.align+' last"' + bg_color + '>'+row[it]+'</td>'));
+								else
+									content.append($('<td class="'+current_element.align+' '+count+'"' + bg_color + '>'+row[it]+'</td>'));
+							}
+						});
+						content.append($('<td class="empty"></td>'));
+						current_element.parent().parent().after(content.show('slow'));
+					});
+				}
+				else
+				{
+					if (current_element.parent().parent().hasClass('alt_row'))
+						var content = $('<tr class="details_'+id+' alt_row"></tr>');
+					else
+						var content = $('<tr class="details_'+id+'"></tr>');
+					content.append($('<td style="border:none!important;"><div class="details_content">'+data.data+'</div></td>').attr('colspan', current_element.parent().parent().find('td').length));
+					current_element.parent().parent().after(content);
+					current_element.parent().parent().parent().find('.details_'+id+' div.details_content').hide();
+				}
+				current_element.data('dataMaped',true);
+				current_element.data('opened', false);
+				initTableDnD('.details_'+id+' table.tableDnD');
+			}
+		});
+	}
+
+	if (current_element.data('opened'))
+	{
+		current_element.find('img').attr('src', '../img/admin/more.png');
+		current_element.parent().parent().parent().find('.details_'+id+' div.details_content').slideUp('slow', function()
+		{
+			current_element.parent().parent().parent().find('.details_'+id).hide();
+		});
+		current_element.data('opened', false);
+	}
+	else
+	{
+		current_element.find('img').attr('src', '../img/admin/less.png');
+		current_element.parent().parent().parent().find('.details_'+id).show();
+		current_element.parent().parent().parent().find('.details_'+id+' div.details_content').slideDown('slow');
+		current_element.data('opened', true);
+	}
+}

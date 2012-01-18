@@ -79,10 +79,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 * method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
 	 */
-	public function ajaxProcess()
+	public function ajaxProcessDetails()
 	{
-		// test if an id is submit
-		if (($id = Tools::getValue('id')) && Tools::isSubmit('id'))
+		if (($id = Tools::getValue('id')))
 		{
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
@@ -150,9 +149,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$helper->bulk_actions = $this->bulk_actions;
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
-			$this->content = Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
+			exit;
 		}
-
 	}
 
 	/**

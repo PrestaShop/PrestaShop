@@ -196,10 +196,9 @@ class AdminTabsControllerCore extends AdminController
 	 * method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
 	 */
-	public function ajaxProcess()
+	public function ajaxProcessDetails()
 	{
-		// test if an id is submit
-		if (($id = Tools::getValue('id')) && Tools::isSubmit('id'))
+		if (($id = Tools::getValue('id')))
 		{
 			// override attributes
 			$this->display = 'list';

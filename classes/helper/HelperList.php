@@ -392,12 +392,18 @@ class HelperListCore extends Helper
 		$tpl = $this->createTemplate('list_action_details.tpl');
 		if (!array_key_exists('Details', self::$cache_lang))
 			self::$cache_lang['Details'] = $this->l('Details', 'helper');
+
+		$ajax_params = $this->ajax_params;
+		if (!is_array($ajax_params) || !isset($ajax_params['action']))
+			$ajax_params['action'] = 'details';
+
 		$tpl->assign(array(
 			'id' => $id,
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
 			'token' => $token != null ? $token : $this->token,
 			'action' => self::$cache_lang['Details'],
-			'params' => $this->ajax_params
+			'params' => $ajax_params,
+			'json_params' => Tools::jsonEncode($ajax_params)
 		));
 		return $tpl->fetch();
 	}
