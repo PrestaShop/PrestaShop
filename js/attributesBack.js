@@ -52,7 +52,7 @@ virtual_product_nb_days, is_shareable)
 	getE('attribute_ean13').value = ean;
 	getE('attribute_upc').value = upc;
 	getE('attribute_wholesale_price').value = Math.abs(wholesale_price);
-	getE('attribute_price').value = Math.abs(price_impact);
+	getE('attribute_price').value = ps_round(Math.abs(price_impact), 2);
 	getE('attribute_weight').value = Math.abs(weight_impact);
 	getE('attribute_unity').value = Math.abs(unit_impact);
 	if ($('#attribute_ecotax').length != 0)
