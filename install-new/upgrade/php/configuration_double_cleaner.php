@@ -20,31 +20,29 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function set_payment_module_group()
+function configuration_double_cleaner()
 {
-	// Get all modules then select only payment ones
-	$modules = Module::getModulesInstalled();
-	foreach ($modules AS $module)
+	$result = Db::getInstance()->ExecuteS('
+	SELECT name, MIN(id_configuration) AS minid
+	FROM '._DB_PREFIX_.'configuration
+	GROUP BY name
+	HAVING count(name) > 1');
+	foreach ($result as $row)
 	{
-		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
-		if (!file_exists($file))
-			continue;
-		$fd = @fopen($file, 'r');
-		if (!$fd)
-			continue ;
-		$content = fread($fd, filesize($file));
-		if (preg_match_all('/extends PaymentModule/U', $content, $matches))
-		{
-			Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_group` (id_module, id_group)
-			SELECT '.(int)($module['id_module']).', id_group FROM `'._DB_PREFIX_.'group`');
-		}
-		fclose($fd);
+		DB::getInstance()->Execute('
+		DELETE FROM '._DB_PREFIX_.'configuration
+		WHERE name = \''.addslashes($row['name']).'\'
+		AND id_configuration != '.(int)($row['minid']));
 	}
+	DB::getInstance()->Execute('
+	DELETE FROM '._DB_PREFIX_.'configuration_lang
+	WHERE id_configuration NOT IN (
+		SELECT id_configuration
+		FROM '._DB_PREFIX_.'configuration)');
 }
 

@@ -20,22 +20,31 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function update_modules_sql()
+function set_payment_module_group()
 {
-	Configuration::loadConfiguration();
-	$blocklink = Module::getInstanceByName('blocklink');
-	if ($blocklink->id)
-		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'blocklink_lang` ADD PRIMARY KEY (`id_link`, `id_lang`);');
-	$productComments = Module::getInstanceByName('productcomments');
-	if ($productComments->id)
+	// Get all modules then select only payment ones
+	$modules = Module::getModulesInstalled();
+	foreach ($modules AS $module)
 	{
-		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'product_comment_grade` ADD PRIMARY KEY (`id_product_comment`, `id_product_comment_criterion`);');
-		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'product_comment_criterion` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_product_comment_criterion`, `id_lang`);');
-		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'product_comment_criterion_product` ADD PRIMARY KEY(`id_product`, `id_product_comment_criterion`);');
+		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
+		if (!file_exists($file))
+			continue;
+		$fd = @fopen($file, 'r');
+		if (!$fd)
+			continue ;
+		$content = fread($fd, filesize($file));
+		if (preg_match_all('/extends PaymentModule/U', $content, $matches))
+		{
+			Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'module_group` (id_module, id_group)
+			SELECT '.(int)($module['id_module']).', id_group FROM `'._DB_PREFIX_.'group`');
+		}
+		fclose($fd);
 	}
 }
+

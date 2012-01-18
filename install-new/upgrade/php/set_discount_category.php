@@ -20,25 +20,16 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_CONTAINS_REQUIRED_FIELD_', 2);
-
-function add_required_customization_field_flag()
+function set_discount_category()
 {
-	if (($result = Db::getInstance()->executeS('SELECT `id_product` FROM `'._DB_PREFIX_.'customization_field` WHERE `required` = 1')) === false)
-		return false;
-	if (Db::getInstance()->numRows())
-	{
-		$productIds = array();
-		foreach ($result AS $row)
-			$productIds[] = (int)($row['id_product']);
-		if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '._CONTAINS_REQUIRED_FIELD_.' WHERE `id_product` IN ('.implode(', ', $productIds).')'))
-			return false;
-	}
-	return true;
+	$discounts = Db::getInstance()->ExecuteS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount`');
+	$categories = Db::getInstance()->ExecuteS('SELECT `id_category` FROM `'._DB_PREFIX_.'category`');
+	foreach ($discounts AS $discount)
+		foreach ($categories AS $category)
+			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`,`id_category`) VALUES ('.(int)($discount['id_discount']).','.(int)($category['id_category']).')');
 }
-

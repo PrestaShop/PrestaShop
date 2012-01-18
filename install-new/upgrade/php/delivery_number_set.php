@@ -20,35 +20,36 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function set_payment_module()
+function delivery_number_set()
 {
-	// Get all modules then select only payment ones
-	$modules = Module::getModulesInstalled();
-	foreach ($modules AS $module)
-	{
-		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
-		if (!file_exists($file))
-			continue;
-		$fd = fopen($file, 'r');
-		if (!$fd)
-			continue ;
-		$content = fread($fd, filesize($file));
-		if (preg_match_all('/extends PaymentModule/U', $content, $matches))
-		{
-			Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
-			SELECT '.(int)($module['id_module']).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
-			Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
-			SELECT '.(int)($module['id_module']).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0');
-		}
-		fclose($fd);
-	}
-}
+	Configuration::loadConfiguration();
+	$number = 1;
 
+	// Update each order with a number
+	$result = Db::getInstance()->ExecuteS('
+	SELECT id_order
+	FROM '._DB_PREFIX_.'orders
+	ORDER BY id_order');
+	foreach ($result as $row)
+	{
+		$order = new Order((int)($row['id_order']));
+		$history = $order->getHistory(false);
+		foreach ($history as $row2)
+		{
+			$oS = new OrderState((int)($row2['id_order_state']), Configuration::get('PS_LANG_DEFAULT'));
+			if ($oS->delivery)
+			{
+				Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET delivery_number = '.(int)($number++).', `delivery_date` = `date_add` WHERE id_order = '.(int)($order->id));
+				break ;
+			}
+		}
+	}
+	// Add configuration var
+	Configuration::updateValue('PS_DELIVERY_NUMBER', (int)($number));
+}
 

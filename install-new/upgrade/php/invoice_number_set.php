@@ -20,29 +20,36 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/* Convert product prices from the PS < 1.3 wrong rounding system to the new 1.3 one */
-function convert_product_price()
+function invoice_number_set()
 {
-	$taxes = Tax::getTaxes();
-	$taxRates = array();
-	foreach ($taxes as $data)
-		$taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
-	$results = DB::getInstance()->executeS('SELECT `id_product`, `price`, `id_tax` FROM `'._DB_PREFIX_.'product`');
-	foreach ($results as $row)
-		if ($row['id_tax'])
+	Configuration::loadConfiguration();
+	$number = 1;
+
+	// Update each order with a number
+	$result = Db::getInstance()->ExecuteS('
+	SELECT id_order
+	FROM '._DB_PREFIX_.'orders
+	ORDER BY id_order');
+	foreach ($result as $row)
+	{
+		$order = new Order((int)($row['id_order']));
+		$history = $order->getHistory(false);
+		foreach ($history as $row2)
 		{
-			$price = $row['price'] * (1 + $taxRates[$row['id_tax']]);
-			$decimalPart = $price - (int)$price;
-			if ($decimalPart < 0.000001)
+			$oS = new OrderState((int)($row2['id_order_state']), Configuration::get('PS_LANG_DEFAULT'));
+			if ($oS->invoice)
 			{
-				$newPrice = (float)(number_format($price, 6, '.', ''));
-				$newPrice = Tools::floorf($newPrice / (1 + $taxRates[$row['id_tax']]), 6);
-				DB::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'product` SET `price` = '.$newPrice.' WHERE `id_product` = '.(int)$row['id_product']);
+				Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET invoice_number = '.(int)($number++).', `invoice_date` = `date_add` WHERE id_order = '.(int)($order->id));
+				break ;
 			}
 		}
+	}
+	// Add configuration var
+	Configuration::updateValue('PS_INVOICE_NUMBER', (int)($number));
 }
+
