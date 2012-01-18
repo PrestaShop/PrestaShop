@@ -4057,6 +4057,7 @@ $_LANGADM['AdminProductse187fd4d086ab8cf9144f2b1b7a68b93'] = 'Infos.';
 $_LANGADM['AdminProductsc0471f0320bc17eb192bbd412d236806'] = 'Informations globales sur le produit';
 $_LANGADM['AdminProductse659b52eba1f0299b2d8ca3483919e72'] = 'Type :';
 $_LANGADM['AdminProductsdeb10517653c255364175796ace3553f'] = 'Produit';
+$_LANGADM['AdminProducts64b53bc0cc0715cf944e23104df45d66'] = 'Produit Virtuel (services, réservation et produits téléchargeables)';
 $_LANGADM['AdminProducts4e140ba723a03baa6948340bf90e2ef6'] = 'Nom :';
 $_LANGADM['AdminProducts6252c0f2c2ed83b7b06dfca86d4650bb'] = 'Caractères interdits :';
 $_LANGADM['AdminProductsa1f9d795d1110aeeed6b5368c16dc725'] = 'EAN13 ou JAN :';
