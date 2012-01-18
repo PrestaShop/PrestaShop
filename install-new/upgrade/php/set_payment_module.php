@@ -20,28 +20,35 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function group_reduction_column_fix()
+function set_payment_module()
 {
-	if (!Db::getInstance()->execute('SELECT `group_reduction` FROM `'._DB_PREFIX_.'order_detail` LIMIT 1'))
-		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `group_reduction` DECIMAL(10, 2) NOT NULL AFTER `reduction_amount`');
-	return true;
+	// Get all modules then select only payment ones
+	$modules = Module::getModulesInstalled();
+	foreach ($modules AS $module)
+	{
+		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
+		if (!file_exists($file))
+			continue;
+		$fd = fopen($file, 'r');
+		if (!$fd)
+			continue ;
+		$content = fread($fd, filesize($file));
+		if (preg_match_all('/extends PaymentModule/U', $content, $matches))
+		{
+			Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
+			SELECT '.(int)($module['id_module']).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
+			Db::getInstance()->Execute('
+			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
+			SELECT '.(int)($module['id_module']).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0');
+		}
+		fclose($fd);
+	}
 }
 
-function ecotax_tax_application_fix()
-{
-	if (!Db::getInstance()->execute('SELECT `ecotax_tax_rate` FROM `'._DB_PREFIX_.'order_detail` LIMIT 1'))
-		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `ecotax_tax_rate` DECIMAL(5, 3) NOT NULL AFTER `ecotax`');
-	return true;
-}
 
-function id_currency_country_fix()
-{
-	if (!Db::getInstance()->execute('SELECT `id_currency` FROM `'._DB_PREFIX_.'country` LIMIT 1'))
-		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'country` ADD `id_currency` INT NOT NULL DEFAULT \'0\' AFTER `id_zone`');
-	return true;
-}

@@ -20,29 +20,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function configuration_double_cleaner()
+function group_reduction_column_fix()
 {
-	$result = Db::getInstance()->executeS('
-	SELECT name, MIN(id_configuration) AS minid
-	FROM '._DB_PREFIX_.'configuration
-	GROUP BY name
-	HAVING count(name) > 1');
-	foreach ($result as $row)
-	{
-		DB::getInstance()->Execute('
-		DELETE FROM '._DB_PREFIX_.'configuration
-		WHERE name = \''.addslashes($row['name']).'\'
-		AND id_configuration != '.(int)($row['minid']));
-	}
-	DB::getInstance()->Execute('
-	DELETE FROM '._DB_PREFIX_.'configuration_lang
-	WHERE id_configuration NOT IN (
-		SELECT id_configuration
-		FROM '._DB_PREFIX_.'configuration)');
+	if (!Db::getInstance()->execute('SELECT `group_reduction` FROM `'._DB_PREFIX_.'order_detail` LIMIT 1'))
+		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `group_reduction` DECIMAL(10, 2) NOT NULL AFTER `reduction_amount`');
+	return true;
 }
-

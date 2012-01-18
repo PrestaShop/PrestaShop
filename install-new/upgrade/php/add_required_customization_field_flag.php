@@ -20,21 +20,25 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function setAllGroupsOnHomeCategory()
+define('_CONTAINS_REQUIRED_FIELD_', 2);
+
+function add_required_customization_field_flag()
 {
-	$results = Group::getGroups(Configuration::get('PS_LANG_DEFAULT'));
-	$groups = array();
-	foreach ($results AS $result)
-		$groups[] = $result['id_group'];
-	if (is_array($groups) && sizeof($groups))
+	if (($result = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'customization_field` WHERE `required` = 1')) === false)
+		return false;
+	if (Db::getInstance()->numRows())
 	{
-		$category = new Category(1);
-		$category->cleanGroups();
-		$category->addGroups($groups);
+		$productIds = array();
+		foreach ($result AS $row)
+			$productIds[] = (int)($row['id_product']);
+		if (!Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '._CONTAINS_REQUIRED_FIELD_.' WHERE `id_product` IN ('.implode(', ', $productIds).')'))
+			return false;
 	}
+	return true;
 }
+

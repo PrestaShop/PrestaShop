@@ -20,24 +20,28 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 12447 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function update_carrier_url()
+function attribute_group_clean_combinations()
 {
-	// Get all carriers
-	$sql = '
-		SELECT c.`id_carrier`, c.`url`
-		FROM `'._DB_PREFIX_.'carrier` c';
-	$carriers = Db::getInstance()->executeS($sql);
+	$attributeCombinations = Db::getInstance()->ExecuteS('SELECT 
+		pac.`id_attribute`, pa.`id_product_attribute` 
+		FROM `'._DB_PREFIX_.'product_attribute` pa 
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac 
+			ON (pa.`id_product_attribute` = pac.`id_product_attribute`)');
+	$toRemove = array();
+	foreach ($attributeCombinations AS $attributeCombination)
+		if ((int)($attributeCombination['id_attribute']) == 0)
+			$toRemove[] = (int)($attributeCombination['id_product_attribute']);
 
-	// Check each one and erase carrier URL if not correct URL
-	foreach ($carriers as $carrier)
-		if (!Validate::isAbsoluteUrl($carrier['url']))
-			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'carrier`
-				SET `url` = \'\'
-				WHERE  `id_carrier`= '.(int)($carrier['id_carrier']));
+	if (!empty($toRemove))
+	{
+		$res = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'product_attribute` 
+			WHERE `id_product_attribute` IN ('.implode(', ', $toRemove).')');
+		return $res;
+	}
+	return true;
 }

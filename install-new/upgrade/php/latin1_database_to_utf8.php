@@ -20,13 +20,15 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if(!defined('_PS_MAGIC_QUOTES_GPC_'))
-define('_PS_MAGIC_QUOTES_GPC_', get_magic_quotes_gpc());
+if (!defined('_PS_MAGIC_QUOTES_GPC_'))
+	define('_PS_MAGIC_QUOTES_GPC_', get_magic_quotes_gpc());
+if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
+	define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 
 function latin1_database_to_utf8()
 {
@@ -70,7 +72,7 @@ function latin1_database_to_utf8()
 					array('name' => 'order_state_lang', 'id' => 'id_order_state', 'lang' => true, 'fields' => array('name', 'template')),
 					array('name' => 'product', 'id' => 'id_product', 'fields' => array('ean13', 'reference')),
 					array('name' => 'product_attribute', 'id' => 'id_product_attribute', 'fields' => array('reference', 'ean13')),
-					array('name' => 'product_download', 'id' => 'id_product_download', 'fields' => array('display_filename', 'filename')),
+					array('name' => 'product_download', 'id' => 'id_product_download', 'fields' => array('display_filename', 'physically_filename')),
 					array('name' => 'product_lang', 'id' => 'id_product', 'lang' => true, 'fields' => array('description', 'description_short', 'link_rewrite', 'meta_description', 'meta_keywords', 'meta_title', 'name', 'availability')),
 					array('name' => 'profile_lang', 'id' => 'id_profile', 'lang' => true, 'fields' => array('name')),
 					array('name' => 'quick_access', 'id' => 'id_quick_access', 'fields' => array('link')),
@@ -86,7 +88,7 @@ function latin1_database_to_utf8()
 	foreach ($tables AS $table)
 	{
 		/* Latin1 datas' selection */
-		if (!Db::getInstance()->execute('SET NAMES latin1'))
+		if (!Db::getInstance()->Execute('SET NAMES latin1'))
 			echo 'Cannot change the sql encoding to latin1!';
 		$query = 'SELECT `'.$table['id'].'`';
 		foreach ($table['fields'] AS $field)
@@ -94,7 +96,7 @@ function latin1_database_to_utf8()
 		if (isset($table['lang']) AND $table['lang'])
 			$query .= ', `id_lang`';
 		$query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
-		$latin1Datas = Db::getInstance()->executeS($query);
+		$latin1Datas = Db::getInstance()->ExecuteS($query);
 		if ($latin1Datas === false)
 		{
 			$warningExist = true;
@@ -109,7 +111,7 @@ function latin1_database_to_utf8()
 		if (Db::getInstance()->NumRows())
 		{
 			/* Utf-8 datas' restitution */
-			if (!Db::getInstance()->execute('SET NAMES utf8'))
+			if (!Db::getInstance()->Execute('SET NAMES utf8'))
 				echo 'Cannot change the sql encoding to utf8!';
 			foreach ($latin1Datas AS $latin1Data)
 			{
@@ -120,7 +122,7 @@ function latin1_database_to_utf8()
 				$query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
 				if (isset($table['lang']) AND $table['lang'])
 					$query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
-				if (!Db::getInstance()->execute($query))
+				if (!Db::getInstance()->Execute($query))
 				{
 					$warningExist = true;
 					$requests .= '
