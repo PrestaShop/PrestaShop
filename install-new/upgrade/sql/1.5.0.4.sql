@@ -1,7 +1,6 @@
 SET NAMES 'utf8';
 
-
-ALTER TABLE `PREFIX_order_state` ADD COLUMN `deleted` tinyint(1) UNSIGNED NOT NULL default '0' AFTER `paid`;
+/* PHP:add_column_order_state_deleted_if_not_exists(); */;
 
 ALTER TABLE `PREFIX_category` ADD COLUMN `is_root_category` tinyint(1) NOT NULL default '0' AFTER `position`;
 
