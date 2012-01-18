@@ -35,7 +35,7 @@ function migrate_block_info_to_cms_block()
 	//get ids cms of block information
 	$ids_cms = Db::getInstance()->executeS('SELECT id_cms FROM  `'._DB_PREFIX_.'block_cms` WHERE `id_block` = '.(int)$id_blockinfos);
 	//check if block info is installed and active
-	if (sizeof($ids_cms))
+	if (is_array($ids_cms))
 	{
 		//install module blockcms
 		// Module::getInstanceByName('blockcms')->install()
@@ -107,11 +107,11 @@ function migrate_block_info_to_cms_block()
 				VALUES( 1, "", 0, 0)');
 			$id_block = Db::getInstance()->insert_id();
 			
-			foreach($languages AS $language)
+			foreach ($languages AS $language)
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES ('.(int)$id_block.', '.(int)$language['id_lang'].', \'Information\')');
 			
 			//save ids cms of block information in new module cms bloc
-			foreach($ids_cms AS $id_cms)
+			foreach ($ids_cms AS $id_cms)
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`) VALUES ('.(int)$id_block.', '.(int)$id_cms['id_cms'].', 0)');
 		}
 		else
