@@ -65,6 +65,9 @@
 			<tr>
 				<td style="font-size: 13pt; font-weight: bold">{$address_supplier->postcode} {$address_supplier->city}</td>
 			</tr>
+			<tr>
+				<td style="font-size: 13pt; font-weight: bold">{$address_supplier->country}</td>
+			</tr>
 		</table>
 	</div>
 	<!-- / SUPPLIER ADDRESS -->
