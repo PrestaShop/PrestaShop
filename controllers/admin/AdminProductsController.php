@@ -1884,40 +1884,31 @@ class AdminProductsControllerCore extends AdminController
 				self::$currentIndex .= '&id_category='.$id_category;
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
 
-			if (!empty($this->_list))
+			$id_category = Tools::getValue('id_category', 1);
+
+			$root_category = Category::getRootCategory();
+			if (!$root_category->id_category)
 			{
-				$id_category = Tools::getValue('id_category', 1);
-				if (!$id_category)
-					$id_category = 1;
-				// @todo lot of ergonomy works around here
-				// @todo : move blockcategories select queries in class Category
-				$root_categ = Category::getRootCategory();
-				$children = $root_categ->getAllChildren();
-				$category_tree = array();
-
-				// Add category "all products" to tree
-				$all_categ = new Category();
-				$all_categ->name = 'All products';
-				$all_categ->selected = $this->_category->id_category == $all_categ->id;
-				$all_categ->dashes = '';
-				$category_tree[] = $all_categ;
-
-				// Add root category to tree
-				$root_categ->selected = $this->_category->id_category == $root_categ->id;
-				$root_categ->dashes = str_repeat('&nbsp;-&nbsp;',$root_categ->level_depth);
-				$category_tree[] = $root_categ;
-
-				foreach ($children as $categ)
-				{
-					$categ->selected = $this->_category->id_category == $categ->id;
-					$categ->dashes = str_repeat('&nbsp;-&nbsp;',$categ->level_depth);
-					$category_tree[] = $categ;
-				}
-				$this->tpl_list_vars['category_tree'] = $category_tree;
-
-				// used to build the new url when changing category
-				$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
+				$root_category->id_category = 0;
+				$root_category->name = $this->l('Root');
 			}
+			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+
+			$translations = array(
+				'Root' => $root_category,
+				'selected' => $this->l('selected'),
+				'Collapse All' => $this->l('Collapse All'),
+				'Expand All' => $this->l('Expand All'),
+				'Check All' => $this->l('Check All'),
+				'Uncheck All'  => $this->l('Uncheck All'),
+				'search' => $this->l('Search a category')
+			);
+
+			$this->tpl_list_vars['is_category_filter'] = Tools::getValue('id_category') ? true : false;
+			$this->tpl_list_vars['category_tree'] = Helper::renderAdminCategorieTree($translations, array($id_category), 'categoryBox', true, false);
+
+			// used to build the new url when changing category
+			$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
 		}
 		// @todo module free
 		$this->tpl_form_vars['vat_number'] = file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php');
@@ -1932,6 +1923,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if (!Tools::getValue('id_category'))
 			unset($this->fieldsDisplay['position']);
+
 		return parent::renderList();
 	}
 
