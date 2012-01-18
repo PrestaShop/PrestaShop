@@ -56,6 +56,7 @@ class ConfigurationTestCore
 			'mails_dir' => 'mails',
 			'module_dir' => 'modules',
 			'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang',
+			'theme_pdf_lang_dir' => 'themes/'._THEME_NAME_.'/pdf/lang/',
 			'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache',
 			'translations_dir' => 'translations',
 			'customizable_products_dir' => 'upload',
@@ -256,6 +257,13 @@ class ConfigurationTestCore
 	}
 
 	public static function test_theme_lang_dir($dir)
+	{
+		if (!file_exists($dir))
+			return true;
+		return self::test_dir($dir, true);
+	}
+
+	public static function test_theme_pdf_lang_dir($dir)
 	{
 		if (!file_exists($dir))
 			return true;
