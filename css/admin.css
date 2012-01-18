@@ -2244,3 +2244,17 @@ margin-bottom:7px;
 	-webkit-border-bottom-right-radius: 3px;
 	width: 300px;
 }
+
+#container_category_tree {
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 5px;
+}
+
+#container_category_tree a{
+	font-weight: bold;
+}
+
+#container_category_tree a input{
+	margin-right: 3px;
+}

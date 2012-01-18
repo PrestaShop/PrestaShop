@@ -1431,10 +1431,8 @@ class AdminControllerCore extends Controller
 		$helper = new HelperList();
 
 		$this->setHelperDisplay($helper);
-        $this->tpl_list_vars['img_dir'] = 'toto';
 		$helper->tpl_vars = $this->tpl_list_vars;
 		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
-		// Check if list templates have been overriden
 
 		// For compatibility reasons, we have to check standard actions in class attributes
 		foreach ($this->actions_available as $action)
@@ -1538,7 +1536,6 @@ class AdminControllerCore extends Controller
 		// @todo : move that in Helper
 		$helper->title = $this->toolbar_title;
 		$helper->toolbar_btn = $this->toolbar_btn;
-
 		$helper->show_toolbar = $this->show_toolbar;
 		$helper->toolbar_fix = $this->toolbar_fix;
 		$helper->override_folder = $this->tpl_folder;
