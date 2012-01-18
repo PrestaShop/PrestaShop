@@ -13,4 +13,4 @@ INSERT INTO PREFIX_configuration (name, value, date_add, date_upd) VALUES ('PS_T
 
 /* PHP */
 /* PHP:update_carrier_url(); */;
-/* PHP:moduleReinstaller('blocksearch'); */;
+/* PHP:module_reinstall_blocksearch(); */;

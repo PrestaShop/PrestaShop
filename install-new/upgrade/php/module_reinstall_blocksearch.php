@@ -25,26 +25,29 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/* Convert product prices from the PS < 1.3 wrong rounding system to the new 1.3 one */
-function convert_product_price()
+function module_reinstall_blocksearch()
 {
-	$taxes = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'tax');
-	$taxRates = array();
-	foreach ($taxes as $data)
-		$taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
-	$resource = DB::getInstance()->ExecuteS('SELECT `id_product`, `price`, `id_tax` FROM `'._DB_PREFIX_.'product`', false);
-	if (!$resource)
-		die(mysql_error());
-	while ($row = DB::getInstance()->nextRow($resource))
-		if ($row['id_tax'])
+	$res = true;
+	$id_module = Db::getInstance()->getValue('SELECT id_module FROM '._DB_PREFIX_.'module where name="blocksearch"');
+	if ($id_module)
+	{
+		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'hook` 
+			(`name`, `title`, `description`, `position`) VALUES 
+			("myAccountBlock", "My account block", "Display extra informations inside the \"my account\" block", 1)');
+		// register left column, and header, and addmyaccountblockhook
+		$hooks = array('top', 'header');
+		foreach($hooks as $hook_name)
 		{
-			$price = $row['price'] * (1 + $taxRates[$row['id_tax']]);
-			$decimalPart = $price - (int)$price;
-			if ($decimalPart < 0.000001)
-			{
-				$newPrice = (float)(number_format($price, 6, '.', ''));
-				$newPrice = Tools::floorf($newPrice / (1 + $taxRates[$row['id_tax']]), 6);
-				DB::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'product` SET `price` = '.$newPrice.' WHERE `id_product` = '.(int)$row['id_product']);
-			}
+			// do not pSql hook_name 
+			$row = Db::getInstance()->getRow('SELECT h.id_hook, '.$id_module.' as id_module, MAX(hm.position)+1 as position
+				FROM  `'._DB_PREFIX_.'hook_module` hm
+				LEFT JOIN `'._DB_PREFIX_.'hook` h on hm.id_hook=h.id_hook
+				WHERE h.name = "'.$hook_name.'" group by id_hook');
+			$res &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'hook_module', $row, 'INSERT');
 		}
+		return $res;
+	}
+	return true;
 }
+
+
