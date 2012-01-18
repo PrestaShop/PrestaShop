@@ -434,7 +434,7 @@ ALTER TABLE `PREFIX_country` ADD `zip_code_format` VARCHAR(12) NOT NULL DEFAULT 
 
 ALTER TABLE `PREFIX_product` ADD `unit_price` DECIMAL(20,6) NOT NULL DEFAULT '0.000000' AFTER `wholesale_price`;
 ALTER TABLE `PREFIX_product` ADD `unity` VARCHAR(10) NOT NULL DEFAULT '0.000000' AFTER `unit_price` ;
-ALTER TABLE `PREFIX_product_attribute` ADD `unit_price_impact`DECIMAL(17,2) NOT NULL DEFAULT '0.00' AFTER `weight`;
+ALTER TABLE `PREFIX_product_attribute` ADD `unit_price_impact` DECIMAL(17,2) NOT NULL DEFAULT '0.00' AFTER `weight`;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_VOLUME_UNIT', 'cl', NOW(), NOW());
 
