@@ -788,7 +788,7 @@ abstract class ModuleCore
 			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php'))
 			{
 				include_once(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php');
-				
+
 				if (class_exists($moduleName, false))
 					return self::$_INSTANCE[$moduleName] = new $moduleName;
 			}
@@ -850,7 +850,7 @@ abstract class ModuleCore
 		foreach ($modules_dir as $module)
 		{
 			// Memory usage checking
-			if (function_exists('memory_get_usage') && $memory_limit !== -1)
+			if (function_exists('memory_get_usage') && $memory_limit != '-1')
 			{
 				$current_memory = memory_get_usage(true);
 				// memory_threshold in MB
