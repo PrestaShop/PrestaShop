@@ -598,7 +598,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 					LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cg.`id_category` = cs.`id_category`)
+					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE p.`active` = 1
 						AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID().'
