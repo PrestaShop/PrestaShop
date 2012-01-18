@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 6594 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,8 +31,8 @@ function update_order_details()
 
 	if (sizeof($res) == 0)
 	{
-		  Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `reduction_percent` DECIMAL(10, 2) NOT NULL default \'0.00\' AFTER `product_price`');
-		  Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `reduction_amount` DECIMAL(20, 6) NOT NULL default \'0.000000\' AFTER `reduction_percent`');		  
+		  Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `reduction_percent` DECIMAL(10, 2) NOT NULL default "0.00" AFTER `product_price`');
+		  Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `reduction_amount` DECIMAL(20, 6) NOT NULL default "0.000000" AFTER `reduction_percent`');		  
 	}
 }
 

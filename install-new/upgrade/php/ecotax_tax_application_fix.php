@@ -20,24 +20,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 12447 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function update_carrier_url()
+function ecotax_tax_application_fix()
 {
-	// Get all carriers
-	$sql = '
-		SELECT c.`id_carrier`, c.`url`
-		FROM `'._DB_PREFIX_.'carrier` c';
-	$carriers = Db::getInstance()->executeS($sql);
-
-	// Check each one and erase carrier URL if not correct URL
-	foreach ($carriers as $carrier)
-		if (!Validate::isAbsoluteUrl($carrier['url']))
-			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'carrier`
-				SET `url` = \'\'
-				WHERE  `id_carrier`= '.(int)($carrier['id_carrier']));
+	if (!Db::getInstance()->execute('SELECT `ecotax_tax_rate` FROM `'._DB_PREFIX_.'order_detail` LIMIT 1'))
+		return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `ecotax_tax_rate` DECIMAL(5, 3) NOT NULL AFTER `ecotax`');
+	return true;
 }

@@ -28,9 +28,19 @@
 function deactivate_custom_modules()
 {
 	$db = Db::getInstance();
-	$modulesDirOnDisk = Module::getModulesDirOnDisk();
+	$modulesDirOnDisk = array();
+	$modules = scandir(_PS_MODULE_DIR_);
+	foreach ($modules AS $name)
+	{
+		if (is_dir(_PS_MODULE_DIR_.$name) && Tools::file_exists_cache(_PS_MODULE_DIR_.$name.'/'.$name.'.php'))
+		{
+			if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name))
+				die(Tools::displayError().' (Module '.$name.')');
+			$modulesDirOnDisk[] = $name;
+		}
+	}
 
-	$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
+	$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
 	$nativeModules = simplexml_load_file($module_list_xml);
 	$nativeModules = $nativeModules->modules;
 	foreach ($nativeModules as $nativeModulesType)

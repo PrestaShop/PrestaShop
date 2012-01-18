@@ -20,29 +20,29 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 12447 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function add_module_to_hook($module_name, $hook_name)
 {
-	$result = false;
+	$res = true;
 
 	$id_module = Db::getInstance()->getValue('
 	SELECT `id_module` FROM `'._DB_PREFIX_.'module`
-	WHERE `name` = \''.pSQL($module_name).'\''
+	WHERE `name` = "'.$module_name.'"'
 	);
 
 	if ((int)$id_module > 0)
 	{
 		$id_hook = Db::getInstance()->getValue('
-		SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \''.pSQL($hook_name).'\'
+		SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = "'.$hook_name.'"
 		');
 
 		if ((int)$id_hook > 0)
 		{
-			$result = Db::getInstance()->execute('
+			$res &= Db::getInstance()->execute('
 			INSERT IGNORE INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
 			VALUES (
 			'.(int)$id_module.',
@@ -53,6 +53,6 @@ function add_module_to_hook($module_name, $hook_name)
 		}
 	}
 
-	return $result;
+	return $res;
 }
 

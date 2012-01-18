@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 7373 $
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,12 +35,12 @@ function add_missing_rewrite_value()
 	AND m.`page` != "index"
 	');
 	if (sizeof($pages) && is_array($pages))
-	foreach ($pages as $page)
-	{
-		Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'meta_lang` 
-		SET `url_rewrite` = "'.pSQL(Tools::str2url($page['title'])).'" 
-		WHERE `id_meta` = '.(int)$page['id_meta'].'
-		AND `id_lang` = '.(int)$page['id_lang']);
-	}
+		foreach ($pages as $page)
+		{
+			Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'meta_lang`
+			SET `url_rewrite` = "'.pSQL(Tools::str2url($page['title'])).'"
+			WHERE `id_meta` = '.(int)$page['id_meta'].'
+			AND `id_lang` = '.(int)$page['id_lang']);
+		}
 }

@@ -20,18 +20,28 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function set_discount_category()
+function setAllGroupsOnHomeCategory()
 {
-	$discounts = Db::getInstance()->executeS('SELECT `id_discount` FROM `'._DB_PREFIX_.'discount`');
-	$categories = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category`');
-	foreach ($discounts AS $discount)
-		foreach ($categories AS $category)
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'discount_category` (`id_discount`,`id_category`) VALUES ('.(int)($discount['id_discount']).','.(int)($category['id_category']).')');
+	$ps_lang_default = Db::getInstance()->getValue('SELECT value 
+		FROM `'._DB_PREFIX_.'`configuration WHERE name="PS_LANG_DEFAULT"');
+
+	$results = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
+	$groups = array();
+	foreach ($results AS $result)
+		$groups[] = $result['id_group'];
+
+	if (is_array($groups) && sizeof($groups))
+	{
+		// cleanGroups
+		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` 
+			WHERE `id_category` = 1');
+		// addGroups($groups);
+		$row = array('id_category' => 1, 'id_group' => (int)($groups));
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'category_group', $row, 'INSERT');
+	}
 }
-
-
