@@ -115,7 +115,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		$settings_content = "<?php\n";
 		foreach ($settings_constants as $constant => $value)
-			$settings_content .= "define('$constant', '$value');\n";
+			$settings_content .= "define('$constant', '".str_replace('\'', '\\\'', $value)."');\n";
 		if (!@file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content))
 		{
 			$this->setError($this->language->l('Cannot write settings file'));
