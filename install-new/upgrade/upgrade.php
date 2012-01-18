@@ -25,8 +25,62 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+// note : this value wil l
+if (!isset($display_type))
+	$display_type = 'xml';
+
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
+
+// Set execution time and time_limit to infinite if available
+@set_time_limit(0);
+@ini_set('max_execution_time', '0');
+
+// setting the memory limit to 128M only if current is lower
+$memory_limit = ini_get('memory_limit');
+if (substr($memory_limit,-1) != 'G'
+	AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0,-1) < 128)
+	OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072))
+)
+	@ini_set('memory_limit','128M');
+
+// redefine REQUEST_URI if empty (on some webservers...)
+if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '')
+	$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
+if ($tmp = strpos($_SERVER['REQUEST_URI'], '?'))
+	$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
+$_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
+
+// retrocompatibility (is present in some upgrade scripts)
+define('INSTALL_PATH', dirname(dirname(__FILE__)).'/');
+
+require_once(INSTALL_PATH . 'install_version.php');
+
+define('SETTINGS_FILE', INSTALL_PATH . '/../config/settings.inc.php');
+
+if (file_exists(SETTINGS_FILE))
+	include_once(SETTINGS_FILE);
+else
+	die('settings.inc.php is missing (error code 30).');
+
+// need for upgrade before 1.5
+if (!defined('__PS_BASE_URI__'))
+	define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev|-new)?)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
+
+// need for upgrade before 1.5
+if (!defined('_THEME_NAME_'))
+define('_THEME_NAME_', 'default');
+
+require_once(dirname(__FILE__).'/../init.php');
+
+// set logger 
+require_once(_PS_INSTALL_PATH_.'upgrade/classes/AbstractLogger.php');
+eval('abstract class AbstractLogger extends AbstractLoggerCore{}');
+require_once(_PS_INSTALL_PATH_.'upgrade/classes/FileLogger.php');
+eval('class FileLogger extends FileLoggerCore{}');
+
+$logger = new FileLogger();
+$logger->setFilename(_PS_ROOT_DIR_.'/log/'.@date('Ymd').'_upgrade.log');
 
 if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set('Europe/Paris');
@@ -35,33 +89,25 @@ if (function_exists('date_default_timezone_set'))
 if (defined('_PS_ROOT_DIR_') AND !defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
 else if (!defined('_PS_MODULE_DIR_'))
-	define('_PS_MODULE_DIR_', INSTALL_PATH.'/../modules/');
+	define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_.'/../modules/');
 
 if(!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
-	define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  INSTALL_PATH.DIRECTORY_SEPARATOR.'php/');
+	define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  _PS_INSTALL_PATH_.'upgrade/php/');
+
+if(!defined('_PS_INSTALLER_SQL_UPGRADE_DIR_'))
+	define('_PS_INSTALLER_SQL_UPGRADE_DIR_',  _PS_INSTALL_PATH_.'upgrade/sql/');
 
 
 //old version detection
 global $oldversion, $logger;
 $oldversion = false;
-if (file_exists(SETTINGS_FILE) AND file_exists(DEFINES_FILE))
-{
-	include_once(SETTINGS_FILE);
-	include_once(DEFINES_FILE);
-	$oldversion = _PS_VERSION_;
-}
-else
-{
-	$logger->logError('The config/settings.inc.php file was not found.');
-	die('<action result="fail" error="30" />'."\n");
-}
 
-if (!file_exists(DEFINES_FILE))
-{
-	$logger->logError('The config/settings.inc.php file was not found.');
-	die('<action result="fail" error="37" />'."\n");
-}
-include_once(SETTINGS_FILE);
+//sql file execution
+global $requests, $warningExist;
+$requests = '';
+$fail_result = '';
+$warningExist = false;
+
 
 if (!defined('_THEMES_DIR_'))
 	define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
@@ -71,53 +117,57 @@ if (!defined('_PS_JS_DIR_'))
 	define('_PS_JS_DIR_', __PS_BASE_URI__.'js/');
 if (!defined('_PS_CSS_DIR_'))
 	define('_PS_CSS_DIR_', __PS_BASE_URI__.'css/');
-include_once(DEFINES_FILE);
 
 $oldversion = _PS_VERSION_;
 
-$versionCompare =  version_compare(INSTALL_VERSION, $oldversion);
+$versionCompare =  version_compare(_PS_INSTALL_VERSION_, $oldversion);
 
 if ($versionCompare == '-1')
 {
 	$logger->logError('This installer is too old.');
-	die('<action result="fail" error="27" />'."\n");
+	$requests .= '<action result="fail" error="27" />'."\n";
 }
 elseif ($versionCompare == 0)
 {
-	$logger->logError(sprintf('You already have the %s version.',INSTALL_VERSION));
-	die('<action result="fail" error="28" />'."\n");
+	$logger->logError(sprintf('You already have the %s version.',_PS_INSTALL_VERSION_));
+	$fail_result .= '<action result="fail" error="28" />'."\n";
 }
 elseif ($versionCompare === false)
 {
 	$logger->logError('There is no older version. Did you delete or rename the config/settings.inc.php file?');
-	die('<action result="fail" error="29" />'."\n");
+	$fail_result .= '<action result="fail" error="29" />'."\n";
 }
 
 //check DB access
-include_once(INSTALL_PATH.'/classes/ToolsInstall.php');
-$resultDB = ToolsInstall::checkDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
+// include_once(_PS_INSTALL_PATH_.'/classes/ToolsInstall.php');
+// $resultDB = ToolsInstall::checkDB(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
+/*
 if ($resultDB !== true)
 {
 	$logger->logError('Invalid database configuration.');
 	die("<action result='fail' error='".$resultDB."'/>\n");
 }
+*/
 
+// 
 //custom sql file creation
 $upgradeFiles = array();
-if ($handle = opendir(INSTALL_PATH.'/sql/upgrade'))
+if (empty ($fail_result))
 {
-    while (false !== ($file = readdir($handle)))
-        if ($file != '.' AND $file != '..')
-            $upgradeFiles[] = str_replace(".sql", "", $file);
-    closedir($handle);
+	if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_))
+	{
+			while (false !== ($file = readdir($handle)))
+					if ($file != '.' AND $file != '..')
+							$upgradeFiles[] = str_replace(".sql", "", $file);
+			closedir($handle);
+	}
+	if (empty($upgradeFiles))
+	{
+		$logger->logError('Can\'t find the sql upgrade files. Please verify that the /install/sql/upgrade folder is not empty)');
+		$fail_result .=  '<action result="fail" error="31" />'."\n";
+	}
+	natcasesort($upgradeFiles);
 }
-if (empty($upgradeFiles))
-{
-	$logger->logError('Can\'t find the sql upgrade files. Please verify that the /install/sql/upgrade folder is not empty)');
-	die('<action result="fail" error="31" />'."\n");
-}
-natcasesort($upgradeFiles);
-$neededUpgradeFiles = array();
 
 // fix : complete version number if there is not all 4 numbers
 // for example replace 1.4.3 by 1.4.3.0
@@ -132,22 +182,23 @@ if ($versionNumbers != 4)
 $oldversion = implode('.', $arrayVersion);
 // end of fix
 
+$neededUpgradeFiles = array();
 foreach ($upgradeFiles AS $version)
 {
-
-	if (version_compare($version, $oldversion) == 1 AND version_compare(INSTALL_VERSION, $version) != -1)
-		$neededUpgradeFiles[] = $version;
+	if (version_compare($version, $oldversion) == 1 AND version_compare(_PS_INSTALL_VERSION_, $version) != -1)
+	$neededUpgradeFiles[] = $version;
 }
 
-if (empty($neededUpgradeFiles))
+if (empty ($fail_result) && empty($neededUpgradeFiles))
 {
 	$logger->logError('No upgrade is possible.');
-	die('<action result="fail" error="32" />'."\n");
+	$fail_result .= '<action result="fail" error="32" />'."\n";
 }
 
 
-//refresh conf file
-require_once(INSTALL_PATH.'/classes/AddConfToFile.php');
+// refresh conf file
+require_once(_PS_INSTALL_PATH_.'upgrade/classes/AddConfToFile.php');
+
 $oldLevel = error_reporting(E_ALL);
 $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 $datas = array(
@@ -166,7 +217,7 @@ $datas = array(
 	array('_COOKIE_KEY_', _COOKIE_KEY_),
 	array('_COOKIE_IV_', _COOKIE_IV_),
 	array('_PS_CREATION_DATE_', defined("_PS_CREATION_DATE_") ? _PS_CREATION_DATE_ : date('Y-m-d')),
-	array('_PS_VERSION_', INSTALL_VERSION)
+	array('_PS_VERSION_', _PS_INSTALL_VERSION_)
 );
 if (defined('_RIJNDAEL_KEY_'))
 	$datas[] = array('_RIJNDAEL_KEY_', _RIJNDAEL_KEY_);
@@ -184,49 +235,128 @@ if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
 	deactivate_custom_modules();
 }
 
-foreach($neededUpgradeFiles AS $version)
-{
-	$file = INSTALL_PATH.'/sql/upgrade/'.$version.'.sql';
-	if (!file_exists($file))
+if (empty($fail_result))
+	foreach($neededUpgradeFiles AS $version)
 	{
-		$logger->logError('Error while loading sql upgrade file.');
-		die('<action result="fail" error="33" />'."\n");
+		$file = _PS_INSTALLER_SQL_UPGRADE_DIR_.$version.'.sql';
+		if (!file_exists($file))
+		{
+			$logger->logError('Error while loading sql upgrade file.');
+			$fail_result .= '<action result="fail" error="33" />'."\n";
+		}
+		if (!$sqlContent .= file_get_contents($file))
+		{
+			$logger->logError(sprintf('Error while loading sql upgrade file %s.', $version));
+			$fail_result .= '<action result="fail" error="33" />'."\n";
+		}
+		$sqlContent .= "\n";
 	}
-	if (!$sqlContent .= file_get_contents($file))
-	{
-		$logger->logError(sprintf('Error while loading sql upgrade file %s.', $version));
-		die('<action result="fail" error="33" />'."\n");
-	}
-	$sqlContent .= "\n";
-}
 
 $sqlContent = str_replace(array($filePrefix, $engineType), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
 $sqlContent = preg_split("/;\s*[\r\n]+/",$sqlContent);
 
-error_reporting($oldLevel);
-$confFile = new AddConfToFile(SETTINGS_FILE, 'w');
-if ($confFile->error)
+if (empty($fail_result))
 {
-	$logger->logError($confFile->error);
-	die('<action result="fail" error="'.$confFile->error.'" />'."\n");
+	error_reporting($oldLevel);
+	$confFile = new AddConfToFile(SETTINGS_FILE, 'w');
+	if ($confFile->error)
+	{
+		$logger->logError($confFile->error);
+		$fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
+	}
+	else
+		foreach ($datas AS $data)
+			$confFile->writeInFile($data[0], $data[1]);
+	if ($confFile->error != false)
+	{
+		$logger->logError($confFile->error);
+		$fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
+	}
 }
 
-foreach ($datas AS $data){
-	$confFile->writeInFile($data[0], $data[1]);
-}
 
-if ($confFile->error != false)
-{
-	$logger->logError($confFile->error);
-	die('<action result="fail" error="'.$confFile->error.'" />'."\n");
-}
+Configuration::loadConfiguration();
+
+if (empty($fail_result));
+	foreach ($sqlContent as $query)
+	{
+		$query = trim($query);
+		if(!empty($query))
+		{
+			/* If php code have to be executed */
+			if (strpos($query, '/* PHP:') !== false)
+			{
+				/* Parsing php code */
+				$pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
+				$phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
+				$php = explode('::', $phpString);
+				preg_match('/\((.*)\)/', $phpString, $pattern);
+				$paramsString = trim($pattern[0], '()');
+				preg_match_all('/([^,]+),? ?/', $paramsString, $parameters);
+				if (isset($parameters[1]))
+					$parameters = $parameters[1];
+				else
+					$parameters = array();
+				if (is_array($parameters))
+					foreach ($parameters AS &$parameter)
+						$parameter = str_replace('\'', '', $parameter);
+
+				/* Call a simple function */
+				if (strpos($phpString, '::') === false)
+				{
+					$func_name = str_replace($pattern[0], '', $php[0]);
+					require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
+					$phpRes = call_user_func_array($func_name, $parameters);
+				}
+				/* Or an object method */
+				else
+				{
+					$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
+					$phpRes = call_user_func_array($func_name, $parameters);
+				}
+				if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
+				{
+					$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
+					$logger->logError(empty($phpRes['error'])?'':$phpRes['error']);
+					$requests .=
+	'	<request result="fail">
+			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+			<phpMsgError><![CDATA['.(empty($phpRes['msg'])?'':$phpRes['msg']).']]></sqlMsgError>
+			<phpNumberError><![CDATA['.(empty($phpRes['error'])?'':$phpRes['error']).']]></sqlNumberError>
+		</request>'."\n";
+				}
+				else
+					$requests .=
+	'	<request result="ok">
+			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+		</request>'."\n";
+			}
+			elseif(!Db::getInstance()->execute($query))
+			{
+				$logger->logError('SQL query: '."\r\n".$query);
+				$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
+				$warningExist = true;
+				$requests .=
+	'	<request result="fail">
+			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+			<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
+			<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
+		</request>'."\n";
+			}
+			else
+				$requests .=
+	'	<request result="ok">
+			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+		</request>'."\n";
+		}
+	}
 
 // Settings updated, compile and cache directories must be emptied
 $arrayToClean = array(
-	INSTALL_PATH.'/../tools/smarty/cache/',
-	INSTALL_PATH.'/../tools/smarty/compile/',
-	INSTALL_PATH.'/../tools/smarty_v2/cache/',
-	INSTALL_PATH.'/../tools/smarty_v2/compile/');
+	_PS_INSTALL_PATH_.'/../tools/smarty/cache/',
+	_PS_INSTALL_PATH_.'/../tools/smarty/compile/',
+	_PS_INSTALL_PATH_.'/../tools/smarty_v2/cache/',
+	_PS_INSTALL_PATH_.'/../tools/smarty_v2/compile/');
 foreach ($arrayToClean as $dir)
 	if (!file_exists($dir))
 		$logger->logError('directory '.$dir." doesn't exist and can't be emptied.\r\n");
@@ -243,91 +373,29 @@ if($depth)
 	CacheFs::createCacheDirectories((int)$depth);
 }
 
-//sql file execution
-global $requests, $warningExist;
-$requests = '';
-$warningExist = false;
-
-Configuration::loadConfiguration();
-
-foreach ($sqlContent as $query)
+$result = '<?xml version="1.0" encoding="UTF-8"?>';
+if (empty($fail_result))
 {
-	$query = trim($query);
-	if(!empty($query))
-	{
-		/* If php code have to be executed */
-		if (strpos($query, '/* PHP:') !== false)
-		{
-			/* Parsing php code */
-			$pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
-			$phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
-			$php = explode('::', $phpString);
-			preg_match('/\((.*)\)/', $phpString, $pattern);
-			$paramsString = trim($pattern[0], '()');
-			preg_match_all('/([^,]+),? ?/', $paramsString, $parameters);
-			if (isset($parameters[1]))
-				$parameters = $parameters[1];
-			else
-				$parameters = array();
-			if (is_array($parameters))
-				foreach ($parameters AS &$parameter)
-					$parameter = str_replace('\'', '', $parameter);
-
-			/* Call a simple function */
-			if (strpos($phpString, '::') === false)
-			{
-				$func_name = str_replace($pattern[0], '', $php[0]);
-				require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
-				$phpRes = call_user_func_array($func_name, $parameters);
-			}
-			/* Or an object method */
-			else
-			{
-				$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
-				$phpRes = call_user_func_array($func_name, $parameters);
-			}
-			if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
-			{
-				$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
-				$logger->logError(empty($phpRes['error'])?'':$phpRes['error']);
-				if (!isset($request))
-					$request = '';
-				$request .=
-'	<request result="fail">
-		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-		<phpMsgError><![CDATA['.(empty($phpRes['msg'])?'':$phpRes['msg']).']]></sqlMsgError>
-		<phpNumberError><![CDATA['.(empty($phpRes['error'])?'':$phpRes['error']).']]></sqlNumberError>
-	</request>'."\n";
-			}
-			else
-				$requests .=
-'	<request result="ok">
-		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-	</request>'."\n";
-		}
-		elseif(!Db::getInstance()->execute($query))
-		{
-			$logger->logError('SQL query: '."\r\n".$query);
-			$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
-			$warningExist = true;
-			$requests .=
-'	<request result="fail">
-		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-		<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
-		<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
-	</request>'."\n";
-		}
-		else
-			$requests .=
-'	<request result="ok">
-		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-	</request>'."\n";
-	}
+	Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 0);
+	Configuration::updateValue('PS_NEED_REBUILD_INDEX', 1);
+	Configuration::updateValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
+	$result .= $warningExist ? '<action result="fail" error="34">'."\n" : '<action result="ok" error="">'."\n";
+	$result .= $requests;
+	$result .= '</action>'."\n";
 }
-Configuration::updateValue('PS_HIDE_OPTIMIZATION_TIPS', 0);
-Configuration::updateValue('PS_NEED_REBUILD_INDEX', 1);
-Configuration::updateValue('PS_VERSION_DB', INSTALL_VERSION);
-$result = $warningExist ? '<action result="fail" error="34">'."\n" : '<action result="ok" error="">'."\n";
-$result .= $requests;
-die($result.'</action>'."\n");
+else
+	$result = $fail_result;
 
+switch ($display_type)
+{
+	case 'json':
+		$result = json_encode(simplexml_load_string($result));
+		break;
+	default:
+	case 'xml':
+		// XML Header
+		header('Content-Type: text/xml');
+		break;
+}
+
+echo $result;
