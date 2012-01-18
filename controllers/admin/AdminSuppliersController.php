@@ -407,8 +407,26 @@ class AdminSuppliersControllerCore extends AdminController
 		$address = new Address($object->id_address);
 		if (Validate::isLoadedObject($address))
 		{
-			$address->id_supplier = $object->id_address;
+			$address->id_supplier = $object->id;
 			$address->save();
+		}
+		return true;
+
+	}
+
+	/**
+	 * @see AdminController::afterUpdate()
+	 */
+	public function afterUpdate($object)
+	{
+		$address = new Address($object->id_address);
+		if (Validate::isLoadedObject($address))
+		{
+			if ($address->id_supplier != $object->id)
+			{
+				$address->id_supplier = $object->id;
+				$address->save();
+			}
 		}
 		return true;
 	}

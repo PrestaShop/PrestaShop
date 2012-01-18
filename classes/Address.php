@@ -163,6 +163,9 @@ class AddressCore extends ObjectModel
 			$this->country = Country::getNameById($id_lang ? $id_lang : Configuration::get('PS_LANG_DEFAULT'), $this->id_country);
 	}
 
+	/**
+	 * @see ObjectModel::add()
+	 */
 	public function add($autodate = true, $null_values = false)
 	{
 		if (!parent::add($autodate, $null_values))
@@ -173,6 +176,9 @@ class AddressCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * @see ObjectModel::delete()
+	 */
 	public function delete()
 	{
 		if (Validate::isUnsignedId($this->id_customer))
@@ -200,6 +206,9 @@ class AddressCore extends ObjectModel
 		return $out;
 	}
 
+	/**
+	 * @see ObjectModel::validateController()
+	 */
 	public function validateController($htmlentities = true)
 	{
 		$errors = parent::validateController($htmlentities);
@@ -296,7 +305,7 @@ class AddressCore extends ObjectModel
 	{
 		if (!$id_customer)
 			return false;
-		
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
