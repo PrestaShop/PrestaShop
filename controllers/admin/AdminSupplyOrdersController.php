@@ -359,6 +359,20 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
+		// adds colors depending on the receipt state
+		if ($order_by == 'quantity_expected')
+		{
+			$nb_items = count($this->_list);
+			for ($i = 0; $i < $nb_items; ++$i)
+			{
+				$item = &$this->_list[$i];
+				if ($item['quantity_received'] == $item['quantity_expected'])
+					$item['color'] = '#00bb35';
+				else if ($item['quantity_received'] > $item['quantity_expected'])
+					$item['color'] = '#fb0008';
+			}
+		}
+
 		// actions filters on supply orders list
 		if ($this->table == 'supply_order')
 		{
@@ -723,6 +737,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 	$this->className = 'SupplyOrderDetail';
 	 	$this->list_simple_header = true;
 	 	$this->list_no_link = true;
+	 	$this->colorOnBackground = true;
 	 	$this->bulk_actions = array('Update' => array('text' => $this->l('Update selected'), 'confirm' => $this->l('Update selected items?')));
 		$this->addRowAction('details');
 
