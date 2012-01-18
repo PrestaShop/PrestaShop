@@ -56,9 +56,9 @@ ALTER TABLE `PREFIX_tax_rule` MODIFY `id_county` INT NOT NULL AFTER `id_country`
 UPDATE `PREFIX_address_format` set `format`='firstname lastname
 company
 address1 address2
-city, State:name postcode 
+city, State:name postcode
 Country:name
-phone' 
+phone'
 WHERE `id_country` = (SELECT `id_country` FROM `PREFIX_country` WHERE `iso_code`='US');
 
 ALTER TABLE `PREFIX_attachment` CHANGE `mime` `mime` VARCHAR(128) NOT NULL;
