@@ -298,7 +298,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			}
 
 			//specific discount display
-			$this->object->discount_rate = Tools::ps_round($this->object->discount_rate, 4);
+			if (isset($this->object->discount_rate))
+				$this->object->discount_rate = Tools::ps_round($this->object->discount_rate, 4);
+
+			//specific date display
+
+			if (isset($this->object->date_delivery_expected))
+			{
+				$date = explode(' ', $this->object->date_delivery_expected);
+				if ($date)
+					$this->object->date_delivery_expected = $date[0];
+			}
 
 			$this->displayInformation(
 				$this->l('Please note that if you wish to order products, they have to be available for the specified Supplier/Warehouse.')
