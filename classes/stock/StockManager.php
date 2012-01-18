@@ -475,7 +475,7 @@ class StockManagerCore implements StockManagerInterface
 
 		// Gets supply_orders_qty
 		$query = new DbQuery();
-		$query->select('SUM(sod.quantity_expected)');
+		$query->select('SUM(sod.quantity_expected) - SUM(sod.quantity_received)');
 		$query->from('supply_order', 'so');
 		$query->leftjoin('supply_order_detail', 'sod', 'sod.id_supply_order = so.id_supply_order');
 		$query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
