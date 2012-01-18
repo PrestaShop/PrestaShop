@@ -30,24 +30,41 @@
 	{if isset($category_tree)}
 		<script type="text/javascript">
 			$(document).ready(function(){
-				$('#go_to_categ').bind('change', function(){
-					var base_url = '{$base_url}';
+				var base_url = '{$base_url}';
+				// Load category products page when category is clicked
+				$('#categories-treeview :input').live('click', function(){
 					if (this.value !== "")
 						location.href = base_url + '&id_category=' + parseInt(this.value);
 					else
 						location.href = base_url;
 				});
+
+				// Make sure the checkbox is checked/unchecked when the link is clicked
+				$('#toggle_category_tree').bind('click', function(){
+					$('#block_category_tree').toggle();
+					if ($('#block_category_tree').is(':visible'))
+						$(this).find('input').attr('checked', 'checked');
+					else
+					{
+						$(this).find('input').removeAttr('checked');
+						location.href = base_url;
+					}
+				});
 			});
+
 		</script>
 		<div class="bloc-leadin">
-		{l s='Go to category:'}
-		<select id="go_to_categ" name="go_to_categ">
-		{foreach from=$category_tree item=categ}
-			<option value="{$categ->id}" {if $categ->selected}selected="selected"{/if} >
-				{$categ->dashes}{$categ->name}
-			</option>
-		{/foreach}
-		</select>
+			<div id="container_category_tree">
+				<a href="#" id="toggle_category_tree">
+					<form>
+						<input type="checkbox" {if $is_category_filter}checked="checked"{/if} />{l s='Filter by category'}
+					</form>
+				</a>
+				<div id="block_category_tree" {if !$is_category_filter}style="display:none"{/if}>
+					<br />
+					{$category_tree}
+				</div>
+			</div>
 		</div>
 	{/if}
 {/block}
