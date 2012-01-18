@@ -119,7 +119,7 @@ class CarrierCore extends ObjectModel
 		'multilang' => true,
 		'multishop' => true,
 		'fields' => array(
-			// Classic fields
+			/* Classic fields */
 			'id_reference' => 			array('type' => self::TYPE_INT),
 			'id_tax_rules_group' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
@@ -141,7 +141,7 @@ class CarrierCore extends ObjectModel
 			'position' => 				array('type' => self::TYPE_INT),
 			'deleted' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-			// Lang fields
+			/* Lang fields */
 			'delay' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
@@ -456,7 +456,7 @@ class CarrierCore extends ObjectModel
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone FROM `'._DB_PREFIX_.'country` c
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = 1)
+			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)($id_lang).')
 			INNER JOIN (`'._DB_PREFIX_.'carrier_zone` cz INNER JOIN `'._DB_PREFIX_.'carrier` cr ON ( cr.id_carrier = cz.id_carrier AND cr.deleted = 0 '.
 			($active_carriers ? 'AND cr.active = 1) ' : ') ').'
 			LEFT JOIN `'._DB_PREFIX_.'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone`
@@ -1025,7 +1025,6 @@ class CarrierCore extends ObjectModel
 	 */
 	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null)
 	{
-
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
