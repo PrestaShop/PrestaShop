@@ -398,7 +398,7 @@
 					theme_advanced_buttons3 : "",
 					theme_advanced_buttons4 : "",
 				});
-			})
+			});
 		{/block}
 	});
 	</script>
