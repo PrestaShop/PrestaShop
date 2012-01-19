@@ -18,3 +18,14 @@ WHERE `name` = "order fenced" AND (`id_lang` = 1 OR `id_lang` = 3 OR `id_lang` =
 UPDATE `PREFIX_supply_order_state_lang` 
 SET `name` = "Commande cloturée" 
 WHERE `name` = "order fenced" AND id_lang = 2;
+
+
+CREATE TABLE `PREFIX_category_shop` (
+  `id_category` int(11) NOT NULL,
+  `id_shop` int(11) NOT NULL,
+  PRIMARY KEY (`id_category`, `id_shop`),
+  UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+
+/* PHP:generate_root_category_for_multishop(); */;

@@ -28,27 +28,20 @@
 
 {block name=leadin}
 <div class="cat_bar2">
-	{if count($categories_tree) == 0}
-		{if $category_root->id_category == 0}
-			&nbsp;<img src="../img/admin/home.gif" alt="" /> {$category_root->name}
+	{assign var=i value=0}
+	{foreach $categories_tree key=key item=category}
+		{if $i++ == 0}
+			&nbsp;<img src="../img/admin/home.gif" alt="" />
+			{assign var=params_url value=""}
 		{else}
-			&nbsp;<img src="../img/admin/home.gif" alt="" /> {$categories_name}
+			{assign var=params_url value="&id_category={$category.id_category}&viewcategory"}
 		{/if}
-	{else}
-		{if $category_root->id_category == 0}
-			&nbsp;<a href="{$currentIndex}&token={$token}"><img src="../img/admin/home.gif" alt="" /> {$category_root->name}</a>&nbsp;>&nbsp;
+		{if $key == 0}
+			{$category.name}
 		{else}
-			&nbsp;<a href="{$currentIndex}&id_category={$category_root->id_category}&token={$token}"><img src="../img/admin/home.gif" alt="" /> {$category_root->name}</a>&nbsp;>&nbsp;
+			<a href="{$currentIndex}{$params_url}&token={$token}">{$category.name}</a>&nbsp;>&nbsp;
 		{/if}
-
-		{foreach $categories_tree key=key item=category}
-			{if $key == 0}
-				{$category.name}
-			{else}
-				<a href="{$currentIndex}&token={$token}&id_category={$category.id_category}&viewcategory">{$category.name}</a>&nbsp;>&nbsp;
-			{/if}
-		{/foreach}
-	{/if}
+	{/foreach}
 </div>
 	{if isset($delete_category) && $delete_category}
 		<form action="{$REQUEST_URI}" method="post">

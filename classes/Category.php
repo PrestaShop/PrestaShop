@@ -390,19 +390,21 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function regenerateEntireNtree()
 	{
-		$categories = Db::getInstance()->executeS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_category ASC');
+		$categories = Db::getInstance()->executeS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_parent, position ASC');
 		$categories_array = array();
 		foreach ($categories as $category)
-			$categories_array[(int)$category['id_parent']]['subcategories'][(int)$category['id_category']] = 1;
-			$n = 1;
-		Category::_subTree($categories_array, 1, $n);
+			$categories_array[$category['id_parent']]['subcategories'][] = $category['id_category'];
+		$n = 1;
+
+		if (isset($categories_array[0]) && $categories_array[0]['subcategories'])
+			Category::_subTree($categories_array, $categories_array[0]['subcategories'][0], $n);
 	}
 
 	protected static function _subTree(&$categories, $id_category, &$n)
 	{
-		$left = (int)$n++;
+		$left = $n++;
 		if (isset($categories[(int)$id_category]['subcategories']))
-			foreach (array_keys($categories[(int)$id_category]['subcategories']) as $id_subcategory)
+			foreach ($categories[(int)$id_category]['subcategories'] as $id_subcategory)
 				Category::_subTree($categories, (int)$id_subcategory, $n);
 		$right = (int)$n++;
 
@@ -660,7 +662,7 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function getHomeCategories($id_lang, $active = true)
 	{
-		return Category::getChildren(1, $id_lang, $active);
+		return self::getChildren(1, $id_lang, $active);
 	}
 
 	public static function getRootCategory($id_lang = null, Shop $shop = null)
@@ -671,17 +673,13 @@ class CategoryCore extends ObjectModel
 		if (!$shop)
 			$shop = $context->shop;
 
-		// context : no multishop
-		if (count(Shop::getShops()) == 1)
-			if (count(Category::getCategoriesWithoutParent()) > 1)
-				$category = new Category();
-			else
-				$category = new Category($shop->getCategory(), $id_lang);
-		else // context : multishop
-			if (count(Category::getCategoriesWithoutParent()) > 1 && $context->shop() != Shop::CONTEXT_SHOP)
-				$category = new Category();
-			else
-				$category = new Category($shop->getCategory(), $id_lang);
+		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
+		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
+			Shop::isFeatureActive() && $is_more_than_one_root_category && $context->shop() != Shop::CONTEXT_SHOP)
+			$category = Category::getTopCategory();
+		else
+			$category = new Category($shop->getCategory(), $id_lang);
+
 		return $category;
 	}
 
@@ -932,17 +930,20 @@ class CategoryCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 				ON (c.`id_category` = cl.`id_category`
 				AND `id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').')';
-			if (count(Shop::getShops()) > 1 && $context->shop() == Shop::CONTEXT_SHOP)
+			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP)
 				$sql .= '
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 				ON c.`id_category` = cs.`id_category`';
 			$sql .= '
 			WHERE c.`id_category` = '.(int)$id_current;
-			if (count(Shop::getShops()) > 1 && $context->shop() == Shop::CONTEXT_SHOP)
+			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP)
 				$sql .= '
 				AND cs.`id_shop` = '.(int)$context->shop->getID(true);
 			$root_category = Category::getRootCategory();
-			if ($context->shop() == Shop::CONTEXT_SHOP && (!Tools::isSubmit('id_category') || (int)Tools::getValue('id_category') == (int)$root_category->id_category || (int)$root_category->id_category == (int)$context->shop->id_category))
+			if (Shop::isFeatureActive() && $context->shop() == Shop::CONTEXT_SHOP &&
+				(!Tools::isSubmit('id_category') ||
+					(int)Tools::getValue('id_category') == (int)$root_category->id_category ||
+					(int)$root_category->id_category == (int)$context->shop->id_category))
 				$sql .= '
 					AND c.`id_parent` != 0';
 
@@ -952,7 +953,7 @@ class CategoryCore extends ObjectModel
 				$categories[] = $result[0];
 			else if (!$categories)
 				$categories = array();
-			if (!$result || $result[0]['id_category'] == $context->shop->id_category)
+			if (!$result || ($result[0]['id_category'] == $context->shop->id_category && Shop::isFeatureActive()))
 				return $categories;
 			$id_current = $result[0]['id_parent'];
 		}
@@ -1317,7 +1318,7 @@ class CategoryCore extends ObjectModel
 		SELECT DISTINCT c.*
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
-		WHERE `id_parent` = 0
+		WHERE `level_depth` = 1
 		');
 	}
 
@@ -1328,5 +1329,14 @@ class CategoryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'shop`
 		WHERE `id_category` = '.(int)$this->id);
 	}
-}
 
+	public static function getTopCategory()
+	{
+		$id_category = Db::getInstance()->getValue('
+		SELECT `id_category`
+		FROM `'._DB_PREFIX_.'category`
+		WHERE `id_parent` = 0
+		');
+		return new Category($id_category);
+	}
+}

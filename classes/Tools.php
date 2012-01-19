@@ -973,7 +973,9 @@ class ToolsCore
 		if ($categoryType === 'products')
 		{
 			$interval = Category::getInterval($id_category);
-			$intervalRoot = Category::getInterval($context->shop->getCategory());
+			$id_root_category = $context->shop->getCategory();
+			$root_category = new Category($id_root_category);
+			$intervalRoot = Category::getInterval($id_root_category);
 			if ($interval)
 			{
 				$sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
@@ -985,6 +987,7 @@ class ToolsCore
 							AND c.nright <= '.$intervalRoot['nright'].'
 							AND cl.id_lang = '.(int)$context->language->id.'
 							AND c.active = 1
+							AND c.level_depth > '.(int)$root_category->level_depth.'
 						ORDER BY c.level_depth ASC';
 				$categories = Db::getInstance()->executeS($sql);
 
