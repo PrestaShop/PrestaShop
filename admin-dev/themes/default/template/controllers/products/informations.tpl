@@ -25,7 +25,6 @@
 *}
 
 <script type="text/javascript">
-
 	$(document).ready(function() {
 		$('input').keypress(function(e) {
 			var code = null;
@@ -40,9 +39,6 @@
 	<h4 class="tab">1. {l s='Info.'}</h4>
 	<h4>{l s='Product global information'}</h4>
 	<script type="text/javascript">
-		var token = '{$token}';
-		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
-
 		{$combinationImagesJs}
 	</script>
 	<div class="separation"></div>
