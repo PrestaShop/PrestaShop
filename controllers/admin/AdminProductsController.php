@@ -2472,12 +2472,7 @@ class AdminProductsControllerCore extends AdminController
 				$selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
 		}
 		$root_category = Category::getRootCategory();
-		if (!$root_category->id_category)
-		{
-			$root_category->id_category = 0;
-			$root_category->name = $this->l('Root');
-		}
-		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
+		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
 		$translations = array(
 			'Root' => $root_category,
 			'selected' => $this->l('selected'),
