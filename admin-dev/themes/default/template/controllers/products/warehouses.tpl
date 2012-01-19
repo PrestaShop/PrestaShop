@@ -24,17 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-
-	$(document).ready(function() {
-		$('input').keypress(function(e) {
-			var code = null;
-			code = (e.keyCode ? e.keyCode : e.which);
-			return (code == 13) ? false : true;
-		});
-	});
-
-</script>
 <input type="hidden" name="warehouse_loaded" value="1">
 {if isset($product->id)}
 

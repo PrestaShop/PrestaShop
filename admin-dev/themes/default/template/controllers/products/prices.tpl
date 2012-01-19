@@ -104,18 +104,6 @@ jQuery(document).ready(Customer.init);
 {/literal}
 {* END CUSTOMER AUTO-COMPLETE / TO REFACTO *}
 
-<script type="text/javascript">
-
-	$(document).ready(function() {
-		$('input').keypress(function(e) { 
-			var code = null; 
-			code = (e.keyCode ? e.keyCode : e.which);
-			return (code == 13) ? false : true;
-		});
-	});
-
-</script>
-
 <div class="block_specific_prices_modifications">
 	<h4>{l s='Product price'}</h4>
     <div class="hint" style="display:block;min-height:0;">

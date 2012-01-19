@@ -24,21 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-
-	$(document).ready(function() {
-		$('input').keypress(function(e) { 
-			var code = null; 
-			code = (e.keyCode ? e.keyCode : e.which);
-			return (code == 13) ? false : true;
-		});
-
-		// Enable product name field when the url rewrite field is loaded
-		$('.copy2friendlyUrl').removeAttr('disabled');
-	});
-
-</script>
-
 <h4>{l s='SEO'}</h4>
 <div class="separation"></div>
 
