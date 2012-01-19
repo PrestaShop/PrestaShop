@@ -247,13 +247,8 @@ class AdminGroupsControllerCore extends AdminController
 				)
 			)
 		);
-		if ($this->context->shop() == Shop::CONTEXT_SHOP)
-		{
-			$root_category = Category::getRootCategory();
-			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
-		}
-		else
-			$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
+		$root_category = Category::getRootCategory();
+		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
 		$trads = array(

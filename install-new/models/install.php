@@ -219,7 +219,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$shop = new Shop();
 		$shop->active = true;
 		$shop->id_group_shop = $group_shop->id;
-		$shop->id_category = 1;
+		$shop->id_category = 2;
 		$shop->id_theme = 1;
 		$shop->name = 'Default';
 		if (!$shop->add())
