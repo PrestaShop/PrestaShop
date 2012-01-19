@@ -107,8 +107,7 @@ abstract class InstallControllerHttp
 			$session->last_step = self::$steps[0];
 
 		// Set timezone
-		if ($session->shop_timezone)
-			@date_default_timezone_set($session->shop_timezone);
+		@date_default_timezone_set($session->shop_timezone ? $session->shop_timezone : 'UTC');
 
 		// Get current step (check first if step is changed, then take it from session)
 		if (Tools::getValue('step'))
