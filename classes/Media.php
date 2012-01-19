@@ -273,12 +273,16 @@ class MediaCore
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		// check if js files exists, if not try to load query from ajax.googleapis.com
 
+		$return = array();
 		if (file_exists($file_uri))
-			return self::getJSPath($file);
+			$return[] = self::getJSPath($file);
 		else
-			return self::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
+			$return[] = self::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
+		
 		if ($addNoConflict)
-			return self::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
+			$return[] = self::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
+		
+		return $return;
 	}
 
 	/**
