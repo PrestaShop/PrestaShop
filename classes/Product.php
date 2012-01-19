@@ -159,14 +159,14 @@ class ProductCore extends ObjectModel
 	/** @var integer Number of uploadable files (concerning customizable products) */
 	public $uploadable_files;
 
-	/** @var interger Number of text fields */
+	/** @var int Number of text fields */
 	public $text_fields;
 
 	/** @var boolean Product statuts */
-	public $active = 1;
+	public $active = true;
 
 	/** @var boolean Product available for order */
-	public $available_for_order = 1;
+	public $available_for_order = true;
 
 	/** @var string Object available order date */
 	public $available_date = '0000-00-00';
@@ -175,7 +175,7 @@ class ProductCore extends ObjectModel
 	public $condition;
 
 	/** @var boolean Show price of Product */
-	public $show_price = 1;
+	public $show_price = true;
 
 	public $indexed = 0;
 
@@ -259,7 +259,7 @@ class ProductCore extends ObjectModel
 			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'available_for_order' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'available_date' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-			'condition' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'), // @todo enum ?
+			'condition' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
 			'show_price' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'ean13' => 						array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 						array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),

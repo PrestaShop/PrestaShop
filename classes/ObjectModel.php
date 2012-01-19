@@ -712,6 +712,17 @@ abstract class ObjectModelCore
 				if (Tools::isEmpty($value))
 					return 'Property '.get_class($this).'->'.$field.' is empty';
 
+		// Default value
+		if (!$value && !empty($data['default']))
+		{
+			$value = $data['default'];
+			$this->$field = $value;
+		}
+
+		// Check field values
+		if (!empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values']))
+			return 'Property '.get_class($this).'->'.$field.' has bad value (allowed values are: '.implode(', ', $data['values']).')';
+
 		// Check field size
 		if (!empty($data['size']))
 		{
