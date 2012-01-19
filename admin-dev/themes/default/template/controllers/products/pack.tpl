@@ -30,13 +30,6 @@
 	var msg_set_quantity = '{l s='Thanks to set a quantity to add a product.' js=1}';
 
 	$(document).ready(function() {
-
-		$('input').keypress(function(e) { 
-			var code = null; 
-			code = (e.keyCode ? e.keyCode : e.which);
-			return (code == 13) ? false : true;
-		});
-
 		if ($('#ppack').attr('checked'))
 		{
 			$('#ppack').attr('disabled', 'disabled');
