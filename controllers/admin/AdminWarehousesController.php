@@ -113,8 +113,10 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the general default currency used.').'<br />');
 		$this->displayInformation($this->l('Futhermore, for each warehouse, you have to check :'));
 		$this->displayInformation($this->l('the management type (according to the law in your country), the valuation currency, its associated carriers and shops.').'<br />');
-		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation, the number of products and quantities stored, ...'));
-
+		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation, the number of products and quantities stored, ...').'<br /><br />');
+		
+		$this->displayInformation($this->l('Be careful, products from different warehouses will need to be shipped in different packages.'));
+		
 		return parent::renderList();
 	}
 

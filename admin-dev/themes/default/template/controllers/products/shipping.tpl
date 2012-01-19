@@ -84,6 +84,7 @@
 					<option value="{$carrier.id_reference}" {if isset($carrier.selected) && $carrier.selected}selected="selected"{/if}>{$carrier.name}</option>
 				{/foreach}
 			</select>
+			<p class="preference_description">{l s='If no carrier selected, all carriers could be used to ship this product.'}</p>
 		</td>
 	</tr>
 </table>
