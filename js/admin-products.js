@@ -335,6 +335,28 @@ function handleSaveForPack()
 		enableSave();
 }
 
+function enableProductName()
+{
+	$('.copy2friendlyUrl').removeAttr('disabled');
+}
+
+/**
+ * Execute a callback function when a specific tab has finished loading or right now if the tab is already loaded
+ *
+ * @param tab_name name of the tab that is checked for loading
+ * @param callback_function function to call
+ */
+function onTabLoad(tab_name, callback_function)
+{
+	var target_tab = $('#product-tab-content-' + tab_name);
+	if (!target_tab)
+		return false;
+	if (target_tab.hasClass('not-loaded'))
+		target_tab.bind('loaded', callback_function);
+	else
+		callback_function();
+}
+
 /* function autocomplete */
 urlToCall = null;
 
@@ -348,4 +370,7 @@ $(document).ready(function() {
 		code = (e.keyCode ? e.keyCode : e.which);
 		return (code == 13) ? false : true;
 	});
+
+	// Enable writing of the product name when the friendly url field in tab SEO is loaded
+	onTabLoad('Seo', enableProductName);
 });
