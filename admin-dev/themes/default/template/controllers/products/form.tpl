@@ -27,43 +27,41 @@
 {extends file="helper/form/form.tpl"}
 
 {block name="autoload_tinyMCE"}
-	// change each by click to load only on click
+	// Execute when tab Informations has finished loading
+	onTabLoad('Informations', function(){
+		// change each by click to load only on click
+		$(".autoload_rte").each(function(e){
+			tinySetup({
+				mode :"exact",
+				editor_selector :"autoload_rte",
+				elements : $(this).attr("id"),
+				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
+				theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
+				theme_advanced_buttons3 : "",
+				theme_advanced_buttons4 : "",
+				setup : function(ed) {
 
-	$("#product-tab-content-Informations").bind('loaded', function(){
+					{* Count the total number of the field *}
 
-	$(".autoload_rte").each(function(e){
-		tinySetup({
-			mode :"exact",
-			editor_selector :"autoload_rte",
-			elements : $(this).attr("id"),
-			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
-			theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
-			theme_advanced_buttons3 : "",
-			theme_advanced_buttons4 : "",
-			setup : function(ed) {
-
-				{* Count the total number of the field *}
-
-				ed.onKeyUp.add(function(ed, e) {
-					tinyMCE.triggerSave();
-					textarea = $('#'+ed.id);
-					max = textarea.parent('div').find('span.counter').attr('max');
-					if (max != 'none')
-					{
-						textarea_value = textarea.val();
-						count = stripHTML(textarea_value).length;
-						rest = max - count;
-						if (rest < 0)
-							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s=' characters'} : '+rest+'</span>');
-						else
-							textarea.parent('div').find('span.counter').html(' ');
-					}
-				});
-			}			
+					ed.onKeyUp.add(function(ed, e) {
+						tinyMCE.triggerSave();
+						textarea = $('#'+ed.id);
+						max = textarea.parent('div').find('span.counter').attr('max');
+						if (max != 'none')
+						{
+							textarea_value = textarea.val();
+							count = stripHTML(textarea_value).length;
+							rest = max - count;
+							if (rest < 0)
+								textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s=' characters'} : '+rest+'</span>');
+							else
+								textarea.parent('div').find('span.counter').html(' ');
+						}
+					});
+				}
+			});
 		});
 	});
-});
-$("#product-tab-content-Informations").trigger('loaded');
 {/block}
 
 {block name="defaultForm"}
