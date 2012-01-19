@@ -137,7 +137,7 @@ class MediaCore
 	public static function packJSinHTMLpregCallback($preg_matches)
 	{
 		$preg_matches[1] = $preg_matches[1].'/* <![CDATA[ */';
-		$preg_matches[2] = self::packJS($preg_matches[2]);
+		$preg_matches[2] = Media::packJS($preg_matches[2]);
 		$preg_matches[count($preg_matches)-1] = '/* ]]> */'.$preg_matches[count($preg_matches)-1];
 		unset($preg_matches[0]);
 		$output = implode('', $preg_matches);
@@ -275,12 +275,12 @@ class MediaCore
 
 		$return = array();
 		if (file_exists($file_uri))
-			$return[] = self::getJSPath($file);
+			$return[] = Media::getJSPath($file);
 		else
-			$return[] = self::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
-		
+			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
+
 		if ($addNoConflict)
-			$return[] = self::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
+			$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version);
 		
 		return $return;
 	}
@@ -300,13 +300,13 @@ class MediaCore
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		$ui_tmp = array();
 		if ($check_dependencies && array_key_exists($component, self::$jquery_ui_dependencies))
-			foreach(self::$jquery_ui_dependencies[$component]['dependencies'] as $dependency)
-				$ui_tmp[] = self::getJqueryUIPath($dependency, $theme,  false);
+			foreach (self::$jquery_ui_dependencies[$component]['dependencies'] as $dependency)
+				$ui_tmp[] = Media::getJqueryUIPath($dependency, $theme, false);
 		
 		if (self::$jquery_ui_dependencies[$component]['theme'] AND $check_dependencies)
 		{
-			$theme_css = self::getCSSPath($folder.'themes/'.$theme.'/jquery.ui.theme.css');
-			$comp_css = self::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$component.'.css');
+			$theme_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.ui.theme.css');
+			$comp_css = Media::getCSSPath($folder.'themes/'.$theme.'/jquery.'.$component.'.css');
 			if (!empty($theme_css) OR $theme_css)
 				$ui_path['css'] = array_merge($ui_path['css'], $theme_css);
 			if (!empty($comp_css) OR $comp_css)
@@ -323,15 +323,15 @@ class MediaCore
 					$ui_path['js'][] = $ui['js'];
 					$ui_path['css'][] = $ui['css'];
 				}					
-				$ui_path['js'][] = self::getJSPath($folder.$file);
+				$ui_path['js'][] = Media::getJSPath($folder.$file);
 			}
 			else
-				$ui_path['js'] = self::getJSPath($folder.$file);
+				$ui_path['js'] = Media::getJSPath($folder.$file);
 		}
 		
 		//add i18n file for datepicker
 		if ($component == 'ui.datepicker')
-			$ui_path['js'][] = self::getJSPath($folder.'i18n/jquery.ui.datepicker-'.Context::getContext()->language->iso_code.'.js');		
+			$ui_path['js'][] = Media::getJSPath($folder.'i18n/jquery.ui.datepicker-'.Context::getContext()->language->iso_code.'.js');
 	
 		return $ui_path;
 	}
@@ -352,12 +352,12 @@ class MediaCore
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		if (file_exists($file_uri.$file))
-			$plugin_path['js'] = self::getJSPath($folder.$file);
+			$plugin_path['js'] = Media::getJSPath($folder.$file);
 		else if (file_exists($file_uri.$name.'/'.$file))
-			$plugin_path['js'] = self::getJSPath($folder.$name.'/'.$file);
+			$plugin_path['js'] = Media::getJSPath($folder.$name.'/'.$file);
 		else
 			return false;
-		$plugin_path['css'] = self::getJqueryPluginCSSPath($name);
+		$plugin_path['css'] = Media::getJqueryPluginCSSPath($name);
 		return $plugin_path;
 	}
 	
@@ -375,9 +375,9 @@ class MediaCore
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		if (file_exists($file_uri.$file))
-			return self::getCSSPath($folder.$file);
+			return Media::getCSSPath($folder.$file);
 		else if (file_exists($file_uri.$name.'/'.$file))
-			return self::getCSSPath($folder.$name.'/'.$file);
+			return Media::getCSSPath($folder.$name.'/'.$file);
 		else
 			return false;
 	}
@@ -442,7 +442,7 @@ class MediaCore
 				foreach ($media_infos['files'] as $file_infos)
 				{
 					if (file_exists($file_infos['path']))
-						$compressed_css_files[$media] .= self::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri'], $import_url);
+						$compressed_css_files[$media] .= Media::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri'], $import_url);
 					else
 						$compressed_css_files_not_found[] = $file_infos['path'];
 				}
@@ -528,7 +528,7 @@ class MediaCore
 				else
 					$compressed_js_files_not_found[] = $file_infos['path'];
 			}
-			$content = self::packJS($content);
+			$content = Media::packJS($content);
 
 			if (!empty($compressed_js_files_not_found))
 				$content = '/* WARNING ! file(s) not found : "'.

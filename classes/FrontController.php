@@ -191,7 +191,7 @@ class FrontControllerCore extends Controller
 			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND
 					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND
 					$cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 AND
-					!self::isInWhitelistForGeolocation())
+					!FrontController::isInWhitelistForGeolocation())
 				unset($this->context->cookie->id_cart, $cart);
 			// update cart values
 			elseif ($this->context->cookie->id_customer != $cart->id_customer OR $this->context->cookie->id_lang != $cart->id_lang OR $currency->id != $cart->id_currency)
@@ -595,7 +595,7 @@ class FrontControllerCore extends Controller
 
 					if (is_object($record))
 					{
-						if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND !self::isInWhitelistForGeolocation())
+						if (!in_array(strtoupper($record->country_code), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation())
 						{
 							if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_)
 								$this->restrictedCountry = true;

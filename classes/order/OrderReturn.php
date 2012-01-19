@@ -86,10 +86,10 @@ class OrderReturnCore extends ObjectModel
 			die(Tools::displayError());
 		$products = $order->getProducts();
 		/* Products already returned */
-		$order_return = self::getOrdersReturn($order->id_customer, $order->id, true);
+		$order_return = OrderReturn::getOrdersReturn($order->id_customer, $order->id, true);
 		foreach ($order_return AS $or)
 		{
-			$order_return_products = self::getOrdersReturnProducts($or['id_order_return'], $order);
+			$order_return_products = OrderReturn::getOrdersReturnProducts($or['id_order_return'], $order);
 			foreach ($order_return_products AS $key => $orp)
 				$products[$key]['product_quantity'] -= (int)($orp['product_quantity']);
 		}
@@ -159,7 +159,7 @@ class OrderReturnCore extends ObjectModel
 	
 	public static function getOrdersReturnProducts($orderReturnId, $order)
 	{
-		$productsRet = self::getOrdersReturnDetail($orderReturnId);
+		$productsRet = OrderReturn::getOrdersReturnDetail($orderReturnId);
 		$products = $order->getProducts();
 		$tmp = array();
 		foreach ($productsRet AS $return_detail)

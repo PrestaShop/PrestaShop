@@ -106,7 +106,7 @@ class AdminPaymentControllerCore extends AdminController
 	}
 
 
-	private function saveRestrictions($type)
+	protected function saveRestrictions($type)
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'` WHERE id_shop = '.Context::getContext()->shop->getID(true));
 		foreach ($this->payment_modules as $module)

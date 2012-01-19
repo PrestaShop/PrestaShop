@@ -102,7 +102,7 @@ class CMSCategoryCore extends ObjectModel
 
 	public	function add($autodate = true, $nullValues = false)
 	{
-		$this->position = self::getLastPosition((int)$this->id_parent);
+		$this->position = CMSCategory::getLastPosition((int)$this->id_parent);
 		$this->level_depth = $this->calcLevelDepth();
 		foreach ($this->name AS $k => $value)
 			if (preg_match('/^[1-9]\./', $value))
@@ -185,7 +185,7 @@ class CMSCategoryCore extends ObjectModel
 					($active ? ' AND c.`active` = 1' : '');
 		$result = Db::getInstance()->executeS($sql);
 		foreach ($result as $row)
-			$category['children'][] = self::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
+			$category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
 
 		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms` c
@@ -208,12 +208,12 @@ class CMSCategoryCore extends ObjectModel
 	public static function recurseCMSCategory($categories, $current, $id_cms_category = 1, $id_selected = 1, $is_html = 0)
 	{
 		$html = '<option value="'.$id_cms_category.'"'.(($id_selected == $id_cms_category) ? ' selected="selected"' : '').'>'.
-		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).self::hideCMSCategoryPosition(stripslashes($current['infos']['name'])).'</option>';
+		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).CMSCategory::hideCMSCategoryPosition(stripslashes($current['infos']['name'])).'</option>';
 		if ($is_html == 0)
 			echo $html;
 		if (isset($categories[$id_cms_category]))
 			foreach (array_keys($categories[$id_cms_category]) AS $key)
-				$html .= self::recurseCMSCategory($categories, $categories[$id_cms_category][$key], $key, $id_selected, $is_html);
+				$html .= CMSCategory::recurseCMSCategory($categories, $categories[$id_cms_category][$key], $key, $id_selected, $is_html);
 		return $html;
 	}
 
@@ -257,7 +257,7 @@ class CMSCategoryCore extends ObjectModel
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category` WHERE `id_cms_category` IN ('.$list.')');
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category_lang` WHERE `id_cms_category` IN ('.$list.')');
 
-		self::cleanPositions($this->id_parent);
+		CMSCategory::cleanPositions($this->id_parent);
 
 		/* Delete pages which are in categories to delete */
 		$result = Db::getInstance()->executeS('
@@ -390,7 +390,7 @@ class CMSCategoryCore extends ObjectModel
 	  */
 	public static function getHomeCategories($id_lang, $active = true)
 	{
-		return self::getChildren(1, $id_lang, $active);
+		return CMSCategory::getChildren(1, $id_lang, $active);
 	}
 
 	public static function getChildren($id_parent, $id_lang, $active = true)

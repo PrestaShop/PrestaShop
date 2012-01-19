@@ -154,7 +154,7 @@ class ShopCore extends ObjectModel
 
 	public function delete()
 	{
-		if (self::has_dependency($this->id) || !$res = parent::delete())
+		if (Shop::has_dependency($this->id) || !$res = parent::delete())
 			return false;
 
 		foreach (Shop::getAssoTables() as $table_name => $row)
@@ -494,7 +494,7 @@ class ShopCore extends ObjectModel
 						'name' => 			$row['group_name'],
 						'share_customer' =>	$row['share_customer'],
 						'share_order' =>	$row['share_order'],
-						'totalShops' =>		self::getTotalShopsByIdGroupShop($row['id_group_shop']),
+						'totalShops' =>		Shop::getTotalShopsByIdGroupShop($row['id_group_shop']),
 						'shops' => 			array(),
 					);
 
@@ -896,7 +896,7 @@ class ShopCore extends ObjectModel
 	public static function getShopWithoutUrls($id_shop = false)
 	{
 		$without = array();
-		$shops = self::getShops();
+		$shops = Shop::getShops();
 		foreach ($shops as $shop)
 			if ((!$id_shop || $shop['id_shop'] == $id_shop) && empty($shop['domain']) && empty($shop['uri']))
 				$without[] = $shop;

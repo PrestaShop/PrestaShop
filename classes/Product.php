@@ -461,7 +461,7 @@ class ProductCore extends ObjectModel
 	public static function getTaxCalculationMethod($id_customer = null)
 	{
 		if ($id_customer)
-			self::initPricesComputation((int)$id_customer);
+			Product::initPricesComputation((int)$id_customer);
 		return (int)self::$_taxCalculationMethod;
 	}
 
@@ -580,7 +580,7 @@ class ProductCore extends ObjectModel
 
 	public static function updateDefaultAttribute($id_product)
 	{
-		$id_product_attribute = self::getDefaultAttribute($id_product);
+		$id_product_attribute = Product::getDefaultAttribute($id_product);
 		Db::getInstance()->execute(
 			'UPDATE '._DB_PREFIX_.'product
 			SET cache_default_attribute = '.(int)$id_product_attribute.'
@@ -1874,7 +1874,7 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 
 		$current_date = date('Y-m-d H:i:s');
-		$ids_product = self::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
+		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -1945,7 +1945,7 @@ class ProductCore extends ObjectModel
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
 		$current_date = date('Y-m-d H:i:s');
-		$ids_product = self::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
+		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
@@ -2671,9 +2671,9 @@ class ProductCore extends ObjectModel
 			foreach ($products_pack as $product_pack)
 			{
 				$tab_product_pack['id_product'] = (int)($product_pack->id);
-				$tab_product_pack['id_product_attribute'] = self::getDefaultAttribute($tab_product_pack['id_product'], 1);
+				$tab_product_pack['id_product_attribute'] = Product::getDefaultAttribute($tab_product_pack['id_product'], 1);
 				$tab_product_pack['cart_quantity'] = (int)($product_pack->pack_quantity * $product['cart_quantity']);
-				self::updateQuantity($tab_product_pack);
+				Product::updateQuantity($tab_product_pack);
 			}
 		}
 
@@ -2962,7 +2962,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function getFeatures()
 	{
-		return self::getFeaturesStatic((int)$this->id);
+		return Product::getFeaturesStatic((int)$this->id);
 	}
 
 	public static function getFeaturesStatic($id_product)
@@ -3107,7 +3107,7 @@ class ProductCore extends ObjectModel
 			$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute', $row, 'INSERT');
 
 			$id_product_attribute_new = (int)Db::getInstance()->Insert_ID();
-			if ($result_images = self::_getAttributeImageAssociations($id_product_attribute_old))
+			if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old))
 			{
 				$combination_images['old'][$id_product_attribute_old] = $result_images;
 				$combination_images['new'][$id_product_attribute_new] = $result_images;
@@ -3289,7 +3289,7 @@ class ProductCore extends ObjectModel
 		// If customization is not activated, return success
 		if (!Customization::isFeatureActive())
 			return true;
-		if (($customizations = self::_getCustomizationFieldsNLabels($old_product_id)) === false)
+		if (($customizations = Product::_getCustomizationFieldsNLabels($old_product_id)) === false)
 			return false;
 		if (empty($customizations))
 			return true;
@@ -3526,7 +3526,7 @@ class ProductCore extends ObjectModel
 
 	public function getFrontFeatures($id_lang)
 	{
-		return self::getFrontFeaturesStatic($id_lang, $this->id);
+		return Product::getFrontFeaturesStatic($id_lang, $this->id);
 	}
 
 	public static function getAttachmentsStatic($id_lang, $id_product)
@@ -3541,7 +3541,7 @@ class ProductCore extends ObjectModel
 
 	public function getAttachments($id_lang)
 	{
-		return self::getAttachmentsStatic($id_lang, $this->id);
+		return Product::getAttachmentsStatic($id_lang, $this->id);
 	}
 
 	/*
@@ -4066,7 +4066,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function getWsDefaultCombination()
 	{
-		return self::getDefaultAttribute($this->id);
+		return Product::getDefaultAttribute($this->id);
 	}
 
 	/**
@@ -4636,7 +4636,7 @@ class ProductCore extends ObjectModel
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
 
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && self::usesAdvancedStockManagement($id_product) &&
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product) &&
 			StockAvailable::dependsOnStock($id_product, $id_shop))
 			return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
 		else

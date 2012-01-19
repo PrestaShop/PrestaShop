@@ -33,7 +33,7 @@ class PackCore extends Product
 
 	public static function isPack($id_product)
 	{
-		if (!self::isFeatureActive())
+		if (!Pack::isFeatureActive())
 			return false;
 
 		if (!array_key_exists($id_product, self::$cacheIsPack))
@@ -46,7 +46,7 @@ class PackCore extends Product
 
 	public static function isPacked($id_product)
 	{
-		if (!self::isFeatureActive())
+		if (!Pack::isFeatureActive())
 			return false;
 
 		if (!array_key_exists($id_product, self::$cacheIsPacked))
@@ -61,7 +61,7 @@ class PackCore extends Product
 	{
 		$sum = 0;
 		$price_display_method = !self::$_taxCalculationMethod;
-		$items = self::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
+		$items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($items as $item)
 			$sum += $item->getPrice($price_display_method) * $item->pack_quantity;
 		return $sum;
@@ -69,7 +69,7 @@ class PackCore extends Product
 
 	public static function getItems($id_product, $id_lang)
 	{
-		if (!self::isFeatureActive())
+		if (!Pack::isFeatureActive())
 			return array();
 
 		if (array_key_exists($id_product, self::$cachePackItems))
@@ -89,10 +89,10 @@ class PackCore extends Product
 
 	public static function isInStock($id_product)
 	{
-		if (!self::isFeatureActive())
+		if (!Pack::isFeatureActive())
 			return true;
 
-		$items = self::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
+		$items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
 
 		foreach ($items as $item)
 		{
@@ -105,7 +105,7 @@ class PackCore extends Product
 
 	public static function getItemTable($id_product, $id_lang, $full = false)
 	{
-		if (!self::isFeatureActive())
+		if (!Pack::isFeatureActive())
 			return array();
 
 		$sql = 'SELECT p.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity
@@ -134,7 +134,7 @@ class PackCore extends Product
 
 	public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
 	{
-		if (!self::isFeatureActive())
+		if (!Pack::isFeatureActive())
 			return array();
 
 		$packs = Db::getInstance()->getValue('
@@ -176,7 +176,7 @@ class PackCore extends Product
 	{
 		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)($id_product)) &&
-			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', self::isCurrentlyUsed());
+			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', Pack::isCurrentlyUsed());
 	}
 
 	/**
@@ -240,7 +240,7 @@ class PackCore extends Product
 		if (!Pack::isPack($id_product))
 			return false;
 
-		$products = self::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
+		$products = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($products as $product)
 		{
 			// if one product uses the advanced stock management

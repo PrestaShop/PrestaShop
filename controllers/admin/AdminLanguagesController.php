@@ -451,7 +451,7 @@ class AdminLanguagesControllerCore extends AdminController
 	 * @param string $id_language
 	 * @return boolean true if no error
 	 */
-	private function deleteNoPictureImages($id_language)
+	protected function deleteNoPictureImages($id_language)
 	{
 	 	$language = Language::getIsoById($id_language);
 		$images_types = ImageType::getImagesTypes('products');

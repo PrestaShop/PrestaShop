@@ -331,7 +331,7 @@ class AdminModulesControllerCore extends AdminController
 		return $url;
 	}
 
-	private function extractArchive($file, $redirect = true)
+	protected function extractArchive($file, $redirect = true)
 	{
 		$success = false;
 		if (substr($file, -4) == '.zip')
@@ -355,7 +355,7 @@ class AdminModulesControllerCore extends AdminController
 			Tools::redirectAdmin(self::$currentIndex.'&conf=8'.'&token='.$this->token);
 	}
 
-	private function recursiveDeleteOnDisk($dir)
+	protected function recursiveDeleteOnDisk($dir)
 	{
 		if (strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false)
 			return ;
@@ -385,7 +385,7 @@ class AdminModulesControllerCore extends AdminController
 	** Set and reset filter configuration
 	*/
 
-	private function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
+	protected function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
 	{
 		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee, $module_type);
 		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee, $country_module_value);
@@ -393,7 +393,7 @@ class AdminModulesControllerCore extends AdminController
 		Configuration::updateValue('PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee, $module_status);
 	}
 
-	private function resetFilterModules()
+	protected function resetFilterModules()
 	{
 		Configuration::updateValue('PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee, 'allModules');
 		Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee, 0);
@@ -718,7 +718,7 @@ class AdminModulesControllerCore extends AdminController
 	 * @param $module_errors
 	 * @return string
 	 */
-	private function generateHtmlMessage($module_errors)
+	protected function generateHtmlMessage($module_errors)
 	{
 		$html_error = '';
 

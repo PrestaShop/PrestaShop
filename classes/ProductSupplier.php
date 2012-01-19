@@ -98,7 +98,7 @@ class ProductSupplierCore extends ObjectModel
 
 		if ($res && $this->id_product_attribute == 0)
 		{
-			$items = self::getSupplierCollection($this->id_product, false);
+			$items = ProductSupplier::getSupplierCollection($this->id_product, false);
 			foreach ($items as $item)
 			{
 				if ($item->id_product_attribute > 0)

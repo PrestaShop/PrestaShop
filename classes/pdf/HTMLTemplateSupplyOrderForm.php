@@ -47,7 +47,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
    		// header informations
 		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
-		$this->title = self::l('Supply order form').sprintf(' %s', $supply_order->reference);
+		$this->title = HTMLTemplateSupplyOrderForm::l('Supply order form').sprintf(' %s', $supply_order->reference);
 	}
 
 	/**
@@ -88,7 +88,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	 */
     public function getFilename()
     {
-    	return (self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf');
+    	return (HTMLTemplateSupplyOrderForm::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf');
     }
 
     protected function getTaxOrderSummary()
@@ -121,8 +121,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	public function getFooter()
 	{
 		$this->address = $this->address_warehouse;
-		$free_text = self::l('DE: Discount excluded ');
-		$free_text .= self::l(' DI: Discount included');
+		$free_text = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
+		$free_text .= HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
 
 		$this->smarty->assign(array(
 			'shop_address' => $this->getShopAddress(),

@@ -126,7 +126,7 @@ class AttributeGroupCore extends ObjectModel
 				IN ('.implode(', ', $to_remove).')') === false)
 			return false;
 		/* Remove combinations if they do not possess attributes anymore */
-		if (!self::cleanDeadCombinations())
+		if (!AttributeGroup::cleanDeadCombinations())
 			return false;
 	 	/* Also delete related attributes */
 		if (Db::getInstance()->execute('

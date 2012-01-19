@@ -123,7 +123,7 @@ class GroupCore extends ObjectModel
 
 	public static function getPriceDisplayMethod($id_group)
 	{
-		if (!isset(self::$group_price_display_method[$id_group]))
+		if (!isset(Group::$group_price_display_method[$id_group]))
 			self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `price_display_method`
 			FROM `'._DB_PREFIX_.'group`
@@ -133,7 +133,7 @@ class GroupCore extends ObjectModel
 
 	public static function getDefaultPriceDisplayMethod()
 	{
-		return self::getPriceDisplayMethod((int)Configuration::get('PS_CUSTOMER_GROUP'));
+		return Group::getPriceDisplayMethod((int)Configuration::get('PS_CUSTOMER_GROUP'));
 	}
 
 	public function add($autodate = true, $null_values = false)
@@ -163,7 +163,7 @@ class GroupCore extends ObjectModel
 			$this->truncateModulesRestrictions($this->id);
 
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', self::isCurrentlyUsed());
+			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', Group::isCurrentlyUsed());
 
 			// Add default group (id 3) to customers without groups
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (

@@ -29,7 +29,7 @@ class AdminHomeControllerCore extends AdminController
 {
 	const TIPS_TIMEOUT = 5;
 
-	private function _displayOptimizationTips()
+	protected function _displayOptimizationTips()
 	{
 		$link = $this->context->link;
 
@@ -169,7 +169,7 @@ class AdminHomeControllerCore extends AdminController
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
 
-	private function getQuickLinks()
+	protected function getQuickLinks()
 	{
 		$quick_links['first'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCategories').'&amp;addcategory',

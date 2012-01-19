@@ -38,7 +38,7 @@ class AdminContactControllerCore extends AdminController
 		$this->_buildOrderedFieldsShop($temporyArrayFields);
 	}
 
-	private function _getDefaultFieldsContent()
+	protected function _getDefaultFieldsContent()
 	{
 		$this->context = Context::getContext();
 		$countryList = array();
@@ -66,7 +66,7 @@ class AdminContactControllerCore extends AdminController
 		return $formFields;
 	}
 
-	private function _buildOrderedFieldsShop($formFields)
+	protected function _buildOrderedFieldsShop($formFields)
 	{
 		$associatedOrderKey = array(
 			'PS_SHOP_NAME' => 'company',

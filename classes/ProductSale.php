@@ -179,7 +179,7 @@ class ProductSaleCore
 
 	public static function removeProductSale($id_product, $qty = 1)
 	{
-		$nbrSales = self::getNbrSales($id_product);
+		$nbrSales = ProductSale::getNbrSales($id_product);
 		if ($nbrSales > 1)
 			return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product_sale SET `quantity` = `quantity` - '.(int)($qty).', `sale_nbr` = `sale_nbr` - 1, `date_upd` = NOW() WHERE `id_product` = '.(int)($id_product));
 		elseif ($nbrSales == 1)

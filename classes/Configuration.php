@@ -93,7 +93,7 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function getIdByName($key, $shopGroupID = null, $shopID = null)
 	{
-		self::getShopFromContext($shopGroupID, $shopID);
+		Configuration::getShopFromContext($shopGroupID, $shopID);
 		$sql = 'SELECT id_configuration
 				FROM '._DB_PREFIX_.'configuration
 				WHERE name = \''.pSQL($key).'\''
@@ -138,7 +138,7 @@ class ConfigurationCore extends ObjectModel
 	  */
 	static public function get($key, $langID = NULL, $shopGroupID = NULL, $shopID = NULL)
 	{
-		self::getShopFromContext($shopGroupID, $shopID);
+		Configuration::getShopFromContext($shopGroupID, $shopID);
 		$langID = (int)$langID;
 		if (!isset(self::$_CONF[$langID]))
 			$langID = 0;
@@ -158,7 +158,7 @@ class ConfigurationCore extends ObjectModel
 	
 	static public function getGlobalValue($key, $langID = NULL)
 	{
-		return self::get($key, $langID, 0, 0);
+		return Configuration::get($key, $langID, 0, 0);
 	}
 
 	/**
@@ -174,7 +174,7 @@ class ConfigurationCore extends ObjectModel
 		$languages = Language::getLanguages();
 		$resultsArray = array();
 		foreach ($languages as $language)
-			$resultsArray[$language['id_lang']] = self::get($key, $language['id_lang'], $id_group_shop, $id_shop);
+			$resultsArray[$language['id_lang']] = Configuration::get($key, $language['id_lang'], $id_group_shop, $id_shop);
 		return $resultsArray;
 	}
 
@@ -191,7 +191,7 @@ class ConfigurationCore extends ObjectModel
 	 		throw new PrestaShopException('keys var is not an array');
 
 		$langID = (int)$langID;
-		self::getShopFromContext($shopGroupID, $shopID);
+		Configuration::getShopFromContext($shopGroupID, $shopID);
 
 	 	$results = array();
 	 	foreach ($keys as $key)
@@ -230,7 +230,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
-		self::getShopFromContext($id_group_shop, $id_shop);
+		Configuration::getShopFromContext($id_group_shop, $id_shop);
 
 		if (!is_array($values))
 			$values = array($values);
@@ -273,7 +273,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (!Validate::isConfigName($key))
 	 		die(Tools::displayError());
-		self::getShopFromContext($shopGroupID, $shopID);
+		Configuration::getShopFromContext($shopGroupID, $shopID);
 
 		if (!is_array($values))
 			$values = array($values);

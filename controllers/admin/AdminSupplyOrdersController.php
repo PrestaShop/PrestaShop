@@ -2059,7 +2059,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 *
 	 * @return int id_warehouse
 	 */
-	private function getCurrentWarehouse()
+	protected function getCurrentWarehouse()
 	{
 		static $warehouse = 0;
 
@@ -2077,7 +2077,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 *
 	 * @return int status
 	 */
-	private function getFilterStatus()
+	protected function getFilterStatus()
 	{
 		static $status = 0;
 

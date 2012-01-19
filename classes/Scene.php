@@ -80,7 +80,7 @@ class SceneCore extends ObjectModel
 		if (parent::update($nullValues))
 		{
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table'], true));
+			Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', Scene::isCurrentlyUsed($this->def['table'], true));
 			return true;
 		}
 		return false;
@@ -111,7 +111,7 @@ class SceneCore extends ObjectModel
 		if (parent::delete())
 		{
 			return $this->deleteImage() &&
-				Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table'], true));
+				Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', Scene::isCurrentlyUsed($this->def['table'], true));
 		}
 		return false;
 	}
@@ -193,7 +193,7 @@ class SceneCore extends ObjectModel
 	*/
 	public static function getScenes($id_category, $id_lang = NULL, $onlyActive = true, $liteResult = true, $hideScenePosition = true, Context $context = null)
 	{
-		if (!self::isFeatureActive())
+		if (!Scene::isFeatureActive())
 			return array();
 
 		if (!$context)
@@ -224,7 +224,7 @@ class SceneCore extends ObjectModel
 	*/
 	public function getProducts($onlyActive = true, $id_lang = NULL, $liteResult = true, Context $context = null)
 	{
-		if (!self::isFeatureActive())
+		if (!Scene::isFeatureActive())
 			return array();
 
 		if (!$context)

@@ -152,12 +152,12 @@ class CategoryCore extends ObjectModel
 
 	public	function add($autodate = true, $nullValues = false)
 	{
-		$this->position = self::getLastPosition((int)$this->id_parent);
+		$this->position = Category::getLastPosition((int)$this->id_parent);
 		if (!isset($this->level_depth))
 			$this->level_depth = $this->calcLevelDepth();
 		$ret = parent::add($autodate);
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
-			self::regenerateEntireNtree();
+			Category::regenerateEntireNtree();
 		$this->updateGroup($this->groupBox);
 		Hook::exec('actionCategoryAdd', array('category' => $this));
 		return $ret;
@@ -179,11 +179,11 @@ class CategoryCore extends ObjectModel
 		$this->cleanPositions((int)$this->id_parent);
 		// If the parent category was changed, we don't want to have 2 categories with the same position
 		if ($this->getDuplicatePosition())
-			$this->position = self::getLastPosition((int)$this->id_parent);
+			$this->position = Category::getLastPosition((int)$this->id_parent);
 		$ret = parent::update($nullValues);
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 		{
-			self::regenerateEntireNtree();
+			Category::regenerateEntireNtree();
 			$this->recalculateLevelDepth($this->id_category);
 		}
 		Hook::exec('actionCategoryUpdate', array('category' => $this));
@@ -246,7 +246,7 @@ class CategoryCore extends ObjectModel
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		if (isset($categories[$id_category]))
 			foreach (array_keys($categories[$id_category]) as $key)
-				self::recurseCategory($categories, $categories[$id_category][$key], $key, $id_selected);
+				Category::recurseCategory($categories, $categories[$id_category][$key], $key, $id_selected);
 	}
 
 
@@ -291,7 +291,7 @@ class CategoryCore extends ObjectModel
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` IN ('.$list.')');
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` IN ('.$list.')');
 
-		self::cleanPositions($this->id_parent);
+		Category::cleanPositions($this->id_parent);
 
 		/* Delete category images and its children images */
 		$tmp_category = new Category();
@@ -337,7 +337,7 @@ class CategoryCore extends ObjectModel
 
 		/* Rebuild the nested tree */
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
-			self::regenerateEntireNtree();
+			Category::regenerateEntireNtree();
 
 		Hook::exec('actionCategoryDelete', array('category' => $this));
 
@@ -395,7 +395,7 @@ class CategoryCore extends ObjectModel
 		foreach ($categories as $category)
 			$categories_array[(int)$category['id_parent']]['subcategories'][(int)$category['id_category']] = 1;
 			$n = 1;
-		self::_subTree($categories_array, 1, $n);
+		Category::_subTree($categories_array, 1, $n);
 	}
 
 	protected static function _subTree(&$categories, $id_category, &$n)
@@ -403,7 +403,7 @@ class CategoryCore extends ObjectModel
 		$left = (int)$n++;
 		if (isset($categories[(int)$id_category]['subcategories']))
 			foreach (array_keys($categories[(int)$id_category]['subcategories']) as $id_subcategory)
-				self::_subTree($categories, (int)$id_subcategory, $n);
+				Category::_subTree($categories, (int)$id_subcategory, $n);
 		$right = (int)$n++;
 
 		Db::getInstance()->execute('
@@ -660,7 +660,7 @@ class CategoryCore extends ObjectModel
 	  */
 	public static function getHomeCategories($id_lang, $active = true)
 	{
-		return self::getChildren(1, $id_lang, $active);
+		return Category::getChildren(1, $id_lang, $active);
 	}
 
 	public static function getRootCategory($id_lang = null, Shop $shop = null)

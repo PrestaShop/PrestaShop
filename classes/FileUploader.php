@@ -48,7 +48,7 @@ class FileUploaderCore
         }
 	}
 
-	private function toBytes($str)
+	protected function toBytes($str)
 	{
 		$val = trim($str);
 		$last = strtolower($str[strlen($str)-1]);

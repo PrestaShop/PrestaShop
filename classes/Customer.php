@@ -498,7 +498,7 @@ class CustomerCore extends ObjectModel
 	// DEPRECATED
 	public function customerIdExists($id_customer)
 	{
-		return self::customerIdExistsStatic((int)$id_customer);
+		return Customer::customerIdExistsStatic((int)$id_customer);
 	}
 
 	public static function customerIdExistsStatic($id_customer)
@@ -559,7 +559,7 @@ class CustomerCore extends ObjectModel
 
 	public function getGroups()
 	{
-		return self::getGroupsStatic((int)$this->id);
+		return Customer::getGroupsStatic((int)$this->id);
 	}
 
 	/**
@@ -687,7 +687,7 @@ class CustomerCore extends ObjectModel
 			return false;
 
 		/* Customer is valid only if it can be load and if object password is the same as database one */
-		if ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && self::checkPassword($this->id, $this->passwd))
+		if ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd))
 			return true;
 		return false;
 	}

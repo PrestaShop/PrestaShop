@@ -104,7 +104,7 @@ class AdminAccountingManagementControllerCore extends AdminController
 	/**
 	 * Update the account number for each shop liable to their zones
 	 */
-	private function updateAccountNumber()
+	protected function updateAccountNumber()
 	{
 		$id_shop = $this->context->shop->getID();
 

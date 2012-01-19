@@ -108,7 +108,7 @@ class OrderSlipCore extends ObjectModel
 	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
 		$cart_rules = $order->getCartRules(true);
-		$productsRet = self::getOrdersSlipDetail($orderSlipId);
+		$productsRet = OrderSlip::getOrdersSlipDetail($orderSlipId);
 		$products = $order->getProductsDetail();
 
 		$tmp = array();

@@ -105,7 +105,7 @@ class SpecificPriceCore extends ObjectModel
 			self::$_specificPriceCache = array();
 			Product::flushPriceCache();
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table']));
+			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed($this->def['table']));
 			return true;
 		}
 		return false;
@@ -156,7 +156,7 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getPriority($id_product)
     {
-		if (!self::isFeatureActive())
+		if (!SpecificPrice::isFeatureActive())
 			return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
 
     	if (!isset(self::$_cache_priorities[(int)$id_product]))
@@ -180,7 +180,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0)
 	{
-		if (!self::isFeatureActive())
+		if (!SpecificPrice::isFeatureActive())
 			return array();
 		/*
 		** The date is not taken into account for the cache, but this is for the better because it keeps the consistency for the whole script.
@@ -192,7 +192,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			$now = date('Y-m-d H:i:s');
 			self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT *, '.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+				SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price`
 				WHERE `id_product` IN (0, '.(int)$id_product.')
 				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
@@ -247,13 +247,13 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false, $id_customer = 0)
 	{
-		if (!self::isFeatureActive())
+		if (!SpecificPrice::isFeatureActive())
 			return array();
 
 		$now = date('Y-m-d H:i:s');
 		$res =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
-					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
@@ -292,13 +292,13 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0)
 	{
-		if (!self::isFeatureActive())
+		if (!SpecificPrice::isFeatureActive())
 			return array();
 
 		$now = date('Y-m-d H:i:s');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *,
-					'.self::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
@@ -321,7 +321,7 @@ class SpecificPriceCore extends ObjectModel
 
 	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0)
 	{
-		if (!self::isFeatureActive())
+		if (!SpecificPrice::isFeatureActive())
 			return array();
 
 		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -352,7 +352,7 @@ class SpecificPriceCore extends ObjectModel
 		if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product))
 		{
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', self::isCurrentlyUsed('specific_price'));
+			Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed('specific_price'));
 			return true;
 		}
 		return false;

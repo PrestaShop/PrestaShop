@@ -281,20 +281,20 @@ class SupplyOrderDetailCore extends ObjectModel
 		foreach ($fields_required as $field)
 			if (($value = $this->{$field}) == false && (string)$value != '0')
 				if (!$this->id || $field != 'passwd')
-					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities)
+					$errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities)
 								.'</b> '.Tools::displayError('is required.');
 
 		/* Checks maximum fields sizes */
 		foreach ($this->fieldsSize as $field => $max_length)
 			if ($value = $this->{$field} && Tools::strlen($value) > $max_length)
-				$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities)
+				$errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities)
 							.'</b> '.Tools::displayError('is too long.').' ('.Tools::displayError('Maximum length:').' '.$max_length.')';
 
 		/* Checks fields validity */
 		foreach ($this->fieldsValidate as $field => $function)
 			if ($value = $this->{$field})
 				if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
-					$errors[] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
+					$errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 					if ($field == 'passwd')
 						if ($value = Tools::getValue($field))
@@ -303,13 +303,13 @@ class SupplyOrderDetailCore extends ObjectModel
 						$this->{$field} = $value;
 
 		if ($this->quantity_expected <= 0)
-			$errors[] = '<b>'.self::displayFieldName('quantity_expected', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+			$errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.Tools::displayError('is invalid.');
 
 		if ($this->tax_rate < 0 || $this->tax_rate > 100)
-			$errors[] = '<b>'.self::displayFieldName('tax_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+			$errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
 
 		if ($this->discount_rate < 0 || $this->discount_rate > 100)
-			$errors[] = '<b>'.self::displayFieldName('discount_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+			$errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
 
 		return $errors;
 	}

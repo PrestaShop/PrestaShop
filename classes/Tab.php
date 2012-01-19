@@ -76,12 +76,12 @@ class TabCore extends ObjectModel
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
-		$this->position = self::getNewLastPosition($this->id_parent);
+		$this->position = Tab::getNewLastPosition($this->id_parent);
 		if (parent::add($autodate, $null_values))
 		{
 			// refresh cache when adding new tab
 			self::$_getIdFromClassName[$this->class_name] = $this->id;
-			return self::initAccess($this->id);
+			return Tab::initAccess($this->id);
 		}
 		return false;
 	}
@@ -138,7 +138,7 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentTabId()
 	{
-		return self::getIdFromClassName(Tools::getValue('tab'));
+		return Tab::getIdFromClassName(Tools::getValue('tab'));
 	}
 
 	/**
@@ -274,7 +274,7 @@ class TabCore extends ObjectModel
 	 */
 	public static function enablingForModule($module)
 	{
-		$tabs = self::getCollectionFromModule($module);
+		$tabs = Tab::getCollectionFromModule($module);
 		if (!empty($tabs)) {
 			foreach ($tabs as $tab) {
 				$tab->active = 1;
@@ -293,7 +293,7 @@ class TabCore extends ObjectModel
 	 */
 	public static function disablingForModule($module)
 	{
-		$tabs = self::getCollectionFromModule($module);
+		$tabs = Tab::getCollectionFromModule($module);
 		if (!empty($tabs)) {
 			foreach ($tabs as $tab) {
 				$tab->active = 0;
@@ -312,8 +312,8 @@ class TabCore extends ObjectModel
 	 */
 	public static function getInstanceFromClassName($class_name)
 	{
-		$id_tab = (int)self::getIdFromClassName($class_name);
-		return new self($id_tab);
+		$id_tab = (int)Tab::getIdFromClassName($class_name);
+		return new Tab($id_tab);
 	}
 
 	public static function getNbTabs($id_parent = null)
@@ -342,7 +342,7 @@ class TabCore extends ObjectModel
 
 	public function move($direction)
 	{
-		$nb_tabs = self::getNbTabs($this->id_parent);
+		$nb_tabs = Tab::getNbTabs($this->id_parent);
 		if ($direction != 'l' && $direction != 'r')
 			return false;
 		if ($nb_tabs <= 1)

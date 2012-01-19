@@ -343,10 +343,10 @@ class CurrencyCore extends ObjectModel
 		// Default feed currency (EUR)
 		$isoCodeSource = strval($feed->source['iso_code']);
 
-		if (!$default_currency = self::getDefaultCurrency())
+		if (!$default_currency = Currency::getDefaultCurrency())
 			return Tools::displayError('No default currency');
 
-		$currencies = self::getCurrencies(true);
+		$currencies = Currency::getCurrencies(true);
 		foreach ($currencies as $currency)
 			$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);
 

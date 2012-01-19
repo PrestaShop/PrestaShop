@@ -68,7 +68,7 @@ class MetaCore extends ObjectModel
 		// Exclude page already filled
 		if ($excludeFilled)
 		{
-			$metas = self::getMetas();
+			$metas = Meta::getMetas();
 			foreach ($metas as $meta)
 				if (in_array($meta['page'], $selectedPages))
 					unset($selectedPages[array_search($meta['page'], $selectedPages)]);

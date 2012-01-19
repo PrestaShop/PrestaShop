@@ -44,16 +44,16 @@ class AliasCore extends ObjectModel
 		),
 	);
 
-	public function __construct($id = NULL, $alias = NULL, $search = NULL, $id_lang = NULL)
+	public function __construct($id = null, $alias = null, $search = null, $id_lang = null)
 	{
-		$this->def = self::getDefinition($this);
+		$this->def = Alias::getDefinition($this);
 		$this->setDefinitionRetrocompatibility();
 
 		if ($id)
 			parent::__construct($id);
 		else if ($alias && Validate::isValidSearch($alias))
 		{
-			if (!self::isFeatureActive())
+			if (!Alias::isFeatureActive())
 			{
 				$this->alias = trim($alias);
 				$this->search = trim($search);
@@ -96,7 +96,7 @@ class AliasCore extends ObjectModel
 		if (parent::delete())
 		{
 			// Refresh cache of feature detachable
-			Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', self::isCurrentlyUsed($this->def['table'], true));
+			Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', Alias::isCurrentlyUsed($this->def['table'], true));
 			return true;
 		}
 		return false;
@@ -104,7 +104,7 @@ class AliasCore extends ObjectModel
 
 	public function getAliases()
 	{
-		if (!self::isFeatureActive())
+		if (!Alias::isFeatureActive())
 			return '';
 
 		$aliases = Db::getInstance()->executeS('
