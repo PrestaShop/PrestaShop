@@ -34,18 +34,12 @@
 
 	<div>
 		<label class="text">{l s='Type:'}</label>
-
-			<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" />
-					<label class="radioCheck">{l s='Product'}</label>
-		
-
-			<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $is_pack}checked="checked"{/if} />
-					<label class="radioCheck">{l s='Pack'}</label>
-	
-		
-			<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" />
-			<label class="radioCheck">{l s='Virtual Product (services, booking and downloadable products)'}</label>
-		
+		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" />
+		<label class="radioCheck">{l s='Product'}</label>
+		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $is_pack}checked="checked"{/if} />
+		<label class="radioCheck">{l s='Pack'}</label>
+		<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" />
+		<label class="radioCheck">{l s='Virtual Product (services, booking and downloadable products)'}</label>
 	</div>
 
 	<div class="separation"></div>
@@ -155,8 +149,6 @@
 </table>
 
 <table cellpadding="5" cellspacing="0" border="0" style="width: 100%;"><tr><td><div class="separation"></div></td></tr></table>
-
-
 		<table cellspacing="0" cellpadding="5" border="0">
 			<tr>
 				<td class="col-left"><label>{l s='Short description:'}<br /></label><p class="product_description">({l s='appears in the product lists and on the top of the product page'})</p></td>
@@ -166,7 +158,6 @@
 						input_name='description_short'
 						input_value=$product->description_short
 						max=$PS_PRODUCT_SHORT_DESC_LIMIT}
-
 					<p class="clear"></p>
 				</td>
 			</tr>
@@ -180,9 +171,7 @@
 					<p class="clear"></p>
 				</td>
 			</tr>
-
 		{if $images}
-
 			<tr>
 				<td class="col-left"><label></label></td>
 				<td style="padding-bottom:5px;">
@@ -190,78 +179,70 @@
 						{l s='Do you want an image associated with the product in your description?'}
 						<span class="addImageDescription" style="cursor:pointer">{l s='Click here'}</span>.
 					</div>
-								<p class="clear"></p>
+					<p class="clear"></p>
 				</td>
 			</tr>
-			
 			</table>
-	
-					<table id="createImageDescription" style="display:none;width:100%">
-							<tr>
-								<td colspan="2" height="10"></td>
-							</tr>
-							<tr>
-								<td class="col-left"><label>{l s='Select your image:'}</label></td>
-								<td style="padding-bottom:5px;">
-									<ul class="smallImage">
-									{foreach from=$images item=image key=key}
-											<li>
-												<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
-												<label for="smallImage_{$key}" class="t">
-													<img src="{$image.src}" alt="{$image.legend}" />
-												</label>
-											</li>
-									{/foreach}
-									</ul>
-									<p class="clear"></p>
-								</td>
-							</tr>
-							<tr>
-								<td class="col-left"><label>{l s='Where to place it?'}</label></td>
-								<td style="padding-bottom:5px;">
-									<ul class="listForm">
-										<li><input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
-									<label for="leftRight_1" class="t">{l s='left'}</label>
-									</li>
+				<table id="createImageDescription" style="display:none;width:100%">
+					<tr>
+						<td colspan="2" height="10"></td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Select your image:'}</label></td>
+						<td style="padding-bottom:5px;">
+							<ul class="smallImage">
+							{foreach from=$images item=image key=key}
 									<li>
+										<input type="radio" name="smallImage" id="smallImage_{$key}" value="{$image.id_image}" {if $key == 0}checked="checked"{/if} >
+										<label for="smallImage_{$key}" class="t">
+											<img src="{$image.src}" alt="{$image.legend}" />
+										</label>
+									</li>
+							{/foreach}
+							</ul>
+							<p class="clear"></p>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Where to place it?'}</label></td>
+						<td style="padding-bottom:5px;">
+							<ul class="listForm">
+								<li><input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
+									<label for="leftRight_1" class="t">{l s='left'}</label>
+								</li>
+								<li>
 									<input type="radio" name="leftRight" id="leftRight_2" value="right">
 									<label for="leftRight_2" class="t">{l s='right'}</label>
-									</li>
-									</ul>
-								</td>
-							</tr>
-							<tr>
-								<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
-								<td style="padding-bottom:5px;">
-									<ul class="listForm">
-									{foreach from=$imagesTypes key=key item=type}
-											<li><input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
-											<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
-											</li>
-									{/foreach}
-									</ul>
-									<p class="clear"></p>
-								</td>
-							</tr>
-
-							<tr>
-								<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
-								<td style="padding-bottom:5px;">
-									<input type="text" id="resultImage" name="resultImage" />
-									<p class="preference_description">{l s='The tag is to copy / paste in the description.'}</p>
-								</td>
-							</tr>
-							<tr>
-							<td colspan="2">
-								<div class="separation"></div>
-							</td>
-							</tr>
-						</table>
-
-
-
-
-
+								</li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Select the type of picture:'}</label></td>
+						<td style="padding-bottom:5px;">
+							<ul class="listForm">
+							{foreach from=$imagesTypes key=key item=type}
+								<li><input type="radio" name="imageTypes" id="imageTypes_{$key}" value="{$type.name}" {if $key == 0}checked="checked"{/if}>
+									<label for="imageTypes_{$key}" class="t">{$type.name} <span>({$type.width}px par {$type.height}px)</span></label>
+								</li>
+							{/foreach}
+							</ul>
+							<p class="clear"></p>
+						</td>
+					</tr>
+					<tr>
+						<td class="col-left"><label>{l s='Image tag to insert:'}</label></td>
+						<td style="padding-bottom:5px;">
+							<input type="text" id="resultImage" name="resultImage" />
+							<p class="preference_description">{l s='The tag is to copy / paste in the description.'}</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="separation"></div>
+						</td>
+					</tr>
+				</table>
 			<script type="text/javascript">
 				$(function() {
 					changeTagImage();
