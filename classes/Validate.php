@@ -45,7 +45,7 @@ class ValidateCore
 	*/
 	public static function isEmail($email, $required = true)
     {
-    	return !empty($email) AND preg_match('/^[a-z0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z0-9]+[._a-z0-9-]*\.[a-z0-9]+$/ui', $email);
+    	return !empty($email) && preg_match('/^[a-z0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z0-9]+[._a-z0-9-]*\.[a-z0-9]+$/ui', $email);
     }
 
     /**
@@ -59,7 +59,7 @@ class ValidateCore
 	{
 		if (!$url OR $url == 'http://')
 			$errors[] = Tools::displayError('Please specify module URL');
-		elseif (substr($url, -4) != '.tar' AND substr($url, -4) != '.zip' AND substr($url, -4) != '.tgz' AND substr($url, -7) != '.tar.gz')
+		elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz')
 			$errors[] = Tools::displayError('Unknown archive type');
 		else
 		{
@@ -109,7 +109,7 @@ class ValidateCore
 
     public static function isUnsignedFloat($float)
     {
-			return strval((float)($float)) == strval($float) AND $float >= 0;
+			return strval((float)$float) == strval($float) && $float >= 0;
 	}
 
 	/**
@@ -311,7 +311,7 @@ class ValidateCore
 	*/
 	public static function isLinkRewrite($link)
 	{
-		return preg_match("/^[a-zA-Z0-9\-\pL]+$/u", $link);
+		return preg_match('/^[_a-zA-Z0-9\-\pL]+$/u', $link);
 	}
 
 	/**
@@ -322,7 +322,7 @@ class ValidateCore
 	*/
 	public static function isAddress($address)
 	{
-		return empty($address) OR preg_match('/^[^!<>?=+@{}_$%]*$/u', $address);
+		return empty($address) || preg_match('/^[^!<>?=+@{}_$%]*$/u', $address);
 	}
 
 	/**
@@ -599,7 +599,7 @@ class ValidateCore
 	*/
 	public static function isInt($value)
 	{
-		return ((string)(int)$value === (string)$value OR $value === false);
+		return ((string)(int)$value === (string)$value || $value === false);
 	}
 
 	/**
@@ -610,7 +610,7 @@ class ValidateCore
 	*/
 	public static function isUnsignedInt($value)
 	{
-		return (preg_match('#^[0-9]+$#', (string)$value) AND $value < 4294967296 AND $value >= 0);
+		return (preg_match('#^[0-9]+$#', (string)$value) && $value < 4294967296 && $value >= 0);
 	}
 
 	/**
@@ -638,7 +638,7 @@ class ValidateCore
 	*/
 	public static function isLoadedObject($object)
 	{
-		return is_object($object) AND $object->id;
+		return is_object($object) && $object->id;
 	}
 
 	/**
@@ -764,7 +764,7 @@ class ValidateCore
 	*/
 	public static function IsSortDirection($value)
 	{
-		return (!is_null($value) AND ($value === 'ASC' OR $value === 'DESC'));
+		return (!is_null($value) && ($value === 'ASC' || $value === 'DESC'));
 	}
 
 	/**
@@ -786,7 +786,7 @@ class ValidateCore
 	*/
 	public static function isPriceDisplayMethod($data)
 	{
-		return ($data == PS_TAX_EXC OR $data == PS_TAX_INC);
+		return ($data == PS_TAX_EXC || $data == PS_TAX_INC);
 	}
 
 	/**
@@ -795,7 +795,7 @@ class ValidateCore
 	 */
 	public static function isDniLite($dni)
 	{
-		return empty($dni) OR (bool)preg_match('/^[0-9A-Za-z-.]{1,16}$/U', $dni);
+		return empty($dni) || (bool)preg_match('/^[0-9A-Za-z-.]{1,16}$/U', $dni);
 	}
 
 	/**
@@ -806,7 +806,7 @@ class ValidateCore
 	 */
 	public static function isCookie($data)
 	{
-		return (is_object($data) AND get_class($data) == 'Cookie');
+		return (is_object($data) && get_class($data) == 'Cookie');
 	}
 
 	/**
@@ -861,7 +861,7 @@ class ValidateCore
 	*/
 	public static function isSerializedArray($data)
 	{
-		return ($data == NULL) OR (bool)(is_string($data) AND preg_match('/^a:[0-9]+:{.*;}$/s', $data));
+		return is_null($data) || (is_string($data) && preg_match('/^a:[0-9]+:{.*;}$/s', $data));
 	}
 
 	/**
@@ -872,7 +872,7 @@ class ValidateCore
 	*/
 	public static function isCoordinate($data)
 	{
-		return ($data == NULL) OR (bool)(preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data));
+		return is_null($data) || preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data);
 	}
 
 	/**
@@ -883,7 +883,7 @@ class ValidateCore
 	*/
 	public static function isLangIsoCode($iso_code)
 	{
-		return (bool)(preg_match('/^[a-zA-Z]{2,3}$/s', $iso_code));
+		return (bool)preg_match('/^[a-zA-Z]{2,3}$/s', $iso_code);
 	}
 
 	/**
@@ -894,7 +894,7 @@ class ValidateCore
 	*/
 	public static function isLanguageFileName($file_name)
 	{
-		return (bool)(preg_match('/^[a-zA-Z]{2,3}\.gzip$/s', $file_name));
+		return (bool)preg_match('/^[a-zA-Z]{2,3}\.gzip$/s', $file_name);
 	}
 
 	/**
@@ -904,8 +904,8 @@ class ValidateCore
 	 */
 	public static function isArrayWithIds($ids)
 	{
-		if (sizeof($ids))
-			foreach($ids as $id)
+		if (count($ids))
+			foreach ($ids as $id)
 				if ($id == 0 || !Validate::isUnsignedInt($id))
 					return false;
 		return true;
