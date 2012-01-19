@@ -80,12 +80,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
 		$this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
 
-		$categoriesArray = array();
-		$categories = Category::getSimpleCategories($this->context->language->id);
-
-		foreach ($categories AS $categorie)
-			$categoriesArray[$categorie['id_category']] = $categorie['name'];
-
 		$this->fieldsDisplay = array(
 			'id_product' => array(
 				'title' => $this->l('ID'),
@@ -107,27 +101,24 @@ class AdminProductsControllerCore extends AdminController
 			),
 			'reference' => array(
 				'title' => $this->l('Reference'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 80
 			),
 			'name_category' => array(
 				'title' => $this->l('Category'),
 				'width' => 230,
-				'type' => 'select',
-				'list' => $categoriesArray,
 				'filter_key' => 'cl!name',
-				'filter_type' => 'int'
 			),
 			'price' => array(
 				'title' => $this->l('Base price'),
-				'width' => 70,
+				'width' => 90,
 				'type' => 'price',
 				'align' => 'right',
 				'filter_key' => 'a!price'
 			),
 			'price_final' => array(
 				'title' => $this->l('Final price'),
-				'width' => 70,
+				'width' => 90,
 				'type' => 'price',
 				'align' => 'right',
 				'havingFilter' => true,
@@ -1885,27 +1876,11 @@ class AdminProductsControllerCore extends AdminController
 			$this->getList($this->context->language->id, !$this->context->cookie->__get($this->table.'Orderby') ? 'position' : null, !$this->context->cookie->__get($this->table.'Orderway') ? 'ASC' : null, 0, null, $this->context->shop->getID(true));
 
 			$id_category = Tools::getValue('id_category', 1);
-
-			$root_category = Category::getRootCategory();
-			if (!$root_category->id_category)
-			{
-				$root_category->id_category = 0;
-				$root_category->name = $this->l('Root');
-			}
-			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
-
-			$translations = array(
-				'Root' => $root_category,
-				'selected' => $this->l('selected'),
-				'Collapse All' => $this->l('Collapse All'),
-				'Expand All' => $this->l('Expand All'),
-				'Check All' => $this->l('Check All'),
-				'Uncheck All'  => $this->l('Uncheck All'),
-				'search' => $this->l('Search a category')
-			);
-
 			$this->tpl_list_vars['is_category_filter'] = Tools::getValue('id_category') ? true : false;
-			$this->tpl_list_vars['category_tree'] = Helper::renderAdminCategorieTree($translations, array($id_category), 'categoryBox', true, false);
+
+			// Generate category selection tree
+			$helper = new Helper();
+			$this->tpl_list_vars['category_tree'] = $helper->renderCategoryTree(null, array($id_category), 'categoryBox', true, false);
 
 			// used to build the new url when changing category
 			$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
