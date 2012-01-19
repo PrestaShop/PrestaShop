@@ -922,7 +922,7 @@ class AdminStockManagementControllerCore extends AdminController
 	 * @param array $item reference to the current item
 	 * @param bool $is_product_attribute specify if it's a product or a product variation
 	 */
-	private function skipActionByStock(&$item, $is_product_variation = false)
+	protected function skipActionByStock(&$item, $is_product_variation = false)
 	{
 		$stock_manager = StockManagerFactory::getManager();
 

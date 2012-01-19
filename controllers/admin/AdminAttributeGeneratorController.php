@@ -39,7 +39,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	private function addAttribute($arr, $price = 0, $weight = 0)
+	protected function addAttribute($arr, $price = 0, $weight = 0)
 	{
 		foreach ($arr as $attr)
 		{
@@ -69,7 +69,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		$first = array_pop($list);
 		foreach ($first as $attribute)
 		{
-			$tab = self::createCombinations($list);
+			$tab = AdminAttributeGeneratorController::createCombinations($list);
 			foreach ($tab as $to_add)
 				$res[] = is_array($to_add) ? array_merge($to_add, array($attribute)) : array($to_add, $attribute);
 		}
@@ -90,8 +90,8 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				$tab = array_values($_POST['options']);
 				if (count($tab) && Validate::isLoadedObject($this->product))
 				{
-                    self::setAttributesImpacts($this->product->id, $tab);
-					$this->combinations = array_values(self::createCombinations($tab));
+					AdminAttributeGeneratorController::setAttributesImpacts($this->product->id, $tab);
+					$this->combinations = array_values(AdminAttributeGeneratorController::createCombinations($tab));
 					$values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
 
 					// @since 1.5.0
@@ -183,7 +183,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		$combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
 		$attributes = array();
-        $impacts = self::getAttributesImpacts($this->product->id);
+        $impacts = AdminAttributeGeneratorController::getAttributesImpacts($this->product->id);
 		foreach ($combinations_groups as &$combination)
 		{
             $target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
@@ -225,7 +225,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		$this->initGroupTable();
 
-		$js_attributes = self::displayAndReturnAttributeJs();
+		$js_attributes = AdminAttributeGeneratorController::displayAndReturnAttributeJs();
 		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$this->product = new Product((int)Tools::getValue('id_product'));
 

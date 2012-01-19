@@ -527,7 +527,7 @@ class AdminImportControllerCore extends AdminController
 		}
 	}
 
-	private function generateContentTable($current_table, $nb_column, $handle, $glue)
+	protected function generateContentTable($current_table, $nb_column, $handle, $glue)
 	{
 		$html = '<table id="table'.$current_table.'" style="display: none;" class="table" cellspacing="0" cellpadding="0">
 					<tr>';
@@ -550,7 +550,7 @@ class AdminImportControllerCore extends AdminController
 						</th>';
 		$html .= '</tr>';
 
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $current_line < 10 && $line = fgetcsv($handle, MAX_LINE_SIZE, $glue); $current_line++)
 		{
 			/* UTF-8 conversion */
@@ -563,7 +563,7 @@ class AdminImportControllerCore extends AdminController
 			$html .= '</tr>';
 		}
 		$html .= '</table>';
-		self::rewindBomAware($handle);
+		AdminImportController::rewindBomAware($handle);
 		return $html;
 	}
 
@@ -639,7 +639,7 @@ class AdminImportControllerCore extends AdminController
 		return $res;
 	}
 
-	private function getTypeValuesOptions($nb_c)
+	protected function getTypeValuesOptions($nb_c)
 	{
 		$i = 0;
 		$no_pre_select = array('price_tin', 'feature');
@@ -690,7 +690,7 @@ class AdminImportControllerCore extends AdminController
 			return implode("\n\r", $fields);
 	}
 
-	private function receiveTab()
+	protected function receiveTab()
 	{
 		$type_value = Tools::getValue('type_value') ? Tools::getValue('type_value') : array();
 		foreach ($type_value as $nb => $type)
@@ -804,19 +804,19 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
 			if (!isset($info['id']) || (int)$info['id'] < 2)
 								continue;
 
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 			$category = new Category();
-			self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
 
 			if (isset($category->parent) && is_numeric($category->parent))
 			{
@@ -832,7 +832,7 @@ class AdminImportControllerCore extends AdminController
 				else
 				{
 					$category_to_create = new Category();
-					$category_to_create->name = self::createMultiLangField($category->parent);
+					$category_to_create->name = AdminImportController::createMultiLangField($category->parent);
 					$category_to_create->active = 1;
 					$category_to_create->id_parent = 1; // Default parent is home for unknown category to create
 					if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -861,7 +861,7 @@ class AdminImportControllerCore extends AdminController
 					$category->link_rewrite = 'friendly-url-autogeneration-failed';
 					$this->warnings[] = Tools::displayError('URL rewriting failed to auto-generate a friendly URL for: ').$category->name[$default_language_id];
 				}
-				$category->link_rewrite = self::createMultiLangField($category->link_rewrite);
+				$category->link_rewrite = AdminImportController::createMultiLangField($category->link_rewrite);
 			}
 
 			if (!$valid_link)
@@ -898,7 +898,7 @@ class AdminImportControllerCore extends AdminController
 			}
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
-				if (!(self::copyImg($category->id, null, $category->image, 'categories')))
+				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories')))
 					$this->warnings[] = $category->image.' '.Tools::displayError('Cannot be copied');
 			// If both failed, mysql error
 			if (!$res)
@@ -920,12 +920,12 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 			if (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
 			{
 				$product = new Product((int)$info['id']);
@@ -936,8 +936,8 @@ class AdminImportControllerCore extends AdminController
 			}
 			else
 				$product = new Product();
-			self::setEntityDefaultValues($product);
-			self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
+			AdminImportController::setEntityDefaultValues($product);
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
 			if ((int)$product->id_tax_rules_group != 0)
 			{
@@ -1025,7 +1025,7 @@ class AdminImportControllerCore extends AdminController
 						{
 							$category_to_create = new Category();
 							$category_to_create->id = (int)$value;
-							$category_to_create->name = self::createMultiLangField($value);
+							$category_to_create->name = AdminImportController::createMultiLangField($value);
 							$category_to_create->active = 1;
 							$category_to_create->id_parent = 1; // Default parent is home for unknown category to create
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1048,7 +1048,7 @@ class AdminImportControllerCore extends AdminController
 						else
 						{
 							$category_to_create = new Category();
-							$category_to_create->name = self::createMultiLangField($value);
+							$category_to_create->name = AdminImportController::createMultiLangField($value);
 							$category_to_create->active = 1;
 							$category_to_create->id_parent = 1; // Default parent is home for unknown category to create
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1081,7 +1081,7 @@ class AdminImportControllerCore extends AdminController
 				$this->warnings[] = Tools::displayError('Rewrite link for').' '.$link_rewrite.(isset($info['id']) ? ' (ID '.$info['id'].') ' : '').
 					' '.Tools::displayError('was re-written as').' '.$link_rewrite;
 
-			$product->link_rewrite = self::createMultiLangField($link_rewrite);
+			$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
 			$res = false;
 			$field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
@@ -1172,7 +1172,7 @@ class AdminImportControllerCore extends AdminController
 					$tag = new Tag();
 					if (!is_array($product->tags))
 					{
-						$product->tags = self::createMultiLangField($product->tags);
+						$product->tags = AdminImportController::createMultiLangField($product->tags);
 						foreach ($product->tags as $key => $tags)
 						{
 							$is_tag_added = $tag->addTags($key, $product->id, $tags);
@@ -1222,7 +1222,7 @@ class AdminImportControllerCore extends AdminController
 							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
-								if (!self::copyImg($product->id, $image->id, $url))
+								if (!AdminImportController::copyImg($product->id, $image->id, $url))
 									$this->warnings[] = Tools::displayError('Error copying image: ').$url;
 							}
 							else
@@ -1270,15 +1270,15 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$fsep = ((is_null(Tools::getValue('multiple_value_separator')) || trim(Tools::getValue('multiple_value_separator')) == '' ) ? ',' : Tools::getValue('multiple_value_separator'));
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 			$info = array_map('trim', $info);
 
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 
 			$product = new Product((int)$info['id_product'], false, $default_language);
 			$id_image = null;
@@ -1300,7 +1300,7 @@ class AdminImportControllerCore extends AdminController
 				if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 					($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 				{
-					if (!self::copyImg($product->id, $image->id, $url))
+					if (!AdminImportController::copyImg($product->id, $image->id, $url))
 						$this->warnings[] = Tools::displayError('Error copying image: ').$url;
 					else
 						$id_image = array($image->id);
@@ -1417,16 +1417,16 @@ class AdminImportControllerCore extends AdminController
 	{
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 			$customer = new Customer();
-			self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
 			if ($customer->passwd)
 				$customer->passwd = md5(_COOKIE_KEY_.$customer->passwd);
@@ -1468,16 +1468,16 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		$handle = $this->openCsvFile();
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 			$address = new Address();
-			self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $address);
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $address);
 
 			if (isset($address->country) && is_numeric($address->country))
 			{
@@ -1492,7 +1492,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					$country = new Country();
 					$country->active = 1;
-					$country->name = self::createMultiLangField($address->country);
+					$country->name = AdminImportController::createMultiLangField($address->country);
 					$country->id_zone = 0; // Default zone for country to create
 					$country->iso_code = strtoupper(substr($address->country, 0, 2)); // Default iso for country to create
 					$country->contains_states = 0; // Default value for country to create
@@ -1613,20 +1613,20 @@ class AdminImportControllerCore extends AdminController
 	{
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 
 			if (array_key_exists('id', $info) && (int)$info['id'] && Manufacturer::existsInDatabase((int)$info['id'], 'manufacturer'))
 				$manufacturer = new Manufacturer((int)$info['id']);
 			else
-			$manufacturer = new Manufacturer();
-			self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $manufacturer);
+				$manufacturer = new Manufacturer();
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $manufacturer);
 
 			$res = false;
 			if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1671,21 +1671,21 @@ class AdminImportControllerCore extends AdminController
 	{
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		self::setLocale();
+		AdminImportController::setLocale();
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 
 			if (array_key_exists('id', $info) && (int)$info['id'] && Supplier::existsInDatabase((int)$info['id'], 'supplier'))
 				$supplier = new Supplier((int)$info['id']);
 			else
-			$supplier = new Supplier();
+				$supplier = new Supplier();
 
-			self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
+			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
 			if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
@@ -1733,7 +1733,7 @@ class AdminImportControllerCore extends AdminController
 		// opens CSV & sets locale
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		self::setLocale();
+		AdminImportController::setLocale();
 
 		// main loop, for each supply orders to import
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator')); ++$current_line)
@@ -1741,10 +1741,10 @@ class AdminImportControllerCore extends AdminController
 			// if convert requested
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
 			// sets default values if needed
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 
 			// if an id is set, instanciates a supply order with this id if possible
 			if (array_key_exists('id', $info) && (int)$info['id'] && SupplyOrder::exists((int)$info['id']))
@@ -1805,7 +1805,7 @@ class AdminImportControllerCore extends AdminController
 					$info['id_supply_order_state'] = 1;
 
 				// sets parameters
-				self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order);
+				AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order);
 
 				// updatesd($supply_order);
 				$res = true;
@@ -1829,7 +1829,7 @@ class AdminImportControllerCore extends AdminController
 		// opens CSV & sets locale
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
-		self::setLocale();
+		AdminImportController::setLocale();
 
 		$products = array();
 		$reset = true;
@@ -1839,10 +1839,10 @@ class AdminImportControllerCore extends AdminController
 			// if convert requested
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
-			$info = self::getMaskedRow($line);
+			$info = AdminImportController::getMaskedRow($line);
 
 			// sets default values if needed
-			self::setDefaultValues($info);
+			AdminImportController::setDefaultValues($info);
 
 			// gets the supply order
 			if (array_key_exists('supply_order_reference', $info) && pSQL($info['supply_order_reference']) && SupplyOrder::exists(pSQL($info['supply_order_reference'])))
@@ -1901,7 +1901,7 @@ class AdminImportControllerCore extends AdminController
 
 					// creates new product
 					$supply_order_detail = new SupplyOrderDetail();
-					self::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order_detail);
+					AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order_detail);
 
 					// sets parameters
 					$supply_order_detail->id_supply_order = $supply_order->id;
@@ -1952,10 +1952,10 @@ class AdminImportControllerCore extends AdminController
 		return $array;
 	}
 
-	private function getNbrColumn($handle, $glue)
+	protected function getNbrColumn($handle, $glue)
 	{
 		$tmp = fgetcsv($handle, MAX_LINE_SIZE, $glue);
-		self::rewindBomAware($handle);
+		AdminImportController::rewindBomAware($handle);
 		return count($tmp);
 	}
 
@@ -1970,26 +1970,26 @@ class AdminImportControllerCore extends AdminController
 		return ($a < $b) ? 1 : -1;
 	}
 
-	private function openCsvFile()
+	protected function openCsvFile()
 	{
 		 $handle = fopen(_PS_ADMIN_DIR_.'/import/'.strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))), 'r');
 
 		if (!$handle)
 			$this->errors[] = Tools::displayError('Cannot read the CSV file');
 
-		self::rewindBomAware($handle);
+		AdminImportController::rewindBomAware($handle);
 
 		for ($i = 0; $i < (int)Tools::getValue('skip'); ++$i)
 			$line = fgetcsv($handle, MAX_LINE_SIZE, Tools::getValue('separator', ';'));
 		return $handle;
 	}
 
-	private function closeCsvFile($handle)
+	protected function closeCsvFile($handle)
 	{
 		fclose($handle);
 	}
 
-	private function truncateTables($case)
+	protected function truncateTables($case)
 	{
 		switch ((int)$case)
 		{

@@ -67,7 +67,7 @@ class CacheMemcacheCore extends Cache
 	public function connect()
 	{
 		$this->memcache = new Memcache();
-		$servers = self::getMemcachedServers();
+		$servers = CacheMemcache::getMemcachedServers();
 		if (!$servers)
 			return false;
 		foreach ($servers AS $server)

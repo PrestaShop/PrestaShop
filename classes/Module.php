@@ -256,7 +256,7 @@ abstract class ModuleCore
 	 *
 	 * @param $upgrade_detail
 	 */
-	private function setUpgradeMessage($upgrade_detail)
+	protected function setUpgradeMessage($upgrade_detail)
 	{
 		// Store information if a module has been upgraded (memory optimization)
 		if ($upgrade_detail['available_upgrade'])
@@ -390,7 +390,7 @@ abstract class ModuleCore
 	 * @param $registered_version
 	 * @return bool to know directly if any files have been found
 	 */
-	private static function loadUpgradeVersionList($module_name, $module_version, $registered_version)
+	protected static function loadUpgradeVersionList($module_name, $module_version, $registered_version)
 	{
 		$list = array();
 
@@ -844,7 +844,7 @@ abstract class ModuleCore
 		$errors = array();
 
 		// Get modules directory list and memory limit
-		$modules_dir = self::getModulesDirOnDisk();
+		$modules_dir = Module::getModulesDirOnDisk();
 		$memory_limit = Tools::getMemoryLimit();
 
 		foreach ($modules_dir as $module)
@@ -893,12 +893,12 @@ abstract class ModuleCore
 					$item->warning = '';
 					foreach ($xml_module as $k => $v)
 						$item->$k = (string) $v;
-					$item->displayName = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
-					$item->description = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
-					$item->author = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
+					$item->displayName = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
+					$item->description = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
+					$item->author = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
 
 					if (isset($xml_module->confirmUninstall))
-						$item->confirmUninstall = Module::findTranslation($xml_module->name, self::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
+						$item->confirmUninstall = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
 					$moduleList[] = $item;
@@ -1438,12 +1438,12 @@ abstract class ModuleCore
 
 	protected function _isTemplateOverloaded($template)
 	{
-		return self::_isTemplateOverloadedStatic($this->name, $template);
+		return Module::_isTemplateOverloadedStatic($this->name, $template);
 	}
 
 	public function display($file, $template, $cacheId = null, $compileId = null)
 	{
-		if (($overloaded = self::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === NULL)
+		if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null)
 			$result = Tools::displayError('No template found for module').' '.basename($file,'.php');
 		else
 		{
@@ -1532,7 +1532,7 @@ abstract class ModuleCore
 	 */
 	public function getPermission($variable, $employee = null)
 	{
-		return self::getPermissionStatic($this->id, $variable, $employee);
+		return Module::getPermissionStatic($this->id, $variable, $employee);
 	}
 
 	/**

@@ -306,12 +306,12 @@ abstract class ModuleGraphCore extends Module
 
 	public function getDate()
 	{
-		return self::getDateBetween($this->_employee);
+		return ModuleGraph::getDateBetween($this->_employee);
 	}
 
 	public static function getDateBetween($employee = null)
 	{
-		$employee = self::getEmployee($employee);
+		$employee = ModuleGraph::getEmployee($employee);
 		return ' \''.$employee->stats_date_from.' 00:00:00\' AND \''.$employee->stats_date_to.' 23:59:59\' ';
 	}
 

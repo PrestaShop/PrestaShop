@@ -604,7 +604,7 @@ class AdminCarriersControllerCore extends AdminController
 		$object->copyCarrierData((int)$old_id);
 	}
 
-	private function changeGroups($id_carrier, $delete = true)
+	protected function changeGroups($id_carrier, $delete = true)
 	{
 		if ($delete)
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);

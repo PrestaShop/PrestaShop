@@ -359,7 +359,7 @@ class AdminEmployeesControllerCore extends AdminController
 					return false;
 			}
 			
-			$assos = self::getAssoShop($this->table);
+			$assos = AdminEmployeesController::getAssoShop($this->table);
 
 			if (count($assos[0]) == 0 && $this->table = 'employee')
 				if (Shop::isFeatureActive() && _PS_ADMIN_PROFILE_ != $_POST['id_profile'])

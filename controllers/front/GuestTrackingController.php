@@ -169,7 +169,7 @@ class GuestTrackingControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
 	}
 
-	private function processAddressFormat(Address $delivery, Address $invoice)
+	protected function processAddressFormat(Address $delivery, Address $invoice)
 	{
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields($invoice->id_country, false, true);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields($delivery->id_country, false, true);

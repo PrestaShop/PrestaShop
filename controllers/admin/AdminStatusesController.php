@@ -416,7 +416,7 @@ class AdminStatusesControllerCore extends AdminController
 		}
 	}
 
-	private function getTemplates($iso_code)
+	protected function getTemplates($iso_code)
 	{
 		$array = array();
 		if (!file_exists(_PS_ADMIN_DIR_.'/../mails/'.$iso_code))

@@ -381,12 +381,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	public function initContent()
 	{
 		if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_.$_GET['filename']))
-			self::openUploadedFile();
+			AdminCustomerThreadsController::openUploadedFile();
 
 		return parent::initContent();
 	}
 
-	private function openUploadedFile()
+	protected function openUploadedFile()
 	{
 		$filename = $_GET['filename'];
 
@@ -522,7 +522,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		return parent::renderView();
 	}
 
-	private function displayMessage($message, $email = false, $id_employee = null)
+	protected function displayMessage($message, $email = false, $id_employee = null)
 	{
 		$tpl = $this->createTemplate('message.tpl');
 
@@ -559,7 +559,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		return $tpl->fetch();
 	}
 
-	private function displayButton($content)
+	protected function displayButton($content)
 	{
 		return '
 		<div style="margin-bottom:10px;border:1px solid #005500;width:200px;height:130px;padding:10px;background:#EFE">

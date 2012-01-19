@@ -914,7 +914,7 @@ abstract class AdminTabCore
 		if (!Shop::isFeatureActive())
 			return ;
 
-		if(!$assos = self::getAssoShop($this->table, $id_object))
+		if (!$assos = AdminTab::getAssoShop($this->table, $id_object))
 			return;
 
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$assos[1].($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));

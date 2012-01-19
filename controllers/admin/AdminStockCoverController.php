@@ -267,7 +267,7 @@ class AdminStockCoverControllerCore extends AdminController
 	 *
 	 * @return int coverage period
 	 */
-	private function getCurrentCoveragePeriod()
+	protected function getCurrentCoveragePeriod()
 	{
 		static $coverage_period = 0;
 
@@ -285,7 +285,7 @@ class AdminStockCoverControllerCore extends AdminController
 	 *
 	 * @return int id_warehouse
 	 */
-	private function getCurrentCoverageWarehouse()
+	protected function getCurrentCoverageWarehouse()
 	{
 		static $warehouse = 0;
 
@@ -303,7 +303,7 @@ class AdminStockCoverControllerCore extends AdminController
 	 *
 	 * @return int warn_days
 	 */
-	private function getCurrentWarning()
+	protected function getCurrentWarning()
 	{
 		static $warning = 0;
 

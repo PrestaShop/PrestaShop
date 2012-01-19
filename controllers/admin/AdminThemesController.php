@@ -243,7 +243,7 @@ class AdminThemesControllerCore extends AdminController
 					if (!is_dir($target_dir.$file))
 						mkdir($target_dir.$file, Theme::$access_rights);
 					
-					$res &= self::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
+					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
 				elseif (!file_exists($target_theme_dir.$file))
 					$res &= copy($base_dir.$file, $target_dir.$file);
@@ -326,7 +326,7 @@ class AdminThemesControllerCore extends AdminController
 	 * @param string $theme_dir theme directory
 	 * @return boolean Validity is ok or not
 	 */
-	private function _isThemeCompatible($theme_dir)
+	protected function _isThemeCompatible($theme_dir)
 	{
 		$all_errors='';
 		$return=true;
@@ -380,7 +380,7 @@ class AdminThemesControllerCore extends AdminController
 	 * @param mixed $configItem will precise the attribute which not matches. If empty, will check every attributes
 	 * @return error message, or null if disabled
 	 */
-	private function _checkConfigForFeatures($arrFeatures, $configItem = array())
+	protected function _checkConfigForFeatures($arrFeatures, $configItem = array())
 	{
 		$return = true;
 		if (is_array($configItem))

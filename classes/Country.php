@@ -295,7 +295,7 @@ class CountryCore extends ObjectModel
 
 	public function isNeedDni()
 	{
-		return (bool)self::isNeedDniByCountryId($this->id);
+		return Country::isNeedDniByCountryId($this->id);
 	}
 
 	public static function isNeedDniByCountryId($id_country)

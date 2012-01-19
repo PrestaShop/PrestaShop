@@ -398,7 +398,7 @@ class AdminPreferencesControllerCore extends AdminController
 		parent::postProcess();
 	}
 
-	private function getConf($fields, $languages)
+	protected function getConf($fields, $languages)
 	{
 		$tab['_MEDIA_SERVER_1_'] = _MEDIA_SERVER_1_;
 		$tab['_MEDIA_SERVER_2_'] = _MEDIA_SERVER_2_;

@@ -483,7 +483,7 @@ abstract class PaymentModuleCore extends Module
 	 * @param Object Address $the_address that needs to be txt formated
 	 * @return String the txt formated address block
 	 */
-	private function _getTxtFormatedAddress($the_address)
+	protected function _getTxtFormatedAddress($the_address)
 	{
 		$out = '';
 		$adr_fields = AddressFormat::getOrderedAddressFields($the_address->id_country, false, true);
@@ -508,7 +508,7 @@ abstract class PaymentModuleCore extends Module
 	 * @return String the txt formated address block
 	 */
 
-	private function _getFormatedAddress(Address $the_address, $line_sep, $fields_style = array())
+	protected function _getFormatedAddress(Address $the_address, $line_sep, $fields_style = array())
 	{
 		return AddressFormat::generateAddress($the_address, array('avoid' => array()), $line_sep, ' ', $fields_style);
 	}
@@ -517,7 +517,7 @@ abstract class PaymentModuleCore extends Module
 	 * @param int $id_currency : this parameter is optionnal but on 1.5 version of Prestashop, it will be REQUIRED
 	 * @return Currency
 	 */
-	public function getCurrency($current_id_currency = NULL)
+	public function getCurrency($current_id_currency = null)
 	{
 		if (!(int)$current_id_currency)
 			$current_id_currency = Context::getContext()->currency->id;

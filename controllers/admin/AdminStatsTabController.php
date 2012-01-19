@@ -60,7 +60,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 	public function displayCalendar()
 	{
-		return self::displayCalendarForm(array(
+		return AdminStatsTabController::displayCalendarForm(array(
 			'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
 			'Day' => $this->l('Day', 'AdminStatsTab'),
 			'Month' => $this->l('Month', 'AdminStatsTab'),
@@ -137,7 +137,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		return $tpl->fetch();
 	}
 
-	private function getModules()
+	protected function getModules()
 	{
 		$sql = 'SELECT h.`name` AS hook, m.`name`
 				FROM `'._DB_PREFIX_.'module` m

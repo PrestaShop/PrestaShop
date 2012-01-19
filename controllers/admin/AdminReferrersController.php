@@ -353,7 +353,7 @@ class AdminReferrersControllerCore extends AdminController
 
 	public function displayCalendar($action = null, $table = null, $identifier = null, $id = null)
 	{
-		return self::displayCalendarForm(array(
+		return AdminReferrersController::displayCalendarForm(array(
 			'Calendar' => $this->l('Calendar'),
 			'Day' => $this->l('Today'),
 			'Month' => $this->l('Month'),
@@ -399,7 +399,7 @@ class AdminReferrersControllerCore extends AdminController
 		}
 	}
 
-	private function enableCalendar()
+	protected function enableCalendar()
 	{
 		return (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table) && !Tools::isSubmit('update'.$this->table));
 	}

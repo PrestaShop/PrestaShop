@@ -138,7 +138,7 @@ class CacheFsCore extends Cache
 			if (mkdir($new_dir))
 				if (chmod($new_dir, 0777))
 					if ($level_depth - 1 > 0)
-						self::createCacheDirectories($level_depth - 1, $new_dir);
+						CacheFs::createCacheDirectories($level_depth - 1, $new_dir);
 		}
 	}
 

@@ -164,7 +164,7 @@ class OrderControllerCore extends ParentOrderController
 		parent::initContent();
 	}
 
-	private function processAddressFormat()
+	protected function processAddressFormat()
 	{
 		$addressDelivery = new Address((int)$this->context->cart->id_address_delivery);
 		$addressInvoice = new Address((int)$this->context->cart->id_address_invoice);

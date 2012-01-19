@@ -312,7 +312,7 @@ class WarehouseCore extends ObjectModel
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
 		if (Pack::isPack($id_product))
 		{
-			$warehouses = self::getPackWarehouses($id_product);
+			$warehouses = Warehouse::getPackWarehouses($id_product);
 			$res = array();
 			foreach ($warehouses as $warehouse)
 				$res[]['id_warehouse'] = $warehouse;

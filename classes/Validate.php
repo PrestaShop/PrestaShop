@@ -120,7 +120,7 @@ class ValidateCore
 	*/
     public static function isOptFloat($float)
     {
-		return empty($float) OR self::isFloat($float);
+		return empty($float) || Validate::isFloat($float);
 	}
 
 	/**
@@ -394,7 +394,7 @@ class ValidateCore
 
 	public static function isPasswdAdmin($passwd)
 	{
-		return self::isPasswd($passwd, 8);
+		return Validate::isPasswd($passwd, 8);
 	}
 
 	/**
@@ -622,12 +622,12 @@ class ValidateCore
 	*/
 	public static function isUnsignedId($id)
 	{
-		return self::isUnsignedInt($id); /* Because an id could be equal to zero when there is no association */
+		return Validate::isUnsignedInt($id); /* Because an id could be equal to zero when there is no association */
 	}
 
 	public static function isNullOrUnsignedId($id)
 	{
-		return is_null($id) OR self::isUnsignedId($id);
+		return is_null($id) || Validate::isUnsignedId($id);
 	}
 
 	/**
@@ -671,7 +671,7 @@ class ValidateCore
 	*/
 	public static function isUrlOrEmpty($url)
 	{
-		return empty($url) || self::isUrl($url);
+		return empty($url) || Validate::isUrl($url);
 	}
 
 	/**
@@ -906,7 +906,7 @@ class ValidateCore
 	{
 		if (sizeof($ids))
 			foreach($ids as $id)
-				if ($id == 0 || !self::isUnsignedInt($id))
+				if ($id == 0 || !Validate::isUnsignedInt($id))
 					return false;
 		return true;
 	}
@@ -920,15 +920,15 @@ class ValidateCore
 	{
 		foreach ($zones as $zone)
 		{
-			if (!isset($zone['x1']) || !self::isUnsignedInt($zone['x1']))
+			if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1']))
 				return false;
-			if (!isset($zone['y1']) || !self::isUnsignedInt($zone['y1']))
+			if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1']))
 				return false;
-			if (!isset($zone['width']) || !self::isUnsignedInt($zone['width']))
+			if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width']))
 				return false;
-			if (!isset($zone['height']) || !self::isUnsignedInt($zone['height']))
+			if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height']))
 				return false;
-			if (!isset($zone['id_product']) || !self::isUnsignedInt($zone['id_product']))
+			if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product']))
 				return false;
 		}
 		return true;
