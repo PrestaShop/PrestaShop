@@ -379,7 +379,7 @@ class ToolsCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if ($id_lang = (int)Tools::getValue('id_lang') && Validate::isUnsignedId($id_lang))
+		if (($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang))
 			$context->cookie->id_lang = $id_lang;
 
 		$language = new Language($id_lang);
