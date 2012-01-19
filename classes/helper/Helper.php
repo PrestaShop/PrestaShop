@@ -98,9 +98,39 @@ class HelperCore
 	}
 
 	/**
+	 * @deprecated since 1.5 - use Helper::renderCategoryTree() instead
+	 * @static
+	 * @param $translations
+	 * @param array $selected_cat
+	 * @param string $input_name
+	 * @param bool $use_radio
+	 * @param bool $use_search
+	 * @param array $disabled_categories
+	 * @param bool $use_in_popup
+	 * @return mixed
+	 */
+	public static function renderAdminCategorieTree($translations,
+													$selected_cat = array(),
+													$input_name = 'categoryBox',
+													$use_radio = false,
+													$use_search = false,
+													$disabled_categories = array(),
+													$use_in_popup = false)
+	{
+		$helper = new Helper();
+		if (isset($translations['Root']))
+			$root = $translations['Root'];
+		else if (isset($translations['Home']))
+			$root = array('name' => $translations['Home'], 'id_category' => 1);
+		else
+			throw new PrestaShopException('Missing root category parameter.');
+
+		return $helper->renderCategoryTree($root, $selected_cat, $input_name, $use_radio, $use_search, $disabled_categories, $use_in_popup);
+	}
+
+	/**
 	 *
-	 * @param type $trads values of translations keys
-	 *					For the moment, translation are not automatic
+	 * @param array $root array with the name and ID of the tree root category, if null the Shop's root category will be used
 	 * @param type $selected_cat array of selected categories
 	 *					Format
 	 *						Array
@@ -118,18 +148,42 @@ class HelperCore
 	 *									[link_rewrite] => home
 	 *							  )
 	 *					)
-	 * @param type $input_name name of input
+	 * @param string $input_name name of input
+	 * @param bool $use_radio use radio tree or checkbox tree
+	 * @param bool $use_search display a find category search box
+	 * @param array $disabled_categories
+	 * @param bool $use_in_popup
 	 * @return string
 	 */
-	public static function renderAdminCategorieTree($trads, $selected_cat = array(), $input_name = 'categoryBox', $use_radio = false, $use_search = false, $disabled_categories = array(), $use_in_popup = false)
+	public function renderCategoryTree($root = null,
+									   $selected_cat = array(),
+									   $input_name = 'categoryBox',
+									   $use_radio = false,
+									   $use_search = false,
+									   $disabled_categories = array(),
+									   $use_in_popup = false)
 	{
+		$translations = array(
+			'selected' => $this->l('selected'),
+			'Collapse All' => $this->l('Collapse All'),
+			'Expand All' => $this->l('Expand All'),
+			'Check All' => $this->l('Check All'),
+			'Uncheck All'  => $this->l('Uncheck All'),
+			'search' => $this->l('Find a category')
+			);
+
+		if (!$root)
+		{
+			$root_category = Category::getRootCategory();
+			$root = array('name' => $root_category->name, 'id_category' => $root_category->id);
+		}
+
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
 
 		$context = Context::getContext();
 
 		$context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
-
 		$context->controller->addJs(array(
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
@@ -152,8 +206,8 @@ class HelperCore
 		else
 			$html .= 'var selectedCat = "";';
 		$html .= '
-			var selectedLabel = \''.$trads['selected'].'\';
-			var home = \''.$trads['Root']['name'].'\';
+			var selectedLabel = \''.$translations['selected'].'\';
+			var home = \''.$root['name'].'\';
 			var use_radio = '.(int)$use_radio.';';
 		if (!$use_in_popup)
 			$html .= '
@@ -166,15 +220,15 @@ class HelperCore
 
 		$html .= '
 		<div class="category-filter">
-			<span><a href="#" id="collapse_all" >'.$trads['Collapse All'].'</a>
+			<span><a href="#" id="collapse_all" >'.$translations['Collapse All'].'</a>
 			| </span>
-			<span><a href="#" id="expand_all" >'.$trads['Expand All'].'</a>
+			<span><a href="#" id="expand_all" >'.$translations['Expand All'].'</a>
 			'.(!$use_radio ? '
 			 |</span>
-			 <span> <a href="#" id="check_all" >'.$trads['Check All'].'</a>
+			 <span> <a href="#" id="check_all" >'.$translations['Check All'].'</a>
 			 |</span>
-			 <span><a href="#" id="uncheck_all" >'.$trads['Uncheck All'].'</a>|</span>
-			 ' : '').($use_search ? '<span>'.$trads['search'].' : <input type="text" name="search_cat" id="search_cat"></span>' : '').'
+			 <span><a href="#" id="uncheck_all" >'.$translations['Uncheck All'].'</a>|</span>
+			 ' : '').($use_search ? '<span>'.$translations['search'].' : <input type="text" name="search_cat" id="search_cat"></span>' : '').'
 		</div>
 		';
 
@@ -185,7 +239,7 @@ class HelperCore
 			if (is_array($cat))
 			{
 				$disabled = in_array($cat['id_category'], $disabled_categories);
-				if  ($cat['id_category'] != $trads['Root']['id_category'])
+				if ($cat['id_category'] != $root['id_category'])
 					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat['id_category'].'" >';
 				else
 					$home_is_selected = true;
@@ -193,7 +247,7 @@ class HelperCore
 			else
 			{
 				$disabled = in_array($cat, $disabled_categories);
-				if  ($cat != $trads['Root']['id_category'])
+				if ($cat != $root['id_category'])
 					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat.'" >';
 				else
 					$home_is_selected = true;
@@ -201,8 +255,13 @@ class HelperCore
 		}
 		$html .= '
 			<ul id="categories-treeview" class="filetree">
-				<li id="'.$trads['Root']['id_category'].'" class="hasChildren">
-					<span class="folder"> <input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'.$input_name.'" value="'.$trads['Root']['id_category'].'" '.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '.$trads['Root']['name'].'</span>
+				<li id="'.$root['id_category'].'" class="hasChildren">
+					<span class="folder">
+						<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'
+							.$input_name.'" value="'.$root['id_category'].'" '
+							.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '
+							.$root['name']
+					.'</span>
 					<ul>
 						<li><span class="placeholder">&nbsp;</span></li>
 				  </ul>
