@@ -115,7 +115,6 @@ $(document).ready(function() {
 	<div class="clear">&nbsp;</div>
 <script type="text/javascript">
 $(document).ready(function() {
-
 	if ({$refresh_check_version})
 	{
 		$('#blockNewVersionCheck').hide();
@@ -177,7 +176,7 @@ $(document).ready(function() {
 
 			$('#discover_prestashop').fadeOut('slow', function() {
 				if (json.discover_prestashop != 'NOK')
-					$('#discover_prestashop').html(json.discover_prestashop);
+					$('#discover_prestashop').replaceWith(json.discover_prestashop);
 				else
 					$('#discover_prestashop').html('');
 				$('#discover_prestashop').fadeIn('slow');

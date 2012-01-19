@@ -434,20 +434,19 @@ class AdminHomeControllerCore extends AdminController
 			Configuration::updateValue('PS_PREACTIVATION_PAYPAL_WARNING', '');
 
 		// DISCOVER PRESTASHOP
-		$result['discover_prestashop'] = $this->getBlockDiscover();
+		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
 
-
-			if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-				$result['discover_prestashop'] .= '<iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://api.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe>';
-			else
-				$result['discover_prestashop'] .= '';
+		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
+			$result['discover_prestashop'] .= '<div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://api.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
+		else
+			$result['discover_prestashop'] .= '';
 
 		// SHOW PAYPAL TIPS
 			$content = '';
 			$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 			$content = explode('|', $content);
 			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
-				$result['discover_prestashop'] .= $content[1];
+				$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div>';
 
 		$this->content = Tools::jsonEncode($result);
 	}
@@ -516,11 +515,12 @@ class AdminHomeControllerCore extends AdminController
 		$isoCountry = Context::getContext()->country->iso_code;
 
 		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+
 		if (!$content)
 			return ''; // NOK
 		else
 		{
-			if(strpos($content, '|') !== false);
+			if (strpos($content, '|') !== false)
 				$content = explode('|', $content);
 			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 				return $content[1];
