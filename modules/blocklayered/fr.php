@@ -61,6 +61,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_f72c75bdf80dc88b2529162f4947edc
 $_MODULE['<{blocklayered}prestashop>blocklayered_64646db703ca003a37bd1e73977a3a4d'] = 'Catégories utilisant ce modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_d758a9754eb9f36db05c22ad0c77e38e'] = 'Sélectionnez une ou plusieurs catégories utilisant ce modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5965d2ce192837f00d743d8a674382c1'] = 'Cliquez sur \"Sauvegarder cette sélection\" ou fermez la fenêtre pour sauvegarder';
+$_MODULE['<{blocklayered}prestashop>blocklayered_fa03eb688ad8aa1db593d33dabd89bad'] = 'Racine';
 $_MODULE['<{blocklayered}prestashop>blocklayered_8cf04a9734132302f96da8e113e80ce5'] = 'Accueil';
 $_MODULE['<{blocklayered}prestashop>blocklayered_b56c3bda503a8dc4be356edb0cc31793'] = 'Tout replier';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5ffd7a335dd836b3373f5ec570a58bdc'] = 'Tout étendre';
@@ -78,6 +79,7 @@ $_MODULE['<{blocklayered}prestashop>blocklayered_74a6a547d86659933a210680efb6e6d
 $_MODULE['<{blocklayered}prestashop>blocklayered_f8263d99054a4cdb3428196f078fa212'] = 'Nom du modèle :';
 $_MODULE['<{blocklayered}prestashop>blocklayered_b96ce93c61b856a0163c116820646b19'] = 'Mon modèle';
 $_MODULE['<{blocklayered}prestashop>blocklayered_5f514b580ea1b6bdb681916bc1deb207'] = 'uniquement pour le retrouver facilement';
+$_MODULE['<{blocklayered}prestashop>blocklayered_188185ae335eb523e53d6d31ede21f1c'] = 'Aucun filtre sélectionné, la navigation à facette sera désactivée pour les catégories concernées.';
 $_MODULE['<{blocklayered}prestashop>blocklayered_ef1094d9826e98f5417e0a37f1742133'] = 'Sauvegarder ce modèle de filtres';
 $_MODULE['<{blocklayered}prestashop>blocklayered_254f642527b45bc260048e30704edb39'] = 'Configuration';
 $_MODULE['<{blocklayered}prestashop>blocklayered_054b4f3ea543c990f6b125f41af6ebf7'] = 'Option';
