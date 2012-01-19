@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 12319 $
+*  @version  Release: $Revision: 12553 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.7.5';
+		$this->version = '1.7.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -1249,6 +1249,7 @@ class BlockLayered extends Module
 				
 	
 					$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position, filter_show_limit, filter_type) VALUES ';
+					$values = false;
 					foreach ($_POST['categoryBox'] as $id_category_layered)
 					{
 						$n = 0;
@@ -1256,6 +1257,7 @@ class BlockLayered extends Module
 						foreach ($_POST as $key => $value)
 							if (substr($key, 0, 17) == 'layered_selection' && $value == 'on')
 							{
+								$values = true;
 								$type = 0;
 								$limit = 0;
 								if (Tools::getValue($key.'_filter_type'))
@@ -1291,8 +1293,8 @@ class BlockLayered extends Module
 								}
 							}
 					}
-					
-					Db::getInstance()->Execute(rtrim($sqlToInsert, ','));
+					if ($values)
+						Db::getInstance()->Execute(rtrim($sqlToInsert, ','));
 					
 					$valuesToInsert = array(
 						'name' => pSQL(Tools::getValue('layered_tpl_name')),
@@ -1593,9 +1595,15 @@ class BlockLayered extends Module
 				#layered_container_left ul li { cursor: move; position: relative; }
 				#layered-cat-counter { display: none; }
 				#layered-step-2, #layered-step-3 { display: none; }
+				#layered-step-2 h3 { margin-top: 0; }
 				#table-filter-templates tr th, #table-filter-templates tr td { text-align: center; }
 				.filter_type { width: 70px; position: absolute; right: 53px; top: 5px;}
 				.filter_show_limit { position: absolute; width: 40px; right: 5px; top: 5px; }
+				#layered-step-3 .alert { width: auto; }
+				#fancybox-content {
+					height: 400px !important;
+					overflow: auto !important;
+				}
 			</style>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" onsubmit="return checkForm();">';
 			
@@ -1649,12 +1657,11 @@ class BlockLayered extends Module
 					$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
 			}
 			else
-			{
-				$root_category = array('id_category' => '1', 'name' => $this->l('Home'));
-			}
+				$root_category = '';
+			
 			$trads = array(
 				 'Root' => $root_category,
-				 'Home' => $root_category, // for retrocompatibility 1.4
+				 'Home' => $this->l('Home'), // for retrocompatibility 1.4
 				 'selected' => $this->l('selected'),
 				 'Collapse All' => $this->l('Collapse All'),
 				 'Expand All' => $this->l('Expand All'),
@@ -1703,17 +1710,28 @@ class BlockLayered extends Module
 				
 			}
 			
-			$html .= '<script type="text/javascript">
-					
-					function updLayCounters()
+			$html .= '
+				<script type="text/javascript">
+					function updLayCounters(showAlert)
 					{
 						$(\'#num_sel_filters\').html(\'(\'+$(\'ul#selected_filters\').find(\'li\').length+\')\');
 						$(\'#num_avail_filters\').html(\'(\'+$(\'#layered_container_right ul\').find(\'li\').length+\')\');
 						
 						if ($(\'ul#selected_filters\').find(\'li\').length >= 1)
+						{
 							$(\'#layered-step-3\').show();
+							$(\'#layered-step-3 .alert\').hide();
+						}
 						else
-							$(\'#layered-step-3\').hide();
+						{
+							if (showAlert)
+								$(\'#layered-step-3\').show();
+							else
+								$(\'#layered-step-3\').hide();
+							
+							$(\'#layered-step-3 .alert\').show();
+							
+						}
 					}
 
 					function updPositions()
@@ -1737,6 +1755,7 @@ class BlockLayered extends Module
 
 					function updElements(all, id_layered_filter)
 					{
+console.log($(\'#error-treeview\').is(\':hidden\'));
 						if ($(\'#error-treeview\').is(\':hidden\'))
 							$(\'#layered-step-2\').show();
 						else
@@ -1766,7 +1785,7 @@ class BlockLayered extends Module
 								});
 								
 								updHeight();
-								updLayCounters();
+								updLayCounters(true);
 							}
 						});
 						return false;
@@ -1798,7 +1817,7 @@ class BlockLayered extends Module
 								$(this).parent().addClass(\'layered_left\');
 								$(this).effect(\'transfer\', { to: $(\'#layered_container_left ul#selected_filters\') }, 300, function() {
 									$(this).parent().appendTo(\'ul#selected_filters\');
-									updLayCounters();
+									updLayCounters(false);
 									updHeight();
 									updPositions();
 								});
@@ -1810,7 +1829,7 @@ class BlockLayered extends Module
 									$(this).parent().removeClass(\'layered_left\');
 									$(this).parent().addClass(\'layered_right\');
 									$(this).parent().appendTo(\'ul#all_filters\');
-									updLayCounters();
+									updLayCounters(true);
 									updHeight();
 									updPositions();
 									if ($(\'#layered_container_left ul\').length == 0)
@@ -1823,15 +1842,18 @@ class BlockLayered extends Module
 						$(\'label a#inline\').fancybox({ 
 							\'hideOnContentClick\': false,
 							\'onClosed\': function() {
+								lock_treeview_hidding = false;
+								$(\'#categories-treeview\').parent().parent().hide();
 								updCatCounter();
 								if ($(\'#categories-treeview\').find(\'input:checked\').length == 0)
-									$(\'#error-treeview\').show(500);
+									$(\'#error-treeview\').show();
 								else
-									$(\'#error-treeview\').hide(500);
+									$(\'#error-treeview\').hide();
 								updElements(0, 0);
 							},
 							\'onComplete\': function() {
-							'.(version_compare(_PS_VERSION_,'1.5','<') ? '
+								lock_treeview_hidding = true;
+								$(\'#categories-treeview\').parent().parent().show();
 								if($(\'#categories-treeview li#1\').attr(\'cleaned\'))
 									return;
 								if($(\'#categories-treeview li#1\').attr(\'cleaned\', true))
@@ -1844,12 +1866,12 @@ class BlockLayered extends Module
 								$(\'.hitarea\').live(\'click\', function(it)
 								{
 									$(this).parent().find(\'> .category_label\').click();
-								});' : '').'
+								});
 							}
 						});
 
 						updHeight();
-						updLayCounters();
+						updLayCounters(false);
 						updPositions();
 						updCatCounter();
 						enableSortable();
@@ -1885,6 +1907,7 @@ class BlockLayered extends Module
 				{ $(\'#error-filter-name\').hide(); } else { $(\'#error-filter-name\').show(); }" name="layered_tpl_name" maxlength="64" value="'.$this->l('My template').' '.date('Y-m-d').'"
 				style="width: 200px; font-size: 11px;" /> <span style="font-size: 10px; font-style: italic;">('.$this->l('only as a reminder').')</span></p>
 				<hr size="1" noshade />
+				<p class="alert">'.$this->l('No filters selected, the blocklayered will be disable for the categories seleted.').'</p>
 				<br />
 				<center><input type="submit" class="button" name="SubmitFilter" value="'.$this->l('Save this filter template').'" /></center>
 			</div>
@@ -1892,17 +1915,17 @@ class BlockLayered extends Module
 				<input type="hidden" name="n_existing" id="n_existing" value="'.(int)count($filtersTemplates).'" />
 			</form>
 		</fieldset><br />
-		<fieldset class="width2">
+		<fieldset class="width4">
 			<legend><img src="../img/admin/cog.gif" alt="" /> '.$this->l('Configuration').'</legend>
 			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">			
 				<table border="0" style="font-size: 11px; width: 100%; margin: 0 auto;" class="table">
 					<tr>
 						<th style="text-align: center;">'.$this->l('Option').'</th>
-						<th style="text-align: center;">'.$this->l('Value').'</th>
+						<th style="text-align: center; width: 200px;">'.$this->l('Value').'</th>
 					</tr>
 					<tr>
 						<td style="text-align: right;">'.$this->l('Hide filter values with no product is matching').'</td>
-						<td>
+						<td style="text-align: center;">
 							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
 							'.$this->l('Yes').' <input type="radio" name="ps_layered_hide_0_values" value="1" '.(Configuration::get('PS_LAYERED_HIDE_0_VALUES') ? 'checked="checked"' : '').' />
 							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
@@ -1911,7 +1934,7 @@ class BlockLayered extends Module
 					</tr>
 					<tr>
 						<td style="text-align: right;">'.$this->l('Show the number of matching products').'</td>
-						<td>
+						<td style="text-align: center;">
 							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
 							'.$this->l('Yes').' <input type="radio" name="ps_layered_show_qties" value="1" '.(Configuration::get('PS_LAYERED_SHOW_QTIES') ? 'checked="checked"' : '').' />
 							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
@@ -1920,14 +1943,14 @@ class BlockLayered extends Module
 					</tr>
 					<tr>
 						<td style="text-align: right;">'.$this->l('Show products from subcategories').'</td>
-						<td>
+						<td style="text-align: center;">
 							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
 							'.$this->l('Yes').' <input type="radio" name="ps_layered_full_tree" value="1" '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
 							<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" style="margin-left: 10px;" />
 							'.$this->l('No').' <input type="radio" name="ps_layered_full_tree" value="0" '.(!Configuration::get('PS_LAYERED_FULL_TREE') ? 'checked="checked"' : '').' />
 						</td>
 					</tr>
-					<tr>
+					<tr style="text-align: center;">
 						<td style="text-align: right;">'.$this->l('Use tax to filter price').'</td>
 						<td>
 							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
@@ -3294,7 +3317,6 @@ class BlockLayered extends Module
 		{
 			$html .= '
 			<script type="text/javascript">
-				//<![CDATA[
 				$(document).ready(function()
 				{
 					$(\'#selected_filters li\').remove();
@@ -3312,8 +3334,67 @@ class BlockLayered extends Module
 			
 			if (isset($layeredValues['categories']) && count($layeredValues['categories']))
 			{
-				foreach ($layeredValues['categories'] as $id_category)
-					$html .= '$(\'#categories-treeview\').find(\'input[name="categoryBox[]"][value='.(int)$id_category.']\').attr(\'checked\', \'checked\');'."\n";
+				$html .= '
+							function expandCategories(categories, iteration, id_category, init) {
+								if (categories[iteration])
+								{
+									category = $(\'#categories-treeview\').find(\'input[name="categoryBox[]"][value=\'+categories[iteration]+\']\');
+								
+									if (category.length)
+									{
+										if (category.parent().hasClass(\'expandable\'))
+										{
+											$(\'#\'+categories[iteration]+\' .hitarea\').click();
+										}
+										
+										if (parseInt(categories[iteration]) == parseInt(id_category))
+										{
+											$(\'#layered-cat-counter\').html(parseInt($(\'#layered-cat-counter\').html()) + 1);
+											if ($(\'#categories-treeview\').find(\'input[name="categoryBox[]"][value=\'+id_category+\']:checked\').length == 0)
+											{
+												$(\'#categories-treeview\').find(\'input[name="categoryBox[]"][value=\'+id_category+\']\').click();
+												clickOnCategoryBox($(\'#categories-treeview\').find(\'input[name="categoryBox[]"][value=\'+id_category+\']\'));
+											}
+											collapseAllCategories();
+										}
+									}
+									else {
+										setTimeout(function() { expandCategories(categories, iteration, id_category, false); }, 20 );
+										return;
+									}
+									$(\'#categories-treeview\').parent().parent().show();
+									expandCategories(categories, iteration+1, id_category);
+									if (typeof(lock_treeview_hidding) == \'undefined\' || !lock_treeview_hidding)
+										$(\'#categories-treeview\').parent().parent().hide();
+								}
+							}
+							$(\'#layered-cat-counter\').html(0);
+							$(\'.nb_sub_cat_selected\').hide();
+							$(\'#categories-treeview\').find(\'input[name="categoryBox[]"]:checked\').each(function(i, it) {
+								$(it).click();
+								updateNbSubCategorySelected($(it), false);
+							});';
+				
+				foreach ($layeredValues['categories'] as $id_category) {
+					if ($id_category != 1) // @todo do we need to use the root of the current shop ?
+					{
+						$category = new Category($id_category);
+						$parent_list = array_reverse($category->getParentsCategories());
+					}
+					else
+						$parent_list = array(array('id_category' => 1));
+					$html .= 'var categories = [];
+					';
+					foreach ($parent_list as $parent)
+					{
+						$html .= '
+							categories.push('.(int)$parent['id_category'].');';
+					}
+
+					$html .= '
+						expandCategories(categories, 0, '.(int)$id_category.', false);';
+				}
+				
 				$html .= '
 				updCatCounter();
 				$(\'#scope_1\').attr(\'checked\', \'\');
@@ -3328,7 +3409,8 @@ class BlockLayered extends Module
 				
 			$html .= '
 			$(\'#layered_tpl_name\').val(\''.addslashes($layeredFilter['name']).'\');
-			$(\'#id_layered_filter\').val(\''.(int)$layeredFilter['id_layered_filter'].'\')';
+			$(\'#id_layered_filter\').val(\''.(int)$layeredFilter['id_layered_filter'].'\');
+			';
 				
 			$html .= '
 				});
