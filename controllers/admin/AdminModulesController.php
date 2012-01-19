@@ -1000,6 +1000,10 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['list_modules_categories'] = $this->list_modules_categories;
 		$tpl_vars['list_modules_authors'] = $this->modules_authors;
 
+		$tpl_vars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
+		$tpl_vars['check_curl'] = (extension_loaded('curl') ? 'ok' : 'ko');
+		$tpl_vars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
+
 		if ($this->logged_on_addons)
 			$tpl_vars['logged_on_addons'] = 1;
 		$smarty->assign($tpl_vars);
