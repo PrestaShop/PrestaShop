@@ -341,4 +341,11 @@ urlToCall = null;
 $(document).ready(function() {
 	updateCurrentText();
 	updateFriendlyURL();
+
+	// Pressing enter in an input field should not submit the form
+	$('#product_form').delegate('input', 'keypress', function(e){
+			var code = null;
+		code = (e.keyCode ? e.keyCode : e.which);
+		return (code == 13) ? false : true;
+	});
 });
