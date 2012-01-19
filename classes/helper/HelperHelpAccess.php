@@ -28,7 +28,7 @@
 /**
  * @since 1.5
  */
-class HelperHelpAccess extends Helper
+class HelperHelpAccessCore extends Helper
 {
     public $label;
     public $iso_lang;
