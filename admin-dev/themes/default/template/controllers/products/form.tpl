@@ -28,6 +28,9 @@
 
 {block name="autoload_tinyMCE"}
 	// change each by click to load only on click
+
+	$("#product-tab-content-Informations").bind('loaded', function(){
+
 	$(".autoload_rte").each(function(e){
 		tinySetup({
 			mode :"exact",
@@ -56,10 +59,11 @@
 							textarea.parent('div').find('span.counter').html(' ');
 					}
 				});
-
 			}			
 		});
-	})
+	});
+});
+$("#product-tab-content-Informations").trigger('loaded');
 {/block}
 
 {block name="defaultForm"}
@@ -75,6 +79,8 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		var token = '{$token}';
+		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
 		var toload = new Array();
 		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}';
 		$('#product-tab-content-wait').show();
