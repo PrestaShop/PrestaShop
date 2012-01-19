@@ -113,7 +113,7 @@ class	LoggerCore extends ObjectModel
 			$log->object_id = intval($object_id);
 		}
 
-		self::sendByMail($log);
+		Logger::sendByMail($log);
 
 		if ($allow_duplicate || !$log->_isPresent())
 		{
@@ -145,7 +145,7 @@ class	LoggerCore extends ObjectModel
 	 *
 	 * @return true if exists
 	 */
-	private function _isPresent()
+	protected function _isPresent()
 	{
 		if (!isset(self::$is_present[md5($this->message)]))
 			self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)

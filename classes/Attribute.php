@@ -202,7 +202,7 @@ class AttributeCore extends ObjectModel
 		Tools::displayAsDeprecated();
 
 		$id_product = (int)$arr['id_product'];
-		$qty = self::getAttributeQty($id_product);
+		$qty = Attribute::getAttributeQty($id_product);
 
 		if ($qty !== false)
 		{

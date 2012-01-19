@@ -54,7 +54,7 @@ class ToolsCore
 		}
 
 		for ($i = 0, $passwd = ''; $i < $length; $i++)
-			$passwd .= self::substr($str, mt_rand(0, self::strlen($str) - 1), 1);
+			$passwd .= Tools::substr($str, mt_rand(0, Tools::strlen($str) - 1), 1);
 		return $passwd;
 	}
 
@@ -84,7 +84,7 @@ class ToolsCore
 			{
 				$url = substr($url, strlen('index.php?controller='));
 				if (Configuration::get('PS_REWRITING_SETTINGS'))
-					$url = self::strReplaceFirst('&', '?' , $url);
+					$url = Tools::strReplaceFirst('&', '?', $url);
 			}
 
 			$explode = explode('?', $url);
@@ -199,7 +199,7 @@ class ToolsCore
 	public static function getShopDomain($http = false, $entities = false)
 	{
 		if (!$domain = ShopUrl::getMainShopDomain())
-			$domain = self::getHttpHost();
+			$domain = Tools::getHttpHost();
 		if ($entities)
 			$domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
 		if ($http)
@@ -217,7 +217,7 @@ class ToolsCore
 	public static function getShopDomainSsl($http = false, $entities = false)
 	{
 		if (!$domain = ShopUrl::getMainShopDomainSSL())
-			$domain = self::getHttpHost();
+			$domain = Tools::getHttpHost();
 		if ($entities)
 			$domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
 		if ($http)
@@ -281,7 +281,7 @@ class ToolsCore
 	*/
 	public static function getCurrentUrlProtocolPrefix()
 	{
-		if(self::usingSecureMode())
+		if (Tools::usingSecureMode())
 			return 'https://';
 		else
 			return 'http://';
@@ -295,7 +295,7 @@ class ToolsCore
 	*/
 	public static function secureReferrer($referrer)
 	{
-		if (preg_match('/^http[s]?:\/\/'.self::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer))
+		if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer))
 			return $referrer;
 		return __PS_BASE_URI__;
 	}
@@ -346,8 +346,8 @@ class ToolsCore
 		/* Automatically detect language if not already defined */
 		if (!$cookie->id_lang AND isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
-			$array = explode(',', self::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
-			if (self::strlen($array[0]) > 2)
+			$array = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+			if (Tools::strlen($array[0]) > 2)
 			{
 				$tab = explode('-', $array[0]);
 				$string = $tab[0];
@@ -379,7 +379,7 @@ class ToolsCore
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if ($id_lang = (int)(self::getValue('id_lang')) AND Validate::isUnsignedId($id_lang))
+		if ($id_lang = (int)Tools::getValue('id_lang') && Validate::isUnsignedId($id_lang))
 			$context->cookie->id_lang = $id_lang;
 
 		$language = new Language($id_lang);
@@ -394,7 +394,7 @@ class ToolsCore
 	 */
 	public static function setCurrency($cookie)
 	{
-		if (self::isSubmit('SubmitCurrency'))
+		if (Tools::isSubmit('SubmitCurrency'))
 			if (isset($_POST['id_currency']) AND is_numeric($_POST['id_currency']))
 			{
 				$currency = Currency::getCurrencyInstance((int)($_POST['id_currency']));
@@ -454,7 +454,7 @@ class ToolsCore
 		$ret = 0;
 		if (($isNegative = ($price < 0)))
 			$price *= -1;
-		$price = self::ps_round($price, $c_decimals);
+		$price = Tools::ps_round($price, $c_decimals);
 		switch ($c_format)
 	 	{
 	 	 	/* X 0,000.00 */
@@ -487,9 +487,9 @@ class ToolsCore
 		{
 			$currency = Currency::getCurrencyInstance((int)($params['currency']));
 			if (Validate::isLoadedObject($currency))
-				return self::displayPrice($params['price'], $currency, false);
+				return Tools::displayPrice($params['price'], $currency, false);
 		}
-		return self::displayPrice($params['price']);
+		return Tools::displayPrice($params['price']);
 	}
 
 	/**
@@ -570,7 +570,7 @@ class ToolsCore
 	*/
 	public static function dateFormat($params, &$smarty)
 	{
-		return self::displayDate($params['date'], Context::getContext()->language->id, (isset($params['full']) ? $params['full'] : false));
+		return Tools::displayDate($params['date'], Context::getContext()->language->id, (isset($params['full']) ? $params['full'] : false));
 	}
 
 	/**
@@ -644,7 +644,7 @@ class ToolsCore
 			if ($file != '.' AND $file != '..')
 			{
 				if (is_dir($dirname.$file))
-					self::deleteDirectory($dirname.$file, true);
+					Tools::deleteDirectory($dirname.$file, true);
 				elseif (file_exists($dirname.$file))
 					unlink($dirname.$file);
 			}
@@ -714,7 +714,7 @@ class ToolsCore
 	*/
 	public static function d($object, $kill = true)
 	{
-		return (self::dieObject($object, $kill));
+		return (Tools::dieObject($object, $kill));
 	}
 
 	/**
@@ -724,7 +724,7 @@ class ToolsCore
 	*/
 	public static function p($object)
 	{
-		return (self::dieObject($object, false));
+		return (Tools::dieObject($object, false));
 	}
 
 	/**
@@ -750,10 +750,10 @@ class ToolsCore
 	{
 		global $maintenance;
 
-		if (!(isset($maintenance) AND (!in_array(self::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
+		if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
 		{
 		 	/* Products specifics meta tags */
-			if ($id_product = self::getValue('id_product'))
+			if ($id_product = Tools::getValue('id_product'))
 			{
 				$sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
 						FROM `'._DB_PREFIX_.'product` p
@@ -766,16 +766,16 @@ class ToolsCore
 				{
 					if (empty($row['meta_description']))
 						$row['meta_description'] = strip_tags($row['description_short']);
-					return self::completeMetaTags($row, $row['name']);
+					return Tools::completeMetaTags($row, $row['name']);
 				}
 			}
 
 			/* Categories specifics meta tags */
-			elseif ($id_category = self::getValue('id_category'))
+			else if ($id_category = Tools::getValue('id_category'))
 			{
 				if (!empty($title))
 					$title = ' - '.$title;
-				$page_number = (int)self::getValue('p');
+				$page_number = (int)Tools::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang` cl
@@ -794,14 +794,14 @@ class ToolsCore
 					if (!empty($title))
 						$row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
 
-					return self::completeMetaTags($row, $row['name']);
+					return Tools::completeMetaTags($row, $row['name']);
 				}
 			}
 
 			/* Manufacturers specifics meta tags */
-			elseif ($id_manufacturer = self::getValue('id_manufacturer'))
+			else if ($id_manufacturer = Tools::getValue('id_manufacturer'))
 			{
-				$page_number = (int)self::getValue('p');
+				$page_number = (int)Tools::getValue('p');
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'manufacturer_lang` ml
@@ -813,12 +813,12 @@ class ToolsCore
 						$row['meta_description'] = strip_tags($row['meta_description']);
 					$row['meta_title'] .= $row['name'] . (!empty($page_number) ? ' ('.$page_number.')' : '');
 					$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['meta_title']);
+					return Tools::completeMetaTags($row, $row['meta_title']);
 				}
 			}
 
 			/* Suppliers specifics meta tags */
-			elseif ($id_supplier = self::getValue('id_supplier'))
+			else if ($id_supplier = Tools::getValue('id_supplier'))
 			{
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
@@ -832,12 +832,12 @@ class ToolsCore
 						$row['meta_description'] = strip_tags($row['meta_description']);
 					if (!empty($row['meta_title']))
 						$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['name']);
+					return Tools::completeMetaTags($row, $row['name']);
 				}
 			}
 
 			/* CMS specifics meta tags */
-			elseif ($id_cms = self::getValue('id_cms'))
+			else if ($id_cms = Tools::getValue('id_cms'))
 			{
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `meta_title`, `meta_description`, `meta_keywords`
@@ -846,12 +846,12 @@ class ToolsCore
 				if ($row)
 				{
 					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['meta_title']);
+					return Tools::completeMetaTags($row, $row['meta_title']);
 				}
 			}
 
 			/* CMS category specifics meta tags */
-			elseif ($id_cms = self::getValue('id_cms_category'))
+			else if ($id_cms = Tools::getValue('id_cms_category'))
 			{
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `meta_title`, `meta_description`, `meta_keywords`
@@ -860,13 +860,13 @@ class ToolsCore
 				if ($row)
 				{
 					$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
-					return self::completeMetaTags($row, $row['meta_title']);
+					return Tools::completeMetaTags($row, $row['meta_title']);
 				}
 			}
 		}
 
 		/* Default meta tags */
-		return self::getHomeMetaTags($id_lang, $page_name);
+		return Tools::getHomeMetaTags($id_lang, $page_name);
 	}
 
 	/**
@@ -920,9 +920,9 @@ class ToolsCore
 		if (!$context)
 			$context = Context::getContext();
 		if ($page === true)
-			return (self::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
+			return (Tools::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
 		else
-			return (self::encrypt($context->customer->id.$context->customer->passwd.$page));
+			return (Tools::encrypt($context->customer->id.$context->customer->passwd.$page));
 	}
 
 	/**
@@ -932,7 +932,7 @@ class ToolsCore
 	*/
 	public static function getAdminToken($string)
 	{
-		return !empty($string) ? self::encrypt($string) : false;
+		return !empty($string) ? Tools::encrypt($string) : false;
 	}
 
 	public static function getAdminTokenLite($tab, Context $context = null)
@@ -993,10 +993,10 @@ class ToolsCore
 				foreach ($categories AS $category)
 				{
 					$fullPath .=
-					(($n < $nCategories OR $linkOntheLastItem) ? '<a href="'.self::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+					(($n < $nCategories || $linkOntheLastItem) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-					(($n < $nCategories OR $linkOntheLastItem) ? '</a>' : '').
-					(($n++ != $nCategories OR !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
+					(($n < $nCategories || $linkOntheLastItem) ? '</a>' : '').
+					(($n++ != $nCategories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
 				}
 
 				return $fullPath.$path;
@@ -1006,15 +1006,15 @@ class ToolsCore
 		{
 			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
-				die(self::displayError());
+				die(Tools::displayError());
 			$categoryLink = $context->link->getCMSCategoryLink($category);
 
 			if ($path != $category->name)
-				$fullPath .= '<a href="'.self::safeOutput($categoryLink).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
+				$fullPath .= '<a href="'.Tools::safeOutput($categoryLink).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
 			else
-				$fullPath = ($linkOntheLastItem ? '<a href="'.self::safeOutput($categoryLink).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($linkOntheLastItem ? '</a>' : '');
+				$fullPath = ($linkOntheLastItem ? '<a href="'.Tools::safeOutput($categoryLink).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($linkOntheLastItem ? '</a>' : '');
 
-			return self::getPath($category->id_parent, $fullPath, $linkOntheLastItem, $categoryType);
+			return Tools::getPath($category->id_parent, $fullPath, $linkOntheLastItem, $categoryType);
 		}
 	}
 
@@ -1043,7 +1043,7 @@ class ToolsCore
 		if ($id_category == $defaultCategory)
 			return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
 
-		return self::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
+		return Tools::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
 	}
 
 	/**
@@ -1055,7 +1055,7 @@ class ToolsCore
 	 */
 	public static function link_rewrite($str, $utf8_decode = false)
 	{
-		return self::str2url($str);
+		return Tools::str2url($str);
 	}
 
 	/**
@@ -1071,7 +1071,7 @@ class ToolsCore
 			$str = mb_strtolower($str, 'utf-8');
 
 		$str = trim($str);
-		$str = self::replaceAccentedChars($str);
+		$str = Tools::replaceAccentedChars($str);
 
 		// Remove all non-whitelist chars.
 		$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u','', $str);
@@ -1126,10 +1126,10 @@ class ToolsCore
 	** For other purposes use the smarty function instead */
 	public static function truncate($str, $maxLen, $suffix = '...')
 	{
-	 	if (self::strlen($str) <= $maxLen)
+	 	if (Tools::strlen($str) <= $maxLen)
 	 		return $str;
 	 	$str = utf8_decode($str);
-	 	return (utf8_encode(substr($str, 0, $maxLen - self::strlen($suffix)).$suffix));
+	 	return (utf8_encode(substr($str, 0, $maxLen - Tools::strlen($suffix)).$suffix));
 	}
 
 	/**
@@ -1171,7 +1171,7 @@ class ToolsCore
 	{
 		$tab = explode(' ', $date);
 		if (!isset($tab[1]))
-		    $date .= ' ' . self::hourGenerate(0, 0, 0);
+		    $date .= ' '.Tools::hourGenerate(0, 0, 0);
 		return $date;
 	}
 
@@ -1179,7 +1179,7 @@ class ToolsCore
 	{
 		$tab = explode(' ', $date);
 		if (!isset($tab[1]))
-		    $date .= ' ' . self::hourGenerate(23, 59, 59);
+		    $date .= ' '.Tools::hourGenerate(23, 59, 59);
 		return $date;
 	}
 
@@ -1223,13 +1223,13 @@ class ToolsCore
 		if (is_array($str))
 			return false;
 		if (function_exists('mb_substr'))
-			return mb_substr($str, (int)($start), ($length === false ? self::strlen($str) : (int)($length)), $encoding);
-		return substr($str, $start, ($length === false ? self::strlen($str) : (int)($length)));
+			return mb_substr($str, (int)($start), ($length === false ? Tools::strlen($str) : (int)($length)), $encoding);
+		return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)($length)));
 	}
 
 	static function ucfirst($str)
 	{
-		return self::strtoupper(self::substr($str, 0, 1)).self::substr($str, 1);
+		return Tools::strtoupper(Tools::substr($str, 0, 1)).Tools::substr($str, 1);
 	}
 
 	public static function orderbyPrice(&$array, $orderWay)
@@ -1269,9 +1269,9 @@ class ToolsCore
 	{
 		$method = (int)(Configuration::get('PS_PRICE_ROUND_MODE'));
 		if ($method == PS_ROUND_UP)
-			return self::ceilf($value, $precision);
+			return Tools::ceilf($value, $precision);
 		elseif ($method == PS_ROUND_DOWN)
-			return self::floorf($value, $precision);
+			return Tools::floorf($value, $precision);
 		return round($value, $precision);
 	}
 
@@ -1465,12 +1465,12 @@ class ToolsCore
 	{
 		global $current_css_file;
 
-		$protocol_link = self::getCurrentUrlProtocolPrefix();
+		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
 
 		if (array_key_exists(1, $matches))
 		{
 			$tmp = dirname($current_css_file).'/'.$matches[1];
-			return 'url(\''.$protocol_link.self::getMediaServer($tmp).$tmp.'\')';
+			return 'url(\''.$protocol_link.Tools::getMediaServer($tmp).$tmp.'\')';
 		}
 		return false;
 	}
@@ -1541,7 +1541,7 @@ class ToolsCore
 
 		if (self::$_cache_nb_media_servers AND ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
-		return self::getHttpHost();
+		return Tools::getHttpHost();
 	}
 
 	public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null)
@@ -1773,7 +1773,7 @@ FileETag INode MTime Size
 
 		trigger_error($message, E_WARNING);
 		$class = isset($callee['class']) ? $callee['class'] : null;
-		self::throwDeprecated($error, $message, $class);
+		Tools::throwDeprecated($error, $message, $class);
 	}
 
 	public static function displayFileAsDeprecated()
@@ -1784,7 +1784,7 @@ FileETag INode MTime Size
 		$message = 'The file '.$callee['file'].' is deprecated and will be removed in the next major version.';
 
 		$class = isset($callee['class']) ? $callee['class'] : null;
-		self::throwDeprecated($error, $message, $class);
+		Tools::throwDeprecated($error, $message, $class);
 	}
 
 	protected static function throwDeprecated($error, $message, $class)
@@ -2073,7 +2073,7 @@ FileETag INode MTime Size
 	{
 		$memory_limit = @ini_get('memory_limit');
 
-		return self::getOctets($memory_limit);
+		return Tools::getOctets($memory_limit);
 	}
 
 	/**
@@ -2113,8 +2113,8 @@ FileETag INode MTime Size
 	 */
 	public static function getMaxUploadSize($max_size = 0)
 	{
-		$post_max_size = self::convertBytes(ini_get('post_max_size'));
-		$upload_max_filesize = self::convertBytes(ini_get('upload_max_filesize'));
+		$post_max_size = Tools::convertBytes(ini_get('post_max_size'));
+		$upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 		if ($max_size > 0)
 			$result = min($post_max_size, $upload_max_filesize, $max_size);
 		else

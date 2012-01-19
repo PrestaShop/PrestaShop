@@ -402,7 +402,7 @@ class AdminCountriesControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	private function displayValidFields()
+	protected function displayValidFields()
 	{
 		$html = '<ul>';
 

@@ -215,7 +215,7 @@ class FeatureCore extends ObjectModel
 		if ($position)
 			$feature->position = (int)$position;
 		else
-			$feature->position = self::getHigherPosition() + 1;
+			$feature->position = Feature::getHigherPosition() + 1;
 		$feature->add();
 		return $feature->id;
 	}

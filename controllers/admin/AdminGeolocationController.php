@@ -147,7 +147,7 @@ class AdminGeolocationControllerCore extends AdminController
 		parent::initContent();
 	}
 
-	private function isGeoLiteCityAvailable()
+	protected function isGeoLiteCityAvailable()
 	{
 		if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
 			return true;

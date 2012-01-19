@@ -114,7 +114,7 @@ class AdminTranslationsControllerCore extends AdminController
 			'packs_to_install' => $packs_to_install,
 			'packs_to_update' => $packs_to_update,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
-			'themes' => $themes = self::getThemesList(),
+			'themes' => $themes = AdminTranslationsController::getThemesList(),
 			'url_create_language' => 'index.php?tab=AdminLanguages&addlang&token='.Tools::getAdminToken('AdminLanguages'.(int)(Tab::getIdFromClassName('AdminLanguages')).(int)$this->context->employee->id),
 		);
 
@@ -1478,7 +1478,7 @@ class AdminTranslationsControllerCore extends AdminController
 		);
 		$arr_files_to_parse = array_merge($arr_files_to_parse, $modules_has_mails);
 		foreach ($arr_files_to_parse as $path) {
-			$subject_mail = self::getSubjectMail($path, $subject_mail);
+			$subject_mail = AdminTranslationsController::getSubjectMail($path, $subject_mail);
 		}
 
 		$core_mails = $this->getMailFiles(_PS_MAIL_DIR_, $lang, 'core_mail');
@@ -1580,7 +1580,7 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 			}
 			if ($filename != '.svn' AND $filename != '.' AND $filename != '..' AND is_dir(($directory.'/'.$filename)))
-				 $subject_mail = self::getSubjectMail($directory.'/'.$filename, $subject_mail);
+				 $subject_mail = AdminTranslationsController::getSubjectMail($directory.'/'.$filename, $subject_mail);
 		}
 		return $subject_mail;
 	}
@@ -1682,7 +1682,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if ($module{0} != '.' AND is_dir($root_dir.$module))
 			{
 				@include($root_dir.$module.'/'.$lang.'.php');
-				self::getModuleTranslations($is_default);
+				AdminTranslationsController::getModuleTranslations($is_default);
 				$this->recursiveGetModuleFiles($root_dir.$module.'/', $array_files, $module, $root_dir.$module.'/'.$lang.'.php', $is_default);
 			}
 		}
@@ -1750,7 +1750,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @return array containing all datas needed for building the translation form
 	 * @since 1.4.5.0
 	 */
-	private function _parsePdfClass($filepath, $regex, $langArray, $tab, $tabs_array)
+	protected function _parsePdfClass($filepath, $regex, $langArray, $tab, $tabs_array)
 	{
 		$content = file_get_contents($filepath);
 		preg_match_all($regex, $content, $matches);

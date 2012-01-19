@@ -191,7 +191,7 @@ class AdminProductsControllerCore extends AdminController
 
 		parent::__construct();
 	}
-	private function _cleanMetaKeywords($keywords)
+	protected function _cleanMetaKeywords($keywords)
 	{
 		if (!empty($keywords) && $keywords != '')
 		{
@@ -1273,7 +1273,7 @@ class AdminProductsControllerCore extends AdminController
 	}
 
 	// Checking customs feature
-	private function checkFeatures($languages, $feature_id)
+	protected function checkFeatures($languages, $feature_id)
 	{
 		$rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
 		$feature = Feature::getFeature(Configuration::get('PS_LANG_DEFAULT'), $feature_id);
@@ -1610,14 +1610,14 @@ class AdminProductsControllerCore extends AdminController
 					$this->errors[] = $this->l('Tags list').' ('.$language['name'].') '.$this->l('is invalid');
 	}
 
-	private function _removeTaxFromEcotax()
+	protected function _removeTaxFromEcotax()
 	{
 	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($ecotax = Tools::getValue('ecotax'))
 			$_POST['ecotax'] = Tools::ps_round(Tools::getValue('ecotax') / (1 + $ecotaxTaxRate / 100), 6);
 	}
 
-	private function _applyTaxToEcotax($product)
+	protected function _applyTaxToEcotax($product)
 	{
 	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($product->ecotax)
@@ -1954,11 +1954,11 @@ class AdminProductsControllerCore extends AdminController
 		if (isset($categories[$id_category]))
 			foreach ($categories[$id_category] as $key => $row)
 				if ($key != 'infos')
-					$content .= self::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
+					$content .= AdminProductsController::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
 		return $content;
 	}
 
-	private function _displayDraftWarning($active)
+	protected function _displayDraftWarning($active)
 	{
 		$content = '<div class="warn draft" style="'.($active ? 'display:none' : '').'">
 				<p>
@@ -2725,7 +2725,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
-	private function _getFinalPrice($specific_price, $productPrice, $taxRate)
+	protected function _getFinalPrice($specific_price, $productPrice, $taxRate)
 	{
 		$price = Tools::ps_round((float)($specific_price['price']) ? $specific_price['price'] : $productPrice, 2);
 		if (!(float)($specific_price['reduction']))
@@ -2901,7 +2901,7 @@ class AdminProductsControllerCore extends AdminController
 		return $content;
 	}
 
-	private function _getCustomizationFieldIds($labels, $alreadyGenerated, $obj)
+	protected function _getCustomizationFieldIds($labels, $alreadyGenerated, $obj)
 	{
 		$customizableFieldIds = array();
 		if (isset($labels[Product::CUSTOMIZE_FILE]))
@@ -2919,7 +2919,7 @@ class AdminProductsControllerCore extends AdminController
 		return implode('¤', $customizableFieldIds);
 	}
 
-	private function _displayLabelField(&$label, $languages, $default_language, $type, $fieldIds, $id_customization_field)
+	protected function _displayLabelField(&$label, $languages, $default_language, $type, $fieldIds, $id_customization_field)
 	{
 		$content = '';
 		$fieldsName = 'label_'.$type.'_'.(int)($id_customization_field);
@@ -2942,7 +2942,7 @@ class AdminProductsControllerCore extends AdminController
 		return $content;
 	}
 
-	private function _displayLabelFields(&$obj, &$labels, $languages, $default_language, $type)
+	protected function _displayLabelFields(&$obj, &$labels, $languages, $default_language, $type)
 	{
 		$content = '';
 		$type = (int)($type);
@@ -3785,7 +3785,7 @@ class AdminProductsControllerCore extends AdminController
 		return false;
 	}
 
-	private function initPack(Product $product)
+	protected function initPack(Product $product)
 	{
 		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack');
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);

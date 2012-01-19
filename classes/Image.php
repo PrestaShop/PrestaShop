@@ -250,12 +250,12 @@ class ImageCore extends ObjectModel
 			if (file_exists(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg'))
 				copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'.jpg', $new_path.'.jpg');
 
-				self::replaceAttributeImageAssociationId($combination_images, (int)$image_old->id, (int)$image_new->id);
+				Image::replaceAttributeImageAssociationId($combination_images, (int)$image_old->id, (int)$image_new->id);
 			}
 			else
 				return false;
 		}
-		return self::duplicateAttributeImageAssociations($combination_images);
+		return Image::duplicateAttributeImageAssociations($combination_images);
 	}
 
 	protected static function replaceAttributeImageAssociationId(&$combination_images, $saved_id, $id_image)
@@ -451,7 +451,7 @@ class ImageCore extends ObjectModel
 			if (preg_match('/^[0-9]+(\-(.*))?\.'.$format.'$/', $file))
 				unlink($path.$file);
 			else if (is_dir($path.$file) && (preg_match('/^[0-9]$/', $file)))
-				self::deleteAllImages($path.$file.'/', $format);
+				Image::deleteAllImages($path.$file.'/', $format);
 		}
 
 		// Can we remove the image folder?
@@ -509,7 +509,7 @@ class ImageCore extends ObjectModel
 			return false;
 
 		if (!$this->folder)
-			$this->folder = self::getImgFolderStatic($this->id);
+			$this->folder = Image::getImgFolderStatic($this->id);
 
 		return $this->folder;
 	}

@@ -94,7 +94,7 @@ class ConfigurationTestCore
 	{
 		$res = array();
 		foreach ($tests as $key => $test)
-			$res[$key] = self::run($key, $test);
+			$res[$key] = ConfigurationTest::run($key, $test);
 		return $res;
 	}
 
@@ -178,7 +178,7 @@ class ConfigurationTestCore
 		{
 			while (($file = readdir($dh)) !== false)
 				if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn')
-					if (!self::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, true))
+					if (!ConfigurationTest::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, true))
 						return false;
 		}
 		closedir($dh);
@@ -193,98 +193,98 @@ class ConfigurationTestCore
 
 	public static function test_config_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_sitemap($dir)
 	{
-		return self::test_file($dir);
+		return ConfigurationTest::test_file($dir);
 	}
 
 	public static function test_root_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_log_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_admin_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_img_dir($dir)
 	{
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_module_dir($dir)
 	{
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_cache_dir($dir)
 	{
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_tools_v2_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_cache_v2_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_download_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_mails_dir($dir)
 	{
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_translations_dir($dir)
 	{
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_lang_dir($dir)
 	{
 		if (!file_exists($dir))
 			return true;
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_pdf_lang_dir($dir)
 	{
 		if (!file_exists($dir))
 			return true;
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_theme_cache_dir($dir)
 	{
 		if (!file_exists($dir))
 			return true;
-		return self::test_dir($dir, true);
+		return ConfigurationTest::test_dir($dir, true);
 	}
 
 	public static function test_customizable_products_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_virtual_products_dir($dir)
 	{
-		return self::test_dir($dir);
+		return ConfigurationTest::test_dir($dir);
 	}
 
 	public static function test_mcrypt()

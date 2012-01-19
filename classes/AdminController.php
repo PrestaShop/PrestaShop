@@ -1604,7 +1604,7 @@ class AdminControllerCore extends Controller
 		// @todo remove global keyword in translations files and use static
 		global $_LANGADM;
 
-		self::initModuleCacheTab();
+		AdminController::initModuleCacheTab();
 
 		if (!is_array($_LANGADM))
 		{
@@ -1661,7 +1661,7 @@ class AdminControllerCore extends Controller
 			$class = substr($class, 0, -10);
 		else if ($class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
-		return self::translate($string, $class, $addslashes, $htmlentities);
+		return AdminController::translate($string, $class, $addslashes, $htmlentities);
 	}
 
 	/**

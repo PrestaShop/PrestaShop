@@ -283,7 +283,7 @@ class DispatcherCore
 		// FO dispatch
 		if (!defined('_PS_ADMIN_DIR_'))
 		{
-			$controllers = self::getControllers($this->controller_directories);
+			$controllers = Dispatcher::getControllers($this->controller_directories);
  			if (!isset($controllers[$this->controller]))
  				$this->controller = strtolower($this->controller_not_found);
  			$controller_class = $controllers[$this->controller];
@@ -306,7 +306,7 @@ class DispatcherCore
 		else
 		{
 			// Get controller class name
-			$controller_row = self::getAdminController($this->controller);
+			$controller_row = Dispatcher::getAdminController($this->controller);
 			if (empty($controller_row))
 			{
 				// We need controller_not_found to be the camelcase controller name
@@ -318,7 +318,7 @@ class DispatcherCore
 
 			// If Tab/Controller is in module, include it
 			if (!empty($controller_row['module']))
-				$controller_type = self::includeModuleClass($controller_row['module'], $controller_class);
+				$controller_type = Dispatcher::includeModuleClass($controller_row['module'], $controller_class);
 			// If it is an AdminTab, include it
 			else if (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$controller_class.'.php'))
 			{

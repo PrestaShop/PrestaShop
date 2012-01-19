@@ -134,7 +134,7 @@ class ManufacturerCore extends ObjectModel
 		foreach ($selection as $id)
 		{
 			$this->id = (int)$id;
-			$this->id_address = self::getManufacturerAddress();
+			$this->id_address = Manufacturer::getManufacturerAddress();
 			$result = $result && $this->delete();
 		}
 

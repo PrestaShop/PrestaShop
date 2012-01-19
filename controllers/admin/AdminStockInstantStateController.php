@@ -228,7 +228,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 *
 	 * @return int id_warehouse
 	 */
-	private function getCurrentCoverageWarehouse()
+	protected function getCurrentCoverageWarehouse()
 	{
 		static $warehouse = 0;
 

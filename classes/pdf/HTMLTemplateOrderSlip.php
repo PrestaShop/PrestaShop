@@ -47,7 +47,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date, (int)$this->order->id_lang);
-		$this->title = self::l('Slip #').sprintf('%06d', $this->order_slip->id);
+		$this->title = HTMLTemplateOrderSlip::l('Slip #').sprintf('%06d', $this->order_slip->id);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);

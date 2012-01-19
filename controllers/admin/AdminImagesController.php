@@ -317,7 +317,7 @@ class AdminImagesControllerCore extends AdminController
 	/**
 	  * Delete resized image then regenerate new one with updated settings
 	  */
-	private function _deleteOldImages($dir, $type, $product = false)
+	protected function _deleteOldImages($dir, $type, $product = false)
 	{
 		if (!is_dir($dir))
 			return false;
@@ -350,7 +350,7 @@ class AdminImagesControllerCore extends AdminController
 	}
 
 	// Regenerate images
-	private function _regenerateNewImages($dir, $type, $productsImages = false)
+	protected function _regenerateNewImages($dir, $type, $productsImages = false)
 	{
 		if (!is_dir($dir))
 			return false;
@@ -397,7 +397,7 @@ class AdminImagesControllerCore extends AdminController
 	}
 
 	// Regenerate no-pictures images
-	private function _regenerateNoPictureImages($dir, $type, $languages)
+	protected function _regenerateNoPictureImages($dir, $type, $languages)
 	{
 		$errors = false;
 		foreach ($type AS $k => $imageType)
@@ -416,7 +416,7 @@ class AdminImagesControllerCore extends AdminController
 	}
 
 	// Hook watermark optimization
-	private function _regenerateWatermark($dir)
+	protected function _regenerateWatermark($dir)
 	{
 		$result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `'._DB_PREFIX_.'module` m
@@ -442,7 +442,7 @@ class AdminImagesControllerCore extends AdminController
 	}
 	}
 
-	private function _regenerateThumbnails($type = 'all', $deleteOldImages = false)
+	protected function _regenerateThumbnails($type = 'all', $deleteOldImages = false)
 	{
 		$this->start_time = time();
 		ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
@@ -509,7 +509,7 @@ class AdminImagesControllerCore extends AdminController
 	/**
 	 * Move product images to the new filesystem
 	 */
-	private function _moveImagesToNewFileSystem()
+	protected function _moveImagesToNewFileSystem()
 	{
 		if (!Image::testFileSystem())
 			$this->errors[] =  Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');

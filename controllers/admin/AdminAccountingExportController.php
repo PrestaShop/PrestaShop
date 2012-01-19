@@ -70,7 +70,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	/**
 	 * Init the available fields by export type with associated translation
 	 */
-	private function initExportFieldList()
+	protected function initExportFieldList()
 	{
 		$this->exportTypeList = array(
 			'global_export' => array(
@@ -109,7 +109,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	/**
 	 * Init the block Menu
 	 */
-	private function initMenu()
+	protected function initMenu()
 	{
 		$this->context->smarty->assign(array(
 			'exportTypeList' => $this->exportTypeList,
@@ -132,7 +132,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		$this->addJqueryUi('ui.datepicker');
 	}
 	
-	private function checkRights()
+	protected function checkRights()
 	{
 		if (!is_writeable($this->downloadDir))
 			$this->errors[] = $this->l('The download folder doesn\'t have the sufficient right…');
@@ -214,7 +214,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	 * Write the exported content tout a file
 	 * @var array $list Result of the SQL query
 	 */
-	private function writeExportToFile($list)
+	protected function writeExportToFile($list)
 	{
 		$this->checkRights();
 		
@@ -241,7 +241,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	/**
 	 * Start the reconciliation export type
 	 */
-	private function runReconciliationExport()
+	protected function runReconciliationExport()
 	{
 		$query = '
 			SELECT
@@ -276,7 +276,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	 * @param $line_number
 	 * @return array
 	 */
-	private function createLine($row, $line_number)
+	protected function createLine($row, $line_number)
 	{
 		$line = array();
 
@@ -320,7 +320,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	 * @param $db_details
 	 * @return array
 	 */
-	private function buildGlobalExportlist($db_details)
+	protected function buildGlobalExportlist($db_details)
 	{
 		// List use to write data in csv file
 		$list = array();
@@ -401,7 +401,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	 * Start the global export type 
 	 *
 	 */
-	private function runGlobalExport()
+	protected function runGlobalExport()
 	{
 		$query = '
 			SELECT 
@@ -462,7 +462,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	* Allow to download the last export file
 	* @var string File name
 	*/
-	private function downloadFile($fileName)
+	protected function downloadFile($fileName)
 	{
 		$path = $this->downloadDir.$fileName;
 		header('Content-length: ' . filesize($path));

@@ -103,7 +103,7 @@ class AddressFormatCore extends ObjectModel
 	 * @fieldName is a property name
 	 * @isIdField boolean to know if we have to allowed a property name started by 'id_'
 	 */
-	private function _checkValidateClassField($className, $fieldName, $isIdField)
+	protected function _checkValidateClassField($className, $fieldName, $isIdField)
 	{
 		$isValide = false;
 
@@ -142,7 +142,7 @@ class AddressFormatCore extends ObjectModel
 	 * @patternName is the composition of the class and field name
 	 * @fieldsValidate contains the list of available field for the Address class
 	 */
-	private function _checkLiableAssociation($patternName, $fieldsValidate)
+	protected function _checkLiableAssociation($patternName, $fieldsValidate)
 	{
 		$patternName = trim($patternName);
 
@@ -229,7 +229,7 @@ class AddressFormatCore extends ObjectModel
 	** example : (firstname) => 'Presta' will result (Presta)
 	**         : (firstname-lastname) => 'Presta' and 'Shop' result '(Presta-Shop)'
 	*/
-	private static function _setOriginalDisplayFormat(&$formattedValueList, $currentLine, $currentKeyList)
+	protected static function _setOriginalDisplayFormat(&$formattedValueList, $currentLine, $currentKeyList)
 	{
 		if ($currentKeyList && is_array($currentKeyList))
 			if ($originalFormattedPatternList = explode(' ', $currentLine))
@@ -326,10 +326,10 @@ class AddressFormatCore extends ObjectModel
 								}
 							}
 					}
-						self::_setOriginalDisplayFormat($tab, $line, $keyList);
+						AddressFormat::_setOriginalDisplayFormat($tab, $line, $keyList);
 			}
 			}
-		self::cleanOrderedAddress($addressFormat);
+		AddressFormat::cleanOrderedAddress($addressFormat);
 		// Free the instanciate objects
 		foreach($temporyObject as &$object)
 			unset($object);
@@ -373,7 +373,7 @@ class AddressFormatCore extends ObjectModel
 
 	public static function generateAddressSmarty($params, &$smarty)
 	{
-		return self::generateAddress(
+		return AddressFormat::generateAddress(
 			$params['address'],
 			(isset($params['patternRules']) ? $params['patternRules'] : array()),
 			(isset($params['newLine']) ? $params['newLine'] : "\r\n"),
@@ -450,7 +450,7 @@ class AddressFormatCore extends ObjectModel
 	public static function getOrderedAddressFields($id_country = 0, $split_all = false, $cleaned = false)
 	{
 		$out = array();
-		$field_set = explode("\n", self::getAddressCountryFormat($id_country));
+		$field_set = explode("\n", AddressFormat::getAddressCountryFormat($id_country));
 		foreach ($field_set as $field_item)
 			if ($split_all)
 			{
@@ -515,7 +515,7 @@ class AddressFormatCore extends ObjectModel
 		return $out;
 	}
 
-	private function _getFormatDB($id_country)
+	protected function _getFormatDB($id_country)
 	{
 		$result = Db::getInstance()->getRow('
 		SELECT format

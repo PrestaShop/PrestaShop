@@ -470,7 +470,7 @@ class CartCore extends ObjectModel
 		}
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
 		Product::cacheProductsFeatures($products_ids);
-		self::cacheSomeAttributesLists($pa_ids, $this->id_lang);
+		Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
 
 		$this->_products = array();
 		if (empty($result))
@@ -664,7 +664,7 @@ class CartCore extends ObjectModel
 		if (!$this->id)
 			return 0;
 
-		return self::getNbProducts($this->id);
+		return Cart::getNbProducts($this->id);
 	}
 
 	public static function getNbProducts($id)
@@ -1863,7 +1863,7 @@ class CartCore extends ObjectModel
 				'delay' => $delay,
 				'price' => $price,
 				'price_tax_exc' => $price_tax_exc,
-				'id_carrier' => self::intifier($key), // Need to translate to an integer for retrocompatibility reason, in 1.4 template we used intval
+				'id_carrier' => Cart::intifier($key), // Need to translate to an integer for retrocompatibility reason, in 1.4 template we used intval
 				'is_module' => false,
 			);
 		}
@@ -1877,7 +1877,7 @@ class CartCore extends ObjectModel
 		if (count($delivery_option) > 1 || empty($delivery_option))
 			return 0;
 
-		return self::intifier(reset($delivery_option));
+		return Cart::intifier(reset($delivery_option));
 	}
 
 	/**
@@ -1971,7 +1971,7 @@ class CartCore extends ObjectModel
 		$this->delivery_option = serialize($delivery_option);
 	}
 
-	private function getIdCarrierFromDeliveryOption($delivery_option)
+	protected function getIdCarrierFromDeliveryOption($delivery_option)
 	{
 		$delivery_option_list = $this->getDeliveryOptionList();
 		foreach ($delivery_option as $key => $value)
@@ -2160,7 +2160,7 @@ class CartCore extends ObjectModel
 		// If no product added, return 0
 		if ($order_total <= 0
 			&& (
-				!(self::getNbProducts($this->id) && is_null($product_list))
+				!(Cart::getNbProducts($this->id) && is_null($product_list))
 				||
 				(count($product_list) && !is_null($product_list))
 		))
@@ -2571,7 +2571,7 @@ class CartCore extends ObjectModel
 	 */
 	public static function getCartByOrderId($id_order)
 	{
-		if ($id_cart = self::getCartIdByOrderId($id_order))
+		if ($id_cart = Cart::getCartIdByOrderId($id_order))
 			return new Cart((int)$id_cart);
 
 		return false;

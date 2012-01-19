@@ -1041,7 +1041,7 @@ class OrderCore extends ObjectModel
 			if ($order_invoice->number)
 				Configuration::updateValue('PS_INVOICE_START_NUMBER', false);
 			else
-				$order_invoice->number = self::getLastInvoiceNumber() + 1;
+				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
 
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
