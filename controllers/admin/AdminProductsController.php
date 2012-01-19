@@ -2082,6 +2082,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
 
+		// autoload rich text editor (tiny mce)
+		$this->tpl_form_vars['tinymce'] = true;
+		$iso = $this->context->language->iso_code;
+		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
+
 		if (Validate::isLoadedObject(($this->object)))
 			$id_product = $this->object->id;
 		else
@@ -3014,12 +3020,6 @@ class AdminProductsControllerCore extends AdminController
 	public function initFormInformations($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
-
-		// autoload rich text editor (tiny mce)
-		$iso = $this->context->language->iso_code;
-		$this->tpl_form_vars['iso'] = file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
-		$this->tpl_form_vars['ad'] = dirname($_SERVER['PHP_SELF']);
-		$this->tpl_form_vars['tinymce'] = true;
 
 		$currency = $this->context->currency;
 		$data->assign('languages', $this->_languages);
