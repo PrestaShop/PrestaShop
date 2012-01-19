@@ -29,6 +29,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 {
 	const SETTINGS_FILE = 'config/settings.inc.php';
 
+	/**
+	 * @var InstallModelInstall
+	 */
+	protected $model_install;
+
 	public function init()
 	{
 		require_once _PS_INSTALL_MODELS_PATH_.'install.php';
@@ -101,7 +106,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->initializeContext();
 
 		// @todo remove true in populateDatabase for 1.5.0 RC version
-		if (!$this->model_install->populateDatabase(true) || $this->model_install->getErrors())
+		$result = $this->model_install->populateDatabase(true, array(
+			'shop_name' => $this->session->shop_name
+		));
+
+		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
 		$this->ajaxJsonAnswer(true);

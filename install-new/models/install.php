@@ -143,13 +143,14 @@ class InstallModelInstall extends InstallAbstractModel
 	 * PROCESS : populateDatabase
 	 * Populate database with default data
 	 */
-	public function populateDatabase($clear_database = false)
+	public function populateDatabase($clear_database = false, array $params = array())
 	{
 		if ($clear_database)
 			$this->clearDatabase(true);
 
 		// Install first shop
-		if (!$this->createShop())
+		$shop_name = isset($params['shop_name']) ? $params['shop_name'] : 'Default';
+		if (!$this->createShop($shop_name))
 			return false;
 
 		// Install languages
@@ -203,7 +204,7 @@ class InstallModelInstall extends InstallAbstractModel
 		return true;
 	}
 
-	public function createShop()
+	public function createShop($shop_name)
 	{
 		// Create default group shop
 		$group_shop = new GroupShop();
@@ -221,7 +222,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$shop->id_group_shop = $group_shop->id;
 		$shop->id_category = 2;
 		$shop->id_theme = 1;
-		$shop->name = 'Default';
+		$shop->name = $shop_name;
 		if (!$shop->add())
 		{
 			$this->setError($this->language->l('Cannot create shop'));
