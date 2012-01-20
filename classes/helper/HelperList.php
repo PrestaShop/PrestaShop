@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0
+ */
 class HelperListCore extends Helper
 {
 	/** @var array Cache for query results */
@@ -65,7 +68,8 @@ class HelperListCore extends Helper
 
 	protected $is_dnd_identifier = false;
 
-	/* Customize list display
+	/**
+	 * @var string Customize list display
 	 *
 	 * align  : determine value alignment
 	 * prefix : displayed before value
@@ -111,12 +115,6 @@ class HelperListCore extends Helper
 	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
 
-	/**
-	 * @var bool
-	 * Usage : Set the value to false if you want to simply display the back button
-	 */
-	public $no_back = true;
-
 	public $ajax_params = array();
 
 	public function __construct()
@@ -131,15 +129,15 @@ class HelperListCore extends Helper
 	 * Return an html list given the data to fill it up
 	 *
 	 * @param array $list entries to display (rows)
-	 * @param array $fieldsDisplay fields (cols)
+	 * @param array $fields_display fields (cols)
 	 * @return string html
 	 */
 	public function generateList($list, $fields_display)
 	{
-		/*if ($this->edit AND (!isset($this->noAdd) OR !$this->noAdd))
+		/*if ($this->edit && (!isset($this->noAdd) || !$this->noAdd))
 			$this->displayAddButton();*/
 
-		/* Append when we get a syntax error in SQL query */
+		// Append when we get a syntax error in SQL query
 		if ($list === false)
 		{
 			$this->displayWarning($this->l('Bad SQL query', 'helper'));
@@ -153,13 +151,15 @@ class HelperListCore extends Helper
 
 		$this->_list = $list;
 		$this->fieldsDisplay = $fields_display;
-		/* Display list header (filtering, pagination and column names) */
-		$tpl_vars['header'] = $this->displayListHeader();
-		/* Show the content of the table */
-		$tpl_vars['content'] = $this->displayListContent();
-		/* Close list table and submit button */
-		$tpl_vars['footer'] = $this->displayListFooter();
 
+		// Display list header (filtering, pagination and column names)
+		$tpl_vars['header'] = $this->displayListHeader();
+
+		// Show the content of the table
+		$tpl_vars['content'] = $this->displayListContent();
+
+		// Close list table and submit button
+		$tpl_vars['footer'] = $this->displayListFooter();
 
 		$this->tpl->assign($tpl_vars);
 		return parent::generate();
@@ -174,6 +174,7 @@ class HelperListCore extends Helper
 	 * @param string $active status
 	 * @param int $id_category
 	 * @param int $id_product
+	 * @return string
 	 */
 	protected function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
@@ -186,12 +187,12 @@ class HelperListCore extends Helper
 		return $tpl_enable->fetch();
 	}
 
-	public function displayListContent($token = null)
+	public function displayListContent()
 	{
 		if ($this->is_dnd_identifier)
 			$id_category = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', '1');
 		else
-			$id_category = 1; // default categ
+			$id_category = Category::getRootCategory();
 
 		if (isset($this->fieldsDisplay['position']))
 		{
@@ -201,8 +202,6 @@ class HelperListCore extends Helper
 
 		$identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
 		$key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.$identifier;
-
-		$fields = array();
 
 		foreach ($this->_list as $index => $tr)
 		{
@@ -220,10 +219,9 @@ class HelperListCore extends Helper
 					$method_name = 'display'.ucfirst($action).'Link';
 
 					if (method_exists($this->context->controller, $method_name))
-						$this->_list[$index][$action] = $this->context->controller->$method_name($token, $id, $name);
+						$this->_list[$index][$action] = $this->context->controller->$method_name($this->token, $id, $name);
 					else if (method_exists($this, $method_name))
-						$this->_list[$index][$action] = $this->$method_name($token, $id, $name);
-
+						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
 				}
 			}
 
@@ -273,7 +271,8 @@ class HelperListCore extends Helper
 					{
 						$image = new Image((int)$tr['id_image']);
 						$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$image->getExistingImgPath().'.'.$this->imageType;
-					}else
+					}
+					else
 						$path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$item_id.(isset($tr['id_image']) ? '-'.(int)$tr['id_image'] : '').'.'.$this->imageType;
 
 					$this->_list[$index][$key] = cacheImage($path_to_image, $this->table.'_mini_'.$item_id.'.'.$this->imageType, 45, $this->imageType);
@@ -300,15 +299,13 @@ class HelperListCore extends Helper
 					else
 						$echo = $tr[$key];
 
-					$this->_list[$index][$key] = isset($params['callback'])
-						?
-						call_user_func_array(array((isset($params['callback_object']))
-							?
-							$params['callback_object']
-							:
-							$this->context->controller, $params['callback']), array($echo, $tr))
-						:
-						$echo;
+					if (isset($params['callback']))
+					{
+						$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
+						$this->_list[$index][$key] = call_user_func_array(array($callback_obj, $params['callback']), array($echo, $tr));
+					}
+					else
+						$this->_list[$index][$key] = $echo;
 				}
 			}
 		}
@@ -442,7 +439,6 @@ class HelperListCore extends Helper
 		));
 
 		return $tpl->fetch();
-
 	}
 
 	/**
@@ -495,7 +491,7 @@ class HelperListCore extends Helper
 	/**
 	 * Display list header (filtering, pagination and column names)
 	 */
-	public function displayListHeader($token = null)
+	public function displayListHeader()
 	{
 		$id_cat = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
 
@@ -521,7 +517,8 @@ class HelperListCore extends Helper
 
 		/* Determine current page number */
 		$page = (int)Tools::getValue('submitFilter'.$this->table);
-		if (!$page) $page = 1;
+		if (!$page)
+			$page = 1;
 
 		/* Choose number of results per page */
 		$selected_pagination = Tools::getValue(
@@ -563,6 +560,7 @@ class HelperListCore extends Helper
 			{
 				case 'bool':
 					break;
+
 				case 'date':
 				case 'datetime':
 					if (is_string($value))
@@ -573,6 +571,7 @@ class HelperListCore extends Helper
 					$name_id = str_replace('!', '__', $name);
 					$this->context->controller->addJqueryUI('ui.datepicker');
 					break;
+
 				case 'select':
 					foreach ($params['list'] as $option_value => $option_display)
 					{
@@ -582,6 +581,7 @@ class HelperListCore extends Helper
 							$this->fieldsDisplay[$key]['select'][$option_value]['selected'] = 'selected';
 					}
 					break;
+
 				case 'text':
 					if (!Validate::isCleanHtml($value))
 						$value = '';
@@ -628,7 +628,7 @@ class HelperListCore extends Helper
 	/**
 	 * Close list table and submit button
 	 */
-	public function displayListFooter($token = null)
+	public function displayListFooter()
 	{
 		$this->footer_tpl->assign(array_merge($this->tpl_vars, array(
 			'token' => $this->token,
@@ -638,5 +638,4 @@ class HelperListCore extends Helper
 		)));
 		return $this->footer_tpl->fetch();
 	}
-
 }

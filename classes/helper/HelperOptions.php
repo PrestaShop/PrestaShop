@@ -53,7 +53,7 @@ class HelperOptionsCore extends Helper
 
 		foreach ($option_list as $category => $category_data)
 		{
-			if(!is_array($category_data))
+			if (!is_array($category_data))
 				continue;
 
 			if (!isset($category_data['image']))
@@ -92,7 +92,6 @@ class HelperOptionsCore extends Helper
 				// Fill values for all languages for all lang fields
 				if (substr($field['type'], -4) == 'Lang')
 				{
-
 					foreach ($languages as $language)
 					{
 						if ($field['type'] == 'textLang')
@@ -107,6 +106,7 @@ class HelperOptionsCore extends Helper
 				}
 
 				// pre-assign vars to the tpl
+				// @todo move this
 				if ($field['type'] == 'maintenance_ip')
 				{
 					$field['script_ip'] = '
@@ -159,7 +159,7 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Type = image
-	 * @ TODO
+	 * @TODO
 	 */
 	public function displayOptionTypeImage($key, $field, $value)
 	{
@@ -187,7 +187,7 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Type = price
-	 * @ TODO
+	 * @TODO
 	 */
 	public function displayOptionTypePrice($key, $field, $value)
 	{
@@ -199,7 +199,7 @@ class HelperOptionsCore extends Helper
 	/**
 	 * Type = disabled
 	 *
-	 * @ TODO
+	 * @TODO
 	 */
 	public function displayOptionTypeDisabled($key, $field, $value)
 	{
