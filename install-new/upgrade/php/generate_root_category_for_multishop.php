@@ -34,10 +34,28 @@ function generate_root_category_for_multishop()
 			);
 	Db::getInstance()->autoExecute(_DB_PREFIX_.'category_lang', $data, 'INSERT');
 
+	$categories = Db::getInstance()->executeS('
+		SELECT `id_category`
+		FROM `'._DB_PREFIX_.'category`
+	');
+	$data = array();
+	foreach ($categories as $category)
+		foreach ($shops as $shop)
+			$data[] = array(
+				'id_category' => $category['id_category'],
+				'id_shop' => $shop['id_shop']
+			);
+	Db::getInstance()->autoExecute(_DB_PREFIX_.'category_shop', $data, 'INSERT');
+
 	Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'category`
 		SET `id_parent` = '.(int)$id.'
 		WHERE `id_parent` = 0 AND `id_category` <> '.(int)$id.'
+	');
+	Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'shop`
+		SET `id_category` = 1
+		WHERE `id_shop` = 1
 	');
 
 	Category::regenerateEntireNtree();
