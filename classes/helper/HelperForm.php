@@ -25,6 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @since 1.5.0
+ */
 class HelperFormCore extends Helper
 {
 	public $id;

@@ -340,7 +340,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$helper->fields_value = $this->getFieldsValue($this->object);
 		$helper->toolbar_btn = null;
 		$helper->submit_action = 'create_rule';
-		$helper->no_back = true;
 
 		return $helper->generateForm($this->fields_form);
 	}
