@@ -974,7 +974,6 @@ class ToolsCore
 		{
 			$interval = Category::getInterval($id_category);
 			$id_root_category = $context->shop->getCategory();
-			$root_category = new Category($id_root_category);
 			$intervalRoot = Category::getInterval($id_root_category);
 			if ($interval)
 			{
@@ -987,7 +986,7 @@ class ToolsCore
 							AND c.nright <= '.$intervalRoot['nright'].'
 							AND cl.id_lang = '.(int)$context->language->id.'
 							AND c.active = 1
-							AND c.level_depth > '.(int)$root_category->level_depth.'
+							AND c.level_depth > '.(int)$intervalRoot['level_depth'].'
 						ORDER BY c.level_depth ASC';
 				$categories = Db::getInstance()->executeS($sql);
 
