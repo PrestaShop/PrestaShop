@@ -2477,17 +2477,6 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
 		}
-		$root_category = Category::getRootCategory();
-		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
-		$translations = array(
-			'Root' => $root_category,
-			'selected' => $this->l('selected'),
-			'Collapse All' => $this->l('Collapse All'),
-			'Expand All' => $this->l('Expand All'),
-			'Check All' => $this->l('Check All'),
-			'Uncheck All'  => $this->l('Uncheck All'),
-			'search' => $this->l('Search a category')
-		);
 
 		// Multishop block
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
@@ -2515,10 +2504,11 @@ class AdminProductsControllerCore extends AdminController
 
 		$product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
 
+		$helper = new Helper();
 		$data->assign(array('default_category' => $default_category,
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
-					'category_tree' => Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true),
+					'category_tree' => $helper->renderCategoryTree(null, $selected_cat, 'categoryBox', false, true),
 				  	'product' => $product,
 					'link' => $this->context->link
 		));

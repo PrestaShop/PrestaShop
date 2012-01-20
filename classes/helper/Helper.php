@@ -98,7 +98,7 @@ class HelperCore
 	}
 
 	/**
-	 * @deprecated since 1.5 - use Helper::renderCategoryTree() instead
+	 * Since 1.5 - This function will be deprecated in 1.6 - use Helper::renderCategoryTree() instead
 	 * @static
 	 * @param $translations
 	 * @param array $selected_cat
@@ -145,7 +145,6 @@ class HelperCore
 	 *							  (
 	 *									[id_category] => 1
 	 *									[name] => Home page
-	 *									[link_rewrite] => home
 	 *							  )
 	 *					)
 	 * @param string $input_name name of input

@@ -247,21 +247,11 @@ class AdminGroupsControllerCore extends AdminController
 				)
 			)
 		);
-		$root_category = Category::getRootCategory();
-		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
+
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
-		$trads = array(
-			'Root' => $root_category,
-			'selected' => $this->l('selected'),
-			'Collapse All' => $this->l('Collapse All'),
-			'Expand All' => $this->l('Expand All'),
-			'Check All' => $this->l('Check All'),
-			'Uncheck All'  => $this->l('Uncheck All'),
-			'search' => $this->l('Search a category')
-		);
-
-		$this->tpl_form_vars['categoryTreeView'] = Helper::renderAdminCategorieTree($trads, array(), 'id_category', true, false, array(), true);
+		$helper = new Helper();
+		$this->tpl_form_vars['categoryTreeView'] = $helper->renderCategoryTree(null, array(), 'id_category', true, false, array(), true);
 
 		return parent::renderForm();
 	}
