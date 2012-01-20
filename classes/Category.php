@@ -676,7 +676,7 @@ class CategoryCore extends ObjectModel
 		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
 		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
 			Shop::isFeatureActive() && $is_more_than_one_root_category && $context->shop() != Shop::CONTEXT_SHOP)
-			$category = Category::getTopCategory();
+			$category = Category::getTopCategory($id_lang);
 		else
 			$category = new Category($shop->getCategory(), $id_lang);
 
@@ -1330,13 +1330,14 @@ class CategoryCore extends ObjectModel
 		WHERE `id_category` = '.(int)$this->id);
 	}
 
-	public static function getTopCategory()
+	public static function getTopCategory($id_lang = null)
 	{
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
 		$id_category = Db::getInstance()->getValue('
 		SELECT `id_category`
 		FROM `'._DB_PREFIX_.'category`
-		WHERE `id_parent` = 0
-		');
-		return new Category($id_category);
+		WHERE `id_parent` = 0');
+		return new Category($id_category, $id_lang);
 	}
 }
