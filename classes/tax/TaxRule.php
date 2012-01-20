@@ -86,12 +86,12 @@ class TaxRuleCore extends ObjectModel
 		SELECT g.`id_tax_rule`,
 				 c.`name` AS country_name,
 				 s.`name` AS state_name,
-				 t.rate,
+				 t.`rate`,
 				 g.`zipcode_from`, g.`zipcode_to`,
 				 g.`description`,
 				 g.`behavior`
 		FROM `'._DB_PREFIX_.'tax_rule` g
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND id_lang = '.(int)$id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` c ON (g.`id_country` = c.`id_country` AND `id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'state` s ON (g.`id_state` = s.`id_state`)
 		LEFT JOIN `'._DB_PREFIX_.'tax` t ON (g.`id_tax` = t.`id_tax`)
 		WHERE `id_tax_rules_group` = '.(int)$id_group.'
@@ -137,6 +137,8 @@ class TaxRuleCore extends ObjectModel
 	{
 		$zip_codes = preg_split('/-/', $zip_codes);
 
+		$from = $zip_codes[0];
+		$to = isset($zip_codes[1]) ? $zip_codes[1]: 0;
 		if (count($zip_codes) == 2)
 		{
 			$from = $zip_codes[0];

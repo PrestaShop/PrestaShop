@@ -27,10 +27,10 @@
 
 class AdminTaxRulesGroupControllerCore extends AdminController
 {
-    public $tax_rule;
-    public $selected_countries = array();
-    public $selected_states = array();
-    public $_errors_tax_rule;
+	public $tax_rule;
+	public $selected_countries = array();
+	public $selected_states = array();
+	public $_errors_tax_rule;
 
 	public function __construct()
 	{
@@ -214,7 +214,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'name' => 'country[]',
 					'id' => 'country',
 					'options' => array(
-						'query' => Country::getCountries((int)$this->context->language->id),
+						'query' => Country::getCountries($this->context->language->id),
 						'id' => 'id_country',
 						'name' => 'name',
 						'default' => array(
@@ -347,73 +347,77 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	public function postProcess()
 	{
 		if (Tools::isSubmit('deletetax_rule'))
-		{
-			$id_rule	= (int)Tools::getValue('id_tax_rule');
-			$tax_rule = new TaxRule($id_rule);
+			$this->processDeleteTaxRule();
+		else if (Tools::getValue('action') == 'create_rule')
+			$this->processCreateRule();
+		else
+			parent::postProcess();
+	}
 
-			if (Validate::isLoadedObject($tax_rule))
+	protected function processCreateRule()
+	{
+		$zipcode = Tools::getValue('zipcode');
+		$id_rule = (int)Tools::getValue('id_tax_rule');
+
+		$this->selected_countries = Tools::getValue('country');
+		$this->selected_states = Tools::getValue('states');
+
+		if (empty($this->selected_states) || count($this->selected_states) == 0)
+			$this->selected_states = array(0);
+
+		foreach ($this->selected_countries as $id_country)
+		{
+			foreach ($this->selected_states as $id_state)
 			{
-				$tax_rule->delete();
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+				$tr = new TaxRule();
+
+				// update or creation?
+				if (isset($id_rule))
+					$tr->id = $id_rule;
+
+				$tr->id_tax = (int)Tools::getValue('id_tax');
+				$tr->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
+				$tr->id_country = (int)$id_country;
+				$tr->id_state = (int)$id_state;
+				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zipcode);
+				$tr->behavior = (int)Tools::getValue('behavior');
+				$tr->description = Tools::getValue('description');
+				$this->tax_rule = $tr;
+				$_POST['id_state'] = $tr->id_state;
+				$this->_errors_tax_rule = $this->validateTaxRule($tr);
+				if (count($this->_errors_tax_rule) == 0)
+					if (!$tr->save())
+						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current tax rule');
+				else
+					Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
 			}
 		}
-		else if (Tools::getValue('action') == 'create_rule')
+
+		if (count($this->_errors_tax_rule) == 0)
+			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+	}
+
+	protected function processDeleteTaxRule()
+	{
+		$id_rule = (int)Tools::getValue('id_tax_rule');
+		$tax_rule = new TaxRule($id_rule);
+
+		if (Validate::isLoadedObject($tax_rule))
 		{
-			$zipcode = Tools::getValue('zipcode');
-			$id_rule = (int)Tools::getValue('id_tax_rule');
-
-			$this->selected_countries = Tools::getValue('country');
-			$this->selected_states = Tools::getValue('states');
-
-			if (empty($this->selected_states) || count($this->selected_states) == 0)
-				$this->selected_states = array(0);
-
-			foreach ($this->selected_countries as $id_country)
-			{
-				foreach ($this->selected_states as $id_state)
-				{
-					$tr = new TaxRule();
-
-					// update or creation?
-					if (isset($id_rule))
-						$tr->id = $id_rule;
-
-					$tr->id_tax = (int)Tools::getValue('id_tax');
-					$tr->id_tax_rules_group = (int)Tools::getValue('id_tax_rules_group');
-					$tr->id_country = (int)$id_country;
-					$tr->id_state = (int)$id_state;
-					list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zipcode);
-					$tr->behavior = (int)Tools::getValue('behavior');
-					$tr->description = Tools::getValue('description');
-					$this->tax_rule = $tr;
-					$_POST['id_state'] = $tr->id_state;
-					$this->_errors_tax_rule = $this->validateTaxRule($tr);
-					if (count($this->_errors_tax_rule) == 0)
-					{
-
-						if (!$tr->save())
-							$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current tax rule');
-					} else
-						Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-				}
-			}
-
-			if (count($this->_errors_tax_rule) == 0)
-				Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-
-		} else
-         	parent::postProcess();
+			$tax_rule->delete();
+			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+		}
 	}
 
 	/**
 	* check if the tax rule could be added in the database
 	* @param TaxRule $tr
 	*/
-    protected function validateTaxRule(TaxRule $tr)
-    {
-       // TODO: check if the rule already exists
-       return $tr->validateController();
-    }
+	protected function validateTaxRule(TaxRule $tr)
+	{
+		// TODO: check if the rule already exists
+		return $tr->validateController();
+	}
 }
 
 
