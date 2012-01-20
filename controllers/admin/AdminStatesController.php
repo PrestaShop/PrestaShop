@@ -187,12 +187,8 @@ class AdminStatesControllerCore extends AdminController
 			// set token
 			$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
-			// Sub included tab postProcessing
-			$this->includeSubTab('postProcess', array('submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
-
 			if ($this->tabAccess['delete'] === '1')
 			{
-
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
 					if (!$object->isUsed())
