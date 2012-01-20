@@ -53,8 +53,6 @@ class FrontControllerCore extends Controller
 	public $display_column_right = true;
 
 	public static $initialized = false;
-	
-	protected $page_name = null;
 
 	protected static $currentCustomerGroups;
 
@@ -253,8 +251,8 @@ class FrontControllerCore extends Controller
 		
 		// Are we in a payment module 
 		$module_name = Tools::getValue('module');
-		if (!is_null($this->page_name))
-			$page_name = $this->page_name;
+		if (!empty($this->php_self))
+			$page_name = $this->php_self;
 		else if (Tools::getValue('controller') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
 			$page_name = 'module-payment-submit';
 		// Are we in a module 
@@ -274,7 +272,7 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('navigationPipe', $navigationPipe);
 
 		// Automatically redirect to the canonical URL if needed
-		if (isset($this->php_self) && !empty($this->php_self) && !Tools::getValue('ajax'))
+		if (!empty($this->php_self) && !Tools::getValue('ajax'))
 			$this->canonicalRedirection($this->context->link->getPageLink($this->php_self, $this->ssl, $this->context->language->id));
 
 		Product::initPricesComputation();
