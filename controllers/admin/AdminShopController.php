@@ -176,15 +176,9 @@ class AdminShopControllerCore extends AdminController
 		{
 			$root_category = new Category((int)Tools::getValue('id_category'));
 			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
-			$trads = array(
-				 'Root' => $root_category,
-				 'selected' => $this->l('selected'),
-				 'Collapse All' => $this->l('Collapse All'),
-				 'Check All' => $this->l('Check All'),
-				 'Uncheck All' => $this->l('Uncheck All'),
-				 'Expand All' => $this->l('Expand All')
-			);
-			echo Helper::renderAdminCategorieTree($trads, array($root_category['id_category']));
+
+			$helper = new Helper();
+			echo $helper->renderCategoryTree($root_category, array($root_category['id_category']));
 		}
 	}
 
@@ -507,16 +501,8 @@ class AdminShopControllerCore extends AdminController
 		else
 			$root_category = new Category($id_root);
 		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
-		$translations = array(
-			'Root' => $root_category,
-			'selected' => $this->l('selected'),
-			'Collapse All' => $this->l('Collapse All'),
-			'Expand All' => $this->l('Expand All'),
-			'Check All' => $this->l('Check All'),
-			'Uncheck All'  => $this->l('Uncheck All'),
-			'search' => $this->l('Search a category')
-		);
 
-		return Helper::renderAdminCategorieTree($translations, $selected_cat, 'categoryBox', false, true);
+		$helper = new Helper();
+		return $helper->renderCategoryTree($root_category, $selected_cat, 'categoryBox', false, true);
 	}
 }
