@@ -41,13 +41,15 @@ class AdminOrdersControllerCore extends AdminController
 		$this->context = Context::getContext();
 
 		$this->_select = '
-			a.id_order AS id_pdf,
-			CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
-			osl.`name` AS `osname`,
-			os.`color`,
-			IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
-			(SELECT COUNT(od.`id_order`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = a.`id_order` GROUP BY `id_order`) AS product_number';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		(SELECT COUNT(od.`id_order`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = a.`id_order` GROUP BY `id_order`) AS product_number';
+		
+		$this->_join = '
+		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
 		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
@@ -55,11 +57,11 @@ class AdminOrdersControllerCore extends AdminController
 		$this->_orderBy = '`id_order`';
 		$this->_orderWay = 'DESC'; // FIXME
 
-		$statesArray = array();
-		$states = OrderState::getOrderStates((int)$this->context->language->id);
+		$statusesArray = array();
+		$statuses = OrderState::getOrderStates((int)$this->context->language->id);
 
-		foreach ($states AS $state)
-			$statesArray[$state['id_order_state']] = $state['name'];
+		foreach ($statuses as $status)
+			$statusesArray[$status['id_order_state']] = $status['name'];
 
 		$this->fieldsDisplay = array(
 		'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -68,7 +70,7 @@ class AdminOrdersControllerCore extends AdminController
 		'customer' => array('title' => $this->l('Customer'), 'filter_key' => 'customer', 'tmpTableFilter' => true),
 		'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'prefix' => '<b>', 'suffix' => '</b>', 'type' => 'price', 'currency' => true),
 		'payment' => array('title' => $this->l('Payment'), 'width' => 100),
-		'osname' => array('title' => $this->l('Status'), 'color' => 'color', 'width' => 280, 'type' => 'select', 'list' => $statesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int'),
+		'osname' => array('title' => $this->l('Status'), 'color' => 'color', 'width' => 280, 'type' => 'select', 'list' => $statusesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int'),
 		'date_add' => array('title' => $this->l('Date'), 'width' => 130, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'width' => 35, 'align' => 'center', 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false, 'remove_onclick' => true));
 
@@ -110,9 +112,12 @@ class AdminOrdersControllerCore extends AdminController
 		if ($this->display == 'view')
 		{
 			$order = new Order((int)Tools::getValue('id_order'));
-			if ($order->hasBeenDelivered()) $type = $this->l('Return products');
-			elseif ($order->hasBeenPaid()) $type = $this->l('Standard refund');
-			else $type = $this->l('Cancel products');
+			if ($order->hasBeenDelivered())
+				$type = $this->l('Return products');
+			elseif ($order->hasBeenPaid())
+				$type = $this->l('Standard refund');
+			else
+				$type = $this->l('Cancel products');
 
 			if (!$order->hasBeenDelivered())
 				$this->toolbar_btn['new'] = array(
@@ -198,7 +203,7 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						// Send mail to customer
 						$customer = new Customer((int)$order->id_customer);
-						$carrier = new Carrier((int)$order->id_carrier);
+						$carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
 						if (!Validate::isLoadedObject($customer))
 							throw new PrestaShopException('Can\'t load Customer object');
 						if (!Validate::isLoadedObject($carrier))
@@ -256,7 +261,7 @@ class AdminOrdersControllerCore extends AdminController
 						);
 					// Save all changes
 					if ($history->addWithemail(true, $templateVars))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder'.'&token='.$this->token);
 					$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 				}
 			}
@@ -310,15 +315,17 @@ class AdminOrdersControllerCore extends AdminController
 						}
 						else
 							$customer_thread = new CustomerThread((int)$id_customer_thread);
+							
 						$customer_message = new CustomerMessage();
 						$customer_message->id_customer_thread = $customer_thread->id;
 						$customer_message->id_employee = (int)$this->context->employee->id;
 						$customer_message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
 						$customer_message->private = Tools::getValue('visibility');
+						
 						if (!$customer_message->add())
 							$this->errors[] = Tools::displayError('An error occurred while sending message.');
 						elseif ($customer_message->private)
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11'.'&token='.$this->token);
 						else
 						{
 							$message = $customer_message->message;
@@ -496,7 +503,7 @@ class AdminOrdersControllerCore extends AdminController
 							}
 
 							// Delete product
-							$orderDetail = new OrderDetail((int)($id_order_detail));
+							$orderDetail = new OrderDetail((int)$id_order_detail);
 							if (!$order->deleteProduct($order, $orderDetail, $qtyCancelProduct))
 								$this->errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
 							Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => $id_order_detail));
@@ -623,7 +630,7 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$payment_module = Module::getInstanceByName($module_name);
 				$cart = new Cart((int)$id_cart);
-				$payment_module->validateOrder((int)$cart->id, (int)$id_order_state, $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l(sprintf('Manual order - ID Employee :%1', (int)Context::getContext()->cookie->id_employee)));
+				$payment_module->validateOrder((int)$cart->id, (int)$id_order_state, $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, sprintf($this->l('Manual order - ID Employee :%1'), (int)Context::getContext()->cookie->id_employee));
 				if ($payment_module->currentOrder)
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
 			}
@@ -663,7 +670,7 @@ class AdminOrdersControllerCore extends AdminController
 						throw new PrestaShopException('Can\'t load Currency object');
 
 					// Update order detail amount
-					foreach($order->getOrderDetailList() as $row)
+					foreach ($order->getOrderDetailList() as $row)
 					{
 						$order_detail = new OrderDetail($row['id_order_detail']);
 						$order_detail->product_price = Tools::convertPriceFull($order_detail->product_price, $old_currency, $currency);
@@ -679,14 +686,14 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					// Update order payment amount
-					foreach($order->getOrderPaymentCollection() as $payment)
+					foreach ($order->getOrderPaymentCollection() as $payment)
 					{
 						$payment->id_currency = (int)$currency->id;
 						$payment->amount = Tools::convertPriceFull((float)$payment->amount, $old_currency, $currency);
 						$payment->update();
 					}
 
-					$id_order_carrier = Db::getInstance()->getRow('
+					$id_order_carrier = Db::getInstance()->getValue('
 						SELECT `id_order_carrier`
 						FROM `'._DB_PREFIX_.'order_carrier`
 						WHERE `id_order` = '.(int)$order->id);
@@ -743,7 +750,7 @@ class AdminOrdersControllerCore extends AdminController
 					if ($order_cart_rule->id_order_invoice)
 					{
 						$order_invoice = new OrderInvoice($order_cart_rule->id_order_invoice);
-						if (!ValidateCore::isLoadedObject($order_invoice))
+						if (!Validate::isLoadedObject($order_invoice))
 							throw new PrestaShopException('Can\'t load Order Invoice object');
 
 						// Update amounts of Order Invoice
@@ -908,7 +915,7 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					$res = true;
-					foreach($cart_rules as $id_order_invoice => $cart_rule)
+					foreach ($cart_rules as $id_order_invoice => $cart_rule)
 					{
 						// Create OrderCartRule
 						$order_cart_rule = new OrderCartRule();
