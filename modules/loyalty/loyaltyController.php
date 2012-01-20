@@ -34,7 +34,7 @@ include_once(dirname(__FILE__).'/LoyaltyStateModule.php');
 
 class ModuleLoyaltyController extends ModuleController
 {
-	protected $php_self = 'module-loyalty-loyalty-program';
+	protected $page_name = 'module-loyalty-loyalty-program';
 
 	/**
 	 * @see FrontController::postProcess()
