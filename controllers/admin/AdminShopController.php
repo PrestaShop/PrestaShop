@@ -31,7 +31,7 @@ class AdminShopControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->context = Context::getContext();
-	 	$this->table = 'shop';
+		$this->table = 'shop';
 		$this->className = 'Shop';
 
 		$this->fieldsDisplay = array(
@@ -64,7 +64,7 @@ class AdminShopControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'),'confirm' => $this->l('Delete selected items?')));
 
 		$this->options = array(
 			'general' => array(
@@ -146,10 +146,10 @@ class AdminShopControllerCore extends AdminController
 		$shops =  Shop::getShopWithoutUrls();
 		if (count($shops) && !$this->ajax)
 		{
-		 	$shop_url_configuration = '';
 			foreach ($shops as $shop)
-				$shop_url_configuration .= sprintf($this->l('No url is configured for shop: %s'), '<b>'.$shop['name'].'</b>').' <a href="'.$this->context->link->getAdminLink('AdminShopUrl').'&addshop_url&id_shop='.$shop['id_shop'].'">'.$this->l('click here').'</a><br />';
-			$this->content .= '<div class="warn">'.$shop_url_configuration.'</div>';
+				$this->warnings[] = sprintf($this->l('No url is configured for shop: %s'), '<b>'.$shop['name'].'</b>')
+				.' <a href="'.$this->context->link->getAdminLink('AdminShopUrl').'&addshop_url&id_shop='.$shop['id_shop'].'">'
+				.$this->l('click here').'</a><br />';
 		}
 		parent::initContent();
 	}
@@ -160,26 +160,29 @@ class AdminShopControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 		$this->_select = 'gs.name group_shop_name, cl.name category_name';
-	 	$this->_join = '
-	 		LEFT JOIN `'._DB_PREFIX_.'group_shop` gs
-	 			ON (a.id_group_shop = gs.id_group_shop)
-	 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-	 			ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')';
-	 	$this->_group = 'GROUP BY a.id_shop';
+		$this->_join = '
+			LEFT JOIN `'._DB_PREFIX_.'group_shop` gs
+				ON (a.id_group_shop = gs.id_group_shop)
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
+				ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')';
+		$this->_group = 'GROUP BY a.id_shop';
 
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
-	public function ajaxProcess()
+	public function displayAjaxGetCategoriesFromRootCategory()
 	{
-		if (Tools::isSubmit('getCategoriesFromRootCategory') && Tools::isSubmit('id_category'))
+		if (Tools::isSubmit('id_category'))
 		{
 			$root_category = new Category((int)Tools::getValue('id_category'));
-			$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
-
+			$root_category = array(
+				'id_category' => $root_category->id_category,
+				'name' => $root_category->name[$this->context->language->id]
+			);
 			$helper = new Helper();
-			echo $helper->renderCategoryTree($root_category, array($root_category['id_category']));
+			$this->content = $helper->renderCategoryTree($root_category, array($root_category['id_category']));
 		}
+		parent::displayAjax();
 	}
 
 	public function postProcess()
@@ -213,10 +216,12 @@ class AdminShopControllerCore extends AdminController
 
 		return false;
 	}
+	
 	public function afterAdd($new_shop)
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
+		return parent::afterAdd($new_shop);
 	}
 
 	public function afterUpdate($new_shop)
@@ -224,6 +229,7 @@ class AdminShopControllerCore extends AdminController
 		$new_shop->updateCategories(Tools::getValue('categoryBox'));
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
+		return parent::afterUpdate($new_shop);
 	}
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
@@ -231,7 +237,7 @@ class AdminShopControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 		$shop_delete_list = array();
 
-		// test store authorized to remove
+		// don't allow to remove shop which have dependencies (customers / orders / ... )
 		foreach ($this->_list as $shop)
 		{
 			if (Shop::has_dependency($shop['id_shop']))
