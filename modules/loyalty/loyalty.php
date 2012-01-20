@@ -324,31 +324,10 @@ class Loyalty extends Module
 				<label>'.$this->l('Vouchers created by the loyalty system can be used in the following categories :').'</label>';
 		$index = explode(',', Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY'));
 		$indexedCategories =  isset($_POST['categoryBox']) ? $_POST['categoryBox'] : $index;
-		// Translations are not automatic for the moment ;)
-		if (version_compare(_PS_VERSION_,'1.5','>'))
-		{
-			if ($this->context->shop() == Shop::CONTEXT_SHOP)
-			{
-				$root_category = Category::getRootCategory();
-				$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
-			}
-			else
-				$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
-		}
-		else
-		{
-			$root_category = array('id_category' => '1', 'name' => $this->l('Home'));
-		}
-		$trads = array(
-			 'Root' => $root_category,
-			 'selected' => $this->l('selected'), 
-			 'Collapse All' => $this->l('Collapse All'), 
-			 'Expand All' => $this->l('Expand All'), 
-			 'Check All' => $this->l('Check All'), 
-			 'Uncheck All'  => $this->l('Uncheck All')
-		);
-		$html .= '<div class="margin-form">'.Helper::renderAdminCategorieTree($trads, $indexedCategories).'</div>';
-		 $html .= '
+
+		$helper = new Helper();
+		$html .= '<div class="margin-form">'.$helper->renderCategoryTree(null, $indexedCategories).'</div>';
+		$html .= '
 				<p style="padding-left:200px;">'.$this->l('Mark the box(es) of categories in which loyalty vouchers are usable.').'</p>
 				<div class="clear"></div>
 				<h3 style="margin-top:20px">'.$this->l('Loyalty points progression').'</h3>
