@@ -53,9 +53,9 @@ class AdminRangePriceControllerCore extends AdminController
 	public function renderForm()
 	{
 		$currency = $this->context->currency;
-		$carriers = Carrier::getCarriers((int)(Configuration::get('PS_LANG_DEFAULT')), true , false,false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+		$carriers = Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 
-		foreach ($carriers AS $carrier)
+		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
 
@@ -119,7 +119,7 @@ class AdminRangePriceControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (isset($_POST['submitAdd'.$this->table]) AND Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
+		if (Tools::getValue('submitAdd'.$this->table) && Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
 			$this->errors[] = Tools::displayError('Invalid range');
 		else
 			parent::postProcess();
