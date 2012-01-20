@@ -35,7 +35,6 @@ class HelperHelpAccessCore extends Helper
     public $country;
     public $ps_version;
 
-
     public function __construct($label, $iso_lang, $country, $ps_version)
     {
         parent::__construct();

@@ -1669,7 +1669,8 @@ class BlockLayered extends Module
 				 'Uncheck All'  => $this->l('Uncheck All'),
 				 'search'  => $this->l('Search a category')
 			);
-			
+
+			// @todo renderAdminCategorieTree is deprecated in 1.5
 			$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
 			
 			$html .= '

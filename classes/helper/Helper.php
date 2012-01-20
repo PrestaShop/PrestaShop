@@ -98,16 +98,7 @@ class HelperCore
 	}
 
 	/**
-	 * Since 1.5 - This function will be deprecated in 1.6 - use Helper::renderCategoryTree() instead
-	 * @static
-	 * @param $translations
-	 * @param array $selected_cat
-	 * @param string $input_name
-	 * @param bool $use_radio
-	 * @param bool $use_search
-	 * @param array $disabled_categories
-	 * @param bool $use_in_popup
-	 * @return mixed
+	 * @deprecated 1.5.0
 	 */
 	public static function renderAdminCategorieTree($translations,
 													$selected_cat = array(),
@@ -117,6 +108,8 @@ class HelperCore
 													$disabled_categories = array(),
 													$use_in_popup = false)
 	{
+		Tools::displayAsDeprecated();
+
 		$helper = new Helper();
 		if (isset($translations['Root']))
 			$root = $translations['Root'];
@@ -169,7 +162,7 @@ class HelperCore
 			'Check All' => $this->l('Check All'),
 			'Uncheck All'  => $this->l('Uncheck All'),
 			'search' => $this->l('Find a category')
-			);
+		);
 
 		if (!$root)
 		{
@@ -180,22 +173,20 @@ class HelperCore
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
 
-		$context = Context::getContext();
-
-		$context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
-		$context->controller->addJs(array(
+		$this->context->controller->addCSS(_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.css');
+		$this->context->controller->addJs(array(
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.js',
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.async.js',
 			_PS_JS_DIR_.'jquery/plugins/treeview/jquery.treeview.edit.js',
 			_PS_JS_DIR_.'admin-categories-tree.js'));
 		if ($use_search)
-			$context->controller->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
+			$this->context->controller->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 
 		$html = '
 		<script type="text/javascript">
 			var inputName = "'.$input_name.'";
 		';
-		if (sizeof($selected_cat) > 0)
+		if (count($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
 				$html .= 'var selectedCat = "'.implode(',', $selected_cat).'";';
@@ -232,8 +223,7 @@ class HelperCore
 		';
 
 		$home_is_selected = false;
-
-		foreach($selected_cat AS $cat)
+		foreach ($selected_cat as $cat)
 		{
 			if (is_array($cat))
 			{
@@ -252,6 +242,7 @@ class HelperCore
 					$home_is_selected = true;
 			}
 		}
+
 		$html .= '
 			<ul id="categories-treeview" class="filetree">
 				<li id="'.$root['id_category'].'" class="hasChildren">
@@ -278,7 +269,7 @@ class HelperCore
 	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
-	protected function l($string, $class = 'AdminTab', $addslashes = FALSE, $htmlentities = TRUE)
+	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
 	{
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 		$currentClass = get_class($this);
@@ -314,11 +305,10 @@ class HelperCore
 			$type = 'shop';
 
 		$assos = array();
-
 		if ((int)$this->id)
 		{
-			$sql = 'SELECT `id_'.bqSQL($type).'`, `'.bqSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.bqSQL($this->table).'_'.bqSQL($type).'`
+			$sql = 'SELECT `id_'.$type.'`, `'.bqSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.bqSQL($this->table).'_'.$type.'`
 					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
 
 			foreach (Db::getInstance()->executeS($sql) as $row)
