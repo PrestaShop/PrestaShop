@@ -43,17 +43,20 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#id_category").change(function(){
-					$.ajax({
-						type: "POST",
-						url : "{$current}",
-						async: true,
-						dataType: "html",
-						data : "ajax=true&id_category="+$(this).val()+"&use_shop_context=false&getCategoriesFromRootCategory=true&token={$token}",
-						success : function(res)
+					doAdminAjax(
+						{
+						ajax:"1",
+						id_category : $(this).val(),
+						use_shop_context : 0,
+						action : "getCategoriesFromRootCategory",
+						controller: "AdminShop",
+						token : "{$token}",
+						},
+						function(res)
 						{
 							$('#categories-treeview').parent().html(res);
 						}
-					});
+					);
 				});
 			});
 		</script>
