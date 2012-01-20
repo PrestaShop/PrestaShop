@@ -28,6 +28,7 @@
 class PageNotFoundControllerCore extends FrontController
 {
 	public $php_self = '404';
+	public $page_name = 'pagenotfound';
 
 	/**
 	 * Assign template vars related to page content

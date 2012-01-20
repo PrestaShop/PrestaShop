@@ -251,7 +251,9 @@ class FrontControllerCore extends Controller
 		
 		// Are we in a payment module 
 		$module_name = Tools::getValue('module');
-		if (!empty($this->php_self))
+		if (!empty($this->page_name))
+			$page_name = $this->page_name;
+		else if (!empty($this->php_self))
 			$page_name = $this->php_self;
 		else if (Tools::getValue('controller') == 'module' && $module_name != '' && new $module_name() instanceof PaymentModule)
 			$page_name = 'module-payment-submit';
