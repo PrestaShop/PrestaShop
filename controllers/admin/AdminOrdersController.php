@@ -47,7 +47,7 @@ class AdminOrdersControllerCore extends AdminController
 		os.`color`,
 		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
 		(SELECT COUNT(od.`id_order`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = a.`id_order` GROUP BY `id_order`) AS product_number';
-		
+
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
 		LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON (oh.`id_order` = a.`id_order`)
@@ -57,20 +57,22 @@ class AdminOrdersControllerCore extends AdminController
 		$this->_orderBy = '`id_order`';
 		$this->_orderWay = 'DESC'; // FIXME
 
-		$statusesArray = array();
+		$statuses_array = array();
 		$statuses = OrderState::getOrderStates((int)$this->context->language->id);
 
 		foreach ($statuses as $status)
-			$statusesArray[$status['id_order_state']] = $status['name'];
+			$statuses_array[$status['id_order_state']] = $status['name'];
 
 		$this->fieldsDisplay = array(
 		'id_order' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 		'reference' => array('title' => $this->l('Reference'), 'align' => 'center', 'width' => 65),
-		'new' => array('title' => $this->l('New'), 'width' => 25, 'align' => 'center', 'type' => 'bool', 'filter_key' => 'new', 'tmpTableFilter' => true, 'icon' => array(0 => 'blank.gif', 1 => 'news-new.gif'), 'orderby' => false),
+		'new' => array('title' => $this->l('New'), 'width' => 25, 'align' => 'center', 'type' => 'bool',
+						'filter_key' => 'new', 'tmpTableFilter' => true, 'icon' => array(0 => 'blank.gif', 1 => 'news-new.gif'), 'orderby' => false),
 		'customer' => array('title' => $this->l('Customer'), 'filter_key' => 'customer', 'tmpTableFilter' => true),
 		'total_paid_tax_incl' => array('title' => $this->l('Total'), 'width' => 70, 'align' => 'right', 'prefix' => '<b>', 'suffix' => '</b>', 'type' => 'price', 'currency' => true),
 		'payment' => array('title' => $this->l('Payment'), 'width' => 100),
-		'osname' => array('title' => $this->l('Status'), 'color' => 'color', 'width' => 280, 'type' => 'select', 'list' => $statusesArray, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int'),
+		'osname' => array('title' => $this->l('Status'), 'color' => 'color', 'width' => 280, 'type' => 'select',
+						'list' => $statuses_array, 'filter_key' => 'os!id_order_state', 'filter_type' => 'int'),
 		'date_add' => array('title' => $this->l('Date'), 'width' => 130, 'align' => 'right', 'type' => 'datetime', 'filter_key' => 'a!date_add'),
 		'id_pdf' => array('title' => $this->l('PDF'), 'width' => 35, 'align' => 'center', 'callback' => 'printPDFIcons', 'orderby' => false, 'search' => false, 'remove_onclick' => true));
 
@@ -261,7 +263,7 @@ class AdminOrdersControllerCore extends AdminController
 						);
 					// Save all changes
 					if ($history->addWithemail(true, $templateVars))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder'.'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
 					$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
 				}
 			}
@@ -325,7 +327,7 @@ class AdminOrdersControllerCore extends AdminController
 						if (!$customer_message->add())
 							$this->errors[] = Tools::displayError('An error occurred while sending message.');
 						elseif ($customer_message->private)
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11'.'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11&token='.$this->token);
 						else
 						{
 							$message = $customer_message->message;
@@ -503,17 +505,17 @@ class AdminOrdersControllerCore extends AdminController
 							}
 
 							// Delete product
-							$orderDetail = new OrderDetail((int)$id_order_detail);
-							if (!$order->deleteProduct($order, $orderDetail, $qtyCancelProduct))
-								$this->errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$orderDetail->product_name.'</span>';
+							$order_detail = new OrderDetail((int)$id_order_detail);
+							if (!$order->deleteProduct($order, $order_detail, $qtyCancelProduct))
+								$this->errors[] = Tools::displayError('An error occurred during deletion of the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
 							Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => $id_order_detail));
 						}
 					if (!sizeof($this->errors) AND $customizationList)
 						foreach ($customizationList AS $id_customization => $id_order_detail)
 						{
-							$orderDetail = new OrderDetail((int)($id_order_detail));
+							$order_detail = new OrderDetail((int)($id_order_detail));
 							$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
-							if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $orderDetail))
+							if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $order_detail))
 								$this->errors[] = Tools::displayError('An error occurred during deletion of product customization.').' '.$id_customization;
 						}
 					// E-mail params
