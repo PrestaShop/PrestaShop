@@ -127,14 +127,15 @@ class AdminCategoriesControllerCore extends AdminController
 
 		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 		$is_multishop = Shop::isFeatureActive();
+		$top_category = Category::getTopCategory();
 		if (Tools::isSubmit('id_category'))
 			$id_parent = $this->_category->id;
 		else if (!$is_multishop && $count_categories_without_parent > 1)
-			$id_parent = 1;
+			$id_parent = $top_category;
 		else if ($is_multishop && $count_categories_without_parent == 1)
-			$id_parent = 2;
+			$id_parent = 2; //TODO need to get the ID category where category = Home
 		else if ($is_multishop && $count_categories_without_parent > 1 && $this->context->shop() != Shop::CONTEXT_SHOP)
-			$id_parent = 1;
+			$id_parent = $top_category;
 		else
 			$id_parent = $this->context->shop->id_category;
 
@@ -256,7 +257,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), "<b>".$guest->name[$this->context->language->id]."</b>");
 		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), "<b>".$default->name[$this->context->language->id]."</b>");
 		$root_category = Category::getRootCategory();
-		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name[$this->context->language->id]);
+		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
 		$this->fields_form = array(
 			'tinymce' => true,
 			'legend' => array(
