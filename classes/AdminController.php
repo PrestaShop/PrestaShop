@@ -226,15 +226,17 @@ class AdminControllerCore extends Controller
 	protected $noLink;
 	protected $specificConfirmDelete;
 	protected $colorOnBackground;
+	/** @var bool If true, activates color on hover */
+	protected $row_hover = true;
 	/** @string Action to perform : 'edit', 'view', 'add', ... */
 	protected $action;
 	protected $display;
 	protected $_includeContainer = true;
 
 	public $tpl_folder;
-	
+
 	protected $bo_theme;
-	
+
 	/** @var bool Redirect or not ater a creation */
 	protected $_redirect = true;
 
@@ -1575,6 +1577,7 @@ class AdminControllerCore extends Controller
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
 		$helper->multiple_fieldsets = $this->multiple_fieldsets;
+		$helper->row_hover = $this->row_hover;
 
 		// For each action, try to add the corresponding skip elements list
 		$helper->list_skip_actions = $this->list_skip_actions;

@@ -28,7 +28,7 @@
 {foreach $list AS $index => $tr}
 	<tr
 	{if $is_dnd_identifier}id="tr_{$id_category}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	{if $index is odd}class="alt_row"{/if}
+	class="{if $index is odd}alt_row{/if} {if $row_hover}row_hover{/if}"
 	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
 	>
 		<td class="center">

@@ -166,7 +166,7 @@
 							{/if}
 						</tr>
  						{if !$simple_header}
-						<tr class="nodrag nodrop filter" style="height: 35px;">
+						<tr class="nodrag nodrop filter {if $row_hover}row_hover{/if}" style="height: 35px;">
 							<td class="center">
 								{if $has_bulk_actions}
 									--
