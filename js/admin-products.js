@@ -375,4 +375,5 @@ $(document).ready(function() {
 	});
 
 	// Enable writing of the product name when the friendly url field in tab SEO is loaded
+	onTabLoad('Seo', enableProductName);
 });
