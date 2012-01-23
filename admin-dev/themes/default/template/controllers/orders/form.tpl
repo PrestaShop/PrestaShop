@@ -431,7 +431,6 @@
 
 					$('#id_address_delivery').html(addresses_options);
 					$('#id_address_invoice').html(addresses_options);
-
 					$('#address_delivery_detail,#address_invoice_detail').html(address_detail);
 				}
 				if (res.id_cart)
@@ -534,10 +533,10 @@
 		$.each(products, function() {
 			cart_quantity[this.id_product+'_'+this.id_product_attribute] = this.cart_quantity;
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td><td><input type="text" size="7" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="product_unit_price" value="'+this.price+'" />&nbsp;<span class="currency_sign"></span></td><td>';
-			cart_content += '<p><a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'" ><img src="../img/admin/delete.gif" /></a>';
-			cart_content += '<a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'" ><img src="../img/admin/up.gif" /></a><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" /></p>';
-			cart_content += '<p style="float:right"><center><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'"><img src="../img/admin/down.gif" /></center></a>';
-			cart_content += '</p></td><td>'+this.total+'&nbsp;<span class="currency_sign"></span></td></tr>';
+			cart_content += '<div style="float:left;"><a href="#" class="increaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'" ><img src="../img/admin/up.gif" /></a><br /><a href="#" class="decreaseqty_product" rel="'+this.id_product+'_'+this.id_product_attribute+'"><img src="../img/admin/down.gif" /></a></div>';
+			cart_content += '<div style="float:left;"><input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'" class="cart_quantity" size="2" value="'+this.cart_quantity+'" />';
+			cart_content += '<a href="#" class="delete_product" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'" ><img src="../img/admin/delete.gif" /></a>';
+			cart_content += '</div></td><td>'+this.total+'&nbsp;<span class="currency_sign"></span></td></tr>';
 		});
 		$('#customer_cart tbody').html(cart_content);
 	}
@@ -806,7 +805,7 @@
 </fieldset><br />
 <form action="{$link->getAdminLink('AdminOrders')}&submitAdd{$table}=1" method="post" autocomplete="off">
 <fieldset id="products_part" style="display:none;"><legend><img src="../img/t/AdminCatalog.gif" />{l s='Cart'}</legend>
-	<div class="width3">
+	<div>
 		<p><label>{l s='Search a product:'} </label>
 		<input type="hidden" value="" id="id_cart" name="id_cart" />
 		<input type="text" id="product" value="" /></p>
@@ -838,7 +837,7 @@
 					<th>{l s='Description'}</th>
 					<th>{l s='Ref'}</th>
 					<th>{l s='Unit price'}</th>
-					<th>{l s='Qty'}</th>
+					<th style="width: 65px;">{l s='Qty'}</th>
 					<th>{l s='Price'}</th>
 				</tr>
 			</thead>
