@@ -372,6 +372,7 @@ abstract class ObjectModelCore
 	public function add($autodate = true, $null_values = false)
 	{
 		// @hook actionObject*AddBefore
+		Hook::exec('actionObjectAddBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
 
 		// Automatically fill dates
@@ -430,6 +431,7 @@ abstract class ObjectModelCore
 		}
 
 		// @hook actionObject*AddAfter
+		Hook::exec('actionObjectAddAfter', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'AddAfter', array('object' => $this));
 
 		return $result;
@@ -444,6 +446,7 @@ abstract class ObjectModelCore
 	public function update($null_values = false)
 	{
 		// @hook actionObject*UpdateBefore
+		Hook::exec('actionObjectUpdateBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'UpdateBefore', array('object' => $this));
 
 		$this->clearCache();
@@ -504,6 +507,7 @@ abstract class ObjectModelCore
 		}
 
 		// @hook actionObject*UpdateAfter
+		Hook::exec('actionObjectUpdateAfter', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'UpdateAfter', array('object' => $this));
 
 		return $result;
@@ -517,6 +521,7 @@ abstract class ObjectModelCore
 	public function delete()
 	{
 		// @hook actionObject*DeleteBefore
+		Hook::exec('actionObjectDeleteBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'DeleteBefore', array('object' => $this));
 
 		$this->clearCache();
@@ -539,6 +544,7 @@ abstract class ObjectModelCore
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.$this->def['table'].'_group_shop` WHERE `'.$this->def['primary'].'`='.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
+		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'DeleteAfter', array('object' => $this));
 
 		return $result;
