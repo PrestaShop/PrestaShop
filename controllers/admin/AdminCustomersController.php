@@ -718,46 +718,49 @@ class AdminCustomersControllerCore extends AdminController
 		parent::processDelete($token);
 	}
 
-	public function processSave($token)
+	public function processAdd($token)
 	{
 		// Check that the new email is not already in use
-		// Case add
-		if (!$this->id_object)
+		$customer_email = strval(Tools::getValue('email'));
+		$customer = new Customer();
+		if (Validate::isEmail($customer_email))
+			$customer->getByEmail($customer_email);
+		if ($customer->id)
+			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
+		else
+			return parent::processAdd($token);
+
+	}
+
+	public function processUpdate($token)
+	{
+		if (Validate::isLoadedObject($this->object))
 		{
 			$customer_email = strval(Tools::getValue('email'));
-			$customer = new Customer();
-			if (Validate::isEmail($customer_email))
-				$customer->getByEmail($customer_email);
-			if ($customer->id)
-				$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
-		}
-		// Case update
-		else
-		{
-			$object = new $this->className($this->id_object);
-			if (Validate::isLoadedObject($object))
+
+			// check if e-mail already used
+			if ($customer_email != $this->object->email)
 			{
-				$customer_email = strval(Tools::getValue('email'));
-
-				// check if e-mail already used
-				if ($customer_email != $object->email)
-				{
-					$customer = new Customer();
-					$customer->getByEmail($customer_email);
-					if ($customer->id)
-						$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
-				}
+				$customer = new Customer();
+				$customer->getByEmail($customer_email);
+				if ($customer->id)
+					$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 			}
-			else
-				$this->errors[] = Tools::displayError('An error occurred while loading object.').'
-					<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-		}
 
+			return parent::processUpdate($token);
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while loading object.').'
+				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+	}
+
+	public function processSave($token)
+	{
 		// Check that default group is selected
 		if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox')))
 			$this->errors[] = Tools::displayError('Default customer group must be selected in group box.');
 
-		parent::processSave($token);
+		return parent::processSave($token);
 	}
 
 	public function afterDelete($object, $oldId)
