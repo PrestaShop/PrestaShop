@@ -25,6 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * This file will be removed in 1.6
+ */
+
 if (isset(Context::getContext()->controller))
 	$controller = Context::getContext()->controller;
 else
