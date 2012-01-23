@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -26,7 +26,7 @@
 */
 
 class SearchEngineCore extends ObjectModel
-{	
+{
 	public $server;
 	public $getvar;
 
@@ -44,24 +44,24 @@ class SearchEngineCore extends ObjectModel
 
 	public static function getKeywords($url)
 	{
-		$parsedUrl = @parse_url($url);
-		if (!isset($parsedUrl['host']) OR !isset($parsedUrl['query']))
+		$parsed_url = @parse_url($url);
+		if (!isset($parsed_url['host']) || !isset($parsed_url['query']))
 			return false;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM `'._DB_PREFIX_.'search_engine`');
 		foreach ($result as $row)
 		{
 			$host =& $row['server'];
 			$varname =& $row['getvar'];
-			if (strstr($parsedUrl['host'], $host))
+			if (strstr($parsed_url['host'], $host))
 			{
-				$kArray = array();
-				preg_match('/[^a-z]'.$varname.'=.+\&'.'/U', $parsedUrl['query'], $kArray);
-				if (empty($kArray[0]))
-					preg_match('/[^a-z]'.$varname.'=.+$'.'/', $parsedUrl['query'], $kArray);
-				if (empty($kArray[0]))
+				$array = array();
+				preg_match('/[^a-z]'.$varname.'=.+\&/U', $parsed_url['query'], $array);
+				if (empty($array[0]))
+					preg_match('/[^a-z]'.$varname.'=.+$/', $parsed_url['query'], $array);
+				if (empty($array[0]))
 					return false;
-				$kString = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($kArray[0], '&'), strlen($varname) + 1), '=')));
-				return $kString;
+				$str = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($array[0], '&'), strlen($varname) + 1), '=')));
+				return $str;
 			}
 		}
 	}

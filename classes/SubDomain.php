@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -44,10 +44,10 @@ class SubDomainCore extends ObjectModel
 	{
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `name` FROM `'._DB_PREFIX_.'subdomain`'))
 			return false;
-		$subDomains = array();
-		foreach ($result AS $row)
-			$subDomains[] = $row['name'];
-		return $subDomains;
+		$domains = array();
+		foreach ($result as $row)
+			$domains[] = $row['name'];
+		return $domains;
 	}
 }
 
