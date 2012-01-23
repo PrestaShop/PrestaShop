@@ -95,8 +95,10 @@ class AdminCategoriesControllerCore extends AdminController
 		else
 			if (Shop::isFeatureActive() && $this->context->shop() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
-			else
+			else if (count(Category::getCategoriesWithoutParent()) > 1)
 				$this->_category = Category::getTopCategory();
+			else
+				$this->_category = new Category(2);
 	}
 	
 	public function initContent()
@@ -131,11 +133,11 @@ class AdminCategoriesControllerCore extends AdminController
 		if (Tools::isSubmit('id_category'))
 			$id_parent = $this->_category->id;
 		else if (!$is_multishop && $count_categories_without_parent > 1)
-			$id_parent = $top_category;
+			$id_parent = $top_category->id;
 		else if ($is_multishop && $count_categories_without_parent == 1)
 			$id_parent = 2; //TODO need to get the ID category where category = Home
 		else if ($is_multishop && $count_categories_without_parent > 1 && $this->context->shop() != Shop::CONTEXT_SHOP)
-			$id_parent = $top_category;
+			$id_parent = $top_category->id;
 		else
 			$id_parent = $this->context->shop->id_category;
 
