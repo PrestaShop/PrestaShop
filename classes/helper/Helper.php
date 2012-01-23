@@ -164,11 +164,11 @@ class HelperCore
 			'search' => $this->l('Find a category')
 		);
 
+		$top_category = Category::getTopCategory();
+		$root_category = Category::getRootCategory();
+		$disabled_categories[] = $top_category->id;
 		if (!$root)
-		{
-			$root_category = Category::getRootCategory();
 			$root = array('name' => $root_category->name, 'id_category' => $root_category->id);
-		}
 
 		if (!$use_radio)
 			$input_name = $input_name.'[]';
@@ -243,15 +243,18 @@ class HelperCore
 			}
 		}
 
+		$root_input = '&nbsp;';
+		if ($root_category->id != $top_category->id)
+			$root_input = '<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'
+									.$input_name.'" value="'.$root['id_category'].'" '
+									.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" />
+							<span class="category_label">'
+								.$root['name'].
+							'</span>';
 		$html .= '
 			<ul id="categories-treeview" class="filetree">
 				<li id="'.$root['id_category'].'" class="hasChildren">
-					<span class="folder">
-						<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'
-							.$input_name.'" value="'.$root['id_category'].'" '
-							.($home_is_selected ? 'checked' : '').' onclick="clickOnCategoryBox($(this));" /> '
-							.$root['name']
-					.'</span>
+					<span class="folder">'.$root_input.' </span>
 					<ul>
 						<li><span class="placeholder">&nbsp;</span></li>
 				  </ul>
