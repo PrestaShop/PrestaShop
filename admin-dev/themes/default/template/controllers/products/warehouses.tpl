@@ -75,10 +75,12 @@
 					<tr>
 						<td colspan="3">&nbsp;</td>
 					</tr>
+					{if $attributes|@count gt 1}
 					<tr>
 						<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
 						<td colspan="2"><i>{l s='Mark all products as stored in this warehouse.'}</i></td>
 					</tr>
+					{/if}
 				</table>
 			</div>
 		{/foreach}
