@@ -86,7 +86,7 @@
 	<p>&nbsp;</p>
 
 	<script type="text/javascript">
-		$(function() {
+		$(document).ready(function() {
 			$('.check_all_warehouse').click(function() {
 				var check = $(this);
 				//get all checkboxes of current warehouse
@@ -107,10 +107,16 @@
 				}
 			});
 
-			setTimeout(function() {
-				$('#warehouse_accordion').accordion();
-			}, 500);
+		// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
+		setTimeout(function() {
+			$('#warehouse_accordion').accordion();
+		}, 500);
+
+		// Resize the accordion once the page is visible because of the bug with accordions initialized
+		// inside a display:none block not having the correct size.
+		$('#warehouse_accordion').parents('.product-tab-content').bind('displayed', function(){
+			$('#warehouse_accordion').accordion("resize");
+		});
 		});
 	</script>
-
 {/if}
