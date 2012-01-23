@@ -475,7 +475,8 @@ class StockManagerCore implements StockManagerInterface
 
 		// Gets supply_orders_qty
 		$query = new DbQuery();
-		$query->select('SUM(sod.quantity_expected) - SUM(sod.quantity_received)');
+
+		$query->select('sod.quantity_expected, sod.quantity_received');
 		$query->from('supply_order', 'so');
 		$query->leftjoin('supply_order_detail', 'sod', 'sod.id_supply_order = so.id_supply_order');
 		$query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
@@ -484,12 +485,17 @@ class StockManagerCore implements StockManagerInterface
 		if (count($ids_warehouse))
 			$query->where('so.id_warehouse IN('.implode(', ', $ids_warehouse).')');
 
-		$supply_orders_qty = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+		$supply_orders_qties = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		$supply_orders_qty = 0;
+		foreach ($supply_orders_qties as $qty)
+			if ($qty['quantity_expected'] > $qty['quantity_received'])
+				$supply_orders_qty += ($qty['quantity_expected'] - $qty['quantity_received']);
 
 		// Gets {physical OR usable}_qty
 		$qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse, $usable);
 
-		// real qty = actual qty in stock - current client orders + current supply orders
+		//real qty = actual qty in stock - current client orders + current supply orders
 		return ($qty - $client_orders_qty + $supply_orders_qty);
 	}
 
