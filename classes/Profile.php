@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -28,7 +28,7 @@
 class ProfileCore extends ObjectModel
 {
  	/** @var string Name */
-	public 		$name;
+	public $name;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -55,7 +55,7 @@ class ProfileCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
 		FROM `'._DB_PREFIX_.'profile` p
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)($id_lang).')
+		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)$id_lang.')
 		ORDER BY `id_profile` ASC');
 	}
 
@@ -64,29 +64,35 @@ class ProfileCore extends ObjectModel
 	*
 	* @return string Profile
 	*/
-	public static function getProfile($id_profile, $id_lang = NULL)
+	public static function getProfile($id_profile, $id_lang = null)
 	{
-		if ($id_lang == NULL)
+		if (!$id_lang)
 			$id_lang = Configuration::get('PS_LANG_DEFAULT');
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `name` 
-		FROM `'._DB_PREFIX_.'profile` p 
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`) 
-		WHERE p.`id_profile` = '.(int)$id_profile.'
-		AND pl.`id_lang` = '.(int)$id_lang);
+			SELECT `name`
+			FROM `'._DB_PREFIX_.'profile` p
+			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
+			WHERE p.`id_profile` = '.(int)$id_profile.'
+			AND pl.`id_lang` = '.(int)$id_lang
+		);
 	}
 
-	
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-	 	if (parent::add($autodate, true))
-			return (
-				Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)')
-				&& Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_access (`id_profile`, `id_module`, `configure`, `view`) (SELECT '.(int)$this->id.', id_module, 0, 1 FROM '._DB_PREFIX_.'module)')
-			);
+		if (parent::add($autodate, true))
+		{
+			$result = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)');
+			$result &= Db::getInstance()->execute('
+				INSERT INTO '._DB_PREFIX_.'module_access
+				(`id_profile`, `id_module`, `configure`, `view`)
+				(SELECT '.(int)$this->id.', id_module, 0, 1 FROM '._DB_PREFIX_.'module)
+			');
+			return $result;
+		}
 		return false;
 	}
-	
+
 	public function delete()
 	{
 	 	if (parent::delete())
@@ -114,7 +120,7 @@ class ProfileCore extends ObjectModel
 			WHERE `id_profile` = '.(int)$id_profile);
 
 			self::$_cache_accesses[$id_profile] = array();
-			foreach ($result AS $row)
+			foreach ($result as $row)
 			{
 				if (!isset(self::$_cache_accesses[$id_profile][$row['id_tab']]))
 					self::$_cache_accesses[$id_profile][$row['id_tab']] = array();

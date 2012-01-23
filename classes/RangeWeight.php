@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -27,9 +27,9 @@
 
 class RangeWeightCore extends ObjectModel
 {
-	public		$id_carrier;
-	public 		$delimiter1;
-	public 		$delimiter2;
+	public $id_carrier;
+	public $delimiter1;
+	public $delimiter2;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -62,10 +62,10 @@ class RangeWeightCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'range_weight`
-		WHERE `id_carrier` = '.(int)($id_carrier).'
+		WHERE `id_carrier` = '.(int)$id_carrier.'
 		ORDER BY `delimiter1` ASC');
 	}
-	
+
 	/**
 	 * Override add to create delivery value for all zones
 	 * @see classes/ObjectModelCore::add()
@@ -78,20 +78,19 @@ class RangeWeightCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
 			return false;
-		
+
 		$carrier = new Carrier((int)$this->id_carrier);
-		$priceList = array();
+		$price_list = array();
 		foreach ($carrier->getZones() as $zone)
-			$priceList[] = array(
+			$price_list[] = array(
 				'id_range_price' => 0,
 				'id_range_weight' => (int)$this->id,
 				'id_carrier' => (int)$this->id_carrier,
 				'id_zone' => (int)$zone['id_zone'],
 				'price' => 0,
 			);
-		$carrier->addDeliveryPrice($priceList);
-		
+		$carrier->addDeliveryPrice($price_list);
+
 		return true;
 	}
 }
-

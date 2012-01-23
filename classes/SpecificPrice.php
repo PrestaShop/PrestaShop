@@ -120,7 +120,7 @@ class SpecificPriceCore extends ObjectModel
 			AND id_product_attribute='.(int)$id_product_attribute.'
 			AND id_cart='.(int)$id_cart);
 	}
-	
+
 	public static function deleteByIdCart($id_cart, $id_product = false, $id_product_attribute = false)
 	{
 		return Db::getInstance()->Execute('
@@ -139,7 +139,9 @@ class SpecificPriceCore extends ObjectModel
 			AND id_cart='.(int)$id_cart);
 	}
 
-	// score generation for quantity discount
+	/**
+	 * score generation for quantity discount
+	 */
 	protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer)
 	{
 	    $select = '(';
@@ -149,7 +151,7 @@ class SpecificPriceCore extends ObjectModel
 
 	    $priority = SpecificPrice::getPriority($id_product);
 	    foreach (array_reverse($priority) as $k => $field)
-           $select .= ' IF (`'.bqSQL($field).'` = '.(int)(${$field}).', '.pow(2, $k + 1).', 0) + ';
+			$select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
 
 	    return rtrim($select, ' +').') AS `score`';
 	}
@@ -159,8 +161,8 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
 
-    	if (!isset(self::$_cache_priorities[(int)$id_product]))
-    	{
+		if (!isset(self::$_cache_priorities[(int)$id_product]))
+		{
 			self::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `priority`, `id_specific_price_priority`
 				FROM `'._DB_PREFIX_.'specific_price_priority`
@@ -251,7 +253,7 @@ class SpecificPriceCore extends ObjectModel
 			return array();
 
 		$now = date('Y-m-d H:i:s');
-		$res =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
@@ -275,7 +277,7 @@ class SpecificPriceCore extends ObjectModel
 		$targeted_prices = array();
 		$last_quantity = null;
 
-		foreach($res as $specific_price)
+		foreach ($res as $specific_price)
 		{
 			if (!isset($last_quantity))
 				 $last_quantity = $specific_price['from_quantity'];

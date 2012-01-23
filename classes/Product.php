@@ -377,8 +377,9 @@ class ProductCore extends ObjectModel
 	const CUSTOMIZE_FILE = 0;
 	const CUSTOMIZE_TEXTFIELD = 1;
 
-
-	// Note:  prefix is "PTYPE" because TYPE_ is used in ObjectModel (definition)
+	/**
+	 * Note:  prefix is "PTYPE" because TYPE_ is used in ObjectModel (definition)
+	 */
 	const PTYPE_SIMPLE = 0;
 	const PTYPE_PACK = 1;
 	const PTYPE_VIRTUAL = 2;
@@ -1245,7 +1246,6 @@ class ProductCore extends ObjectModel
 	public function updateAttribute($id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
 		$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date)
 	{
-
 		$price = str_replace(',', '.', $price);
 		$weight = str_replace(',', '.', $weight);
 
@@ -2369,7 +2369,7 @@ class ProductCore extends ObjectModel
 		}
 		$result = self::$_pricesLevel2[$cache_id_2];
 
-		if (!$specific_price || $specific_price['price'] ==0)
+		if (!$specific_price || $specific_price['price'] == 0)
 			$price = (float)$result['price'];
 		else
 			$price = (float)$specific_price['price'];
@@ -3386,7 +3386,7 @@ class ProductCore extends ObjectModel
 
 		$row['attribute_price'] = 0;
 		if (isset($row['id_product_attribute']) && $row['id_product_attribute'])
-			$row['attribute_price'] =  (float)Product::getProductAttributePrice($row['id_product_attribute']);
+			$row['attribute_price'] = (float)Product::getProductAttributePrice($row['id_product_attribute']);
 
 		$row['price_tax_exc'] = Product::getPriceStatic(
 			(int)$row['id_product'],

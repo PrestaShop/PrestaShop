@@ -54,27 +54,28 @@ class ThemeCore extends ObjectModel
 	/**
 	 * return an array of all available theme (installed or not)
 	 * 
-	 * @param boolean $installed 
+	 * @param boolean $installed_only
 	 * @return array string (directory)
 	 */
-	public static function getAvailable($installed_only = true){
+	public static function getAvailable($installed_only = true)
+	{
 		static $dirlist = array();
 		$available_theme = array();
-		
+
 		if (empty($dirlist))
 		{
 			$themes = scandir(_PS_ALL_THEMES_DIR_);
-			foreach ($themes AS $theme)
+			foreach ($themes as $theme)
 				if (is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$theme) && $theme[0] != '.')
 					$dirlist[] = $theme;
 		}
-		
+
 		if ($installed_only)
 		{
 			$themes = Theme::getThemes();
-			foreach($themes as $theme_obj)
+			foreach ($themes as $theme_obj)
 				$themes_dir[] = $theme_obj->directory;
-			foreach( $dirlist as $theme)
+			foreach ($dirlist as $theme)
 				if (false !== array_search($theme, $themes_dir))
 					$available_theme[] = $theme;
 		}

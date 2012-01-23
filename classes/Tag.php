@@ -195,7 +195,12 @@ class TagCore extends ObjectModel
 			$ids = array();
 			foreach ($array as $id_product)
 				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';
-			return ($result && Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids)) && Search::indexation(false));
+
+			if ($result)
+			{
+				$result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids));
+				$result &= Search::indexation(false);
+			}
 		}
 		return $result;
 	}
