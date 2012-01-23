@@ -117,17 +117,17 @@ abstract class ModuleGridCore extends Module
 
 		$grider .= '&width='.$params['width'];
 		$grider .= '&height='.$params['height'];
-		if (isset($params['start']) AND Validate::IsUnsignedInt($params['start']))
+		if (isset($params['start']) && Validate::IsUnsignedInt($params['start']))
 			$grider .= '&start='.$params['start'];
-		if (isset($params['limit']) AND Validate::IsUnsignedInt($params['limit']))
+		if (isset($params['limit']) && Validate::IsUnsignedInt($params['limit']))
 			$grider .= '&limit='.$params['limit'];
-		if (isset($params['type']) AND Validate::IsName($params['type']))
+		if (isset($params['type']) && Validate::IsName($params['type']))
 			$grider .= '&type='.$params['type'];
-		if (isset($params['option']) AND Validate::IsGenericName($params['option']))
+		if (isset($params['option']) && Validate::IsGenericName($params['option']))
 			$grider .= '&option='.$params['option'];
-		if (isset($params['sort']) AND Validate::IsName($params['sort']))
+		if (isset($params['sort']) && Validate::IsName($params['sort']))
 			$grider .= '&sort='.$params['sort'];
-		if (isset($params['dir']) AND Validate::IsSortDirection($params['dir']))
+		if (isset($params['dir']) && Validate::isSortDirection($params['dir']))
 			$grider .= '&dir='.$params['dir'];
 			
 		require_once(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php');
