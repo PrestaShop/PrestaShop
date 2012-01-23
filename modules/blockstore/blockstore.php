@@ -78,7 +78,7 @@ class BlockStore extends Module
 		{
 			if (isset($_FILES['store_img']) && isset($_FILES['store_img']['tmp_name']) && !empty($_FILES['store_img']['tmp_name']))
 			{
-				if ($error = checkImage($_FILES['store_img'], 4000000))
+				if ($error = ImageManager::validateUpload($_FILES['store_img'], 4000000))
 					return $this->displayError($this->l('invalid image'));
 				else
 				{

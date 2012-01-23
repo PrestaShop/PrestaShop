@@ -944,7 +944,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				if ($file['size'] > $this->imgMaxUploadSize)
 					throw new WebserviceException(sprintf('The image size is too large (maximum allowed is %d KB)', ($this->imgMaxUploadSize/1000)), array(72, 400));
 				require_once(_PS_ROOT_DIR_.'/images.inc.php');
-				if ($error = checkImageUploadError($file))
+				if ($error = ImageManager::getErrorFromCode($file['error']))
 					throw new WebserviceException('Image upload error : '.$error, array(76, 400));
 				if (isset($file['tmp_name']) AND $file['tmp_name'] != NULL)
 				{
@@ -965,7 +965,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					// copy image
 					if (!isset($file['tmp_name']))
 						return false;
-					if ($error = checkImage($file, $this->imgMaxUploadSize))
+					if ($error = ImageManager::validateUpload($file, $this->imgMaxUploadSize))
 						throw new WebserviceException('Bad image : '.$error, array(76, 400));
 
 					if ($this->imageType == 'products')
@@ -976,13 +976,13 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 						if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($file['tmp_name'], $tmpName))
 							throw new WebserviceException('An error occurred during the image upload', array(76, 400));
-						elseif (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format))
+						elseif (!ImageManager::resize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'.'.$image->image_format))
 							throw new WebserviceException('An error occurred while copying image', array(76, 400));
-		else
+						else
 						{
 							$imagesTypes = ImageType::getImagesTypes('products');
 							foreach ($imagesTypes AS $imageType)
-								if (!imageResize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
+								if (!ImageManager::resize($tmpName, _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
 									$this->_errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 						}
 						@unlink($tmpName);
@@ -992,7 +992,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					{
 						if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($file['tmp_name'], $tmpName))
 							throw new WebserviceException('An error occurred during the image upload', array(76, 400));
-						elseif (!imageResize($tmpName, $receptionPath))
+						elseif (!ImageManager::resize($tmpName, $receptionPath))
 							throw new WebserviceException('An error occurred while copying image', array(76, 400));
 						@unlink(_PS_TMP_IMG_DIR_.$tmpName);
 						$this->imgToDisplay = $receptionPath;

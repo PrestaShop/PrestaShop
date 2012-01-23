@@ -113,7 +113,7 @@ class Watermark extends Module
 
 		if (isset($_FILES['PS_WATERMARK']['tmp_name']) AND !empty($_FILES['PS_WATERMARK']['tmp_name']))
 		{
-			if (!isPicture($_FILES['PS_WATERMARK'], array('image/gif')))
+			if (!ImageManager::isRealImage($_FILES['PS_WATERMARK']['tmp_name'], $_FILES['PS_WATERMARK']['type'], array('image/gif')))
 				$this->_postErrors[] = $this->l('Image must be in GIF format.');
 		}
 		
@@ -136,7 +136,7 @@ class Watermark extends Module
 		if (isset($_FILES['PS_WATERMARK']) AND !empty($_FILES['PS_WATERMARK']['tmp_name']))
 		{
 			/* Check watermark validity */
-			if ($error = checkImage($_FILES['PS_WATERMARK']))
+			if ($error = ImageManager::validateUpload($_FILES['PS_WATERMARK']))
 				$this->_errors[] = $error;
 			/* Copy new watermark */
 			elseif(!copy($_FILES['PS_WATERMARK']['tmp_name'], dirname(__FILE__).'/watermark'.$str_shop.'.gif'))
@@ -249,7 +249,7 @@ class Watermark extends Module
 		foreach($this->imageTypes as $imageType)
 		{
 		    $newFile = _PS_PROD_IMG_DIR_.$image->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg';
-		    if (!imageResize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
+		    if (!ImageManager::resize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
 				$return = false;    
 		}
 		return $return;

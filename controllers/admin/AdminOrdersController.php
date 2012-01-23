@@ -1732,7 +1732,7 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$name = 'product_mini_'.(int)$product['product_id'].(isset($product['product_attribute_id']) ? '_'.(int)$product['product_attribute_id'] : '').'.jpg';
 				// generate image cache, only for back office
-				$product['image_tag'] = cacheImage(_PS_IMG_DIR_.'p/'.$product['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
+				$product['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$product['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
 				if (file_exists(_PS_TMP_IMG_DIR_.$name))
 					$product['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
 				else

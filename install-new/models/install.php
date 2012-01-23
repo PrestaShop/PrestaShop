@@ -313,7 +313,7 @@ class InstallModelInstall extends InstallAbstractModel
 				if (file_exists($img_path.$iso.'-default-'.$type['name'].'.jpg'))
 					copy($img_path.$iso.'-default-'.$type['name'].'.jpg', $dst_path.$iso.'-default-'.$type['name'].'.jpg');
 				else
-					imageResize($img_path.$iso.'.jpg', $dst_path.$iso.'-default-'.$type['name'].'.jpg', $type['width'], $type['height']);
+					ImageManager::resize($img_path.$iso.'.jpg', $dst_path.$iso.'-default-'.$type['name'].'.jpg', $type['width'], $type['height']);
 			}
 		}
 	}

@@ -415,17 +415,17 @@ class AdminLanguagesControllerCore extends AdminController
 	public function copyNoPictureImage($language)
 	{
 		if (isset($_FILES['no-picture']) && $_FILES['no-picture']['error'] === 0)
-			if ($error = checkImage($_FILES['no-picture'], Tools::getMaxUploadSize()))
+			if ($error = ImageManager::validateUpload($_FILES['no-picture'], Tools::getMaxUploadSize()))
 				$this->errors[] = $error;
 			else
 			{
 				if (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES['no-picture']['tmp_name'], $tmp_name))
 					return false;
-				if (!imageResize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
+				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your product folder.');
-				if (!imageResize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg'))
+				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your category folder.');
-				if (!imageResize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
+				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your manufacturer folder');
 				else
 				{
@@ -433,11 +433,11 @@ class AdminLanguagesControllerCore extends AdminController
 					foreach ($images_types as $k => $image_type)
 					{
 						$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-						if (!imageResize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
+						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
 							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your product directory.');
-						if (!imageResize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
+						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
 							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your category directory.');
-						if (!imageResize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
+						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
 							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your manufacturer directory.');
 					}
 				}

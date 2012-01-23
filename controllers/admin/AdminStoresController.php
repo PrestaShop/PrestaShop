@@ -269,7 +269,7 @@ class AdminStoresControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$image = cacheImage(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
+		$image = ImageManager::thumbnail(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
 
 		$days = array();
 		$days[1] = $this->l('Monday');
@@ -376,7 +376,7 @@ class AdminStoresControllerCore extends AdminController
 			foreach ($images_types as $k => $image_type)
 			{
 				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				imageResize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
+				ImageManager::resize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
 							_PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).$theme.'.jpg',
 							(int)$image_type['width'], (int)$image_type['height']
 				);

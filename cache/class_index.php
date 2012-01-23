@@ -384,6 +384,8 @@
   'IdentityControllerCore' => 'controllers/front/IdentityController.php',
   'Image' => 'override/classes/Image.php',
   'ImageCore' => 'classes/Image.php',
+  'ImageManager' => 'override/classes/ImageManager.php',
+  'ImageManagerCore' => 'classes/ImageManager.php',
   'ImageType' => 'override/classes/ImageType.php',
   'ImageTypeCore' => 'classes/ImageType.php',
   'ImportModule' => 'override/classes/ImportModule.php',
