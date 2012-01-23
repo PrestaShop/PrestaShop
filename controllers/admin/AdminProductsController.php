@@ -1339,7 +1339,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!isset($_FILES['image_product']['tmp_name']))
 			return false;
-		if ($error = checkImage($_FILES['image_product']))
+		if ($error = ImageManager::validateUpload($_FILES['image_product']))
 			$this->errors[] = $error;
 		else
 		{
@@ -1349,7 +1349,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('An error occurred during new folder creation');
 			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName))
 				$this->errors[] = Tools::displayError('An error occurred during the image upload');
-			else if (!imageResize($tmpName, $new_path.'.'.$image->image_format))
+			else if (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format))
 				$this->errors[] = Tools::displayError('An error occurred while copying image.');
 			else if ($method == 'auto')
 			{
@@ -1357,7 +1357,7 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($imagesTypes as $k => $image_type)
 				{
 					$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-					if (!imageResize($tmpName, $new_path.'-'.stripslashes($image_type['name']).$theme.'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
+					if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).$theme.'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
 						$this->errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($image_type['name']);
 				}
 			}

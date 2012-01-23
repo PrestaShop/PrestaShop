@@ -82,11 +82,11 @@ class blockreinsurance extends Module
 				$filename = explode('.', $_FILES['info'.$i.'_file']['name']);
 				if (isset($_FILES['info'.$i.'_file']) AND isset($_FILES['info'.$i.'_file']['tmp_name']) AND !empty($_FILES['info'.$i.'_file']['tmp_name']))
 				{
-					if ($error = checkImage($_FILES['info'.$i.'_file']))
+					if ($error = ImageManager::validateUpload($_FILES['info'.$i.'_file']))
 						return false;
 					elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['info'.$i.'_file']['tmp_name'], $tmpName))
 						return false;
-					elseif (!imageResize($tmpName, dirname(__FILE__).'/img/'.$filename[0].'.jpg'))
+					elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/img/'.$filename[0].'.jpg'))
 						return false;
 					unlink($tmpName);
 				}

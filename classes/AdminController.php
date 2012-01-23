@@ -2418,7 +2418,7 @@ class AdminControllerCore extends Controller
 
 			// Check image validity
 			$max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
-			if ($error = checkImage($_FILES[$name], Tools::getMaxUploadSize($max_size)))
+			if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->errors[] = $error;
 			else if (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
 				return false;
@@ -2426,7 +2426,7 @@ class AdminControllerCore extends Controller
 			{
 				$tmp_name = $_FILES[$name]['tmp_name'];
 				// Copy new image
-				if (!imageResize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
+				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
 					$this->errors[] = Tools::displayError('An error occurred while uploading image.');
 				if (count($this->errors))
 					return false;

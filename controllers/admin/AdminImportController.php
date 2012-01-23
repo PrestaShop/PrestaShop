@@ -778,12 +778,12 @@ class AdminImportControllerCore extends AdminController
 		// Just hide the warning, the traitment will be the same.
 		if (@copy($url, $tmpfile))
 		{
-			imageResize($tmpfile, $path.'.jpg');
+			ImageManager::resize($tmpfile, $path.'.jpg');
 			$images_types = ImageType::getImagesTypes($entity);
 			foreach ($images_types as $k => $image_type)
 			{
 				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				imageResize($tmpfile, $path.'-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']);
+				ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']);
 			}
 			if (in_array($image_type['id_image_type'], $watermark_types))
 				Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));

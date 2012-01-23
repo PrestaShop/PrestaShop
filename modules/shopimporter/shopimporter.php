@@ -869,7 +869,7 @@ class shopimporter extends ImportModule
 				{
 
 					$imagesTypes = ImageType::getImagesTypes($type);
-					imageResize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
+					ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'.jpg');
 					if ($className == 'Product')
 					{
 						$image = new Image();
@@ -884,13 +884,13 @@ class shopimporter extends ImportModule
 								$legend[Configuration::get('PS_LANG_DEFAULT')] = Tools::link_rewrite($val);
 						$image->legend = $legend;
 						$image->add();
-						imageResize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'.jpg');
+						ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'.jpg');
 						foreach ($imagesTypes AS $k => $imageType)
-							imageResize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
+							ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.(int)$image->id.'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
 					}
 					else
-						foreach ($imagesTypes AS $k => $imageType)
-							imageResize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
+						foreach ($imagesTypes as $imageType)
+							ImageManager::resize($tmpfile, $path.(int)$matchId[$item[$identifier]].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height']);
 				}
 				else
 					@unlink($tmpfile);
