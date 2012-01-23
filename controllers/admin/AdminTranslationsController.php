@@ -917,14 +917,17 @@ class AdminTranslationsControllerCore extends AdminController
 		foreach ($tabs as $tab)
 			if (preg_match('/^(.*)\.php$/', $tab) && file_exists($tpl = _PS_ADMIN_CONTROLLER_DIR_.$tab))
 			{
+				$prefix_key = basename($tab);
 				// -4 becomes -14 to remove the ending "Controller.php" from the filename
-				$prefix_key = basename(substr($tab, 0, -14));
+				if (strpos($tab, 'Controller.php') !== false)
+					$prefix_key = basename(substr($tab, 0, -14));
+				elseif (strpos($tab, 'Helper') !== false)
+					$prefix_key = 'Helper';
 
 				// @todo this is retrocompatible, but we should not leave this
-				if ( $prefix_key == 'Admin')
+				if ($prefix_key == 'Admin')
 					$prefix_key = 'AdminController';
-				elseif ($prefix_key == 'helper' || $prefix_key == 'Hel')
-					$prefix_key = 'Helper';
+
 				$fd = fopen($tpl, 'r');
 				$content = fread($fd, filesize($tpl));
 				fclose($fd);
