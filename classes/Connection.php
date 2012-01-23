@@ -92,15 +92,11 @@ class ConnectionCore extends ObjectModel
 
 		// The ending time will be updated by an ajax request when the guest will close the page
 		$time_start = date('Y-m-d H:i:s');
-		Db::getInstance()->AutoExecute(
-			_DB_PREFIX_.'connections_page',
-			array(
-				'id_connections' => (int)$cookie->id_connections,
-				'id_page' => (int)$id_page,
-				'time_start' => $time_start
-			),
-			'INSERT'
-		);
+		Db::getInstance()->insert('connections_page', array(
+			'id_connections' => (int)$cookie->id_connections,
+			'id_page' => (int)$id_page,
+			'time_start' => $time_start
+		));
 
 		// This array is serialized and used by the ajax request to identify the page
 		return array(

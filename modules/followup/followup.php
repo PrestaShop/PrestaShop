@@ -270,7 +270,7 @@ class Followup extends Module
 			$values['id_cart'] = (int)($id_cart);
 		if (!empty($id_customer))
 			$values['id_customer'] = (int)($id_customer);
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'log_email', $values, 'INSERT');
+		Db::getInstance()->insert('log_email', $values);
 	}
 
 	/* Each cart which wasn't transformed into an order */

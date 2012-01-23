@@ -80,7 +80,7 @@ class PageCore extends ObjectModel
 		if ($result['id_page'])
 			return $result['id_page'];
 
-		Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.'page', $insertData, 'INSERT');
+		Db::getInstance()->insert('page', $insertData, true);
 		return Db::getInstance()->Insert_ID();
 	}
 
@@ -97,9 +97,9 @@ class PageCore extends ObjectModel
 		if ($value = Db::getInstance()->getValue($sql))
 			return $value;
 
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'page_type', array(
+		Db::getInstance()->insert('page_type', array(
 			'name' =>	$name,
-		), 'INSERT');
+		));
 		return Db::getInstance()->Insert_ID();
 	}
 
@@ -118,12 +118,12 @@ class PageCore extends ObjectModel
 
 		// If no one has seen the page in this date range, it is added
 		if (Db::getInstance()->Affected_Rows() == 0)
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'page_viewed', array(
+			Db::getInstance()->insert('page_viewed', array(
 				'id_date_range' =>	(int)$id_date_range,
 				'id_page' =>		(int)$id_page,
 				'counter' =>		1,
 				'id_shop' =>		(int)$context->shop->getID(),
 				'id_group_shop' =>	(int)$context->shop->getGroupID(),
-			), 'INSERT');
+			));
 	}
 }

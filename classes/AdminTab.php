@@ -787,7 +787,7 @@ abstract class AdminTabCore
 									foreach ($category as $categ_id => $categ)
 										if ($categ_id != 1)
 											$rowList[] = array('id_category' => $categ_id, 'id_group' => $object->id);
-								Db::getInstance()->autoExecute(_DB_PREFIX_.'category_group', $rowList, 'INSERT');
+								Db::getInstance()->insert('category_group', $rowList);
 							}
 							// Save and stay on same form
 							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))

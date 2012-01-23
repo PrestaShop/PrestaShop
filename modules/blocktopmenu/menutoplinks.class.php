@@ -49,27 +49,25 @@ class MenuTopLinks
     if(!is_array($label))
       return false;
 
-    Db::getInstance()->autoExecute(
-      _DB_PREFIX_.'linksmenutop',
+    Db::getInstance()->insert(
+      'linksmenutop',
       array(
         'new_window'=>(int)$newWindow,
         'link'=>pSQL($link),
         'id_shop' => (int)$id_shop
-      ),
-      'INSERT'
+      )
     );
     $id_linksmenutop = Db::getInstance()->Insert_ID();
     foreach($label as $id_lang=>$label)
     {
-      Db::getInstance()->autoExecute(
-        _DB_PREFIX_.'linksmenutop_lang',
+      Db::getInstance()->insert(
+        'linksmenutop_lang',
         array(
           'id_linksmenutop'=>(int)$id_linksmenutop,
           'id_lang'=>(int)$id_lang,
           'id_shop'=>(int)$id_shop,
           'label'=>pSQL($label)
-        ),
-        'INSERT'
+        )
       );
     }
   }

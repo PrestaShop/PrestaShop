@@ -190,7 +190,7 @@ class PackCore extends Product
 	public static function addItem($id_product, $id_item, $qty)
 	{
 		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
-			Db::getInstance()->AutoExecute(_DB_PREFIX_.'pack', array('id_product_pack' => (int)($id_product), 'id_product_item' => (int)($id_item), 'quantity' => (int)($qty)), 'INSERT') &&
+			Db::getInstance()->insert('pack', array('id_product_pack' => (int)$id_product, 'id_product_item' => (int)$id_item, 'quantity' => (int)$qty)) &&
 			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
 	}
 

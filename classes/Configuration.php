@@ -290,10 +290,10 @@ class ConfigurationCore extends ObjectModel
 				if (!$lang)
 				{
 					// Update config not linked to lang
-					$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'configuration', array(
+					$result &= Db::getInstance()->update('configuration', array(
 						'value' => pSQL($value, $html),
 						'date_upd' => date('Y-m-d H:i:s'),
-					), 'UPDATE', '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($shopGroupID, $shopID), true, true);
+					), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($shopGroupID, $shopID), true, true);
 				}
 				else
 				{
@@ -330,12 +330,12 @@ class ConfigurationCore extends ObjectModel
 
 				if ($lang)
 				{
-					$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'configuration_lang', array(
+					$result &= Db::getInstance()->insert('configuration_lang', array(
 						'id_configuration' =>	$configID,
 						'id_lang' =>			$lang,
 						'value' =>				pSQL($value, $html),
 						'date_upd' =>			date('Y-m-d H:i:s'),
-					), 'INSERT');
+					));
 				}
 			}
 
@@ -346,12 +346,12 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Delete a configuration key in database (with or without language management)
-	  *
-	  * @param string $key Key to delete
-	  * @return boolean Deletion result
-	  */
-	static public function deleteByName($key)
+	 * Delete a configuration key in database (with or without language management)
+	 *
+	 * @param string $key Key to delete
+	 * @return boolean Deletion result
+	 */
+	public static function deleteByName($key)
 	{
 	 	if (!Validate::isConfigName($key))
 			return false;

@@ -141,13 +141,12 @@ class StockAvailableCore extends ObjectModel
 				{
 					$quantity = $manager->getProductRealQuantities($id_product, $id_product_attribute, $warehouses, true);
 					$query = array(
-						'table' => _DB_PREFIX_.'stock_available',
+						'table' => 'stock_available',
 						'data' => array('quantity' => $quantity),
-						'type' => 'UPDATE',
 						'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = '.(int)$id_product_attribute.
 						StockAvailable::addSqlShopRestriction(null, $id_shop)
 					);
-					Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
+					Db::getInstance()->update($query['table'], $query['data'], $query['where']);
 
 					$product_quantity += $quantity;
 				}
@@ -155,13 +154,12 @@ class StockAvailableCore extends ObjectModel
 				// updates
 				// if $id_product has attributes, it also updates the sum for all attributes
 				$query = array(
-					'table' => _DB_PREFIX_.'stock_available',
+					'table' => 'stock_available',
 					'data' => array('quantity' => $product_quantity),
-					'type' => 'UPDATE',
 					'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0'.
 					StockAvailable::addSqlShopRestriction(null, $id_shop)
 				);
-				Db::getInstance()->autoExecute($query['table'], $query['data'], $query['type'], $query['where']);
+				Db::getInstance()->update($query['table'], $query['data'], $query['where']);
 			}
 		}
 
@@ -190,10 +188,9 @@ class StockAvailableCore extends ObjectModel
 
 		if ($existing_id > 0)
 		{
-			Db::getInstance()->autoExecute(
-				_DB_PREFIX_.'stock_available',
+			Db::getInstance()->update(
+				'stock_available',
 				array('depends_on_stock' => (int)(bool)$depends_on_stock),
-				'UPDATE',
 				'id_product = '.(int)$id_product.
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
@@ -208,11 +205,7 @@ class StockAvailableCore extends ObjectModel
 
 			StockAvailable::addSqlShopParams($params, $id_shop);
 
-			Db::getInstance()->autoExecute(
-				_DB_PREFIX_.'stock_available',
-				$params,
-				'INSERT'
-			);
+			Db::getInstance()->insert('stock_available', $params);
 		}
 
 		// depends on stock.. hence synchronizes
@@ -236,10 +229,9 @@ class StockAvailableCore extends ObjectModel
 
 		if ($existing_id > 0)
 		{
-			Db::getInstance()->autoExecute(
-				_DB_PREFIX_.'stock_available',
+			Db::getInstance()->update(
+				'stock_available',
 				array('out_of_stock' => (int)$out_of_stock),
-				'UPDATE',
 				'id_product = '.(int)$id_product.
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
@@ -254,11 +246,7 @@ class StockAvailableCore extends ObjectModel
 
 			StockAvailable::addSqlShopParams($params, $id_shop);
 
-			Db::getInstance()->autoExecute(
-				_DB_PREFIX_.'stock_available',
-				$params,
-				'INSERT'
-			);
+			Db::getInstance()->insert('stock_available', $params);
 		}
 	}
 

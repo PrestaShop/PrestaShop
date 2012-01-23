@@ -31,6 +31,13 @@ if (file_exists(dirname(__FILE__).'/../config/settings.inc.php'))
 abstract class DbCore
 {
 	/**
+	 * Constants used by insert() method
+	 */
+	const INSERT = 1;
+	const INSERT_IGNORE = 2;
+	const REPLACE = 3;
+
+	/**
 	 * @var string Server (eg. localhost)
 	 */
 	protected $server;
@@ -105,7 +112,7 @@ abstract class DbCore
 	abstract public function disconnect();
 
 	/**
-	 * Execute a query and get result ressource
+	 * Execute a query and get result resource
 	 *
 	 * @param string $sql
 	 * @return mixed
@@ -125,7 +132,7 @@ abstract class DbCore
 	abstract public function Insert_ID();
 
 	/**
-	 * Get number of affected rows in previous databse operation
+	 * Get number of affected rows in previous database operation
 	 */
 	abstract public function Affected_Rows();
 
@@ -167,7 +174,7 @@ abstract class DbCore
 	/**
 	 * Get Db object instance
 	 *
-	 * @param bool $master Decides wether the connection to be returned by the master server or the slave server
+	 * @param bool $master Decides whether the connection to be returned by the master server or the slave server
 	 * @return Db instance
 	 */
 	public static function getInstance($master = true)
@@ -246,86 +253,32 @@ abstract class DbCore
 	}
 
 	/**
-	 * Filter SQL query within a blacklist
-	 *
-	 * @param string $table Table where insert/update data
-	 * @param string $data Data to insert/update
-	 * @param string $type INSERT or INSERT IGNORE or REPLACE or UPDATE
-	 * @param string $where WHERE clause, only for UPDATE (optional)
-	 * @param int $limit LIMIT clause (optional)
-	 * @param bool $use_cache
-	 * @param bool $use_null If true, replace empty strings and NULL by a NULL value
-	 * @return mixed|boolean SQL query result
+	 * @deprecated 1.5.0 use insert() or update() method instead
 	 */
 	public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
 	{
-		if (!$data)
-			return true;
+		Tools::displayAsDeprecated();
+		if (substr($table, 0, strlen(_DB_PREFIX_)) == _DB_PREFIX_)
+			$table = substr($table, strlen(_DB_PREFIX_));
 
 		$type = strtoupper($type);
-		if ($type == 'INSERT' || $type == 'INSERT IGNORE' || $type == 'REPLACE')
+		switch ($type)
 		{
-			// Check if $data is a list of row
-			$current = current($data);
-			if (!is_array($current) || isset($current['type']))
-				$data = array($data);
+			case 'INSERT' :
+				return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT);
 
-			$keys = array();
-			$values_stringified = array();
-			foreach ($data as $row_data)
-			{
-				$values = array();
-				foreach ($row_data as $key => $value)
-				{
-					if (isset($keys_stringified))
-					{
-						// Check if row array mapping are the same
-						if (!in_array("`$key`", $keys))
-							throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
-					}
-					else
-						$keys[] = "`$key`";
+			case 'INSERT IGNORE' :
+				return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT_IGNORE);
 
-					if (!is_array($value))
-						$value = array('type' => 'text', 'value' => $value);
-					if ($value['type'] == 'sql')
-						$values[] = $value['value'];
-					else
-						$values[] = $use_null && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
-				}
-				$keys_stringified = implode(', ', $keys);
-				$values_stringified[] = '('.implode(', ', $values).')';
-			}
+			case 'REPLACE' :
+				return $this->insert($table, $data, $use_null, $use_cache, Db::REPLACE);
 
-			$sql = $type.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
-			if ($limit)
-				$sql .= ' LIMIT '.(int)$limit;
-			return (bool)$this->q($sql, $use_cache);
+			case 'UPDATE' :
+				return $this->update($table, $data, $where, $limit, $use_null, $use_cache);
+
+			default :
+				throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
 		}
-		else if ($type == 'UPDATE')
-		{
-			$sql = 'UPDATE `'.$table.'` SET ';
-			foreach ($data as $key => $value)
-			{
-				if (!is_array($value))
-					$value = array('type' => 'text', 'value' => $value);
-				if ($value['type'] == 'sql')
-					$sql .= "`$key` = {$value['value']},";
-				else
-					$sql .= ($use_null && ($value['value'] === '' || is_null($value['value']))) ? "`$key` = NULL," : "`$key` = '{$value['value']}',";
-			}
-
-			$sql = rtrim($sql, ',');
-			if ($where)
-				$sql .= ' WHERE '.$where;
-			if ($limit)
-				$sql .= ' LIMIT '.(int)$limit;
-			return (bool)$this->q($sql, $use_cache);
-		}
-		else
-			throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
-
-		return false;
 	}
 
 	/**
@@ -358,6 +311,101 @@ abstract class DbCore
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
 		return $result;
+	}
+
+	/**
+	 * Execute an INSERT query
+	 *
+	 * @param string $table Table name without prefix
+	 * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
+	 * @param bool $null_values If we want to use NULL values instead of empty quotes
+	 * @param bool $use_cache
+	 * @param $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
+	 * @return bool
+	 */
+	public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT)
+	{
+		if (!$data)
+			return true;
+
+		$table = _DB_PREFIX_.$table;
+		if ($type == Db::INSERT)
+			$insert_keyword = 'INSERT';
+		else if ($type == Db::INSERT_IGNORE)
+			$insert_keyword = 'INSERT IGNORE';
+		else if ($type == Db::REPLACE)
+			$insert_keyword = 'REPLACE';
+		else
+			throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE');
+
+		// Check if $data is a list of row
+		$current = current($data);
+		if (!is_array($current) || isset($current['type']))
+			$data = array($data);
+
+		$keys = array();
+		$values_stringified = array();
+		foreach ($data as $row_data)
+		{
+			$values = array();
+			foreach ($row_data as $key => $value)
+			{
+				if (isset($keys_stringified))
+				{
+					// Check if row array mapping are the same
+					if (!in_array("`$key`", $keys))
+						throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
+				}
+				else
+					$keys[] = "`$key`";
+
+				if (!is_array($value))
+					$value = array('type' => 'text', 'value' => $value);
+				if ($value['type'] == 'sql')
+					$values[] = $value['value'];
+				else
+					$values[] = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+			}
+			$keys_stringified = implode(', ', $keys);
+			$values_stringified[] = '('.implode(', ', $values).')';
+		}
+
+		$sql = $insert_keyword.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
+		return (bool)$this->q($sql, $use_cache);
+	}
+
+	/**
+	 * @param string $table Table name without prefix
+	 * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
+	 * @param string $where WHERE condition
+	 * @param int $limit
+	 * @param bool $null_values If we want to use NULL values instead of empty quotes
+	 * @param bool $use_cache
+	 * @return bool
+	 */
+	public function update($table, $data, $where = '', $limit = 0, $null_values = false, $use_cache = true)
+	{
+		if (!$data)
+			return true;
+
+		$table = _DB_PREFIX_.$table;
+		$sql = 'UPDATE `'.$table.'` SET ';
+		foreach ($data as $key => $value)
+		{
+			if (!is_array($value))
+				$value = array('type' => 'text', 'value' => $value);
+			if ($value['type'] == 'sql')
+				$sql .= "`$key` = {$value['value']},";
+			else
+				$sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? "`$key` = NULL," : "`$key` = '{$value['value']}',";
+		}
+
+		$sql = rtrim($sql, ',');
+		if ($where)
+			$sql .= ' WHERE '.$where;
+		if ($limit)
+			$sql .= ' LIMIT '.(int)$limit;
+		return (bool)$this->q($sql, $use_cache);
 	}
 
 	/**

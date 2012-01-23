@@ -113,9 +113,9 @@ class GroupReductionCore extends ObjectModel
 
 		$result = true;
 		if ($ids)
-			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'product_group_reduction_cache', array(
+			$result &= Db::getInstance()->update('product_group_reduction_cache', array(
 				'reduction' => (float)$this->reduction,
-			), 'UPDATE', 'id_product IN('.implode(', ', $ids).') AND id_group = '.(int)$this->id_group);
+			), 'id_product IN('.implode(', ', $ids).') AND id_group = '.(int)$this->id_group);
 
 		return $result;
 	}
