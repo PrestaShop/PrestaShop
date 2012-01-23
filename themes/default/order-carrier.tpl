@@ -34,6 +34,7 @@
 	var currencyBlank = '{$currencyBlank|intval}';
 	var txtProduct = "{l s='product'}";
 	var txtProducts = "{l s='products'}";
+	var orderUrl = '{$link->getPageLink("order", true)}';
 
 	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
 	{literal}
@@ -117,7 +118,7 @@
 			<div class="delivery_options">
 			{foreach $option_list as $key => $option}
 				<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
-					<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" {if $opc}onclick="updateCarrierSelectionAndGift();"{/if} id="delivery_option_{$id_address}_{$option@index}" value="{$key}" {if $delivery_option[$id_address] == $key}checked="checked"{/if} />
+					<input class="delivery_option_radio" type="radio" name="delivery_option[{$id_address}]" onclick="{if $opc}updateCarrierSelectionAndGift();{else}updateExtraCarrier('{$key}', {$id_address});{/if}" id="delivery_option_{$id_address}_{$option@index}" value="{$key}" {if $delivery_option[$id_address] == $key}checked="checked"{/if} />
 					<label for="delivery_option_{$id_address}_{$option@index}">
 						<table class="resume">
 							<tr>
@@ -132,7 +133,6 @@
 									{/foreach}
 								</td>
 								<td>
-								
 								{if $option.unique_carrier}
 									{foreach $option.carrier_list as $carrier}
 										{$carrier.instance->name}
@@ -167,18 +167,22 @@
 								</td>
 							</tr>
 						</table>
-						<table class="delivery_option_carrier">
+						<table class="delivery_option_carrier {if $delivery_option[$id_address] == $key}selected{/if}">
 							{foreach $option.carrier_list as $carrier}
 							<tr>
 								{if !$option.unique_carrier}
 								<td class="first_item">
+								<input type="hidden" value="{$carrier.instance->id}" name="id_carrier" />
 									{if $carrier.logo}
 										<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
 									{/if}
 								</td>
-								<td>{$carrier.instance->name}</td>
+								<td>
+									{$carrier.instance->name}
+								</td>
 								{/if}
 								<td {if $option.unique_carrier}class="first_item" colspan="2"{/if}>
+									<input type="hidden" value="{$carrier.instance->id}" name="id_carrier" />
 									{if isset($carrier.instance->delay[$cookie->id_lang])}
 										{$carrier.instance->delay[$cookie->id_lang]}
 									{/if}
@@ -190,6 +194,7 @@
 				</div>
 			{/foreach}
 			</div>
+			<div id="HOOK_EXTRACARRIER_{$id_address}">{$HOOK_EXTRACARRIER_ADDR.$id_address}</div>
 			{foreachelse}
 			<p class="warning" id="noCarrierWarning">
 				{if $cart->isMultiAddressDelivery()}

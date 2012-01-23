@@ -615,7 +615,15 @@ function refreshDeliveryOptions()
 {
 	$.each($('.delivery_option_radio'), function() {
 		if ($(this).attr('checked'))
+		{
 			$(this).parent().find('.delivery_option_carrier').show();
+			var carrier_id_list = $(this).val().split(',');
+			carrier_id_list.pop();
+			var it = this;
+			$(carrier_id_list).each(function() {
+				$(it).parent().find('input[value="'+this.toString()+'"]').change();
+			});
+		}
 		else
 			$(this).parent().find('.delivery_option_carrier').hide();
 	});
@@ -658,3 +666,25 @@ $(document).ready(function() {
 		}
 	);
 });
+
+function updateExtraCarrier(id_delivery_option, id_address)
+{
+	if(typeof(orderOpcUrl) != 'undefined')
+		var url = orderOpcUrl;
+	else
+		var url = orderUrl;
+	
+	$.ajax({
+		type: 'POST',
+		url: url,
+		async: true,
+		cache: false,
+		dataType : "json",
+		data: 'ajax=true&method=updateExtraCarrier&id_address='+id_address+'&id_delivery_option='+id_delivery_option+'&token=' + static_token,
+		success: function(jsonData)
+		{
+			console.log(jsonData);
+			$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);
+		}
+	});
+}

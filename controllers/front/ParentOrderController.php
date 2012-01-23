@@ -406,15 +406,19 @@ class ParentOrderControllerCore extends FrontController
 			'checked' => $checked,
 			'delivery_option' => $this->context->cart->getDeliveryOption()
 		));
-		$this->context->smarty->assign(array(
-			'HOOK_EXTRACARRIER' => Hook::exec('displayCarrierList', array('address' => $address)),
+		
+		$vars = array(
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
 				'delivery_option' => $this->context->cart->getDeliveryOption()
 			))
-		));
+		);
+		
+		Cart::addExtraCarriers($vars);
+		
+		$this->context->smarty->assign($vars);
 	}
 
 	protected function _assignWrappingAndTOS()
