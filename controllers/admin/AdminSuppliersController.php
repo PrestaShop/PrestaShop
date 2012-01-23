@@ -149,7 +149,6 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'select',
 					'label' => $this->l('State'),
 					'name' => 'id_state',
-					'required' => true,
 					'options' => array(
 						'id' => 'id_state',
 						'name' => 'name'
