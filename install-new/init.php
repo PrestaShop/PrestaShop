@@ -25,6 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+// Check PHP version
+if (version_compare(PHP_VERSION, '5.1', '<'))
+	die('You need at least PHP 5.1 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
+
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);
 define('_PS_INSTALL_PATH_', dirname(__FILE__).'/');
