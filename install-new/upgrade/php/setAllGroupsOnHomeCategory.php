@@ -35,13 +35,13 @@ function setAllGroupsOnHomeCategory()
 	foreach ($results AS $result)
 		$groups[] = $result['id_group'];
 
-	if (is_array($groups) && sizeof($groups))
+	if (is_array($groups) && count($groups))
 	{
 		// cleanGroups
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` 
 			WHERE `id_category` = 1');
 		// addGroups($groups);
-		$row = array('id_category' => 1, 'id_group' => (int)($groups));
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'category_group', $row, 'INSERT');
+		$row = array('id_category' => 1, 'id_group' => (int)$groups);
+		Db::getInstance()->insert('category_group', $row);
 	}
 }

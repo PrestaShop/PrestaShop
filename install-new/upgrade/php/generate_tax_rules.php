@@ -40,7 +40,7 @@ function generate_tax_rules()
 			'id_tax' => $id_tax,
 			'name' => 'Rule '.$tax['rate'].'%',
 		);
-		Db::getInstance()->AutoExecute(_DB_PREFIX_.'category_group', $row, 'INSERT');
+		Db::getInstance()->insert('category_group', $row);
 		$id_tax_rules_group = Db::getInstance()->insert_id;
 
 

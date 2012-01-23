@@ -391,11 +391,11 @@ class InstallXmlLoader
 	{
 		foreach ($this->delayed_inserts as $entity => $queries)
 		{
-			$type = 'INSERT IGNORE';
+			$type = Db::INSERT_IGNORE;
 			if ($entity == 'access')
-				$type = 'REPLACE';
+				$type = Db::REPLACE;
 
-			if (!Db::getInstance()->autoExecute(_DB_PREFIX_.$entity, $queries, $type))
+			if (!Db::getInstance()->insert($entity, $queries, false, true, $type))
 				$this->setError($this->language->l('An SQL error occured for entity <i>%1$s</i>: <i>%2$s</i>', $entity, Db::getInstance()->getMsgError()));
 			unset($this->delayed_inserts[$entity]);
 		}
