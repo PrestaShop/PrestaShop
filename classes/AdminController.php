@@ -489,11 +489,13 @@ class AdminControllerCore extends Controller
 			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
 			{
 				/* Hook Before Action */
+				Hook::exec('actionAdminBefore', array('controller' => $this));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
 
 				$return = $this->{'process'.Tools::toCamelCase($this->action)}($token);
 
 				/* Hook After Action */
+				Hook::exec('actionAdminAfter', array('controller' => $this, 'return' => $return));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 
 				return $return;
@@ -501,11 +503,13 @@ class AdminControllerCore extends Controller
 			else if (method_exists($this, $this->action))
 			{
 				/* Hook Before Action */
+				Hook::exec('actionAdminBefore', array('controller' => $this));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
 
 				$return = call_user_func(array($this, $this->action), $this->boxes);
 
 				/* Hook After Action */
+				Hook::exec('actionAdminAfter', array('controller' => $this, 'return' => $return));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 
 				return $return;
