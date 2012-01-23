@@ -127,7 +127,7 @@
 	</div>
 
 	<script type="text/javascript">
-		$(function() {
+		$(document).ready(function() {
 			var default_is_ok = false;
 
 			var manageDefaultSupplier = function() {
@@ -192,9 +192,16 @@
 
 			});
 
+			// @TODO: a better way to fix the accordion wrong size bug when the selected page is this page
 			setTimeout(function() {
 				$('#suppliers_accordion').accordion();
 			}, 500);
+
+			// Resize the accordion once the page is visible because of the bug with accordions initialized
+			// inside a display:none block not having the correct size.
+			$('#suppliers_accordion').parents('.product-tab-content').bind('displayed', function(){
+				$('#suppliers_accordion').accordion("resize");
+			});
 		});
 	</script>
 
