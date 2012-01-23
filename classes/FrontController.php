@@ -884,6 +884,7 @@ class FrontControllerCore extends Controller
 					$this->context->cookie->is_guest = $customer->isGuest();
 					$this->context->cookie->passwd = $customer->passwd;
 					$this->context->cookie->email = $customer->email;
+					$this->context->cookie->checkedTOS = true;
 					return $id_cart;
 				}
 			}
