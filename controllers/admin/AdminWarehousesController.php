@@ -114,9 +114,9 @@ class AdminWarehousesControllerCore extends AdminController
 		$this->displayInformation($this->l('Futhermore, for each warehouse, you have to check :'));
 		$this->displayInformation($this->l('the management type (according to the law in your country), the valuation currency, its associated carriers and shops.').'<br />');
 		$this->displayInformation($this->l('Finally, you can see detailed informations on your stock per warehouse, such as its valuation, the number of products and quantities stored, ...').'<br /><br />');
-		
+
 		$this->displayInformation($this->l('Be careful, products from different warehouses will need to be shipped in different packages.'));
-		
+
 		return parent::renderList();
 	}
 
@@ -168,7 +168,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'maxlength' => 45,
 					'required' => true,
 					'desc' => $this->l('Name of this warehouse'),
-					'hint' => $this->l('Invalid characters:').' 0-9!<>,;?=+()@#"�{}_$%:',
+					'hint' => $this->l('Invalid characters:').' !<>,;?=+()@#"�{}_$%:',
 				),
 				array(
 					'type' => 'text',
@@ -248,7 +248,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'type' => 'select',
 					'label' => $this->l('Carriers:'),
 					'name' => 'ids_carriers[]',
-					'required' => true,
+					'required' => false,
 					'multiple' => true,
 					'options' => array(
 						'query' => Carrier::getCarriers($this->context->language->id, true),

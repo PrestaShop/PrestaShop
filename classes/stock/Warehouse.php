@@ -68,7 +68,7 @@ class WarehouseCore extends ObjectModel
 		'fields' => array(
 			'id_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'reference' => 			array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
-			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 45),
+			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
 			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'management_type' => 	array('type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true),
 			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
