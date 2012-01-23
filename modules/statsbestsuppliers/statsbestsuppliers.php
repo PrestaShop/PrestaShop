@@ -142,7 +142,7 @@ class StatsBestSuppliers extends ModuleGrid
 		if (Validate::IsName($this->_sort))
 		{
 			$this->_query .= ' ORDER BY `'.$this->_sort.'`';
-			if (isset($this->_direction) && Validate::IsSortDirection($this->_direction))
+			if (isset($this->_direction) && Validate::isSortDirection($this->_direction))
 				$this->_query .= ' '.$this->_direction;
 		}
 
