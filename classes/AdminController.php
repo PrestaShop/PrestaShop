@@ -610,7 +610,10 @@ class AdminControllerCore extends Controller
 	public function processSave($token)
 	{
 		if ($this->id_object)
+		{
+			$this->object = $this->loadObject();
 			return $this->processUpdate($token);
+		}
 		else
 			return $this->processAdd($token);
 	}
@@ -673,7 +676,7 @@ class AdminControllerCore extends Controller
 		/* Checking fields validity */
 		$this->validateRules();
 
-		if (count($this->errors) <= 0)
+		if (empty($this->errors))
 		{
 			$id = (int)Tools::getValue($this->identifier);
 
@@ -745,7 +748,7 @@ class AdminControllerCore extends Controller
 			}
 		}
 		$this->errors = array_unique($this->errors);
-		if (count($this->errors) > 0)
+		if (!empty($this->errors))
 			return;
 		if (isset($object))
 			return $object;
