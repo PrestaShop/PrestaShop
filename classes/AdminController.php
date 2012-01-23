@@ -486,34 +486,43 @@ class AdminControllerCore extends Controller
 			if ($this->filter)
 				$this->processFilter();
 
-			if (!empty($this->action) && method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action))))
+
+			// Methods tests
+			$case1 = false;
+			$case2 = false;
+			if (!empty($this->action))
+			{
+				$case1 = method_exists($this, 'process'.ucfirst(Tools::toCamelCase($this->action)));
+				$case2 = method_exists($this, $this->action);
+			}
+
+
+			// Hook before action
+			if ($case1 || $case2)
 			{
 				/* Hook Before Action */
-				Hook::exec('actionAdminBefore', array('controller' => $this));
+				Hook::exec('actionAdmin'.ucfirst($this->action).'Before', array('controller' => $this));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
+			}
 
+
+			// Call process
+			if ($case1)
 				$return = $this->{'process'.Tools::toCamelCase($this->action)}($token);
+			else if ($case2)
+				$return = $this->{$this->action}($this->boxes);
 
-				/* Hook After Action */
-				Hook::exec('actionAdminAfter', array('controller' => $this, 'return' => $return));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 
-				return $return;
-			}
-			else if (method_exists($this, $this->action))
+			// Hook after action
+			if (isset($return) && ($case1 || $case2))
 			{
-				/* Hook Before Action */
-				Hook::exec('actionAdminBefore', array('controller' => $this));
-				Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
-
-				$return = call_user_func(array($this, $this->action), $this->boxes);
-
 				/* Hook After Action */
-				Hook::exec('actionAdminAfter', array('controller' => $this, 'return' => $return));
+				Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 				Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
 
 				return $return;
 			}
+
 		}
 	}
 
