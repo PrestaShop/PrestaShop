@@ -16,6 +16,6 @@
     <name>Commande r&#xE9;ceptionn&#xE9;e totalement</name>
   </supply_order_state>
   <supply_order_state id="supply_order_state_6">
-    <name>Commande clotur&#xE9;e</name>
+    <name>Commande annul&#xE9;e</name>
   </supply_order_state>
 </entity_supply_order_state>
