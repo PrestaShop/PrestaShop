@@ -451,7 +451,8 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO'], 300000))
 				$this->errors[] = $error;
-			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmpName))
+			$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+			if (!$tmpName || !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmpName, _PS_IMG_DIR_.'logo.jpg'))
 				$this->errors[] = 'an error occurred during logo copy';
@@ -472,7 +473,8 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_MAIL'], 300000))
 				$this->errors[] = $error;
-			if (!$tmpName == tempnam(_PS_TMP_IMG_DIR_, 'PS_MAIL') OR !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmpName))
+			$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_MAIL');
+			if (!$tmpName || !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmpName, _PS_IMG_DIR_.'logo_mail.jpg'))
 				$this->errors[] = 'an error occurred during logo copy';
@@ -492,7 +494,8 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_INVOICE'], 300000))
 				$this->errors[] = $error;
-			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_INVOICE') OR !move_uploaded_file($_FILES['PS_LOGO_INVOICE']['tmp_name'], $tmpName))
+			$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_INVOICE');
+			if (!$tmpName || !move_uploaded_file($_FILES['PS_LOGO_INVOICE']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmpName, _PS_IMG_DIR_.'logo_invoice.jpg'))
 				$this->errors[] = 'an error occurred during logo copy';
@@ -513,7 +516,8 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_STORES_ICON'], 300000))
 				$this->errors[] = $error;
-			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_STORES_ICON') OR !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmpName))
+			$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS_STORES_ICON');
+			if (!$tmpName || !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmpName))
 				return false;
 			if ($id_shop = Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmpName, _PS_IMG_DIR_.'logo_stores.gif'))
 				$this->errors[] = 'an error occurred during logo copy';
