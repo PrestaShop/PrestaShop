@@ -43,7 +43,7 @@ function module_reinstall_blocksearch()
 				FROM  `'._DB_PREFIX_.'hook_module` hm
 				LEFT JOIN `'._DB_PREFIX_.'hook` h on hm.id_hook=h.id_hook
 				WHERE h.name = "'.$hook_name.'" group by id_hook');
-			$res &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'hook_module', $row, 'INSERT');
+			$res &= Db::getInstance()->insert('hook_module', $row);
 		}
 		return $res;
 	}
