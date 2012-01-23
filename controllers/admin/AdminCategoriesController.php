@@ -401,7 +401,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$image = cacheImage(_PS_CAT_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
+		$image = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.'/'.$obj->id.'.jpg', $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true);
 
 		$this->fields_value = array(
 			'image' => $image ? $image : false,
@@ -546,7 +546,7 @@ class AdminCategoriesControllerCore extends AdminController
 			foreach ($images_types as $k => $image_type)
 			{
 				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				imageResize(
+				ImageManager::resize(
 					_PS_CAT_IMG_DIR_.$id_category.'.jpg',
 					_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).$theme.'.jpg',
 					(int)$image_type['width'], (int)$image_type['height']

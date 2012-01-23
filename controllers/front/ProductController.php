@@ -466,7 +466,7 @@ class ProductControllerCore extends FrontController
 			if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name']))
 			{
 				$file_name = md5(uniqid(rand(), true));
-				if ($error = checkImage($file, (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
+				if ($error = ImageManager::validateUpload($file, (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE')))
 					$this->errors[] = $error;
 
 				$product_picture_width = (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
@@ -474,10 +474,10 @@ class ProductControllerCore extends FrontController
 				if ($error || (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($file['tmp_name'], $tmp_name)))
 					return false;
 				/* Original file */
-				else if (!imageResize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
+				else if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
 				/* A smaller one */
-				else if (!imageResize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height))
+				else if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');
 				else if (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777))
 					$this->errors[] = Tools::displayError('An error occurred during the image upload.');

@@ -335,7 +335,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'class' => 'button'
 		);
 
-		$image = cacheImage(_PS_MANU_IMG_DIR_.'/'.$manufacturer->id.'.jpg', $this->table.'_'.(int)$manufacturer->id.'.'.$this->imageType, 350, $this->imageType, true);
+		$image = ImageManager::thumbnail(_PS_MANU_IMG_DIR_.'/'.$manufacturer->id.'.jpg', $this->table.'_'.(int)$manufacturer->id.'.'.$this->imageType, 350, $this->imageType, true);
 
 		$this->fields_value = array(
 			'image' => $image ? $image : false,
@@ -685,7 +685,7 @@ class AdminManufacturersControllerCore extends AdminController
 			foreach ($images_types as $k => $image_type)
 			{
 				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				imageResize(
+				ImageManager::resize(
 					_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
 					_PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).$theme.'.jpg',
 					(int)$image_type['width'],

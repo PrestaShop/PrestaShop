@@ -564,11 +564,11 @@ class HomeSlider extends Module
 				{
 					$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 					$salt = sha1(microtime());
-					if ($error = checkImage($_FILES['image_'.$language['id_lang']]))
+					if ($error = ImageManager::validateUpload($_FILES['image_'.$language['id_lang']]))
 						$errors .= $error;
 					else if (!$temp_name || !move_uploaded_file($_FILES['image_'.$language['id_lang']]['tmp_name'], $temp_name))
 						return false;
-					else if (!imageResize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).$type))
+					else if (!ImageManager::resize($temp_name, dirname(__FILE__).'/images/'.Tools::encrypt($_FILES['image_'.$language['id_lang']]['name'].$salt).$type))
 						$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
 					if (isset($temp_name))
 						@unlink($temp_name);

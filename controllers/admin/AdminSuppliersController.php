@@ -243,7 +243,7 @@ class AdminSuppliersControllerCore extends AdminController
 		}
 
 		// set logo image
-		$image = cacheImage(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg', $this->table.'_'.(int)$this->object->id.'.'.$this->imageType, 350, $this->imageType, true);
+		$image = ImageManager::thumbnail(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg', $this->table.'_'.(int)$this->object->id.'.'.$this->imageType, 350, $this->imageType, true);
 		$this->fields_value['image'] = $image ? $image : false;
 		$this->fields_value['size'] = $image ? filesize(_PS_SUPP_IMG_DIR_.'/'.$this->object->id.'.jpg') / 1000 : false;
 
@@ -320,7 +320,7 @@ class AdminSuppliersControllerCore extends AdminController
 			{
 				$file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
 				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				imageResize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).$theme.'.jpg', (int)$image_type['width'], (int)$image_type['height']);
+				ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).$theme.'.jpg', (int)$image_type['width'], (int)$image_type['height']);
 			}
 		}
 	}

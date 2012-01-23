@@ -143,7 +143,7 @@ class BlockAdvertising extends Module
 			$file = false;
 			if (isset($_FILES['adv_img']) AND isset($_FILES['adv_img']['tmp_name']) AND !empty($_FILES['adv_img']['tmp_name']))
 			{
-				if ($error = checkImage($_FILES['adv_img'], Tools::convertBytes(ini_get('upload_max_filesize'))))
+				if ($error = ImageManager::validateUpload($_FILES['adv_img'], Tools::convertBytes(ini_get('upload_max_filesize'))))
 					$errors .= $error;
 				elseif ($dot_pos = strrpos($_FILES['adv_img']['name'],'.'))
 				{

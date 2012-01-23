@@ -245,7 +245,7 @@ abstract class InstallFixtures
 				@chmod($target_file, 0644);
 			}
 			// Resize the image if no cache was prepared in fixtures
-			else if (!imageResize($path.$id.'.jpg', $target_file, $type['width'], $type['height']))
+			else if (!ImageManager::resize($path.$id.'.jpg', $target_file, $type['width'], $type['height']))
 				$this->setError($this->language->l('Cannot create image "%s"', $id.'-'.$type['name']));
 		}
 	}
@@ -280,7 +280,7 @@ abstract class InstallFixtures
 				@chmod($target_file, 0644);
 			}
 			// Resize the image if no cache was prepared in fixtures
-			else if (!imageResize($path.$id.'.jpg', $target_file, $type['width'], $type['height']))
+			else if (!ImageManager::resize($path.$id.'.jpg', $target_file, $type['width'], $type['height']))
 				$this->setError($this->language->l('Cannot create image "%s"', $id.'-'.$type['name']));
 		}
 	}
