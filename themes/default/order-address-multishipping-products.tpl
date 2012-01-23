@@ -25,9 +25,9 @@
 *}
 <p>{l s='Choose the delivery addresses:'}</p>
 <script type="text/javascript">
-	CloseTxt = '{l s='Submit'}';
-	QtyChanged = '{l s='Some product quantities has changed, please check them.'}';
-	ShipToAnOtherAddress = '{l s='Ship to multiple addresses'}';
+	CloseTxt = '{l s='Submit' js=1}';
+	QtyChanged = '{l s='Some product quantities has changed, please check them.' js=1}';
+	ShipToAnOtherAddress = '{l s='Ship to multiple addresses' js=1}';
 </script>
 <div id="order-detail-content" class="table_block">
 	<table id="cart_summary" class="std">

@@ -68,12 +68,16 @@ class OrderOpcControllerCore extends ParentOrderController
 							{
 								if ($this->_processCarrier())
 								{
+									$carriers = $this->context->cart->simulateCarriersOutput();
+									$address_delivery = new Address($this->context->cart->id_address_delivery);
 									$return = array(
 										'summary' => $this->context->cart->getSummaryDetails(),
 										'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 										'HOOK_PAYMENT' => $this->_getPaymentMethods(),
 										'carrier_data' => $this->_getCarrierList(),
+										'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array('carriers' => $carriers))
 									);
+									Cart::addExtraCarriers($return);
 									die(Tools::jsonEncode($return));
 								}
 								else
@@ -436,8 +440,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$link_conditions .= '&content_only=1';
 		
 		$carriers = $this->context->cart->simulateCarriersOutput();
-		
-		$this->context->smarty->assign(array(
+		$vars = array(
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
 			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
 			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
@@ -451,7 +454,17 @@ class OrderOpcControllerCore extends ParentOrderController
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 			'delivery_option' => $this->context->cart->getDeliveryOption(),
 			'address_collection' => $this->context->cart->getAddressCollection(),
-			'opc' => true));
+			'opc' => true,
+			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
+				'carriers' => $carriers,
+				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
+				'delivery_option' => $this->context->cart->getDeliveryOption()
+			))
+		);
+		
+		Cart::addExtraCarriers($vars);
+		
+		$this->context->smarty->assign($vars);
 		
 		if ($this->context->customer->id)
 			$groups = $this->context->customer->getGroups();
@@ -469,9 +482,9 @@ class OrderOpcControllerCore extends ParentOrderController
 					'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 					'delivery_option' => $this->context->cart->getDeliveryOption()
 				)),
-				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl'),
-				'HOOK_EXTRACARRIER' => Hook::exec('displayCarrierList', array('address' => $address_delivery))
+				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl')
 			);
+			Cart::addExtraCarriers($result);
 			return $result;
 		}
 		if (sizeof($this->errors))

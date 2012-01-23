@@ -1717,7 +1717,7 @@ class CartCore extends ObjectModel
 				'carrier_list' => $best_price_carrier,
 				'is_best_price' => true,
 				'is_best_grade' => false,
-				'unique_carrier' => false
+				'unique_carrier' => (count($best_price_carrier) <= 1)
 			);
 
 			$best_grade_carrier = array();
@@ -1742,7 +1742,7 @@ class CartCore extends ObjectModel
 				$delivery_option_list[$id_address][$key] = array(
 					'carrier_list' => $best_grade_carrier,
 					'is_best_price' => false,
-					'unique_carrier' => false
+					'unique_carrier' => (count($best_grade_carrier) <= 1)
 				);
 
 			$delivery_option_list[$id_address][$key]['is_best_grade'] = true;
@@ -1769,7 +1769,7 @@ class CartCore extends ObjectModel
 					$delivery_option_list[$id_address][$key] = array(
 						'is_best_price' => false,
 						'is_best_grade' => false,
-					'unique_carrier' => false,
+						'unique_carrier' => true,
 						'carrier_list' => array(
 							$id_carrier => array(
 								'price_with_tax' => $price_with_tax,
@@ -1780,7 +1780,7 @@ class CartCore extends ObjectModel
 						)
 					);
 				else
-					$delivery_option_list[$id_address][$key]['unique_carrier'] = true;
+					$delivery_option_list[$id_address][$key]['unique_carrier'] = (count($delivery_option_list[$id_address][$key]['carrier_list']) <= 1);
 			}
 
 			foreach ($delivery_option_list as $id_address => $delivery_option)
@@ -1809,6 +1809,23 @@ class CartCore extends ObjectModel
 
 		$cache = $delivery_option_list;
 		return $delivery_option_list;
+	}
+	
+	public function carrierIsSelected($id_carrier, $id_address)
+	{
+		$delivery_option = $this->getDeliveryOption();
+		$delivery_option_list = $this->getDeliveryOptionList();
+		
+		if (!isset($delivery_option[$id_address]))
+			return false;
+			
+		if (!isset($delivery_option_list[$id_address][$delivery_option[$id_address]]))
+			return false;
+		
+		if (!in_array($id_carrier, array_keys($delivery_option_list[$id_address][$delivery_option[$id_address]]['carrier_list'])))
+			return false;
+			
+		return true;
 	}
 
 	/**
@@ -3136,5 +3153,34 @@ class CartCore extends ObjectModel
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * 
+	 * Execute hook displayCarrierList (extraCarrier) and merge theme to the $array
+	 * @param array $array
+	 */
+	public static function addExtraCarriers(&$array)
+	{
+		$first = true;
+		$hook_extracarrier_addr = array();
+		foreach (Context::getContext()->cart->getAddressCollection() as $address)
+		{
+			$hook = Hook::exec('displayCarrierList', array('address' => $address));
+			$hook_extracarrier_addr[$address->id] = $hook;
+			
+			if ($first)
+			{
+				$array = array_merge(
+					$array,
+					array('HOOK_EXTRACARRIER' => $hook)
+				);
+				$first = false;
+			}
+			$array = array_merge(
+				$array,
+				array('HOOK_EXTRACARRIER_ADDR' => $hook_extracarrier_addr)
+			);
+		}
 	}
 }
