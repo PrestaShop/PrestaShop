@@ -32,7 +32,7 @@ function generate_root_category_for_multishop()
 				'name' => 'Root',
 				'link_rewrite' => '',
 			);
-	Db::getInstance()->autoExecute(_DB_PREFIX_.'category_lang', $data, 'INSERT');
+	Db::getInstance()->insert('category_lang', $data);
 
 	$categories = Db::getInstance()->executeS('
 		SELECT `id_category`
@@ -45,7 +45,7 @@ function generate_root_category_for_multishop()
 				'id_category' => $category['id_category'],
 				'id_shop' => $shop['id_shop']
 			);
-	Db::getInstance()->autoExecute(_DB_PREFIX_.'category_shop', $data, 'INSERT');
+	Db::getInstance()->insert('category_shop', $data);
 
 	Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'category`

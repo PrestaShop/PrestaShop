@@ -44,8 +44,8 @@ function migrate_block_info_to_cms_block()
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="PS_LANG_DEFAULT"');
 		// 2) parent::install()
-		$result = Db::getInstance()->AutoExecute(_DB_PREFIX_.'module', 
-			array('name' => 'blockcms', 'active' => 1), 'INSERT');
+		$result = Db::getInstance()->insert('module',
+			array('name' => 'blockcms', 'active' => 1));
 		$id_module = Db::getInstance()->insert_Id();
 		// 3) hooks
 		$hooks = array('leftColumn', 'rightColumn', 'footer', 'header');
@@ -56,7 +56,7 @@ function migrate_block_info_to_cms_block()
 				FROM  `'._DB_PREFIX_.'hook_module` hm
 				LEFT JOIN `'._DB_PREFIX_.'hook` h on hm.id_hook=h.id_hook
 				WHERE h.name = "'.$hook_name.'" group by id_hook');
-			$res &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'hook_module', $row, 'INSERT');
+			$res &= Db::getInstance()->insert('hook_module', $row);
 		}
 
 		// module install
