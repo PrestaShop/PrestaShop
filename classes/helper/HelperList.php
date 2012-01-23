@@ -97,6 +97,9 @@ class HelperListCore extends Helper
 	public $specificConfirmDelete;
 	public $colorOnBackground;
 
+	/** @var bool If true, activates color on hover */
+	public $row_hover = true;
+
 	protected $identifiersDnd = array(
 		'id_product' => 'id_product',
 		'id_category' => 'id_category_to_move',
@@ -335,6 +338,7 @@ class HelperListCore extends Helper
 			'has_actions' => !empty($this->actions),
 			'has_bulk_actions' => !empty($this->bulk_actions),
 			'list_skip_actions' => $this->list_skip_actions,
+			'row_hover' => $this->row_hover,
 		)));
 		return $this->content_tpl->fetch();
 	}
@@ -620,6 +624,7 @@ class HelperListCore extends Helper
 			'table_dnd' => isset($table_dnd) ? $table_dnd : null,
 			'name' => isset($name) ? $name : null,
 			'name_id' => isset($name_id) ? $name_id : null,
+			'row_hover' => $this->row_hover,
 		)));
 
 		return $this->header_tpl->fetch();
