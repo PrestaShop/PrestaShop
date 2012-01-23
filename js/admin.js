@@ -1142,9 +1142,9 @@ function display_action_details(row_id, controller, token, action, params) {
 						var content = $('<tr class="details_'+id+' alt_row"></tr>');
 					else
 						var content = $('<tr class="details_'+id+'"></tr>');
-					content.append($('<td style="border:none!important;"><div class="details_content">'+data.data+'</div></td>').attr('colspan', current_element.parent().parent().find('td').length));
+					content.append($('<td style="border:none!important;">'+data.data+'</td>').attr('colspan', current_element.parent().parent().find('td').length));
 					current_element.parent().parent().after(content);
-					current_element.parent().parent().parent().find('.details_'+id+' div.details_content').hide();
+					current_element.parent().parent().parent().find('.details_'+id).hide();
 				}
 				current_element.data('dataMaped',true);
 				current_element.data('opened', false);
@@ -1156,17 +1156,13 @@ function display_action_details(row_id, controller, token, action, params) {
 	if (current_element.data('opened'))
 	{
 		current_element.find('img').attr('src', '../img/admin/more.png');
-		current_element.parent().parent().parent().find('.details_'+id+' div.details_content').slideUp('slow', function()
-		{
-			current_element.parent().parent().parent().find('.details_'+id).hide();
-		});
+		current_element.parent().parent().parent().find('.details_'+id).hide('fast');
 		current_element.data('opened', false);
 	}
 	else
 	{
 		current_element.find('img').attr('src', '../img/admin/less.png');
-		current_element.parent().parent().parent().find('.details_'+id).show();
-		current_element.parent().parent().parent().find('.details_'+id+' div.details_content').slideDown('slow');
+		current_element.parent().parent().parent().find('.details_'+id).show('fast');
 		current_element.data('opened', true);
 	}
 }
