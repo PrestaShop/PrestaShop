@@ -201,7 +201,9 @@
 					displayTabProductById(id, true, 0, null);
 				else
 				{
-					$("#product-tab-content-"+id).show();
+					$("#product-tab-content-"+id).show(0, function(){
+						$(this).trigger('displayed');
+					});
 					$("#link-"+id).addClass('selected');
 				}
 

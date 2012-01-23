@@ -224,8 +224,9 @@ function editProductAttribute(ids, token)
 function displayTabProductById(id, selected, index, stack)
 {
 	var myurl = $('#link-'+id).attr("href")+"&ajax=1";
+	var tab_selector = $("#product-tab-content-"+id);
 	// Used to check if the tab is already in the process of being loaded
-	$("#product-tab-content-"+id).addClass('loading');
+	tab_selector.addClass('loading');
 
 	if (selected)
 		$('#product-tab-content-wait').show();
@@ -236,22 +237,24 @@ function displayTabProductById(id, selected, index, stack)
 		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 		success : function(data)
 		{
-			$("#product-tab-content-"+id).html(data);
-			$("#product-tab-content-"+id).removeClass('not-loaded');
+			tab_selector.html(data);
+			tab_selector.removeClass('not-loaded');
 
 			if (selected)
 			{
 				$("#link-"+id).addClass('selected');
-				$("#product-tab-content-"+id).show();
+				tab_selector.show();
 			}
 		},
 		complete : function(data)
 		{
 			$("#product-tab-content-"+id).removeClass('loading');
 			if (selected)
+			{
 				$('#product-tab-content-wait').hide();
-
-			$("#product-tab-content-"+id).trigger('loaded');
+				tab_selector.trigger('displayed');
+			}
+			tab_selector.trigger('loaded');
 			if (stack && stack[index + 1])
 				displayTabProductById(stack[index + 1], selected, index + 1, stack);
 		},
@@ -372,5 +375,4 @@ $(document).ready(function() {
 	});
 
 	// Enable writing of the product name when the friendly url field in tab SEO is loaded
-	onTabLoad('Seo', enableProductName);
 });
