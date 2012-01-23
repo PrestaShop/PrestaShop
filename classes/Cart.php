@@ -693,14 +693,10 @@ class CartCore extends ObjectModel
 
 	public function addCartRule($id_cart_rule)
 	{
-		return Db::getInstance()->AutoExecute(
-			_DB_PREFIX_.'cart_cart_rule',
-			array(
-				'id_cart_rule' => (int)$id_cart_rule,
-				'id_cart' => (int)$this->id
-			),
-			'INSERT'
-		);
+		return Db::getInstance()->insert('cart_cart_rule', array(
+			'id_cart_rule' => (int)$id_cart_rule,
+			'id_cart' => (int)$this->id
+		));
 	}
 
 	public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = false, $id_address_delivery = 0)
@@ -849,7 +845,7 @@ class CartCore extends ObjectModel
 				if ((int)$quantity < $minimal_quantity)
 					return -1;
 
-				$result_add = Db::getInstance()->AutoExecute(_DB_PREFIX_.'cart_product', array(
+				$result_add = Db::getInstance()->insert('cart_product', array(
 					'id_product' => 			(int)$id_product,
 					'id_product_attribute' => 	(int)$id_product_attribute,
 					'id_cart' => 				(int)$this->id,
@@ -857,7 +853,7 @@ class CartCore extends ObjectModel
 					'id_shop' => 				$shop->getID(true),
 					'quantity' => 				(int)$quantity,
 					'date_add' => 				date('Y-m-d H:i:s')
-				), 'INSERT');
+				));
 
 				if (!$result_add)
 					return false;

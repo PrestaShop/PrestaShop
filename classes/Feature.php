@@ -161,11 +161,10 @@ class FeatureCore extends ObjectModel
 	 				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
 	 					AND `id_lang` = '.(int)$field['id_lang'];
 			$mode = Db::getInstance()->getRow($sql);
-			$result &= (!$mode) ? Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT') :
-			Db::getInstance()->AutoExecute(
-				_DB_PREFIX_.$this->def['table'].'_lang',
+			$result &= (!$mode) ? Db::getInstance()->insert($this->def['table'].'_lang', $field) :
+			Db::getInstance()->update(
+				$this->def['table'].'_lang',
 				$field,
-				'UPDATE',
 				'`'.$this->def['primary'].'` = '.(int)$this->id.' AND `id_lang` = '.(int)$field['id_lang']
 			);
 		}

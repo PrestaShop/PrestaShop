@@ -987,7 +987,7 @@ class CategoryCore extends ObjectModel
 		foreach ($groups as $group)
 		{
 			$row = array('id_category' => (int)$this->id, 'id_group' => (int)$group);
-			Db::getInstance()->AutoExecute(_DB_PREFIX_.'category_group', $row, 'INSERT');
+			Db::getInstance()->insert('category_group', $row);
 		}
 	}
 

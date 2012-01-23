@@ -145,7 +145,7 @@ class WarehouseCore extends ObjectModel
 			DELETE FROM '._DB_PREFIX_.'warehouse_shop
 			WHERE '.$this->def['primary'].' = '.(int)$this->id);
 
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_shop', $row_to_insert, 'INSERT');
+		Db::getInstance()->insert('warehouse_shop', $row_to_insert);
 	}
 
 	/**
@@ -190,7 +190,7 @@ class WarehouseCore extends ObjectModel
 			WHERE '.$this->def['primary'].' = '.(int)$this->id);
 
 		if ($row_to_insert)
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_carrier', $row_to_insert, 'INSERT');
+			Db::getInstance()->insert('warehouse_carrier', $row_to_insert);
 	}
 
 	/**
@@ -263,7 +263,7 @@ class WarehouseCore extends ObjectModel
 			'location' => pSQL($location),
 		);
 
-		return Db::getInstance()->autoExecute(_DB_PREFIX_.'warehouse_product_location', $row_to_insert, 'INSERT');
+		return Db::getInstance()->insert('warehouse_product_location', $row_to_insert);
 	}
 
 	/**

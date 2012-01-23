@@ -215,7 +215,7 @@ abstract class ModuleCore
 		}
 
 		// Install module and retrieve the installation id
-		$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version), 'INSERT');
+		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
 		{
 			$this->_errors[] = $this->l('Technical error : PrestaShop could not installed this module.');
@@ -500,10 +500,10 @@ abstract class ModuleCore
 		// Enable module in the shop where it is not enabled yet
 		foreach ($list as $id)
 			if (!in_array($id, $items))
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'module_shop', array(
+				Db::getInstance()->insert('module_shop', array(
 					'id_module' =>	$this->id,
 					'id_shop' =>	$id,
-				), 'INSERT');
+				));
 
 		return true;
 	}
@@ -630,12 +630,12 @@ abstract class ModuleCore
 				$position = 0;
 
 			// Register module in hook
-			$return &= Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module', array(
+			$return &= Db::getInstance()->insert('hook_module', array(
 				'id_module' => (int)$this->id,
 				'id_hook' => (int)$id_hook,
 				'id_shop' => (int)$shopID,
 				'position' => (int)($position + 1),
-			), 'INSERT');
+			));
 		}
 
 		return $return;
@@ -713,7 +713,7 @@ abstract class ModuleCore
 					'id_shop' => (int)$shopID,
 					'file_name' => pSQL($except),
 				);
-				$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'hook_module_exceptions', $insertException, 'INSERT');
+				$result = Db::getInstance()->insert('hook_module_exceptions', $insertException);
 				if (!$result)
 					return false;
 			}

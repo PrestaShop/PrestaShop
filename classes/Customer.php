@@ -535,7 +535,7 @@ class CustomerCore extends ObjectModel
 		foreach ($groups as $group)
 		{
 			$row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
-			Db::getInstance()->AutoExecute(_DB_PREFIX_.'customer_group', $row, 'INSERT');
+			Db::getInstance()->insert('customer_group', $row);
 		}
 	}
 

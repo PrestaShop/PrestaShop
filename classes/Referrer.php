@@ -271,7 +271,7 @@ class ReferrerCore extends ObjectModel
 				$registrations = $referrer->getRegistrations(null, $employee, $shop);
 				$stats_sales = $referrer->getStatsSales(null, $employee, $shop);
 
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'referrer_shop', array(
+				Db::getInstance()->update('referrer_shop', array(
 					'cache_visitors' => $stats_visits['uniqs'],
 					'cache_visits' => $stats_visits['visits'],
 					'cache_pages' => $stats_visits['pages'],
@@ -280,7 +280,7 @@ class ReferrerCore extends ObjectModel
 					'cache_sales' => number_format($stats_sales['sales'], 2, '.', ''),
 					'cache_reg_rate' => $stats_visits['uniqs'] ? $registrations / $stats_visits['uniqs'] : 0,
 					'cache_order_rate' => $stats_visits['uniqs'] ? $stats_sales['orders'] / $stats_visits['uniqs'] : 0,
-				), 'UPDATE', 'id_referrer = '.$referrer->id.' AND id_shop = '.$shop_id);
+				), 'id_referrer = '.$referrer->id.' AND id_shop = '.$shop_id);
 			}
 		}
 

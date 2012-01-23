@@ -81,21 +81,21 @@ class SpecificPriceRuleCore extends ObjectModel
 		if (!is_array($conditions))
 			return;
 
-		$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'specific_price_rule_condition_group', array(
+		$result = Db::getInstance()->insert('specific_price_rule_condition_group', array(
 			'id_specific_price_rule_condition_group' =>	'',
 			'id_specific_price_rule' =>	(int)$this->id
-		), 'INSERT');
+		));
 		if (!$result)
 			return false;
 		$id_specific_price_rule_condition_group = (int)Db::getInstance()->Insert_ID();
 		foreach ($conditions as $condition)
 		{
-			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.'specific_price_rule_condition', array(
+			$result = Db::getInstance()->insert('specific_price_rule_condition', array(
 				'id_specific_price_rule_condition' => '',
 				'id_specific_price_rule_condition_group' => (int)$id_specific_price_rule_condition_group,
 				'type' => $condition['type'],
 				'value' => $condition['value'],
-			), 'INSERT');
+			));
 			if (!$result)
 				return false;
 		}

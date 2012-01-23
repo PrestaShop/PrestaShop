@@ -383,9 +383,9 @@ abstract class ObjectModelCore
 
 		// Database insertion
 		if ($null_values)
-			$result = Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'INSERT');
+			$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), true);
 		else
-			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'INSERT');
+			$result = Db::getInstance()->insert($this->def['table'], $this->getFields());
 
 		if (!$result)
 			return false;
@@ -412,11 +412,11 @@ abstract class ObjectModelCore
 						foreach ($shops as $id_shop)
 						{
 							$field['id_shop'] = (int)$id_shop;
-							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
+							$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
 						}
 					}
 					else
-						$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
+						$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
 				}
 		}
 
@@ -457,9 +457,9 @@ abstract class ObjectModelCore
 
 		// Database update
 		if ($null_values)
-			$result = Db::getInstance()->autoExecuteWithNullValues(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'UPDATE', '`'.pSQL($this->def['primary']).'` = '.(int)($this->id));
+			$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, true);
 		else
-			$result = Db::getInstance()->autoExecute(_DB_PREFIX_.$this->def['table'], $this->getFields(), 'UPDATE', '`'.pSQL($this->def['primary']).'` = '.(int)($this->id));
+			$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 		if (!$result)
 			return false;
 
@@ -487,9 +487,9 @@ abstract class ObjectModelCore
 										.' AND id_shop = '.$field['id_shop'];
 
 							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
-								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'UPDATE', $where);
+								$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
 							else
-								$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
+								$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
 						}
 					}
 					// If this table is not linked to multishop system ...
@@ -498,9 +498,9 @@ abstract class ObjectModelCore
 						$where = pSQL($this->def['primary']).' = '.(int)$this->id
 									.' AND id_lang = '.(int)$field['id_lang'];
 						if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where))
-							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'UPDATE', $where);
+							$result &= Db::getInstance()->update($this->def['table'].'_lang', $field, $where);
 						else
-							$result &= Db::getInstance()->AutoExecute(_DB_PREFIX_.$this->def['table'].'_lang', $field, 'INSERT');
+							$result &= Db::getInstance()->insert($this->def['table'].'_lang', $field, 'INSERT');
 					}
 				}
 			}
@@ -977,11 +977,11 @@ abstract class ObjectModelCore
 		if (!is_array($fields))
 			return false;
 
-		if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'required_field WHERE object_name = \''.pSQL(get_class($this)).'\''))
+		if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'required_field WHERE object_name = \''.get_class($this).'\''))
 			return false;
 
 		foreach ($fields AS $field)
-			if (!Db::getInstance()->AutoExecute(_DB_PREFIX_.'required_field', array('object_name' => pSQL(get_class($this)), 'field_name' => pSQL($field)), 'INSERT'))
+			if (!Db::getInstance()->insert('required_field', array('object_name' => get_class($this), 'field_name' => pSQL($field))))
 				return false;
 		return true;
 	}
