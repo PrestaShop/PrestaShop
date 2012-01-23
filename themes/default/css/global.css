@@ -860,7 +860,7 @@ table#cart_summary .cart_total_price .total_price_container {
 	color:#666
 }
 
-#orderopc #login_form_content label {
+#order-opc #login_form_content label {
 	display:block;
 	margin:0 0 10px 0
 }
@@ -889,7 +889,7 @@ table#cart_summary .cart_total_price .total_price_container {
 }
 .lost_password a {color:#666}
 
-#orderopc .lost_password {
+#order-opc .lost_password {
 	display:block;
 	float:none;
 	margin:5px 0 10px;
@@ -962,12 +962,12 @@ table#cart_summary .cart_total_price .total_price_container {
 /* step 4 - paiement ************************************************************************** */
 
 /* #################### CSS MAXENCE  ########################
-#order .delivery_options_address, #orderopc .delivery_options_address {
+#order .delivery_options_address, #order-opc .delivery_options_address {
 width: 541px;
 margin-left: 7px;
 }
 */
-#order .delivery_options_address h3, #orderopc .delivery_options_address h3 {
+#order .delivery_options_address h3, #order-opc .delivery_options_address h3 {
 /*background: url("../img/table_header.gif") no-repeat;
 color: #374853;
 font-weight: bold;
@@ -981,51 +981,51 @@ margin: 10px 0 0 0;*/
     text-transform: uppercase;
 	background: none repeat scroll 0 0 #383838;
 }
-#order .delivery_option_radio, #orderopc .delivery_option_radio {
+#order .delivery_option_radio, #order-opc .delivery_option_radio {
 	float: left;
 	margin: 12px;
 }
-#order .delivery_option label, #orderopc .delivery_option label {
+#order .delivery_option label, #order-opc .delivery_option label {
 	display: block;
 	padding-bottom: 5px;
 }
-#order .delivery_option label > table.resume, #orderopc .delivery_option label > table.resume {
+#order .delivery_option label > table.resume, #order-opc .delivery_option label > table.resume {
 	height: 40px;
 	width: 685px;
 }
-#order .delivery_option.item, #orderopc .delivery_option.item {
+#order .delivery_option.item, #order-opc .delivery_option.item {
 	background: #fafafa;
 }
-#order .delivery_option.alternate_item, #orderopc .delivery_option.alternate_item {
+#order .delivery_option.alternate_item, #order-opc .delivery_option.alternate_item {
 	border-top: 1px solid #bdc2c9;
 	background: #f1f2f4;
 	border-bottom: 1px solid #bdc2c9;
 }
-#order .delivery_option label > table.resume td, #orderopc .delivery_option label > table.resume td {
+#order .delivery_option label > table.resume td, #order-opc .delivery_option label > table.resume td {
 	padding: 0 8px;
 }
-#order .delivery_option label > table.resume td + td, #orderopc .delivery_option label > table.resume td + td {
+#order .delivery_option label > table.resume td + td, #order-opc .delivery_option label > table.resume td + td {
 	width: 300px;
 }
-#order .delivery_option label > table.resume td + td + td, #orderopc .delivery_option label > table.resume td + td + td {
+#order .delivery_option label > table.resume td + td + td, #order-opc .delivery_option label > table.resume td + td + td {
 	width: 100px;
 	text-align: right;
 }
 #order .delivery_option_carrier td {width:200px}
 #order .delivery_option_carrier td + td {width:280px;}
 #order .delivery_option_carrier td + td + td {width:200px}
-#order .delivery_options_address .delivery_option_logo, #order .delivery_option_carrier .delivery_option_logo, #orderopc .delivery_options_address .delivery_option_logo {
+#order .delivery_options_address .delivery_option_logo, #order .delivery_option_carrier .delivery_option_logo, #order-opc .delivery_options_address .delivery_option_logo {
 	padding-left:10px;
 	width: 160px;
 }
-#order .delivery_options_address .delivery_option_logo img, #orderopc .delivery_options_address .delivery_option_logo img { /*height: 40px;*/ }
-#orderopc .delivery_option_carrier {
+#order .delivery_options_address .delivery_option_logo img, #order-opc .delivery_options_address .delivery_option_logo img { /*height: 40px;*/ }
+#order-opc .delivery_option_carrier {
 	margin: 0 0 0 45px;
 	padding: 5px;
 	width: 680px;
 	background: white;
 }
-#order .delivery_option_carrier .first_item {
+#order .delivery_option_carrier .first_item, #order-opc .delivery_option_carrier .first_item {
 	padding:0 0 0 5px;
 	background:url(../img/arrow_right_2.png) no-repeat 0 2px
 }
@@ -1060,11 +1060,11 @@ margin: 10px 0 0 0;*/
 #carrierTable  th {
 	padding:0 15px;
 	height: 29px;
-   font-weight: bold;
-   line-height:29px;
-   color:#fff;
+	font-weight: bold;
+	line-height:29px;
+	color:#fff;
 	text-transform:uppercase;
-   background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
+	background:url(../img/bg_address_title.png) repeat-x 0 0 #989898
 }
 #carrierTable  td {
 	padding:15px;
@@ -1129,56 +1129,60 @@ a.iframe {font-weight:bold}
 /* ************************************************************************************************
       PAGE ORDER-OPC
 ************************************************************************************************ */
-#orderopc #left_column {display:none}
-#orderopc #center_column{width:757px}
+#order-opc #left_column {display:none}
+#order-opc #center_column{width:757px}
 
 
-#orderopc h2 {}
-#orderopc h2 span {
+#order-opc h2 {}
+#order-opc h2 span {
 	display:inline-block;
 	padding:5px 7px;
 	color:#fff;
 	background:#333;
 }
 
-#orderopc #login_form fieldset {
+#order-opc #login_form fieldset {
 	background: none repeat scroll 0 0 #FFFFE0;
-    border: 1px solid #E6DB55;
-    font-size: 13px;
-    margin: 0 0 10px;
-    padding: 10px;
+	border: 1px solid #E6DB55;
+	font-size: 13px;
+	margin: 0 0 10px;
+	padding: 10px;
 }
-#orderopc #login_form fieldset p {padding:0}
-#orderopc #login_form fieldset p a {padding:0}
+#order-opc #login_form fieldset p {padding:0}
+#order-opc #login_form fieldset p a {padding:0}
 
-#orderopc #new_account_form p.submit {
+#order-opc #new_account_form p.submit {
 	margin-right: 120px;
 	text-align:right
 }
-#orderopc #new_account_form p.opc-required {margin-left:20px}
+#order-opc #new_account_form p.opc-required {margin-left:20px}
 
-#orderopc .addresses {margin-bottom:20px}
+#order-opc .addresses {margin-bottom:20px}
 
-#orderopc #opc_delivery_methods h3 {margin-top:20px;}
-#orderopc #opc_delivery_methods textarea {
+#order-opc #opc_delivery_methods h3 {margin-top:20px;}
+#order-opc #opc_delivery_methods textarea {
 	height:60px;
 	width:755px;
 	border:1px solid #ccc
 }
 
-#orderopc #opc_payment_methods {margin-bottom:20px}
-#orderopc #opc_payment_methods #opc_payment_methods-content p{margin:0}
+#order-opc #opc_payment_methods {margin-bottom:20px}
+#order-opc #opc_payment_methods #opc_payment_methods-content p{margin:0}
 
-#orderopc .delivery_option_carrier td {width:200px}
-#orderopc .delivery_option_carrier td + td {width:280px;}
-#orderopc .delivery_option_carrier td + td + td {width:200px}
-#orderopc .delivery_option_carrier {
+#order-opc .delivery_option_carrier td {width:200px}
+#order-opc .delivery_option_carrier td + td {width:280px;}
+#order-opc .delivery_option_carrier td + td + td {width:200px}
+#order-opc .delivery_option_carrier {
 	margin: 0 0 0 45px;
 	padding: 5px;
 	width: 680px;
 	background: white;
+	display: none;
 }
-#orderopc .delivery_option_carrier .first_item {padding:0 0 0 5px}
+#order-opc .delivery_option_carrier.selected {
+	display: table;
+} 
+#order-opc .delivery_option_carrier .first_item {padding:0 0 0 5px}
 
 
 /* ************************************************************************************************

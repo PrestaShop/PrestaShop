@@ -28,8 +28,9 @@ function updateCarrierList(json)
 {
 	var html = json.carrier_block;
 	
-	if (json.HOOK_EXTRACARRIER !== null && json.HOOK_EXTRACARRIER != undefined)
-		html += json.HOOK_EXTRACARRIER;
+	// @todo  check with theme 1.4
+	//if ($('#HOOK_EXTRACARRIER').length == 0 && json.HOOK_EXTRACARRIER !== null && json.HOOK_EXTRACARRIER != undefined)
+	//	html += json.HOOK_EXTRACARRIER;
 	
 	$('#carrier_area').replaceWith(html);
 	
@@ -181,7 +182,7 @@ function updateCarrierSelectionAndGift()
 			$('#opc_payment_methods-overlay').fadeOut('slow');
 			$('#opc_delivery_methods-overlay').fadeOut('slow');
 		}
-   });
+	});
 }
 
 function confirmFreeOrder()
