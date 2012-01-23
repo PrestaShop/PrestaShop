@@ -51,16 +51,16 @@ class AdminProductsControllerCore extends AdminController
 		'Prices' => 1,
 		'Seo' => 2,
 		'Associations' => 3,
-		'Images' => false,
+		'Images' => 9,
 		'Shipping' => 4,
 		'Combinations' => 5,
-		'Features' => false,
-		'Customization' => false,
-		'Attachments' => false,
+		'Features' => 10,
+		'Customization' => 11,
+		'Attachments' => 12,
 		'Quantities' => 6,
-		'Suppliers' => false,
-		'Warehouses' => false,
-		'Accounting' => false,
+		'Suppliers' => 13,
+		'Warehouses' => 14,
+		'Accounting' => 15,
 	);
 
 	protected $default_tab = 'Informations';
