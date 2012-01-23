@@ -25,6 +25,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * This file will be removed in 1.6
+ */
+
 include(dirname(__FILE__).'/config/config.inc.php');
 Tools::displayFileAsDeprecated();
 
