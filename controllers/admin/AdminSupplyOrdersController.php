@@ -738,6 +738,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 	$this->list_simple_header = true;
 	 	$this->list_no_link = true;
 	 	$this->colorOnBackground = true;
+	 	$this->row_hover = false;
 	 	$this->bulk_actions = array('Update' => array('text' => $this->l('Update selected'), 'confirm' => $this->l('Update selected items?')));
 		$this->addRowAction('details');
 
@@ -782,6 +783,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// display these global order informations
 		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
 		$this->displayInformation($this->l('Be careful : once you update, you cannot go back unless you add new negative stock movements.').'<br />');
+		$this->displayInformation($this->l('Please not that a green line means that you received what you expected, and a red line means that you received more than expected.').'<br />');
 
 		// generates content
 		$content = $helper->generateList($this->_list, $this->fieldsDisplay);
