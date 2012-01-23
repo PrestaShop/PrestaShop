@@ -81,7 +81,11 @@ class OrderSlipCore extends ObjectModel
 		foreach ($orderDetailList as $key => $orderDetail)
 		{
 			if ($qty = (int)($productQtyList[$key]))
-				Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_slip_detail', array('id_order_slip' => (int)($this->id), 'id_order_detail' => (int)($orderDetail), 'product_quantity' => $qty), 'INSERT');
+				Db::getInstance()->insert('order_slip_detail', array(
+					'id_order_slip' => (int)$this->id,
+					'id_order_detail' => (int)$orderDetail,
+					'product_quantity' => $qty,
+				));
 		}
 	}
 
@@ -227,7 +231,7 @@ class OrderSlipCore extends ObjectModel
 				'amount_tax_excl' => (float)($tab['amount_tax_excl']),
 				'amount_tax_incl' => (float)($tab['amount_tax_incl']),
 			);
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_slip_detail', $insertOrderSlip, 'INSERT');
+			Db::getInstance()->insert('order_slip_detail', $insertOrderSlip);
 		}
 	}
 

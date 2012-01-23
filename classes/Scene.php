@@ -139,7 +139,7 @@ class SceneCore extends ObjectModel
 				'id_category' => (int)$category,
 			);
 		}
-		return Db::getInstance()->autoExecute(_DB_PREFIX_.'scene_category', $data, 'INSERT');
+		return Db::getInstance()->insert('scene_category', $data);
 	}
 
 	public function deleteCategories()
@@ -173,7 +173,7 @@ class SceneCore extends ObjectModel
 			);
 		}
 
-		return Db::getInstance()->autoExecute(_DB_PREFIX_.'scene_products', $data, 'INSERT');
+		return Db::getInstance()->insert('scene_products', $data);
 	}
 
 	public function deleteZoneProducts()

@@ -68,15 +68,15 @@ class OrderReturnCore extends ObjectModel
 	{
 		/* Classic product return */
 		if ($orderDetailList)
-			foreach ($orderDetailList AS $key => $orderDetail)
-				if ($qty = (int)($productQtyList[$key]))
-					Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_return_detail', array('id_order_return' => (int)($this->id), 'id_order_detail' => (int)($orderDetail), 'product_quantity' => $qty, 'id_customization' => 0), 'INSERT');
+			foreach ($orderDetailList as $key => $orderDetail)
+				if ($qty = (int)$productQtyList[$key])
+					Db::getInstance()->insert('order_return_detail', array('id_order_return' => (int)$this->id, 'id_order_detail' => (int)$orderDetail, 'product_quantity' => $qty, 'id_customization' => 0));
 		/* Customized product return */
 		if ($customizationIds)
-			foreach ($customizationIds AS $orderDetailId => $customizations)
-				foreach ($customizations AS $customizationId)
-					if ($quantity = (int)($customizationQtyInput[(int)($customizationId)]))
-						Db::getInstance()->AutoExecute(_DB_PREFIX_.'order_return_detail', array('id_order_return' => (int)($this->id), 'id_order_detail' => (int)($orderDetailId), 'product_quantity' => $quantity, 'id_customization' => (int)($customizationId)), 'INSERT');
+			foreach ($customizationIds as $orderDetailId => $customizations)
+				foreach ($customizations as $customizationId)
+					if ($quantity = (int)$customizationQtyInput[(int)$customizationId])
+						Db::getInstance()->insert('order_return_detail', array('id_order_return' => (int)$this->id, 'id_order_detail' => (int)$orderDetailId, 'product_quantity' => $quantity, 'id_customization' => (int)$customizationId));
 	}
 	
 	public function checkEnoughProduct($orderDetailList, $productQtyList, $customizationIds, $customizationQtyInput)

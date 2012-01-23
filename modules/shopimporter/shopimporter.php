@@ -726,7 +726,7 @@ class shopimporter extends ImportModule
 							$item['cart_products'][$k][$key] = $foreignKey[$key][$val];
 						else
 							$item['cart_products'][$k][$key] = 0;
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'cart_product', $item['cart_products'][$k],'INSERT');
+				Db::getInstance()->insert('cart_product', $item['cart_products'][$k]);
 			}
 			foreach($item['order_products'] as $k => $order_products)
 			{
@@ -755,7 +755,7 @@ class shopimporter extends ImportModule
 							$item['order_products'][$k][$key] = $foreignKey[$key][$val];
 						else
 							$item['order_products'][$k][$key] = 0;
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $item['order_products'][$k],'INSERT');
+				Db::getInstance()->insert('order_detail', $item['order_products'][$k]);
 			}
 			//save order history
 			foreach($item['order_history'] as $k => $order_history)
@@ -767,7 +767,7 @@ class shopimporter extends ImportModule
 						else
 							$item['order_history'][$k][$key] = 0;
 
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'order_history', $item['order_history'][$k],'INSERT');
+				Db::getInstance()->insert('order_history', $item['order_history'][$k]);
 			}
 		}
 	}

@@ -89,35 +89,35 @@ class BlockCms extends Module
 		return false;
 
 		// Install fixtures for blockcms
-		if (!Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block', array(
+		if (!Db::getInstance()->insert('cms_block', array(
 			'id_cms_category' =>	1,
 			'location' =>			0,
 			'position' =>			0,
-		), 'INSERT'))
+		)))
 			return false;
 		$id_cms_block = Db::getInstance()->Insert_ID();
 		$result = true;
 		$shops =  Shop::getShops(true, null, true);
 		foreach ($shops as $shop)
-			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_shop', array(
+			$result &= Db::getInstance()->insert('cms_block_shop', array(
 				'id_cms_block' =>	$id_cms_block,
 				'id_shop' =>		$shop
-			), 'INSERT');
+			));
 			
 
 		foreach (Language::getLanguages(false) as $lang)
-			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_lang', array(
+			$result &= Db::getInstance()->insert('cms_block_lang', array(
 				'id_cms_block' =>	$id_cms_block,
 				'id_lang' =>		$lang['id_lang'],
 				'name' =>			$this->l('Information'),
-			), 'INSERT');
+			));
 
 		foreach (CMS::getCMSPages(null, 1) as $cms)
-			$result &= Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_page', array(
+			$result &= Db::getInstance()->insert('cms_block_page', array(
 				'id_cms_block' =>	$id_cms_block,
 				'id_cms' =>			$cms['id_cms'],
 				'is_category' =>	0,
-			), 'INSERT');
+			));
 
 		return $result;
 	}
@@ -740,10 +740,10 @@ class BlockCms extends Module
 				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'cms_block_shop WHERE id_cms_block='.(int)$id_cms_block);
 				foreach ($assos_shop as $asso)
 					foreach ($asso as $id_shop => $row)
-						Db::getInstance()->autoExecute(_DB_PREFIX_.'cms_block_shop', array(
+						Db::getInstance()->insert('cms_block_shop', array(
 							'id_cms_block' =>	(int)$id_cms_block,
 							'id_shop' => (int)$id_shop,
-						), 'INSERT');
+						));
 			}
 			
 			$cmsBoxes = Tools::getValue('cmsBox');

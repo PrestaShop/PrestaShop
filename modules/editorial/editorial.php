@@ -80,14 +80,14 @@ class Editorial extends Module
 		{
 			$id_editorial = Db::getInstance()->Insert_ID();
 			foreach (Language::getLanguages(false) as $lang)
-				$res &= Db::getInstance()->autoExecute(_DB_PREFIX_.'editorial_lang', array(
+				$res &= Db::getInstance()->insert('editorial_lang', array(
 					'id_editorial' =>			$id_editorial,
 					'id_lang' =>				$lang['id_lang'],
 					'body_title' =>				'Lorem ipsum dolor sit amet',
 					'body_subheading' =>		'Excepteur sint occaecat cupidatat non proident',
 					'body_paragraph' =>			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>',
 					'body_logo_subheading' =>	'Lorem ipsum presta shop amet',
-					), 'INSERT');
+					));
 		}
 
 		if (!$res)

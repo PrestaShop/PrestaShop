@@ -2102,7 +2102,7 @@ class ProductCore extends ObjectModel
 			AND id_shop = '.(int)$this->id_shop
 		);
 
-		Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_carrier', $data, 'INSERT');
+		Db::getInstance()->insert('product_carrier', $data);
 	}
 
 	/**
@@ -2913,14 +2913,10 @@ class ProductCore extends ObjectModel
 	public function changeAccessories($accessories_id)
 	{
 		foreach ($accessories_id as $id_product_2)
-			Db::getInstance()->AutoExecute(
-				_DB_PREFIX_.'accessory',
-				array(
-					'id_product_1' => (int)$this->id,
-					'id_product_2' => (int)$id_product_2
-				),
-				'INSERT'
-			);
+			Db::getInstance()->insert('accessory', array(
+				'id_product_1' => (int)$this->id,
+				'id_product_2' => (int)$id_product_2
+			));
 	}
 
 	/**
@@ -2929,7 +2925,7 @@ class ProductCore extends ObjectModel
 	public function addFeaturesCustomToDB($id_value, $lang, $cust)
 	{
 		$row = array('id_feature_value' => (int)$id_value, 'id_lang' => (int)$lang, 'value' => pSQL($cust));
-		return Db::getInstance()->autoExecute(_DB_PREFIX_.'feature_value_lang', $row, 'INSERT');
+		return Db::getInstance()->insert('feature_value_lang', $row);
 	}
 
 	public function addFeaturesToDB($id_feature, $id_value, $cust = 0)
@@ -2937,11 +2933,11 @@ class ProductCore extends ObjectModel
 		if ($cust)
 		{
 			$row = array('id_feature' => (int)$id_feature, 'custom' => 1);
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'feature_value', $row, 'INSERT');
+			Db::getInstance()->insert('feature_value', $row);
 			$id_value = Db::getInstance()->Insert_ID();
 		}
 		$row = array('id_feature' => (int)$id_feature, 'id_product' => (int)$this->id, 'id_feature_value' => (int)$id_value);
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'feature_product', $row, 'INSERT');
+		Db::getInstance()->insert('feature_product', $row);
 		if ($id_value)
 			return ($id_value);
 	}
@@ -3104,7 +3100,7 @@ class ProductCore extends ObjectModel
 
 			$row['id_product'] = $id_product_new;
 			unset($row['id_product_attribute']);
-			$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute', $row, 'INSERT');
+			$return &= Db::getInstance()->insert('product_attribute', $row);
 
 			$id_product_attribute_new = (int)Db::getInstance()->Insert_ID();
 			if ($result_images = Product::_getAttributeImageAssociations($id_product_attribute_old))
@@ -3115,7 +3111,7 @@ class ProductCore extends ObjectModel
 			foreach ($result2 as $row2)
 			{
 				$row2['id_product_attribute'] = $id_product_attribute_new;
-				$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'product_attribute_combination', $row2, 'INSERT');
+				$return &= Db::getInstance()->insert('product_attribute_combination', $row2);
 			}
 		}
 		return !$return ? false : $combination_images;
@@ -3151,7 +3147,7 @@ class ProductCore extends ObjectModel
 			$data = array(
 				'id_product_1' => (int)$id_product_new,
 				'id_product_2' => (int)$row['id_product_2']);
-			$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'accessory', $data, 'INSERT');
+			$return &= Db::getInstance()->insert('accessory', $data);
 		}
 		return $return;
 	}
@@ -3216,7 +3212,7 @@ class ProductCore extends ObjectModel
 			{
 				$old_id_feature_value = $result2['id_feature_value'];
 				unset($result2['id_feature_value']);
-				$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'feature_value', $result2, 'INSERT');
+				$return &= Db::getInstance()->insert('feature_value', $result2);
 				$max_fv = Db::getInstance()->getRow('
 					SELECT MAX(`id_feature_value`) AS nb
 					FROM `'._DB_PREFIX_.'feature_value`');
@@ -3230,12 +3226,12 @@ class ProductCore extends ObjectModel
 					WHERE `id_feature_value` = '.(int)$old_id_feature_value.'
 					AND `id_lang` = '.(int)$language['id_lang']);
 					$result3['id_feature_value'] = $new_id_feature_value;
-					$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'feature_value_lang', $result3, 'INSERT');
+					$return &= Db::getInstance()->insert('feature_value_lang', $result3);
 				}
 				$row['id_feature_value'] = $new_id_feature_value;
 			}
 			$row['id_product'] = $id_product_new;
-			$return &= Db::getInstance()->AutoExecute(_DB_PREFIX_.'feature_product', $row, 'INSERT');
+			$return &= Db::getInstance()->insert('feature_product', $row);
 		}
 		return $return;
 	}
@@ -3301,11 +3297,7 @@ class ProductCore extends ObjectModel
 
 			unset($customization_field['id_customization_field']);
 
-			if (!Db::getInstance()->AutoExecute(
-					_DB_PREFIX_.'customization_field',
-					$customization_field,
-					'INSERT'
-				)
+			if (!Db::getInstance()->insert('customization_field', $customization_field)
 				|| !$customization_field_id = Db::getInstance()->Insert_ID())
 				return false;
 

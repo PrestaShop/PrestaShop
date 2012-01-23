@@ -188,10 +188,10 @@ class BlockLink extends Module
 		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'blocklink_shop WHERE id_blocklink='.(int)$id_link);
 		foreach ($assos_shop as $asso)
 			foreach ($asso as $id_shop => $row)
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'blocklink_shop', array(
+				Db::getInstance()->insert('blocklink_shop', array(
 					'id_blocklink' =>	(int)$id_link,
 					'id_shop' => (int)$id_shop,
-				), 'INSERT');
+				));
 		return true;
 	}
 		

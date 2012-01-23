@@ -99,8 +99,8 @@ class ShopUrlCore extends ObjectModel
 
 	public function setMain()
 	{
-		$res = Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 0), 'UPDATE', 'id_shop = '.(int)$this->id_shop);
-		$res &= Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 1), 'UPDATE', 'id_shop_url = '.(int)$this->id);
+		$res = Db::getInstance()->update('shop_url', array('main' => 0), 'id_shop = '.(int)$this->id_shop);
+		$res &= Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = '.(int)$this->id);
 		$this->main = true;
 
 		// Reset main URL for all shops to prevent problems
@@ -112,7 +112,7 @@ class ShopUrlCore extends ObjectModel
 				) = 0
 				GROUP BY s1.id_shop';
 		foreach (Db::getInstance()->executeS($sql) as $row)
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'shop_url', array('main' => 1), 'UPDATE', 'id_shop_url = '.$row['id_shop_url']);
+			Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = '.$row['id_shop_url']);
 
 		return $res;
 	}
