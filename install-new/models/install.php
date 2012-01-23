@@ -378,12 +378,21 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		// Set localization configuration
-		$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-		if (file_exists(_PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml'))
-			$localization_file = _PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml';
+		$version = str_replace('.', '', _PS_VERSION_);
+		$version = substr($version, 0, 2);
+
+		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/download/localization/'.$version.'/'.$data['shop_country'].'.xml');
+		if (!$localization_file_content)
+		{
+			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml'))
+				$localization_file = _PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml';
+
+			$localization_file_content = file_get_contents($localization_file);
+		}
 
 		$locale = new LocalizationPackCore();
-		$locale->loadLocalisationPack(file_get_contents($localization_file), '', true);
+		$locale->loadLocalisationPack($localization_file_content, '', true);
 
 		// Create default employee
 		if (isset($data['admin_firstname']) && isset($data['admin_lastname']) && isset($data['admin_password']) && isset($data['admin_email']))
