@@ -71,7 +71,7 @@ class TabCore extends ObjectModel
 	 * - add access for admin profile
 	 *
 	 * @param boolean $autodate
-	 * @param boolean $nullValues
+	 * @param boolean $null_values
 	 * @return int id_tab
 	 */
 	public function add($autodate = true, $null_values = false)
@@ -90,6 +90,7 @@ class TabCore extends ObjectModel
 	 *
 	 * @todo this should not be public static but protected
 	 * @param int $id_tab
+	 * @param Context $context
 	 * @return boolean true if succeed
 	 */
 	public static function initAccess($id_tab, Context $context = null)
@@ -275,8 +276,10 @@ class TabCore extends ObjectModel
 	public static function enablingForModule($module)
 	{
 		$tabs = Tab::getCollectionFromModule($module);
-		if (!empty($tabs)) {
-			foreach ($tabs as $tab) {
+		if (!empty($tabs))
+		{
+			foreach ($tabs as $tab)
+			{
 				$tab->active = 1;
 				$tab->save();
 			}
@@ -294,8 +297,10 @@ class TabCore extends ObjectModel
 	public static function disablingForModule($module)
 	{
 		$tabs = Tab::getCollectionFromModule($module);
-		if (!empty($tabs)) {
-			foreach ($tabs as $tab) {
+		if (!empty($tabs))
+		{
+			foreach ($tabs as $tab)
+			{
 				$tab->active = 0;
 				$tab->save();
 			}

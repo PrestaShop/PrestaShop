@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2011 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -79,9 +79,9 @@ class ReferrerCore extends ObjectModel
 			AND (r.http_referer_regexp_not IS NULL OR r.http_referer_regexp_not = \'\' OR cs.http_referer NOT REGEXP r.http_referer_regexp_not)
 			AND (r.request_uri_regexp_not IS NULL OR r.request_uri_regexp_not = \'\' OR cs.request_uri NOT REGEXP r.request_uri_regexp_not)';
 
-	public function add($autodate = true, $nullValues = false)
+	public function add($autodate = true, $null_values = false)
 	{
-		if (!($result = parent::add($autodate, $nullValues)))
+		if (!($result = parent::add($autodate, $null_values)))
 			return false;
 		Referrer::refreshCache(array(array('id_referrer' => $this->id)));
 		Referrer::refreshIndex(array(array('id_referrer' => $this->id)));
@@ -334,22 +334,24 @@ class ReferrerCore extends ObjectModel
 		if ((int)$id_product && !$stats_visits['visits'] && !$stats_sales['orders'])
 			exit;
 
-		$json_array = array();
-		$json_array[] = '"id_product":"'.(int)$product->id.'"';
-		$json_array[] = '"product_name":"'.addslashes($product->name).'"';
-		$json_array[] = '"uniqs":"'.(int)$stats_visits['uniqs'].'"';
-		$json_array[] = '"visitors":"'.(int)$stats_visits['visitors'].'"';
-		$json_array[] = '"visits":"'.(int)$stats_visits['visits'].'"';
-		$json_array[] = '"pages":"'.(int)$stats_visits['pages'].'"';
-		$json_array[] = '"registrations":"'.(int)$registrations.'"';
-		$json_array[] = '"orders":"'.(int)$stats_sales['orders'].'"';
-		$json_array[] = '"sales":"'.Tools::displayPrice($stats_sales['sales'], $currency).'"';
-		$json_array[] = '"cart":"'.Tools::displayPrice(((int)$stats_sales['orders'] ? $stats_sales['sales'] / (int)$stats_sales['orders'] : 0), $currency).'"';
-		$json_array[] = '"reg_rate":"'.number_format((int)$stats_visits['uniqs'] ? (int)$registrations / (int)$stats_visits['uniqs'] : 0, 4, '.', '').'"';
-		$json_array[] = '"order_rate":"'.number_format((int)$stats_visits['uniqs'] ? (int)$stats_sales['orders'] / (int)$stats_visits['uniqs'] : 0, 4, '.', '').'"';
-		$json_array[] = '"click_fee":"'.Tools::displayPrice((int)$stats_visits['visits'] * $referrer->click_fee, $currency).'"';
-		$json_array[] = '"base_fee":"'.Tools::displayPrice($stats_sales['orders'] * $referrer->base_fee, $currency).'"';
-		$json_array[] = '"percent_fee":"'.Tools::displayPrice($stats_sales['sales'] * $referrer->percent_fee / 100, $currency).'"';
-		die ('[{'.implode(',', $json_array).'}]');
+		$json_array = array(
+			'id_product' => (int)$product->id,
+			'product_name' => addslashes($product->name),
+			'uniqs' => (int)$stats_visits['uniqs'],
+			'visitors' => (int)$stats_visits['visitors'],
+			'visits' => (int)$stats_visits['visits'],
+			'pages' => (int)$stats_visits['pages'],
+			'registrations' => (int)$registrations,
+			'orders' => (int)$stats_sales['orders'],
+			'sales' => Tools::displayPrice($stats_sales['sales'], $currency),
+			'cart' => Tools::displayPrice(((int)$stats_sales['orders'] ? $stats_sales['sales'] / (int)$stats_sales['orders'] : 0), $currency),
+			'reg_rate' => number_format((int)$stats_visits['uniqs'] ? (int)$registrations / (int)$stats_visits['uniqs'] : 0, 4, '.', ''),
+			'order_rate' => number_format((int)$stats_visits['uniqs'] ? (int)$stats_sales['orders'] / (int)$stats_visits['uniqs'] : 0, 4, '.', ''),
+			'click_fee' => Tools::displayPrice((int)$stats_visits['visits'] * $referrer->click_fee, $currency),
+			'base_fee' => Tools::displayPrice($stats_sales['orders'] * $referrer->base_fee, $currency),
+			'percent_fee' => Tools::displayPrice($stats_sales['sales'] * $referrer->percent_fee / 100, $currency),
+		);
+
+		die ('['.Tools::jsonEncode($json_array).']');
 	}
 }

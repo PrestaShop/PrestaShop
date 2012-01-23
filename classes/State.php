@@ -28,19 +28,19 @@
 class StateCore extends ObjectModel
 {
 	/** @var integer Country id which state belongs */
-	public 		$id_country;
+	public $id_country;
 
 	/** @var integer Zone id which state belongs */
-	public 		$id_zone;
+	public $id_zone;
 
 	/** @var string 2 letters iso code */
-	public 		$iso_code;
+	public $iso_code;
 
 	/** @var string Name */
-	public 		$name;
+	public $name;
 
 	/** @var boolean Status for delivery */
-	public		$active = true;
+	public $active = true;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -74,36 +74,38 @@ class StateCore extends ObjectModel
 	}
 
 	/**
-	* Get a state name with its ID
-	*
-	* @param integer $id_state Country ID
-	* @return string State name
-	*/
+	 * Get a state name with its ID
+	 *
+	 * @param integer $id_state Country ID
+	 * @return string State name
+	 */
 	public static function getNameById($id_state)
 	{
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `name`
-		FROM `'._DB_PREFIX_.'state`
-		WHERE `id_state` = '.(int)($id_state));
+			SELECT `name`
+			FROM `'._DB_PREFIX_.'state`
+			WHERE `id_state` = '.(int)$id_state
+		);
 
-        return $result['name'];
-    }
+		return $result['name'];
+	}
 
 	/**
-	* Get a state id with its name
-	*
-	* @param string $id_state Country ID
-	* @return integer state id
-	*/
+	 * Get a state id with its name
+	 *
+	 * @param string $id_state Country ID
+	 * @return integer state id
+	 */
 	public static function getIdByName($state)
-    {
-	  	$result = Db::getInstance()->getRow('
-		SELECT `id_state`
-		FROM `'._DB_PREFIX_.'state`
-		WHERE `name` LIKE \''.pSQL($state).'\'');
+	{
+		$result = Db::getInstance()->getValue('
+			SELECT `id_state`
+			FROM `'._DB_PREFIX_.'state`
+			WHERE `name` LIKE \''.pSQL($state).'\'
+		');
 
-        return ((int)($result['id_state']));
-    }
+        return (int)$result;
+	}
 
 	/**
 	* Get a state id with its iso code
@@ -112,13 +114,13 @@ class StateCore extends ObjectModel
 	* @return integer state id
 	*/
 	public static function getIdByIso($iso_code)
-    {
+	{
 	  	return Db::getInstance()->getValue('
 			SELECT `id_state`
 			FROM `'._DB_PREFIX_.'state`
 			WHERE `iso_code` = \''.pSQL($iso_code).'\''
 		);
-    }
+	}
 
 	/**
 	* Delete a state only if is not in use
@@ -130,7 +132,7 @@ class StateCore extends ObjectModel
 		if (!$this->isUsed())
 		{
 			/* Database deletion */
-			$result = Db::getInstance()->execute('DELETE FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'` WHERE `'.$this->def['primary'] .'` = '.(int)$this->id);
+			$result = Db::getInstance()->delete(_DB_PREFIX_.$this->def['table'], '`'.$this->def['primary'].'` = '.(int)$this->id);
 			if (!$result)
 				return false;
 
@@ -160,11 +162,12 @@ class StateCore extends ObjectModel
 	 */
 	public function countUsed()
 	{
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(*) AS nb_used
-		FROM `'._DB_PREFIX_.'address`
-		WHERE `'.$this->def['primary'].'` = '.(int)($this->id));
-		return $row['nb_used'];
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'address`
+			WHERE `'.$this->def['primary'].'` = '.(int)$this->id
+		);
+		return $result;
 	}
 
     public static function getStatesByIdCountry($id_country)
@@ -181,32 +184,33 @@ class StateCore extends ObjectModel
 
 	public static function hasCounties($id_state)
 	{
-		return sizeof(County::getCounties((int)$id_state));
+		return count(County::getCounties((int)$id_state));
 	}
-	
+
 	public static function getIdZone($id_state)
 	{
 		if (!Validate::isUnsignedId($id_state))
 			die(Tools::displayError());
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_zone`
-		FROM `'._DB_PREFIX_.'state`
-		WHERE `id_state` = '.(int)($id_state));
+			SELECT `id_zone`
+			FROM `'._DB_PREFIX_.'state`
+			WHERE `id_state` = '.(int)$id_state
+		);
 	}
 
-		/**
-		 * @param $ids_states
-		 * @param $id_zone
-		 * @return bool
-		 */
-		public function affectZoneToSelection($ids_states, $id_zone)
-		{
-			// cast every array values to int (security)
-			$ids_states = array_map('intval', $ids_states);
-			return Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int)$id_zone.' WHERE `id_state` IN ('.implode(',', $ids_states).')
-			');
-		}
+	/**
+	 * @param $ids_states
+	 * @param $id_zone
+	 * @return bool
+	 */
+	public function affectZoneToSelection($ids_states, $id_zone)
+	{
+		// cast every array values to int (security)
+		$ids_states = array_map('intval', $ids_states);
+		return Db::getInstance()->execute('
+		UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int)$id_zone.' WHERE `id_state` IN ('.implode(',', $ids_states).')
+		');
+	}
 }
 
