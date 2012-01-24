@@ -76,12 +76,16 @@
 	<ul id="categories-treeview" class="filetree">
 		<li id="{$categories.trads.Root.id_category}" class="hasChildren">
 			<span class="folder">
-				<input type="{if !$categories.use_radio}checkbox{else}radio{/if}"
-						name="{$categories.input_name}"
-						value="{$categories.trads.Root.id_category}"
-						{if $home_is_selected}checked{/if}
-						onclick="clickOnCategoryBox($(this));" />
-					{$categories.trads.Root.name}
+				{if $categories.top_category->id != $categories.trads.Root.id_category}
+					<input type="{if !$categories.use_radio}checkbox{else}radio{/if}"
+							name="{$categories.input_name}"
+							value="{$categories.trads.Root.id_category}"
+							{if $home_is_selected}checked{/if}
+							onclick="clickOnCategoryBox($(this));" />
+						<span class="category_label">{$categories.trads.Root.name}</span>
+				{else}
+					&nbsp;
+				{/if}
 			</span>
 			<ul>
 				<li><span class="placeholder">&nbsp;</span></li>

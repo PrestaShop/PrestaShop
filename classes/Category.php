@@ -673,6 +673,8 @@ class CategoryCore extends ObjectModel
 				$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 			else
 				$shop = $context->shop;
+		else
+			return new Category($shop->getCategory(), $id_lang);
 		$is_more_than_one_root_category = count(Category::getCategoriesWithoutParent()) > 1;
 		if ((!Shop::isFeatureActive() && $is_more_than_one_root_category) ||
 			Shop::isFeatureActive() && $is_more_than_one_root_category && $context->shop() != Shop::CONTEXT_SHOP)
@@ -922,7 +924,7 @@ class CategoryCore extends ObjectModel
 
 		$categories = null;
 		$id_current = $this->id;
-		$context->shop = ($context->shop->id) ? $context->shop : new Shop(Configuration::get('PS_DEFAULT_SHOP'));
+		$context->shop = ($context->shop->id) ? $context->shop : new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		while (true)
 		{
 			$sql = '

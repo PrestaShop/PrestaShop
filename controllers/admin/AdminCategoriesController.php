@@ -323,6 +323,7 @@ class AdminCategoriesControllerCore extends AdminController
 						'use_radio' => true,
 						'use_search' => false,
 						'disabled_categories' => array(4),
+						'top_category' => Category::getTopCategory(),
 					)
 				),
 				array(
@@ -407,6 +408,15 @@ class AdminCategoriesControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+				'values' => Shop::getTree()
+			);
+		}
 		if (Tools::isSubmit('add'.$this->table.'root'))
 			unset($this->fields_form['input'][2],$this->fields_form['input'][3]);
 
