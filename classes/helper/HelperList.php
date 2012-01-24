@@ -94,7 +94,7 @@ class HelperListCore extends Helper
 	public $list_skip_actions = array();
 
 	public $bulk_actions = false;
-	public $specificConfirmDelete;
+	public $specificConfirmDelete = null;
 	public $colorOnBackground;
 
 	/** @var bool If true, activates color on hover */
@@ -464,12 +464,16 @@ class HelperListCore extends Helper
 		if (!is_null($name))
 			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
 
-		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
+		$data = array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
-			'confirm' => (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name),
 			'action' => self::$cache_lang['Delete'],
-			'id' => $id,
-		)));
+			'id' => $id
+		);
+		
+		if ($this->specificConfirmDelete !== false)
+			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
+		
+		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();
 	}
