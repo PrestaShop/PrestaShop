@@ -730,19 +730,19 @@ class CustomerCore extends ObjectModel
 	public function getOutstanding()
 	{
 		$query = new DbQuery();
-		$query->select('SUM(oi.total_paid_tax_incl)')
-			->from('order_invoice', 'oi')
-			->leftJoin('orders', 'o', 'oi.id_order = o.id_order')
-			->groupBy('o.id_customer')
-			->where('o.id_customer = '.(int)$this->id);
+		$query->select('SUM(oi.total_paid_tax_incl)');
+		$query->from('order_invoice', 'oi');
+		$query->leftJoin('orders', 'o', 'oi.id_order = o.id_order');
+		$query->groupBy('o.id_customer');
+		$query->where('o.id_customer = '.(int)$this->id);
 		$total_paid = (float)Db::getInstance()->getValue($query->build());
 
 		$query = new DbQuery();
-		$query->select('SUM(op.amount)')
-			->from('order_payment', 'op')
-			->leftJoin('orders', 'o', 'op.id_order = o.id_order')
-			->groupBy('o.id_customer')
-			->where('o.id_customer = '.(int)$this->id);
+		$query->select('SUM(op.amount)');
+		$query->from('order_payment', 'op');
+		$query->leftJoin('orders', 'o', 'op.id_order = o.id_order');
+		$query->groupBy('o.id_customer');
+		$query->where('o.id_customer = '.(int)$this->id);
 		$total_rest = (float)Db::getInstance()->getValue($query->build());
 
 		return $total_paid - $total_rest;

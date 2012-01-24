@@ -123,18 +123,17 @@ class CurrencyCore extends ObjectModel
 	 * @param int|string $iso_code int for iso code number string for iso code
 	 * @return boolean
 	 */
-	public static function exists ($iso_code)
+	public static function exists($iso_code)
 	{
-		if(is_int($iso_code))
+		if (is_int($iso_code))
 			$id_currency_exists = Currency::getIdByIsoCodeNum($iso_code);
 		else
 			$id_currency_exists = Currency::getIdByIsoCode($iso_code);
 
-		if ($id_currency_exists){
+		if ($id_currency_exists)
 			return true;
-		} else {
+		else
 			return false;
-		}
 	}
 
 	public function deleteSelection($selection)
@@ -173,7 +172,7 @@ class CurrencyCore extends ObjectModel
 	 * @param string $side left or right
 	 * @return string formated sign
 	 */
-	public function getSign($side=NULL)
+	public function getSign($side = null)
 	{
 		if (!$side)
 			return $this->sign;
@@ -296,7 +295,7 @@ class CurrencyCore extends ObjectModel
 		$conversion_rate = 1;
 		if ($defaultCurrency->iso_code != $isoCodeSource)
 		{
-			foreach ($data->currency AS $currency)
+			foreach ($data->currency as $currency)
 				if ($currency['iso_code'] == $defaultCurrency->iso_code)
 				{
 					$conversion_rate = round((float)$currency['rate'], 6);
@@ -312,15 +311,15 @@ class CurrencyCore extends ObjectModel
 				$rate = 1;
 			else
 			{
-				foreach ($data->currency AS $obj)
+				foreach ($data->currency as $obj)
 					if ($this->iso_code == strval($obj['iso_code']))
 					{
-						$rate = (float) $obj['rate'];
+						$rate = (float)$obj['rate'];
 						break;
 					}
 			}
 
-			$this->conversion_rate = round($rate /  $conversion_rate, 6);
+			$this->conversion_rate = round($rate / $conversion_rate, 6);
 		}
 		$this->update();
 	}

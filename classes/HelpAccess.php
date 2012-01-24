@@ -83,12 +83,12 @@ class HelpAccessCore
         $res = @file_get_contents($url, 0, $ctx);
 
 	    $infos = preg_split('/\|/', $res);
-	    if (sizeof($infos) > 0)
+	    if (count($infos) > 0)
 	    {
             $version = trim($infos[0]);
             if (!empty($version))
             {
-                if (sizeof($infos) > 1)
+                if (count($infos) > 1)
                     $tooltip = trim($infos[1]);
             }
 	    }

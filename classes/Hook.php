@@ -411,7 +411,7 @@ font-style:italic;"><img style="padding-right:5px;" src="'._MODULE_DIR_.$moduleI
 		$newOS = new OrderState((int)($newOrderStatusId), $order->id_lang);
 
 		$return = ((int)($newOS->id) == Configuration::get('PS_OS_PAYMENT')) ? Hook::exec('paymentConfirm', array('id_order' => (int)($order->id))) : true;
-		$return = Hook::exec('updateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id))) AND $return;
+		$return = Hook::exec('updateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id))) && $return;
 		return $return;
 	}
 
@@ -459,7 +459,7 @@ font-style:italic;"><img style="padding-right:5px;" src="'._MODULE_DIR_.$moduleI
 	public static function paymentReturn($id_order, $id_module)
 	{
 		Tools::displayAsDeprecated();
-		if (Validate::isUnsignedId($id_order) AND Validate::isUnsignedId($id_module))
+		if (Validate::isUnsignedId($id_order) && Validate::isUnsignedId($id_module))
 		{
 			$params = array();
 			$order = new Order((int)($id_order));
@@ -485,7 +485,7 @@ font-style:italic;"><img style="padding-right:5px;" src="'._MODULE_DIR_.$moduleI
 	public static function PDFInvoice($pdf, $id_order)
 	{
 		Tools::displayAsDeprecated();
-		if (!is_object($pdf) OR !Validate::isUnsignedId($id_order))
+		if (!is_object($pdf) || !Validate::isUnsignedId($id_order))
 			return false;
 		return Hook::exec('PDFInvoice', array('pdf' => $pdf, 'id_order' => $id_order));
 	}

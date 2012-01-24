@@ -72,7 +72,7 @@ class GuestCore extends ObjectModel
 		),
 	);
 
-	function userAgent()
+	public function userAgent()
 	{
 		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		$acceptLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
@@ -96,7 +96,7 @@ class GuestCore extends ObjectModel
 		}
 		
 		// Only the first language is returned
-		return (sizeof($langsArray) ? key($langsArray) : '');
+		return (count($langsArray) ? key($langsArray) : '');
 	}
 
 	protected function getBrowser($userAgent)
@@ -121,7 +121,7 @@ class GuestCore extends ObjectModel
 				
 				return $result['id_web_browser'];
 			}
-		return NULL;
+		return null;
 	}
 	
 	protected function getOs($userAgent)
@@ -142,7 +142,7 @@ class GuestCore extends ObjectModel
 				
 				return $result['id_operating_system'];
 			}
-		return NULL;
+		return null;
 	}
 	
 	public static function getFromCustomer($id_customer)
@@ -177,9 +177,9 @@ class GuestCore extends ObjectModel
 	
 	public static function setNewGuest($cookie)
 	{
-		$guest = new Guest(isset($cookie->id_customer) ? Guest::getFromCustomer((int)($cookie->id_customer)) : NULL);
+		$guest = new Guest(isset($cookie->id_customer) ? Guest::getFromCustomer((int)($cookie->id_customer)) : null);
 		$guest->userAgent();
-		if ($guest->id_operating_system OR $guest->id_web_browser)
+		if ($guest->id_operating_system || $guest->id_web_browser)
 		{
 			$guest->save();
 			$cookie->id_guest = (int)($guest->id);

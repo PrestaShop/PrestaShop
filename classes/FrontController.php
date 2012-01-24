@@ -105,13 +105,13 @@ class FrontControllerCore extends Controller
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
 
-		if ($this->ssl AND !Tools::usingSecureMode() AND Configuration::get('PS_SSL_ENABLED'))
+		if ($this->ssl && !Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
-		else if (Configuration::get('PS_SSL_ENABLED') AND Tools::usingSecureMode() AND !($this->ssl))
+		else if (Configuration::get('PS_SSL_ENABLED') && Tools::usingSecureMode() && !($this->ssl))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
@@ -134,15 +134,15 @@ class FrontControllerCore extends Controller
 		ob_start();
 
 		// Switch language if needed and init cookie language
-		if ($iso = Tools::getValue('isolang') AND Validate::isLanguageIsoCode($iso) AND ($id_lang = (int)(Language::getIdByIso($iso))))
+		if ($iso = Tools::getValue('isolang') && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)(Language::getIdByIso($iso))))
 			$_GET['id_lang'] = $id_lang;
 
 		Tools::switchLanguage();
 		Tools::setCookieLanguage($this->context->cookie);
 		$currency = Tools::setCurrency($this->context->cookie);
 
-		$protocol_link = (Configuration::get('PS_SSL_ENABLED') OR Tools::usingSecureMode()) ? 'https://' : 'http://';
-		$useSSL = ((isset($this->ssl) AND $this->ssl AND Configuration::get('PS_SSL_ENABLED')) OR Tools::usingSecureMode()) ? true : false;
+		$protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
+		$useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
 		$protocol_content = ($useSSL) ? 'https://' : 'http://';
 		$link = new Link($protocol_link, $protocol_content);
 		$this->context->link = $link;
@@ -150,31 +150,31 @@ class FrontControllerCore extends Controller
 		if ($id_cart = (int)$this->recoverCart())
 			$this->context->cookie->id_cart = (int)$id_cart;
 
-		if ($this->auth AND !$this->context->customer->isLogged($this->guestAllowed))
+		if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed))
 			Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
 
 		/* Theme is missing or maintenance */
 		if (!is_dir(_PS_THEME_DIR_))
 			die(Tools::displayError('Current theme unavailable. Please check your theme directory name and permissions.'));
-		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' AND !(int)(Configuration::get('PS_SHOP_ENABLE')))
+		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' && !(int)(Configuration::get('PS_SHOP_ENABLE')))
 			$this->maintenance = true;
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
 
-		if (isset($_GET['logout']) OR ($this->context->customer->logged AND Customer::isBanned($this->context->customer->id)))
+		if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id)))
 		{
 			$this->context->customer->logout();
 
 			// Login information have changed, so we check if the cart rules still apply
 			CartRule::autoRemoveFromCart();
 
-			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
+			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		}
 		elseif (isset($_GET['mylogout']))
 		{
 			$this->context->customer->mylogout();
-			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL);
+			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		}
 
 		$_MODULES = array();
@@ -186,13 +186,13 @@ class FrontControllerCore extends Controller
 			if ($cart->OrderExists())
 				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
 			/* Delete product of cart, if user can't make an order from his country */
-			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) AND
-					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) AND
-					$cart->nbProducts() AND intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 AND
+			elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) &&
+					!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) &&
+					$cart->nbProducts() && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 &&
 					!FrontController::isInWhitelistForGeolocation())
 				unset($this->context->cookie->id_cart, $cart);
 			// update cart values
-			elseif ($this->context->cookie->id_customer != $cart->id_customer OR $this->context->cookie->id_lang != $cart->id_lang OR $currency->id != $cart->id_currency)
+			elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency)
 			{
 				if ($this->context->cookie->id_customer)
 					$cart->id_customer = (int)($this->context->cookie->id_customer);
@@ -220,7 +220,7 @@ class FrontControllerCore extends Controller
 			}
 		}
 
-		if (!isset($cart) OR !$cart->id)
+		if (!isset($cart) || !$cart->id)
 		{
 			$cart = new Cart();
 			$cart->id_lang = (int)($this->context->cookie->id_lang);
@@ -313,7 +313,7 @@ class FrontControllerCore extends Controller
 			'display_tax_label' => (bool)$display_tax_label,
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
-			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') OR !(bool)Group::getCurrent()->show_prices,
+			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE')
 		));
 
@@ -341,7 +341,7 @@ class FrontControllerCore extends Controller
 		);
 
 		foreach ($assignArray as $assignKey => $assignValue)
-			if (substr($assignValue, 0, 1) == '/' OR $protocol_content == 'https://')
+			if (substr($assignValue, 0, 1) == '/' || $protocol_content == 'https://')
 				$this->context->smarty->assign($assignKey, $protocol_content.Tools::getMediaServer($assignValue).$assignValue);
 			else
 				$this->context->smarty->assign($assignKey, $assignValue);
@@ -363,7 +363,7 @@ class FrontControllerCore extends Controller
 			$this->displayRestrictedCountryPage();
 
 		//live edit
-		if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		if (Tools::isSubmit('live_edit') && $ad = Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
 				die(Tools::displayError());
 
@@ -373,11 +373,11 @@ class FrontControllerCore extends Controller
 		// Customer wasn't defined at all
 		$customer = new StdClass();
 
-		if($this->context->cookie->id_country)
+		if ($this->context->cookie->id_country)
 			$customer->geoloc_id_country = (int)$this->context->cookie->id_country;
-		if($this->context->cookie->id_state)
+		if ($this->context->cookie->id_state)
 			$customer->geoloc_id_state = (int)$this->context->cookie->id_state;
-		if($this->context->cookie->postcode)
+		if ($this->context->cookie->postcode)
 			$customer->geoloc_postcode = (int)$this->context->cookie->postcode;
 
 		$this->context->cart = $cart;
@@ -425,7 +425,7 @@ class FrontControllerCore extends Controller
 		Tools::displayAsDeprecated();
 		$this->initHeader();
  		$hook_header = Hook::exec('displayHeader');
-		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
+		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
 		{
 			// CSS compressor management
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
@@ -481,7 +481,7 @@ class FrontControllerCore extends Controller
 		Tools::safePostVars();
 
 		// assign css_files and js_files at the very last time
-		if ((Configuration::get('PS_CSS_THEME_CACHE') OR Configuration::get('PS_JS_THEME_CACHE')) AND is_writable(_PS_THEME_DIR_.'cache'))
+		if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache'))
 		{
 			// CSS compressor management
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
@@ -523,7 +523,7 @@ class FrontControllerCore extends Controller
 				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 
 			// live edit
-			if (Tools::isSubmit('live_edit') AND $ad = Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+			if (Tools::isSubmit('live_edit') && $ad = Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 			{
 				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
 				$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');
@@ -572,7 +572,7 @@ class FrontControllerCore extends Controller
 				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').implode('&', $params);
 
 			header('HTTP/1.0 301 Moved');
-			if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_ AND $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
+			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
 				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.$strParams.'">'.$canonicalURL.$strParams.'</a>');
 			Tools::redirectLink($canonicalURL.$strParams);
 		}
@@ -585,7 +585,7 @@ class FrontControllerCore extends Controller
 			/* Check if Maxmind Database exists */
 			if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
 			{
-				if (!isset($this->context->cookie->iso_code_country) OR (isset($this->context->cookie->iso_code_country) AND !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
+				if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
           			include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
@@ -616,9 +616,9 @@ class FrontControllerCore extends Controller
 				if (isset($this->context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($this->context->cookie->iso_code_country))))
 				{
 					/* Update defaultCountry */
-					if($defaultCountry->iso_code != $this->context->cookie->iso_code_country)
+					if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country)
 						$defaultCountry = new Country($id_country);
-					if (isset($hasBeenSet) AND $hasBeenSet)
+					if (isset($hasBeenSet) && $hasBeenSet)
 						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($defaultCountry->id_currency ? (int)$defaultCountry->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $defaultCountry;
 				}
@@ -644,12 +644,12 @@ class FrontControllerCore extends Controller
 		$this->addjqueryPlugin('easing');
 		$this->addJS(_PS_JS_DIR_.'tools.js');
 
-		if (Tools::isSubmit('live_edit') AND Tools::getValue('ad') AND (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
 			$this->addJqueryUI('ui.sortable');
 			$this->addjqueryPlugin('fancybox');
 			$this->addJS(_PS_JS_DIR_.'hookLiveEdit.js');
-			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'all'); //TODO
+			$this->addCSS(_PS_CSS_DIR_.'jquery.fancybox-1.3.4.css', 'all'); // @TODO
 		}
 		if ($this->context->language->is_rtl)
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
@@ -683,10 +683,9 @@ class FrontControllerCore extends Controller
 
 	public function getLiveEditFooter()
 	{
-		if (Tools::isSubmit('live_edit') 
+		if (Tools::isSubmit('live_edit')
 			&& ($ad = Tools::getValue('ad'))
-			&& (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_))
-		)
+			&& (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 		{
 			$data = $this->context->smarty->createData();
 			$data->assign(array(
@@ -739,7 +738,7 @@ class FrontControllerCore extends Controller
 		// Clean duplicate values
 		$nArray = array_unique($nArray);
 		asort($nArray);
-		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) AND $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
+		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
 		$this->p = abs((int)(Tools::getValue('p', 1)));
 
 		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
@@ -751,7 +750,7 @@ class FrontControllerCore extends Controller
 		if ($this->p < 0)
 			$this->p = 0;
 
-		if (isset($this->context->cookie->nb_item_per_page) AND $this->n != $this->context->cookie->nb_item_per_page AND in_array($this->n, $nArray))
+		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
 		if ($this->p > ($nbProducts / $this->n))
@@ -802,7 +801,7 @@ class FrontControllerCore extends Controller
 		$allowed = false;
 		$userIp = Tools::getRemoteAddr();
 		$ips = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
-		if (is_array($ips) && sizeof($ips))
+		if (is_array($ips) && count($ips))
 			foreach ($ips as $ip)
 				if (!empty($ip) && strpos($userIp, $ip) === 0)
 					$allowed = true;
@@ -875,7 +874,7 @@ class FrontControllerCore extends Controller
 			if (Validate::isLoadedObject($cart))
 			{
 				$customer = new Customer((int)$cart->id_customer);
-				if(Validate::isLoadedObject($customer))
+				if (Validate::isLoadedObject($customer))
 				{
 					$this->context->cookie->id_customer = (int)$customer->id;
 					$this->context->cookie->customer_lastname = $customer->lastname;
@@ -884,7 +883,6 @@ class FrontControllerCore extends Controller
 					$this->context->cookie->is_guest = $customer->isGuest();
 					$this->context->cookie->passwd = $customer->passwd;
 					$this->context->cookie->email = $customer->email;
-					$this->context->cookie->checkedTOS = true;
 					return $id_cart;
 				}
 			}
