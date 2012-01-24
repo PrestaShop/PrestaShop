@@ -788,6 +788,28 @@
 				else
 					$('#send_email_feedback').removeClass('error').addClass('conf');
 				$('#send_email_feedback').html(res.result);
+				var x, address_del, address_inv;
+				for(x in res.addresses)
+				{
+					if (res.addresses[x].id_address == $('#id_address_delivery option:selected').val())
+					{
+						address_del = res.addresses[x].company+' '+res.addresses[x].firstname+' '+res.addresses[x].lastname+'<br />';
+						address_del += res.addresses[x].address1+'<br />';
+						address_del += res.addresses[x].address2+'<br />';
+						address_del += res.addresses[x].postcode+' '+res.addresses[x].city+' '+res.addresses[x].country;
+						$('#address_delivery_detail').html(address_del);
+					}
+					else if (res.addresses[x].id_address == $('#id_address_invoice option:selected').val())
+					{
+						address_inv = res.addresses[x].company+' '+res.addresses[x].firstname+' '+res.addresses[x].lastname+'<br />';
+						address_inv += res.addresses[x].address1+'<br />';
+						address_inv += res.addresses[x].address2+'<br />';
+						address_inv += res.addresses[x].postcode+' '+res.addresses[x].city+' '+res.addresses[x].country;
+						$('#address_invoice_detail').html(address_inv);
+					}
+				}
+
+
 			}
 		});
 	}

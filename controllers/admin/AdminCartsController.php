@@ -368,6 +368,11 @@ class AdminCartsControllerCore extends AdminController
 		}
 	}
 
+	public function ajaxProcessUpdateAddress()
+	{
+		echo Tools::jsonEncode(array('addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang)));
+	}
+
 	public function ajaxProcessUpdateAddresses()
 	{
 		if ($this->tabAccess['edit'] === '1')
