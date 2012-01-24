@@ -4,7 +4,7 @@ function update_stock_mvt_reason()
 {
 	//Get all stock mvts reasons already presents in the solution (from 1.4.x)
 	//Remove standard movements to keep only custom movement
-	$mvts = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+	$mvts = Db::getInstance()->executeS('
 		SELECT smr.*
 		FROM `'._DB_PREFIX_.'stock_mvt_reason`
 		WHERE `id` > 5
@@ -12,7 +12,7 @@ function update_stock_mvt_reason()
 
 	//Get all stock mvts reasons language traduction already presents in the solution (from 1.4.x)
 	//Remove standard movements to keep only custom movement
-	$mvts_lang = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+	$mvts_lang = Db::getInstance()->executeS('
 		SELECT smrl.*
 		FROM `'._DB_PREFIX_.'stock_movement_reason_lang`
 		WHERE `id_stock_mvt_reason` > 5
