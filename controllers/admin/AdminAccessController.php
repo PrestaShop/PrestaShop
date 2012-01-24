@@ -79,7 +79,11 @@ class AdminAccessControllerCore extends AdminController
 			foreach ($modules[$profile['id_profile']] as &$module)
 			{
 				$m = Module::getInstanceById($module['id_module']);
-				$module['name'] = $m->displayName;
+				// the following condition handles invalid modules
+				if ($m)
+					$module['name'] = $m->displayName;
+				else
+					$this->warnings[] = '<b>'.$module['name'].'</b>'.$this->l(': module is installed in database, but its files are missing or incompatible.');
 			}
 		}
 
