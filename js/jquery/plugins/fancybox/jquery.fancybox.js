@@ -1112,7 +1112,7 @@
 		ajax : {},
 		swf : { wmode: 'transparent' },
 
-		hideOnOverlayClick : true,
+		hideOnOverlayClick : false,
 		hideOnContentClick : false,
 
 		overlayShow : true,
