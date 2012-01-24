@@ -245,15 +245,17 @@ class DispatcherCore
 	 */
 	public static function includeModuleClass($module, $name)
 	{
-		if (file_exists(_PS_MODULE_DIR_.$module.'/'.$name.'Controller.php'))
+		$file = _PS_MODULE_DIR_.$module.'/controllers/admin/'.$name.'Controller.php';
+		if (file_exists($file))
 		{
-			include(_PS_MODULE_DIR_.$module.'/'.$name.'Controller.php');
+			include($file);
 			return 'controller';
 		}
 
-		if (file_exists(_PS_MODULE_DIR_.$module.'/'.$name.'.php'))
+		$file = _PS_MODULE_DIR_.$module.'/'.$name.'.php';
+		if (file_exists($file))
 		{
-			include(_PS_MODULE_DIR_.$module.'/'.$name.'.php');
+			include($file);
 			return 'tab';
 		}
 		return false;
