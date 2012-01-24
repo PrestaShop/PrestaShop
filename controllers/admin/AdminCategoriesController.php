@@ -160,9 +160,16 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->tpl_list_vars['categories_tree'] = $categories_tree;
 
 		if (Tools::isSubmit('submitBulkdelete'.$this->table) OR Tools::isSubmit('delete'.$this->table))
+		{
+			$category = new Category(Tools::getValue('id_category'));
+			if ($category->is_root_category)
+				$this->tpl_list_vars['need_delete_mode'] = false;
+			else
+				$this->tpl_list_vars['need_delete_mode'] = true;
 			$this->tpl_list_vars['delete_category'] = true;
 			$this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
 			$this->tpl_list_vars['POST'] = $_POST;
+		}
 		
 		return parent::renderList();
 	}
@@ -239,7 +246,9 @@ class AdminCategoriesControllerCore extends AdminController
 		parent::initProcess();
 
 		if ($this->action == 'delete' || $this->action == 'bulkdelete')
-			if (Tools::getValue('deleteMode') == 'link' || Tools::getValue('deleteMode') == 'linkanddisable' || Tools::getValue('deleteMode') == 'delete')
+			if (Tools::getIsset('cancel'))
+				Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories'));
+			elseif (Tools::getValue('deleteMode') == 'link' || Tools::getValue('deleteMode') == 'linkanddisable' || Tools::getValue('deleteMode') == 'delete')
 				$this->delete_mode = Tools::getValue('deleteMode');
 			else
 				$this->action = 'select_delete';
