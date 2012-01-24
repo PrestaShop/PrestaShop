@@ -42,14 +42,14 @@ abstract class PaymentModuleCore extends Module
 		{
 			if (!Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
-			SELECT '.(int)($this->id).', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0'))
+			SELECT '.(int)$this->id.', id_currency FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0'))
 				return false;
 		}
 		elseif ($this->currencies_mode == 'radio')
 		{
 			if (!Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (id_module, id_currency)
-			VALUES ('.(int)($this->id).', -2)'))
+			VALUES ('.(int)$this->id.', -2)'))
 				return false;
 		}
 		else
@@ -58,16 +58,16 @@ abstract class PaymentModuleCore extends Module
 		// Insert countries availability
 		$return = Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'module_country` (id_module, id_country)
-		SELECT '.(int)($this->id).', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
+		SELECT '.(int)$this->id.', id_country FROM `'._DB_PREFIX_.'country` WHERE active = 1');
 
 		return $return;
 	}
 
 	public function uninstall()
 	{
-		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int)($this->id))
-			OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int)($this->id))
-			OR !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int)($this->id)))
+		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int)$this->id)
+			|| !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int)$this->id)
+			|| !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int)$this->id))
 			return false;
 		return parent::uninstall();
 	}
@@ -78,22 +78,22 @@ abstract class PaymentModuleCore extends Module
 	*
 	* @param integer $id_cart Value
 	* @param integer $id_order_state Value
-	* @param float $amountPaid Amount really paid by customer (in the default currency)
-	* @param string $paymentMethod Payment method (eg. 'Credit card')
+	* @param float $amount_paid Amount really paid by customer (in the default currency)
+	* @param string $payment_method Payment method (eg. 'Credit card')
 	* @param string $message Message to attach to order
 	*/
-	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown',
-		$message = NULL, $extraVars = array(), $currency_special = NULL, $dont_touch_amount = false,
+	public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown',
+		$message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
 		$secure_key = false, Shop $shop = null)
 	{
-		$cart = new Cart((int)($id_cart));
+		$cart = new Cart($id_cart);
 
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 		// Does order already exists ?
-		if (Validate::isLoadedObject($cart) AND $cart->OrderExists() == false)
+		if (Validate::isLoadedObject($cart) && $cart->OrderExists() == false)
 		{
-			if ($secure_key !== false AND $secure_key != $cart->secure_key)
+			if ($secure_key !== false && $secure_key != $cart->secure_key)
 				die(Tools::displayError());
 
 			// For each package, generate an order
@@ -115,19 +115,19 @@ abstract class PaymentModuleCore extends Module
 			$reference = Order::generateReference();
 			$this->currentOrderReference = $reference;
 
-			$id_currency = $currency_special ? (int)($currency_special) : (int)($cart->id_currency);
+			$id_currency = $currency_special ? (int)$currency_special : (int)$cart->id_currency;
 			$currency = new Currency($id_currency);
 
 			$cart->order_reference = $reference;
 
-			$orderCreationFailed = false;
-			$cart_total_paid = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH)), 2);
+			$order_creation_failed = false;
+			$cart_total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH), 2);
 
 			if ($cart->orderExists())
 			{
-				$errorMessage = Tools::displayError('An order has already been placed using this cart.');
-				Logger::addLog($errorMessage, 4, '0000001', 'Cart', intval($cart->id));
-				die($errorMessage);
+				$error = Tools::displayError('An order has already been placed using this cart.');
+				Logger::addLog($error, 4, '0000001', 'Cart', intval($cart->id));
+				die($error);
 			}
 
 			$order_status = new OrderState((int)$id_order_state, (int)$cart->id_lang);
@@ -142,28 +142,28 @@ abstract class PaymentModuleCore extends Module
 						$carrier = new Carrier($id_carrier, $cart->id_lang);
 						$order = new Order();
 						$order->id_carrier = (int)$carrier->id;
-						$order->id_customer = (int)($cart->id_customer);
-						$order->id_address_invoice = (int)($cart->id_address_invoice);
+						$order->id_customer = (int)$cart->id_customer;
+						$order->id_address_invoice = (int)$cart->id_address_invoice;
 						$order->id_address_delivery = (int)$id_address;
 						$order->id_currency = $id_currency;
-						$order->id_lang = (int)($cart->id_lang);
-						$order->id_cart = (int)($cart->id);
+						$order->id_lang = (int)$cart->id_lang;
+						$order->id_cart = (int)$cart->id;
 						$order->reference = $reference;
 
 						$order->id_shop = (int)($shop->getID() ? $shop->getID() : $cart->id_shop);
 						$order->id_group_shop = (int)($shop->getID() ? $shop->getGroupID() : $cart->id_group_shop);
 
-						$customer = new Customer((int)($order->id_customer));
+						$customer = new Customer($order->id_customer);
 						$order->secure_key = ($secure_key ? pSQL($secure_key) : pSQL($customer->secure_key));
-						$order->payment = $paymentMethod;
+						$order->payment = $payment_method;
 						if (isset($this->name))
 							$order->module = $this->name;
 						$order->recyclable = $cart->recyclable;
-						$order->gift = (int)($cart->gift);
+						$order->gift = (int)$cart->gift;
 						$order->gift_message = $cart->gift_message;
 						$order->conversion_rate = $currency->conversion_rate;
-						$amountPaid = !$dont_touch_amount ? Tools::ps_round((float)($amountPaid), 2) : $amountPaid;
-						$order->total_paid_real = $amountPaid;
+						$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
+						$order->total_paid_real = $amount_paid;
 						$order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
 						$order->total_products_wt = (float)$cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $product_list, $id_carrier);
 
@@ -182,9 +182,9 @@ abstract class PaymentModuleCore extends Module
 						$order->total_wrapping_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
 						$order->total_wrapping_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $product_list, $id_carrier));
 
-						$order->total_paid = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier)), 2);
-						$order->total_paid_tax_excl = (float)Tools::ps_round((float)($cart->getOrderTotal(false, Cart::BOTH, $product_list, $id_carrier)), 2);
-						$order->total_paid_tax_incl = (float)Tools::ps_round((float)($cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier)), 2);
+						$order->total_paid = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
+						$order->total_paid_tax_excl = (float)Tools::ps_round((float)$cart->getOrderTotal(false, Cart::BOTH, $product_list, $id_carrier), 2);
+						$order->total_paid_tax_incl = (float)Tools::ps_round((float)$cart->getOrderTotal(true, Cart::BOTH, $product_list, $id_carrier), 2);
 
 						$order->invoice_date = '0000-00-00 00:00:00';
 						$order->delivery_date = '0000-00-00 00:00:00';
@@ -201,7 +201,7 @@ abstract class PaymentModuleCore extends Module
 						// Register Payment only if the order status validate the order
 						if ($result && $order_status->logable)
 						{
-							if (!$order->addOrderPayment($amountPaid))
+							if (!$order->addOrderPayment($amount_paid))
 								throw new PrestaShopException('Can\'t save Order Payment');
 						}
 
@@ -226,12 +226,12 @@ abstract class PaymentModuleCore extends Module
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
-				if (!$orderCreationFailed AND isset($order->id))
+				if (!$order_creation_failed & isset($order->id))
 				{
 					if (!$secure_key)
 						$message .= Tools::displayError('Warning : the secure key is empty, check your payment account before validation');
 					// Optional message to attach to this order
-					if (isset($message) AND !empty($message))
+					if (isset($message) & !empty($message))
 					{
 						$msg = new Message();
 						$message = strip_tags($message, '<br>');
@@ -249,74 +249,74 @@ abstract class PaymentModuleCore extends Module
 					//$orderDetail->createList($order, $cart, $id_order_state);
 
 					// Construct order detail table for the email
-					$productsList = '';
+					$products_list = '';
 					$products = $cart->getProducts();
-					foreach ($products AS $key => $product)
+					foreach ($products as $key => $product)
 					{
-						$price = Product::getPriceStatic((int)($product['id_product']), false, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 6, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-						$price_wt = Product::getPriceStatic((int)($product['id_product']), true, ($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : NULL), 2, NULL, false, true, $product['cart_quantity'], false, (int)($order->id_customer), (int)($order->id_cart), (int)($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-						$customizationQuantity = 0;
-						if (isset($customizedDatas[$product['id_product']][$product['id_product_attribute']]))
+						$customization_quantity = 0;
+						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
 						{
-							$customizationText = '';
-							foreach ($customizedDatas[$product['id_product']][$product['id_product_attribute']] AS $customization)
+							$customization_text = '';
+							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']] as $customization)
 							{
 								if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
-									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] AS $text)
-										$customizationText .= $text['name'].':'.' '.$text['value'].'<br />';
+									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
+										$customization_text .= $text['name'].': '.$text['value'].'<br />';
 
 								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
-									$customizationText .= sizeof($customization['datas'][Product::CUSTOMIZE_FILE]) .' '. Tools::displayError('image(s)').'<br />';
+									$customization_text .= count($customization['datas'][Product::CUSTOMIZE_FILE]).' '.Tools::displayError('image(s)').'<br />';
 
-								$customizationText .= '---<br />';
+								$customization_text .= '---<br />';
 							}
 
-							$customizationText = rtrim($customizationText, '---<br />');
+							$customization_text = rtrim($customization_text, '---<br />');
 
-							$customizationQuantity = (int)($product['customizationQuantityTotal']);
-							$productsList .=
+							$customization_quantity = (int)$product['customizationQuantityTotal'];
+							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.$this->l('Customized').(!empty($customizationText) ? ' - '.$customizationText : '').'</strong></td>
+								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.$this->l('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
 								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt, $currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; text-align: center;">'.$customizationQuantity.'</td>
-								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice($customizationQuantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
+								<td style="padding: 0.6em 0.4em; text-align: center;">'.$customization_quantity.'</td>
+								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
 							</tr>';
 						}
 
-						if (!$customizationQuantity OR (int)$product['cart_quantity'] > $customizationQuantity)
-							$productsList .=
+						if (!$customization_quantity || (int)$product['cart_quantity'] > $customization_quantity)
+							$products_list .=
 							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
 								<td style="padding: 0.6em 0.4em;">'.$product['reference'].'</td>
 								<td style="padding: 0.6em 0.4em;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong></td>
 								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt, $currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; text-align: center;">'.((int)($product['cart_quantity']) - $customizationQuantity).'</td>
-								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(((int)($product['cart_quantity']) - $customizationQuantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
+								<td style="padding: 0.6em 0.4em; text-align: center;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
+								<td style="padding: 0.6em 0.4em; text-align: right;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt), $currency, false).'</td>
 							</tr>';
 					} // end foreach ($products)
 
-					$cartRulesList = '';
+					$cart_rules_list = '';
 					$result = $cart->getCartRules();
 					foreach ($result as $cart_rule)
 					{
-						$cartRule = $cart_rule['obj'];
+						$cart_rule_obj = $cart_rule['obj'];
 						$values = array(
-							'tax_incl' => $cartRule->getContextualValue(true),
-							'tax_excl' => $cartRule->getContextualValue(false)
+							'tax_incl' => $cart_rule_obj->getContextualValue(true),
+							'tax_excl' => $cart_rule_obj->getContextualValue(false)
 						);
-						// Todo : has not been tested because order processing wasn't functionnal
-						if ($values['tax_incl'] > $order->total_products_wt && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0)
+						// @Todo : has not been tested because order processing wasn't functionnal
+						if ($values['tax_incl'] > $order->total_products_wt && $cart_rule_obj->partial_use == 1 && $cart_rule_obj->reduction_amount > 0)
 						{
-							$voucher = clone $cartRule;
+							$voucher = clone $cart_rule_obj;
 							unset($voucher->id);
-							$voucher->code = empty($voucher->code) ? substr(md5($order->id.'-'.$order->id_customer.'-'.$cartRule->id), 0, 16) : $voucher->code.'-2';
+							$voucher->code = empty($voucher->code) ? substr(md5($order->id.'-'.$order->id_customer.'-'.$cart_rule_obj->id), 0, 16) : $voucher->code.'-2';
 							$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt;
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
 							if ($voucher->add())
 							{
-								CartRule::copyConditions($cartRule->id, $voucher->id);
+								CartRule::copyConditions($cart_rule_obj->id, $voucher->id);
 								$params['{voucher_amount}'] = Tools::displayPrice($voucher->reduction_amount, $currency, false);
 								$params['{voucher_num}'] = $voucher->code;
 								$params['{firstname}'] = $customer->firstname;
@@ -326,28 +326,28 @@ abstract class PaymentModuleCore extends Module
 							}
 						}
 
-						$order->addCartRule($cartRule->id, $cartRule->name, $values);
+						$order->addCartRule($cart_rule_obj->id, $cart_rule_obj->name, $values);
 
-						if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED'))
+						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED'))
 						{
 							// Create a new instance of Cart Rule without id_lang, in order to update it quantity
-							$cart_rule_to_update = new CartRule($cartRule->id);
+							$cart_rule_to_update = new CartRule($cart_rule_obj->id);
 							$cart_rule_to_update->quantity = $cart_rule_to_update->quantity - 1;
 							$cart_rule_to_update->update();
 						}
 
-						$cartRulesList .= '
+						$cart_rules_list .= '
 						<tr style="background-color:#EBECEE;">
-							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.$this->l('Voucher name:').' '.$cartRule->name.'</td>
+							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.$this->l('Voucher name:').' '.$cart_rule_obj->name.'</td>
 							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $currency, false).'</td>
 						</tr>';
 					}
 
 					// Specify order id for message
-					$oldMessage = Message::getMessageByCartId((int)($cart->id));
-					if ($oldMessage)
+					$old_message = Message::getMessageByCartId((int)$cart->id);
+					if ($old_message)
 					{
-						$message = new Message((int)$oldMessage['id_message']);
+						$message = new Message((int)$old_message['id_message']);
 						$message->id_order = (int)$order->id;
 						$message->update();
 					}
@@ -361,7 +361,7 @@ abstract class PaymentModuleCore extends Module
 						'orderStatus' => $order_status
 					));
 
-					foreach ($cart->getProducts() AS $product)
+					foreach ($cart->getProducts() as $product)
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 
@@ -378,7 +378,7 @@ abstract class PaymentModuleCore extends Module
 					$new_history = new OrderHistory();
 					$new_history->id_order = (int)$order->id;
 					$new_history->changeIdOrderState((int)$id_order_state, (int)$order->id);
-					$new_history->addWithemail(true, $extraVars);
+					$new_history->addWithemail(true, $extra_vars);
 
 					unset($order_detail);
 
@@ -386,12 +386,12 @@ abstract class PaymentModuleCore extends Module
 					$order = new Order($order->id);
 
 					// Send an e-mail to customer (one order = one email)
-					if ($id_order_state != Configuration::get('PS_OS_ERROR') AND $id_order_state != Configuration::get('PS_OS_CANCELED') AND $customer->id)
+					if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $customer->id)
 					{
-						$invoice = new Address((int)($order->id_address_invoice));
-						$delivery = new Address((int)($order->id_address_delivery));
-						$delivery_state = $delivery->id_state ? new State((int)($delivery->id_state)) : false;
-						$invoice_state = $invoice->id_state ? new State((int)($invoice->id_state)) : false;
+						$invoice = new Address($order->id_address_invoice);
+						$delivery = new Address($order->id_address_delivery);
+						$delivery_state = $delivery->id_state ? new State($delivery->id_state) : false;
+						$invoice_state = $invoice->id_state ? new State($invoice->id_state) : false;
 
 						$data = array(
 						'{firstname}' => $customer->firstname,
@@ -399,14 +399,14 @@ abstract class PaymentModuleCore extends Module
 						'{email}' => $customer->email,
 						'{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
 						'{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
-						'{delivery_block_html}' => $this->_getFormatedAddress($delivery, "<br />",
-							array(
+						'{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
+							'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
+							'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>'
+						)),
+						'{invoice_block_html}' => $this->_getFormatedAddress($invoice, '<br />', array(
 								'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-								'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
-							'{invoice_block_html}' => $this->_getFormatedAddress($invoice, "<br />",
-							array(
-								'firstname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>',
-								'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>')),
+								'lastname'	=> '<span style="color:#DB3484; font-weight:bold;">%s</span>'
+						)),
 						'{delivery_company}' => $delivery->company,
 						'{delivery_firstname}' => $delivery->firstname,
 						'{delivery_lastname}' => $delivery->lastname,
@@ -430,41 +430,51 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_state}' => $invoice->id_state ? $invoice_state->name : '',
 						'{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
 						'{invoice_other}' => $invoice->other,
-						'{order_name}' => sprintf("#%06d", (int)($order->id)),
-						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)($order->id_lang), 1),
+						'{order_name}' => sprintf('#%06d', (int)$order->id),
+						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), (int)$order->id_lang, 1),
 						'{carrier}' => $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
-						'{products}' => $productsList,
-						'{discounts}' => $cartRulesList,
+						'{products}' => $products_list,
+						'{discounts}' => $cart_rules_list,
 						'{total_paid}' => Tools::displayPrice($order->total_paid, $currency, false),
 						'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $currency, false),
 						'{total_discounts}' => Tools::displayPrice($order->total_discounts, $currency, false),
 						'{total_shipping}' => Tools::displayPrice($order->total_shipping, $currency, false),
 						'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $currency, false));
 
-						if (is_array($extraVars))
-							$data = array_merge($data, $extraVars);
+						if (is_array($extra_vars))
+							$data = array_merge($data, $extra_vars);
 
 						// Join PDF invoice
-						if ((int)(Configuration::get('PS_INVOICE')) && $order_status->invoice && $order->invoice_number)
+						if ((int)Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number)
 						{
                             $pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
-							$fileAttachment['content'] = $pdf->render(false);
-							$fileAttachment['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)($order->id_lang)).sprintf('%06d', $order->invoice_number).'.pdf';
-							$fileAttachment['mime'] = 'application/pdf';
+							$file_attachement['content'] = $pdf->render(false);
+							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang).sprintf('%06d', $order->invoice_number).'.pdf';
+							$file_attachement['mime'] = 'application/pdf';
 						}
 						else
-							$fileAttachment = NULL;
+							$file_attachement = null;
 
 						if (Validate::isEmail($customer->email))
-							Mail::Send((int)$order->id_lang, 'order_conf', Mail::l('Order confirmation', (int)$order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, $fileAttachment);
+							Mail::Send(
+								(int)$order->id_lang,
+								'order_conf',
+								Mail::l('Order confirmation', (int)$order->id_lang),
+								$data,
+								$customer->email,
+								$customer->firstname.' '.$customer->lastname,
+								null,
+								null,
+								$file_attachement
+							);
 					}
 				}
 				else
 				{
-					$errorMessage = Tools::displayError('Order creation failed');
-					Logger::addLog($errorMessage, 4, '0000002', 'Cart', intval($order->id_cart));
-					die($errorMessage);
+					$error = Tools::displayError('Order creation failed');
+					Logger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
+					die($error);
 				}
 			}
 			// Use the last order as currentOrder
@@ -473,9 +483,9 @@ abstract class PaymentModuleCore extends Module
 		}
 		else
 		{
-			$errorMessage = Tools::displayError('Cart can\'t be loaded or an order has already been placed using this cart');
-			Logger::addLog($errorMessage, 4, '0000001', 'Cart', intval($cart->id));
-			die($errorMessage);
+			$error = Tools::displayError('Cart can\'t be loaded or an order has already been placed using this cart');
+			Logger::addLog($error, 4, '0000001', 'Cart', intval($cart->id));
+			die($error);
 		}
 	}
 
@@ -485,10 +495,9 @@ abstract class PaymentModuleCore extends Module
 	 */
 	protected function _getTxtFormatedAddress($the_address)
 	{
-		$out = '';
 		$adr_fields = AddressFormat::getOrderedAddressFields($the_address->id_country, false, true);
 		$r_values = array();
-		foreach($adr_fields as $fields_line)
+		foreach ($adr_fields as $fields_line)
 		{
 			$tmp_values = array();
 			foreach (explode(' ', $fields_line) as $field_item)
@@ -536,11 +545,11 @@ abstract class PaymentModuleCore extends Module
 			if ($currency == -1)
 				$id_currency = (int)$current_id_currency;
 			elseif ($currency == -2)
-				$id_currency = (int)(Configuration::get('PS_CURRENCY_DEFAULT'));
+				$id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 			else
 				$id_currency = $currency;
 		}
-		if (!isset($id_currency) OR empty($id_currency))
+		if (!isset($id_currency) || empty($id_currency))
 			return false;
 		return (new Currency($id_currency));
 	}
@@ -587,28 +596,28 @@ abstract class PaymentModuleCore extends Module
 	 */
 	public static function getInstalledPaymentModules()
 	{
-		$hookPayment = 'Payment';
+		$hook_payment = 'Payment';
 		if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\''))
-			$hookPayment = 'displayPayment';
+			$hook_payment = 'displayPayment';
 
 		return Db::getInstance()->executeS('
-		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-		FROM `'._DB_PREFIX_.'module` m
-		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-		WHERE h.`name` = \''.pSQL($hookPayment).'\'
-		AND m.`active` = 1
+			SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+			FROM `'._DB_PREFIX_.'module` m
+			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+			WHERE h.`name` = \''.pSQL($hook_payment).'\'
+			AND m.`active` = 1
 		');
 	}
 
 
-	public static function preCall($moduleName)
+	public static function preCall($module_name)
 	{
-		if (!parent::preCall($moduleName))
+		if (!parent::preCall($module_name))
 			return false;
 
-		if (($moduleInstance = Module::getInstanceByName($moduleName)))
-			if (!$moduleInstance->currencies OR ($moduleInstance->currencies AND sizeof(Currency::checkPaymentCurrencies($moduleInstance->id))))
+		if (($module_instance = Module::getInstanceByName($module_name)))
+			if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id))))
 				return true;
 
 		return false;

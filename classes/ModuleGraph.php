@@ -36,7 +36,7 @@ abstract class ModuleGraphCore extends Module
 	protected	$_legend = array();
 
 	/**@var string graph titles */
-	protected	$_titles = array('main' => NULL, 'x' => NULL, 'y' => NULL);
+	protected	$_titles = array('main' => null, 'x' => null, 'y' => null);
 
 	/** @var ModuleGraphEngine graph engine */
 	protected $_render;
@@ -45,7 +45,7 @@ abstract class ModuleGraphCore extends Module
 
 	public function setEmployee($id_employee)
 	{
-		$this->_employee = new Employee((int)($id_employee));
+		$this->_employee = new Employee($id_employee);
 	}
 
 	public function setLang($id_lang)
@@ -56,8 +56,8 @@ abstract class ModuleGraphCore extends Module
 	protected function setDateGraph($layers, $legend = false)
 	{
 		// Get dates in a manageable format
-		$fromArray = getdate(strtotime($this->_employee->stats_date_from));
-		$toArray = getdate(strtotime($this->_employee->stats_date_to));
+		$from_array = getdate(strtotime($this->_employee->stats_date_from));
+		$to_array = getdate(strtotime($this->_employee->stats_date_to));
 
 		// If the granularity is inferior to 1 day
 		if ($this->_employee->stats_date_from == $this->_employee->stats_date_to)
@@ -81,15 +81,15 @@ abstract class ModuleGraphCore extends Module
 			if ($legend)
 			{
 				$days = array();
-				if ($fromArray['mon'] == $toArray['mon'])
-					for ($i = $fromArray['mday']; $i <= $toArray['mday']; ++$i)
+				if ($from_array['mon'] == $to_array['mon'])
+					for ($i = $from_array['mday']; $i <= $to_array['mday']; ++$i)
 						$days[] = $i;
 				else
 				{
-					$imax = date('t', mktime(0, 0, 0, $fromArray['mon'], 1, $fromArray['year']));
-					for ($i = $fromArray['mday']; $i <= $imax; ++$i)
+					$imax = date('t', mktime(0, 0, 0, $from_array['mon'], 1, $from_array['year']));
+					for ($i = $from_array['mday']; $i <= $imax; ++$i)
 						$days[] = $i;
-					for ($i = 1; $i <= $toArray['mday']; ++$i)
+					for ($i = 1; $i <= $to_array['mday']; ++$i)
 						$days[] = $i;
 				}
 				foreach ($days as $i)
@@ -111,14 +111,14 @@ abstract class ModuleGraphCore extends Module
 			if ($legend)
 			{
 				$months = array();
-				if ($fromArray['year'] == $toArray['year'])
-					for ($i = $fromArray['mon']; $i <= $toArray['mon']; ++$i)
+				if ($from_array['year'] == $to_array['year'])
+					for ($i = $from_array['mon']; $i <= $to_array['mon']; ++$i)
 						$months[] = $i;
 				else
 				{
-					for ($i = $fromArray['mon']; $i <= 12; ++$i)
+					for ($i = $from_array['mon']; $i <= 12; ++$i)
 						$months[] = $i;
-					for ($i = 1; $i <= $toArray['mon']; ++$i)
+					for ($i = 1; $i <= $to_array['mon']; ++$i)
 						$months[] = $i;
 				}
 				foreach ($months as $i)
@@ -140,7 +140,7 @@ abstract class ModuleGraphCore extends Module
 			if ($legend)
 			{
 				$years = array();
-				for ($i = $fromArray['year']; $i <= $toArray['year']; ++$i)
+				for ($i = $from_array['year']; $i <= $to_array['year']; ++$i)
 					$years[] = $i;
 				foreach ($years as $i)
 				{
@@ -172,9 +172,9 @@ abstract class ModuleGraphCore extends Module
 		// @todo use native CSV PHP functions ?
 		// Generate first line (column titles)
 		if (is_array($this->_titles['main']))
-			for ($i = 0; $i <= sizeof($this->_titles['main']); $i++)
+			for ($i = 0, $total_main = count($this->_titles['main']); $i <= $total_main; $i++)
 			{
-				if($i > 0)
+				if ($i > 0)
 					$this->_csv .= ';';
 				if (isset($this->_titles['main'][$i]))
 					$this->_csv .= $this->_titles['main'][$i];
@@ -182,17 +182,17 @@ abstract class ModuleGraphCore extends Module
 		else // If there is only one column title, there is in fast two column (the first without title)
 			$this->_csv .= ';'.$this->_titles['main'];
 		$this->_csv .= "\n";
-		if (sizeof($this->_legend))
+		if (count($this->_legend))
 		{
 			$total = 0;
 			if ($datas['type'] == 'pie')
-				foreach ($this->_legend AS $key => $legend)
-					for ($i = 0; $i < (is_array($this->_titles['main']) ? sizeof($this->_values) : 1); ++$i)
+				foreach ($this->_legend as $key => $legend)
+					for ($i = 0, $total_main = (is_array($this->_titles['main']) ? count($this->_values) : 1); $i < $total_main; ++$i)
 						$total += (is_array($this->_values[$i])  ? $this->_values[$i][$key] : $this->_values[$key]);
-			foreach ($this->_legend AS $key => $legend)
+			foreach ($this->_legend as $key => $legend)
 			{
 				$this->_csv .= $legend.';';
-				for ($i = 0; $i < (is_array($this->_titles['main']) ? sizeof($this->_values) : 1); ++$i)
+				for ($i = 0, $total_main = (is_array($this->_titles['main']) ? count($this->_values) : 1); $i < $total_main; ++$i)
 				{
 					if (!isset($this->_values[$i]) || !is_array($this->_values[$i]))
 						if (isset($this->_values[$key]))
@@ -202,7 +202,8 @@ abstract class ModuleGraphCore extends Module
 					            $this->_csv .= $this->_values[$key] / (($datas['type'] == 'pie') ? $total : 1);
 					        else
 					            $this->_csv .= $this->_values[$key];
-					    }else
+						}
+						else
 							$this->_csv .= '0';
 					else
 					{
@@ -263,8 +264,8 @@ abstract class ModuleGraphCore extends Module
 		if (!file_exists(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php'))
 			return Tools::displayError('Graph engine selected is unavailable.');
 
-		$id_employee = (int)($context->employee->id);
-		$id_lang = (int)($context->language->id);
+		$id_employee = (int)$context->employee->id;
+		$id_lang = (int)$context->language->id;
 
 		if (!isset($params['layers']))
 			$params['layers'] = 1;
@@ -275,12 +276,12 @@ abstract class ModuleGraphCore extends Module
 		if (!isset($params['height']))
 			$params['height'] = 270;
 
-		$urlParams = $params;
-		$urlParams['render'] = $render;
-		$urlParams['module'] = Tools::getValue('module');
-		$urlParams['id_employee'] = $id_employee;
-		$urlParams['id_lang'] = $id_lang;
-		$drawer = 'drawer.php?' . http_build_query(array_map('Tools::safeOutput', $urlParams));
+		$url_params = $params;
+		$url_params['render'] = $render;
+		$url_params['module'] = Tools::getValue('module');
+		$url_params['id_employee'] = $id_employee;
+		$url_params['id_lang'] = $id_lang;
+		$drawer = 'drawer.php?'.http_build_query(array_map('Tools::safeOutput', $url_params));
 
 		require_once(dirname(__FILE__).'/../modules/'.$render.'/'.$render.'.php');
 		return call_user_func(array($render, 'hookGraphEngine'), $params, $drawer);
@@ -293,11 +294,12 @@ abstract class ModuleGraphCore extends Module
 		if (!$employee)
 			$employee = $context->employee;
 
-		if (empty($employee->stats_date_from) OR empty($employee->stats_date_to) OR $employee->stats_date_from == '0000-00-00' OR $employee->stats_date_to == '0000-00-00')
+		if (empty($employee->stats_date_from) || empty($employee->stats_date_to)
+			|| $employee->stats_date_from == '0000-00-00' || $employee->stats_date_to == '0000-00-00')
 		{
-			if (empty($employee->stats_date_from) OR $employee->stats_date_from == '0000-00-00')
+			if (empty($employee->stats_date_from) || $employee->stats_date_from == '0000-00-00')
 				$employee->stats_date_from = date('Y').'-01-01';
-			if (empty($employee->stats_date_to)  OR $employee->stats_date_to == '0000-00-00')
+			if (empty($employee->stats_date_to) || $employee->stats_date_to == '0000-00-00')
 				$employee->stats_date_to = date('Y').'-12-31';
 			$employee->update();
 		}

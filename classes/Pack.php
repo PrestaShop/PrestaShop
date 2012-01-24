@@ -38,7 +38,7 @@ class PackCore extends Product
 
 		if (!array_key_exists($id_product, self::$cacheIsPack))
 		{
-			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)($id_product));
+			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$id_product);
 			self::$cacheIsPack[$id_product] = ($result > 0);
 		}
 		return self::$cacheIsPack[$id_product];
@@ -51,7 +51,7 @@ class PackCore extends Product
 
 		if (!array_key_exists($id_product, self::$cacheIsPacked))
 		{
-			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_item = '.(int)($id_product));
+			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_item = '.(int)$id_product);
 			self::$cacheIsPacked[$id_product] = ($result > 0);
 		}
 		return self::$cacheIsPacked[$id_product];
@@ -74,16 +74,16 @@ class PackCore extends Product
 
 		if (array_key_exists($id_product, self::$cachePackItems))
 			return self::$cachePackItems[$id_product];
-		$result = Db::getInstance()->executeS('SELECT id_product_item, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)($id_product));
-		$arrayResult = array();
-		foreach ($result AS $row)
+		$result = Db::getInstance()->executeS('SELECT id_product_item, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$id_product);
+		$array_result = array();
+		foreach ($result as $row)
 		{
 			$p = new Product($row['id_product_item'], false, $id_lang);
 			$p->loadStockData();
 			$p->pack_quantity = $row['quantity'];
-			$arrayResult[] = $p;
+			$array_result[] = $p;
 		}
-		self::$cachePackItems[$id_product] = $arrayResult;
+		self::$cachePackItems[$id_product] = $array_result;
 		return self::$cachePackItems[$id_product];
 	}
 
@@ -97,7 +97,8 @@ class PackCore extends Product
 		foreach ($items as $item)
 		{
 			// Updated for 1.5.0
-			if (Product::getQuantity($item->id) < $item->pack_quantity || (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)))
+			if (Product::getQuantity($item->id) < $item->pack_quantity
+				|| (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)))
 				return false;
 		}
 		return true;
@@ -111,10 +112,14 @@ class PackCore extends Product
 		$sql = 'SELECT p.*, pl.*, i.`id_image`, il.`legend`, t.`rate`, cl.`name` AS category_default, a.quantity AS pack_quantity
 				FROM `'._DB_PREFIX_.'pack` a
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = a.id_product_item
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.id_product = pl.id_product AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').')
+				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+					ON p.id_product = pl.id_product
+					AND pl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('pl').'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl').')
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
+					ON p.`id_category_default` = cl.`id_category`
+					AND cl.`id_lang` = '.(int)$id_lang.Context::getContext()->shop->addSqlRestrictionOnLang('cl').'
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0)
@@ -125,11 +130,11 @@ class PackCore extends Product
 		if (!$full)
 			return $result;
 
-		$arrayResult = array();
+		$array_result = array();
 		foreach ($result as $row)
 			if (!Pack::isPack($row['id_product']))
-				$arrayResult[] = Product::getProductProperties($id_lang, $row);
-		return $arrayResult;
+				$array_result[] = Product::getProductProperties($id_lang, $row);
+		return $array_result;
 	}
 
 	public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
@@ -165,17 +170,17 @@ class PackCore extends Product
 		if (!$full)
 			return $result;
 
-		$arrayResult = array();
+		$array_result = array();
 		foreach ($result as $row)
 			if (!Pack::isPacked($row['id_product']))
-				$arrayResult[] = Product::getProductProperties($id_lang, $row);
-		return $arrayResult;
+				$array_result[] = Product::getProductProperties($id_lang, $row);
+		return $array_result;
 	}
 
 	public static function deleteItems($id_product)
 	{
-		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
-			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)($id_product)) &&
+		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 0 WHERE id_product = '.(int)$id_product.' LIMIT 1') &&
+			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)$id_product) &&
 			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', Pack::isCurrentlyUsed());
 	}
 
@@ -189,7 +194,7 @@ class PackCore extends Product
 	*/
 	public static function addItem($id_product, $id_item, $qty)
 	{
-		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)($id_product).' LIMIT 1') &&
+		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET cache_is_pack = 1 WHERE id_product = '.(int)$id_product.' LIMIT 1') &&
 			Db::getInstance()->insert('pack', array('id_product_pack' => (int)$id_product, 'id_product_item' => (int)$id_item, 'quantity' => (int)$qty)) &&
 			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
 	}
@@ -197,7 +202,7 @@ class PackCore extends Product
 	public static function duplicate($id_product_old, $id_product_new)
 	{
 		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'pack (id_product_pack, id_product_item, quantity)
-		(SELECT '.(int)($id_product_new).', id_product_item, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)($id_product_old).')');
+		(SELECT '.(int)$id_product_new.', id_product_item, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$id_product_old.')');
 
 		// If return query result, a non-pack product will return false
 		return true;
@@ -215,7 +220,7 @@ class PackCore extends Product
 
 	/**
 	 * This method is allow to know if a Pack entity is currently used
-	 * @since 1.5.0.1
+	 * @since 1.5.0
 	 * @param $table
 	 * @param $has_active_column
 	 * @return bool

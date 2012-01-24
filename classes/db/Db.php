@@ -257,7 +257,6 @@ abstract class DbCore
 	 */
 	public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
 	{
-		Tools::displayAsDeprecated();
 		$type = strtoupper($type);
 		switch ($type)
 		{
