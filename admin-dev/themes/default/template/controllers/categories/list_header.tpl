@@ -46,7 +46,14 @@
 	{if isset($delete_category) && $delete_category}
 		<form action="{$REQUEST_URI}" method="post">
 			<div class="warn">
-				<h2>{l s='Do you want to delete products too?'}</h2>
+				<h2>
+					{if $need_delete_mode}
+						{l s='Do you want to delete products too?'}
+					{else}
+						{l s='Deleting this category will remove products linked with this category and without any others. Are you sure you want to continue?'}
+					{/if}
+				</h2>
+				{if $need_delete_mode}
 				<ul class="listForm">
 				<li>
 					<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" />
@@ -61,6 +68,9 @@
 					<label for="deleteMode_delete" style="float:none">{l s='Yes, I want to remove products linked with this category and without any others categories.'}</label>
 				</li>
 				</ul>
+				{else}
+					<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
+				{/if}
 				{foreach $POST as $key => $value}
 					{if $key != 'deleteMode'}
 						{if is_array($value)}
@@ -72,7 +82,9 @@
 						{/if}
 					{/if}
 				{/foreach}
-				<br /><input type="submit" class="button" value="{l s='   Validate   '}" />
+				<br />
+				<input type="submit" name="cancel" class="button" value="{l s='   Cancel   '}" />
+				<input type="submit" class="button" value="{l s='   Validate   '}" />
 			</div>
 		</form>
 		<div class="clear">&nbsp;</div>

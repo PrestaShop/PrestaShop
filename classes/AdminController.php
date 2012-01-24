@@ -224,7 +224,7 @@ class AdminControllerCore extends Controller
 	 */
 	protected $filter;
 	protected $noLink;
-	protected $specificConfirmDelete;
+	protected $specificConfirmDelete = null;
 	protected $colorOnBackground;
 	/** @var bool If true, activates color on hover */
 	protected $row_hover = true;
@@ -1343,7 +1343,7 @@ class AdminControllerCore extends Controller
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
 			'is_multishop' => $is_multishop,
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
-            'controller_name' => Tools::getValue('controller'),
+			'controller_name' => Tools::getValue('controller'),
 		));
 	}
 
