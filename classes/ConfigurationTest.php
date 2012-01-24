@@ -72,7 +72,6 @@ class ConfigurationTestCore
 	 */
 	public static function getDefaultTestsOp()
 	{
-
 		return array(
 			'fopen' => false,
 			'register_globals' => false,
@@ -127,7 +126,7 @@ class ConfigurationTestCore
 
 	public static function test_upload()
 	{
-		return  ini_get('file_uploads');
+		return ini_get('file_uploads');
 	}
 
 	public static function test_fopen()
@@ -163,7 +162,7 @@ class ConfigurationTestCore
 	public static function test_dir($relative_dir, $recursive = false)
 	{
 		$dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.ltrim($relative_dir, '/');
-		if (!file_exists($dir) OR !$dh = opendir($dir))
+		if (!file_exists($dir) || !$dh = opendir($dir))
 			return false;
 		$dummy = rtrim($dir, '/').'/'.uniqid();
 		if (@file_put_contents($dummy, 'test'))
@@ -188,7 +187,7 @@ class ConfigurationTestCore
 	public static function test_file($file_relative)
 	{
 		$file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
-		return (file_exists($file) AND is_writable($file));
+		return (file_exists($file) && is_writable($file));
 	}
 
 	public static function test_config_dir($dir)

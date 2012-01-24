@@ -90,18 +90,16 @@ class CombinationCore extends ObjectModel
 
 	public function delete()
 	{
-		if (!parent::delete() OR $this->deleteAssociations() === false)
+		if (!parent::delete() || $this->deleteAssociations() === false)
 			return false;
 		return true;
 	}
 
 	public function deleteAssociations()
 	{
-		if (
-			Db::getInstance()->execute('
+		if (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `id_product_attribute` = '.(int)($this->id)) === false
-			)
+				WHERE `id_product_attribute` = '.(int)$this->id) === false)
 			return false;
 		return true;
 	}

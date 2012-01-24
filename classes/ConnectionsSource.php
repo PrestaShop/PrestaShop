@@ -59,18 +59,18 @@ class ConnectionsSourceCore extends ObjectModel
 	{
 		if (!$cookie)
 			$cookie = Context::getContext()->cookie;
-		if (!isset($cookie->id_connections) OR !Validate::isUnsignedId($cookie->id_connections))
+		if (!isset($cookie->id_connections) || !Validate::isUnsignedId($cookie->id_connections))
 			return false;
-		if (!isset($_SERVER['HTTP_REFERER']) AND !Configuration::get('TRACKING_DIRECT_TRAFFIC'))
+		if (!isset($_SERVER['HTTP_REFERER']) && !Configuration::get('TRACKING_DIRECT_TRAFFIC'))
 			return false;
 		
 		$source = new ConnectionsSource();
-		if (isset($_SERVER['HTTP_REFERER']) AND Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER']))
+		if (isset($_SERVER['HTTP_REFERER']) && Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER']))
 		{
 			$parsed = parse_url($_SERVER['HTTP_REFERER']);
 			$parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
 			if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) 
-				AND !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__)))
+				&& !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__)))
 				return false;
 			if (Validate::isAbsoluteUrl(strval($_SERVER['HTTP_REFERER'])))
 			{

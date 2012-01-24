@@ -233,9 +233,9 @@ abstract class ControllerCore
 	public function addCSS($css_uri, $css_media_type = 'all')
 	{
 		if (is_array($css_uri))
-			foreach($css_uri as $css_file => $media)
+			foreach ($css_uri as $css_file => $media)
 			{
-				if (is_string($css_file) AND strlen($css_file) > 1)
+				if (is_string($css_file) && strlen($css_file) > 1)
 				{
 					$css_path = Media::getCSSPath($css_file, $media);
 					if ($css_path)
@@ -248,7 +248,7 @@ abstract class ControllerCore
 						$this->css_files = array_merge($css_path, $this->css_files);
 				}
 			}
-		else if (is_string($css_uri) AND strlen($css_uri) > 1)
+		else if (is_string($css_uri) && strlen($css_uri) > 1)
 		{
 			$css_path = Media::getCSSPath($css_uri, $css_media_type);
 			if ($css_path)
@@ -265,7 +265,7 @@ abstract class ControllerCore
 	public function addJS($js_uri)
 	{
 		if (is_array($js_uri))
-			foreach($js_uri as $js_file)
+			foreach ($js_uri as $js_file)
 			{
 				$js_path = Media::getJSPath($js_file);
 				if ($js_path)
@@ -300,7 +300,7 @@ abstract class ControllerCore
 	{
 		$ui_path = array();
 		if (is_array($component))
-			foreach($component as $ui)
+			foreach ($component as $ui)
 				$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
 		else
 			$ui_path = Media::getJqueryUIPath($component, $theme, $check_dependencies);
@@ -320,7 +320,7 @@ abstract class ControllerCore
 		$plugin_path = array();
 		if (is_array($name))
 		{
-			foreach($name as $plugin)
+			foreach ($name as $plugin)
 			{
 				$plugin_path = Media::getJqueryPluginPath($plugin, $folder);
 				$this->addJS($plugin_path['js']);

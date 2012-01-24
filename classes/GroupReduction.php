@@ -104,8 +104,8 @@ class GroupReductionCore extends ObjectModel
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.`id_product`
 			FROM `'._DB_PREFIX_.'product` p
-			WHERE p.`id_category_default` = '.(int)$this->id_category
-		, false);
+			WHERE p.`id_category_default` = '.(int)$this->id_category,
+		false);
 
 		$ids = array();
 		foreach ($products as $product)
@@ -154,8 +154,8 @@ class GroupReductionCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT gr.`id_group` as id_group, gr.`reduction` as reduction
 			FROM `'._DB_PREFIX_.'group_reduction` gr
-			WHERE `id_category` = '.(int)$id_category
-		, false);
+			WHERE `id_category` = '.(int)$id_category,
+		false);
 	}
 
 	public static function getGroupReductionByCategoryId($id_category)
@@ -163,13 +163,13 @@ class GroupReductionCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT gr.`id_group_reduction` as id_group_reduction
 			FROM `'._DB_PREFIX_.'group_reduction` gr
-			WHERE `id_category` = '.(int)$id_category
-		, false);
+			WHERE `id_category` = '.(int)$id_category,
+		false);
 	}
 
 	public static function setProductReduction($id_product, $id_group, $id_category, $reduction)
 	{
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction`
 			FROM `'._DB_PREFIX_.'product_group_reduction_cache` pgr
 			WHERE pgr.`id_product` = '.(int)$id_product

@@ -63,7 +63,7 @@ class CompareProductCore extends ObjectModel
 		$compareProducts = null;
 
 		if ($results)
-			foreach($results as $result)
+			foreach ($results as $result)
 				$compareProducts[] = $result['id_product'];
 
 		return $compareProducts;

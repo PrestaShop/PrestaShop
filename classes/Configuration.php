@@ -27,22 +27,22 @@
 
 class ConfigurationCore extends ObjectModel
 {
-	public 		$id;
+	public $id;
 
 	/** @var string Key */
-	public 		$name;
+	public $name;
 
-	public		$id_group_shop;
-	public		$id_shop;
+	public $id_group_shop;
+	public $id_shop;
 
 	/** @var string Value */
-	public 		$value;
+	public $value;
 
 	/** @var string Object creation date */
-	public 		$date_add;
+	public $date_add;
 
 	/** @var string Object last modification date */
-	public 		$date_upd;
+	public $date_upd;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -104,7 +104,7 @@ class ConfigurationCore extends ObjectModel
 	/**
 	 * Load all configuration data
 	 */
-	static public function loadConfiguration()
+	public static function loadConfiguration()
 	{
 		self::$_CONF = array();
 		$sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_group_shop, c.id_shop
@@ -136,7 +136,7 @@ class ConfigurationCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return string Value
 	  */
-	static public function get($key, $langID = NULL, $shopGroupID = NULL, $shopID = NULL)
+	public static function get($key, $langID = null, $shopGroupID = null, $shopID = null)
 	{
 		Configuration::getShopFromContext($shopGroupID, $shopID);
 		$langID = (int)$langID;
@@ -156,7 +156,7 @@ class ConfigurationCore extends ObjectModel
 		return false;
 	}
 	
-	static public function getGlobalValue($key, $langID = NULL)
+	public static function getGlobalValue($key, $langID = null)
 	{
 		return Configuration::get($key, $langID, 0, 0);
 	}
@@ -169,7 +169,7 @@ class ConfigurationCore extends ObjectModel
 	  * @param int $shopID
 	  * @return array Values in multiple languages
 	  */
-	static public function getInt($key, $id_group_shop = NULL, $id_shop = NULL)
+	public static function getInt($key, $id_group_shop = null, $id_shop = null)
 	{
 		$languages = Language::getLanguages();
 		$resultsArray = array();
@@ -185,7 +185,7 @@ class ConfigurationCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Values
 	  */
-	static public function getMultiple($keys, $langID = NULL, $shopGroupID = NULL, $shopID = NULL)
+	public static function getMultiple($keys, $langID = null, $shopGroupID = null, $shopID = null)
 	{
 	 	if (!is_array($keys))
 	 		throw new PrestaShopException('keys var is not an array');
@@ -226,7 +226,7 @@ class ConfigurationCore extends ObjectModel
 	  * @param int $shopGroupID
 	  * @param int $shopID
 	  */
-	static public function set($key, $values, $id_group_shop = NULL, $id_shop = NULL)
+	public static function set($key, $values, $id_group_shop = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
 			die(Tools::displayError());
@@ -254,7 +254,7 @@ class ConfigurationCore extends ObjectModel
 	 * @param bool $html
 	 * @return bool
 	 */
-	static public function updateGlobalValue($key, $values, $html = false)
+	public static function updateGlobalValue($key, $values, $html = false)
 	{
 		return Configuration::updateValue($key, $values, $html, 0, 0);
 	}
@@ -269,7 +269,7 @@ class ConfigurationCore extends ObjectModel
 	  * @param int $shopID
 	  * @return boolean Update result
 	  */
-	static public function updateValue($key, $values, $html = false, $shopGroupID = null, $shopID = null)
+	public static function updateValue($key, $values, $html = false, $shopGroupID = null, $shopID = null)
 	{
 		if (!Validate::isConfigName($key))
 	 		die(Tools::displayError());

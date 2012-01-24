@@ -196,7 +196,7 @@ class LinkCore
 	 */
 	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null)
 	{
-		$base = (($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
+		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
@@ -369,7 +369,7 @@ class LinkCore
 		unset($request['controller']);
 
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $request);
-		$url = ($ssl AND Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
+		$url = ($ssl && Configuration::get('PS_SSL_ENABLED')) ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true);
 		$url .= __PS_BASE_URI__.$this->getLangLink($id_lang).ltrim($uri_path, '/');
 
 		return $url;
@@ -412,7 +412,7 @@ class LinkCore
 
 	public function goPage($url, $p)
 	{
-		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)($p));
+		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)$p);
 	}
 
 	public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
@@ -426,9 +426,9 @@ class LinkCore
 				$url = $this->getPageLink(basename($url));
 		}
 		$vars = (!$array) ? '' : array();
-		$varsNb = array('n', 'search_query');
-		$varsSort = array('orderby', 'orderway');
-		$varsPagination = array('p');
+		$vars_nb = array('n', 'search_query');
+		$vars_sort = array('orderby', 'orderway');
+		$vars_pagination = array('p');
 
 		$n = 0;
 		foreach ($_GET as $k => $value)
@@ -436,10 +436,10 @@ class LinkCore
 			{
 				if (Configuration::get('PS_REWRITING_SETTINGS') && ($k == 'isolang' || $k == 'id_lang'))
 					continue;
-				$ifNb = (!$nb || ($nb && !in_array($k, $varsNb)));
-				$ifSort = (!$sort || ($sort && !in_array($k, $varsSort)));
-				$ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination)));
-				if ($ifNb && $ifSort && $ifPagination && !is_array($value))
+				$if_nb = (!$nb || ($nb && !in_array($k, $vars_nb)));
+				$if_sort = (!$sort || ($sort && !in_array($k, $vars_sort)));
+				$if_pagination = (!$pagination || ($pagination && !in_array($k, $vars_pagination)));
+				if ($if_nb && $if_sort && $if_pagination && !is_array($value))
 					!$array ? ($vars .= ((!$n++ && ($this->allow == 1 || $url == $this->url)) ? '?' : '&').urlencode($k).'='.urlencode($value)) : ($vars[urlencode($k)] = urlencode($value));
 			}
 		if (!$array)
@@ -455,11 +455,11 @@ class LinkCore
 		return $url.(!strstr($url, '?') ? '?' : '&').'orderby='.urlencode($orderby).'&orderway='.urlencode($orderway);
 	}
 
-	protected function getLangLink($id_lang = NULL, Context $context = null)
+	protected function getLangLink($id_lang = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
-		if (!$this->allow OR !Language::isMultiLanguageActivated())
+		if (!$this->allow || !Language::isMultiLanguageActivated())
 			return '';
 
 		if (!$id_lang)
