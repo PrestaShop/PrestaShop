@@ -274,36 +274,29 @@ class ShopCore extends ObjectModel
 				}
 		}
 
-		if ($id_shop)
+		if (!$id_shop && defined('_PS_ADMIN_DIR_'))
 		{
-			// Get instance of found shop
-			$shop = new Shop($id_shop);
-			if (!Validate::isLoadedObject($shop) || !$shop->active)
-			{
-				// No shop found ... too bad, let's redirect to default shop
-				$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-
-				// Hmm there is something really bad in your Prestashop !
-				if (!Validate::isLoadedObject($default_shop))
-					throw new PrestaShopException('Shop not found');
-
-				$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().ltrim($_SERVER['SCRIPT_NAME'], '/').'?'.$_SERVER['QUERY_STRING'];
-				header('location: '.$url);
-				exit;
-			}
+			// If in admin, we can access to the shop without right URL
+			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$shop->physical_uri = str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/';
+			$shop->virtual_uri = '';
+			return $shop;
 		}
-		else
-			if (defined('INSTALL_VERSION'))
-				$shop = new Shop();
-			else if (defined('_PS_ADMIN_DIR_'))
-			{
-				// If in admin, we can access to the shop without right URL
-				$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-				$shop->physical_uri = str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME'])));
-				$shop->virtual_uri = '';
-			}
-			else
+
+		$shop = new Shop($id_shop);
+		if (!Validate::isLoadedObject($shop) || !$shop->active || !$id_shop)
+		{
+			// No shop found ... too bad, let's redirect to default shop
+			$default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+
+			// Hmm there is something really bad in your Prestashop !
+			if (!Validate::isLoadedObject($default_shop))
 				throw new PrestaShopException('Shop not found');
+
+			$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php'.'?'.$_SERVER['QUERY_STRING'];
+			header('location: '.$url);
+			exit;
+		}
 
 		return $shop;
 	}
