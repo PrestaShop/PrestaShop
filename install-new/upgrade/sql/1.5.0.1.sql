@@ -33,19 +33,19 @@ CREATE TABLE IF NOT EXISTS `PREFIX_accounting_product_zone_shop` (
 /* PHP:add_accounting_tab(); */;
 
 
--- INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
--- 	SELECT `id_profile`, `id_module`, 0, 1
--- 	FROM `PREFIX_access` a, PREFIX_module m
--- 	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminModules' LIMIT 1)
--- 	AND a.`view` = 0
--- );
---
--- INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
--- 	SELECT `id_profile`, `id_module`, 1, 1
--- 	FROM `PREFIX_access` a, PREFIX_module m
--- 	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` = 'AdminModules' LIMIT 1)
--- 	AND a.`view` = 1
--- );
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
+	SELECT `id_profile`, `id_module`, 0, 1
+	FROM `PREFIX_access` a, PREFIX_module m
+	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` != "" LIMIT 1)
+	AND a.`view` = 0
+);
+
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `configure`, `view`) (
+	SELECT `id_profile`, `id_module`, 1, 1
+	FROM `PREFIX_access` a, PREFIX_module m
+	WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` WHERE `class_name` != "" LIMIT 1)
+	AND a.`view` = 1
+);
 
 
 UPDATE `PREFIX_tab` SET `class_name` = 'AdminThemes' WHERE `class_name` = 'AdminAppearance';
