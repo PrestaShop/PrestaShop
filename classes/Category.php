@@ -312,14 +312,12 @@ class CategoryCore extends ObjectModel
 			$product = new Product((int)$p['id_product']);
 			if (Validate::isLoadedObject($product))
 			{
-				if ($this->remove_products)
+				if ($this->remove_products || $this->id_parent == 0)
 					$product->delete();
 				else
 				{
 					if ($this->disable_products)
-					{
 						$product->active = 0;
-					}
 					
 					$product->addToCategories($this->id_parent);
 					$product->save();
