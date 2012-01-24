@@ -1784,7 +1784,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$count = 0;
 		$prefix_key = 'PDF';
 		$tabs_array = array($prefix_key=>array());
-		$regex = '/self::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+		$regex = '/HTMLTemplate.*::l\(\''._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
 		// need to parse PDF.php in order to find $regex and add this to $tabs_array
 		// this has to be done for the core class, and eventually for the override
 		foreach (glob(_PS_CLASS_DIR_.'pdf/'."*.php") as $filename)
