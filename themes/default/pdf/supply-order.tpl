@@ -78,11 +78,11 @@
 
 	{l s='Products ordered:' pdf='true'}
 	<!-- PRODUCTS -->
-	<div style="font-size: 6pt;">
+	<div style="font-size: 5pt;">
 		<table style="width: 100%;">
 			<tr style="line-height:6px; border: none">
-				<td style="width: 13%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Reference' pdf='true'}</td>
-				<td style="width: 21%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Designation' pdf='true'}</td>
+				<td style="width: 14%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Reference' pdf='true'}</td>
+				<td style="width: 20%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Designation' pdf='true'}</td>
 				<td style="width: 6%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Qty' pdf='true'}</td>
 				<td style="width: 10%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Unit Price TE' pdf='true'}</td>
 				<td style="width: 11%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE (DE)' pdf='true'}</td>
