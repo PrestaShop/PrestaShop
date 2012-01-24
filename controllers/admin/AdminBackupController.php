@@ -119,7 +119,7 @@ class AdminBackupControllerCore extends AdminController
 		if ($this->display == 'add')
 			$this->display = 'list';
 
-		parent::initContent();
+		return parent::initContent();
 	}
 
 	/**
