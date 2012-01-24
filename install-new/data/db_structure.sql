@@ -2374,3 +2374,13 @@ CREATE TABLE `PREFIX_category_shop` (
   PRIMARY KEY (`id_category`, `id_shop`),
   UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_module_preference` (
+  `id_module_preference` int(11) NOT NULL auto_increment,
+  `id_employee` int(11) NOT NULL,
+  `module` varchar(255) NOT NULL,
+  `interest` tinyint(1) default NULL,
+  `favorite` tinyint(1) default NULL,
+  PRIMARY KEY (`id_module_preference`),
+  UNIQUE KEY `employee_module` (`id_employee`, `module`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
