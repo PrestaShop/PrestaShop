@@ -165,7 +165,9 @@ class HelperCore
 		);
 
 		$top_category = Category::getTopCategory();
-		$root_category = Category::getRootCategory();
+		$id_shop = Tools::isSubmit('id_shop') ? Tools::getValue('id_shop'): Configuration::get('PS_SHOP_DEFAULT');
+		$shop = new Shop($id_shop);
+		$root_category = Category::getRootCategory(null, $shop);
 		$disabled_categories[] = $top_category->id;
 		if (!$root)
 			$root = array('name' => $root_category->name, 'id_category' => $root_category->id);
