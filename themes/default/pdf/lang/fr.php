@@ -3,6 +3,11 @@
 global $_LANGPDF;
 $_LANGPDF = array();
 $_LANGPDF['submitTranslationsPdf'] = '1';
+$_LANGPDF['PDF065ab3a28ca4f16f55f103adc7d0226f'] = 'Livraison';
+$_LANGPDF['PDF6c2fbe34c186a6b5725d212ad8cd2432'] = 'Facture';
+$_LANGPDF['PDFf771e4a4df40bf061607fdb8e3f140dc'] = 'Bon de commande';
+$_LANGPDF['PDF3a80d6ec5285dd5d3930db30d04e2b9e'] = 'HR : hors remise';
+$_LANGPDF['PDFa58b1c9575ab07c5be819243c96d9c0e'] = 'RC : remise comprise';
 $_LANGPDF['PDF2f2f0f119a907c6c67a3c6fcde0193ab'] = 'Addresse de Livraison';
 $_LANGPDF['PDF28a59051cd90053f87bacd5f1ffbc0b8'] = 'Adresse de Paiement';
 $_LANGPDF['PDFe2f324b87eac820c81e4d4a1105dcddf'] = 'Adresse de Paiement & Livraison';
