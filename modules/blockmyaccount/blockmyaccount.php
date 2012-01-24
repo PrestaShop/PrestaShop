@@ -46,7 +46,10 @@ class BlockMyAccount extends Module
 
 	public function install()
 	{
-		if (!$this->addMyAccountBlockHook() OR !parent::install() OR !$this->registerHook('leftColumn') OR !$this->registerHook('header'))
+		if (!$this->addMyAccountBlockHook() 
+			|| !parent::install() 
+			|| !$this->registerHook('displayLeftColumn') 
+			|| !$this->registerHook('displayHeader'))
 			return false;
 		return true;
 	}
@@ -56,7 +59,7 @@ class BlockMyAccount extends Module
 		return (parent::uninstall() AND $this->removeMyAccountBlockHook());
 	}
 
-	public function hookLeftColumn($params)
+	public function hookDisplayLeftColumn($params)
 	{
 		if (!$this->context->customer->isLogged())
 			return false;
@@ -69,14 +72,14 @@ class BlockMyAccount extends Module
 		return $this->display(__FILE__, $this->name.'.tpl');
 	}
 
-	public function hookRightColumn($params)
+	public function hookDisplayRightColumn($params)
 	{
-		return $this->hookLeftColumn($params);
+		return $this->hookDisplayLeftColumn($params);
 	}
 	
-	public function hookFooter($params)
+	public function hookDisplayFooter($params)
 	{
-		return $this->hookLeftColumn($params);
+		return $this->hookDisplayLeftColumn($params);
 	}
 
 	private function addMyAccountBlockHook()
@@ -88,7 +91,8 @@ class BlockMyAccount extends Module
 	{
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'myAccountBlock\'');
 	}
-	function hookHeader($params)
+
+	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockmyaccount.css', 'all');
 	}
