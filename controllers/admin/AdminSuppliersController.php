@@ -37,8 +37,8 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('delete');
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-		$this->_select = 'COUNT(p.`id_product`) AS products';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_supplier` = p.`id_supplier`)';
+		$this->_select = 'COUNT(ps.`id_product`) AS products';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
 		$this->_group = 'GROUP BY a.`id_supplier`';
 
  		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
