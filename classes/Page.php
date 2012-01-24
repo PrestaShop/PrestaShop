@@ -50,11 +50,11 @@ class PageCore extends ObjectModel
 	public static function getCurrentId()
 	{
 		$controller = Dispatcher::getInstance()->getController();
-		$pageTypeID = Page::getPageTypeByName($controller);
+		$page_type_id = Page::getPageTypeByName($controller);
 
 		// Some pages must be distinguished in order to record exactly what is being seen
 		// @todo dispatcher module
-		$specialArray = array(
+		$special_array = array(
 			'product' => 'id_product',
 			'category' => 'id_category',
 			'order' => 'step',
@@ -62,25 +62,25 @@ class PageCore extends ObjectModel
 		);
 
 		$where = '';
-		$insertData = array(
-			'id_page_type' =>	$pageTypeID,
+		$insert_data = array(
+			'id_page_type' => $page_type_id,
 		);
 
-		if (array_key_exists($controller, $specialArray))
+		if (array_key_exists($controller, $special_array))
 		{
-			$objectID = Tools::getValue($specialArray[$controller], null);
-			$where = ' AND `id_object` = '.(int)$objectID;
-			$insertData['id_object'] = (int)$objectID;
+			$object_id = Tools::getValue($special_array[$controller], null);
+			$where = ' AND `id_object` = '.(int)$object_id;
+			$insert_data['id_object'] = (int)$object_id;
 		}
 
 		$sql = 'SELECT `id_page`
 				FROM `'._DB_PREFIX_.'page`
-				WHERE `id_page_type` = '.(int)$pageTypeID.$where;
+				WHERE `id_page_type` = '.(int)$page_type_id.$where;
 		$result = Db::getInstance()->getRow($sql);
 		if ($result['id_page'])
 			return $result['id_page'];
 
-		Db::getInstance()->insert('page', $insertData, true);
+		Db::getInstance()->insert('page', $insert_data, true);
 		return Db::getInstance()->Insert_ID();
 	}
 

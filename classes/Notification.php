@@ -43,7 +43,7 @@ class NotificationCore
 	public function getLastElements()
 	{
 		global $cookie;
-		
+
 		$notifications = array();
 		$employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT id_last_order, id_last_customer_message, id_last_customer
@@ -55,7 +55,7 @@ class NotificationCore
 
 		return $notifications;
 	}
-	
+
 	public function installDb()
 	{
 		Db::getInstance(_PS_USE_SQL_SLAVE_)->Execute('ALTER TABLE `'._DB_PREFIX_.'employee`
@@ -74,7 +74,6 @@ class NotificationCore
 	 */
 	public static function getLastElementsIdsByType($type, $id_last_element)
 	{
-
 		if ($type == 'order' || $type == 'customer_message')
 			$sql = 'SELECT '.(($type == 'order') ? 'id_order, id_customer, total_paid' : 'c.id_customer_message as id_customer_message, ct.id_customer as id_customer, ct.id_customer_thread as id_customer_thread, ct.email as email').'
 					FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s`' : bqSQL($type).'` as c LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON c.id_customer_thread = ct.id_customer_thread').'
@@ -90,9 +89,9 @@ class NotificationCore
 		$json = array();
 		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql) as $key => $value)
 		{
-			$customer = NULL;
-			$order = NULL;
-			$currency = NULL;
+			$customer = null;
+			$order = null;
+			$currency = null;
 			if (isset($value['id_order']))
 			{
 				$order = new Order(intval($value['id_order']));
@@ -100,14 +99,14 @@ class NotificationCore
 			}
 			if (!empty($value['id_customer']))
 				$customer = new Customer(intval($value['id_customer']));
-			
+
 			$json[] = array(
 				'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
-				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),				
-				'total_paid' => ((!empty($value['total_paid']) && $currency != NULL) ? Tools::displayPrice((float)$value['total_paid'], $currency, false) : 0),
-				'customer_name' => (($customer != NULL) ? $customer->firstname.' '.$customer->lastname : (isset($value['email']) ? $value['email'] : ''))
+				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
+				'total_paid' => ((!empty($value['total_paid']) && $currency != null) ? Tools::displayPrice((float)$value['total_paid'], $currency, false) : 0),
+				'customer_name' => (($customer != null) ? $customer->firstname.' '.$customer->lastname : (isset($value['email']) ? $value['email'] : ''))
 			);
 		}
 
@@ -122,9 +121,9 @@ class NotificationCore
 	 * @return boolean if type exists or not
 	 */
 	public function updateEmployeeLastElement($type)
-	{	
+	{
 		global $cookie;
-		
+
 		if (in_array($type, $this->types))
 			// We update the last item viewed
 			return Db::getInstance()->Execute('
@@ -136,4 +135,3 @@ class NotificationCore
 			return false;
 	}
 }
-?>

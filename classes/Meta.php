@@ -28,11 +28,11 @@
 class MetaCore extends ObjectModel
 {
 	/** @var string Name */
-	public 		$page;
-	public 		$title;
-	public 		$description;
-	public 		$keywords;
-	public 		$url_rewrite;
+	public $page;
+	public $title;
+	public $description;
+	public $keywords;
+	public $url_rewrite;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -53,33 +53,36 @@ class MetaCore extends ObjectModel
 		),
 	);
 
-	public static function getPages($excludeFilled = false, $addPage = false)
+	public static function getPages($exclude_filled = false, $add_page = false)
 	{
-		$selectedPages = array();
+		$selected_pages = array();
 		if (!$files = scandir(_PS_ROOT_DIR_.'/controllers'))
 			die(Tools::displayError('Cannot scan root directory'));
 
 		// Exclude pages forbidden
-		$exludePages = array('category', 'changecurrency', 'cms', 'footer', 'header',
-		'pagination', 'product', 'product-sort', 'statistics');
+		$exlude_pages = array(
+			'category', 'changecurrency', 'cms', 'footer', 'header',
+			'pagination', 'product', 'product-sort', 'statistics'
+		);
+
 		foreach ($files as $file)
-			if (preg_match('/^[a-z0-9_.-]*\.php$/i', $file) AND !in_array(strtolower(str_replace('Controller.php', '', $file)), $exludePages))
-				$selectedPages[] = strtolower(str_replace('Controller.php', '', $file));
+			if (preg_match('/^[a-z0-9_.-]*\.php$/i', $file) && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
+				$selected_pages[] = strtolower(str_replace('Controller.php', '', $file));
 		// Exclude page already filled
-		if ($excludeFilled)
+		if ($exclude_filled)
 		{
 			$metas = Meta::getMetas();
 			foreach ($metas as $meta)
-				if (in_array($meta['page'], $selectedPages))
-					unset($selectedPages[array_search($meta['page'], $selectedPages)]);
+				if (in_array($meta['page'], $selected_pages))
+					unset($selected_pages[array_search($meta['page'], $selected_pages)]);
 		}
 		// Add selected page
-		if ($addPage)
+		if ($add_page)
 		{
-			$selectedPages[] = $addPage;
-			sort($selectedPages);
+			$selected_pages[] = $add_page;
+			sort($selected_pages);
 		}
-		return $selectedPages;
+		return $selected_pages;
 	}
 
 	public static function getMetas()
@@ -90,7 +93,7 @@ class MetaCore extends ObjectModel
 		ORDER BY page ASC');
 	}
 
-	static public function getMetasByIdLang($id_lang, Shop $shop = null)
+	public static function getMetasByIdLang($id_lang, Shop $shop = null)
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
@@ -105,7 +108,7 @@ class MetaCore extends ObjectModel
 
 	}
 
-	static public function getMetaByPage($page, $id_lang, Context $context = null)
+	public static function getMetaByPage($page, $id_lang, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -119,9 +122,9 @@ class MetaCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 
-	public function update($nullValues = false)
+	public function update($null_values = false)
 	{
-		if (!parent::update($nullValues))
+		if (!parent::update($null_values))
 			return false;
 
 		return Tools::generateHtaccess();
@@ -140,10 +143,10 @@ class MetaCore extends ObjectModel
 		if (!is_array($selection))
 			die(Tools::displayError());
 		$result = true;
-		foreach ($selection AS $id)
+		foreach ($selection as $id)
 		{
-			$this->id = (int)($id);
-			$result = $result AND $this->delete();
+			$this->id = (int)$id;
+			$result = $result && $this->delete();
 		}
 
 		return Tools::generateHtaccess();
@@ -157,10 +160,10 @@ class MetaCore extends ObjectModel
 		WHERE id_meta = (
 			SELECT id_meta
 			FROM `'._DB_PREFIX_.'meta_lang`
-			WHERE url_rewrite = \''.pSQL($url_rewrite).'\' AND id_lang = '.(int)($id_lang).'
+			WHERE url_rewrite = \''.pSQL($url_rewrite).'\' AND id_lang = '.(int)$id_lang.'
 			AND id_shop = '.Context::getContext()->shop->getID(true).'
 		)
-		AND id_lang = '.(int)($new_id_lang).'
+		AND id_lang = '.(int)$new_id_lang.'
 		AND id_shop = '.Context::getContext()->shop->getID(true));
 	}
 }
