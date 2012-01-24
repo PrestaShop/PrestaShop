@@ -68,7 +68,7 @@ function migrate_block_info_to_cms_block()
 		`position` int(10) unsigned NOT NULL default \'0\',
 		`display_store` tinyint(1) unsigned NOT NULL default \'1\',
 		PRIMARY KEY (`id_cms_block`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8');
 		$res &= Db::getInstance()->Execute('
 		INSERT INTO `'._DB_PREFIX_.'cms_block` (`id_cms_category`, `location`, `position`) VALUES(1, 0, 0)');
 		$res &= Db::getInstance()->Execute('
@@ -77,7 +77,7 @@ function migrate_block_info_to_cms_block()
 		`id_lang` int(10) unsigned NOT NULL,
 		`name` varchar(40) NOT NULL default \'\',
 		PRIMARY KEY (`id_cms_block`, `id_lang`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8');
 
 		$query_lang = 'INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`) VALUES';
 		foreach ($languages AS $language)
@@ -92,7 +92,7 @@ function migrate_block_info_to_cms_block()
 		`id_cms` int(10) unsigned NOT NULL,
 		`is_category` tinyint(1) unsigned NOT NULL,
 		PRIMARY KEY (`id_cms_block_page`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8');
 
 		$res &= Db::getInstance()->getValue('REPLACE INTO `'._DB_PREFIX_.'configuration`
 			(name, value) VALUES ("FOOTER_CMS", "")');

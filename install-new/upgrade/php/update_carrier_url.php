@@ -35,8 +35,8 @@ function update_carrier_url()
 
 	// Check each one and erase carrier URL if not correct URL
 	foreach ($carriers as $carrier)
-		if (!Validate::isAbsoluteUrl($carrier['url']))
-			Db::getInstance()->execute('
+		if (empty($carrier['url']) || !preg_match('/^https?:\/\/[:#%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $carrier['url']))
+			Db::getInstance()->Execute('
 				UPDATE `'._DB_PREFIX_.'carrier`
 				SET `url` = \'\'
 				WHERE  `id_carrier`= '.(int)($carrier['id_carrier']));

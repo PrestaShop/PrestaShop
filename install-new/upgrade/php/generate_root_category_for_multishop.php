@@ -1,5 +1,7 @@
 <?php
 
+require_once('./generate_ntree.php');
+
 function generate_root_category_for_multishop()
 {
 	Db::getInstance()->execute('
@@ -10,7 +12,7 @@ function generate_root_category_for_multishop()
 		INSERT INTO `'._DB_PREFIX_.'category` (`id_parent`, `level_depth`, `active`, `date_add`, `date_upd`, `is_root_category`) VALUES
 		(0, 0, 1, NOW(), NOW(), 0)
 	');
-	$id = Db::getInstance()->Insert_ID();
+	$id = Db::getInstance()->insert_id();
 
 	$langs = Db::getInstance()->executeS('
 		SELECT `id_lang`
@@ -57,6 +59,6 @@ function generate_root_category_for_multishop()
 		SET `id_category` = 1
 		WHERE `id_shop` = 1
 	');
-
-	Category::regenerateEntireNtree();
+	
+	generate_ntree();
 }
