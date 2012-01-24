@@ -350,24 +350,9 @@
 			}
 		});
 	
-		$('.available_quantity').find('input').blur(function(e)
+		$('.available_quantity').find('input').change(function(e, init_val)
 		{
 			ajaxCall( { actionQty: 'set_qty', id_product_attribute: $(this).parent().attr('id').split('_')[1], value: $(this).val() } );
-		});
-	
-		$('.available_quantity').find('input').click(function(e)
-		{
-			if(typeof(this.intervalId) != 'undefined')
-				window.clearInterval(this.intervalId);
-			this.intervalId = window.setInterval(function(it, initialValue)
-			{
-				if(initialValue != $(it).val())
-				{
-					window.clearInterval(it.intervalId);
-					$(it).trigger('change');
-					$(it).trigger('click');
-				}
-			}, 500, this, $(this).val())
 		});
 	
 		$('.out_of_stock').click(function(e)
