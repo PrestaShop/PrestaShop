@@ -429,8 +429,18 @@
 						addresses_options += '<option value="'+this.id_address+'">'+this.alias+'</option>';
 					});
 
-					$('#id_address_delivery').html(addresses_options);
-					$('#id_address_invoice').html(addresses_options);
+					if (addresses_options == '')
+					{
+						$('#address_delivery').hide();
+						$('#address_invoice').hide();
+					}
+					else
+					{
+						$('#id_address_delivery').html(addresses_options);
+						$('#id_address_invoice').html(addresses_options);
+						$('#address_delivery').show();
+						$('#address_invoice').show();
+					}
 					$('#address_delivery_detail,#address_invoice_detail').html(address_detail);
 				}
 				if (res.id_cart)
