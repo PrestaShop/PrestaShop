@@ -128,7 +128,7 @@ class DiscountCore extends CartRule
 		$obj = $this->parent;
 		if (in_array($method, array('add', 'update', 'getIdByName', 'getCustomerDiscounts', 'getValue', 'discountExists', 'createOrderDiscount', 'getVouchersToCartDisplay')))
 			$obj = $this;
-		return call_user_func_array(array(obj, $method), $args);
+		return call_user_func_array(array($obj, $method), $args);
 	}
 
 	/**
@@ -163,8 +163,8 @@ class DiscountCore extends CartRule
 	  * @deprecated 1.5.0.1
 	  */
 	public static function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $hasStock = false, Cart $cart = null)
-    {
-	 	return parent::getCustomerCartRules($id_lang, $id_customer, $active, $includeGenericOnes, $hasStock, $cart);
+	{
+		return parent::getCustomerCartRules($id_lang, $id_customer, $active, $includeGenericOnes, $hasStock, $cart);
 	}
 	
 	/**

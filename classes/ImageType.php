@@ -27,34 +27,34 @@
 
 class ImageTypeCore extends ObjectModel
 {
-	public		$id;
+	public $id;
 	
 	/** @var string Name */
-	public		$name;
+	public $name;
 
 	/** @var integer Width */
-	public		$width;
+	public $width;
 
 	/** @var integer Height */
-	public 		$height;
+	public $height;
 
 	/** @var boolean Apply to products */
-	public		$products;
+	public $products;
 
 	/** @var integer Apply to categories */
-	public 		$categories;
+	public $categories;
 
 	/** @var integer Apply to manufacturers */
-	public 		$manufacturers;
+	public $manufacturers;
 
 	/** @var integer Apply to suppliers */
-	public 		$suppliers;
+	public $suppliers;
 
 	/** @var integer Apply to scenes */
-	public 		$scenes;
+	public $scenes;
 
 	/** @var integer Apply to store */
-	public 		$stores;
+	public $stores;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -88,7 +88,7 @@ class ImageTypeCore extends ObjectModel
 	* @param string|null Image type
 	* @return array Image type definitions
 	*/
-	public static function getImagesTypes($type = NULL, $id_theme = false)
+	public static function getImagesTypes($type = null, $id_theme = false)
 	{
 		if (!isset(self::$images_types_cache[$type.($id_theme ? '-'.$id_theme : '')]))
 		{
@@ -96,7 +96,7 @@ class ImageTypeCore extends ObjectModel
 			if ($id_theme)
 				$where .= ' AND id_theme='.(int)$id_theme;
 			if (!empty($type))
-				$where .= ' AND ' . pSQL($type) . ' = 1 ';
+				$where .= ' AND '.pSQL($type).' = 1 ';
 
 			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.' ORDER BY `name` ASC';
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);

@@ -27,28 +27,28 @@
 
 class LanguageCore extends ObjectModel
 {
-	public 		$id;
+	public $id;
 
 	/** @var string Name */
-	public 		$name;
+	public $name;
 
 	/** @var string 2-letter iso code */
-	public 		$iso_code;
+	public $iso_code;
 
 	/** @var string 5-letter iso code */
-	public 		$language_code;
+	public $language_code;
 
 	/** @var string date format http://http://php.net/manual/en/function.date.php with the date only */
-	public 		$date_format_lite = 'Y-m-d';
+	public $date_format_lite = 'Y-m-d';
 
 	/** @var string date format http://http://php.net/manual/en/function.date.php with hours and minutes */
-	public 		$date_format_full = 'Y-m-d H:i:s';
+	public $date_format_full = 'Y-m-d H:i:s';
 
 	/** @var bool true if this language is right to left language */
-	public		$is_rtl = false;
+	public $is_rtl = false;
 
 	/** @var boolean Status */
-	public 		$active = true;
+	public $active = true;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -85,7 +85,7 @@ class LanguageCore extends ObjectModel
 			'pdf' => '_LANGPDF',
 		);
 
-	public	function __construct($id = NULL, $id_lang = NULL)
+	public	function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id);
 	}
@@ -125,7 +125,7 @@ class LanguageCore extends ObjectModel
 	 */
 	public function moveToIso($newIso)
 	{
-		if($newIso == $this->iso_code)
+		if ($newIso == $this->iso_code)
 			return true;
 
 		if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
@@ -173,7 +173,7 @@ class LanguageCore extends ObjectModel
 		if (empty($themes))
 		{
 			$installed_themes = Theme::getThemes();
-			foreach($installed_themes as $theme)
+			foreach ($installed_themes as $theme)
 				$themes[$theme->directory] = array('name' => $theme->name);
 		}
 		return $themes;
@@ -233,7 +233,7 @@ class LanguageCore extends ObjectModel
 		if (empty($iso_from))
 			die(Tools::displayError());
 
-		$copy = ($iso_to AND $theme_to) ? true : false;
+		$copy = ($iso_to && $theme_to) ? true : false;
 
 		$lPath_from = _PS_TRANSLATIONS_DIR_.(string)$iso_from.'/';
 		$tPath_from = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/';
@@ -246,8 +246,8 @@ class LanguageCore extends ObjectModel
 			$mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
 		}
 
-		$lFiles = array('admin'.'.php', 'errors'.'.php', 'fields'.'.php', 'pdf'.'.php');
-		$mFiles =  array('account.html', 'account.txt', 'bankwire.html', 'bankwire.txt',
+		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php');
+		$mFiles = array('account.html', 'account.txt', 'bankwire.html', 'bankwire.txt',
 		'cheque.html', 'cheque.txt', 'contact.html', 'contact.txt', 'contact_form.html',
 		'contact_form.txt', 'credit_slip.html', 'credit_slip.txt', 'download_product.html',
 		'download_product.txt', 'download-product.tpl', 'employee_password.html', 'employee_password.txt',
@@ -273,10 +273,10 @@ class LanguageCore extends ObjectModel
 		// to an other theme for the same language,
 		// it's avoid to copy Translations, Mails files
 		// and modules files which are not override by theme.
-		if (!$copy OR $iso_from != $iso_to)
+		if (!$copy || $iso_from != $iso_to)
 		{
 			// Translations files
-			if (!$check OR ($check AND (string)$iso_from != 'en'))
+			if (!$check || ($check && (string)$iso_from != 'en'))
 				foreach ($lFiles as $file)
 					$files_tr[$lPath_from.$file] = ($copy ? $lPath_to.$file : ++$number);
 			if ($select == 'tr')
@@ -284,7 +284,7 @@ class LanguageCore extends ObjectModel
 			$files = array_merge($files, $files_tr);
 
 			// Mail files
-			if (!$check OR ($check AND (string)$iso_from != 'en'))
+			if (!$check || ($check && (string)$iso_from != 'en'))
 				$files_mail[$mPath_from.'lang.php'] = ($copy ? $mPath_to.'lang.php' : ++$number);
 			foreach ($mFiles as $file)
 				$files_mail[$mPath_from.$file] = ($copy ? $mPath_to.$file : ++$number);
@@ -309,7 +309,7 @@ class LanguageCore extends ObjectModel
 					{
 						$dirFiles = scandir($modMailDirFrom);
 						foreach ($dirFiles as $file)
-							if (file_exists($modMailDirFrom.'/'.$file) AND $file != '.' AND $file != '..' AND $file != '.svn')
+							if (file_exists($modMailDirFrom.'/'.$file) && $file != '.' && $file != '..' && $file != '.svn')
 								$files_modules[$modMailDirFrom.'/'.$file] = ($copy ? $modMailDirTo.'/'.$file : ++$number);
 					}
 				}
@@ -318,18 +318,16 @@ class LanguageCore extends ObjectModel
 				$files = array_merge($files, $files_modules);
 			}
 		}
-		else if ($select == 'mail' OR $select == 'tr')
-		{
+		else if ($select == 'mail' || $select == 'tr')
 			return $files;
-		}
 
 		// Theme files
-		if (!$check OR ($check AND (string)$iso_from != 'en'))
+		if (!$check || ($check && (string)$iso_from != 'en'))
 		{
 			$files_theme[$tPath_from.'lang/'.(string)$iso_from.'.php'] = ($copy ? $tPath_to.'lang/'.(string)$iso_to.'.php' : ++$number);
 			$module_theme_files = (file_exists($tPath_from.'modules/') ? scandir($tPath_from.'modules/') : array());
 			foreach ($module_theme_files as $module)
-				if ($module !== '.' AND $module != '..' AND $module !== '.svn' AND file_exists($tPath_from.'modules/'.$module.'/'.(string)$iso_from.'.php'))
+				if ($module !== '.' && $module != '..' && $module !== '.svn' && file_exists($tPath_from.'modules/'.$module.'/'.(string)$iso_from.'.php'))
 					$files_theme[$tPath_from.'modules/'.$module.'/'.(string)$iso_from.'.php'] = ($copy ? $tPath_to.'modules/'.$module.'/'.(string)$iso_to.'.php' : ++$number);
 		}
 		if ($select == 'theme')
@@ -350,29 +348,30 @@ class LanguageCore extends ObjectModel
 		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'%_lang\' ');
 		$langTables = array();
 
-		foreach($tables as $table)
-			foreach($table as $t)
+		foreach ($tables as $table)
+			foreach ($table as $t)
 				if ($t != _DB_PREFIX_.'configuration_lang')
 				$langTables[] = $t;
 
 		Db::getInstance()->execute('SET @id_lang_default = (SELECT c.`value` FROM `'._DB_PREFIX_.'configuration` c WHERE c.`name` = \'PS_LANG_DEFAULT\' LIMIT 1)');
 		$return = true;
-		foreach($langTables as $name)
+		foreach ($langTables as $name)
 		{
 			$fields = '';
 			$columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
-			foreach($columns as $column)
+			foreach ($columns as $column)
 				$fields .= $column['Field'].', ';
 			$fields = rtrim($fields, ', ');
 			preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
 			$identifier = 'id_'.$m[1];
 
 			$sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
-			foreach($columns as $column) {
-				if ($identifier != $column['Field'] and $column['Field'] != 'id_lang')
+			foreach ($columns as $column)
+			{
+				if ($identifier != $column['Field'] && $column['Field'] != 'id_lang')
 					$sql .= '(SELECT `'.$column['Field'].'` FROM `'.$name.'` tl WHERE tl.`id_lang` = @id_lang_default AND tl.`'.$identifier.'` = `'.str_replace('_lang', '', $name).'`.`'.$identifier.'`), ';
 				else
-					$sql.= '`'.$column['Field'].'`, ';
+					$sql .= '`'.$column['Field'].'`, ';
 			}
 			$sql = rtrim($sql, ', ');
 			$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.str_replace('_lang', '', $name).'`) ;';
@@ -407,16 +406,16 @@ class LanguageCore extends ObjectModel
 
 		// Database translations deletion
 		$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
-		foreach ($result AS $row)
+		foreach ($result as $row)
 			if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]))
-				if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($this->id)))
+				if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
 					return false;
 
 		// Delete tags
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
 
 		// Delete search words
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)($this->id));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)$this->id);
 
 		// Files deletion
 		foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
@@ -430,7 +429,7 @@ class LanguageCore extends ObjectModel
 			if (count($files) <= 2)
 				Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
 
-			if(file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
+			if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
 			{
 				unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
 				$files = @scandir(_PS_MODULE_DIR_.$mod);
@@ -449,8 +448,8 @@ class LanguageCore extends ObjectModel
 		// delete images
 		$files_copy = array('/en.jpg', '/en-default-thickbox.jpg', '/en-default-home.jpg', '/en-default-large.jpg', '/en-default-medium.jpg', '/en-default-small.jpg', '/en-default-large_scene.jpg');
 		$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-		foreach($tos AS $to)
-			foreach($files_copy AS $file)
+		foreach ($tos as $to)
+			foreach ($files_copy as $file)
 			{
 				$name = str_replace('/en', ''.$this->iso_code, $file);
 
@@ -473,7 +472,7 @@ class LanguageCore extends ObjectModel
 		foreach ($selection as $id)
 		{
 			$this->id = (int)($id);
-			$result = $result AND $this->delete();
+			$result = $result && $this->delete();
 		}
 
 		Tools::generateHtaccess();
@@ -492,9 +491,9 @@ class LanguageCore extends ObjectModel
 			Language::loadLanguages();
 
 		$languages = array();
-		foreach (self::$_LANGUAGES AS $language)
+		foreach (self::$_LANGUAGES as $language)
 		{
-			if ($active AND !$language['active'] OR ($id_shop AND !isset($language['shops'][(int)$id_shop])))
+			if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int)$id_shop])))
 				continue;
 			$languages[] = $language;
 		}
@@ -557,19 +556,19 @@ class LanguageCore extends ObjectModel
 	public static function copyLanguageData($from, $to)
 	{
 		$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
-		foreach ($result AS $row)
-			if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]) AND $row['Tables_in_'._DB_NAME_] != _DB_PREFIX_.'lang')
+		foreach ($result as $row)
+			if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]) && $row['Tables_in_'._DB_NAME_] != _DB_PREFIX_.'lang')
 			{
-				$result2 = Db::getInstance()->executeS('SELECT * FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($from));
-				if (!sizeof($result2))
+				$result2 = Db::getInstance()->executeS('SELECT * FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$from);
+				if (!count($result2))
 					continue;
-				Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)($to));
+				Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$to);
 				$query = 'INSERT INTO `'.$row['Tables_in_'._DB_NAME_].'` VALUES ';
-				foreach ($result2 AS $row2)
+				foreach ($result2 as $row2)
 				{
 					$query .= '(';
 					$row2['id_lang'] = $to;
-					foreach ($row2 AS $field)
+					foreach ($row2 as $field)
 						$query .= '\''.pSQL($field, true).'\',';
 					$query = rtrim($query, ',').'),';
 				}
@@ -591,7 +590,7 @@ class LanguageCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
 		$result = Db::getInstance()->executeS($sql);
-		foreach ($result AS $row)
+		foreach ($result as $row)
 		{
 			if (!isset(self::$_LANGUAGES[(int)$row['id_lang']]))
 				self::$_LANGUAGES[(int)$row['id_lang']] = $row;
@@ -613,7 +612,7 @@ class LanguageCore extends ObjectModel
 			return true;
 		else
 		{
-			if(@fsockopen('api.prestashop.com', 80))
+			if (@fsockopen('api.prestashop.com', 80))
 			{
 				$lang = new Language();
 				$lang->iso_code = $iso_code;
@@ -626,14 +625,14 @@ class LanguageCore extends ObjectModel
 					&& isset($lang_pack->iso_code))
 						$lang->name = $lang_pack->name;
 				}
-				if (!$lang->name OR !$lang->add())
+				if (!$lang->name || !$lang->add())
 					return false;
-				$insert_id = (int)($lang->id);
+				$insert_id = (int)$lang->id;
 
 				if ($lang_pack)
 				{
 					$flag = Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
-					if ($flag != NULL && !preg_match('/<body>/', $flag))
+					if ($flag != null && !preg_match('/<body>/', $flag))
 					{
 						$file = fopen(dirname(__FILE__).'/../img/l/'.$insert_id.'.jpg', 'w');
 						if ($file)
@@ -652,8 +651,8 @@ class LanguageCore extends ObjectModel
 
 				$files_copy = array('/en.jpg', '/en-default-thickbox.jpg', '/en-default-home.jpg', '/en-default-large.jpg', '/en-default-medium.jpg', '/en-default-small.jpg', '/en-default-large_scene.jpg');
 				$tos = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-				foreach($tos AS $to)
-					foreach($files_copy AS $file)
+				foreach ($tos as $to)
+					foreach ($files_copy as $file)
 					{
 						$name = str_replace('/en', '/'.$iso_code, $file);
 						copy(dirname(__FILE__).'/../img/l'.$file, $to.$name);
