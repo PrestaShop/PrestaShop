@@ -906,6 +906,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						$entry->discount_rate = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('input_discount_rate_'.$id, 0));
 						$entry->tax_rate = (float)str_replace(array(' ', ','), array('', '.'), Tools::getValue('input_tax_rate_'.$id, 0));
 						$entry->reference = Tools::getValue('input_reference_'.$id, '');
+						$entry->supplier_reference = Tools::getValue('input_supplier_reference_'.$id, '');
 						$entry->ean13 = Tools::getValue('input_ean13_'.$id, '');
 						$entry->upc = Tools::getValue('input_upc_'.$id, '');
 
@@ -914,9 +915,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 						if (empty($entry->name))
 							$entry->name = '';
-
-						//get the product supplier reference
-						$entry->supplier_reference = ProductSupplier::getProductSupplierReference($entry->id_product, $entry->id_product_attribute, $supply_order->id_supplier);
 
 						if ($entry->supplier_reference == null)
 							$entry->supplier_reference = '';
@@ -944,6 +942,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								'name' => $entry->name,
 								'name_displayed' => $entry->name_displayed,
 								'reference' => $entry->reference,
+								'supplier_reference' => $entry->supplier_reference,
 								'ean13' => $entry->ean13,
 								'upc' => $entry->upc,
 							);
@@ -1563,6 +1562,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$query = new DbQuery();
 		$query->select('
 			CONCAT(p.id_product, \'_\', IFNULL(pa.id_product_attribute, \'0\')) as id,
+			ps.product_supplier_reference as supplier_reference,
 			IFNULL(pa.reference, IFNULL(p.reference, \'\')) as reference,
 			IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
 			IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc,
@@ -1580,14 +1580,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$query->leftJoin('attribute_group_lang', 'agl', 'agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang);
 		$query->leftJoin('product_supplier', 'ps', 'ps.id_product = p.id_product');
 
-		$query->where('pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\'');
+		$query->where('(pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\' OR ps.product_supplier_reference LIKE \'%'.$pattern.'%\')');
 		$query->where('p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
 		$query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
 
 		if ($id_supplier)
 			$query->where('ps.id_supplier = '.$id_supplier.' OR p.id_supplier = '.$id_supplier);
 
-		$query->groupBy('pa.id_product_attribute');
+		$query->groupBy('p.id_product, pa.id_product_attribute');
 
 		$items = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 

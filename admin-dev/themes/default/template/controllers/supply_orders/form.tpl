@@ -59,6 +59,7 @@
 								<th style="width: 150px">{l s='Reference'}</th>
 								<th style="width: 50px">{l s='EAN13'}</th>
 								<th style="width: 50px">{l s='UPC'}</th>
+								<th style="width: 150px">{l s='Supplier Reference'}</th>
 								<th>{l s='Name'}</th>
 								<th style="width: 100px">{l s='Unit Price TE'}</th>
 								<th style="width: 100px">{l s='Quantity'}</th>
@@ -83,6 +84,10 @@
 									<td>
 										{$product.upc}
 										<input type="hidden" name="input_upc_{$product.id_product}_{$product.id_product_attribute}" value="{$product.upc}" />
+									</td>
+									<td>
+										{$product.supplier_reference}
+										<input type="hidden" name="input_supplier_reference_{$product.id_product}_{$product.id_product_attribute}" value="{$product.supplier_reference}" />
 									</td>
 									<td>
 										{$product.name_displayed}
@@ -147,6 +152,7 @@
 				'<td>'+product_infos.reference+'<input type="hidden" name="input_check_'+product_infos.id+'" value="'+product_infos.checksum+'" /><input type="hidden" name="input_reference_'+product_infos.id+'" value="'+product_infos.reference+'" /></td>'+
 				'<td>'+product_infos.ean13+'<input type="hidden" name="input_ean13_'+product_infos.id+'" value="'+product_infos.ean13+'" /></td>'+
 				'<td>'+product_infos.upc+'<input type="hidden" name="input_upc_'+product_infos.id+'" value="'+product_infos.upc+'" /></td>'+
+				'<td>'+product_infos.supplier_reference+'<input type="hidden" name="input_supplier_reference_'+product_infos.id+'" value="'+product_infos.supplier_reference+'" /></td>'+
 				'<td>'+product_infos.name+'<input type="hidden" name="input_name_displayed_'+product_infos.id+'" value="'+product_infos.name+'" /></td>'+
 				'<td class="center">{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_'+product_infos.id+'" value="'+product_infos.unit_price_te+'" size="8" />&nbsp;{$currency->suffix}</td>'+
 				'<td class="center"><input type="text" name="input_quantity_expected_'+product_infos.id+'" value="0" size="5" /></td>'+
@@ -226,7 +232,7 @@
 				matchContains: true,
 				mustMatch:false,
 				scroll:false,
-				cacheLength:20,
+				cacheLength:0,
 	            dataType: 'json',
 	            extraParams: {
 	                id_supplier: '{$supplier_id}',
@@ -244,14 +250,14 @@
 	            		if (jQuery.inArray(row.id, product_ids) == -1)
 		    				return {
 		    					data: row,
-		    					result: row.reference + ' - ' + row.name,
+		    					result: row.supplier_reference + ' - ' + row.name,
 		    					value: row.id
 		    				}
 	    			});
 	    			return res;
 	            },
 	    		formatItem: function(item) {
-	    			return item.reference + ' - ' + item.name;
+	    			return item.supplier_reference + ' - ' + item.name;
 	    		}
 	        }).result(function(event, item){
 				product_infos = item;
