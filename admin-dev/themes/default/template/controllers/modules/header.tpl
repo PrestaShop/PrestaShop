@@ -70,34 +70,4 @@
 		<br />
 	</div>
 
-	{if !isset($logged_on_addons)}
-
-		{if $check_url_fopen eq 'ko' OR $check_curl eq 'ko' OR $check_openssl eq 'ko'}
-			
-			<div class="warn">
-				<b>{l s='If you want to be able to fully use the AdminModules pannel and have free modules available, you should enable the following configuration on your server :'}</b><br />
-				{if $check_url_fopen eq 'ko'}- {l s='Enable allow_url_fopen'}<br />{/if}
-				{if $check_curl eq 'ko'}- {l s='Enable php curl extension'}<br />{/if}
-				{if $check_openssl eq 'ko'}- {l s='Enable php openssl extension'}<br />{/if}
-			</div>
-			
-		{else}
-
-			<!--start addons login-->
-			<div class="filter-module" id="addons_login_div">
-		
-				<p>{l s='You have a PrestaShop Addons account ?'}</p>
-				<form id="addons_login_form" method="post">
-					<label>{l s='Login Addons'} :</label> <input type="text" value="" id="username_addons" autocomplete="off" class="ac_input">
-					<label>{l s= 'Password Addons'} :</label> <input type="password" value="" id="password_addons" autocomplete="off" class="ac_input">
-					<input type="submit" class="button" id="addons_login_button" value="{l s='Log in'}">
-					<span id="addons_loading" style="color:red"></span>
-				</form>
-
-			</div>
-			<!--end addons login-->
-
-		{/if}
-
-	{/if}
 

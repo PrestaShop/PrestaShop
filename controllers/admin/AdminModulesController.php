@@ -273,7 +273,7 @@ class AdminModulesControllerCore extends AdminController
 	public function ajaxProcessLogOnAddonsWebservices()
 	{
 		$content = $this->addonsRequest('check_customer', array('username_addons' => pSQL(trim(Tools::getValue('username_addons'))), 'password_addons' => pSQL(trim(Tools::getValue('password_addons')))));
-		$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 		if (!$xml)
 			die('KO');
 		$result = strtoupper((string)$xml->success);
@@ -305,6 +305,31 @@ class AdminModulesControllerCore extends AdminController
 		die('OK');
 	}
 
+	public function ajaxProcessSaveFavoritePreferences()
+	{
+		$action = Tools::getValue('action_pref');
+		$value = Tools::getValue('value_pref');
+		$module = Tools::getValue('module_pref');
+		$id_module_preference = (int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'');
+		if ($id_module_preference > 0)
+		{
+			if ($action == 'i')
+				$update = array('interest' => ($value == '' ? null : (int)$value));
+			if ($action == 'f')
+				$update = array('favorite' => ($value == '' ? null : (int)$value));
+			Db::getInstance()->update('module_preference', $update, '`id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'', 0, true);
+		}
+		else
+		{
+			$insert = array('id_employee' => (int)$this->id_employee, 'module' => pSQL($module), 'interest' => null, 'favorite' => null);
+			if ($action == 'i')
+				$insert['interest'] = ($value == '' ? null : (int)$value);
+			if ($action == 'f')
+				$insert['favorite'] = ($value == '' ? null : (int)$value);
+			Db::getInstance()->insert('module_preference', $insert, true);
+		}
+		die('OK');
+	}
 
 
 
@@ -570,7 +595,7 @@ class AdminModulesControllerCore extends AdminController
 							{
 								$file = $f['file'];
 								$content = Tools::file_get_contents(_PS_ROOT_DIR_.$file);
-								$xml = @simplexml_load_string($content, NULL, LIBXML_NOCDATA);
+								$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 								foreach ($xml->module as $modaddons)
 									if ($name == $modaddons->name && isset($modaddons->id) && ($this->logged_on_addons || $f['loggedOnAddons'] == 0))
 									{
@@ -817,8 +842,21 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (stristr($module->name, $filter_name) === false && stristr($module->displayName, $filter_name) === false && stristr($module->description, $filter_name) === false)
 				return true;
-			else
+			return false;
+		}
+
+
+		// Filter on interest
+		if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `interest` = 0') > 0)
+				return true;
+
+
+		// Filter on favorites
+		if (Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee) == 'favorites')
+		{
+			if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)') > 0)
 				return false;
+			return true;
 		}
 
 
@@ -894,11 +932,26 @@ class AdminModulesControllerCore extends AdminController
 		$filterCategories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
 		if (count($filterCategories) > 0)
 			foreach ($filterCategories as $fc)
-				$categoryFiltered[$fc] = 1;
-				
+				if (!empty($fc))
+					$categoryFiltered[$fc] = 1;
+
 		foreach ($this->list_modules_categories as $k => $v)
 			$this->list_modules_categories[$k]['nb'] = 0;
-		
+
+
+		// Retrieve Modules Preferences
+		$modules_preferences = '';
+		$modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
+		foreach ($modules_preferences_tmp as $k => $v)
+		{
+			if ($v['interest'] == null)
+				unset($v['interest']);
+			if ($v['favorite'] == null)
+				unset($v['favorite']);
+			$modules_preferences[$v['module']] = $v;
+		}
+
+
 		// Retrieve Modules List
 		$modules = Module::getModulesOnDisk(true, $this->logged_on_addons);
 		$this->initModulesList($modules);
@@ -939,7 +992,7 @@ class AdminModulesControllerCore extends AdminController
 			)).', ';
 
 			// Apply filter
-			if ($this->isModuleFiltered($module))
+			if ($this->isModuleFiltered($module) && Tools::getValue('select') != 'favorites')
 				unset($modules[$km]);
 			else
 			{
@@ -956,6 +1009,8 @@ class AdminModulesControllerCore extends AdminController
 				$modules[$km]->options['uninstall_onclick'] = ((!method_exists($module, 'onclickOption')) ? ((empty($module->confirmUninstall)) ? '' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') : $module->onclickOption('uninstall', $modules[$km]->options['uninstall_url']));
 				if (Tools::getValue('module_name') == $module->name && (int)Tools::getValue('conf') > 0)
 					$modules[$km]->message = $this->_conf[(int)Tools::getValue('conf')];
+				if (isset($modules_preferences[$modules[$km]->name]))
+					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 			}
 			unset($object);
 		}
@@ -993,6 +1048,7 @@ class AdminModulesControllerCore extends AdminController
 
 		$tpl_vars['modules'] = $modules;
 		$tpl_vars['nb_modules'] = $this->nb_modules_total;
+		$tpl_vars['nb_modules_favorites'] = Db::getInstance()->getValue('SELECT COUNT(`id_module_preference`) FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)');
 		$tpl_vars['nb_modules_installed'] = $this->nb_modules_installed;
 		$tpl_vars['nb_modules_uninstalled'] = $tpl_vars['nb_modules'] - $tpl_vars['nb_modules_installed'];
 		$tpl_vars['nb_modules_activated'] = $this->nb_modules_activated;
