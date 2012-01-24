@@ -166,7 +166,7 @@ abstract class HTMLTemplateCore
 		if (!isset($_LANGPDF) OR !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
 		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = (key_exists('PDF_invoice'.$key, $_LANGPDF) ? $_LANGPDF['PDF_invoice'.$key] : $string);
+		$str = (key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
 		return $str;
 	}
