@@ -258,23 +258,20 @@ abstract class DbCore
 	public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
 	{
 		Tools::displayAsDeprecated();
-		if (substr($table, 0, strlen(_DB_PREFIX_)) == _DB_PREFIX_)
-			$table = substr($table, strlen(_DB_PREFIX_));
-
 		$type = strtoupper($type);
 		switch ($type)
 		{
 			case 'INSERT' :
-				return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT);
+				return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT, false);
 
 			case 'INSERT IGNORE' :
-				return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT_IGNORE);
+				return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT_IGNORE, false);
 
 			case 'REPLACE' :
-				return $this->insert($table, $data, $use_null, $use_cache, Db::REPLACE);
+				return $this->insert($table, $data, $use_null, $use_cache, Db::REPLACE, false);
 
 			case 'UPDATE' :
-				return $this->update($table, $data, $where, $limit, $use_null, $use_cache);
+				return $this->update($table, $data, $where, $limit, $use_null, $use_cache, false);
 
 			default :
 				throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
@@ -323,12 +320,14 @@ abstract class DbCore
 	 * @param $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
 	 * @return bool
 	 */
-	public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT)
+	public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT, $add_prefix = true)
 	{
 		if (!$data)
 			return true;
 
-		$table = _DB_PREFIX_.$table;
+		if ($add_prefix)
+			$table = _DB_PREFIX_.$table;
+
 		if ($type == Db::INSERT)
 			$insert_keyword = 'INSERT';
 		else if ($type == Db::INSERT_IGNORE)
@@ -383,12 +382,14 @@ abstract class DbCore
 	 * @param bool $use_cache
 	 * @return bool
 	 */
-	public function update($table, $data, $where = '', $limit = 0, $null_values = false, $use_cache = true)
+	public function update($table, $data, $where = '', $limit = 0, $null_values = false, $use_cache = true, $add_prefix = true)
 	{
 		if (!$data)
 			return true;
 
-		$table = _DB_PREFIX_.$table;
+		if ($add_prefix)
+			$table = _DB_PREFIX_.$table;
+
 		$sql = 'UPDATE `'.$table.'` SET ';
 		foreach ($data as $key => $value)
 		{
