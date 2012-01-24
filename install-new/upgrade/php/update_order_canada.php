@@ -66,7 +66,7 @@ function update_order_canada()
 			// 	returns Group::getDefaultPriceDisplayMethod
 			$tax_calculation_method = $order['price_display_method'];
 
-			$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$products = Db::getInstance()->ExecuteS('
 				SELECT * FROM `'._DB_PREFIX_.'order_detail` od
 				WHERE od.`id_order` = '.(int)$id_order);
 

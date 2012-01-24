@@ -5,7 +5,7 @@ function set_product_suppliers()
 	FROM `'._DB_PREFIX_.'configuration` WHERE name="PS_CURRENCY_DEFAULT"');
 
 	//Get all products with positive quantity
-	$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+	$resource = Db::getInstance()->query('
 		SELECT id_supplier, id_product, supplier_reference, wholesale_price
 		FROM `'._DB_PREFIX_.'product`
 		WHERE `id_supplier` > 0
@@ -26,7 +26,7 @@ function set_product_suppliers()
 		');
 
 		//Try to get product attribues
-		$attributes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$attributes = Db::getInstance()->executeS('
 			SELECT id_product_attribute, supplier_reference, wholesale_price
 			FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product` = '.(int)$row['id_product']

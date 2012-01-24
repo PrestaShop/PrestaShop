@@ -2,7 +2,7 @@
 function set_stock_available()
 {
 	//Get all products with positive quantity
-	$resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+	$resource = Db::getInstance()->query('
 		SELECT quantity, id_product, out_of_stock
 		FROM `'._DB_PREFIX_.'product`
 		WHERE `active` = 1
@@ -13,7 +13,7 @@ function set_stock_available()
 		$quantity = 0;
 
 		//Try to get product attribues
-		$attributes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$attributes = Db::getInstance()->executeS('
 			SELECT quantity, id_product_attribute
 			FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product` = '.(int)$row['id_product']

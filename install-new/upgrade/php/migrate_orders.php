@@ -186,7 +186,7 @@ function mo_getPriceDisplayMethod($id_group)
 	static $cache;
 
 	if (!isset($cache[$id_group]))
-    $cache[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+    $cache[$id_group] = Db::getInstance()->getValue('
 			SELECT `price_display_method`
 			FROM `'._DB_PREFIX_.'group`
 			WHERE `id_group` = '.(int)$id_group);
