@@ -259,7 +259,7 @@ abstract class ObjectModelCore
 			foreach (Language::getLanguages(false) as $language)
 				$fields[$language['id_lang']] = $this->formatFields($language['id_lang']);
 		else
-			$fields = $this->formatFields($this->id_lang);
+			$fields = array($this->id_lang => $this->formatFields($this->id_lang));
 
 		return $fields;
 	}
@@ -400,7 +400,7 @@ abstract class ObjectModelCore
 			$fields = $this->getFieldsLang();
 			$shops = Shop::getShops(true, null, true);
 			if ($fields && is_array($fields))
-				foreach ($fields as &$field)
+				foreach ($fields as $field)
 				{
 					foreach (array_keys($field) AS $key)
 						if (!Validate::isTableOrIdentifier($key))
