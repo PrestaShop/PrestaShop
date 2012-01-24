@@ -15,7 +15,7 @@
 * DISCLAIMER
 *
 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
+* /ersions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
@@ -88,7 +88,7 @@ if (function_exists('date_default_timezone_set'))
 // if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
 if (defined('_PS_ROOT_DIR_') AND !defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
-else if (!defined('_PS_MODULE_DIR_'))
+elseif (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_.'/../modules/');
 
 if(!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
@@ -213,6 +213,10 @@ $datas = array(
 	array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : ''),
 	array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : ''),
 	array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : ''),
+	// 1.4 only
+	// array('__PS_BASE_URI__', __PS_BASE_URI__),
+	// 1.4 only
+	// array('_THEME_NAME_', _THEME_NAME_),
 	array('_PS_DIRECTORY_', __PS_BASE_URI__),
 	array('_COOKIE_KEY_', _COOKIE_KEY_),
 	array('_COOKIE_IV_', _COOKIE_IV_),
@@ -228,13 +232,12 @@ if(!defined('_PS_CACHE_ENABLED_'))
 if(!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
 
-$sqlContent = '';
 if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
 {
 	require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
 	deactivate_custom_modules();
 }
-
+$sqlContentVersion = array();
 if (empty($fail_result))
 	foreach($neededUpgradeFiles AS $version)
 	{
@@ -244,16 +247,18 @@ if (empty($fail_result))
 			$logger->logError('Error while loading sql upgrade file.');
 			$fail_result .= '<action result="fail" error="33" />'."\n";
 		}
-		if (!$sqlContent .= file_get_contents($file))
+		if (!$sqlContent = file_get_contents($file))
 		{
 			$logger->logError(sprintf('Error while loading sql upgrade file %s.', $version));
 			$fail_result .= '<action result="fail" error="33" />'."\n";
 		}
 		$sqlContent .= "\n";
+		$sqlContent = str_replace(array($filePrefix, $engineType), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
+		$sqlContent = preg_split("/;\s*[\r\n]+/", $sqlContent);
+
+		$sqlContentVersion[$version] = $sqlContent;
 	}
 
-$sqlContent = str_replace(array($filePrefix, $engineType), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
-$sqlContent = preg_split("/;\s*[\r\n]+/",$sqlContent);
 
 if (empty($fail_result))
 {
@@ -277,79 +282,80 @@ if (empty($fail_result))
 
 Configuration::loadConfiguration();
 
-if (empty($fail_result));
-	foreach ($sqlContent as $query)
-	{
-		$query = trim($query);
-		if(!empty($query))
+if (empty($fail_result))
+	foreach ($sqlContentVersion as $version => $sqlContent)
+		foreach ($sqlContent as $query)
 		{
-			/* If php code have to be executed */
-			if (strpos($query, '/* PHP:') !== false)
+			$query = trim($query);
+			if(!empty($query))
 			{
-				/* Parsing php code */
-				$pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
-				$phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
-				$php = explode('::', $phpString);
-				preg_match('/\((.*)\)/', $phpString, $pattern);
-				$paramsString = trim($pattern[0], '()');
-				preg_match_all('/([^,]+),? ?/', $paramsString, $parameters);
-				if (isset($parameters[1]))
-					$parameters = $parameters[1];
-				else
-					$parameters = array();
-				if (is_array($parameters))
-					foreach ($parameters AS &$parameter)
-						$parameter = str_replace('\'', '', $parameter);
+				/* If php code have to be executed */
+				if (strpos($query, '/* PHP:') !== false)
+				{
+					/* Parsing php code */
+					$pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
+					$phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
+					$php = explode('::', $phpString);
+					preg_match('/\((.*)\)/', $phpString, $pattern);
+					$paramsString = trim($pattern[0], '()');
+					preg_match_all('/([^,]+),? ?/', $paramsString, $parameters);
+					if (isset($parameters[1]))
+						$parameters = $parameters[1];
+					else
+						$parameters = array();
+					if (is_array($parameters))
+						foreach ($parameters AS &$parameter)
+							$parameter = str_replace('\'', '', $parameter);
 
-				/* Call a simple function */
-				if (strpos($phpString, '::') === false)
-				{
-					$func_name = str_replace($pattern[0], '', $php[0]);
-					require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
-					$phpRes = call_user_func_array($func_name, $parameters);
+					/* Call a simple function */
+					if (strpos($phpString, '::') === false)
+					{
+						$func_name = str_replace($pattern[0], '', $php[0]);
+						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
+						$phpRes = call_user_func_array($func_name, $parameters);
+					}
+					/* Or an object method */
+					else
+					{
+						$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
+						$phpRes = call_user_func_array($func_name, $parameters);
+					}
+					if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
+					{
+						$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
+						$logger->logError(empty($phpRes['error'])?'':$phpRes['error']);
+						$requests .=
+		'	<request result="fail" sqlfile="'.$version.'">
+				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+				<phpMsgError><![CDATA['.(empty($phpRes['msg'])?'':$phpRes['msg']).']]></phpMsgError>
+				<phpNumberError><![CDATA['.(empty($phpRes['error'])?'':$phpRes['error']).']]></phpNumberError>
+			</request>'."\n";
+					}
+					else
+						$requests .=
+		'	<request result="ok" sqlfile="'.$version.'">
+				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+			</request>'."\n";
 				}
-				/* Or an object method */
-				else
+				elseif(!Db::getInstance()->execute($query))
 				{
-					$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
-					$phpRes = call_user_func_array($func_name, $parameters);
-				}
-				if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
-				{
-					$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
-					$logger->logError(empty($phpRes['error'])?'':$phpRes['error']);
-					$requests .=
-	'	<request result="fail">
-			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-			<phpMsgError><![CDATA['.(empty($phpRes['msg'])?'':$phpRes['msg']).']]></sqlMsgError>
-			<phpNumberError><![CDATA['.(empty($phpRes['error'])?'':$phpRes['error']).']]></sqlNumberError>
-		</request>'."\n";
-				}
-				else
-					$requests .=
-	'	<request result="ok">
-			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-		</request>'."\n";
-			}
-			elseif(!Db::getInstance()->execute($query))
-			{
-				$logger->logError('SQL query: '."\r\n".$query);
-				$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
-				$warningExist = true;
-				$requests .=
-	'	<request result="fail">
-			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-			<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
+					$logger->logError('SQL query: '."\r\n".$query);
+					$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
+					$warningExist = true;
+					$requests .= '
+	<request result="fail" sqlfile="'.$version.'" >
+		<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
+		<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
 			<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
 		</request>'."\n";
-			}
-			else
-				$requests .=
-	'	<request result="ok">
+				}
+				else
+					$requests .='
+	<request result="ok" sqlfile="'.$version.'">
 			<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
 		</request>'."\n";
+			}
 		}
-	}
 
 // Settings updated, compile and cache directories must be emptied
 $arrayToClean = array(

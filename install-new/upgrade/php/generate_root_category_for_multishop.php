@@ -1,6 +1,6 @@
 <?php
 
-require_once('./generate_ntree.php');
+require_once('generate_ntree.php');
 
 function generate_root_category_for_multishop()
 {
