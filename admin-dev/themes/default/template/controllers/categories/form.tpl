@@ -27,11 +27,11 @@
 
 {block name="end_field_block"}
 	{if ($input.name == 'groupBox')}
-		<p class="hint" style="display:block">
+		<p class="hint" style="display:block; position:relative; display:inline-block;">
 			<span>{$input.info_introduction}</span><br />
 			<span>{$input.unidentified}</span><br />
 			<span>{$input.guest}</span><br />
 			<span>{$input.customer}</span><br />
-		</p><br /><br /><br /><br />
+		</p>
 	{/if}</div>
 {/block}
