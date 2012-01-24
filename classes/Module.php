@@ -1558,6 +1558,10 @@ abstract class ModuleCore
 				$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
 			}
 		}
+
+		if (!isset($cache_permissions[$employee->id_profile][$id_module]))
+			throw new PrestaShopException('No access reference in table module_access for id_module '.$id_module.'.');
+
 		return (bool)$cache_permissions[$employee->id_profile][$id_module][$variable];
 	}
 
