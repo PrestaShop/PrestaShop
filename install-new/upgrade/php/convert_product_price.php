@@ -32,9 +32,11 @@ function convert_product_price()
 	$taxRates = array();
 	foreach ($taxes as $data)
 		$taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
-	$resource = DB::getInstance()->ExecuteS('SELECT `id_product`, `price`, `id_tax` FROM `'._DB_PREFIX_.'product`', false);
+	$resource = DB::getInstance()->executeS('SELECT `id_product`, `price`, `id_tax` 
+		FROM `'._DB_PREFIX_.'product`', false);
 	if (!$resource)
-		die(mysql_error());
+		return array('error' => 1, 'msg' => Db::getInstance()->getMsgError()); // was previously die(mysql_error())
+
 	while ($row = DB::getInstance()->nextRow($resource))
 		if ($row['id_tax'])
 		{
@@ -44,7 +46,7 @@ function convert_product_price()
 			{
 				$newPrice = (float)(number_format($price, 6, '.', ''));
 				$newPrice = Tools::floorf($newPrice / (1 + $taxRates[$row['id_tax']]), 6);
-				DB::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'product` SET `price` = '.$newPrice.' WHERE `id_product` = '.(int)$row['id_product']);
+				DB::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `price` = '.$newPrice.' WHERE `id_product` = '.(int)$row['id_product']);
 			}
 		}
 }
