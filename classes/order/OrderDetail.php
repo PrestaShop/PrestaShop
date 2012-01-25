@@ -402,17 +402,19 @@ class OrderDetailCore extends ObjectModel
 		$this->reduction_percent = 0.00;
 
 		if ($this->specificPrice)
-			switch($this->specificPrice['reduction_type'])
+			switch ($this->specificPrice['reduction_type'])
 			{
 				case 'percentage':
 					$this->reduction_percent = (float)$this->specificPrice['reduction'] * 100;
-					break;
+				break;
+
 				case 'amount':
 					$price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
 					$this->reduction_amount = (float)(!$this->specificPrice['id_currency'] ?
 						$price : $this->specificPrice['reduction']);
                     $this->reduction_amount_tax_incl = $this->reduction_amount;
                     $this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
+				break;
 			}
 	}
 
@@ -571,8 +573,8 @@ class OrderDetailCore extends ObjectModel
         if (isset($carrier) && Validate::isLoadedObject($carrier))
             $tax_rate = $carrier->getTaxesRate(new Address((int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-        $this->total_shipping_price_tax_excl = (float) $product['additional_shipping_cost'];
-        $this->total_shipping_price_tax_incl = (float) ($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
+        $this->total_shipping_price_tax_excl = (float)$product['additional_shipping_cost'];
+        $this->total_shipping_price_tax_incl = (float)($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
         $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, 2);
     }
 }

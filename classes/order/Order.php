@@ -238,7 +238,7 @@ class OrderCore extends ObjectModel
 
 	protected static $_historyCache = array();
 
-	public function __construct($id = NULL, $id_lang = NULL)
+	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
 		if ($this->id_customer)
@@ -334,7 +334,7 @@ class OrderCore extends ObjectModel
 			$reduction_amount = $price * $orderDetail->reduction_percent / 100;
 		elseif ($orderDetail->reduction_amount != '0.000000')
 			$reduction_amount = Tools::ps_round($orderDetail->reduction_amount, 2);
-		if (isset($reduction_amount) AND $reduction_amount)
+		if (isset($reduction_amount) && $reduction_amount)
 			$price = Tools::ps_round($price - $reduction_amount, 2);
 		$productPriceWithoutTax = number_format($tax_calculator->removeTaxes($price), 2, '.', '');
 		$price += Tools::ps_round($orderDetail->ecotax * (1 + $orderDetail->ecotax_tax_rate / 100), 2);
@@ -398,7 +398,7 @@ class OrderCore extends ObjectModel
 			}
 			return $this->update();
 		}
-		return $orderDetail->update() AND $this->update();
+		return $orderDetail->update() && $this->update();
 	}
 
 	public function deleteCustomization($id_customization, $quantity, $orderDetail)
@@ -429,7 +429,7 @@ class OrderCore extends ObjectModel
 		if (!$id_order_state)
 			$id_order_state = 0;
 
-		if (!isset(self::$_historyCache[$this->id.'_'.$id_order_state]) OR $no_hidden)
+		if (!isset(self::$_historyCache[$this->id.'_'.$id_order_state]) || $no_hidden)
 		{
 			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
 			$result = Db::getInstance()->executeS('
@@ -488,7 +488,7 @@ class OrderCore extends ObjectModel
 
 		$group_reduction = 1;
 		if ($row['group_reduction'] > 0)
-			$group_reduction =  1 - $row['group_reduction'] / 100;
+			$group_reduction = 1 - $row['group_reduction'] / 100;
 
 		$row['product_price_wt_but_ecotax'] = $row['product_price_wt'] - $row['ecotax'];
 
@@ -510,17 +510,17 @@ class OrderCore extends ObjectModel
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 
 		$resultArray = array();
-		foreach ($products AS $row)
+		foreach ($products as $row)
 		{
 			// Change qty if selected
 			if ($selectedQty)
 			{
 				$row['product_quantity'] = 0;
-				foreach ($selectedProducts AS $key => $id_product)
+				foreach ($selectedProducts as $key => $id_product)
 					if ($row['id_order_detail'] == $id_product)
 						$row['producsvt_quantity'] = (int)($selectedQty[$key]);
 				if (!$row['product_quantity'])
-					continue ;
+					continue;
 			}
 
 			$this->setProductImageInformations($row);
@@ -652,10 +652,10 @@ class OrderCore extends ObjectModel
 		if (count($products) < 1)
 			return false;
 		$virtual = true;
-		foreach ($products AS $product)
+		foreach ($products as $product)
 		{
 			$pd = ProductDownload::getIdFromIdProduct((int)($product['product_id']));
-			if ($pd AND Validate::isUnsignedInt($pd) AND $product['download_hash'] AND $product['display_filename'] != '')
+			if ($pd && Validate::isUnsignedInt($pd) && $product['download_hash'] && $product['display_filename'] != '')
 			{
 				if ($strict === false)
 					return true;
@@ -701,7 +701,7 @@ class OrderCore extends ObjectModel
 	public function getCurrentState()
 	{
 		$orderHistory = OrderHistory::getLastOrderState($this->id);
-		if (!isset($orderHistory) OR !$orderHistory)
+		if (!isset($orderHistory) || !$orderHistory)
 			return false;
 		return $orderHistory->id;
 	}
@@ -714,32 +714,33 @@ class OrderCore extends ObjectModel
 	public function getCurrentStateFull($id_lang)
 	{
 		return Db::getInstance()->getRow('
-		SELECT oh.`id_order_state`, osl.`name`, os.`logable`, os.`shipped`
-		FROM `'._DB_PREFIX_.'order_history` oh
-		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = oh.`id_order_state`)
-		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
-		WHERE osl.`id_lang` = '.(int)($id_lang).' AND oh.`id_order` = '.(int)($this->id).'
-		ORDER BY `date_add` DESC, `id_order_history` DESC');
+			SELECT oh.`id_order_state`, osl.`name`, os.`logable`, os.`shipped`
+			FROM `'._DB_PREFIX_.'order_history` oh
+			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = oh.`id_order_state`)
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
+			WHERE osl.`id_lang` = '.(int)($id_lang).' AND oh.`id_order` = '.(int)($this->id).'
+			ORDER BY `date_add` DESC, `id_order_history` DESC
+		');
 	}
 
 	public function hasBeenDelivered()
 	{
-		return sizeof($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_DELIVERED')));
+		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_DELIVERED')));
 	}
 
 	public function hasBeenPaid()
 	{
-		return sizeof($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PAYMENT')));
+		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PAYMENT')));
 	}
 
 	public function hasBeenShipped()
 	{
-		return sizeof($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_SHIPPING')));
+		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_SHIPPING')));
 	}
 
 	public function isInPreparation()
 	{
-		return sizeof($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PREPARATION')));
+		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PREPARATION')));
 	}
 
 	/**
@@ -749,7 +750,7 @@ class OrderCore extends ObjectModel
 	 * @param boolean $showHiddenStatus Display or not hidden order statuses
 	 * @return array Customer orders
 	 */
-	static public function getCustomerOrders($id_customer, $showHiddenStatus = false, Context $context = null)
+	public static function getCustomerOrders($id_customer, $showHiddenStatus = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -763,7 +764,7 @@ class OrderCore extends ObjectModel
 		if (!$res)
 			return array();
 
-		foreach ($res AS $key => $val)
+		foreach ($res as $key => $val)
 		{
 			$res2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`
@@ -781,7 +782,7 @@ class OrderCore extends ObjectModel
 		return $res;
 	}
 
-	public static function getOrdersIdByDate($date_from, $date_to, $id_customer = NULL, $type = NULL)
+	public static function getOrdersIdByDate($date_from, $date_to, $id_customer = null, $type = null)
 	{
 		$sql = 'SELECT `id_order`
 				FROM `'._DB_PREFIX_.'orders`
@@ -792,12 +793,12 @@ class OrderCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
-		foreach ($result AS $order)
+		foreach ($result as $order)
 			$orders[] = (int)($order['id_order']);
 		return $orders;
 	}
 
-	static public function getOrdersWithInformations($limit = NULL, Context $context = null)
+	public static function getOrdersWithInformations($limit = null, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -831,7 +832,7 @@ class OrderCore extends ObjectModel
 	 *
 	 * @return array
 	 */
-	public static function getOrdersIdInvoiceByDate($date_from, $date_to, $id_customer = NULL, $type = NULL)
+	public static function getOrdersIdInvoiceByDate($date_from, $date_to, $id_customer = null, $type = null)
 	{
         Tools::displayAsDeprecated();
 		$sql = 'SELECT `id_order`
@@ -844,8 +845,8 @@ class OrderCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
-		foreach ($result AS $order)
-			$orders[] = (int)($order['id_order']);
+		foreach ($result as $order)
+			$orders[] = (int)$order['id_order'];
 		return $orders;
 	}
 
@@ -873,7 +874,7 @@ class OrderCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
-		foreach ($result AS $order)
+		foreach ($result as $order)
 			$orders[] = (int)($order['id_order']);
 		return $orders;
 	}
@@ -895,7 +896,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getTotalProductsWithTaxes($products = false)
 	{
-		if ($this->total_products_wt != '0.00' AND !$products)
+		if ($this->total_products_wt != '0.00' && !$products)
 			return $this->total_products_wt;
 		/* Retro-compatibility (now set directly on the validateOrder() method) */
 
@@ -904,7 +905,7 @@ class OrderCore extends ObjectModel
 
 		$return = 0;
 
-		foreach ($products AS $row)
+		foreach ($products as $row)
 		{
 			if (!isset($row['tax_rate']))
 				$row['tax_rate'] = 0;
@@ -1013,10 +1014,10 @@ class OrderCore extends ObjectModel
 	{
 		$payment = $this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PAYMENT'));
 		$delivred = $this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_DELIVERED'));
-		if ($payment AND $delivred AND strtotime($delivred[0]['date_add']) < strtotime($payment[0]['date_add']))
-			return ((int)(Configuration::get('PS_ORDER_RETURN')) == 1 AND $this->getNumberOfDays());
+		if ($payment && $delivred && strtotime($delivred[0]['date_add']) < strtotime($payment[0]['date_add']))
+			return ((int)(Configuration::get('PS_ORDER_RETURN')) == 1 && $this->getNumberOfDays());
 		else
-			return ((int)(Configuration::get('PS_ORDER_RETURN')) == 1 AND (int)($this->getCurrentState()) == Configuration::get('PS_OS_DELIVERED') AND $this->getNumberOfDays());
+			return ((int)Configuration::get('PS_ORDER_RETURN') == 1 && (int)$this->getCurrentState() == Configuration::get('PS_OS_DELIVERED') && $this->getNumberOfDays());
 	}
 
     public static function getLastInvoiceNumber()
@@ -1096,7 +1097,7 @@ class OrderCore extends ObjectModel
 	{
 		// Get all invoice
 		$order_invoice_collection = $this->getInvoicesCollection();
-		foreach($order_invoice_collection as $order_invoice)
+		foreach ($order_invoice_collection as $order_invoice)
 		{
 			$number = (int)Configuration::get('PS_DELIVERY_NUMBER');
 			if (!$number)
@@ -1124,17 +1125,17 @@ class OrderCore extends ObjectModel
 	{
 		$order = new Order($id_order);
 		$orderState = OrderHistory::getLastOrderState($id_order);
-		if (!Validate::isLoadedObject($orderState) OR !Validate::isLoadedObject($order))
+		if (!Validate::isLoadedObject($orderState) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invalid objects'));
 		echo '<span style="width:20px; margin-right:5px;">';
-		if (($orderState->invoice AND $order->invoice_number) AND (int)($tr['product_number']))
-			echo '<a target="_blank" href="pdf.php?id_order='.(int)($order->id).'&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
+		if (($orderState->invoice && $order->invoice_number) && (int)($tr['product_number']))
+			echo '<a target="_blank" href="pdf.php?id_order='.(int)$order->id.'&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
 		else
 			echo '&nbsp;';
 		echo '</span>';
 		echo '<span style="width:20px;">';
-		if ($orderState->delivery AND $order->delivery_number)
-			echo '<a target="_blank" href="pdf.php?id_delivery='.(int)($order->delivery_number).'"><img src="../img/admin/delivery.gif" alt="delivery" /></a>';
+		if ($orderState->delivery && $order->delivery_number)
+			echo '<a target="_blank" href="pdf.php?id_delivery='.(int)$order->delivery_number.'"><img src="../img/admin/delivery.gif" alt="delivery" /></a>';
 		else
 			echo '&nbsp;';
 		echo '</span>';
@@ -1238,7 +1239,7 @@ class OrderCore extends ObjectModel
 	{
 		$paymentModule = Module::getInstanceByName($this->module);
 		$customer = new Customer($this->id_customer);
-		$paymentModule->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, NULL, array(), null, false, $customer->secure_key);
+		$paymentModule->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, array(), null, false, $customer->secure_key);
 		$this->id = $paymentModule->currentOrder;
 		return true;
 	}
@@ -1386,7 +1387,7 @@ class OrderCore extends ObjectModel
 		$invoices = $this->getInvoicesCollection()->getResults();
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
-		foreach($delivery_slips as $delivery)
+		foreach ($delivery_slips as $delivery)
 		{
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
@@ -1402,7 +1403,7 @@ class OrderCore extends ObjectModel
 		}
 
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
-		usort($documents, "sortDocuments");
+		usort($documents, 'sortDocuments');
 
 		return $documents;
 	}
@@ -1501,7 +1502,7 @@ class OrderCore extends ObjectModel
 		$total = 0;
 		// Retrieve all payments
 		$payments = $this->getOrderPaymentCollection();
-		foreach($payments as $payment)
+		foreach ($payments as $payment)
 		{
 			if ($payment->id_currency == $currency->id)
 				$total += $payment->amount;
@@ -1675,8 +1676,7 @@ class OrderCore extends ObjectModel
 		if (Db::getInstance()->getRow('
 				SELECT *
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id)
-		)
+				WHERE `id_order` =  '.(int)$this->id))
 			return true;
 		return false;
 	}

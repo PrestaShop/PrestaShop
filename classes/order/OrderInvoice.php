@@ -129,17 +129,17 @@ class OrderInvoiceCore extends ObjectModel
 		$customized_datas = Product::getAllCustomizedDatas($order->id_cart);
 
 		$resultArray = array();
-		foreach ($products AS $row)
+		foreach ($products as $row)
 		{
 			// Change qty if selected
 			if ($selectedQty)
 			{
 				$row['product_quantity'] = 0;
-				foreach ($selectedProducts AS $key => $id_product)
+				foreach ($selectedProducts as $key => $id_product)
 					if ($row['id_order_detail'] == $id_product)
 						$row['product_quantity'] = (int)($selectedQty[$key]);
 				if (!$row['product_quantity'])
-					continue ;
+					continue;
 			}
 
 			$this->setProductImageInformations($row);
