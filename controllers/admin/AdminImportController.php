@@ -113,12 +113,10 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id_product' => array('label' => $this->l('Product ID').'*'),
 					'group' => array(
-						'label' => $this->l('Group (Name:Position)').'*',
-						'help' => $this->l('Position of the group attribute.')
+						'label' => $this->l('Group (Name:Position)').'*'
 					),
 					'attribute' => array(
-						'label' => $this->l('Attribute (Value:Position)').'*',
-						'help' => $this->l('Position of the attribute in the attribute group.')
+						'label' => $this->l('Attribute (Value:Position)').'*'
 					),
 					'reference' => array('label' => $this->l('Reference')),
 					'supplier_reference' => array('label' => $this->l('Supplier reference')),
@@ -131,14 +129,11 @@ class AdminImportControllerCore extends AdminController
 					'weight' => array('label' => $this->l('Weight')),
 					'default_on' => array('label' => $this->l('Default')),
 					'image_position' => array(
-						'label' => $this->l('Image position'),
-						'help' => $this->l('Position of the product image to use for this combination. If you use this field, leave image URL empty.')
+						'label' => $this->l('Image position')
 					),
 					'image_url' => array('label' => $this->l('Image URL')),
 					'delete_existing_images' => array(
-						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
-						'help' => $this->l('If you do not specify this column and you specify the column images,
-							all images of the product will be replaced by those specified in the import file')
+						'label' => $this->l('Delete existing images (0 = no, 1 = yes)')
 					),
 				);
 
@@ -222,17 +217,13 @@ class AdminImportControllerCore extends AdminController
 					'show_price' => array('label' => $this->l('Show price')),
 					'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
 					'delete_existing_images' => array(
-						'label' => $this->l('Delete existing images (0 = no, 1 = yes)'),
-						'help' => $this->l('If you do not specify this column and you specify the column images,
-							all images of the product will be replaced by those specified in the import file')
+						'label' => $this->l('Delete existing images (0 = no, 1 = yes)')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Value:Position)'),
-						'help' => $this->l('Position of the feature.')),
+					'features' => array('label' => $this->l('Feature(Name:Value:Position)')),
 					'online_only' => array('label' => $this->l('Only available online')),
 					'condition' => array('label' => $this->l('Condition')),
 					'shop' => array(
-						'label' => $this->l('ID / Name of shop'),
-						'help' => $this->l('Ignore this field if you don\'t use multishop tool. If you leave this field empty, default shop will be used'),
+						'label' => $this->l('ID / Name of shop')
 					),
 				);
 

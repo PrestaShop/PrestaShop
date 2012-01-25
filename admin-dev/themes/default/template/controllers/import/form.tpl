@@ -270,19 +270,26 @@
 			$(".import_products_categories").hide();
 
 		$("#entitie").html($("#entity > option:selected").text().toLowerCase());
-		$.getJSON("ajax.php", {
+		$.ajax({
+			url: 'ajax.php',
+			data: {
 				getAvailableFields:1,
 				entity: $("#entity").val()
 			},
-			function(j) {
+			dataType: 'json',
+			success: function(j) {
 				var fields = "";
 				$("#availableFields").empty();
+				
 				for (var i = 0; i < j.length; i++)
 					fields += j[i].field;
+
 				$("#availableFields").html(fields);
 				activeClueTip();
-			}
-		);
+			},
+			error: function(j) {		
+			}			
+		});
 
 	});
 </script>
