@@ -36,10 +36,10 @@
 				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{$shop_name|escape:'htmlall':'UTF-8'}</td>
 			</tr>
 			<tr>
-				<td style="font-size: 11pt; color: #9E9F9E">{$date|escape:'htmlall':'UTF-8'}</td>
+				<td style="font-size: 14pt; color: #9E9F9E">{$date|escape:'htmlall':'UTF-8'}</td>
 			</tr>
 			<tr>
-				<td style="font-size: 11pt; color: #9E9F9E">{$title|escape:'htmlall':'UTF-8'}</td>
+				<td style="font-size: 14pt; color: #9E9F9E">{$title|escape:'htmlall':'UTF-8'}</td>
 			</tr>
 		</table>
 	</td>
