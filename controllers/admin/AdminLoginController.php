@@ -50,13 +50,13 @@ class AdminLoginControllerCore extends AdminController
 	
 	public function initContent()
 	{
-		if ((empty($_SERVER['HTTPS']) OR strtolower($_SERVER['HTTPS']) == 'off') AND Configuration::get('PS_SSL_ENABLED'))
+		if ((empty($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') && Configuration::get('PS_SSL_ENABLED'))
 		{
 			// You can uncomment these lines if you want to force https even from localhost and automatically redirect
 			// header('HTTP/1.1 301 Moved Permanently');
 			// header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
 			// exit();
-			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'),explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
+			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 			// If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
 			if ($clientIsMaintenanceOrLocal)
 				$this->errors = Tools::displayError('SSL is activated. However, your IP is allowed to use unsecure mode (Maintenance or local IP).');
@@ -71,15 +71,14 @@ class AdminLoginControllerCore extends AdminController
 		
 		
 		if (file_exists(_PS_ADMIN_DIR_.'/../install') || file_exists(_PS_ADMIN_DIR_.'/../admin')
-		|| (file_exists(_PS_ADMIN_DIR_.'/../install-new') && (!defined('_PS_MODE_DEV_') || !_PS_MODE_DEV_))
-		)
+		|| (file_exists(_PS_ADMIN_DIR_.'/../install-new') && (!defined('_PS_MODE_DEV_') || !_PS_MODE_DEV_)))
 			$this->context->smarty->assign(
 				array(
 				'randomNb' => rand(100, 999),
 				'wrong_folder_name'	=> true)
 				);
 		
-		if ($nbErrors = sizeof($this->errors))
+		if ($nbErrors = count($this->errors))
 			$this->context->smarty->assign(
 				array(
 					'errors' => $this->errors,
@@ -132,7 +131,7 @@ class AdminLoginControllerCore extends AdminController
 		else if (!Validate::isPasswd($passwd))
 			$this->errors[] = Tools::displayError('Invalid password');
 			
-		if (!sizeof($this->errors))
+		if (!count($this->errors))
 		{
 		 	/* Seeking for employee */
 			$employee = new Employee();
@@ -181,15 +180,15 @@ class AdminLoginControllerCore extends AdminController
 		else
 		{
 			$employee = new Employee();
-			if (!$employee->getByemail($email) OR !$employee)
+			if (!$employee->getByemail($email) || !$employee)
 				$this->errors[] = Tools::displayError('This account does not exist');
-			else if ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0 )
+			else if ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
 					$this->errors[] = Tools::displayError('You can regenerate your password only every').' '.Configuration::get('PS_PASSWD_TIME_BACK').' '.Tools::displayError('minute(s)');
 		}
 		if (_PS_MODE_DEMO_)
 			$errors[] = Tools::displayError('This functionnality has been disabled.');
 
-		if(!sizeof($this->errors))
+		if (!count($this->errors))
 		{	
 			$pwd = Tools::passwdGen();
 			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
