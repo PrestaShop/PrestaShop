@@ -240,31 +240,37 @@ class AdminOrdersControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Invalid new order status');
 				else
 				{
-					// Create new OrderHistory
-					$history = new OrderHistory();
-					$history->id_order = $order->id;
-					$history->id_employee = (int)$this->context->employee->id;
-					$history->changeIdOrderState($order_state->id, $order->id);
+					$current_order_state = OrderHistory::getLastOrderState($order->id);
+					if ($current_order_state->id != $order_state->id)
+					{
+						// Create new OrderHistory
+						$history = new OrderHistory();
+						$history->id_order = $order->id;
+						$history->id_employee = (int)$this->context->employee->id;
+						$history->changeIdOrderState($order_state->id, $order->id);
 
-					$carrier = new Carrier($order->id_carrier, $order->id_lang);
-					$templateVars = array();
-					if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
-						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-					elseif ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
-						$templateVars = array(
-							'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
-							'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : '')
-						);
-					elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
-						$templateVars = array(
-							'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
-							'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
-							'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : '')
-						);
-					// Save all changes
-					if ($history->addWithemail(true, $templateVars))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
-					$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
+						$carrier = new Carrier($order->id_carrier, $order->id_lang);
+						$templateVars = array();
+						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
+							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+						elseif ($history->id_order_state == Configuration::get('PS_OS_CHEQUE'))
+							$templateVars = array(
+								'{cheque_name}' => (Configuration::get('CHEQUE_NAME') ? Configuration::get('CHEQUE_NAME') : ''),
+								'{cheque_address_html}' => (Configuration::get('CHEQUE_ADDRESS') ? nl2br(Configuration::get('CHEQUE_ADDRESS')) : '')
+							);
+						elseif ($history->id_order_state == Configuration::get('PS_OS_BANKWIRE'))
+							$templateVars = array(
+								'{bankwire_owner}' => (Configuration::get('BANK_WIRE_OWNER') ? Configuration::get('BANK_WIRE_OWNER') : ''),
+								'{bankwire_details}' => (Configuration::get('BANK_WIRE_DETAILS') ? nl2br(Configuration::get('BANK_WIRE_DETAILS')) : ''),
+								'{bankwire_address}' => (Configuration::get('BANK_WIRE_ADDRESS') ? nl2br(Configuration::get('BANK_WIRE_ADDRESS')) : '')
+							);
+						// Save all changes
+						if ($history->addWithemail(true, $templateVars))
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&token='.$this->token);
+						$this->errors[] = Tools::displayError('An error occurred while changing the status or was unable to send e-mail to the customer.');
+					}
+					else
+						$this->errors[] = Tools::displayError('This order has already this status');
 				}
 			}
 			else
@@ -317,13 +323,13 @@ class AdminOrdersControllerCore extends AdminController
 						}
 						else
 							$customer_thread = new CustomerThread((int)$id_customer_thread);
-							
+
 						$customer_message = new CustomerMessage();
 						$customer_message->id_customer_thread = $customer_thread->id;
 						$customer_message->id_employee = (int)$this->context->employee->id;
 						$customer_message->message = htmlentities(Tools::getValue('message'), ENT_COMPAT, 'UTF-8');
 						$customer_message->private = Tools::getValue('visibility');
-						
+
 						if (!$customer_message->add())
 							$this->errors[] = Tools::displayError('An error occurred while sending message.');
 						elseif ($customer_message->private)
