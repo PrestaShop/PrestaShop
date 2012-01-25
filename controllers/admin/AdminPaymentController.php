@@ -97,9 +97,9 @@ class AdminPaymentControllerCore extends AdminController
 			if (Tools::isSubmit('submitModulecountry'))
 				$this->action = 'country';
 			else if (Tools::isSubmit('submitModulecurrency'))
-				$this->action ='currency';
+				$this->action = 'currency';
 			else if (Tools::isSubmit('submitModulegroup'))
-				$this->action ='group';
+				$this->action = 'group';
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit here.');

@@ -326,7 +326,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
 					'title' => $this->l('Limit upload file value'),
-					'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).',$upload_mb),
+					'desc' => $this->l('Define the limit upload for a downloadable product, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
 					'validation' => 'isInt',
 					'cast' => 'intval',
 					'type' => 'text',
@@ -335,7 +335,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
 					'title' => $this->l('Limit upload image value'),
-					'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).',$upload_mb),
+					'desc' => $this->l('Define the limit upload for an image, this value have to be inferior or egal to your server\'s maximum upload file ').sprintf('(%s MB).', $upload_mb),
 					'validation' => 'isInt',
 					'cast' => 'intval',
 					'type' => 'text',
@@ -382,7 +382,7 @@ class AdminPreferencesControllerCore extends AdminController
 		$post_max_size = (int)str_replace('M', '', ini_get('post_max_size'));
 		$max_size = $upload_max_size < $post_max_size ? $upload_max_size : $post_max_size;
 
-		if (Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE') > $max_size or Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE') > $max_size)
+		if (Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE') > $max_size || Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE') > $max_size)
 		{
 			$this->errors[] = Tools::displayError('The limit choosen is superior to the server\'s maximum upload file You need to improve the limit of your server.');
 			return;
@@ -445,10 +445,13 @@ class AdminPreferencesControllerCore extends AdminController
 		$value = (int)$value;
 
 		$tabs_class_name = array('AdminOutstanding');
-		if (!empty($tabs_class_name)) {
-			foreach ($tabs_class_name as $tab_class_name) {
+		if (!empty($tabs_class_name))
+		{
+			foreach ($tabs_class_name as $tab_class_name)
+			{
 				$tab = Tab::getInstanceFromClassName($tab_class_name);
-				if (Validate::isLoadedObject($tab)) {
+				if (Validate::isLoadedObject($tab))
+				{
 					$tab->active = $value;
 					$tab->save();
 				}
