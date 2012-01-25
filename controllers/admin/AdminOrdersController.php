@@ -475,6 +475,9 @@ class AdminOrdersControllerCore extends AdminController
 									&& $product->advanced_stock_management
 									&& $order_detail->id_warehouse != 0)
 								{
+
+									$manager = StockManagerFactory::getManager();
+
 									$mvts = StockMvt::getNegativeStockMvts(
 										$order_detail->id_order,
 										$order_detail->product_id,
