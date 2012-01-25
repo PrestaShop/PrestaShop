@@ -120,7 +120,7 @@ class QqUploadedFileForm
 		$image = new Image($id_image);
 		if (!$new_path = $image->getPathForCreation())
 			return array('error' => Tools::displayError('An error occurred during new folder creation'));
-		if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName))
+		if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['qqfile']['tmp_name'], $tmpName))
 			return array('error' => Tools::displayError('An error occurred during the image upload'));
 		elseif (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format))
 			return array('error' => Tools::displayError('An error occurred while copying image.'));

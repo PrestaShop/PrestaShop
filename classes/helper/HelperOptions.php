@@ -177,7 +177,7 @@ class HelperOptionsCore extends Helper
 					echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
 				echo '</label>';
 			echo '</td>';
-			if (isset($field['max']) && ($i +1 ) % $field['max'] == 0)
+			if (isset($field['max']) && ($i + 1) % $field['max'] == 0)
 				echo '</tr><tr>';
 			$i++;
 		}

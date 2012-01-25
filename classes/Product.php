@@ -662,7 +662,7 @@ class ProductCore extends ObjectModel
 		return false;
 
 		if ($id = ProductDownload::getIdFromIdProduct($this->id))
-			if ($product_download = new ProductDownload($id) && !$product_download->delete(true))
+			if (($product_download = new ProductDownload($id)) && !$product_download->delete(true))
 				return false;
 
 		return true;

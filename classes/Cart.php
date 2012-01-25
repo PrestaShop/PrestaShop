@@ -787,9 +787,7 @@ class CartCore extends ObjectModel
 					$product_qty = (int)$result2['quantity'];
 					// Quantity for product pack
 					if (Pack::isPack($id_product))
-					{
 						$product_qty = Pack::getQuantity($id_product, $id_product_attribute);
-					}
 					$new_qty = (int)$result['quantity'] + (int)$quantity;
 					$qty = '+ '.(int)$quantity;
 
@@ -834,9 +832,7 @@ class CartCore extends ObjectModel
 
 				// Quantity for product pack
 				if (Pack::isPack($id_product))
-				{
 					$result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
-				}
 
 				if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']))
 					if ((int)$quantity > $result2['quantity'])
@@ -868,7 +864,7 @@ class CartCore extends ObjectModel
 		CartRule::autoAddToCart($context);
 
 		if ($product->customizable)
-			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery , $operator);
+			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery, $operator);
 		else
 			return true;
 	}
@@ -1866,7 +1862,7 @@ class CartCore extends ObjectModel
 				$nameList = array();
 				foreach ($option['carrier_list'] as $carrier)
 					$nameList[] = $carrier['instance']->name;
-				$name = join(' -' , $nameList);
+				$name = join(' -', $nameList);
 				$img = ''; // No images if multiple carriers
 				$delay = '';
 			}
@@ -1906,7 +1902,7 @@ class CartCore extends ObjectModel
 	{
 		$elm = explode($delimiter, $string);
 		$max = max($elm);
-		return strlen($max).join(str_repeat('0', strlen($max)+1), $elm);
+		return strlen($max).join(str_repeat('0', strlen($max) + 1), $elm);
 	}
 
 	/**
@@ -1916,7 +1912,7 @@ class CartCore extends ObjectModel
 	{
 		$delimiter_len = $int[0];
 		$int = substr($int, 1);
-		$elm = explode(str_repeat('0',$delimiter_len+1), $int);
+		$elm = explode(str_repeat('0', $delimiter_len + 1), $int);
 		return join($delimiter, $elm);
 	}
 
@@ -1967,7 +1963,7 @@ class CartCore extends ObjectModel
 			return;
 		}
 
-		$delivery_option_list = $this->getDeliveryOptionList(null , true);
+		$delivery_option_list = $this->getDeliveryOptionList(null, true);
 
 		foreach ($delivery_option_list as $id_address => $options)
 			if (!isset($delivery_option[$id_address]))
@@ -2916,8 +2912,8 @@ class CartCore extends ObjectModel
 			$sql->where('id_cart = '.(int)$this->id);
 			$duplicatedQuantity = Db::getInstance()->getValue($sql);
 
-			if ($duplicatedQuantity > $quantity) {
-
+			if ($duplicatedQuantity > $quantity)
+			{
 				$sql = 'UPDATE '._DB_PREFIX_.'cart_product
 					SET `quantity` = `quantity` - '.(int)$quantity.'
 					WHERE id_cart = '.(int)$this->id.'

@@ -661,9 +661,8 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->errors = array_unique($this->errors);
-		if (count($this->errors) > 0) {
+		if (count($this->errors) > 0)
 			return;
-		}
 
 		return $object;
 	}
@@ -1915,7 +1914,7 @@ class AdminControllerCore extends Controller
 					$this->boxes = Tools::getValue($this->table.'Box');
 					break;
 				}
-				else if(Tools::isSubmit('submitBulk'))
+				else if (Tools::isSubmit('submitBulk'))
 				{
 					$this->action = 'bulk'.Tools::getValue('select_submitBulk');
 					$this->boxes = Tools::getValue($this->table.'Box');
@@ -2235,12 +2234,16 @@ class AdminControllerCore extends Controller
 	/**
 	 * Overload this method for custom checking
 	 */
-	protected function _childValidation(){}
+	protected function _childValidation()
+	{
+	}
 
 	/**
 	 * Display object details
 	 */
-	public function viewDetails(){}
+	public function viewDetails()
+	{
+	}
 
 	/**
 	 * Called before deletion
@@ -2429,7 +2432,7 @@ class AdminControllerCore extends Controller
 			$max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
 			if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->errors[] = $error;
-			else if (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
+			else if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
 				return false;
 			else
 			{

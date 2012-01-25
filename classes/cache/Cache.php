@@ -249,7 +249,7 @@ abstract class CacheCore
 
 		// Get all table from the query and save them in cache
 		if (preg_match_all('/('._DB_PREFIX_.'[a-z_-]*)`?.*/i', $query, $res))
-			foreach($res[1] as $table)
+			foreach ($res[1] as $table)
 				if (!isset($this->sql_tables_cached[$table][$key]))
 					$this->sql_tables_cached[$table][$key] = true;
 		$this->set(self::SQL_TABLES_NAME, $this->sql_tables_cached);

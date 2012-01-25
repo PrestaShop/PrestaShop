@@ -216,7 +216,7 @@ class CartRuleCore extends ObjectModel
 
 	public function getProductRules()
 	{
-		if (!Validate::isLoadedObject($this) OR $this->product_restriction == 0)
+		if (!Validate::isLoadedObject($this) || $this->product_restriction == 0)
 			return array();
 
 		$productRules = array();
@@ -274,7 +274,7 @@ class CartRuleCore extends ObjectModel
 			{
 				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
 					return Tools::displayError('This voucher is already in your cart');
-				if ($this->carrier_restriction AND $otherCartRule['cart_rule_restriction'])
+				if ($this->carrier_restriction && $otherCartRule['cart_rule_restriction'])
 				{
 					$combinable = Db::getInstance()->getValue('
 					SELECT id_cart_rule_1
@@ -302,7 +302,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the customer delivery address is usable with the cart rule
-		if ($this->country_restriction AND $context->cart->id_address_delivery)
+		if ($this->country_restriction && $context->cart->id_address_delivery)
 		{
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
@@ -314,7 +314,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the carrier chosen by the customer is usable with the cart rule
-		if ($this->carrier_restriction AND $context->cart->id_carrier)
+		if ($this->carrier_restriction && $context->cart->id_carrier)
 		{
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crc.id_cart_rule
@@ -405,8 +405,14 @@ class CartRuleCore extends ObjectModel
 		}
 	}
 
-	// The reduction value is POSITIVE
-	public function getContextualValue($useTax, Context $context = NULL)
+	/**
+	 * The reduction value is POSITIVE
+	 *
+	 * @param bool $useTax
+	 * @param Context $context
+	 * @return float|int|string
+	 */
+	public function getContextualValue($useTax, Context $context = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return 0;
@@ -435,13 +441,11 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Discount (%) on the whole order
-		if ($this->reduction_percent AND $this->reduction_product == 0)
-		{
+		if ($this->reduction_percent && $this->reduction_product == 0)
 			$reductionValue += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
-		}
 
 		// Discount (%) on a specific product
-		if ($this->reduction_percent AND $this->reduction_product > 0)
+		if ($this->reduction_percent && $this->reduction_product > 0)
 		{
 			foreach ($context->cart->getProducts() as $product)
 				if ($product['id_product'] == $this->reduction_product)
@@ -449,7 +453,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Discount (%) on the cheapest product
-		if ($this->reduction_percent AND $this->reduction_product == -1)
+		if ($this->reduction_percent && $this->reduction_product == -1)
 		{
 			$minPrice = false;
 			foreach ($context->cart->getProducts() as $product)
@@ -610,7 +614,7 @@ class CartRuleCore extends ObjectModel
 		return $array;
 	}
 
-	public static function autoRemoveFromCart($context = NULL)
+	public static function autoRemoveFromCart($context = null)
 	{
 		if (!CartRule::isFeatureActive())
 			return;
@@ -630,14 +634,14 @@ class CartRuleCore extends ObjectModel
 		return $errors;
 	}
 
-	public static function autoAddToCart($context = NULL)
+	public static function autoAddToCart(Context $context = null)
 	{
-		if ($context === NULL)
+		if ($context === null)
 			$context = Context::getContext();
 		if (!CartRule::isFeatureActive() || !Validate::isLoadedObject($context->cart))
 			return;
 
-		$result = Db::getInstance()->ExecuteS('
+		$result = Db::getInstance()->executeS('
 		SELECT cr.*
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
