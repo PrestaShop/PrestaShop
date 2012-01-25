@@ -378,12 +378,12 @@ class AdminCartsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			if (($id_address_delivery = (int)Tools::getValue('id_address_delivery')) &&
-				$address_delivery = new Address((int)$id_address_delivery) &&
-				$address_delivery->id_customer = $this->context->cart->id_customer)
+				($address_delivery = new Address((int)$id_address_delivery)) &&
+				$address_delivery->id_customer == $this->context->cart->id_customer)
 				$this->context->cart->id_address_delivery = (int)$address_delivery->id;
 
 			if (($id_address_invoice = (int)Tools::getValue('id_address_invoice')) &&
-				$address_invoice = new Address((int)$id_address_invoice) &&
+				($address_invoice = new Address((int)$id_address_invoice)) &&
 				$address_invoice->id_customer = $this->context->cart->id_customer)
 				$this->context->cart->id_address_invoice = (int)$address_invoice->id;
 			$this->context->cart->save();
