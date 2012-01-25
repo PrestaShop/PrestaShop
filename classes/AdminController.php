@@ -171,6 +171,9 @@ class AdminControllerCore extends Controller
 	/** @var array required_fields to display in the Required Fields form */
 	public $required_fields = array();
 
+	/** @var module contain the controller */
+	public $module;
+
 	/**
 	 * @var array actions to execute on multiple selections
 	 * Usage:
@@ -2583,6 +2586,15 @@ class AdminControllerCore extends Controller
 	 */
 	public function createTemplate($tpl_name)
 	{
+		// Use for module
+		if (!is_null($this->module))
+		{
+			$moduleTemplate = _PS_MODULE_DIR_.$this->module.'/templates/admin/'.$this->override_folder.$tpl_name;
+
+			if ($this->viewAccess()	&& file_exists($moduleTemplate))
+				return $this->context->smarty->createTemplate($moduleTemplate, $this->context->smarty);
+		}
+
 		// Use override tpl if it exists
 		// If view access is denied, we want to use the default template that will be used to display an error
 		if ($this->viewAccess()
