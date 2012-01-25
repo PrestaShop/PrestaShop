@@ -135,8 +135,11 @@
 								<td>
 								{if $option.unique_carrier}
 									{foreach $option.carrier_list as $carrier}
-										{$carrier.instance->name}
+										<div class="delivery_option_title">{$carrier.instance->name}</div>
 									{/foreach}
+									{if isset($carrier.instance->delay[$cookie->id_lang])}
+										<div class="delivery_option_delay">{$carrier.instance->delay[$cookie->id_lang]}</div>
+									{/if}
 								{/if}
 								{if count($option_list) > 1}
 									{if $option.is_best_grade}
@@ -167,7 +170,7 @@
 								</td>
 							</tr>
 						</table>
-						<table class="delivery_option_carrier {if $delivery_option[$id_address] == $key}selected{/if}">
+						<table class="delivery_option_carrier {if $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
 							{foreach $option.carrier_list as $carrier}
 							<tr>
 								{if !$option.unique_carrier}
@@ -194,7 +197,7 @@
 				</div>
 			{/foreach}
 			</div>
-			<div id="HOOK_EXTRACARRIER_{$id_address}">{$HOOK_EXTRACARRIER_ADDR.$id_address}</div>
+			<div class="hook_extracarrier" id="HOOK_EXTRACARRIER_{$id_address}">{$HOOK_EXTRACARRIER_ADDR.$id_address}</div>
 			{foreachelse}
 			<p class="warning" id="noCarrierWarning">
 				{if $cart->isMultiAddressDelivery()}
