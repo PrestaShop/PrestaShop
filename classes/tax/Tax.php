@@ -194,7 +194,7 @@ class TaxCore extends ObjectModel
 	* @param id_address
 	* @return float $tax_rate
 	*/
-	public static function getProductEcotaxRate($id_address = NULL)
+	public static function getProductEcotaxRate($id_address = null)
 	{
 		$address = Address::initialize($id_address);
 
@@ -210,7 +210,7 @@ class TaxCore extends ObjectModel
 	* @param id_address
 	* @return float $tax_rate
 	*/
-	public static function getCarrierTaxRate($id_carrier, $id_address = NULL)
+	public static function getCarrierTaxRate($id_carrier, $id_address = null)
 	{
 		$address = Address::initialize($id_address);
 		$id_tax_rules = (int)Carrier::getIdTaxRulesGroupByIdCarrier((int)$id_carrier);
@@ -250,7 +250,7 @@ class TaxCore extends ObjectModel
 	 * @param integer $id_country
 	 * @return Tax
 	 */
-	public static function getProductTaxRate($id_product, $id_address = NULL)
+	public static function getProductTaxRate($id_product, $id_address = null)
 	{
 		$address = Address::initialize($id_address);
 		$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct($id_product);

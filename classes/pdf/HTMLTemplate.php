@@ -89,7 +89,7 @@ abstract class HTMLTemplateCore
         {
             $shop_address_obj = $this->shop->getAddress();
             if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
-                $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');return $shop_address;
+                $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
             return $shop_address;
         }
 
@@ -163,7 +163,7 @@ abstract class HTMLTemplateCore
 		if (@!include(_PS_THEME_DIR_.'pdf/lang/'.$iso.'.php'))
 			die('Cannot include PDF translation language file : '._PS_THEME_DIR_.'pdf/lang/'.$iso.'.php');
 
-		if (!isset($_LANGPDF) OR !is_array($_LANGPDF))
+		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
 		$key = md5(str_replace('\'', '\\\'', $string));
 		$str = (key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);

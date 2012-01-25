@@ -87,8 +87,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     {
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-								AND !empty($invoiceAddress->vat_number)
-								AND $invoiceAddress->id_country != Configuration::get('VATNUMBER_COUNTRY');
+								&& !empty($invoiceAddress->vat_number)
+								&& $invoiceAddress->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
 			$this->smarty->assign(array(
 				'tax_exempt' => $tax_exempt,
