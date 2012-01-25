@@ -188,11 +188,11 @@ class AdminMetaControllerCore extends AdminController
 			}
 			else
 			{	// index.php can have empty rewrite rule
-				$defaultLangIsValidated = !Tools::getValue('url_rewrite_'.$default_language) OR Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
-				$englishLangIsValidated = !Tools::getValue('url_rewrite_1') OR Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
+				$defaultLangIsValidated = !Tools::getValue('url_rewrite_'.$default_language) || Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
+				$englishLangIsValidated = !Tools::getValue('url_rewrite_1') || Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
 			}
 
-			if (!$defaultLangIsValidated AND !$englishLangIsValidated)
+			if (!$defaultLangIsValidated && !$englishLangIsValidated)
 			{
 				$this->errors[] = Tools::displayError('Url rewrite field must be filled at least in default or english language.');
 				return false;
@@ -214,7 +214,7 @@ class AdminMetaControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function getList($id_lang, $orderBy = NULL, $orderWay = NULL, $start = 0, $limit = NULL, $id_lang_shop = false)
+	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->getID(true));
 	}
@@ -228,13 +228,13 @@ class AdminMetaControllerCore extends AdminController
 	{
 		$default_routes = Dispatcher::getInstance()->default_routes;
 		if (!isset($default_routes[$routeID]))
-			return ;
+			return;
 
 		$rule = Tools::getValue('PS_ROUTE_'.$routeID);
 		if (!$rule || $rule == $default_routes[$routeID]['rule'])
 		{
 			Configuration::updateValue('PS_ROUTE_'.$routeID, '');
-			return ;
+			return;
 		}
 
 		$errors = array();
