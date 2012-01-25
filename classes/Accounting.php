@@ -42,8 +42,8 @@ class AccountingCore
 		$values = '';
 		
 		// Build the query for the update 
-		foreach($assoZoneShopList as $asso)
-			if (array_key_exists('id_zone', $asso) && 
+		foreach ($assoZoneShopList as $asso)
+			if (array_key_exists('id_zone', $asso) &&
 					array_key_exists('id_shop', $asso) &&
 					array_key_exists('num', $asso))
 				$values .= '('.(int)$asso['id_zone'].','.(int)$asso['id_shop'].', \''.pSQL($asso['num']).'\'), ';
@@ -67,8 +67,8 @@ class AccountingCore
 			VALUES %s';
 		
 		$values = '';
-		foreach($assoProductZoneShop as $asso)
-			if (array_key_exists('id_zone', $asso) && 
+		foreach ($assoProductZoneShop as $asso)
+			if (array_key_exists('id_zone', $asso) &&
 					array_key_exists('id_shop', $asso) &&
 					array_key_exists('id_product', $asso) &&
 					array_key_exists('num', $asso))

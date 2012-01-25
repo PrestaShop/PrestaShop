@@ -53,7 +53,7 @@ class CacheMemcacheCore extends Cache
                     if ($this->memcache->getExtendedStats('cachedump', (int)$slab_id))
                         foreach ($dump as $entries)
                             foreach ($entries as $entry)
-                                $this->keys[$entry] = 0;;
+                                $this->keys[$entry] = 0;
 	}
 
 	public function __destruct()
@@ -70,7 +70,7 @@ class CacheMemcacheCore extends Cache
 		$servers = CacheMemcache::getMemcachedServers();
 		if (!$servers)
 			return false;
-		foreach ($servers AS $server)
+		foreach ($servers as $server)
 			$this->memcache->addServer($server['ip'], $server['port'], $server['weight']);
 
 		$this->is_connected = true;

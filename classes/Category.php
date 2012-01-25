@@ -78,10 +78,10 @@ class CategoryCore extends ObjectModel
 	public $is_root_category;
 
 	public $groupBox;
-	
+
 	/** @var boolean does the product have to be removed during the delete process */
 	public $remove_products = true;
-	
+
 	/** @var boolean does the product have to be disable during the delete process */
 	public $disable_products = false;
 
@@ -150,12 +150,12 @@ class CategoryCore extends ObjectModel
 		return strip_tags(stripslashes($description));
 	}
 
-	public	function add($autodate = true, $nullValues = false)
+	public	function add($autodate = true, $null_values = false)
 	{
 		$this->position = Category::getLastPosition((int)$this->id_parent);
 		if (!isset($this->level_depth))
 			$this->level_depth = $this->calcLevelDepth();
-		$ret = parent::add($autodate);
+		$ret = parent::add($autodate, $null_values);
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 			Category::regenerateEntireNtree();
 		$this->updateGroup($this->groupBox);
@@ -166,10 +166,10 @@ class CategoryCore extends ObjectModel
 	/**
 	 * update category positions in parent
 	 *
-	 * @param mixed $nullValues
+	 * @param mixed $null_values
 	 * @return void
 	 */
-	public function update($nullValues = false)
+	public function update($null_values = false)
 	{
 		if ($this->id_parent == $this->id)
 			throw new PrestaShopException('a category cannot be it\'s own parent');
@@ -180,7 +180,7 @@ class CategoryCore extends ObjectModel
 		// If the parent category was changed, we don't want to have 2 categories with the same position
 		if ($this->getDuplicatePosition())
 			$this->position = Category::getLastPosition((int)$this->id_parent);
-		$ret = parent::update($nullValues);
+		$ret = parent::update($null_values);
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
 		{
 			Category::regenerateEntireNtree();
@@ -318,7 +318,7 @@ class CategoryCore extends ObjectModel
 				{
 					if ($this->disable_products)
 						$product->active = 0;
-					
+
 					$product->addToCategories($this->id_parent);
 					$product->save();
 				}
