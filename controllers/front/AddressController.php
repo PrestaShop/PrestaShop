@@ -164,7 +164,7 @@ class AddressControllerCore extends FrontController
 			}
 			else if ($zip_code_format)
 				$this->errors[] = '<strong>'.Tools::displayError('Zip/ Postal code').'</strong> '.Tools::displayError('is required.');
-			else if ($postcode AND !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
+			else if ($postcode && !preg_match('/^[0-9a-zA-Z -]{4,9}$/ui', $postcode))
 				$this->errors[] = '<strong>'.Tools::displayError('Zip/ Postal code').'</strong> '.Tools::displayError('is invalid.')
 										.'<br />'.Tools::displayError('Must be typed as follows:').' '
 										.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $zip_code_format)));
@@ -174,7 +174,7 @@ class AddressControllerCore extends FrontController
 		if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
 			$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
 		else if (!$country->isNeedDni())
-			$address->dni = NULL;
+			$address->dni = null;
 
 		// Don't continue this process if we have errors !
 		if ($this->errors && !Tools::isSubmit('ajax'))

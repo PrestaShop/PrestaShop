@@ -234,7 +234,7 @@ class ProductControllerCore extends FrontController
 		$id_shop = $this->context->shop->getID(true);
 
 		$quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true);
-		foreach($quantity_discounts as &$quantity_discount)
+		foreach ($quantity_discounts as &$quantity_discount)
 			if ($quantity_discount['id_product_attribute'])
 			{
 				$combination = new Combination((int)$quantity_discount['id_product_attribute']);
