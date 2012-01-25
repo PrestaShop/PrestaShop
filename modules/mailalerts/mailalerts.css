@@ -1,0 +1,47 @@
+#module-mailalerts-mailalerts-account #left_column {display:none}
+#module-mailalerts-mailalerts-account #center_column {width:757px}
+
+#mailalerts_block_account .mailalert {
+	position:relative;
+   margin-bottom: 14px;
+   padding: 12px 8px;
+	border: 1px solid #eee;
+   border-radius: 3px 3px 3px 3px;
+}
+
+.mailalert a.product_img_link {
+    border: 1px solid #CCCCCC;
+    display: block;
+    float: left;
+    margin-right: 14px;
+    overflow: hidden;
+    position: relative;
+}
+
+.mailalert h3 {
+    color: #000000;
+    font-size: 13px;
+    padding: 0 0 10px;
+}
+
+.mailalert  p.product_desc {
+    line-height: 16px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.mailalert .remove {
+	position:absolute;
+	top:10px;
+	right:10px
+}
+.mailalert .remove .icon {cursor:pointer}
+
+
+/* lnk fiche produit */
+
+#usefull_link_block li#mailalerts_block_extra_remove {
+	padding-left:20px;
+	background:url(img/del_alert.gif) no-repeat 0 0;
+	cursor: pointer;
+}

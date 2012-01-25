@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 12432 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,24 +34,24 @@ include_once(dirname(__FILE__).'/mailalerts.php');
 
 $errors = array();
 
-if (Context::getContext()->customer->isLogged())
+if ($cookie->isLogged())
 {
 	if (Tools::getValue('action') == 'delete')
 	{
-		$id_customer = (int)(Context::getContext()->customer->id);
+		$id_customer = (int)($cookie->id_customer);
 		if (!$id_product = (int)(Tools::getValue('id_product')))
 			$errors[] = Tools::displayError('You must have a product to delete an alert.'); 
 		$id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
 		$customer = new Customer((int)($id_customer));
-		MailAlerts::deleteAlert((int)($id_customer), 0, (int)($id_product), (int)($id_product_attribute));
+		MailAlerts::deleteAlert((int)($id_customer), strval($customer->email), (int)($id_product), (int)($id_product_attribute));
 	}
-	$smarty->assign('alerts', MailAlerts::getProductsAlerts(Context::getContext()->customer->id, (int)Context::getContext()->language->id));
+	$this->context->smarty->assign('mailAlerts', MailAlert::getProductsAlerts((int)($cookie->id_customer), (int)($cookie->id_lang)));
 }
 else
 	$errors[] = Tools::displayError('You must be logged in to manage your alerts.'); 
 
-$smarty->assign(array(
-	'id_customer' => (int)(Context::getContext()->customer->id),
+$this->context->smarty->assign(array(
+	'id_customer' => (int)($cookie->id_customer),
 	'errors' => $errors
 ));
 

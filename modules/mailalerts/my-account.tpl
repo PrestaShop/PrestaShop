@@ -19,14 +19,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 11894 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- MODULE MailAlerts -->
-<li>
-	<a href="{$base_dir_ssl}modules/mailalerts/myalerts.php" title="{l s='My alerts' mod='mailalerts'}"><img src="{$module_template_dir}logo.gif" alt="{l s='alerts' mod='mailalerts'}" class="icon" /></a>
-	<a href="{$base_dir_ssl}modules/mailalerts/myalerts.php" title="{l s='My alerts' mod='mailalerts'}">{l s='My alerts' mod='mailalerts'}</a>
+<li class="mailalerts">
+	<a href="{$link->getModuleLink('mailalerts', 'account')}" title="{l s='My alerts' mod='mailalerts'}">
+		<img src="{$module_template_dir}img/icon-alert.png" class="icon" />
+		{l s='My alerts' mod='mailalerts'}
+	</a>
 </li>
-<!-- END : MODULE MailAlerts -->

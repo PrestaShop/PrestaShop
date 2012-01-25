@@ -20,25 +20,14 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 12437 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/../../modules/mailalerts/mailalerts.php');
+require_once(dirname(__FILE__).'/../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../init.php');
 
-if (!Context::getContext()->customer->isLogged())
-	die('0');
 
-$id_customer = (int)(Context::getContext()->customer->id);
-if (!$id_product = (int)(Tools::getValue('id_product')))
-	die ('0');
-$id_product_attribute = (int)(Tools::getValue('id_product_attribute'));
 
-$mA = new MailAlerts();
-if ($mA->customerHasNotification((int)($id_customer), (int)($id_product), (int)($id_product_attribute)))
-	die ('1');
-die('0');
 

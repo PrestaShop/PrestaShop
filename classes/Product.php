@@ -1189,6 +1189,9 @@ class ProductCore extends ObjectModel
 			$id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date
 		);
 		$this->addSupplierReference($supplier_reference, $id_product_attribute);
+
+		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
+
 		return $return;
 	}
 
