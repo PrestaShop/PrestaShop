@@ -98,7 +98,7 @@ class ParentOrderControllerCore extends FrontController
 						$this->errors[] = Tools::displayError('Voucher code invalid');
 					else
 					{
-						if ($cartRule = new CartRule(CartRule::getIdByCode($code)) AND Validate::isLoadedObject($cartRule))
+						if ($cartRule = new CartRule(CartRule::getIdByCode($code)) && Validate::isLoadedObject($cartRule))
 						{
 							if ($error = $cartRule->checkValidity($this->context))
 								$this->errors[] = $error;
@@ -116,7 +116,7 @@ class ParentOrderControllerCore extends FrontController
 						'discount_name' => Tools::safeOutput($code)
 					));
 				}
-				elseif ($id_cart_rule = (int)Tools::getValue('deleteDiscount') AND Validate::isUnsignedId($id_cart_rule))
+				elseif ($id_cart_rule = (int)Tools::getValue('deleteDiscount') && Validate::isUnsignedId($id_cart_rule))
 				{
 					$this->context->cart->removeCartRule($id_cart_rule);
 					Tools::redirect('index.php?controller=order-opc');
