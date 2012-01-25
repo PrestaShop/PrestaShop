@@ -28,25 +28,25 @@
 class OrderReturnCore extends ObjectModel
 {
 	/** @var integer */
-	public		$id;
+	public $id;
 	
 	/** @var integer */
-	public 		$id_customer;
+	public $id_customer;
 	
 	/** @var integer */
-	public 		$id_order;
+	public $id_order;
 	
 	/** @var integer */
-	public 		$state;
+	public $state;
 	
 	/** @var string message content */
-	public		$question;
+	public $question;
 	
 	/** @var string Object creation date */
-	public 		$date_add;
+	public $date_add;
 
 	/** @var string Object last modification date */
-	public 		$date_upd;
+	public $date_upd;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -87,7 +87,7 @@ class OrderReturnCore extends ObjectModel
 		$products = $order->getProducts();
 		/* Products already returned */
 		$order_return = OrderReturn::getOrdersReturn($order->id_customer, $order->id, true);
-		foreach ($order_return AS $or)
+		foreach ($order_return as $or)
 		{
 			$order_return_products = OrderReturn::getOrdersReturnProducts($or['id_order_return'], $order);
 			foreach ($order_return_products AS $key => $orp)
@@ -95,7 +95,7 @@ class OrderReturnCore extends ObjectModel
 		}
 		/* Quantity check */
 		if ($orderDetailList)
-			foreach (array_keys($orderDetailList) AS $key)
+			foreach (array_keys($orderDetailList) as $key)
 				if ($qty = (int)($productQtyList[$key]))
 					if ($products[$key]['product_quantity'] - $qty < 0)
 						return false;
@@ -103,10 +103,10 @@ class OrderReturnCore extends ObjectModel
 		if ($customizationIds)
 		{
 			$orderedCustomizations = Customization::getOrderedCustomizations((int)($order->id_cart));
-			foreach ($customizationIds AS $customizations)
-				foreach ($customizations AS $customizationId)
+			foreach ($customizationIds as $customizations)
+				foreach ($customizations as $customizationId)
 				{
-					$customizationId = (int)($customizationId);
+					$customizationId = (int)$customizationId;
 					if (!isset($orderedCustomizations[$customizationId]))
 						return false;
 					$quantity =  (isset($customizationQtyInput[$customizationId]) ? (int)($customizationQtyInput[$customizationId]) : 0);
@@ -127,7 +127,7 @@ class OrderReturnCore extends ObjectModel
 		return (int)($data['total']);
 	}
 
-	static public function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null)
+	public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -162,13 +162,13 @@ class OrderReturnCore extends ObjectModel
 		$productsRet = OrderReturn::getOrdersReturnDetail($orderReturnId);
 		$products = $order->getProducts();
 		$tmp = array();
-		foreach ($productsRet AS $return_detail)
+		foreach ($productsRet as $return_detail)
 		{
 			$tmp[$return_detail['id_order_detail']]['quantity'] = isset($tmp[$return_detail['id_order_detail']]['quantity']) ? $tmp[$return_detail['id_order_detail']]['quantity'] + (int)($return_detail['product_quantity']) : (int)($return_detail['product_quantity']);
 			$tmp[$return_detail['id_order_detail']]['customizations'] = (int)($return_detail['id_customization']);
 		}
 		$resTab = array();
-		foreach ($products AS $key => $product)
+		foreach ($products as $key => $product)
 			if (isset($tmp[$product['id_order_detail']]))
 			{
 				$resTab[$key] = $product;
@@ -185,7 +185,7 @@ class OrderReturnCore extends ObjectModel
 		if (!Validate::isLoadedObject($order))
 			die(Tools::displayError());
 		$products = $order->getProducts();
-		foreach ($returns AS &$return)
+		foreach ($returns as &$return)
 		{
 			$return['product_id'] = (int)($products[(int)($return['id_order_detail'])]['product_id']);
 			$return['product_attribute_id'] = (int)($products[(int)($return['id_order_detail'])]['product_attribute_id']);
