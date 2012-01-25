@@ -684,7 +684,6 @@ function updateExtraCarrier(id_delivery_option, id_address)
 		data: 'ajax=true&method=updateExtraCarrier&id_address='+id_address+'&id_delivery_option='+id_delivery_option+'&token=' + static_token,
 		success: function(jsonData)
 		{
-			console.log(jsonData);
 			$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);
 		}
 	});
