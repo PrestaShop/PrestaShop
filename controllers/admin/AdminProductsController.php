@@ -30,8 +30,8 @@ class AdminProductsControllerCore extends AdminController
 	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 **/
-	protected $max_file_size = NULL;
-	protected $max_image_size = NULL;
+	protected $max_file_size = null;
+	protected $max_image_size = null;
 
 	private $_category;
 	/**
@@ -320,7 +320,7 @@ class AdminProductsControllerCore extends AdminController
 			if (isset($_FILES['attachment_file']) && is_uploaded_file($_FILES['attachment_file']['tmp_name']))
 			{
 				if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-					$this->errors[] = $this->l('File too large, maximum size allowed:').' '.(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.$this->l('File size you\'re trying to upload is:').number_format(($_FILES['attachment_file']['size']/1024), 2, '.', '').$this->l('kb');
+					$this->errors[] = $this->l('File too large, maximum size allowed:').' '.(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024).' '.$this->l('kb').'. '.$this->l('File size you\'re trying to upload is:').number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '').$this->l('kb');
 				else
 				{
 					do $uniqid = sha1(microtime());
@@ -1010,11 +1010,11 @@ class AdminProductsControllerCore extends AdminController
 			parent::postProcess();
 	}
 
-	// @todo rename to processaddproductimage
+	/* @todo rename to processaddproductimage */
 	public function ajaxProcessAddImage()
 	{
 		self::$currentIndex = 'index.php?tab=AdminProducts';
-		$allowedExtensions = array("jpeg", "gif", "png", "jpg");
+		$allowedExtensions = array('jpeg', 'jpg', 'png', 'jpg');
 		// max file size in bytes
 		$uploader = new FileUploader($allowedExtensions, $this->max_image_size);
 		$result = $uploader->handleUpload();
@@ -1242,9 +1242,9 @@ class AdminProductsControllerCore extends AdminController
 			WHERE `id_product` = '.(int)$image->id_product.' LIMIT 1');
 		}
 
-		if(file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
+		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg'))
 			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg');
-		if(file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg'))
+		if (file_exists(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg'))
 			$res &= @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$image->id_product.'.jpg');
 
 		if ($res)
@@ -1272,7 +1272,7 @@ class AdminProductsControllerCore extends AdminController
 		return false;
 	}
 
-	// Checking customs feature
+	/* Checking customs feature */
 	protected function checkFeatures($languages, $feature_id)
 	{
 		$rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
@@ -1417,7 +1417,7 @@ class AdminProductsControllerCore extends AdminController
 					if (!$this->object->active)
 					{
 						$admin_dir = dirname($_SERVER['PHP_SELF']);
-						$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+						$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 						$token = Tools::encrypt('PreviewProduct'.$this->object->id);
 						$preview_url .= '&adtoken='.$token.'&ad='.$admin_dir;
 					}
@@ -1502,7 +1502,7 @@ class AdminProductsControllerCore extends AdminController
 							if (!$object->active)
 							{
 								$admin_dir = dirname($_SERVER['PHP_SELF']);
-								$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+								$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 								$token = Tools::encrypt('PreviewProduct'.$object->id);
 								if (strpos($preview_url, '?') === false)
 									$preview_url .= '?';
@@ -1632,9 +1632,9 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function updateDownloadProduct($product, $edit = 0, $id_product_attribute = null)
 	{
-		$is_virtual_file = (int) Tools::getValue('is_virtual_file');
+		$is_virtual_file = (int)Tools::getValue('is_virtual_file');
 
-		/* add or update a virtual product */
+		// add or update a virtual product
 		if (Tools::getValue('is_virtual_good') == 'true')
 		{
 			if (!Tools::getValue('virtual_product_name') && !Tools::getValue('virtual_product_name_attribute') && !empty($is_virtual_file))
@@ -1765,7 +1765,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!empty($id_product_download))
 			{
 				$product_download = new ProductDownload($id_product_download);
-				$product_download->date_expiration = date('Y-m-d H:i:s', time()-1);
+				$product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
 				$product_download->active = 0;
 				return $product_download->save();
 			}
@@ -1773,12 +1773,12 @@ class AdminProductsControllerCore extends AdminController
 		return false;
 	}
 
-	public function deleteDownloadProduct($id_product_attribute = NULL)
+	public function deleteDownloadProduct($id_product_attribute = null)
 	{
 		if (!empty($id_product_attribute))
 		{
 			$product_download = new ProductDownload($id_product_attribute);
-			$product_download->date_expiration = date('Y-m-d H:i:s', time()-1);
+			$product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
 			$product_download->active = 0;
 			return $product_download->save();
 		}
@@ -1833,7 +1833,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
 
-			if(method_exists($this, 'initForm'.$this->tab_display))
+			if (method_exists($this, 'initForm'.$this->tab_display))
 				$this->tpl_form = strtolower($this->tab_display).'.tpl';
 
 			if ($this->ajax)
@@ -1907,7 +1907,7 @@ class AdminProductsControllerCore extends AdminController
 		$manufacturers = Manufacturer::getManufacturers();
 		$jsonArray = array();
 			if ($manufacturers)
-				foreach ($manufacturers AS $manufacturer)
+				foreach ($manufacturers as $manufacturer)
 					$jsonArray[] = '{"optionValue": "'.$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
 			die('['.implode(',', $jsonArray).']');
 	}
@@ -1982,7 +1982,7 @@ class AdminProductsControllerCore extends AdminController
 				if ((bool)$product->id)
 				{
 					// adding button for delete this product
-					if ($this->tabAccess['delete']  && $this->display != 'add')
+					if ($this->tabAccess['delete'] && $this->display != 'add')
 						$this->toolbar_btn['delete'] = array(
 							'short' => 'Delete',
 							'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.$product->id.'&amp;deleteproduct',
@@ -2063,7 +2063,7 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function renderForm()
 	{
-		if(!method_exists($this, 'initForm'.$this->tab_display))
+		if (!method_exists($this, 'initForm'.$this->tab_display))
 			return;
 
 		// Sort the tabs that need to be preloaded by their priority number
@@ -2137,16 +2137,11 @@ class AdminProductsControllerCore extends AdminController
 			Category::getLinkRewrite($product->id_category_default, $this->context->language->id), null, null, Context::getContext()->shop->getID());
 		if (!$product->active)
 		{
-		$admin_dir = dirname($_SERVER['PHP_SELF']);
-		$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
-		$token = Tools::encrypt('PreviewProduct'.$product->id);
-		if (strpos($preview_url, '?') === false)
-			$preview_url .= '?';
-			$preview_url = ($this->context->link->getProductLink($product, $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id)));
+			$preview_url = $this->context->link->getProductLink($product, $this->getFieldValue($product, 'link_rewrite', $this->default_form_language), Category::getLinkRewrite($this->getFieldValue($product, 'id_category_default'), $this->context->language->id));
 			if (!$product->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
-				$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 				$token = Tools::encrypt('PreviewProduct'.$product->id);
 
 				$preview_url .= $product->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
@@ -2169,8 +2164,8 @@ class AdminProductsControllerCore extends AdminController
 			{
 				// Build tab with associated data
 				$tab = array();
-				foreach($zones as $zone)
-					if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== NULL)
+				foreach ($zones as $zone)
+					if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== null)
 						$tab[] = array(
 							'id_zone' => $zone['id_zone'],
 							'id_product' => $product->id,
@@ -2436,7 +2431,7 @@ class AdminProductsControllerCore extends AdminController
 				$id_shop = $this->context->shop->getID();
 
 				// Set default zone value to the shop	and sort it
-				foreach($zones as $zone)
+				foreach ($zones as $zone)
 				{
 					$detail['zones'][$zone['id_zone']]['name'] = $zone['name'];
 					$detail['zones'][$zone['id_zone']]['account_number'] = '';
@@ -2444,7 +2439,7 @@ class AdminProductsControllerCore extends AdminController
 				$zoneAccountNumberList = Accounting::getProductAccountNumberZoneShop($obj->id, $id_shop);
 
 				// Set Account number to the id_zone for an id_shop if exist
-				foreach($zoneAccountNumberList as $zone)
+				foreach ($zoneAccountNumberList as $zone)
 					$detail['zones'][$zone['id_zone']]['account_number'] = $zone['account_number'];
 			}
 
@@ -2661,9 +2656,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!file_exists($exists_file)
 			&& !empty($product->productDownload->display_filename)
 			&& !empty($product->cache_default_attribute))
-		{
 			$msg = sprintf(Tools::displayError('This file "%s" is missing'), $product->productDownload->display_filename);
-		}
 		else
 			$msg = '';
 
@@ -2798,7 +2791,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 
 				$content .= '
-				<tr '.($i%2 ? 'class="alt_row"' : '').'>
+				<tr '.($i % 2 ? 'class="alt_row"' : '').'>
 					<td class="cell border">'.$rule_name.'</td>
 					<td class="cell border">'.$attributes_name.'</td>
 					'.(Shop::isFeatureActive() ? '<td class="cell border">'.($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->l('All shops')).'</td>' : '').'

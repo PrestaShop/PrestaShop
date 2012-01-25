@@ -116,9 +116,9 @@ class AdminModulesControllerCore extends AdminController
 		if (file_exists(_PS_ROOT_DIR_.$this->cache_file_modules_list))
 			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.$this->cache_file_modules_list);
 		if ($xmlModules)
-			foreach($xmlModules->children() as $xmlModule)
-				foreach($xmlModule->children() as $module)
-					foreach($module->attributes() as $key => $value)
+			foreach ($xmlModules->children() as $xmlModule)
+				foreach ($xmlModule->children() as $module)
+					foreach ($module->attributes() as $key => $value)
 					{
 						if ($xmlModule->attributes() == 'native' && $key == 'name')
 							$this->list_natives_modules[] = (string)$value;
@@ -349,7 +349,7 @@ class AdminModulesControllerCore extends AdminController
 		if (!is_array($remove))
 			$remove = array($remove);
 
-		$url = preg_replace('#(?<=&|\?)(' . implode('|', $remove) . ')=.*?(&|$)#i', '', $url);
+		$url = preg_replace('#(?<=&|\?)('.implode('|', $remove).')=.*?(&|$)#i', '', $url);
 		$len = strlen($url);
 		if ($url[$len - 1] == '&')
 			$url = substr($url, 0, $len - 1);
@@ -383,17 +383,17 @@ class AdminModulesControllerCore extends AdminController
 	protected function recursiveDeleteOnDisk($dir)
 	{
 		if (strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false)
-			return ;
+			return;
 		if (is_dir($dir))
 		{
 			$objects = scandir($dir);
 			foreach ($objects as $object)
-				if ($object != "." && $object != "..")
+				if ($object != '.' && $object != '..')
 				{
-					if (filetype($dir."/".$object) == "dir")
-						$this->recursiveDeleteOnDisk($dir."/".$object);
+					if (filetype($dir.'/'.$object) == 'dir')
+						$this->recursiveDeleteOnDisk($dir.'/'.$object);
 					else
-						unlink($dir."/".$object);
+						unlink($dir.'/'.$object);
 				}
 			reset($objects);
 			rmdir($dir);
@@ -510,9 +510,10 @@ class AdminModulesControllerCore extends AdminController
 		// Try to upload and unarchive the module
 	 	if ($this->tabAccess['add'] === '1')
 		{
-			if (!isset($_FILES['file']['tmp_name']) OR empty($_FILES['file']['tmp_name']))
+			if (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name']))
 				$this->errors[] = $this->l('no file selected');
-			elseif (substr($_FILES['file']['name'], -4) != '.tar' AND substr($_FILES['file']['name'], -4) != '.zip' AND substr($_FILES['file']['name'], -4) != '.tgz' AND substr($_FILES['file']['name'], -7) != '.tar.gz')
+			elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
+				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
 				$this->errors[] = Tools::displayError('Unknown archive type');
 			elseif (!@copy($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
 				$this->errors[] = Tools::displayError('An error occurred while copying archive to module directory.');
@@ -555,7 +556,7 @@ class AdminModulesControllerCore extends AdminController
 				if (Tools::getValue('module_name') != '')
 				{
 					$module = Module::getInstanceByName(Tools::getValue('module_name'));
-					if (Validate::isLoadedObject($module) AND !$module->getPermission('configure'))
+					if (Validate::isLoadedObject($module) && !$module->getPermission('configure'))
 						$this->errors[] = Tools::displayError('You do not have the permission to use this module');
 					else
 					{
@@ -581,7 +582,7 @@ class AdminModulesControllerCore extends AdminController
 				$modules = empty($modules) ? false : array($modules);
 			$module_errors = array();
 			if ($modules)
-				foreach ($modules AS $name)
+				foreach ($modules as $name)
 				{
 					// If Addons module, download and unzip it before installing it
 					if (!is_dir('../modules/'.$name.'/'))
@@ -612,15 +613,15 @@ class AdminModulesControllerCore extends AdminController
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('module not found');
-					elseif ($key == 'install' AND $this->tabAccess['add'] !== '1')
+					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install a module.');
-					elseif ($key == 'uninstall' AND ($this->tabAccess['delete'] !== '1' OR !$module->getPermission('configure')))
+					elseif ($key == 'uninstall' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
-					elseif ($key == 'configure' AND ($this->tabAccess['edit'] !== '1' OR !$module->getPermission('configure')))
+					elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to configure this module.');
-					elseif ($key == 'install' AND Module::isInstalled($module->name))
+					elseif ($key == 'install' && Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
-					elseif ($key == 'uninstall' AND !Module::isInstalled($module->name))
+					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module is already uninstalled:').' '.$module->name;
 					else
 					{
@@ -660,7 +661,7 @@ class AdminModulesControllerCore extends AdminController
 									<th><a href="'.$backlink.'" style="padding:5px 10px">'.$this->l('Back').'</a></th>
 									<th><a href="'.$hooklink.'" style="padding:5px 10px">'.$this->l('Manage hooks').'</a></th>
 									<th style="padding:5px 10px">'.$this->l('Manage translations:').' ';
-									foreach (Language::getLanguages(false) AS $language)
+									foreach (Language::getLanguages(false) as $language)
 										$toolbar .= '<a href="'.$tradlink.$language['iso_code'].'#'.$module->name.'" style="margin-left:5px"><img src="'._THEME_LANG_DIR_.$language['id_lang'].'.jpg" alt="'.$language['iso_code'].'" title="'.$language['iso_code'].'" /></a>';
 							$toolbar .= '</th></tr>';
 
@@ -691,7 +692,7 @@ class AdminModulesControllerCore extends AdminController
 							// Display module configuration
 							$this->context->smarty->assign('module_content', $toolbar.'<div class="clear">&nbsp;</div>'.$echo.'<div class="clear">&nbsp;</div>'.$toolbar);
 						}
-						elseif($echo === true)
+						elseif ($echo === true)
 							$return = ($method == 'install' ? 12 : 13);
 						elseif ($echo === false)
 							$module_errors[] = array('name' => $name, 'message' => $module->getErrors());
@@ -787,10 +788,10 @@ class AdminModulesControllerCore extends AdminController
 		if ($module->id)
 			$return .= ' <span class="desactive-module"><a class="action_module" '.($module->active && method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('desactive', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&'.($module->active ? 'enable=0' : 'enable=1').'&tab_module='.$module->tab.'" '.((Shop::isFeatureActive()) ? 'title="'.htmlspecialchars($module->active ? $this->translationsTab['Disable this module'] : $this->translationsTab['Enable this module for all shops']).'"' : '').'>'.($module->active ? $this->translationsTab['Disable'] : $this->translationsTab['Enable']).'</a></span>';
 
-		if ($module->id AND $module->active)
+		if ($module->id && $module->active)
 			$return .= (!empty($result) ? '|' : '').' <span class="reset-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('reset', $href).'"' : '').' href="'.self::$currentIndex.'&token='.$this->token.'&module_name='.urlencode($module->name).'&reset&tab_module='.$module->tab.'">'.$this->translationsTab['Reset'].'</a></span>';
 
-		if ($module->id AND (method_exists($module, 'getContent') OR (isset($module->is_configurable) AND $module->is_configurable)))
+		if ($module->id && (method_exists($module, 'getContent') || (isset($module->is_configurable) && $module->is_configurable)))
 			$return .= (!empty($result) ? '|' : '').' <span class="configure-module"><a class="action_module" '.(method_exists($module, 'onclickOption')? 'onclick="'.$module->onclickOption('configure', $href).'"' : '').' href="'.self::$currentIndex.'&configure='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name).'">'.$this->translationsTab['Configure'].'</a></span>';
 
 		$hrefDelete = self::$currentIndex.'&delete='.urlencode($module->name).'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.urlencode($module->name);
@@ -801,12 +802,12 @@ class AdminModulesControllerCore extends AdminController
 
 	public function initModulesList($modules)
 	{
-		foreach ($modules AS $module)
+		foreach ($modules as $module)
 		{
 			if (!in_array($module->name, $this->list_natives_modules))
 				$this->serial_modules .= $module->name.' '.$module->version.'-'.($module->active ? 'a' : 'i')."\n";
 			$module_author = $module->author;
-			if (!empty($module_author)&& ($module_author != ""))
+			if (!empty($module_author) && ($module_author != ''))
 				$this->modules_authors[(string)$module_author] = 'notselected';
 		}
 		$this->serial_modules = urlencode($this->serial_modules);
@@ -832,7 +833,7 @@ class AdminModulesControllerCore extends AdminController
 	public function isModuleFiltered($module)
 	{
 		// Beware $module could be an instance of Module or stdClass, that explain the static call
-		if ($module->id AND !Module::getPermissionStatic($module->id, 'view') AND !Module::getPermissionStatic($module->id, 'configure'))
+		if ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure'))
 			return true;
 
 
@@ -877,7 +878,7 @@ class AdminModulesControllerCore extends AdminController
 			return true;
 		else if ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules))
 			return true;
-		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) OR in_array($module->name, $this->list_natives_modules)))
+		else if ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules)))
 			return true;
 		else if (strpos($show_type_modules, 'authorModules[') !== false)
 		{
@@ -907,7 +908,10 @@ class AdminModulesControllerCore extends AdminController
 
 		// Filter on country
 		$show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
-		if ($show_country_modules AND (isset($module->limited_countries) AND !empty($module->limited_countries) AND ((is_array($module->limited_countries) AND sizeof($module->limited_countries) AND !in_array(strtolower($this->iso_default_country), $module->limited_countries)) OR (!is_array($module->limited_countries) AND strtolower($this->iso_default_country) != strval($module->limited_countries)))))
+		if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
+				&& ((is_array($module->limited_countries) && count($module->limited_countries)
+				&& !in_array(strtolower($this->iso_default_country), $module->limited_countries))
+				|| (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries)))))
 			return true;
 
 

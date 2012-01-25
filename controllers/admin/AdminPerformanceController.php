@@ -711,7 +711,7 @@ class AdminPerformanceControllerCore extends AdminController
 						Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
 					}
 				}
-				else if($caching_system == 'MCached' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'MCached')
+				else if ($caching_system == 'MCached' && $cache_active && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'MCached')
 					Cache::getInstance()->flush();
 
 				if (!count($this->errors))

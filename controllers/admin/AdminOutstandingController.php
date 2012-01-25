@@ -48,9 +48,7 @@ class AdminOutstandingControllerCore  extends AdminController
 
 		$risks = array();
 		foreach (Risk::getRisks() as $risk)
-		{
 			$risks[$risk->id] = $risk->name;
-		}
 
 		$this->fieldsDisplay = array(
 			'number' => array(
@@ -159,7 +157,7 @@ class AdminOutstandingControllerCore  extends AdminController
 	 */
 	public function renderView()
 	{
-		$order_invoice = new OrderInvoice((int) Tools::getValue('id_order_invoice'));
+		$order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
 		if (!Validate::isLoadedObject($order_invoice))
 			throw new PrestaShopException('object OrderInvoice can\'t be loaded');
 		$order = new Order($order_invoice->id_order);
