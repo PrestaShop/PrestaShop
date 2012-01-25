@@ -342,7 +342,13 @@ class DispatcherCore
 		// Instantiate controller
 		try
 		{
-			Controller::getController($controller_class)->run();
+			$controller = Controller::getController($controller_class);
+
+			// Controller comes from a module set "module name"
+			if (!empty($controller_row['module']) && $controller_type == 'controller')
+				$controller->module = $controller_row['module'];
+
+			$controller->run();
 		}
 		catch (PrestaShopException $e)
 		{
