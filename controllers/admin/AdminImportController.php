@@ -113,10 +113,10 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id_product' => array('label' => $this->l('Product ID').'*'),
 					'group' => array(
-						'label' => $this->l('Group (Name:Position)').'*'
+						'label' => $this->l('Attribute (Name:Type:Position)').'*'
 					),
 					'attribute' => array(
-						'label' => $this->l('Attribute (Value:Position)').'*'
+						'label' => $this->l('Value (Value:Position)').'*'
 					),
 					'reference' => array('label' => $this->l('Reference')),
 					'supplier_reference' => array('label' => $this->l('Supplier reference')),
@@ -1338,20 +1338,30 @@ class AdminImportControllerCore extends AdminController
 
 			$id_attribute_group = 0;
 			$group = '';
-			foreach (explode($fsep, $info['group']) as $group)
+			// groups
+			$groups_attributes = array();
+			foreach (explode($fsep, $info['group']) as $key => $group)
 			{
 				$tab_group = explode(':', $group);
 				$group = $tab_group[0];
-				$id_attribute_group = $groups[$group];
+				if (!isset($tab_group[1]))
+					$type = 'select';
+				else
+				$type = $tab_group[1];
+
+				// sets group
+				$groups_attributes[$key]['group'] = $group;
+
 				// if position is filled
-				if (isset($tab_group[1]))
-					$position = $tab_group[1];
+				if (isset($tab_group[2]))
+					$position = $tab_group[2];
 				else
 					$position = false;
 				if (!isset($groups[$group]))
 				{
 					$obj = new AttributeGroup();
 					$obj->is_color_group = false;
+					$obj->group_type = pSQL($type);
 					$obj->name[$default_language] = $group;
 					$obj->public_name[$default_language] = $group;
 					$obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
@@ -1363,9 +1373,19 @@ class AdminImportControllerCore extends AdminController
 					}
 					else
 						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+
+					// fils groups attributes
+					$id_attribute_group = $obj->id;
+					$groups_attributes[$key]['id'] = $id_attribute_group;
+				}
+				else // alreay exists
+				{
+					$id_attribute_group = $groups[$group];
+					$groups_attributes[$key]['id'] = $id_attribute_group;
 				}
 			}
-			foreach (explode($fsep, $info['attribute']) as $attribute)
+
+			foreach (explode($fsep, $info['attribute']) as $key => $attribute)
 			{
 				$tab_attribute = explode(':', $attribute);
 				$attribute = $tab_attribute[0];
@@ -1374,34 +1394,43 @@ class AdminImportControllerCore extends AdminController
 					$position = $tab_attribute[1];
 				else
 					$position = false;
-				if (!isset($attributes[$group.'_'.$attribute]))
-				{
-					$obj = new Attribute();
-					$obj->id_attribute_group = $groups[$group];
-					$obj->name[$default_language] = str_replace('\n', '', str_replace('\r', '', $attribute));
-					$obj->position = (!$position) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
-					if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
-					{
-						$obj->add();
-						$attributes[$group.'_'.$attribute] = $obj->id;
-					}
-					else
-						$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 
+				if (isset($groups_attributes[$key]))
+				{
+					if (!isset($attributes[$group.'_'.$attribute]) && count($groups_attributes[$key]) == 2)
+					{
+						$group = $groups_attributes[$key]['group'];
+						$id_attribute_group = $groups_attributes[$key]['id'];
+						$obj = new Attribute();
+						// sets the proper id (corresponding to the right key)
+						$obj->id_attribute_group = $groups_attributes[$key]['id'];
+						$obj->name[$default_language] = str_replace('\n', '', str_replace('\r', '', $attribute));
+						$obj->position = (!$position) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
+						if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+							($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+						{
+							$obj->add();
+							$attributes[$group.'_'.$attribute] = $obj->id;
+						}
+						else
+							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+
+					}
+
+					Db::getInstance()->execute('
+						INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+						VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
+					');
+
+					// after insertion, we clean attribute position and group attribute position
+					$obj = new Attribute();
+					$obj->cleanPositions((int)$id_attribute_group, false);
+					AttributeGroup::cleanPositions();
 				}
 			}
-			Db::getInstance()->execute('
-				INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-				VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
-			');
 		}
 		$this->closeCsvFile($handle);
 
-		// after insertion, we clean attribute position and group attribute position
-		$obj = new Attribute();
-		$obj->cleanPositions((int)$id_attribute_group, false);
-		AttributeGroup::cleanPositions();
 	}
 
 	public function customerImport()
