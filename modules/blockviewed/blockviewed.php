@@ -33,7 +33,7 @@ class BlockViewed extends Module
 	private $_html = '';
 	private $_postErrors = array();
 
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'blockviewed';
 		$this->tab = 'front_office_features';
@@ -47,7 +47,7 @@ class BlockViewed extends Module
 		$this->description = $this->l('Adds a block displaying last-viewed products.');
 	}
 
-	function install()
+	public function install()
 	{
 		if (!parent::install()
 			OR !$this->registerHook('leftColumn')
@@ -91,10 +91,10 @@ class BlockViewed extends Module
 		return $output;
 	}
 
-	function hookRightColumn($params)
+	public function hookRightColumn($params)
 	{
-		$id_product = (int)(Tools::getValue('id_product'));
-		$productsViewed = (isset($params['cookie']->viewed) AND !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
+		$id_product = (int)Tools::getValue('id_product');
+		$productsViewed = (isset($params['cookie']->viewed) && !empty($params['cookie']->viewed)) ? array_slice(explode(',', $params['cookie']->viewed), 0, Configuration::get('PRODUCTS_VIEWED_NBR')) : array();
 
 		if (sizeof($productsViewed))
 		{
@@ -179,12 +179,12 @@ class BlockViewed extends Module
 		return ;
 	}
 
-	function hookLeftColumn($params)
+	public function hookLeftColumn($params)
 	{
 		return $this->hookRightColumn($params);
 	}
 
-	function hookHeader($params)
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockviewed.css', 'all');
 	}
