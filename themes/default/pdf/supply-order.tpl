@@ -85,9 +85,9 @@
 				<td style="width: 20%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Designation' pdf='true'}</td>
 				<td style="width: 6%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Qty' pdf='true'}</td>
 				<td style="width: 10%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Unit Price TE' pdf='true'}</td>
-				<td style="width: 11%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE (DE)' pdf='true'}</td>
+				<td style="width: 11%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='Before discount' pdf='true'}</td>
 				<td style="width: 9%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Discount Rate' pdf='true'}</td>
-				<td style="width: 11%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE (DI)' pdf='true'}</td>
+				<td style="width: 11%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='After discount' pdf='true'}</td>
 				<td style="width: 9%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Tax rate' pdf='true'}</td>
 				<td style="width: 10%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TI' pdf='true'}</td>
 			</tr>
@@ -137,7 +137,7 @@
 		<tr><td style="line-height: 8px">&nbsp;</td></tr>
 	</table>
 	
-	{l s='Summary' pdf='true'}
+	{l s='Summary:' pdf='true'}
 	<!-- TOTAL -->
 	<div style="font-size: 6pt;">
 		<table style="width: 30%;">

@@ -106,7 +106,11 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->displayInformation($this->l('This interface allows you to manage the stocks of each of your products and their variations.').'<br />');
 		$this->displayInformation($this->l('Through this interface, you can increase quantities (add) and decrease quantities (delete) of products for a given warehouse.'));
 		$this->displayInformation($this->l('Furthermore, you can move quantities (transfer) of products between warehouses, or within one warehouse.').'<br />');
-		$this->displayInformation($this->l('Note that if you want to increase quantities of multiple products at once, you can use the supply orders tab.'));
+		$this->displayInformation($this->l('Note that if you want to increase quantities of multiple products at once, you can use the supply orders tab.').'<br />');
+
+		$this->displayInformation($this->l('Finally, you will be asked to specify the state of the quantity you will add : '));
+		$this->displayInformation($this->l('usable for sale means that this quantity will be available in shop(s),'));
+		$this->displayInformation($this->l('otherwise it will be considered reserved (i.e. for other purposes).'));
 
 		return parent::renderList();
 	}
@@ -149,6 +153,8 @@ class AdminStockManagementControllerCore extends AdminController
 					if (Validate::isLoadedObject($last_sm_currency))
 						$last_sm_unit_price_te = Tools::displayPrice((float)$last_sm['price_te'], $last_sm_currency);
 				}
+
+				$this->displayInformation($this->l('Note that rolling over the quantity and price fields will give you the details of the last stock movement.'));
 
 				// fields in the form
 				$this->fields_form[]['form'] = array(
