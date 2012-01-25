@@ -19,7 +19,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 6844 $
+*  @version  Release: $Revision: 8234 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -35,7 +35,7 @@ function clearText() {
 function oosHookJsCodeMailAlert() {
 	$.ajax({
 		type: 'POST',
-		url: '{/literal}{$base_dir}{literal}modules/mailalerts/mailalerts-ajax_check.php',
+		url: "{/literal}{$link->getModuleLink('mailalerts', 'check')}{literal}",
 		data: 'id_product={/literal}{$id_product}{literal}&id_product_attribute='+$('#idCombination').val(),
 		success: function (msg) {
 			if (msg == '0') {
@@ -53,7 +53,7 @@ function oosHookJsCodeMailAlert() {
 function  addNotification() {
 	$.ajax({
 		type: 'POST',
-		url: '{/literal}{$base_dir}{literal}modules/mailalerts/mailalerts-ajax_add.php',
+		url: "{/literal}{$link->getModuleLink('mailalerts', 'add')}{literal}",
 		data: 'id_product={/literal}{$id_product}{literal}&id_product_attribute='+$('#idCombination').val()+'&customer_email='+$('#oos_customer_email').val()+'',
 		success: function (msg) {
 			if (msg == '1') {
@@ -62,7 +62,10 @@ function  addNotification() {
 				$('#oos_customer_email_result').html("{/literal}{l s='Request notification registered' mod='mailalerts'}{literal}");
 				$('#oos_customer_email_result').css('color', 'green').show();
 			}
-			else {
+			else if (msg == '2' ) {
+				$('#oos_customer_email_result').html("{/literal}{l s='You already have an alert for this product' mod='mailalerts'}{literal}");
+				$('#oos_customer_email_result').css('color', 'red').show();
+			} else {
 				$('#oos_customer_email_result').html("{/literal}{l s='Your e-mail address is invalid' mod='mailalerts'}{literal}");
 				$('#oos_customer_email_result').css('color', 'red').show();
 			}
