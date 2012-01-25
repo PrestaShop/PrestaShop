@@ -961,12 +961,11 @@ table#cart_summary .cart_total_price .total_price_container {
 
 /* step 4 - paiement ************************************************************************** */
 
-/* #################### CSS MAXENCE  ########################
-#order .delivery_options_address, #order-opc .delivery_options_address {
-width: 541px;
-margin-left: 7px;
+.delivery_options {
+	border: 1px solid #BDC2C9;
+	border-top: 0;
 }
-*/
+
 #order .delivery_options_address h3, #order-opc .delivery_options_address h3 {
 /*background: url("../img/table_header.gif") no-repeat;
 color: #374853;
@@ -974,23 +973,24 @@ font-weight: bold;
 height: 14px;
 padding: 5px 10px;
 margin: 10px 0 0 0;*/
-    padding: 6px 11px;
-    font-size: 12px;
-    color: #fff;
-    text-shadow: 0 1px 0 #000;
-    text-transform: uppercase;
+	padding: 6px 11px;
+	font-size: 12px;
+	color: #fff;
+	text-shadow: 0 1px 0 #000;
+	text-transform: uppercase;
 	background: none repeat scroll 0 0 #383838;
 }
 #order .delivery_option_radio, #order-opc .delivery_option_radio {
 	float: left;
-	margin: 12px;
+	margin: 21px 12px;
 }
 #order .delivery_option label, #order-opc .delivery_option label {
 	display: block;
 	padding-bottom: 5px;
+	padding-top: 5px;
 }
 #order .delivery_option label > table.resume, #order-opc .delivery_option label > table.resume {
-	height: 40px;
+	height: 46px;
 	width: 685px;
 }
 #order .delivery_option.item, #order-opc .delivery_option.item {
@@ -1019,15 +1019,9 @@ margin: 10px 0 0 0;*/
 	width: 160px;
 }
 #order .delivery_options_address .delivery_option_logo img, #order-opc .delivery_options_address .delivery_option_logo img { /*height: 40px;*/ }
-#order-opc .delivery_option_carrier {
-	margin: 0 0 0 45px;
-	padding: 5px;
-	width: 680px;
-	background: white;
-}
 #order .delivery_option_carrier .first_item, #order-opc .delivery_option_carrier .first_item {
-	padding:0 0 0 5px;
-	background:url(../img/arrow_right_2.png) no-repeat 0 2px
+	padding: 3px 5px 3px 12px;
+	background:url(../img/arrow_right_2.png) no-repeat 3px 7px
 }
 
 .order_carrier_content {
@@ -1089,20 +1083,25 @@ margin: 10px 0 0 0;*/
 
 a.iframe {font-weight:bold}
 
+.hook_extracarrier {
+	margin-top: 5px;
+	padding: 5px;
+}
+
 /* step 5 - paiement ************************************************************************** */
 .paiement_block {
 	padding:15px;
-   border:1px solid #ccc;
+	border:1px solid #ccc;
 	font-size:12px;
 	color:#000;
-   background:#f8f8f8
+	background:#f8f8f8
 }
 
 .payment_module {
-   position:relative;
-   padding-top:20px;
+	position:relative;
+	padding-top:20px;
 	border-top:1px dotted #ccc;
-   text-transform:uppercase;
+	text-transform:uppercase;
 }
 .payment_module a {display:block;}
 .payment_module img {
@@ -1117,10 +1116,10 @@ a.iframe {font-weight:bold}
 
 .payment_module:before,
 .payment_module:after {
-   content: ".";
-   display: block;
-   height: 0;
-   overflow: hidden
+	content: ".";
+	display: block;
+	height: 0;
+	overflow: hidden
 }
 .payment_module:after {clear: both}
 .payment_module {zoom: 1}
@@ -1169,20 +1168,26 @@ a.iframe {font-weight:bold}
 #order-opc #opc_payment_methods {margin-bottom:20px}
 #order-opc #opc_payment_methods #opc_payment_methods-content p{margin:0}
 
-#order-opc .delivery_option_carrier td {width:200px}
-#order-opc .delivery_option_carrier td + td {width:280px;}
-#order-opc .delivery_option_carrier td + td + td {width:200px}
-#order-opc .delivery_option_carrier {
-	margin: 0 0 0 45px;
-	padding: 5px;
-	width: 680px;
-	background: white;
+.delivery_option_carrier td {width:200px}
+.delivery_option_carrier td + td {width:280px;}
+.delivery_option_carrier td + td + td {width:200px}
+.delivery_option_carrier {
+	margin: 5px 0 0 45px;
+	width: 670px;
 	display: none;
 }
-#order-opc .delivery_option_carrier.selected {
+ .delivery_option_carrier tr td {
+	padding: 5px;
+}
+.delivery_option_carrier.selected {
 	display: table;
-} 
-#order-opc .delivery_option_carrier .first_item {padding:0 0 0 5px}
+}
+.delivery_option_carrier.not-displayable {
+	display: none;
+}
+.delivery_option_title {
+	font-weight: bold;
+}
 
 
 /* ************************************************************************************************
