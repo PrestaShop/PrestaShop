@@ -84,7 +84,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->afterAdd($currentObject);
 	}
 
-	// TODO Move this function into CartRule
+	/* @TODO Move this function into CartRule */
 	public function afterAdd($currentObject)
 	{
 		// Add restrictions for generic entities like country, carrier and group
@@ -289,20 +289,20 @@ class AdminCartRulesControllerCore extends AdminController
 
 		// All the filter are prefilled with the correct information
 		$customer_filter = '';
-		if (Validate::isUnsignedId($current_object->id_customer) AND
-			$customer = new Customer($current_object->id_customer) AND
+		if (Validate::isUnsignedId($current_object->id_customer) &&
+			($customer = new Customer($current_object->id_customer)) &&
 			Validate::isLoadedObject($customer))
 			$customer_filter = $customer->firstname.' '.$customer->lastname.' ('.$customer->email.')';
 
 		$gift_product_filter = '';
-		if (Validate::isUnsignedId($current_object->gift_product) AND
-			$product = new Product($current_object->gift_product, false, Context::getContext()->language->id) AND
+		if (Validate::isUnsignedId($current_object->gift_product) &&
+			($product = new Product($current_object->gift_product, false, Context::getContext()->language->id)) &&
 			Validate::isLoadedObject($product))
 			$gift_product_filter = trim($product->reference.' '.$product->name);
 
 		$reduction_product_filter = '';
-		if (Validate::isUnsignedId($current_object->reduction_product) AND
-			$product = new Product($current_object->reduction_product, false, Context::getContext()->language->id) AND
+		if (Validate::isUnsignedId($current_object->reduction_product) &&
+			($product = new Product($current_object->reduction_product, false, Context::getContext()->language->id)) &&
 			Validate::isLoadedObject($product))
 			$reduction_product_filter = trim($product->reference.' '.$product->name);
 

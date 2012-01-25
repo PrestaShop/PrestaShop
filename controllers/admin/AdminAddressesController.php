@@ -391,11 +391,11 @@ class AdminAddressesControllerCore extends AdminController
 		foreach (array('inv','dlv') as $adr_type)
 		{
 			foreach (${$adr_type.'_adr_fields'} as $fields_line)
-				foreach(explode(' ',$fields_line) as $field_item)
+				foreach (explode(' ', $fields_line) as $field_item)
 					${$adr_type.'_all_fields'}[] = trim($field_item);
 
-			$out[$adr_type.'_adr_fields'] =  ${$adr_type.'_adr_fields'};
-			$out[$adr_type.'_all_fields'] =  ${$adr_type.'_all_fields'};
+			$out[$adr_type.'_adr_fields'] = ${$adr_type.'_adr_fields'};
+			$out[$adr_type.'_all_fields'] = ${$adr_type.'_all_fields'};
 		}
 
 		return $out;

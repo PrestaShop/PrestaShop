@@ -39,7 +39,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	
 	public $exportSelected = '';
 	
-	public $fd = NULL;
+	public $fd = null;
 	
 	public $date = array(
 		'begin' => '',
@@ -157,7 +157,7 @@ class AdminAccountingExportControllerCore extends AdminController
 			'urlDownload' => Tools::getShopDomain().'/download/'
 		));
 		
-		foreach($this->exportTypeList as $exportType)
+		foreach ($this->exportTypeList as $exportType)
 		{
 			$this->context->smarty->assign(array(
 				'title' => $exportType['name'],
@@ -189,7 +189,7 @@ class AdminAccountingExportControllerCore extends AdminController
 			// Switch to ajax if there is any problems with time
 			ini_set('max_execution_time', 0);
 			
-			switch($this->exportSelected)
+			switch ($this->exportSelected)
 			{
 				case 'reconciliation_export':
 					$this->runReconciliationExport();
@@ -218,10 +218,10 @@ class AdminAccountingExportControllerCore extends AdminController
 	{
 		$this->checkRights();
 		
-		if (!count($this->errors) && $this->fd !== NULL)
+		if (!count($this->errors) && $this->fd !== null)
 		{
 			$buffer = '';
-			foreach($this->exportTypeList[$this->exportSelected]['fields'] as $key => $translation)
+			foreach ($this->exportTypeList[$this->exportSelected]['fields'] as $key => $translation)
 				$buffer .= '"'.$translation.'";';
 			fwrite($this->fd, mb_convert_encoding(rtrim($buffer, ';')."\r\n", 'UTF-16LE'));
 			
@@ -293,7 +293,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		$line[9] = $row['wording'];
 		
 		// Override case depending of the whished line
-		switch($line_number)
+		switch ($line_number)
 		{
 			case 0:
 				$line[2] = $row['account_client'];
@@ -301,7 +301,7 @@ class AdminAccountingExportControllerCore extends AdminController
 				break;
 			case 1:
 				$line[2] = !empty($row['account']) ? $row['account'] :
-					Configuration::get('default_account_number', NULL, NULL, $row['id_shop']);
+					Configuration::get('default_account_number', null, null, $row['id_shop']);
 				// Force an empty string if Configuration send false
 				$line[2] = empty($line[2]) ? '' : $line[2];
 				$line[5] = $row['product_price_ht'];
@@ -328,7 +328,7 @@ class AdminAccountingExportControllerCore extends AdminController
 		// Cache list to merge easily the content with the same accounting for different invoice number
 		$cache_list = array();
 		$num = 0;
-		foreach($db_details as $row)
+		foreach ($db_details as $row)
 		{
 			// Init the list for the current invoice number
 			if (!array_key_exists($row['invoice_number'], $cache_list))
@@ -337,7 +337,7 @@ class AdminAccountingExportControllerCore extends AdminController
 			// Need to Generate 3 lines for a product
 			for ($i = 0; $i < 3; ++$i)
 				// Create the two first line and check if a tax exist for the last one
-				if ($i < 2 || ($i == 2 && $row['id_tax'] !== NULL))
+				if ($i < 2 || ($i == 2 && $row['id_tax'] !== null))
 				{
 					// Generate a product line
 					$line = $this->createLine($row, $i);
@@ -379,9 +379,9 @@ class AdminAccountingExportControllerCore extends AdminController
 		// If advanced stock management enable then we foreach the cache_list to know
 		// if a product use the system to store back the movement price.
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-			foreach($cache_list as $invoice_list)
-				foreach($invoice_list as $product_list)
-					foreach($product_list as $id_product => $product_detail)
+			foreach ($cache_list as $invoice_list)
+				foreach ($invoice_list as $product_list)
+					foreach ($product_list as $id_product => $product_detail)
 						if ($product_detail['advanced_stock_management'])
 						{
 							// Get stock product stock movement detail
@@ -465,7 +465,7 @@ class AdminAccountingExportControllerCore extends AdminController
 	protected function downloadFile($fileName)
 	{
 		$path = $this->downloadDir.$fileName;
-		header('Content-length: ' . filesize($path));
+		header('Content-length: '.filesize($path));
 		header('Content-Disposition: attachment; filename="'.$fileName.'"');
 		
 		// Flush buffered data before reading the file

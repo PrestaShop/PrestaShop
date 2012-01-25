@@ -329,7 +329,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		$str_attributes_groups = '';
 		foreach ($attributes_groups as $attribute_group)
-			$str_attributes_groups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ) .', ';
+			$str_attributes_groups .= '"'.$attribute_group['id_attribute_group'].'" : '.($attribute_group['group_type'] == 'color' ? '1' : '0'  ).', ';
 
 		$image = _PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.$obj->id.'.jpg';
 		$this->tpl_form_vars = array(

@@ -245,7 +245,7 @@ class AdminCartsControllerCore extends AdminController
 				return;
 			if ($this->context->cart->OrderExists())
 				$errors[] = Tools::displayError('An order already placed with this cart');
-			elseif (!($id_product = (int)Tools::getValue('id_product')) OR !($product = new Product((int)$id_product, true, $this->context->language->id)))
+			elseif (!($id_product = (int)Tools::getValue('id_product')) || !($product = new Product((int)$id_product, true, $this->context->language->id)))
 				$errors[] = Tools::displayError('Invalid product');
 			elseif (!($qty = Tools::getValue('qty')) || $qty == 0)
 				$errors[] = Tools::displayError('Invalid quantity');
@@ -355,9 +355,7 @@ class AdminCartsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$errors = array();
-			$customer = new Customer((int)$this->context->cart->id_customer);
-
-			if (!$id_cart_rule = Tools::getValue('id_cart_rule') OR !$cart_rule = new CartRule((int)$id_cart_rule))
+			if (!$id_cart_rule = Tools::getValue('id_cart_rule') || !$cart_rule = new CartRule((int)$id_cart_rule))
 				$errors[] = Tools::displayError('Invalid voucher');
 			else if ($err = $cart_rule->checkValidity($this->context))
 				$errors[] = $err;

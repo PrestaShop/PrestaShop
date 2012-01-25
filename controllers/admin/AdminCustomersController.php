@@ -199,7 +199,7 @@ class AdminCustomersControllerCore extends AdminController
 			LIMIT 1
 		) as connect';
 
-		if (Tools::isSubmit('submitBulkdelete'.$this->table) OR Tools::isSubmit('delete'.$this->table))
+		if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table))
 			$this->tpl_list_vars = array(
 				'delete_customer' => true,
 				'REQUEST_URI' => $_SERVER['REQUEST_URI'],
@@ -397,13 +397,14 @@ class AdminCustomersControllerCore extends AdminController
 			);
 		}
 
-		if (Configuration::get('PS_B2B_ENABLE')) {
+		if (Configuration::get('PS_B2B_ENABLE'))
+		{
 			$risks = Risk::getRisks();
 
 			$list_risks = array();
 			foreach ($risks as $key => $risk)
 			{
-				$list_risks[$key]['id_risk'] = (int) $risk->id;
+				$list_risks[$key]['id_risk'] = (int)$risk->id;
 				$list_risks[$key]['name'] = $risk->name;
 			}
 

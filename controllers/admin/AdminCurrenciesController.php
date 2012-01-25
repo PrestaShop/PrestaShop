@@ -296,7 +296,7 @@ class AdminCurrenciesControllerCore extends AdminController
 	public function processExchangeRates($token)
 	{
 		if (!$this->errors[] = Currency::refreshCurrencies())
-			Tools::redirectAdmin(self::$currentIndex . '&conf=6' . '&token=' . $this->token);
+			Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$this->token);
 	}
 
 	/**

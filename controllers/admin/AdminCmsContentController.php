@@ -34,7 +34,7 @@ class AdminCmsContentControllerCore extends AdminController
 	private $adminCMS;
 
 	/** @var object Category() instance for navigation*/
-	private static $_category = NULL;
+	private static $_category = null;
 
 	public function __construct()
 	{
