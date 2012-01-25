@@ -172,7 +172,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->toolbar_title = $this->l('Stock : Manage supply order');
 
 			if (Tools::isSubmit('mod') && Tools::getValue('mod') === 'template' || $this->object->is_template)
-				$this->toolbar_title .= ' '.$this->l('template');
+				$this->toolbar_title .= ' ('.$this->l('template').')';
 
 			$this->addJqueryUI('ui.datepicker');
 
