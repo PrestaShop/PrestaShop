@@ -25,7 +25,7 @@
 *}
 <table>
 	<tr>
-		<td style="text-align: center; font-size: 6pt; color: #444">
+		<td style="text-align: left; font-size: 6pt; color: #444">
 			{$shop_address|escape:'htmlall':'UTF-8'}<br />
 
 			{if !empty($shop_phone) OR !empty($shop_fax)}
