@@ -3587,7 +3587,8 @@ class AdminProductsControllerCore extends AdminController
 				'currencies' => Currency::getCurrencies(),
 				'product' => $obj,
 				'link' => $this->context->link,
-				'token' => $this->token
+				'token' => $this->token,
+				'id_default_currency' => Configuration::get('PS_CURRENCY_DEFAULT'),
 			));
 		}
 		else
