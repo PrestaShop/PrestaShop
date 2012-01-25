@@ -309,7 +309,7 @@
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
 				action: "deleteVoucher",
-				id_voucher: id_cart_rule,
+				id_cart_rule: id_cart_rule,
 				id_cart: id_cart,
 				},
 			success : function(res)
@@ -403,16 +403,6 @@
 				{
 					var html_carts = '';
 					var html_orders = '';
-					var addresses_options = '';
-					if (res.addresses.length > 0)
-					{
-						var address_detail = res.addresses[0].company+' '+res.addresses[0].firstname+' '+res.addresses[0].lastname+'<br />';
-						address_detail += res.addresses[0].address1+'<br />';
-						address_detail += res.addresses[0].address2+'<br />';
-						address_detail += res.addresses[0].postcode+' '+res.addresses[0].city+' '+res.addresses[0].country;
-					}
-					else
-						address_detail = '{l s='No addresses'}';
 					$.each(res.carts, function() {
 						html_carts += '<tr><td>'+this.id_cart+'</td><td>'+this.date_add+'</td><td>'+this.total_price+'</td>';
 						html_carts += '<td><a title="{l s='View this cart'}" class="fancybox" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><img src="../img/admin/details.gif" /></a>';
@@ -425,23 +415,6 @@
 					});
 					$('#nonOrderedCarts table tbody').html(html_carts);
 					$('#lastOrders table tbody').html(html_orders);
-					$.each(res.addresses, function () {
-						addresses_options += '<option value="'+this.id_address+'">'+this.alias+'</option>';
-					});
-
-					if (addresses_options == '')
-					{
-						$('#address_delivery').hide();
-						$('#address_invoice').hide();
-					}
-					else
-					{
-						$('#id_address_delivery').html(addresses_options);
-						$('#id_address_invoice').html(addresses_options);
-						$('#address_delivery').show();
-						$('#address_invoice').show();
-					}
-					$('#address_delivery_detail,#address_invoice_detail').html(address_detail);
 				}
 				if (res.id_cart)
 				{
@@ -576,6 +549,8 @@
 	{
 		updateCartProducts(jsonSummary.summary.products);
 		updateCartVouchers(jsonSummary.summary.discounts);
+		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
+
 		if (!jsonSummary.summary.products.length || !jsonSummary.addresses.length)
 			$('#carriers_part,#summary_part').hide();
 		else
@@ -764,6 +739,28 @@
 			}
 		});
 	}
+	
+	function updateAddressesList(addresses, id_address_delivery, id_address_invoice)
+	{
+		var addresses_delivery_options = '';
+		var addresses_invoice_options = '';
+		var address_invoice_detail = '';
+		var address_delivery_detail = '';
+		
+		$.each(addresses, function() {
+			if (this.id_address == id_address_invoice)
+				address_invoice_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city+' '+this.country;
+			if(this.id_address == id_address_delivery)
+				address_delivery_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city+' '+this.country;
+
+			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
+			addresses_invoice_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_invoice ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
+		});
+		$('#id_address_delivery').html(addresses_delivery_options);
+		$('#id_address_invoice').html(addresses_invoice_options);
+		$('#address_delivery_detail').html(address_delivery_detail);
+		$('#address_invoice_detail').html(address_invoice_detail);
+	}
 
 	function updateAddresses()
 	{
@@ -776,18 +773,15 @@
 				ajax: "1",
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
-				action: "updateAddress",
+				action: "updateAddresses",
 				id_customer: id_customer,
+				id_cart: id_cart,
 				id_address_delivery: $('#id_address_delivery option:selected').val(),
 				id_address_invoice: $('#id_address_invoice option:selected').val()
 				},
 			success : function(res)
 			{
-				if (res.errors)
-					$('#send_email_feedback').removeClass('conf').addClass('error');
-				else
-					$('#send_email_feedback').removeClass('error').addClass('conf');
-				$('#send_email_feedback').html(res.result);
+				displaySummary(res);
 				var x;
 				for(x in res.addresses)
 				{
@@ -865,8 +859,8 @@
 					<th>{l s='Description'}</th>
 					<th>{l s='Ref'}</th>
 					<th>{l s='Unit price'}</th>
-					<th style="width: 65px;">{l s='Qty'}</th>
-					<th>{l s='Price'}</th>
+					<th style="width: 80px;">{l s='Qty'}</th>
+					<th style="width: 80px;">{l s='Price'}</th>
 				</tr>
 			</thead>
 			<tbody>
