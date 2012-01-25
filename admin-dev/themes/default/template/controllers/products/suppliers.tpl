@@ -93,12 +93,14 @@
 					{foreach $attributes AS $index => $attribute}
 						{assign var=reference value=''}
 						{assign var=price_te value=''}
-						{assign var=id_currency value=''}
+						{assign var=id_currency value=$id_default_currency}
 						{foreach from=$associated_suppliers_collection item=asc}
 							{if $asc->id_product == $attribute['id_product'] && $asc->id_product_attribute == $attribute['id_product_attribute'] && $asc->id_supplier == $supplier->id_supplier}
 								{assign var=reference value=$asc->product_supplier_reference}
 								{assign var=price_te value=Tools::ps_round($asc->product_supplier_price_te, 2)}
-								{assign var=id_currency value=$asc->id_currency}
+								{if $asc->id_currency}
+									{assign var=id_currency value=$asc->id_currency}
+								{/if}
 							{/if}
 						{/foreach}
 						<tr {if $index is odd}class="alt_row"{/if}>
