@@ -254,7 +254,7 @@ class AdminImagesControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 		 	{
-				if($this->_moveImagesToNewFileSystem())
+				if ($this->_moveImagesToNewFileSystem())
 					Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
 		 	}
 		else
@@ -286,7 +286,7 @@ class AdminImagesControllerCore extends AdminController
 
 	protected function _childValidation()
 	{
-		if (!Tools::getValue('id_image_type') AND Validate::isImageTypeName($typeName = Tools::getValue('name')) AND ImageType::typeAlreadyExists($typeName))
+		if (!Tools::getValue('id_image_type') && Validate::isImageTypeName($typeName = Tools::getValue('name')) && ImageType::typeAlreadyExists($typeName))
 			$this->errors[] = Tools::displayError('This name already exists.');
 	}
 
@@ -322,9 +322,9 @@ class AdminImagesControllerCore extends AdminController
 		if (!is_dir($dir))
 			return false;
 		$toDel = scandir($dir);
-		foreach ($toDel AS $d)
-			foreach ($type AS $imageType)
-				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) OR preg_match('/^([[:lower:]]{2})\-default\-(.*)\.jpg$/', $d))
+		foreach ($toDel as $d)
+			foreach ($type as $imageType)
+				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) || preg_match('/^([[:lower:]]{2})\-default\-(.*)\.jpg$/', $d))
 					if (file_exists($dir.$d))
 						unlink($dir.$d);
 
@@ -332,15 +332,15 @@ class AdminImagesControllerCore extends AdminController
 		if ($product)
 		{
 			$productsImages = Image::getAllImages();
-			foreach ($productsImages AS $k => $image)
+			foreach ($productsImages as $image)
 			{
 				$imageObj = new Image($image['id_image']);
 				$imageObj->id_product = $image['id_product'];
 				if (file_exists($dir.$imageObj->getImgFolder()))
 				{
 					$toDel = scandir($dir.$imageObj->getImgFolder());
-					foreach ($toDel AS $d)
-						foreach ($type AS $imageType)
+					foreach ($toDel as $d)
+						foreach ($type as $imageType)
 							if (preg_match('/^[0-9]+\-'.$imageType['name'].'\.jpg$/', $d))
 								if (file_exists($dir.$imageObj->getImgFolder().$d))
 									unlink($dir.$imageObj->getImgFolder().$d);
@@ -349,7 +349,14 @@ class AdminImagesControllerCore extends AdminController
 		}
 	}
 
-	// Regenerate images
+	/**
+	 * Regenerate images
+	 *
+	 * @param $dir
+	 * @param $type
+	 * @param bool $productsImages
+	 * @return bool|string
+	 */
 	protected function _regenerateNewImages($dir, $type, $productsImages = false)
 	{
 		if (!is_dir($dir))
@@ -358,9 +365,9 @@ class AdminImagesControllerCore extends AdminController
 		$toRegen = scandir($dir);
 		if (!$productsImages)
 		{
-			foreach ($toRegen AS $image)
+			foreach ($toRegen as $image)
 				if (preg_match('/^[0-9]*\.jpg$/', $image))
-					foreach ($type AS $k => $imageType)
+					foreach ($type as $k => $imageType)
 					{
 						// Customizable writing dir
 						$newDir = $dir;
@@ -378,11 +385,11 @@ class AdminImagesControllerCore extends AdminController
 		else
 		{
 			$productsImages = Image::getAllImages();
-			foreach ($productsImages AS $k => $image)
+			foreach ($productsImages as $image)
 			{
 				$imageObj = new Image($image['id_image']);
 				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
-					foreach ($type AS $k => $imageType)
+					foreach ($type as $imageType)
 					{
 						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
 							if (!ImageManager::resize($dir.$imageObj->getExistingImgPath().'.jpg', $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
@@ -396,13 +403,20 @@ class AdminImagesControllerCore extends AdminController
 		return $errors;
 	}
 
-	// Regenerate no-pictures images
+	/**
+	 * Regenerate no-pictures images
+	 *
+	 * @param $dir
+	 * @param $type
+	 * @param $languages
+	 * @return bool
+	 */
 	protected function _regenerateNoPictureImages($dir, $type, $languages)
 	{
 		$errors = false;
-		foreach ($type AS $k => $imageType)
+		foreach ($type as $imageType)
 		{
-			foreach ($languages AS $language)
+			foreach ($languages as $language)
 			{
 				$file = $dir.$language['iso_code'].'.jpg';
 				if (!file_exists($file))
@@ -415,7 +429,7 @@ class AdminImagesControllerCore extends AdminController
 		return $errors;
 	}
 
-	// Hook watermark optimization
+	/* Hook watermark optimization */
 	protected function _regenerateWatermark($dir)
 	{
 		$result = Db::getInstance()->executeS('
@@ -433,7 +447,7 @@ class AdminImagesControllerCore extends AdminController
 				if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
 					foreach ($result as $module)
 					{
-						if ($moduleInstance = Module::getInstanceByName($module['name']) AND is_callable(array($moduleInstance, 'hookwatermark')))
+						if ($moduleInstance = Module::getInstanceByName($module['name']) && is_callable(array($moduleInstance, 'hookwatermark')))
 							call_user_func(array($moduleInstance, 'hookwatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product));
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
@@ -460,10 +474,10 @@ class AdminImagesControllerCore extends AdminController
 			);
 
 		// Launching generation process
-		foreach ($process AS $k => $proc)
+		foreach ($process as $proc)
 		{
 			if ($type != 'all' && $type != $proc['type'])
-				continue ;
+				continue;
 
 			// Getting format generation
 			$formats = ImageType::getImagesTypes($proc['type']);
@@ -471,7 +485,7 @@ class AdminImagesControllerCore extends AdminController
 			{
 				$format = strval(Tools::getValue('format_'.$type));
 				if ($format != 'all')
-					foreach ($formats AS $k => $form)
+					foreach ($formats as $k => $form)
 						if ($form['id_image_type'] != $format)
 							unset($formats[$k]);
 			}
@@ -492,7 +506,7 @@ class AdminImagesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('Cannot write no-picture image to').' ('.$proc['type'].') '.Tools::displayError('images folder. Please check the folder\'s writing permissions.');
 			}
 		}
-		return (sizeof($this->errors) > 0 ? false : true);
+		return (count($this->errors) > 0 ? false : true);
 	}
 
 	/**
@@ -512,18 +526,18 @@ class AdminImagesControllerCore extends AdminController
 	protected function _moveImagesToNewFileSystem()
 	{
 		if (!Image::testFileSystem())
-			$this->errors[] =  Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
+			$this->errors[] = Tools::displayError('Error: your server configuration is not compatible with the new image system. No images were moved');
 		else
 		{
 			ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
 			$this->max_execution_time = (int)ini_get('max_execution_time');
 			$result = Image::moveToNewFileSystem($this->max_execution_time);
 			if ($result === 'timeout')
-				$this->errors[] =  Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
+				$this->errors[] = Tools::displayError('Not all images have been moved, server timed out before finishing. Click on \"Move images\" again to resume moving images');
 			else if ($result === false)
-				$this->errors[] =  Tools::displayError('Error: some or all images could not be moved.');
+				$this->errors[] = Tools::displayError('Error: some or all images could not be moved.');
 		}
-		return (sizeof($this->errors) > 0 ? false : true);
+		return (count($this->errors) > 0 ? false : true);
 	}
 
 	public function initContent()

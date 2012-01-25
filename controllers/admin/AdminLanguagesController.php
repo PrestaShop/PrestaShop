@@ -488,22 +488,22 @@ class AdminLanguagesControllerCore extends AdminController
 	public function ajaxProcessCheckLangPack()
 	{
 		$this->json = true;
-		if(empty($_GET['iso_lang']))
+		if (empty($_GET['iso_lang']))
 		{
 			$this->status = 'error';
 			$this->errors[] = '[TECHNICAL ERROR] iso_lang not set or empty';
 		}
-		if(empty($_GET['ps_version']))
+		if (empty($_GET['ps_version']))
 		{
 			$this->status = 'error';
 			$this->errors[] = '[TECHNICAL ERROR] ps_version not set or empty';
 		}
-		if(@fsockopen('api.prestashop.com', 80))
+		if (@fsockopen('api.prestashop.com', 80))
 		{
 			// Get all iso code available
 			$lang_packs = Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']);
 			
-			if ($lang_packs !== '' && Tools::jsonDecode($lang_packs) !== NULL)
+			if ($lang_packs !== '' && Tools::jsonDecode($lang_packs) !== null)
 			{
 				$this->status = 'ok';
 				$this->content = $lang_packs;

@@ -59,16 +59,16 @@ class AdminHomeControllerCore extends AdminController
 		{
 			$stat = stat(dirname(__FILE__).'/../../.htaccess');
 			$dateUpdHtaccess = Db::getInstance()->getValue('SELECT date_upd FROM '._DB_PREFIX_.'configuration WHERE name = "PS_HTACCESS_CACHE_CONTROL"');
-			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL') AND strtotime($dateUpdHtaccess) > $stat['mtime'])
+			if (Configuration::get('PS_HTACCESS_CACHE_CONTROL') && strtotime($dateUpdHtaccess) > $stat['mtime'])
 				$htaccessOptimized = 1;
 
 			$dateUpdate = Configuration::get('PS_LAST_SHOP_UPDATE');
-			if ($dateUpdate AND strtotime($dateUpdate) > $stat['mtime'])
+			if ($dateUpdate && strtotime($dateUpdate) > $stat['mtime'])
 				$htaccessAfterUpdate = 0;
 		}
 		$indexRebuiltAfterUpdate = 0;
-		$needRebuild=Configuration::get('PS_NEED_REBUILD_INDEX');
-		if($needRebuild !='0');
+		$needRebuild = Configuration::get('PS_NEED_REBUILD_INDEX');
+		if ($needRebuild != '0');
 			$indexRebuiltAfterUpdate = 2;
 
 		$smartyOptimized = 0;
@@ -77,10 +77,10 @@ class AdminHomeControllerCore extends AdminController
 		if (Configuration::get('PS_SMARTY_CACHE'))
 			++$smartyOptimized;
 
-		$cccOptimized = Configuration::get('PS_CSS_THEME_CACHE')
-		+ Configuration::get('PS_JS_THEME_CACHE')
-		+ Configuration::get('PS_HTML_THEME_COMPRESSION')
-		+ Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
+		$cccOptimized = Configuration::get('PS_CSS_THEME_CACHE');
+		$cccOptimized += Configuration::get('PS_JS_THEME_CACHE');
+		$cccOptimized += Configuration::get('PS_HTML_THEME_COMPRESSION');
+		$cccOptimized += Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
 		if ($cccOptimized == 4)
 			$cccOptimized = 2;
 		else
@@ -96,7 +96,7 @@ class AdminHomeControllerCore extends AdminController
 
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
 		{
-			$this->context->smarty->assign('hide_tips',Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
+			$this->context->smarty->assign('hide_tips', Configuration::get('PS_HIDE_OPTIMIZATION_TIPS'));
 			$opti_list[] = array(
 				'title' => $this->l('URL rewriting'),
 				'href' => $link->getAdminLink('AdminGenerator'),
@@ -146,8 +146,8 @@ class AdminHomeControllerCore extends AdminController
 				'image' => $lights[$htaccessAfterUpdate]['image'],
 			);
 		}
-		$this->context->smarty->assign('opti_list',$opti_list);
-		$this->context->smarty->assign('content',$content);
+		$this->context->smarty->assign('opti_list', $opti_list);
+		$this->context->smarty->assign('content', $content);
 		$template = $this->createTemplate('optimizationTips.tpl');
 		return $template->fetch();
 	}
@@ -155,14 +155,14 @@ class AdminHomeControllerCore extends AdminController
 	public function setMedia()
 	{
 		parent::setMedia();
-		if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== false)
+		if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)
 			$this->addJqueryPlugin('excanvas');
 		$this->addJqueryPlugin('flot');
 	}
 
 	protected function warnDomainName()
 	{
-		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') AND $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
+		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
 			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
 			$this->l('This one is different from the main shop domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
 			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
@@ -351,7 +351,7 @@ class AdminHomeControllerCore extends AdminController
 
 		$orders = Order::getOrdersWithInformations(10);
 		$i = 0;
-		foreach ($orders AS $order)
+		foreach ($orders as $order)
 		{
 			$currency = Currency::getCurrency((int)$order['id_currency']);
 			$content .= '
@@ -536,17 +536,16 @@ class AdminHomeControllerCore extends AdminController
 		$this->warnDomainName();
 
 		$protocol = Tools::usingSecureMode()?'https':'http';
-		$smarty->assign('protocol',$protocol);
+		$smarty->assign('protocol', $protocol);
 		$isoUser = $this->context->language->iso_code;
-		$smarty->assign('isoUser',$isoUser);
+		$smarty->assign('isoUser', $isoUser);
 		$upgrade = null;
 		$tpl_vars['refresh_check_version'] = 0;
 		if (@ini_get('allow_url_fopen'))
 		{
 			$upgrade = new Upgrader(true);
 			// if this information is outdated, the version will be checked after page loading
-			if (Configuration::get('PS_LAST_VERSION_CHECK') 
-				< time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)) 
+			if (Configuration::get('PS_LAST_VERSION_CHECK') < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))
 				$tpl_vars['refresh_check_version'] = 1;
 		}
 
@@ -560,8 +559,8 @@ class AdminHomeControllerCore extends AdminController
 		$tpl_vars['monthly_statistics'] = $this->getMonthlyStatistics();
 		$tpl_vars['customers_service'] = $this->getCustomersService();
 		$tpl_vars['stats_sales'] = $this->getStatsSales();
-		$tpl_vars['last_orders'] =$this->getLastOrders();
-		$tpl_vars['tips_optimization'] =  $this->_displayOptimizationTips();
+		$tpl_vars['last_orders'] = $this->getLastOrders();
+		$tpl_vars['tips_optimization'] = $this->_displayOptimizationTips();
 
 		$smarty->assign($tpl_vars);
 	}
