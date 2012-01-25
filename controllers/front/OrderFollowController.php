@@ -46,9 +46,9 @@ class OrderFollowControllerCore extends FrontController
 				Tools::redirect('index.php?controller=history');
 			if (!$order_qte_input = Tools::getValue('order_qte_input'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
-			if ($customizationIds = Tools::getValue('customization_ids') AND !$customizationQtyInput)
+			if ($customizationIds = Tools::getValue('customization_ids') && !$customizationQtyInput)
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
-			if (!$ids_order_detail = Tools::getValue('ids_order_detail') AND !$customizationIds)
+			if (!$ids_order_detail = Tools::getValue('ids_order_detail') && !$customizationIds)
 				Tools::redirect('index.php?controller=order-follow&errorDetail2');
 
 			$order = new Order((int)($id_order));
@@ -88,7 +88,7 @@ class OrderFollowControllerCore extends FrontController
 		elseif (Tools::isSubmit('errorDetail2'))
 			$this->context->smarty->assign('errorDetail2', true);
 		elseif (Tools::isSubmit('errorNotReturnable'))
-			$this->context->smarty->assign('errorNotReturnable',true);
+			$this->context->smarty->assign('errorNotReturnable', true);
 
 		$this->context->smarty->assign('ordersReturn', $ordersReturn);
 

@@ -131,7 +131,7 @@ class OrderDetailControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
-		if (!$id_order = (int)(Tools::getValue('id_order')) OR !Validate::isUnsignedId($id_order))
+		if (!$id_order = (int)(Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order))
 			$this->errors[] = Tools::displayError('Order ID required');
 		else
 		{

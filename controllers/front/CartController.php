@@ -70,11 +70,11 @@ class CartControllerCore extends FrontController
 				$this->processChangeProductInCart();
 			else if (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
-			else if(Tools::getIsset('changeAddressDelivery'))
+			else if (Tools::getIsset('changeAddressDelivery'))
 				$this->processChangeProductAddressDelivery();
-			else if(Tools::getIsset('allowSeperatedPackage'))
+			else if (Tools::getIsset('allowSeperatedPackage'))
 				$this->processAllowSeperatedPackage();
-			else if(Tools::getIsset('duplicate'))
+			else if (Tools::getIsset('duplicate'))
 				$this->processDuplicateProduct();
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
@@ -147,14 +147,12 @@ class CartControllerCore extends FrontController
 		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
 			return;
 		
-		if (
-			!$this->context->cart->duplicateProduct(
+		if (!$this->context->cart->duplicateProduct(
 				$this->id_product,
 				$this->id_product_attribute,
 				$this->id_address_delivery,
 				(int)Tools::getValue('new_id_address_delivery')
-			)
-		)
+			))
 		{
 			//$error_message = $this->l('Error durring product duplication');
 			// For the moment no translations

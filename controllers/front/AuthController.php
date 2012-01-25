@@ -231,7 +231,7 @@ class AuthControllerCore extends FrontController
 				$addressItems[] = trim($addressItem);
 
 		// Add missing require fields for a new user susbscription form
-		foreach($requireFormFieldsList as $fieldName)
+		foreach ($requireFormFieldsList as $fieldName)
 			if (!in_array($fieldName, $addressItems))
 				$addressItems[] = trim($fieldName);
 
@@ -450,7 +450,7 @@ class AuthControllerCore extends FrontController
 			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 
 			// US customer: normalize the address
-			if($address->id_country == Country::getByIso('US'))
+			if ($address->id_country == Country::getByIso('US'))
 			{
 				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
 				$normalize = new AddressStandardizationSolution;
@@ -481,7 +481,7 @@ class AuthControllerCore extends FrontController
 			if (Country::isNeedDniByCountryId($address->id_country) && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
 				$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
 			elseif (!Country::isNeedDniByCountryId($address->id_country))
-				$address->dni = NULL;
+				$address->dni = null;
 		}
 
 		if (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) && !(Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == ''))
