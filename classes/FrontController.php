@@ -134,7 +134,7 @@ class FrontControllerCore extends Controller
 		ob_start();
 
 		// Switch language if needed and init cookie language
-		if ($iso = Tools::getValue('isolang') && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)(Language::getIdByIso($iso))))
+		if (($iso = Tools::getValue('isolang')) && Validate::isLanguageIsoCode($iso) && ($id_lang = (int)Language::getIdByIso($iso)))
 			$_GET['id_lang'] = $id_lang;
 
 		Tools::switchLanguage();
@@ -363,7 +363,7 @@ class FrontControllerCore extends Controller
 			$this->displayRestrictedCountryPage();
 
 		//live edit
-		if (Tools::isSubmit('live_edit') && $ad = Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+		if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 			if (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$ad))
 				die(Tools::displayError());
 
@@ -523,7 +523,7 @@ class FrontControllerCore extends Controller
 				$this->context->smarty->display(_PS_THEME_DIR_.'footer.tpl');
 
 			// live edit
-			if (Tools::isSubmit('live_edit') && $ad = Tools::getValue('ad') && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
+			if (Tools::isSubmit('live_edit') && ($ad = Tools::getValue('ad')) && (Tools::getValue('liveToken') == sha1(Tools::getValue('ad')._COOKIE_KEY_)))
 			{
 				$this->context->smarty->assign(array('ad' => $ad, 'live_edit' => true));
 				$this->context->smarty->display(_PS_ALL_THEMES_DIR_.'live_edit.tpl');

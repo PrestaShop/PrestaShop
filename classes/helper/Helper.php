@@ -278,7 +278,7 @@ class HelperCore
 	{
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 		$currentClass = get_class($this);
-		if(Module::getModuleNameFromClass($currentClass))
+		if (Module::getModuleNameFromClass($currentClass))
 		{
 			$string = str_replace('\'', '\\\'', $string);
 			return Module::findTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
