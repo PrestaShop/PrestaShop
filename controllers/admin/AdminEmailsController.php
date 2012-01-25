@@ -34,7 +34,7 @@ class AdminEmailsControllerCore extends AdminController
 
 		parent::__construct();
 
-		foreach (Contact::getContacts($this->context->language->id) AS $contact)
+		foreach (Contact::getContacts($this->context->language->id) as $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
  		$this->options = array(
@@ -89,7 +89,7 @@ class AdminEmailsControllerCore extends AdminController
 		if (isset($_POST['PS_SHOP_EMAIL']))
 			$_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
 
-		if ($_POST['PS_MAIL_METHOD'] == 2 AND (empty($_POST['PS_MAIL_SERVER']) OR empty($_POST['PS_MAIL_SMTP_PORT'])))
+		if ($_POST['PS_MAIL_METHOD'] == 2 && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
 			$this->errors[] = Tools::displayError('You must define a SMTP server and a SMTP port. If you do not know, use the PHP mail() function instead.');
 	}
 }

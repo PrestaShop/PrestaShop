@@ -49,15 +49,14 @@ class AdminAccountingManagementControllerCore extends AdminController
 			$id_shop = $this->context->shop->getID();
 
 			// Set default zone value to the shop	and sort it
-			foreach($zones as $zone)
+			foreach ($zones as $zone)
 			{
 					$shop['zones'][$zone['id_zone']]['name'] = $zone['name'];
 					$shop['zones'][$zone['id_zone']]['account_number'] = '';
 					$shop['name'] = $this->context->shop->name;
 			}
 			
-			$shop['default_account_number'] = Configuration::get('default_account_number', 
-					NULL, NULL, $id_shop);
+			$shop['default_account_number'] = Configuration::get('default_account_number', null, null, $id_shop);
 			ksort($shop['zones']);
 			
 			$zoneShopList = Accounting::getAccountNumberZoneShop($id_shop);
