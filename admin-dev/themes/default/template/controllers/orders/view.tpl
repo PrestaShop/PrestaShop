@@ -221,7 +221,7 @@
 				<hr />
 				{/if}
 
-				<p class="error" style="{if $orders_total_paid_tax_incl == $total_paid}display: none;{/if}">
+				<p class="error" style="{if $orders_total_paid_tax_incl == $total_paid || $currentState->id == 6}display: none;{/if}">
 					{l s='Warning:'} {displayPrice price=$total_paid currency=$currency->id}
 					{l s='paid instead of'} <span class="total_paid">{displayPrice price=$order->total_paid_tax_incl currency=$currency->id}</span>
 				</p>
