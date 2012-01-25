@@ -185,12 +185,12 @@ class AdminCmsControllerCore extends AdminController
 		return parent::renderList();
 	}
 
-	public function displayList($token = NULL)
+	public function displayList($token = null)
 	{
 		/* Display list header (filtering, pagination and column names) */
 		$this->displayListHeader($token);
-		if (!sizeof($this->_list))
-			echo '<tr><td class="center" colspan="'.(sizeof($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
+		if (!count($this->_list))
+			echo '<tr><td class="center" colspan="'.(count($this->fieldsDisplay) + 2).'">'.$this->l('No items found').'</td></tr>';
 
 		/* Show the content of the table */
 		$this->displayListContent($token);
@@ -212,15 +212,15 @@ class AdminCmsControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 
-	function postProcess()
+	public function postProcess()
 	{
-		if (Tools::isSubmit('viewcms') AND ($id_cms = (int)(Tools::getValue('id_cms'))) AND $cms = new CMS($id_cms, $this->context->language->id) AND Validate::isLoadedObject($cms))
+		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
 		{
 			$redir = $this->context->link->getCMSLink($cms);
 			if (!$cms->active)
 			{
 				$admin_dir = dirname($_SERVER['PHP_SELF']);
-				$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+				$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 				$redir .= '?adtoken='.Tools::encrypt('PreviewCMS'.$cms->id).'&ad='.$admin_dir;
 			}
 			Tools::redirectAdmin($redir);
@@ -262,10 +262,10 @@ class AdminCmsControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete here.');
 		}
-		elseif (Tools::isSubmit('submitAddcms') OR Tools::isSubmit('submitAddcmsAndPreview'))
+		elseif (Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndPreview'))
 		{
 			parent::validateRules();
-			if (!sizeof($this->errors))
+			if (!count($this->errors))
 			{
 				if (!$id_cms = (int)(Tools::getValue('id_cms')))
 				{
@@ -282,7 +282,7 @@ class AdminCmsControllerCore extends AdminController
 						if (!$cms->active)
 						{
 							$admin_dir = dirname($_SERVER['PHP_SELF']);
-							$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+							$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 							$token = Tools::encrypt('PreviewCMS'.$cms->id);
 
 							$preview_url .= $cms->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
@@ -306,7 +306,7 @@ class AdminCmsControllerCore extends AdminController
 						if (!$cms->active)
 						{
 							$admin_dir = dirname($_SERVER['PHP_SELF']);
-							$admin_dir = substr($admin_dir, strrpos($admin_dir,'/') + 1);
+							$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 							$token = Tools::encrypt('PreviewCMS'.$cms->id);
 
 							$preview_url .= $object->active ? '' : '&adtoken='.$token.'&ad='.$admin_dir;
@@ -330,7 +330,7 @@ class AdminCmsControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4'.(($id_category = (int)(Tools::getValue('id_cms_category'))) ? ('&id_cms_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		/* Change object statuts (active, inactive) */
-		elseif (Tools::isSubmit('status') AND Tools::isSubmit($this->identifier))
+		elseif (Tools::isSubmit('status') && Tools::isSubmit($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{

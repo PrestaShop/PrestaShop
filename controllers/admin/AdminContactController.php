@@ -43,11 +43,11 @@ class AdminContactControllerCore extends AdminController
 		$this->context = Context::getContext();
 		$countryList = array();
 		$countryList[] = array('id' => '0', 'name' => $this->l('Choose your country'));
-		foreach (Country::getCountries($this->context->language->id) AS $country)
+		foreach (Country::getCountries($this->context->language->id) as $country)
 			$countryList[] = array('id' => $country['id_country'], 'name' => $country['name']);
 		$stateList = array();
 		$stateList[] = array('id' => '0', 'name' => $this->l('Choose your state (if applicable)'));
-		foreach (State::getStates($this->context->language->id) AS $state)
+		foreach (State::getStates($this->context->language->id) as $state)
 			$stateList[] = array('id' => $state['id_state'], 'name' => $state['name']);
 
 		$formFields = array(
@@ -81,12 +81,12 @@ class AdminContactControllerCore extends AdminController
 		$fields = array();
 		$orderedFields = AddressFormat::getOrderedAddressFields(Configuration::get('PS_SHOP_COUNTRY_ID'), false, true);
 
-		foreach($orderedFields as $lineFields)
+		foreach ($orderedFields as $lineFields)
 			if (($patterns = explode(' ', $lineFields)))
-				foreach($patterns as $pattern)
+				foreach ($patterns as $pattern)
 					if (($key = array_search($pattern, $associatedOrderKey)))
 						$fields[$key] = $formFields[$key];
-		foreach($formFields as $key => $value)
+		foreach ($formFields as $key => $value)
 			if (!isset($fields[$key]))
 				$fields[$key] = $formFields[$key];
 

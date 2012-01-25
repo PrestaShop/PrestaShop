@@ -73,7 +73,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 	}
 
-	public function postProcess($token = NULL)
+	public function postProcess($token = null)
 	{
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 		if (Tools::isSubmit('submitAdd'.$this->table))
@@ -89,7 +89,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 			}
 		}
 		/* Change object statuts (active, inactive) */
-		elseif (isset($_GET['statuscms_category']) AND Tools::getValue($this->identifier))
+		elseif (isset($_GET['statuscms_category']) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -111,10 +111,10 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
-				if (Validate::isLoadedObject($object = $this->loadObject()) AND isset($this->fieldImageSettings))
+				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
 					// check if request at least one object with noZeroObject
-					if (isset($object->noZeroObject) AND sizeof($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
+					if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 						$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
 					else
 					{

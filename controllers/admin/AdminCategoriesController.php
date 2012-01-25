@@ -160,7 +160,7 @@ class AdminCategoriesControllerCore extends AdminController
 		asort($categories_tree);
 		$this->tpl_list_vars['categories_tree'] = $categories_tree;
 
-		if (Tools::isSubmit('submitBulkdelete'.$this->table) OR Tools::isSubmit('delete'.$this->table))
+		if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table))
 		{
 			$category = new Category(Tools::getValue('id_category'));
 			if ($category->is_root_category)
@@ -265,9 +265,9 @@ class AdminCategoriesControllerCore extends AdminController
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-		$unidentified_group_information = sprintf($this->l('%s - All persons without a customer account or unauthenticated.'), "<b>".$unidentified->name[$this->context->language->id]."</b>");
-		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), "<b>".$guest->name[$this->context->language->id]."</b>");
-		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), "<b>".$default->name[$this->context->language->id]."</b>");
+		$unidentified_group_information = sprintf($this->l('%s - All persons without a customer account or unauthenticated.'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
+		$guest_group_information = sprintf($this->l('%s - Customer who placed an order with the Guest Checkout.'), '<b>'.$guest->name[$this->context->language->id].'</b>');
+		$default_group_information = sprintf($this->l('%s - All persons who created an account on this site.'), '<b>'.$default->name[$this->context->language->id].'</b>');
 		$root_category = Category::getRootCategory();
 		$root_category = array('id_category' => $root_category->id_category, 'name' => $root_category->name);
 		$this->fields_form = array(
@@ -511,9 +511,8 @@ class AdminCategoriesControllerCore extends AdminController
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
 					if ($object->isRootCategoryForAShop())
-					{
 						$this->errors[] = Tools::displayError('You cannot remove this category because a shop uses this category as a root category.');
-					}// check if request at least one object with noZeroObject
+					// check if request at least one object with noZeroObject
 					elseif (isset($object->noZeroObject) &&
 						count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 						$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.
