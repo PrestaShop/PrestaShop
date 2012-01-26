@@ -101,7 +101,7 @@ class AdminTaxesControllerCore extends AdminController
 	 */
 	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
-		if ($value AND TaxRule::isTaxInUse($id))
+		if ($value && TaxRule::isTaxInUse($id))
 			$confirm = $this->l('This tax is currently in use in a tax rule. If you continue this tax will be removed from the tax rule, are you sure?');
 
 		$tpl_enable = $this->context->smarty->createTemplate('helper/list/list_action_enable.tpl');
@@ -189,12 +189,12 @@ class AdminTaxesControllerCore extends AdminController
 		{
 		 	/* Checking fields validity */
 			$this->validateRules();
-			if (!sizeof($this->errors))
+			if (!count($this->errors))
 			{
 				$id = (int)(Tools::getValue('id_'.$this->table));
 
 				/* Object update */
-				if (isset($id) AND !empty($id))
+				if (isset($id) && !empty($id))
 				{
 					$object = new $this->className($id);
 					if (Validate::isLoadedObject($object))
@@ -205,9 +205,7 @@ class AdminTaxesControllerCore extends AdminController
 						if (!$result)
 							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
 						elseif ($this->postImage($object->id))
-							{
-								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
-							}
+							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
 					}
 					else
 						$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
@@ -220,10 +218,8 @@ class AdminTaxesControllerCore extends AdminController
 					$this->copyFromPost($object, $this->table);
 					if (!$object->add())
 						$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
-					elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) AND $this->postImage($object->id) AND $this->_redirect)
-					{
+					elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
 						Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
-					}
 				}
 			}
 		}

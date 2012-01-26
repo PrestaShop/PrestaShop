@@ -96,7 +96,7 @@ class AdminShopControllerCore extends AdminController
 				if ((bool)$shop->id)
 				{
 					// adding button for delete this shop
-					if ($this->tabAccess['delete']  && $this->display != 'add'  && !Shop::has_dependency($shop->id))
+					if ($this->tabAccess['delete'] && $this->display != 'add' && !Shop::has_dependency($shop->id))
 						$this->toolbar_btn['delete'] = array(
 							'short' => 'Delete',
 							'href' => $this->context->link->getAdminLink('AdminShop').'&amp;id_shop='.$shop->id.'&amp;deleteshop',
@@ -143,7 +143,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$shops =  Shop::getShopWithoutUrls();
+		$shops = Shop::getShopWithoutUrls();
 		if (count($shops) && !$this->ajax)
 		{
 			foreach ($shops as $shop)
@@ -209,7 +209,7 @@ class AdminShopControllerCore extends AdminController
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 			$this->errors[] = Tools::displayError('Unable to load this shop.');
-		else if(!Shop::has_dependency($object->id))
+		else if (!Shop::has_dependency($object->id))
 			return $object->deleteCategories() && parent::processDelete($token);
 		else
 			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');

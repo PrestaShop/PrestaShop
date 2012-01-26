@@ -227,7 +227,7 @@ class AdminAccountingExportControllerCore extends AdminController
 			
 			// Bufferize line by line and write it to the file
 			// Todo :: Allow to configure the size of the buffer before flushing it
-			foreach($list as $row)
+			foreach ($list as $row)
 			{
 				$buffer = '';
 				foreach ($row as $col => $val)

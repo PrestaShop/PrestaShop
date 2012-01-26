@@ -89,7 +89,7 @@ class AdminCmsContentControllerCore extends AdminController
 			$cms_tabs = array('cms_category', 'cms');
 			// Cleaning links
 			$catBarIndex = self::$currentIndex;
-			foreach ($cms_tabs AS $tab)
+			foreach ($cms_tabs as $tab)
 				if (Tools::getValue($tab.'Orderby') && Tools::getValue($tab.'Orderway'))
 					$catBarIndex = preg_replace('/&'.$tab.'Orderby=([a-z _]*)&'.$tab.'Orderway=([a-z]*)/i', '', self::$currentIndex);
 
@@ -97,7 +97,7 @@ class AdminCmsContentControllerCore extends AdminController
 			$this->adminCMS->id_cms_category = $id_cms_category;
 			$this->content .= $this->adminCMS->renderList();
 			$this->context->smarty->assign(array(
-				'cms_breadcrumb' => getPath($catBarIndex, $id_cms_category,'','','cms'),
+				'cms_breadcrumb' => getPath($catBarIndex, $id_cms_category, '', '', 'cms'),
 			));
 		}
 
@@ -108,11 +108,11 @@ class AdminCmsContentControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && sizeof($this->adminCMSCategories->errors))
+		if (((Tools::isSubmit('submitAddcms_category') || Tools::isSubmit('submitAddcms_categoryAndStay')) && count($this->adminCMSCategories->errors))
 			|| isset($_GET['updatecms_category'])
 			|| isset($_GET['addcms_category']))
 			$this->display = 'edit_category';
-		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && sizeof($this->adminCMS->errors))
+		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->adminCMS->errors))
 			|| isset($_GET['updatecms'])
 			|| isset($_GET['addcms']))
 			$this->display = 'edit_page';
@@ -129,7 +129,7 @@ class AdminCmsContentControllerCore extends AdminController
 			|| Tools::isSubmit('viewcms')
 			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position') && !Tools::isSubmit('id_cms_category_to_move')))
 			$this->adminCMS->postProcess();
-		elseif(Tools::isSubmit('submitDelcms_category')
+		elseif (Tools::isSubmit('submitDelcms_category')
 			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
 			|| Tools::isSubmit('submitAddcms_category')
 			|| isset($_GET['deletecms_category'])

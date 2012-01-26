@@ -210,9 +210,7 @@ class AdminRequestSqlControllerCore extends AdminController
 			$this->content .= $this->renderView();
 		}
 		else if ($this->display == 'export')
-		{
 			$this->generateExport();
-		}
 		else if (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
