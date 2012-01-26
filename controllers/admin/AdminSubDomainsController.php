@@ -78,8 +78,8 @@ class AdminSubDomainsControllerCore extends AdminController
 			SELECT `id_subdomain`
 			FROM `'._DB_PREFIX_.'subdomain`
 		');
-		if (sizeof($result) === 1)
-			foreach ($result AS $row)
+		if (count($result) === 1)
+			foreach ($result as $row)
 				$this->_listSkipDelete = array($row['id_subdomain']);
 		
 		return parent::postProcess();

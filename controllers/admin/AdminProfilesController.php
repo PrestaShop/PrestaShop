@@ -75,7 +75,7 @@ class AdminProfilesControllerCore extends AdminController
 		);
 
 		$list_profile = array();
-		foreach(Profile::getProfiles($this->context->language->id) as $profil)
+		foreach (Profile::getProfiles($this->context->language->id) as $profil)
 			$list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
 
 		parent::__construct();
@@ -91,7 +91,7 @@ class AdminProfilesControllerCore extends AdminController
 		}
 		/* PrestaShop demo mode*/
 
-	 	if (isset($_GET['delete'.$this->table]) AND $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
+	 	if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
 			$this->errors[] = $this->l('For security reasons, you cannot delete the Administrator profile');
 		else
 			parent::postProcess();

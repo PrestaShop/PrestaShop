@@ -136,19 +136,21 @@ class AdminThemesControllerCore extends AdminController
 
 	}
 
-	public function renderForm(){
+	public function renderForm()
+	{
 		$getAvailableThemes = Theme::getAvailable(false);
 		$available_theme_dir = array();
 		$selected_theme_dir = null;
 		if ($this->object)
-			$selected_theme_dir= $this->object->directory;
+			$selected_theme_dir = $this->object->directory;
 		
-		foreach($getAvailableThemes as $k => $dirname)
+		foreach ($getAvailableThemes as $k => $dirname)
 		{
 			$available_theme_dir[$k]['value'] = $dirname;
 			$available_theme_dir[$k]['label'] = $dirname;
 			$available_theme_dir[$k]['id'] = $dirname;
 		};
+
 		$this->fields_form = array(
 			'tinymce' => false,
 			'legend' => array(
@@ -209,12 +211,11 @@ class AdminThemesControllerCore extends AdminController
 
 		return parent::renderForm();
 	}
-	public function renderList(){
+
+	public function renderList()
+	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
-	//	$this->_filter .= ' AND `id_parent` = '.(int)$this->_category->id.' ';
-	//	$this->_select = 'position ';
 
 		return parent::renderList();
 	}
@@ -230,9 +231,9 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$res = true;
 		$base_theme_dir = rtrim($base_theme_dir, '/').'/';
-		$base_dir = _PS_ALL_THEMES_DIR_ . $base_theme_dir;
+		$base_dir = _PS_ALL_THEMES_DIR_.$base_theme_dir;
 		$target_theme_dir = rtrim($target_theme_dir, '/').'/';
-		$target_dir = _PS_ALL_THEMES_DIR_ . $target_theme_dir;
+		$target_dir = _PS_ALL_THEMES_DIR_.$target_theme_dir;
 		$files = scandir($base_dir);
 
 		foreach ($files as $file)
@@ -252,7 +253,8 @@ class AdminThemesControllerCore extends AdminController
 		return $res;
 	}
 
-	public function processAdd($token){
+	public function processAdd($token)
+	{
 		$new_dir = Tools::getValue('directory');
 		$res = true;
 		if (Validate::isDirName($new_dir) && !is_dir(_PS_ALL_THEMES_DIR_.$new_dir))
@@ -272,7 +274,8 @@ class AdminThemesControllerCore extends AdminController
 		return parent::processAdd($token);
 	}
 
-	public function processDelete($token){
+	public function processDelete($token)
+	{
 		$obj = $this->loadObject();
 		if ($obj && $obj->isUsed())
 		{
@@ -328,22 +331,19 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	protected function _isThemeCompatible($theme_dir)
 	{
-		$all_errors='';
-		$return=true;
-		$check_version=AdminThemes::$check_features_version;
+		$return = true;
+		$check_version = AdminThemes::$check_features_version;
 
-		if (!is_file(_PS_ALL_THEMES_DIR_ . $theme_dir . '/config.xml'))
+		if (!is_file(_PS_ALL_THEMES_DIR_.$theme_dir.'/config.xml'))
 		{
 			$this->errors[] = Tools::displayError('config.xml is missing in your theme path.').'<br/>';
-			$xml=null;
+			$xml = null;
 		}
 		else
 		{
-			$xml=@simplexml_load_file(_PS_ALL_THEMES_DIR_.$theme_dir.'/config.xml');
+			$xml = @simplexml_load_file(_PS_ALL_THEMES_DIR_.$theme_dir.'/config.xml');
 			if (!$xml)
-			{
 				$this->errors[] = Tools::displayError('config.xml is not a valid xml file in your theme path.').'<br/>';
-			}
 		}
 		// will be set to false if any version node in xml is correct
 		$xml_version_too_old = true;
@@ -352,20 +352,19 @@ class AdminThemesControllerCore extends AdminController
 		// node means feature, attributes has to match
 		// the corresponding value in AdminThemes::$check_features[feature] array
 		$xmlArray = simpleXMLToArray($xml);
-		foreach($xmlArray AS $version)
+		foreach ($xmlArray as $version)
 		{
-			if (isset($version['value']) AND version_compare($version['value'], $check_version) >= 0)
+			if (isset($version['value']) && version_compare($version['value'], $check_version) >= 0)
 			{
-				$checkedFeature = array();
-				foreach (AdminThemes::$check_features AS $codeFeature => $arrConfigToCheck)
-					foreach ($arrConfigToCheck['attributes'] AS $attr => $v)
-						if (!isset($version[$codeFeature]) OR !isset($version[$codeFeature][$attr]) OR $version[$codeFeature][$attr] != $v['value'])
+				foreach (AdminThemes::$check_features as $codeFeature => $arrConfigToCheck)
+					foreach ($arrConfigToCheck['attributes'] as $attr => $v)
+						if (!isset($version[$codeFeature]) || !isset($version[$codeFeature][$attr]) || $version[$codeFeature][$attr] != $v['value'])
 							if (!$this->_checkConfigForFeatures($codeFeature, $attr)) // feature missing in config.xml file, or wrong attribute value
 								$return = false;
 				$xml_version_too_old = false;
 			}
 		}
-		if ($xml_version_too_old AND !$this->_checkConfigForFeatures(array_keys(AdminThemes::$check_features)))
+		if ($xml_version_too_old && !$this->_checkConfigForFeatures(array_keys(AdminThemes::$check_features)))
 		{
 			$this->errors[] .= Tools::displayError('config.xml theme file has not been created for this version of prestashop.');
 			$return = false;
@@ -386,12 +385,12 @@ class AdminThemesControllerCore extends AdminController
 		if (is_array($configItem))
 		{
 			foreach ($arrFeatures as $feature)
-				if (!sizeof($configItem))
+				if (!count($configItem))
 					$configItem = array_keys(AdminThemes::$check_features[$feature]['attributes']);
 			foreach ($configItem as $attr)
 			{
-				$check = $this->_checkConfigForFeatures($arrFeatures,$attr);
-				if($check == false)
+				$check = $this->_checkConfigForFeatures($arrFeatures, $attr);
+				if ($check == false)
 					$return = false;
 			}
 			return $return;
@@ -415,7 +414,7 @@ class AdminThemesControllerCore extends AdminController
 						.Tools::getAdminTokenLite(AdminThemes::$check_features[$feature]['tab']).'" ><u>'
 						.Tools::displayError('You can disable this function on this page')
 						.'</u></a>':''
-					).'<br/>' ;
+					).'<br/>';
 					$return = false;
 					break; // break for this attributes
 				}
@@ -434,7 +433,7 @@ class AdminThemesControllerCore extends AdminController
 		// new check compatibility theme feature (1.4) :
 		$val = Tools::getValue('PS_THEME');
 		Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
-		if (!empty($val) AND !$this->_isThemeCompatible($val)) // don't submit if errors
+		if (!empty($val) && !$this->_isThemeCompatible($val)) // don't submit if errors
 			unset($_POST['submitThemes'.$this->table]);
 		Tools::clearCache($this->context->smarty);
 
@@ -447,7 +446,7 @@ class AdminThemesControllerCore extends AdminController
 	public function updateOptionPsLogo()
 	{
 		$id_shop = Context::getContext()->shop->getID();
-		if (isset($_FILES['PS_LOGO']['tmp_name']) AND $_FILES['PS_LOGO']['tmp_name'])
+		if (isset($_FILES['PS_LOGO']['tmp_name']) && $_FILES['PS_LOGO']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO'], 300000))
 				$this->errors[] = $error;
@@ -469,7 +468,7 @@ class AdminThemesControllerCore extends AdminController
 	public function updateOptionPsLogoMail()
 	{
 		$id_shop = Context::getContext()->shop->getID();
-		if (isset($_FILES['PS_LOGO_MAIL']['tmp_name']) AND $_FILES['PS_LOGO_MAIL']['tmp_name'])
+		if (isset($_FILES['PS_LOGO_MAIL']['tmp_name']) && $_FILES['PS_LOGO_MAIL']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_MAIL'], 300000))
 				$this->errors[] = $error;
@@ -490,7 +489,7 @@ class AdminThemesControllerCore extends AdminController
 	public function updateOptionPsLogoInvoice()
 	{
 		$id_shop = Context::getContext()->shop->getID();
-		if (isset($_FILES['PS_LOGO_INVOICE']['tmp_name']) AND $_FILES['PS_LOGO_INVOICE']['tmp_name'])
+		if (isset($_FILES['PS_LOGO_INVOICE']['tmp_name']) && $_FILES['PS_LOGO_INVOICE']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_LOGO_INVOICE'], 300000))
 				$this->errors[] = $error;
@@ -512,7 +511,7 @@ class AdminThemesControllerCore extends AdminController
 	public function updateOptionPsStoresIcon()
 	{
 		$id_shop = Context::getContext()->shop->getID();
-		if (isset($_FILES['PS_STORES_ICON']['tmp_name']) AND $_FILES['PS_STORES_ICON']['tmp_name'])
+		if (isset($_FILES['PS_STORES_ICON']['tmp_name']) && $_FILES['PS_STORES_ICON']['tmp_name'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES['PS_STORES_ICON'], 300000))
 				$this->errors[] = $error;
@@ -535,12 +534,12 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (isset($_FILES[$name]['tmp_name']) && !empty($_FILES[$name]['tmp_name']))
 		{
-			/* Check ico validity */
+			// Check ico validity
 			if ($error = ImageManager::validateIconUpload($_FILES[$name]))
 				$this->errors[] = $error;
 
-			/* Copy new ico */
-			elseif(!copy($_FILES[$name]['tmp_name'], $dest))
+			// Copy new ico
+			elseif (!copy($_FILES[$name]['tmp_name'], $dest))
 				$this->errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
 		}
 		return !count($this->errors) ? true : false;

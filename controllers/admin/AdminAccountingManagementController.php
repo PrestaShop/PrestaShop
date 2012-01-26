@@ -62,7 +62,7 @@ class AdminAccountingManagementControllerCore extends AdminController
 			$zoneShopList = Accounting::getAccountNumberZoneShop($id_shop);
 	
 			// Set Account number to the id_zone for the id_shop if exist
-			foreach($zoneShopList as $zoneShop)
+			foreach ($zoneShopList as $zoneShop)
 				$shop['zones'][$zoneShop['id_zone']]['account_number'] = $zoneShop['account_number'];
 		}
 		
@@ -111,15 +111,15 @@ class AdminAccountingManagementControllerCore extends AdminController
 		Configuration::updateValue(
 			'default_account_number',
 			Tools::getValue('default_account_number'),
-			false, NULL, 
+			false, null,
 			$id_shop);
 		
 		// If zone still exist, then update the database with the new value
 		if (count($zones = Zone::getZones()))
 		{
 			$tab = array();
-			foreach($zones as $zone)
-				if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== NULL)
+			foreach ($zones as $zone)
+				if (($num = Tools::getValue('zone_'.$zone['id_zone'])) !== null)
 					$tab[] = array(
 						'id_zone' => $zone['id_zone'],
 						'id_shop' => $id_shop,

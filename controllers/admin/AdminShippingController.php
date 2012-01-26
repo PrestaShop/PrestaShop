@@ -34,8 +34,8 @@ class AdminShippingControllerCore extends AdminController
 		parent::__construct();
 	 	$this->table = 'delivery';
 
-		$carriers = Carrier::getCarriers($this->context->language->id, true , false, false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-		foreach ($carriers AS $key => $carrier)
+		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
 
@@ -91,8 +91,8 @@ class AdminShippingControllerCore extends AdminController
 
 	public function initContent()
 	{
-		$carriers = Carrier::getCarriers($this->context->language->id, true , false, false, NULL, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-		foreach ($carriers AS $key => $carrier)
+		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
 
@@ -114,7 +114,7 @@ class AdminShippingControllerCore extends AdminController
 		$ranges = $rangeObj->getRanges($id_carrier);
 		$delivery = Carrier::getDeliveryPriceByRanges($rangeTable, $id_carrier);
 		$deliveryArray = array();
-		foreach ($delivery AS $deliv)
+		foreach ($delivery as $deliv)
 			$deliveryArray[$deliv['id_zone']][$deliv['id_carrier']][$deliv[$rangeIdentifier]] = $deliv['price'];
 
 		$this->context->smarty->assign(array(
@@ -140,7 +140,7 @@ class AdminShippingControllerCore extends AdminController
 		{
 		 	if ($this->tabAccess['edit'] === '1')
 			{
-				if (($id_carrier = (int)(Tools::getValue('id_carrier'))) AND $id_carrier == ($id_carrier2 = (int)(Tools::getValue('id_carrier2'))))
+				if (($id_carrier = (int)(Tools::getValue('id_carrier'))) && $id_carrier == ($id_carrier2 = (int)(Tools::getValue('id_carrier2'))))
 				{
 					$carrier = new Carrier($id_carrier);
 					if (Validate::isLoadedObject($carrier))
@@ -154,7 +154,7 @@ class AdminShippingControllerCore extends AdminController
 
 						/* Build prices list */
 						$priceList = array();
-						foreach ($_POST AS $key => $value)
+						foreach ($_POST as $key => $value)
 							if (strstr($key, 'fees_'))
 							{
 								$tmpArray = explode('_', $key);
@@ -183,9 +183,7 @@ class AdminShippingControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('An error occurred while updating fees (cannot load carrier object).');
 				}
 				elseif (isset($id_carrier2))
-				{
 					$_POST['id_carrier'] = $id_carrier2;
-				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating fees (cannot load carrier object).');
 			}
