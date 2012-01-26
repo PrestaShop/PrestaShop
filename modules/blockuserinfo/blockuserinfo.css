@@ -44,6 +44,12 @@
 	line-height: 11px;
 	border-left:1px solid #000
 }
+#header_user_info a.account {
+	border: none;
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
 *:first-child+html #header_user_info a {line-height:14px;}
 #header_user_info a.login {background: url('img/icon/login.gif') no-repeat 10px 0}
 #header_user_info a.logout {background: url('img/icon/logout.png') no-repeat 10px -1px}
