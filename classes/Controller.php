@@ -239,20 +239,20 @@ abstract class ControllerCore
 				{
 					$css_path = Media::getCSSPath($css_file, $media);
 					if ($css_path)
-						$this->css_files = array_merge($css_path, $this->css_files);
+						$this->css_files = array_merge($this->css_files, $css_path);
 				}
 				else
 				{
 					$css_path = Media::getCSSPath($media, $css_media_type);
 					if ($css_path)
-						$this->css_files = array_merge($css_path, $this->css_files);
+						$this->css_files = array_merge($this->css_files, $css_path);
 				}
 			}
 		else if (is_string($css_uri) && strlen($css_uri) > 1)
 		{
 			$css_path = Media::getCSSPath($css_uri, $css_media_type);
 			if ($css_path)
-				$this->css_files = array_merge($css_path, $this->css_files);
+				$this->css_files = array_merge($this->css_files, $css_path);
 		}
 	}
 
