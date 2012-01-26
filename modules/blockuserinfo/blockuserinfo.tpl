@@ -52,7 +52,7 @@
 	<p id="header_user_info">
 		{l s='Welcome' mod='blockuserinfo'}
 		{if $logged}
-			<span>{$cookie->customer_firstname} {$cookie->customer_lastname}</span>
+			<a href="{$link->getPageLink('my-account', true)}" class="account"><span>{$cookie->customer_firstname} {$cookie->customer_lastname}</span></a>
 			<a href="{$link->getPageLink('index', true, NULL, "mylogout")}" title="{l s='Log me out' mod='blockuserinfo'}" class="logout">{l s='Log out' mod='blockuserinfo'}</a>
 		{else}
 			<a href="{$link->getPageLink('my-account', true)}" class="login">{l s='Log in' mod='blockuserinfo'}</a>
