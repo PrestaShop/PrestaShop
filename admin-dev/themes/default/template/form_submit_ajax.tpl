@@ -26,12 +26,12 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#formAdd{$table}').submit(function(e) {
+		$('#{$table}_form').submit(function(e) {
 			e.preventDefault();
 			var form_datas = new Object;
 			form_datas['liteDisplaying'] = 1;
-			var form_inputs = $('#formAdd{$table} input, #formAdd{$table} textarea, #formAdd{$table} button');
-			var form_selects = $('#formAdd{$table} select');
+			var form_inputs = $('#{$table}_form input, #{$table}_form textarea, #{$table}_form button');
+			var form_selects = $('#{$table}_form select');
 			$.each(form_inputs, function() {
 				if (this.type == 'radio' || this.type == 'checkbox')
 					if (!this.checked)

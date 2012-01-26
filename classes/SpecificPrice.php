@@ -219,8 +219,9 @@ class SpecificPriceCore extends ObjectModel
 	public static function setPriorities($priorities)
 	{
 		$value = '';
-		foreach ($priorities as $priority)
-			$value .= pSQL($priority).';';
+		if (is_array($priorities))
+			foreach ($priorities as $priority)
+				$value .= pSQL($priority).';';
 
         SpecificPrice::deletePriorities();
 

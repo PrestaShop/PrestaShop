@@ -878,6 +878,19 @@ class AdminCustomersControllerCore extends AdminController
 
 		return $tpl->fetch();
 	}
+	
+	/**
+	* Search customers
+	*/
+	public function ajaxProcessSearchCustomers()
+	{
+		if ($customers = Customer::searchByName(pSQL(Tools::getValue('customer_search'))))
+			$to_return = array('customers' => $customers, 'found' => true);
+		else
+			$to_return = array('found' => false);
+
+		$this->content = Tools::jsonEncode($to_return);
+	}
 }
 
 
