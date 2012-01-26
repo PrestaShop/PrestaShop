@@ -432,7 +432,7 @@
 		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
 
-	<div class="container-command">
+	<div class="container-command container-command-top-spacing">
 		<!-- Addresses -->
 		<div style="width: 49%; float:left;"></contact>
 			<!-- Shipping address -->
@@ -495,7 +495,7 @@
 		<div class="clear" style="margin-bottom: 10px;"></div>
 	</div>
 
-	<form style="width: 98%" action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
+	<form style="width: 98%" class="container-command-top-spacing" action="{$currentIndex}&vieworder&token={$smarty.get.token}" method="post" onsubmit="return orderDeleteProduct('{l s='Cannot return this product'}', '{l s='Quantity to cancel is greater than quantity available'}');">
 		<input type="hidden" name="id_order" value="{$order->id}" />
 		<fieldset style="width: 100%; ">
 			<div style="display: none">

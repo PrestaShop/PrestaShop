@@ -2141,6 +2141,7 @@ div#scrollTop a:hover{
 
 /*commandes*/
 .container-command {width:100%}
+.container-command-top-spacing {margin-top: 25px;}
 .bloc-command {background-color:#EBEDF4; border:1px solid #CCCED7; margin-bottom:10px;}
 .button-command {float:right; padding:10px;}
 
