@@ -358,20 +358,32 @@ class AdminCustomersControllerCore extends AdminController
 					'values' => $groups,
 					'required' => true,
 					'desc' => $this->l('Check all the box(es) of groups of which the customer is to be a member')
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Default group:'),
-					'name' => 'id_default_group',
-					'options' => array(
-						'query' => $groups,
-						'id' => 'id_group',
-						'name' => 'name'
-					),
-					'hint' => $this->l('The group will be as applied by default.'),
-					'desc' => $this->l('Apply the discount\'s price of this group.')
 				)
 			)
+		);
+
+		// if we add a customer via fancybox (ajax), it's a customer and he doesn't need to be added to the visitor and guest groups
+		if (Tools::isSubmit('addcustomer') && Tools::isSubmit('submitFormAjax'))
+		{
+			$visitor_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+			$guest_group = Configuration::get('PS_GUEST_GROUP');
+			foreach ($groups as $key => $g)
+				if (in_array($g['id_group'], array($visitor_group, $guest_group)))
+					unset($groups[$key]);
+		}
+
+		$this->fields_form['input'][] =
+		array(
+			'type' => 'select',
+			'label' => $this->l('Default group:'),
+			'name' => 'id_default_group',
+			'options' => array(
+				'query' => $groups,
+				'id' => 'id_group',
+				'name' => 'name'
+			),
+			'hint' => $this->l('The group will be as applied by default.'),
+			'desc' => $this->l('Apply the discount\'s price of this group.')
 		);
 
 		// if customer is a guest customer, password hasn't to be there
