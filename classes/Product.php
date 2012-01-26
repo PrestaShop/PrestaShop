@@ -671,11 +671,12 @@ class ProductCore extends ObjectModel
 	public function deleteSelection($products)
 	{
 		$return = 1;
-		foreach ($products as $id_product)
-		{
-			$product = new Product((int)$id_product);
-			$return &= $product->delete();
-		}
+		if (is_array($products) && count($products))
+			foreach ($products as $id_product)
+			{
+				$product = new Product((int)$id_product);
+				$return &= $product->delete();
+			}
 		return $return;
 	}
 
@@ -1500,16 +1501,16 @@ class ProductCore extends ObjectModel
 		);
 
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'product_attribute`
-				WHERE `id_product_attribute` = '.$id_product_attribute.'
-					AND `id_product` = '.$this->id;
+				WHERE `id_product_attribute` = '.(int)$id_product_attribute.'
+					AND `id_product` = '.(int)$this->id;
 		$result = Db::getInstance()->execute($sql);
 
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'product_attribute_combination`
-				WHERE `id_product_attribute` = '.$id_product_attribute;
+				WHERE `id_product_attribute` = '.(int)$id_product_attribute;
 		$result2 = Db::getInstance()->execute($sql);
 
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product_attribute` = '.$id_product_attribute;
+				WHERE `id_product_attribute` = '.(int)$id_product_attribute;
 		$result3 = Db::getInstance()->execute($sql);
 		return ($result && $result2 && $result3);
 	}

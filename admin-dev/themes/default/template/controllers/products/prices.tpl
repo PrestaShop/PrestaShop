@@ -25,7 +25,7 @@
 *}
 
 {* BEGIN CUSTOMER AUTO-COMPLETE / TO REFACTO *}
-{literal}
+
 <script type="text/javascript">
 var Customer = {
 	"hiddenField": jQuery('#id_customer'),
@@ -41,13 +41,13 @@ var Customer = {
 		}).focus(Customer.placeholderIn).blur(Customer.placeholderOut);
 	},
 	"placeholderIn": function() {
-		if (this.value == '{/literal}{l s='All customers'}{literal}') {
+		if (this.value == '{l s='All customers'}') {
 			this.value = '';
 		}
 	},
 	"placeholderOut": function() {
 		if (this.value == '') {
-			this.value = '{/literal}{l s='All customers'}{literal}';
+			this.value = '{l s='All customers'}';
 		}
 	},
 	"search": function()
@@ -55,13 +55,13 @@ var Customer = {
 		Customer.showLoader();
 		jQuery.ajax({
 			"type": "POST",
-			"url": "{/literal}{$link->getAdminLink('AdminProducts')}{literal}",
+			"url": "{$link->getAdminLink('AdminCustomers')}",
 			"async": true,
 			"dataType": "json",
 			"data": {
 				"ajax": "1",
-				"token": "{/literal}{$token}{literal}",
-				"tab": "AdminProducts",
+				"token": "{getAdminToken tab='AdminCustomers'}",
+				"tab": "AdminCustomers",
 				"action": "searchCustomers",
 				"customer_search": Customer.field.val()
 			},
@@ -73,14 +73,14 @@ var Customer = {
 		if(result.found) {
 			var html = '<ul class="clearfix">';
 			jQuery.each(result.customers, function() {
-				html += '<li><a class="fancybox" href="{/literal}{$link->getAdminLink('AdminCustomers')}{literal}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
+				html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
 				html += '<a href="mailto:'+this.email+'">'+this.email+'</a><br />';
-				html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{/literal}{l s='Choose'}{literal}</a></li>';
+				html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{l s='Choose'}</a></li>';
 			});
 			html += '</ul>';
 		}
 		else
-			html = '<div class="warn">{/literal}{l s='No customers found'}{literal}</div>';
+			html = '<div class="warn">{l s='No customers found'}</div>';
 		Customer.hideLoader();
 		Customer.container.html(html);
 		jQuery('.fancybox', Customer.container).fancybox();
@@ -101,7 +101,7 @@ var Customer = {
 };
 jQuery(document).ready(Customer.init);
 </script>
-{/literal}
+
 {* END CUSTOMER AUTO-COMPLETE / TO REFACTO *}
 
 <h4>{l s='Product price'}</h4>
