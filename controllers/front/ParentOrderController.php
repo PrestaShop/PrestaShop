@@ -116,7 +116,7 @@ class ParentOrderControllerCore extends FrontController
 						'discount_name' => Tools::safeOutput($code)
 					));
 				}
-				elseif ($id_cart_rule = (int)Tools::getValue('deleteDiscount') && Validate::isUnsignedId($id_cart_rule))
+				elseif (($id_cart_rule = (int)Tools::getValue('deleteDiscount')) && Validate::isUnsignedId($id_cart_rule))
 				{
 					$this->context->cart->removeCartRule($id_cart_rule);
 					Tools::redirect('index.php?controller=order-opc');

@@ -693,7 +693,7 @@ class CartCore extends ObjectModel
 	public function addCartRule($id_cart_rule)
 	{
 		// You can't add a cart rule that does not exist
-		$cartRule = new CartRule($id_cart_rule, Context::getContext()->lang->id);
+		$cartRule = new CartRule($id_cart_rule, Context::getContext()->language->id);
 		if (!Validate::isLoadedObject($cartRule))
 			return false;
 		
