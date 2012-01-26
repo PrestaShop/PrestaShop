@@ -32,7 +32,6 @@
 			<div class="warn">
 				<b>{l s='If you want to be able to fully use the AdminModules pannel and have free modules available, you should enable the following configuration on your server :'}</b><br />
 				{if $check_url_fopen eq 'ko'}- {l s='Enable allow_url_fopen'}<br />{/if}
-				{if $check_curl eq 'ko'}- {l s='Enable php curl extension'}<br />{/if}
 				{if $check_openssl eq 'ko'}- {l s='Enable php openssl extension'}<br />{/if}
 			</div>
 			
