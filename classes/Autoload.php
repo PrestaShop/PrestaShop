@@ -154,11 +154,11 @@ class Autoload
 			if (!$integrity_is_ok)
 			{
 				file_put_contents($filename, '<?php return array(); ?>');
-				throw new Exception('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
+				throw new PrestashopException('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
 			}
 		}
 		else
-			throw new Exception($filename.' is not writable!');
+			throw new PrestashopException($filename.' is not writable!');
 
 		$this->index = $classes;
 	}
