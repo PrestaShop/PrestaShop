@@ -54,7 +54,7 @@ class Autoload
 	{
 		$this->root_dir = dirname(dirname(__FILE__)).'/';
 		if (file_exists($this->root_dir.Autoload::INDEX_FILE))
-			$this->index = include_once($this->root_dir.Autoload::INDEX_FILE);
+			$this->index = include($this->root_dir.Autoload::INDEX_FILE);
 	}
 
 	/**
@@ -129,12 +129,34 @@ class Autoload
 			$this->getClassesFromDir('override/controllers/')
 		);
 		ksort($classes);
-		$content = '<?php return '.var_export($classes, true).';';
+		$content = '<?php return '.var_export($classes, true).'; ?>';
 
 		// Write classes index on disc to cache it
 		$filename = $this->root_dir.Autoload::INDEX_FILE;
 		if ((file_exists($filename) && is_writable($filename)) || is_writable(dirname($filename)))
-			file_put_contents($filename, $content);
+		{
+			// Let's write index content in cache file
+			// In order to be sure that this file is correctly written, a check is done on the file content
+			$loop_protection = 0;
+			do
+			{
+				$integrity_is_ok = false;
+				file_put_contents($filename, $content);
+				if ($loop_protection++ > 10)
+					break;
+
+				// If the file content end with PHP tag, integrity of the file is ok
+				if (preg_match('#\?>\s*$#', file_get_contents($filename)))
+					$integrity_is_ok = true;
+			}
+			while (!$integrity_is_ok);
+
+			if (!$integrity_is_ok)
+			{
+				file_put_contents($filename, '<?php return array(); ?>');
+				throw new Exception('Your file '.$filename.' is corrupted. Please remove this file, a new one will be regenerated automatically');
+			}
+		}
 		else
 			throw new Exception($filename.' is not writable!');
 
