@@ -1002,7 +1002,7 @@ class ProductCore extends ObjectModel
 	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
 	 * @see ProductSupplier for manage supplier reference(s)
 	 *
-	 * @deprecated
+	 * @deprecated since 1.5.0
 	 */
 	public function addProductAttribute($price, $weight, $unit_impact, $ecotax, $quantity, $id_images, $reference,
 		$supplier_reference = null, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1)
@@ -2423,10 +2423,10 @@ class ProductCore extends ObjectModel
 		// Group reduction
 		if ($use_group_reduction)
 		{
-		if ($reduction_from_category = (float)GroupReduction::getValueForProduct($id_product, $id_group))
-			$price -= $price * $reduction_from_category;
-		else // apply group reduction if there is no group reduction for this category
-			$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
+			if ($reduction_from_category = (float)GroupReduction::getValueForProduct($id_product, $id_group))
+				$price -= $price * $reduction_from_category;
+			else // apply group reduction if there is no group reduction for this category
+				$price *= ((100 - Group::getReductionByIdGroup($id_group)) / 100);
 		}
 
 		$price = Tools::ps_round($price, $decimals);
@@ -4649,7 +4649,7 @@ class ProductCore extends ObjectModel
 	{
 		$query = new DbQuery;
 		$query->select('p.advanced_stock_management');
-		$query->from('products', 'p');
+		$query->from('product', 'p');
 		$query->where('p.id_product = '.(int)$id_product);
 
 		return (bool)Db::getInstance()->getValue($query);
