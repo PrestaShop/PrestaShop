@@ -3288,8 +3288,8 @@ class AdminProductsControllerCore extends AdminController
 
 					foreach ($product_attribute['attributes'] as $attribute)
 					{
-						$list .= addslashes(htmlspecialchars($attribute[0])).' - '.addslashes(htmlspecialchars($attribute[1])).', ';
-						$js_list .= '\''.addslashes(htmlspecialchars($attribute[0])).' : '.addslashes(htmlspecialchars($attribute[1])).'\', \''.$attribute[2].'\', ';
+						$list .= htmlspecialchars($attribute[0]).' - '.htmlspecialchars($attribute[1]).', ';
+						$js_list .= '\''.htmlspecialchars($attribute[0]).' : '.htmlspecialchars($attribute[1]).'\', \''.$attribute[2].'\', ';
 					}
 					$list = rtrim($list, ', ');
 					$js_list = rtrim($js_list, ', ');
