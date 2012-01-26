@@ -293,7 +293,7 @@ class AdminOrdersControllerCore extends AdminController
 					// TODO review
 					$rules = call_user_func(array('Message', 'getValidationRules'), 'Message');
 					foreach ($rules['required'] as $field)
-						if (($value = Tools::getValue($field)) == false || (string)$value != '0')
+						if (($value = Tools::getValue($field)) == false && (string)$value != '0')
 							if (!Tools::getValue('id_'.$this->table) || $field != 'passwd')
 								$this->errors[] = Tools::displayError('field').' <b>'.$field.'</b> '.Tools::displayError('is required.');
 					foreach ($rules['size'] as $field => $maxLength)
