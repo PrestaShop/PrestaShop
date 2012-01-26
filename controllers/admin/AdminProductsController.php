@@ -1589,14 +1589,14 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function _removeTaxFromEcotax()
 	{
-	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
+		$ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($ecotax = Tools::getValue('ecotax'))
 			$_POST['ecotax'] = Tools::ps_round(Tools::getValue('ecotax') / (1 + $ecotaxTaxRate / 100), 6);
 	}
 
 	protected function _applyTaxToEcotax($product)
 	{
-	    $ecotaxTaxRate = Tax::getProductEcotaxRate();
+		$ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($product->ecotax)
 			$product->ecotax = Tools::ps_round($product->ecotax * (1 + $ecotaxTaxRate / 100), 2);
 	}
@@ -2056,6 +2056,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->display = 'edit';
 		$this->tpl_form_vars['token'] = $this->token;
 		$this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
+		$this->tpl_form_vars['post_data'] = Tools::jsonEncode($_POST);
 
 		// autoload rich text editor (tiny mce)
 		$this->tpl_form_vars['tinymce'] = true;
@@ -2480,7 +2481,7 @@ class AdminProductsControllerCore extends AdminController
 					'selected_cat_ids' => implode(',', array_keys($selected_cat)),
 					'selected_cat' => $selected_cat,
 					'category_tree' => $helper->renderCategoryTree(null, $selected_cat, 'categoryBox', false, true),
-				  	'product' => $product,
+					'product' => $product,
 					'link' => $this->context->link
 		));
 
@@ -2602,7 +2603,7 @@ class AdminProductsControllerCore extends AdminController
 			'languages' => $languages,
 			'default_language' => $default_language,
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
-			'is_pack' => ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack'),
+			'is_pack' => ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack') || Tools::getValue('type_product') == Product::PTYPE_PACK,
 			'input_pack_items' => $input_pack_items,
 			'input_namepack_items' => $input_namepack_items
 		));
@@ -3742,7 +3743,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function initPack(Product $product)
 	{
-		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack');
+		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack') || Tools::getValue('type_product') == Product::PTYPE_PACK;
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
 		$input_pack_items = '';
