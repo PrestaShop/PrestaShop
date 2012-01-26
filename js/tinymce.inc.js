@@ -19,7 +19,7 @@ function tinySetup(config)
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : false,
-        content_css : pathCSS+"global.css",
+		content_css : pathCSS+"global.css",
 		document_base_url : ad,
 		width: "600",
 		height: "auto",
@@ -28,8 +28,7 @@ function tinySetup(config)
 		file_browser_callback : "ajaxfilemanager",
 		entity_encoding: "raw",
 		convert_urls : false,
-        language : iso
-		
+		language : iso
 	}
 
 	$.each(default_config, function(index, el)

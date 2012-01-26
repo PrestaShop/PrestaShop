@@ -1004,7 +1004,10 @@ $(document).ready(function(){
 
 	view.bind("scroll", function(e) {
 		var heightView = view.height();
-		var btnPlace = scroll.offset().top;
+		if (scroll.offset())
+			var btnPlace = scroll.offset().top;
+		else
+			var btnPlace = 0;
 		if (heightView < btnPlace)
 			scroll.show();
 		else
