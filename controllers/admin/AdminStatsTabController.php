@@ -154,7 +154,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	{
 		$tpl = $this->createTemplate('stats.tpl');
 
-		if (!($module_name = Tools::getValue('module')) && $module_instance = Module::getInstanceByName('statsforecast') AND $module_instance->active)
+		if (!($module_name = Tools::getValue('module')) && ($module_instance = Module::getInstanceByName('statsforecast')) && $module_instance->active)
 			$module_name = 'statsforecast';
 
 		if ($module_name)
