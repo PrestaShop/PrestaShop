@@ -1,28 +1,3 @@
-{*
-* 2007-2011 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*}
 <label>{l s='Limit to a single customer'}</label>
 <div class="margin-form">
 	<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
@@ -58,10 +33,12 @@
 <label>{l s='Total available'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
+	<p>{l s='The cart rule will be applied to the X first customers only.'}</p>
 </div>
 <label>{l s='Total available for each user'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
+	<p>{l s='A customer will only be able to use the cart rule X time(s).'}</p>
 </div>
 {if $countries.unselected|@count + $countries.selected|@count > 1}
 <br />
@@ -192,22 +169,14 @@
 </div>
 {/if}
 <br />
-<input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rules|@count}checked="checked"{/if} /> <strong>{l s='Product selection'}</strong>
-<div id="product_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:10px 10px 10px 10px;background-color:#FFF5D3">
-	{l s='Add a filter on'}
-	<select id="product_rule_type">
-		<option value="">{l s='-- Choose --'}</option>
-		<option value="products">{l s='Products'}</option>
-		<option value="attributes">{l s='Attributes'}</option>
-		<option value="categories">{l s='Categories'}</option>
-	</select>
-	<a href="javascript:addProductRule();">
-		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Add'}
-	</a>
-	<hr />
-	<table id="product_rule_table" class="table" cellpadding="0" cellspacing="0">
-		{foreach from=$product_rules item='product_rule'}
-			{$product_rule}
+<input type="checkbox" id="product_restriction" name="product_restriction" value="1" {if $product_rule_groups|@count}checked="checked"{/if} /> <strong>{l s='Product selection'}</strong>
+<div id="product_restriction_div">
+	<table id="product_rule_group_table" style="border:1px solid #AAAAAA;margin:10px 0 10px 0;padding:10px 10px 10px 10px;background-color:#FFF5D3;width:600px" cellpadding="0" cellspacing="0">
+		{foreach from=$product_rule_groups item='product_rule_group'}
+			{$product_rule_group}
 		{/foreach}
 	</table>
+	<a href="javascript:addProductRuleGroup();">
+		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Add a new rule group'}
+	</a>
 </div>

@@ -330,7 +330,7 @@ abstract class PaymentModuleCore extends Module
 
 						if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED'))
 						{
-							// Create a new instance of Cart Rule without id_lang, in order to update it quantity
+							// Create a new instance of Cart Rule without id_lang, in order to update its quantity
 							$cart_rule_to_update = new CartRule($cart_rule_obj->id);
 							$cart_rule_to_update->quantity = $cart_rule_to_update->quantity - 1;
 							$cart_rule_to_update->update();
