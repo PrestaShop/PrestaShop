@@ -35,11 +35,11 @@
 	<div>
 		<label class="text">{l s='Type:'}</label>
 		<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" />
-		<label class="radioCheck">{l s='Product'}</label>
+		<label class="radioCheck" for="simple_product">{l s='Product'}</label>
 		<input type="radio" name="type_product" id="pack_product" value="{Product::PTYPE_PACK}" {if $is_pack}checked="checked"{/if} />
-		<label class="radioCheck">{l s='Pack'}</label>
+		<label class="radioCheck" for="pack_product">{l s='Pack'}</label>
 		<input type="radio" name="type_product" id="virtual_product" value="{Product::PTYPE_VIRTUAL}" />
-		<label class="radioCheck">{l s='Virtual Product (services, booking and downloadable products)'}</label>
+		<label class="radioCheck" for="virtual_product">{l s='Virtual Product (services, booking and downloadable products)'}</label>
 	</div>
 
 	<div class="separation"></div>
