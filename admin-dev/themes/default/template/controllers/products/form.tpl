@@ -66,7 +66,7 @@
 
 {block name="defaultForm"}
 	<div>
-	 	<div class="productTabs" style="display:none;">
+		<div class="productTabs" style="display:none;">
 			<ul class="tab">
 			{foreach $product_tabs key=numStep item=tab}
 				<li class="tab-row">
@@ -82,6 +82,7 @@
 		var toload = new Array();
 		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}';
 		$('#product-tab-content-wait').show();
+		var post_data = {$post_data};
 
 		$(document).ready(function()
 		{
@@ -273,18 +274,18 @@
 	{***********************************************}
 	{********** TO CHECK !!!!!!!!!!!!!!! ***********}
 	<script type="text/javascript">
-	    // <![CDATA[
-	    	ThickboxI18nImage = "{l s='Image'}";
-	    	ThickboxI18nOf = "{l s='of'}";
-	    	ThickboxI18nClose = "{l s='Close'}";
-	    	ThickboxI18nOrEscKey = "{l s='(or "Esc")'}";
-	    	ThickboxI18nNext = "{l s='Next >'}";
-	    	ThickboxI18nPrev = "{l s='< Previous'}";
-	    	tb_pathToImage = "../img/loadingAnimation.gif";
-	    //]]>
+		// <![CDATA[
+			ThickboxI18nImage = "{l s='Image'}";
+			ThickboxI18nOf = "{l s='of'}";
+			ThickboxI18nClose = "{l s='Close'}";
+			ThickboxI18nOrEscKey = "{l s='(or "Esc")'}";
+			ThickboxI18nNext = "{l s='Next >'}";
+			ThickboxI18nPrev = "{l s='< Previous'}";
+			tb_pathToImage = "../img/loadingAnimation.gif";
+		//]]>
 	</script>
 
-    <div id="product-tab-content-wait" style="display:none"><div id="loading">{l s='Loading...'}</div></div>
+	<div id="product-tab-content-wait" style="display:none"><div id="loading">{l s='Loading...'}</div></div>
 
 	<form id="product_form" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
 		<input type="hidden" name="id_product" value="{$id_product}" />
