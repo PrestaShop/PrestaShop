@@ -35,7 +35,7 @@ class OrderControllerCore extends ParentOrderController
 	 */
 	public function init()
 	{
-		global $isVirtualCart, $orderTotal;
+		global $orderTotal;
 
 		parent::init();
 
