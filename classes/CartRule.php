@@ -477,8 +477,6 @@ class CartRuleCore extends ObjectModel
 			if ($this->minimum_amount_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
 			{
 				$minimumAmountCurrency = new Currency($this->minimum_amount_currency);
-				//p($this->minimum_amount_currency);
-
 				if ($this->minimum_amount == 0 || $minimumAmountCurrency->conversion_rate == 0)
 					$minimum_amount = 0;
 				else

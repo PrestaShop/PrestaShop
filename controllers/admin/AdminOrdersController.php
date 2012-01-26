@@ -930,33 +930,63 @@ class AdminOrdersControllerCore extends AdminController
 									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
 								}
 							}
+							else
+							{
+								$cart_rules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
+								$cart_rules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
+							}
 							break;
 						default:
 							$this->errors[] = Tools::displayError('Discount type is invalid');
 					}
 
 					$res = true;
-					foreach ($cart_rules as $id_order_invoice => $cart_rule)
+					foreach ($cart_rules as &$cart_rule)
 					{
-						// Create OrderCartRule
-						$order_cart_rule = new OrderCartRule();
-						$order_cart_rule->id_order = $order->id;
-						$order_cart_rule->id_order_invoice = $id_order_invoice;
-						$order_cart_rule->name = Tools::getValue('discount_name');
-						$order_cart_rule->value = $cart_rule['value_tax_incl'];
-						$order_cart_rule->value_tax_excl = $cart_rule['value_tax_excl'];
-						$res &= $order_cart_rule->add();
-
-						$order->total_discounts += $order_cart_rule->value;
-						$order->total_discounts_tax_incl += $order_cart_rule->value;
-						$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
-						$order->total_paid -= $order_cart_rule->value;
-						$order->total_paid_tax_incl -= $order_cart_rule->value;
-						$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
+						$cartRuleObj = new CartRule();
+						$cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
+						$cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
+						$cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('discount_name');
+						$cartRuleObj->quantity = 0;
+						$cartRuleObj->quantity_per_user = 1;
+						if (Tools::getValue('discount_type') == 1)
+							$cartRuleObj->reduction_percent = Tools::getValue('discount_value');
+						elseif (Tools::getValue('discount_type') == 2)
+							$cartRuleObj->reduction_amount = $cart_rule['value_tax_excl'];
+						elseif (Tools::getValue('discount_type') == 3)
+							$cartRuleObj->free_shipping = 1;
+						$cartRuleObj->active = 0;
+						if ($res = $cartRuleObj->add())
+							$cart_rule['id'] = $cartRuleObj->id;
+						else
+							break;
 					}
+					
+					if ($res)
+					{
+						foreach ($cart_rules as $id_order_invoice => $cart_rule)
+						{
+							// Create OrderCartRule
+							$order_cart_rule = new OrderCartRule();
+							$order_cart_rule->id_order = $order->id;
+							$order_cart_rule->id_cart_rule = $cart_rule['id'];
+							$order_cart_rule->id_order_invoice = $id_order_invoice;
+							$order_cart_rule->name = Tools::getValue('discount_name');
+							$order_cart_rule->value = $cart_rule['value_tax_incl'];
+							$order_cart_rule->value_tax_excl = $cart_rule['value_tax_excl'];
+							$res &= $order_cart_rule->add();
 
-					// Update Order
-					$res &= $order->update();
+							$order->total_discounts += $order_cart_rule->value;
+							$order->total_discounts_tax_incl += $order_cart_rule->value;
+							$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
+							$order->total_paid -= $order_cart_rule->value;
+							$order->total_paid_tax_incl -= $order_cart_rule->value;
+							$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
+						}
+
+						// Update Order
+						$res &= $order->update();
+					}
 
 					if ($res)
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
