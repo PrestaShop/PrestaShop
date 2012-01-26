@@ -644,4 +644,4 @@
   'WebserviceSpecificManagementSearchCore' => 'classes/webservice/WebserviceSpecificManagementSearch.php',
   'Zone' => 'override/classes/Zone.php',
   'ZoneCore' => 'classes/Zone.php',
-);
+); ?>
