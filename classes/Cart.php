@@ -692,10 +692,19 @@ class CartCore extends ObjectModel
 
 	public function addCartRule($id_cart_rule)
 	{
-		return Db::getInstance()->insert('cart_cart_rule', array(
+		// You can't add a cart rule that does not exist
+		$cartRule = new CartRule($id_cart_rule, Context::getContext()->lang->id);
+		if (!Validate::isLoadedObject($cartRule))
+			return false;
+		
+		// Add the cart rule to the cart
+		if (!Db::getInstance()->insert('cart_cart_rule', array(
 			'id_cart_rule' => (int)$id_cart_rule,
 			'id_cart' => (int)$this->id
-		));
+		)))
+			return false;
+
+		return true;
 	}
 
 	public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = false, $id_address_delivery = 0)
