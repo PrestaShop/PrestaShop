@@ -169,18 +169,30 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		$this->id_object = Tools::getValue('id_'.$this->table);
+		parent::initProcess();
+
 		if (Tools::isSubmit('submitGuestToCustomer') && $this->id_object)
+		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'guest_to_customer';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		elseif (Tools::isSubmit('changeNewsletterVal') && $this->id_object)
-			$this->action = 'change_newsletter_val';
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'change_newsletter_val';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 		elseif (Tools::isSubmit('changeOptinVal') && $this->id_object)
-			$this->action = 'change_optin_val';
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'change_optin_val';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
+		}
 
-		parent::initProcess();
 		// When deleting, first display a form to select the type of deletion
 		if ($this->action == 'delete' || $this->action == 'bulkdelete')
 			if (Tools::getValue('deleteMode') == 'real' || Tools::getValue('deleteMode') == 'deleted')
@@ -816,8 +828,8 @@ class AdminCustomersControllerCore extends AdminController
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
 			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
-		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET newsletter = '.($customer->newsletter ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
-		if (!$update)
+		$customer->newsletter = $customer->newsletter ? 0 : 1;
+		if (!$customer->update())
 			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
@@ -832,8 +844,8 @@ class AdminCustomersControllerCore extends AdminController
 		$customer = new Customer($this->id_object);
 		if (!Validate::isLoadedObject($customer))
 			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
-		$update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` SET optin = '.($customer->optin ? 0 : 1).' WHERE `id_customer` = '.(int)$customer->id);
-		if (!$update)
+		$customer->optin = $customer->optin ? 0 : 1;
+		if (!$customer->update())
 			$this->errors[] = Tools::displayError('An error occurred while updating customer.');
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
