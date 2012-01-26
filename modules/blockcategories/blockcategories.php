@@ -45,15 +45,15 @@ class BlockCategories extends Module
 
 	public function install()
 	{
-		if (!parent::install() OR
-			!$this->registerHook('leftColumn') OR
-			!$this->registerHook('header') OR
+		if (!parent::install() ||
+			!$this->registerHook('leftColumn') ||
+			!$this->registerHook('header') ||
 			// Temporary hooks. Do NOT hook any module on it. Some CRUD hook will replace them as soon as possible.
-			!$this->registerHook('categoryAddition') OR
-			!$this->registerHook('categoryUpdate') OR
-			!$this->registerHook('categoryDeletion') OR
-			!$this->registerHook('afterSaveAdminMeta') OR
-			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 3) OR
+			!$this->registerHook('categoryAddition') ||
+			!$this->registerHook('categoryUpdate') ||
+			!$this->registerHook('categoryDeletion') ||
+			!$this->registerHook('afterSaveAdminMeta') ||
+			!Configuration::updateValue('BLOCK_CATEG_MAX_DEPTH', 3) ||
 			!Configuration::updateValue('BLOCK_CATEG_DHTML', 1))
 			return false;
 		return true;
@@ -61,8 +61,8 @@ class BlockCategories extends Module
 
 	public function uninstall()
 	{
-		if (!parent::uninstall() OR
-			!Configuration::deleteByName('BLOCK_CATEG_MAX_DEPTH') OR
+		if (!parent::uninstall() ||
+			!Configuration::deleteByName('BLOCK_CATEG_MAX_DEPTH') ||
 			!Configuration::deleteByName('BLOCK_CATEG_DHTML'))
 			return false;
 		return true;
@@ -75,10 +75,10 @@ class BlockCategories extends Module
 		{
 			$maxDepth = (int)(Tools::getValue('maxDepth'));
 			$dhtml = Tools::getValue('dhtml');
-			$nbrColumns = Tools::getValue('nbrColumns',4);
+			$nbrColumns = Tools::getValue('nbrColumns', 4);
 			if ($maxDepth < 0)
 				$output .= '<div class="alert error">'.$this->l('Maximum depth: Invalid number.').'</div>';
-			elseif ($dhtml != 0 AND $dhtml != 1)
+			elseif ($dhtml != 0 && $dhtml != 1)
 				$output .= '<div class="alert error">'.$this->l('Dynamic HTML: Invalid choice.').'</div>';
 			else
 			{
@@ -143,7 +143,7 @@ class BlockCategories extends Module
 			$id_category = $this->context->shop->getCategory();
 
 		$children = array();
-		if (isset($resultParents[$id_category]) AND sizeof($resultParents[$id_category]) AND ($maxDepth == 0 OR $currentDepth < $maxDepth))
+		if (isset($resultParents[$id_category]) && count($resultParents[$id_category]) && ($maxDepth == 0 || $currentDepth < $maxDepth))
 			foreach ($resultParents[$id_category] as $subcat)
 				$children[] = $this->getTree($resultParents, $resultIds, $maxDepth, $subcat['id_category'], $currentDepth + 1);
 		if (!isset($resultIds[$id_category]))
@@ -190,8 +190,7 @@ class BlockCategories extends Module
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
 				AND cg.`id_group` IN ('.pSQL($groups).')
 				GROUP BY id_category
-				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'))
-			)
+				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
 
 				return Tools::restoreCacheSettings();
 
@@ -215,13 +214,13 @@ class BlockCategories extends Module
 			}
 			if (Tools::isSubmit('id_product'))
 			{
-				if (!isset($this->context->cookie->last_visited_category) OR !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
+				if (!isset($this->context->cookie->last_visited_category) || !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
 				{
 					$product = new Product($id_product);
-					if (isset($product) AND Validate::isLoadedObject($product))
+					if (isset($product) && Validate::isLoadedObject($product))
 						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
-				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
+				$this->smarty->assign('currentCategoryId', (int)$this->context->cookie->last_visited_category);
 			}
 			$this->smarty->assign('blockCategTree', $blockCategTree);
 
@@ -262,8 +261,7 @@ class BlockCategories extends Module
 				WHERE (c.`active` = 1 OR c.`id_category` = 1)
 				'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
 				AND cg.`id_group` IN ('.pSQL($groups).')
-				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'))
-			)
+				ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC')))
 				return;
 			$resultParents = array();
 			$resultIds = array();
@@ -275,10 +273,10 @@ class BlockCategories extends Module
 			}
 			//$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMNS_FOOTER');
 			$nbrColumns = Configuration::get('BLOCK_CATEG_NBR_COLUMN_FOOTER');
-			if(!$nbrColumns)
-				$nbrColumns=3;
-			$numberColumn = abs(sizeof($result)/$nbrColumns);
-			$widthColumn= floor(100/$nbrColumns);
+			if (!$nbrColumns)
+				$nbrColumns = 3;
+			$numberColumn = abs(count($result) / $nbrColumns);
+			$widthColumn = floor(100 / $nbrColumns);
 			$this->smarty->assign('numberColumn', $numberColumn);
 			$this->smarty->assign('widthColumn', $widthColumn);
 
@@ -294,10 +292,10 @@ class BlockCategories extends Module
 			}
 			if (Tools::isSubmit('id_product'))
 			{
-				if (!isset($this->context->cookie->last_visited_category) OR !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
+				if (!isset($this->context->cookie->last_visited_category) || !Product::idIsOnCategoryId($id_product, array('0' => array('id_category' => $this->context->cookie->last_visited_category))))
 				{
 					$product = new Product($id_product);
-					if (isset($product) AND Validate::isLoadedObject($product))
+					if (isset($product) && Validate::isLoadedObject($product))
 						$this->context->cookie->last_visited_category = (int)($product->id_category_default);
 				}
 				$this->smarty->assign('currentCategoryId', (int)($this->context->cookie->last_visited_category));
