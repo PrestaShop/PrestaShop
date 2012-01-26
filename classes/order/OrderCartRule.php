@@ -58,7 +58,7 @@ class OrderCartRuleCore extends ObjectModel
 			'id_order' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_cart_rule' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_order_invoice' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
 			'value' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'value_tax_excl' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true)
 		)
