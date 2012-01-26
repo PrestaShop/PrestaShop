@@ -50,9 +50,9 @@ if(!headers_sent())
 if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 {
 	$dir = ((is_dir($_SERVER['REQUEST_URI']) OR substr($_SERVER['REQUEST_URI'], -1) == '/') ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
-	if(!file_exists(dirname(__FILE__).'/../install-new'))
-		die('Error: \'install\' directory is missing');
-	header('Location: install-new/');
+	if (!file_exists(dirname(__FILE__).'/../install-dev'))
+		die('Error: "install" directory is missing');
+	header('Location: install-dev/');
 	exit;
 }
 require_once(dirname(__FILE__).'/settings.inc.php');
