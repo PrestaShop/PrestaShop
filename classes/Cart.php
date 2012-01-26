@@ -264,8 +264,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0.1
-	 * @see Cart::getCartRules()
+	 * @deprecated 1.5.0, use Cart->getCartRules()
 	 */
 	public function getDiscounts($lite = false, $refresh = false)
 	{
@@ -683,7 +682,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0.1
+	 * @deprecated 1.5.0, use Cart->addCartRule()
 	 */
 	public function addDiscount($id_cart_rule)
 	{
@@ -997,7 +996,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0.1
+	 * @deprecated 1.5.0, use Cart->removeCartRule()
 	 */
 	public function deleteDiscount($id_cart_rule)
 	{
@@ -2091,17 +2090,7 @@ class CartCore extends ObjectModel
 
 
 	/**
-	 * Return shipping total
-	 * This function is dépreciate, use getTotalShippingCost or getPackageShippingCost
-	 *
-	 * @param integer $id_carrier Carrier ID (default : current carrier)
-	 * @param booleal $use_tax
-	 * @param Country $default_country
-	 * @param Array $product_list
-	 * @param array $product_list List of product concerned by the shipping. If null, all the product of the cart are used to calculate the shipping cost
-	 * @deprecated since 1.5.0
-	 *
-	 * @return float Shipping total
+	 * @deprecated 1.5.0, use Cart->getPackageShippingCost()
 	 */
 	public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
 	{
@@ -2453,7 +2442,7 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0.1
+	 * @deprecated 1.5.0
 	 */
 	public function checkDiscountValidity($obj, $discounts, $order_total, $products, $check_cart_discount = false)
 	{

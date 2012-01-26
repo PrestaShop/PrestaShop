@@ -26,6 +26,8 @@
 */
 
 /**
+ * Controllers don't need to be loaded with includeController anymore since they use Autoload
+ *
  * @deprecated since 1.5.0
  */
 class ControllerFactoryCore

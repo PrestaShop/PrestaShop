@@ -177,11 +177,7 @@ class AttributeCore extends ObjectModel
 	}
 
 	/**
-	 * Get quantity for product with attributes quantity
-	 *
-	 * @deprecated since 1.5.0, use Product->getStock()
-	 * @param integer $id_product
-	 * @return mixed Quantity or false
+	 * @deprecated 1.5.0, use StockAvailable::getQuantityAvailableByProduct()
 	 */
 	public static function getAttributeQty($id_product)
 	{

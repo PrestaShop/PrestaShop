@@ -27,6 +27,9 @@
 
 /**
  * This file will be removed in 1.6
+ * You have to use index.php?controller=page_name instead of this page
+ *
+ * @deprecated 1.5.0
  */
 
 require(dirname(__FILE__).'/config/config.inc.php');
