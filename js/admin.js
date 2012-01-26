@@ -975,9 +975,9 @@ $(document).ready(function(){
 		checkMultishopDefaultValue(v, key.substr(17, len - 18));
 	});
 
-	$(".copy2friendlyUrl").live('keyup',function(e){
+	$(".copy2friendlyUrl").live('keyup change',function(e){
 		if(!isArrowKey(e))
-			return copy2friendlyURL()
+			return copy2friendlyURL();
 	});
 
 	// on live will make this binded for dynamic content
@@ -989,7 +989,7 @@ $(document).ready(function(){
 		updateCurrentText()
 	});
 
-	$(".copyMeta2friendlyURL").live('keyup',function(e){
+	$(".copyMeta2friendlyURL").live('keyup change',function(e){
 		if(!isArrowKey(e))
 			return copyMeta2friendlyURL()
 	});
