@@ -417,7 +417,7 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 1.5.0
 	 */
 	public function displayHeader($display = true)
 	{
@@ -449,7 +449,7 @@ class FrontControllerCore extends Controller
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 1.5.0
 	 */
 	public function displayFooter($display = true)
 	{

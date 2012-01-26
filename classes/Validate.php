@@ -571,11 +571,7 @@ class ValidateCore
 	}
 
 	/**
-	 * Check for values list validity
-	 * Mostly used in database for insertions (A,B,C),(A,B,C)...
-	 *
-	 * @deprecated
-	 * @return boolean Validity is ok or not
+	 * @deprecated 1.5.0 You should not use list like this, please use an array when you build a SQL query
 	 */
 	public static function isValuesList()
 	{
@@ -848,7 +844,7 @@ class ValidateCore
 	}
 
 	/**
-	 * @deprecated 1.5.0
+	 * @deprecated 1.5.0 Use Validate::isBoolId()
 	 */
 	public static function isBool_Id($ids)
 	{
