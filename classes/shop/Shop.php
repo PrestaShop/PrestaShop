@@ -897,7 +897,7 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @deprecated 1.5.0
+	 * @deprecated 1.5.0 Use shop->getID()
 	 */
 	public static function getCurrentShop()
 	{
