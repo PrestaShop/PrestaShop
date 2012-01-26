@@ -192,27 +192,24 @@ class AdminModulesControllerCore extends AdminController
 			}
 		}
 
-		// Make the request
-		if (is_callable('curl_exec') && count($protocolsList) > 0)
-		{
-			foreach ($protocolsList as $protocol => $port)
-			{
-				// Curl Request
-				$ch = curl_init($protocol.$this->addons_url);
-				curl_setopt($ch, CURLOPT_HEADER, 0);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-				curl_setopt($ch, CURLOPT_PORT, $port);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-				$content = curl_exec($ch);
 
-				// If content returned, we cache it
-				if ($content)
-					return $content;
-			}
+		// Make the request
+		$opts = array(
+  			'http'=>array(
+				'method'=> 'POST',
+				'content' => $postData,
+				'header'  => 'Content-type: application/x-www-form-urlencoded',
+				'timeout' => 5,
+ 			)
+		);
+		$context = stream_context_create($opts);
+		foreach ($protocolsList as $protocol => $port)
+		{
+			$content = file_get_contents($protocol.$this->addons_url, false, $context);
+
+			// If content returned, we cache it
+			if ($content)
+				return $content;
 		}
 
 		// No content, return false
@@ -1061,7 +1058,6 @@ class AdminModulesControllerCore extends AdminController
 		$tpl_vars['list_modules_authors'] = $this->modules_authors;
 
 		$tpl_vars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
-		$tpl_vars['check_curl'] = (extension_loaded('curl') ? 'ok' : 'ko');
 		$tpl_vars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
 
 		if ($this->logged_on_addons)
