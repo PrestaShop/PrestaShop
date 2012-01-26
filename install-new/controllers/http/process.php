@@ -153,6 +153,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		Context::getContext()->shop = new Shop(1);
 		Configuration::loadConfiguration();
 		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
+		Context::getContext()->cart = new Cart();
 
 		require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 		Context::getContext()->smarty = $smarty;
