@@ -30,3 +30,30 @@ CREATE TABLE `PREFIX_category_shop` (
 /* PHP:generate_root_category_for_multishop(); */;
 
 /* PHP:update_mailalerts_add_column_idshop(); */;
+
+
+CREATE TABLE `PREFIX_cart_rule_manufacturer` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_manufacturer` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_manufacturer`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_supplier` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_supplier` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_supplier`)
+);
+
+CREATE TABLE `PREFIX_cart_rule_product_rule_group` (
+	`id_product_rule_group` int(10) unsigned NOT NULL auto_increment,
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`quantity` int(10) unsigned NOT NULL default 1,
+	PRIMARY KEY  (`id_product_rule_group`)
+);
+
+INSERT INTO `PREFIX_cart_rule_product_rule_group` (`id_product_rule_group`, `id_cart_rule`, `quantity`) (
+	SELECT `id_cart_rule`, `id_cart_rule`, `quantity` FROM `PREFIX_cart_rule_product_rule`
+);
+
+ALTER TABLE `PREFIX_cart_rule_product_rule` CHANGE `id_cart_rule` `id_product_rule_group` int(10) unsigned NOT NULL;
+ALTER TABLE `PREFIX_cart_rule_product_rule` CHANGE `type` ENUM('products', 'categories', 'attributes', 'manufacturers', 'suppliers') NOT NULL;

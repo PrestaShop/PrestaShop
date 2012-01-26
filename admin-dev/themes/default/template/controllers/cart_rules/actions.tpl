@@ -1,28 +1,3 @@
-{*
-* 2007-2011 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 8971 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*}
 <label>{l s='Free shipping'}</label>
 <div class="margin-form">
 	&nbsp;&nbsp;
@@ -40,7 +15,7 @@
 	<label class="t" for="apply_discount_percent"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /> {l s='Percent (%)'}</label>
 	&nbsp;&nbsp;
 	<input type="radio" name="apply_discount" id="apply_discount_amount" value="amount"  {if $currentTab->getFieldValue($currentObject, 'reduction_amount')|intval}checked="checked"{/if} />
-	<label class="t" for="apply_discount_amount"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /> {l s='Amount'}</label>
+	<label class="t" for="apply_discount_amount"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /> {l s='Amount (¤)'}</label>
 	&nbsp;&nbsp;
 	<input type="radio" name="apply_discount" id="apply_discount_off" value="off"  {if !$currentTab->getFieldValue($currentObject, 'reduction_amount')|intval && !$currentTab->getFieldValue($currentObject, 'reduction_percent')|intval}checked="checked"{/if} />
 	<label class="t" for="apply_discount_off"> <img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="cursor:pointer" /> {l s='None'}</label>
@@ -53,7 +28,7 @@
 	</div>
 </div>
 <div id="apply_discount_amount_div">
-	<label>{l s='Value'}</label>
+	<label>{l s='Value (¤)'}</label>
 	<div class="margin-form">
 		<input type="text" id="reduction_amount" name="reduction_amount" value="{$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval}" />
 		<select name="reduction_currency">
