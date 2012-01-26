@@ -27,7 +27,7 @@
 
 	{if !isset($logged_on_addons)}
 
-		{if $check_url_fopen eq 'ko' OR $check_curl eq 'ko' OR $check_openssl eq 'ko'}
+		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
 			
 			<div class="warn">
 				<b>{l s='If you want to be able to fully use the AdminModules pannel and have free modules available, you should enable the following configuration on your server :'}</b><br />
