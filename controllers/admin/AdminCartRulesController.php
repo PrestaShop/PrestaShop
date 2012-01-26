@@ -76,8 +76,9 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		// All the associations are deleted for an update, then recreated when we call the "afterAdd" method
 		$id_cart_rule = Tools::getValue('id_cart_rule');
-		foreach (array('country', 'carrier', 'group', 'product_rule') as $type)
+		foreach (array('country', 'carrier', 'group', 'product_rule_group') as $type)
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE `id_cart_rule` = '.(int)$id_cart_rule);
+		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_product_rule_group` NOT IN (SELECT `id_product_rule_group` FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`)');
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_combination` WHERE `id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
 
@@ -105,18 +106,26 @@ class AdminCartRulesControllerCore extends AdminController
 			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
 		}
 		// Add product rule restrictions
-		if (Tools::getValue('product_restriction') && is_array($array = Tools::getValue('product_rule')) && count($array))
+		if (Tools::getValue('product_restriction') && is_array($ruleGroupArray = Tools::getValue('product_rule_group')) && count($ruleGroupArray))
 		{
-			foreach ($array as $id)
+			foreach ($ruleGroupArray as $ruleGroupId)
 			{
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_cart_rule`, `quantity`, `type`)
-				VALUES ('.(int)$currentObject->id.', '.(int)Tools::getValue('product_rule_'.$id.'_quantity').', "'.pSQL(Tools::getValue('product_rule_'.$id.'_type')).'")');
-				$id_product_rule = Db::getInstance()->Insert_ID();
-
-				$values = array();
-				foreach (Tools::getValue('product_rule_select_'.$id) as $id)
-					$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
+				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
+				VALUES ('.(int)$currentObject->id.', '.(int)Tools::getValue('product_rule_group_'.$ruleGroupId.'_quantity').')');
+				$id_product_rule_group = Db::getInstance()->Insert_ID();
+				
+				if (is_array($ruleArray = Tools::getValue('product_rule_'.$ruleGroupId)) && count($ruleArray))
+				foreach ($ruleArray as $ruleId)
+				{
+					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
+					VALUES ('.(int)$id_product_rule_group.', "'.pSQL(Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type')).'")');
+					$id_product_rule = Db::getInstance()->Insert_ID();
+					
+					$values = array();
+					foreach (Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId) as $id)
+						$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
+					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
+				}	
 			}
 		}
 
@@ -152,13 +161,67 @@ class AdminCartRulesControllerCore extends AdminController
 		}
 	}
 
-	public function getProductRuleDisplay($product_rule_id, $product_rule_type, $product_rule_quantity = 1, $selected = array())
+	/* Retrieve the cart rule product rule groups in the POST data if available, and in the database if there is none */
+	public function getProductRuleGroupsDisplay($cartRule)
+	{
+		$productRuleGroupsArray = array();
+		if (Tools::getValue('product_restriction') && is_array($array = Tools::getValue('product_rule_group')) && count($array))
+		{
+			$i = 1;
+			foreach ($array as $ruleGroupId)
+			{
+				$productRulesArray = array();
+				if (is_array($array = Tools::getValue('product_rule_'.$ruleGroupId)) && count($array))
+				{
+					foreach ($array as $ruleId)
+					{
+						$productRulesArray[] = $this->getProductRuleDisplay(
+							$ruleGroupId,
+							$ruleId,
+							Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type'),
+							Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId)
+						);
+					}
+				}
+				
+				$productRuleGroupsArray[] = $this->getProductRuleGroupDisplay(
+					$i++,
+					(int)Tools::getValue('product_rule_group_'.$ruleGroupId.'_quantity'),
+					$productRulesArray
+				);
+			}
+		}
+		else
+		{
+			$i = 1;
+			foreach ($cartRule->getProductRuleGroups() as $productRuleGroup)
+			{
+				$j = 1;
+				$productRulesDisplay = array();
+				foreach ($productRuleGroup['product_rules'] as $id_product_rule => $productRule)
+					$productRulesDisplay[] = $this->getProductRuleDisplay($i, $j++, $productRule['type'], $productRule['values']);
+				$productRuleGroupsArray[] = $this->getProductRuleGroupDisplay($i++, $productRuleGroup['quantity'], $productRulesDisplay);
+			}
+		}
+		return $productRuleGroupsArray;
+	}
+
+	/* Return the form for a single cart rule group either with or without product_rules set up */
+	public function getProductRuleGroupDisplay($product_rule_group_id, $product_rule_group_quantity = 1, $product_rules = null)
+	{
+		Context::getContext()->smarty->assign('product_rule_group_id', $product_rule_group_id);
+		Context::getContext()->smarty->assign('product_rule_group_quantity', $product_rule_group_quantity);
+		Context::getContext()->smarty->assign('product_rules', $product_rules);
+		return Context::getContext()->smarty->fetch('controllers/cart_rules/product_rule_group.tpl');
+	}
+	
+	public function getProductRuleDisplay($product_rule_group_id, $product_rule_id, $product_rule_type, $selected = array())
 	{
 		Context::getContext()->smarty->assign(
 			array(
+				'product_rule_group_id' => (int)$product_rule_group_id,
 				'product_rule_id' => (int)$product_rule_id,
 				'product_rule_type' => $product_rule_type,
-				'product_rule_quantity' => (int)$product_rule_quantity
 			)
 		);
 
@@ -193,6 +256,30 @@ class AdminCartRulesControllerCore extends AdminController
 				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
+			case 'manufacturers':
+				$products = array('selected' => array(), 'unselected' => array());
+				$results = Db::getInstance()->ExecuteS('
+				SELECT name, id_manufacturer as id
+				FROM '._DB_PREFIX_.'manufacturer
+				ORDER BY name');
+				foreach ($results as $row)
+					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
+				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
+				break;
+			case 'suppliers':
+				$products = array('selected' => array(), 'unselected' => array());
+				$results = Db::getInstance()->ExecuteS('
+				SELECT name, id_supplier as id
+				FROM '._DB_PREFIX_.'supplier
+				ORDER BY name');
+				foreach ($results as $row)
+					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
+				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
+				break;
 			case 'categories':
 				// Todo: Consider optimization
 				$categories = array('selected' => array(), 'unselected' => array());
@@ -207,8 +294,6 @@ class AdminCartRulesControllerCore extends AdminController
 				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
-			default:
-				die;
 		}
 
 		return $this->createTemplate('product_rule.tpl')->fetch();
@@ -217,7 +302,9 @@ class AdminCartRulesControllerCore extends AdminController
 	public function ajaxProcess()
 	{
 		if (Tools::isSubmit('newProductRule'))
-			die ($this->getProductRuleDisplay(Tools::getValue('product_rule_id'), Tools::getValue('product_rule_type')));
+			die ($this->getProductRuleDisplay(Tools::getValue('product_rule_group_id'), Tools::getValue('product_rule_id'), Tools::getValue('product_rule_type')));
+		if (Tools::isSubmit('newProductRuleGroup') && $product_rule_group_id = Tools::getValue('product_rule_group_id'))
+			die ($this->getProductRuleGroupDisplay($product_rule_group_id, Tools::getValue('product_rule_group_'.$product_rule_group_id.'_quantity')));
 
 		if (Tools::isSubmit('customerFilter'))
 		{
@@ -242,30 +329,6 @@ class AdminCartRulesControllerCore extends AdminController
 			$products = Product::searchByName(Context::getContext()->language->id, trim(Tools::getValue('q')));
 			die(Tools::jsonEncode($products));
 		}
-	}
-
-	public function getProductRulesDisplay($cartRule)
-	{
-		$i = 1;
-		$productRulesArray = array();
-		if (Tools::getValue('product_restriction') && is_array($array = Tools::getValue('product_rule')) && count($array))
-		{
-			foreach ($array as $id)
-			{
-				$productRulesArray[] = $this->getProductRuleDisplay(
-					$i++,
-					Tools::getValue('product_rule_'.$id.'_type'),
-					(int)Tools::getValue('product_rule_'.$id.'_quantity'),
-					Tools::getValue('product_rule_select_'.$id)
-				);
-			}
-		}
-		else
-		{
-			foreach ($cartRule->getProductRules() as $productRule)
-				$productRulesArray[] = $this->getProductRuleDisplay($i++, $productRule['type'], $productRule['quantity'], $productRule['values']);
-		}
-		return $productRulesArray;
 	}
 
 	public function renderForm()
@@ -306,7 +369,7 @@ class AdminCartRulesControllerCore extends AdminController
 			Validate::isLoadedObject($product))
 			$reduction_product_filter = trim($product->reference.' '.$product->name);
 
-		$product_rules = $this->getProductRulesDisplay($current_object);
+		$product_rule_groups = $this->getProductRuleGroupsDisplay($current_object);
 
 		Context::getContext()->smarty->assign(
 			array(
@@ -316,7 +379,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'title' => $this->l('Payment : Cart Rules '),
 				'languages' => Language::getLanguages(),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
-				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 year')),
+				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
 				'customerFilter' => $customer_filter,
 				'giftProductFilter' => $gift_product_filter,
 				'reductionProductFilter' => $reduction_product_filter,
@@ -327,8 +390,8 @@ class AdminCartRulesControllerCore extends AdminController
 				'carriers' => $current_object->getAssociatedRestrictions('carrier', 1),
 				'groups' => $current_object->getAssociatedRestrictions('group', 0),
 				'cart_rules' => $current_object->getAssociatedRestrictions('cart_rule', 1),
-				'product_rules' => $product_rules,
-				'product_rules_counter' => count($product_rules),
+				'product_rule_groups' => $product_rule_groups,
+				'product_rule_groups_counter' => count($product_rule_groups),
 				'attribute_groups' => AttributeGroup::getAttributesGroups(Context::getContext()->language->id),
 				'currentIndex' => self::$currentIndex,
 				'currentToken' => $this->token,
