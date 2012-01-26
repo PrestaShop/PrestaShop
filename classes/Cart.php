@@ -274,8 +274,6 @@ class CartCore extends ObjectModel
 
 	public function getCartRules()
 	{
-		// TODO : add cache
-
 		// If the cart has not been saved, then there can't be any cart rule applied
 		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
@@ -307,15 +305,11 @@ class CartCore extends ObjectModel
 			$row['description'] = $row['name'];
 		}
 
-		// TODO Clean the following line, this line generate bug because getCartRule method not exists
-		//$results = $this->getCartRule();
-
 		return $result;
 	}
 
 	public function getDiscountsCustomer($id_cart_rule)
 	{
-		// Todo: see uses and change name
 		if (!CartRule::isFeatureActive())
 			return 0;
 
@@ -703,6 +697,9 @@ class CartCore extends ObjectModel
 			'id_cart' => (int)$this->id
 		)))
 			return false;
+			
+		if ((int)$cartRule->gift_product)
+			return $this->updateQty(1, $cartRule->gift_product);
 
 		return true;
 	}
@@ -1303,7 +1300,6 @@ class CartCore extends ObjectModel
 
 		$order_total_products = $order_total;
 
-		// Todo: consider optimizations
 		if ($type == Cart::ONLY_DISCOUNTS)
 			$order_total = 0;
 

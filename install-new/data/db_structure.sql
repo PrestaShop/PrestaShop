@@ -259,18 +259,6 @@ CREATE TABLE `PREFIX_cart_rule_combination` (
 	PRIMARY KEY  (`id_cart_rule_1`, `id_cart_rule_2`)
 );
 
-CREATE TABLE `PREFIX_cart_rule_manufacturer` (
-	`id_cart_rule` int(10) unsigned NOT NULL,
-	`id_manufacturer` int(10) unsigned NOT NULL,
-	PRIMARY KEY  (`id_cart_rule`, `id_manufacturer`)
-);
-
-CREATE TABLE `PREFIX_cart_rule_supplier` (
-	`id_cart_rule` int(10) unsigned NOT NULL,
-	`id_supplier` int(10) unsigned NOT NULL,
-	PRIMARY KEY  (`id_cart_rule`, `id_supplier`)
-);
-
 CREATE TABLE `PREFIX_cart_rule_product_rule_group` (
 	`id_product_rule_group` int(10) unsigned NOT NULL auto_increment,
 	`id_cart_rule` int(10) unsigned NOT NULL,
