@@ -417,7 +417,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					Hook::exec('actionProductAdd', array('product' => $product));
 					Search::indexation(false, $product->id);
-					$this->redirect_after = self::$currentIndex.'&id_category='.(Tools::getIsset('id_category') ? Tools::getValue('id_category') : '1').'&conf=19&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.($token ? $token : $this->token);
 				}
 			}
 			else
@@ -481,7 +481,7 @@ class AdminProductsControllerCore extends AdminController
 					$productId = (int)Tools::getValue('id_product');
 					@unlink(_PS_TMP_IMG_DIR_.'product_'.$productId.'.jpg');
 					@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'.jpg');
-					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&action=Images&addproduct'.'&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.($token ? $token : $this->token);
 				}
 			}
 
@@ -489,7 +489,7 @@ class AdminProductsControllerCore extends AdminController
 			elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection'))
 			{
 				$image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
-				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&add'.$this->table.'&action=Images&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.($token ? $token : $this->token);
 			}
 		}
 		else
@@ -635,7 +635,7 @@ class AdminProductsControllerCore extends AdminController
 					if (!empty($is_virtual))
 						Product::updateIsVirtual($product->id);
 
-					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&add'.$this->table.'&conf=4&action=Combinations&token='.($token ? $token : $this->token);
+					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&conf=4&action=Combinations&token='.($token ? $token : $this->token);
 				}
 			}
 		}
@@ -716,7 +716,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->errors = Tools::displayError('An error occurred while updating the specific price.');
 			}
 		if (!count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&update'.$this->table.'&action=Prices&token='.($token ? $token : $this->token);
+			$this->redirect_after = self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&update'.$this->table.'&action=Prices&token='.($token ? $token : $this->token);
 
 	}
 
@@ -805,7 +805,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!count($this->errors) && !$product->update())
 				$this->errors[] = Tools::displayError('An error occurred while updating customization configuration.');
 			if (!count($this->errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&add'.$this->table.'&action=Customization&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Customization&token='.($token ? $token : $this->token);
 		}
 		else
 			$this->errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -821,7 +821,7 @@ class AdminProductsControllerCore extends AdminController
 			if (!count($this->errors) && !$product->updateLabels())
 				$this->errors[] = Tools::displayError('An error occurred while updating customization.');
 			if (!count($this->errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&action=Customization&add'.$this->table.'&token='.($token ? $token : $this->token);
+				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Customization&add'.$this->table.'&token='.($token ? $token : $this->token);
 		}
 		else
 			$this->errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -841,7 +841,7 @@ class AdminProductsControllerCore extends AdminController
 		else if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
-			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
+			$this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
 	}
 
 	public function initProcess()
@@ -1409,19 +1409,19 @@ class AdminProductsControllerCore extends AdminController
 
 				if (Tools::getValue('resizer') == 'man' && isset($id_image) && is_int($id_image) && $id_image)
 					$this->redirect_after = self::$currentIndex.'&id_product='.$this->object->id
-						.'&id_category='.(Tools::getIsset('id_category_default') ? (int)Tools::getValue('id_category_default') : '1')
+						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
 						.'&id_image='.(int)$id_image.'&imageresize&toconf=3&submitAddAndStay='.(Tools::isSubmit('submitAdd'.$this->table.'AndStay') ? 'on' : 'off')
 						.'&token='.($token ? $token : $this->token);
 
 				// Save and stay on same form
 				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
-						.'&id_category='.(Tools::getIsset('id_category_default') ? (int)Tools::getValue('id_category_default') : '1')
+						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
 						.'&addproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.($token ? $token : $this->token);
 				else
 					// Default behavior (save and back)
 					$this->redirect_after = self::$currentIndex
-						.'&id_category='.(Tools::getIsset('id_category_default') ? (int)Tools::getValue('id_category_default') : '1')
+						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
 						.'&conf=3&token='.($token ? $token : $this->token);
 			}
 			else
@@ -1496,7 +1496,7 @@ class AdminProductsControllerCore extends AdminController
 								$this->confirmations[] = $this->l('Update successful');
 							else
 								// Default behavior (save and back)
-								$this->redirect_after = self::$currentIndex.'&id_category='.(Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '1').'&conf=4&token='.($token ? $token : $this->token);
+								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.($token ? $token : $this->token);
 						}
 					}
 				}
