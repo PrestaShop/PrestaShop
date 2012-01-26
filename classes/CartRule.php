@@ -294,7 +294,7 @@ class CartRuleCore extends ObjectModel
 			{
 				if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart)
 					return Tools::displayError('This voucher is already in your cart');
-				if ($this->carrier_restriction && $otherCartRule['cart_rule_restriction'])
+				if ($this->cart_rule_restriction && $otherCartRule['cart_rule_restriction'])
 				{
 					$combinable = Db::getInstance()->getValue('
 					SELECT id_cart_rule_1

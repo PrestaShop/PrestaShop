@@ -660,7 +660,6 @@ table#cart_summary  td {
 table#cart_summary  td.cart_delete,
 table#cart_summary  td.price_discount_del {border-right:none}
 table#cart_summary  .last_item  td {border-bottom:1px solid #999}
-table#cart_summary  td.cart_discount_price {border-bottom:1px solid #999}
 
 
 table#cart_summary tr:nth-child(odd),
