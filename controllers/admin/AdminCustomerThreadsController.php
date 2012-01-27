@@ -111,7 +111,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'width' => 50,
 				'filter_key' => 'messages',
 				'tmpTableFilter' => true,
-				'maxlength' => 0
+				'maxlength' => 40
 			),
 			'date_upd' => array(
 				'title' => $this->l('Last message'),

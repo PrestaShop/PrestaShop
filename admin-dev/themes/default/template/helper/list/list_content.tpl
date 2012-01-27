@@ -101,7 +101,11 @@
 			{elseif isset($tr.$key) && $key == 'color'}
 				<div style="float: left; width: 18px; height: 12px; border: 1px solid #996633; background-color: {$tr.$key}; margin-right: 4px;"></div>
 			{elseif isset($tr.$key)}
-				{$tr.$key|escape:'htmlall':'UTF-8'}
+				{if isset($params.maxlength) && Tools::strlen($tr.$key) > $params.maxlength}
+					<span title="{$tr.$key|escape:'htmlall':'UTF-8'}">{$tr.$key|truncate:$params.maxlength:'...'|escape:'htmlall':'UTF-8'}</span>
+				{else}
+					{$tr.$key|escape:'htmlall':'UTF-8'}
+				{/if}
 			{else}
 				--
 			{/if}
