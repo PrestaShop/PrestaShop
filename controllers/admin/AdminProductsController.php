@@ -162,6 +162,16 @@ class AdminProductsControllerCore extends AdminController
 			'Accounting' => $this->l('Accounting')
 		);
 
+
+		/* Adding tab if modules are hooked */
+		$modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
+		if (is_array($modules_list) && count($modules_list) > 0)
+		{
+			$this->available_tabs['Others'] = 23;
+			$this->available_tabs_lang['Others'] = $this->l('Others');
+		}
+
+
 		/* Join categories table */
 		if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
 		{
@@ -3762,6 +3772,17 @@ class AdminProductsControllerCore extends AdminController
 				$input_namepack_items .= $pack_item->pack_quantity.' x '.$pack_item->name.'¤';
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
+
+
+	/**
+	 *  AdminProducts display hook
+	 */
+	public function initFormOthers($obj)
+	{
+		$this->tpl_form_vars['custom_form'] = hook::exec('displayAdminProductsExtra');
+	}	
+
+
 
 	/**
 	 * delete all items in pack, then check if type_product value is 2.
