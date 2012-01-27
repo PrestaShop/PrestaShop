@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_'))
 
 class BlockLanguages extends Module
 {
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'blocklanguages';
 		$this->tab = 'front_office_features';
@@ -44,9 +44,9 @@ class BlockLanguages extends Module
 		$this->description = $this->l('Adds a block for selecting a language.');
 	}
 
-	function install()
+	public function install()
 	{
-		return (parent::install() AND $this->registerHook('top') AND $this->registerHook('header'));
+		return (parent::install() && $this->registerHook('top') && $this->registerHook('header'));
 	}
 
 	/**
@@ -55,38 +55,37 @@ class BlockLanguages extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*/
-	function hookTop($params)
+	public function hookTop($params)
 	{
 		$languages = Language::getLanguages(true, $this->context->shop->getID());
 		if (!count($languages))
 			return;
 		$link = new Link();
 
-		if((int)Configuration::get('PS_REWRITING_SETTINGS'))
+		if ((int)Configuration::get('PS_REWRITING_SETTINGS'))
 		{
 			$default_rewrite = array();
-			$phpSelf = isset($_SERVER['PHP_SELF']) ? substr($_SERVER['PHP_SELF'], strlen(__PS_BASE_URI__)) : '';
-			if ($phpSelf == 'product.php' AND $id_product = (int)Tools::getValue('id_product'))
+			if (Dispatcher::getInstance()->getController() == 'product' && ($id_product = (int)Tools::getValue('id_product')))
 			{
 				$rewrite_infos = Product::getUrlRewriteInformations((int)$id_product);
-				foreach ($rewrite_infos AS $infos)
+				foreach ($rewrite_infos as $infos)
 					$default_rewrite[$infos['id_lang']] = $link->getProductLink((int)$id_product, $infos['link_rewrite'], $infos['category_rewrite'], $infos['ean13'], (int)$infos['id_lang']);
 			}
 
-			if ($phpSelf == 'category.php' AND $id_category = (int)Tools::getValue('id_category'))
+			if (Dispatcher::getInstance()->getController() == 'category' && ($id_category = (int)Tools::getValue('id_category')))
 			{
 				$rewrite_infos = Category::getUrlRewriteInformations((int)$id_category);
-				foreach ($rewrite_infos AS $infos)
+				foreach ($rewrite_infos as $infos)
 					$default_rewrite[$infos['id_lang']] = $link->getCategoryLink((int)$id_category, $infos['link_rewrite'], $infos['id_lang']);
 			}
 
-			if ($phpSelf == 'cms.php' AND ($id_cms = (int)Tools::getValue('id_cms') OR $id_cms_category = (int)Tools::getValue('id_cms_category')))
+			if (Dispatcher::getInstance()->getController() == 'cms' && (($id_cms = (int)Tools::getValue('id_cms')) || ($id_cms_category = (int)Tools::getValue('id_cms_category'))))
 			{
-				$rewrite_infos = (isset($id_cms) AND !isset($id_cms_category)) ? CMS::getUrlRewriteInformations($id_cms) : CMSCategory::getUrlRewriteInformations($id_cms_category);
-				foreach ($rewrite_infos AS $infos)
+				$rewrite_infos = (isset($id_cms) && !isset($id_cms_category)) ? CMS::getUrlRewriteInformations($id_cms) : CMSCategory::getUrlRewriteInformations($id_cms_category);
+				foreach ($rewrite_infos as $infos)
 				{
-					$arr_link = (isset($id_cms) AND !isset($id_cms_category)) ?
-						$link->getCMSLink($id_cms, $infos['link_rewrite'], NULL, $infos['id_lang']) :
+					$arr_link = (isset($id_cms) && !isset($id_cms_category)) ?
+						$link->getCMSLink($id_cms, $infos['link_rewrite'], null, $infos['id_lang']) :
 						$link->getCMSCategoryLink($id_cms_category, $infos['link_rewrite'], $infos['id_lang']);
 					$default_rewrite[$infos['id_lang']] = $arr_link;
 				}
@@ -98,7 +97,7 @@ class BlockLanguages extends Module
 		return $this->display(__FILE__, 'blocklanguages.tpl');
 	}
 
-	function hookHeader($params)
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'blocklanguages.css', 'all');
 	}
