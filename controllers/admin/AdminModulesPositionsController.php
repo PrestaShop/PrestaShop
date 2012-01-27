@@ -27,26 +27,26 @@
 
 class AdminModulesPositionsControllerCore extends AdminController
 {
-	private $displayKey = 0;
+	private $display_key = 0;
 
 	public function postProcess()
 	{
 		// Getting key value for display
 		if (Tools::getValue('show_modules') && strval(Tools::getValue('show_modules')) != 'all')
-			$this->displayKey = (int)(Tools::getValue('show_modules'));
+			$this->display_key = (int)Tools::getValue('show_modules');
 
 		// Change position in hook
 		if (array_key_exists('changePosition', $_GET))
 		{
 			if ($this->tabAccess['edit'] === '1')
-		 	{
-				$id_module = (int)(Tools::getValue('id_module'));
-				$id_hook = (int)(Tools::getValue('id_hook'));
+			{
+				$id_module = (int)Tools::getValue('id_module');
+				$id_hook = (int)Tools::getValue('id_hook');
 				$module = Module::getInstanceById($id_module);
 				if (Validate::isLoadedObject($module))
 				{
-					$module->updatePosition($id_hook, (int)(Tools::getValue('direction')));
-					Tools::redirectAdmin(self::$currentIndex.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+					$module->updatePosition($id_hook, (int)Tools::getValue('direction'));
+					Tools::redirectAdmin(self::$currentIndex.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 				}
 				else
 					$this->errors[] = Tools::displayError('module cannot be loaded');
@@ -58,12 +58,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 		// Add new module in hook
 		elseif (Tools::isSubmit('submitAddToHook'))
 		{
-		 	if ($this->tabAccess['add'] === '1')
+			if ($this->tabAccess['add'] === '1')
 			{
 				// Getting vars...
-				$id_module = (int)(Tools::getValue('id_module'));
+				$id_module = (int)Tools::getValue('id_module');
 				$module = Module::getInstanceById($id_module);
-				$id_hook = (int)(Tools::getValue('id_hook'));
+				$id_hook = (int)Tools::getValue('id_hook');
 				$hook = new Hook($id_hook);
 
 				if (!$id_module || !Validate::isLoadedObject($module))
@@ -94,7 +94,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 					}
 
 					if (!$this->errors)
-						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 				}
 			}
 			else
@@ -104,12 +104,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 		// Edit module from hook
 		elseif (Tools::isSubmit('submitEditGraft'))
 		{
-		 	if ($this->tabAccess['add'] === '1')
+			if ($this->tabAccess['add'] === '1')
 			{
 				// Getting vars...
-				$id_module = (int)(Tools::getValue('id_module'));
+				$id_module = (int)Tools::getValue('id_module');
 				$module = Module::getInstanceById($id_module);
-				$id_hook = (int)(Tools::getValue('id_hook'));
+				$id_hook = (int)Tools::getValue('id_hook');
 				$hook = new Hook($id_hook);
 
 				if (!$id_module || !Validate::isLoadedObject($module))
@@ -138,7 +138,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 							$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 
 						if (!$this->errors)
-							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 					}
 					else
 					{
@@ -153,7 +153,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 						if (!$module->editExceptions($id_hook, $exceptions, Context::getContext()->shop->getListOfID()))
 							$this->errors[] = Tools::displayError('An error occurred while transplanting module to hook.');
 						else
-							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+							Tools::redirectAdmin(self::$currentIndex.'&conf=16'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 					}
 				}
 			}
@@ -164,11 +164,11 @@ class AdminModulesPositionsControllerCore extends AdminController
 		// Delete module from hook
 		elseif (array_key_exists('deleteGraft', $_GET))
 		{
-		 	if ($this->tabAccess['delete'] === '1')
-		 	{
-				$id_module = (int)(Tools::getValue('id_module'));
+			if ($this->tabAccess['delete'] === '1')
+			{
+				$id_module = (int)Tools::getValue('id_module');
 				$module = Module::getInstanceById($id_module);
-				$id_hook = (int)(Tools::getValue('id_hook'));
+				$id_hook = (int)Tools::getValue('id_hook');
 				$hook = new Hook($id_hook);
 				if (!Validate::isLoadedObject($module))
 					$this->errors[] = Tools::displayError('module cannot be loaded');
@@ -176,10 +176,11 @@ class AdminModulesPositionsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 				else
 				{
-					if (!$module->unregisterHook($id_hook, Context::getContext()->shop->getListOfID()) || !$module->unregisterExceptions($id_hook, Context::getContext()->shop->getListOfID()))
+					if (!$module->unregisterHook($id_hook, Context::getContext()->shop->getListOfID())
+						|| !$module->unregisterExceptions($id_hook, Context::getContext()->shop->getListOfID()))
 						$this->errors[] = Tools::displayError('An error occurred while deleting module from hook.');
 					else
-						Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+						Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 				}
 			}
 			else
@@ -196,20 +197,20 @@ class AdminModulesPositionsControllerCore extends AdminController
 					$explode = explode('_', $unhook);
 					$id_hook = $explode[0];
 					$id_module = $explode[1];
-					$module = Module::getInstanceById((int)($id_module));
-					$hook = new Hook((int)($id_hook));
+					$module = Module::getInstanceById((int)$id_module);
+					$hook = new Hook((int)$id_hook);
 					if (!Validate::isLoadedObject($module))
 						$this->errors[] = Tools::displayError('module cannot be loaded');
 					elseif (!$id_hook || !Validate::isLoadedObject($hook))
 						$this->errors[] = Tools::displayError('Hook cannot be loaded.');
 					else
 					{
-						if (!$module->unregisterHook((int)($id_hook)) || !$module->unregisterExceptions((int)($id_hook)))
+						if (!$module->unregisterHook((int)$id_hook) || !$module->unregisterExceptions((int)$id_hook))
 							$this->errors[] = Tools::displayError('An error occurred while deleting module from hook.');
 					}
 				}
 				if (!count($this->errors))
-					Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token);
+					Tools::redirectAdmin(self::$currentIndex.'&conf=17'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token);
 			}
 		}
 	}
@@ -239,19 +240,19 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		$assoc_modules_id = array();
 		foreach ($modules as $module)
-			if ($tmpInstance = Module::getInstanceById((int)$module['id_module']))
+			if ($tmp_instance = Module::getInstanceById((int)$module['id_module']))
 			{
 				// We want to be able to sort modules by display name
-				$module_instances[$tmpInstance->displayName] = $tmpInstance;
+				$module_instances[$tmp_instance->displayName] = $tmp_instance;
 				// But we also want to associate hooks to modules using the modules IDs
-				$assoc_modules_id[(int)$module['id_module']] = $tmpInstance->displayName;
+				$assoc_modules_id[(int)$module['id_module']] = $tmp_instance->displayName;
 			}
 		ksort($module_instances);
-		$hooks = Hook::getHooks(!(int)(Tools::getValue('hook_position')));
+		$hooks = Hook::getHooks(!(int)Tools::getValue('hook_position'));
 		foreach ($hooks as $key => $hook)
 		{
 			// Get all modules for this hook or only the filtered module
-			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->displayKey);
+			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
 			// If modules were found, link to the previously created Module instances
 			if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
@@ -263,7 +264,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$this->addJqueryPlugin('tablednd');
 
 		$this->toolbar_btn['save'] = array(
-			'href' => self::$currentIndex.'&addToHook'.($this->displayKey ? '&show_modules='.$this->displayKey : '').'&token='.$this->token,
+			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
 			'desc' => $this->l('Transplant a module')
 		);
 
@@ -275,11 +276,13 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'token' => $this->token,
 			'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
 			'modules' => $module_instances,
-			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)(Tools::getValue('show_modules')).'&hook_position=',
+			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
 			'hook_position' => Tools::getValue('hook_position'),
 			'live_edit' => Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP,
-			'url_live_edit' => $this->context->link->getPageLink('index', false, null, 'live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_).((Shop::isFeatureActive()) ? '&id_shop='.Context::getContext()->shop->getID() : '')),
-			'display_key' => $this->displayKey,
+			'url_live_edit' => $this->context->link->getPageLink('index', false, null,
+				'live_edit&ad='.$admin_dir.'&liveToken='.sha1($admin_dir._COOKIE_KEY_)
+				.(Shop::isFeatureActive()?'&id_shop='.Context::getContext()->shop->getID() : '')),
+			'display_key' => $this->display_key,
 			'hooks' => $hooks,
 			'url_submit' => self::$currentIndex.'&token='.$this->token,
 			'can_move' => (Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_SHOP) ? false : true,
@@ -294,8 +297,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$this->initToolbarTitle();
 		// toolbar (save, cancel, new, ..)
 		$this->initToolbar();
-		$id_module = (int)(Tools::getValue('id_module'));
-		$id_hook = (int)(Tools::getValue('id_hook'));
+		$id_module = (int)Tools::getValue('id_module');
+		$id_hook = (int)Tools::getValue('id_hook');
 		if (Tools::isSubmit('editGraft'))
 		{
 			// Check auth for this page
@@ -310,39 +313,39 @@ class AdminModulesPositionsControllerCore extends AdminController
 			if (!Db::getInstance()->getValue($sql))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 
-			$slModule = Module::getInstanceById($id_module);
-			$exceptsList = $slModule->getExceptions($id_hook, true);
-			$exceptsDiff = false;
+			$sl_module = Module::getInstanceById($id_module);
+			$excepts_list = $sl_module->getExceptions($id_hook, true);
+			$excepts_diff = false;
 			$excepts = '';
-			if ($exceptsList)
+			if ($excepts_list)
 			{
-				$first = current($exceptsList);
-				foreach ($exceptsList as $k => $v)
+				$first = current($excepts_list);
+				foreach ($excepts_list as $k => $v)
 					if (array_diff($v, $first) || array_diff($first, $v))
-						$exceptsDiff = true;
+						$excepts_diff = true;
 
-				if (!$exceptsDiff)
+				if (!$excepts_diff)
 					$excepts = implode(', ', $first);
 			}
 		}
 		else
 		{
-			$exceptsDiff = false;
-			$exceptsList = Tools::getValue('exceptions', array(array()));
+			$excepts_diff = false;
+			$excepts_list = Tools::getValue('exceptions', array(array()));
 		}
 		$modules = Module::getModulesInstalled(0);
 
 		$instances = array();
 		foreach ($modules as $module)
-			if ($tmpInstance = Module::getInstanceById($module['id_module']))
-				$instances[$tmpInstance->displayName] = $tmpInstance;
+			if ($tmp_instance = Module::getInstanceById($module['id_module']))
+				$instances[$tmp_instance->displayName] = $tmp_instance;
 		ksort($instances);
 		$modules = $instances;
 		$hooks = Hook::getHooks(0);
 
 		$exception_list_diff = array();
-		foreach ($exceptsList as $shopID => $fileList)
-			$exception_list_diff[] = $this->displayModuleExceptionList($fileList, $shopID);
+		foreach ($excepts_list as $shop_id => $file_list)
+			$exception_list_diff[] = $this->displayModuleExceptionList($file_list, $shop_id);
 
 		$tpl = $this->createTemplate('form.tpl');
 		$tpl->assign(array(
@@ -352,10 +355,10 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'id_hook' => (int)Tools::getValue('id_hook'),
 			'show_modules' => Tools::getValue('show_modules'),
 			'hooks' => $hooks,
-			'exception_list' => $this->displayModuleExceptionList(array_shift($exceptsList), 0),
+			'exception_list' => $this->displayModuleExceptionList(array_shift($excepts_list), 0),
 			'exception_list_diff' => $exception_list_diff,
-			'except_diff' => isset($exceptsDiff) ? $exceptsDiff : null,
-			'display_key' => $this->displayKey,
+			'except_diff' => isset($excepts_diff) ? $excepts_diff : null,
+			'display_key' => $this->display_key,
 			'modules' => $modules,
 			'show_toolbar' => true,
 			'toolbar_btn' => $this->toolbar_btn,
@@ -366,23 +369,26 @@ class AdminModulesPositionsControllerCore extends AdminController
 		return $tpl->fetch();
 	}
 
-	public function displayModuleExceptionList($fileList, $shopID)
+	public function displayModuleExceptionList($file_list, $shop_id)
 	{
-		if (!is_array($fileList))
-			$fileList = ($fileList) ? array($fileList) : array();
+		if (!is_array($file_list))
+			$file_list = ($file_list) ? array($file_list) : array();
 
-		$content = '<input type="text" name="exceptions['.$shopID.']" size="40" value="'.implode(', ', $fileList).'" id="em_text_'.$shopID.'">';
-		if ($shopID)
-			$content .= ' ('.Shop::getInstance($shopID)->name.')';
-		$content .= '<br /><select id="em_list_'.$shopID.'">';
+		$content = '<input type="text" name="exceptions['.$shop_id.']" size="40" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'">';
+		if ($shop_id)
+		{
+			$shop = new Shop($shop_id);
+			$content .= ' ('.$shop->name.')';
+		}
+		$content .= '<br /><select id="em_list_'.$shop_id.'">';
 
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
 		ksort($controllers);
 		foreach ($controllers as $k => $v)
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
-		$content .= '</select> <input type="button" class="button" value="'.$this->l('Add').'" onclick="position_exception_add('.$shopID.')" />
-				<input type="button" class="button" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shopID.')" /><br /><br />';
+		$content .= '</select> <input type="button" class="button" value="'.$this->l('Add').'" onclick="position_exception_add('.$shop_id.')" />
+				<input type="button" class="button" value="'.$this->l('Remove').'" onclick="position_exception_remove('.$shop_id.')" /><br /><br />';
 
 		return $content;
 	}
