@@ -191,6 +191,10 @@ class CMSCore extends ObjectModel
 
 		if ($active)
 			$sql->where('c.active = 1');
+
+		if ($id_cms_category)
+			$sql->where('c.id_cms_category = '.(int)$id_cms_category);
+
 		$sql->orderBy('position');
 
 		return Db::getInstance()->executeS($sql);
