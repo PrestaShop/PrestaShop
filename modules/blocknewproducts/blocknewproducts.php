@@ -46,7 +46,7 @@ class BlockNewProducts extends Module
 
 	public function install()
 	{
-			if (parent::install() == false OR $this->registerHook('rightColumn') == false OR $this->registerHook('header') == false OR Configuration::updateValue('NEW_PRODUCTS_NBR', 5) == false)
+			if (parent::install() == false || $this->registerHook('rightColumn') == false || $this->registerHook('header') == false || Configuration::updateValue('NEW_PRODUCTS_NBR', 5) == false)
 					return false;
 			return true;
 	}
@@ -56,7 +56,7 @@ class BlockNewProducts extends Module
 		$output = '<h2>'.$this->displayName.'</h2>';
 		if (Tools::isSubmit('submitBlockNewProducts'))
 		{
-			if (!$productNbr = Tools::getValue('productNbr') OR empty($productNbr))
+			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
 				$output .= '<div class="alert error">'.$this->l('Please fill in the "products displayed" field.').'</div>';
 			elseif ((int)($productNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
@@ -97,7 +97,7 @@ class BlockNewProducts extends Module
 	public function hookRightColumn($params)
 	{
 		$newProducts = Product::getNewProducts((int)($params['cookie']->id_lang), 0, (int)(Configuration::get('NEW_PRODUCTS_NBR')));
-		if (!$newProducts AND !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
+		if (!$newProducts && !Configuration::get('PS_BLOCK_NEWPRODUCTS_DISPLAY'))
 			return;
 
 		$this->smarty->assign(array(

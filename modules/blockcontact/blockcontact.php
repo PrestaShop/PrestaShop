@@ -28,7 +28,7 @@
 if (!defined('_CAN_LOAD_FILES_'))
 	exit;
 	
-class blockcontact extends Module
+class Blockcontact extends Module
 {
 	public function __construct()
 	{
@@ -44,13 +44,17 @@ class blockcontact extends Module
 	
 	public function install()
 	{
-		return (parent::install() AND Configuration::updateValue('blockcontact_telnumber', '') AND Configuration::updateValue('blockcontact_email', '') AND $this->registerHook('displayRightColumn') && $this->registerHook('displayHeader'));
+		return parent::install()
+			&& Configuration::updateValue('blockcontact_telnumber', '')
+			&& Configuration::updateValue('blockcontact_email', '')
+			&& $this->registerHook('displayRightColumn')
+			&& $this->registerHook('displayHeader');
 	}
 	
 	public function uninstall()
 	{
-		//Delete configuration			
-		return (Configuration::deleteByName('blockcontact_telnumber') AND Configuration::deleteByName('blockcontact_email') AND parent::uninstall());
+		// Delete configuration
+		return Configuration::deleteByName('blockcontact_telnumber') && Configuration::deleteByName('blockcontact_email') && parent::uninstall();
 	}
 	
 	public function getContent()
@@ -69,10 +73,10 @@ class blockcontact extends Module
 		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset>			
 				<label for="telnumber">'.$this->l('Telephone number : ').'</label>
-				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != "") ? Configuration::get('blockcontact_telnumber') : "").'" />
+				<input type="text" id="telnumber" name="telnumber" value="'.((Configuration::get('blockcontact_telnumber') != '') ? Configuration::get('blockcontact_telnumber') : '').'" />
 				<div class="clear">&nbsp;</div>
 				<label for="email">'.$this->l('Email : ').'</label>
-				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != "") ? Configuration::get('blockcontact_email') : "").'" />
+				<input type="text" id="email" name="email" value="'.((Configuration::get('blockcontact_email') != '') ? Configuration::get('blockcontact_email') : '').'" />
 				<div class="clear">&nbsp;</div>
 				<div class="margin-form">
 					<input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>

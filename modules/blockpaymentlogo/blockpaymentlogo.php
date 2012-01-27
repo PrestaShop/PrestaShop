@@ -77,7 +77,7 @@ class BlockPaymentLogo extends Module
 
 		$cmss = CMS::listCms($this->context->language->id);
 
-		if (!sizeof($cmss))
+		if (!count($cmss))
 			$html .= $this->displayError($this->l('No CMS page is available'));
 		else
 		{
@@ -109,7 +109,7 @@ class BlockPaymentLogo extends Module
 	public function hookLeftColumn($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
-			return ;
+			return;
 
 
 		if (!Configuration::get('PS_PAYMENT_LOGO_CMS_ID'))
@@ -133,7 +133,7 @@ class BlockPaymentLogo extends Module
 	public function hookHeader($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
-			return ;
+			return;
 		$this->context->controller->addCSS(($this->_path).'blockpaymentlogo.css', 'all');
 	}
 

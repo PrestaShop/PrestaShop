@@ -46,7 +46,7 @@ class BlockCurrencies extends Module
 
 	public function install()
 	{
-		return (parent::install() AND $this->registerHook('top') AND $this->registerHook('header'));
+		return parent::install() && $this->registerHook('top') && $this->registerHook('header');
 	}
 
 	/**
@@ -58,7 +58,7 @@ class BlockCurrencies extends Module
 	public function hookTop($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
-			return ;
+			return;
 
 		if (!count(Currency::getCurrencies()))
 			return '';
@@ -69,7 +69,7 @@ class BlockCurrencies extends Module
 	public function hookHeader($params)
 	{
 		if (Configuration::get('PS_CATALOG_MODE'))
-			return ;
+			return;
 		$this->context->controller->addCSS(($this->_path).'blockcurrencies.css', 'all');
 	}
 }

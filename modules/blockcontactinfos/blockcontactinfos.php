@@ -28,12 +28,12 @@
 if (!defined('_CAN_LOAD_FILES_'))
 	exit;
 	
-class blockcontactinfos extends Module
+class Blockcontactinfos extends Module
 {
 	public function __construct()
 	{
 		$this->name = 'blockcontactinfos';
-		if(version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
+		if (version_compare(_PS_VERSION_, '1.4.0.0') >= 0)
 			$this->tab = 'front_office_features';
 		else
 			$this->tab = 'Blocks';
@@ -48,18 +48,18 @@ class blockcontactinfos extends Module
 	public function install()
 	{
 		return (parent::install() 
-				AND Configuration::updateValue('blockcontactinfos_company', Configuration::get('PS_SHOP_NAME')) 
-				AND Configuration::updateValue('blockcontactinfos_address', '') AND Configuration::updateValue('blockcontactinfos_phone', '') 
-				AND Configuration::updateValue('blockcontactinfos_email', Configuration::get('PS_SHOP_EMAIL')) 
-				AND $this->registerHook('header') AND $this->registerHook('footer'));
+				&& Configuration::updateValue('blockcontactinfos_company', Configuration::get('PS_SHOP_NAME'))
+				&& Configuration::updateValue('blockcontactinfos_address', '') && Configuration::updateValue('blockcontactinfos_phone', '')
+				&& Configuration::updateValue('blockcontactinfos_email', Configuration::get('PS_SHOP_EMAIL'))
+				&& $this->registerHook('header') && $this->registerHook('footer'));
 	}
 	
 	public function uninstall()
 	{
 		//Delete configuration			
 		return (Configuration::deleteByName('blockcontactinfos_company') 
-				AND Configuration::deleteByName('blockcontactinfos_address') AND Configuration::deleteByName('blockcontactinfos_phone') 
-				AND Configuration::deleteByName('blockcontactinfos_email') AND parent::uninstall());
+				&& Configuration::deleteByName('blockcontactinfos_address') && Configuration::deleteByName('blockcontactinfos_phone')
+				&& Configuration::deleteByName('blockcontactinfos_email') && parent::uninstall());
 	}
 	
 	public function getContent()
@@ -68,10 +68,10 @@ class blockcontactinfos extends Module
 		// If we try to update the settings
 		if (isset($_POST['submitModule']))
 		{	
-			Configuration::updateValue('blockcontactinfos_company', ((isset($_POST['company']) AND $_POST['company'] != '') ? $_POST['company'] : Configuration::get('PS_SHOP_NAME')));
-			Configuration::updateValue('blockcontactinfos_address', ((isset($_POST['address']) AND $_POST['address'] != '') ? $_POST['address'] : ''));
-			Configuration::updateValue('blockcontactinfos_phone', ((isset($_POST['phone']) AND $_POST['phone'] != '') ? $_POST['phone'] : ''));
-			Configuration::updateValue('blockcontactinfos_email', ((isset($_POST['email']) AND $_POST['email'] != '') ? $_POST['email'] : Configuration::get('PS_SHOP_EMAIL')));
+			Configuration::updateValue('blockcontactinfos_company', ((isset($_POST['company']) && $_POST['company'] != '') ? $_POST['company'] : Configuration::get('PS_SHOP_NAME')));
+			Configuration::updateValue('blockcontactinfos_address', ((isset($_POST['address']) && $_POST['address'] != '') ? $_POST['address'] : ''));
+			Configuration::updateValue('blockcontactinfos_phone', ((isset($_POST['phone']) && $_POST['phone'] != '') ? $_POST['phone'] : ''));
+			Configuration::updateValue('blockcontactinfos_email', ((isset($_POST['email']) && $_POST['email'] != '') ? $_POST['email'] : Configuration::get('PS_SHOP_EMAIL')));
 			
 			$html .= '<div class="confirm">'.$this->l('Configuration updated').'</div>';
 		}
