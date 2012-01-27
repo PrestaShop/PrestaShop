@@ -305,24 +305,39 @@ abstract class PaymentModuleCore extends Module
 							'tax_incl' => $cart_rule_obj->getContextualValue(true),
 							'tax_excl' => $cart_rule_obj->getContextualValue(false)
 						);
-						// @Todo : has not been tested because order processing wasn't functionnal
+
 						if ($values['tax_incl'] > $order->total_products_wt && $cart_rule_obj->partial_use == 1 && $cart_rule_obj->reduction_amount > 0)
 						{
+							// Create a new voucher from the original
 							$voucher = clone $cart_rule_obj;
 							unset($voucher->id);
+							
+							// Set a new voucher code
 							$voucher->code = empty($voucher->code) ? substr(md5($order->id.'-'.$order->id_customer.'-'.$cart_rule_obj->id), 0, 16) : $voucher->code.'-2';
-							$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt;
+							if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2])
+								$voucher->code = preg_replace('/'.$matches[0].'$/', '-'.(intval($matches[1]) + 1), $voucher->code);
+								
+							// Set the new voucher value
+							if ($voucher->reduction_tax)
+								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt;
+							else
+								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products;
+								
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
 							if ($voucher->add())
 							{
+								// If the voucher has conditions, they are now copied to the new voucher
 								CartRule::copyConditions($cart_rule_obj->id, $voucher->id);
-								$params['{voucher_amount}'] = Tools::displayPrice($voucher->reduction_amount, $currency, false);
-								$params['{voucher_num}'] = $voucher->code;
-								$params['{firstname}'] = $customer->firstname;
-								$params['{lastname}'] = $customer->lastname;
-								$params['{id_order}'] = $order->id;
-								Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order #', (int)$order->id_lang).$order->id, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
+								
+								$params = array(
+									'{voucher_amount}' => Tools::displayPrice($voucher->reduction_amount, $currency, false),
+									'{voucher_num}' => $voucher->code,
+									'{firstname}' => $customer->firstname,
+									'{lastname}' => $customer->lastname,
+									'{id_order}' => $order->reference
+								);
+								Mail::Send((int)$order->id_lang, 'voucher', Mail::l('New voucher regarding your order ', (int)$order->id_lang).$order->reference, $params, $customer->email, $customer->firstname.' '.$customer->lastname);
 							}
 						}
 
