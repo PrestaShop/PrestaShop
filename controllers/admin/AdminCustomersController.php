@@ -33,15 +33,15 @@ class AdminCustomersControllerCore extends AdminController
 	{
 		$this->required_database = true;
 		$this->required_fields = array('newsletter','optin');
-	 	$this->table = 'customer';
+		$this->table = 'customer';
 		$this->className = 'Customer';
-	 	$this->lang = false;
+		$this->lang = false;
 		$this->deleted = true;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->context = Context::getContext();
 
@@ -78,21 +78,21 @@ class AdminCustomersControllerCore extends AdminController
 			'lastname' => array(
 				'title' => $this->l('Last Name'),
 				'width' => 'auto'
- 			),
+			),
 			'firstname' => array(
 				'title' => $this->l('First name'),
 				'width' => 'auto'
- 			),
+			),
 			'email' => array(
 				'title' => $this->l('E-mail address'),
 				'width' => 140,
- 			),
+			),
 			'age' => array(
 				'title' => $this->l('Age'),
 				'width' => 20,
 				'search' => false,
- 				'align' => 'center'
- 			),
+				'align' => 'center'
+			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
 				'width' => 70,
@@ -100,7 +100,7 @@ class AdminCustomersControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false
- 			),
+			),
 			'newsletter' => array(
 				'title' => $this->l('News.'),
 				'width' => 70,
@@ -108,7 +108,7 @@ class AdminCustomersControllerCore extends AdminController
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
 				'orderby' => false
- 			),
+			),
 			'optin' => array(
 				'title' => $this->l('Opt.'),
 				'width' => 70,
@@ -116,20 +116,20 @@ class AdminCustomersControllerCore extends AdminController
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
 				'orderby' => false
- 			),
+			),
 			'date_add' => array(
 				'title' => $this->l('Registration'),
 				'width' => 150,
 				'type' => 'date',
 				'align' => 'right'
- 			),
+			),
 			'connect' => array(
 				'title' => $this->l('Connection'),
 				'width' => 100,
 				'type' => 'datetime',
 				'search' => false
- 			)
- 		);
+			)
+		);
 
 		$this->shopLinkType = 'shop';
 		$this->shopShareDatas = Shop::SHARE_CUSTOMER;
