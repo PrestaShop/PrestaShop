@@ -73,6 +73,7 @@ class AdminControllerCore extends Controller
 
 	/** @var string Default ORDER BY clause when $_orderBy is not defined */
 	protected $_defaultOrderBy = false;
+	protected $_defaultOrderWay = 'ASC';
 
 	public $tpl_form_vars = array();
 	public $tpl_list_vars = array();
@@ -1954,7 +1955,7 @@ class AdminControllerCore extends Controller
 		if (empty($order_by))
 			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
 		if (empty($order_way))
-			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
+			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : $this->_defaultOrderWay;
 
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;

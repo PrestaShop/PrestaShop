@@ -28,6 +28,9 @@
 class AdminCustomersControllerCore extends AdminController
 {
 	protected $delete_mode;
+	
+	protected $_defaultOrderBy = 'date_add';
+	protected $_defaultOrderWay = 'DESC';
 
 	public function __construct()
 	{
@@ -406,7 +409,6 @@ class AdminCustomersControllerCore extends AdminController
 					array_splice($this->fields_form['input'], $k, 1);
 		}
 
-
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -514,7 +516,8 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		foreach ($groups as $group)
-			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], in_array($group['id_group'], $customer_groups_ids));
+			$this->fields_value['groupBox_'.$group['id_group']] =
+				Tools::getValue('groupBox_'.$group['id_group'], in_array($group['id_group'], $customer_groups_ids));
 
 		return parent::renderForm();
 	}
@@ -644,6 +647,7 @@ class AdminCustomersControllerCore extends AdminController
 		for ($i = 0; $i < $total_referrers; $i++)
 			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'], $this->default_form_language, true);
 
+		$shop = new Shop($customer->id_shop);
 		$this->tpl_view_vars = array(
 			'customer' => $customer,
 			'gender_image' => $gender_image,
@@ -654,7 +658,7 @@ class AdminCustomersControllerCore extends AdminController
 			'last_visit' => Tools::displayDate($customer_stats['last_visit'], $this->default_form_language, true),
 			'count_better_customers' => $count_better_customers,
 			'shop_is_feature_active' => Shop::isFeatureActive(),
-			'name_shop' => Shop::getInstance($customer->id_shop)->name,
+			'name_shop' => $shop->name,
 			'customer_birthday' => Tools::displayDate($customer->birthday, $this->default_form_language),
 			'last_update' => Tools::displayDate($customer->date_upd, $this->default_form_language, true),
 			'customer_exists' => Customer::customerExists($customer->email),
@@ -712,7 +716,7 @@ class AdminCustomersControllerCore extends AdminController
 			$this->deleted = true;
 		else
 		{
-			$this->errors[] = Tools::displayError('Unknown delete mode:'.' '.$this->deleted);
+			$this->errors[] = Tools::displayError('Unknown delete mode:').' '.$this->deleted;
 			return;
 		}
 
@@ -764,9 +768,9 @@ class AdminCustomersControllerCore extends AdminController
 		return parent::processSave($token);
 	}
 
-	public function afterDelete($object, $oldId)
+	public function afterDelete($object, $old_id)
 	{
-		$customer = new Customer($oldId);
+		$customer = new Customer($old_id);
 		$addresses = $customer->getAddresses($this->default_form_language);
 		foreach ($addresses as $k => $v)
 		{
@@ -826,32 +830,19 @@ class AdminCustomersControllerCore extends AdminController
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = null)
-	{
-		return parent::getList(
-			Context::getContext()->language->id,
-			!Tools::getValue($this->table.'Orderby') ? 'date_add' : null,
-			!Tools::getValue($this->table.'Orderway') ? 'DESC' : null
-		);
-	}
-
 	public static function printNewsIcon($id_customer, $tr)
 	{
-		$customer = new Customer($tr['id_customer']);
-		if (!Validate::isLoadedObject($customer))
-			return;
-		return '<a href="index.php?tab=AdminCustomers&id_customer='.(int)$customer->id.'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($customer->newsletter ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+		return '<a href="index.php?tab=AdminCustomers&id_customer='
+			.(int)$id_customer.'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
+				'.($tr['newsletter'] ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
 
 	public static function printOptinIcon($id_customer, $tr)
 	{
-		$customer = new Customer($tr['id_customer']);
-		if (!Validate::isLoadedObject($customer))
-			return;
-		return '<a href="index.php?tab=AdminCustomers&id_customer='.(int)$customer->id.'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($customer->optin ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+		return '<a href="index.php?tab=AdminCustomers&id_customer='
+			.$id_customer.'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">;
+				'.($tr['optin'] ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
 
@@ -880,8 +871,11 @@ class AdminCustomersControllerCore extends AdminController
 	}
 	
 	/**
-	* Search customers
-	*/
+	 * add to $this->content the result of Customer::SearchByName 
+	 * (encoded in json)
+	 * 
+	 * @return void
+	 */
 	public function ajaxProcessSearchCustomers()
 	{
 		if ($customers = Customer::searchByName(pSQL(Tools::getValue('customer_search'))))
