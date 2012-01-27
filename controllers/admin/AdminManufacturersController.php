@@ -216,17 +216,17 @@ class AdminManufacturersControllerCore extends AdminController
 	 */
 	public function displayEditaddressesLink($token = null, $id)
 	{
-        if (!array_key_exists('editaddresses', self::$cache_lang))
-            self::$cache_lang['editaddresses'] = $this->l('Edit Adresses');
+		if (!array_key_exists('editaddresses', self::$cache_lang))
+			self::$cache_lang['editaddresses'] = $this->l('Edit Adresses');
 
-        $this->context->smarty->assign(array(
-            'href' => self::$currentIndex.
-            	'&'.$this->identifier.'='.$id.
-            	'&editaddresses&token='.($token != null ? $token : $this->token),
-            'action' => self::$cache_lang['editaddresses'],
-        ));
+		$this->context->smarty->assign(array(
+			'href' => self::$currentIndex.
+				'&'.$this->identifier.'='.$id.
+				'&editaddresses&token='.($token != null ? $token : $this->token),
+			'action' => self::$cache_lang['editaddresses'],
+		));
 
-        return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
+		return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
 	}
 
 	public function renderForm()
@@ -667,7 +667,7 @@ class AdminManufacturersControllerCore extends AdminController
 		{
 			$this->table = 'address';
 			$this->className = 'Address';
-	 		$this->identifier = 'id_address';
+			$this->identifier = 'id_address';
 			$this->deleted = true;
 		}
 		parent::initProcess();

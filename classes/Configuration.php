@@ -272,7 +272,7 @@ class ConfigurationCore extends ObjectModel
 	public static function updateValue($key, $values, $html = false, $shopGroupID = null, $shopID = null)
 	{
 		if (!Validate::isConfigName($key))
-	 		die(Tools::displayError());
+			die(Tools::displayError());
 		Configuration::getShopFromContext($shopGroupID, $shopID);
 
 		if (!is_array($values))
