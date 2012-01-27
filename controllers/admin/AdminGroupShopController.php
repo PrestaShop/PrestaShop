@@ -122,7 +122,8 @@ class AdminGroupShopControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and available quantities)')
+					'desc' =>
+						$this->l('Share orders and carts between shops of this group (you can share orders only if you share customers and available quantities)')
 				),
 				array(
 					'type' => 'radio',
@@ -226,10 +227,11 @@ class AdminGroupShopControllerCore extends AdminController
 				'desc' => $this->l('Use this option to associate data (products, modules, etc.) the same way as the selected shop')
 			);
 
+		$default_group_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$this->tpl_form_vars = array(
 			'disabled' => $disabled,
 			'checked' => (Tools::getValue('addgroup_shop') !== false) ? true : false,
-			'defaultGroup' => Shop::getInstance(Configuration::get('PS_SHOP_DEFAULT'))->getGroupID(),
+			'defaultGroup' => $default_group_shop->getGroupID(),
 		);
 		if (isset($this->fields_import_form))
 			$this->tpl_form_vars = array_merge($this->tpl_form_vars, array('form_import' => $this->fields_import_form));
