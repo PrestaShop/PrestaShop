@@ -92,13 +92,13 @@ class ParentOrderControllerCore extends FrontController
 			{
 				if (Tools::isSubmit('submitAddDiscount'))
 				{
-					if (!($code = Tools::getValue('discount_name')))
+					if (!($code = trim(Tools::getValue('discount_name'))))
 						$this->errors[] = Tools::displayError('You must enter a voucher code');
 					elseif (!Validate::isDiscountName($code))
 						$this->errors[] = Tools::displayError('Voucher code invalid');
 					else
 					{
-						if ($cartRule = new CartRule(CartRule::getIdByCode($code)) && Validate::isLoadedObject($cartRule))
+						if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule))
 						{
 							if ($error = $cartRule->checkValidity($this->context))
 								$this->errors[] = $error;

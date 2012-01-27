@@ -43,7 +43,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		
 		$this->context->smarty->assign('is_multi_address_delivery', $this->context->cart->isMultiAddressDelivery());
 		
-		$this->isLogged = (bool)($this->context->customer->id && Customer::customerIdExistsStatic((int)($this->context->cookie->id_customer)));
+		$this->isLogged = (bool)($this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer));
 
 		if ($this->context->cart->nbProducts())
 		{
