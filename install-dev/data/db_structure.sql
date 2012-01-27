@@ -205,6 +205,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`quantity` int(10) unsigned NOT NULL default 0,
 	`quantity_per_user` int(10) unsigned NOT NULL default 0,
 	`priority` int(10) unsigned NOT NULL default 1,
+	`partial_use` tinyint(1) unsigned NOT NULL default 0,
 	`code` varchar(254) NOT NULL,
 	`minimum_amount` decimal(17,2) NOT NULL default 0,
 	`minimum_amount_tax` tinyint(1) NOT NULL default 0,
