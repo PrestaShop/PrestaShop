@@ -464,30 +464,6 @@ class AdminCustomersControllerCore extends AdminController
 				'hint' => $this->l('Valid characters:').' 0-9',
 				'suffix' => '¤'
 			);
-			/*
-			@todo RC Version
-			$this->fields_form['input'][] = array(
-				'type' => 'radio',
-				'label' => $this->l('Show public prices:'),
-				'name' => 'show_public_prices',
-				'required' => false,
-				'class' => 't',
-				'is_bool' => true,
-				'values' => array(
-					array(
-						'id' => 'show_public_prices_on',
-						'value' => 1,
-						'label' => $this->l('Enabled')
-					),
-					array(
-						'id' => 'show_public_prices_off',
-						'value' => 0,
-						'label' => $this->l('Disabled')
-					)
-				),
-				'desc' => $this->l('Show public prices on the front office if specific prices have been set ')
-			);
-			*/
 			$this->fields_form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Max payment days:'),
