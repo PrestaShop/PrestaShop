@@ -295,13 +295,7 @@ class HelperListCore extends Helper
 					$this->_list[$index][$key] = Tools::displayDate($tr[$key], $this->context->language->id, true);
 				else if (isset($tr[$key]))
 				{
-					if ($key == 'price')
-						$echo = round($tr[$key], 2);
-					else if (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
-						$echo = '<span title="'.$tr[$key].'">'.Tools::substr($tr[$key], 0, $params['maxlength']).'...</span>';
-					else
-						$echo = $tr[$key];
-
+					$echo = $tr[$key];
 					if (isset($params['callback']))
 					{
 						$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
