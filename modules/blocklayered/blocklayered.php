@@ -1756,7 +1756,6 @@ class BlockLayered extends Module
 
 					function updElements(all, id_layered_filter)
 					{
-console.log($(\'#error-treeview\').is(\':hidden\'));
 						if ($(\'#error-treeview\').is(\':hidden\'))
 							$(\'#layered-step-2\').show();
 						else
