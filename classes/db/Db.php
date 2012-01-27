@@ -303,10 +303,10 @@ abstract class DbCore
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
-		$result = $this->_query($sql);
+		$this->result = $this->_query($sql);
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
-		return $result;
+		return $this->result;
 	}
 
 	/**
