@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_'))
 
 class BlockManufacturer extends Module
 {
-    function __construct()
+    public function __construct()
     {
         $this->name = 'blockmanufacturer';
         $this->tab = 'front_office_features';
@@ -44,16 +44,16 @@ class BlockManufacturer extends Module
         $this->description = $this->l('Displays a block of manufacturers/brands');
     }
 
-    function install()
-    {
+	public function install()
+	{
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT', true);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', 5);
 		Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', true);
-        return (parent::install() AND $this->registerHook('leftColumn') AND $this->registerHook('header'));
+        return parent::install() && $this->registerHook('leftColumn') && $this->registerHook('header');
     }
 
-    function hookLeftColumn($params)
-    {
+	public function hookLeftColumn($params)
+	{
 		$this->smarty->assign(array(
 			'manufacturers' => Manufacturer::getManufacturers(),
 			'text_list' => Configuration::get('MANUFACTURER_DISPLAY_TEXT'),
@@ -64,12 +64,12 @@ class BlockManufacturer extends Module
 		return $this->display(__FILE__, 'blockmanufacturer.tpl');
 	}
 
-	function hookRightColumn($params)
+	public function hookRightColumn($params)
 	{
 		return $this->hookLeftColumn($params);
 	}
 
-	function getContent()
+	public function getContent()
 	{
 		$output = '<h2>'.$this->displayName.'</h2>';
 		if (Tools::isSubmit('submitBlockManufacturers'))
@@ -77,9 +77,9 @@ class BlockManufacturer extends Module
 			$text_list = (int)(Tools::getValue('text_list'));
 			$text_nb = (int)(Tools::getValue('text_nb'));
 			$form_list = (int)(Tools::getValue('form_list'));
-			if ($text_list AND !Validate::isUnsignedInt($text_nb))
+			if ($text_list && !Validate::isUnsignedInt($text_nb))
 				$errors[] = $this->l('Invalid number of elements');
-			elseif (!$text_list AND !$form_list)
+			elseif (!$text_list && !$form_list)
 				$errors[] = $this->l('Please activate at least one system list');
 			else
 			{
@@ -87,7 +87,7 @@ class BlockManufacturer extends Module
 				Configuration::updateValue('MANUFACTURER_DISPLAY_TEXT_NB', $text_nb);
 				Configuration::updateValue('MANUFACTURER_DISPLAY_FORM', $form_list);
 			}
-			if (isset($errors) AND sizeof($errors))
+			if (isset($errors) && count($errors))
 				$output .= $this->displayError(implode('<br />', $errors));
 			else
 				$output .= $this->displayConfirmation($this->l('Settings updated'));
@@ -123,7 +123,7 @@ class BlockManufacturer extends Module
 		return $output;
 	}
 
-	function hookHeader($params)
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockmanufacturer.css', 'all');
 	}

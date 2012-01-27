@@ -28,7 +28,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class blockmyaccountfooter extends Module
+class Blockmyaccountfooter extends Module
 {
 	public function __construct()
 	{
@@ -46,14 +46,14 @@ class blockmyaccountfooter extends Module
 
 	public function install()
 	{
-		if (!$this->addMyAccountBlockHook() OR !parent::install() OR !$this->registerHook('footer') OR !$this->registerHook('header'))
+		if (!$this->addMyAccountBlockHook() || !parent::install() || !$this->registerHook('footer') || !$this->registerHook('header'))
 			return false;
 		return true;
 	}
 
 	public function uninstall()
 	{
-		return (parent::uninstall() AND $this->removeMyAccountBlockHook());
+		return parent::uninstall() && $this->removeMyAccountBlockHook();
 	}
 
 	public function hookLeftColumn($params)
@@ -84,11 +84,13 @@ class blockmyaccountfooter extends Module
 	{
 		return Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'myAccountBlockfooter\'');
 	}
-	function hookHeader($params)
+
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockmyaccount.css', 'all');
 	}
-	function hookFooter($params)
+
+	public function hookFooter($params)
 	{
 		global $smarty;
 		
@@ -99,8 +101,4 @@ class blockmyaccountfooter extends Module
 		));
 		return $this->display(__FILE__, $this->name.'.tpl');
 	}
-	
 }
-
-
-

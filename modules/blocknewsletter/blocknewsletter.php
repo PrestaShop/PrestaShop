@@ -62,7 +62,7 @@ class Blocknewsletter extends Module
 
 	public function install()
 	{
-		if (parent::install() == false OR $this->registerHook('leftColumn') == false OR $this->registerHook('header') == false)
+		if (parent::install() == false || $this->registerHook('leftColumn') == false || $this->registerHook('header') == false)
 			return false;
 
 		Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
@@ -188,7 +188,7 @@ class Blocknewsletter extends Module
 	 */
 	private function newsletterRegistration()
 	{
-		if (empty($_POST['email']) OR !Validate::isEmail($_POST['email']))
+		if (empty($_POST['email']) || !Validate::isEmail($_POST['email']))
 			return $this->error = $this->l('Invalid e-mail address');
 
 		/* Unsubscription */

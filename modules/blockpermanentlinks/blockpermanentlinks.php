@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_'))
 
 class BlockPermanentLinks extends Module
 {
-	function __construct()
+	public function __construct()
 	{
 		$this->name = 'blockpermanentlinks';
 		$this->tab = 'front_office_features';
@@ -44,9 +44,9 @@ class BlockPermanentLinks extends Module
 		$this->description = $this->l('Adds a block that displays permanent links such as sitemap, contact, etc.');
 	}
 
-	function install()
+	public function install()
 	{
-			return (parent::install() AND $this->registerHook('top') AND $this->registerHook('header'));
+			return (parent::install() && $this->registerHook('top') && $this->registerHook('header'));
 	}
 
 	/**
@@ -55,7 +55,7 @@ class BlockPermanentLinks extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*/
-	function hookTop($params)
+	public function hookTop($params)
 	{
 		return $this->display(__FILE__, 'blockpermanentlinks-header.tpl');
 	}
@@ -66,22 +66,22 @@ class BlockPermanentLinks extends Module
 	* @param array $params Parameters
 	* @return string Content
 	*/
-	function hookLeftColumn($params)
+	public function hookLeftColumn($params)
 	{
 		return $this->display(__FILE__, 'blockpermanentlinks.tpl');
 	}
 
-	function hookRightColumn($params)
+	public function hookRightColumn($params)
 	{
 		return $this->hookLeftColumn($params);
 	}
-	
-	function hookFooter($params)
+
+	public function hookFooter($params)
 	{
 		return $this->display(__FILE__, 'blockpermanentlinks-footer.tpl');
 	}
-	
-	function hookHeader($params)
+
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS(($this->_path).'blockpermanentlinks.css', 'all');
 	}

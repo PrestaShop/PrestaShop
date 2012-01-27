@@ -28,7 +28,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 	
-class blockcustomerprivacy extends Module
+class Blockcustomerprivacy extends Module
 {
 	public function __construct()
 	{
@@ -49,7 +49,7 @@ class blockcustomerprivacy extends Module
 	
 	public function install()
 	{	
-		return (parent::install() AND $this->registerHook('createAccountForm') AND Configuration::updateValue('CUSTPRIV_MESSAGE', array()));
+		return parent::install() && $this->registerHook('createAccountForm') && Configuration::updateValue('CUSTPRIV_MESSAGE', array());
 	}
 	
 	public function getContent()
@@ -61,10 +61,10 @@ class blockcustomerprivacy extends Module
 		if (Tools::isSubmit('submitCustPrivMess'))
 		{
 			$message_trads = array();
-			foreach($_POST as $key => $value)
-				if (preg_match("/custpriv_message_/i", $key))
+			foreach ($_POST as $key => $value)
+				if (preg_match('/custpriv_message_/i', $key))
 				{
-					$id_lang = preg_split("/custpriv_message_/i", $key);
+					$id_lang = preg_split('/custpriv_message_/i', $key);
 					$message_trads[(int)$id_lang[1]] = $value;
 				}
 			Configuration::updateValue('CUSTPRIV_MESSAGE', $message_trads, true);
@@ -149,7 +149,7 @@ class blockcustomerprivacy extends Module
 	public function hookCreateAccountForm($params)
 	{
 		if (!$this->active)
-			return ;
+			return;
 		
 		$this->smarty->assign(array(
 			'privacy_message' => Configuration::get('CUSTPRIV_MESSAGE', $this->context->language->id),
