@@ -36,6 +36,7 @@ class CartRuleCore extends ObjectModel
 	public $quantity = 1;
 	public $quantity_per_user = 1;
 	public $priority = 1;
+	public $partial_use = 1;
 	public $code;
 	public $minimum_amount;
 	public $minimum_amount_tax;
@@ -72,6 +73,7 @@ class CartRuleCore extends ObjectModel
 			'quantity' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'quantity_per_user' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'priority' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'partial_use' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'code' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 254),
 			'minimum_amount' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'minimum_amount_tax' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),

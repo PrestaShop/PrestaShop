@@ -44,3 +44,5 @@ INSERT INTO `PREFIX_cart_rule_product_rule_group` (`id_product_rule_group`, `id_
 
 ALTER TABLE `PREFIX_cart_rule_product_rule` CHANGE `id_cart_rule` `id_product_rule_group` int(10) unsigned NOT NULL;
 ALTER TABLE `PREFIX_cart_rule_product_rule` CHANGE `type` `type` ENUM('products', 'categories', 'attributes', 'manufacturers', 'suppliers') NOT NULL;
+
+ALTER TABLE `PREFIX_cart_rule` ADD `partial_use` tinyint(1) unsigned NOT NULL default 0 AFTER `priority`;
