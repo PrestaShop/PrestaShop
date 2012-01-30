@@ -2,6 +2,16 @@
 
 class AdminNotFoundControllerCore extends AdminController
 {
+	public function checkAccess()
+	{
+		return true;
+	}
+
+	public function viewAccess()
+	{
+		return true;
+	}
+
 	public function initContent()
 	{
 		$this->errors[] = Tools::displayError('Controller not found');
