@@ -24,12 +24,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="toolbarBox">
-	<div class="pageTitle">
+	<div class="pageTitleHome">
 		<span><h3>{l s='Dashboard'}</h3></span>
 	</div>
-</div>
-	{if $upgrade}
+<div id="dashboard">
+<div id="homepage">
+
+
+	<div id="column_left">
+		{if $upgrade}
 		<div id="blockNewVersionCheck">
 		{if $upgrade->need_upgrade}
 			<div class="warning warn" style="margin-bottom:10px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
@@ -42,13 +45,20 @@
 		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
 	{/if}
 {if $employee->bo_show_screencast}
-<div id="adminpresentation">
-	<iframe src="{$protocol}://screencasts.prestashop.com/v1.5/screencast.php?iso_lang={$isoUser}" style="border:none;width:100%;height:384px;" scrolling="no"></iframe>
+<div id="adminpresentation" style="display:block;">
+<h2>{l s ='Video'}</h2>
+		<div id="video">
+			<a href="{$protocol}://screencasts.dev.prestashop.com/screencast.php?iso_lang={$isoUser}" id="screencast_fancybox"><img height="128" width="220" src="http://screencasts.dev.prestashop.com/img/preview_fr.jpg" /><span class="mask-player"></span></a>
+		</div>
+			<div id="video-content">
+			<p>{l s ='Start now with PrestaShop and all new features to help you sell more and simplify management of your shop'}</p>
+			</div>
 	<div id="footer_iframe_home">
 		<!--<a href="#">{l s ='View more video tutorials'}</a>-->
 		<input type="checkbox" id="screencast_dont_show_again">
 		<label for="screencast_dont_show_again">{l s='don\'t show again'}</label>
 	</div>
+				<div class="separation"></div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -84,11 +94,9 @@ $(document).ready(function() {
 	});
 });
 </script>
-<div class="clear"></div>
 {/if}
 
-<div id="homepage">
-	<div id="column_left">
+<h2>{l s='Quick link'}</h2>
 		<ul class="F_list clearfix">
 		{foreach from=$quick_links key=k item=link}
 		<li id="{$k}_block">
@@ -99,20 +107,32 @@ $(document).ready(function() {
 		</li>
 		{/foreach}
 		</ul>
+	<div class="separation"></div>
+	<div id="partner_preactivation"><h2>{l s='Your Required'}</h2><p class="center"><img src="../img/loader.gif" alt="" /></p>
+		<div class="separation"></div>
+	</div>
+
+	{$tips_optimization}
+	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
+
+
+
+</div>
+
+
+	<div id="column_right">
+	<h2>{l s='Your Indicators'}</h2>
 		{$monthly_statistics}
 		{$customers_service}
 		{$stats_sales}
 		{$last_orders}
-
-
-	<div id="column_right">
-	{$tips_optimization}
-	<div id="partner_preactivation"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
-	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 	</div>
 	{hook h="displayBackOfficeHome"}
 </div>
 	<div class="clear">&nbsp;</div>
+	
+	</div>
+
 <script type="text/javascript">
 $(document).ready(function() {
 	if ({$refresh_check_version})
@@ -191,6 +211,28 @@ $(document).ready(function() {
 			$('#partner_preactivation').fadeOut('slow');
 			$('#discover_prestashop').fadeOut('slow');
 		}
+	});
+	$('#screencast_fancybox').bind('click', function(event)
+	{
+		$.fancybox(
+			this.href,
+			{
+				'width'				: 	660,
+				'height'			: 	384,
+				'transitionIn'		: 'none',
+				'transitionOut'		: 'none',
+				'type' 				: 'iframe',
+				'scrolling'			: 'no',
+				'onComplete'		: function()
+					{
+						// Rewrite some css properties of Fancybox
+						$('#fancybox-wrap').css('width', '');
+						$('#fancybox-content').css('background-color', '');
+						$('#fancybox-content').css( 'border', '');
+					}
+			});
+
+		event.preventDefault();
 	});
 });
 </script>

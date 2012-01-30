@@ -49,6 +49,7 @@
 }
 
 #fancybox-overlay {
+	background-color :#000 !important;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -66,13 +67,16 @@
 }
 
 #fancybox-wrap {
+	background: none repeat scroll 0 0 rgb(255, 255, 255) !important;
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.3) !important;
 	position: absolute;
 	top: 0;
 	left: 0;
-	padding: 20px;
+	padding: 8px;
 	z-index: 1101;
 	outline: none;
 	display: none;
+	border-radius:8px;
 }
 
 #fancybox-outer {

@@ -89,9 +89,9 @@ class AdminHomeControllerCore extends AdminController
 		$shopEnabled = (Configuration::get('PS_SHOP_ENABLE') ? 2 : 1);
 
 		$lights = array(
-		0 => array('image'=>'bullet_red.png','color'=>'red'),
-		1 => array('image'=>'bullet_orange.png','color'=>'orange'),
-		2 => array('image'=>'bullet_green.png','color'=>'green'));
+		0 => array('image'=>'cross.png','color'=>'red'),
+		1 => array('image'=>'error.png','color'=>'orange'),
+		2 => array('image'=>'tick.png','color'=>'green'));
 
 
 		if ($rewrite + $htaccessOptimized + $smartyOptimized + $cccOptimized + $shopEnabled + $htaccessAfterUpdate + $indexRebuiltAfterUpdate != 14)
@@ -158,6 +158,7 @@ class AdminHomeControllerCore extends AdminController
 		if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false)
 			$this->addJqueryPlugin('excanvas');
 		$this->addJqueryPlugin('flot');
+		$this->addJqueryPlugin('fancybox');
 	}
 
 	protected function warnDomainName()
@@ -172,26 +173,50 @@ class AdminHomeControllerCore extends AdminController
 	protected function getQuickLinks()
 	{
 		$quick_links['first'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCategories').'&amp;addcategory',
-			'title' => $this->l('New category'),
+			'href' => $this->context->link->getAdminLink('AdminStats'),
+			'title' => $this->l('Product sold recently'),
 			'description' => $this->l('Create a new category and organize your products.'),
 		);
 
 		$quick_links['second'] = array(
-			'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
-			'title' => $this->l('New product'),
+			'href' => $this->context->link->getAdminLink('AdminOrders').'&amp;addorder',
+			'title' => $this->l('New order'),
 			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
 		);
 
 		$quick_links['third'] = array(
-			'href' => $this->context->link->getAdminLink('AdminStats'),
-			'title' => $this->l('Statistics'),
+			'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
+			'title' => $this->l('New Specific Price'),
 			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
 		);
 
 		$quick_links['fourth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminEmployees').'&amp;addemployee',
-			'title' => $this->l('New employee'),
+			'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;addproduct',
+			'title' => $this->l('New Product'),
+			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
+		);
+		
+		$quick_links['fifth'] = array(
+			'href' => $this->context->link->getAdminLink('AdminModules').'&amp;addcategory',
+			'title' => $this->l('New module'),
+			'description' => $this->l('Create a new category and organize your products.'),
+		);
+
+		$quick_links['sixth'] = array(
+			'href' => $this->context->link->getAdminLink('AdminOrders').'&amp;id_order',
+			'title' => $this->l('New admin order'),
+			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
+		);
+
+		$quick_links['seventh'] = array(
+			'href' => $this->context->link->getAdminLink('AdminCmsContent').'&amp;addcms',
+			'title' => $this->l('New Page CMS'),
+			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
+		);
+
+		$quick_links['eighth'] = array(
+			'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
+			'title' => $this->l('New Cart Rules'),
 			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
 		);
 		return $quick_links;
@@ -206,7 +231,11 @@ class AdminHomeControllerCore extends AdminController
 			$content = '
 			<div class="table_info" id="table_info_last">
 				<h5><a href="index.php?tab=AdminCustomerThreads&token='.Tools::getAdminTokenLite('AdminCustomerThreads').'">'.$this->l('View more').'</a> '.$this->l('Customers service').'</h5>
-				<table class="table_info_details">
+				<table class="table_info_details" style="width:100%;">
+					<colgroup>
+						<col width=""></col>
+						<col width="80px"></col>
+					</colgroup>
 					<tr class="tr_odd">
 						<td class="td_align_left">
 						'.$this->l('Thread unread').'
@@ -269,7 +298,11 @@ class AdminHomeControllerCore extends AdminController
 
 		$content = '<div class="table_info">
 			<h5><a href="index.php?tab=AdminStats&token='.Tools::getAdminTokenLite('AdminStats').'">'.$this->l('View more').'</a> '.$this->l('Monthly Statistics').' </h5>
-			<table class="table_info_details">
+			<table class="table_info_details" style="width:100%;">
+					<colgroup>
+						<col width=""></col>
+						<col width="80px"></col>
+					</colgroup>
 				<tr class="tr_odd">
 					<td class="td_align_left">
 					'.$this->l('Sales').'
@@ -337,7 +370,7 @@ class AdminHomeControllerCore extends AdminController
 	public function getLastOrders()
 	{
 		$content = '
-			<table cellpadding="0" cellspacing="0" id="table_customer">
+			<table cellpadding="0" cellspacing="0" id="table_customer" style="width:100%;">
 				<thead>
 					<tr>
 						<th class="order_id"><span class="first">'.$this->l('ID').'</span></th>
@@ -371,7 +404,7 @@ class AdminHomeControllerCore extends AdminController
 		$content .= '
 				</tbody>
 			</table>
-		</div>';
+	';
 		return $content;
 	}
 
@@ -437,16 +470,16 @@ class AdminHomeControllerCore extends AdminController
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
 
 		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-			$result['discover_prestashop'] .= '<div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 315px; height: 290px;" src="'.$protocol.'://api.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
+			$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:250px; overflow:hidden;" src="'.$protocol.'://www.dev.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 		else
 			$result['discover_prestashop'] .= '';
 
 		// SHOW PAYPAL TIPS
 			$content = '';
-			$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+			$content = @file_get_contents($protocol.'://www.dev.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 			$content = explode('|', $content);
 			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
-				$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div>';
+				$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
 
 		$this->content = Tools::jsonEncode($result);
 	}
@@ -514,7 +547,7 @@ class AdminHomeControllerCore extends AdminController
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 
-		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		$content = @file_get_contents($protocol.'://localhost:8888/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 
 		if (!$content)
 			return ''; // NOK
