@@ -1604,12 +1604,15 @@ class AdminControllerCore extends Controller
 			_PS_JS_DIR_.'toggle.js',
 			_PS_JS_DIR_.'tools.js',
 			_PS_JS_DIR_.'ajax.js',
-			_PS_JS_DIR_.'notifications.js',
 			_PS_JS_DIR_.'toolbar.js'
 		));
 
-        if (Configuration::get('PS_HELPBOX'))
-            $this->addJS(_PS_JS_DIR_.'helpAccess.js');
+		if (!Tools::getValue('submitFormAjax'))
+		{
+			$this->addJs(_PS_JS_DIR_.'notifications.js');
+			if (Configuration::get('PS_HELPBOX'))
+				$this->addJS(_PS_JS_DIR_.'helpAccess.js');
+      }
 	}
 	/**
 	 * use translations files to replace english expression.
