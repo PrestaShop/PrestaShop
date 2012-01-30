@@ -298,4 +298,13 @@ class EmployeeCore extends ObjectModel
 			$data[] = (int)$group_data['id_shop'];
 		return $data;
 	}
+
+	public static function getEmployeesByProfile($id_profile, $active_only = false)
+	{
+		return Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'employee`
+		WHERE `id_profile` = '.(int)$id_profile.'
+		'.($active_only ? ' AND `active` = 1' : ''));
+	}
 }
