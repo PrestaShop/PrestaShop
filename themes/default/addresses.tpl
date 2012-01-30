@@ -106,8 +106,8 @@
 				{assign var=addressKey value=" "|explode:$pattern}
 				<li>
 				{foreach from=$addressKey item=key name="word_loop"}
-					<span class="{if isset($addresses_style[$key])}{$addresses_style[$key]}{/if}">
-						{$address.formated[$key]|escape:'htmlall':'UTF-8'}
+					<span{if isset($addresses_style[$key])} class="{$addresses_style[$key]}"{/if}>
+						{$address.formated[$key|replace:',':'']|escape:'htmlall':'UTF-8'}
 					</span>
 				{/foreach}
 				</li>
