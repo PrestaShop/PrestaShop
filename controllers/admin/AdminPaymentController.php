@@ -181,7 +181,7 @@ class AdminPaymentControllerCore extends AdminController
 						&& isset($module->limited_countries)
 						&& !empty($module->limited_countries)
 						&& !(in_array(strtoupper($item['iso_code']), array_map('strtoupper', $module->limited_countries))))
-						$list['check_list'][$key_module] = null;
+						$list['items'][$key_item]['check_list'][$key_module] = null;
 				}
 			}
 			// update list
