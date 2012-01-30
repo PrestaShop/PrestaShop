@@ -53,9 +53,9 @@
 					{if $module->active}
 						<td style="text-align: center">
 							{if !$item['check_list'][$key_module]}
-								--
+								{$type = null}
 							{elseif $list['name_id'] === 'currency'}
-								{if $module->currencies && $module->currencies_mode == 'checkbox'}				
+								{if $module->currencies && $module->currencies_mode == 'checkbox'}
 									{$type = 'checkbox'}
 								{elseif $module->currencies && $module->currencies_mode == 'radio'}
 									{$type = 'radio'}
@@ -63,7 +63,7 @@
 							{else}
 								{$type = 'checkbox'}
 							{/if}
-							{if isset($type)}
+							{if $type != null}
 								<input type="checkbox" name="{$module->name}_{$list['name_id']}[]" value="{$item[$list['identifier']]}"
 									{if $item['check_list'][$key_module] == 'checked'}checked="checked"{/if} 
 								/>
