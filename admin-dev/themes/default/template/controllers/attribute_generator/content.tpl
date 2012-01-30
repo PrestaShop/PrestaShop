@@ -33,7 +33,7 @@
 	{
 			name = element.attr("name");
 			var element_price = element.val().replace(/,/g, ".");
-			var other_element_price = "0";
+			var other_element_price = 0;
 
 			if (!isNaN(element_price) && element_price > 0)
 			{
@@ -41,6 +41,8 @@
 					other_element_price = parseFloat(element_price / ((product_tax / 100) + 1));
 				else
 					other_element_price = ps_round(parseFloat(element_price * ((product_tax / 100) + 1)), 2);
+
+				other_element_price = other_element_price.toFixed(2);
 			}
 
 			$("#related_to_"+name).val(other_element_price);
