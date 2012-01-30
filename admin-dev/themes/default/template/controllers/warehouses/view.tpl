@@ -53,7 +53,7 @@
 					</tr>
 					<tr>
 						<td>{l s='Management type:'}</td>
-						<td>{$warehouse->management_type}</td>
+						<td>{l s=$warehouse->management_type}</td>
 					</tr>
 					<tr>
 						<td>{l s='Valuation currency:'}</td>
