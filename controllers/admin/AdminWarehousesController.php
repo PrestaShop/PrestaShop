@@ -143,7 +143,6 @@ class AdminWarehousesControllerCore extends AdminController
 		if (isset($countries[$id_default_country]))
 			$countries = array($id_default_country => $countries[$id_default_country]) + $countries;
 
-
 		// sets the title of the toolbar
 		$this->toolbar_title = $this->l('Stock : Warehouse management');
 
