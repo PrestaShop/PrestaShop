@@ -370,6 +370,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$carriers = $this->context->cart->simulateCarriersOutput();
 			$this->context->smarty->assign(array(
 				'HOOK_EXTRACARRIER' => null,
+				'HOOK_EXTRACARRIER_ADDR' => null,
 				'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 					'carriers' => $carriers,
 					'checked' => $this->context->cart->simulateCarrierSelectedOutput(),

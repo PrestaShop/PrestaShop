@@ -113,6 +113,7 @@
 				{if isset($address_collection[$id_address])}
 					{l s='Choose a shipping option for the address: '}{$address_collection[$id_address]->alias}
 				{else}
+					{l s='Choose a shipping option'}
 				{/if}
 			</h3>
 			<div class="delivery_options">
