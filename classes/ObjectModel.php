@@ -541,7 +541,7 @@ abstract class ObjectModelCore
 
 		$assos = GroupShop::getAssoTables();
 		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
-			Db::getInstance()->delete('DELETE FROM `'._DB_PREFIX_.$this->def['table'].'_group_shop` WHERE `'.$this->def['primary'].'`='.(int)$this->id);
+			Db::getInstance()->delete(_DB_PREFIX_.$this->def['table'].'_group_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
 		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
