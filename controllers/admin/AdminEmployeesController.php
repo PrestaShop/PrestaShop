@@ -47,6 +47,19 @@ class AdminEmployeesControllerCore extends AdminController
 		$this->context = Context::getContext();
 
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		/*
+		check if there are more than one superAdmin
+		if it's the case then we can delete a superAdmin
+		*/
+		$superAdmin = Employee::countProfile(1, true);
+		if ($superAdmin == 1)
+		{
+			$superAdmin_array = Employee::getEmployeesByProfile(1, true);
+			$superAdmin_id = array();
+			foreach ($superAdmin_array as $key => $val)
+				$superAdmin_id[] = $val['id_employee'];
+			$this->addRowActionSkipList('delete', $superAdmin_id);
+		}
 
 		$profiles = Profile::getProfiles($this->context->language->id);
 		if (!$profiles)
