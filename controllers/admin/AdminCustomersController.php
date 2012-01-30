@@ -841,7 +841,7 @@ class AdminCustomersControllerCore extends AdminController
 	public static function printOptinIcon($id_customer, $tr)
 	{
 		return '<a href="index.php?tab=AdminCustomers&id_customer='
-			.$id_customer.'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">;
+			.$id_customer.'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
 				'.($tr['optin'] ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
