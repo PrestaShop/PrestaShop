@@ -185,12 +185,20 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			//get currencies list
 			$currencies = Currency::getCurrencies();
+			$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+			$default_currency = Currency::getCurrency($id_default_currency);
+			if ($default_currency)
+				$currencies = array_merge(array($default_currency, '-'), $currencies);
 
 			//get suppliers list
 			$suppliers = Supplier::getSuppliers();
 
 			//get languages list
 			$languages = Language::getLanguages(true);
+			$id_default_lang = Configuration::get('PS_LANG_DEFAULT');
+			$default_lang = Language::getLanguage($id_default_lang);
+			if ($default_lang)
+				$languages = array_merge(array($default_lang, '-'), $languages);
 
 			$this->fields_form = array(
 				'legend' => array(
