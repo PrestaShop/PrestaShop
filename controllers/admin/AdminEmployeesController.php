@@ -51,14 +51,14 @@ class AdminEmployeesControllerCore extends AdminController
 		check if there are more than one superAdmin
 		if it's the case then we can delete a superAdmin
 		*/
-		$superAdmin = Employee::countProfile(1, true);
-		if ($superAdmin == 1)
+		$super_admin = Employee::countProfile(1, true);
+		if ($super_admin == 1)
 		{
-			$superAdmin_array = Employee::getEmployeesByProfile(1, true);
-			$superAdmin_id = array();
-			foreach ($superAdmin_array as $key => $val)
-				$superAdmin_id[] = $val['id_employee'];
-			$this->addRowActionSkipList('delete', $superAdmin_id);
+			$super_admin_array = Employee::getEmployeesByProfile(1, true);
+			$super_admin_id = array();
+			foreach ($super_admin_array as $key => $val)
+				$super_admin_id[] = $val['id_employee'];
+			$this->addRowActionSkipList('delete', $super_admin_id);
 		}
 
 		$profiles = Profile::getProfiles($this->context->language->id);
