@@ -80,7 +80,7 @@ class TabCore extends ObjectModel
 		if (parent::add($autodate, $null_values))
 		{
 			// refresh cache when adding new tab
-			self::$_getIdFromClassName[$this->class_name] = $this->id;
+			self::$_getIdFromClassName[strtolower($this->class_name)] = $this->id;
 			return Tab::initAccess($this->id);
 		}
 		return false;
@@ -237,12 +237,13 @@ class TabCore extends ObjectModel
 	 */
 	public static function getIdFromClassName($class_name)
 	{
+		$class_name = strtolower($class_name);
 		if (self::$_getIdFromClassName === null)
 		{
 			self::$_getIdFromClassName = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`');
 			foreach ($result as $row)
-				self::$_getIdFromClassName[$row['class_name']] = $row['id_tab'];
+				self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
 		}
 		return (isset(self::$_getIdFromClassName[$class_name]) ? (int)self::$_getIdFromClassName[$class_name] : false);
 	}
@@ -311,8 +312,8 @@ class TabCore extends ObjectModel
 
 	/**
 	 * Get Instance from tab class name
-	 * @static
-	 * @param $class_name Name of tab class
+	 *
+	 * @param $class_name string Name of tab class
 	 * @return Tab Tab object (empty if bad id or class name)
 	 */
 	public static function getInstanceFromClassName($class_name)
