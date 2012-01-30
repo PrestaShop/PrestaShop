@@ -1057,9 +1057,17 @@ class CarrierCore extends ObjectModel
 		if (empty($carrier_list)) // No carriers defined, get all available carriers
 		{
 			$carrier_list = array();
-			$id_address = (!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery : Context::getContext()->cart->id_address_delivery;
-			$address = new Address($id_address);
-			$id_zone = Address::getZoneById($address->id);
+			$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  Context::getContext()->cart->id_address_delivery);
+			if ($id_address)
+			{
+				$address = new Address($id_address);
+				$id_zone = Address::getZoneById($address->id);
+			}
+			else
+			{
+				$country = new Country(Context::getContext()->shop->getAddress()->id_country);
+				$id_zone = $country->id_zone;
+			}
 			$carriers = Carrier::getCarriersForOrder($id_zone, Context::getContext()->customer->getGroups());
 			foreach ($carriers as $carrier)
 				$carrier_list[] = $carrier['id_carrier'];
