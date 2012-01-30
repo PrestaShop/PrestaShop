@@ -183,7 +183,7 @@ class LocalizationPackCore
 
 				if (!$trg->save())
 				{
-					$this->_errors[] = Tools::displayError('This tax rule can\'t be saved.');
+					$this->_errors[] = Tools::displayError('This tax rule cannot be saved.');
 					return false;
 				}
 
