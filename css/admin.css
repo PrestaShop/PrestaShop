@@ -1105,13 +1105,8 @@ html[xmlns] .clearfix {
 	margin-top: 5px;
 }
 #adminpresentation{
-	width: 902px;
-	border:1px solid #cccccc;
-	background-color: #F8F8F8;
-	float: left;
-	margin: 0 0 15px;
-	padding: 10px;
 	position:relative;
+	width:100%;
 }
 
 #listpresentation{
@@ -1160,14 +1155,14 @@ html[xmlns] .clearfix {
 
 #footer_iframe_home{
 	position:absolute;
-	top:379px;
-	left:675px;
+	top:0;
+	right:0;
 }
 
 #footer_iframe_home label{
 	float: none;
-	padding-left: 10px;
-	color: #903E5B;
+	color: #585A69;
+	font-weight:normal;
 	line-height: 15px;
 }
 
@@ -1183,19 +1178,27 @@ html[xmlns] .clearfix {
 }
 
 #column_left{
-	width: 610px;
+	width: 49.1%;
 	float: left;
 	padding-top: 5px;
 }
 
 #column_right{
-	width: 315px;
+	width: 49.1%;
 	float: right;
-	padding-top: 5px;
+	padding:0;
 }
 
-/*homepage*/
-#homepage { width:925px;}
+#column_right .table_info {
+	width:48.1%;
+	float:left;
+}
+
+#column_right #table_info_last.table_info {
+	width:48.1%;
+	float:right;
+}
+
 
 .F_list{
 	list-style: none;
@@ -1204,46 +1207,64 @@ html[xmlns] .clearfix {
 }
 
 
-#first_block a, #second_block a, #third_block a, #fourth_block a{ background: #F8F8F8 none no-repeat scroll center 6px;}
+#first_block a, #second_block a, #third_block a, #fourth_block a,
+#fifth_block a, #sixth_block a, #seventh_block a, #eighth_block a{ background: #F8F8F8 none no-repeat scroll center 25px;}
 
 #first_block a{
-	background-image: url('../img/admin/folder_add.png');
-	margin-left:0;
+	background-image: url('../img/admin/package_go.png');
 }
 
 #second_block a{
-	background-image: url('../img/admin/package_add.png');
+	background-image: url('../img/admin/cart_add.png');
 }
 
 #third_block a {
-	background-image: url('../img/admin/chart_bar.png');
+	background-image: url('../img/admin/book.png');
 }
 
 #fourth_block a{
-	background-image: url('../img/admin/user_add.png');
+	background-image: url('../img/admin/package_add.png');
+}
+
+#fifth_block a{
+	background-image: url('../img/admin/plugin_add.png');
+}
+
+#sixth_block a{
+	background-image: url('../img/admin/cart_remove.png');
+}
+
+#seventh_block a {
+	background-image: url('../img/admin/page_white_add.png');
+}
+
+#eighth_block a{
+	background-image: url('../img/admin/advertising.png');
 }
 
 .F_list li{
 	float: left;
+	margin-right:15px;
+	margin-bottom:15px;
+	display: block;
 }
 
 .F_list li h4{
-	width: 115px;
-	font-size: 14px;
-	font-weight:bold;
-	margin-top: 35px;
+	width: 95px;
+	font-size: 11px;
+	font-weight:normal;
+	margin-top: 55px;
 	margin-bottom: 0;
-	line-height: 14px;
+	line-height: 16px;
 }
 
 .F_list a{
 	float:left;
 	color: #333;
-	width: 125px;
-	margin-left: 14px;
+	width: 95px;
 	border: 1px solid #ccc;
 	padding: 5px;
-	height: 120px;
+	height: 95px;
 	text-align:center;
 	border-radius:3px;
 }
@@ -1254,16 +1275,16 @@ html[xmlns] .clearfix {
 
 .F_list li p{
 	font-size: 8pt;
+	display:none;
 }
 
 .table_info{
-	width: 283px;
 	float: left;
-	padding: 0;
+	padding:0;
+	margin:0;
 	border: 1px solid #ccc;
-	margin-right: 15px;
-	margin-top: 20px;
 	border-radius:3px;
+	background-color:#fff;
 }
 
 .table_info h5{
@@ -1310,7 +1331,6 @@ html[xmlns] .clearfix {
 
 .table_info_details{
 	border-collapse: collapse;
-	width: 283px;
 	border: none;
 }
 
@@ -1334,8 +1354,7 @@ html[xmlns] .clearfix {
 	font-weight:normal;
 	text-align: left;
 	padding-left: 10px;
-	width: 150px;
-	font-size:12px;
+	font-size:13px;
 }
 
 .table_info_details tr td{
@@ -1347,11 +1366,12 @@ html[xmlns] .clearfix {
 #table_info_large{
 	margin-top: 20px;
 	margin-bottom: 20px;
-	width: 586px;
+	width: 100%;
 	float: left;
 	padding: 0;
 	border: 1px solid #ccc;
 	border-radius:3px;
+	background-color:#fff;
 }
 
 #table_info_large h5{
@@ -1379,11 +1399,13 @@ html[xmlns] .clearfix {
 	width: 586px;
 	height: 175px;
 	background-color: #fff;
+	margin: 15px auto;
+	text-align: center;
 }
 
 .admin-box1{
 	background-color:#F8F8F8;
-	width: 310px;
+	width: 48.1%;
 	float: left;
 	padding: 0;
 	border: 1px solid #ccc;
@@ -1407,14 +1429,14 @@ html[xmlns] .clearfix {
 }
 
 .admin-box2{
-	width: 310px;
-	float: left;
+	float: right;
 	padding: 0;
 	border: 1px solid #CCCCCC;
 	font-size: 8pt;
 	margin-bottom: 20px;
 	background-color: #f2f2f2;
 	border-radius:3px;
+	width:100%;
 }
 
 .admin-box2 h5{
@@ -1430,6 +1452,7 @@ html[xmlns] .clearfix {
 	font-weight:normal;
 }
 
+#discover_prestashop { width:48.1% !important; float:right !important;}
 
 .admin-home-box-list li img{
 	margin: 0 5px;
@@ -1481,10 +1504,10 @@ html[xmlns] .clearfix {
 
 #table_customer{
 	border:1px solid #ccc;
-	width: 590px;
 	cellpadding: 0;
 	cellspacing: 0;
 	border-radius:3px;
+	background-color:#fff;
 }
 
 #table_customer thead span{
@@ -1494,13 +1517,13 @@ html[xmlns] .clearfix {
 	text-shadow: 0 1px 0 #fff;
 	line-height: 35px;
 	display: block;
-	text-align: center;
-	height: 30px;
+	height: 39px;
 	border-left: none;
 	border-right: none;
 }
 
 #table_customer thead span.first{
+text-align: center;
 }
 
 #table_customer thead span.last{
@@ -1547,8 +1570,8 @@ html[xmlns] .clearfix {
 
 #table_customer tbody tr td{
 	border: none;
-	padding-left: 10px;
 	height: 35px;
+	font-size:12px;
 }
 
 #table_info_news{
@@ -2246,6 +2269,7 @@ margin-bottom:7px;
 	width: 300px;
 }
 
+
 #container_category_tree {
 	border: 1px solid #ccc;
 	border-radius: 3px;
@@ -2259,3 +2283,10 @@ margin-bottom:7px;
 #container_category_tree a input{
 	margin-right: 3px;
 }
+
+
+#block_tips {float:right; width:48.1%}
+#block_discover {float:left; width:48.1%}
+#block_partner_tips {float:right; width:48.1%}
+.row-news { width:100%;float:left;}
+#table_info_news { border:1px solid #ccc;}

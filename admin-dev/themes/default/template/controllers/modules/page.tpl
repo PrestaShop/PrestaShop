@@ -29,9 +29,11 @@
 	{include file='controllers/modules/header.tpl'}
 	{include file='controllers/modules/filters.tpl'}
 
-	<br />
-	<img src="themes/default/img/modules_view_layout_sidebar.png" alt="{l s='Normal view'}" border="0" />
-	<a href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites"><img src="themes/default/img/modules_view_table_select_row_grey.png" alt="{l s='Favorites view'}" border="0" /></a><br />
+	<ul class="view-modules">
+		<li class="button normal-view-disabled"><img src="themes/default/img/modules_view_layout_sidebar.png" alt="{l s='Normal view'}" border="0" /><span>{l s='Normal view'}</span></li>
+		<li class="button favorites-view"><a  href="index.php?controller={$smarty.get.controller|htmlentities}&token={$smarty.get.token|htmlentities}&select=favorites"><img src="themes/default/img/modules_view_table_select_row.png" alt="{l s='Favorites view'}" border="0" /><span>{l s='Favorites view'}</span></a></li>
+	
+	</ul>
 
 	<div id="container">
 		<!--start sidebar module-->
