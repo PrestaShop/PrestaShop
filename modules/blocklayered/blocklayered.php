@@ -1009,7 +1009,7 @@ class BlockLayered extends Module
 			foreach ($currencyList as $currency)
 			{
 				$price = Product::priceCalculation($id_shop, (int)$idProduct, null, null, null, null,
-					$currency['id_currency'], null, null, false, true, false, true, true,
+					$currency['id_currency'], null, null, false, 6, false, true, true,
 					$specificPriceOutput, true);
 				
 				if (!isset($maxPrice[$currency['id_currency']]))
@@ -1032,7 +1032,7 @@ class BlockLayered extends Module
 					$price = Product::priceCalculation((($specificPrice['id_shop'] == 0) ? null : (int)$specificPrice['id_shop']), (int)$idProduct,
 						null, (($specificPrice['id_country'] == 0) ? null : $specificPrice['id_country']), null, null,
 						$currency['id_currency'], (($specificPrice['id_group'] == 0) ? null : $specificPrice['id_group']),
-						$specificPrice['from_quantity'], false, true, false, true, true, $specificPriceOutput, true);
+						$specificPrice['from_quantity'], false, 6, false, true, true, $specificPriceOutput, true);
 					
 					if (!isset($maxPrice[$currency['id_currency']]))
 						$maxPrice[$currency['id_currency']] = 0;
@@ -1050,7 +1050,7 @@ class BlockLayered extends Module
 				foreach ($currencyList as $currency)
 				{
 					$price = Product::priceCalculation(null, (int)$idProduct, null, null, null, null, (int)$currency['id_currency'], (int)$group['id_group'],
-						null, false, true, false, true, true, $specificPriceOutput, true);
+						null, false, 6, false, true, true, $specificPriceOutput, true);
 					
 					if (!isset($maxPrice[$currency['id_currency']]))
 						$maxPrice[$currency['id_currency']] = 0;
@@ -1070,7 +1070,7 @@ class BlockLayered extends Module
 					'.(int)$currency['id_currency'].',
 					'.$id_shop.',
 					'.(int)$minPrice[$currency['id_currency']].',
-					'.(int)($maxPrice[$currency['id_currency']] * (100 + $maxTaxRate) / 100).')';
+					'.(int)Tools::ps_round($maxPrice[$currency['id_currency']] * (100 + $maxTaxRate) / 100, 0).')';
 			
 			Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'layered_price_index` (id_product, id_currency, id_shop, price_min, price_max)
@@ -1655,23 +1655,22 @@ class BlockLayered extends Module
 				}
 				else
 					$root_category = array('id_category' => '0', 'name' => $this->l('Root'));
+				$helper = new Helper();
+				$html .= $helper->renderCategoryTree(null, $selectedCat, 'categoryBox');
 			}
 			else
-				$root_category = '';
-			
-			$trads = array(
-				 'Root' => $root_category,
-				 'Home' => $this->l('Home'), // for retrocompatibility 1.4
-				 'selected' => $this->l('selected'),
-				 'Collapse All' => $this->l('Collapse All'),
-				 'Expand All' => $this->l('Expand All'),
-				 'Check All' => $this->l('Check All'),
-				 'Uncheck All'  => $this->l('Uncheck All'),
-				 'search'  => $this->l('Search a category')
-			);
-
-			// @todo renderAdminCategorieTree is deprecated in 1.5
-			$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
+			{
+				$trads = array(
+					 'Home' => $this->l('Home'),
+					 'selected' => $this->l('selected'),
+					 'Collapse All' => $this->l('Collapse All'),
+					 'Expand All' => $this->l('Expand All'),
+					 'Check All' => $this->l('Check All'),
+					 'Uncheck All'  => $this->l('Uncheck All'),
+					 'search'  => $this->l('Search a category')
+				);
+				$html .= Helper::renderAdminCategorieTree($trads, $selectedCat, 'categoryBox');
+			}
 			
 			$html .= '
 					<br />
@@ -1854,13 +1853,13 @@ class BlockLayered extends Module
 							\'onComplete\': function() {
 								lock_treeview_hidding = true;
 								$(\'#categories-treeview\').parent().parent().show();
-								if($(\'#categories-treeview li#1\').attr(\'cleaned\'))
+								if($($(\'#categories-treeview li\')[0]).attr(\'cleaned\'))
 									return;
-								if($(\'#categories-treeview li#1\').attr(\'cleaned\', true))
-								$(\'#categories-treeview li#1\').removeClass(\'static\');
-								$(\'#categories-treeview li#1 span\').trigger(\'click\');
-								$(\'#categories-treeview li#1\').children(\'div\').remove();
-								$(\'#categories-treeview li#1\').
+								if($($(\'#categories-treeview li\')[0]).attr(\'cleaned\', true))
+								$($(\'#categories-treeview li\')[0]).removeClass(\'static\');
+								$($(\'#categories-treeview li span\')[0]).trigger(\'click\');
+								$($(\'#categories-treeview li\')[0]).children(\'div\').remove();
+								$($(\'#categories-treeview li\')[0]).
 									removeClass(\'collapsable lastCollapsable\').
 									addClass(\'last static\');
 								$(\'.hitarea\').live(\'click\', function(it)
