@@ -519,4 +519,34 @@ class AdminWarehousesControllerCore extends AdminController
 
 		return true;
 	}
+
+	/**
+	 * AdminController::getList() override
+	 * @see AdminController::getList()
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		$nb_items = count($this->_list);
+		for ($i = 0; $i < $nb_items; ++$i)
+		{
+			$item = &$this->_list[$i];
+			switch ($item['management_type'])
+			{
+				case 'WA':
+					$item['management_type'] = $this->l('WA');
+				break;
+
+				case 'FIFO':
+					$item['management_type'] = $this->l('FIFO');
+				break;
+
+				case 'LIFO':
+					$item['management_type'] = $this->l('LIFO');
+				break;
+			}
+		}
+	}
+
 }
