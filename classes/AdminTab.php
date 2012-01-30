@@ -370,7 +370,7 @@ abstract class AdminTabCore
 		{
 			/* New tab loading */
 			$classname = 'Admin'.$subtab;
-			if ($module = Db::getInstance()->getValue('SELECT `module` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($classname).'\'') && file_exists(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php'))
+			if (($module = Db::getInstance()->getValue('SELECT `module` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($classname).'\'')) && file_exists(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php'))
 				include_once(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php');
 			elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$classname.'.php'))
 				include_once('tabs/'.$classname.'.php');
@@ -1085,7 +1085,7 @@ abstract class AdminTabCore
 			$max_size = isset($this->maxImageSize) ? $this->maxImageSize : 0;
 			if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->_errors[] = $error;
-			elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName))
+			elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName))
 				return false;
 			else
 			{
