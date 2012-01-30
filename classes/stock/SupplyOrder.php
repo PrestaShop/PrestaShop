@@ -487,6 +487,27 @@ class SupplyOrderCore extends ObjectModel
 		}
 	}
 
+
+	/**
+	 * Gets the reference of a given order
+	 *
+	 * @param int $id_supply_order
+	 * @return bool|string
+	 */
+	public static function getReferenceById($id_supply_order)
+	{
+		if (!$id_supply_order)
+			return false;
+
+		$query = new DbQuery();
+		$query->select('so.reference');
+		$query->from('supply_order', 'so');
+		$query->where('so.id_supply_order = '.(int)$id_supply_order);
+		$ref = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+
+		return (pSQL($ref));
+	}
+
 	/*********************************\
 	 *
 	 * Webservices Specific Methods

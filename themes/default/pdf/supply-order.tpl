@@ -142,7 +142,7 @@
 	<div style="font-size: 6pt;">
 		<table style="width: 30%;">
 				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE (DE)' pdf='true'}</td>
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='(Discount excluded)' pdf='true'}</td>
 					<td>{$currency->prefix} {$supply_order->total_te} {$currency->suffix}</td>
 				</tr>
 				<tr style="line-height:6px; border: none">
@@ -150,7 +150,7 @@
 					<td>{$currency->prefix} {$supply_order->discount_value_te} {$currency->suffix}</td>
 				</tr>
 				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE (DI)' pdf='true'}</td>
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 5px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='(Discount included)' pdf='true'}</td>
 					<td>{$currency->prefix} {$supply_order->total_with_discount_te} {$currency->suffix}</td>
 				</tr>
 				<tr style="line-height:6px; border: none">
