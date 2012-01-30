@@ -77,6 +77,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowAction('view');
+		$this->addRowActionSkipList('delete', array(Category::getTopCategory()->id));
+		$this->addRowActionSkipList('edit', array(Category::getTopCategory()->id));
 
 		$this->fieldsDisplay = (array(
 			'id_category' => array('title' => $this->l('ID'), 'width' => 50),
