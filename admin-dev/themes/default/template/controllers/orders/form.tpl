@@ -431,10 +431,20 @@
 	function updateCarrierList(carriers)
 	{
 		var html = '';
-		$.each(carriers, function() {
-			html += '<option value="'+this.id_carrier+'">'+this.name+' - '+this.delay+'</option>';
-		});
-		$('#id_carrier').html(html);
+		if (carriers.length > 0)
+		{
+			$.each(carriers, function() {
+				html += '<option value="'+this.id_carrier+'">'+this.name+' - '+this.delay+'</option>';
+			});
+			$('#carrier_form').show();
+			$('#id_carrier').html(html);
+			$('#carriers_err').hide();
+		}
+		else
+		{
+			$('#carrier_form').hide();
+			$('#carriers_err').show().html('{l s='No carrier can be applied to this order'}');
+		}
 	}
 
 	function searchProducts()
@@ -551,11 +561,11 @@
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
 
-		if (!jsonSummary.summary.products.length || !jsonSummary.addresses.length)
+		if (!jsonSummary.summary.products.length || !jsonSummary.addresses.length || !jsonSummary.cart.id_carrier)
 			$('#carriers_part,#summary_part').hide();
 		else
 			$('#carriers_part,#summary_part').show();
-
+		
 		updateCarrierList(jsonSummary.carriers);
 
 		if (jsonSummary.cart.gift == 1)
@@ -746,7 +756,6 @@
 		var addresses_invoice_options = '';
 		var address_invoice_detail = '';
 		var address_delivery_detail = '';
-		
 		$.each(addresses, function() {
 			if (this.id_address == id_address_invoice)
 				address_invoice_detail = this.company+' '+this.firstname+' '+this.lastname+'<br />'+this.address1+'<br />'+this.address2+'<br />'+this.postcode+' '+this.city+' '+this.country;
@@ -782,25 +791,8 @@
 			success : function(res)
 			{
 				displaySummary(res);
-				var x;
-				for(x in res.addresses)
-				{
-					if (res.addresses[x].id_address == $('#id_address_delivery option:selected').val())
-						displayAddressDetail('address_delivery_detail', res.addresses[x]);
-					else if (res.addresses[x].id_address == $('#id_address_invoice option:selected').val())
-						displayAddressDetail('address_invoice_detail', res.addresses[x]);
-				}
 			}
 		});
-	}
-
-	function displayAddressDetail(id, address)
-	{
-		var address_detail = address.company+' '+address.firstname+' '+address.lastname+'<br />';
-		address_detail += address.address1+'<br />';
-		address_detail += address.address2+'<br />';
-		address_detail += address.postcode+' '+address.city+' '+address.country;
-		$('#'+id).html(address_detail);
 	}
 
 </script>
@@ -990,25 +982,29 @@
 <br />
 <fieldset id="carriers_part" style="display:none;">
 	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Carriers'}</legend>
-	<div>
-		<p>
-			<label>{l s='Carriers:'} </label>
-			<select name="id_carrier" id="id_carrier">
-			</select>
-		</p>
-		<p>
-			<label for="shipping_price">{l s='Shipping price:'}</label> <input type="text" id="shipping_price"  name="shipping_price" size="7" />&nbsp;<span class="currency_sign"></span>&nbsp;
-			<a class="button" href="#" onclick="resetShippingPrice()">{l s='Reset shipping price'}</a>
-		</p>
-	</div>
-	<div id="float:left;">
-		{if $recyclable_pack}
-			<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
-		{/if}
-		{if $gift_wrapping}
-			<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
-			<p><label for="gift_message">{l s='Gift message:'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
-		{/if}
+	<div id="carriers_err" style="display:none;" class="warn"></div>
+		<div id="carrier_form">
+			<div>
+				<p>
+					<label>{l s='Carriers:'} </label>
+					<select name="id_carrier" id="id_carrier">
+					</select>
+				</p>
+				<p>
+					<label for="shipping_price">{l s='Shipping price:'}</label> <input type="text" id="shipping_price"  name="shipping_price" size="7" />&nbsp;<span class="currency_sign"></span>&nbsp;
+					<a class="button" href="#" onclick="resetShippingPrice()">{l s='Reset shipping price'}</a>
+				</p>
+			</div>
+			<div id="float:left;">
+				{if $recyclable_pack}
+					<p><input type="checkbox" name="carrier_recycled_package" value="1" id="carrier_recycled_package" />  <label for="carrier_recycled_package">{l s='Recycled package'}</label></p>
+				{/if}
+				{if $gift_wrapping}
+					<p><input type="checkbox" name="order_gift" id="order_gift" value="1" /> <label for="order_gift">{l s='Gift'}</label></p>
+					<p><label for="gift_message">{l s='Gift message:'}</label><textarea id="gift_message" cols="40" rows="4"></textarea></p>
+				{/if}
+			</div>
+		</div>
 	</div>
 </fieldset>
 <br />
