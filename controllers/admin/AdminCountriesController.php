@@ -250,8 +250,7 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'zip_code_format',
 					'class' => 'uppercase',
 					'required' => true,
-					'desc' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France.
-									No verification if undefined')
+					'desc' => $this->l('National zip code (L for a letter, N for a number and C for the Iso code), e.g., NNNNN for France. No verification if undefined')
 				),
 				array(
 					'type' => 'address_layout',
