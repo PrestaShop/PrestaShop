@@ -319,8 +319,7 @@ class AdminSuppliersControllerCore extends AdminController
 			foreach ($images_types as $k => $image_type)
 			{
 				$file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
-				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).$theme.'.jpg', (int)$image_type['width'], (int)$image_type['height']);
+				ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']);
 			}
 		}
 	}
