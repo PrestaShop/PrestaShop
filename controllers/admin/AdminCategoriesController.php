@@ -80,6 +80,10 @@ class AdminCategoriesControllerCore extends AdminController
 			)
 		);
 
+		// if we are not in a shop context, we remove the position column
+		if ($this->context->shop() != Shop::CONTEXT_SHOP)
+			unset($this->fieldsDisplay['position']);
+
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected')));
 		$this->specificConfirmDelete = false;
 		
@@ -143,13 +147,13 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 
 		$this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
-		$this->_select = 'position ';
+		$this->_select = 'cs.`position` ';
+		$id = $this->context->shop->id;
+		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (a.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')';
 		// we add restriction for shop
 		if (Shop::CONTEXT_SHOP == Context::getContext()->shop() && $is_multishop)
-		{
-			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON a.`id_category` = cs.`id_category`';
 			$this->_where = ' AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true);
-		}
 
 		$categories_tree = $this->_category->getParentsCategories();
 		if (empty($categories_tree)
@@ -177,7 +181,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
-		parent::getList($id_lang, 'position', $order_way, $start, $limit, Context::getContext()->shop->getID(true));
+		parent::getList($id_lang, 'cs.position', $order_way, $start, $limit, Context::getContext()->shop->getID(true));
 		// Check each row to see if there are combinations and get the correct action in consequence
 
 		$nb_items = count($this->_list);
@@ -260,7 +264,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->initToolbar();
 		$obj = $this->loadObject(true);
 		$id_shop = Context::getContext()->shop->getID(true);
-		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', 1));
+		$selected_cat = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? $obj->id_parent : Tools::getValue('id_parent', Category::getRootCategory()->id));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
@@ -585,6 +589,42 @@ class AdminCategoriesControllerCore extends AdminController
 	public static function getDescriptionClean($description)
 	{
 		return strip_tags(stripslashes($description));
+	}
+
+	protected function updateAssoShop($id_object = false, $new_id_object = false)
+	{
+		if (!Shop::isFeatureActive())
+			return;
+
+		$assos_data = $this->getAssoShop($this->table, $id_object);
+		$assos = $assos_data[0];
+		$type = $assos_data[1];
+
+		$categories_shop = Category::getShopsByCategory($id_object);
+
+		if (!$type)
+			return;
+
+		$delete = $insert = '';
+		foreach ($assos as $asso)
+		{
+			$passed = false;
+			$delete .= (int)$asso['id_'.$type].',';
+			foreach ($categories_shop as $cat)
+				if ($cat['id_shop'] == $asso['id_'.$type])
+					$passed = true;
+			if (!$passed)
+				$insert .= '('.($new_id_object ? (int)$new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].'),';
+		}
+		$delete = substr($delete, 0, strlen($delete) - 1);
+		$insert = substr($insert, 0, strlen($insert) - 1);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.
+			($id_object ? ' WHERE `'.$this->identifier.'` = '.(int)$id_object.' AND `id_'.$type.'` NOT IN ('.$delete.')' : ''));
+
+		if (!empty($insert))
+			Db::getInstance()->execute('
+				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, `id_'.$type.'`)
+				VALUES '.pSQL($insert));
 	}
 }
 

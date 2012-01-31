@@ -266,6 +266,7 @@ class AdminScenesControllerCore extends AdminController
 						'use_radio' => false,
 						'use_search' => true,
 						'disabled_categories' => array(4),
+						'top_category' => Category::getTopCategory(),
 					)
 				);
 		}
