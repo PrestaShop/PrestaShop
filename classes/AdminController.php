@@ -2436,23 +2436,25 @@ class AdminControllerCore extends Controller
 			$max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
 			if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->errors[] = $error;
-			else if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
+			
+			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+			if (!$tmp_name)
 				return false;
-			else
+			
+			if (!move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
+				return false;
+
+			// Copy new image
+			if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
+				$this->errors[] = Tools::displayError('An error occurred while uploading image.');
+			if (count($this->errors))
+				return false;
+			if ($this->afterImageUpload())
 			{
-				$tmp_name = $_FILES[$name]['tmp_name'];
-				// Copy new image
-				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
-					$this->errors[] = Tools::displayError('An error occurred while uploading image.');
-				if (count($this->errors))
-					return false;
-				if ($this->afterImageUpload())
-				{
-					unlink($tmp_name);
-					return true;
-				}
-				return false;
+				unlink($tmp_name);
+				return true;
 			}
+			return false;
 		}
 		return true;
 	}
