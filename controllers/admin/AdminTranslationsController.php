@@ -259,7 +259,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$items = array_flip(Language::getFilesList($lang, $theme, false, false, false, false, true));
 			$gz = new Archive_Tar(_PS_TRANSLATIONS_DIR_.'/export/'.$lang.'.gzip', true);
 			if ($gz->createModify($items, null, _PS_ROOT_DIR_));
-				Tools::redirect('translations/export/'.$lang.'.gzip');
+				Tools::redirectLink(Tools::getCurrentUrlProtocolPrefix().Tools::getShopDomain().__PS_BASE_URI__.'translations/export/'.$lang.'.gzip');
 			$this->errors[] = Tools::displayError('An error occurred while creating archive.');
 		}
 		$this->errors[] = Tools::displayError('Please choose a language and theme.');
