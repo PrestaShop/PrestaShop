@@ -408,6 +408,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->displayInformation($this->l('This interface allows you to manage supply orders.').'<br />');
 		$this->displayInformation($this->l('Also, you can create templates that you can later use to generate actual orders.').'<br />');
 
+		if (count($this->warehouses) <= 1)
+			$this->displayWarning($this->l('You must have at least one warehouse before creating supply orders. See Stock/Warehouses'));
+
 		// assigns warehouses
 		$this->tpl_list_vars['warehouses'] = $this->warehouses;
 		$this->tpl_list_vars['current_warehouse'] = $this->getCurrentWarehouse();
