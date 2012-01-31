@@ -45,8 +45,7 @@ class AdminOrdersControllerCore extends AdminController
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
 		os.`color`,
-		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
-		(SELECT COUNT(od.`id_order`) FROM `'._DB_PREFIX_.'order_detail` od WHERE od.`id_order` = a.`id_order` GROUP BY `id_order`) AS product_number';
+		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new';
 
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
@@ -54,8 +53,8 @@ class AdminOrdersControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_where = 'AND oh.`id_order_history` = (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` moh WHERE moh.`id_order` = a.`id_order` GROUP BY moh.`id_order`)';
-		$this->_orderBy = '`id_order`';
-		$this->_orderWay = 'DESC'; // FIXME
+		$this->_orderBy = 'id_order';
+		$this->_orderWay = 'DESC';
 
 		$statuses_array = array();
 		$statuses = OrderState::getOrderStates((int)$this->context->language->id);
@@ -175,7 +174,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function postProcess()
 	{
 		// If id_order is sent, we instanciate a new Order object
-		if (Tools::isSubmit('id_order'))
+		if (Tools::isSubmit('id_order') && Tools::getValue('id_order') > 0)
 		{
 			$order = new Order(Tools::getValue('id_order'));
 			if (!Validate::isLoadedObject($order))

@@ -1956,9 +1956,23 @@ class AdminControllerCore extends Controller
 			throw new PrestaShopException(sprintf('Table name %s is invalid:', $this->table));
 
 		if (empty($order_by))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+		{
+			if ($this->context->cookie->{$this->table.'Orderby'})
+				$order_by = $this->context->cookie->{$this->table.'Orderby'};
+			elseif ($this->_orderBy)
+				$order_by = $this->_orderBy;
+			else
+				$order_by = $this->_defaultOrderBy;
+		}
 		if (empty($order_way))
-			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : $this->_defaultOrderWay;
+		{
+			if ($this->context->cookie->{$this->table.'Orderway'})
+				$order_way = $this->context->cookie->{$this->table.'Orderway'};
+			elseif ($this->_orderWay)
+				$order_way = $this->_orderWay;
+			else
+				$order_way = $this->_defaultOrderWay;
+		}
 
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
