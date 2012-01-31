@@ -281,7 +281,7 @@ class AdminCountriesControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'desc' => $this->l('Display or not this store')
+					'desc' => $this->l('Display or not this country')
 				),
 				array(
 					'type' => 'radio',
