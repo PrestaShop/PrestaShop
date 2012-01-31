@@ -151,6 +151,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'name' => 'id_state',
 					'options' => array(
 						'id' => 'id_state',
+						'query' => array(),
 						'name' => 'name'
 					)
 				),
