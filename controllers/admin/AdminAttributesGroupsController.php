@@ -519,7 +519,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function processSave($token)
 	{
-		if ($this->display == 'add')
+		if ($this->display == 'add' || $this->display == 'edit')
 			$this->identifier = 'id_attribute_group';
 		else
 			$this->identifier = 'id_attribute';
