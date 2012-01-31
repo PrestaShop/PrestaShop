@@ -234,14 +234,14 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	 */
 	public function display()
 	{
-		$this->process_steps = array(
-			array('key' => 'installDatabase', 'lang' => $this->l('Create database tables')),
-			array('key' => 'populateDatabase', 'lang' => $this->l('Populate database tables')),
-			array('key' => 'configureShop', 'lang' => $this->l('Configure shop informations')),
-			array('key' => 'installModules', 'lang' => $this->l('Install modules')),
-			array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data')),
-			array('key' => 'installTheme', 'lang' => $this->l('Install theme')),
-		);
+		$this->process_steps = array();
+		$this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->l('Create database tables'));
+		$this->process_steps[] = array('key' => 'populateDatabase', 'lang' => $this->l('Populate database tables'));
+		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop informations'));
+		$this->process_steps[] = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
+		if ($this->session->install_type == 'full')
+			$this->process_steps[] = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
+		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('CInstall theme'));
 		$this->displayTemplate('process');
 	}
 }
