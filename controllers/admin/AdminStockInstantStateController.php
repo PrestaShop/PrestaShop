@@ -93,9 +93,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'width' => 80,
 				'orderby' => true,
 				'search' => false,
-				'hint' => $this->l('Pysical qty,
-									in combination with the quantity you ordered (atm) from your supplier,
-									minus what is ordered (atm) by clients.')
+				'hint' => $this->l('Pysical qty (usable) - Clients orders + Supply Orders'),
 			),
 		);
 
