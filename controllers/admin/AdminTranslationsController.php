@@ -448,7 +448,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$is_default = $theme_name === self::DEFAULT_THEME_NAME ? true : false;
 
 		if (!$dir)
-			$dir = ($theme_name === self::DEFAULT_THEME_NAME ? _PS_MODULE_DIR_.$module_name.'/' : _PS_ALL_THEMES_DIR_.$theme_name.'/modules/'.$module_name.'/');
+			$dir = ($is_default ? _PS_MODULE_DIR_.$module_name.'/' : _PS_ALL_THEMES_DIR_.$theme_name.'/modules/'.$module_name.'/');
 
 		// Thank to this var similar keys are not duplicate
 		// in AndminTranslation::modules_translations array
@@ -1665,9 +1665,13 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			if ($module{0} != '.' && is_dir($root_dir.$module))
 			{
-				@include($root_dir.$module.'/'.$lang.'.php');
+				if (file_exists($root_dir.$module.'/translations/'.$lang.'.php'))
+					$lang_file = $root_dir.$module.'/translations/'.$lang.'.php';
+				else
+					$lang_file = $root_dir.$module.'/'.$lang.'.php';
+				@include($lang_file);
 				AdminTranslationsController::getModuleTranslations($is_default);
-				$this->recursiveGetModuleFiles($root_dir.$module.'/', $array_files, $module, $root_dir.$module.'/'.$lang.'.php', $is_default);
+				$this->recursiveGetModuleFiles($root_dir.$module.'/', $array_files, $module, $lang_file, $is_default);
 			}
 		}
 		return $array_files;

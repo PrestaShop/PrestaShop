@@ -105,7 +105,7 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Join current entity to an associated entity
 	 *
-	 * @param $association Association name
+	 * @param string $association Association name
 	 * @param string $on
 	 * @param int $type
 	 * @return Collection
@@ -304,10 +304,6 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 			return $this;
 		$this->is_hydrated = true;
 
-		$alias = $this->generateAlias();
-		//$this->query->select($alias.'.*');
-		$this->query->from($this->definition['table'], $alias);
-
 		// If multilang, create association to lang table
 		if (!empty($this->definition['multilang']))
 		{
@@ -315,6 +311,39 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 			if ($this->id_lang)
 				$this->where(self::LANG_ALIAS.'.id_lang', '=', $this->id_lang);
 		}
+
+		// Build query
+		$this->query->from($this->definition['table'], $this->generateAlias());
+
+		// Add list of fields to select
+		$association_list = array('');
+		$association_list = array_merge($association_list, array_keys($this->join_list));
+		$fields_tree = array();
+		$fields = array();
+		$fields_alias = array();
+		foreach ($association_list as $association)
+		{
+			$def = $this->getDefinition($association);
+			$is_lang = !empty($def['is_lang']);
+			foreach ($def['fields'] as $field => $info)
+				if ((!$is_lang && empty($info['lang'])) || ($is_lang && !empty($info['lang'])))
+				{
+					$fields_tree[$association][] = $field;
+					if (!isset($fields[$field]))
+						$fields[$field] = $association;
+					else
+					{
+						if (!isset($fields_alias[$field]))
+							$fields_alias[$field] = array($fields[$field]);
+						$fields_alias[$field][] = $association;
+					}
+				}
+		}
+
+		$this->query->select('*');
+		foreach ($fields_alias as $field => $associations)
+			foreach ($associations as $association)
+			$this->query->select($this->generateAlias($association).'.'.$field.' as \''.$association.'.'.$field.'\'');
 
 		// Add join clause
 		foreach ($this->join_list as $data)
@@ -340,8 +369,31 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 		if ($display_query)
 			echo $this->query.'<br />';
 
-		$this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
-		$this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
+		// Get results and organize them
+		/*$results = array();
+		$query_ressource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($this->query);
+		while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($query_ressource))
+		{
+			$result = array();
+			foreach ($fields_tree as $association => $fields)
+			{
+				if ($association)
+				{
+					$ref = &$result;
+					foreach (explode('.', $association) as $asso)
+					{
+						if (!isset($ref['@associations'][$asso]))
+							$ref['@associations'][$asso] = array();
+						$ref = &$ref['@associations'][$asso];
+						$ref = &$ref[count($ref) - 1];
+					}
+				}
+			}
+
+			$results[] = $result;
+		}
+		d($results);*/
+		$this->results = ObjectModel::hydrateCollection($this->classname, Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query), $this->id_lang);
 
 		return $this;
 	}
@@ -497,25 +549,23 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 
 		if (!isset($this->association_definition[$association]))
 		{
-			$definition = $this->definition;
+			// Get previous association definition
 			$split = explode('.', $association);
-			$is_lang = false;
-			for ($i = 0, $total_association = count($split); $i < $total_association; $i++)
+			$asso = array_pop($split);
+			$previous_association = implode('.', $split);
+			$definition = $this->getDefinition($previous_association);
+
+			// Check if association exists
+			if (!isset($definition['associations'][$asso]))
+				throw new PrestaShopException('Association '.$asso.' not found for class '.$definition['classname']);
+			$current_def = $definition['associations'][$asso];
+
+			// Special case for lang alias
+			if ($asso == self::LANG_ALIAS)
+				$is_lang = true;
+			else
 			{
-				$asso = $split[$i];
-
-				// Check is current association exists in current definition
-				if (!isset($definition['associations'][$asso]))
-					throw new PrestaShopException('Association '.$asso.' not found for class '.$this->definition['classname']);
-				$current_def = $definition['associations'][$asso];
-
-				// Special case for lang alias
-				if ($asso == self::LANG_ALIAS)
-				{
-					$is_lang = true;
-					break;
-				}
-
+				$is_lang = false;
 				$classname = (isset($current_def['object'])) ? $current_def['object'] : Tools::toCamelCase($asso, true);
 				$definition = ObjectModel::getDefinition($classname);
 			}
@@ -524,22 +574,22 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 			$current_def['name'] = $asso;
 			if (!isset($current_def['object']))
 				$current_def['object'] = Tools::toCamelCase($asso, true);
+
 			if (!isset($current_def['field']))
 				$current_def['field'] = 'id_'.$asso;
+
 			if (!isset($current_def['foreign_field']))
 				$current_def['foreign_field'] = 'id_'.$asso;
-			if ($total_association > 1)
-			{
-				unset($split[$total_association - 1]);
-				$current_def['complete_field'] = implode('.', $split).'.'.$current_def['field'];
-			}
-			else
-				$current_def['complete_field'] = $current_def['field'];
+
+			$current_def['complete_field'] = (($previous_association) ? '.' : '').$current_def['field'];
 			$current_def['complete_foreign_field'] = $association.'.'.$current_def['field'];
 
 			$definition['is_lang'] = $is_lang;
 			$definition['asso'] = $current_def;
 			$this->association_definition[$association] = $definition;
+
+			// Create join clause for this association
+			$this->join($association);
 		}
 		else
 			$definition = $this->association_definition[$association];
@@ -618,9 +668,6 @@ class CollectionCore implements Iterator, ArrayAccess, Countable
 			}
 
 			$definition = $this->getDefinition($association);
-			if ($association && !isset($this->join_list[$association]))
-				$this->join($association);
-
 			if ($fieldname == $definition['primary'] || (!empty($definition['is_lang']) && $fieldname == 'id_lang'))
 				$type = ObjectModel::TYPE_INT;
 			else

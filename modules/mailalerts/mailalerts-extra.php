@@ -28,7 +28,7 @@
 $('document').ready(function(){
 	$('#mailalerts_block_extra_add').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'add')}",
+			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'add'])}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
@@ -46,7 +46,7 @@ $('document').ready(function(){
 	});
 	$('#mailalerts_block_extra_remove').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'remove')}",
+			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
@@ -64,7 +64,7 @@ $('document').ready(function(){
 	});
 	$('#mailalerts_block_extra_added').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'remove')}",
+			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'remove'])}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}
@@ -82,7 +82,7 @@ $('document').ready(function(){
 	});
 	$('#mailalerts_block_extra_removed').click(function(){
 		$.ajax({
-			url: "{$link->getModuleLink('mailalerts', 'add')}",
+			url: "{$link->getModuleLink('mailalerts', 'actions', ['process' => 'add'])}",
 			type: "POST",
 			data: {
 				"id_product": {$smarty.get.id_product}

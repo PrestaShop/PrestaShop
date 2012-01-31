@@ -1236,16 +1236,18 @@ abstract class ModuleCore
 
 		global $_MODULES, $_MODULE;
 
-		if ($id_lang == null)
-			$id_lang = Context::getContext()->language->id;
-		$file = _PS_MODULE_DIR_.$this->name.'/'.Context::getContext()->language->iso_code.'.php';
+		// @retrocompatibility with translations files in module root
+		if (Tools::file_exists_cache($this->local_path.'/translations/'.Context::getContext()->language->iso_code.'.php'))
+			$file = $this->local_path.'/translations/'.Context::getContext()->language->iso_code.'.php';
+		else
+			$file = $this->local_path.'/'.Context::getContext()->language->iso_code.'.php';
 
 		if (Tools::file_exists_cache($file) && include_once($file))
 			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 
 		$source = $specific ? $specific : $this->name;
 		$string = str_replace('\'', '\\\'', $string);
-		$ret = $this->findTranslation($this->name, $string, $source);
+		$ret = Module::findTranslation($this->name, $string, $source);
 		return $ret;
 	}
 
@@ -1421,6 +1423,8 @@ abstract class ModuleCore
 	{
 		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/'.$template))
 			return true;
+		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/views/templates/hook/'.$template))
+			return false;
 		elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$template))
 			return false;
 		return null;
@@ -1443,7 +1447,7 @@ abstract class ModuleCore
 			));
 
 			$smarty_subtemplate = $this->context->smarty->createTemplate(
-				($overloaded ? _PS_THEME_DIR_.'modules/'.basename($file, '.php') : _PS_MODULE_DIR_.basename($file, '.php')).'/'.$template,
+				$this->getTemplatePath($template),
 				$cacheId,
 				$compileId,
 				$this->smarty
@@ -1466,7 +1470,12 @@ abstract class ModuleCore
 		$overloaded = $this->_isTemplateOverloaded($template);
 		if (is_null($overloaded))
 			return null;
-		return ($overloaded ? _PS_THEME_DIR_.'modules/'.$this->name : _PS_MODULE_DIR_.$this->name).'/'.$template;
+		if ($overloaded)
+			return _PS_THEME_DIR_.'modules/'.$this->name.'/'.$template;
+		else if (file_exists(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template))
+			return _PS_MODULE_DIR_.$this->name.'/views/templates/hook/'.$template;
+		else
+			return _PS_MODULE_DIR_.$this->name.'/'.$template;
 	}
 
 	protected function _getApplicableTemplateDir($template)
@@ -1597,6 +1606,17 @@ abstract class ModuleCore
 	public function getConfirmations()
 	{
 		return $this->_confirmations;
+	}
+
+	/**
+	 * Get local path for module
+	 *
+	 * @since 1.5.0
+	 * @return string
+	 */
+	public function getLocalPath()
+	{
+		return $this->local_path;
 	}
 
 	/**

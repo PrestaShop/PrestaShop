@@ -278,7 +278,7 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getModuleLink($module, $process = '', $ssl = false, $id_lang = null)
+	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = false, $id_lang = null)
 	{
 		$base = (($ssl && Configuration::get('PS_SSL_ENABLED')) ? _PS_BASE_URL_SSL_ : _PS_BASE_URL_);
 
@@ -287,9 +287,8 @@ class LinkCore
 		$url = $base.__PS_BASE_URI__.$this->getLangLink($id_lang);
 
 		// Set available keywords
-		$params = array();
 		$params['module'] = $module;
-		$params['process'] = $process;
+		$params['controller'] = $controller ? $controller : 'default';
 
 		return $url.Dispatcher::getInstance()->createUrl('module', $params, $this->allow);
 	}
