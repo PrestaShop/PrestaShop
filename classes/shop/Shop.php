@@ -918,7 +918,9 @@ class ShopCore extends ObjectModel
 			$query->select('cs.`id_category`');
 		else
 			$query->select('DISTINCT cs.`id_category`, cl.`name`, cl.`link_rewrite`');
-		$query->from('category_shop', 'cs')->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id)->where('cs.`id_shop` = '.(int)$id);
+		$query->from('category_shop', 'cs');
+		$query->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id);
+		$query->where('cs.`id_shop` = '.(int)$id);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		if ($only_id)
