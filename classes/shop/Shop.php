@@ -71,8 +71,8 @@ class ShopCore extends ObjectModel
 	private	static $asso_tables = array(
 		'carrier' => array('type' => 'shop'),
 		'carrier_lang' => array('type' => 'fk_shop'),
-		'category' => 	array('type' => 'shop'),
-		'category_lang' => 	array('type' => 'fk_shop'),
+		'category' => array('type' => 'shop'),
+		'category_lang' => array('type' => 'fk_shop'),
 		'cms' => array('type' => 'shop'),
 		'contact' => array('type' => 'shop'),
 		'country' => array('type' => 'shop'),
@@ -918,9 +918,7 @@ class ShopCore extends ObjectModel
 			$query->select('cs.`id_category`');
 		else
 			$query->select('DISTINCT cs.`id_category`, cl.`name`, cl.`link_rewrite`');
-		$query->from('category_shop', 'cs')
-			->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id)
-			->where('cs.`id_shop` = '.(int)$id);//d($query->__toString());
+		$query->from('category_shop', 'cs')->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id)->where('cs.`id_shop` = '.(int)$id);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		if ($only_id)
@@ -934,69 +932,6 @@ class ShopCore extends ObjectModel
 			return $result;
 
 		return $array;
-	}
-
-	/**
-	* Update categories for a shop
-	*
-	* @param string $productCategories Categories list to associate a shop
-	* @return array Update/insertion result
-	*/
-	public function updateCategories($categories)
-	{
-		// if array is empty or if the default category is not selected, return false
-		if (empty($categories) || !in_array($this->id_category, $categories))
-			return false;
-
-		// delete categories for this shop
-		$this->deleteCategories();
-
-		// and add $categories to this shop
-		return $this->addToCategories($categories);
-	}
-
-	/**
-	 * Delete shop from category $id_category
-	 * @param int $id_category
-	 * @return bool
-	 */
-	public function deleteCategory($id_category)
-	{
-		return Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'category_shop`
-			WHERE `id_shop` = '.(int)$this->id.'
-			AND id_category = '.(int)$id_category.''
-		);
-	}
-
-	/**
-	 * Delete every categories
-	 * @return bool
-	 */
-	public function deleteCategories()
-	{
-		return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE `id_shop` = '.(int)$this->id.'
-		');
-	}
-
-	/**
-	 * Add some categories to a shop
-	 * @param array $categories
-	 * @return bool
-	 */
-	public function addToCategories($categories)
-	{
-		if (!is_array($categories))
-			return false;
-		$sql = '
-		INSERT INTO `'._DB_PREFIX_.'category_shop` (`id_category`, `id_shop`) VALUES';
-		foreach ($categories as $c)
-			$sql .= '("'.(int)$c.'", "'.(int)$this->id.'"),';
-		// removing last comma to avoid SQL error
-		$sql = substr($sql, 0, strlen($sql) - 1);
-
-		return Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -1020,13 +955,15 @@ class ShopCore extends ObjectModel
 	 */
 	public static function isProductAvailable($id_product)
 	{
+		$id = Context::getContext()->shop->id;
+		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
 		return (bool)Db::getInstance()->getValue('
 		SELECT p.`id_product`
 		FROM `'._DB_PREFIX_.'product` p
 		LEFT JOIN `'._DB_PREFIX_.'category_product` cp
 			ON p.`id_product` = cp.`id_product`
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
-			ON cp.`id_category` = cs.`id_category`
+			ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 		WHERE p.`id_product` = '.(int)$id_product.'
 		AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID(true));
 	}
