@@ -218,7 +218,7 @@ class Blocknewsletter extends Module
 			//	return $this->error = $this->l('E-mail address already registered');
 
 			$email = pSQL($_POST['email']);
-			if (true || !$this->isRegistered($register_status))
+			if (!$this->isRegistered($register_status))
 			{
 				if (Configuration::get('NW_VERIFICATION_EMAIL'))
 				{
@@ -451,7 +451,9 @@ class Blocknewsletter extends Module
 	 */
 	protected function sendVerificationEmail($email, $token)
 	{
-		$verif_url = Context::getContext()->link->getModuleLink('blocknewsletter', 'verification').'&token='.$token;
+		$verif_url = Context::getContext()->link->getModuleLink('blocknewsletter', 'verification', array(
+			'token' => $token,
+		));
 		return Mail::Send($this->context->language->id, 'newsletter_verif', Mail::l('Email verification', $this->context->language->id), array('{verif_url}' => $verif_url), $email, null, null, null, null, null, dirname(__FILE__).'/mails/');
 	}
 

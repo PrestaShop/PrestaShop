@@ -35,7 +35,7 @@ function smartyTranslate($params, &$smarty)
 	if (!isset($params['mod'])) $params['mod'] = false;
 
 	$string = str_replace('\'', '\\\'', $params['s']);
-	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
+	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 	$key = Tools::substr(basename($filename), 0, -4).'_'.md5($string);
 	$lang_array = $_LANG;
 	if ($params['mod'])
@@ -49,11 +49,15 @@ function smartyTranslate($params, &$smarty)
 		}
 		else
 		{
-			$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/'.$iso.'.php';
+			// @retrocompatibility with translations files in module root
+			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$params['mod'].'/translations'))
+				$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/translations/'.$iso.'.php';
+			else
+				$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/'.$iso.'.php';
 			$key = '<{'.$params['mod'].'}prestashop>'.$key;
 		}
 
-		if(!is_array($_MODULES))
+		if (!is_array($_MODULES))
 			$_MODULES = array();
 		if (@include_once($translationsFile))
 			if(is_array($_MODULE))
@@ -72,9 +76,9 @@ function smartyTranslate($params, &$smarty)
 		$lang_array = $_LANGPDF;
 	}
 
-	if (is_array($lang_array) AND key_exists($key, $lang_array))
+	if (is_array($lang_array) && key_exists($key, $lang_array))
 		$msg = $lang_array[$key];
-	elseif (is_array($lang_array) AND key_exists(Tools::strtolower($key), $lang_array))
+	elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
 		$msg = $lang_array[Tools::strtolower($key)];
 	else
 		$msg = $params['s'];

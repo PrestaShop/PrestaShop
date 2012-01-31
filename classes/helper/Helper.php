@@ -79,8 +79,12 @@ class HelperCore
 	 */
 	public function createTemplate($tpl_name)
 	{
-		// Overrides exists?
-		if ($this->override_folder && file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
+		if ($this->context->controller instanceof ModuleAdminController)
+		{
+			if ($this->override_folder && file_exists($this->context->controller->getTemplatePath().$this->override_folder.$tpl_name))
+				return $this->context->smarty->createTemplate($this->context->controller->getTemplatePath().$this->override_folder.$tpl_name);
+		}
+		else if ($this->override_folder && file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
 			return $this->context->smarty->createTemplate('controllers/'.$this->override_folder.$tpl_name);
 
 		return $this->context->smarty->createTemplate($this->base_folder.$tpl_name);

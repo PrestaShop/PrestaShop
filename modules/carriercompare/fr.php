@@ -10,7 +10,6 @@ $_MODULE['<{carriercompare}prestashop>carriercompare_fb9e838d470b2c27c2c128d1271
 $_MODULE['<{carriercompare}prestashop>carriercompare_b72dd62d03697b37417288c63e78c8c6'] = 'Veuillez utiliser un code postal valide en fonction du pays choisi';
 $_MODULE['<{carriercompare}prestashop>carriercompare_3f63451bbacbb1c3303d99d0309fdfe9'] = 'Choississez un transporteur';
 $_MODULE['<{carriercompare}prestashop>carriercompare_efaf5c3827ef576b05de32ad458f196c'] = 'Cet identifiant de transporteur n\'est pas disponible pour cette sélection';
-$_MODULE['<{carriercompare}prestashop>carriercompare_edc5cf1b3bab64b1d45ef51c63b53887'] = 'Impossibilité de mettre a jour le panier';
 $_MODULE['<{carriercompare}prestashop>carriercompare_e7a6ca4e744870d455a57b644f696457'] = 'Offert !';
 $_MODULE['<{carriercompare}prestashop>carriercompare_fbc1bef527a3a092053a244fd8d87abf'] = 'Estimez vos frais de livraison & taxes';
 $_MODULE['<{carriercompare}prestashop>carriercompare_59716c97497eb9694541f7c3d37b1a4d'] = 'Pays';

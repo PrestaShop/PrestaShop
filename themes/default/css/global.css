@@ -1680,8 +1680,8 @@ ul#suppliers_list li .right_side {float:right;}
 /* ************************************************************************************************
       addon loyalty
 ************************************************************************************************ */
-#module-loyalty-loyalty-program #left_column {display:none}
-#module-loyalty-loyalty-program #center_column{width:757px}
+#module-loyalty-default #left_column {display:none}
+#module-loyalty-default #center_column{width:757px}
 
 #product p#loyalty {
 	padding:10px 0 0 20px;
