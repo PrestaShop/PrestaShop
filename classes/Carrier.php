@@ -1065,7 +1065,7 @@ class CarrierCore extends ObjectModel
 			}
 			else
 			{
-				$country = new Country(Context::getContext()->shop->getAddress()->id_country);
+				$country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
 				$id_zone = $country->id_zone;
 			}
 			$carriers = Carrier::getCarriersForOrder($id_zone, Context::getContext()->customer->getGroups());
