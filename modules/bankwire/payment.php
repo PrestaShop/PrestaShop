@@ -26,7 +26,7 @@
 */
 
 /**
- * @deprecated 1.5.0 This file is deprecated, use moduleController instead
+ * @deprecated 1.5.0 This file is deprecated, use moduleFrontController instead
  */
 
 /* SSL Management */
@@ -39,4 +39,4 @@ Tools::displayFileAsDeprecated();
 $controller = new FrontController();
 $controller->init();
 
-Tools::redirect('index.php?controller=module&module=bankwire&process=payment');
+Tools::redirect(Context::getContext()->link->getModuleLink('bankwire', 'payment'));

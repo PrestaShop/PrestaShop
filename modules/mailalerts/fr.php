@@ -2,14 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mon compte';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_4edfd10d0bb5f51e0fd2327df608b5a8'] = 'Mes alertes';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_deb10517653c255364175796ace3553f'] = 'Produit';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_074c07016d3e5a9f011aa8e62abe4517'] = 'Vous n\'êtes inscris à aucune alerte.';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_0b3db27bc15f682e92ff250ebb167d4b'] = 'Retour à votre compte';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_8cf04a9734132302f96da8e113e80ce5'] = 'Accueil';
-$_MODULE['<{mailalerts}prestashop>mailalerts-account_8bb23c2ae698681ebb650f43acb54dab'] = 'Aucune alerte mail.';
 $_MODULE['<{mailalerts}prestashop>mailalerts_fd30254803e8db32521d3390131a44da'] = 'Alertes email';
 $_MODULE['<{mailalerts}prestashop>mailalerts_2d51f4a7ab8a12c4f35b507019523b8c'] = 'Envoie des notifications par e-mail aux clients et aux marchands.';
 $_MODULE['<{mailalerts}prestashop>mailalerts_8fd3b84964bd6dfec8095f658d200b29'] = 'Etes-vous sûr de vouloir supprimer toutes les notifications clients ?';
@@ -33,6 +25,14 @@ $_MODULE['<{mailalerts}prestashop>mailalerts_f77ed609e48d550f0166dfbafc102710'] 
 $_MODULE['<{mailalerts}prestashop>mailalerts_7cb9a154f101c674c945f88dad5c5e28'] = 'Aucun message';
 $_MODULE['<{mailalerts}prestashop>mailalerts_9137796c15dd92e5553c3f29574d0968'] = 'Code de réduction :';
 $_MODULE['<{mailalerts}prestashop>mailalerts_4c9120f1a5947445c0e9620254ceb30b'] = 'Nouvelle commande';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mon compte';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_4edfd10d0bb5f51e0fd2327df608b5a8'] = 'Mes alertes';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_deb10517653c255364175796ace3553f'] = 'Produit';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_074c07016d3e5a9f011aa8e62abe4517'] = 'Vous n\'êtes inscris à aucune alerte.';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_0b3db27bc15f682e92ff250ebb167d4b'] = 'Retour à votre compte';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_8cf04a9734132302f96da8e113e80ce5'] = 'Accueil';
+$_MODULE['<{mailalerts}prestashop>mailalerts-account_8bb23c2ae698681ebb650f43acb54dab'] = 'Aucune alerte mail.';
 $_MODULE['<{mailalerts}prestashop>my-account_4edfd10d0bb5f51e0fd2327df608b5a8'] = 'Mes alertes';
 $_MODULE['<{mailalerts}prestashop>product_67135a14d3ac4f1369633dd006d6efec'] = 'votre@email.com';
 $_MODULE['<{mailalerts}prestashop>product_61172eb93737ebf095d3fa02119ce1df'] = 'Demande de notification enregistrée';

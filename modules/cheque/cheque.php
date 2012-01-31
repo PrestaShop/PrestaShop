@@ -33,8 +33,8 @@ class Cheque extends PaymentModule
 	private $_html = '';
 	private $_postErrors = array();
 
-	public  $chequeName;
-	public  $address;
+	public $chequeName;
+	public $address;
 
 	public function __construct()
 	{
@@ -58,22 +58,22 @@ class Cheque extends PaymentModule
 		$this->description = $this->l('Module for accepting payments by check.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 
-		if (!isset($this->chequeName) OR !isset($this->address) OR empty($this->chequeName) OR empty($this->address))
+		if (!isset($this->chequeName) || !isset($this->address) || empty($this->chequeName) || empty($this->address))
 			$this->warning = $this->l('\'To the order of\' and address must be configured in order to use this module correctly.');
-		if (!sizeof(Currency::checkPaymentCurrencies($this->id)))
+		if (!count(Currency::checkPaymentCurrencies($this->id)))
 			$this->warning = $this->l('No currency set for this module');
 	}
 
 	public function install()
 	{
-		if (!parent::install() OR !$this->registerHook('payment') OR !$this->registerHook('paymentReturn'))
+		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn'))
 			return false;
 		return true;
 	}
 
 	public function uninstall()
 	{
-		if (!Configuration::deleteByName('CHEQUE_NAME') OR !Configuration::deleteByName('CHEQUE_ADDRESS') OR !parent::uninstall())
+		if (!Configuration::deleteByName('CHEQUE_NAME') || !Configuration::deleteByName('CHEQUE_ADDRESS') || !parent::uninstall())
 			return false;
 		return true;
 	}
@@ -132,11 +132,11 @@ class Cheque extends PaymentModule
 		if (Tools::isSubmit('btnSubmit'))
 		{
 			$this->_postValidation();
-			if (!sizeof($this->_postErrors))
+			if (!count($this->_postErrors))
 				$this->_postProcess();
 			else
-				foreach ($this->_postErrors AS $err)
-					$this->_html .= '<div class="alert error">'. $err .'</div>';
+				foreach ($this->_postErrors as $err)
+					$this->_html .= '<div class="alert error">'.$err.'</div>';
 		}
 		else
 			$this->_html .= '<br />';
@@ -150,9 +150,9 @@ class Cheque extends PaymentModule
 	public function hookPayment($params)
 	{
 		if (!$this->active)
-			return ;
+			return;
 		if (!$this->checkCurrency($params['cart']))
-			return ;
+			return;
 
 		$this->smarty->assign(array(
 			'this_path' => $this->_path,
@@ -164,10 +164,10 @@ class Cheque extends PaymentModule
 	public function hookPaymentReturn($params)
 	{
 		if (!$this->active)
-			return ;
+			return;
 
 		$state = $params['objOrder']->getCurrentState();
-		if ($state == Configuration::get('PS_OS_CHEQUE') OR $state == Configuration::get('PS_OS_OUTOFSTOCK'))
+		if ($state == Configuration::get('PS_OS_CHEQUE') || $state == Configuration::get('PS_OS_OUTOFSTOCK'))
 		{
 			$this->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
@@ -190,7 +190,7 @@ class Cheque extends PaymentModule
 		$currencies_module = $this->getCurrency((int)$cart->id_currency);
 
 		if (is_array($currencies_module))
-			foreach ($currencies_module AS $currency_module)
+			foreach ($currencies_module as $currency_module)
 				if ($currency_order->id == $currency_module['id_currency'])
 					return true;
 		return false;
