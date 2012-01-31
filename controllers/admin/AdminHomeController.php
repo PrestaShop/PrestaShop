@@ -203,8 +203,8 @@ class AdminHomeControllerCore extends AdminController
 		);
 
 		$quick_links['sixth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminOrders').'&amp;id_order',
-			'title' => $this->l('New admin order'),
+			'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
+			'title' => $this->l('New Cart Rules'),
 			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
 		);
 
@@ -215,8 +215,8 @@ class AdminHomeControllerCore extends AdminController
 		);
 
 		$quick_links['eighth'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
-			'title' => $this->l('New Cart Rules'),
+			'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
+			'title' => $this->l('New Promote Carts'),
 			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
 		);
 		return $quick_links;
@@ -470,7 +470,7 @@ class AdminHomeControllerCore extends AdminController
 		$result['discover_prestashop'] = '<div id="block_tips">'.$this->getBlockDiscover().'</div>';
 
 		if (@fsockopen('api.prestashop.com', 80, $errno, $errst, AdminHomeController::TIPS_TIMEOUT))
-			$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:250px; overflow:hidden;" src="'.$protocol.'://www.dev.prestashop.com/rss/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
+			$result['discover_prestashop'] .= '<div class="row-news"><div id="block_discover"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height:250px; overflow:hidden;" src="'.$protocol.'://api.prestashop.com/rss2/news2.php?v='._PS_VERSION_.'&lang='.$isoUser.'"></iframe></div>';
 		else
 			$result['discover_prestashop'] .= '';
 
@@ -547,7 +547,7 @@ class AdminHomeControllerCore extends AdminController
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 
-		$content = @file_get_contents($protocol.'://localhost:8888/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		$content = @file_get_contents($protocol.'://www.dev.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 
 		if (!$content)
 			return ''; // NOK
