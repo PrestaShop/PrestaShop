@@ -1960,7 +1960,7 @@ FileETag INode MTime Size
 						$orderByPrefix = 'p.';
 					elseif ($value == 'name')
 						$orderByPrefix = 'pl.';
-					elseif ($value == 'manufacturer_name')
+					elseif ($value == 'manufacturer_name' && $prefix)
 					{
 						$orderByPrefix = 'm.';
 						$value = 'name';
