@@ -48,11 +48,17 @@
 
 {block name="script"}
 	var attributesGroups = {ldelim}{$strAttributesGroups}{rdelim};
-	$('#id_attribute_group').change(function() {
-		var val = $(this).val();
+	
+	var displayColorFieldsOption = function() {
+		var val = $('#id_attribute_group').val();
 		if (attributesGroups[val])
 			$('#colorAttributeProperties').show();
 		else
 			$('#colorAttributeProperties').hide();
-	});
+	};
+	
+	displayColorFieldsOption();
+	
+	$('#id_attribute_group').change(displayColorFieldsOption);
+	
 {/block}
