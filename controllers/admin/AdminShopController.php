@@ -210,7 +210,7 @@ class AdminShopControllerCore extends AdminController
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 			$this->errors[] = Tools::displayError('Unable to load this shop.');
 		else if (!Shop::has_dependency($object->id))
-			return $object->deleteCategories() && parent::processDelete($token);
+			return Category::deleteCategoriesFromShop($object->id) && parent::processDelete($token);
 		else
 			$this->errors[] = Tools::displayError('You can\'t delete this shop (customer and/or order dependency)');
 
@@ -226,7 +226,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function afterUpdate($new_shop)
 	{
-		$new_shop->updateCategories(Tools::getValue('categoryBox'));
+		Category::updateFromShop(Tools::getValue('categoryBox'), $new_shop->id);
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
 		return parent::afterUpdate($new_shop);
@@ -491,8 +491,11 @@ class AdminShopControllerCore extends AdminController
 		if (count($this->errors) > 0)
 			return;
 
-		$shop = new Shop($object->id);
-		$shop->updateCategories(Tools::getValue('categoryBox'));
+		// if we import datas from another shop, we do not update the shop categories
+		$import_data = Tools::getValue('importData');
+		if (!isset($import_data['category']))
+			Category::updateFromShop(Tools::getValue('categoryBox'), $object->id);
+
 		return $object;
 	}
 
@@ -501,6 +504,8 @@ class AdminShopControllerCore extends AdminController
 		$id_shop = Tools::getValue('id_shop');
 		$shop = new Shop($id_shop);
 		$selected_cat = Shop::getCategories($id_shop);
+		if (empty($selected_cat))
+			$selected_cat = array(Category::getRootCategory()->id);
 
 		if ($this->context->shop() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);
