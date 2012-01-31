@@ -145,28 +145,28 @@ class SearchCore
 		return $string;
 	}
 
-	public static function find($id_lang, $expr, $pageNumber = 1, $pageSize = 1, $orderBy = 'position',
-		$orderWay = 'desc', $ajax = false, $useCookie = true, Context $context = null)
+	public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
+		$order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
 		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
 
 		// Only use cookie if id_customer is not present
-		if ($useCookie)
+		if ($use_cookie)
 			$id_customer = $context->customer->id;
 		else
 			$id_customer = 0;
 
 		// TODO : smart page management
-		if ($pageNumber < 1) $pageNumber = 1;
-		if ($pageSize < 1) $pageSize = 1;
+		if ($page_number < 1) $page_number = 1;
+		if ($page_size < 1) $page_size = 1;
 
-		if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay))
+		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			return false;
 
-		$intersectArray = array();
-		$scoreArray = array();
+		$intersect_array = array();
+		$score_array = array();
 		$words = explode(' ', Search::sanitize($expr, $id_lang));
 
 		foreach ($words as $key => $word)
@@ -174,7 +174,7 @@ class SearchCore
 			{
 				$word = str_replace('%', '\\%', $word);
 				$word = str_replace('_', '\\_', $word);
-				$intersectArray[] = 'SELECT si.id_product
+				$intersect_array[] = 'SELECT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 					WHERE sw.id_lang = '.(int)$id_lang.'
@@ -186,7 +186,7 @@ class SearchCore
 					);
 
 				if ($word[0] != '-')
-					$scoreArray[] = 'sw.word LIKE \''.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\'';
+					$score_array[] = 'sw.word LIKE \''.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\'';
 			}
 			else
 				unset($words[$key]);
@@ -195,7 +195,7 @@ class SearchCore
 			return ($ajax ? array() : array('total' => 0, 'result' => array()));
 
 		$score = '';
-		if (count($scoreArray))
+		if (count($score_array))
 			$score = ',(
 				SELECT SUM(weight)
 				FROM '._DB_PREFIX_.'search_word sw
@@ -203,7 +203,7 @@ class SearchCore
 				WHERE sw.id_lang = '.(int)$id_lang.'
 					AND sw.id_shop = '.$context->shop->getID(true).'
 					AND si.id_product = p.id_product
-					AND ('.implode(' OR ', $scoreArray).')
+					AND ('.implode(' OR ', $score_array).')
 			) position';
 
 		$sql = 'SELECT cp.`id_product`
@@ -221,29 +221,29 @@ class SearchCore
 					)');
 		$results = $db->executeS($sql);
 
-		$eligibleProducts = array();
+		$eligible_products = array();
 		foreach ($results as $row)
-			$eligibleProducts[] = $row['id_product'];
-		foreach ($intersectArray as $query)
+			$eligible_products[] = $row['id_product'];
+		foreach ($intersect_array as $query)
 		{
-			$eligibleProducts2 = array();
+			$eligible_products2 = array();
 			foreach ($db->executeS($query) as $row)
-				$eligibleProducts2[] = $row['id_product'];
+				$eligible_products2[] = $row['id_product'];
 
-			$eligibleProducts = array_intersect($eligibleProducts, $eligibleProducts2);
-			if (!count($eligibleProducts))
+			$eligible_products = array_intersect($eligible_products, $eligible_products2);
+			if (!count($eligible_products))
 				return ($ajax ? array() : array('total' => 0, 'result' => array()));
 		}
 
-		$eligibleProducts = array_unique($eligibleProducts);
+		$eligible_products = array_unique($eligible_products);
 
-		$productPool = '';
-		foreach ($eligibleProducts as $id_product)
+		$product_pool = '';
+		foreach ($eligible_products as $id_product)
 			if ($id_product)
-				$productPool .= (int)$id_product.',';
-		if (empty($productPool))
+				$product_pool .= (int)$id_product.',';
+		if (empty($product_pool))
 			return ($ajax ? array() : array('total' => 0, 'result' => array()));
-		$productPool = ((strpos($productPool, ',') === false) ? (' = '.(int)$productPool.' ') : (' IN ('.rtrim($productPool, ',').') '));
+		$product_pool = ((strpos($product_pool, ',') === false) ? (' = '.(int)$product_pool.' ') : (' IN ('.rtrim($product_pool, ',').') '));
 
 		if ($ajax)
 		{
@@ -258,11 +258,16 @@ class SearchCore
 						p.`id_category_default` = cl.`id_category`
 						AND cl.`id_lang` = '.(int)$id_lang.$context->shop->addSqlRestrictionOnLang('cl').'
 					)
-					WHERE p.`id_product` '.$productPool.'
+					WHERE p.`id_product` '.$product_pool.'
 					ORDER BY position DESC LIMIT 10';
 			return $db->executeS($sql);
 		}
 
+		if (strpos($order_by, '.') > 0)
+		{
+			$order_by = explode('.', $order_by);
+			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
+		}
 		$sql = 'SELECT p.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 				tax.`rate`, i.`id_image`, il.`legend`, m.`name` manufacturer_name '.$score.',
@@ -286,9 +291,9 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				'.Product::sqlStock('p', 0).'
-				WHERE p.`id_product` '.$productPool.'
-				'.($orderBy ? 'ORDER BY  '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
-				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
+				WHERE p.`id_product` '.$product_pool.'
+				'.($order_by ? 'ORDER BY  '.$order_by : '').($order_way ? ' '.$order_way : '').'
+				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
 		$result = $db->executeS($sql);
 
 		$sql = 'SELECT COUNT(*)
@@ -304,15 +309,15 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				WHERE p.`id_product` '.$productPool;
+				WHERE p.`id_product` '.$product_pool;
 		$total = $db->getValue($sql);
 
 		if (!$result)
-			$resultProperties = false;
+			$result_properties = false;
 		else
-			$resultProperties = Product::getProductsProperties((int)$id_lang, $result);
+			$result_properties = Product::getProductsProperties((int)$id_lang, $result);
 
-		return array('total' => $total,'result' => $resultProperties);
+		return array('total' => $total,'result' => $result_properties);
 	}
 
 	public static function getTags($db, $id_product, $id_lang)
@@ -590,6 +595,8 @@ class SearchCore
 		if ($pageNumber < 1) $pageNumber = 1;
 		if ($pageSize < 1) $pageSize = 10;
 
+		$id = Context::getContext()->shop->id;
+		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
 		if ($count)
 		{
 			$sql = 'SELECT COUNT(DISTINCT pt.`id_product`) nb
@@ -598,7 +605,7 @@ class SearchCore
 					LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 					LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
+					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 					WHERE p.`active` = 1
 						AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID().'
@@ -635,7 +642,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cg.`id_category` = cs.`id_category`)
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cg.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE p.`active` = 1
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->getID().'
