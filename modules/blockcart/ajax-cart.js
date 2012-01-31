@@ -316,7 +316,7 @@ var ajaxCart = {
 						}
 					});
 				});
-				$('dd#cart_block_combination_of_' + ids[0] + (ids[1] ? '_'+ids[1] : '') ).fadeTo('fast', 0, function(){
+				$('dd#cart_block_combination_of_' + ids[0] + (ids[1] ? '_'+ids[1] : '') + (ids[2] ? '_'+ids[2] : '')).fadeTo('fast', 0, function(){
 					$(this).slideUp('fast', function(){
 						$(this).remove();
 					});
