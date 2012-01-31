@@ -830,19 +830,19 @@ class AdminCustomersControllerCore extends AdminController
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
-	public static function printNewsIcon($id_customer, $tr)
+	public static function printNewsIcon($value, $customer)
 	{
 		return '<a href="index.php?tab=AdminCustomers&id_customer='
-			.(int)$id_customer.'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($tr['newsletter'] ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+			.(int)$customer['id_customer'].'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
+				'.($value ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
 
-	public static function printOptinIcon($id_customer, $tr)
+	public static function printOptinIcon($value, $customer)
 	{
 		return '<a href="index.php?tab=AdminCustomers&id_customer='
-			.$id_customer.'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
-				'.($tr['optin'] ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
+			.(int)$customer['id_customer'].'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
+				'.($value ? '<img src="../img/admin/enabled.gif" />' : '<img src="../img/admin/disabled.gif" />').
 			'</a>';
 	}
 
