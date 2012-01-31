@@ -154,7 +154,7 @@ class ShopCore extends ObjectModel
 
 	public function delete()
 	{
-		if (Shop::has_dependency($this->id) || !$res = parent::delete())
+		if (Shop::hasDependency($this->id) || !$res = parent::delete())
 			return false;
 
 		foreach (Shop::getAssoTables() as $table_name => $row)
@@ -185,7 +185,7 @@ class ShopCore extends ObjectModel
 	 *
 	 * @return bool
 	 */
-	public static function has_dependency($id_shop)
+	public static function hasDependency($id_shop)
 	{
 		$has_dependency = false;
 		$nbr_customer = (int)Db::getInstance()->getValue('
@@ -228,7 +228,6 @@ class ShopCore extends ObjectModel
 	 */
 	public static function initialize()
 	{
-
 		// Get list of excluded uri
 		$dirname = dirname(__FILE__);
 		$directories = scandir($dirname.'/../');
@@ -293,7 +292,7 @@ class ShopCore extends ObjectModel
 			if (!Validate::isLoadedObject($default_shop))
 				throw new PrestaShopException('Shop not found');
 
-			$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php'.'?'.$_SERVER['QUERY_STRING'];
+			$url = 'http://'.$default_shop->domain.$default_shop->getBaseURI().'index.php?'.$_SERVER['QUERY_STRING'];
 			header('location: '.$url);
 			exit;
 		}
@@ -391,7 +390,7 @@ class ShopCore extends ObjectModel
 	{
 		if (defined('_PS_ADMIN_DIR_'))
 			return Shop::getContextGroupID();
-		return (isset($this->id_group_shop)) ? (int)$this->id_group_shop : NULL;
+		return (isset($this->id_group_shop)) ? (int)$this->id_group_shop : null;
 	}
 
 	/**
@@ -662,8 +661,8 @@ class ShopCore extends ObjectModel
 		$sql = sprintf('
 			SELECT `id_shop`, `%s`
 			FROM `'._DB_PREFIX_.'%s_shop`
-			WHERE `%s` = %d'
-		, $identifier, $table, $identifier, $id);
+			WHERE `%s` = %d',
+		$identifier, $table, $identifier, $id);
 
 		return Db::getInstance()->executeS($sql);
 	}

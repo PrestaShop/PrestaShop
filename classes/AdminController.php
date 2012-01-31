@@ -1993,7 +1993,7 @@ class AdminControllerCore extends Controller
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
-		$this->_orderBy = $order_by;
+		$this->_orderBy = substr($order_by, strpos($order_by, '.') + 1);
 		$this->_orderWay = Tools::strtoupper($order_way);
 
 		/* SQL table : orders, but class name is Order */
@@ -2061,7 +2061,11 @@ class AdminControllerCore extends Controller
 			 if (isset($this->_having))
 			 	$having_clause .= $this->_having.' ';
 		}
-
+		if (strpos($order_by, '.') > 0)
+		{
+			$order_by = explode('.', $order_by);
+			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
+		}
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS
 			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
 			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
@@ -2074,7 +2078,7 @@ class AdminControllerCore extends Controller
 			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 			'.(isset($this->_group) ? $this->_group.' ' : '').'
 			'.$having_clause.'
-			ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).
+			ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
