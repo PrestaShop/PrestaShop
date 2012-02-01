@@ -419,7 +419,7 @@ class AdminLanguagesControllerCore extends AdminController
 				$this->errors[] = $error;
 			else
 			{
-				if (!$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES['no-picture']['tmp_name'], $tmp_name))
+				if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no-picture']['tmp_name'], $tmp_name))
 					return false;
 				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
 					$this->errors[] = Tools::displayError('An error occurred while copying no-picture image to your product folder.');
@@ -485,6 +485,7 @@ class AdminLanguagesControllerCore extends AdminController
 		if (!$lang->active)
 			$this->errors[] = Tools::displayError('You cannot set this language as default language because it\'s disabled');
 	}
+
 	public function ajaxProcessCheckLangPack()
 	{
 		$this->json = true;
@@ -501,7 +502,7 @@ class AdminLanguagesControllerCore extends AdminController
 		if (@fsockopen('api.prestashop.com', 80))
 		{
 			// Get all iso code available
-			$lang_packs = Tools::file_get_contents('http://api.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']);
+			$lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.(string)$_GET['ps_version'].'&iso_lang='.(string)$_GET['iso_lang']);
 			
 			if ($lang_packs !== '' && Tools::jsonDecode($lang_packs) !== null)
 			{
