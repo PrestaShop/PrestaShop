@@ -313,7 +313,7 @@ class AdminTranslationsControllerCore extends AdminController
 		if (Validate::isLangIsoCode($arr_import_lang[0]))
 		{
 			if ($content = Tools::file_get_contents(
-				'http://api.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
+				'http://www.prestashop.com/download/lang_packs/gzip/'.$arr_import_lang[1].'/'.$arr_import_lang[0].'.gzip', false,
 				@stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)))))
 			{
 				$file = _PS_TRANSLATIONS_DIR_.$arr_import_lang[0].'.gzip';
