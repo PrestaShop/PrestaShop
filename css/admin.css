@@ -1798,6 +1798,7 @@ p.preference_description{
     text-align: left;
     width: 500px;
     color:#7F7F7F;
+    font-size:11px;
 }
 
 .preference_default_multishop{
@@ -2249,7 +2250,7 @@ margin-bottom:7px;
 
 /*cart_rule_form*/
 #cart_rule_form {}
-#cart_rule_form h4 { margin-top:0;}
+#cart_rule_form h4 { font-size:18px; font-weight:normal; margin-top:0;}
 
 #ajax_running {
 	display: none;

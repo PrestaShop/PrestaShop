@@ -2,7 +2,7 @@
 <div class="margin-form">
 	<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
 	<input type="text" id="customerFilter" name="customerFilter" value="{$customerFilter}" style="width:400px" />
-	<p>{l s='Optional, the cart rule will be available for everyone if you leave this field blank.'}</p>
+	<p class="preference_description">{l s='Optional, the cart rule will be available for everyone if you leave this field blank.'}</p>
 </div>
 <label>{l s='Validity'}</label>
 <div class="margin-form">
@@ -10,7 +10,7 @@
 	<input type="text" class="datepicker" name="date_from" value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')}{else}{$defaultDateFrom}{/if}" />
 	<strong>{l s='to'}</strong>
 	<input type="text" class="datepicker" name="date_to" value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')}{else}{$defaultDateTo}{/if}" />
-	<p>{l s='Default period is one year.'}</p>
+	<p class="preference_description">{l s='Default period is one year.'}</p>
 </div>
 <label>{l s='Minimum amount'}</label>
 <div class="margin-form">
@@ -28,17 +28,17 @@
 		<option value="0" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_shipping') == 0}selected="selected"{/if}>{l s='Shipping excluded'}</option>
 		<option value="1" {if $currentTab->getFieldValue($currentObject, 'minimum_amount_shipping') == 1}selected="selected"{/if}>{l s='Shipping included'}</option>
 	</select>
-	<p>{l s='You can choose a minimum amount for the cart either with or without the taxes, with or without shipping.'}</p>
+	<p class="preference_description">{l s='You can choose a minimum amount for the cart either with or without the taxes, with or without shipping.'}</p>
 </div>
 <label>{l s='Total available'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity" value="{$currentTab->getFieldValue($currentObject, 'quantity')|intval}" />
-	<p>{l s='The cart rule will be applied to the X first customers only.'}</p>
+	<p class="preference_description">{l s='The cart rule will be applied to the X first customers only.'}</p>
 </div>
 <label>{l s='Total available for each user'}</label>
 <div class="margin-form">
 	<input type="text" name="quantity_per_user" value="{$currentTab->getFieldValue($currentObject, 'quantity_per_user')|intval}" />
-	<p>{l s='A customer will only be able to use the cart rule X time(s).'}</p>
+	<p class="preference_description">{l s='A customer will only be able to use the cart rule X time(s).'}</p>
 </div>
 {if $countries.unselected|@count + $countries.selected|@count > 1}
 <br />
