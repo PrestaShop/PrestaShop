@@ -434,7 +434,7 @@
 		if (carriers.length > 0)
 		{
 			$.each(carriers, function() {
-				html += '<option value="'+this.id_carrier+'">'+this.name+' - '+this.delay+'</option>';
+				html += '<option value="'+this.id_carrier+'" ' + ((parseInt($('#id_carrier').val()) == this.id_carrier) ? 'selected="selected"' : '') + '>'+this.name+' - '+this.delay+'</option>';
 			});
 			$('#carrier_form').show();
 			$('#id_carrier').html(html);
@@ -714,7 +714,7 @@
 				},
 			success : function(res)
 			{
-					displaySummary(res);
+				displaySummary(res);
 			}
 		});
 	}
@@ -986,7 +986,7 @@
 		<div id="carrier_form">
 			<div>
 				<p>
-					<label>{l s='Carriers:'} </label>
+					<label>{l s='Carrier:'} </label>
 					<select name="id_carrier" id="id_carrier">
 					</select>
 				</p>
