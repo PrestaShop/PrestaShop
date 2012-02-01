@@ -29,7 +29,7 @@ define ('TEXTAREA_SIZED', 70);
 
 class AdminTranslationsControllerCore extends AdminController
 {
-	protected $link_lang_pack = 'http://api.prestashop.com/download/lang_packs/get_each_language_pack.php';
+	protected $link_lang_pack = 'http://www.prestashop.com/download/lang_packs/get_each_language_pack.php';
 	protected $total_expression = 0;
 	protected $all_iso_lang = array();
 	protected $modules_translations = array();
