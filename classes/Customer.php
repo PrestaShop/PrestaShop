@@ -542,7 +542,7 @@ class CustomerCore extends ObjectModel
 	public static function getGroupsStatic($id_customer)
 	{
 		if (!Group::isFeatureActive())
-			return array(3);
+			return array(Configuration::get('PS_CUSTOMER_GROUP'));
 
 		if (!isset(self::$_customer_groups[$id_customer]))
 		{
@@ -582,7 +582,7 @@ class CustomerCore extends ObjectModel
 	public static function getDefaultGroupId($id_customer)
 	{
 		if (!Group::isFeatureActive())
-			return 3;
+			return Configuration::get('PS_CUSTOMER_GROUP');
 
 		if (!isset(self::$_defaultGroupId[(int)$id_customer]))
 			self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('
