@@ -153,14 +153,14 @@ class Editorial extends Module
 			$editorial->update();
 
 			/* upload the image */
-			if (isset($_FILES['body_homepage_logo']) AND isset($_FILES['body_homepage_logo']['tmp_name']) AND !empty($_FILES['body_homepage_logo']['tmp_name']))
+			if (isset($_FILES['body_homepage_logo']) && isset($_FILES['body_homepage_logo']['tmp_name']) && !empty($_FILES['body_homepage_logo']['tmp_name']))
 			{
 				Configuration::set('PS_IMAGE_GENERATION_METHOD', 1);
 				if(file_exists(dirname(__FILE__).'/homepage_logo.jpg'))
 					unlink(dirname(__FILE__).'/homepage_logo.jpg');
 				if ($error = ImageManager::validateUpload($_FILES['body_homepage_logo']))
 					$errors .= $error;
-				elseif (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') OR !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
+				elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
 					return false;
 				elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/homepage_logo.jpg'))
 					$errors .= $this->displayError($this->l('An error occurred during the image upload.'));
