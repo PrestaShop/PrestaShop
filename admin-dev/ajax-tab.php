@@ -38,6 +38,5 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab']))
 	$_REQUEST['controller'] = strtolower($_REQUEST['tab']);
 // Retrocompatibility with 1.4
 $_REQUEST['ajaxMode'] = $_POST['ajaxMode'] = $_GET['ajaxMode'] = $_REQUEST['ajax'] = $_POST['ajax'] = $_GET['ajax'] = 1;
-	
-Dispatcher::getInstance()->setControllerDirectories(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_));
+
 Dispatcher::getInstance()->dispatch();

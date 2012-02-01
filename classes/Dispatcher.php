@@ -155,7 +155,7 @@ class DispatcherCore
 	/**
 	 * @var string Set default controller, which will be used if http parameter 'controller' is empty
 	 */
-	protected $default_controller = 'Index';
+	protected $default_controller = 'index';
 
 	/**
 	 * @var string Controller to use if found controller doesn't exist
@@ -166,11 +166,6 @@ class DispatcherCore
 	 * @var string Front controller to use
 	 */
 	protected $front_controller = self::FC_FRONT;
-
-	/**
-	 * @var array List of controllers where are stored controllers
-	 */
-	protected $controller_directories = array();
 
 	/**
 	 * Get current instance of dispatcher (singleton)
@@ -191,14 +186,24 @@ class DispatcherCore
 	{
 		// Select right front controller
 		if (defined('_PS_ADMIN_DIR_'))
-			$this->setFrontController(self::FC_ADMIN);
+		{
+			$this->front_controller = self::FC_ADMIN;
+			$this->controller_not_found = 'adminnotfound';
+			$this->default_controller = 'adminhome';
+		}
 		else if (Tools::getValue('fc') == 'module')
-			$this->setFrontController(self::FC_MODULE);
+		{
+			$this->front_controller = self::FC_MODULE;
+			$this->controller_not_found = 'pagenotfound';
+			$this->default_controller = 'default';
+		}
 		else
-			$this->setFrontController(self::FC_FRONT);
+		{
+			$this->front_controller = self::FC_FRONT;
+			$this->controller_not_found = 'pagenotfound';
+			$this->default_controller = 'index';
+		}
 
-		$this->setDefaultController('index');
-		$this->setControllerDirectories(_PS_FRONT_CONTROLLER_DIR_);
 		$this->use_routes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
 		$this->loadRoutes();
 
@@ -208,45 +213,6 @@ class DispatcherCore
 		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 		$this->request_uri = rawurldecode($this->request_uri);
-	}
-
-	/**
-	 * Set default controller, which will be used if http parameter 'controller' is empty
-	 *
-	 * @param string $controller
-	 */
-	public function setDefaultController($controller)
-	{
-		$this->default_controller = $controller;
-	}
-
-	/**
-	 * Controller to use if found controller doesn't exist
-	 *
-	 * @var string $controller
-	 */
-	public function setControllerNotFound($controller)
-	{
-		$this->controller_not_found = $controller;
-	}
-
-	public function setFrontController($fc)
-	{
-		if (!in_array($fc, array(self::FC_FRONT, self::FC_ADMIN, self::FC_MODULE)))
-			throw new PrestaShopException('Bad front controller chosen');
-		$this->front_controller = $fc;
-	}
-
-	/**
-	 * Set list of controllers where are stored controllers
-	 *
-	 * @param mixed A directory, or an array of directory
-	 */
-	public function setControllerDirectories($dir)
-	{
-		if (!is_array($dir))
-			$dir = array($dir);
-		$this->controller_directories = $dir;
 	}
 
 	/**
