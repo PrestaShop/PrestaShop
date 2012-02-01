@@ -227,58 +227,58 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_cart_rule`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_lang` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_lang` int(10) unsigned NOT NULL,
 	`name` varchar(254) NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_lang`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_country` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_country` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_country`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_group` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_group` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_group`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_carrier` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_carrier` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_carrier`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_combination` (
 	`id_cart_rule_1` int(10) unsigned NOT NULL,
 	`id_cart_rule_2` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule_1`, `id_cart_rule_2`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_product_rule_group` (
 	`id_product_rule_group` int(10) unsigned NOT NULL auto_increment,
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`quantity` int(10) unsigned NOT NULL default 1,
 	PRIMARY KEY  (`id_product_rule_group`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_product_rule` (
 	`id_product_rule` int(10) unsigned NOT NULL auto_increment,
 	`id_product_rule_group` int(10) unsigned NOT NULL,
 	`type` ENUM('products', 'categories', 'attributes', 'manufacturers', 'suppliers') NOT NULL,
 	PRIMARY KEY  (`id_product_rule`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_product_rule_value` (
 	`id_product_rule` int(10) unsigned NOT NULL,
 	`id_item` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_product_rule`, `id_item`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_cart_rule` (
   `id_cart` int(10) unsigned NOT NULL,

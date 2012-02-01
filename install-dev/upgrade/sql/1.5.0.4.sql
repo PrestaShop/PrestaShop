@@ -36,7 +36,7 @@ CREATE TABLE `PREFIX_cart_rule_product_rule_group` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`quantity` int(10) unsigned NOT NULL default 1,
 	PRIMARY KEY  (`id_product_rule_group`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 INSERT INTO `PREFIX_cart_rule_product_rule_group` (`id_product_rule_group`, `id_cart_rule`, `quantity`) (
 	SELECT `id_cart_rule`, `id_cart_rule`, `quantity` FROM `PREFIX_cart_rule_product_rule`
