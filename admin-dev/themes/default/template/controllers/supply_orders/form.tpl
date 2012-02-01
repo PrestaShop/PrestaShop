@@ -94,10 +94,10 @@
 										<input type="hidden" name="input_name_{$product.id_product}_{$product.id_product_attribute}" value="{$product.name}" />
 									</td>
 									<td class="center">
-										{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te}" size="8" />&nbsp;{$currency->suffix}
+										{$currency->prefix}&nbsp;<input type="text" name="input_unit_price_te_{$product.id_product}_{$product.id_product_attribute}" value="{$product.unit_price_te|htmlentities}" size="8" />&nbsp;{$currency->suffix}
 									</td>
 									<td class="center">
-										<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected}" size="5" />
+										<input type="text" name="input_quantity_expected_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity_expected|htmlentities}" size="5" />
 									</td>
 									<td class="center">
 										<input type="text" name="input_discount_rate_{$product.id_product}_{$product.id_product_attribute}" value="{round($product.discount_rate, 4)}" size="5" />%

@@ -43,13 +43,13 @@
 			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 			name="latitude"
 			id="latitude"
-			value="{$fields_value[$input.name]}" /> /
+			value="{$fields_value[$input.name]|htmlentities}" /> /
 		<input type="text"
 			{if isset($input.size)}size="{$input.size}"{/if}
 			{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 			name="longitude"
 			id="longitude"
-			value="{$fields_value['longitude']}" />
+			value="{$fields_value['longitude']|htmlentities}" />
 	{/if}
 {/block}
 
@@ -84,7 +84,7 @@
 				{foreach $fields_value.days as $k => $value}
 					<tr style="color: #7F7F7F; font-size: 0.85em;">
 						<td>{$value}</td>
-						<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]}{/if}" /><br /></td>
+						<td><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|htmlentities}{/if}" /><br /></td>
 					</tr>
 				{/foreach}
 			</table>

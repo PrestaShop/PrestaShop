@@ -45,7 +45,7 @@
 				{foreach from=$productAccountNumberList['zones'] key=id_zone item=currentZone}
 					<label>{$currentZone['name']}</label>
 					<div class="margin-form">
-						<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']}" />
+						<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']|htmlentities}" />
 					</div>
 				{/foreach}
 			</form>

@@ -62,7 +62,7 @@
 		<label>{l s='Product'}</label>
 		<div class="margin-form">
 			<input type="hidden" id="reduction_product" name="reduction_product" value="{$currentTab->getFieldValue($currentObject, 'reduction_product')|intval}" />
-			<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter}" style="width:400px" />
+			<input type="text" id="reductionProductFilter" name="reductionProductFilter" value="{$reductionProductFilter|htmlentities}" style="width:400px" />
 		</div>
 	</div>
 </div>
@@ -80,6 +80,6 @@
 	<label>{l s='Product'}</label>
 	<div class="margin-form">
 		<input type="hidden" id="gift_product" name="gift_product" value="{$currentTab->getFieldValue($currentObject, 'gift_product')|intval}" />
-		<input type="text" id="giftProductFilter" name="giftProductFilter" value="{$giftProductFilter}" style="width:400px" />
+		<input type="text" id="giftProductFilter" name="giftProductFilter" value="{$giftProductFilter|htmlentities}" style="width:400px" />
 	</div>
 </div>

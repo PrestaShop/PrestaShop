@@ -131,7 +131,7 @@
 								<tr>
 									<td  class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
 										<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
-										<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]}"/>
+										<input type="text" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
 									</td>
 									<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 								</tr>

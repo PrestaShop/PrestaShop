@@ -60,8 +60,8 @@
 			{if $line.can_edit}
 				<form style="display: inline;" method="POST" action="{$link->getAdminLink('AdminOrders')}&vieworder&id_order={$smarty.get.id_order|escape:'htmlall':'UTF-8'}">
 					<span class="shipping_number_edit" style="display:none;">
-						<input type="text" name="id_order_carrier" value="{$line.id_order_carrier}" />
-						<input type="text" name="tracking_number" value="{$line.tracking_number}" />
+						<input type="text" name="id_order_carrier" value="{$line.id_order_carrier|htmlentities}" />
+						<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />
 						<input type="submit" class="button" name="submitShippingNumber" value="{l s='Update'}" />
 					</span>
 					<a href="#" class="edit_shipping_number_link"><img src="../img/admin/edit.gif" alt="{l s='Edit'}" /></a>

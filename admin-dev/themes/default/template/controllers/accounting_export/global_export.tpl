@@ -31,7 +31,7 @@
 			{include file="controllers/accounting_export/common_form.tpl"}
 			<label for="clientPrefix">{l s='Journal:'}</label>
 			<div class="margin-form">
-				<input type="text" name="journal" value="{$journal}"/>
+				<input type="text" name="journal" value="{$journal|htmlentities}"/>
 			</div>	
 			<div class="margin-form">
 				<input id="submitGlobalExport" type="submit" class="button" name="submitAccountingExportType" />
