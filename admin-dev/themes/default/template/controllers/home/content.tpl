@@ -48,7 +48,7 @@
 <div id="adminpresentation" style="display:block;">
 <h2>{l s ='Video'}</h2>
 		<div id="video">
-			<a href="{$protocol}://screencasts.dev.prestashop.com/screencast.php?iso_lang={$isoUser}" id="screencast_fancybox"><img height="128" width="220" src="http://screencasts.dev.prestashop.com/img/preview_fr.jpg" /><span class="mask-player"></span></a>
+			<a href="{$protocol}://screencasts.prestashop.com/screencast.php?iso_lang={$isoUser}" id="screencast_fancybox"><img height="128" width="220" src="../img/admin/preview_fr.jpg" /><span class="mask-player"></span></a>
 		</div>
 			<div id="video-content">
 			<p>{l s ='Start now with PrestaShop and all new features to help you sell more and simplify management of your shop'}</p>
