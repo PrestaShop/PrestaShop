@@ -173,7 +173,7 @@ class AdminHomeControllerCore extends AdminController
 	protected function getQuickLinks()
 	{
 		$quick_links['first'] = array(
-			'href' => $this->context->link->getAdminLink('AdminStats'),
+			'href' => $this->context->link->getAdminLink('AdminStats').'&amp;module=statsbestproducts',
 			'title' => $this->l('Product sold recently'),
 			'description' => $this->l('Create a new category and organize your products.'),
 		);
@@ -186,7 +186,7 @@ class AdminHomeControllerCore extends AdminController
 
 		$quick_links['third'] = array(
 			'href' => $this->context->link->getAdminLink('AdminSpecificPriceRule').'&amp;addspecific_price_rule',
-			'title' => $this->l('New Specific Price'),
+			'title' => $this->l('New Price Rule for catalog'),
 			'description' => $this->l('Manage your activity with a thorough analysis of your e-shop.'),
 		);
 
@@ -204,7 +204,7 @@ class AdminHomeControllerCore extends AdminController
 
 		$quick_links['sixth'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCartRules').'&amp;addcart_rule',
-			'title' => $this->l('New Cart Rules'),
+			'title' => $this->l('New Price Rule for cart'),
 			'description' => $this->l('Fill up your catalog with new articles and attributes.'),
 		);
 
@@ -216,7 +216,7 @@ class AdminHomeControllerCore extends AdminController
 
 		$quick_links['eighth'] = array(
 			'href' => $this->context->link->getAdminLink('AdminCarts').'&amp;id_cart',
-			'title' => $this->l('New Promote Carts'),
+			'title' => $this->l('Abandoned Carts'),
 			'description' => $this->l('Add a new employee account and discharge a part of your duties of shop owner.'),
 		);
 		return $quick_links;
@@ -476,7 +476,7 @@ class AdminHomeControllerCore extends AdminController
 
 		// SHOW PAYPAL TIPS
 			$content = '';
-			$content = @file_get_contents($protocol.'://www.dev.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+			$content = @file_get_contents($protocol.'://www.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 			$content = explode('|', $content);
 			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 				$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
@@ -547,7 +547,7 @@ class AdminHomeControllerCore extends AdminController
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 
-		$content = @file_get_contents($protocol.'://www.dev.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 
 		if (!$content)
 			return ''; // NOK
