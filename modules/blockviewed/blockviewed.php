@@ -62,13 +62,13 @@ class BlockViewed extends Module
 		$output = '<h2>'.$this->displayName.'</h2>';
 		if (Tools::isSubmit('submitBlockViewed'))
 		{
-			if (!$productNbr = Tools::getValue('productNbr') OR empty($productNbr))
+			if (!($productNbr = Tools::getValue('productNbr')) || empty($productNbr))
 				$output .= '<div class="alert error">'.$this->l('You must fill in the \'Products displayed\' field.').'</div>';
 			elseif ((int)($productNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
 			{
-				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)($productNbr));
+				Configuration::updateValue('PRODUCTS_VIEWED_NBR', (int)$productNbr);
 				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
 			}
 		}
