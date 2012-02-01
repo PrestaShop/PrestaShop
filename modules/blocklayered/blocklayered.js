@@ -119,7 +119,9 @@ $(document).ready(function()
 	$('#selectPrductSort').unbind('change');
 
 	// To be sure there is no other events attached to the selectPrductSort, change the ID
+	$('#selectPrductSort').attr('onchange', '');
 	$('#selectPrductSort').attr('id', 'selectPrductSort2');
+	$('label[for=selectPrductSort]').attr('for', 'selectPrductSort2');
 	$('#selectPrductSort2').live('change', function(event) {
 		reloadContent();
 	});
@@ -306,7 +308,19 @@ function reloadContent(params_plus)
 	
 	if ($('#selectPrductSort2').length)
 	{
-		var splitData = $('#selectPrductSort2').val().split(':');
+		if ($('#selectPrductSort2').val().search(/orderby=/) > 0)
+		{
+			// Old ordering working
+			var splitData = [
+				$('#selectPrductSort2').val().match(/orderby=(\w*)/)[1],
+				$('#selectPrductSort2').val().match(/orderway=(\w*)/)[1]
+			];
+		}
+		else
+		{
+			// New working for default theme 1.4 and theme 1.5
+			var splitData = $('#selectPrductSort2').val().split(':');
+		}
 		data += '&orderby='+splitData[0]+'&orderway='+splitData[1];
 	}
 	
