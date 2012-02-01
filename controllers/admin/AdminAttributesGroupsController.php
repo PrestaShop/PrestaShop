@@ -48,13 +48,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				'filter_key' => 'b!name',
 				'align' => 'left'
 			),
+			'count_values' => array(
+				'title' => $this->l('Values'),
+				'width' => 25,
+				'align' => 'center'
+			),
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
 				'filter_key' => 'cp!position',
 				'position' => 'position',
 				'align' => 'center'
-			)
+			),
 		);
 
  		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
@@ -149,8 +154,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$helper->bulk_actions = $this->bulk_actions;
 			$content = $helper->generateList($this->_list, $this->fieldsDisplay);
 
-			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
-			exit;
+			die (Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content)));
 		}
 	}
 
@@ -162,7 +166,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		$this->table = 'attribute_group';
 		$this->identifier = 'id_attribute_group';
-		
+
 		$group_type = array(
 			array(
 				'id' => 'select',
@@ -245,7 +249,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
 		$this->table = 'attribute';
 		$this->identifier = 'id_attribute';
-			
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Values'),
@@ -366,16 +370,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	public function processAdd($token)
 	{
 		parent::processAdd($token);
-		
+
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
 			if ($this->display == 'add')
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'&conf=3&update'.$this->table.'&token='.$token;
 		}
 	}
-	
+
 	/**
 	 * Override processUpdate to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processUpdate()
@@ -383,7 +387,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	public function processUpdate($token)
 	{
 		parent::processUpdate($token);
-		
+
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
 			if ($this->display == 'add')
@@ -392,7 +396,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
 		}
 	}
-	
+
 	/**
 	 * AdminController::initContent() override
 	 * @see AdminController::initContent()
@@ -451,13 +455,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
-				
+
 				$this->toolbar_btn['save-and-stay'] = array(
 					'short' => 'SaveAndStay',
 					'href' => '#',
 					'desc' => $this->l('Save and stay'),
 				);
-				
+
 				$back = self::$currentIndex.'&token='.$this->token;
 				$this->toolbar_btn['cancel'] = array(
 					'href' => $back,
@@ -523,7 +527,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->identifier = 'id_attribute_group';
 		else
 			$this->identifier = 'id_attribute';
-		
+
 		if ((int)Tools::getValue('id_attribute_group') <= 0 && $this->display == 'add'
 			|| (int)Tools::getValue('id_attribute') <= 0 && $this->display != 'add')
 			return $this->processAdd($token);
@@ -579,7 +583,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 							WHERE `id_attribute_group` = '.(int)Tools::getValue('id_attribute_group').'
 							ORDER BY position DESC';
 					// set the position of the new group attribute in $_POST for postProcess() method
-					$_POST['position'] = DB::getInstance()->getValue($sql);
+					$_POST['position'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 				}
 				$_POST['id_parent'] = 0;
 				$this->processSave($this->token);
@@ -619,7 +623,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 							FROM `'._DB_PREFIX_.'attribute_group`
 							ORDER BY position DESC';
 				// set the position of the new group attribute in $_POST for postProcess() method
-					$_POST['position'] = DB::getInstance()->getValue($sql);
+					$_POST['position'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 				}
 				// clean \n\r characters
 				foreach ($_POST as $key => $value)
@@ -631,4 +635,31 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				parent::postProcess();
 		}
 	}
+
+	/**
+	 * AdminController::getList() override
+	 * @see AdminController::getList()
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		$nb_items = count($this->_list);
+		for ($i = 0; $i < $nb_items; ++$i)
+		{
+			$item = &$this->_list[$i];
+
+			$query = new DbQuery();
+			$query->select('COUNT(id_attribute) as count_values');
+			$query->from('attribute', 'a');
+			$query->where('a.id_attribute_group ='.(int)$item['id_attribute_group']);
+			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+			$item['count_values'] = (int)$res;
+
+			unset($res);
+		}
+
+
+	}
+
 }
