@@ -205,13 +205,13 @@ class AdminFeaturesControllerCore extends AdminController
 					'href' => '#',
 					'desc' => $this->l('Save')
 				);
-				
+
 				$this->toolbar_btn['save-and-stay'] = array(
 					'short' => 'SaveAndStay',
 					'href' => '#',
 					'desc' => $this->l('Save and stay'),
 				);
-				
+
 				// Default cancel button - like old back link
 				$back = Tools::safeOutput(Tools::getValue('back', ''));
 				if (empty($back))
@@ -237,7 +237,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->table = 'feature_value';
 		$this->className = 'FeatureValue';
 		$this->identifier = 'id_feature_value';
-		
+
 		$this->fields_form[0]['form'] = array(
 			'legend' => array(
 				'title' => $this->l('Feature value'),
@@ -385,7 +385,7 @@ class AdminFeaturesControllerCore extends AdminController
 				$this->table = 'feature_value';
 				$this->className = 'FeatureValue';
 				$this->identifier = 'id_feature_value';
-				
+
 				$id = (int)Tools::getValue('id_feature_value');
 				$feature_value = new FeatureValue($id);
 				$feature_value->value = array();
@@ -474,7 +474,7 @@ class AdminFeaturesControllerCore extends AdminController
 				parent::postProcess();
 		}
 	}
-	
+
 	/**
 	 * Override processAdd to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processAdd()
@@ -482,11 +482,11 @@ class AdminFeaturesControllerCore extends AdminController
 	public function processAdd($token)
 	{
 		parent::processAdd($token);
-		
+
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 	}
-	
+
 	/**
 	 * Override processUpdate to change SaveAndStay button action
 	 * @see classes/AdminControllerCore::processUpdate()
@@ -494,11 +494,11 @@ class AdminFeaturesControllerCore extends AdminController
 	public function processUpdate($token)
 	{
 		parent::processUpdate($token);
-	
+
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 	}
-	
+
 	/**
 	 * Call the right method for creating or updating object
 	 *
@@ -513,4 +513,31 @@ class AdminFeaturesControllerCore extends AdminController
 		else
 			return $this->processUpdate($token);
 	}
+
+	/**
+	 * AdminController::getList() override
+	 * @see AdminController::getList()
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		if ($this->table == 'feature')
+		{
+			$nb_items = count($this->_list);
+			for ($i = 0; $i < $nb_items; ++$i)
+			{
+				$item = &$this->_list[$i];
+
+				$query = new DbQuery();
+				$query->select('COUNT(id_feature_value) as count_values');
+				$query->from('feature_value', 'fv');
+				$query->where('fv.id_feature ='.(int)$item['id_feature']);
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+				$item['value'] = (int)$res;
+				unset($query);
+			}
+		}
+	}
+
 }
