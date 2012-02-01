@@ -125,7 +125,7 @@ define('_STOCK_MOVEMENT_MISSING_REASON_', 4);
 
 /**
  * @deprecated 1.5.0.1
- * @see Group::CUSTOMER
+ * @see const PS_CUSTOMER_GROUP
  */
 define('_PS_DEFAULT_CUSTOMER_GROUP_', 3);
 
