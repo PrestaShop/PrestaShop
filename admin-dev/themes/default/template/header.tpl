@@ -101,7 +101,7 @@
 			{* begin  HEADER *}
 			<div id="header">
 				<div id="header_infos">
-				<a id="header_shopname" href="index.php"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
+				<a id="header_shopname" href="{$link->getAdminLink('AdminHome')}"><span>{$shop_name}</span></a><div id="notifs_icon_wrapper">
 				{if {$show_new_orders} == 1}
 					<div id="orders_notif" class="notifs">
 						<span id="orders_notif_number_wrapper" class="number_wrapper">
