@@ -364,8 +364,8 @@ class CartRuleCore extends ObjectModel
 					OR (id_cart_rule_2 = '.(int)$this->id.' AND id_cart_rule_1 = '.(int)$otherCartRule['id_cart_rule'].')');
 					if (!$combinable)
 					{
-						$cartRule = new CartRule($otherCartRule['cart_rule_restriction'], $context->cart->id_lang);
-						return Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cartRule->name;
+						$cart_rule = new CartRule($otherCartRule['cart_rule_restriction'], $context->cart->id_lang);
+						return Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
 					}
 				}
 			}
@@ -537,11 +537,11 @@ class CartRuleCore extends ObjectModel
 			$minimum_amount = $this->minimum_amount;
 			if ($this->minimum_amount_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
 			{
-				$minimumAmountCurrency = new Currency($this->minimum_amount_currency);
-				if ($this->minimum_amount == 0 || $minimumAmountCurrency->conversion_rate == 0)
+				$minimum_amount_currency = new Currency($this->minimum_amount_currency);
+				if ($this->minimum_amount == 0 || $minimum_amount_currency->conversion_rate == 0)
 					$minimum_amount = 0;
 				else
-					$minimum_amount = $this->minimum_amount / $minimumAmountCurrency->conversion_rate;
+					$minimum_amount = $this->minimum_amount / $minimum_amount_currency->conversion_rate;
 			}
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
