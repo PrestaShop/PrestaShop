@@ -512,8 +512,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 
 		$supply_order = new SupplyOrder($id_supply_order);
+		$supply_order_state = new SupplyOrderState($supply_order->id_supply_order_state);
 
-		if (!Validate::isLoadedObject($supply_order))
+		if (!Validate::isLoadedObject($supply_order) || !Validate::isLoadedObject($supply_order_state))
 		{
 			$this->errors[] = Tools::displayError($this->l('The specified supply order is not valid'));
 			return parent::initContent();
@@ -577,15 +578,18 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			'id_supply_order' => $id_supply_order,
 		);
 
-		// generates the form to display
-		$this->content = $helper->generateForm($this->fields_form);
+		//$this->setHelperDisplay($helper);
+		$helper->override_folder = 'supply_orders_change_state/';
 
 		// assigns our content
-		$this->tpl_form_vars['show_change_state_form'] = true;
-		$this->tpl_form_vars['state_content'] = $this->content;
+		$helper->tpl_vars['show_change_state_form'] = true;
+		$helper->tpl_vars['supply_order_state'] = $supply_order_state;
+
+		// generates the form to display
+		$content = $helper->generateForm($this->fields_form);
 
 		$this->context->smarty->assign(array(
-			'content' => $this->content,
+			'content' => $content,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
 		));
 	}
