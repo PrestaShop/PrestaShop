@@ -52,6 +52,9 @@ class OrderCore extends ObjectModel
 	/** @var integer Carrier id */
 	public $id_carrier;
 
+	/** @var integer Order State id */
+	public $current_state;
+
 	/** @var string Secure key */
 	public $secure_key;
 
@@ -163,6 +166,7 @@ class OrderCore extends ObjectModel
 			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_customer' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_carrier' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'current_state' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'secure_key' => 				array('type' => self::TYPE_STRING, 'validate' => 'isMd5'),
 			'payment' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
 			'module' => 					array('type' => self::TYPE_STRING),
@@ -210,13 +214,13 @@ class OrderCore extends ObjectModel
 			'id_lang' => array('xlink_resource'=> 'languages'),
 			'id_customer' => array('xlink_resource'=> 'customers'),
 			'id_carrier' => array('xlink_resource'=> 'carriers'),
+			'current_state' => array('xlink_resource'=> 'order_states'),
 			'module' => array('required' => true),
 			'invoice_number' => array(),
 			'invoice_date' => array(),
 			'delivery_number' => array(),
 			'delivery_date' => array(),
 			'valid' => array(),
-			'current_state' => array('getter' => 'getCurrentState', 'setter' => 'setCurrentState', 'xlink_resource'=> 'order_states'),
 			'date_add' => array(),
 			'date_upd' => array(),
 		),
@@ -696,14 +700,11 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get current order state (eg. Awaiting payment, Delivered...)
 	 *
-	 * @return array Order state details
+	 * @return int Order state id
 	 */
 	public function getCurrentState()
 	{
-		$orderHistory = OrderHistory::getLastOrderState($this->id);
-		if (!isset($orderHistory) || !$orderHistory)
-			return false;
-		return $orderHistory->id;
+		return $this->current_state;
 	}
 
 	/**
@@ -714,13 +715,10 @@ class OrderCore extends ObjectModel
 	public function getCurrentStateFull($id_lang)
 	{
 		return Db::getInstance()->getRow('
-			SELECT oh.`id_order_state`, osl.`name`, os.`logable`, os.`shipped`
-			FROM `'._DB_PREFIX_.'order_history` oh
-			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = oh.`id_order_state`)
-			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
-			WHERE osl.`id_lang` = '.(int)($id_lang).' AND oh.`id_order` = '.(int)($this->id).'
-			ORDER BY `date_add` DESC, `id_order_history` DESC
-		');
+			SELECT os.`id_order_state`, osl.`name`, os.`logable`, os.`shipped`
+			FROM `'._DB_PREFIX_.'order_state` os
+			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = os.`id_order_state`)
+			WHERE osl.`id_lang` = '.(int)$id_lang.' AND os.`id_order_state` = '.(int)$this->current_state);
 	}
 
 	public function hasBeenDelivered()
@@ -804,12 +802,10 @@ class OrderCore extends ObjectModel
 			$context = Context::getContext();
 
 		$sql = 'SELECT *, (
-					SELECT `name`
-					FROM `'._DB_PREFIX_.'order_history` oh
-					LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (osl.`id_order_state` = oh.`id_order_state`)
-					WHERE oh.`id_order` = o.`id_order`
+					SELECT osl.`name`
+					FROM `'._DB_PREFIX_.'order_state_lang` osl
+					WHERE osl.`id_order_state` = o.`current_state`
 					AND osl.`id_lang` = '.(int)$context->language->id.'
-					ORDER BY oh.`date_add` DESC
 					LIMIT 1
 				) AS `state_name`
 				FROM `'._DB_PREFIX_.'orders` o
@@ -862,13 +858,7 @@ class OrderCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		$sql = 'SELECT id_order
 				FROM '._DB_PREFIX_.'orders o
-				WHERE '.(int)$id_order_state.' = (
-					SELECT id_order_state
-					FROM '._DB_PREFIX_.'order_history oh
-					WHERE oh.id_order = o.id_order
-					ORDER BY date_add DESC, id_order_history DESC
-					LIMIT 1
-				)
+				WHERE o.`current_state` = '.(int)$id_order_state.'
 				'.Context::getContext()->shop->addSqlRestriction(false, 'o').'
 				ORDER BY invoice_date ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1124,7 +1114,7 @@ class OrderCore extends ObjectModel
 	public static function printPDFIcons($id_order, $tr)
 	{
 		$order = new Order($id_order);
-		$orderState = OrderHistory::getLastOrderState($id_order);
+		$orderState = $order->getCurrentOrderState();
 		if (!Validate::isLoadedObject($orderState) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invalid objects'));
 		echo '<span style="width:20px; margin-right:5px;">';
@@ -1233,6 +1223,9 @@ class OrderCore extends ObjectModel
 		$this->delivery_date = $res['delivery_date'];
 		$this->delivery_number = $res['delivery_number'];
 		$history->addWithemail();
+
+		$this->current_state = $id_order_state;
+		$this->update();
 	}
 
 	public function addWs($autodate = true, $nullValues = false)
@@ -1701,6 +1694,17 @@ class OrderCore extends ObjectModel
 			$warehouse_list[] = $row['id_warehouse'];
 
 		return $warehouse_list;
+	}
+
+	/**
+	 * @since 1.5.0.4
+	 * @return OrderState or null if Order haven't a state
+	 */
+	public function getCurrentOrderState()
+	{
+		if ($this->current_state)
+			return new OrderState($this->current_state);
+		return null;
 	}
 }
 

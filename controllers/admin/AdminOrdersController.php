@@ -158,7 +158,7 @@ class AdminOrdersControllerCore extends AdminController
 	public function printPDFIcons($id_order, $tr)
 	{
 		$order = new Order($id_order);
-		$order_state = OrderHistory::getLastOrderState($id_order);
+		$order_state = $order->getCurrentOrderState();
 		if (!Validate::isLoadedObject($order_state) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invalid objects'));
 
@@ -239,7 +239,7 @@ class AdminOrdersControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('Invalid new order status');
 				else
 				{
-					$current_order_state = OrderHistory::getLastOrderState($order->id);
+					$current_order_state = $order->getCurrentOrderState();
 					if ($current_order_state->id != $order_state->id)
 					{
 						// Create new OrderHistory
@@ -1092,7 +1092,7 @@ class AdminOrdersControllerCore extends AdminController
 			'states' => OrderState::getOrderStates($this->context->language->id),
 			'warehouse_list' => $warehouse_list,
 			'sources' => ConnectionsSource::getOrderSources($order->id),
-			'currentState' => OrderHistory::getLastOrderState($order->id),
+			'currentState' => $order->getCurrentOrderState(),
 			'currency' => new Currency($order->id_currency),
 			'currencies' => Currency::getCurrencies(),
 			'previousOrder' => $order->getPreviousOrderId(),
@@ -1398,7 +1398,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Create Order detail information
 		$order_detail = new OrderDetail();
-		$order_detail->createList($order, $cart, OrderHistory::getLastOrderState($order->id), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int)Tools::getValue('add_product_warehouse'));
+		$order_detail->createList($order, $cart, $order->getCurrentOrderState(), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int)Tools::getValue('add_product_warehouse'));
 
 		// update totals amount of order
 		$order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
