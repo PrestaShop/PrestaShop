@@ -655,11 +655,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$query->where('a.id_attribute_group ='.(int)$item['id_attribute_group']);
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 			$item['count_values'] = (int)$res;
-
-			unset($res);
+			unset($query);
 		}
-
-
 	}
 
 }
