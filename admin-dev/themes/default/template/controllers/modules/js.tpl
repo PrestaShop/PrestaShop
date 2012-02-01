@@ -25,7 +25,7 @@
 *}
 
 
-<link href="{$smarty.const._PS_CSS_DIR_}jquery.fancybox-1.3.4.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript">{$autocompleteList}</script>
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/autocomplete/jquery.autocomplete.js"></script>
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/fancybox/jquery.fancybox.js"></script>
@@ -135,7 +135,7 @@
 							ajax : "1",
 							token : token,
 							controller : "AdminModules",
-							action : "reloadModulesList",
+							action : "reloadModulesList"
 						},
  						beforeSend: function(xhr)
 						{
