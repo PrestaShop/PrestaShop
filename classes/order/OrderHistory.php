@@ -81,7 +81,7 @@ class OrderHistoryCore extends ObjectModel
 		// sets order and states
 		$order = new Order($id_order);
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
-		$old_os = OrderHistory::getLastOrderState((int)$id_order);
+		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
 
 		// executes hook
@@ -209,6 +209,8 @@ class OrderHistoryCore extends ObjectModel
 
 		// the order is valid if and only if the invoice is available and the order is not cancelled
 		$order->valid = $new_os->logable;
+		// Update id_order_state attribute in Order
+		$order->current_state = $new_os->id;
 		$order->update();
 
 		if ($new_os->invoice && !$order->invoice_number)
@@ -251,9 +253,12 @@ class OrderHistoryCore extends ObjectModel
 	 * Returns the last order state
 	 * @param int $id_order
 	 * @return OrderState|bool
+	 * @deprecated 1.5.0.4
+	 * @see Order->current_state
 	 */
 	public static function getLastOrderState($id_order)
 	{
+		Tools::displayAsDeprecated();
 		$id_order_state = Db::getInstance()->getValue('
 		SELECT `id_order_state`
 		FROM `'._DB_PREFIX_.'order_history`
@@ -278,7 +283,8 @@ class OrderHistoryCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$last_order_state = $this->getLastOrderState($this->id_order);
+		$order = new Order($this->id_order);
+		$last_order_state = $order->getCurrentOrderState();
 
 		if (!parent::add($autodate))
 			return false;
@@ -298,7 +304,6 @@ class OrderHistoryCore extends ObjectModel
 			$data = array('{lastname}' => $result['lastname'], '{firstname}' => $result['firstname'], '{id_order}' => (int)$this->id_order);
 			if ($template_vars)
 				$data = array_merge($data, $template_vars);
-			$order = new Order((int)$this->id_order);
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
 			$data['{order_name}'] = sprintf('#%06d', (int)$order->id);
 

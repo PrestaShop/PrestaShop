@@ -46,3 +46,5 @@ ALTER TABLE `PREFIX_cart_rule_product_rule` CHANGE `id_cart_rule` `id_product_ru
 ALTER TABLE `PREFIX_cart_rule_product_rule` CHANGE `type` `type` ENUM('products', 'categories', 'attributes', 'manufacturers', 'suppliers') NOT NULL;
 
 ALTER TABLE `PREFIX_cart_rule` ADD `partial_use` tinyint(1) unsigned NOT NULL default 0 AFTER `priority`;
+
+ALTER TABLE `PREFIX_orders` ADD `current_state` int(10) unsigned NOT NULL default 0 AFTER `id_address_invoice`;
