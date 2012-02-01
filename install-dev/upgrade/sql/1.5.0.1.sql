@@ -309,31 +309,31 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_cart_rule`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_country` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_country` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_country`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_group` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_group` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_group`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_carrier` (
 	`id_cart_rule` int(10) unsigned NOT NULL,
 	`id_carrier` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule`, `id_carrier`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_combination` (
 	`id_cart_rule_1` int(10) unsigned NOT NULL,
 	`id_cart_rule_2` int(10) unsigned NOT NULL,
 	PRIMARY KEY  (`id_cart_rule_1`, `id_cart_rule_2`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_rule_product_rule` (
 	`id_product_rule` int(10) unsigned NOT NULL auto_increment,
@@ -341,7 +341,7 @@ CREATE TABLE `PREFIX_cart_rule_product_rule` (
 	`quantity` int(10) unsigned NOT NULL default 1,
 	`type` ENUM('products', 'categories', 'attributes') NOT NULL,
 	PRIMARY KEY  (`id_product_rule`)
-);
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 SET @id_currency_default = (SELECT value FROM `PREFIX_configuration` WHERE name = 'PS_CURRENCY_DEFAULT' LIMIT 1);
 INSERT INTO `PREFIX_cart_rule` (
