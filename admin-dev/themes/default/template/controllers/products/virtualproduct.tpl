@@ -202,7 +202,7 @@
 
 							<p class="block">
 								<label for="virtual_product_name" class="t">{l s='Filename'}</label>
-								<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentitiesUTF8}" />
+								<input type="text" id="virtual_product_name" name="virtual_product_name" style="width:200px" value="{$product->productDownload->display_filename|htmlentities}" />
 								<span class="hint" name="help_box" style="display:none;">{l s='The full filename with its extension (e.g., Book.pdf)'}</span>
 							</p>
 						</div>
@@ -213,7 +213,7 @@
 						<div id="virtual_good_more" style="'.$hidden.'padding:5px;width:40%;float:left;margin-left:10px">
 							<p class="block">
 								<label for="virtual_product_nb_downloable" class="t">{l s='Number of downloads'}</label>
-								<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="{$product->productDownload->nb_downloadable}" class="" size="6" />
+								<input type="text" id="virtual_product_nb_downloable" name="virtual_product_nb_downloable" value="{$product->productDownload->nb_downloadable|htmlentities}" class="" size="6" />
 								<span class="hint" name="help_box" style="display:none">{l s='Number of authorized downloads per customer'}</span>
 							</p>
 							<p class="block">
@@ -223,7 +223,7 @@
 							</p>
 							<p class="block">
 								<label for="virtual_product_nb_days" class="t">{l s='Number of days'}</label>
-								<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="{$product->productDownload->nb_days_accessible}" class="" size="4" /><sup> *</sup>
+								<input type="text" id="virtual_product_nb_days" name="virtual_product_nb_days" value="{$product->productDownload->nb_days_accessible|htmlentities}" class="" size="4" /><sup> *</sup>
 								<span class="hint" name="help_box" style="display:none">{l s='How many days this file can be accessed by customers'} - <em>({l s='set to zero for unlimited access'})</em></span>
 							</p>
 							<p class="block">

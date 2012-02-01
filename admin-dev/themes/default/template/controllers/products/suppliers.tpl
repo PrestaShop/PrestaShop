@@ -106,10 +106,10 @@
 						<tr {if $index is odd}class="alt_row"{/if}>
 							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 							<td>
-								<input type="text" size="10" value="{$reference}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+								<input type="text" size="10" value="{$reference|htmlentities}" name="supplier_reference_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
 							</td>
 							<td>
-								<input type="text" size="10" value="{$price_te}" name="product_price_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
+								<input type="text" size="10" value="{$price_te|htmlentities}" name="product_price_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}" />
 							</td>
 							<td>
 								<select name="product_price_currency_{$attribute['id_product']}_{$attribute['id_product_attribute']}_{$supplier->id_supplier}">

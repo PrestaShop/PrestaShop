@@ -73,7 +73,7 @@
 			</script>
 			<label>{l s='Customer e-mail'}</label>
 			<div class="margin-form">
-				<input type="text" size="33" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" style="text-transform: lowercase;" /> <sup>*</sup>
+				<input type="text" size="33" name="email" value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'|htmlentities}" style="text-transform: lowercase;" /> <sup>*</sup>
 			</div>
 		{/if}
 	{else} 

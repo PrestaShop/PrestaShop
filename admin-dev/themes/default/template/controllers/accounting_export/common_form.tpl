@@ -34,7 +34,7 @@
 
 <label for="clientPrefix">{l s='Client prefix:'}</label>
 <div class="margin-form">
-	<input type="text" value="{$clientPrefix}" name="clientPrefix" />
+	<input type="text" value="{$clientPrefix|htmlentities}" name="clientPrefix" />
 	<span class="input-error"></span>
 </div>
 

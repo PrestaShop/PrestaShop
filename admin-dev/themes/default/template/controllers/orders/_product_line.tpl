@@ -53,7 +53,7 @@
 		<span class="product_quantity_show">{$product['product_quantity']}</span>
 		{if $can_edit}
 		<span class="product_quantity_edit" style="display:none;">
-			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']}" size="2" />
+			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']|htmlentities}" size="2" />
 		</span>
 		{/if}
 	</td>

@@ -44,13 +44,13 @@
 		<form id="{$table}_form" method="POST" action="{$smarty.server.REQUEST_URI}">
 			<label>{l s='Default number for this shop'}</label>
 				<div class="margin-form">
-				<input type="text" name="default_account_number" value="{$shop_details['default_account_number']}" />
+				<input type="text" name="default_account_number" value="{$shop_details['default_account_number']|htmlentities}" />
 				<p>{l s='If a zone field is empty it will use this default number.'}</p>
 			</div>
 			{foreach from=$shop_details['zones'] key=id_zone item=currentZone}
 				<label>{$currentZone['name']}</label>
 				<div class="margin-form">
-					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']|escape:htmlall}" />
+					<input type="text" name="zone_{$id_zone}" value="{$currentZone['account_number']|escape:htmlall|htmlentities}" />
 
 				</div>
 			{/foreach}
