@@ -49,9 +49,9 @@ class BlockTags extends Module
 	function install()
 	{
 		if (parent::install() == false
-				OR $this->registerHook('leftColumn') == false
-				OR $this->registerHook('header') == false
-				OR Configuration::updateValue('BLOCKTAGS_NBR', 10) == false)
+				|| $this->registerHook('leftColumn') == false
+				|| $this->registerHook('header') == false
+				|| Configuration::updateValue('BLOCKTAGS_NBR', 10) == false)
 			return false;
 		return true;
 	}
@@ -61,13 +61,13 @@ class BlockTags extends Module
 		$output = '<h2>'.$this->displayName.'</h2>';
 		if (Tools::isSubmit('submitBlockTags'))
 		{
-			if (!$tagsNbr = Tools::getValue('tagsNbr') OR empty($tagsNbr))
+			if (!($tagsNbr = Tools::getValue('tagsNbr')) || empty($tagsNbr))
 				$output .= '<div class="alert error">'.$this->l('Please fill in the "tags displayed" field.').'</div>';
 			elseif ((int)($tagsNbr) == 0)
 				$output .= '<div class="alert error">'.$this->l('Invalid number.').'</div>';
 			else
 			{
-				Configuration::updateValue('BLOCKTAGS_NBR', (int)($tagsNbr));
+				Configuration::updateValue('BLOCKTAGS_NBR', (int)$tagsNbr);
 				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Settings updated').'</div>';
 			}
 		}

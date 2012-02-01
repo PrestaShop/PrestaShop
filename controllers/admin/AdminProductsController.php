@@ -1340,7 +1340,7 @@ class AdminProductsControllerCore extends AdminController
 
 			if (!$new_path = $image->getPathForCreation())
 				$this->errors[] = Tools::displayError('An error occurred during new folder creation');
-			if (!$tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS') || !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName))
+			if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['image_product']['tmp_name'], $tmpName))
 				$this->errors[] = Tools::displayError('An error occurred during the image upload');
 			else if (!ImageManager::resize($tmpName, $new_path.'.'.$image->image_format))
 				$this->errors[] = Tools::displayError('An error occurred while copying image.');
