@@ -1953,9 +1953,24 @@ class AdminControllerCore extends Controller
 			throw new PrestaShopException(sprintf('Table name %s is invalid:', $this->table));
 
 		if (empty($order_by))
-			$order_by = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+		{
+			if ($this->context->cookie->{$this->table.'Orderby'})
+				$order_by = $this->context->cookie->{$this->table.'Orderby'};
+			elseif ($this->_orderBy)
+				$order_by = $this->_orderBy;
+			else
+				$order_by = $this->_defaultOrderBy;
+		}
+
 		if (empty($order_way))
-			$order_way = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : $this->_defaultOrderWay;
+		{
+			if ($this->context->cookie->{$this->table.'Orderway'})
+				$order_way = $this->context->cookie->{$this->table.'Orderway'};
+			elseif ($this->_orderWay)
+				$order_way = $this->_orderWay;
+			else
+				$order_way = $this->_defaultOrderWay;
+		}
 
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
@@ -1976,7 +1991,7 @@ class AdminControllerCore extends Controller
 
 		/* Cache */
 		$this->_lang = (int)$id_lang;
-		$this->_orderBy = $order_by;
+		$this->_orderBy = (strpos($order_by, '.') !== false) ? substr($order_by, strpos($order_by, '.') + 1) : $order_by;
 		$this->_orderWay = Tools::strtoupper($order_way);
 
 		/* SQL table : orders, but class name is Order */
@@ -2045,6 +2060,12 @@ class AdminControllerCore extends Controller
 			 	$having_clause .= $this->_having.' ';
 		}
 
+		if (strpos($order_by, '.') > 0)
+		{
+			$order_by = explode('.', $order_by);
+			$order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
+		}
+
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS
 			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
 			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$select_shop.'
@@ -2057,7 +2078,7 @@ class AdminControllerCore extends Controller
 			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 			'.(isset($this->_group) ? $this->_group.' ' : '').'
 			'.$having_clause.'
-			ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).
+			ORDER BY '.(($order_by == $this->identifier) ? 'a.' : '').pSQL($order_by).' '.pSQL($order_way).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
 			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
@@ -2433,23 +2454,25 @@ class AdminControllerCore extends Controller
 			$max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
 			if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size)))
 				$this->errors[] = $error;
-			else if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
+
+			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+			if (!$tmp_name)
 				return false;
-			else
+
+			if (!move_uploaded_file($_FILES[$name]['tmp_name'], $tmp_name))
+				return false;
+
+			// Copy new image
+			if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
+				$this->errors[] = Tools::displayError('An error occurred while uploading image.');
+			if (count($this->errors))
+				return false;
+			if ($this->afterImageUpload())
 			{
-				$tmp_name = $_FILES[$name]['tmp_name'];
-				// Copy new image
-				if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
-					$this->errors[] = Tools::displayError('An error occurred while uploading image.');
-				if (count($this->errors))
-					return false;
-				if ($this->afterImageUpload())
-				{
-					unlink($tmp_name);
-					return true;
-				}
-				return false;
+				unlink($tmp_name);
+				return true;
 			}
+			return false;
 		}
 		return true;
 	}
