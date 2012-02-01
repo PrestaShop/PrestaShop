@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.7.6';
+		$this->version = '1.7.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
