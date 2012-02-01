@@ -311,6 +311,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 	public function afterImageUpload()
 	{
+		$return = true;
 		/* Generate image with differents size */
 		if (($id_supplier = (int)Tools::getValue('id_supplier')) &&
 			 isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg'))
@@ -319,9 +320,11 @@ class AdminSuppliersControllerCore extends AdminController
 			foreach ($images_types as $k => $image_type)
 			{
 				$file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
-				ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']);
+				if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
+					$return = false;
 			}
 		}
+		return $return;
 	}
 
 	/**
