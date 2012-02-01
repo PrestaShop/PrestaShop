@@ -733,6 +733,7 @@ class AdminProductsControllerCore extends AdminController
 	public function processPriceAddition($token)
 	{
 		$id_product = Tools::getValue('id_product');
+		$id_product_attribute = Tools::getValue('sp_id_product_attribute');
 		$id_shop = Tools::getValue('sp_id_shop');
 		$id_currency = Tools::getValue('sp_id_currency');
 		$id_country = Tools::getValue('sp_id_country');
@@ -748,7 +749,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$specificPrice = new SpecificPrice();
 			$specificPrice->id_product = (int)$id_product;
-			$specificPrice->id_product_attribute = (int)Tools::getValue('id_product_attribute');
+			$specificPrice->id_product_attribute = (int)$id_product_attribute;
 			$specificPrice->id_shop = (int)$id_shop;
 			$specificPrice->id_currency = (int)($id_currency);
 			$specificPrice->id_country = (int)($id_country);

@@ -118,9 +118,13 @@ function findCombination(firstTime)
 			else
 				selectedCombination['ecotax'] = default_eco_tax;
 
-			//show the large image in relation to the selected combination
-			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
+            //show the large image in relation to the selected combination
+            if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+                displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
+
+            //show discounts values according to the selected combination
+            if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
+                displayDiscounts(combinations[combination]['idCombination']);
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
@@ -425,12 +429,24 @@ function displayImage(domAAroundImgThumb)
             $('#bigpic').fadeOut('fast', function(){
                 $(this).attr('src', newSrc).show();
                 if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-	                $(this).attr('alt', domAAroundImgThumb.attr('href'));
+                    $(this).attr('alt', domAAroundImgThumb.attr('href'));
             });
         }
         $('#views_block li a').removeClass('shown');
         $(domAAroundImgThumb).addClass('shown');
     }
+}
+
+//update display of the discounts table
+function displayDiscounts(combination)
+{
+    $('#quantityDiscount table tbody tr').each(function() {
+        if (($(this).attr('id') != 'quantityDiscount_0') &&
+            ($(this).attr('id') != 'quantityDiscount_'+combination))
+            $(this).fadeOut('slow');
+    });
+
+    $('#quantityDiscount_'+combination).show();
 }
 
 // Serialscroll exclude option bug ?
