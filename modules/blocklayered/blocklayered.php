@@ -537,13 +537,21 @@ class BlockLayered extends Module
 		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$langValue = array();
 		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$return = '
+				<script type="text/javascript">
+					flag_fields = \'\';
+				</script>';
+		else
+			$return = '';
+		
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
 		WHERE id_feature_value = '.(int)$params['id_feature_value']);
 		if ($result)
 			foreach ($result as $data)
 				$langValue[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-		$return = '<div class="clear"></div>
+		$return .= '<div class="clear"></div>
 				<label>'.$this->l('Url:').'</label>
 				<div class="margin-form">
 				<script type="text/javascript">
@@ -616,13 +624,21 @@ class BlockLayered extends Module
 		$default_form_language = (int)(Configuration::get('PS_LANG_DEFAULT'));
 		$langValue = array();
 		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$return = '
+				<script type="text/javascript">
+					flag_fields = \'\';
+				</script>';
+		else
+			$return = '';
+		
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 		WHERE id_attribute = '.(int)$params['id_attribute']);
 		if ($result)
 			foreach ($result as $data)
 				$langValue[$data['id_lang']] = array('url_name' => $data['url_name'], 'meta_title' => $data['meta_title']);
-		$return = '<div class="clear"></div>
+		$return .= '<div class="clear"></div>
 				<label>'.$this->l('Url:').'</label>
 				<div class="margin-form">
 				<script type="text/javascript">
@@ -741,7 +757,15 @@ class BlockLayered extends Module
 		else
 			$on = (bool)$indexable;
 
-		$return = '<div class="clear"></div>
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$return = '
+				<script type="text/javascript">
+					flag_fields = \'\';
+				</script>';
+		else
+			$return = '';
+		
+		$return .= '<div class="clear"></div>
 				<label>'.$this->l('Url:').'</label>
 				<div class="margin-form">
 				<script type="text/javascript">
@@ -807,7 +831,15 @@ class BlockLayered extends Module
 		else
 			$on = (bool)$indexable;
 		
-		$return = '<div class="clear"></div>
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$return = '
+				<script type="text/javascript">
+					flag_fields = \'\';
+				</script>';
+		else
+			$return = '';
+		
+		$return .= '<div class="clear"></div>
 				<label>'.$this->l('Url:').'</label>
 				<div class="margin-form">
 				<script type="text/javascript">
