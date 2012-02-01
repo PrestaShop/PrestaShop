@@ -67,7 +67,7 @@
 							<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 							<td><input type="text"
 								name="location_warehouse_{$warehouse['id_warehouse']}_{$attribute['id_product']}_{$attribute['id_product_attribute']}"
-								value="{$location}"
+								value="{$location|htmlentities}"
 								size="20" />
 							</td>
 						</tr>

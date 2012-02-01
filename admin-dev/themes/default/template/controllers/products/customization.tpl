@@ -32,14 +32,14 @@
 		<tr>
 			<td style="width:150px;text-align:right;padding-right:10px;font-weight:bold;vertical-align:top;" valign="top">{l s='File fields:'}</td>
 			<td style="padding-bottom:5px;">
-				<input type="text" name="uploadable_files" id="uploadable_files" size="4" value="{$uploadable_files}" />
+				<input type="text" name="uploadable_files" id="uploadable_files" size="4" value="{$uploadable_files|htmlentities}" />
 				<p class="preference_description">{l s='Number of upload file fields displayed'}</p>
 			</td>
 		</tr>
 		<tr>
 			<td style="width:150px;text-align:right;padding-right:10px;font-weight:bold;vertical-align:top;" valign="top">{l s='Text fields:'}</td>
 			<td style="padding-bottom:5px;">
-				<input type="text" name="text_fields" id="text_fields" size="4" value="{$text_fields}" />
+				<input type="text" name="text_fields" id="text_fields" size="4" value="{$text_fields|htmlentities}" />
 				<p class="preference_description">{l s='Number of text fields displayed'}</p>
 			</td>
 		</tr>
