@@ -35,7 +35,7 @@ function process_install(step)
 		success: function(json)
 		{
 			// No error during this step
-			if (json && json.success)
+			if (json && json.success === true)
 			{
 				$('#process_step_'+step.key).show().addClass('success');
 				current_step++;
