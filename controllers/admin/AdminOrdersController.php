@@ -218,6 +218,7 @@ class AdminOrdersControllerCore extends AdminController
 						@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
 							$customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
 							_PS_MAIL_DIR_, true);
+						Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order));
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					}
 					else

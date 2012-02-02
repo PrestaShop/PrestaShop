@@ -81,6 +81,7 @@ class PasswordControllerCore extends FrontController
 					$customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 					if ($customer->update())
 					{
+						Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));
 						if (Mail::Send($this->context->language->id, 'password', Mail::l('Your password'),
 						array(
 							'{email}' => $customer->email,

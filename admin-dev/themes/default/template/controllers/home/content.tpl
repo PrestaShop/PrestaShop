@@ -106,6 +106,7 @@ $(document).ready(function() {
 			</a>
 		</li>
 		{/foreach}
+		{hook h="displayAdminHomeQuickLinks"}
 		</ul>
 	<div class="separation"></div>
 	<div id="partner_preactivation"><h2>{l s='Your Required'}</h2><p class="center"><img src="../img/loader.gif" alt="" /></p>
@@ -115,7 +116,7 @@ $(document).ready(function() {
 	{$tips_optimization}
 	<div id="discover_prestashop"><p class="center"><img src="../img/loader.gif" alt="" />{l s='Loading...'}</p></div>
 
-
+	{hook h="displayAdminHomeInfos"}
 
 </div>
 
@@ -126,8 +127,9 @@ $(document).ready(function() {
 		{$customers_service}
 		{$stats_sales}
 		{$last_orders}
+		{hook h="displayAdminHomeStatistics"}
 	</div>
-	{hook h="displayBackOfficeHome"}
+
 </div>
 	<div class="clear">&nbsp;</div>
 	

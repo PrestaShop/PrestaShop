@@ -3798,7 +3798,7 @@ class AdminProductsControllerCore extends AdminController
 	public function initFormModules($obj)
 	{
  		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
-		$this->tpl_form_vars['custom_form'] = hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
+		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
 	}	
 
 
