@@ -839,8 +839,18 @@ abstract class ModuleCore
 		libxml_use_internal_errors(true);
 		$xml_module = simplexml_load_file($configFile);
 		foreach (libxml_get_errors() as $error)
+		{
+			libxml_clear_errors();
 			return 'Module '.ucfirst($module);
+		}
 		libxml_clear_errors();
+
+		// Find translations
+		global $_MODULES;
+		$file = _PS_MODULE_DIR_.$module.'/'.Context::getContext()->language->iso_code.'.php';
+		if (Tools::file_exists_cache($file) && include_once($file))
+			if (isset($_MODULE) && is_array($_MODULE))
+				$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 
 		// Return Name
 		return Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
