@@ -45,9 +45,16 @@ class InstallSession
 		session_start();
 	}
 
-	public function __get($varname)
+	public function &__get($varname)
 	{
-		return isset($_SESSION[$varname]) ? $_SESSION[$varname] : null;
+		if (isset($_SESSION[$varname]))
+			$ref = &$_SESSION[$varname];
+		else
+		{
+			$null = null;
+			$ref = &$null;
+		}
+		return $ref;
 	}
 
 	public function __set($varname, $value)
