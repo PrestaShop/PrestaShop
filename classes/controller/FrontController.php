@@ -573,7 +573,7 @@ class FrontControllerCore extends Controller
 
 			header('HTTP/1.0 301 Moved');
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
-				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.$strParams.'">'.$canonicalURL.$strParams.'</a>');
+				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.Tools::safeOutput($strParams).'">'.$canonicalURL.Tools::safeOutput($strParams).'</a>');
 			Tools::redirectLink($canonicalURL.$strParams);
 		}
 	}

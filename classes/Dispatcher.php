@@ -255,7 +255,7 @@ class DispatcherCore
 
 			// Dispatch module controller for front office
 			case self::FC_MODULE :
-				$module_name = Tools::getValue('module');
+				$module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
 				$module = Module::getInstanceByName($module_name);
 				$controller_class = 'PageNotFoundController';
 				if (Validate::isLoadedObject($module) && $module->active)
@@ -537,7 +537,7 @@ class DispatcherCore
 
 		$controller = Tools::getValue('controller');
 
-		if (isset($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
+		if (isset($controller) && is_string($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
 		{
 			$controller = $m[1];
 			if (isset($_GET['controller']))
@@ -545,7 +545,8 @@ class DispatcherCore
 			else if (isset($_POST['controller']))
 				$_POST[$m[2]] = $m[3];
 		}
-
+		if (!Validate::isControllerName($controller))
+			$controller = false;
 		// Use routes ? (for url rewriting)
 		if ($this->use_routes && !$controller)
 		{
