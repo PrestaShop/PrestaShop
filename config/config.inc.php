@@ -52,7 +52,7 @@ if (!file_exists(dirname(__FILE__).'/settings.inc.php'))
 	$dir = ((is_dir($_SERVER['REQUEST_URI']) || substr($_SERVER['REQUEST_URI'], -1) == '/') ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
 	if (!file_exists(dirname(__FILE__).'/../install'))
 		die('Error: "install" directory is missing');
-	header('Location: install-dev/');
+	header('Location: install/');
 	exit;
 }
 
