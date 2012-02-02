@@ -476,7 +476,7 @@ class AdminHomeControllerCore extends AdminController
 
 		// SHOW PAYPAL TIPS
 			$content = '';
-			$content = @file_get_contents($protocol.'://www.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+			$content = @file_get_contents($protocol.'://api.prestashop.com/partner/paypal/paypal-tips.php?protocol='.$protocol.'&iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 			$content = explode('|', $content);
 			if ($content[0] == 'OK' && Validate::isCleanHtml($content[1]))
 				$result['discover_prestashop'] .= '<div id="block_partner_tips">'.$content[1].'</div></div>';
@@ -547,7 +547,7 @@ class AdminHomeControllerCore extends AdminController
 		$isoUser = Context::getContext()->language->iso_code;
 		$isoCountry = Context::getContext()->country->iso_code;
 
-		$content = @file_get_contents($protocol.'://www.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
+		$content = @file_get_contents($protocol.'://api.prestashop.com/partner/prestashop/prestashop-link.php?iso_country='.$isoCountry.'&iso_lang='.Tools::strtolower($isoUser).'&id_lang='.(int)Context::getContext()->language->id, false, $stream_context);
 
 		if (!$content)
 			return ''; // NOK
