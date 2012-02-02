@@ -55,6 +55,20 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		return false;
 	}
 
+	public function initializeContext()
+	{
+		global $smarty;
+
+		Context::getContext()->shop = new Shop(1);
+		Configuration::loadConfiguration();
+		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
+		Context::getContext()->cart = new Cart();
+
+		require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+		Context::getContext()->smarty = $smarty;
+	}
+
 	public function process()
 	{
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
@@ -62,18 +76,22 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (Tools::getValue('installDatabase'))
 			$this->processInstallDatabase();
-		else if (Tools::getValue('populateDatabase'))
+		else if (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase']))
 			$this->processPopulateDatabase();
-		else if (Tools::getValue('configureShop'))
+		else if (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase']))
 			$this->processConfigureShop();
-		else if (Tools::getValue('installModules'))
+		else if (Tools::getValue('installModules') && !empty($this->session->process_validated['configureShop']))
 			$this->processInstallModules();
-		else if (Tools::getValue('installFixtures'))
+		else if (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallFixtures();
-		else if (Tools::getValue('installTheme'))
+		else if (Tools::getValue('installTheme') && !empty($this->session->process_validated['installFixtures']))
 			$this->processInstallTheme();
-		else if (Tools::getValue('preactivation'))
-			$this->processPreactivation();
+		else
+		{
+			// With no parameters, we consider that we are doing a new install, so session where the last process step
+			// was stored can be cleaned
+			$this->session->process_validated = array();
+		}
 	}
 
 	/**
@@ -94,6 +112,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (!$success || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->process_validated['installDatabase'] = true;
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -113,6 +132,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
+		$this->session->process_validated['populateDatabase'] = true;
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -143,21 +163,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (!$success || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->process_validated['configureShop'] = true;
 		$this->ajaxJsonAnswer(true);
-	}
-
-	public function initializeContext()
-	{
-		global $smarty;
-
-		Context::getContext()->shop = new Shop(1);
-		Configuration::loadConfiguration();
-		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
-		Context::getContext()->cart = new Cart();
-
-		require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
-		Context::getContext()->smarty = $smarty;
 	}
 
 	/**
@@ -173,6 +180,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 
 		if (!$this->model_install->installModules() || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->process_validated['installModules'] = true;
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -187,6 +195,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
 		if (!$this->model_install->installFixtures() || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->process_validated['installFixtures'] = true;
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -241,7 +250,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->process_steps[] = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
 		if ($this->session->install_type == 'full')
 			$this->process_steps[] = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
-		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('CInstall theme'));
+		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
+
 		$this->displayTemplate('process');
 	}
 }
