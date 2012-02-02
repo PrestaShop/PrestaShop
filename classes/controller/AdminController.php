@@ -338,7 +338,7 @@ class AdminControllerCore extends Controller
 		}
 		// note : this should use a tpl file
 		foreach ($tabs as $key => $item)
-			$bread .= '<span class="breadcrumb item-'.$key.' ">'.$item['name'].'</span> : ';
+			$bread .= '<span class="breadcrumb item-'.$key.' ">'.Tools::safeOutput($item['name']).'</span> : ';
 
 		$bread = rtrim($bread, ': ');
 

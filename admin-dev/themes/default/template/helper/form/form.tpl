@@ -31,7 +31,7 @@
 				<div class="pageTitle">
 				<h3>
 					{block name=pageTitle}
-						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'|escape:'htmlall'}</span>
+						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
 					{/block}
 				</h3>
 				</div>
