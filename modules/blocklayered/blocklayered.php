@@ -930,7 +930,12 @@ class BlockLayered extends Module
 		if (($nbProducts > 0 && !$full || $cursor < $nbProducts && $full) && !$ajax)
 		{
 			$token = substr(Tools::encrypt('blocklayered/index'), 0, 10);
-			if (!Tools::file_get_contents(Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php?token='.$token.'&cursor='.(int)$cursor.'&full='.(int)$full))
+			if (Tools::usingSecureMode())
+				$domain = Tools::getShopDomainSsl(true);
+			else
+				$domain = Tools::getShopDomain(true);
+			
+			if (!Tools::file_get_contents($domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php?token='.$token.'&cursor='.(int)$cursor.'&full='.(int)$full))
 				self::indexPrices((int)$cursor, (int)$full);
 			return $cursor;
 		}
@@ -1396,7 +1401,7 @@ class BlockLayered extends Module
 			'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'<span class="message"></span>
 		</div>
 		<div id="ajax-message-ko" class="error ajax-message" style="display: none">
-			'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'<span class="message"></span>
+			'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/errors.png" alt="" />').'<span class="message"></span>
 		</div>
 		<h2>'.$this->l('Layered navigation').'</h2>
 		<fieldset class="width4">
@@ -1417,37 +1422,42 @@ class BlockLayered extends Module
 		foreach (Db::getInstance()->ExecuteS('SELECT id_category FROM `'._DB_PREFIX_.'category`') as $category)
 			if ($category['id_category'] != 1)
 				$categoryList[] = $category['id_category'];
-		
+				
+		if (Tools::usingSecureMode())
+			$domain = Tools::getShopDomainSsl(true);
+		else
+			$domain = Tools::getShopDomain(true);
+			
 		$html .= '
 			<a class="bold ajaxcall-recurcive"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px"
-			href="'.Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
+			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Index all missing prices').'</a>
 			<br />
 			<a class="bold ajaxcall-recurcive"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
-			href="'.Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.
+			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1">'.
 			$this->l('Re-build entire price index').'</a>
 			<br />
 			<a class="bold ajaxcall" id="attribute-indexer"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
-			href="'.Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
+			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'">'.
 			$this->l('Build attribute index').'</a>
 			<br />
 			<a class="bold ajaxcall" id="url-indexer"
 			style="width: 250px; text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="full-index"
-			href="'.Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.
+			href="'.$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1">'.
 			$this->l('Build url index').'</a>
 			<br />
 			<br />
 			'.$this->l('You can set a cron job that will re-build price index using the following URL:').'<br /><b>'.
-			Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</b>
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-price-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&full=1</b>
 			<br />
 			'.$this->l('You can set a cron job that will re-build url index using the following URL:').'<br /><b>'.
-			Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</b>
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-url-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&truncate=1</b>
 			<br />
 			'.$this->l('You can set a cron job that will re-build attribute index using the following URL:').'<br /><b>'.
-			Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</b>
+			$domain.__PS_BASE_URI__.'modules/blocklayered/blocklayered-attribute-indexer.php'.'?token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'</b>
 			<br /><br />
 			'.$this->l('A nightly rebuild is recommended.').'
 			<script type="text/javascript">
