@@ -827,6 +827,26 @@ abstract class ModuleCore
 		return str_replace('\'', '\\\'', Tools::htmlentitiesDecodeUTF8($string));
 	}
 
+
+	public static function getModuleName($module)
+	{
+		// Config file
+		$configFile = _PS_MODULE_DIR_.$module.'/config.xml';
+		if (!file_exists($configFile))
+			return 'Module '.ucfirst($module);
+
+		// Load config.xml
+		libxml_use_internal_errors(true);
+		$xml_module = simplexml_load_file($configFile);
+		foreach (libxml_get_errors() as $error)
+			return 'Module '.ucfirst($module);
+		libxml_clear_errors();
+
+		// Return Name
+		return Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
+	}
+
+
 	/**
 	 * Return available modules
 	 *
