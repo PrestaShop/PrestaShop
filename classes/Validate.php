@@ -197,7 +197,7 @@ class ValidateCore
 	 */
 	public static function isModuleName($module_name)
 	{
-		return preg_match('/^[a-zA-Z0-9_-]+$/', $module_name);
+		return (is_string($module_name) && preg_match('/^[a-zA-Z0-9_-]+$/', $module_name));
 	}
 
 	/**
@@ -986,6 +986,11 @@ class ValidateCore
 	public static function isApe($ape)
 	{
 		return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
+	}
+	
+	public static function isControllerName($name)
+	{
+		return (bool)(is_string($name) && preg_match('/^[0-9a-zA-Z-_]*$/u', $name));
 	}
 
 }
