@@ -38,6 +38,7 @@ class AdminProductsControllerCore extends AdminController
 	 * @var string name of the tab to display
 	 */
 	protected $tab_display;
+	protected $tab_display_module;
 
 	/**
 	 * The order in the array decides the order in the list of tab. If an element's value is a number, it will be preloaded.
@@ -166,10 +167,11 @@ class AdminProductsControllerCore extends AdminController
 		/* Adding tab if modules are hooked */
 		$modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
 		if (is_array($modules_list) && count($modules_list) > 0)
-		{
-			$this->available_tabs['Others'] = 23;
-			$this->available_tabs_lang['Others'] = $this->l('Others');
-		}
+			foreach ($modules_list as $m)
+			{
+				$this->available_tabs['Module'.ucfirst($m['module'])] = 23;
+				$this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
+			}
 
 
 		/* Join categories table */
@@ -1820,6 +1822,13 @@ class AdminProductsControllerCore extends AdminController
 			$this->addJS(_PS_JS_DIR_.'admin-products.js');
 			$this->fields_form = array();
 
+			// Check if Module
+			if (substr($this->tab_display, 0, 6) == 'Module')
+			{
+				$this->tab_display_module = strtolower(substr($this->tab_display, 6, strlen($this->tab_display) - 6));
+				$this->tab_display = 'Modules';
+			}
+
 			if (method_exists($this, 'initForm'.$this->tab_display))
 				$this->tpl_form = strtolower($this->tab_display).'.tpl';
 
@@ -1828,6 +1837,14 @@ class AdminProductsControllerCore extends AdminController
 			else
 			{
 				$product_tabs = array();
+
+				// Check if Module
+				if (substr($this->tab_display, 0, 6) == 'Module')
+				{
+					$this->tab_display = 'Module';
+					$this->tab_display_module = strtolower(substr($this->tab_display, 6, strlen($this->tab_display) - 6));
+				}
+
 				// tab_display defines which tab to display first
 				if (!method_exists($this, 'initForm'.$this->tab_display))
 					$this->tab_display = $this->default_tab;
@@ -3778,9 +3795,10 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 *  AdminProducts display hook
 	 */
-	public function initFormOthers($obj)
+	public function initFormModules($obj)
 	{
-		$this->tpl_form_vars['custom_form'] = hook::exec('displayAdminProductsExtra');
+ 		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
+		$this->tpl_form_vars['custom_form'] = hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
 	}	
 
 
