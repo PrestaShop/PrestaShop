@@ -69,8 +69,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->table = 'category';
 		$this->lang = true;
 		$this->identifier = 'id_category';
-		$this->_defaultOrderBy = 'id_category';
-		$this->_defaultOrderWay = 'DESC';
+		$this->_orderBy = 'id_category';
+		$this->_orderWay = 'DESC';
 		self::$currentIndex = 'index.php?controller=AdminCategories';
 		$this->token = Tools::getAdminTokenLite('AdminCategories');
 
@@ -103,8 +103,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->table = 'product';
 		$this->lang = true;
 		$this->identifier = 'id_product';
-		$this->_defaultOrderBy = 'id_product';
-		$this->_defaultOrderWay = 'DESC';
+		$this->_orderBy = 'id_product';
+		$this->_orderWay = 'DESC';
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
 		$this->show_toolbar = false;
@@ -141,8 +141,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->table = 'product';
 		$this->lang = true;
 		$this->identifier = 'id_product';
-		$this->_defaultOrderBy = 'id_product';
-		$this->_defaultOrderWay = 'DESC';
+		$this->_orderBy = 'id_product';
+		$this->_orderWay = 'DESC';
 		$this->show_toolbar = false;
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
@@ -179,8 +179,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->table = 'product';
 		$this->lang = true;
 		$this->identifier = 'id_product';
-		$this->_defaultOrderBy = 'id_product';
-		$this->_defaultOrderWay = 'DESC';
+		$this->_orderBy = 'id_product';
+		$this->_orderWay = 'DESC';
 		$this->_filter = 'AND active = 0';
 		$this->list_no_filter = true;
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of disabled products:'));
@@ -206,8 +206,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->actions = array();
 		$this->lang = false;
 		$this->identifier = '';
-		$this->_defaultOrderBy = '';
-		$this->_defaultOrderWay = '';
+		$this->_orderBy = '';
+		$this->_orderWay = '';
 		$this->_filter = '';
 		$this->_group = '';
 		$this->list_no_filter = true;
