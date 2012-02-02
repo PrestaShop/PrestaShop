@@ -685,7 +685,11 @@ class LanguageCore extends ObjectModel
 	public static function countActiveLanguages()
 	{
 		if (!self::$countActiveLanguages)
-			self::$countActiveLanguages = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
+			self::$countActiveLanguages = Db::getInstance()->getValue('
+				SELECT COUNT(*) FROM `'._DB_PREFIX_.'lang` l
+				'.Context::getContext()->shop->addSqlAssociation('lang', 'l').'
+				WHERE l.`active` = 1
+			');
 		return self::$countActiveLanguages;
 	}
 

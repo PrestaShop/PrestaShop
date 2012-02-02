@@ -304,7 +304,7 @@ class FrontControllerCore extends Controller
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace('\'', '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),
-			'languages' => Language::getLanguages(),
+			'languages' => Language::getLanguages(true, $this->context->shop->getID()),
 			'priceDisplay' => Product::getTaxCalculationMethod(),
 			'add_prod_display' => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
 			'shop_name' => Configuration::get('PS_SHOP_NAME'),
