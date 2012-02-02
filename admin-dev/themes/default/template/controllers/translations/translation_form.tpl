@@ -47,10 +47,11 @@
 						{if isset($missing_translations[$k])}(<font color="red">{$missing_translations[$k]} {l s='missing'}</font>){/if}
 					</legend>
 					<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
-					<table cellpadding="2">
-					{foreach $newLang as $key => $value}
-						<tr>
-							<td style="width: 40%">{$key|stripslashes}</td>
+					<table cellpadding="2" cellspacing="0">
+					{counter start=0 assign=irow}
+					{foreach $newLang as $key => $value}{counter}
+						<tr class="{if $irow % 2 == 0}alt_row{/if}">
+							<td style="width:40%">{$key|stripslashes}</td>
 							<td>= {*todo : md5 is already calculated in AdminTranslationsController*}
 								{if $key|strlen < $textarea_sized}
 									<input type="text" 
