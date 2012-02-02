@@ -88,7 +88,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			$this->session->database_password,
 			$this->session->database_prefix,
 			$this->session->database_engine,
-			$this->session->database_clear
+
+			// We do not want to validate table prefix if we are already in install process
+			($this->session->step == 'process') ? true : $this->session->database_clear
 		);
 
 		return count($this->errors) ? false : true;
