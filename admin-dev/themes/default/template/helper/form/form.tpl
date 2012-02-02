@@ -31,7 +31,7 @@
 				<div class="pageTitle">
 				<h3>
 					{block name=pageTitle}
-						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'}</span>
+						<span id="current_obj" style="font-weight: normal;">{$title|default:'&nbsp;'|escape:'htmlall'}</span>
 					{/block}
 				</h3>
 				</div>
@@ -40,7 +40,7 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
-{if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
+{if isset($fields.title)}<h2>{$fields.title|escape:'htmlall'}</h2>{/if}
 {block name="defaultForm"}
 <form id="{$table}_form" class="defaultForm {$name_controller}" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
@@ -51,8 +51,8 @@
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					<legend>
-						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
-						{$field.title}
+						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall'}" />{/if}
+						{$field.title|escape:'htmlall'}
 					</legend>
 				{elseif $key == 'description'}
 					<p class="description">{$field}</p>
@@ -63,11 +63,11 @@
 						{/if}
 						{block name="label"}
 							{if isset($input.label)}
-								<label>{$input.label} </label>
+								<label>{$input.label|escape:'htmlall'} </label>
 							{/if}
 						{/block}
 						{if $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|htmlentities}" />
+							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'htmlall'}" />
 						{else}
 						{block name="start_field_block"}
 							<div class="margin-form">
@@ -94,7 +94,7 @@
 												<input type="text"
 														name="{$input.name}_{$language.id_lang}"
 														id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
-														value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|htmlentities}{else}{$value_text}{/if}"
+														value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall'}{else}{$value_text|escape:'htmlall'}{/if}"
 														class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 														{if isset($input.size)}size="{$input.size}"{/if}
 														{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
@@ -124,7 +124,7 @@
 									<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|htmlentities}{else}{$value_text}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall'}{else}{$value_text|escape:'htmlall'}{/if}"
 											class="{if $input.type == 'tags'}tagify {/if}"
 											{if isset($input.size)}size="{$input.size}"{/if}
 											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
@@ -199,7 +199,7 @@
 									<input type="radio"
 											name="{$input.name}"
 											id="{$value.id}"
-											value="{$value.value|escape:'htmlall':'UTF-8'|htmlentities}"
+											value="{$value.value|escape:'htmlall':'UTF-8'|escape:'htmlall'}"
 											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 									<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
@@ -210,23 +210,23 @@
 									 		<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
 									 	{/if}
 									 {else}
-									 	{$value.label}
+									 	{$value.label|escape:'htmlall'}
 									 {/if}
 									</label>
 									{if isset($input.br) && $input.br}<br />{/if}
-									{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
+									{if isset($value.p) && $value.p}<p>{$value.p|escape:'htmlall'}</p>{/if}
 								{/foreach}
 							{elseif $input.type == 'textarea'}
 								{if isset($input.lang)}
 									<div class="translatable">
 										{foreach $languages as $language}
 											<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
-												<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]|htmlentities}</textarea>
+												<textarea cols="{$input.cols}" rows="{$input.rows}" name="{$input.name}_{$language.id_lang}" {if isset($input.autoload_rte) && $input.autoload_rte}class="rte autoload_rte"{/if} >{$fields_value[$input.name][$language.id_lang]|escape:'htmlall'}</textarea>
 											</div>
 										{/foreach}
 									</div>
 								{else}
-									<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]|htmlentities}</textarea>
+									<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]|escape:'htmlall'}</textarea>
 								{/if}
 							{elseif $input.type == 'checkbox'}
 								{foreach $input.values.query as $value}
@@ -234,7 +234,7 @@
 									<input type="checkbox"
 										name="{$id_checkbox}"
 										id="{$id_checkbox}"
-										{if isset($value.val)}value="{$value.val|htmlentities}"{/if}
+										{if isset($value.val)}value="{$value.val|escape:'htmlall'}"{/if}
 										{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 									<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 								{/foreach}
@@ -304,7 +304,7 @@
 									{if isset($input.class)}class="{$input.class}"
 									{else}class="color mColorPickerInput"{/if}
 									name="{$input.name}"
-									value="{$fields_value[$input.name]|htmlentities}" />
+									value="{$fields_value[$input.name]|escape:'htmlall'}" />
 							{elseif $input.type == 'date'}
 								<input type="text"
 									size="{$input.size}"
@@ -312,7 +312,7 @@
 									{if isset($input.class)}class="{$input.class}"
 									{else}class="datepicker"{/if}
 									name="{$input.name}"
-									value="{$fields_value[$input.name]|htmlentities}" />
+									value="{$fields_value[$input.name]|escape:'htmlall'}" />
 							{elseif $input.type == 'free'}
 								{$fields_value[$input.name]}
 							{/if}
@@ -322,13 +322,13 @@
 									{if is_array($input.desc)}
 										{foreach $input.desc as $p}
 											{if is_array($p)}
-												<span id="{$p.id}">{$p.text}</span><br />
+												<span id="{$p.id}">{$p.text|escape:'htmlall'}</span><br />
 											{else}
 												{$p}<br />
 											{/if}
 										{/foreach}
 									{else}
-										{$input.desc}
+										{$input.desc|escape:'htmlall'}
 									{/if}
 								</p>
 							{/if}
@@ -352,14 +352,14 @@
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
-									<span id="{$p.id}">{$p.text}</span><br />
+									<span id="{$p.id}">{$p.text|escape:'htmlall'}</span><br />
 								{else}
 									{$p}
 									{if isset($field[$k+1])}<br />{/if}
 								{/if}
 							{/foreach}
 						{else}
-							{$field}
+							{$field|escape:'htmlall'}
 						{/if}
 					</p>
 				{/if}
