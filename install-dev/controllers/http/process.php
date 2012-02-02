@@ -74,7 +74,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
 			require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 
-		if (Tools::getValue('installDatabase'))
+		if (Tools::getValue('generateSettingsFile'))
+			$this->processGenerateSettingsFile();
+		else if (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile']))
 			$this->processInstallDatabase();
 		else if (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase']))
 			$this->processPopulateDatabase();
@@ -95,22 +97,32 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	}
 
 	/**
-	 * PROCESS : installDatabase
-	 * Generate settings file and create database structure
+	 * PROCESS : generateSettingsFile
 	 */
-	public function processInstallDatabase()
+	public function processGenerateSettingsFile()
 	{
-		$success = $this->model_install->installDatabase(
+		$success = $this->model_install->generateSettingsFile(
 			$this->session->database_server,
 			$this->session->database_login,
 			$this->session->database_password,
 			$this->session->database_name,
 			$this->session->database_prefix,
-			$this->session->database_engine,
-			$this->session->database_clear
+			$this->session->database_engine
 		);
 
-		if (!$success || $this->model_install->getErrors())
+		if (!$success)
+			$this->ajaxJsonAnswer(false);
+		$this->session->process_validated['generateSettingsFile'] = true;
+		$this->ajaxJsonAnswer(true);
+	}
+
+	/**
+	 * PROCESS : installDatabase
+	 * Create database structure
+	 */
+	public function processInstallDatabase()
+	{
+		if (!$this->model_install->installDatabase($this->session->database_clear) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->process_validated['installDatabase'] = true;
 		$this->ajaxJsonAnswer(true);
@@ -245,6 +257,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function display()
 	{
 		$this->process_steps = array();
+		$this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->l('Create settings.inc file'));
 		$this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->l('Create database tables'));
 		$this->process_steps[] = array('key' => 'populateDatabase', 'lang' => $this->l('Populate database tables'));
 		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop informations'));

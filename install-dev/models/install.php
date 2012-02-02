@@ -30,47 +30,6 @@ class InstallModelInstall extends InstallAbstractModel
 	const SETTINGS_FILE = 'config/settings.inc.php';
 
 	/**
-	 * PROCESS : installDatabase
-	 * Generate settings file and create database structure
-	 */
-	public function installDatabase($database_server, $database_login, $database_password, $database_name, $database_prefix, $database_engine, $clear_database = false)
-	{
-		// Generate settings file
-		$this->generateSettingsFile($database_server, $database_login, $database_password, $database_name, $database_prefix, $database_engine);
-
-		// Clear database (only tables with same prefix)
-		require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
-		if ($clear_database)
-			$this->clearDatabase();
-
-		// Install database structure
-		$sql_loader = new InstallSqlLoader();
-		$sql_loader->setMetaData(array(
-			'PREFIX_' => _DB_PREFIX_,
-			'ENGINE_TYPE' => _MYSQL_ENGINE_,
-		));
-
-		try
-		{
-			$sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_structure.sql');
-		}
-		catch (PrestashopInstallerException $e)
-		{
-			$this->setError($this->language->l('Database structure file not found'));
-			return false;
-		}
-
-		if ($errors = $sql_loader->getErrors())
-		{
-			foreach ($errors as $error)
-				$this->setError($this->language->l('An SQL error occured: <i>%1$s</i>', $error['error']));
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Generate settings file
 	 */
 	public function generateSettingsFile($database_server, $database_login, $database_password, $database_name, $database_prefix, $database_engine)
@@ -121,6 +80,44 @@ class InstallModelInstall extends InstallAbstractModel
 			$this->setError($this->language->l('Cannot write settings file'));
 			return false;
 		}
+		return true;
+	}
+
+	/**
+	 * PROCESS : installDatabase
+	 * Generate settings file and create database structure
+	 */
+	public function installDatabase($clear_database = false)
+	{
+		// Clear database (only tables with same prefix)
+		require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
+		if ($clear_database)
+			$this->clearDatabase();
+
+		// Install database structure
+		$sql_loader = new InstallSqlLoader();
+		$sql_loader->setMetaData(array(
+			'PREFIX_' => _DB_PREFIX_,
+			'ENGINE_TYPE' => _MYSQL_ENGINE_,
+		));
+
+		try
+		{
+			$sql_loader->parse_file(_PS_INSTALL_DATA_PATH_.'db_structure.sql');
+		}
+		catch (PrestashopInstallerException $e)
+		{
+			$this->setError($this->language->l('Database structure file not found'));
+			return false;
+		}
+
+		if ($errors = $sql_loader->getErrors())
+		{
+			foreach ($errors as $error)
+				$this->setError($this->language->l('An SQL error occured: <i>%1$s</i>', $error['error']));
+			return false;
+		}
+
 		return true;
 	}
 
