@@ -39,7 +39,16 @@ class DbPDOCore extends Db
 	{
 		try
 		{
-			$this->link = new PDO('mysql:dbname='.$this->database.';host='.$this->server, $this->user, $this->password);
+			$dsn = 'mysql:dbname='.$this->database;
+			if (strpos($this->server, ':') !== false)
+			{
+				list($server, $port) = explode(':', $this->server);
+				$dsn .= ';server='.$server.';port='.$port;
+			}
+			else
+				$dsn .= ';server='.$this->server;
+
+			$this->link = new PDO($dsn, $this->user, $this->password);
 		}
 		catch (PDOException $e)
 		{
