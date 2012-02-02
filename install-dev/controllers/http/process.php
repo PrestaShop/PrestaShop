@@ -145,20 +145,21 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->initializeContext();
 
 		$success = $this->model_install->configureShop(array(
-			'shop_name' =>		$this->session->shop_name,
-			'shop_activity' =>	$this->session->shop_activity,
-			'shop_country' =>	$this->session->shop_country,
-			'shop_timezone' =>	$this->session->shop_timezone,
-			'use_smtp' =>		$this->session->use_smtp,
-			'smtp_server' =>	$this->session->smtp_server,
-			'smtp_login' =>		$this->session->smtp_login,
-			'smtp_password' =>	$this->session->smtp_password,
-			'smtp_encryption' =>$this->session->smtp_encryption,
-			'smtp_port' =>		$this->session->smtp_port,
-			'admin_firstname' =>$this->session->admin_firstname,
-			'admin_lastname' =>	$this->session->admin_lastname,
-			'admin_password' =>	$this->session->admin_password,
-			'admin_email' =>	$this->session->admin_email,
+			'shop_name' =>				$this->session->shop_name,
+			'shop_activity' =>			$this->session->shop_activity,
+			'shop_country' =>			$this->session->shop_country,
+			'shop_timezone' =>			$this->session->shop_timezone,
+			'use_smtp' =>				$this->session->use_smtp,
+			'smtp_server' =>			$this->session->smtp_server,
+			'smtp_login' =>				$this->session->smtp_login,
+			'smtp_password' =>			$this->session->smtp_password,
+			'smtp_encryption' =>		$this->session->smtp_encryption,
+			'smtp_port' =>				$this->session->smtp_port,
+			'admin_firstname' =>		$this->session->admin_firstname,
+			'admin_lastname' =>			$this->session->admin_lastname,
+			'admin_password' =>			$this->session->admin_password,
+			'admin_email' =>			$this->session->admin_email,
+			'configuration_agrement' =>	$this->session->configuration_agrement,
 		));
 
 		if (!$success || $this->model_install->getErrors())
