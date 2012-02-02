@@ -193,8 +193,14 @@ class CategoryCore extends ObjectModel
 		// If the parent category was changed, we don't want to have 2 categories with the same position
 		if ($this->getDuplicatePosition())
 		{
-			$shops = Shop::getAssoShop();
-			foreach ($shops as $shop)
+			$assos = array();
+			if (isset($_POST['checkBoxShopAsso_category']))
+				foreach ($_POST['checkBoxShopAsso_category'] as $id_asso_object => $row)
+				{
+					foreach ($row as $id_shop => $value)
+						$assos[] = array('id_object' => (int)$id_asso_object, 'id_shop' => (int)$id_shop);
+				}
+			foreach ($assos as $shop)
 				$this->addPosition(Category::getLastPosition((int)$this->id_parent, $shop['id_shop']), $shop['id_shop']);
 		}
 		$this->cleanPositions((int)$this->id_parent);
