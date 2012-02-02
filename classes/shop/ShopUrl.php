@@ -149,15 +149,15 @@ class ShopUrlCore extends ObjectModel
 
 	public static function getMainShopDomainSSL()
 	{
-		if (!self::$main_domain)
+		if (!self::$main_domain_ssl)
 		{
-			$sql = 'SELECT domain
+			$sql = 'SELECT domain_ssl
 					FROM '._DB_PREFIX_.'shop_url
 					WHERE main = 1
 						AND id_shop='.Context::getContext()->shop->getID(true);
-			self::$main_domain = Db::getInstance()->getValue($sql);
+			self::$main_domain_ssl = Db::getInstance()->getValue($sql);
 		}
-		return	self::$main_domain_ssl;
+		return self::$main_domain_ssl;
 	}
 
 	/**
