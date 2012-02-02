@@ -376,7 +376,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($this->display == 'add')
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&'.$this->identifier.'&conf=3&update'.$this->table.'&token='.$token;
 		}
 	}
 
