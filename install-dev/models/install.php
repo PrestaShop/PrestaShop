@@ -348,15 +348,16 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::loadConfiguration();
 
 		// Set default configuration
-		Configuration::updateGlobalValue('PS_SHOP_DOMAIN', 			Tools::getHttpHost());
-		Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', 		Tools::getHttpHost());
-		Configuration::updateGlobalValue('PS_INSTALL_VERSION', 		_PS_INSTALL_VERSION_);
-		Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', 		$this->language->getLanguageIso());
-		Configuration::updateGlobalValue('PS_SHOP_NAME', 			$data['shop_name']);
-		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 		$data['shop_activity']);
-		Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',		Country::getByIso($data['shop_country']));
-		Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', 		$data['shop_country']);
-		Configuration::updateGlobalValue('PS_TIMEZONE', 			$data['shop_timezone']);
+		Configuration::updateGlobalValue('PS_SHOP_DOMAIN', 				Tools::getHttpHost());
+		Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', 			Tools::getHttpHost());
+		Configuration::updateGlobalValue('PS_INSTALL_VERSION', 			_PS_INSTALL_VERSION_);
+		Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', 			$this->language->getLanguageIso());
+		Configuration::updateGlobalValue('PS_SHOP_NAME', 				$data['shop_name']);
+		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 			$data['shop_activity']);
+		Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',			Country::getByIso($data['shop_country']));
+		Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', 			$data['shop_country']);
+		Configuration::updateGlobalValue('PS_TIMEZONE', 				$data['shop_timezone']);
+		Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',	(int)$data['configuration_agrement']);
 
 		// Set mails configuration
 		Configuration::updateGlobalValue('PS_MAIL_METHOD', 			($data['use_smtp']) ? 2 : 1);
