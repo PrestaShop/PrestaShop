@@ -37,7 +37,7 @@
 	var by = '{l s='by'}';
 	var errorLogin = '{l s='Could not login to Addons'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
-	{if isset($smarty.get.anchor)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''}';{else}var anchor = '';{/if}
+	{if isset($smarty.get.anchor)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
 
 
