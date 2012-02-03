@@ -279,10 +279,13 @@ class AdminCartsControllerCore extends AdminController
 		}
 	}
 
-	public function ajaxProcessUpdateCarrier()
+	public function ajaxProcessUpdateDeliveryOption()
 	{
 		if ($this->tabAccess['edit'] === '1')
 		{
+			$delivery_option = Tools::getValue('delivery_option');			
+			if ($delivery_option !== false)
+				$this->context->cart->setDeliveryOption(array($this->context->cart->id_address_delivery => $delivery_option));
 			if (Validate::isBool(($recyclable = (int)Tools::getValue('recyclable'))))
 				$this->context->cart->recyclable = $recyclable;
 			if (Validate::isBool(($gift = (int)Tools::getValue('gift'))))
@@ -434,10 +437,33 @@ class AdminCartsControllerCore extends AdminController
 		return $summary;
 	}
 
-	protected function getAvailableCarriers()
+	protected function getDeliveryOptionList()
 	{
-		$customer = new Customer((int)$this->context->cart->id_customer);
-		return Carrier::getCarriersForOrder(Address::getZoneById($this->context->cart->id_address_delivery), $customer->getGroups());
+		$delivery_option_list_formated = array();
+		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+		
+		if (!count($delivery_option_list))
+			return array();
+
+		foreach (current($delivery_option_list) as $key => $delivery_option)
+		{
+			$name = '';
+			$first = true;
+			foreach ($delivery_option['carrier_list'] as $carrier)
+			{
+				if (!$first)
+					$name .= ', ';
+				else
+					$first = false;
+				
+				$name .= $carrier['instance']->name;
+				
+				if ($delivery_option['unique_carrier'])
+					$name .= ' - '.$carrier['instance']->delay[$this->context->employee->id_lang];
+			}
+			$delivery_option_list_formated[] = array('name' => $name, 'key' => $key);
+		}
+		return $delivery_option_list_formated;
 	}
 
 	public function displayAjaxSearchCarts()
@@ -474,9 +500,8 @@ class AdminCartsControllerCore extends AdminController
 	{
 		$id_cart = (int)$this->context->cart->id;
 		return array('summary' => $this->getCartSummary(),
-						'carriers' => $this->getAvailableCarriers(),
+						'delivery_option_list' => $this->getDeliveryOptionList(),
 						'cart' => $this->context->cart,
-						'carriers' => $this->getAvailableCarriers(),
 						'addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang),
 						'id_cart' => $id_cart,
 						'link_order' => $this->context->link->getPageLink(
