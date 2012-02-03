@@ -1603,7 +1603,7 @@ class CartCore extends ObjectModel
 	 *
 	 * @return array array(
 	 *                   0 => array( // First address
-	 *                       0 => array(  // First delivery option available for this address
+	 *                       '12,' => array(  // First delivery option available for this address
 	 *                           carrier_list => array(
 	 *                               12 => array( // First carrier for this option
 	 *                                   'instance' => Carrier Object,
