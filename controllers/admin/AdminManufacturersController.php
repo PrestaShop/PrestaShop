@@ -113,7 +113,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
 		$this->_group = 'GROUP BY a.`id_manufacturer`';
 
-	 	$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
+		$this->context->smarty->assign('title_list', $this->l('List of manufacturers:'));
 
 		$this->content .= parent::renderList();
 	}
@@ -126,13 +126,14 @@ class AdminManufacturersControllerCore extends AdminController
 		unset($this->fieldsDisplay, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
 		$this->table = 'address';
-	 	$this->identifier = 'id_address';
+		$this->identifier = 'id_address';
 		$this->deleted = true;
+		$this->_orderBy = null;
 
 		$this->addRowAction('editaddresses');
 		$this->addRowAction('delete');
 
-	 	// test if a filter is applied for this list
+		// test if a filter is applied for this list
 		if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false)
 			$this->filter = true;
 
@@ -187,12 +188,12 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
 				ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.') ';
-	 	$this->_join .= '
-	 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
-	 			ON (a.`id_manufacturer` = m.`id_manufacturer`)';
-	 	$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0';
+		$this->_join .= '
+			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
+				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
+		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0';
 
-	 	$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses:'));
+		$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses:'));
 
 		// call postProcess() for take care about actions and filters
 		$this->postProcess();
@@ -208,7 +209,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->initListManufacturerAddresses();
 	}
 
-	 /**
+	/**
 	 * Display editaddresses action link
 	 * @param string $token the token to add to the link
 	 * @param int $id the identifier to add to the link
