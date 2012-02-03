@@ -10,7 +10,7 @@
 		<?php endif; ?>
 	<?php endif; ?>
 
-	<?php if (!$this->isFirstStep()): ?>
+	<?php if (!$this->isFirstStep() && $this->previous_button): ?>
 		<input id="btBack" class="button little" type="submit" name="submitPrevious" value="<?php echo $this->l('Back') ?>" />
 	<?php endif; ?>
 </div>
