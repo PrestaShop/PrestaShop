@@ -119,6 +119,7 @@ class AdminStatusesControllerCore extends AdminController
 		$this->deleted = false;
 		$this->toolbar_btn = array();
 		$this->bulk_actions = array();
+		$this->_orderBy = null;
 
 		$this->addRowAction('editstatus');
 
