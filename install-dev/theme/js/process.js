@@ -42,6 +42,7 @@ function process_install(step)
 				if (current_step >= process_steps.length)
 				{
 					$('#progress_bar .total .progress').animate({'width': '100%'}, 500);
+					$('#progress_bar .total span').html('100%');
 
 					// Installation finished
 					setTimeout(function()
@@ -52,6 +53,7 @@ function process_install(step)
 				else
 				{
 					$('#progress_bar .total .progress').animate({'width': '+='+process_percent+'%'}, 500);
+					$('#progress_bar .total span').html(Math.ceil(current_step * process_percent)+'%');
 
 					// Process next step
 					process_install(process_steps[current_step]);
@@ -98,6 +100,7 @@ function install_error(step, errors)
 
 function install_success()
 {
+	$('#progress_bar .total span').hide();
 	$('.installing').html(install_is_done);
 	is_installing = false;
 	$('#install_process_form').slideUp();

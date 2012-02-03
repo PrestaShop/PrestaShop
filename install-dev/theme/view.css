@@ -692,6 +692,9 @@ ul#optional_update {list-style-type:none;}
 }
 
 /* STEP 5 ******************************************/
+#install_process_form{
+    height: 260px;
+}
 #progress_bar {
 	display: none;
 }
@@ -700,7 +703,16 @@ ul#optional_update {list-style-type:none;}
         height: 30px;
 		border: 1px solid #999999;
         background-color: #eeeeee;
+        text-align: center;
 	}
+
+    #progress_bar .total span{
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 5px;
+        position: absolute;
+        text-align: center;
+    }
 
         #progress_bar .total .progress {
             width: 0px;

@@ -34,6 +34,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	 */
 	protected $model_install;
 
+	public $previous_button = false;
+
 	public function init()
 	{
 		require_once _PS_INSTALL_MODELS_PATH_.'install.php';
