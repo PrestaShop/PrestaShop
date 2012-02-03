@@ -52,19 +52,15 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 */
 	public function getContent()
 	{
-		$country = new Country((int)$this->order->id_address_invoice);
-
 		$delivery_address = new Address((int)$this->order->id_address_delivery);
 		$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
 		$formatted_invoice_address = '';
 
 		if ($this->order->id_address_delivery != $this->order->id_address_invoice)
 		{
-			$invoice_address = new Address((int)$id_address_invoice);
+			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-
-		$customer = new Customer($this->order->id_customer);
 
 		$this->smarty->assign(array(
 			'order' => $this->order,
@@ -81,18 +77,18 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 * Returns the template filename when using bulk rendering
 	 * @return string filename
 	 */
-    public function getBulkFilename()
-    {
-        return 'deliveries.pdf';
-    }
+	public function getBulkFilename()
+	{
+		return 'deliveries.pdf';
+	}
 
 	/**
 	 * Returns the template filename
 	 * @return string filename
 	 */
-    public function getFilename()
-    {
-        return Configuration::get('PS_DELIVERY_PREFIX').sprintf('%06d', $this->order->invoice_number).'.pdf';
-    }
+	public function getFilename()
+	{
+		return Configuration::get('PS_DELIVERY_PREFIX').sprintf('%06d', $this->order->invoice_number).'.pdf';
+	}
 }
 

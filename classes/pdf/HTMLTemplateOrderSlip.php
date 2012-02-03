@@ -39,15 +39,15 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$this->order = new Order((int)$order_slip->id_order);
 
 		$products = OrderSlip::getOrdersSlipProducts($this->order_slip->id, $this->order);
-		$customizedDatas = Product::getAllCustomizedDatas((int)($this->order->id_cart));
-		Product::addCustomizationPrice($products, $customizedDatas);
+		$customized_datas = Product::getAllCustomizedDatas((int)$this->order->id_cart);
+		Product::addCustomizationPrice($products, $customized_datas);
 
 		$this->order->products = $products;
 		$this->smarty = $smarty;
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date, (int)$this->order->id_lang);
-		$this->title = HTMLTemplateOrderSlip::l('Slip #').sprintf('%06d', $this->order_slip->id);
+		$this->title = HTMLTemplateOrderSlip::l('Slip #').sprintf('%06d', (int)$this->order_slip->id);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -59,7 +59,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 	 */
 	public function getContent()
 	{
-		$country = new Country((int)$this->order->id_address_invoice);
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
 		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		$formatted_delivery_address = '';
@@ -70,36 +69,34 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
 		}
 
-		$customer = new Customer($this->order->id_customer);
+		$customer = new Customer((int)$this->order->id_customer);
 
-
-		$this->order->total_products = 0;
-		$this->order->total_products_wt = 0;
-		foreach ($this->order->products as $k => $p)
+		$this->order->total_products = $this->order->total_products_wt = 0;
+		foreach ($this->order->products as &$product)
 		{
-			$this->order->products[$k]['total_price_tax_excl'] = $this->order->products[$k]['unit_price_tax_excl'] * $this->order->products[$k]['product_quantity'];
-			$this->order->products[$k]['total_price_tax_incl'] = $this->order->products[$k]['unit_price_tax_incl'] * $this->order->products[$k]['product_quantity'];
+			$product['total_price_tax_excl'] = $product['unit_price_tax_excl'] * $product['product_quantity'];
+			$product['total_price_tax_incl'] = $product['unit_price_tax_incl'] * $product['product_quantity'];
 			if ($this->order_slip->partial == 1)
 			{
-				$order_slip_detail = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'order_slip_detail` WHERE `id_order_slip` = '.(int)$this->order_slip->id.' AND `id_order_detail` = '.(int)$p['id_order_detail']);
-				$this->order->products[$k]['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
-				$this->order->products[$k]['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
+				$order_slip_detail = Db::getInstance()->getRow('
+					SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+					WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
+					AND `id_order_detail` = '.(int)$product['id_order_detail']);
+				$product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
+				$product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
 			}
-			$this->order->total_products += $this->order->products[$k]['total_price_tax_excl'];
-			$this->order->total_products_wt += $this->order->products[$k]['total_price_tax_incl'];
+			$this->order->total_products += $product['total_price_tax_excl'];
+			$this->order->total_products_wt += $product['total_price_tax_incl'];
 			$this->order->total_paid_tax_excl = $this->order->total_products;
 			$this->order->total_paid_tax_incl = $this->order->total_products_wt;
 		}
+		unset($product); // remove reference
 		if ($this->order_slip->shipping_cost == 0)
-		{
-			$this->order->total_shipping_tax_incl = 0;
-			$this->order->total_shipping_tax_excl = 0;
-		}
+			$this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
+
 		if ($this->order_slip->partial == 1 && $this->order_slip->shipping_cost_amount > 0)
-		{
-			$this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
-			$this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
-		}
+			$this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
+
 		$this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
 		$this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
 
@@ -109,8 +106,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'order_details' => $this->order->products,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
-			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
-         	'tax_tab' => '',
+			'tax_excluded_display' => Group::getPriceDisplayMethod((int)$customer->id_default_group),
+			'tax_tab' => '',
 		));
 
 		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/order-slip.tpl');
@@ -134,4 +131,3 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		return 'order-slip-'.sprintf('%06d', $this->order_slip->id).'.pdf';
 	}
 }
-
