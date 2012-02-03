@@ -59,7 +59,7 @@ class AdminLoginControllerCore extends AdminController
 			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 			// If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
 			if ($clientIsMaintenanceOrLocal)
-				$this->errors = Tools::displayError('SSL is activated. However, your IP is allowed to use unsecure mode (Maintenance or local IP).');
+				$this->errors[] = Tools::displayError('SSL is activated. However, your IP is allowed to use unsecure mode (Maintenance or local IP).');
 			else
 			{
 				$warningSslMessage = Tools::displayError('SSL is activated. Please connect using the following url to log in in secure mode (https).');
@@ -83,7 +83,8 @@ class AdminLoginControllerCore extends AdminController
 				array(
 					'errors' => $this->errors,
 					'nbErrors' => $nbErrors,
-					'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME'))
+					'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
+					'disableDefaultErrorOutPut' => true,
 					)
 				);
 		$this->setMedia();
