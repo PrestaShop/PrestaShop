@@ -202,15 +202,14 @@
 			$(document).ready(function() {
 				$( "#sortable_module_authorize_list, #sortable_module_unauthorize_list" ).sortable({
 					connectWith: ".connectedSortable",
-			        stop: function(event, ui) 
+					stop: function(event, ui) 
 					{
-			          	console.log($(event.toElement).parent('ul').attr('id'));
-			          	if ($(event.toElement).parent('ul').attr('id') == 'sortable_module_authorize_list')
-	               			$(event.toElement).children('input["type=hidden"]').attr('name', 'modulesBoxAuth[]');
-	               		else
-	               			$(event.toElement).children('input["type=hidden"]').attr('name', 'modulesBoxUnauth[]');
-			        }
-	            }).disableSelection();
+						if ($(event.toElement).parent('ul').attr('id') == 'sortable_module_authorize_list')
+							$(event.toElement).children('input["type=hidden"]').attr('name', 'modulesBoxAuth[]');
+						else
+							$(event.toElement).children('input["type=hidden"]').attr('name', 'modulesBoxUnauth[]');
+					}
+				}).disableSelection();
 			});
 		</script>
 			<table cellspacing="0" cellpadding="0" class="table" style="width:600px">
