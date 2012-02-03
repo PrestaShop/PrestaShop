@@ -313,6 +313,7 @@
 				action: "deleteVoucher",
 				id_cart_rule: id_cart_rule,
 				id_cart: id_cart,
+				id_customer: id_customer
 				},
 			success : function(res)
 			{
@@ -336,6 +337,7 @@
 				id_product: id_product,
 				id_product_attribute: id_product_attribute,
 				id_cart: id_cart,
+				id_customer: id_customer
 				},
 			success : function(res)
 			{
