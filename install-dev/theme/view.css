@@ -210,7 +210,7 @@ div.field {
 		vertical-align: top;
 }
 	div.field label.radiolabel {width:auto;}
-	div.field span.contentinput {
+	div.field div.contentinput {
 		display:inline-block;
 		width:245px;
 		vertical-align: top;
@@ -686,7 +686,7 @@ ul#optional_update {list-style-type:none;}
 	float: left;
 }
 
-#sheet_configure div.field span.contentinput {
+#sheet_configure div.field div.contentinput {
 	display: block;
 	float: left;
 }
