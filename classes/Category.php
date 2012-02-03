@@ -194,12 +194,15 @@ class CategoryCore extends ObjectModel
 		if ($this->getDuplicatePosition())
 		{
 			$assos = array();
-			if (isset($_POST['checkBoxShopAsso_category']))
-				foreach ($_POST['checkBoxShopAsso_category'] as $id_asso_object => $row)
+			if (Tools::isSubmit('checkBoxShopAsso_category'))
+			{
+				$check_box = Tools::getValue('checkBoxShopAsso_category');
+				foreach ($check_box as $id_asso_object => $row)
 				{
 					foreach ($row as $id_shop => $value)
 						$assos[] = array('id_object' => (int)$id_asso_object, 'id_shop' => (int)$id_shop);
 				}
+			}
 			foreach ($assos as $shop)
 				$this->addPosition(Category::getLastPosition((int)$this->id_parent, $shop['id_shop']), $shop['id_shop']);
 		}
