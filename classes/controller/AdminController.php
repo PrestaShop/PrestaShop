@@ -2361,15 +2361,17 @@ class AdminControllerCore extends Controller
 			return;
 
 		$assos = array();
-		if (isset($_POST['checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table]))
-			foreach ($_POST['checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table] as $id_asso_object => $row)
+		if (Tools::isSubmit('checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table))
+		{
+			$check_box = Tools::getValue('checkBox'.Tools::toCamelCase($type, true).'Asso_'.$table);
+			foreach ($check_box as $id_asso_object => $row)
 			{
 				if (!(int)$id_asso_object)
 					$id_asso_object = $id_object;
 				foreach ($row as $id_shop => $value)
 					$assos[] = array('id_object' => (int)$id_asso_object, 'id_'.$type => (int)$id_shop);
 			}
-
+		}
 		return array($assos, $type);
 	}
 
