@@ -101,7 +101,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 				$this->session->process_validated = array();
 			else if (!Tools::getValue('submitNext'))
 			{
-				$this->session->clean();
+				unset($this->session->step);
+				unset($this->session->last_step);
 				Tools::redirect('index.php');
 			}
 		}
