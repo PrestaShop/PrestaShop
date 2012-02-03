@@ -32,7 +32,7 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 if (!Context::getContext()->employee->id)
 	Tools::redirectAdmin('index.php?controller=AdminLogin');
 
-$functionArray = array(
+$function_array = array(
 	'pdf' => 'generateInvoicePDF',
 	'id_order_slip' => 'generateOrderSlipPDF',
 	'id_delivery' => 'generateDeliverySlipPDF',
@@ -44,7 +44,7 @@ $functionArray = array(
 	'id_supply_order' => 'generateSupplyOrderFormPDF'
 );
 
-foreach ($functionArray as $var => $function)
+foreach ($function_array as $var => $function)
 	if (isset($_GET[$var]))
 	{
 		call_user_func($function);
@@ -53,16 +53,16 @@ foreach ($functionArray as $var => $function)
 
 function generateSupplyOrderFormPDF()
 {
-	if (!isset($_GET['id_supply_order']))
+	if (!Tools::isSubmit('id_supply_order'))
 		die (Tools::displayError('Missing supply order ID'));
 
-	$id_supply_order = (int)$_GET['id_supply_order'];
+	$id_supply_order = (int)Tools::getValue('id_supply_order');
 	$supply_order = new SupplyOrder($id_supply_order);
 
 	if (!Validate::isLoadedObject($supply_order))
 		die(Tools::displayError('Cannot find this supply order in the database'));
 
-    generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
+	generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
 }
 
 function generateInvoicePDF()
@@ -78,7 +78,7 @@ function generateInvoicePDF()
 
 function generateInvoicePDFByIdOrder($id_order)
 {
-	$order = new Order($id_order);
+	$order = new Order((int)$id_order);
 	if (!Validate::isLoadedObject($order))
 		die(Tools::displayError('Cannot find order in database'));
 
@@ -89,7 +89,7 @@ function generateInvoicePDFByIdOrder($id_order)
 
 function generateInvoicePDFByIdOrderInvoice($id_order_invoice)
 {
-	$order_invoice = new OrderInvoice($id_order_invoice);
+	$order_invoice = new OrderInvoice((int)$id_order_invoice);
 	if (!Validate::isLoadedObject($order_invoice))
 		die(Tools::displayError('Cannot find order invoice in database'));
 
@@ -99,26 +99,25 @@ function generateInvoicePDFByIdOrderInvoice($id_order_invoice)
 
 function generateOrderSlipPDF()
 {
-	$orderSlip = new OrderSlip((int)($_GET['id_order_slip']));
-	$order = new Order((int)($orderSlip->id_order));
+	$orderSlip = new OrderSlip((int)Tools::getValue('id_order_slip'));
+	$order = new Order((int)$orderSlip->id_order);
 	if (!Validate::isLoadedObject($order))
 		die(Tools::displayError('Cannot find order in database'));
 	$order->products = OrderSlip::getOrdersSlipProducts($orderSlip->id, $order);
-	$tmp = NULL;
 
-   generatePDF($orderSlip, PDF::TEMPLATE_ORDER_SLIP);
+	generatePDF($orderSlip, PDF::TEMPLATE_ORDER_SLIP);
 }
 
 function generateDeliverySlipPDF()
 {
 	if (Tools::isSubmit('id_order'))
-		generateDeliverySlipPDFByIdOrder(Tools::getValue('id_order'));
+		generateDeliverySlipPDFByIdOrder((int)Tools::getValue('id_order'));
 	elseif (Tools::isSubmit('id_order_invoice'))
-		generateDeliverySlipPDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
+		generateDeliverySlipPDFByIdOrderInvoice((int)Tools::getValue('id_order_invoice'));
 	elseif (Tools::isSubmit('id_delivery'))
 	{
-		$order = Order::getByDelivery(Tools::getValue('id_delivery'));
-		generateDeliverySlipPDFByIdOrder($order->id);
+		$order = Order::getByDelivery((int)Tools::getValue('id_delivery'));
+		generateDeliverySlipPDFByIdOrder((int)$order->id);
 	}
 	else
 		die (Tools::displayError('Missing order ID or invoice order ID'));
@@ -127,7 +126,7 @@ function generateDeliverySlipPDF()
 
 function generateDeliverySlipPDFByIdOrder($id_order)
 {
-	$order = new Order($id_order);
+	$order = new Order((int)$id_order);
 	if (!Validate::isLoadedObject($order))
 		throw new PrestaShopException('Can\'t load Order object');
 
@@ -137,7 +136,7 @@ function generateDeliverySlipPDFByIdOrder($id_order)
 
 function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
 {
-	$order_invoice = new OrderInvoice($id_order_invoice);
+	$order_invoice = new OrderInvoice((int)$id_order_invoice);
 	if (!Validate::isLoadedObject($order_invoice))
 		throw new PrestaShopException('Can\'t load Order Invoice object');
 
@@ -146,9 +145,9 @@ function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
 
 function generateInvoicesPDF()
 {
-	$order_invoice_collection = OrderInvoice::getByDateInterval($_GET['date_from'], $_GET['date_to']);
+	$order_invoice_collection = OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
 
-	if (!sizeof($order_invoice_collection))
+	if (!count($order_invoice_collection))
 		die(Tools::displayError('No invoices found'));
 
 	generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
@@ -158,10 +157,10 @@ function generateInvoicesPDF2()
 {
 	$order_invoice_collection = array();
 	foreach (explode('-', Tools::getValue('id_order_state')) as $id_order_state)
-		if (is_array($order_invoices = OrderInvoice::getByStatus($id_order_state)))
+		if (is_array($order_invoices = OrderInvoice::getByStatus((int)$id_order_state)))
 			$order_invoice_collection = array_merge($order_invoices, $order_invoice_collection);
 
-	if (!sizeof($order_invoice_collection))
+	if (!count($order_invoice_collection))
 		die(Tools::displayError('No invoices found'));
 
 	generatePDF($order_invoice_collection, PDF::TEMPLATE_INVOICE);
@@ -169,7 +168,7 @@ function generateInvoicesPDF2()
 
 function generateOrderSlipsPDF()
 {
-	$id_order_slips_list = OrderSlip::getSlipsIdByDate($_GET['date_from'], $_GET['date_to']);
+	$id_order_slips_list = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
 	if (!count($id_order_slips_list))
 		die (Tools::displayError('No order slips found'));
 
@@ -184,7 +183,7 @@ function generateDeliverySlipsPDF()
 {
 	$order_invoice_collection = OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'));
 
-	if (!sizeof($order_invoice_collection))
+	if (!count($order_invoice_collection))
 		die(Tools::displayError('No invoices found'));
 
 	generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
@@ -192,7 +191,6 @@ function generateDeliverySlipsPDF()
 
 function generatePDF($object, $template)
 {
-	global $smarty;
-	$pdf = new PDF($object, $template, $smarty);
+	$pdf = new PDF($object, $template, Context::getContext()->smarty);
 	$pdf->render();
 }

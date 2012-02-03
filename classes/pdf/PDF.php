@@ -81,13 +81,13 @@ class PDFCore
 		}
 
 		if ($render)
-            return $this->pdf_renderer->render($this->filename, $display);
+			return $this->pdf_renderer->render($this->filename, $display);
 	}
 
-    public function getTemplateObject($object)
-    {
-        $class = false;
-        $classname = 'HTMLTemplate'.$this->template;
+	public function getTemplateObject($object)
+	{
+		$class = false;
+		$classname = 'HTMLTemplate'.$this->template;
 
 		if (class_exists($classname))
 		{
@@ -96,7 +96,6 @@ class PDFCore
 				throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
 		}
 
-        return $class;
-    }
+		return $class;
+	}
 }
-
