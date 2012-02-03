@@ -517,7 +517,7 @@ class AdminControllerCore extends Controller
 
 
 			// Hook after action
-			if (isset($return) && ($case1 || $case2))
+			if ($case1 || $case2)
 			{
 				/* Hook After Action */
 				Hook::exec('actionAdmin'.ucfirst($this->action).'After', array('controller' => $this, 'return' => $return));
