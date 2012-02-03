@@ -693,7 +693,7 @@ ul#optional_update {list-style-type:none;}
 
 /* STEP 5 ******************************************/
 #install_process_form{
-    height: 260px;
+    min-height: 260px;
 }
 #progress_bar {
 	display: none;
@@ -763,7 +763,28 @@ ul#optional_update {list-style-type:none;}
 					#progress_bar ol.process_list li .error_log li {
 					    padding: 3px;
 					}
-			
+
+#error_process{
+    padding: 5px;
+    background-color: #FBE8D6;
+    border: 1px solid #666666;
+    margin-left: 37px;
+    margin-bottom: 20px;
+    display: none;
+}
+    #error_process h3{
+        color: red;
+    }
+    #error_process p{
+        margin-left: 20px;
+    }
+        #error_process p a{
+            font-weight: bold;
+        }
+        #error_process p a:hover{
+            text-decoration: underline;
+        }
+
 #install_process_success {
 	display: none;
 }

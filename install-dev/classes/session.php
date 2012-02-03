@@ -45,6 +45,12 @@ class InstallSession
 		session_start();
 	}
 
+	public function clean()
+	{
+		foreach ($_SESSION as $k => $v)
+			unset($_SESSION[$k]);
+	}
+
 	public function &__get($varname)
 	{
 		if (isset($_SESSION[$varname]))
