@@ -13,6 +13,7 @@ var process_percent = <?php echo 100 / count($this->process_steps) ?>;
 		<div class="installing"></div>
 
 		<div class="total">
+			<span>0%</span>
 			<div class="progress"></div>
 		</div>
 
@@ -54,26 +55,24 @@ var process_percent = <?php echo 100 / count($this->process_steps) ?>;
 		<h3 class="infosBlock"><?php echo $this->l('WARNING: For security purposes, you must delete the "install" folder.') ?></h3>
 
 		<div id="boBlock" class="blockInfoEnd clearfix">
-				<img src="theme/img/visu_boBlock.png" />
-				<h3><?php echo $this->l('Back Office'); ?></h3>
-				<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>
-				<a href="../admin" id="access" class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
+			<img src="theme/img/visu_boBlock.png" />
+			<h3><?php echo $this->l('Back Office'); ?></h3>
+			<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>
+			<a href="../admin" id="access" class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
 		</div>
 		<div id="foBlock" class="blockInfoEnd last clearfix">
-				<img src="theme/img/visu_foBlock.png" />
-				<h3><?php echo $this->l('Front Office'); ?></h3>
-				<p class="description"><?php echo $this->l('Discover your store as your future customers will see it!') ?></p>
-				<a href="../" id="access" class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
+			<img src="theme/img/visu_foBlock.png" />
+			<h3><?php echo $this->l('Front Office'); ?></h3>
+			<p class="description"><?php echo $this->l('Discover your store as your future customers will see it!') ?></p>
+			<a href="../" id="access" class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
 		</div>
 	</div>
-	<?php
-	if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
+</div>
+
+<?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
 	<iframe src="http://addons.prestashop.com/psinstall.php?lang=<?php echo $this->language->getLanguageIso() ?>" scrolling="no" id="prestastore">
 		<p>Your browser does not support iframes.</p>
 	</iframe>
-	<?php
-	endif; ?>
-
-</div>
+<?php endif; ?>
 
 <?php $this->displayTemplate('footer') ?>

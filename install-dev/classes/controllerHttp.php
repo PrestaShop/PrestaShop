@@ -65,6 +65,11 @@ abstract class InstallControllerHttp
 	public $next_button = true;
 
 	/**
+	 * @var bool If false, disable previous button access
+	 */
+	public $previous_button = true;
+
+	/**
 	 * @var InstallAbstractModel
 	 */
 	public $model;
