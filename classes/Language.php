@@ -345,7 +345,7 @@ class LanguageCore extends ObjectModel
 	 */
 	public function loadUpdateSQL()
 	{
-		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'%_lang\' ');
+		$tables = Db::getInstance()->executeS('SHOW TABLES LIKE \''.str_replace('_', '\\_', _DB_PREFIX_).'%\_lang\' ');
 		$langTables = array();
 
 		foreach ($tables as $table)

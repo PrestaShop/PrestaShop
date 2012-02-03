@@ -26,8 +26,8 @@
 */
 
 function update_order_canada()
-	{
-	$sql ='SHOW TABLES LIKE "'._DB_PREFIX_.'order_tax"';
+{
+	$sql ='SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
 	$table = Db::getInstance()->executeS($sql);
 
 	if (!count($table))
