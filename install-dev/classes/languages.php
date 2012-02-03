@@ -150,7 +150,7 @@ class InstallLanguages
 		$information = $this->getLanguage()->getTranslation($key, 'informations');
 		if (is_null($information) && $with_default)
 			return $this->getLanguage(self::DEFAULT_ISO)->getTranslation($key, 'informations');
-		return false;
+		return $information;
 	}
 
 	/**
