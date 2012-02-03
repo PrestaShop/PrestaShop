@@ -40,7 +40,7 @@
 	<div class="leadin">{block name="leadin"}{/block}</div>
 {/if}
 
-{if isset($fields.title)}<h2>{$fields.title|escape:'htmlall'}</h2>{/if}
+{if isset($fields.title)}<h2>{$fields.title}</h2>{/if}
 {block name="defaultForm"}
 <form id="{$table}_form" class="defaultForm {$name_controller}" action="{$current}&{$submit_action}=1&token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if}>
 	{if $form_id}
@@ -52,7 +52,7 @@
 				{if $key == 'legend'}
 					<legend>
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title|escape:'htmlall'}" />{/if}
-						{$field.title|escape:'htmlall'}
+						{$field.title}
 					</legend>
 				{elseif $key == 'description'}
 					<p class="description">{$field}</p>
@@ -210,11 +210,11 @@
 									 		<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
 									 	{/if}
 									 {else}
-									 	{$value.label|escape:'htmlall'}
+									 	{$value.label}
 									 {/if}
 									</label>
 									{if isset($input.br) && $input.br}<br />{/if}
-									{if isset($value.p) && $value.p}<p>{$value.p|escape:'htmlall'}</p>{/if}
+									{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
 								{/foreach}
 							{elseif $input.type == 'textarea'}
 								{if isset($input.lang)}
@@ -322,13 +322,13 @@
 									{if is_array($input.desc)}
 										{foreach $input.desc as $p}
 											{if is_array($p)}
-												<span id="{$p.id}">{$p.text|escape:'htmlall'}</span><br />
+												<span id="{$p.id}">{$p.text}</span><br />
 											{else}
 												{$p}<br />
 											{/if}
 										{/foreach}
 									{else}
-										{$input.desc|escape:'htmlall'}
+										{$input.desc}
 									{/if}
 								</p>
 							{/if}
@@ -352,14 +352,14 @@
 						{if is_array($field)}
 							{foreach $field as $k => $p}
 								{if is_array($p)}
-									<span id="{$p.id}">{$p.text|escape:'htmlall'}</span><br />
+									<span id="{$p.id}">{$p.text}</span><br />
 								{else}
 									{$p}
 									{if isset($field[$k+1])}<br />{/if}
 								{/if}
 							{/foreach}
 						{else}
-							{$field|escape:'htmlall'}
+							{$field}
 						{/if}
 					</p>
 				{/if}
