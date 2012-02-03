@@ -63,7 +63,7 @@
 						{/if}
 						{block name="label"}
 							{if isset($input.label)}
-								<label>{$input.label|escape:'htmlall'} </label>
+								<label>{$input.label} </label>
 							{/if}
 						{/block}
 						{if $input.type == 'hidden'}
