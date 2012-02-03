@@ -1091,6 +1091,7 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Assign one (ore more) group to all carriers
 	 * 
+	 * @since 1.5.0
 	 * @param int|array $id_group_list group id or list of group ids
 	 * @param array $exception list of id carriers to ignore
 	 */
