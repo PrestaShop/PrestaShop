@@ -271,7 +271,7 @@ class AdminFeaturesControllerCore extends AdminController
 			)
 		);
 
-	 	// Create Object FeatureValue
+		// Create Object FeatureValue
 		$feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
 
 		$this->tpl_vars = array(
