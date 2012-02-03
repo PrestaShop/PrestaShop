@@ -66,6 +66,43 @@ function smartyTranslate($params, &$smarty)
 	if(strpos($dir_filename, 'helper') !== false)
 		$dir_filename = 'helper';
 
+	if (!empty($params['mod']))
+	{
+		global $_MODULES, $_MODULE;
+
+		$key = Tools::substr(basename($filename), 0, -4).'_'.md5($params['s']);
+		$iso = Language::getIsoById(Context::getContext()->language->id);
+
+		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$params['mod'].'/'.$iso.'.php'))
+		{
+			$translationsFile = _PS_THEME_DIR_.'modules/'.$params['mod'].'/'.$iso.'.php';
+			$key = '<{'.$params['mod'].'}'._THEME_NAME_.'>'.$key;
+		}
+		else
+		{
+			// @retrocompatibility with translations files in module root
+			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$params['mod'].'/translations'))
+				$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/translations/'.$iso.'.php';
+			else
+				$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/'.$iso.'.php';
+			$key = '<{'.$params['mod'].'}prestashop>'.$key;
+		}
+
+		if (!is_array($_MODULES))
+			$_MODULES = array();
+		if (@include_once($translationsFile))
+			if (is_array($_MODULE))
+				$_MODULES = array_merge($_MODULES, $_MODULE);
+		$lang_array = $_MODULES;
+		if (is_array($lang_array) && key_exists($key, $lang_array))
+			$msg = $lang_array[$key];
+		elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
+			$msg = $lang_array[Tools::strtolower($key)];
+		else
+			$msg = $params['s'];
+		return $msg;
+	}
+
 	switch ($dir_filename)
 	{
 
