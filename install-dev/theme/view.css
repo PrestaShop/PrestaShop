@@ -709,9 +709,8 @@ ul#optional_update {list-style-type:none;}
     #progress_bar .total span{
         font-size: 16px;
         font-weight: bold;
-        margin-top: 5px;
-        position: absolute;
-        text-align: center;
+        margin-top: -24px;
+        display: block;
     }
 
         #progress_bar .total .progress {
