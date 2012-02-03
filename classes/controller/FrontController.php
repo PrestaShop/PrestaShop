@@ -559,6 +559,7 @@ class FrontControllerCore extends Controller
 			return;
 
 		$matchUrl = (($this->ssl && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$matchUrl = rawurldecode($matchUrl);
 		if (!preg_match('/^'.Tools::pRegexp($canonicalURL, '/').'([&?].*)?$/', $matchUrl))
 		{
 			$params = array();
