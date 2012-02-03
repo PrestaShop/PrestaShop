@@ -45,7 +45,7 @@ UPDATE `PREFIX_cms` SET `id_cms_category` = 0;
 
 ALTER TABLE `PREFIX_category` ADD `position` int(10) unsigned NOT NULL default '0' AFTER `date_upd`;
 
-UPDATE `PREFIX_employee` SET `id_lang` = (SELECT `value` FROM `PREFIX_configuration` WHERE `name` LIKE "PS_LANG_DEFAULT");
+UPDATE `PREFIX_employee` SET `id_lang` = (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = "PS_LANG_DEFAULT");
 
 ALTER TABLE `PREFIX_customer` ADD `note` text AFTER `secure_key`;
 
@@ -171,9 +171,9 @@ CREATE TABLE `PREFIX_product_group_reduction_cache` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 ALTER TABLE `PREFIX_currency` ADD `iso_code_num` varchar(3) NOT NULL default '0' AFTER `iso_code`;
-UPDATE `PREFIX_currency` SET iso_code_num = '978' WHERE iso_code LIKE 'EUR' LIMIT 1;
-UPDATE `PREFIX_currency` SET iso_code_num = '840' WHERE iso_code LIKE 'USD' LIMIT 1;
-UPDATE `PREFIX_currency` SET iso_code_num = '826' WHERE iso_code LIKE 'GBP' LIMIT 1;
+UPDATE `PREFIX_currency` SET iso_code_num = '978' WHERE iso_code = 'EUR' LIMIT 1;
+UPDATE `PREFIX_currency` SET iso_code_num = '840' WHERE iso_code = 'USD' LIMIT 1;
+UPDATE `PREFIX_currency` SET iso_code_num = '826' WHERE iso_code = 'GBP' LIMIT 1;
 
 ALTER TABLE `PREFIX_country` ADD `call_prefix` int(10) NOT NULL default '0' AFTER `iso_code`;
 
