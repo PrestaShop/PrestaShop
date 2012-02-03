@@ -78,6 +78,7 @@ function install_error(step, errors)
 	current_step = 0;
 	is_installing = false;
 
+	$('#error_process').show();
 	$('#process_step_'+step.key).show().addClass('fail');
 	$('#progress_bar .total .progress').stop().css('width', '0px');
 	$('#progress_bar .installing').hide();

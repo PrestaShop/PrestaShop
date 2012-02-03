@@ -76,6 +76,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
 			require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 
+		if (!$this->session->process_validated)
+			$this->session->process_validated = array();
+
 		if (Tools::getValue('generateSettingsFile'))
 			$this->processGenerateSettingsFile();
 		else if (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile']))
@@ -94,7 +97,13 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		{
 			// With no parameters, we consider that we are doing a new install, so session where the last process step
 			// was stored can be cleaned
-			$this->session->process_validated = array();
+			if (Tools::getValue('restart'))
+				$this->session->process_validated = array();
+			else if (!Tools::getValue('submitNext'))
+			{
+				$this->session->clean();
+				Tools::redirect('index.php');
+			}
 		}
 	}
 
@@ -225,6 +234,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->model_install->installTheme();
 		if ($this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+
+		// If last step is fine, we store the fact PrestaShop is installed
+		$this->session->last_step = 'configure';
+		$this->session->step = 'configure';
+
 		$this->ajaxJsonAnswer(true);
 	}
 
