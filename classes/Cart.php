@@ -3128,15 +3128,36 @@ class CartCore extends ObjectModel
 	}
 
 	/**
+	 * @param bool $ignore_virtual Ignore virtual product
+	 * @param bool $exclusive If true, the validation is exclusive : it must be present product in stock and out of stock
 	 * @since 1.5.0
+	 * 
 	 * @return bool false is some products from the cart are out of stock
 	 */
-	public function isAllProductsInStock()
+	public function isAllProductsInStock($ignore_virtual = false, $exclusive = false)
 	{
+		$product_out_of_stock = 0;
+		$product_in_stock = 0;
 		foreach ($this->getProducts() as $product)
 		{
-			if ((int)$product['quantity_available'] <= 0)
-				return false;
+			if (!$exclusive)
+			{
+				if ((int)$product['quantity_available'] <= 0
+					&& (!$ignore_virtual || !$product['is_virtual']))
+					return false;
+			}
+			else
+			{
+				if ((int)$product['quantity_available'] <= 0
+					&& (!$ignore_virtual || !$product['is_virtual']))
+					$product_out_of_stock++;
+				if ((int)$product['quantity_available'] > 0
+					&& (!$ignore_virtual || !$product['is_virtual']))
+					$product_in_stock++;
+				
+				if ($product_in_stock > 0 && $product_out_of_stock > 0)
+					return false;
+			}
 		}
 		return true;
 	}
