@@ -64,7 +64,7 @@ try
 	// if the current employee theme is not valid (check layout.tpl presence), 
 	// reset to default theme
 	if (empty($context->employee->bo_theme) ||
-		!file_exists($path.$employee->bo_theme.'/template/layout.tpl'))
+		!file_exists($path.$context->employee->bo_theme.'/template/layout.tpl'))
 	{
 		// default admin theme is "default".
 		$context->employee->bo_theme = '';
