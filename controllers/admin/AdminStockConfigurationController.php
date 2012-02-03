@@ -426,11 +426,12 @@ class AdminStockConfigurationControllerCore extends AdminController
 	public function initSupplyOrderStatusList()
 	{
 		$this->table = 'supply_order_state';
-	 	$this->className = 'SupplyOrderState';
-	 	$this->identifier = 'id_supply_order_state';
-	 	$this->_defaultOrderBy = 'id_supply_order_state';
+		$this->className = 'SupplyOrderState';
+		$this->identifier = 'id_supply_order_state';
+		$this->_defaultOrderBy = 'id_supply_order_state';
 		$this->lang = true;
 		$this->list_no_link = true;
+		$this->_orderBy = null;
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6));
 		$this->toolbar_title = $this->l('Stock : Supply Order status');
 		$this->initToolbar();
