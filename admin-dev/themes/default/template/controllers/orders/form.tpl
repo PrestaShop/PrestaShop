@@ -262,7 +262,8 @@
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
 				action: "duplicateOrder",
-				id_order: id_order
+				id_order: id_order,
+				id_customer: id_customer
 				},
 			success : function(res)
 			{
@@ -288,7 +289,8 @@
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
 				action: "getSummary",
-				id_cart: id_cart
+				id_cart: id_cart,
+				id_customer: id_customer
 				},
 			success : function(res)
 			{
