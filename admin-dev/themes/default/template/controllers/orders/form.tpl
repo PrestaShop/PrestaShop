@@ -60,8 +60,8 @@
 		$('#id_lang').change(function() {
 			updateLang();
 		});
-		$('#id_carrier,#carrier_recycled_package,#order_gift,#gift_message').change(function() {
-			updateCarrier();
+		$('#delivery_option,#carrier_recycled_package,#order_gift,#gift_message').change(function() {
+			updateDeliveryOption();
 		});
 		$('#shipping_price').change(function() {
 			if ($(this).val() != shipping_price_selected_carrier)
@@ -428,16 +428,16 @@
 		});
 	}
 
-	function updateCarrierList(carriers)
+	function updateDeliveryOptionList(delivery_option_list)
 	{
 		var html = '';
-		if (carriers.length > 0)
+		if (delivery_option_list.length > 0)
 		{
-			$.each(carriers, function() {
-				html += '<option value="'+this.id_carrier+'" ' + ((parseInt($('#id_carrier').val()) == this.id_carrier) ? 'selected="selected"' : '') + '>'+this.name+' - '+this.delay+'</option>';
+			$.each(delivery_option_list, function() {
+				html += '<option value="'+this.key+'" '+(($('#delivery_option').val() == this.key) ? 'selected="selected"' : '')+'>'+this.name+'</option>';
 			});
 			$('#carrier_form').show();
-			$('#id_carrier').html(html);
+			$('#delivery_option').html(html);
 			$('#carriers_err').hide();
 		}
 		else
@@ -561,12 +561,12 @@
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
 
-		if (!jsonSummary.summary.products.length || !jsonSummary.addresses.length || !jsonSummary.cart.id_carrier)
+		if (!jsonSummary.summary.products.length || !jsonSummary.addresses.length || !jsonSummary.delivery_option_list)
 			$('#carriers_part,#summary_part').hide();
 		else
 			$('#carriers_part,#summary_part').show();
 		
-		updateCarrierList(jsonSummary.carriers);
+		updateDeliveryOptionList(jsonSummary.delivery_option_list);
 
 		if (jsonSummary.cart.gift == 1)
 			$('#order_gift').attr('checked', 'checked');
@@ -693,7 +693,7 @@
 		});
 	}
 
-	function updateCarrier()
+	function updateDeliveryOption()
 	{
 		$.ajax({
 			type:"POST",
@@ -704,8 +704,8 @@
 				ajax: "1",
 				token: "{getAdminToken tab='AdminCarts'}",
 				tab: "AdminCarts",
-				action: "updateCarrier",
-				id_carrier: $('#id_carrier option:selected').val(),
+				action: "updateDeliveryOption",
+				delivery_option: $('#delivery_option option:selected').val(),
 				gift: $('#order_gift').is(':checked')?1:0,
 				gift_message: $('#gift_message').val(),
 				recyclable: $('#carrier_recycled_package').is(':checked')?1:0,
@@ -981,13 +981,13 @@
 </fieldset>
 <br />
 <fieldset id="carriers_part" style="display:none;">
-	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Carriers'}</legend>
+	<legend><img src="../img/t/AdminCarriers.gif" />{l s='Shipping'}</legend>
 	<div id="carriers_err" style="display:none;" class="warn"></div>
 		<div id="carrier_form">
 			<div>
 				<p>
-					<label>{l s='Carrier:'} </label>
-					<select name="id_carrier" id="id_carrier">
+					<label>{l s='Delivery option:'} </label>
+					<select name="delivery_option" id="delivery_option">
 					</select>
 				</p>
 				<p>
