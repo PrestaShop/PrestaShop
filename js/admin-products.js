@@ -236,6 +236,7 @@ function displayTabProductById(id, selected, index, stack)
 		async : true,
 		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 		data: post_data,
+		type: 'POST',
 		success : function(data)
 		{
 			tab_selector.html(data);
