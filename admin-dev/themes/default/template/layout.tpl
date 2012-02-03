@@ -29,19 +29,19 @@
 		{$conf}
 	</div>
 {/if}
-
-{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
+{if count($errors) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)} {* @todo what is ??? AND $this->_includeContainer *}
 	<div class="error">
 		<span style="float:right">
 			<a id="hideError" href="#"><img alt="X" src="../img/admin/close.png" /></a>
 		</span>
+		
 		{if count($errors) == 1}
 			{$errors[0]}
 		{else}
 			{$errors|count} {l s='errors'}
 			<br/>
 			<ol>
-				{foreach $errors AS $error}
+				{foreach $errors as $error}
 					<li>{$error}</li>
 				{/foreach}
 			</ol>
