@@ -257,7 +257,7 @@ var ajaxCart = {
 			success: function(jsonData)	{
 				ajaxCart.updateCart(jsonData);
 				if ($('body').attr('id') == 'order' || $('body').attr('id') == 'order-opc')
-					deletProductFromSummary(idProduct+'_'+idCombination);
+					deleteProductFromSummary(idProduct+'_'+idCombination+'_'+customizationId+'_'+idAddressDelivery);
 			},
 			error: function() {alert('ERROR: unable to delete the product');}
 		});
