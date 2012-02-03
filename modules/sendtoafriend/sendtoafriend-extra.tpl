@@ -31,7 +31,6 @@ $('document').ready(function(){
 	});
 
 	$('#sendEmail').click(function(){
-		//console.log('aaa');
 		var datas = [];
 		$('#fancybox-content').find('input').each(function(index){
 			var o = {}
@@ -40,8 +39,6 @@ $('document').ready(function(){
 			if (o.value != '')
 				datas.push(o);
 		});
-	//console.log(datas.length);
-	//console.log(datas);
 		if (datas.length >= 3)
 		{
 			$.ajax({
