@@ -25,7 +25,7 @@
 			width:180px;/* 190 */
 		}
 		.moduleTable .field label.radiolabel {width:auto;}
-		.moduleTable .field span.contentinput {
+		.moduleTable .field div.contentinput {
 			display:inline-block;
 			width:245px;
 			font-size: 11px;
