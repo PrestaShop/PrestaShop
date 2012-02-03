@@ -72,7 +72,7 @@ class AdminCartRulesControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function afterUpdate($currentObject)
+	public function afterUpdate($current_object)
 	{
 		// All the associations are deleted for an update, then recreated when we call the "afterAdd" method
 		$id_cart_rule = Tools::getValue('id_cart_rule');
@@ -82,7 +82,7 @@ class AdminCartRulesControllerCore extends AdminController
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_combination` WHERE `id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
 
-		$this->afterAdd($currentObject);
+		$this->afterAdd($current_object);
 	}
 
 	/* @TODO Move this function into CartRule */
