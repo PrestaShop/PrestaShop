@@ -10,7 +10,7 @@
 	<input type="text" class="datepicker" name="date_from" value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')}{else}{$defaultDateFrom}{/if}" />
 	<strong>{l s='to'}</strong>
 	<input type="text" class="datepicker" name="date_to" value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')}{else}{$defaultDateTo}{/if}" />
-	<p class="preference_description">{l s='Default period is one year.'}</p>
+	<p class="preference_description">{l s='Default period is one month.'}</p>
 </div>
 <label>{l s='Minimum amount'}</label>
 <div class="margin-form">
