@@ -763,7 +763,13 @@ abstract class ModuleCore
 			$realpathModuleDir = realpath(_PS_MODULE_DIR_);
 			if (substr(realpath($filePath), 0, strlen($realpathModuleDir)) == $realpathModuleDir)
 			{
-				self::$classInModule[$currentClass] = substr(dirname($filePath), strlen($realpathModuleDir) + 1);
+				// For controllers in module/controllers path
+				if (basename(dirname(dirname($filePath))) == 'controllers')
+					self::$classInModule[$currentClass] = basename(dirname(dirname(dirname($filePath))));
+				// For old AdminTab controllers
+				else
+					self::$classInModule[$currentClass] = substr(dirname($filePath), strlen($realpathModuleDir) + 1);
+
 				$file = _PS_MODULE_DIR_.self::$classInModule[$currentClass].'/'.Context::getContext()->language->iso_code.'.php';
 				if (Tools::file_exists_cache($file) && include_once($file))
 					$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
@@ -771,6 +777,7 @@ abstract class ModuleCore
 			else
 				self::$classInModule[$currentClass] = false;
 		}
+
 		// return name of the module, or false
 		return self::$classInModule[$currentClass];
 	}

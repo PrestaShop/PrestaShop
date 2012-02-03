@@ -1634,14 +1634,14 @@ class AdminControllerCore extends Controller
 			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
 
-		if (isset(self::$tab_module_list[$class]))
+		if (isset(self::$tab_module_list[strtolower($class)]))
 		{
 			$class_name_controller = $class.'controller';
 			// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
 			{
 				$string = str_replace('\'', '\\\'', $string);
-				return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
+				return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class);
 			}
 		}
 		$key = md5(str_replace('\'', '\\\'', $string));
