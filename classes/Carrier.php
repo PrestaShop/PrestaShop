@@ -1087,5 +1087,42 @@ class CarrierCore extends ObjectModel
 		}
 		return $carrier_list;
 	}
+	
+	/**
+	 * Assign one (ore more) group to all carriers
+	 * 
+	 * @param int|array $id_group_list group id or list of group ids
+	 * @param array $exception list of id carriers to ignore
+	 */
+	public static function assignGroupToAllCarriers($id_group_list, $exception = null)
+	{
+		if (!is_array($id_group_list))
+			$id_group_list = array($id_group_list);
+		
+		Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'carrier_group`
+			WHERE `id_group` IN ('.join(',', $id_group_list).')');
+		
+		$carrier_list = Db::getInstance()->executeS('
+			SELECT id_carrier FROM `'._DB_PREFIX_.'carrier`
+			WHERE deleted = 0
+			'.(is_array($exception) ? 'AND id_carrier NOT IN ('.join(',', $exception).')' : ''));
+		
+		if ($carrier_list)
+		{
+			$data = array();
+			foreach ($carrier_list as $carrier)
+			{
+				foreach ($id_group_list as $id_group)
+					$data[] = array(
+						'id_carrier' => $carrier['id_carrier'],
+						'id_group' => $id_group,
+					);
+			}
+			return Db::getInstance()->insert('carrier_group', $data, false, false, Db::INSERT, false);
+		}
+		
+		return true;
+	}
 }
 
