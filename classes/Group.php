@@ -141,6 +141,8 @@ class GroupCore extends ObjectModel
 		if (parent::add($autodate, $null_values))
 		{
 			Category::setNewGroupForHome((int)$this->id);
+			
+			Carrier::assignGroupToAllCarriers((int)$this->id);
 
 			// Set cache of feature detachable to true
 			Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
