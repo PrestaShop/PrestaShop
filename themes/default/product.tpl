@@ -452,7 +452,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
 	</div>
 </div>
 
-{if isset($quantity_discounts) && $quantity_discounts}
+{if (isset($quantity_discounts) && count($quantity_discounts) > 0)}
 <!-- quantity discount -->
 <ul class="idTabs clearfix">
 	<li><a href="#discount" style="cursor: pointer" class="selected">{l s='Quantity discount'}</a></li>
@@ -467,6 +467,9 @@ var fieldRequired = '{l s='Please fill in all required fields, then save the cus
             </tr>
         </thead>
 		<tbody>
+            <tr id="noQuantityDiscount">
+                <td colspan='3'>{l s='There is not any quantity discount for this product.'}</td>
+            </tr>
             {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
             <tr id="quantityDiscount_{$quantity_discount.id_product_attribute}">
                 <td>
