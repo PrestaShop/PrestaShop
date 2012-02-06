@@ -29,13 +29,13 @@
 
 <br />
 
-{if isset($supply_order_state) && $supply_order_state->editable == false}
+{if isset($supply_order_state) && $supply_order_state->editable == false && isset($supply_order)}
 <fieldset>
 <legend>
 <img src="../img/admin/pdf.gif" alt="{l s='Supply Order State'}">
 {l s='Print the supply order form'}
 </legend>
-<a href="pdf.php?id_supply_order='.(int)$supply_order->id.'" target="_blank" title="Export as PDF">{l s='Click here to download the supply order form'}.</a>
+<a href="pdf.php?id_supply_order={$supply_order->id}" target="_blank" title="Export as PDF">{l s='Click here to download the supply order form'}.</a>
 </fieldset>
 {/if}
 
