@@ -142,4 +142,30 @@ class SupplyOrderStateCore extends ObjectModel
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
+
+	/**
+	 * Gets the list of supply order states
+	 *
+	 * @param array $ids Optional Do not include these ids in the result
+	 * @param int $id_lang Optional
+	 * @return array
+	 */
+	public static function getStates($ids = null, $id_lang = null)
+	{
+		if ($id_lang == null)
+			$id_lang = Context::getContext()->language->id;
+
+		if ($ids && !is_array($ids))
+			$ids = array();
+
+		$query = new DbQuery();
+		$query->select('sl.name, s.id_supply_order_state');
+		$query->from('supply_order_state', 's');
+		$query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang);
+		if ($ids)
+			$query->where('s.id_supply_order_state NOT IN('.implode(',', array_map('intval', $ids)).')');
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+	}
+
 }
