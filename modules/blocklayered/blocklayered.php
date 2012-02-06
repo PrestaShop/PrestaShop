@@ -1813,7 +1813,7 @@ class BlockLayered extends Module
 							data: \'layered_token='.substr(Tools::encrypt('blocklayered/index'), 0, 10).'&id_lang='.$id_lang.'&\'
 								+(all ? \'\' : $(\'input[name="categoryBox[]"]\').serialize()+\'&\')
 								+(id_layered_filter ? \'id_layered_filter=\'+parseInt(id_layered_filter) : \'\')
-								+\'&base_folder='._PS_ADMIN_DIR_.'\',
+								+\'&base_folder='.urlencode(_PS_ADMIN_DIR_).'\',
 							success: function(result)
 							{
 								$(\'#layered-ajax-refresh\').css(\'background-color\', \'transparent\');
@@ -2190,7 +2190,7 @@ class BlockLayered extends Module
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 					{
 						$queryFiltersWhere .= ' AND sa.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0 ';
-						$queryFiltersFrom .= 'LEFT JOIN stock_available sa ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
+						$queryFiltersFrom .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
 					}
 					else
 						$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0 ';
@@ -2395,7 +2395,7 @@ class BlockLayered extends Module
 					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 					AND c.active = 1) ';
 					if (version_compare(_PS_VERSION_,'1.5','>'))
-						$sqlQuery['join'] .= 'LEFT JOIN '._DB_PREFIX_.'stock_available sa
+						$sqlQuery['join'] .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa
 							ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)$this->context->shop->getID(true).') ';
 					$sqlQuery['where'] = 'WHERE p.`active` = 1 ';
 					$sqlQuery['group'] = ' GROUP BY p.id_product ';
@@ -3088,7 +3088,7 @@ class BlockLayered extends Module
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 		{
 			$queryFilters = ' AND sav.quantity '.(!$filterValue[0] ? '>=' : '>').' 0 ';
-			$queryFiltersJoin = 'LEFT JOIN stock_available sav ON (sav.id_product = p.id_product AND sav.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
+			$queryFiltersJoin = 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.id_product = p.id_product AND sav.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
 		}
 		else
 			$queryFilters = ' AND p.quantity '.(!$filterValue[0] ? '>=' : '>').' 0 ';
