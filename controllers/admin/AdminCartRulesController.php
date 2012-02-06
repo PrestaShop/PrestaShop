@@ -72,7 +72,7 @@ class AdminCartRulesControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function afterUpdate($current_object)
+	protected function afterUpdate($current_object)
 	{
 		// All the associations are deleted for an update, then recreated when we call the "afterAdd" method
 		$id_cart_rule = Tools::getValue('id_cart_rule');
@@ -86,7 +86,7 @@ class AdminCartRulesControllerCore extends AdminController
 	}
 
 	/* @TODO Move this function into CartRule */
-	public function afterAdd($currentObject)
+	protected function afterAdd($currentObject)
 	{
 		// Add restrictions for generic entities like country, carrier and group
 		foreach (array('country', 'carrier', 'group') as $type)

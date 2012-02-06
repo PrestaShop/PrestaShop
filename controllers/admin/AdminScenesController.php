@@ -64,7 +64,7 @@ class AdminScenesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	public function afterImageUpload()
+	protected function afterImageUpload()
 	{
 		/* Generate image with differents size */
 		if (!($obj = $this->loadObject(true)))

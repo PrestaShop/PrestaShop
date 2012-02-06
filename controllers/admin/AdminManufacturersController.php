@@ -674,7 +674,7 @@ class AdminManufacturersControllerCore extends AdminController
 		parent::initProcess();
 	}
 
-	public function afterImageUpload()
+	protected function afterImageUpload()
 	{
 		/* Generate image with differents size */
 		if (($id_manufacturer = (int)Tools::getValue('id_manufacturer')) &&

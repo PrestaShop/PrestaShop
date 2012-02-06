@@ -281,7 +281,7 @@ class AdminTabsControllerCore extends AdminController
 		parent::getList($id_lang, 'position', $order_way, $start, $limit, $id_lang_shop);
 	}
 
-	public function afterImageUpload()
+	protected function afterImageUpload()
 	{
 		if (!($obj = $this->loadObject(true)))
 			return;

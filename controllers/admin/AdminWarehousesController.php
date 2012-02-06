@@ -513,7 +513,7 @@ class AdminWarehousesControllerCore extends AdminController
 	/**
 	 * @see AdminController::afterAdd()
 	 */
-	public function afterAdd($object)
+	protected function afterAdd($object)
 	{
 		$address = new Address($object->id_address);
 		if (Validate::isLoadedObject($address))

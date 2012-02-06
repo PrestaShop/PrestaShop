@@ -272,7 +272,7 @@ class AdminGroupShopControllerCore extends AdminController
 		return parent::postProcess();
 	}
 
-	public function afterAdd($new_group_shop)
+	protected function afterAdd($new_group_shop)
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);
@@ -281,7 +281,7 @@ class AdminGroupShopControllerCore extends AdminController
 		StockAvailable::resetProductFromStockAvailableByGroupShop($new_group_shop);
 	}
 
-	public function afterUpdate($new_group_shop)
+	protected function afterUpdate($new_group_shop)
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_group_shop->copyGroupShopData(Tools::getValue('importFromShop'), $import_data);

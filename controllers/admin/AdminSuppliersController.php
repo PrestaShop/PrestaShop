@@ -309,7 +309,7 @@ class AdminSuppliersControllerCore extends AdminController
 		return parent::renderView();
 	}
 
-	public function afterImageUpload()
+	protected function afterImageUpload()
 	{
 		$return = true;
 		/* Generate image with differents size */
@@ -407,7 +407,7 @@ class AdminSuppliersControllerCore extends AdminController
 	/**
 	 * @see AdminController::afterAdd()
 	 */
-	public function afterAdd($object)
+	protected function afterAdd($object)
 	{
 		$address = new Address($object->id_address);
 		if (Validate::isLoadedObject($address))
@@ -422,7 +422,7 @@ class AdminSuppliersControllerCore extends AdminController
 	/**
 	 * @see AdminController::afterUpdate()
 	 */
-	public function afterUpdate($object)
+	protected function afterUpdate($object)
 	{
 		$address = new Address($object->id_address);
 		if (Validate::isLoadedObject($address))
