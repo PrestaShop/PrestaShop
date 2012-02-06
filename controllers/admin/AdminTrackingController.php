@@ -73,7 +73,6 @@ class AdminTrackingControllerCore extends AdminController
 		$this->_orderWay = 'DESC';
 		self::$currentIndex = 'index.php?controller=AdminCategories';
 		$this->token = Tools::getAdminTokenLite('AdminCategories');
-		$this->_orderBy = null;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -109,7 +108,6 @@ class AdminTrackingControllerCore extends AdminController
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
 		$this->show_toolbar = false;
-		$this->_orderBy = null;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -148,7 +146,6 @@ class AdminTrackingControllerCore extends AdminController
 		$this->show_toolbar = false;
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
-		$this->_orderBy = null;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -190,7 +187,6 @@ class AdminTrackingControllerCore extends AdminController
 		$this->show_toolbar = false;
 		self::$currentIndex = 'index.php?controller=AdminProducts';
 		$this->token = Tools::getAdminTokenLite('AdminProducts');
-		$this->_orderBy = null;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
