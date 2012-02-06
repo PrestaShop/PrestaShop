@@ -600,9 +600,13 @@ ul.idTabs li {
 #more_info_sheets dl {margin-left:20px}
 #more_info_sheets em {font-style:italic}
 
+/* Make sure lists are correctly displayed in tinyMCE BO edition mode too */
 #short_description_content ul,
 #short_description_content ol,
-#short_description_content dl {margin-left:20px}
+#short_description_content dl,
+#tinymce ul,
+#tinymce ol,
+#tinymce dl {margin-left:20px}
 
 .block_hidden_only_for_screen {display:none}
 
