@@ -655,14 +655,13 @@ class CartRuleCore extends ObjectModel
 		{
 			$selectedProductsReduction = 0;
 			$selectedProducts = $this->checkProductRestrictions($context, true);
-			foreach ($context->cart->getProducts() as $product)
-			{
-				if (in_array($product['id_product'], $selectedProducts))
-				{
-					$price = ($useTax ? $product['price_wt'] : $product['price']);
-					$selectedProductsReduction += $price * $product['cart_quantity'];
-				}
-			}
+			if (is_array($selectedProducts))
+				foreach ($context->cart->getProducts() as $product)
+					if (in_array($product['id_product'], $selectedProducts))
+					{
+						$price = ($useTax ? $product['price_wt'] : $product['price']);
+						$selectedProductsReduction += $price * $product['cart_quantity'];
+					}
 			$reductionValue += $selectedProductsReduction * $this->reduction_percent / 100;
 		}
 
