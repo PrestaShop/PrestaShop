@@ -103,8 +103,7 @@ class OrderConfirmationControllerCore extends FrontController
 
 			if (Validate::isLoadedObject($order))
 			{
-				$cart = new Cart((int)$order->id_cart);
-				$params['total_to_pay'] = $cart->getOrderTotal();
+				$params['total_to_pay'] = $order->getOrdersTotalPaid();
 				$params['currency'] = $currency->sign;
 				$params['objOrder'] = $order;
 				$params['currencyObj'] = $currency;
@@ -128,8 +127,7 @@ class OrderConfirmationControllerCore extends FrontController
 
 			if (Validate::isLoadedObject($order))
 			{
-				$cart = new Cart($order->id_cart);
-				$params['total_to_pay'] = $cart->getOrderTotal();
+				$params['total_to_pay'] = $order->getOrdersTotalPaid();
 				$params['currency'] = $currency->sign;
 				$params['objOrder'] = $order;
 				$params['currencyObj'] = $currency;
