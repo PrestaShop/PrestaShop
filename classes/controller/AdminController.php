@@ -472,11 +472,6 @@ class AdminControllerCore extends Controller
 				return $this->{'ajaxProcess'.Tools::toCamelCase($action)}();
 			else if (method_exists($this, 'ajaxProcess'))
 				return $this->ajaxProcess();
-
-			/*if (!empty($action) && method_exists($this, 'displayAjax'.Tools::toCamelCase($action)))
-				$this->{'displayAjax'.$action}();
-			else
-				$this->displayAjax();	*/
 		}
 		else
 		{
