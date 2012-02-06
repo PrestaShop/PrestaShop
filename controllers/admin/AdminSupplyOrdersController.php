@@ -675,9 +675,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// re-defines fieldsDisplay
 		$this->fieldsDisplay = array(
+			'supplier_reference' => array(
+				'title' => $this->l('Supplier Reference'),
+				'align' => 'left',
+				'width' => 50,
+				'orderby' => false,
+				'filter' => false,
+				'search' => false,
+			),
 			'reference' => array(
 				'title' => $this->l('Reference'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 30,
 				'orderby' => false,
 				'filter' => false,
@@ -685,7 +693,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'ean13' => array(
 				'title' => $this->l('EAN13'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 30,
 				'orderby' => false,
 				'filter' => false,
@@ -693,7 +701,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'upc' => array(
 				'title' => $this->l('UPC'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 30,
 				'orderby' => false,
 				'filter' => false,
@@ -701,15 +709,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
-				'align' => 'center',
-				'width' => 350,
+				'align' => 'left',
+				'width' => 300,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'quantity_received_today' => array(
 				'title' => $this->l('Quantity to receive today ?'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 20,
 				'type' => 'editable',
 				'orderby' => false,
@@ -719,7 +727,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'quantity_received' => array(
 				'title' => $this->l('Quantity received'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 20,
 				'orderby' => false,
 				'filter' => false,
@@ -728,15 +736,15 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			),
 			'quantity_expected' => array(
 				'title' => $this->l('Quantity expected'),
-				'align' => 'center',
-				'width' => 20,
+				'align' => 'left',
+				'width' => 40,
 				'orderby' => false,
 				'filter' => false,
 				'search' => false,
 			),
 			'quantity_left' => array(
 				'title' => $this->l('Quantity left'),
-				'align' => 'center',
+				'align' => 'left',
 				'width' => 20,
 				'orderby' => false,
 				'filter' => false,
