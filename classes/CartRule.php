@@ -474,8 +474,8 @@ class CartRuleCore extends ObjectModel
 			{
 				$eligibleProductsList = array();
 				foreach ($context->cart->getProducts() as $product)
-					$eligibleProductsList[] = (int)$product['id_product'];
-					
+					$eligibleProductsList[] = (int)$product['id_product'].'-'.(int)$product['id_product_attribute'];
+				
 				$productRules = $this->getProductRules($id_product_rule_group);
 				foreach ($productRules as $productRule)
 				{
@@ -483,11 +483,11 @@ class CartRuleCore extends ObjectModel
 					{
 						case 'attributes':
 							$cartAttributes = Db::getInstance()->ExecuteS('
-							SELECT cp.quantity, cp.`id_product`, pac.`id_attribute`
+							SELECT cp.quantity, cp.`id_product`, pac.`id_attribute`, cp.`id_product_attribute`
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON cp.id_product_attribute = pac.id_product_attribute
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode($eligibleProductsList, ',').')
+							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')
 							AND cp.id_product_attribute > 0');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
@@ -495,7 +495,7 @@ class CartRuleCore extends ObjectModel
 								if (in_array($cartAttribute['id_attribute'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartAttribute['quantity'];
-									$matchingProductsList[] = $cartAttribute['id_product'];
+									$matchingProductsList[] = $cartAttribute['id_product'].'-'.$cartAttribute['id_product_attribute'];
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
@@ -506,14 +506,14 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode($eligibleProductsList, ',').')');
+							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartProducts as $cartProduct)
 								if (in_array($cartProduct['id_product'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartProduct['quantity'];
-									$matchingProductsList[] = $cartProduct['id_product'];
+									$matchingProductsList[] = $cartProduct['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
@@ -525,14 +525,14 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode($eligibleProductsList, ',').')');
+							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartCategories as $cartCategory)
 								if (in_array($cartCategory['id_category'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartCategory['quantity'];
-									$matchingProductsList[] = $cartCategory['id_product'];
+									$matchingProductsList[] = $cartCategory['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
@@ -544,14 +544,14 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode($eligibleProductsList, ',').')');
+							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartManufacturers as $cartManufacturer)
 								if (in_array($cartManufacturer['id_manufacturer'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartManufacturer['quantity'];
-									$matchingProductsList[] = $cartManufacturer['id_product'];
+									$matchingProductsList[] = $cartManufacturer['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
@@ -563,14 +563,14 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
-							AND cp.`id_product` IN ('.implode($eligibleProductsList, ',').')');
+							AND cp.`id_product` IN ('.implode(array_map('intval', $eligibleProductsList), ',').')');
 							$countMatchingProducts = 0;
 							$matchingProductsList = array();
 							foreach ($cartSuppliers as $cartSupplier)
 								if (in_array($cartSupplier['id_supplier'], $productRule['values']))
 								{
 									$countMatchingProducts += $cartSupplier['quantity'];
-									$matchingProductsList[] = $cartSupplier['id_product'];
+									$matchingProductsList[] = $cartSupplier['id_product'].'-0';
 								}
 							if ($countMatchingProducts < $productRuleGroup['quantity'])
 								return Tools::displayError('You cannot use this voucher with these products');
@@ -657,7 +657,8 @@ class CartRuleCore extends ObjectModel
 			$selectedProducts = $this->checkProductRestrictions($context, true);
 			if (is_array($selectedProducts))
 				foreach ($context->cart->getProducts() as $product)
-					if (in_array($product['id_product'], $selectedProducts))
+					if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selectedProducts)
+						|| in_array($product['id_product'].'-0', $selectedProducts))
 					{
 						$price = ($useTax ? $product['price_wt'] : $product['price']);
 						$selectedProductsReduction += $price * $product['cart_quantity'];
