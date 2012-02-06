@@ -442,11 +442,16 @@ function displayDiscounts(combination)
 {
     $('#quantityDiscount table tbody tr').each(function() {
         if (($(this).attr('id') != 'quantityDiscount_0') &&
-            ($(this).attr('id') != 'quantityDiscount_'+combination))
+            ($(this).attr('id') != 'quantityDiscount_'+combination) &&
+            ($(this).attr('id') != 'noQuantityDiscount'))
             $(this).fadeOut('slow');
     });
 
-    $('#quantityDiscount_'+combination).show();
+    if ($('#quantityDiscount_'+combination).length != 0) {
+        $('#quantityDiscount_'+combination).show();
+        $('#noQuantityDiscount').hide();
+    } else
+        $('#noQuantityDiscount').show();
 }
 
 // Serialscroll exclude option bug ?
