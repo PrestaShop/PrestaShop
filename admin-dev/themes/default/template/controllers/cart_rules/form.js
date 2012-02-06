@@ -113,13 +113,12 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		if ($('#apply_discount_to_product').attr('checked'))
 			toggleApplyDiscountTo();
 		$('#apply_discount_to_cheapest').removeAttr('disabled');
-		$('#apply_discount_to_cheapest').removeAttr('checked');
+		$('#apply_discount_to_selection').removeAttr('disabled');
 	}
 	else
 	{
 		$('#apply_discount_percent_div').hide(200);
 		$('#reduction_percent').val('0');
-		$('#apply_discount_to_cheapest').attr('disabled', 'disabled');
 	}
 	
 	if (amount)
@@ -129,12 +128,13 @@ function toggleApplyDiscount(percent, amount, apply_to)
 			toggleApplyDiscountTo();
 		$('#apply_discount_to_cheapest').attr('disabled', 'disabled');
 		$('#apply_discount_to_cheapest').removeAttr('checked');
+		$('#apply_discount_to_selection').attr('disabled', 'disabled');
+		$('#apply_discount_to_selection').removeAttr('checked');
 	}
 	else
 	{
 		$('#apply_discount_amount_div').hide(200);
 		$('#reduction_amount').val('0');
-		$('#apply_discount_to_cheapest').removeAttr('disabled');
 	}
 		
 	if (apply_to)
