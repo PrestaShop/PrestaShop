@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="helper/list/list_header.tpl"}
+{extends file="helpers/list/list_header.tpl"}
 {block name=override_header}
 {if isset($warehouses) && count($warehouses) > 0 && isset($filter_status)}
 <div class="filter-stock-extended">

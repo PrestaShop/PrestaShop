@@ -37,7 +37,7 @@ class HelperViewCore extends Helper
 
 	public function __construct()
 	{
-		$this->base_folder = 'helper/view/';
+		$this->base_folder = 'helpers/view/';
 		$this->base_tpl = 'view.tpl';
 		parent::__construct();
 	}

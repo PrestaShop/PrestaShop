@@ -34,7 +34,7 @@ class HelperOptionsCore extends Helper
 
 	public function __construct()
 	{
-		$this->base_folder = 'helper/options/';
+		$this->base_folder = 'helpers/options/';
 		$this->base_tpl = 'options.tpl';
 		parent::__construct();
 	}

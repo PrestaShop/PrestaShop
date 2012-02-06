@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helper/list/list_header.tpl"}
+{extends file="helpers/list/list_header.tpl"}
 
 {block name="override_header"}
 
