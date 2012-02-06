@@ -430,16 +430,55 @@ class CartRuleCore extends ObjectModel
 		// Check if the products chosen by the customer are usable with the cart rule
 		if ($this->product_restriction)
 		{
+			$r = $this->checkProductRestrictions($context, false);
+			if ($r !== false)
+				return $r;
+		}
+
+		// Check if the cart rule is only usable by a specific customer, and if the current customer is the right one
+		if ($this->id_customer && $context->cart->id_customer != $this->id_customer)
+		{
+			if (!Context::getContext()->customer->isLogged())
+				return Tools::displayError('You cannot use this voucher').' - '.Tools::displayError('Please log in');
+			return Tools::displayError('You cannot use this voucher');
+		}
+
+		if ($this->minimum_amount)
+		{
+			$minimum_amount = $this->minimum_amount;
+			if ($this->minimum_amount_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
+			{
+				$minimum_amount_currency = new Currency($this->minimum_amount_currency);
+				if ($this->minimum_amount == 0 || $minimum_amount_currency->conversion_rate == 0)
+					$minimum_amount = 0;
+				else
+					$minimum_amount = $this->minimum_amount / $minimum_amount_currency->conversion_rate;
+			}
+			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
+			if ($this->minimum_amount_shipping)
+				$cartTotal += $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
+			if ($cartTotal < $minimum_amount)
+				return Tools::displayError('You do not reach the minimum amount required to use this voucher');
+		}
+	}
+	
+	protected function checkProductRestrictions(Context $context, $return_products = false)
+	{
+		$selectedProducts = array();
+		
+		// Check if the products chosen by the customer are usable with the cart rule
+		if ($this->product_restriction)
+		{
 			$productRuleGroups = $this->getProductRuleGroups();
 			foreach ($productRuleGroups as $id_product_rule_group => $productRuleGroup)
 			{
+				$eligibleProductsList = array();
+				foreach ($context->cart->getProducts() as $product)
+					$eligibleProductsList[] = (int)$product['id_product'];
+					
 				$productRules = $this->getProductRules($id_product_rule_group);
 				foreach ($productRules as $productRule)
 				{
-					$eligibleProductsList = array();
-					foreach ($context->cart->getProducts() as $product)
-						$eligibleProductsList[] = (int)$product['id_product'];
-					
 					switch ($productRule['type'])
 					{
 						case 'attributes':
@@ -542,34 +581,13 @@ class CartRuleCore extends ObjectModel
 					if (!count($eligibleProductsList))
 						return Tools::displayError('You cannot use this voucher with these products');
 				}
+				$selectedProducts = array_merge($selectedProducts, $eligibleProductsList);
 			}
 		}
-
-		// Check if the cart rule is only usable by a specific customer, and if the current customer is the right one
-		if ($this->id_customer && $context->cart->id_customer != $this->id_customer)
-		{
-			if (!Context::getContext()->customer->isLogged())
-				return Tools::displayError('You cannot use this voucher').' - '.Tools::displayError('Please log in');
-			return Tools::displayError('You cannot use this voucher');
-		}
-
-		if ($this->minimum_amount)
-		{
-			$minimum_amount = $this->minimum_amount;
-			if ($this->minimum_amount_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
-			{
-				$minimum_amount_currency = new Currency($this->minimum_amount_currency);
-				if ($this->minimum_amount == 0 || $minimum_amount_currency->conversion_rate == 0)
-					$minimum_amount = 0;
-				else
-					$minimum_amount = $this->minimum_amount / $minimum_amount_currency->conversion_rate;
-			}
-			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
-			if ($this->minimum_amount_shipping)
-				$cartTotal += $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
-			if ($cartTotal < $minimum_amount)
-				return Tools::displayError('You do not reach the minimum amount required to use this voucher');
-		}
+		
+		if ($return_products)
+			return $selectedProducts;
+		return false;
 	}
 
 	/**
@@ -632,6 +650,22 @@ class CartRuleCore extends ObjectModel
 			$reductionValue += $minPrice * $this->reduction_percent / 100;
 		}
 
+		// Discount (%) on the selection of products
+		if ($this->reduction_percent && $this->reduction_product == -2)
+		{
+			$selectedProductsReduction = 0;
+			$selectedProducts = $this->checkProductRestrictions($context, true);
+			foreach ($context->cart->getProducts() as $product)
+			{
+				if (in_array($product['id_product'], $selectedProducts))
+				{
+					$price = ($useTax ? $product['price_wt'] : $product['price']);
+					$selectedProductsReduction += $price * $product['cart_quantity'];
+				}
+			}
+			$reductionValue += $selectedProductsReduction * $this->reduction_percent / 100;
+		}
+
 		// Discount (¤)
 		if ($this->reduction_amount)
 		{
@@ -659,7 +693,6 @@ class CartRuleCore extends ObjectModel
 			{
 				if ($this->reduction_product > 0)
 				{
-					// Todo: optimize with an array_search (and do the same in the other foreach of this function)
 					foreach ($context->cart->getProducts() as $product)
 						if ($product['id_product'] == $this->reduction_product)
 						{
@@ -678,7 +711,7 @@ class CartRuleCore extends ObjectModel
 								$reductionValue += $reduction_amount * (1 + $product_vat_rate);
 						}
 				}
-				// Discount (�) on the whole order
+				// Discount (¤) on the whole order
 				elseif ($this->reduction_product == 0)
 				{
 					$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
@@ -695,7 +728,12 @@ class CartRuleCore extends ObjectModel
 					elseif (!$this->reduction_tax && $useTax)
 						$reductionValue += $reduction_amount * (1 + $cart_average_vat_rate);
 				}
-				// Todo: discount on the cheapest (but this is not meaningful)
+				/*
+				 * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
+				 * Please keep this code, so it won't be considered as a bug
+				 * elseif ($this->reduction_product == -1)
+				 * elseif ($this->reduction_product == -2)
+				*/
 			}
 		}
 
@@ -754,7 +792,7 @@ class CartRuleCore extends ObjectModel
 			$array['selected'] = Db::getInstance()->ExecuteS('
 			SELECT t.*'.($i18n ? ', tl.*' : '').', 1 as selected
 			FROM `'._DB_PREFIX_.$type.'` t
-			'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id : '').'
+			'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
 			WHERE 1
 			'.($active_only ? 'AND t.active = 1' : '').'
 			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').'
@@ -769,7 +807,7 @@ class CartRuleCore extends ObjectModel
 				$resource = Db::getInstance()->query('
 				SELECT t.*'.($i18n ? ', tl.*' : '').', IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
 				FROM `'._DB_PREFIX_.$type.'` t
-				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id : '').'
+				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
 				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.$type.' = crt.id_'.$type.'
 				'.($active_only ? 'WHERE t.active = 1' : '').'
 				ORDER BY name ASC',
