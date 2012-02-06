@@ -47,6 +47,7 @@ class UpgraderCore
 	public $autoupgrade;
 	public $autoupgrade_module;
 	public $autoupgrade_last_version;
+	public $autoupgrade_module_link;
 	public $changelog;
 	public $md5;
 
@@ -102,45 +103,47 @@ class UpgraderCore
 	public function checkPSVersion($force = false)
 	{
 
-			if (class_exists('Configuration'))
-				$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
-			else
-				$last_check = 0;
-			// if we use the autoupgrade process, we will never refresh it
-			// except if no check has been done before
-			if ($force || ($last_check < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
+		if (class_exists('Configuration'))
+			$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
+		else
+			$last_check = 0;
+		// if we use the autoupgrade process, we will never refresh it
+		// except if no check has been done before
+		if ($force || ($last_check < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
+		{
+			libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
+			if ($feed = @simplexml_load_file($this->rss_version_link))
 			{
-				libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
-				if ($feed = @simplexml_load_file($this->rss_version_link))
-				{
-					$this->version_name = (string)$feed->version->name;
-					$this->version_num = (string)$feed->version->num;
-					$this->link = (string)$feed->download->link;
-					$this->md5 = (string)$feed->download->md5;
-					$this->changelog = (string)$feed->download->changelog;
-					$this->autoupgrade = (int)$feed->autoupgrade;
-					$this->autoupgrade_module = (int)$feed->autoupgrade_module;
+				$this->version_name = (string)$feed->version->name;
+				$this->version_num = (string)$feed->version->num;
+				$this->link = (string)$feed->download->link;
+				$this->md5 = (string)$feed->download->md5;
+				$this->changelog = (string)$feed->download->changelog;
+				$this->autoupgrade = (int)$feed->autoupgrade;
+				$this->autoupgrade_module = (int)$feed->autoupgrade_module;
 				$this->autoupgrade_last_version = (string)$feed->autoupgrade_last_version;
-					$this->desc = (string)$feed->desc ;
-					$config_last_version = array(
-						'name' => $this->version_name,
-						'num' => $this->version_num,
-						'link' => $this->link,
-						'md5' => $this->md5,
-						'autoupgrade' => $this->autoupgrade,
-						'autoupgrade_module' => $this->autoupgrade_module,
+				$this->autoupgrade_module_link = (string)$feed->autoupgrade_module_link;
+				$this->desc = (string)$feed->desc;
+				$config_last_version = array(
+					'name' => $this->version_name,
+					'num' => $this->version_num,
+					'link' => $this->link,
+					'md5' => $this->md5,
+					'autoupgrade' => $this->autoupgrade,
+					'autoupgrade_module' => $this->autoupgrade_module,
 					'autoupgrade_last_version' => $this->autoupgrade_last_version,
-						'changelog' => $this->changelog,
-						'desc' => $this->desc
-					);
-					if (class_exists('Configuration'))
-					{
-						Configuration::updateValue('PS_LAST_VERSION', serialize($config_last_version));
-					Configuration::updateValue('PS_LAST_VERSION_CHECK',time());
+					'autoupgrade_module_link' => $this->autoupgrade_module_link,
+					'changelog' => $this->changelog,
+					'desc' => $this->desc
+				);
+				if (class_exists('Configuration'))
+				{
+					Configuration::updateValue('PS_LAST_VERSION', serialize($config_last_version));
+					Configuration::updateValue('PS_LAST_VERSION_CHECK', time());
 				}
 			}
-			}
-			else
+		}
+		else
 			$this->loadFromConfig();
 		// retro-compatibility :
 		// return array(name,link) if you don't use the last version
@@ -176,6 +179,8 @@ class UpgraderCore
 				$this->autoupgrade_module = $last_version_check['autoupgrade_module'];
 			if (isset($last_version_check['autoupgrade_last_version']))
 				$this->autoupgrade_last_version = $last_version_check['autoupgrade_last_version'];
+			if (isset($last_version_check['autoupgrade_module_link']))
+				$this->autoupgrade_module_link = $last_version_check['autoupgrade_module_link'];
 			if (isset($last_version_check['md5']))
 				$this->md5 = $last_version_check['md5'];
 			if (isset($last_version_check['desc']))
@@ -195,6 +200,7 @@ class UpgraderCore
 	{
 		if (is_array($this->changed_files) && count($this->changed_files) == 0)
 		{
+			libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
 			if ($checksum == false)
 			{
@@ -202,7 +208,7 @@ class UpgraderCore
 			}
 			else
 				$this->browseXmlAndCompare($checksum->ps_root_dir[0]);
-}
+		}
 		return $this->changed_files;
 	}
 
