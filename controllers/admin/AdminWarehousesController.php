@@ -310,6 +310,13 @@ class AdminWarehousesControllerCore extends AdminController
 				'desc' => $this->l('Inventory valuation method')
 			);
 
+			//get currencies list
+			$currencies = Currency::getCurrencies();
+			$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+			$default_currency = Currency::getCurrency($id_default_currency);
+			if ($default_currency)
+				$currencies = array_merge(array($default_currency, '-'), $currencies);
+
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
 				'label' => $this->l('Stock valuation currency:'),
@@ -317,7 +324,7 @@ class AdminWarehousesControllerCore extends AdminController
 				'name' => 'id_currency',
 				'required' => true,
 				'options' => array(
-					'query' => Currency::getCurrencies(),
+					'query' => $currencies,
 					'id' => 'id_currency',
 					'name' => 'name'
 				)
