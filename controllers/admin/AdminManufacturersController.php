@@ -227,7 +227,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'action' => self::$cache_lang['editaddresses'],
 		));
 
-		return $this->context->smarty->fetch('helper/list/list_action_edit.tpl');
+		return $this->context->smarty->fetch('helpers/list/list_action_edit.tpl');
 	}
 
 	public function renderForm()

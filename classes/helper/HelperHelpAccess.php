@@ -38,7 +38,7 @@ class HelperHelpAccessCore extends Helper
     public function __construct($label, $iso_lang, $country, $ps_version)
     {
         parent::__construct();
-        $this->base_folder = 'helper/help_access/';
+        $this->base_folder = 'helpers/help_access/';
 
         $this->tpl = $this->createTemplate('button.tpl');
         $this->label = $label;

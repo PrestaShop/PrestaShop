@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helper/list/list_footer.tpl"}
+{extends file="helpers/list/list_footer.tpl"}
 
 {block name="after"}
 

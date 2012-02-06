@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="helper/options/options.tpl"}
+{extends file="helpers/options/options.tpl"}
 {block name="defaultOptions"}
 		<form action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data">
 		<fieldset><legend><img src="../img/admin/htaccess.gif" alt="" />{l s='Htaccess file generation'}</legend>

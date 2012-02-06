@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="helper/options/options.tpl"}
+{extends file="helpers/options/options.tpl"}
 {block name="after"}
 <br/><br/>
 <fieldset id="prestastore-content" class="width3"></fieldset>
