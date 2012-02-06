@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helper/options/options.tpl"} 
+{extends file="helpers/options/options.tpl"}
 {block name="start_field_block"}
 	{if $field['type'] == 'disabled'}
 		<div class="margin-form">

@@ -288,11 +288,11 @@
 								{/foreach}
 							{elseif $input.type == 'group'}
 								{assign var=groups value=$input.values}
-								{include file='helper/form/form_group.tpl'}
+								{include file='helpers/form/form_group.tpl'}
 							{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
-								{include file='helper/assoshop.tpl' input=$input fields_value=$fields_value}
+								{include file='helpers/assoshop.tpl' input=$input fields_value=$fields_value}
 							{elseif $input.type == 'categories'}
-								{include file='helper/form/form_category.tpl' categories=$input.values}
+								{include file='helpers/form/form_category.tpl' categories=$input.values}
 							{elseif $input.type == 'categories_select'}
 								{$input.category_tree}
 							{elseif $input.type == 'asso_shop' && isset($asso_shop) && $asso_shop}

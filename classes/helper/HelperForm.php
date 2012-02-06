@@ -55,7 +55,7 @@ class HelperFormCore extends Helper
 
 	public function __construct()
 	{
-		$this->base_folder = 'helper/form/';
+		$this->base_folder = 'helpers/form/';
 		$this->base_tpl = 'form.tpl';
 		parent::__construct();
 	}

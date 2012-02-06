@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helper/form/form.tpl"}
+{extends file="helpers/form/form.tpl"}
 
 {block name="autoload_tinyMCE"}
 	// Execute when tab Informations has finished loading

@@ -122,7 +122,7 @@ class HelperListCore extends Helper
 
 	public function __construct()
 	{
-		$this->base_folder = 'helper/list/';
+		$this->base_folder = 'helpers/list/';
 		$this->base_tpl = 'list.tpl';
 
 		parent::__construct();

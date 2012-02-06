@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="helper/view/view.tpl"}
+{extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
 	<div style="margin-top: 20px;">

@@ -86,7 +86,7 @@ class AdminTaxesControllerCore extends AdminController
 			'action' => self::$cache_lang['Delete'],
 		));
 
-		return $this->context->smarty->fetch('helper/list/list_action_delete.tpl');
+		return $this->context->smarty->fetch('helpers/list/list_action_delete.tpl');
 	}
 
 	/**
@@ -104,7 +104,7 @@ class AdminTaxesControllerCore extends AdminController
 		if ($value && TaxRule::isTaxInUse($id))
 			$confirm = $this->l('This tax is currently in use in a tax rule. If you continue this tax will be removed from the tax rule, are you sure?');
 
-		$tpl_enable = $this->context->smarty->createTemplate('helper/list/list_action_enable.tpl');
+		$tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
 		$tpl_enable->assign(array(
 			'enabled' => (bool)$value,
 			'url_enable' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
