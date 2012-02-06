@@ -658,7 +658,8 @@ class ProductCore extends ObjectModel
 			!$this->deleteSceneProducts() ||
 			!$this->deleteSearchIndexes() ||
 			!$this->deleteAccessories() ||
-			!$this->deleteFromAccessories())
+			!$this->deleteFromAccessories() ||
+			!$this->deleteFromSupplier())
 		return false;
 
 		if ($id = ProductDownload::getIdFromIdProduct($this->id))
@@ -677,6 +678,16 @@ class ProductCore extends ObjectModel
 				$product = new Product((int)$id_product);
 				$return &= $product->delete();
 			}
+		return $return;
+	}
+
+	public function deleteFromSupplier()
+	{
+		$return = Db::getInstance()->execute(
+			'DELETE FROM `'._DB_PREFIX_.'product_supplier`
+			WHERE `id_product` = '.(int)$this->id
+		);
+
 		return $return;
 	}
 

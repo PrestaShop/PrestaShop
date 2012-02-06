@@ -392,8 +392,11 @@ class AdminSuppliersControllerCore extends AdminController
 			else
 			{
 				$address = new Address($obj->id_address);
-				$address->deleted = 1;
-				$address->save();
+				if (Validate::isLoadedObject($address))
+				{
+					$address->deleted = 1;
+					$address->save();
+				}
 				return parent::postProcess();
 			}
 		}
