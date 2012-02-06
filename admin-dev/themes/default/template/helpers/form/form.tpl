@@ -339,6 +339,10 @@
 							</div>
 						{/if}
 					{/foreach}
+					{if isset($name_controller)}
+						{capture name=hookName assign=hookName}display{$name_controller|ucfirst}Form{/capture}
+						{hook h=$hookName}
+					{/if}
 				{elseif $key == 'submit'}
 					<div class="margin-form">
 						<input type="submit"

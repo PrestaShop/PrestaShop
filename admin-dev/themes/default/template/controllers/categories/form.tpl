@@ -34,7 +34,4 @@
 			<span>{$input.customer}</span><br />
 		</p>
 	{/if}</div>
-	{if ($input.name == 'module')}
-		{hook h="displayAdminCategoriesForm"}
-	{/if}
 {/block}
