@@ -294,11 +294,15 @@ class CartCore extends ObjectModel
 			WHERE `id_cart` = '.(int)$this->id
 		);
 
+		// Define virtual context to prevent case where the cart is not the in the global context
+		$virtual_context = Context::getContext()->cloneContext();
+		$virtual_context->cart = $this;
+		
 		foreach ($result as &$row)
 		{
 			$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
-			$row['value_real'] = $row['obj']->getContextualValue(true);
-			$row['value_tax_exc'] = $row['obj']->getContextualValue(false);
+			$row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context);
+			$row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context);
 
 			// Retro compatibility < 1.5.0.2
 			$row['id_discount'] = $row['id_cart_rule'];
@@ -1201,6 +1205,10 @@ class CartCore extends ObjectModel
 			Cart::ONLY_WRAPPING,
 			Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
 		);
+		
+		// Define virtual context to prevent case where the cart is not the in the global context
+		$virtual_context = Context::getContext()->cloneContext();
+		$virtual_context->cart = $this;
 
 		if (!in_array($type, $array_type))
 			die(Tools::displayError());
@@ -1321,7 +1329,7 @@ class CartCore extends ObjectModel
 		{
 			$result = $this->getCartRules();
 			foreach ($result as $row)
-				$order_total_discount += Tools::ps_round($row['obj']->getContextualValue($with_taxes), 2);
+				$order_total_discount += Tools::ps_round($row['obj']->getContextualValue($with_taxes, $virtual_context), 2);
 
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
