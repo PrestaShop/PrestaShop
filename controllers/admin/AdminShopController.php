@@ -217,14 +217,14 @@ class AdminShopControllerCore extends AdminController
 		return false;
 	}
 
-	public function afterAdd($new_shop)
+	protected function afterAdd($new_shop)
 	{
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))
 			$new_shop->copyShopData((int)Tools::getValue('importFromShop'), $import_data);
 		return parent::afterAdd($new_shop);
 	}
 
-	public function afterUpdate($new_shop)
+	protected function afterUpdate($new_shop)
 	{
 		Category::updateFromShop(Tools::getValue('categoryBox'), $new_shop->id);
 		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data))

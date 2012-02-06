@@ -1944,7 +1944,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 * @param ObjectModel $object
 	 * @return bool
 	 */
-	public function afterAdd($object)
+	protected function afterAdd($object)
 	{
 		$this->object = $object;
 		return true;

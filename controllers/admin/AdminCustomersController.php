@@ -771,7 +771,7 @@ class AdminCustomersControllerCore extends AdminController
 		return parent::processSave($token);
 	}
 
-	public function afterDelete($object, $old_id)
+	protected function afterDelete($object, $old_id)
 	{
 		$customer = new Customer($old_id);
 		$addresses = $customer->getAddresses($this->default_form_language);

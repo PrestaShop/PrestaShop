@@ -589,12 +589,12 @@ class AdminCarriersControllerCore extends AdminController
 			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
 	}
 
-	public function beforeDelete($object)
+	protected function beforeDelete($object)
 	{
 		return $object->isUsed();
 	}
 
-	public function afterDelete($object, $old_id)
+	protected function afterDelete($object, $old_id)
 	{
 		$object->copyCarrierData((int)$old_id);
 	}
