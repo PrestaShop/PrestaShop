@@ -1120,7 +1120,7 @@ class CarrierCore extends ObjectModel
 						'id_group' => $id_group,
 					);
 			}
-			return Db::getInstance()->insert('carrier_group', $data, false, false, Db::INSERT, false);
+			return Db::getInstance()->insert('carrier_group', $data, false, false, Db::INSERT);
 		}
 		
 		return true;
