@@ -25,15 +25,38 @@
 *}
 {extends file="helper/form/form.tpl"}
 
-{block name="other_fieldsets"}
+{block name="other_input"}
 
+{if isset($supply_order) && $supply_order->id > 0 && isset($supply_order_states)}
+<input type="hidden" name="id_supply_order" id="id_supply_order" value="{$supply_order->id}">
+<label>{l s='Status of the order:'}</label>						
+
+<div class="margin-form">
+	<select name="id_supply_order_state" id="id_supply_order_state">
+	{foreach $supply_order_states as $state}
+		<option value="{$state['id_supply_order_state']}" {if $state['allowed'] == 0} disabled="disabled" {/if}>{$state['name']}</option>
+	{/foreach}
+	</select>
+	<p class="preference_description">
+		{l s='Choose the new status of your order'}
+	</p>
+</div>
+
+<div class="margin-form">
+<input type="submit" id="_form_submit_btn" value="   Save   " name="submitChangestate" class="button" style="display: none; ">
+</div>
+{/if}
+
+{/block}
+
+{block name="other_fieldset"}							
 <br />
 
 {if isset($supply_order_state) && $supply_order_state->editable == false && isset($supply_order)}
 <fieldset>
 <legend>
-<img src="../img/admin/pdf.gif" alt="{l s='Supply Order State'}">
-{l s='Print the supply order form'}
+	<img src="../img/admin/pdf.gif" alt="{l s='Supply Order State'}">
+	{l s='Print the supply order form'}
 </legend>
 <a href="pdf.php?id_supply_order={$supply_order->id}" target="_blank" title="Export as PDF">{l s='Click here to download the supply order form'}.</a>
 </fieldset>

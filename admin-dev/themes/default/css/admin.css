@@ -19,7 +19,7 @@ fieldset{background-color:#EBEDF4; border:1px solid #CCCED7; color:#585A69; font
 legend{background:#EBEDF4;border:1px solid #CCCED7;font-weight:700;margin:0;padding:.2em .5em;text-align:left}
 input[type="text"],input[type="password"],input[type="file"],textarea {border:1px solid #ccc; background-color:#fff;}
 select { border:1px solid #ccc; font-size: 12px;}
-select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
+select[disabled="disabled"], input[disabled="disabled"],textarea[disabled="disabled"], option[disabled="disabled"] {border: 1px solid #CCCCCC;color: #AAAAAA}
 .header_module{background:url('../img/header_module.png');padding-left: 0.5em;padding-top: 0.8em;height:20px;color: #812143;border:solid 1px #CCC;}
 .double_select select{width:300px;height:160px;}
 .double_select a{text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px}
