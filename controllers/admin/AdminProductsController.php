@@ -508,7 +508,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Could not find image.');
 	}
 
-	public function processBulkDelete($token)
+	protected function processBulkDelete($token)
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
