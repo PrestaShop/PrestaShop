@@ -47,6 +47,7 @@ class CartRuleCore extends ObjectModel
 	public $group_restriction;
 	public $cart_rule_restriction;
 	public $product_restriction;
+	public $shop_restriction;
 	public $free_shipping;
 	public $reduction_percent;
 	public $reduction_amount;
@@ -84,6 +85,7 @@ class CartRuleCore extends ObjectModel
 			'group_restriction' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'cart_rule_restriction' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'product_restriction' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'shop_restriction' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'free_shipping' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'reduction_percent' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'reduction_amount' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
@@ -124,6 +126,7 @@ class CartRuleCore extends ObjectModel
 		
 		$r = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart_rule` = '.(int)$this->id);
 		$r &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_carrier` WHERE `id_cart_rule` = '.(int)$this->id);
+		$r &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_shop` WHERE `id_cart_rule` = '.(int)$this->id);
 		$r &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_group` WHERE `id_cart_rule` = '.(int)$this->id);
 		$r &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_country` WHERE `id_cart_rule` = '.(int)$this->id);
 		$r &= Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_combination` WHERE `id_cart_rule_1` = '.(int)$this->id.' OR `id_cart_rule_2` = '.(int)$this->id);
@@ -143,6 +146,9 @@ class CartRuleCore extends ObjectModel
      */
 	public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
 	{
+		Db::getInstance()->Execute('
+		INSERT INTO `'._DB_PREFIX_.'cart_rule_shop` (`id_cart_rule`, `id_shop`)
+		(SELECT '.(int)$id_cart_rule_destination.', id_shop FROM `'._DB_PREFIX_.'cart_rule_shop` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
 		Db::getInstance()->Execute('
 		INSERT INTO `'._DB_PREFIX_.'cart_rule_carrier` (`id_cart_rule`, `id_carrier`)
 		(SELECT '.(int)$id_cart_rule_destination.', id_carrier FROM `'._DB_PREFIX_.'cart_rule_carrier` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
@@ -407,6 +413,18 @@ class CartRuleCore extends ObjectModel
 			AND crc.id_carrier = '.(int)$context->cart->id_carrier);
 			if (!$id_cart_rule)
 				return Tools::displayError('You cannot use this voucher with this carrier');
+		}
+
+		// Check if the cart rules appliy to the shop browsed by the customer
+		if ($this->shop_restriction && $context->shop->id && Shop::isFeatureActive())
+		{
+			$id_cart_rule = (int)Db::getInstance()->getValue('
+			SELECT crs.id_cart_rule
+			FROM '._DB_PREFIX_.'cart_rule_shop crs
+			WHERE crs.id_cart_rule = '.(int)$this->id.'
+			AND crs.id_shop = '.(int)$context->shop->id);
+			if (!$id_cart_rule)
+				return Tools::displayError('You cannot use this voucher');
 		}
 
 		// Check if the products chosen by the customer are usable with the cart rule
@@ -724,21 +742,21 @@ class CartRuleCore extends ObjectModel
 		return $array;
 	}
 
-	public function getAssociatedRestrictions($type, $active = 1)
+	public function getAssociatedRestrictions($type, $active_only, $i18n)
 	{
 		$array = array('selected' => array(), 'unselected' => array());
 
-		if (!in_array($type, array('country', 'carrier', 'group', 'cart_rule')))
+		if (!in_array($type, array('country', 'carrier', 'group', 'cart_rule', 'shop')))
 			return false;
 
 		if (!Validate::isLoadedObject($this) OR $this->{$type.'_restriction'} == 0)
 		{
 			$array['selected'] = Db::getInstance()->ExecuteS('
-			SELECT t.*, tl.*, 1 as selected
+			SELECT t.*'.($i18n ? ', tl.*' : '').', 1 as selected
 			FROM `'._DB_PREFIX_.$type.'` t
-			LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.'
+			'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id : '').'
 			WHERE 1
-			'.($active ? 'AND t.active = 1' : '').'
+			'.($active_only ? 'AND t.active = 1' : '').'
 			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').'
 			ORDER BY name ASC');
 		}
@@ -749,11 +767,11 @@ class CartRuleCore extends ObjectModel
 			else
 			{
 				$resource = Db::getInstance()->query('
-				SELECT t.*, tl.*, IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
+				SELECT t.*'.($i18n ? ', tl.*' : '').', IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
 				FROM `'._DB_PREFIX_.$type.'` t
-				LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.'
+				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id : '').'
 				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.$type.' = crt.id_'.$type.'
-				'.($active ? 'WHERE t.active = 1' : '').'
+				'.($active_only ? 'WHERE t.active = 1' : '').'
 				ORDER BY name ASC',
 				false);
 				while ($row = Db::getInstance()->nextRow($resource))
@@ -798,6 +816,7 @@ class CartRuleCore extends ObjectModel
 		$result = Db::getInstance()->executeS('
 		SELECT cr.*
 		FROM '._DB_PREFIX_.'cart_rule cr
+		LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
 		WHERE cr.active = 1
@@ -813,6 +832,10 @@ class CartRuleCore extends ObjectModel
 		AND (
 			cr.carrier_restriction = 0
 			'.($context->cart->id_carrier ? 'OR crca.id_carrier = '.(int)$context->cart->id_carrier : '').'
+		)
+		AND (
+			cr.shop_restriction = 0
+			'.((Shop::isFeatureActive() && $context->shop->id) ? 'OR crs.id_shop = '.(int)$context->shop->id : '').'
 		)
 		AND (
 			cr.group_restriction = 0

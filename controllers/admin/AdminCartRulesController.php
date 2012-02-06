@@ -54,7 +54,7 @@ class AdminCartRulesControllerCore extends AdminController
 		if (Tools::isSubmit('submitAddcart_rule') || Tools::isSubmit('submitAddcart_ruleAndStay'))
 		{
 			// These are checkboxes (which aren't sent through POST when they are not check), so they are forced to 0
-			foreach (array('country', 'carrier', 'group', 'cart_rule', 'product') as $type)
+			foreach (array('country', 'carrier', 'group', 'cart_rule', 'product', 'shop') as $type)
 				if (!Tools::getValue($type.'_restriction'))
 					$_POST[$type.'_restriction'] = 0;
 
@@ -76,7 +76,7 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		// All the associations are deleted for an update, then recreated when we call the "afterAdd" method
 		$id_cart_rule = Tools::getValue('id_cart_rule');
-		foreach (array('country', 'carrier', 'group', 'product_rule_group') as $type)
+		foreach (array('country', 'carrier', 'group', 'product_rule_group', 'shop') as $type)
 			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE `id_cart_rule` = '.(int)$id_cart_rule);
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_product_rule_group` NOT IN (SELECT `id_product_rule_group` FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`)');
 		Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
@@ -89,7 +89,7 @@ class AdminCartRulesControllerCore extends AdminController
 	protected function afterAdd($currentObject)
 	{
 		// Add restrictions for generic entities like country, carrier and group
-		foreach (array('country', 'carrier', 'group') as $type)
+		foreach (array('country', 'carrier', 'group', 'shop') as $type)
 			if (Tools::getValue($type.'_restriction') && is_array($array = Tools::getValue($type.'_select')) && count($array))
 			{
 				$values = array();
@@ -304,7 +304,7 @@ class AdminCartRulesControllerCore extends AdminController
 		if (Tools::isSubmit('newProductRule'))
 			die ($this->getProductRuleDisplay(Tools::getValue('product_rule_group_id'), Tools::getValue('product_rule_id'), Tools::getValue('product_rule_type')));
 		if (Tools::isSubmit('newProductRuleGroup') && $product_rule_group_id = Tools::getValue('product_rule_group_id'))
-			die ($this->getProductRuleGroupDisplay($product_rule_group_id, Tools::getValue('product_rule_group_'.$product_rule_group_id.'_quantity')));
+			die ($this->getProductRuleGroupDisplay($product_rule_group_id, Tools::getValue('product_rule_group_'.$product_rule_group_id.'_quantity', 1)));
 
 		if (Tools::isSubmit('customerFilter'))
 		{
@@ -386,10 +386,11 @@ class AdminCartRulesControllerCore extends AdminController
 				'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
 				'defaultLanguage' => Configuration::get('PS_LANG_DEFAULT'),
 				'currencies' => Currency::getCurrencies(),
-				'countries' => $current_object->getAssociatedRestrictions('country', 1),
-				'carriers' => $current_object->getAssociatedRestrictions('carrier', 1),
-				'groups' => $current_object->getAssociatedRestrictions('group', 0),
-				'cart_rules' => $current_object->getAssociatedRestrictions('cart_rule', 1),
+				'countries' => $current_object->getAssociatedRestrictions('country', true, true),
+				'carriers' => $current_object->getAssociatedRestrictions('carrier', true, true),
+				'groups' => $current_object->getAssociatedRestrictions('group', false, true),
+				'shops' => $current_object->getAssociatedRestrictions('shop', false, false),
+				'cart_rules' => $current_object->getAssociatedRestrictions('cart_rule', false, true),
 				'product_rule_groups' => $product_rule_groups,
 				'product_rule_groups_counter' => count($product_rule_groups),
 				'attribute_groups' => AttributeGroup::getAttributesGroups(Context::getContext()->language->id),
@@ -413,5 +414,4 @@ class AdminCartRulesControllerCore extends AdminController
 			$found = true;
 		echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
 	}
-
 }
