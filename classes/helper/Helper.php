@@ -79,15 +79,18 @@ class HelperCore
 	 */
 	public function createTemplate($tpl_name)
 	{
-		if ($this->context->controller instanceof ModuleAdminController)
+		if ($this->override_folder)
 		{
-			if ($this->override_folder && file_exists($this->context->controller->getTemplatePath().$this->override_folder.$tpl_name))
-				return $this->context->smarty->createTemplate($this->context->controller->getTemplatePath().$this->override_folder.$tpl_name);
+			if ($this->context->controller instanceof ModuleAdminController)
+				$override_tpl_path = $this->context->controller->getTemplatePath().$this->override_folder.$this->base_folder.$tpl_name;
+			else
+				$override_tpl_path = $this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$this->base_folder.$tpl_name;
 		}
-		else if ($this->override_folder && file_exists($this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$tpl_name))
-			return $this->context->smarty->createTemplate('controllers/'.$this->override_folder.$tpl_name);
 
-		return $this->context->smarty->createTemplate($this->base_folder.$tpl_name);
+		if (isset($override_tpl_path) && file_exists($override_tpl_path))
+			return $this->context->smarty->createTemplate($override_tpl_path);
+		else
+			return $this->context->smarty->createTemplate($this->base_folder.$tpl_name);
 	}
 
 	/**
@@ -323,7 +326,7 @@ class HelperCore
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$assos[$row['id_'.$type]] = $row['id_'.$type];
 		}
-		$tpl = $this->createTemplate('helper/assoshop.tpl');
+		$tpl = $this->createTemplate('helpers/assoshop.tpl');
 		$tpl->assign(array(
 			'input' => array(
 				'type' => $type,
@@ -369,7 +372,7 @@ class HelperCore
 			'token' => $this->token
 		);
 
-		$tpl = $this->createTemplate('helper/required_fields.tpl');
+		$tpl = $this->createTemplate('helpers/required_fields.tpl');
 		$tpl->assign($this->tpl_vars);
 
 		return $tpl->fetch();
