@@ -203,7 +203,7 @@
 			</div>
 		{if !count($files_to_import)}
 			<div class="warn" style="margin-top: 20px;">
-				<p>{l s='There is no CSV file available, please upload one using the form above.'}</p>
+				<p>{l s='There is no CSV file available, please upload one using the \'Upload\' button above.'}</p>
 				<ul>
 				<li>{l s='You can read informations on CSV import at:'} <a href="http://www.prestashop.com/wiki/Troubleshooting_6/" target="_blank">http://www.prestashop.com/wiki/Troubleshooting_6/</a></li>	
 					<li>
