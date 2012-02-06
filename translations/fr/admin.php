@@ -4025,6 +4025,7 @@ $_LANGADM['AdminProductsc820e0c1d4ae16db218626f49e7916b1'] = 'Ko max.';
 $_LANGADM['AdminProductsc795dfff10a7c952f4c5438951e9ece9'] = 'Image de couverture';
 $_LANGADM['AdminProducts004bf6c9a40003140292e97330236c53'] = 'Action';
 $_LANGADM['AdminProducts7be66046997731ac05844f11ee4f6a76'] = 'Supprimer cette image';
+$_LANGADM['AdminProducts26de4d3e04796d6486136c5b8203c3ac'] = 'Ajouter une image';
 $_LANGADM['AdminProducts4ce8e7777d2385ce6123d0083d8d8cb4'] = 'L\'image a été ajoutée avec succès';
 $_LANGADM['AdminProducts729a51874fe901b092899e9e8b31c97a'] = 'Êtes-vous sûr ?';
 $_LANGADM['AdminProductse187fd4d086ab8cf9144f2b1b7a68b93'] = 'Infos.';
