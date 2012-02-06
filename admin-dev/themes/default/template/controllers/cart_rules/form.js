@@ -28,6 +28,7 @@ function addProductRuleGroup()
 {
 	product_rule_groups_counter += 1;
 	product_rule_counters[product_rule_groups_counter] = 0;
+
 	$.get(
 		'ajax-tab.php',
 		{controller:'AdminCartRules',token:currentToken,newProductRuleGroup:1,product_rule_group_id:product_rule_groups_counter},
@@ -93,7 +94,7 @@ function updateProductRuleShortDescription(item)
 		$('#' + id2 + '_match').val(length);
 }
 
-var restrictions = new Array('country', 'carrier', 'group', 'cart_rule');
+var restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop');
 for (i in restrictions)
 {
 	toggleCartRuleFilter($('#' + restrictions[i] + '_restriction'));

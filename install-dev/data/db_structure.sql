@@ -216,6 +216,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`group_restriction` tinyint(1) unsigned NOT NULL default 0,
 	`cart_rule_restriction` tinyint(1) unsigned NOT NULL default 0,
 	`product_restriction` tinyint(1) unsigned NOT NULL default 0,
+	`shop_restriction` tinyint(1) unsigned NOT NULL default 0,
 	`free_shipping` tinyint(1) NOT NULL default 0,
 	`reduction_percent` decimal(5,2) NOT NULL default 0,
 	`reduction_amount` decimal(17,2) NOT NULL default 0,
@@ -285,6 +286,12 @@ CREATE TABLE `PREFIX_cart_cart_rule` (
   `id_cart_rule` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_cart`,`id_cart_rule`),
   KEY (`id_cart_rule`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_cart_rule_shop` (
+	`id_cart_rule` int(10) unsigned NOT NULL,
+	`id_shop` int(10) unsigned NOT NULL,
+	PRIMARY KEY  (`id_cart_rule`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_cart_product` (

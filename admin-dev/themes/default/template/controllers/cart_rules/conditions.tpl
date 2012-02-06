@@ -180,3 +180,35 @@
 		<img src="../img/admin/add.gif" alt="{l s='Add'}" title="{l s='Add'}" /> {l s='Add a new rule group'}
 	</a>
 </div>
+{if $shops.unselected|@count + $shops.selected|@count > 1}
+<br />
+<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} /> <strong>{l s='Shop selection'}</strong>
+<div id="shop_restriction_div" style="border:1px solid #AAAAAA;margin-top:10px;padding:0 10px 10px 10px;background-color:#FFF5D3">
+	<table>
+		<tr>
+			<td>
+				<p><strong>{l s='Selected shops'}</strong></p>
+				<select name="shop_select[]" id="shop_select_2" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$shops.selected item='shop'}
+						<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name}</option>
+					{/foreach}
+				</select><br /><br />
+				<a style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="shop_select_remove">
+					{l s='Remove'} &gt;&gt;
+				</a>
+			</td>
+			<td style="padding-left:20px;">
+				<p><strong>{l s='Unselected shops'}</strong></p>
+				<select id="shop_select_1" style="border:1px solid #AAAAAA;width:400px;height:160px" multiple>
+					{foreach from=$shops.unselected item='shop'}
+						<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name}</option>
+					{/foreach}
+				</select><br /><br />
+				<a style="text-align:center;display:block;border:1px solid #aaa;text-decoration:none;background-color:#fafafa;color:#123456;margin:2px;padding:2px" id="shop_select_add">
+					&lt;&lt; {l s='Add'}
+				</a>
+			</td>
+		</tr>
+	</table>
+</div>
+{/if}
