@@ -127,6 +127,10 @@
 			</div>
 		{/foreach}
 	</div>
+	
+	<div style="margin-top: 10px">
+	<input type="button" value="{l s='Save'}" onClick="btn_save_and_stay.click()"/>
+	</div>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
