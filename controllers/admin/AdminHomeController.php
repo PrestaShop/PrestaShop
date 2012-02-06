@@ -277,7 +277,7 @@ class AdminHomeControllerCore extends AdminController
 	{
 		$currency = Tools::setCurrency($this->context->cookie);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT SUM(o.`total_paid_real` / o.conversion_rate) as total_sales, COUNT(*) as total_orders
+		SELECT IFNULL(SUM(o.`total_paid_real` / o.conversion_rate), "0") as total_sales, COUNT(*) as total_orders
 		FROM `'._DB_PREFIX_.'orders` o
 		WHERE o.valid = 1
 		AND o.`invoice_date` BETWEEN \''.date('Y-m').'-01 00:00:00\' AND \''.date('Y-m').'-31 23:59:59\' ');
