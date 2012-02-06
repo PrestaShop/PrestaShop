@@ -40,7 +40,8 @@
 				});
 
 				// Make sure the checkbox is checked/unchecked when the link is clicked
-				$('#toggle_category_tree').bind('click', function(){
+				$('#toggle_category_tree').bind('click', function(event){
+					event.preventDefault();
 					$('#block_category_tree').toggle();
 					if ($('#block_category_tree').is(':visible'))
 						$(this).find('input').attr('checked', 'checked');
