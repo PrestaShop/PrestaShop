@@ -527,6 +527,25 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		// given the current state, loads available states
 		$states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
+
+		// gets the state that are not allowed
+		$allowed_states = array();
+		foreach ($states as &$state)
+		{
+			$allowed_states[] = $state['id_supply_order_state'];
+			$state['allowed'] = 1;
+		}
+		$not_allowed_states = SupplyOrderState::getStates($allowed_states);
+
+		// generates the final list of states
+		$index = count($allowed_states);
+		foreach ($not_allowed_states as &$not_allowed_state)
+		{
+			$not_allowed_state['allowed'] = 0;
+			$states[$index] = $not_allowed_state;
+			++$index;
+		}
+
 		// loads languages
 		$this->getlanguages();
 
@@ -536,28 +555,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'title' => $this->l('Supply Order Status'),
 				'image' => '../img/admin/cms.gif'
 			),
-			'input' => array(
-				array(
-					'type' => 'hidden',
-					'name' => 'id_supply_order',
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Status of the order:'),
-					'name' => 'id_supply_order_state',
-					'required' => false,
-					'options' => array(
-						'query' => $states,
-						'id' => 'id_supply_order_state',
-						'name' => 'name'
-					),
-					'desc' => $this->l('Choose the new status of your order')
-				),
-			),
-			'submit' => array(
-				'title' => $this->l('   Save   '),
-				'class' => 'button'
-			)
 		);
 
 		$this->displayInformation($this->l('Be careful when changing status. Some of them cannot be changed afterwards. (Canceled, for instance).'));
@@ -573,10 +570,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->languages = $this->_languages;
 		$helper->default_form_language = $this->default_form_language;
 		$helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-		$helper->fields_value = array(
-			'id_supply_order_state' => Tools::getValue('id_supplier', ''),
-			'id_supply_order' => $id_supply_order,
-		);
 
 		//$this->setHelperDisplay($helper);
 		$helper->override_folder = 'supply_orders_change_state/';
@@ -585,6 +578,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->tpl_vars['show_change_state_form'] = true;
 		$helper->tpl_vars['supply_order_state'] = $supply_order_state;
 		$helper->tpl_vars['supply_order'] = $supply_order;
+		$helper->tpl_vars['supply_order_states'] = $states;
 
 		// generates the form to display
 		$content = $helper->generateForm($this->fields_form);
