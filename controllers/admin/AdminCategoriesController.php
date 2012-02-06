@@ -405,10 +405,6 @@ class AdminCategoriesControllerCore extends AdminController
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
 					'desc' => $this->l('Mark all groups you want to give access to this category')
-				),
-				array(
-					'type' => 'module',
-					'name' => 'module'
 				)
 			),
 			'submit' => array(
