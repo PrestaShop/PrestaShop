@@ -584,6 +584,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// assigns our content
 		$helper->tpl_vars['show_change_state_form'] = true;
 		$helper->tpl_vars['supply_order_state'] = $supply_order_state;
+		$helper->tpl_vars['supply_order'] = $supply_order;
 
 		// generates the form to display
 		$content = $helper->generateForm($this->fields_form);
