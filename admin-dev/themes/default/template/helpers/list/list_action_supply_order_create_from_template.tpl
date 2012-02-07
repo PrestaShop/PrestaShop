@@ -24,5 +24,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <a href="{$href}" onclick="return confirm('{$confirm}');" title="{$action}">
-	<img src="../img/admin/copy_files.gif" alt="{$action}" />
+	<img src="../img/admin/duplicate.png" alt="{$action}" />
 </a>

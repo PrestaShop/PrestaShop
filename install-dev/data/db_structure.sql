@@ -2186,7 +2186,7 @@ CREATE TABLE `PREFIX_supply_order` (
 `id_supply_order_state` INT(11) UNSIGNED NOT NULL,
 `id_currency` INT(11) UNSIGNED NOT NULL,
 `id_ref_currency` INT(11) UNSIGNED NOT NULL,
-`reference` VARCHAR(32) NOT NULL,
+`reference` VARCHAR(64) NOT NULL,
 `date_add` DATETIME NOT NULL,
 `date_upd` DATETIME NOT NULL,
 `date_delivery_expected` DATETIME DEFAULT NULL,
