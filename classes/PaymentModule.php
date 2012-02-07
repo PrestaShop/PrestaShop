@@ -87,6 +87,7 @@ abstract class PaymentModuleCore extends Module
 		$secure_key = false, Shop $shop = null)
 	{
 		$cart = new Cart($id_cart);
+		$this->context->cart = $cart;
 
 		if (!$shop)
 			$shop = Context::getContext()->shop;
