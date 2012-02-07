@@ -654,7 +654,7 @@ class ValidateCore
 	}
 
 	/**
-	 * Check url valdity (disallowed empty string)
+	 * Check url validity (disallowed empty string)
 	 *
 	 * @param string $url Url to validate
 	 * @return boolean Validity is ok or not
@@ -662,6 +662,17 @@ class ValidateCore
 	public static function isUrl($url)
 	{
 		return preg_match('/^[~:#,%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+	}
+
+	/**
+	 * Check tracking number validity (disallowed empty string)
+	 *
+	 * @param string $tracking_number Tracking number to validate
+	 * @return boolean Validity is ok or not
+	 */
+	public static function isTrackingNumber($tracking_number)
+	{
+		return preg_match('/^[~:#,%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $tracking_number);
 	}
 
 	/**

@@ -185,7 +185,7 @@ class StockMvtCore extends ObjectModel
 	 */
 	public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity, $id_warehouse = null)
 	{
-		$mvts = array();
+		$movements = array();
 		$quantity_total = 0;
 
 		$query = new DbQuery();
@@ -205,10 +205,10 @@ class StockMvtCore extends ObjectModel
 			if ($quantity_total >= $quantity)
 				break;
 			$quantity_total += (int)$row['physical_quantity'];
-			$mvts[] = $row;
+			$movements[] = $row;
 		}
 
-		return $mvts;
+		return $movements;
 	}
 
 	/**
