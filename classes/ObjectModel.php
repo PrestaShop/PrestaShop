@@ -849,98 +849,50 @@ abstract class ObjectModelCore
 			unset($default_resource_parameters['retrieveData']['retrieveMethod']);
 
 		$resource_parameters = array_merge_recursive($default_resource_parameters, $this->{$ws_params_attribute_name});
-		if (isset($this->fieldsSize))
-			foreach ($this->fieldsSize as $field_name => $max_size)
-			{
-				if (!isset($resource_parameters['fields'][$field_name]))
-					$resource_parameters['fields'][$field_name] = array('required' => false);
-				$resource_parameters['fields'][$field_name] = array_merge(
-					$resource_parameters['fields'][$field_name],
-					$resource_parameters['fields'][$field_name] = array('sqlId' => $field_name, 'maxSize' => $max_size, 'i18n' => false)
-				);
-			}
-		if (isset($this->fieldsValidate))
-			foreach ($this->fieldsValidate as $field_name => $validate_method)
-			{
-				if (!isset($resource_parameters['fields'][$field_name]))
-					$resource_parameters['fields'][$field_name] = array('required' => false);
-				$resource_parameters['fields'][$field_name] = array_merge(
-					$resource_parameters['fields'][$field_name],
-					$resource_parameters['fields'][$field_name] = array(
-						'sqlId' => $field_name,
-						'validateMethod' => (
-								array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
-								array_merge($resource_parameters['fields'][$field_name]['validateMethod'], array($validate_method)) :
-								array($validate_method)
-							),
-						'i18n' => false
-					)
-				);
-			}
-		if (isset($this->fieldsRequired))
+		$definition = ObjectModel::getDefinition($this);
+
+		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array());
+		foreach ($definition['fields'] as $field_name => $details)
 		{
-			$fieldsRequired = array_merge(
-				$this->fieldsRequired,
-				(isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array())
-			);
-			foreach ($fieldsRequired as $field_required)
+			if (!isset($resource_parameters['fields'][$field_name]))
+				$resource_parameters['fields'][$field_name] = array();
+			$current_field = array();
+			$current_field['sqlId'] = $field_name;
+	
+			if (isset($details['size']))
+				$current_field['maxSize'] = $details['size'];
+			
+			if (isset($details['lang']))
+				$current_field['i18n'] = $details['lang'];
+			else
+				$current_field['i18n'] = false;
+			
+			
+			if ((isset($details['required']) && $details['required'] === true) || in_array($field_name, $required_fields))
+				$current_field['required'] = true;
+			else
+				$current_field['required'] = false;
+			
+			
+			if (isset($details['validate']))
 			{
-				if (!isset($resource_parameters['fields'][$field_required]))
-					$resource_parameters['fields'][$field_required] = array();
-				$resource_parameters['fields'][$field_required] = array_merge(
-					$resource_parameters['fields'][$field_required],
-					$resource_parameters['fields'][$field_required] = array('sqlId' => $field_required, 'required' => true, 'i18n' => false)
-				);
+				$current_field['validateMethod'] = (
+ 								array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
+ 								array_merge($resource_parameters['fields'][$field_name]['validateMethod'], array($details['validate'])) :
+ 								array($details['validate'])
+ 							);
 			}
+			$resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
 		}
-		if (isset($this->fieldsSizeLang))
-			foreach ($this->fieldsSizeLang as $field_name => $max_size)
-			{
-				if (!isset($resource_parameters['fields'][$field_name]))
-					$resource_parameters['fields'][$field_name] = array('required' => false);
-				$resource_parameters['fields'][$field_name] = array_merge(
-					$resource_parameters['fields'][$field_name],
-					$resource_parameters['fields'][$field_name] = array('sqlId' => $field_name, 'maxSize' => $max_size, 'i18n' => true)
-				);
-			}
-		if (isset($this->fieldsValidateLang))
-			foreach ($this->fieldsValidateLang as $field_name => $validate_method)
-			{
-				if (!isset($resource_parameters['fields'][$field_name]))
-					$resource_parameters['fields'][$field_name] = array('required' => false);
-				$resource_parameters['fields'][$field_name] = array_merge(
-					$resource_parameters['fields'][$field_name],
-					$resource_parameters['fields'][$field_name] = array(
-						'sqlId' => $field_name,
-						'validateMethod' => (
-								array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
-								array_merge($resource_parameters['fields'][$field_name]['validateMethod'], array($validate_method)) :
-								array($validate_method)
-							),
-						'i18n' => true
-					)
-				);
-			}
-
-		if (isset($this->fieldsRequiredLang))
-			foreach ($this->fieldsRequiredLang as $field)
-			{
-				if (!isset($resource_parameters['fields'][$field]))
-					$resource_parameters['fields'][$field] = array();
-				$resource_parameters['fields'][$field] = array_merge(
-					$resource_parameters['fields'][$field],
-					$resource_parameters['fields'][$field] = array('sqlId' => $field, 'required' => true, 'i18n' => true)
-				);
-			}
-
 		if (isset($this->date_add))
 			$resource_parameters['fields']['date_add']['setter'] = false;
 		if (isset($this->date_upd))
 			$resource_parameters['fields']['date_upd']['setter'] = false;
-
-		foreach ($resource_parameters['fields'] as $key => &$resource_parameters_field)
+		
+		
+		foreach ($resource_parameters['fields'] as $key => $resource_parameters_field)
 			if (!isset($resource_parameters_field['sqlId']))
-				$resource_parameters['sqlId'] = $key;
+				$resource_parameters['fields'][$key]['sqlId'] = $key;
 		return $resource_parameters;
 	}
 
