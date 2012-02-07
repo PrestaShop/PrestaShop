@@ -267,6 +267,9 @@ class InstallXmlLoader
 				$xpath_query = $entity.'[@id="'.$identifier.'"]';
 				foreach ($xml_langs as $id_lang => $xml_lang)
 				{
+					if (!$xml_lang)
+						continue;
+
 					if (($node_lang = $xml_lang->xpath($xpath_query)) || ($node_lang = $xml_langs[$default_lang]->xpath($xpath_query)))
 					{
 						$node_lang = $node_lang[0];
