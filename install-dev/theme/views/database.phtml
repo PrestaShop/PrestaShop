@@ -57,20 +57,6 @@
 	</div>
 </div>
 
-<!-- Install type (with fixtures or not) -->
-<div id="dbTableParam">
-	<div>
-		<h2><?php echo $this->l('Installation type') ?></h2>
-		<p id="dbModeSetter" style="line-height: 20px;">
-			<input value="lite" type="radio" name="db_mode" id="db_mode_simple" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> />
-			<label for="db_mode_simple"><?php echo $this->l('Simple mode: Basic installation (FREE)'); ?></label><br />
-
-			<input value="full" type="radio" name="db_mode" id="db_mode_complet" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> />
-			<label for="db_mode_complet"><?php echo $this->l('Sandbox mode: includes demo products (FREE)') ?></label>
-		</p>
-	</div>
-</div>
-
 <!-- Email configuration -->
 <div id="mailPart">
 	<h2><?php echo $this->l('E-mail delivery set-up') ?></h2>
