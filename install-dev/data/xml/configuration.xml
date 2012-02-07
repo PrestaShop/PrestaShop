@@ -857,5 +857,11 @@
     <configuration id="PS_SHOP_ACTIVITY" name="PS_SHOP_ACTIVITY">
       <value>10</value>
     </configuration>
+    <configuration id="PS_LOGO" name="PS_LOGO">
+      <value>logo-1.jpg</value>
+    </configuration>
+    <configuration id="PS_LOGO_1" name="PS_LOGO">
+      <value>logo.jpg</value>
+    </configuration>
   </entities>
 </entity_configuration>

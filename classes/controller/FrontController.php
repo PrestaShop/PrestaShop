@@ -670,7 +670,8 @@ class FrontControllerCore extends Controller
 			'logo_image_width' => Configuration::get('SHOP_LOGO_WIDTH'),
 			'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
-			'content_only' => (int)Tools::getValue('content_only')
+			'content_only' => (int)Tools::getValue('content_only'),
+			'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')
 		));
 	}
 

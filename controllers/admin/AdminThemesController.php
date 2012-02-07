@@ -88,13 +88,13 @@ class AdminThemesControllerCore extends AdminController
 			'tab' => 'AdminStores',
 		)
 	);
+	
+	public $className = 'Theme';
+	public $table = 'theme';
 
-	public function __construct()
+	public function init()
 	{
-		$this->className = 'Theme';
-		$this->table = 'theme';
-
-		parent::__construct();
+		parent::init();
 
 		// Thumbnails filenames depend on multishop activation
 		if (Shop::isFeatureActive())
@@ -107,16 +107,16 @@ class AdminThemesControllerCore extends AdminController
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
 				'fields' =>	array(
-					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
-					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (file_exists(_PS_IMG_DIR_.'logo_mail'.$shop_suffix.'.jpg')) ? _PS_IMG_.'logo_mail'.$shop_suffix.'.jpg?date='.time() : _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
-					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => file_exists(_PS_IMG_DIR_.'logo_invoice'.$shop_suffix.'.jpg') ? _PS_IMG_.'logo_invoice'.$shop_suffix.'.jpg?date='.time() : _PS_IMG_.'logo'.$shop_suffix.'.jpg?date='.time()),
+					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
+					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
+					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
 					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => _PS_IMG_.'favicon'.$shop_suffix.'.ico?date='.time()),
 					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => _PS_IMG_.'logo_stores'.$shop_suffix.'.gif?date='.time()),
 					'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
- 			),
- 		);
+			),
+		);
 
 		$this->fieldsDisplay = array(
 			'id_theme' => array(
@@ -291,23 +291,14 @@ class AdminThemesControllerCore extends AdminController
 		$content = '';
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
 		{
-			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.'logo.jpg');
+			list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO'));
 			Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 		}
 		// No cache for auto-refresh uploaded logo
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		//	$this->displayOptionsList();
 
-/*		if (@ini_get('allow_url_fopen') AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
-			$content .= '<script type="text/javascript">
-				$.post("'.dirname(self::$currentIndex).'/ajax.php",{page:"themes"},function(a){getE("prestastore-content").innerHTML="<legend><img src=\"../img/admin/prestastore.gif\" class=\"middle\" /> '.$this->l('Live from PrestaShop Addons!').'</legend>"+a;});
-			</script>
-			<fieldset id="prestastore-content" class="width3">ZZZZZ</fieldset>';
-		else
-			$content .= '<a href="http://addons.prestashop.com/3-prestashop-themes">'.$this->l('Find new themes on PrestaShop Addons!').'</a>';
-			*/
 		$this->content .= $content;
 		return parent::initContent();
 	}
@@ -453,10 +444,15 @@ class AdminThemesControllerCore extends AdminController
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO']['tmp_name'], $tmp_name))
 				return false;
-			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo.jpg'))
-				$this->errors[] = 'an error occurred during logo copy';
+			if (($id_shop == Configuration::get('PS_SHOP_DEFAULT') || $id_shop == 0) && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo.jpg'))
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+				
 			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo-'.(int)$id_shop.'.jpg'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+			else
+				Configuration::updateValue('PS_LOGO', 'logo-'.(int)$id_shop.'.jpg');
+			
+			Configuration::updateGlobalValue('PS_LOGO', 'logo.jpg');
 
 			unlink($tmp_name);
 		}
@@ -476,9 +472,14 @@ class AdminThemesControllerCore extends AdminController
 			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO_MAIL']['tmp_name'], $tmp_name))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_mail.jpg'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
 			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_mail-'.(int)$id_shop.'.jpg'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+			else
+				Configuration::updateValue('PS_LOGO_MAIL', 'logo_mail-'.(int)$id_shop.'.jpg');
+			
+			Configuration::updateGlobalValue('PS_LOGO_MAIL', 'logo_mail.jpg');
+			
 			unlink($tmp_name);
 		}
 	}
@@ -497,9 +498,13 @@ class AdminThemesControllerCore extends AdminController
 			if (!$tmp_name || !move_uploaded_file($_FILES['PS_LOGO_INVOICE']['tmp_name'], $tmp_name))
 				return false;
 			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_invoice.jpg'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
 			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_invoice-'.(int)$id_shop.'.jpg'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+			else
+				Configuration::updateValue('PS_LOGO_INVOICE', 'logo_invoice-'.(int)$id_shop.'.jpg');
+			
+			Configuration::updateGlobalValue('PS_LOGO_INVOICE', 'logo_invoice.jpg');
 
 			unlink($tmp_name);
 		}
@@ -519,9 +524,9 @@ class AdminThemesControllerCore extends AdminController
 			if (!$tmp_name || !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmp_name))
 				return false;
 			if ($id_shop = Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores.gif'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
 			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores-'.(int)$id_shop.'.gif'))
-				$this->errors[] = 'an error occurred during logo copy';
+				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
 			unlink($tmp_name);
 		}
 
@@ -540,7 +545,7 @@ class AdminThemesControllerCore extends AdminController
 
 			// Copy new ico
 			elseif (!copy($_FILES[$name]['tmp_name'], $dest))
-				$this->errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
+				$this->errors[] = sprintf(Tools::displayError('An error occurred while uploading favicon: %s to %s'), $_FILES[$name]['tmp_name'], $dest);
 		}
 		return !count($this->errors) ? true : false;
 	}
