@@ -858,9 +858,6 @@
       <value>10</value>
     </configuration>
     <configuration id="PS_LOGO" name="PS_LOGO">
-      <value>logo-1.jpg</value>
-    </configuration>
-    <configuration id="PS_LOGO_1" name="PS_LOGO">
       <value>logo.jpg</value>
     </configuration>
     <configuration id="PS_FAVICON" name="PS_FAVICON">
