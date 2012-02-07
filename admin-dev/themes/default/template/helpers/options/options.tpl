@@ -208,6 +208,14 @@
 		{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
 		</fieldset><br />
 	{/foreach}
+	{hook h='displayAdminOptions'}
+	{if isset($name_controller)}
+		{capture name=hookName assign=hookName}display{$name_controller|ucfirst}Options{/capture}
+		{hook h=$hookName}
+	{elseif isset($smarty.get.controller)}
+		{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}Options{/capture}
+		{hook h=$hookName}
+	{/if}
 </form>
 {/block}
 {block name="after"}{/block}
