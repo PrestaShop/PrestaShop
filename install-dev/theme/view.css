@@ -215,9 +215,13 @@ div.field {
 		width:245px;
 		vertical-align: top;
 }
+        div.field div.contentinput label {
+            display:inline;
+            margin-right: 10px;
+        }
 	div.field .userInfos {
 		display:inline-block;
-		width:200px;
+		width:210px;
 		font-size:11px;
 		font-family:Georgia;
 		font-style:italic;

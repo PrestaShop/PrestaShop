@@ -38,6 +38,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		// Save shop configuration
 		$this->session->shop_name = trim(Tools::getValue('shop_name'));
 		$this->session->shop_activity = Tools::getValue('shop_activity');
+		$this->session->install_type = Tools::getValue('db_mode');
 		$this->session->shop_country = Tools::getValue('shop_country');
 		$this->session->shop_timezone = Tools::getValue('shop_timezone');
 
@@ -419,6 +420,9 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		);
 		sort($list_activities);
 		$this->list_activities = $list_activities;
+
+		// Install type
+		$this->install_type = ($this->session->install_type) ? $this->session->install_type : 'full';
 
 		$this->displayTemplate('configure');
 	}

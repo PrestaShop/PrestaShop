@@ -34,6 +34,22 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<p class="userInfos aligned"><?php echo $this->l('This information is not required, it will only be used for statistical purposes. This information does not change anything in your store.') ?></p>
 	</div>
 
+	<!-- Install type (with fixtures or not) -->
+	<div class="field clearfix">
+		<label class="aligned"><?php echo $this->l('Install demo products:') ?></label>
+		<div class="contentinput">
+			<label>
+				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> />
+				<?php echo $this->l('Yes') ?>
+			</label>
+			<label>
+				<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite'): ?>checked="checked"<?php endif; ?> />
+				<?php echo $this->l('No'); ?>
+			</label>
+		</div>
+		<p class="userInfos aligned"><?php echo $this->l('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.') ?></p>
+	</div>
+
 	<!-- Country list -->
 	<div class="field clearfix">
 		<label for="infosCountry" class="aligned"><?php echo $this->l('Default country:') ?></label>

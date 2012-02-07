@@ -12,7 +12,7 @@ function start_install()
 	if (is_installing)
 		return;
 	is_installing = true;
-	
+
 	$('.process_step').removeClass('fail').removeClass('success').hide();
 	$('.error_log').hide();
 	$('#progress_bar').show();
@@ -88,7 +88,7 @@ function install_error(step, errors)
 		var list_errors = errors;
 		if ($.type(list_errors) == 'string')
 			list_errors = [list_errors];
-		
+
 		var display = '<ol>';
 		$.each(list_errors, function(k, v)
 		{

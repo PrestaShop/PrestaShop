@@ -54,8 +54,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 	 */
 	public function processNextStep()
 	{
-		$this->session->install_type = Tools::getValue('db_mode');
-
 		// Save database config
 		$this->session->database_server = trim(Tools::getValue('dbServer'));
 		$this->session->database_name = trim(Tools::getValue('dbName'));
@@ -151,7 +149,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 	 */
 	public function display()
 	{
-		if (!$this->session->install_type)
+		if (!$this->session->database_server)
 		{
 			if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 			{
@@ -174,7 +172,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			}
 
 			$this->database_clear = true;
-			$this->install_type = 'full';
 			$this->use_smtp = false;
 			$this->smtp_server = 'smtp.';
 			$this->smtp_encryption = 'off';
@@ -192,7 +189,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 			$this->database_prefix = $this->session->database_prefix;
 			$this->database_clear = $this->session->database_clear;
 
-			$this->install_type = $this->session->install_type;
 			$this->use_smtp = $this->session->use_smtp;
 			$this->smtp_server = $this->session->smtp_server;
 			$this->smtp_encryption = $this->session->smtp_encryption;
