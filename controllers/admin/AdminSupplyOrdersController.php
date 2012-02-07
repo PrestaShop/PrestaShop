@@ -55,7 +55,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'reference' => array(
 				'title' => $this->l('Reference'),
-				'width' => 130,
+				'width' => 250,
 				'havingFilter' => true
 			),
 			'supplier' => array(
@@ -477,10 +477,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		unset($this->toolbar_btn['export-csv-orders']);
 		unset($this->toolbar_btn['export-csv-details']);
 		// adds actions
-		$this->addRowAction('delete');
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('createsupplyorder');
+		$this->addRowAction('delete');
 		// unsets some fields
 		unset($this->fieldsDisplay['state'],
 			  $this->fieldsDisplay['date_upd'],
@@ -1205,6 +1205,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		{
 			// header
 			header('Content-type: text/csv');
+			header('Content-Type: application/force-download; charset=UTF-8');
 			header('Cache-Control: no-store, no-cache');
         	header('Content-disposition: attachment; filename="'.$this->l('supply_orders_details').'.csv"');
 
@@ -2076,8 +2077,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$entries = $supply_order->getEntriesCollection($supply_order->id_lang);
 
 		// updates SupplyOrder so that it is not a template anymore
+		$language = new Language($supply_order->id_lang);
 		$ref = $supply_order->reference;
-		$ref .= ' ('.date('H:i:s').')';
+		$ref .= ' ('.date($language->date_format_full).')';
 		$supply_order->reference = $ref;
 		$supply_order->is_template = 0;
 		$supply_order->id = (int)0;
