@@ -36,7 +36,7 @@
 		<meta name="keywords" content="{$meta_keywords|escape:'htmlall':'UTF-8'}" />
 {/if}
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,follow" />
-		<link rel="shortcut icon" href="{$img_ps_dir}favicon.ico" />
+		<link rel="shortcut icon" href="{$favicon_url}" />
 		<link href="{$css_dir}maintenance.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>

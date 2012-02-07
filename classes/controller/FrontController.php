@@ -540,6 +540,7 @@ class FrontControllerCore extends Controller
 		if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))
 		{
 			header('HTTP/1.1 503 temporarily overloaded');
+			$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
 			$this->context->smarty->display(_PS_THEME_DIR_.'maintenance.tpl');
 			exit;
 		}
@@ -549,6 +550,7 @@ class FrontControllerCore extends Controller
 	protected function displayRestrictedCountryPage()
 	{
 		header('HTTP/1.1 503 temporarily overloaded');
+		$this->context->smarty->assign('favicon_url', _PS_IMG_.Configuration::get('PS_FAVICON'));
 		$this->context->smarty->display(_PS_THEME_DIR_.'restricted-country.tpl');
 		exit;
 	}
@@ -671,7 +673,8 @@ class FrontControllerCore extends Controller
 			'logo_image_height' => Configuration::get('SHOP_LOGO_HEIGHT'),
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only'),
-			'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')
+			'logo_url' => _PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME'),
+			'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
 		));
 	}
 
