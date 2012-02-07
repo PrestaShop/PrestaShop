@@ -47,7 +47,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
 		// header informations
 		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
-		$this->title = HTMLTemplateSupplyOrderForm::l('Supply order form').sprintf(' %s', $supply_order->reference);
+		$this->title = HTMLTemplateSupplyOrderForm::l('Supply order form');
 	}
 
 	/**
@@ -117,14 +117,36 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	}
 
 	/**
+	 * @see HTMLTemplate::getHeader()
+	 */
+	public function getHeader()
+	{
+		$shop_name = '';
+		if (Validate::isLoadedObject($this->shop))
+			$shop_name = $this->shop->name;
+
+		$this->smarty->assign(array(
+			'logo_path' => $this->getLogo(),
+			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
+			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
+			'title' => $this->title,
+			'reference' => $this->supply_order->reference,
+			'date' => $this->date,
+			'shop_name' => $shop_name
+		));
+
+		return $this->smarty->fetch(_PS_THEME_DIR_.'/pdf/supply-order-header.tpl');
+	}
+
+	/**
 	 * @see HTMLTemplate::getFooter()
 	 */
 	public function getFooter()
 	{
 		$this->address = $this->address_warehouse;
-		$free_text = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
-		$free_text .= ' - ';
-		$free_text .= HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
+		$free_text = array();
+		$free_text[] = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
+		$free_text[] = HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
 
 		$this->smarty->assign(array(
 			'shop_address' => $this->getShopAddress(),
