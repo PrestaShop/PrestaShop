@@ -1614,17 +1614,14 @@ class ToolsCore
 			fwrite($write_fd, "\n# Disable Multiviews\nOptions -Multiviews\n\n");
 
 		fwrite($write_fd, "RewriteEngine on\n\n");
-		$utf8 = '';
-		if (Tools::checkPCREUTF8())
-			$utf8 = '(*UTF8)';
 		foreach ($domains as $domain => $list_uri)
 			foreach ($list_uri as $uri)
 				// Rewrite virtual multishop uri
 				if ($uri['virtual'])
 				{
 					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
-					fwrite($write_fd, 'RewriteRule ^'.$utf8.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
-					fwrite($write_fd, 'RewriteRule ^'.$utf8.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
+					fwrite($write_fd, 'RewriteRule ^'.trim($uri['virtual'], '/').'$ '.$uri['physical'].$uri['virtual']."index.php [L,R]\n");
+					fwrite($write_fd, 'RewriteRule ^'.ltrim($uri['virtual'], '/').'(.*) '.$uri['physical']."$1 [L]\n\n");
 				}
 
 		// Webservice
@@ -1636,8 +1633,8 @@ class ToolsCore
 			fwrite($write_fd, "# Images\n");
 			if (Configuration::get('PS_LEGACY_IMAGES'))
 			{
-				fwrite($write_fd, 'RewriteRule '.$utf8.'^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
-				fwrite($write_fd, 'RewriteRule '.$utf8.'^([0-9]+)\-([0-9]+)(-[0-9]+)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
+				fwrite($write_fd, 'RewriteRule ^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3$4.jpg [L]'."\n");
+				fwrite($write_fd, 'RewriteRule ^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.'$1-$2$3.jpg [L]'."\n");
 			}
 
 			// Rewrite product images < 100 millions
@@ -1650,10 +1647,10 @@ class ToolsCore
 					$img_name .= '$'.$j;
 				}
 				$img_name .= '$'.$j;
-				fwrite($write_fd, 'RewriteRule '.$utf8.'^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/[_a-zA-Z0-9-\pL]*\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
+				fwrite($write_fd, 'RewriteRule ^'.str_repeat('([0-9])', $i).'(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ '._PS_PROD_IMG_.$img_path.$img_name.'$'.($j + 1).".jpg [L]\n");
 			}
-			fwrite($write_fd, 'RewriteRule '.$utf8.'^c/([0-9]+)(\-[_a-zA-Z0-9-\pL]*)(-[0-9]+)?/[_a-zA-Z0-9-]*\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
-			fwrite($write_fd, 'RewriteRule '.$utf8.'^c/([a-zA-Z-]+)(-[0-9]+)?/[a-zA-Z0-9-\pL]+\.jpg$ img/c/$1$2.jpg [L]'."\n");
+			fwrite($write_fd, 'RewriteRule ^c/([0-9]+)(\-[_a-zA-Z0-9-\.*]*)(-[0-9]+)?/.+\.jpg$ img/c/$1$2$3.jpg [L]'."\n");
+			fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ img/c/$1$2.jpg [L]'."\n");
 		}
 
 		// Redirections to dispatcher
@@ -1696,7 +1693,7 @@ FileETag INode MTime Size
 		}
 
 		// In case the user hasn't rewrite mod enabled
-		fwrite($write_fd, '#If rewrite mod isn\'t enabled\n');
+		fwrite($write_fd, "#If rewrite mod isn't enabled\n");
 		fwrite($write_fd, 'ErrorDocument 404 '.$uri['physical']."index.php?controller=404\n\n");
 
 		fwrite($write_fd, "# ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
@@ -2196,20 +2193,6 @@ FileETag INode MTime Size
 			if (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))
 				$filtered_files[] = $dir.'/'.$file;
 		return $filtered_files;
-	}
-
-	/**
-	 * @static
-	 * @return bool
-	 */
-	public static function checkPCREUTF8()
-	{
-		$return = true;
-		$regexd = preg_replace('/[\x{0430}-\x{04FF}]/iu', '', '-АБВГД-');
-		if ($regexd != '--')
-			$return = false;
-
-		return $return;
 	}
 }
 
