@@ -76,7 +76,11 @@ class OrderCore extends ObjectModel
 	/** @var string Gift message if specified */
 	public $gift_message;
 
-	/** @var string Shipping number */
+	/**
+	 * @var string Shipping number
+	 * @deprecated 1.5.0.4
+	 * @see OrderCarrier->tracking_number
+	 */
 	public $shipping_number;
 
 	/** @var float Discounts total */
@@ -189,7 +193,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
+			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),
 			'delivery_number' => 			array('type' => self::TYPE_INT),
@@ -1505,7 +1509,7 @@ class OrderCore extends ObjectModel
 				if ($currency->id == Configuration::get('PS_DEFAULT_CURRENCY'))
 					$total += $amount;
 				else
-					$total += Tool::convertPrice($amount, $currency->id, true);
+					$total += Tools::convertPrice($amount, $currency->id, true);
 			}
 		}
 
