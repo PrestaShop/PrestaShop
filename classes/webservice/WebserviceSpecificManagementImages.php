@@ -333,8 +333,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			case 'mail':
 				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
 				{
-					$path = _PS_IMG_DIR_.'logo_mail.jpg';
-					$alternative_path = _PS_IMG_DIR_.'logo.jpg';
+					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL');
+					$alternative_path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				}
 				else
 					throw new WebserviceException('This method is not allowed with general image resources.', array(50, 405));
@@ -344,8 +344,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			case 'invoice':
 				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
 				{
-					$path = _PS_IMG_DIR_.'logo_invoice.jpg';
-					$alternative_path = _PS_IMG_DIR_.'logo.jpg';
+					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE');
+					$alternative_path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				}
 				else
 					throw new WebserviceException('This method is not allowed with general image resources.', array(51, 405));
