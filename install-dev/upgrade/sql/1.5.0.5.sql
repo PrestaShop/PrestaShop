@@ -10,6 +10,8 @@ CREATE TABLE `PREFIX_cart_rule_shop` (
 
 INSERT INTO `PREFIX_configuration`(`id_group_shop`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
 VALUES
-	(NULL, NULL, 'PS_LOGO', 'logo.jpg', NOw(), NOW())
-	(NULL, NULL, 'PS_LOGO_MAIL', 'logo_mail.jpg', NOw(), NOW())
-	(NULL, NULL, 'PS_LOGO_INVOICE', 'logo_invoice.jpg', NOw(), NOW());
+	(NULL, NULL, 'PS_LOGO', 'logo.jpg', NOw(), NOW()),
+	(NULL, NULL, 'PS_LOGO_MAIL', 'logo_mail.jpg', NOw(), NOW()),
+	(NULL, NULL, 'PS_LOGO_INVOICE', 'logo_invoice.jpg', NOW(), NOW()),
+	(NULL, NULL, 'PS_FAVICON', 'favicon.jpg', NOW(), NOW()),
+	(NULL, NULL, 'PS_STORES_ICON', 'logo_stores.gif', NOW(), NOW());
