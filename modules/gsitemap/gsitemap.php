@@ -37,7 +37,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '1.7';
+		$this->version = '1.8';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -185,16 +185,21 @@ XML;
 
 		$tmp = null;
 		$res = null;
+		$done = null;
 		foreach ($products as $product)
 		{
-			if ($tmp == $product['id_product'])
-				$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
-			else
+			if (!isset($done[$product['id_image']]))
 			{
-				$tmp = $product['id_product'];
-				$res[$tmp] = $product;
-				unset($res[$tmp]['id_image'], $res[$tmp]['legend_image']);
-				$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
+				if ($tmp == $product['id_product'])
+				   $res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
+				else
+				{
+					$tmp = $product['id_product'];
+					$res[$tmp] = $product;
+					unset($res[$tmp]['id_image'], $res[$tmp]['legend_image']);
+					$res[$tmp]['images'] []= array('id_image' => $product['id_image'], 'legend_image' => $product['legend_image']);
+				}
+				$done[$product['id_image']] = true;
 			}
 		}
 
@@ -229,7 +234,10 @@ XML;
 			if (($priority = 0.9 - ($category['level_depth'] / 10)) < 0.1)
 				$priority = 0.1;
 
-			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang']) : $link->getCategoryLink((int)$category['id_category']);
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ?
+				$this->context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'], (int)$category['id_lang'])
+				: $this->context->link->getCategoryLink((int)$category['id_category']);
+
 			$this->_addSitemapNode($xml, htmlspecialchars($tmpLink), $priority, 'weekly', substr($category['date_upd'], 0, 10));
 		}
 
@@ -253,7 +261,9 @@ XML;
 		$cmss = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql_cms);
 		foreach($cmss as $cms)
 		{
-			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ? $link->getCMSLink((int)$cms['id_cms'], $cms['link_rewrite'], false, (int)$cms['id_lang']) : $link->getCMSLink((int)$cms['id_cms']);
+			$tmpLink = Configuration::get('PS_REWRITING_SETTINGS') ?
+				$this->context->link->getCMSLink((int)$cms['id_cms'], $cms['link_rewrite'], false, (int)$cms['id_lang'])
+				: $this->context->link->getCMSLink((int)$cms['id_cms']);
 			$this->_addSitemapNode($xml, $tmpLink, '0.8', 'daily');
 		}
 
@@ -385,3 +395,4 @@ XML;
 		return $this->_html;
 	}
 }
+
