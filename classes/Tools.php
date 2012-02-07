@@ -2204,14 +2204,12 @@ FileETag INode MTime Size
 	 */
 	public static function checkPCREUTF8()
 	{
-		if (!function_exists('preg_match'))
-			return false;
-
+		$return = true;
 		$regexd = preg_replace('/[\x{0430}-\x{04FF}]/iu', '', '-АБВГД-');
 		if ($regexd != '--')
-			return false;
+			$return = false;
 
-		return true;
+		return $return;
 	}
 }
 
