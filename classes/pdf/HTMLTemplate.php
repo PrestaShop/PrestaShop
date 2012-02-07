@@ -104,10 +104,10 @@ abstract class HTMLTemplateCore
 	{
 		$logo = '';
 
-		if (file_exists(_PS_IMG_DIR_.'logo_invoice.jpg'))
-			$logo = _PS_IMG_.'logo_invoice.jpg';
-		else if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
-			$logo = _PS_IMG_.'logo.jpg';
+		if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')))
+			$logo = _PS_IMG_.Configuration::get('PS_LOGO_INVOICE');
+		else if (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
+			$logo = _PS_IMG_.Configuration::get('PS_LOGO');
 
 		return $logo;
 	}
