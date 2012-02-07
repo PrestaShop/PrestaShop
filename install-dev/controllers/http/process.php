@@ -243,31 +243,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	}
 
 	/**
-	 * PROCESS : preactivation
-	 * (currently not used)
-	 */
-	public function processPreactivation()
-	{
-		foreach ($this->session->partners as $partner => $data)
-		{
-			/*$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 5)));
-			$url = 'http://api.prestashop.com/partner/preactivation/actions.php?version=1.0&partner='.addslashes($_GET['partner']);
-
-			// Protect fields
-			foreach ($_GET as $key => $value)
-				$_GET[$key] = strip_tags(str_replace(array('\'', '"'), '', trim($value)));
-
-			// Encore Get, Send It and Get Answers
-			@require_once('../config/settings.inc.php');
-			foreach ($_GET as $key => $val)
-				$url .= '&'.$key.'='.urlencode($val);
-			$url .= '&security='.md5($_GET['email']._COOKIE_IV_);*/
-		}
-
-		$this->ajaxJsonAnswer(true);
-	}
-
-	/**
 	 * @see InstallAbstractModel::display()
 	 */
 	public function display()
