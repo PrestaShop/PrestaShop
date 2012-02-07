@@ -91,7 +91,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processInstallModules();
 		else if (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallFixtures();
-		else if (Tools::getValue('installTheme') && !empty($this->session->process_validated['installFixtures']))
+		else if (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallTheme();
 		else
 		{
@@ -220,7 +220,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
 		if (!$this->model_install->installFixtures() || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
-		$this->session->process_validated['installFixtures'] = true;
 		$this->ajaxJsonAnswer(true);
 	}
 
