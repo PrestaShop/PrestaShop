@@ -24,32 +24,32 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <table>
-	<tr>
-		<td style="text-align: left; font-size: 6pt; color: #444">
-			{$shop_address|escape:'htmlall':'UTF-8'}<br />
-
-			{if !empty($shop_phone) OR !empty($shop_fax)}
-				{l s='For more assistance, contact Support:' pdf='true'}<br />
-				{if !empty($shop_phone)}
-					Tel: {$shop_phone|escape:'htmlall':'UTF-8'}
-				{/if}
-
-				{if !empty($shop_fax)}
-					Fax: {$shop_fax|escape:'htmlall':'UTF-8'}
-				{/if}
-				<br />
-			{/if}
-            
-            {if isset($shop_details)}
-                {$shop_details|escape:'htmlall':'UTF-8'}<br />
-            {/if}
-
-            {if isset($free_text)}
-            	{foreach $free_text as $text}
-    				{$text|escape:'htmlall':'UTF-8'}<br />
-    			{/foreach}
-            {/if}
-		</td>
-	</tr>
+	<tr><td style="line-height: 6px">&nbsp;</td></tr>
+</table>
+	
+<table style="width: 100%">
+<tr>
+	<td style="width: 50%">
+        {if $logo_path}
+            <img src="{$logo_path}" />
+        {/if}
+	</td>
+	<td style="width: 50%; text-align: right;">
+		<table style="width: 100%">
+			<tr>
+				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{$shop_name|escape:'htmlall':'UTF-8'}</td>
+			</tr>
+			<tr>
+				<td style="font-size: 14pt; color: #444; font-weight: bold;">{$date|escape:'htmlall':'UTF-8'}</td>
+			</tr>
+			<tr>
+				<td style="font-size: 14pt; color: #444; font-weight: bold;">{$title|escape:'htmlall':'UTF-8'}</td>
+			</tr>
+			<tr>
+				<td style="font-size: 14pt; color: #444; font-weight: bold;">{$reference|escape:'htmlall':'UTF-8'}</td>
+			</tr>
+		</table>
+	</td>
+</tr>
 </table>
 
