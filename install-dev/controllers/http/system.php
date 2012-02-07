@@ -75,15 +75,15 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 
 		if (!isset($this->tests['optional']))
 			$this->tests['optional'] = $this->model_system->checkOptionalTests();
-//d($this->tests);
+
 		// Generate display array
 		$this->tests_render = array(
 			'required' => array(
 				array(
 					'title' => $this->l('PHP parameters:'),
 					'checks' => array(
-						'phpversion' => $this->l('Is PHP 5.1.0 or later installed ?'),
-						'upload' => $this->l('Can upload files allowed ?'),
+						'phpversion' => $this->l('Is PHP 5.1.2 or later installed ?'),
+						'upload' => $this->l('Can upload files ?'),
 						'system' => $this->l('Can create new files and folders ?'),
 						'gd' => $this->l('Is GD Library installed ?'),
 						'mysql_support' => $this->l('Is MySQL support is on ?'),
@@ -113,7 +113,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'title' => $this->l('PHP parameters:'),
 					'checks' => array(
 						'fopen' => $this->l('Can open external URLs ?'),
-						'register_globals' => $this->l('Is PHP register global option deactivated (recommended) ?'),
+						'register_globals' => $this->l('Is PHP register global option off (recommended) ?'),
 						'gz' => $this->l('Is GZIP compression activated (recommended) ?'),
 						'mcrypt' => $this->l('Is Mcrypt extension available (recommended) ?'),
 						'magicquotes' => $this->l('Is PHP magic quotes option deactivated (recommended) ?'),

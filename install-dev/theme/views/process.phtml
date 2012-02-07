@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 <!--
-var install_is_done = '<?php echo addslashes($this->l('Done !')) ?>';
+var install_is_done = '<?php echo addslashes($this->l('Done!')) ?>';
 var process_steps = <?php echo Tools::jsonEncode($this->process_steps) ?>;
 var process_percent = <?php echo 100 / count($this->process_steps) ?>;
 -->
@@ -27,7 +27,7 @@ var process_percent = <?php echo 100 / count($this->process_steps) ?>;
 		</ol>
 
 		<div id="error_process">
-			<h3><?php echo $this->l('An error occured during installation ...') ?></h3>
+			<h3><?php echo $this->l('An error occured during installation...') ?></h3>
 			<p><?php echo $this->l('You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>.', 'index.php?restart=true') ?></p>
 		</div>
 	</div>

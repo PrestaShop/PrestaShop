@@ -13,19 +13,20 @@
 
 	<div id="formCheckSQL">
 		<p class="first" style="margin-top: 15px;">
-			<label for="dbServer"><?php echo $this->l('Server:') ?> </label>
+			<label for="dbServer"><?php echo $this->l('Database server address:') ?> </label>
 			<input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server) ?>" />
+			<span class="userInfos aligned"><?php echo $this->l('If you want to use a different port, add :XX after your server address where XX is your port number.') ?></span>
 		</p>
 		<p>
 			<label for="dbName"><?php echo $this->l('Database name:') ?> </label>
 			<input size="10" class="text" type="text" id="dbName" name="dbName" value="<?php echo htmlspecialchars($this->database_name) ?>" />
 		</p>
 		<p>
-			<label for="dbLogin"><?php echo $this->l('Login:') ?> </label>
+			<label for="dbLogin"><?php echo $this->l('Database login:') ?> </label>
 			<input class="text" size="10" type="text" id="dbLogin" name="dbLogin" value="<?php echo htmlspecialchars($this->database_login) ?>" />
 		</p>
 		<p>
-			<label for="dbPassword"><?php echo $this->l('Password:') ?> </label>
+			<label for="dbPassword"><?php echo $this->l('Database password:') ?> </label>
 			<input class="text" size="10" type="password" id="dbPassword" name="dbPassword" value="<?php echo htmlspecialchars($this->database_password) ?>" />
 		</p>
 		<p>
@@ -71,7 +72,7 @@
 	<div id="mailSMTPParam">
 		<div class="aligned">
 			<p>
-				<label for="smtpSrv"><?php echo $this->l('SMTP server:') ?> </label>
+				<label for="smtpSrv"><?php echo $this->l('SMTP server address:') ?> </label>
 				<input class="text" type="text" id="smtpSrv" name="smtpSrv" value="<?php echo htmlspecialchars($this->smtp_server) ?>"/>
 			</p>
 			<p>
