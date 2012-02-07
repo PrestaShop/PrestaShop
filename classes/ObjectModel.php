@@ -858,22 +858,16 @@ abstract class ObjectModelCore
 				$resource_parameters['fields'][$field_name] = array();
 			$current_field = array();
 			$current_field['sqlId'] = $field_name;
-	
 			if (isset($details['size']))
 				$current_field['maxSize'] = $details['size'];
-			
 			if (isset($details['lang']))
 				$current_field['i18n'] = $details['lang'];
 			else
 				$current_field['i18n'] = false;
-			
-			
 			if ((isset($details['required']) && $details['required'] === true) || in_array($field_name, $required_fields))
 				$current_field['required'] = true;
 			else
 				$current_field['required'] = false;
-			
-			
 			if (isset($details['validate']))
 			{
 				$current_field['validateMethod'] = (
@@ -888,8 +882,6 @@ abstract class ObjectModelCore
 			$resource_parameters['fields']['date_add']['setter'] = false;
 		if (isset($this->date_upd))
 			$resource_parameters['fields']['date_upd']['setter'] = false;
-		
-		
 		foreach ($resource_parameters['fields'] as $key => $resource_parameters_field)
 			if (!isset($resource_parameters_field['sqlId']))
 				$resource_parameters['fields'][$key]['sqlId'] = $key;
