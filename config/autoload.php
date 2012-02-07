@@ -29,11 +29,4 @@
 require_once(dirname(__FILE__).'/alias.php');
 require_once(dirname(__FILE__).'/../classes/Autoload.php');
 
-function __autoload($classname)
-{
-	if (function_exists('smartyAutoload') AND smartyAutoload($classname))
-			return true;
-
-	Autoload::getInstance()->load($classname);
-}
-
+spl_autoload_register(array(Autoload::getInstance(), 'load'));
