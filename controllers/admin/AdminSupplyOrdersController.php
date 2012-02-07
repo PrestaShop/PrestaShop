@@ -265,18 +265,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'desc' => $this->l('The language of the order.')
 					),
 					array(
-						'type' => 'date',
-						'label' => $this->l('Delivery date:'),
-						'name' => 'date_delivery_expected',
-						'size' => 20,
-						'required' => true,
-						'desc' => $this->l('This is the expected delivery date for this order.'),
-					),
-					array(
 						'type' => 'text',
 						'label' => $this->l('Global discount rate (%):'),
 						'name' => 'discount_rate',
-						'size' => 7,
+						'size' => 10,
 						'required' => true,
 						'desc' => $this->l('This is the global discount rate in percents for the order.'),
 					),
@@ -284,7 +276,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						'type' => 'text',
 						'label' => $this->l('Automatically load products:'),
 						'name' => 'load_products',
-						'size' => 7,
+						'size' => 10,
 						'required' => false,
 						'hint' => $this->l('This will reset the order'),
 						'desc' => $this->l('If specified, each product which quantity is less or equal to this value will be loaded.'),
@@ -302,6 +294,22 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->fields_form['input'][] = array(
 					'type' => 'hidden',
 					'name' => 'is_template'
+				);
+
+				$this->fields_form['input'][] = array(
+					'type' => 'hidden',
+					'name' => 'date_delivery_expected',
+				);
+			}
+			else
+			{
+				$this->fields_form['input'][] = array(
+					'type' => 'date',
+					'label' => $this->l('Expected delivery date:'),
+					'name' => 'date_delivery_expected',
+					'size' => 10,
+					'required' => true,
+					'desc' => $this->l('This is the expected delivery date for this order.'),
 				);
 			}
 
@@ -994,6 +1002,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && !($this->tabAccess['edit'] === '1'))
 			$this->errors[] = Tools::displayError($this->l('You do not have the required permission to edit an order.'));
 
+		// Trick to use both Supply Order as template and actual orders
+		if (Tools::isSubmit('is_template'))
+			$_GET['mod'] = 'template';
+
 		// checks if supply order reference is unique
 		if (Tools::isSubmit('reference'))
 		{
@@ -1045,6 +1057,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			if (!count($this->errors))
 			{
+				// forces date for templates
+				if (Tools::isSubmit('is_template') && !Tools::getValue('date_delivery_expected'))
+					$_POST['date_delivery_expected'] = date('Y-m-d h:i:s');
+
 				// specify initial state
 				$_POST['id_supply_order_state'] = 1; //defaut creation state
 
