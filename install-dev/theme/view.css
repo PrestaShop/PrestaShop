@@ -521,6 +521,12 @@ ul#optional {
 	color:#999;
 }
 
+#formCheckSQL .userInfos {
+    display: block;
+    font:italic 11px Georgia, Arial, Sans-serif italic;
+    color:#999;
+}
+
 
 /* ETAPE 4 - infos ********************************************************* */
 #sheet_configure {
