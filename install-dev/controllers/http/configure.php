@@ -26,7 +26,7 @@
 */
 
 /**
- * Step 4 : configure the shop, admin access and modules preactivations
+ * Step 4 : configure the shop and admin access
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp
 {
@@ -54,18 +54,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 
 		if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
 			$this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
-
-		// Save partners preactivation configuration
-		$this->session->partners = array();
-		$partners = Tools::getValue('partner');
-		if (is_array($partners))
-		{
-			// Check all selected partners and store their fields
-			$session_partners = array();
-			foreach ($partners as $partner_id => $state)
-				$session_partners[$partner_id] = (isset($_POST['partner_fields'][$partner_id])) ? $_POST['partner_fields'][$partner_id] : array();
-			$this->session->partners = $session_partners;
-		}
 	}
 
 	/**
@@ -94,7 +82,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		if ($this->session->admin_password)
 		{
 			if (!Validate::isPasswdAdmin($this->session->admin_password))
-				$this->errors['admin_password'] = $this->l('The password is incorrect (alphanumeric string at least 8 characters)');
+				$this->errors['admin_password'] = $this->l('The password is incorrect (alphanumeric string with at least 8 characters)');
 			else if ($this->session->admin_password != $this->session->admin_password_confirm)
 				$this->errors['admin_password'] = $this->l('Password and its confirmation are different');
 		}
@@ -112,10 +100,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 			$this->processUploadLogo();
 		else if (Tools::getValue('timezoneByIso'))
 			$this->processTimezoneByIso();
-		else if (Tools::getValue('getPartners'))
-			$this->processGetPartners();
-		else if (Tools::getValue('getPartnersFields'))
-			$this->processGetPartnersFields();
 	}
 
 	/**
@@ -189,7 +173,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 					{
 						imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
 						if (!is_writable(_PS_ROOT_DIR_.'/img/logo.jpg'))
-							$error = $this->l('Image folder is not writable');
+							$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
 						else if (!imagejpeg($thumb, _PS_ROOT_DIR_.'/img/logo.jpg', 90))
 							$error = $this->l('Cannot upload the file');
 					}
@@ -207,149 +191,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	{
 		$timezone = $this->getTimezoneByIso(Tools::getValue('iso'));
 		$this->ajaxJsonAnswer(($timezone) ? true : false, $timezone);
-	}
-
-	/**
-	 * Obtain a translation from presintall XML file
-	 *
-	 * @param SimplexmlElement $xml
-	 * @param string $xpath
-	 * @return string
-	 */
-	public function getPreinstallXmlLang(SimplexmlElement $xml, $xpath)
-	{
-		$lang = $this->language->getLanguageIso();
-		$translation = $xml->xpath($xpath.'[@iso="'.$lang.'"]');
-		if (!$translation && $lang != 'en')
-			$translation = $xml->xpath($xpath.'[@iso="en"]');
-		if (!$translation)
-			$translation = $xml->xpath($xpath);
-		return ($translation) ? (string)$translation[0] : '';
-	}
-
-	/**
-	 * Get list of partners from PrestaShop website
-	 */
-	public function processGetPartners()
-	{
-		$this->iso = Tools::getValue('iso');
-		if (!$this->iso)
-			$this->ajaxJsonAnswer(false);
-
-		// Load partners XML file from prestashop.com
-		$stream_context = @stream_context_create(array('http' => array('method'=> 'GET', 'timeout' => 3)));
-		$content = @file_get_contents('http://api.prestashop.com/partner/preactivation/partners.php?version=1.1', false, $stream_context);
-		if (!$xml = @simplexml_load_string($content))
-			$this->ajaxJsonAnswer(false, $this->l('Cannot load partners from PrestaShop website'));
-
-		// Browse all partners
-		$partners = array();
-		foreach ($xml->partner as $partner)
-		{
-			// Partner available for current language ?
-			if (!$partner->xpath('countries[country="'.$this->iso.'"]'))
-				continue;
-
-			$partner_id = (string)$partner->key;
-			if (!isset($this->session->shop_name))
-				$checked = ($partner->prechecked) ? true : false;
-			else
-				$checked = (isset($this->session->partners[$partner_id])) ? true : false;
-
-			$partners[$partner_id] = array(
-				'name' => (string)$partner->name,
-				'label' => $this->getPreinstallXmlLang($partner, 'labels/label'),
-				'description' => $this->getPreinstallXmlLang($partner, 'descriptions/description'),
-				'logo' => $partner->logo_medium,
-				'checked' => $checked,
-			);
-		}
-
-		// If no partners, don't displayany preactivation HTML
-		if (!$partners)
-			$this->ajaxJsonAnswer(false);
-
-		// Render partners
-		$this->partners = $partners;
-		$html = $this->displayTemplate('partners', true);
-		$this->ajaxJsonAnswer(true, $html);
-	}
-
-	/**
-	 * Get fields of a partner for a country as HTML
-	 */
-	public function processGetPartnersFields()
-	{
-		$this->partner_id = Tools::getValue('partner_id');
-		$this->iso = Tools::getValue('iso');
-		if (!$this->partner_id || !$this->iso)
-			$this->ajaxJsonAnswer(false);
-
-		$this->fields = $this->getPartnersFields($this->partner_id, $this->iso);
-
-		if (!$this->fields)
-			$this->ajaxJsonAnswer(false);
-
-		// Render fields
-		$html = $this->displayTemplate('partners_fields', true);
-		$this->ajaxJsonAnswer(true, $html);
-	}
-
-	/**
-	 * Get list of fields of a partner for a country
-	 *
-	 * @param string $partner_id
-	 * @param string $iso
-	 * @return array
-	 */
-	public function getPartnersFields($partner_id, $iso)
-	{
-		// Load partners fields XML file from prestashop.com
-		$stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 5)));
-		$content = @file_get_contents('http://api.prestashop.com/partner/preactivation/fields.php?version=1.1&partner='.$partner_id.'&country_iso_code='.$iso, false, $stream_context);
-		if (!$xml = @simplexml_load_string($content))
-			$this->ajaxJsonAnswer(false, $this->l('Cannot load partners fields from PrestaShop website'));
-
-		// Browse all fields
-		$fields = array();
-		foreach ($xml->field as $field)
-		{
-			$key = (string)$field->key;
-			$data = array(
-				'type' => (string)$field->type,
-				'label' => $this->getPreinstallXmlLang($field, 'labels/label'),
-				'help' => $this->getPreinstallXmlLang($field, 'helps/help'),
-				'value' => (isset($this->session->partners[$partner_id][$key])) ? $this->session->partners[$partner_id][$key] : (string)$field->default,
-			);
-
-			switch ($data['type'])
-			{
-				case 'text' :
-				case 'password' :
-					$data['size'] = (string)$field->size;
-				break;
-
-				case 'radio' :
-				case 'select' :
-					$data['list'] = array();
-					foreach ($field->values as $value)
-						$data['list'][(string)$value->value] = $this->getPreinstallXmlLang($value, 'labels/label');
-				break;
-
-				case 'date' :
-					if (!is_array($data['value']))
-						$data['value'] = array(
-							'year' => 0,
-							'month' => 0,
-							'day' => 0,
-						);
-				break;
-			}
-
-			$fields[$key] = $data;
-		}
-
-		return $fields;
 	}
 
 	/**
