@@ -863,5 +863,11 @@
     <configuration id="PS_LOGO_1" name="PS_LOGO">
       <value>logo.jpg</value>
     </configuration>
+    <configuration id="PS_FAVICON" name="PS_FAVICON">
+      <value>favicon.ico</value>
+    </configuration>
+    <configuration id="PS_STORES_ICON" name="PS_STORES_ICON">
+      <value>logo_stores.gif</value>
+    </configuration>
   </entities>
 </entity_configuration>
