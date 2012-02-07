@@ -504,11 +504,12 @@ class CarrierCore extends ObjectModel
 	 * @param Array $groups group of the customer
 	 * @return Array
 	 */
-	public static function getCarriersForOrder($id_zone, $groups = null)
+	public static function getCarriersForOrder($id_zone, $groups = null, $cart = null)
 	{
 		$context = Context::getContext();
 		$id_lang = $context->language->id;
-		$cart = $context->cart;
+		if (is_null($cart))
+			$cart = $context->cart;
 		$id_currency = $context->currency->id;
 
 		if (is_array($groups) && !empty($groups))
@@ -1023,10 +1024,13 @@ class CarrierCore extends ObjectModel
 	 * @param Product $product The id of the product, or an array with at least the package size and weight
 	 * @return array
 	 */
-	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null)
+	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null)
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->getID(true);
+		if (is_null($cart))
+			$cart = Context::getContext()->cart;
+			
 
 		// Does the product is linked with carriers?
 		$query = new DbQuery();
@@ -1057,7 +1061,7 @@ class CarrierCore extends ObjectModel
 		if (empty($carrier_list)) // No carriers defined, get all available carriers
 		{
 			$carrier_list = array();
-			$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  Context::getContext()->cart->id_address_delivery);
+			$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
 			if ($id_address)
 			{
 				$address = new Address($id_address);
@@ -1068,7 +1072,8 @@ class CarrierCore extends ObjectModel
 				$country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
 				$id_zone = $country->id_zone;
 			}
-			$carriers = Carrier::getCarriersForOrder($id_zone, Context::getContext()->customer->getGroups());
+			$customer = new Customer($cart->id_customer);
+			$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
 			foreach ($carriers as $carrier)
 				$carrier_list[] = $carrier['id_carrier'];
 		}
