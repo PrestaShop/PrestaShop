@@ -562,10 +562,17 @@ class DispatcherCore
 				if (preg_match($route['regexp'], $this->request_uri, $m))
 				{
 					// Route found ! Now fill $_GET with parameters of uri
-					$controller = $route['controller'];
 					foreach ($m as $k => $v)
 						if (!is_numeric($k))
 							$_GET[$k] = $v;
+
+					$controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
+					if (!empty($route['params']))
+						foreach ($route['params'] as $k => $v)
+							$_GET[$k] = $v;
+
+					if (isset($_GET['fc']) && $_GET['fc'] == 'module')
+						$this->front_controller = self::FC_MODULE;
 					break;
 				}
 
