@@ -96,12 +96,6 @@ class AdminThemesControllerCore extends AdminController
 	{
 		parent::init();
 
-		// Thumbnails filenames depend on multishop activation
-		if (Shop::isFeatureActive())
-			$shop_suffix = '-'.(int)Context::getContext()->shop->getID();
-		else
-			$shop_suffix = '';
-
 		$this->options = array(
 			'appearance' => array(
 				'title' =>	$this->l('Appearance'),
@@ -110,8 +104,8 @@ class AdminThemesControllerCore extends AdminController
 					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
 					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
 					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE')) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
-					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => _PS_IMG_.'favicon'.$shop_suffix.'.ico?date='.time()),
-					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => _PS_IMG_.'logo_stores'.$shop_suffix.'.gif?date='.time()),
+					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').'?date='.time()),
+					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()),
 					'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
@@ -523,16 +517,31 @@ class AdminThemesControllerCore extends AdminController
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS_STORES_ICON');
 			if (!$tmp_name || !move_uploaded_file($_FILES['PS_STORES_ICON']['tmp_name'], $tmp_name))
 				return false;
-			if ($id_shop = Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores.gif'))
+			if ($id_shop == Configuration::get('PS_SHOP_DEFAULT') && !@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores.gif'))
 				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
 			if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.'logo_stores-'.(int)$id_shop.'.gif'))
 				$this->errors[] = Tools::displayError('An error occurred during logo copy.');
+			else
+				Configuration::updateValue('PS_STORES_ICON', 'logo_stores-'.(int)$id_shop.'.gif');
+			
+			Configuration::updateGlobalValue('PS_STORES_ICON', 'logo_stores.gif');
+			
 			unlink($tmp_name);
 		}
-
-		if ($id_shop = Configuration::get('PS_SHOP_DEFAULT'))
+	}
+	
+	/**
+	 * Update PS_FAVICON
+	 */
+	public function updateOptionPsFavicon()
+	{
+		$id_shop = Context::getContext()->shop->getID();
+		if ($id_shop == Configuration::get('PS_SHOP_DEFAULT'))
 			$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon.ico');
-		$this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico');
+		if ($this->uploadIco('PS_FAVICON', _PS_IMG_DIR_.'favicon-'.(int)$id_shop.'.ico'))
+			Configuration::updateValue('PS_FAVICON', 'favicon-'.(int)$id_shop.'.ico');
+		
+		Configuration::updateGlobalValue('PS_FAVICON', 'favicon.ico');
 	}
 
 	protected function uploadIco($name, $dest)

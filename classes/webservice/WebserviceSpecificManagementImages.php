@@ -355,7 +355,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			case 'store_icon':
 				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
 				{
-					$path = _PS_IMG_DIR_.'logo_stores.gif';
+					$path = _PS_IMG_DIR_.Configuration::get('PS_STORES_ICON');
 					$this->imgExtension = 'gif';
 				}
 				else
