@@ -1755,7 +1755,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$str_output = '';
 
 		if (!Validate::isLangIsoCode($lang))
-			die('Invalid iso lang ('.$lang.')');
+			die('Invalid iso lang ('.Tools::safeOutput($lang).')');
 
 		$i18n_dir = _PS_THEME_DIR_.'pdf/lang/';
 		$i18n_file = $i18n_dir.$lang.'.php';
