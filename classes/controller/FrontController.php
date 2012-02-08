@@ -177,8 +177,6 @@ class FrontControllerCore extends Controller
 			Tools::redirect(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null);
 		}
 
-		$_MODULES = array();
-
 		/* Cart already exists */
 		if ((int)$this->context->cookie->id_cart)
 		{
@@ -369,16 +367,6 @@ class FrontControllerCore extends Controller
 
 		$this->iso = $iso;
 		$this->setMedia();
-
-		// Customer wasn't defined at all
-		$customer = new StdClass();
-
-		if ($this->context->cookie->id_country)
-			$customer->geoloc_id_country = (int)$this->context->cookie->id_country;
-		if ($this->context->cookie->id_state)
-			$customer->geoloc_id_state = (int)$this->context->cookie->id_state;
-		if ($this->context->cookie->postcode)
-			$customer->geoloc_postcode = (int)$this->context->cookie->postcode;
 
 		$this->context->cart = $cart;
 		$this->context->currency = $currency;
