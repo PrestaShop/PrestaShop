@@ -458,6 +458,14 @@ class InstallXmlLoader
 					$insert_data_lang['id_lang'] = $id_lang;
 					$this->delayed_inserts[$entity.'_lang'][] = array_map('pSQL', $insert_data_lang);
 				}
+
+				// Store INSERT queries for _shop associations
+				$asso_shop = Shop::getAssoTables();
+				if (isset($asso_shop[$entity]) && $asso_shop[$entity]['type'] == 'shop')
+					$this->delayed_inserts[$entity.'_shop'][] = array(
+						'id_shop' => 1,
+						'id_'.$entity => $entity_id,
+					);
 			}
 		}
 
