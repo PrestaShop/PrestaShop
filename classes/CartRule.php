@@ -604,13 +604,13 @@ class CartRuleCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 
-		$reductionValue = 0;
+		$reduction_value = 0;
 
 		// Free shipping on selected carriers
 		if ($this->free_shipping)
 		{
 			if (!$this->carrier_restriction)
-				$reductionValue += $context->cart->getTotalShippingCost(null, $useTax = true, $context->country);
+				$reduction_value += $context->cart->getTotalShippingCost(null, $useTax = true, $context->country);
 			else
 			{
 				$data = Db::getInstance()->executeS('
@@ -621,20 +621,20 @@ class CartRuleCore extends ObjectModel
 				
 				if ($data)
 					foreach ($data as $cart_rule)
-						$reductionValue += $context->cart->getCarrierCost((int)$cart_rule['id_carrier'], $useTax, $context->country);
+						$reduction_value += $context->cart->getCarrierCost((int)$cart_rule['id_carrier'], $useTax, $context->country);
 			}
 		}
 
 		// Discount (%) on the whole order
 		if ($this->reduction_percent && $this->reduction_product == 0)
-			$reductionValue += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
+			$reduction_value += $context->cart->getOrderTotal($useTax, Cart::ONLY_PRODUCTS) * $this->reduction_percent / 100;
 
 		// Discount (%) on a specific product
 		if ($this->reduction_percent && $this->reduction_product > 0)
 		{
 			foreach ($context->cart->getProducts() as $product)
 				if ($product['id_product'] == $this->reduction_product)
-					$reductionValue += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
+					$reduction_value += ($useTax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 		}
 
 		// Discount (%) on the cheapest product
@@ -647,23 +647,23 @@ class CartRuleCore extends ObjectModel
 				if ($price > 0 && ($minPrice === false || $minPrice > $price))
 					$minPrice = $price;
 			}
-			$reductionValue += $minPrice * $this->reduction_percent / 100;
+			$reduction_value += $minPrice * $this->reduction_percent / 100;
 		}
 
 		// Discount (%) on the selection of products
 		if ($this->reduction_percent && $this->reduction_product == -2)
 		{
-			$selectedProductsReduction = 0;
-			$selectedProducts = $this->checkProductRestrictions($context, true);
-			if (is_array($selectedProducts))
+			$selected_products_reduction = 0;
+			$selected_products = $this->checkProductRestrictions($context, true);
+			if (is_array($selected_products))
 				foreach ($context->cart->getProducts() as $product)
-					if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selectedProducts)
-						|| in_array($product['id_product'].'-0', $selectedProducts))
+					if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
+						|| in_array($product['id_product'].'-0', $selected_products))
 					{
 						$price = ($useTax ? $product['price_wt'] : $product['price']);
-						$selectedProductsReduction += $price * $product['cart_quantity'];
+						$selected_products_reduction += $price * $product['cart_quantity'];
 					}
-			$reductionValue += $selectedProductsReduction * $this->reduction_percent / 100;
+			$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
 		}
 
 		// Discount (¤)
@@ -688,7 +688,7 @@ class CartRuleCore extends ObjectModel
 
 			// If it has the same tax application that you need, then it's the right value, whatever the product!
 			if ($this->reduction_tax == $useTax)
-				$reductionValue += $reduction_amount;
+				$reduction_value += $reduction_amount;
 			else
 			{
 				if ($this->reduction_product > 0)
@@ -706,9 +706,9 @@ class CartRuleCore extends ObjectModel
 								$product_vat_rate = $product_vat_amount / $product_price_te;
 
 							if ($this->reduction_tax && !$useTax)
-								$reductionValue += $reduction_amount / (1 + $product_vat_rate);
+								$reduction_value += $reduction_amount / (1 + $product_vat_rate);
 							elseif (!$this->reduction_tax && $useTax)
-								$reductionValue += $reduction_amount * (1 + $product_vat_rate);
+								$reduction_value += $reduction_amount * (1 + $product_vat_rate);
 						}
 				}
 				// Discount (¤) on the whole order
@@ -724,9 +724,9 @@ class CartRuleCore extends ObjectModel
 						$cart_average_vat_rate = $cart_vat_amount / $cart_amount_te;
 
 					if ($this->reduction_tax && !$useTax)
-						$reductionValue += $reduction_amount / (1 + $cart_average_vat_rate);
+						$reduction_value += $reduction_amount / (1 + $cart_average_vat_rate);
 					elseif (!$this->reduction_tax && $useTax)
-						$reductionValue += $reduction_amount * (1 + $cart_average_vat_rate);
+						$reduction_value += $reduction_amount * (1 + $cart_average_vat_rate);
 				}
 				/*
 				 * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
@@ -742,10 +742,10 @@ class CartRuleCore extends ObjectModel
 		{
 			foreach ($context->cart->getProducts() as $product)
 				if ($product['id_product'] == $this->gift_product)
-					$reductionValue += ($useTax ? $product['price_wt'] : $product['price']);
+					$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
 		}
 
-		return $reductionValue;
+		return $reduction_value;
     }
 
 	protected function getCartRuleCombinations()
