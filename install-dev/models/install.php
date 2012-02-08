@@ -176,6 +176,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		// IDS from xmlLoader are stored in order to use them for fixtures
 		$this->xml_loader_ids = $xml_loader->getIds();
+		unset($xml_loader);
 
 		// Install custom SQL data (db_data.sql file)
 		if (file_exists(_PS_INSTALL_DATA_PATH_.'db_data.sql'))
