@@ -28,23 +28,49 @@
 class InstallModelMail extends InstallAbstractModel
 {
 	/**
-	 * Send a test email
+	 * @param bool $smtp_checked
+	 * @param string $server
+	 * @param string $login
+	 * @param string $password
+	 * @param int $port
+	 * @param string $encryption
+	 * @param string $email
 	 */
-	public function sendTestMail($smtp_checked, $server, $login, $password, $port, $encryption, $email)
+	public function __construct($smtp_checked, $server, $login, $password, $port, $encryption, $email)
 	{
+		parent::__construct();
+
 		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift.php');
 		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift/Connection/SMTP.php');
 		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift/Connection/NativeMail.php');
 
+		$this->smtp_checked = $smtp_checked;
+		$this->server = $server;
+		$this->login = $login;
+		$this->password = $password;
+		$this->port = $port;
+		$this->encryption = $encryption;
+		$this->email = $email;
+	}
+
+	/**
+	 * Send a mail
+	 *
+	 * @param string $subject
+	 * @param string $content
+	 * @return bool|string false is everything was fine, or error string
+	 */
+	public function send($subject, $content)
+	{
 		try
 		{
 			// Test with custom SMTP connection
-			if ($smtp_checked)
+			if ($this->smtp_checked)
 			{
 
-				$smtp = new Swift_Connection_SMTP($server, $port, ($encryption == "off") ? Swift_Connection_SMTP::ENC_OFF : (($encryption == "tls") ? Swift_Connection_SMTP::ENC_TLS : Swift_Connection_SMTP::ENC_SSL));
-				$smtp->setUsername($login);
-				$smtp->setpassword($password);
+				$smtp = new Swift_Connection_SMTP($this->server, $this->port, ($this->encryption == "off") ? Swift_Connection_SMTP::ENC_OFF : (($this->encryption == "tls") ? Swift_Connection_SMTP::ENC_TLS : Swift_Connection_SMTP::ENC_SSL));
+				$smtp->setUsername($this->login);
+				$smtp->setpassword($this->password);
 				$smtp->setTimeout(5);
 				$swift = new Swift($smtp);
 			}
@@ -52,22 +78,20 @@ class InstallModelMail extends InstallAbstractModel
 				// Test with normal PHP mail() call
 				$swift = new Swift(new Swift_Connection_NativeMail());
 
-			$subject = $this->language->l('Test message from PrestaShop');
-			$content = $this->language->l('This is a test message, your server is now available to send email');
 			$message = new Swift_Message($subject, $content, 'text/html');
-
-			if (@$swift->send($message, $email, 'no-reply@'.Tools::getHttpHost()))
-				$result = true;
+			if (@$swift->send($message, $this->email, 'no-reply@'.Tools::getHttpHost()))
+				$result = false;
 			else
-				$result = 999;
+				$result = 'Could not send message';
 
 			$swift->disconnect();
 		}
 		catch (Swift_Exception $e)
 		{
-			$result = $e->getCode();
+			$result = $e->getMessage();
 		}
 
 		return $result;
 	}
+
 }

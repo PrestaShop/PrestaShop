@@ -114,7 +114,7 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($errors = $sql_loader->getErrors())
 		{
 			foreach ($errors as $error)
-				$this->setError($this->language->l('An SQL error occured: <i>%1$s</i>', $error['error']));
+				$this->setError($this->language->l('SQL error on query <i>%s</i>', $error['error']));
 			return false;
 		}
 
