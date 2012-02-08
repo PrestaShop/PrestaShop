@@ -673,7 +673,7 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$payment_module = Module::getInstanceByName($module_name);
 				$cart = new Cart((int)$id_cart);
-				$payment_module->validateOrder((int)$cart->id, (int)$id_order_state, $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, sprintf($this->l('Manual order - ID Employee :%1'), (int)Context::getContext()->cookie->id_employee));
+				$payment_module->validateOrder((int)$cart->id, (int)$id_order_state, $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, sprintf($this->l('Manual order - ID Employee :%d'), (int)Context::getContext()->cookie->id_employee), array(), null, false, $cart->secure_key);
 				if ($payment_module->currentOrder)
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
 			}
