@@ -36,36 +36,28 @@ var process_percent = <?php echo 100 / count($this->process_steps) ?>;
 <div id="install_process_success">
 	<div class="clearfix">
 		<h2><?php echo $this->l('Your installation is finished!'); ?></h2>
-		<p><?php echo $this->l('You have just installed and configured PrestaShop as your online shop. We wish you all the best with the success of your online shop.'); ?></p>
-		<p><?php echo $this->l('Here is your shop information. You can modify it once you are logged in.') ?></p>
+		<p><?php echo $this->l('You have just finished to install and configure your shop, thank you for using PrestaShop!'); ?></p>
+		<p><?php echo $this->l('Please remember your login information:') ?></p>
 		<table cellpadding="0" cellspacing="0" border="0" id="resultInstall" width="620">
 			<tr class="odd">
-				<td style="width: 220px" class="label"><?php echo $this->l('Shop name:') ?></td>
-				<td style="width: 400px" class="resultEnd"><?php echo htmlspecialchars($this->session->shop_name) ?></td>
-			</tr>
-			<tr>
-				<td class="label"><?php echo $this->l('First name:') ?></td>
-				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_firstname) ?></td>
-			</tr>
-			<tr class="odd">
-				<td class="label"><?php echo $this->l('Last name:') ?></td>
-				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_lastname) ?></td>
-			</tr>
-			<tr>
 				<td class="label"><?php echo $this->l('E-mail:') ?></td>
 				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
+			</tr>
+			<tr>
+				<td class="label"><?php echo $this->l('Password:') ?></td>
+				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_password) ?></td>
 			</tr>
 		</table>
 
 		<h3 class="infosBlock"><?php echo $this->l('WARNING: For security purposes, you must delete the "install" folder.') ?></h3>
 
-		<div id="boBlock" class="blockInfoEnd clearfix">
+		<div id="boBlock" class="blockInfoEnd clearfix" onclick="window.open('../admin')">
 			<img src="theme/img/visu_boBlock.png" alt="" />
 			<h3><?php echo $this->l('Back Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>
 			<a href="../admin" class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
 		</div>
-		<div id="foBlock" class="blockInfoEnd last clearfix">
+		<div id="foBlock" class="blockInfoEnd last clearfix" onclick="window.open('../')" />
 			<img src="theme/img/visu_foBlock.png" alt="" />
 			<h3><?php echo $this->l('Front Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Discover your store as your future customers will see it!') ?></p>

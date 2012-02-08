@@ -55,7 +55,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<label for="infosCountry" class="aligned"><?php echo $this->l('Default country:') ?></label>
 		<div class="contentinput">
 			<select name="shop_country" id="infosCountry">
-				<option value="0">-- <?php echo $this->l('Select your country') ?> --</option>
+				<option value="0">-- <?php echo $this->l('Select your country --') ?></option>
 				<?php foreach ($this->language->getCountries() as $iso => $country_name): ?>
 					<option value="<?php echo $iso ?>" <?php if ($this->session->shop_country == $iso): ?>selected="selected"<?php endif; ?>><?php echo $country_name ?></option>
 				<?php endforeach; ?>
@@ -70,7 +70,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<label for="infosTimezone" class="aligned"><?php echo $this->l('Shop timezone:') ?></label>
 		<div class="contentinput">
 			<select name="shop_timezone" id="infosTimezone">
-				<option value="0">-- <?php echo $this->l('Select your timezone') ?> --</option>
+				<option value="0"><?php echo $this->l('-- Select your timezone --') ?></option>
 				<?php foreach ($this->getTimezones() as $timezone): ?>
 					<option value="<?php echo $timezone ?>" <?php if ($this->session->shop_timezone == $timezone): ?>selected="selected"<?php endif; ?>><?php echo $timezone ?></option>
 				<?php endforeach; ?>
