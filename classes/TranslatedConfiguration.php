@@ -36,9 +36,24 @@ class TranslatedConfigurationCore extends Configuration
 			'date_upd' => array('i18n' => true),
 		),
 	);
-	
+
+	public static $definition = array(
+		'table' => 'configuration',
+		'primary' => 'id_configuration',
+		'multilang' => true,
+		'fields' => array(
+			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
+			'id_group_shop' => 	array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+			'id_shop' => 		array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
+			'value' => 			array('type' => self::TYPE_STRING),
+			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+		),
+	);
+
 	public function __construct($id = NULL, $id_lang = NULL)
 	{
+		$this->def = ObjectModel::getDefinition($this);
 		// Check if the id configuration is set in the configuration_lang table.
 		// Otherwise configuration is not set as translated configuration.
 		if ($id !== null)

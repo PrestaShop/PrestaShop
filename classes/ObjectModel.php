@@ -851,7 +851,7 @@ abstract class ObjectModelCore
 		$resource_parameters = array_merge_recursive($default_resource_parameters, $this->{$ws_params_attribute_name});
 
 		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array());
-		foreach ($this->definition['fields'] as $field_name => $details)
+		foreach ($this->def['fields'] as $field_name => $details)
 		{
 			if (!isset($resource_parameters['fields'][$field_name]))
 				$resource_parameters['fields'][$field_name] = array();
@@ -910,6 +910,7 @@ abstract class ObjectModelCore
 		WHERE 1 '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '');
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
