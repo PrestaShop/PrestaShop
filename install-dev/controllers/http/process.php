@@ -93,6 +93,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processInstallFixtures();
 		else if (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallTheme();
+		else if (Tools::getValue('sendEmail') && !empty($this->session->process_validated['installTheme']))
+			$this->processSendEmail();
 		else
 		{
 			// With no parameters, we consider that we are doing a new install, so session where the last process step
@@ -235,6 +237,47 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if ($this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 
+		$this->session->process_validated['installTheme'] = true;
+		$this->ajaxJsonAnswer(true);
+	}
+
+	/**
+	 * PROCESS : sendEmail
+	 * Send information e-mail
+	 */
+	public function processSendEmail()
+	{
+		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
+		$mail = new InstallModelMail(
+			$this->session->use_smtp,
+			$this->session->smtp_server,
+			$this->session->smtp_login,
+			$this->session->smtp_password,
+			$this->session->smtp_port,
+			$this->session->smtp_encryption,
+			$this->session->admin_email
+		);
+
+		if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt'))
+			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
+		else
+			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
+
+		$vars = array(
+			'{firstname}' => $this->session->admin_firstname,
+			'{lastname}' => $this->session->admin_lastname,
+			'{shop_name}' => $this->session->shop_name,
+			'{passwd}' => $this->session->admin_password,
+			'{email}' => $this->session->admin_email,
+			'{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
+		);
+		$content = str_replace(array_keys($vars), array_values($vars), $content);
+
+		$mail->send(
+			$this->l('%s - Login information', $this->session->shop_name),
+			$content
+		);
+
 		// If last step is fine, we store the fact PrestaShop is installed
 		$this->session->last_step = 'configure';
 		$this->session->step = 'configure';
@@ -256,6 +299,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		if ($this->session->install_type == 'full')
 			$this->process_steps[] = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
 		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
+		if ($this->session->send_informations)
+			$this->process_steps[] = array('key' => 'sendEmail', 'lang' => $this->l('Send information e-mail'));
 
 		$this->displayTemplate('process');
 	}

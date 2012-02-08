@@ -44,9 +44,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 	{
 		require_once _PS_INSTALL_MODELS_PATH_.'database.php';
 		$this->model_database = new InstallModelDatabase();
-
-		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-		$this->model_mail = new InstallModelMail();
 	}
 
 	/**
@@ -136,11 +133,16 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$password = Tools::getValue('smtpPassword');
 		$email = Tools::getValue('testEmail');
 
-		$result = $this->model_mail->sendTestMail($smtp_checked, $server, $login, $password, $port, $encryption, $email);
+		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
+		$this->model_mail = new InstallModelMail($smtp_checked, $server, $login, $password, $port, $encryption, $email);
+		$result = $this->model_mail->send(
+			$this->l('Test message from PrestaShop'),
+			$this->l('This is a test message, your server is now available to send email')
+		);
 
 		$this->ajaxJsonAnswer(
-			(bool)$result,
-			($result) ? $this->l('A test e-mail has been sent to %s', $email) : $this->l('An error occurred while sending email, please verify your parameters')
+			$result === false,
+			($result === false) ? $this->l('A test e-mail has been sent to %s', $email) : $this->l('An error occurred while sending email, please verify your parameters')
 		);
 	}
 
