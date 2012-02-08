@@ -30,8 +30,8 @@
  */
 class AdminStockCoverControllerCore extends AdminController
 {
-	private $stock_cover_warehouses;
-	private $stock_cover_periods;
+	protected $stock_cover_warehouses;
+	protected $stock_cover_periods;
 
 	public function __construct()
 	{
