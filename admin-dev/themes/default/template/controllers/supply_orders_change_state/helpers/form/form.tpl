@@ -46,12 +46,10 @@
 <input type="submit" id="_form_submit_btn" value="   Save   " name="submitChangestate" class="button" style="display: none; ">
 </div>
 {/if}
-
 {/block}
 
-{block name="other_fieldset"}							
+{block name="other_fieldsets"}							
 <br />
-
 {if isset($supply_order_state) && $supply_order_state->editable == false && isset($supply_order)}
 <fieldset>
 <legend>
