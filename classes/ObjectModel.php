@@ -197,7 +197,7 @@ abstract class ObjectModelCore
 				{
 					$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
 							WHERE `'.$this->def['primary'].'` = '.(int)$id
-							.(($this->id_shop) ? ' AND `id_shop` = '.$this->id_shop : '');
+							.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
 					$result = Db::getInstance()->executeS($sql);
 					if ($result)
 						foreach ($result as $row)
