@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.7.7';
+		$this->version = '1.7.8';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -2505,7 +2505,7 @@ class BlockLayered extends Module
 					WHERE c.nleft > '.(int)$parent->nleft.'
 					AND c.nright < '.(int)$parent->nright.'
 					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
-					GROUP BY c.id_category ORDER BY level_depth, c.position';
+					GROUP BY c.id_category ORDER BY c.nleft, c.position';
 			}
 			
 			foreach ($filters as $filterTmp)
