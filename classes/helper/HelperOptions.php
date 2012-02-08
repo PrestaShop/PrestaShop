@@ -159,7 +159,6 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Type = image
-	 * @TODO
 	 */
 	public function displayOptionTypeImage($key, $field, $value)
 	{
@@ -187,7 +186,6 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Type = price
-	 * @TODO
 	 */
 	public function displayOptionTypePrice($key, $field, $value)
 	{
@@ -198,8 +196,6 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Type = disabled
-	 *
-	 * @TODO
 	 */
 	public function displayOptionTypeDisabled($key, $field, $value)
 	{
