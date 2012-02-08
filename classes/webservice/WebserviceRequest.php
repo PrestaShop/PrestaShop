@@ -277,6 +277,7 @@ class WebserviceRequestCore
 			'supply_order_histories' => array('description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_receipt_histories' => array('description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'tax_rules' => array('description' => 'Tax rules entity', 'class' => 'TaxRule', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 		);
 		ksort($resources);
 		return $resources;
