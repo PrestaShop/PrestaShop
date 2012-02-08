@@ -60,6 +60,17 @@ class SpecificPriceRuleCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'specific_price_rules',
+		'objectNodeName' => 'specific_price_rule',
+	        'fields' => array(
+			'id_shop' => 				array('xlink_resource' => 'shops', 'required' => true),
+			'id_country' => 			array('xlink_resource' => 'countries', 'required' => true),
+			'id_currency' => 			array('xlink_resource' => 'currencies', 'required' => true),
+			'id_group' => 				array('xlink_resource' => 'groups', 'required' => true),
+	      	),
+	);
+
 	public function delete()
 	{
 		$ids_condition_group = Db::getInstance()->executeS('SELECT id_specific_price_rule_condition_group

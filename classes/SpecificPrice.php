@@ -70,6 +70,23 @@ class SpecificPriceCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'specific_prices',
+		'objectNodeName' => 'specific_price',
+	        'fields' => array(
+			'id_group_shop' => 			array('xlink_resource' => 'shop_groups'),
+			'id_shop' => 				array('xlink_resource' => 'shops', 'required' => true),
+			'id_cart' => 				array('xlink_resource' => 'carts', 'required' => true),
+			'id_product' => 			array('xlink_resource' => 'products', 'required' => true),
+			'id_product_attribute' => 		array('xlink_resource' => 'product_attributes'),
+			'id_currency' => 			array('xlink_resource' => 'currencies', 'required' => true),
+			'id_country' => 			array('xlink_resource' => 'countries', 'required' => true),
+			'id_group' => 				array('xlink_resource' => 'groups', 'required' => true),
+			'id_customer' => 			array('xlink_resource' => 'customers', 'required' => true),
+	      	),
+	);
+
+
 	protected static $_specificPriceCache = array();
 	protected static $_cache_priorities = array();
 
