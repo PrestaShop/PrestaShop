@@ -107,8 +107,12 @@ function smartyTranslate($params, &$smarty)
 	{
 
 		// note : this may be modified later
-		case '.': $class = 'index';break;
-		case 'helper' : $class = 'AdminTab';break;
+		case '.':
+			$class = 'index';
+			break;
+		case 'helpers':
+			$class = 'AdminTab';
+			break;
 		default :
 		{
 			$parentClass = explode('/', $filename);
