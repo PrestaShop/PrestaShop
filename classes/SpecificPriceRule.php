@@ -52,10 +52,11 @@ class SpecificPriceRuleCore extends ObjectModel
 			'id_currency' => 	array('type' => self::TYPE_INT, 'required' => true),
 			'id_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'from_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'price' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'reduction' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
 			'reduction_type' => array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
-			'from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
-			'to' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
+			'from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
+			'to' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
 		),
 	);
 

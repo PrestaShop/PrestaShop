@@ -181,31 +181,28 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'name' => 'from_quantity',
 					'size' => 6,
 					'maxlength' => 10,
-					'value' => '1',
 					'required' => true,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Price:'),
+					'label' => $this->l('Price (tax excl.):'),
 					'name' => 'price',
 					'size' => 6,
 					'maxlength' => 10,
-					'value' => '0',
 					'suffix' => $this->context->currency->getSign('right'),
+					'desc' => $this->l('Put 0 to not change the price')
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('From:'),
 					'name' => 'from',
 					'size' => 12,
-					'required' => true
 				),
 				array(
 					'type' => 'date',
 					'label' => $this->l('To:'),
 					'name' => 'to',
 					'size' => 12,
-					'required' => true
 				),
 				array(
 					'type' => 'select',
@@ -229,7 +226,11 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				'class' => 'button'
 			),
 		);
-
+		$this->fields_value = array(
+										'price' => number_format((($value = $this->getFieldValue($this->object, 'price')) ? $value : 0), 2),
+										'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
+										'reduction' => number_format((($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 0), 2),
+									);
 		$attribute_groups = array();
 		$attributes = Attribute::getAttributes((int)$this->context->language->id);
 		foreach ($attributes as $attribute)
@@ -257,7 +258,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 										'conditions' => $this->object->getConditions(),
 										'is_multishop' => Shop::isFeatureActive()
 										);
-
 		return parent::renderForm();
 	}
 
