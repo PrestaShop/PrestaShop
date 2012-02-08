@@ -95,8 +95,8 @@ class CountryCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'countries',
 		'fields' => array(
-			'id_zone' => array('sqlId' => 'id_zone', 'xlink_resource'=> 'zones'),
-			'id_currency' => array('sqlId' => 'id_currency', 'xlink_resource'=> 'currencies'),
+			'id_zone' => array('xlink_resource'=> 'zones'),
+			'id_currency' => array('xlink_resource'=> 'currencies'),
 		),
 	);
 
