@@ -120,7 +120,7 @@ class HelperOptionsCore extends Helper
 									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 							}
 						</script>';
-					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP', 'helper').'</a>';
+					$field['link_remove_ip'] = ' &nbsp<a href="#" class="button" onclick="addRemoteAddr(); return false;">'.$this->l('Add my IP', 'Helper').'</a>';
 					if (!isset($category_data['bottom']))
 						$category_data['bottom'] = '<script type="text/javascript">changeCMSActivationAuthorization();</script>';
 				}
@@ -193,7 +193,7 @@ class HelperOptionsCore extends Helper
 	{
 		echo $this->context->currency->getSign('left');
 		$this->displayOptionTypeText($key, $field, $value);
-		echo $this->context->currency->getSign('right').' '.$this->l('(tax excl.)', 'helper');
+		echo $this->context->currency->getSign('right').' '.$this->l('(tax excl.)', 'Helper');
 	}
 
 	/**
