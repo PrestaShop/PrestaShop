@@ -388,93 +388,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-		// checks access
-		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
-		{
-			$this->errors[] = Tools::displayError('You do not have the required permissions to add warehouses.');
-			return parent::postProcess();
-		}
-
-		if (Tools::isSubmit('submitAdd'.$this->table))
-		{
-			if (!($obj = $this->loadObject(true)))
-				return;
-
-			// updates/creates address if it does not exist
-			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
-				$address = new Address((int)Tools::getValue('id_address')); // updates address
-			else
-				$address = new Address(); // creates address
-
-			$address->alias = Tools::getValue('reference', null);
-			$address->lastname = 'warehouse'; // skip problem with numeric characters in warehouse name
-			$address->firstname = 'warehouse'; // skip problem with numeric characters in warehouse name
-			$address->address1 = Tools::getValue('address', null);
-			$address->address2 = Tools::getValue('address2', null);
-			$address->postcode = Tools::getValue('postcode', null);
-			$address->phone = Tools::getValue('phone', null);
-			$address->id_country = Tools::getValue('id_country', null);
-			$address->id_state = Tools::getValue('id_state', null);
-			$address->city = Tools::getValue('city', null);
-
-			$validation = $address->validateController();
-
-			// checks address validity
-			if (count($validation) > 0)
-			{
-				foreach ($validation as $item)
-					$this->errors[] = $item;
-				$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
-			}
-			else
-			{
-				if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
-					$address->update();
-				else
-				{
-					$address->save();
-					$_POST['id_address'] = $address->id;
-				}
-			}
-
-			// if updating
-			if ($obj->id > 0)
-			{
-				// handles shops associations
-				if (Tools::isSubmit('ids_shops'))
-					$obj->setShops(Tools::getValue('ids_shops'));
-
-				// handles carriers associations
-				if (Tools::isSubmit('ids_carriers'))
-					$obj->setCarriers(Tools::getValue('ids_carriers'));
-			}
-
-			// hack for enable the possibility to update a warehouse without recreate new id
-			$this->deleted = false;
-
-			return parent::postProcess();
-		}
-		else if (Tools::isSubmit('delete'.$this->table))
-			if (!($obj = $this->loadObject(true)))
-				return;
-			else if ($obj->getQuantitiesOfProducts() > 0)
-				$this->errors[] = $this->l('It is not possible to delete a Warehouse when there are products in it.');
-			else if (SupplyOrder::warehouseHasPendingOrders($obj->id))
-				$this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
-			else
-			{
-				// sets the address of the warehouse as deleted
-				$address = new Address($obj->id_address);
-				$address->deleted = 1;
-				$address->save();
-
-				// removes associations
-				$obj->setCarriers(array());
-				$obj->setShops(array());
-				$obj->resetProductsLocations();
-
-				return parent::postProcess();
-			}
+		return parent::postProcess();
 	}
 
 	/**
@@ -560,6 +474,125 @@ class AdminWarehousesControllerCore extends AdminController
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Checks access of the employee
+	 */
+	public function processCheckAccess()
+	{
+		if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
+		{
+			$this->errors[] = Tools::displayError('You do not have the required permissions to add warehouses.');
+			return parent::postProcess();
+		}
+	}
+
+	/**
+	 * @see AdminController::processAdd();
+	 */
+	public function processAdd($token)
+	{
+		if (Tools::isSubmit('submitAdd'.$this->table))
+		{
+			if (!($obj = $this->loadObject(true)))
+					return;
+
+			// updates/creates address if it does not exist
+			if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
+				$address = new Address((int)Tools::getValue('id_address')); // updates address
+			else
+				$address = new Address(); // creates address
+
+			$address->alias = Tools::getValue('reference', null);
+			$address->lastname = 'warehouse'; // skip problem with numeric characters in warehouse name
+			$address->firstname = 'warehouse'; // skip problem with numeric characters in warehouse name
+			$address->address1 = Tools::getValue('address', null);
+			$address->address2 = Tools::getValue('address2', null);
+			$address->postcode = Tools::getValue('postcode', null);
+			$address->phone = Tools::getValue('phone', null);
+			$address->id_country = Tools::getValue('id_country', null);
+			$address->id_state = Tools::getValue('id_state', null);
+			$address->city = Tools::getValue('city', null);
+
+			$validation = $address->validateController();
+
+			// checks address validity
+			if (count($validation) > 0)
+			{
+				foreach ($validation as $item)
+					$this->errors[] = $item;
+				$this->errors[] = Tools::displayError('The address is not correct. Check if all required fields are filled.');
+			}
+			else
+			{
+				if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+					$address->update();
+				else
+				{
+					$address->save();
+					$_POST['id_address'] = $address->id;
+				}
+			}
+
+			// if updating
+			if ($obj->id > 0)
+			{
+				// handles shops associations
+				if (Tools::isSubmit('ids_shops'))
+					$obj->setShops(Tools::getValue('ids_shops'));
+
+				// handles carriers associations
+				if (Tools::isSubmit('ids_carriers'))
+					$obj->setCarriers(Tools::getValue('ids_carriers'));
+			}
+
+			// hack for enable the possibility to update a warehouse without recreate new id
+			$this->deleted = false;
+
+			return parent::processAdd($token);
+		}
+	}
+
+	/**
+	 * @see AdminController::processDelete();
+	 */
+	public function processDelete($token)
+	{
+		if (Tools::isSubmit('delete'.$this->table))
+		{
+			if (!($obj = $this->loadObject(true)))
+				return;
+			else if ($obj->getQuantitiesOfProducts() > 0)
+				$this->errors[] = $this->l('It is not possible to delete a Warehouse when there are products in it.');
+			else if (SupplyOrder::warehouseHasPendingOrders($obj->id))
+				$this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
+			else
+			{
+				// sets the address of the warehouse as deleted
+				$address = new Address($obj->id_address);
+				$address->deleted = 1;
+				$address->save();
+
+				// removes associations
+				$obj->setCarriers(array());
+				$obj->setShops(array());
+				$obj->resetProductsLocations();
+
+				return parent::processDelete($token);
+			}
+		}
+	}
+
+	/**
+	 * @see AdminController::initProcess()
+	 */
+	public function initProcess()
+	{
+		// checks access
+		$this->processCheckAccess();
+
+		return parent::initprocess();
 	}
 
 }
