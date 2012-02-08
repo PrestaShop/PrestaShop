@@ -30,7 +30,7 @@
  */
 class AdminStockInstantStateControllerCore extends AdminController
 {
-	private $stock_instant_state_warehouses = array();
+	protected $stock_instant_state_warehouses = array();
 
 	public function __construct()
 	{
