@@ -196,6 +196,8 @@ class AdminCartsControllerCore extends AdminController
 				$this->context->cart->id_customer = $id_customer;
 			if ($this->context->cart->OrderExists())
 				return;
+			if (!$this->context->cart->secure_key)
+				$this->context->cart->secure_key = $this->context->customer->secure_key;
 			if (!$this->context->cart->id_shop)
 				$this->context->cart->id_shop = (int)$this->context->shop->id;
 			if (!$this->context->cart->id_lang)
@@ -215,6 +217,7 @@ class AdminCartsControllerCore extends AdminController
 				$this->context->cart->id_address_delivery = $addresses[0]['id_address'];
 			elseif ($id_address_delivery)
 				$this->context->cart->id_address_delivery = (int)$id_address_delivery;
+				
 			$this->context->cart->save();
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$this->context->currency = $currency;
@@ -371,7 +374,8 @@ class AdminCartsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateAddress()
 	{
-		echo Tools::jsonEncode(array('addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang)));
+		if ($this->tabAccess['edit'] === '1')
+			echo Tools::jsonEncode(array('addresses' => $this->context->customer->getAddresses((int)$this->context->cart->id_lang)));
 	}
 
 	public function ajaxProcessUpdateAddresses()
@@ -524,25 +528,28 @@ class AdminCartsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateProductPrice()
 	{
-		SpecificPrice::deleteByIdCart((int)$this->context->cart->id, (int)Tools::getValue('id_product'), (int)Tools::getValue('id_product_attribute'));
-		$specific_price = new SpecificPrice();
-		$specific_price->id_cart = (int)$this->context->cart->id;
-		$specific_price->id_shop = 0;
-		$specific_price->id_group_shop = 0;
-		$specific_price->id_currency = 0;
-		$specific_price->id_country = 0;
-		$specific_price->id_group = 0;
-		$specific_price->id_customer = (int)$this->context->customer->id;
-		$specific_price->id_product = (int)Tools::getValue('id_product');
-		$specific_price->id_product_attribute = (int)Tools::getValue('id_product_attribute');
-		$specific_price->price = (float)Tools::getValue('price');
-		$specific_price->from_quantity = 1;
-		$specific_price->reduction = 0;
-		$specific_price->reduction_type = 'amount';
-		$specific_price->from = '0000-00-00 00:00:00';
-		$specific_price->to = '0000-00-00 00:00:00';
-		$specific_price->add();
-		echo Tools::jsonEncode($this->ajaxReturnVars());
+		if ($this->tabAccess['edit'] === '1')
+		{
+			SpecificPrice::deleteByIdCart((int)$this->context->cart->id, (int)Tools::getValue('id_product'), (int)Tools::getValue('id_product_attribute'));
+			$specific_price = new SpecificPrice();
+			$specific_price->id_cart = (int)$this->context->cart->id;
+			$specific_price->id_shop = 0;
+			$specific_price->id_group_shop = 0;
+			$specific_price->id_currency = 0;
+			$specific_price->id_country = 0;
+			$specific_price->id_group = 0;
+			$specific_price->id_customer = (int)$this->context->customer->id;
+			$specific_price->id_product = (int)Tools::getValue('id_product');
+			$specific_price->id_product_attribute = (int)Tools::getValue('id_product_attribute');
+			$specific_price->price = (float)Tools::getValue('price');
+			$specific_price->from_quantity = 1;
+			$specific_price->reduction = 0;
+			$specific_price->reduction_type = 'amount';
+			$specific_price->from = '0000-00-00 00:00:00';
+			$specific_price->to = '0000-00-00 00:00:00';
+			$specific_price->add();
+			echo Tools::jsonEncode($this->ajaxReturnVars());
+		}
 	}
 
 	public static function getOrderTotalUsingTaxCalculationMethod($id_cart)
