@@ -41,9 +41,16 @@ class TaxRulesGroupCore extends ObjectModel
 		'primary' => 'id_tax_rules_group',
 		'fields' => array(
 			'name' =>	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-			'active' =>	array('type' => self::TYPE_BOOL),
+			'active' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 		),
 	);
+
+    protected $webserviceParameters = array(
+	'objectsNodeName' => 'tax_rule_groups',
+	'objectNodeName' => 'tax_rule_group',
+        'fields' => array(
+        ),
+    );
 
     protected static $_taxes = array();
 
