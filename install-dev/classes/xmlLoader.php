@@ -307,6 +307,7 @@ class InstallXmlLoader
 		}
 
 		$this->flushDelayedInserts();
+		unset($this->cache_xml_entity[$this->path_type][$entity]);
 	}
 
 	/**
@@ -350,11 +351,7 @@ class InstallXmlLoader
 	 */
 	protected function loadEntity($entity, $iso = null)
 	{
-		$cache_id = $entity;
-		if ($iso)
-			$cache_id .= ':'.$iso;
-
-		if (!isset($this->cache_xml_entity[$this->path_type][$cache_id]))
+		if (!isset($this->cache_xml_entity[$this->path_type][$entity][$iso]))
 		{
 			$path = $this->data_path.$entity.'.xml';
 			if ($iso)
@@ -363,11 +360,11 @@ class InstallXmlLoader
 			if (!file_exists($path))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml not found');
 
-			if (!$this->cache_xml_entity[$this->path_type][$cache_id] = @simplexml_load_file($path, 'InstallSimplexmlElement'))
+			if (!$this->cache_xml_entity[$this->path_type][$entity][$iso] = @simplexml_load_file($path, 'InstallSimplexmlElement'))
 				throw new PrestashopInstallerException('XML data file '.$entity.'.xml invalid');
 		}
 
-		return $this->cache_xml_entity[$this->path_type][$cache_id];
+		return $this->cache_xml_entity[$this->path_type][$entity][$iso];
 	}
 
 	/**
@@ -426,6 +423,7 @@ class InstallXmlLoader
 				$object->hydrate($data_lang);
 			$object->add(true, (isset($xml->fields['null'])) ? true : false);
 			$entity_id = $object->id;
+			unset($object);
 		}
 		else
 		{
@@ -436,6 +434,7 @@ class InstallXmlLoader
 				$primary = 'id_'.$entity;
 			else if (strpos((string)$xml->fields['primary'], ',') === false)
 				$primary = (string)$xml->fields['primary'];
+			unset($xml);
 
 			if ($primary)
 			{
