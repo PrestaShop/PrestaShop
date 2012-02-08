@@ -279,6 +279,8 @@ class WebserviceRequestCore
 			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'tax_rules' => array('description' => 'Tax rules entity', 'class' => 'TaxRule'),
 			'tax_rule_groups' => array('description' => 'Tax rule groups', 'class' => 'TaxRulesGroup'),
+			'specific_prices' => array('description' => 'Specific price management', 'class' => 'SpecificPrice'),
+			'specific_price_rules' => array('description' => 'Specific price management', 'class' => 'SpecificPriceRule'),
 		);
 		ksort($resources);
 		return $resources;
