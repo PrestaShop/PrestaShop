@@ -143,7 +143,7 @@ class HelperListCore extends Helper
 		// Append when we get a syntax error in SQL query
 		if ($list === false)
 		{
-			$this->displayWarning($this->l('Bad SQL query', 'helper'));
+			$this->displayWarning($this->l('Bad SQL query', 'Helper'));
 			return false;
 		}
 
@@ -344,10 +344,10 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_duplicate.tpl');
 		if (!array_key_exists('Duplicate', self::$cache_lang))
-			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'helper');
+			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
 
 		if (!array_key_exists('Copy images too?', self::$cache_lang))
-			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', 'helper');
+			self::$cache_lang['Copy images too?'] = $this->l('Copy images too?', 'Helper');
 
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
@@ -386,7 +386,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_details.tpl');
 		if (!array_key_exists('Details', self::$cache_lang))
-			self::$cache_lang['Details'] = $this->l('Details', 'helper');
+			self::$cache_lang['Details'] = $this->l('Details', 'Helper');
 
 		$ajax_params = $this->ajax_params;
 		if (!is_array($ajax_params) || !isset($ajax_params['action']))
@@ -410,7 +410,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_view.tpl');
 		if (!array_key_exists('View', self::$cache_lang))
-			self::$cache_lang['View'] = $this->l('View', 'helper');
+			self::$cache_lang['View'] = $this->l('View', 'Helper');
 
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -428,7 +428,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_edit.tpl');
 		if (!array_key_exists('Edit', self::$cache_lang))
-			self::$cache_lang['Edit'] = $this->l('Edit', 'helper');
+			self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
 
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -447,13 +447,13 @@ class HelperListCore extends Helper
 		$tpl = $this->createTemplate('list_action_delete.tpl');
 
 		if (!array_key_exists('Delete', self::$cache_lang))
-			self::$cache_lang['Delete'] = $this->l('Delete', 'helper');
+			self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
 
 		if (!array_key_exists('DeleteItem', self::$cache_lang))
-			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item ?', 'helper');
+			self::$cache_lang['DeleteItem'] = $this->l('Delete selected item ?', 'Helper');
 
 		if (!array_key_exists('Name', self::$cache_lang))
-			self::$cache_lang['Name'] = $this->l('Name:', 'helper');
+			self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
 
 		if (!is_null($name))
 			$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
@@ -479,7 +479,7 @@ class HelperListCore extends Helper
 	{
 		$tpl = $this->createTemplate('list_action_default.tpl');
 		if (!array_key_exists('Default', self::$cache_lang))
-			self::$cache_lang['Default'] = $this->l('Default', 'helper');
+			self::$cache_lang['Default'] = $this->l('Default', 'Helper');
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
