@@ -59,13 +59,8 @@ function smartyTranslate($params, &$smarty)
     }
 
 	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
-	// 1.5 admin : default filename is .tpl; test is made on dir
-	$dir_filename = dirname($filename);
-	// key is Helper if dir contains "helper"
-	// we may improve this later to get only the first directory everytime
-	if(strpos($dir_filename, 'helper') !== false)
-		$dir_filename = 'helper';
 
+	// If the template is part of a module
 	if (!empty($params['mod']))
 	{
 		global $_MODULES, $_MODULE;
@@ -103,26 +98,26 @@ function smartyTranslate($params, &$smarty)
 		return $msg;
 	}
 
-	switch ($dir_filename)
-	{
-
-		// note : this may be modified later
-		case '.':
-			$class = 'index';
-			break;
-		case 'helpers':
-			$class = 'AdminTab';
-			break;
-		default :
-		{
-			$parentClass = explode('/', $filename);
-			$key = array_search('controllers', $parentClass);
-			$class = 'Admin'.Tools::toCamelCase($parentClass[$key + 1], true);
-		}
-	}
-
-	if(in_array($class, array('header','footer','password','login')))
+	// If the tpl is at the root of the template folder
+	if (dirname($filename) == '.')
 		$class = 'index';
+	// If the tpl is used by a Helper
+	elseif (strpos($filename, 'helpers') === 0)
+		$class = 'Helper';
+	// If the tpl is used by a Controller
+	else
+	{
+		// Split by \ and / to get the folder tree for the file
+		$folder_tree = preg_split('#[/\\\]#', $filename);
+		$key = array_search('controllers', $folder_tree);
+
+		// If there was a match, construct the class name using the child folder name
+		// Eg. xxx/controllers/customers/xxx => AdminCustomers
+		if ($key !== false)
+			$class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
+		else
+			$class = null;
+	}
 
 	return AdminController::translate($params['s'], $class, $addslashes, $htmlentities);
 }
