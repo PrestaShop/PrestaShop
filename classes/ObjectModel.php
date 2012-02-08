@@ -849,10 +849,9 @@ abstract class ObjectModelCore
 			unset($default_resource_parameters['retrieveData']['retrieveMethod']);
 
 		$resource_parameters = array_merge_recursive($default_resource_parameters, $this->{$ws_params_attribute_name});
-		$definition = ObjectModel::getDefinition($this);
 
 		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array());
-		foreach ($definition['fields'] as $field_name => $details)
+		foreach ($this->definition['fields'] as $field_name => $details)
 		{
 			if (!isset($resource_parameters['fields'][$field_name]))
 				$resource_parameters['fields'][$field_name] = array();
