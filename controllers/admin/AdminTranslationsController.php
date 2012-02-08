@@ -904,10 +904,14 @@ class AdminTranslationsControllerCore extends AdminController
 		// count will contain the number of expressions of the page
 		$count = 0;
 		$missing_translations = array();
-		// parsing .php files
+
+		// Parse BO php files for translations
+		// Add Controllers
 		$tabs = scandir(_PS_ADMIN_CONTROLLER_DIR_);
+		// Add Helpers
 		$tabs = array_merge($tabs, Tools::scandir(_PS_ADMIN_CONTROLLER_DIR_, 'php', '../../classes/helper'));
-		$tabs[] = '../../classes/AdminController.php';
+		// Add parent AdminController
+		$tabs[] = '../../classes/controller/AdminController.php';
 
 		foreach ($tabs as $tab)
 			if (preg_match('/^(.*)\.php$/', $tab) && file_exists($tpl = _PS_ADMIN_CONTROLLER_DIR_.$tab))
