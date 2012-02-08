@@ -571,6 +571,7 @@ ul#optional {
 	-webkit-border-radius:5px;
 	border-radius: 5px;
 	box-shadow:0 1px #d9d9d9;
+    cursor: pointer;
 }
 .blockInfoEnd.last {margin-right:0;}
 	.blockInfoEnd p {
