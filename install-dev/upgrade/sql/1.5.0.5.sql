@@ -15,3 +15,13 @@ VALUES
 	(NULL, NULL, 'PS_LOGO_INVOICE', 'logo_invoice.jpg', NOW(), NOW()),
 	(NULL, NULL, 'PS_FAVICON', 'favicon.jpg', NOW(), NOW()),
 	(NULL, NULL, 'PS_STORES_ICON', 'logo_stores.gif', NOW(), NOW());
+
+CREATE TABLE `PREFIX_module_preference` (
+  `id_module_preference` int(11) NOT NULL auto_increment,
+  `id_employee` int(11) NOT NULL,
+  `module` varchar(255) NOT NULL,
+  `interest` tinyint(1) default NULL,
+  `favorite` tinyint(1) default NULL,
+  PRIMARY KEY (`id_module_preference`),
+  UNIQUE KEY `employee_module` (`id_employee`, `module`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
