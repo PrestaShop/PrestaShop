@@ -34,7 +34,7 @@
 			{l s='You only have free carriers, there is no need to configure your delivery prices.'}
 		{else}
 			<b>{l s='Carrier:'} </b>
-			<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')); $('#fees').submit();">
+			<select name="id_carrier2" onchange="$('#fees').attr('action', $('#fees').attr('action')+'&id_carrier='+$(this).attr('value')+'#fees'); $('#fees').submit();">
 				{foreach $carriers AS $carrier}
 					<option value="{$carrier['id_carrier']|intval}" {if $carrier['id_carrier'] == $id_carrier} selected="selected"{/if}>{$carrier['name']}</option>
 				{/foreach}
