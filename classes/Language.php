@@ -247,19 +247,41 @@ class LanguageCore extends ObjectModel
 		}
 
 		$lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php');
-		$mFiles = array('account.html', 'account.txt', 'bankwire.html', 'bankwire.txt',
-		'cheque.html', 'cheque.txt', 'contact.html', 'contact.txt', 'contact_form.html',
-		'contact_form.txt', 'credit_slip.html', 'credit_slip.txt', 'download_product.html',
-		'download_product.txt', 'download-product.tpl', 'employee_password.html', 'employee_password.txt',
-		'forward_msg.html', 'forward_msg.txt', 'guest_to_customer.html', 'guest_to_customer.txt',
-		'in_transit.html', 'in_transit.txt', 'log_alert.html', 'log_alert.txt', 'newsletter.html', 'newsletter.txt',
-		'order_canceled.html', 'order_canceled.txt', 'order_conf.html', 'order_conf.txt',
-		'order_customer_comment.html', 'order_customer_comment.txt', 'order_merchant_comment.html',
-		'order_merchant_comment.txt', 'order_return_state.html', 'order_return_state.txt',
-		'outofstock.html', 'outofstock.txt', 'password.html', 'password.txt', 'password_query.html',
-		'password_query.txt', 'payment.html', 'payment.txt', 'payment_error.html', 'payment_error.txt',
-		'preparation.html', 'preparation.txt', 'refund.html', 'refund.txt', 'reply_msg.html',
-		'reply_msg.txt', 'shipped.html', 'shipped.txt', 'test.html', 'test.txt', 'voucher.html', 'voucher.txt');
+
+		// Added natives mails files
+		$mFiles = array(
+			'account.html', 'account.txt',
+			'backoffice_order.html', 'backoffice_order.txt',
+			'bankwire.html', 'bankwire.txt',
+			'cheque.html', 'cheque.txt',
+			'contact.html', 'contact.txt',
+			'contact_form.html', 'contact_form.txt',
+			'credit_slip.html', 'credit_slip.txt',
+			'download_product.html', 'download_product.txt', 'download-product.tpl',
+			'employee_password.html', 'employee_password.txt',
+			'forward_msg.html', 'forward_msg.txt',
+			'guest_to_customer.html', 'guest_to_customer.txt',
+			'in_transit.html', 'in_transit.txt',
+			'log_alert.html', 'log_alert.txt',
+			'newsletter.html', 'newsletter.txt',
+			'order_canceled.html', 'order_canceled.txt',
+			'order_conf.html', 'order_conf.txt',
+			'order_customer_comment.html', 'order_customer_comment.txt',
+			'order_merchant_comment.html', 'order_merchant_comment.txt',
+			'order_return_state.html', 'order_return_state.txt',
+			'outofstock.html', 'outofstock.txt',
+			'password.html', 'password.txt',
+			'password_query.html', 'password_query.txt',
+			'payment.html', 'payment.txt',
+			'payment_error.html', 'payment_error.txt',
+			'preparation.html', 'preparation.txt',
+			'refund.html', 'refund.txt',
+			'reply_msg.html', 'reply_msg.txt',
+			'shipped.html', 'shipped.txt',
+			'test.html', 'test.txt',
+			'voucher.html', 'voucher.txt',
+			'voucher_new.html', 'voucher_new.txt'
+		);
 
 		$number = -1;
 
