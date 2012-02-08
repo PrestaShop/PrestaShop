@@ -31,9 +31,9 @@ class TranslatedConfigurationCore extends Configuration
 		'objectNodeName' => 'translated_configuration',
 		'objectsNodeName' => 'translated_configurations',
 		'fields' => array(
-			'value' => array('i18n' => true),
-			'date_add' => array('i18n' => true),
-			'date_upd' => array('i18n' => true),
+			'value' => array(),
+			'date_add' => array(),
+			'date_upd' => array(),
 		),
 	);
 
@@ -45,7 +45,7 @@ class TranslatedConfigurationCore extends Configuration
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32),
 			'id_group_shop' => 	array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
 			'id_shop' => 		array('type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'),
-			'value' => 			array('type' => self::TYPE_STRING),
+			'value' => 			array('type' => self::TYPE_STRING, 'lang' => true),
 			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
