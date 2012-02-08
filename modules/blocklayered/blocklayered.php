@@ -67,6 +67,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', 1);
 			Configuration::updateValue('PS_LAYERED_FILTER_PRICE_USETAX', 1);
+			Configuration::updateValue('PS_LAYERED_FILTER_CATEGORY_DEPTH', 1);
 			
 			$this->rebuildLayeredStructure();
 			$this->rebuildLayeredCache();
@@ -99,6 +100,7 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_FULL_TREE');
 		Configuration::deleteByName('PS_LAYERED_INDEXED');
 		Configuration::deleteByName('PS_LAYERED_FILTER_PRICE_USETAX');
+		Configuration::deleteByName('PS_LAYERED_FILTER_CATEGORY_DEPTH');
 		
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
 		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
@@ -1365,6 +1367,7 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', Tools::getValue('ps_layered_show_qties'));
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', Tools::getValue('ps_layered_full_tree'));
 			Configuration::updateValue('PS_LAYERED_FILTER_PRICE_USETAX', Tools::getValue('ps_layered_filter_price_usetax'));
+			Configuration::updateValue('PS_LAYERED_FILTER_CATEGORY_DEPTH', (int)Tools::getValue('ps_layered_filter_category_depth'));
 			
 			$html .= '
 			<div class="conf">'.
@@ -1992,6 +1995,12 @@ class BlockLayered extends Module
 						</td>
 					</tr>
 					<tr style="text-align: center;">
+						<td style="text-align: right;">'.$this->l('Category filter depth (0 for no limits, 1 by default)').'</td>
+						<td>
+							<input type="text" name="ps_layered_filter_category_depth" value="'.((Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH') !== false) ? Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH') : 1).'" />
+						</td>
+					</tr>
+					<tr style="text-align: center;">
 						<td style="text-align: right;">'.$this->l('Use tax to filter price').'</td>
 						<td>
 							<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />
@@ -2479,6 +2488,10 @@ class BlockLayered extends Module
 					break;
 
 				case 'category':
+					$depth = Configuration::get('PS_LAYERED_FILTER_CATEGORY_DEPTH');
+					if ($depth === false)
+						$depth = 1;
+					
 					$sqlQuery['select'] = '
 					SELECT c.id_category, c.id_parent, cl.name, (SELECT count(DISTINCT p.id_product) # ';
 					$sqlQuery['from'] = '
@@ -2489,7 +2502,9 @@ class BlockLayered extends Module
 					$sqlQuery['group'] = ') count_products
 					FROM '._DB_PREFIX_.'category c
 					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = '.(int)$cookie->id_lang.')
-					WHERE c.id_parent = '.(int)$id_parent.'
+					WHERE c.nleft > '.(int)$parent->nleft.'
+					AND c.nright < '.(int)$parent->nright.'
+					'.($depth ? 'AND c.level_depth <= '.($parent->level_depth+(int)$depth) : '').'
 					GROUP BY c.id_category ORDER BY level_depth, c.position';
 			}
 			
