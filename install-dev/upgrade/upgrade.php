@@ -91,10 +91,10 @@ if (defined('_PS_ROOT_DIR_') AND !defined('_PS_MODULE_DIR_'))
 elseif (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_.'/../modules/');
 
-if(!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
+if (!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_'))
 	define('_PS_INSTALLER_PHP_UPGRADE_DIR_',  _PS_INSTALL_PATH_.'upgrade/php/');
 
-if(!defined('_PS_INSTALLER_SQL_UPGRADE_DIR_'))
+if (!defined('_PS_INSTALLER_SQL_UPGRADE_DIR_'))
 	define('_PS_INSTALLER_SQL_UPGRADE_DIR_',  _PS_INSTALL_PATH_.'upgrade/sql/');
 
 
@@ -322,10 +322,11 @@ if (empty($fail_result))
 					}
 					if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
 					{
+						$warningExist = true;
 						$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
 						$logger->logError(empty($phpRes['error'])?'':$phpRes['error']);
-						$requests .=
-		'	<request result="fail" sqlfile="'.$version.'">
+						$requests .= '
+			<request result="fail" sqlfile="'.$version.'">
 				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
 				<phpMsgError><![CDATA['.(empty($phpRes['msg'])?'':$phpRes['msg']).']]></phpMsgError>
 				<phpNumberError><![CDATA['.(empty($phpRes['error'])?'':$phpRes['error']).']]></phpNumberError>
@@ -337,7 +338,7 @@ if (empty($fail_result))
 				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
 			</request>'."\n";
 				}
-				elseif(!Db::getInstance()->execute($query))
+				elseif (!Db::getInstance()->execute($query))
 				{
 					$logger->logError('SQL query: '."\r\n".$query);
 					$logger->logError('SQL error: '."\r\n".Db::getInstance()->getMsgError());
