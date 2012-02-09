@@ -908,6 +908,10 @@ class AdminTranslationsControllerCore extends AdminController
 		// Parse BO php files for translations
 		// Add Controllers
 		$tabs = scandir(_PS_ADMIN_CONTROLLER_DIR_);
+
+		// Add override controller admin
+		$tabs = array_merge($tabs, Tools::scandir(_PS_ADMIN_CONTROLLER_DIR_, 'php', '../../override/controllers/admin'));
+
 		// Add Helpers
 		$tabs = array_merge($tabs, Tools::scandir(_PS_ADMIN_CONTROLLER_DIR_, 'php', '../../classes/helper'));
 		// Add parent AdminController
@@ -1083,7 +1087,8 @@ class AdminTranslationsControllerCore extends AdminController
 							_PS_ADMIN_DIR_.'/../controllers/front/',
 							_PS_ADMIN_DIR_.'/../controllers/admin/',
 							_PS_ADMIN_DIR_.'/../override/classes/',
-							_PS_ADMIN_DIR_.'/../override/controllers/',
+							_PS_ADMIN_DIR_.'/../override/controllers/front/',
+							_PS_ADMIN_DIR_.'/../override/controllers/admin/',
 							_PS_ADMIN_DIR_.'/');
 		if (!file_exists(_PS_MODULE_DIR_))
 				die($this->displayWarning(Tools::displayError('Fatal error: Module directory is not here anymore ').'('._PS_MODULE_DIR_.')'));
@@ -1463,6 +1468,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$modules_has_mails = $this->getModulesHasMails();
 		$arr_files_to_parse = array(
 			_PS_ROOT_DIR_.'/controllers',
+			_PS_ROOT_DIR_.'/override',
 			_PS_ROOT_DIR_.'/classes',
 			_PS_ADMIN_DIR_.'/tabs',
 			_PS_ADMIN_DIR_,
