@@ -32,7 +32,7 @@
 		<div class="rowForm">
 			<label for="engine_stats_render">{l s='Graph engine'} </label>
 			{if count($array_graph_engines)}
-				<select name="PS_STATS_RENDER" id="engine_stats_render">';
+				<select name="PS_STATS_RENDER" id="engine_stats_render">
 					{foreach $array_graph_engines as $k => $value}
 						<option value="{$k}" {if $k == $graph_engine}selected="selected"{/if}>{$value[0]}</option>
 					{/foreach}

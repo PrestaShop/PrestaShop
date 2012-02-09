@@ -133,7 +133,7 @@
 			<div style="float:left;">
 				<p>
 					<div style="width:75px; font-weight:bold; float:left;">{l s='From:'}</div>
-					<select name="fromLang">';
+					<select name="fromLang">
 						{foreach $languages as $language}
 							<option value="{$language['iso_code']}">{$language['name']}</option>
 						{/foreach}
