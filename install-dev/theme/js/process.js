@@ -17,6 +17,8 @@ function start_install()
 	$('.error_log').hide();
 	$('#progress_bar').show();
 	$('#progress_bar .installing').show();
+	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
+
 	process_install();
 }
 
@@ -52,12 +54,72 @@ function process_install(step)
 				}
 				else
 				{
-					$('#progress_bar .total .progress').animate({'width': '+='+process_percent+'%'}, 500);
-					$('#progress_bar .total span').html(Math.ceil(current_step * process_percent)+'%');
+					$('#progress_bar .total .progress').animate({'width': '+='+process_pixel+'px'}, 500);
+					$('#progress_bar .total span').html(Math.ceil(current_step * (100 / process_steps.length))+'%');
 
 					// Process next step
-					process_install(process_steps[current_step]);
+					if (process_steps[current_step].subtasks)
+						process_install_subtasks(process_steps[current_step]);
+					else
+						process_install(process_steps[current_step]);
 				}
+			}
+			// An error occured during this step
+			else
+			{
+				install_error(step, (json) ? json.message : '');
+			}
+		},
+		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		error: function()
+		{
+			install_error(step);
+		}
+	});
+}
+
+function process_install_subtasks(step)
+{
+	$('.installing').hide().html(step.lang+' ...').fadeIn('slow');
+	process_install_subtask(step, 0);
+}
+
+function process_install_subtask(step, current_subtask)
+{
+	var params = {};
+	params[step.key] = 'true';
+	params['subtask'] = current_subtask;
+	$.each(step.subtasks[current_subtask], function(k, v)
+	{
+		params[k] = v;
+	});
+
+	$.ajax({
+		url: 'index.php',
+		data: params,
+		dataType: 'json',
+		cache: false,
+		success: function(json)
+		{
+			// No error during this step
+			if (json && json.success === true)
+			{
+				current_subtask++;
+				var subtask_process_pixel = process_pixel / step.subtasks.length;
+				$('#progress_bar .total .progress').animate({'width': '+='+subtask_process_pixel+'px'}, 500);
+				$('#progress_bar .total span').html(Math.ceil((current_step * (100 / process_steps.length)) + Math.ceil(current_subtask * ((100 / process_steps.length) / step.subtasks.length)))+'%');
+
+				if (current_subtask >= step.subtasks.length)
+				{
+					current_step++;
+					$('#process_step_'+step.key).show().addClass('success');
+					if (process_steps[current_step].subtasks)
+						process_install_subtasks(process_steps[current_step]);
+					else
+						process_install(process_steps[current_step]);
+				}
+				else
+					process_install_subtask(step, current_subtask);
 			}
 			// An error occured during this step
 			else

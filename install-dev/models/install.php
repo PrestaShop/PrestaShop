@@ -137,16 +137,15 @@ class InstallModelInstall extends InstallAbstractModel
 	}
 
 	/**
-	 * PROCESS : populateDatabase
-	 * Populate database with default data
+	 * PROCESS : installDefaultData
+	 * Create default shop and languages
 	 */
-	public function populateDatabase($clear_database = false, array $params = array())
+	public function installDefaultData($shop_name, $clear_database = false)
 	{
 		if ($clear_database)
 			$this->clearDatabase(true);
 
 		// Install first shop
-		$shop_name = isset($params['shop_name']) ? $params['shop_name'] : 'Default';
 		if (!$this->createShop($shop_name))
 			return false;
 
@@ -163,11 +162,31 @@ class InstallModelInstall extends InstallAbstractModel
 
 		$flip_languages = array_flip($languages);
 		Configuration::updateGlobalValue('PS_LANG_DEFAULT', $flip_languages[$this->language->getLanguageIso()]);
+		return true;
+	}
+
+	/**
+	 * PROCESS : populateDatabase
+	 * Populate database with default data
+	 */
+	public function populateDatabase($entity = null)
+	{
+		Db::getInstance()->delete(_DB_PREFIX_.'timezone');
+		$languages = array();
+		foreach (Language::getLanguages(false) as $lang)
+			$languages[$lang['id_lang']] = $lang['iso_code'];
 
 		// Install XML data (data/xml/ folder)
 		$xml_loader = new InstallXmlLoader();
 		$xml_loader->setLanguages($languages);
-		$xml_loader->populateFromXmlFiles();
+
+		if (isset($this->xml_loader_ids) && $this->xml_loader_ids)
+			$xml_loader->setIds($this->xml_loader_ids);
+
+		if ($entity)
+			$xml_loader->populateEntity($entity);
+		else
+			$xml_loader->populateFromXmlFiles();
 		if ($errors = $xml_loader->getErrors())
 		{
 			$this->setError($errors);
@@ -447,11 +466,7 @@ class InstallModelInstall extends InstallAbstractModel
 						@unlink($dir.$file);
 	}
 
-	/**
-	 * PROCESS : installModules
-	 * Install all modules in ~/modules/ directory
-	 */
-	public function installModules()
+	public function getModulesList()
 	{
 		// @todo REMOVE DEV MODE
 		$modules = array();
@@ -532,6 +547,17 @@ class InstallModelInstall extends InstallAbstractModel
 			);
 		}
 
+		return $modules;
+	}
+
+	/**
+	 * PROCESS : installModules
+	 * Install all modules in ~/modules/ directory
+	 */
+	public function installModules($module = null)
+	{
+		$modules = $module ? array($module) : $this->getModulesList();
+
 		$errors = array();
 		foreach ($modules as $module_name)
 		{
@@ -555,57 +581,8 @@ class InstallModelInstall extends InstallAbstractModel
 	 * PROCESS : installFixtures
 	 * Install fixtures (E.g. demo products)
 	 */
-	public function installFixtures()
+	public function installFixtures($entity = null)
 	{
-		// @todo REMOVE THIS
-		/*Db::getInstance()->delete('prefix_manufacturer');
-		Db::getInstance()->delete('prefix_manufacturer_lang');
-		Db::getInstance()->delete('prefix_supplier');
-		Db::getInstance()->delete('prefix_supplier_lang');
-		Db::getInstance()->delete('prefix_address');
-		Db::getInstance()->delete('prefix_product');
-		Db::getInstance()->delete('prefix_product_lang');
-		Db::getInstance()->delete('prefix_category', 'id_category <> 1');
-		Db::getInstance()->delete('prefix_category_product');
-		Db::getInstance()->delete('prefix_category_lang', 'id_category <> 1');
-		Db::getInstance()->delete('prefix_scene');
-		Db::getInstance()->delete('prefix_scene_lang');
-		Db::getInstance()->delete('prefix_scene_products');
-		Db::getInstance()->delete('prefix_scene_category');
-		Db::getInstance()->delete('prefix_attribute_group');
-		Db::getInstance()->delete('prefix_attribute_group_lang');
-		Db::getInstance()->delete('prefix_attribute');
-		Db::getInstance()->delete('prefix_attribute_lang');
-		Db::getInstance()->delete('prefix_product_attribute');
-		Db::getInstance()->delete('prefix_product_attribute_combination');
-		Db::getInstance()->delete('prefix_product_attribute_image');
-		Db::getInstance()->delete('prefix_order_message');
-		Db::getInstance()->delete('prefix_order_message_lang');
-		Db::getInstance()->delete('prefix_feature');
-		Db::getInstance()->delete('prefix_feature_lang');
-		Db::getInstance()->delete('prefix_feature_value');
-		Db::getInstance()->delete('prefix_feature_value_lang');
-		Db::getInstance()->delete('prefix_feature_product');
-		Db::getInstance()->delete('prefix_store');
-		Db::getInstance()->delete('prefix_image');
-		Db::getInstance()->delete('prefix_image_lang');
-		Db::getInstance()->delete('prefix_tag');
-		Db::getInstance()->delete('prefix_alias');
-		Db::getInstance()->delete('prefix_customer');
-		Db::getInstance()->delete('prefix_guest');
-		Db::getInstance()->delete('prefix_connections');
-		Db::getInstance()->delete('prefix_customer_group');
-		Db::getInstance()->delete('prefix_cart');
-		Db::getInstance()->delete('prefix_cart_product');
-		Db::getInstance()->delete('prefix_orders');
-		Db::getInstance()->delete('prefix_order_detail');
-		Db::getInstance()->delete('prefix_order_history');
-		Db::getInstance()->delete('prefix_range_price');
-		Db::getInstance()->delete('prefix_range_weight');
-		Db::getInstance()->delete('prefix_delivery');
-		Db::getInstance()->delete('prefix_specific_price');
-		Db::getInstance()->delete('prefix_tag');*/
-
 		// Load class (use fixture class if one exists, or use InstallXmlLoader)
 		if (file_exists(_PS_INSTALL_FIXTURES_PATH_.'apple/install.php'))
 		{
@@ -636,12 +613,21 @@ class InstallModelInstall extends InstallAbstractModel
 		foreach (Language::getLanguages(false) as $lang)
 			$languages[$lang['id_lang']] = $lang['iso_code'];
 		$xml_loader->setLanguages($languages);
-		$xml_loader->populateFromXmlFiles();
+
+		if ($entity)
+			$xml_loader->populateEntity($entity);
+		else
+			$xml_loader->populateFromXmlFiles();
+
 		if ($errors = $xml_loader->getErrors())
 		{
 			$this->setError($errors);
 			return false;
 		}
+
+		// IDS from xmlLoader are stored in order to use them for fixtures
+		$this->xml_loader_ids = $xml_loader->getIds();
+		unset($xml_loader);
 
 		// Index products in search tables
 		Search::indexation(true);

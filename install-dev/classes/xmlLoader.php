@@ -144,10 +144,7 @@ class InstallXmlLoader
 		$this->ids = $ids;
 	}
 
-	/**
-	 * Read all XML files from data folder and populate tables
-	 */
-	public function populateFromXmlFiles()
+	public function getSortedEntities()
 	{
 		// Browse all XML files from data/xml directory
 		$entities = array();
@@ -201,14 +198,19 @@ class InstallXmlLoader
 		}
 		while ($current != $sort_entities);
 
+		return $sort_entities;
+	}
+
+	/**
+	 * Read all XML files from data folder and populate tables
+	 */
+	public function populateFromXmlFiles()
+	{
+		$entities = $this->getSortedEntities();
+
 		// Populate entities
-		foreach ($sort_entities as $entity)
-		{
-			if (method_exists($this, 'populateEntity'.Tools::toCamelCase($entity)))
-				$this->{'populateEntity'.Tools::toCamelCase($entity)}();
-			else
-				$this->populateEntity($entity);
-		}
+		foreach ($entities as $entity)
+			$this->populateEntity($entity);
 	}
 
 	/**
@@ -218,6 +220,12 @@ class InstallXmlLoader
 	 */
 	public function populateEntity($entity)
 	{
+		if (method_exists($this, 'populateEntity'.Tools::toCamelCase($entity)))
+		{
+			$this->{'populateEntity'.Tools::toCamelCase($entity)}();
+			return;
+		}
+
 		$xml = $this->loadEntity($entity);
 
 		// Read list of fields

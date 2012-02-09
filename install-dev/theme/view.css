@@ -704,7 +704,7 @@ ul#optional_update {list-style-type:none;}
 
 /* STEP 5 ******************************************/
 #install_process_form{
-    min-height: 260px;
+    min-height: 300px;
 }
 #progress_bar {
 	display: none;
