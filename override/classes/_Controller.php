@@ -359,6 +359,7 @@ abstract class Controller extends ControllerCore
 				<li><a href="#doubles">Go to Doubles</a></li>
 				<li><a href="#tables">Go to Tables</a></li>
 				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">Go to ObjectModels</a></li>' : '').'
+				<li><a href="#includedFiles">Go to included files</a></li>
 			</ul>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px">
@@ -401,6 +402,19 @@ abstract class Controller extends ControllerCore
 			}
 			echo '</div>';
 		}
+
+		// List of included files
+		echo '<div class="rte" style="text-align:left;padding:8px">
+		<h3><a name="includedFiles">Included files</a></h3>';
+		$i = 1;
+		foreach (get_included_files() as $file)
+		{
+			$file = ltrim(str_replace('\\', '/', str_replace(_PS_ROOT_DIR_, '', $file)), '/');
+			$file = '<b style="color: red">'.dirname($file).'/</b><b style="color: blue">'.basename($file).'</b>';
+			echo $i.' '.$file.'<br />';
+			$i++;
+		}
+		echo '</div>';
 	}
 }
 
