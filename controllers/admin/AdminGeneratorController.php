@@ -135,7 +135,7 @@ class AdminGeneratorControllerCore extends AdminController
 		$tab = array();
 
 		// Directories
-		$tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/', Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')).'/');
+		$tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/');
 
 		// Files
 		$disallow_controllers = array(
