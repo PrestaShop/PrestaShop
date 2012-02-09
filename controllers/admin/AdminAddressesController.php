@@ -48,6 +48,10 @@ class AdminAddressesControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = true;
 
+		$countries = Country::getCountries($this->context->language->id);
+		foreach ($countries as $country)
+			$this->countries_array[$country['id_country']] = $country['name'];
+			
 		$this->fieldsDisplay = array(
 			'id_address' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'firstname' => array('title' => $this->l('First name'), 'width' => 120, 'filter_key' => 'a!firstname'),
@@ -66,10 +70,6 @@ class AdminAddressesControllerCore extends AdminController
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_where = 'AND a.id_customer != 0';
-
-		$countries = Country::getCountries($this->context->language->id);
-		foreach ($countries as $country)
-			$this->countries_array[$country['id_country']] = $country['name'];
 
 		return parent::renderList();
 	}

@@ -47,7 +47,8 @@ class AdminShopUrlControllerCore extends AdminController
 			),
 			'shop_name' => array(
 				'title' => $this->l('Shop name'),
-				'width' => 150
+				'width' => 150,
+				'filter_key' => 's!name'
 			),
 			'domain' => array(
 				'title' => $this->l('Domain'),
@@ -62,7 +63,8 @@ class AdminShopUrlControllerCore extends AdminController
 			'uri' => array(
 				'title' => $this->l('Uri'),
 				'width' => 200,
-				'filter_key' => 'uri'
+				'filter_key' => 'uri',
+				'havingFilter' => true
 			),
 			'main' => array(
 				'title' => $this->l('Main URL'),
