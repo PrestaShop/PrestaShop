@@ -94,7 +94,7 @@
 												<input type="text"
 														name="{$input.name}_{$language.id_lang}"
 														id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
-														value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall'}{else}{$value_text|escape:'htmlall'}{/if}"
+														value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
 														class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
 														{if isset($input.size)}size="{$input.size}"{/if}
 														{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
@@ -124,7 +124,7 @@
 									<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall'}{else}{$value_text|escape:'htmlall'}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'htmlall':'UTF-8'}{else}{$value_text|escape:'htmlall':'UTF-8'}{/if}"
 											class="{if $input.type == 'tags'}tagify {/if}"
 											{if isset($input.size)}size="{$input.size}"{/if}
 											{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
@@ -199,7 +199,7 @@
 									<input type="radio"
 											name="{$input.name}"
 											id="{$value.id}"
-											value="{$value.value|escape:'htmlall':'UTF-8'|escape:'htmlall'}"
+											value="{$value.value|escape:'htmlall':'UTF-8'}"
 											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 									<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
@@ -226,7 +226,7 @@
 										{/foreach}
 									</div>
 								{else}
-									<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]|escape:'htmlall'}</textarea>
+									<textarea name="{$input.name}" id="{$input.name}" cols="{$input.cols}" rows="{$input.rows}">{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}</textarea>
 								{/if}
 							{elseif $input.type == 'checkbox'}
 								{foreach $input.values.query as $value}
@@ -234,7 +234,7 @@
 									<input type="checkbox"
 										name="{$id_checkbox}"
 										id="{$id_checkbox}"
-										{if isset($value.val)}value="{$value.val|escape:'htmlall'}"{/if}
+										{if isset($value.val)}value="{$value.val|escape:'htmlall':'UTF-8'}"{/if}
 										{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 									<label for="{$id_checkbox}" class="t"><strong>{$value[$input.values.name]}</strong></label><br />
 								{/foreach}
@@ -305,7 +305,7 @@
 									{if isset($input.class)}class="{$input.class}"
 									{else}class="color mColorPickerInput"{/if}
 									name="{$input.name}"
-									value="{$fields_value[$input.name]|escape:'htmlall'}" />
+									value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 							{elseif $input.type == 'date'}
 								<input type="text"
 									size="{$input.size}"
@@ -313,7 +313,7 @@
 									{if isset($input.class)}class="{$input.class}"
 									{else}class="datepicker"{/if}
 									name="{$input.name}"
-									value="{$fields_value[$input.name]|escape:'htmlall'}" />
+									value="{$fields_value[$input.name]|escape:'htmlall':'UTF-8'}" />
 							{elseif $input.type == 'free'}
 								{$fields_value[$input.name]}
 							{/if}
