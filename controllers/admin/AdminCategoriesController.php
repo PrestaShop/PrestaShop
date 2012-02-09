@@ -213,6 +213,12 @@ class AdminCategoriesControllerCore extends AdminController
 				'desc' => $this->l('Add new')
 			);
 		}
+		// be able to edit the Home category
+		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category'))
+			$this->toolbar_btn['edit'] = array(
+				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.(int)$this->_category->id.'&amp;token='.$this->token,
+				'desc' => $this->l('Edit')
+			);
 		if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory'))
 		{
 			$this->toolbar_btn['edit'] = array(
@@ -413,14 +419,18 @@ class AdminCategoriesControllerCore extends AdminController
 			)
 		);
 		if (Shop::isFeatureActive())
-		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
 				'values' => Shop::getTree()
 			);
-		}
+		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
+		if ($this->_category->id_parent == Category::getTopCategory()->id)
+			foreach ($this->fields_form['input'] as $k => $input)
+				if (in_array($input['name'], array('id_parent', 'is_root_category')))
+					unset($this->fields_form['input'][$k]);
+
 		if (Tools::isSubmit('add'.$this->table.'root'))
 			unset($this->fields_form['input'][2],$this->fields_form['input'][3]);
 
