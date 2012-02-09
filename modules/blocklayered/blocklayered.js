@@ -37,10 +37,10 @@ $(document).ready(function()
 	// Click on color
 	$('#layered_form input[type=button], #layered_form label.layered_color').live('click', function()
 	{
-		if (!$('\'input[name='+$(this).attr('name')+']:hidden\'').length)
+		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
-			$('\'input[name='+$(this).attr('name')+']:hidden\'').remove();
+			$('input[name='+$(this).attr('name')+'][type=hidden]').remove();
 		reloadContent();
 	});
 	
@@ -235,7 +235,7 @@ function cancelFilter()
 			{
 				$('#'+$(this).attr('rel')).attr('checked', false);
 				$('.'+$(this).attr('rel')).attr('checked', false);
-				$('#layered_form input[name='+$(this).attr('rel')+']').remove();
+				$('#layered_form input[type=hidden][name='+$(this).attr('rel')+']').remove();
 			}
 		}
 		reloadContent();

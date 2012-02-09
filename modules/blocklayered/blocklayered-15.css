@@ -90,11 +90,16 @@
 	color: #666;
 }
 #layered_block_left .color-option {
-	 border: 1px solid #666666;
-	 height: 16px;
-	 margin-left: 0;
-	 padding: 0;
-	 width: 16px;
+	border: 1px solid #666666;
+	height: 16px;
+	margin-left: 0;
+	padding: 0;
+	width: 16px;
+}
+#layered_block_left .color-option.disable {
+	opacity: 0.5;
+	filter:alpha(opacity=50);
+	-moz-opacity:0.5; 
 }
 #layered_block_left .nomargin a {
 	display: inline;
