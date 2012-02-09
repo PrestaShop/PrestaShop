@@ -106,7 +106,8 @@ class AdminReferrersControllerCore extends AdminController
 				'title' => $this->l('Avg. cart'),
 				'width' => 50,
 				'align' => 'right',
-				'price' => true
+				'price' => true,
+				'havingFilter' => true
 			),
 			'cache_reg_rate' => array(
 				'title' => $this->l('Reg. rate'),
@@ -122,19 +123,22 @@ class AdminReferrersControllerCore extends AdminController
 				'title' => $this->l('Click'),
 				'width' => 30,
 				'align' => 'right',
-				'price' => true
+				'price' => true,
+				'havingFilter' => true
 			),
 			'fee1' => array(
 				'title' => $this->l('Base'),
 				'width' => 30,
 				'align' => 'right',
-				'price' => true
+				'price' => true,
+				'havingFilter' => true
 			),
 			'fee2' => array(
 				'title' => $this->l('Percent'),
 				'width' => 30,
 				'align' => 'right',
-				'price' => true
+				'price' => true,
+				'havingFilter' => true
 			)
 		);
 
