@@ -277,39 +277,43 @@ class CartCore extends ObjectModel
 		// If the cart has not been saved, then there can't be any cart rule applied
 		if (!CartRule::isFeatureActive() || !$this->id)
 			return array();
-
-		$total_products_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-		$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-		$shipping_ti = $this->getTotalShippingCost();
-		$shipping_te = $this->getTotalShippingCost(null, false);
-
-		$result = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'cart_cart_rule` cd
-			LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
-			LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
-				cd.`id_cart_rule` = crl.`id_cart_rule`
-				AND crl.id_lang = '.(int)$this->id_lang.'
-			)
-			WHERE `id_cart` = '.(int)$this->id
-		);
-
-		// Define virtual context to prevent case where the cart is not the in the global context
-		$virtual_context = Context::getContext()->cloneContext();
-		$virtual_context->cart = $this;
-		
-		foreach ($result as &$row)
+			
+		if (!Cache::isStored('Cart::getCartRules'.$this->id))
 		{
-			$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
-			$row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context);
-			$row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context);
+			$total_products_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+			$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+			$shipping_ti = $this->getTotalShippingCost();
+			$shipping_te = $this->getTotalShippingCost(null, false);
 
-			// Retro compatibility < 1.5.0.2
-			$row['id_discount'] = $row['id_cart_rule'];
-			$row['description'] = $row['name'];
+			$result = Db::getInstance()->executeS('
+				SELECT *
+				FROM `'._DB_PREFIX_.'cart_cart_rule` cd
+				LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
+				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
+					cd.`id_cart_rule` = crl.`id_cart_rule`
+					AND crl.id_lang = '.(int)$this->id_lang.'
+				)
+				WHERE `id_cart` = '.(int)$this->id
+			);
+
+			// Define virtual context to prevent case where the cart is not the in the global context
+			$virtual_context = Context::getContext()->cloneContext();
+			$virtual_context->cart = $this;
+			
+			foreach ($result as &$row)
+			{
+				$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
+				$row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context);
+				$row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context);
+
+				// Retro compatibility < 1.5.0.2
+				$row['id_discount'] = $row['id_cart_rule'];
+				$row['description'] = $row['name'];
+			}
+			
+			Cache::store('Cart::getCartRules'.$this->id, $result);
 		}
-
-		return $result;
+		return Cache::retrieve('Cart::getCartRules'.$this->id);
 	}
 
 	public function getDiscountsCustomer($id_cart_rule)
@@ -701,7 +705,9 @@ class CartCore extends ObjectModel
 			'id_cart' => (int)$this->id
 		)))
 			return false;
-			
+	
+		Cache::clean('Cart::getCartRules'.$this->id);
+	
 		if ((int)$cartRule->gift_product)
 			return $this->updateQty(1, $cartRule->gift_product);
 
@@ -1016,6 +1022,7 @@ class CartCore extends ObjectModel
 
 	public function removeCartRule($id_cart_rule)
 	{
+		Cache::clean('Cart::getCartRules'.$this->id);
 		return Db::getInstance()->Execute(
 			'DELETE FROM `'._DB_PREFIX_.'cart_cart_rule`
 			WHERE `id_cart_rule` = '.(int)$id_cart_rule.'

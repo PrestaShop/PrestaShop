@@ -508,20 +508,21 @@ class AddressFormatCore extends ObjectModel
 	public function getFormat($id_country)
 	{
 		$out = $this->_getFormatDB($id_country);
-
-		if (strlen(trim($out)) == 0)
+		if (empty($out))
 			$out = $this->_getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
 		return $out;
 	}
 
 	protected function _getFormatDB($id_country)
 	{
-		$result = Db::getInstance()->getRow('
-		SELECT format
-		FROM `'._DB_PREFIX_.$this->def['table'].'`
-		WHERE `id_country` = '.(int)($id_country));
-
-		return isset($result['format']) ? trim($result['format']) : '';
+		if (!Cache::isStored('AddressFormat::_getFormatDB'.$id_country))
+		{
+			$format = Db::getInstance()->getValue('
+			SELECT format
+			FROM `'._DB_PREFIX_.$this->def['table'].'`
+			WHERE `id_country` = '.(int)$id_country);
+			Cache::store('AddressFormat::_getFormatDB'.$id_country, trim($format));
+		}
+		return Cache::retrieve('AddressFormat::_getFormatDB'.$id_country);
 	}
 }
-

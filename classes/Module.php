@@ -223,6 +223,8 @@ abstract class ModuleCore
 		}
 		$this->id = Db::getInstance()->Insert_ID();
 
+		Cache::clean('Module::isInstalled'.$this->name);
+		
 		// Enable the module for all shops
 		$this->enable(true);
 
@@ -457,7 +459,13 @@ abstract class ModuleCore
 		Group::truncateRestrictionsByModule($this->id);
 
 		// Uninstall the module
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module` WHERE `id_module` = '.(int)$this->id);
+		if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module` WHERE `id_module` = '.(int)$this->id))
+		{
+			Cache::clean('Module::isInstalled'.$this->name);
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -1437,8 +1445,12 @@ abstract class ModuleCore
 
 	public static function isInstalled($module_name)
 	{
-		Db::getInstance()->executeS('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
-		return (bool)Db::getInstance()->NumRows();
+		if (!Cache::isStored('Module::isInstalled'.$module_name))
+		{
+			$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+			Cache::store('Module::isInstalled'.$module_name, (bool)$id_module);
+		}
+		return Cache::retrieve('Module::isInstalled'.$module_name);
 	}
 
 	public function isRegisteredInHook($hook)
