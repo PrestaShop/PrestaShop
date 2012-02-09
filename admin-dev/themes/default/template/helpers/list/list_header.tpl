@@ -191,10 +191,10 @@
 										{elseif $params.type == 'select'}
 											{if isset($params.filter_key)}
 												<select onchange="$('#submitFilterButton{$table}').focus();$('#submitFilterButton{$table}').click();" name="{$table}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
-													<option value="" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>--</option>
+													<option value="" {if $params.value == ''} selected="selected" {/if}>--</option>
 													{if isset($params.list) && is_array($params.list)}
 														{foreach $params.list AS $option_value => $option_display}
-															<option value="{$option_value}" {if $option_display.selected == 'selected'} selected="selected"{/if}>{$option_display}</option>
+															<option value="{$option_value}" {if $option_display == $params.value ||  $option_value == $params.value} selected="selected"{/if}>{$option_display}</option>
 														{/foreach}
 													{/if}
 												</select>
