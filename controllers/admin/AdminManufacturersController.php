@@ -67,13 +67,13 @@ class AdminManufacturersControllerCore extends AdminController
 			),
 			'addresses' => array(
 				'title' => $this->l('Addresses'),
-				'tmpTableFilter' => true,
 				'width' => 20,
 				'align' => 'center',
+				'havingFilter' => true
 			),
 			'products' => array(
 				'title' => $this->l('Products'),
-				'tmpTableFilter' => true,
+				'havingFilter' => true,
 				'width' => 20,
 				'align' => 'center',
 			),

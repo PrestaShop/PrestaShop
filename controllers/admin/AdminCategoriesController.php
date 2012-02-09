@@ -66,7 +66,7 @@ class AdminCategoriesControllerCore extends AdminController
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'position',
+				'filter_key' => 'cs!position',
 				'align' => 'center',
 				'position' => 'position'
 			),

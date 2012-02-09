@@ -51,12 +51,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'count_values' => array(
 				'title' => $this->l('Values count'),
 				'width' => 120,
-				'align' => 'center'
+				'align' => 'center',
 			),
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'cp!position',
+				'filter_key' => 'a!position',
 				'position' => 'position',
 				'align' => 'center'
 			),

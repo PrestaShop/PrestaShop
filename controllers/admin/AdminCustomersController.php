@@ -130,7 +130,8 @@ class AdminCustomersControllerCore extends AdminController
 				'title' => $this->l('Connection'),
 				'width' => 100,
 				'type' => 'datetime',
-				'search' => false
+				'search' => false,
+				'havingFilter' => true
 			)
 		);
 

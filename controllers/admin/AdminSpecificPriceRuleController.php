@@ -61,22 +61,27 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			),
 			'name' => array(
 				'title' => $this->l('Name'),
+				'filter_key' => 'a!name',
 				'width' => 200
 			),
 			'shop_name' => array(
-				'title' => $this->l('Shop')
+				'title' => $this->l('Shop'),
+				'filter_key' => 's!name'
 			),
 			'currency_name' => array(
 				'title' => $this->l('Currency'),
 				'align' => 'center',
+				'filter_key' => 'cu!name'
 			),
 			'country_name' => array(
 				'title' => $this->l('Country'),
 				'align' => 'center',
+				'filter_key' => 'cl!name'
 			),
 			'group_name' => array(
 				'title' => $this->l('Group'),
 				'align' => 'center',
+				'filter_key' => 'gl!name'
 			),
 			'from_quantity' => array(
 				'title' => $this->l('From quantity'),
@@ -97,6 +102,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'from' => array(
 				'title' => $this->l('From'),
 				'align' => 'center',
+				'type' => 'date'
 			),
 			'to' => array(
 				'title' => $this->l('To'),

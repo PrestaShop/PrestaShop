@@ -60,7 +60,8 @@ class AdminOutstandingControllerCore  extends AdminController
 				'title' => $this->l('Date'),
 				'width' => 150,
 				'type' => 'date',
-				'align' => 'right'
+				'align' => 'right',
+				'filter_key' => 'a!date_add'
  			),
 			'customer' => array(
 				'title' => $this->l('Customer'),

@@ -51,7 +51,7 @@ class AdminFeaturesControllerCore extends AdminController
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'cp!position',
+				'filter_key' => 'a!position',
 				'align' => 'center',
 				'position' => 'position'
 			)
