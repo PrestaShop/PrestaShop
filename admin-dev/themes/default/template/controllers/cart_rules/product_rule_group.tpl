@@ -1,10 +1,10 @@
 <tr id="product_rule_group_{$product_rule_group_id}_tr">
-	<td style="vertical-align:top">
+	<td style="vertical-align:center;padding-right:10px">
 		<a href="javascript:removeProductRuleGroup({$product_rule_group_id});">
 			<img src="../img/admin/disabled.gif" alt="{l s='Remove'}" title="{l s='Remove'}" />
 		</a>
 	</td>
-	<td>
+	<td style="padding-bottom:15px">
 		<input type="hidden" name="product_rule_group[]" value="{$product_rule_group_id}" />
 		{l s='The cart must contain at least'}
 		<input type="text" name="product_rule_group_{$product_rule_group_id}_quantity" value="{$product_rule_group_quantity|intval}" style="width:30px" />
