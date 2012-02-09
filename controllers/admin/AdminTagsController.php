@@ -37,7 +37,6 @@ class AdminTagsControllerCore extends AdminController
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'width' => 25,
-				'filter_key' => 'a!id_seller_message'
 			),
 			'lang' => array(
 				'title' => $this->l('Language'),
