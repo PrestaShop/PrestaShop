@@ -186,7 +186,7 @@ class AdminTabsControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->addRowAction('details');
 
-		$this->_where = 'AND a.`id_parent` = 0';
+		$this->_where = 'AND a.`id_parent` = 0 OR a.id_parent = -1';
 		$this->_orderBy = 'position';
 
 		return parent::renderList();
