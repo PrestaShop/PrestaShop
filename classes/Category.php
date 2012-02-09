@@ -663,8 +663,7 @@ class CategoryCore extends ObjectModel
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE cp.`id_category` = '.(int)$this->id
 					.($active ? ' AND p.`active` = 1' : '')
-					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '').
-					' GROUP BY p.id_product';
+					.($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
 		if ($random === true)
 		{
