@@ -251,6 +251,7 @@
 									{/if}
 								{/if}
 								<input type="file" name="{$input.name}" {if isset($input.id)}id="{$input.id}"{/if} />
+								{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
 							{elseif $input.type == 'password'}
 								<input type="password"
 										name="{$input.name}"

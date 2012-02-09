@@ -1801,6 +1801,11 @@ p.preference_description{
     font-size:11px;
 }
 
+p.preference_description .light-warning {
+	color: red;
+	font-weight: bold;
+}
+
 .preference_default_multishop{
 	float: right;
 	margin-right: 40px;
