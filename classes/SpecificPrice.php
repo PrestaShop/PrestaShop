@@ -111,7 +111,9 @@ class SpecificPriceCore extends ObjectModel
 			// Flush cache when we updating a new specific price
 			self::$_specificPriceCache = array();
 			Product::flushPriceCache();
+			return true;
 		}
+		return false;
 	}
 
 	public function delete()
