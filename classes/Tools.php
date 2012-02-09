@@ -1381,7 +1381,7 @@ class ToolsCore
 		$str = strtolower($str);
 		if ($capitaliseFirstChar)
 			$str = ucfirst($str);
-		return preg_replace_callback('/_([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
+		return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
 	}
 
 	/**
