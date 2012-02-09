@@ -66,55 +66,9 @@ require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 
 @set_time_limit(300);
 
-class InstallLog
-{
-	/**
-	 * @return InstallLog
-	 */
-	public function getInstance()
-	{
-		static $instance = null;
+// Try to improve memory limit if it's under 32M
+if (Tools::getMemoryLimit() < Tools::getOctets('32M'))
+	ini_set('memory_limit', '32M');
 
-		if (!$instance)
-			$instance = new InstallLog();
-		return $instance;
-	}
-
-	protected $fd;
-	protected $data = array();
-	protected $last_time;
-	protected $depth = 0;
-
-	public function __construct()
-	{
-		$this->fd = fopen(_PS_INSTALL_PATH_.'log.txt', 'w');
-		$this->last_time = microtime(true);
-	}
-
-	public function write($id)
-	{
-		$str = str_pad("[$id]", 35, ' ');
-		if (isset($this->data[$id]['start']))
-			$str .= str_pad(round(microtime(true) - $this->data[$id]['start'], 4).'ms', 10, ' ');
-		$str .= str_pad(round(microtime(true) - $this->last_time, 4).'ms', 10, ' ');
-		$this->data[$id]['str'] = str_repeat("\t", $this->depth - 1)."$str\n";
-		$this->depth--;
-	}
-
-	public function start($id)
-	{
-		$this->data[$id] = array('start' => microtime(true));
-		$this->depth++;
-	}
-
-	public function __destruct()
-	{
-		foreach ($this->data as $k => $info)
-			if (!isset($info['str']))
-				$this->write($k);
-
-		foreach ($this->data as $info)
-			fwrite($this->fd, $info['str']);
-		fclose($this->fd);
-	}
-}
+if (Tools::getMemoryLimit() < Tools::getOctets('16M'))
+	die('PrestaShop requires at least 16M of memory to run, please check the memory_limit directive in php.ini or contact your host provider');

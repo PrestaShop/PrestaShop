@@ -66,8 +66,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 		Context::getContext()->country = new Country('PS_COUNTRY_DEFAULT');
 		Context::getContext()->cart = new Cart();
-
+		define('_PS_SMARTY_FAST_LOAD_', true);
 		require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+
 		Context::getContext()->smarty = $smarty;
 	}
 
@@ -83,6 +84,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processGenerateSettingsFile();
 		else if (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile']))
 			$this->processInstallDatabase();
+		else if (Tools::getValue('installDefaultData'))
+			$this->processInstallDefaultData();
 		else if (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase']))
 			$this->processPopulateDatabase();
 		else if (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase']))
@@ -143,6 +146,20 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	}
 
 	/**
+	 * PROCESS : installDefaultData
+	 * Create default shop and languages
+	 */
+	public function processInstallDefaultData()
+	{
+		// @todo remove true in populateDatabase for 1.5.0 RC version
+		$result = $this->model_install->installDefaultData($this->session->shop_name, true);
+
+		if (!$result || $this->model_install->getErrors())
+			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->ajaxJsonAnswer(true);
+	}
+
+	/**
 	 * PROCESS : populateDatabase
 	 * Populate database with default data
 	 */
@@ -150,11 +167,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	{
 		$this->initializeContext();
 
-		// @todo remove true in populateDatabase for 1.5.0 RC version
-		$result = $this->model_install->populateDatabase(true, array(
-			'shop_name' => $this->session->shop_name
-		));
-
+		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
+		$result = $this->model_install->populateDatabase(Tools::getValue('entity'));
 		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
@@ -202,10 +216,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	{
 		$this->initializeContext();
 
-		// Remove all modules from module table, just in case
-		Db::getInstance()->delete(_DB_PREFIX_.'module');
-
-		if (!$this->model_install->installModules() || $this->model_install->getErrors())
+		$result = $this->model_install->installModules(Tools::getValue('module'));
+		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
 		$this->session->process_validated['installModules'] = true;
 		$this->ajaxJsonAnswer(true);
@@ -220,8 +232,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->initializeContext();
 
 		$this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
-		if (!$this->model_install->installFixtures() || $this->model_install->getErrors())
+		if (!$this->model_install->installFixtures(Tools::getValue('entity')) || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+		$this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
 		$this->ajaxJsonAnswer(true);
 	}
 
@@ -290,15 +303,53 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	 */
 	public function display()
 	{
+		$low_memory = Tools::getMemoryLimit() < Tools::getOctets('32M');
+
+		// We fill the process step used for Ajax queries
 		$this->process_steps = array();
 		$this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->l('Create settings.inc file'));
 		$this->process_steps[] = array('key' => 'installDatabase', 'lang' => $this->l('Create database tables'));
-		$this->process_steps[] = array('key' => 'populateDatabase', 'lang' => $this->l('Populate database tables'));
+		$this->process_steps[] = array('key' => 'installDefaultData', 'lang' => $this->l('Create default shop and languages'));
+
+		// If low memory, create subtasks for populateDatabase step (entity per entity)
+		$populate_step = array('key' => 'populateDatabase', 'lang' => $this->l('Populate database tables'));
+		if ($low_memory)
+		{
+			$populate_step['subtasks'] = array();
+			$xml_loader = new InstallXmlLoader();
+			foreach ($xml_loader->getSortedEntities() as $entity)
+				$populate_step['subtasks'][] = array('entity' => $entity);
+		}
+
+		$this->process_steps[] = $populate_step;
 		$this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->l('Configure shop informations'));
-		$this->process_steps[] = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
+
+
+		$install_modules = array('key' => 'installModules', 'lang' => $this->l('Install modules'));
+		if ($low_memory)
+			foreach ($this->model_install->getModulesList() as $module)
+				$install_modules['subtasks'][] = array('module' => $module);
+		$this->process_steps[] = $install_modules;
+
+		// Fixtures are installed only if option is selected
 		if ($this->session->install_type == 'full')
-			$this->process_steps[] = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
+		{
+			// If low memory, create subtasks for installFixtures step (entity per entity)
+			$fixtures_step = array('key' => 'installFixtures', 'lang' => $this->l('Install demonstration data'));
+			if ($low_memory)
+			{
+				$fixtures_step['subtasks'] = array();
+				$xml_loader = new InstallXmlLoader();
+				$xml_loader->setFixturesPath();
+				foreach ($xml_loader->getSortedEntities() as $entity)
+					$fixtures_step['subtasks'][] = array('entity' => $entity);
+			}
+			$this->process_steps[] = $fixtures_step;
+		}
+
 		$this->process_steps[] = array('key' => 'installTheme', 'lang' => $this->l('Install theme'));
+
+		// Mail is send only if option is selected
 		if ($this->session->send_informations)
 			$this->process_steps[] = array('key' => 'sendEmail', 'lang' => $this->l('Send information e-mail'));
 
