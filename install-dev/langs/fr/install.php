@@ -55,6 +55,7 @@ return array(
 		'An error occurred while sending email, please verify your parameters' => 'Une erreur est survenue lors de l\'envoi de l\'e-mail, merci de vérifier vos paramètres',
 		'Create settings.inc file' => 'Création du fichier settings.inc',
 		'Create database tables' => 'Création des tables de la base',
+		'Create default shop and languages ' => 'Création de la boutique par défaut et des langues',
 		'Populate database tables' => 'Remplissage des tables de la base',
 		'Configure shop informations' => 'Configuration de la boutique',
 		'Install modules' => 'Installation des modules',
