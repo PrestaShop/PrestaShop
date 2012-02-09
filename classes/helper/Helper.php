@@ -172,7 +172,16 @@ class HelperCore
 		);
 
 		$top_category = Category::getTopCategory();
-		$id_shop = Tools::isSubmit('id_shop') ? Tools::getValue('id_shop'): Configuration::get('PS_SHOP_DEFAULT');
+		if (Tools::isSubmit('id_shop'))
+			$id_shop = Tools::getValue('id_shop');
+		else
+			if (Context::getContext()->shop->id)
+				$id_shop = Context::getContext()->shop->id;
+			else
+				if (!Shop::isFeatureActive())
+					$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+				else
+					$id_shop = 0;
 		$shop = new Shop($id_shop);
 		$root_category = Category::getRootCategory(null, $shop);
 		$disabled_categories[] = $top_category->id;
