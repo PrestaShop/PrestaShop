@@ -2382,7 +2382,7 @@ class BlockLayered extends Module
 		$filterBlocks = array();
 		foreach ($filters as $filter)
 		{
-			$sqlQuery = array('select' => '', 'from' => '', 'join' => '', 'where' => '', 'group' => '');
+			$sqlQuery = array('select' => '', 'from' => '', 'join' => '', 'where' => '', 'group' => '', 'second_query' => '');
 			switch ($filter['type'])
 			{
 				// conditions + quantities + weight + price
@@ -2422,6 +2422,24 @@ class BlockLayered extends Module
 					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 					AND c.active = 1 ';
 					$sqlQuery['group'] = ' GROUP BY p.id_manufacturer ';
+					
+					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
+					{
+						$sqlQuery['second_query'] = '
+							SELECT m.name, 0 nbr, m.id_manufacturer 
+							
+							FROM `'._DB_PREFIX_.'category_product` cp
+							INNER JOIN  `'._DB_PREFIX_.'category` c ON (c.id_category = cp.id_category)
+							INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = cp.id_product AND p.active = 1)
+							INNER JOIN '._DB_PREFIX_.'manufacturer m ON (m.id_manufacturer = p.id_manufacturer) 
+							
+							WHERE '.(Configuration::get('PS_LAYERED_FULL_TREE') ? 'c.nleft >= '.(int)$parent->nleft.'
+							AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
+							AND c.active = 1
+							
+							GROUP BY p.id_manufacturer';
+					}
+					
 					break;
 
 				case 'id_attribute_group':// attribute group
@@ -2460,6 +2478,37 @@ class BlockLayered extends Module
 					GROUP BY lpa.id_attribute
 					ORDER BY id_attribute_group, id_attribute ';
 					
+					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
+					{
+						$sqlQuery['second_query'] = '
+							SELECT 0 nbr, lpa.id_attribute_group,
+							a.color, al.name attribute_name, agl.public_name attribute_group_name , lpa.id_attribute, ag.is_color_group,
+							liagl.url_name name_url_name, liagl.meta_title name_meta_title, lial.url_name value_url_name, lial.meta_title value_meta_title
+							
+							FROM '._DB_PREFIX_.'layered_product_attribute lpa
+							INNER JOIN '._DB_PREFIX_.'attribute a
+							ON a.id_attribute = lpa.id_attribute
+							INNER JOIN '._DB_PREFIX_.'attribute_lang al
+							ON al.id_attribute = a.id_attribute
+							AND al.id_lang = '.(int)$cookie->id_lang.'
+							INNER JOIN '._DB_PREFIX_.'product as p
+							ON p.id_product = lpa.id_product
+							AND p.active = 1
+							INNER JOIN '._DB_PREFIX_.'attribute_group ag
+							ON ag.id_attribute_group = lpa.id_attribute_group
+							INNER JOIN '._DB_PREFIX_.'attribute_group_lang agl
+							ON agl.id_attribute_group = lpa.id_attribute_group
+							AND agl.id_lang = '.(int)$cookie->id_lang.'
+							LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value liagl
+							ON (liagl.id_attribute_group = lpa.id_attribute_group AND liagl.id_lang = '.(int)$cookie->id_lang.')
+							LEFT JOIN '._DB_PREFIX_.'layered_indexable_attribute_lang_value lial
+							ON (lial.id_attribute = lpa.id_attribute AND lial.id_lang = '.(int)$cookie->id_lang.')
+							
+							WHERE a.id_attribute_group = '.(int)$filter['id_value'].'
+							
+							GROUP BY lpa.id_attribute
+							ORDER BY id_attribute_group, id_attribute';
+					}
 					break;
 
 				case 'id_feature':
@@ -2485,6 +2534,27 @@ class BlockLayered extends Module
 					AND c.nright <= '.(int)$parent->nright : 'c.id_category = '.(int)$id_parent).'
 					AND c.active = 1)) ';
 					$sqlQuery['group'] = 'GROUP BY fv.id_feature_value ';
+					
+					if (!Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
+					{
+						$sqlQuery['second_query'] = '
+							SELECT fl.name feature_name, fp.id_feature, fv.id_feature_value, fvl.value,
+							0 nbr,
+							lifl.url_name name_url_name, lifl.meta_title name_meta_title, lifvl.url_name value_url_name, lifvl.meta_title value_meta_title
+					
+							FROM '._DB_PREFIX_.'feature_product fp
+							INNER JOIN '._DB_PREFIX_.'product p ON (p.id_product = fp.id_product AND p.active = 1)
+							LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = fp.id_feature AND fl.id_lang = '.(int)$cookie->id_lang.')
+							INNER JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature_value = fp.id_feature_value AND (fv.custom IS NULL OR fv.custom = 0))
+							LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = fp.id_feature_value AND fvl.id_lang = '.(int)$cookie->id_lang.')
+							LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_lang_value lifl
+							ON (lifl.id_feature = fp.id_feature AND lifl.id_lang = '.(int)$cookie->id_lang.')
+							LEFT JOIN '._DB_PREFIX_.'layered_indexable_feature_value_lang_value lifvl
+							ON (lifvl.id_feature_value = fp.id_feature_value AND lifvl.id_lang = '.(int)$cookie->id_lang.')
+							WHERE p.`active` = 1 AND fp.id_feature = '.(int)$filter['id_value'].'
+							GROUP BY fv.id_feature_value';
+					}
+					
 					break;
 
 				case 'category':
@@ -2546,6 +2616,13 @@ class BlockLayered extends Module
 						$products = self::$methodName(array(), $products);
 					else
 						$products = self::$methodName(@$selectedFilters[$filterTmp['type']], $products);
+			}
+			
+			if (!empty($sqlQuery['second_query']))
+			{
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlQuery['second_query']);
+				if ($res)
+					$products = array_merge($products, $res);
 			}
 
 			switch ($filter['type'])
@@ -2714,7 +2791,8 @@ class BlockLayered extends Module
 						$manufaturersArray = array();
 							foreach ($products as $manufacturer)
 							{
-								$manufaturersArray[$manufacturer['id_manufacturer']] = array('name' => $manufacturer['name'], 'nbr' => $manufacturer['nbr']);
+								if (!isset($manufaturersArray[$manufacturer['id_manufacturer']]))
+									$manufaturersArray[$manufacturer['id_manufacturer']] = array('name' => $manufacturer['name'], 'nbr' => $manufacturer['nbr']);
 								if (isset($selectedFilters['manufacturer']) && in_array((int)$manufacturer['id_manufacturer'], $selectedFilters['manufacturer']))
 									$manufaturersArray[$manufacturer['id_manufacturer']]['checked'] = true;
 							}
@@ -2750,14 +2828,15 @@ class BlockLayered extends Module
 									'filter_type' => $filter['filter_type']
 								);
 							
-							$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']] = array(
-								'color' => $attributes['color'],
-								'name' => $attributes['attribute_name'],
-								'nbr' => (int)$attributes['nbr'],
-								'url_name' => $attributes['value_url_name'],
-								'meta_title' => $attributes['value_meta_title']
-							);
-							
+							if (!isset($attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']]))
+								$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']] = array(
+									'color' => $attributes['color'],
+									'name' => $attributes['attribute_name'],
+									'nbr' => (int)$attributes['nbr'],
+									'url_name' => $attributes['value_url_name'],
+									'meta_title' => $attributes['value_meta_title']
+								);
+								
 							if (isset($selectedFilters['id_attribute_group'][$attributes['id_attribute']]))
 								$attributesArray[$attributes['id_attribute_group']]['values'][$attributes['id_attribute']]['checked'] = true;
 						}
@@ -2783,12 +2862,13 @@ class BlockLayered extends Module
 									'filter_type' => $filter['filter_type']
 								);
 
-							$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']] = array(
-								'nbr' => (int)$feature['nbr'],
-								'name' => $feature['value'],
-								'url_name' => $feature['value_url_name'],
-								'meta_title' => $feature['value_meta_title']
-							);
+							if (!isset($featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']]))
+								$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']] = array(
+									'nbr' => (int)$feature['nbr'],
+									'name' => $feature['value'],
+									'url_name' => $feature['value_url_name'],
+									'meta_title' => $feature['value_meta_title']
+								);
 							
 							if (isset($selectedFilters['id_feature'][$feature['id_feature_value']]))
 								$featureArray[$feature['id_feature']]['values'][$feature['id_feature_value']]['checked'] = true;
@@ -2801,6 +2881,7 @@ class BlockLayered extends Module
 					$tmpArray = array();
 					if (isset($products) && $products)
 					{
+						$categoriesWithProductsCount = 0;
 						foreach ($products as $category)
 						{
 							$tmpArray[$category['id_category']] = array(
@@ -2808,17 +2889,21 @@ class BlockLayered extends Module
 								'nbr' => (int)$category['count_products']
 							);
 							
+							if ((int)$category['count_products'])
+								$categoriesWithProductsCount++;
+							
 							if (isset($selectedFilters['category']) && in_array($category['id_category'], $selectedFilters['category']))
 								$tmpArray[$category['id_category']]['checked'] = true;
 						}
-						$filterBlocks[] = array (
-							'type_lite' => 'category',
-							'type' => 'category',
-							'id_key' => 0, 'name' => $this->l('Categories'),
-							'values' => $tmpArray,
-							'filter_show_limit' => $filter['filter_show_limit'],
-							'filter_type' => $filter['filter_type']
-						);
+						if ($categoriesWithProductsCount || !Configuration::get('PS_LAYERED_HIDE_0_VALUES'))
+							$filterBlocks[] = array (
+								'type_lite' => 'category',
+								'type' => 'category',
+								'id_key' => 0, 'name' => $this->l('Categories'),
+								'values' => $tmpArray,
+								'filter_show_limit' => $filter['filter_show_limit'],
+								'filter_type' => $filter['filter_type']
+							);
 					}
 					break;
 				

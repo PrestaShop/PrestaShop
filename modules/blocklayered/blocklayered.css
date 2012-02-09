@@ -107,6 +107,11 @@
 	padding:0;
 	border: 1px solid #666;
 }
+#layered_block_left .color-option.disable {
+	opacity: 0.5;
+	filter:alpha(opacity=50);
+	-moz-opacity:0.5; 
+}
 #layered_form  .color-option.on {
 	border: 1px solid red;
 }
