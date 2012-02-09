@@ -94,3 +94,10 @@
 	width:26px;
 	background:url(img/icon/pict_add_cart.png) no-repeat 0 0
 }
+#cart_block table#vouchers {
+	clear: both;
+	width:100%
+}
+#cart_block table#vouchers tr td{
+	padding: 2px;
+}
