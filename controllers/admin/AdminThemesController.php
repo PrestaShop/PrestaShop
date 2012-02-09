@@ -101,12 +101,49 @@ class AdminThemesControllerCore extends AdminController
 				'title' =>	$this->l('Appearance'),
 				'icon' =>	'email',
 				'fields' =>	array(
-					'PS_LOGO' => array('title' => $this->l('Header logo:'), 'desc' => $this->l('Will appear on main page'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
-					'PS_LOGO_MAIL' => array('title' => $this->l('Mail logo:'), 'desc' => $this->l('Will appear on e-mail headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
-					'PS_LOGO_INVOICE' => array('title' => $this->l('Invoice logo:'), 'desc' => $this->l('Will appear on invoices headers, if undefined the Header logo will be used'), 'type' => 'file', 'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()),
-					'PS_FAVICON' => array('title' => $this->l('Favicon:'), 'desc' => $this->l('Will appear in the address bar of your web browser'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').'?date='.time()),
-					'PS_STORES_ICON' => array('title' => $this->l('Store icon:'), 'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'), 'type' => 'file', 'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()),
-					'PS_NAVIGATION_PIPE' => array('title' => $this->l('Navigation pipe:'), 'desc' => $this->l('Used for navigation path inside categories/product'), 'cast' => 'strval', 'type' => 'text', 'size' => 20),
+					'PS_LOGO' => array(
+						'title' => $this->l('Header logo:'),
+						'desc' => $this->l('Will appear on main page'),
+						'type' => 'file',
+						'thumb' => _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+					),
+					'PS_LOGO_MAIL' => array(
+						'title' => $this->l('Mail logo:'),
+						'desc' => 
+							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo defined, the header logo is used instead.').'</span><br />' : '').
+							$this->l('Will appear on e-mail headers, if undefined the Header logo will be used'),
+						'type' => 'file',
+						'thumb' => (Configuration::get('PS_LOGO_MAIL') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL'))) ? _PS_IMG_.Configuration::get('PS_LOGO_MAIL').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+					),
+					'PS_LOGO_INVOICE' => array(
+						'title' => $this->l('Invoice logo:'),
+						'desc' => 
+							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo defined, the header logo is used instead.').'</span><br />' : '').
+							$this->l('Will appear on invoices headers, if undefined the Header logo will be used'),
+						'type' => 'file',
+						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE').'?date='.time() : _PS_IMG_.Configuration::get('PS_LOGO').'?date='.time()
+					),
+					'PS_FAVICON' => array(
+						'title' => $this->l('Favicon:'),
+						'hint' => $this->l('Only ICO format allowed'),
+						'desc' => $this->l('Will appear in the address bar of your web browser'),
+						'type' => 'file',
+						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').'?date='.time()
+					),
+					'PS_STORES_ICON' => array(
+						'title' => $this->l('Store icon:'),
+						'hint' => $this->l('Only GIF format allowed'),
+						'desc' => $this->l('Will appear on the store locator (inside Google Maps)').'<br />'.$this->l('Suggested size: 30x30, Transparent GIF'),
+						'type' => 'file',
+						'thumb' => _PS_IMG_.Configuration::get('PS_STORES_ICON').'?date='.time()
+					),
+					'PS_NAVIGATION_PIPE' => array(
+						'title' => $this->l('Navigation pipe:'),
+						'desc' => $this->l('Used for navigation path inside categories/product'),
+						'cast' => 'strval',
+						'type' => 'text',
+						'size' => 20
+					),
 				),
 				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
 			),
