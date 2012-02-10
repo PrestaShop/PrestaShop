@@ -262,6 +262,35 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 		sort($list_activities);
 		$this->list_activities = $list_activities;
 
+		// Countries list
+		$this->list_countries = array();
+		$countries = $this->language->getCountries();
+		$top_countries = array(
+			'fr',
+			'es',
+			'us',
+			'gb',
+			'it',
+			'de',
+			'nl',
+			'pl',
+			'id',
+			'be',
+			'br',
+			'se',
+			'ca',
+			'ru',
+			'cn',
+		);
+
+		foreach ($top_countries as $iso)
+			$this->list_countries[$iso] = $countries[$iso];
+		$this->list_countries[0] = '-----------------';
+
+		foreach ($countries as $iso => $lang)
+			$this->list_countries[$iso] = $lang;
+
+
 		// Install type
 		$this->install_type = ($this->session->install_type) ? $this->session->install_type : 'full';
 
