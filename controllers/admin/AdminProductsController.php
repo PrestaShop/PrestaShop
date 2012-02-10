@@ -817,8 +817,8 @@ class AdminProductsControllerCore extends AdminController
 			$product->customizable = ((int)Tools::getValue('uploadable_files') > 0 || (int)Tools::getValue('text_fields') > 0) ? 1 : 0;
 			if (!count($this->errors) && !$product->update())
 				$this->errors[] = Tools::displayError('An error occurred while updating customization configuration.');
-			if (!count($this->errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Customization&token='.($token ? $token : $this->token);
+			if (empty($this->errors))
+				$this->confirmations[] = $this->l('Update successfull');
 		}
 		else
 			$this->errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -831,10 +831,10 @@ class AdminProductsControllerCore extends AdminController
 			foreach ($_POST as $field => $value)
 				if (strncmp($field, 'label_', 6) == 0 && !Validate::isLabel($value))
 					$this->errors[] = Tools::displayError('Label fields are invalid');
-			if (!count($this->errors) && !$product->updateLabels())
+			if (empty($this->errors) && !$product->updateLabels())
 				$this->errors[] = Tools::displayError('An error occurred while updating customization.');
-			if (!count($this->errors))
-				$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Customization&add'.$this->table.'&token='.($token ? $token : $this->token);
+			if (empty($this->errors))
+				$this->confirmations[] = $this->l('Update successful');
 		}
 		else
 			$this->errors[] = Tools::displayError('Product must be created before adding customization possibilities.');
@@ -963,14 +963,22 @@ class AdminProductsControllerCore extends AdminController
 		elseif (Tools::isSubmit('submitCustomizationConfiguration'))
 		{
 			if ($this->tabAccess['edit'] === '1')
+			{
 				$this->action = 'customizationConfiguration';
+				$this->tab_display = 'customization';
+				$this->display = 'edit';
+			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
 		elseif (Tools::isSubmit('submitProductCustomization'))
 		{
 			if ($this->tabAccess['edit'] === '1')
+			{
 				$this->action = 'productCustomization';
+				$this->tab_display = 'customization';
+				$this->display = 'edit';
+			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
@@ -1687,7 +1695,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$id_product_download_attribute = ProductDownload::getIdFromIdAttribute((int)$product->id, $id_product_attribute);
 				$id_product_download = $id_product_download_attribute ? (int)$id_product_download_attribute : (int)Tools::getValue('virtual_product_id');
-			} 
+			}
 			else
 				$id_product_download = Tools::getValue('virtual_product_id');
 
