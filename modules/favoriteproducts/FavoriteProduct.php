@@ -60,14 +60,19 @@ class FavoriteProduct extends ObjectModel
 			$shop = Context::getContext()->shop;
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT fp.`id_shop`, p.`id_product`, pl.`description_short`, pl.`link_rewrite`, pl.`name`, i.`id_image`, CONCAT(p.`id_product`, \'-\', i.`id_image`) as image
+			SELECT fp.`id_shop`, p.`id_product`, pl.`description_short`, pl.`link_rewrite`,
+				pl.`name`, i.`id_image`, CONCAT(p.`id_product`, \'-\', i.`id_image`) as image
 			FROM `'._DB_PREFIX_.'favorite_product` fp
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = fp.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.$shop->addSqlRestrictionOnLang('pl').')
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+				ON p.`id_product` = pl.`id_product`
+				AND pl.`id_lang` = '.(int)$id_lang
+				.$shop->addSqlRestrictionOnLang('pl').'
 			LEFT OUTER JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product` AND `default_on` = 1)
 			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
-			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 			WHERE p.`active` = 1
+				'.($id_customer ? ' AND fp.id_customer = '.(int)$id_customer : '').'
 				'.$shop->addSqlRestriction(false, 'fp')
 		);
 	}
@@ -77,12 +82,13 @@ class FavoriteProduct extends ObjectModel
 		if (!$shop)
 			$shop = Context::getContext()->shop;
 
-		$id_favorite_product =  Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		$id_favorite_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_favorite_product`
 			FROM `'._DB_PREFIX_.'favorite_product`
-			WHERE `id_customer` = '.(int)($id_customer).'
-			AND `id_product` = '.(int)($id_product).'
-			AND `id_shop` = '.(int)($shop->getID()));
+			WHERE `id_customer` = '.(int)$id_customer.'
+			AND `id_product` = '.(int)$id_product.'
+			AND `id_shop` = '.(int)$shop->getID(true)
+		);
 
 		if ($id_favorite_product)
 			return new FavoriteProduct($id_favorite_product);
@@ -97,8 +103,8 @@ class FavoriteProduct extends ObjectModel
 		return (bool)Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'favorite_product`
-			WHERE `id_customer` = '.(int)($id_customer).'
-			AND `id_product` = '.(int)($id_product).'
-			AND `id_shop` = '.(int)($shop->getID()));
+			WHERE `id_customer` = '.(int)$id_customer.'
+			AND `id_product` = '.(int)$id_product.'
+			AND `id_shop` = '.(int)$shop->getID(true));
 	}
 }
