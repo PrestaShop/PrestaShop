@@ -89,6 +89,13 @@ p {padding-bottom:20px}
 	font-size:13px;
 	background:#ffffe0
 }
+.success {
+	margin:0 0 10px 0;
+	padding:10px;
+	border:1px solid #5cff74;
+	font-size:13px;
+	background: #d3ffab
+}
 .error {
 	margin:0 0 10px 0;
 	padding:10px;

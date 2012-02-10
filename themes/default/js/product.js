@@ -30,6 +30,7 @@ var combinations = new Array();
 var selectedCombination = new Array();
 var globalQuantity = new Number;
 var colors = new Array();
+var input_save_customized_datas = '';
 
 //check if a function exists
 function function_exists(function_name)
@@ -548,6 +549,7 @@ $(document).ready(function()
 
 	// Hide the customization submit button and display some message
 	$('p#customizedDatas input').click(function() {
+		input_save_customized_datas = $('p#customizedDatas').html();
 		$('p#customizedDatas input').hide();
 		$('#ajax-loader').fadeIn();
 		$('p#customizedDatas').append(uploading_in_progress);
@@ -578,8 +580,50 @@ function saveCustomization()
 	$('body select[id^="group_"]').each(function() {
 		customAction = customAction.replace(new RegExp(this.id + '=\\d+'), this.id +'='+this.value);
 	});
-	$('#customizationForm').attr('action', customAction);
-	$('#customizationForm').submit();
+
+	$.ajax({
+		type: 'POST',
+		url: customAction,
+		data: 'ajax=true&'+$('#customizationForm').serialize(),
+		dataType: 'json',
+		async : true,
+		success: function(data) {
+			$('#customizedDatas').fadeOut();
+			$('#customizedDatas').html(input_save_customized_datas);
+			$('#customizedDatas').fadeIn();
+			if (!data.hasErrors)
+			{
+				$('#customizationForm').find('.error').fadeOut(function(){
+					$(this).remove();
+				});
+				// display a confirmation message
+				if ($('#customizationForm').find('.success').val() == undefined)
+					$('#customizationForm').prepend("<p class='success'>"+data.conf+"</p>");
+				else
+					$('#customizationForm.success').html("<p class='success'>"+data.conf+"</p>");
+			}
+			else
+			{
+				$('#customizationForm').find('.success').fadeOut(function(){
+					$(this).remove();
+				});
+				// display an error message
+				if ($('#customizationForm').find('.error').val() == undefined)
+				{
+					$('#customizationForm').prepend("<p class='error'></p>");
+					for (var i = 0; i < data.errors.length; i++)
+						$('#customizationForm .error').html($('#customizationForm .error').html()+data.errors[i]+"<br />");
+				}
+				else
+				{
+					$('#customizationForm .error').html('');
+					for (var i = 0; i < data.errors.length; i++)
+						$('#customizationForm .error').html($('#customizationForm .error').html()+data.errors[i]+"<br />");
+				}
+			}
+		}
+	});
+	return false;
 }
 
 function submitPublishProduct(url, redirect)

@@ -559,5 +559,22 @@ class ProductControllerCore extends FrontController
 		}
 		return $specific_prices;
 	}
+
+	public function postProcess()
+	{
+		if ($this->ajax)
+		{
+			if (Tools::isSubmit('submitCustomizedDatas'))
+			{
+				$this->pictureUpload($this->product, $this->context->cart);
+				$this->textRecord($this->product, $this->context->cart);
+				$this->formTargetFormat();
+			}
+			if (count($this->errors))
+				die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
+			else
+				die(Tools::jsonEncode(array('hasErrors' => false, 'conf' => Tools::displayError('Customization saved successfully.'))));
+		}
+	}
 }
 

@@ -493,8 +493,10 @@ var ajaxCart = {
 
 		if (!hasAlreadyCustomizations)
 		{
-			if (!product.hasAttributes) content += '<dd id="cart_block_combination_of_' + productId + '" class="hidden">';
-			content += '<ul class="cart_block_customizations" id="customization_' + productId + '_' + productAttributeId + '">';
+			if (!product.hasAttributes)
+				content += '<dd id="cart_block_combination_of_' + productId + '" class="hidden">';
+			if ($('#customization_' + productId + '_' + productAttributeId).val() == undefined)
+				content += '<ul class="cart_block_customizations" id="customization_' + productId + '_' + productAttributeId + '">';
 		}
 
 		$(product.customizedDatas).each(function(){
@@ -502,7 +504,7 @@ var ajaxCart = {
 			customizationId = parseInt(this.customizationId);
 			productAttributeId = typeof(product.idCombination) == 'undefined' ? 0 : parseInt(product.idCombination);
 			// If the customization is already displayed on the cart, no update's needed
-			if($('#cart_block').find("div[id^=deleteCustomizableProduct_" + customizationId + "_]").length)
+			if ($("#deleteCustomizableProduct_" + customizationId + "_" + productId + "_" + productAttributeId).length)
 				return ('');
 			content += '<li name="customization"><div class="deleteCustomizableProduct" id="deleteCustomizableProduct_' + customizationId + '_' + productId + '_' + (productAttributeId ?  productAttributeId : '0') + '"><a  rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseDir + 'index.php?controller=cart&amp;delete&amp;id_product=' + productId + '&amp;ipa=' + productAttributeId + '&amp;id_customization=' + customizationId + '&amp;token=' + static_token + '"> </a></div><span class="quantity-formated"><span class="quantity">' + parseInt(this.quantity) + '</span>x</span>';
 
