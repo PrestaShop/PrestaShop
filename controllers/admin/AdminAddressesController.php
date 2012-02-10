@@ -268,10 +268,11 @@ class AdminAddressesControllerCore extends AdminController
 					'options' => array(
 						'query' => array(),
 						'id' => 'id_state',
-						'name' => 'name'
+						'name' => 'name',
 					)
 				);
 
+				$this->fields_value['id_country'] = Configuration::get('PS_COUNTRY_DEFAULT');
 			}
 		}
 
