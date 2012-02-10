@@ -114,7 +114,7 @@ class Newsletter extends Module
 				fclose($fd);
 				$this->_html .= $this->displayConfirmation(
 				$this->l('The .CSV file has been successfully exported.').
-				' ('.$nb.' '.$this->l('customers found').')<br />>
+				' ('.$nb.' '.$this->l('customers found').')<br />
 				<a href="../modules/newsletter/'.Tools::safeOutput(strval($_POST['action'])).'_'.$this->_file.'"><b>'.$this->l('Download the file').' '.$this->_file.'</b></a>
 				<br />
 				<ol style="margin-top: 10px;">
@@ -161,7 +161,7 @@ class Newsletter extends Module
 		FROM `'._DB_PREFIX_.'newsletter`
 		WHERE `active` = 1');
 
-		$header = array('id_customer', 'email', 'newsletter_date_add', 'ip_address');
+		$header = array('id_customer', 'email', 'newsletter_date_add', 'ip_address', 'http_referer');
 		$result = (is_array($rq) ? array_merge(array($header), $rq) : $header);
 		return $result;
 	}
