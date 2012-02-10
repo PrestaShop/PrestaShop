@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/FavoriteProduct.php');
 
-if (Tools::getValue('action') AND Tools::getValue('id_product') AND Context::getContext()->cookie->id_customer)
+if (Tools::getValue('action') && Tools::getValue('id_product') && Context::getContext()->cookie->id_customer)
 {
 	if (Tools::getValue('action') == 'remove')
 	{
@@ -41,22 +41,23 @@ if (Tools::getValue('action') AND Tools::getValue('id_product') AND Context::get
 		$product = new Product((int)Tools::getValue('id_product'));
 		if (!Validate::isLoadedObject($product))
 			die('0');
-		$favoriteProduct = FavoriteProduct::getFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id);
-		if ($favoriteProduct)
-			if ($favoriteProduct->delete())
+		$favorite_product = FavoriteProduct::getFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id);
+		if ($favorite_product)
+			if ($favorite_product->delete())
 				die('0');
 	}
 	elseif (Tools::getValue('action') == 'add')
 	{
 		$product = new Product((int)Tools::getValue('id_product'));
 		// check if product exists
-		if (!Validate::isLoadedObject($product) || FavoriteProduct::isCustomerFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id))
+		if (!Validate::isLoadedObject($product)
+			|| FavoriteProduct::isCustomerFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id))
 			die('1');
-		$favoriteProduct = new FavoriteProduct();
-		$favoriteProduct->id_product = $product->id;
-		$favoriteProduct->id_customer = (int)Context::getContext()->cookie->id_customer;
-		$favoriteProduct->id_shop = (int)Context::getContext()->shop->getID();
-		if ($favoriteProduct->add())
+		$favorite_product = new FavoriteProduct();
+		$favorite_product->id_product = $product->id;
+		$favorite_product->id_customer = (int)Context::getContext()->cookie->id_customer;
+		$favorite_product->id_shop = (int)Context::getContext()->shop->getID();
+		if ($favorite_product->add())
 			die('0');
 	}
 }

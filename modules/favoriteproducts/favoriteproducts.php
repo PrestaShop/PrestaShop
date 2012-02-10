@@ -70,7 +70,7 @@ class FavoriteProducts extends Module
 
 	public function uninstall()
 	{
-		if (!parent::uninstall() OR !Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'favorite_product`'))
+		if (!parent::uninstall() || !Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'favorite_product`'))
 			return false;
 		return true;
 	}
@@ -79,9 +79,10 @@ class FavoriteProducts extends Module
 	{
 		include_once(dirname(__FILE__).'/FavoriteProduct.php');
 
-		$favoriteProducts = FavoriteProduct::getFavoriteProducts($this->context->customer->id, $this->context->language->id);
-
-		$this->smarty->assign(array('favorite_products' => $favoriteProducts));
+		$products = FavoriteProduct::getFavoriteProducts($this->context->customer->id, $this->context->language->id);
+		$this->smarty->assign(array(
+			'favorite_products' => $products,
+		));
 
 		return $this->display(__FILE__, 'my-account.tpl');
 	}
@@ -97,7 +98,8 @@ class FavoriteProducts extends Module
 
 		$this->smarty->assign(array(
 			'isCustomerFavoriteProduct' => (FavoriteProduct::isCustomerFavoriteProduct($this->context->customer->id, Tools::getValue('id_product')) ? 1 : 0),
-			'isLogged' => (int)$this->context->customer->logged));
+			'isLogged' => (int)$this->context->customer->logged,
+		));
 		return $this->display(__FILE__, 'favoriteproducts-extra.tpl');
 	}
 
