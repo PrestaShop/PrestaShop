@@ -97,7 +97,7 @@
 				<select id="months" name="months">
 					<option value="">-</option>
 					{foreach from=$months key=k item=v}
-						<option value="{$k|escape:'htmlall':'UTF-8'}" {if ($sl_month == $k)}selected="selected"{/if}>{l s="$v"}&nbsp;</option>
+						<option value="{$k|escape:'htmlall':'UTF-8'}" {if ($sl_month == $k)}selected="selected"{/if}>{l s=$v}&nbsp;</option>
 					{/foreach}
 				</select>
 				<select id="years" name="years">
