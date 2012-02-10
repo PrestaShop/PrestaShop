@@ -108,6 +108,16 @@ class AdminContactsControllerCore extends AdminController
 				'class' => 'button'
 			)
 		);
+		
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association:'),
+				'name' => 'checkBoxShopAsso',
+				'values' => Shop::getTree()
+			);
+		}
 
 		return parent::renderForm();
 	}
