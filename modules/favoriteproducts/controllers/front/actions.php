@@ -62,8 +62,8 @@ class FavoriteproductsActionsModuleFrontController extends ModuleFrontController
 		if (!Validate::isLoadedObject($product))
 			die('0');
 
-		$favoriteProduct = FavoriteProduct::getFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id);
-		if ($favoriteProduct && $favoriteProduct->delete())
+		$favorite_product = FavoriteProduct::getFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id);
+		if ($favorite_product && $favorite_product->delete())
 			die('0');
 		die(1);
 	}
@@ -77,11 +77,11 @@ class FavoriteproductsActionsModuleFrontController extends ModuleFrontController
 		// check if product exists
 		if (!Validate::isLoadedObject($product) || FavoriteProduct::isCustomerFavoriteProduct((int)Context::getContext()->cookie->id_customer, (int)$product->id))
 			die('1');
-		$favoriteProduct = new FavoriteProduct();
-		$favoriteProduct->id_product = $product->id;
-		$favoriteProduct->id_customer = (int)Context::getContext()->cookie->id_customer;
-		$favoriteProduct->id_shop = (int)Context::getContext()->shop->getID(true);
-		if ($favoriteProduct->add())
+		$favorite_product = new FavoriteProduct();
+		$favorite_product->id_product = $product->id;
+		$favorite_product->id_customer = (int)Context::getContext()->cookie->id_customer;
+		$favorite_product->id_shop = (int)Context::getContext()->shop->getID(true);
+		if ($favorite_product->add())
 			die('0');
 		die(1);
 	}
