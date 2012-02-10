@@ -99,11 +99,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->fieldsDisplay = array(
 				'id_attribute' => array(
 					'title' => $this->l('ID'),
-					'width' => 25
+					'width' => 40,
+					'align' => 'center'
 				),
 				'name' => array(
-					'title' => $this->l('Name'),
-					'width' => 140,
+					'title' => $this->l('Value'),
+					'width' => 'auto',
 					'filter_key' => 'b!name'
 				)
 			);
@@ -270,7 +271,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Value:'),
 					'name' => 'name',
 					'lang' => true,
 					'size' => 33,
