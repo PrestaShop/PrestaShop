@@ -181,33 +181,40 @@ $(document).ready(function() {
 		add_condition(current_id_condition_group, 'category', $('#id_category option:selected').val());
 		var html = '<tr><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td></tr>';
 		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		return false;
 	});
 	$('#add_condition_manufacturer').click(function() {
 		add_condition(current_id_condition_group, 'manufacturer', $('#id_manufacturer option:selected').val());
 		var html = '<tr><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td></tr>';
 		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		return false;
 	});
 	$('#add_condition_supplier').click(function() {
 		add_condition(current_id_condition_group, 'supplier', $('#id_supplier option:selected').val());
 		var html = '<tr><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td></tr>';
 		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		return false;
 	});
 	$('#add_condition_attribute').click(function() {
 		add_condition(current_id_condition_group, 'attribute', $('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').val());
 		var html = '<tr><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td></tr>';
 		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		return false;
 	});
 	$('#add_condition_feature').click(function() {
 		add_condition(current_id_condition_group, 'feature', $('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').val());
 		var html = '<tr><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td></tr>';
 		$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+		return false;
 	});
 	$('#add_condition_group').click(function() {
 		new_condition_group();
+		return false;
 	});
 	$('.condition_group').live('click', function() {
 		var id = this.id.split('_');
 		toggle_condition_group(id[2]);
+		return false;
 	});
 	{if $conditions|@count == 0}
 		new_condition_group();
