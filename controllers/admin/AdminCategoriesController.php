@@ -426,7 +426,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'values' => Shop::getTree()
 			);
 		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
-		if ($this->_category->id_parent == Category::getTopCategory()->id)
+		if ($this->_category->id_parent == Category::getTopCategory()->id && Tools::isSubmit('updatecategory'))
 			foreach ($this->fields_form['input'] as $k => $input)
 				if (in_array($input['name'], array('id_parent', 'is_root_category')))
 					unset($this->fields_form['input'][$k]);
