@@ -34,6 +34,14 @@
 	var uploadableFileLabel = 0;
 	var textFieldLabel = 0;
 
+	$(document).ready(function(){
+		$(".datepicker").datepicker({
+			prevText: '',
+			nextText: '',
+			dateFormat: 'yy-mm-dd'
+		});
+	});
+
 	if ($('#is_virtual_good').attr('checked'))
 	{
 		$('#virtual_good').show();
@@ -218,7 +226,7 @@
 							</p>
 							<p class="block">
 								<label for="virtual_product_expiration_date" class="t">{l s='Expiration date'}</label>
-								<input class="datepicker hasDatepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
+								<input class="datepicker" type="text" id="virtual_product_expiration_date" name="virtual_product_expiration_date" value="{$product->productDownload->date_expiration}" size="11" maxlength="10" autocomplete="off" /> {l s='Format: YYYY-MM-DD'}
 								<span class="hint" name="help_box" style="display:none">{l s='No expiration date if you leave this blank'}</span>
 							</p>
 							<p class="block">
