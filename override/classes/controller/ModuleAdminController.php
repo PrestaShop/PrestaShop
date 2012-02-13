@@ -1,6 +1,6 @@
 <?php
 
-class ModuleAdminController extends ModuleAdminControllerCore
+abstract class ModuleAdminController extends ModuleAdminControllerCore
 {
 
 }
