@@ -92,9 +92,17 @@ abstract class Db extends DbCore
 		$result = parent::query($sql);
 		$end = microtime(true);
 		
+		// Save details
+		$timeSpent = $end - $start;
+		$trace = debug_backtrace(false);
+		while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $trace[0]['file']))
+			array_shift($trace);
+		
 		$this->queries[] = array(
-			'query' =>	$sql,
-			'time' =>	($end - $start)
+			'query' => $sql,
+			'time' => $timeSpent,
+			'file' => $trace[0]['file'],
+			'line' => $trace[0]['line'],
 		);
 		
 		return $result;
