@@ -69,15 +69,17 @@ class AdminScenesControllerCore extends AdminController
 		/* Generate image with differents size */
 		if (!($obj = $this->loadObject(true)))
 			return;
+
 		if ($obj->id && (isset($_FILES['image']) || isset($_FILES['thumb'])))
 		{
+			$base_img_path = _PS_SCENE_IMG_DIR_.$obj->id.'.jpg';
 			$images_types = ImageType::getImagesTypes('scenes');
 
 			foreach ($images_types as $k => $image_type)
 			{
 				if ($image_type['name'] == 'large_scene' && isset($_FILES['image']))
 					ImageManager::resize(
-						$_FILES['image']['tmp_name'],
+						$base_img_path,
 						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
@@ -85,11 +87,11 @@ class AdminScenesControllerCore extends AdminController
 				else if ($image_type['name'] == 'thumb_scene')
 				{
 					if (isset($_FILES['thumb']) && !$_FILES['thumb']['error'])
-						$tmp_name = $_FILES['thumb']['tmp_name'];
+						$base_thumb_path = _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'.jpg';
 					else
-						$tmp_name = $_FILES['image']['tmp_name'];
+						$base_thumb_path = $base_img_path;
 					ImageManager::resize(
-						$tmp_name,
+						$base_thumb_path,
 						_PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
 						(int)$image_type['width'],
 						(int)$image_type['height']
