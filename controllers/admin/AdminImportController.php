@@ -772,8 +772,7 @@ class AdminImportControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes($entity);
 			foreach ($images_types as $k => $image_type)
 			{
-				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-				ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']);
+				ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
 			}
 			if (in_array($image_type['id_image_type'], $watermark_types))
 				Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));

@@ -580,14 +580,14 @@ class AdminCategoriesControllerCore extends AdminController
 			$images_types = ImageType::getImagesTypes('categories');
 			foreach ($images_types as $k => $image_type)
 			{
-				$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
 				ImageManager::resize(
 					_PS_CAT_IMG_DIR_.$id_category.'.jpg',
-					_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).$theme.'.jpg',
+					_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.jpg',
 					(int)$image_type['width'], (int)$image_type['height']
 				);
 			}
 		}
+
 		return $ret;
 	}
 
