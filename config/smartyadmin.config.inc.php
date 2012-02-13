@@ -35,68 +35,13 @@ function smartyTranslate($params, &$smarty)
 	$addslashes = isset($params['slashes']);
 
     if ($pdf)
-    {
-		global $_LANGPDF;
-		$iso = Context::getContext()->language->iso_code;
-		if (!Validate::isLanguageIsoCode($iso))
-			throw PrestaShopException('Invalid iso lang!');
+    	return Translate::getPdfTranslation($params['s']);
 
-        $translationsFile = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
-
-        if (Tools::file_exists_cache($translationsFile))
-            @include_once($translationsFile);
-
-        $key = 'PDF'.md5($params['s']);
-        $lang_array = $_LANGPDF;
-
-	    $msg = $params['s'];
-	    if (is_array($lang_array) AND key_exists($key, $lang_array))
-		    $msg = $lang_array[$key];
-	    elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
-		    $msg = $lang_array[Tools::strtolower($key)];
-
-        return $msg;
-    }
-
-	$filename = ((!isset($smarty->compiler_object) OR !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
+	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 
 	// If the template is part of a module
 	if (!empty($params['mod']))
-	{
-		global $_MODULES, $_MODULE;
-
-		$key = Tools::substr(basename($filename), 0, -4).'_'.md5($params['s']);
-		$iso = Language::getIsoById(Context::getContext()->language->id);
-
-		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$params['mod'].'/'.$iso.'.php'))
-		{
-			$translationsFile = _PS_THEME_DIR_.'modules/'.$params['mod'].'/'.$iso.'.php';
-			$key = '<{'.$params['mod'].'}'._THEME_NAME_.'>'.$key;
-		}
-		else
-		{
-			// @retrocompatibility with translations files in module root
-			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$params['mod'].'/translations'))
-				$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/translations/'.$iso.'.php';
-			else
-				$translationsFile = _PS_MODULE_DIR_.$params['mod'].'/'.$iso.'.php';
-			$key = '<{'.$params['mod'].'}prestashop>'.$key;
-		}
-
-		if (!is_array($_MODULES))
-			$_MODULES = array();
-		if (@include_once($translationsFile))
-			if (is_array($_MODULE))
-				$_MODULES = array_merge($_MODULES, $_MODULE);
-		$lang_array = $_MODULES;
-		if (is_array($lang_array) && key_exists($key, $lang_array))
-			$msg = $lang_array[$key];
-		elseif (is_array($lang_array) && key_exists(Tools::strtolower($key), $lang_array))
-			$msg = $lang_array[Tools::strtolower($key)];
-		else
-			$msg = $params['s'];
-		return $msg;
-	}
+		return Translate::getModuleTranslation($params['mod'], $params['s'], Tools::substr(basename($filename), 0, -4));
 
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
@@ -119,5 +64,5 @@ function smartyTranslate($params, &$smarty)
 			$class = null;
 	}
 
-	return AdminController::translate($params['s'], $class, $addslashes, $htmlentities);
+	return Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities);
 }

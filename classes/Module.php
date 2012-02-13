@@ -868,7 +868,7 @@ abstract class ModuleCore
 				$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
 
 		// Return Name
-		return Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
+		return Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
 	}
 
 
@@ -938,12 +938,12 @@ abstract class ModuleCore
 					$item->warning = '';
 					foreach ($xml_module as $k => $v)
 						$item->$k = (string)$v;
-					$item->displayName = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
-					$item->description = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
-					$item->author = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
+					$item->displayName = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name);
+					$item->description = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name);
+					$item->author = Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name);
 
 					if (isset($xml_module->confirmUninstall))
-						$item->confirmUninstall = Module::findTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
+						$item->confirmUninstall = Translate::getModuleTranslation($xml_module->name, Module::configXmlStringFormat($xml_module->confirmUninstall), (string)$xml_module->name);
 
 					$item->active = 0;
 					$module_list[] = $item;
@@ -1225,44 +1225,13 @@ abstract class ModuleCore
 	}
 
 	/**
-	 * find translation from $_MODULES and put it in self::$l_cache if not already exist
-	 * and return it.
-	 *
-	 * @param string $name name of the module
-	 * @param string $string term to find
-	 * @param string $source additional param for building translation key
-	 * @return string
+	 * @deprecated 1.5.0 Use Translate::getModuleTranslation()
 	 */
 	public static function findTranslation($name, $string, $source)
 	{
-		global $_MODULES;
-
-		$cache_key = $name.'|'.$string.'|'.$source;
-
-		if (!isset(self::$l_cache[$cache_key]))
-		{
-			if (!is_array($_MODULES))
-				return str_replace('"', '&quot;', $string);
-			// set array key to lowercase for 1.3 compatibility
-			$_MODULES = array_change_key_case($_MODULES);
-			$currentKey = '<{'.strtolower($name).'}'.strtolower(_THEME_NAME_).'>'.strtolower($source).'_'.md5($string);
-			$defaultKey = '<{'.strtolower($name).'}prestashop>'.strtolower($source).'_'.md5($string);
-
-			if (isset($_MODULES[$currentKey]))
-				$ret = stripslashes($_MODULES[$currentKey]);
-			elseif (isset($_MODULES[Tools::strtolower($currentKey)]))
-				$ret = stripslashes($_MODULES[Tools::strtolower($currentKey)]);
-			elseif (isset($_MODULES[$defaultKey]))
-				$ret = stripslashes($_MODULES[$defaultKey]);
-			elseif (isset($_MODULES[Tools::strtolower($defaultKey)]))
-				$ret = stripslashes($_MODULES[Tools::strtolower($defaultKey)]);
-			else
-				$ret = stripslashes($string);
-
-			self::$l_cache[$cache_key] = str_replace('"', '&quot;', $ret);
-		}
-		return self::$l_cache[$cache_key];
+		return Translate::getModuleTranslation($name, $string, $source);
 	}
+
 	/**
 	 * Get translation for a given module text
 	 *
@@ -1279,21 +1248,7 @@ abstract class ModuleCore
 		if (self::$_generate_config_xml_mode)
 			return $string;
 
-		global $_MODULES, $_MODULE;
-
-		// @retrocompatibility with translations files in module root
-		if (Tools::file_exists_cache($this->local_path.'/translations/'.Context::getContext()->language->iso_code.'.php'))
-			$file = $this->local_path.'/translations/'.Context::getContext()->language->iso_code.'.php';
-		else
-			$file = $this->local_path.'/'.Context::getContext()->language->iso_code.'.php';
-
-		if (Tools::file_exists_cache($file) && include_once($file))
-			$_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
-
-		$source = $specific ? $specific : $this->name;
-		$string = str_replace('\'', '\\\'', $string);
-		$ret = Module::findTranslation($this->name, $string, $source);
-		return $ret;
+		return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
 	}
 
 	/*

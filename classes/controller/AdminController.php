@@ -166,9 +166,6 @@ class AdminControllerCore extends Controller
 	/** @var array $cache_lang cache for traduction */
 	public static $cache_lang = array();
 
-	/** @var array list the the tab using under a module */
-	public static $tab_module_list;
-
 	/** @var array required_fields to display in the Required Fields form */
 	public $required_fields = array();
 
@@ -1581,61 +1578,7 @@ class AdminControllerCore extends Controller
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
 			if (Configuration::get('PS_HELPBOX'))
 				$this->addJS(_PS_JS_DIR_.'helpAccess.js');
-      }
-	}
-	/**
-	 * use translations files to replace english expression.
-	 *
-	 * @param mixed $string term or expression in english
-	 * @param string $class the classname (without "Controller" suffix)
-	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
-	 * @return string the translation if available, or the english default text.
-	 */
-	public static function translate($string, $class, $addslashes = false, $htmlentities = true)
-	{
-		// every admin translations should use this method
-		// @todo remove global keyword in translations files and use static
-		global $_LANGADM;
-
-		AdminController::initModuleCacheTab();
-
-		if (!is_array($_LANGADM))
-		{
-			$iso = Context::getContext()->language->iso_code;
-			include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
-
-		if (isset(self::$tab_module_list[strtolower($class)]))
-		{
-			$class_name_controller = $class.'controller';
-			// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
-			{
-				$string = str_replace('\'', '\\\'', $string);
-				return Module::findTranslation(Module::$classInModule[$class_name_controller], $string, $class);
-			}
-		}
-		$key = md5(str_replace('\'', '\\\'', $string));
-		// retrocomp :
-		// if value is not set, try with "AdminTab" as prefix.
-		// @todo : change AdminTab to Helper
-		//echo $class.$key.'<br />';
-
-		if (isset($_LANGADM[$class.$key]))
-			$str = $_LANGADM[$class.$key];
-		else if (isset($_LANGADM['AdminController'.$key]))
-			$str = $_LANGADM['AdminController'.$key];
-		else if (isset($_LANGADM['Helper'.$key]))
-			$str = $_LANGADM['Helper'.$key];
-		else if (isset($_LANGADM['AdminTab'.$key]))
-			$str = $_LANGADM['AdminTab'.$key];
-		else
-			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
-			$str = $string;
-
-		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
-		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
 
 	/**
@@ -1655,16 +1598,7 @@ class AdminControllerCore extends Controller
 			$class = substr($class, 0, -10);
 		else if ($class == 'AdminTab')
 			$class = substr(get_class($this), 0, -10);
-		return AdminController::translate($string, $class, $addslashes, $htmlentities);
-	}
-
-	/**
-	 * Init a cache list of tab existing in a module
-	 */
-	public static function initModuleCacheTab()
-	{
-		if (!isset(self::$tab_module_list))
-			self::$tab_module_list = Tab::getModuleTabList();
+		return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
 	}
 
 	/**
