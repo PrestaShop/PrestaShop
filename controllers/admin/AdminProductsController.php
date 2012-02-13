@@ -647,7 +647,7 @@ class AdminProductsControllerCore extends AdminController
 					if (!empty($is_virtual))
 						Product::updateIsVirtual($product->id);
 
-					$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&conf=4&action=Combinations&token='.($token ? $token : $this->token);
+					//$this->redirect_after = self::$currentIndex.'&id_product='.$product->id.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&conf=4&action=Combinations&token='.($token ? $token : $this->token);
 				}
 			}
 		}
@@ -997,6 +997,7 @@ class AdminProductsControllerCore extends AdminController
 		// And if still not set, use default
 		if (!$this->tab_display)
 			$this->tab_display = $this->default_tab;
+
 	}
 
 	/**
@@ -1359,8 +1360,7 @@ class AdminProductsControllerCore extends AdminController
 				$imagesTypes = ImageType::getImagesTypes('products');
 				foreach ($imagesTypes as $k => $image_type)
 				{
-					$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-					if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).$theme.'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
+					if (!ImageManager::resize($tmpName, $new_path.'-'.stripslashes($image_type['name']).'.'.$image->image_format, $image_type['width'], $image_type['height'], $image->image_format))
 						$this->errors[] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($image_type['name']);
 				}
 			}
@@ -1481,7 +1481,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->processWarehouses($token);
 					$this->processFeatures($token);
 					$this->processProductAttribute($token);
-
+//d($this->redirect_after);
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 					elseif (!$object->updateCategories(Tools::getValue('categoryBox'), true))

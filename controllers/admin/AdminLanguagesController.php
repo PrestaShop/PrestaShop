@@ -432,12 +432,11 @@ class AdminLanguagesControllerCore extends AdminController
 					$images_types = ImageType::getImagesTypes('products');
 					foreach ($images_types as $k => $image_type)
 					{
-						$theme = (Shop::isFeatureActive() ? '-'.$image_type['id_theme'] : '');
-						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
+						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
 							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your product directory.');
-						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
+						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
 							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your category directory.');
-						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).$theme.'.jpg', $image_type['width'], $image_type['height']))
+						if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
 							$this->errors[] = Tools::displayError('An error occurred while resizing no-picture image to your manufacturer directory.');
 					}
 				}
