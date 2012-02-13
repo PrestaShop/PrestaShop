@@ -63,7 +63,11 @@ class FrontControllerCore extends Controller
 		global $useSSL;
 
 		parent::__construct();
-		$useSSL = $this->ssl;
+
+		if (isset($useSSL))
+			$this->ssl = $useSSL;
+		else
+			$useSSL = $this->ssl;
 	}
 
 	/**

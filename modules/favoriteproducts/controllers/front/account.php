@@ -30,6 +30,8 @@
  */
 class FavoriteproductsAccountModuleFrontController extends ModuleFrontController
 {
+	public $ssl = true;
+
 	public function init()
 	{
 		parent::init();
