@@ -834,7 +834,7 @@
 			</div>
 			<div id="attributes_list">
 			</div>
-			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty"/>&nbsp;<b>{l s='In stock:'}</b>&nbsp;<span id="qty_in_stock"></span></p>
+			<p><label for="qty">{l s='Quantity:'}</label><input type="text" name="qty" id="qty" value="1" />&nbsp;<b>{l s='In stock:'}</b>&nbsp;<span id="qty_in_stock"></span></p>
 			<div class="margin-form">
 				<p><input type="submit" onclick="addProduct();return false;" class="button" id="submitAddProduct" value="{l s='Add to cart'}"/></p>
 			</div>
