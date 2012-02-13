@@ -102,24 +102,23 @@ class BlockLayered extends Module
 		Configuration::deleteByName('PS_LAYERED_FILTER_PRICE_USETAX');
 		Configuration::deleteByName('PS_LAYERED_FILTER_CATEGORY_DEPTH');
 		
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature_lang_value');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter_shop');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_product_attribute');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_price_index');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_friendly_url');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_indexable_feature_lang_value');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_filter');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_product_attribute');
 		return parent::uninstall();
 	}
 	
 	private static function installPriceIndexTable()
 	{
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_price_index`');
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_price_index`');
 		
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_price_index` (
 			`id_product` INT  NOT NULL,
 			`id_currency` INT NOT NULL,
@@ -133,8 +132,8 @@ class BlockLayered extends Module
 	
 	private function installFriendlyUrlTable()
 	{
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_friendly_url`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_friendly_url`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_friendly_url` (
 		`id_layered_friendly_url` INT NOT NULL AUTO_INCREMENT,
 		`url_key` varchar(32) NOT NULL,
@@ -143,24 +142,24 @@ class BlockLayered extends Module
 		PRIMARY KEY (`id_layered_friendly_url`),
 		INDEX `id_lang` (`id_lang`)) ENGINE = '._MYSQL_ENGINE_);
 
-		Db::getInstance()->Execute('CREATE INDEX `url_key` ON `'._DB_PREFIX_.'layered_friendly_url`(url_key(5))');
+		Db::getInstance()->execute('CREATE INDEX `url_key` ON `'._DB_PREFIX_.'layered_friendly_url`(url_key(5))');
 	}
 	
 	private function installIndexableAttributeTable()
 	{
 		// Attributes Groups
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_group`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_group`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_group` (
 		`id_attribute_group` INT NOT NULL,
 		`indexable` BOOL NOT NULL DEFAULT 0,
 		PRIMARY KEY (`id_attribute_group`)) ENGINE = '._MYSQL_ENGINE_);
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'layered_indexable_attribute_group`
 		SELECT id_attribute_group, 1 FROM `'._DB_PREFIX_.'attribute_group`');
 		
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value` (
 		`id_attribute_group` INT NOT NULL,
 		`id_lang` INT NOT NULL,
@@ -169,8 +168,8 @@ class BlockLayered extends Module
 		PRIMARY KEY (`id_attribute_group`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
 		
 		// Attributes
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_lang_value`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_attribute_lang_value`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_attribute_lang_value` (
 		`id_attribute` INT NOT NULL,
 		`id_lang` INT NOT NULL,
@@ -180,19 +179,19 @@ class BlockLayered extends Module
 		
 		
 		// Features
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature` (
 		`id_feature` INT NOT NULL,
 		`indexable` BOOL NOT NULL DEFAULT 0,
 		PRIMARY KEY (`id_feature`)) ENGINE = '._MYSQL_ENGINE_);
 		
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'layered_indexable_feature`
 		SELECT id_feature, 1 FROM `'._DB_PREFIX_.'feature`');
 		
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_lang_value`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_lang_value`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature_lang_value` (
 		`id_feature` INT NOT NULL,
 		`id_lang` INT NOT NULL,
@@ -201,8 +200,8 @@ class BlockLayered extends Module
 		PRIMARY KEY (`id_feature`, `id_lang`)) ENGINE = '._MYSQL_ENGINE_);
 		
 		// Features values
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_value_lang_value`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_indexable_feature_value_lang_value`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_indexable_feature_value_lang_value` (
 		`id_feature_value` INT NOT NULL,
 		`id_lang` INT NOT NULL,
@@ -217,8 +216,8 @@ class BlockLayered extends Module
 	 */
 	public function installProductAttributeTable()
 	{
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_product_attribute`');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'layered_product_attribute`');
+		Db::getInstance()->execute('
 		CREATE TABLE `'._DB_PREFIX_.'layered_product_attribute` (
 		`id_attribute` int(10) unsigned NOT NULL,
 		`id_product` int(10) unsigned NOT NULL,
@@ -238,7 +237,7 @@ class BlockLayered extends Module
 		else
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_product_attribute WHERE id_product = '.(int)$id_product);
 		
-		Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'layered_product_attribute` (`id_attribute`, `id_product`, `id_attribute_group`) 
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'layered_product_attribute` (`id_attribute`, `id_product`, `id_attribute_group`) 
 		SELECT pac.id_attribute, pa.id_product, ag.id_attribute_group 
 		FROM '._DB_PREFIX_.'product_attribute pa 
 		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pac.id_product_attribute = pa.id_product_attribute 
@@ -258,7 +257,7 @@ class BlockLayered extends Module
 			Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'layered_friendly_url');
 		
 		$attributeValuesByLang = array();
-		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT lc.*, id_lang, name, link_rewrite, cl.id_category
+		$filters = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT lc.*, id_lang, name, link_rewrite, cl.id_category
 		FROM '._DB_PREFIX_.'layered_category lc
 		INNER JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = lc.id_category AND lc.id_category <> 1 )
 		GROUP BY type, id_value, id_lang');
@@ -269,7 +268,7 @@ class BlockLayered extends Module
 			switch ($filter['type'])
 			{
 				case 'id_attribute_group':
-					$attributes = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+					$attributes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT agl.public_name name, a.id_attribute_group id_name, al.name value, a.id_attribute id_value, al.id_lang,
 					liagl.url_name name_url_name, lial.url_name value_url_name
 					FROM '._DB_PREFIX_.'attribute_group ag
@@ -300,7 +299,7 @@ class BlockLayered extends Module
 					break;
 				
 				case 'id_feature':
-					$features = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+					$features = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT fl.name name, fl.id_feature id_name, fvl.id_feature_value id_value, fvl.value value, fl.id_lang, fl.id_lang,
 					lifl.url_name name_url_name, lifvl.url_name value_url_name
 					FROM '._DB_PREFIX_.'feature_lang fl
@@ -330,7 +329,7 @@ class BlockLayered extends Module
 					break;
 				
 				case 'category':
-					$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+					$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT cl.name, cl.id_lang, c.id_category
 					FROM '._DB_PREFIX_.'category c
 					INNER JOIN '._DB_PREFIX_.'category_lang cl ON (c.id_category = cl.id_category)
@@ -348,7 +347,7 @@ class BlockLayered extends Module
 					break;
 						
 				case 'manufacturer':
-					$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+					$manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT m.name as name,l.id_lang as id_lang,  id_manufacturer
 					FROM '._DB_PREFIX_.'manufacturer m , '._DB_PREFIX_.'lang l
 					WHERE l.id_lang = '.(int)$filter['id_lang'].' ');
@@ -491,15 +490,15 @@ class BlockLayered extends Module
 		if (!$params['id_feature'] || Tools::getValue('layered_indexable') === false)
 			return;
 		
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
-		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature VALUES ('.(int)$params['id_feature'].', '.(int)Tools::getValue('layered_indexable').')');
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
+		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature VALUES ('.(int)$params['id_feature'].', '.(int)Tools::getValue('layered_indexable').')');
 		
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_lang_value WHERE id_feature = '.(int)$params['id_feature']); // don't care about the id_lang
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_lang_value WHERE id_feature = '.(int)$params['id_feature']); // don't care about the id_lang
 		foreach (Language::getLanguages(false) as $language)
 		{
 			// Data are validated by method "hookPostProcessFeature"
 			$id_lang = (int)$language['id_lang'];
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang_value
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_lang_value
 			VALUES ('.(int)$params['id_feature'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
 			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 		}
@@ -510,12 +509,12 @@ class BlockLayered extends Module
 		if (!$params['id_feature_value'])
 			return;
 		
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value WHERE id_feature_value = '.(int)$params['id_feature_value']); // don't care about the id_lang
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value WHERE id_feature_value = '.(int)$params['id_feature_value']); // don't care about the id_lang
 		foreach (Language::getLanguages(false) as $language)
 		{
 			// Data are validated by method "hookPostProcessFeatureValue"
 			$id_lang = (int)$language['id_lang'];
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
 			VALUES ('.(int)$params['id_feature_value'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
 			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 		}
@@ -525,7 +524,7 @@ class BlockLayered extends Module
 	{
 		if (!$params['id_feature_value'])
 			return;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value WHERE id_feature_value = '.(int)$params['id_feature_value']);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value WHERE id_feature_value = '.(int)$params['id_feature_value']);
 	}
 	
 	public function hookPostProcessFeatureValue($params)
@@ -547,7 +546,7 @@ class BlockLayered extends Module
 		else
 			$return = '';
 		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_value_lang_value
 		WHERE id_feature_value = '.(int)$params['id_feature_value']);
 		if ($result)
@@ -597,12 +596,12 @@ class BlockLayered extends Module
 		if (!$params['id_attribute'])
 			return;
 		
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value WHERE id_attribute = '.(int)$params['id_attribute']); // don't care about the id_lang
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value WHERE id_attribute = '.(int)$params['id_attribute']); // don't care about the id_lang
 		foreach (Language::getLanguages(false) as $language)
 		{
 			// Data are validated by method "hookPostProcessAttribute"
 			$id_lang = (int)$language['id_lang'];
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang_value
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 			VALUES ('.(int)$params['id_attribute'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
 			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 		}
@@ -612,7 +611,7 @@ class BlockLayered extends Module
 	{
 		if (!$params['id_attribute'])
 			return;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value WHERE id_attribute = '.(int)$params['id_attribute']);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value WHERE id_attribute = '.(int)$params['id_attribute']);
 	}
 	
 	public function hookPostProcessAttribute($params)
@@ -634,7 +633,7 @@ class BlockLayered extends Module
 		else
 			$return = '';
 		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_lang_value
 		WHERE id_attribute = '.(int)$params['id_attribute']);
 		if ($result)
@@ -687,7 +686,7 @@ class BlockLayered extends Module
 	{
 		if (!$params['id_feature'])
 			return;
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
 	}
 	
 	public function hookAfterSaveAttributeGroup($params)
@@ -695,15 +694,15 @@ class BlockLayered extends Module
 		if (!$params['id_attribute_group'] || Tools::getValue('layered_indexable') === false)
 			return;
 		
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
-		Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group VALUES ('.(int)$params['id_attribute_group'].', '.(int)Tools::getValue('layered_indexable').')');
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
+		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group VALUES ('.(int)$params['id_attribute_group'].', '.(int)Tools::getValue('layered_indexable').')');
 
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value WHERE id_attribute_group = '.(int)$params['id_attribute_group']); // don't care about the id_lang
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value WHERE id_attribute_group = '.(int)$params['id_attribute_group']); // don't care about the id_lang
 		foreach (Language::getLanguages(false) as $language)
 		{
 			// Data are validated by method "hookPostProcessAttributeGroup"
 			$id_lang = (int)$language['id_lang'];
-			Db::getInstance()->Execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
 			VALUES ('.(int)$params['id_attribute_group'].', '.$id_lang.', \''.pSQL(Tools::link_rewrite(Tools::getValue('url_name_'.$id_lang))).'\',
 			\''.pSQL(Tools::safeOutput(Tools::getValue('meta_title_'.$id_lang), true)).'\')');
 		}
@@ -735,8 +734,8 @@ class BlockLayered extends Module
 		if (!$params['id_attribute_group'])
 			return;
 
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 	}
 	
 	public function hookAttributeGroupForm($params)
@@ -747,7 +746,7 @@ class BlockLayered extends Module
 		WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 		$langValue = array();
 		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_attribute_group_lang_value
 		WHERE id_attribute_group = '.(int)$params['id_attribute_group']);
 		if ($result)
@@ -820,7 +819,7 @@ class BlockLayered extends Module
 		$indexable = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT indexable FROM '._DB_PREFIX_.'layered_indexable_feature WHERE id_feature = '.(int)$params['id_feature']);
 		$langValue = array();
 		
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 		'SELECT url_name, meta_title, id_lang FROM '._DB_PREFIX_.'layered_indexable_feature_lang_value
 		WHERE id_feature = '.(int)$params['id_feature']);
 		if ($result)
@@ -983,7 +982,7 @@ class BlockLayered extends Module
 			WHERE `active` = 1 AND psi.id_product is null
 			ORDER by id_product LIMIT 0,'.(int)$length;
 		
-		foreach (Db::getInstance()->ExecuteS($query) as $product)
+		foreach (Db::getInstance()->executeS($query) as $product)
 			self::indexProductPrices((int)$product['id_product'], ($smart && $full));
 
 		return (int)($cursor + $length);
@@ -995,7 +994,7 @@ class BlockLayered extends Module
 
 		if (is_null($groups))
 		{
-			$groups = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_group FROM `'._DB_PREFIX_.'group_reduction`');
+			$groups = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group_reduction`');
 			if (!$groups)
 				$groups = array();
 		}
@@ -1039,7 +1038,7 @@ class BlockLayered extends Module
 			else
 				$maxTaxRate = 0;
 			
-			$productMinPrices = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$productMinPrices = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT id_shop, id_currency, id_country, id_group, from_quantity
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE id_product = '.(int)$idProduct);
@@ -1111,7 +1110,7 @@ class BlockLayered extends Module
 					'.(int)$minPrice[$currency['id_currency']].',
 					'.(int)Tools::ps_round($maxPrice[$currency['id_currency']] * (100 + $maxTaxRate) / 100, 0).')';
 			
-			Db::getInstance()->Execute('
+			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'layered_price_index` (id_product, id_currency, id_shop, price_min, price_max)
 				VALUES '.implode(',', $values).'
 				ON DUPLICATE KEY UPDATE id_product = id_product # avoid duplicate keys');
@@ -1213,7 +1212,17 @@ class BlockLayered extends Module
 
 	public function hookCategoryDeletion($params)
 	{
-		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_category WHERE id_category = '.(int)$params['category']->id);
+		$layered_filter_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter');
+		foreach ($layered_filter_list as $layered_filter)
+		{
+			$data = unserialize($layered_filter_list['filters']);
+			if (in_array((int)$params['category']->id, $data['categories']))
+			{
+				unset($data['categories'][array_search((int)$params['category']->id, $data['categories'])]);
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'layered_filter` SET `filters` = \''.pSQL(serialize($data)).'\'');
+			}
+		}
+		$this->buildLayeredCategories();
 	}
 
 	public function getContent()
@@ -1235,12 +1244,15 @@ class BlockLayered extends Module
 			else
 			{
 				if (isset($_POST['id_layered_filter']) && $_POST['id_layered_filter'])
-					Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)Tools::getValue('id_layered_filter'));
+				{
+					Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)Tools::getValue('id_layered_filter'));
+					$this->buildLayeredCategories();
+				}
 				
 				if (Tools::getValue('scope') == 1)
 				{
-					Db::getInstance()->Execute('TRUNCATE TABLE '._DB_PREFIX_.'layered_filter');
-					$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_category FROM '._DB_PREFIX_.'category');
+					Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'layered_filter');
+					$categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_category FROM '._DB_PREFIX_.'category');
 					foreach ($categories as $category)
 						$_POST['categoryBox'][] = (int)$category['id_category'];
 				}
@@ -1275,24 +1287,15 @@ class BlockLayered extends Module
 					if (isset($_POST['categoryBox']) && is_array($_POST['categoryBox']))
 						foreach ($_POST['categoryBox'] as &$categoryBoxTmp)
 							$categoryBoxTmp = (int)$categoryBoxTmp;
-					
-					Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_category
-						WHERE
-							id_category IN ('.implode(',', array_map('intval', $_POST['categoryBox'])).')
-							AND id_shop IN ('.implode(',', $shop_list).')');
 	
 					$filterValues = array();
 					foreach ($_POST['categoryBox'] as $idc)
 						$filterValues['categories'][] = (int)$idc;
-						
-				
-	
-					$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position, filter_show_limit, filter_type) VALUES ';
+					$filterValues['shop_list'] = $shop_list;
+					
 					$values = false;
 					foreach ($_POST['categoryBox'] as $id_category_layered)
 					{
-						$n = 0;
-						
 						foreach ($_POST as $key => $value)
 							if (substr($key, 0, 17) == 'layered_selection' && $value == 'on')
 							{
@@ -1308,32 +1311,8 @@ class BlockLayered extends Module
 									'filter_type' => (int)$type,
 									'filter_show_limit' => (int)$limit
 								);
-								$n++;
-								foreach ($shop_list as $id_shop)
-								{
-									if ($key == 'layered_selection_stock')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'quantity\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if ($key == 'layered_selection_subcategories')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'category\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if ($key == 'layered_selection_condition')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'condition\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if ($key == 'layered_selection_weight_slider')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'weight\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if ($key == 'layered_selection_price_slider')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'price\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if ($key == 'layered_selection_manufacturer')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', NULL,\'manufacturer\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if (substr($key, 0, 21) == 'layered_selection_ag_')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_ag_', '', $key).',
-											\'id_attribute_group\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-									else if (substr($key, 0, 23) == 'layered_selection_feat_')
-										$sqlToInsert .= '('.(int)$id_category_layered.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_feat_', '', $key).',
-											\'id_feature\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
-								}
 							}
 					}
-					if ($values)
-						Db::getInstance()->Execute(rtrim($sqlToInsert, ','));
 					
 					$valuesToInsert = array(
 						'name' => pSQL(Tools::getValue('layered_tpl_name')),
@@ -1344,16 +1323,7 @@ class BlockLayered extends Module
 						$valuesToInsert['id_layered_filter'] = (int)Tools::getValue('id_layered_filter');
 					
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'layered_filter', $valuesToInsert, 'INSERT');
-					
-					if (version_compare(_PS_VERSION_,'1.5','>'))
-					{
-						Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter_shop WHERE `id_layered_filter` = '.(int)$id_layered_filter);
-						
-					if (isset($assos))
-							foreach ($assos as $asso)
-								Db::getInstance()->execute('INSERT INTO layered_filter_shop (`id_layered_filter`, `id_shop`)
-									VALUES('.$id_layered_filter.', '.(int)$asso['id_shop'].')');
-					}
+					$this->buildLayeredCategories();
 					
 					$html .= '<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').
 						$this->l('Your filter').' "'.Tools::safeOutput(Tools::getValue('layered_tpl_name')).'" '.
@@ -1383,7 +1353,8 @@ class BlockLayered extends Module
 			
 			if ($layeredValues)
 			{
-				Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$_GET['id_layered_filter'].' LIMIT 1');
+				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$_GET['id_layered_filter'].' LIMIT 1');
+				$this->buildLayeredCategories();
 				
 				$html .= '
 				<div class="conf">'.(version_compare(_PS_VERSION_,'1.5','>') ? '' : '<img src="../img/admin/ok2.png" alt="" />').'
@@ -1422,7 +1393,7 @@ class BlockLayered extends Module
 			</script>';
 		
 		$categoryList = array();
-		foreach (Db::getInstance()->ExecuteS('SELECT id_category FROM `'._DB_PREFIX_.'category`') as $category)
+		foreach (Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`') as $category)
 			if ($category['id_category'] != 1)
 				$categoryList[] = $category['id_category'];
 				
@@ -1582,7 +1553,7 @@ class BlockLayered extends Module
 		<fieldset class="width4">
 			<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Existing filters templates').'</legend>';
 	
-		$filtersTemplates = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
+		$filtersTemplates = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
 		if (count($filtersTemplates))
 		{
 			$html .= '<p>'.count($filtersTemplates).' '.$this->l('filters templates are configured:').'</p>
@@ -2303,7 +2274,7 @@ class BlockLayered extends Module
 		else
 		{
 			$n = (int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'));
-			$this->products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			$this->products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.id_product, p.on_sale, p.out_of_stock, p.available_for_order, p.quantity, p.minimal_quantity, p.id_category_default, p.customizable, p.show_price, p.`weight`,
 			p.ean13, pl.available_later, pl.description_short, pl.link_rewrite, pl.name, i.id_image, il.legend,  m.name manufacturer_name, p.condition, p.id_manufacturer,
 			DATEDIFF(p.`date_add`,
@@ -2604,7 +2575,7 @@ class BlockLayered extends Module
 			{
 				if (version_compare(_PS_VERSION_,'1.5','>'))
 					$sqlQuery['from'] .= Context::getContext()->shop->addSqlAssociation('product', 'p');
-				$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlQuery['select']."\n".$sqlQuery['from']."\n".$sqlQuery['join']."\n".$sqlQuery['where']."\n".$sqlQuery['group']);
+				$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlQuery['select']."\n".$sqlQuery['from']."\n".$sqlQuery['join']."\n".$sqlQuery['where']."\n".$sqlQuery['group']);
 			}
 
 			foreach ($filters as $filterTmp)
@@ -2620,7 +2591,7 @@ class BlockLayered extends Module
 			
 			if (!empty($sqlQuery['second_query']))
 			{
-				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sqlQuery['second_query']);
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sqlQuery['second_query']);
 				if ($res)
 					$products = array_merge($products, $res);
 			}
@@ -2914,7 +2885,7 @@ class BlockLayered extends Module
 		$nonIndexable = array();
 		
 		// Get all non indexable attribute groups
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT public_name
 		FROM `'._DB_PREFIX_.'attribute_group_lang` agl
 		LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_group` liag
@@ -2924,7 +2895,7 @@ class BlockLayered extends Module
 			$nonIndexable[] = Tools::link_rewrite($attribute['public_name']);
 		
 		// Get all non indexable features
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT name
 		FROM `'._DB_PREFIX_.'feature_lang` fl
 		LEFT JOIN  `'._DB_PREFIX_.'layered_indexable_feature` lif
@@ -3244,7 +3215,7 @@ class BlockLayered extends Module
 			foreach ($categoryBox as &$value)
 				$value = (int)$value;
 		
-		$attributeGroups = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$attributeGroups = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT ag.id_attribute_group, ag.is_color_group, agl.name, COUNT(DISTINCT(a.id_attribute)) n
 		FROM '._DB_PREFIX_.'attribute_group ag
 		LEFT JOIN '._DB_PREFIX_.'attribute_group_lang agl ON (agl.id_attribute_group = ag.id_attribute_group)
@@ -3257,7 +3228,7 @@ class BlockLayered extends Module
 		(count($categoryBox) ? ' AND cp.id_category IN ('.implode(',', $categoryBox).')' : '').'
 		GROUP BY ag.id_attribute_group');
 		
-		$features = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		$features = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT fl.id_feature, fl.name, COUNT(DISTINCT(fv.id_feature_value)) n
 		FROM '._DB_PREFIX_.'feature_lang fl
 		LEFT JOIN '._DB_PREFIX_.'feature_value fv ON (fv.id_feature = fl.id_feature)
@@ -3463,15 +3434,12 @@ class BlockLayered extends Module
 					$(\'#selected_filters li\').remove();
 			';
 			foreach ($layeredValues as $key => $layeredValue)
-				if ($key != 'categories')
-				{
+				if ($key != 'categories' && $key != 'shop_list')
 					$html .= '
 						$(\'#'.$key.'\').click();
 						$(\'select[name='.$key.'_filter_type]\').val('.$layeredValue['filter_type'].');
 						$(\'select[name='.$key.'_filter_show_limit]\').val('.$layeredValue['filter_show_limit'].');
 						';
-					
-				}
 			
 			if (isset($layeredValues['categories']) && count($layeredValues['categories']))
 			{
@@ -3663,8 +3631,8 @@ class BlockLayered extends Module
 			@ini_set('memory_limit', '128M');
 
 		/* Delete and re-create the layered categories table */
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'layered_category');
+		Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_category` (
 		`id_layered_category` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 		`id_shop` INT(11) UNSIGNED NOT NULL,
@@ -3678,25 +3646,20 @@ class BlockLayered extends Module
 		KEY `id_category` (`id_category`,`type`)
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;'); /* MyISAM + latin1 = Smaller/faster */
 		
-		Db::getInstance()->Execute('
+		Db::getInstance()->execute('
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_filter` (
 		`id_layered_filter` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		`name` VARCHAR(64) NOT NULL,
 		`filters` TEXT NULL,
 		`n_categories` INT(10) UNSIGNED NOT NULL,
 		`date_add` DATETIME NOT NULL)');
-		
-		Db::getInstance()->Execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'layered_filter_shop` (
-		`id_layered_filter` INT(10) UNSIGNED NOT NULL,
-		`id_shop` INT(11) UNSIGNED NOT NULL,
-		PRIMARY KEY (`id_layered_filter`, `id_shop`),
-		KEY `id_shop` (`id_shop`))');
 	}
 	
 	public function rebuildLayeredCache($productsIds = array(), $categoriesIds = array())
 	{
 		@set_time_limit(0);
+		
+		$filter_data = array('categories' => array());
 		
 		/* Set memory limit to 128M only if current is lower */
 		$memory_limit = @ini_get('memory_limit');
@@ -3749,6 +3712,7 @@ class BlockLayered extends Module
 		AND p.id_product IN ('.implode(',', $productsIds).')' : '').' AND (fv.custom IS NULL OR fv.custom = 0)
 		GROUP BY p.id_product');
 
+		$toInsert = false;
 		while ($product = $db->nextRow($result))
 		{
 			$a = $c = $f = array();
@@ -3764,67 +3728,133 @@ class BlockLayered extends Module
 			else
 				$shop_list = array(0);
 			
-			$queryCategory = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position) VALUES ';
-			$toInsert = false;
+			$filter_data['shop_list'] = $shop_list;
+			
 			foreach ($shop_list as $id_shop)
 				foreach ($c as $id_category => $category)
 				{
+					if (!in_array($id_category, $filter_data['categories']))
+						$filter_data['categories'][] = $id_category;
+					
 					if (!isset($nCategories[(int)$id_category]))
 						$nCategories[(int)$id_category] = 1;
 					if (!isset($doneCategories[(int)$id_category]['cat']))
 					{
+						$filter_data['layered_selection_subcategories'] = array('filter_type' => 0, 'filter_show_limit' => 0);
 						$doneCategories[(int)$id_category]['cat'] = true;
-						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'category\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
 					foreach ($a as $kAttribute => $attribute)
 						if (!isset($doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]]))
 						{
+							$filter_data['layered_selection_ag_'.(int)$attributeGroupsById[(int)$kAttribute]] = array('filter_type' => 0, 'filter_show_limit' => 0);
 							$doneCategories[(int)$id_category]['a'.(int)$attributeGroupsById[(int)$kAttribute]] = true;
-							$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.','.(int)$attributeGroupsById[(int)$kAttribute].',\'id_attribute_group\','.(int)$nCategories[(int)$id_category]++.'),';
 							$toInsert = true;
 						}
 					foreach ($f as $kFeature => $feature)
 						if (!isset($doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]]))
 						{
+							$filter_data['layered_selection_feat_'.(int)$featuresById[(int)$kFeature]] = array('filter_type' => 0, 'filter_show_limit' => 0);
 							$doneCategories[(int)$id_category]['f'.(int)$featuresById[(int)$kFeature]] = true;
-							$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', '.(int)$featuresById[(int)$kFeature].',\'id_feature\','.(int)$nCategories[(int)$id_category]++.'),';
 							$toInsert = true;
 						}
 					if (!isset($doneCategories[(int)$id_category]['q']))
 					{
+						$filter_data['layered_selection_stock'] = array('filter_type' => 0, 'filter_show_limit' => 0);
 						$doneCategories[(int)$id_category]['q'] = true;
-						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'quantity\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
 					if (!isset($doneCategories[(int)$id_category]['m']))
 					{
+						$filter_data['layered_selection_manufacturer'] = array('filter_type' => 0, 'filter_show_limit' => 0);
 						$doneCategories[(int)$id_category]['m'] = true;
-						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'manufacturer\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
 					if (!isset($doneCategories[(int)$id_category]['c']))
 					{
+						$filter_data['layered_selection_condition'] = array('filter_type' => 0, 'filter_show_limit' => 0);
 						$doneCategories[(int)$id_category]['c'] = true;
-						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'condition\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
 					if (!isset($doneCategories[(int)$id_category]['w']))
 					{
+						$filter_data['layered_selection_weight_slider'] = array('filter_type' => 0, 'filter_show_limit' => 0);
 						$doneCategories[(int)$id_category]['w'] = true;
-						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'weight\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
 					if (!isset($doneCategories[(int)$id_category]['p']))
 					{
+						$filter_data['layered_selection_price_slider'] = array('filter_type' => 0, 'filter_show_limit' => 0);
 						$doneCategories[(int)$id_category]['p'] = true;
-						$queryCategory .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'price\','.(int)$nCategories[(int)$id_category]++.'),';
 						$toInsert = true;
 					}
 				}
-			
-			if ($toInsert)
-				Db::getInstance()->Execute(rtrim($queryCategory, ','));
 		}
+		if ($toInsert)
+		{
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'layered_filter(name, filters, n_categories, date_add)
+				VALUES (\''.$this->l('My template').' '.date('Y-m-d').'\', \''.pSQL(serialize($filter_data)).'\', '.count($filter_data['categories']).', NOW())');
+			$this->buildLayeredCategories();
+		}
+	}
+	
+	public function buildLayeredCategories()
+	{
+		// Get all filter template
+		$res = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'layered_filter ORDER BY date_add DESC');
+		$categories = array();
+		
+		// Remove all from layered_category
+		Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'layered_category');
+			
+		if (!count($res)) // No filters templates defined, nothing else to do
+			return true;
+		
+		$sqlToInsert = 'INSERT INTO '._DB_PREFIX_.'layered_category (id_category, id_shop, id_value, type, position, filter_show_limit, filter_type) VALUES ';
+		$values = false;
+		foreach ($res as $filter_template)
+		{
+			$data = unserialize($filter_template['filters']);
+			foreach ($data['categories'] as  $id_category)
+			{
+				$n = 0;
+				if (!in_array($id_category, $categories)) // Last definition, erase preivious categories defined
+				{
+					$categories[] = $id_category;
+					foreach ($data as $key => $value)
+						if (substr($key, 0, 17) == 'layered_selection')
+						{
+							$values = true;
+							$type = $value['filter_type'];
+							$limit = $value['filter_show_limit'];
+							$n++;
+							
+							foreach ($data['shop_list'] as $id_shop)
+							{
+								if ($key == 'layered_selection_stock')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'quantity\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if ($key == 'layered_selection_subcategories')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'category\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if ($key == 'layered_selection_condition')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'condition\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if ($key == 'layered_selection_weight_slider')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'weight\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if ($key == 'layered_selection_price_slider')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'price\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if ($key == 'layered_selection_manufacturer')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', NULL,\'manufacturer\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if (substr($key, 0, 21) == 'layered_selection_ag_')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_ag_', '', $key).',
+										\'id_attribute_group\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+								else if (substr($key, 0, 23) == 'layered_selection_feat_')
+									$sqlToInsert .= '('.(int)$id_category.', '.(int)$id_shop.', '.(int)str_replace('layered_selection_feat_', '', $key).',
+										\'id_feature\','.(int)$n.', '.(int)$limit.', '.(int)$type.'),';
+							}
+						}
+				}
+			}
+		}
+		if ($values)
+			Db::getInstance()->execute(rtrim($sqlToInsert, ','));
 	}
 }
