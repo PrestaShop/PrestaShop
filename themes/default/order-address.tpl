@@ -75,6 +75,9 @@
 	var txtProduct = "{l s='product'}";
 	var txtProducts = "{l s='products'}";
 	{/if}
+	
+	var addressMultishippingUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")}";
+	var addressUrl = "{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}";
 
 	var formatedAddressFieldsValuesList = new Array();
 
@@ -195,6 +198,7 @@
 				{else}
 				var multishipping_mode = false;
 				{/if}
+				var open_multishipping_fancybox = {$open_multishipping_fancybox|intval};
 			</script>
 		</div>
 	{/if}
