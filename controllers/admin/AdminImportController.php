@@ -122,10 +122,10 @@ class AdminImportControllerCore extends AdminController
 					'ean13' => array('label' => $this->l('EAN13')),
 					'upc' => array('label' => $this->l('UPC')),
 					'wholesale_price' => array('label' => $this->l('Wholesale price')),
-					'price' => array('label' => $this->l('Price')),
+					'price' => array('label' => $this->l('Impact on price')),
 					'ecotax' => array('label' => $this->l('Ecotax')),
 					'quantity' => array('label' => $this->l('Quantity')),
-					'weight' => array('label' => $this->l('Weight')),
+					'weight' => array('label' => $this->l('Impact on weight')),
 					'default_on' => array('label' => $this->l('Default')),
 					'image_position' => array(
 						'label' => $this->l('Image position')
