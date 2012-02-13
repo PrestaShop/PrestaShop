@@ -150,8 +150,10 @@ class CombinationCore extends ObjectModel
 			WHERE `id_product_attribute` = '.(int)($this->id)) === false)
 		return false;
 		$sqlValues = array();
+
 		foreach ($ids_image as $value)
-			$sqlValues[] = '('.(int)$this->id.', '.(int)$value['id'].')';
+			$sqlValues[] = '('.(int)$this->id.', '.(int)$value.')';
+
 		Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
 			VALUES '.implode(',', $sqlValues)
