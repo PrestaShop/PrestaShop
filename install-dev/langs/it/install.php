@@ -129,7 +129,7 @@
     'Blog' => 'Il blog',
     'Done!' => NULL,
     'An error occured during installation...' => NULL,
-    'You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>' => NULL,
+    'You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>.' => NULL,
     'Your installation is finished!' => 'Installazione terminata!',
     'You have just finished to install and configure your shop, thank you for using PrestaShop!' => NULL,
     'Please remember your login information:' => NULL,
