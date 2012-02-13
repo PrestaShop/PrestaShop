@@ -586,18 +586,16 @@ class ThemeInstallator extends Module
 			{
 				if ($variation == 'prestashop')
 					continue;
-				$target_dir = _PS_ALL_THEMES_DIR_.$theme_directory;
 
 				if ($variation != $theme_directory)
-					$target_dir .= $variation;
+					$theme_directory .= $variation;
+				
+				$target_dir = _PS_ALL_THEMES_DIR_.$theme_directory;
 
 				$res &= self::recurseCopy(_IMPORT_FOLDER_.'themes/'.$variation, $target_dir);
 				$new_theme = new Theme();
 				$new_theme->name = (string)$this->xml['name'];
-				if (isset($this->xml['directory']))
-					$new_theme->directory = (string)$this->xml['directory'];
-				else
-					$new_theme->directory = (string)$this->xml['name'];
+				$new_theme->directory = $theme_directory;
 				$res &= $new_theme->add();
 
 				if ($res)
