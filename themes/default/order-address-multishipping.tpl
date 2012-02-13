@@ -178,7 +178,7 @@
 			{/section}
 			</select>
 		{else}
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")}" title="{l s='Add'}" class="button_large">{l s='Add a new address'}</a>
 		{/if}
 		</p>
 		<div class="clearfix">
@@ -186,7 +186,7 @@
 			</ul>
 		</div>
 		<p class="address_add submit">
-			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{if $back}&mod={$back|urlencode}{/if}")}" title="{l s='Add'}" class="button_large">&raquo; {l s='Add a new address'}</a>
+			<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")}" title="{l s='Add'}" class="button_large">&raquo; {l s='Add a new address'}</a>
 		</p>
 		{if !$opc}
 		<div id="ordermsg" class="clearfix">
