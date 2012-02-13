@@ -119,7 +119,6 @@ class AdminImportControllerCore extends AdminController
 						'label' => $this->l('Value (Value:Position)').'*'
 					),
 					'reference' => array('label' => $this->l('Reference')),
-					'supplier_reference' => array('label' => $this->l('Supplier reference')),
 					'ean13' => array('label' => $this->l('EAN13')),
 					'upc' => array('label' => $this->l('UPC')),
 					'wholesale_price' => array('label' => $this->l('Wholesale price')),
@@ -1327,13 +1326,13 @@ class AdminImportControllerCore extends AdminController
 				(float)$info['weight'],
 				0,
 				(float)$info['ecotax'],
-				(int)$info['quantity'],
 				$id_image,
 				strval($info['reference']),
-				strval($info['supplier_reference']),
 				strval($info['ean13']),
 				(int)$info['default_on'],
-				strval($info['upc'])
+				0,
+				strval($info['upc']),
+				(int)$info['quantity']
 			);
 
 			$id_attribute_group = 0;
