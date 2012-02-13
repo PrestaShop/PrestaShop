@@ -545,8 +545,10 @@ class DispatcherCore
 			else if (isset($_POST['controller']))
 				$_POST[$m[2]] = $m[3];
 		}
+
 		if (!Validate::isControllerName($controller))
 			$controller = false;
+
 		// Use routes ? (for url rewriting)
 		if ($this->use_routes && !$controller)
 		{
@@ -576,7 +578,7 @@ class DispatcherCore
 					break;
 				}
 
-			if ($controller == 'index')
+			if ($controller == 'index' || $this->request_uri == '/index.php')
 				$controller = $this->default_controller;
 			$this->controller = $controller;
 		}
