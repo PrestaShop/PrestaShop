@@ -175,6 +175,15 @@ class AddressControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Identification number is incorrect or has already been used.');
 		else if (!$country->isNeedDni())
 			$address->dni = null;
+		
+		// Check if the alias exists
+		if (!empty($_POST['alias'])
+			&& (int)$this->context->customer->id > 0
+			&& Db::getInstance()->getValue('
+				SELECT count(*)
+				FROM '._DB_PREFIX_.'address
+				WHERE `alias` = \''.pSql($_POST['alias']).'\' AND id_customer = '.(int)$this->context->customer->id) > 0)
+			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose an other one.'), Tools::safeOutput($_POST['alias']));
 
 		// Don't continue this process if we have errors !
 		if ($this->errors && !Tools::isSubmit('ajax'))
