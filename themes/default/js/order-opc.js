@@ -678,6 +678,7 @@ function multishippingMode(it)
 		$('#address_invoice_form').show();
 		
 		$('#link_multishipping_form').click(function() {return false;});
+		$('.address_add a').attr('href', addressMultishippingUrl);
 		
 		$('#link_multishipping_form').fancybox({
 			'transitionIn': 'elastic',
@@ -740,6 +741,7 @@ function multishippingMode(it)
 		} else {
 			$('#address_invoice_form').show();
 		}
+		$('.address_add a').attr('href', addressUrl);
 		
 		// Disable multi address shipping
 		$.ajax({
@@ -772,4 +774,7 @@ $(document).ready(function() {
 		$('.addressesAreEquals').hide();
 		$('.addressesAreEquals').find('input').attr('checked', false);
 	}
+	
+	if (open_multishipping_fancybox)
+		$('#link_multishipping_form').click();
 });

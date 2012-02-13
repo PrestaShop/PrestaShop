@@ -2470,7 +2470,7 @@ class CartCore extends ObjectModel
 			'total_price' => $this->getOrderTotal(),
 			'total_tax' => $total_tax,
 			'total_price_without_tax' => $this->getOrderTotal(false),
-			'is_multi_address_delivery' => $this->isMultiAddressDelivery(),
+			'is_multi_address_delivery' => $this->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1),
 			'free_ship' => 0,
 			'carrier' => new Carrier($this->id_carrier, $id_lang),
 		);
