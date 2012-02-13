@@ -113,19 +113,19 @@ class AdminCartRulesControllerCore extends AdminController
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
 				VALUES ('.(int)$currentObject->id.', '.(int)Tools::getValue('product_rule_group_'.$ruleGroupId.'_quantity').')');
 				$id_product_rule_group = Db::getInstance()->Insert_ID();
-				
+
 				if (is_array($ruleArray = Tools::getValue('product_rule_'.$ruleGroupId)) && count($ruleArray))
 				foreach ($ruleArray as $ruleId)
 				{
 					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
 					VALUES ('.(int)$id_product_rule_group.', "'.pSQL(Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type')).'")');
 					$id_product_rule = Db::getInstance()->Insert_ID();
-					
+
 					$values = array();
 					foreach (Tools::getValue('product_rule_select_'.$ruleGroupId.'_'.$ruleId) as $id)
 						$values[] = '('.(int)$id_product_rule.','.(int)$id.')';
 					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
-				}	
+				}
 			}
 		}
 
@@ -183,7 +183,7 @@ class AdminCartRulesControllerCore extends AdminController
 						);
 					}
 				}
-				
+
 				$productRuleGroupsArray[] = $this->getProductRuleGroupDisplay(
 					$i++,
 					(int)Tools::getValue('product_rule_group_'.$ruleGroupId.'_quantity'),
@@ -214,7 +214,7 @@ class AdminCartRulesControllerCore extends AdminController
 		Context::getContext()->smarty->assign('product_rules', $product_rules);
 		return Context::getContext()->smarty->fetch('controllers/cart_rules/product_rule_group.tpl');
 	}
-	
+
 	public function getProductRuleDisplay($product_rule_group_id, $product_rule_id, $product_rule_type, $selected = array())
 	{
 		Context::getContext()->smarty->assign(
@@ -265,7 +265,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'suppliers':
@@ -277,7 +277,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = Context::getContext()->smarty->fetch('cart_rules/product_rule_itemlist.tpl');
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'categories':
