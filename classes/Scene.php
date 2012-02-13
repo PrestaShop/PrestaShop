@@ -118,6 +118,10 @@ class SceneCore extends ObjectModel
 
 	public function deleteImage()
 	{
+		// Hack to prevent the main scene image from being deleted in AdminController::uploadImage() when a thumb image is uploaded
+		if (isset($_FILES['thumb']) && (!isset($_FILES['image']) || empty($_FILES['image']['name'])))
+			return true;
+
 		if (parent::deleteImage())
 		{
 			if (file_exists($this->image_dir.'thumbs/'.$this->id.'-thumb_scene.'.$this->image_format)
