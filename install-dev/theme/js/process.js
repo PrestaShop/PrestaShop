@@ -17,6 +17,7 @@ function start_install()
 	$('.error_log').hide();
 	$('#progress_bar').show();
 	$('#progress_bar .installing').show();
+	$('.stepList li:last-child').removeClass('ok').removeClass('ko');
 	process_pixel = parseInt($('#progress_bar .total').css('width')) / process_steps.length;
 
 	process_install();
@@ -142,8 +143,9 @@ function install_error(step, errors)
 
 	$('#error_process').show();
 	$('#process_step_'+step.key).show().addClass('fail');
-	$('#progress_bar .total .progress').stop().css('width', '0px');
+	$('#progress_bar .total .progress').stop();
 	$('#progress_bar .installing').hide();
+	$('.stepList li:last-child').addClass('ko');
 
 	if (errors)
 	{
@@ -168,4 +170,5 @@ function install_success()
 	is_installing = false;
 	$('#install_process_form').slideUp();
 	$('#install_process_success').slideDown();
+	$('.stepList li:last-child').addClass('ok');
 }
