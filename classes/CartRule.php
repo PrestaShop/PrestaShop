@@ -445,6 +445,7 @@ class CartRuleCore extends ObjectModel
 
 		if ($this->minimum_amount)
 		{
+			// Minimum amount is converted to the default currency 
 			$minimum_amount = $this->minimum_amount;
 			if ($this->minimum_amount_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
 			{
@@ -454,9 +455,32 @@ class CartRuleCore extends ObjectModel
 				else
 					$minimum_amount = $this->minimum_amount / $minimum_amount_currency->conversion_rate;
 			}
+
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
 				$cartTotal += $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
+				
+			// If a product is given for free in this rule and already in the cart, the price is subtracted
+			if ($this->gift_product)
+			{
+				$in_cart = (bool)Db::getInstance()->getValue('SELECT id_product FROM '._DB_PREFIX_.'cart_product WHERE id_product = '.(int)$this->gift_product.' AND id_cart = '.(int)$context->cart->id);
+				if ($in_cart)
+				{
+					$ref = false;
+					$product_price = Product::getPriceStatic(
+						$this->gift_product,
+						$this->minimum_amount_tax,
+						null, null, null, null, null, null, null,
+						$context->cart->id_customer ? $context->cart->id_customer : null,
+						$context->cart->id,
+						(int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null,
+						$ref, null, null,
+						$context, null
+					);
+					$cartTotal -= $product_price;
+				}
+			}
+				
 			if ($cartTotal < $minimum_amount)
 				return Tools::displayError('You do not reach the minimum amount required to use this voucher');
 		}
