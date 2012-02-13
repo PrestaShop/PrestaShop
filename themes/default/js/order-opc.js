@@ -775,6 +775,6 @@ $(document).ready(function() {
 		$('.addressesAreEquals').find('input').attr('checked', false);
 	}
 	
-	if (open_multishipping_fancybox)
+	if (typeof(open_multishipping_fancybox) != 'undefined' && open_multishipping_fancybox)
 		$('#link_multishipping_form').click();
 });
