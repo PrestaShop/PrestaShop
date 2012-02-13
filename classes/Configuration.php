@@ -448,6 +448,9 @@ class ConfigurationCore extends ObjectModel
 	 */
 	protected static function getShopFromContext(&$id_group_shop, &$id_shop)
 	{
+		if (!Shop::isFeatureActive())
+			return;
+
 		list($shopID, $shopGroupID) = Shop::getContext();
 		if (is_null($id_shop))
 			$id_shop = $shopID;
