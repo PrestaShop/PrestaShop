@@ -43,10 +43,10 @@ class DbPDOCore extends Db
 			if (strpos($this->server, ':') !== false)
 			{
 				list($server, $port) = explode(':', $this->server);
-				$dsn .= ';server='.$server.';port='.$port;
+				$dsn .= ';host='.$server.';port='.$port;
 			}
 			else
-				$dsn .= ';server='.$this->server;
+				$dsn .= ';host='.$this->server;
 
 			$this->link = new PDO($dsn, $this->user, $this->password);
 		}
