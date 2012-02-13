@@ -56,7 +56,7 @@ class MetaCore extends ObjectModel
 	public static function getPages($exclude_filled = false, $add_page = false)
 	{
 		$selected_pages = array();
-		if (!$files = scandir(_PS_ROOT_DIR_.'/controllers'))
+		if (!$files = scandir(_PS_ROOT_DIR_.'/controllers/front/'))
 			die(Tools::displayError('Cannot scan root directory'));
 
 		// Exclude pages forbidden
