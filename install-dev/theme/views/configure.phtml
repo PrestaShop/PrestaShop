@@ -56,8 +56,8 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<div class="contentinput">
 			<select name="shop_country" id="infosCountry">
 				<option value="0">-- <?php echo $this->l('Select your country') ?> --</option>
-				<?php foreach ($this->list_countries as $iso => $country_name): ?>
-					<option value="<?php echo $iso ?>" <?php if ($this->session->shop_country && $this->session->shop_country == $iso): ?>selected="selected"<?php endif; ?>><?php echo $country_name ?></option>
+				<?php foreach ($this->list_countries as $country): ?>
+					<option value="<?php echo (isset($country['iso'])) ? $country['iso'] : '' ?>" <?php if ($this->session->shop_country && isset($country['iso']) && $this->session->shop_country === $country['iso']): ?>selected="selected"<?php endif; ?>><?php echo $country['name'] ?></option>
 				<?php endforeach; ?>
 			</select>
 			<sup class="required">*</sup>
