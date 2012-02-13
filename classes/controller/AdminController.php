@@ -1213,14 +1213,19 @@ class AdminControllerCore extends Controller
 		$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
 		foreach ($quick_access as $index => $quick)
 		{
-			preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
-			if (isset($admin_tab[1]))
+			if ($quick['link'] == '../' && Context::shop() == Shop::CONTEXT_SHOP)
+				$quick_access[$index]['link'] = $this->context->shop->getBaseURL();
+			else
 			{
-				if (strpos($admin_tab[1], '&'))
-					$admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
+				preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
+				if (isset($admin_tab[1]))
+				{
+					if (strpos($admin_tab[1], '&'))
+						$admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
 
-				$token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
-				$quick_access[$index]['link'] .= '&token='.$token;
+					$token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
+					$quick_access[$index]['link'] .= '&token='.$token;
+				}
 			}
 		}
 
