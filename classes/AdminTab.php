@@ -1089,7 +1089,7 @@ abstract class AdminTabCore
 				return false;
 			else
 			{
-				$tmpName = $_FILES[$name]['tmp_name'];
+				$_FILES[$name]['tmp_name'] = $tmpName;
 				// Copy new image
 				if (!ImageManager::resize($tmpName, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, (int)$width, (int)$height, ($ext ? $ext : $this->imageType)))
 					$this->_errors[] = Tools::displayError('An error occurred while uploading image.');
