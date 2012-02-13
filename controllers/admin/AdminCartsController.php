@@ -229,8 +229,10 @@ class AdminCartsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$errors = array();
-			if (!($id_product = (int)Tools::getValue('id_product')) || !($id_product_attribute = (int)Tools::getValue('id_product_attribute')))
+			if ((!$id_product = (int)Tools::getValue('id_product')) || !Validate::isInt($id_product))
 				$errors[] = Tools::displayError('Invalid product');
+			if (($id_product_attribute = (int)Tools::getValue('id_product_attribute')) && !Validate::isInt($id_product_attribute))
+				$errors[] = Tools::displayError('Invalid combination');
 			if (count($errors))
 				die(Tools::jsonEncode($errors));
 
