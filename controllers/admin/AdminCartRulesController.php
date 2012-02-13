@@ -239,7 +239,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$attributes[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $attributes);
-				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'products':
@@ -253,7 +253,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'manufacturers':
@@ -265,7 +265,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'suppliers':
@@ -277,7 +277,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'categories':
@@ -291,12 +291,12 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
-				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 		}
 
-		return $this->createTemplate('product_rule.tpl')->fetch();
+		return $this->createTemplate('controllers/cart_rules/product_rule.tpl')->fetch();
 	}
 
 	public function ajaxProcess()
