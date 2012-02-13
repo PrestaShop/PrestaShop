@@ -39,7 +39,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
-				'title' => $this->l('Reference'),
+				'title' => $this->l('Product reference'),
 				'align' => 'center',
 				'filter_key' => 'a!reference',
 				'width' => 200
@@ -181,15 +181,8 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Reference:'),
+							'label' => $this->l('Product reference:'),
 							'name' => 'reference',
-							'size' => 30,
-							'disabled' => true,
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Manufacturer reference:'),
-							'name' => 'manufacturer_reference',
 							'size' => 30,
 							'disabled' => true,
 						),
@@ -330,15 +323,8 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Reference:'),
+							'label' => $this->l('Product reference:'),
 							'name' => 'reference',
-							'size' => 30,
-							'disabled' => true,
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Manufacturer reference:'),
-							'name' => 'manufacturer_reference',
 							'size' => 30,
 							'disabled' => true,
 						),
@@ -445,15 +431,8 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('Reference:'),
+							'label' => $this->l('Product reference:'),
 							'name' => 'reference',
-							'size' => 30,
-							'disabled' => true,
-						),
-						array(
-							'type' => 'text',
-							'label' => $this->l('Manufacturer reference:'),
-							'name' => 'manufacturer_reference',
 							'size' => 30,
 							'disabled' => true,
 						),
