@@ -249,7 +249,7 @@ abstract class AdminTabCore
 		if(Module::getModuleNameFromClass($currentClass))
 		{
 			$string = str_replace('\'', '\\\'', $string);
-			return Module::findTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
+			return Translate::getModuleTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
 		}
 		global $_LANGADM;
 
