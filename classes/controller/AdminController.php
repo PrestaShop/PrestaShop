@@ -250,21 +250,24 @@ class AdminControllerCore extends Controller
 	/** @var current object ID */
 	protected $id_object;
 
+	/**
+	 * @var current controller name without suffix
+	 */
+	public $controller_name;
+
 	public function __construct()
 	{
-		$controller = get_class($this);
-		// temporary fix for Token retrocompatibility
-		// This has to be done when url is built instead of here)
-		if (strpos($controller, 'Controller'))
-			$controller = substr($controller, 0, -10);
+		$this->controller_name = get_class($this);
+		if (strpos($this->controller_name, 'Controller'))
+			$this->controller_name = substr($this->controller_name, 0, -10);
 
 		parent::__construct();
 
 		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
 		$this->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template');
 
-		$this->id = Tab::getIdFromClassName($controller);
-		$this->token = Tools::getAdminToken($controller.(int)$this->id.(int)$this->context->employee->id);
+		$this->id = Tab::getIdFromClassName($this->controller_name);
+		$this->token = Tools::getAdminToken($this->controller_name.(int)$this->id.(int)$this->context->employee->id);
 
 		$this->_conf = array(
 			1 => $this->l('Deletion successful'), 2 => $this->l('Selection successfully deleted'),
@@ -289,16 +292,16 @@ class AdminControllerCore extends Controller
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, $this->id);
 
 		// Fix for AdminHome
-		if ($controller == 'AdminHome')
+		if ($this->controller_name == 'AdminHome')
 			$_POST['token'] = $this->token;
 
 		if (!Shop::isFeatureActive())
 			$this->shopLinkType = '';
 
 		//$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
-		$this->override_folder = Tools::toUnderscoreCase(substr($controller, 5)).'/';
+		$this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
 		// Get the name of the folder containing the custom tpl files
-		$this->tpl_folder = Tools::toUnderscoreCase(substr($controller, 5)).'/';
+		$this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
 
 		$this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 	}
@@ -1626,8 +1629,8 @@ class AdminControllerCore extends Controller
 		if (isset($_GET['logout']))
 			$this->context->employee->logout();
 
-		if (get_class($this) != 'AdminLoginController' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack()))
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '?redirect='.$_SERVER['REQUEST_URI'] : ''));
+		if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack()))
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').(!isset($_GET['logout']) ? '&redirect='.$this->controller_name : ''));
 
 		// Set current index
 		$current_index = dirname($_SERVER['SCRIPT_NAME']).'/index.php'.(($controller = Tools::getValue('controller')) ? '?controller='.$controller : '');

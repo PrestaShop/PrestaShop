@@ -50,7 +50,7 @@
 	<div id="login">
 	{if !isset($wrong_folder_name)}
 		<h1>{$shop_name}</h1>
-		<form action="" method="post" id="login_form" onsubmit="doAjaxLogin();return false;">
+		<form action="" method="post" id="login_form" onsubmit="doAjaxLogin({$redirect});return false;">
 			<label for="email">{l s='E-mail address:'}</label><br />
 			<input type="text" id="email" name="email" class="input" value="{if isset($email)}{$email|htmlentities}{/if}" />
 			<div style="margin: 1.8em 0 0 0;">
@@ -59,6 +59,7 @@
 			</div>
 			<div>
 				<div id="submit">
+					<input type="hidden" name="redirect" value="{$redirect}"/>
 					<input type="submit" name="submitLogin" value="{l s='Log in'}" class="button" style="float:left"/>
 					<span style="float:left;width:30px">
 						<img id="ajax-loader" src="../img/loader.gif" style="float:left;margin:2px 0 0 5px;display:none">
