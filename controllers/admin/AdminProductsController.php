@@ -997,7 +997,6 @@ class AdminProductsControllerCore extends AdminController
 		// And if still not set, use default
 		if (!$this->tab_display)
 			$this->tab_display = $this->default_tab;
-
 	}
 
 	/**
@@ -1435,7 +1434,7 @@ class AdminProductsControllerCore extends AdminController
 						.'&token='.($token ? $token : $this->token);
 
 				// Save and stay on same form
-				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+				if ($this->display == 'edit')
 					$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
 						.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
 						.'&addproduct&conf=3&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.($token ? $token : $this->token);
@@ -1481,7 +1480,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->processWarehouses($token);
 					$this->processFeatures($token);
 					$this->processProductAttribute($token);
-//d($this->redirect_after);
+
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
 					elseif (!$object->updateCategories(Tools::getValue('categoryBox'), true))
@@ -1513,7 +1512,7 @@ class AdminProductsControllerCore extends AdminController
 						else
 						{
 							// Save and stay on same form
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+							if ($this->display == 'edit')
 								$this->confirmations[] = $this->l('Update successful');
 							else
 								// Default behavior (save and back)
