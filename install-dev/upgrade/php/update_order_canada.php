@@ -46,7 +46,7 @@ function update_order_canada()
 			WHERE name="PS_TAX_ADDRESS_TYPE"');
 		$address_field = str_replace('`','\`', $address_field);
 
-		$sql = 'SELECT `id_order`
+		$sql = 'SELECT `id_order`, `price_display_method`
 					FROM `'._DB_PREFIX_.'orders` o
 					LEFT JOIN `'._DB_PREFIX_.'customer` cus ON (o.id_customer = cus.id_customer)
 					LEFT JOIN `'._DB_PREFIX_.'group` g ON (g.id_group = cus.id_default_group)
@@ -66,7 +66,7 @@ function update_order_canada()
 			// 	returns Group::getDefaultPriceDisplayMethod
 			$tax_calculation_method = $order['price_display_method'];
 
-			$products = Db::getInstance()->ExecuteS('
+			$products = Db::getInstance()->executeS('
 				SELECT * FROM `'._DB_PREFIX_.'order_detail` od
 				WHERE od.`id_order` = '.(int)$id_order);
 
