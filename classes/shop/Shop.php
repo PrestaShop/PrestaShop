@@ -885,16 +885,6 @@ class ShopCore extends ObjectModel
 		return (int)Db::getInstance()->getValue(sprintf('SELECT COUNT(*) FROM`'._DB_PREFIX_.'group_shop` WHERE `id_group_shop` = %d', (int)$id));
 	}
 
-	public static function getShopWithoutUrls($id_shop = false)
-	{
-		$without = array();
-		$shops = Shop::getShops();
-		foreach ($shops as $shop)
-			if ((!$id_shop || $shop['id_shop'] == $id_shop) && empty($shop['domain']) && empty($shop['uri']))
-				$without[] = $shop;
-		return $without;
-	}
-
 	/**
 	 * @deprecated 1.5.0 Use shop->getID()
 	 */

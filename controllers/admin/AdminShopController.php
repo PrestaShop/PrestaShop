@@ -43,7 +43,8 @@ class AdminShopControllerCore extends AdminController
 			'name' => array(
 				'title' => $this->l('Shop'),
 				'width' => 'auto',
-				'filter_key' => 'a!name'
+				'filter_key' => 'a!name',
+				'width' => 200,
 			),
 			'group_shop_name' => array(
 				'title' => $this->l('Group Shop'),
@@ -54,6 +55,10 @@ class AdminShopControllerCore extends AdminController
 				'title' => $this->l('Category Root'),
 				'width' => 150,
 				'filter_key' => 'cl!name'
+			),
+			'url' => array(
+				'title' => $this->l('Shop main URL'),
+				'havingFilter' => 'url',
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -87,7 +92,6 @@ class AdminShopControllerCore extends AdminController
 		);
 		parent::__construct();
 	}
-
 
 	public function initToolbar()
 	{
@@ -143,30 +147,20 @@ class AdminShopControllerCore extends AdminController
 		$this->context->smarty->assign('toolbar_fix', 1);
 	}
 
-	public function initContent()
-	{
-		$shops = Shop::getShopWithoutUrls();
-		if (count($shops) && !$this->ajax)
-		{
-			foreach ($shops as $shop)
-				$this->warnings[] = sprintf($this->l('No url is configured for shop: %s'), '<b>'.$shop['name'].'</b>')
-				.' <a href="'.$this->context->link->getAdminLink('AdminShopUrl').'&addshop_url&id_shop='.$shop['id_shop'].'">'
-				.$this->l('click here').'</a><br />';
-		}
-		parent::initContent();
-	}
-
 	public function renderList()
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-		$this->_select = 'gs.name group_shop_name, cl.name category_name';
+		$this->_select = 'gs.name group_shop_name, cl.name category_name, CONCAT(\'http://\', su.domain, su.physical_uri, su.virtual_uri) AS url';
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'group_shop` gs
 				ON (a.id_group_shop = gs.id_group_shop)
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
-				ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')';
+				ON (a.id_category = cl.id_category AND cl.id_lang='.(int)$this->context->language->id.')
+			LEFT JOIN '._DB_PREFIX_.'shop_url su
+				ON a.id_shop = su.id_shop AND su.main = 1
+		';
 		$this->_group = 'GROUP BY a.id_shop';
 
 		return parent::renderList();
@@ -240,7 +234,7 @@ class AdminShopControllerCore extends AdminController
 		$shop_delete_list = array();
 
 		// don't allow to remove shop which have dependencies (customers / orders / ... )
-		foreach ($this->_list as $shop)
+		foreach ($this->_list as &$shop)
 		{
 			if (Shop::hasDependency($shop['id_shop']))
 				$shop_delete_list[] = $shop['id_shop'];

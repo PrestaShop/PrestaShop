@@ -43,23 +43,26 @@
 			{/if}
 		</td>
 		{foreach $fields_display AS $key => $params}
-			<td
-				{if isset($params.position)}
-					id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
-				{/if}
-				class="{if !$no_link}pointer{/if}
-				{if isset($params.position) && $order_by == 'position'} dragHandle{/if}
-				{if isset($params.align)} {$params.align}{/if}"
+			{block name="open_td"}
+				<td
+					{if isset($params.position)}
+						id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
+					{/if}
+					class="{if !$no_link}pointer{/if}
+					{if isset($params.position) && $order_by == 'position'} dragHandle{/if}
+					{if isset($params.align)} {$params.align}{/if}"
 
-			{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
-				onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
-			{else}
-				>
-			{/if}
+				{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
+					onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
+				{else}
+					>
+				{/if}
+			{/block}
 			{if isset($params.prefix)}{$params.prefix}{/if}
 			{if isset($params.color) && isset($tr[$params.color])}
 				<span class="color_field" style="background-color: {$tr.color}">
 			{/if}
+
 			{if isset($params.active)}
 				{$tr.$key}
 			{elseif isset($params.activeVisu)}
@@ -107,7 +110,7 @@
 					{$tr.$key|escape:'htmlall':'UTF-8'}
 				{/if}
 			{else}
-				--
+				{block name="default_field_block"}--{/block}
 			{/if}
 			{if isset($params.suffix)}{$params.suffix}{/if}
 			{if isset($params.color) && isset($tr.color)}
