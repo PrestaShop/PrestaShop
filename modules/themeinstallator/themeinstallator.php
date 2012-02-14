@@ -461,7 +461,11 @@ class ThemeInstallator extends Module
 					continue;
 				if ($flag++ == 0)
 					$msg .= '<b>'.$this->l('The following modules have been installed').' :</b><br />';
-				self::recurseCopy(_IMPORT_FOLDER_.'modules/'.$row, _PS_ROOT_DIR_.'/modules/'.$row);
+
+				// We copy module only if it does not already exists
+				if (!file_exists(_PS_ROOT_DIR_.'/modules/'.$row))
+					self::recurseCopy(_IMPORT_FOLDER_.'modules/'.$row, _PS_ROOT_DIR_.'/modules/'.$row);
+
 				$obj = Module::getInstanceByName($row);
 				if (Validate::isLoadedObject($obj))
 					Db::getInstance()->execute('
