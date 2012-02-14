@@ -105,7 +105,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
-		
+
 		$path = _PS_ADMIN_DIR_.'/themes/';
 		foreach (scandir($path) as $theme)
 			if (file_exists($path.$theme.'/css/admin.css'))
@@ -136,13 +136,13 @@ class AdminEmployeesControllerCore extends AdminController
 			return;
 
 		$available_profiles = Profile::getProfiles($this->context->language->id);
-		
+
 		if ($obj->id_profile == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
 		{
 			$this->errors[] = Tools::displayError('You cannot edit SuperAdmin profile.');
 			return parent::renderForm();
 		}
-		
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Employees'),
@@ -204,7 +204,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'label' => $this->l('Theme:'),
 					'name' => 'bo_theme',
 					'options' => array('query' => $this->themes),
-					'desc' => $this->l('Out-of-range behavior when none is defined (e.g., when a customer\'s cart weight is greater than the highest range limit)')
+					'desc' => $this->l('Back office theme')
 				)
 			)
 		);
@@ -365,13 +365,13 @@ class AdminEmployeesControllerCore extends AdminController
 					return false;
 				}
 			}
-			
+
 			if (!in_array(Tools::getValue('bo_theme'), $this->themes))
 			{
 				$this->errors[] = Tools::displayError('Invalid theme.');
 					return false;
 			}
-			
+
 			$assos = AdminEmployeesController::getAssoShop($this->table);
 
 			if (count($assos[0]) == 0 && $this->table = 'employee')
