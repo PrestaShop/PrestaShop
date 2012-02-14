@@ -328,7 +328,7 @@ ALTER TABLE `PREFIX_order_cart_rule` ADD `id_order_invoice` INT NOT NULL DEFAULT
 ALTER TABLE `PREFIX_specific_price` ADD `id_group_shop` INT(11) UNSIGNED NOT NULL AFTER `id_shop`;
 
 /* Generate order references */
-/* PHP:generate_order_reference(); */;
+UPDATE `PREFIX_orders` SET `reference` = id_order;
 
 ALTER TABLE `PREFIX_order_detail` ADD `tax_computation_method` tinyint(1) unsigned NOT NULL default '0' AFTER `product_weight`;
 
