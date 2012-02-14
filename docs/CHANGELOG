@@ -24,6 +24,362 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.5
 --------------------------------
 ####################################
+#   v1.5.0.5 - 13181 (2012-02-09)  #
+####################################
+
+	Added Features:
+
+	[+] BO : Dynamics hooks in helper form
+
+	Improved/changed features:
+
+	[*] BO : #PSFV-474 : added folders override/ for translation
+	[*] BO : #PSTEST-381 - Checkbox "Send available products first" must not be present if there is only product "out of stock", or to check states of virtual products
+	[*] BO : #PSTEST-624 - On creating group, automaticaly assign the new groups to all carriers
+	[*] BO : reduction on a selection of products finalized
+	[*] BO : shop restriction added to the cart rules
+
+	[*] WS : Add entity specific_price_rules
+	[*] WS : Add entity specific_prices
+	[*] WS : Add entity tax_rule_groups
+	[*] WS : Add Tax rules entity
+	[*] WS : Delete sqlId not used
+	[*] WS : Fix entity configurations
+	[*] WS : Fix entity translated_configurations
+	[*] WS : Fix ObjectModel issue
+	[*] WS : Fix, Webservice use definitions property instead of fieldsValidate, fieldsRequired, etc..
+	[*] WS : Fix, Webservice use definitions property instead of fieldsValidate, fieldsRequired, etc..
+	[*] WS : From 1.4 (PHP as CGI management)
+
+	Fixed bugs:
+
+	[-] FO : BugFix : PSTEST-660 : adding "My address" as a default alias name
+	[-] FO : Fixed JS & translations for products specifics prices (quantity discount)
+	[-] FO : total to pay on check and bankwire confirmation fixed PSTEST-661
+
+	[-] BO : BugFix : #PSFV-462 : category tree view displayed according to he shop context
+	[-] BO : cart rule with attributes filter and reduction on the selection of products fixed
+	[-] BO : fixed bug #PSTEST-640 - fixed bug on two float comparison
+	[-] BO : fix tinyMCE CSS for list display
+	[-] BO : Minor changes in BO translations (CSV import)
+	[-] BO : #PSCFI-4790 : deleted "fr/" directory
+	[-] BO : #PSTEST-400 - Fix bug with attribute value and "save and stay" (attribute type)
+	[-] BO : #PSTEST-618 - Carriers price was not good on order creation
+	[-] BO : #PSTEST-627 - Fix bug with bad order by
+	[-] BO : #PSTEST-628 - Fix bug with bad order by
+	[-] BO : #PSTEST-630 - Fix bug with bad order way
+	[-] BO : #PSTEST-637 - Removing a product from ajax-cart don't refresh the cart summary
+	[-] BO : #PSTEST-659 - On creating group, table is not prefixed because of a bad parameter to the method DB::insert
+	[-] BO : #PSTEST-661 - Fix bug with non-assigned context
+	[-] BO : #PSTEST-667 - Fix bug with favicon and stores icon and multishop
+	[-] BO : #PSTEST-667 - Fix bug with logo and multishop
+	[-] BO : #PSTEST-678 - Fix translations problems with helpers templates
+	[-] BO : #PSTEST-680 - Fix translations problems with helpers templates
+	[-] BO : #PSTEST-686 - Add Warnings to the admin theme page
+	[-] BO : Removed unused JS
+	[-] BO : wrong error message was displayed on cart rules deletion PSTEST-644
+
+	[-] MO : Google Sitemap : Duplicate url on combination  + undefined $link
+
+	[-] WS : Fix bug on translated_configurations entity
+	[-] WS : Fix xlink
+
+	[-] PDF : Missing translations
+
+
+####################################
+#   v1.5.0.4 - 12938 (2012-02-02)  #
+####################################
+
+	Added Features:
+
+	[+] BO : Adding e-mailing module category
+	[+] BO : Adding warnings when merchant does not enable the configurations needed to use modules API
+	[+] BO : AdminModules Preferences
+
+	Improved/changed features:
+
+	[*] Project : Add possibility to use admin controllers in modules
+
+	[*] Installer : thanks to the old installer/upgrader which is now removed
+	[*] Installer : Upgrade script output now have also the version number which the query belongs to
+	[*] Installer : version number is defined in install_version.php (instead of init.php)
+
+	[*] FO : Better gesture of product discounts.
+	[*] FO : #PSTEST-403 - Improving the render of the shipping option form
+
+	[*] BO : Added category tree to product list
+	[*] BO : Adding category management with multishop
+	[*] BO : Adding hook on AdminProducts
+	[*] BO : add Loading information in back office
+	[*] BO : A new method in Employee class has been written "getEmployeesByProfile". it returns an array of employees who has the given profile.
+	[*] BO : categories multishop improved
+	[*] BO : Each module hooked on displayAdminProductsExtra add a Product Tab
+	[*] BO : HelpAccess helper
+	[*] BO : HelperForm now handles input type=select with collection
+	[*] BO : new dimension added to the product filter in the cart rules
+	[*] BO : product page - added all tabs to preloading queue
+	[*] BO : #PSTEST-201 - add category creation button on product page
+	[*] BO : you can set positions to categories using multishop
+
+	[*] Classes : Db::autoExecute() call are now replaced by Db::insert() or Db::update()
+	[*] Classes : fix bug #PSFV-162 - Remove unused variables
+	[*] Classes : images.inc.php functions are now all deprecated, use the new class ImageManager instead
+	[*] classes : new constant Product::PTYPE_SIMPLE /PTYPE_PACK/PTYPE_VIRTUAL
+	[*] classes : new module architecture
+
+	[*] TR : #PSTEST-553 : Replaced can't with cannot
+
+	[*] LO : 1.5 Localization Pack
+	[*] LO : Colombia states
+	[*] LO : Update tax rate 2012
+
+	Fixed bugs:
+
+	[-] PROJECT : Adding general hook on ObjectModel and AdminController
+	[-] Project : fixed rare bug in Tools::displayPrice that occur when the currency is not valid
+
+	[-] Installer : Currency not installed when offline
+	[-] Installer : Engine and charset were missing for some tables
+	[-] Installer : no more sql or php error when upgrade. ( @todo update_feature_detachable_cache )
+
+	[-] FO : Bug Fixed #PSFV-315 - Incorrect products prices in order history
+	[-] FO : BugFix : #PSTEST-190 : adding a link to create an address in the "my-account" page, if a customer hasn't filled any addresses
+	[-] FO : fixed an error of assign variable with smarty
+	[-] FO : fixed bug while updating customer personal information, the customer couldn't deselect the newsletter checkbox or the optin checkbox
+	[-] FO : Fixed #PSCFI-4080 - short descriptions in product-list.tpl are now correctly displayed
+	[-] FO : fix #PSFV-348 for ce http page to remain http
+	[-] FO : free gift fixed
+	[-] FO : #PSFV-227 - Fixed a problem with close div tags never opened
+	[-] FO : #PSFV-269 - Fixed bug with displayed price and multishipping on the order history
+	[-] FO : #PSFV-272 - Add translation + try to not increase global qty of product on choosing "Ship to multiple addresses"
+	[-] FO : #PSTEST-171 - Set a designation shipping method with multiple carriers (carrier1 - carrier2, ...)
+	[-] FO : #PSTEST-223 - Fixed css problem
+	[-] FO : #PSTEST-400 - Fixed problem with registering attribute value
+	[-] FO : #PSTEST-407 - Fixed problem with groups and carrier edition
+	[-] FO : #PSTEST-437 - Fixed problem with refreshing carriers options
+	[-] FO : uncombinable cart rules are not combinable anymore
+
+	[-] BO : Accounting, fixed bug #PSTEST-508. Translation
+	[-] BO : added a "$_POST"
+	[-] BO : added the "mailMethod" variable
+	[-] BO : Admin Module now use curl and post values for addons API
+	[-] BO : AdminModule replacing cURL by file_get_content with POST stream_context
+	[-] BO : Bug Fixed #PSTEST-477 - Attribute Generator : Price tax included should be displayed with 2 decimal
+	[-] BO : BugFix : PSTEST-196 : Adding a supplier with a photo redirects you to the list and not to the edition of this supplier anymore
+	[-] BO : BugFix : #PSTEST-339 ; remove the ID from the confirm popup message when deleting an item
+	[-] BO : BugFix : #PSTEST-350 : "tax excluded" moved near the prices in AdminShipping (fees)
+	[-] BO : BugFix : #PSTEST-355 : replacing "Groups Attributes and Attributes" by "Attributes and Values"
+	[-] BO : BugFix : #PSTEST-416 : display lastname and firstname on the customer delete confirmation popup
+	[-] BO : BugFix : #PSTEST-428 : URL Rewriting and JS validation : now able to declare a hyphen
+	[-] BO : BugFix : #PSTEST-431 : replacing modules names with translated modules names in AdminAccess
+	[-] BO : BugFix : #PSTEST-436 : adding "required" option for zipcode in AdminStores
+	[-] BO : BugFix : #PSTEST-470 : calendar is now opening again with datepicker
+	[-] BO : BugFix #PSTEST-561 customer creation in fancybox is improved : you cannot select the visitor and guest group as the default group and theses groups are unchecked for the group access
+	[-] BO : BugFix : PSTEST-608 Removing the possibility to edit or remove Root category in AdminTrackingController
+	[-] BO : delete id_theme in Image Type
+	[-] BO : Fix accented char
+	[-] BO : fix action add in AdminBackupController
+	[-] BO : fix AdminTranslations parsing of helper files
+	[-] BO : Fix bug in AdminTranslationsController
+	[-] BO : fix bug in themes for AdminShopController
+	[-] BO : fix bug on product page when clicking save&stay on prices tab
+	[-] BO : fix bug #PSFV-298 - Cannot save supplier specific product price if no reference is set
+	[-] BO : fix change maximum character for short description
+	[-] BO : fixed bug on Delivery slip generation in AdminDeliverySlip
+	[-] BO : fixed bug on Invoice generation in AdminInvoices
+	[-] BO : fixed bug on product addition in order page
+	[-] BO : fixed bug on product line edition in order page
+	[-] BO : fixed bug on sorting feature on AdminOrdersController
+	[-] BO : Fixed bug #PSFV-276. Translates work with module tab
+	[-] BO : Fixed bug #PSFV-363. The mails are more detailed for the customer
+	[-] BO : Fixed bug #PSFV-367 for friendly url using a bad product name.
+	[-] BO : Fixed bug #PSTEST-357. Translation changed
+	[-] BO : fixed bug #PSTEST-510 - Now, you can't define several times the same order status
+	[-] BO : fixed bug which appeared in the customer service when some employees were deleted
+	[-] BO : Fixed default values when add new product (available-date & default id group shop)
+	[-] BO : Fixed #PSFV-281 : new created tab are now set active by default
+	[-] BO : Fixed #PSFV-281 : new created tab are now set active by default, thanks to Oleacorner for the help
+	[-] BO : fixed sav display message in hard coded html span #PSTEST-545
+	[-] BO : fixed undefined variable in AdminModulesController
+	[-] BO : fix JS errors and redirection issues on product page
+	[-] BO : Fix on api call for paid module
+	[-] BO : fix product page display when saving pack
+	[-] BO : fix #PSFV-163
+	[-] BO : fix #PSFV-203
+	[-] BO : fix #PSFV-260
+	[-] BO : fix #PSFV-316
+	[-] BO : fix #PSFV-346
+	[-] BO : fix #PSFV-347
+	[-] BO : fix #PSTEST-134
+	[-] BO : fix #PSTEST-134
+	[-] BO : fix #PSTEST-239
+	[-] BO : fix #PSTEST-281
+	[-] BO : fix #PSTEST-321
+	[-] BO : fix #PSTEST-322
+	[-] BO : fix #PSTEST-323
+	[-] BO : fix #PSTEST-352
+	[-] BO : fix #PSTEST-385
+	[-] BO : fix #PSTEST-385
+	[-] BO : fix #PSTEST-388
+	[-] BO : fix #PSTEST-388
+	[-] BO : fix #PSTEST-392
+	[-] BO : fix #PSTEST-393
+	[-] BO : fix redirection after product creation
+	[-] BO : fix regression on product image upload
+	[-] BO : fix small bug for translations
+	[-] BO : fix small bug for translations
+	[-] BO : Global install/uninstall button disapeared with ajax - Bug fix #PSFV-332
+	[-] BO : modified the treatment in order to add specials characters like password in Preferences/Emails
+	[-] BO : Module loading ptimization on Payment Admin Controller
+	[-] BO : Modules list automatic refresh when BO connect to Addons - Bug fixed #PSTEST-367
+	[-] BO : Modules search now works even when filters are enabled
+	[-] BO : Modules search works with all modules even when a filter is enabled
+	[-] BO : partial use fixed for cart rules
+	[-] BO : product page - fix accordions not always being correctly initialized
+	[-] BO : #PSCFI-4484 - Add historisation of the order status
+	[-] BO : #PSCFI-4580 - Error in shipping Calculation for different zones
+	[-] BO : #PSCFI-4664 : Changed back office content-type from text/html to application/xhtml+xml according to the DOCTYPE
+	[-] BO : #PSFV-197 - Forced "Delivery number" to be an integer
+	[-] BO : #PSFV-207 : fix translation
+	[-] BO : #PSFV-221 - Fixed bad ajax return on no manufacturers on the product tab
+	[-] BO : #PSFV-262 - Fixed bug "Multishipping order notification totals not correct"
+	[-] BO : #PSFV-343 : Group Name can't be empty.
+	[-] BO : PSFV-365 - fixed bug
+	[-] BO : #PSFV-391 - Country restrictions for payment modules is not effective
+	[-] BO : #PSFV-393 : BugFix jquery.fancybox.js was not found
+	[-] BO : #PSFV-444 - Change french translation
+	[-] BO : #PSFV-491 - Fixed problem with multishipping and summary cart
+	[-] BO : #PSFV-491 - Fixed problem with multishipping and summary cart
+	[-] BO : #PSTEST-106 : translation
+	[-] BO : #PSTEST-198 : translation
+	[-] BO : #PSTEST-215 - Fixed translation problems
+	[-] BO : #PSTEST-217 - Add a translation
+	[-] BO : #PSTEST-219 : fix small bugs and translations
+	[-] BO : #PSTEST-241 : We can delete group shops only if the group doesn't have any shops
+	[-] BO : #PSTEST-242 : First name & last name order changed in customers edition form
+	[-] BO : #PSTEST-243 : update date_add for customer connections
+	[-] BO : #PSTEST-248 - ergonomy in Product (pack) edition
+	[-] BO : #PSTEST-250 : Fix bug adding manufacturer address
+	[-] BO : #PSTEST-253 fix bug added groups
+	[-] BO : #PSTEST-263 - Add attribute multilang to Tax class definition
+	[-] BO : #PSTEST-273 : fix bug for generate URL
+	[-] BO : #PSTEST-285 : translations
+	[-] BO : #PSTEST-290 : Update method ajax process to display the correct product's image
+	[-] BO : #PSTEST-296 Fixed bug with Pack product autocomplete
+	[-] BO : #PSTEST-296 : in the autocomplete, we don't have anymore products that we have already chosen
+	[-] BO : #PSTEST-302 : update call javascript file via setMedia()
+	[-] BO : #PSTEST-314 : Bug Fixed
+	[-] BO : PSTEST-315 : add asterisk
+	[-] BO : #PSTEST-316 : Bug fixed : Warnings are not displayed anymore after a wrong configuration mail
+	[-] BO : #PSTEST-331 - Fixed problem on creating order from the BO when customer have no addresses
+	[-] BO : #PSTEST-335 - Fixed problem with test email
+	[-] BO : #PSTEST-353 - Replace french tranlation of "combinaison" by "déclinaison"
+	[-] BO : #PSTEST-365 : Description added for the default customer's groups
+	[-] BO : #PSTEST-369 - Add translation
+	[-] BO : #PSTEST-369 - Durring the category removing, allow to not delete the products
+	[-] BO : #PSTEST-375 - Replaced the "addslashes" from the "Attribute generator"
+	[-] BO : #PSTEST-377 - On order  creation, if no birthdate, a "null" is shown
+	[-] BO : #PSTEST-386 - Fixed problem with filter on the group tab
+	[-] BO : #PSTEST38 - #PSTEST39 : translation and small change in attachements.tpl
+	[-] BO : #PSTEST-391 - Fixed bad description of the export
+	[-] BO : #PSTEST-397 : Groups selection position changed in customers add
+	[-] BO : #PSTEST-400 - Change the working of the button "Save and stay" for attributes and features
+	[-] BO : #PSTEST-400 - Fixed bug with attribute value we cannot register
+	[-] BO : #PSTEST-400 - Fixed problem with adding attribute
+	[-] BO : #PSTEST-400 - Fixed problem with adding attribute
+	[-] BO : #PSTEST-401 - Bug Fixed in SVN
+	[-] BO : #PSTEST-421 - Bug minor Fixed
+	[-] BO : #PSTEST-423 : bug fixed
+	[-] BO : #PSTEST-425 - Automatically set delivery
+	[-] BO : #PSTEST-440 - Fixed problem with search
+	[-] BO : #PSTEST-474 : bug fixed
+	[-] BO : #PSTEST-475 : bug fixed
+	[-] BO : #PSTEST-476 - Fix problem with slashes added before "'"
+	[-] BO : #PSTEST-497 - Remove alert payement message when the order is canceled
+	[-] BO : #PSTEST-504 : bug fixed
+	[-] BO : #PSTEST-516 : bug fixed
+	[-] BO : #PSTEST-519 - Change french translation
+	[-] BO : #PSTEST-521 - Translations
+	[-] BO : #PSTEST-522 : bug fixed, suppression asterisk
+	[-] BO : #PSTEST-525 - Fix problem with the page product : field must be reset if there is an errors
+	[-] BO : #PSTEST-540 : bug fixed
+	[-] BO : #PSTEST-540 : bug fixed
+	[-] BO : #PSTEST-560 : bug fixed
+	[-] BO : #PSTEST-563 : if a customer clicks outside of the fancybox, he won't loose all the data that were already in the box. To leave the fancybox, the customer must click on the close button
+	[-] BO : #PSTEST-572 : bug fixed
+	[-] BO : #PSTEST-573
+	[-] BO : #PSTEST-575 - Replace a || by a &&
+	[-] BO : #PSTEST-579
+	[-] BO : #PSTEST-582 - Select default currency on tab tab product > supplier
+	[-] BO : #PSTEST-583 - Add translation for the button "Edit this mail templates", and fixed tinyMCE area not shown on mail translation page
+	[-] BO : #PSTEST-586 - Bad table name
+	[-] BO : #PSTEST-590 - Fix bug with undefined smarty variable "HOOK_EXTRACARRIER_ADDR" + By default use the default country of the shop to calculate shipping cost
+	[-] BO : #PSTEST-595 - Fix Bug with image uploading
+	[-] BO : #PSTEST-596 - Fix Bug with image uploading
+	[-] BO : #PSTEST-597 - Fix Bug with image uploading
+	[-] BO : #PSTEST-609
+	[-] BO : #PSTEST-613 translation done
+	[-] BO : #PSTEST-614 - Fix bug with not selectable carrier in the BO order creation
+	[-] BO : #PSTEST-624 - On creating a new carrier, all groups of the group box must be selected
+	[-] BO : #PSTEST-80 : add hint box
+	[-] BO : #PSTEST-82 : add hint box in AdminAttributeGenerator
+	[-] BO : #PSTEST-83 : small changes
+	[-] BO : Re-add functionality on AdminController
+	[-] BO : small fix
+	[-] BO : Template corrected in customers list
+	[-] BO : translation for product virtual && image link in AdminProductsController
+	[-] BO : Used urlencode() in order to receive the good format password in Preferences/Emails
+	[-] BO : User id for Newsletter & Opt-in subscripion corrected
+	[-] BO : voucher creation in the order detail fixed
+
+	[-] Classes : all classes and controllers now use their name in static calls instead of self (improve override) #PSFV-376
+	[-] Classes : BugFix : Added htaccess ErrorDocument 404 in case rewrite mod is not available
+	[-] Classes : fixed bug #PSFV-300 - Bug on Orders
+	[-] Classes : fixed bug #PSFV-328 - Round error while editing order in back office
+	[-] Classes : fixed bug #PSTEST-549 - Clean useless code
+	[-] Classes : fixed bug #PSTEST-550 - Add current_state attribute on Order class
+	[-] Classes : fixed noConflict jquery bug //thanks raph
+	[-] Classes : #PSCFI-4569 : BugFix : Get module instance by name fixed
+	[-] Classes : #PSCFI-4640 : Country name depending on current language (countries restricted to active deliveries)
+	[-] Classes : #PSCFI-4688 : Added a base64_encode() for the mail receiver name. Needed for names with accentuated chars
+	[-] Classes : #PSFV-150 : BugFix : Configuration class check for NULL values
+	[-] classes : #PSFV-375 - missing id_lang in the parent::__construct call
+	[-] classes : #PSFV-375 - Reverting
+	[-] Classes : #PSTEST-214 : BugFix : TopMenu for shops and groups
+	[-] Classes : Undefined index on cities (addresses) corrected
+
+	[-] Core : Improve cacheFS storage
+	[-] core : minor fix in Db->escape function to make it compatible to the phpdoc (2nd parameter html_ok is now optional)
+
+	[-] MO : BugFix : PSTEST-185 : categories and customer group permissions fixed
+	[-] MO : fixed javascript bug on mouse event
+	[-] MO : Fix url for contact page
+	[-] MO : MailAlerts module upgraded for PrestaShop 1.5
+	[-] MO : #PNM-45 : Changed template text 24/24 with 24/7
+	[-] MO : #PSCFI-4440 - Fixed image problem is the blockwishlist and images
+	[-] MO : #PSCFI-4462 : Fixed problem with static token
+	[-] MO : #PSCFI-4689 - ERROR Module contacts from New themes prestashop
+	[-] MO : #PSFV-236 - Fixed little problem with form vars named "ajax"
+	[-] MO : #PSTEST-280 - Removed old-way method (deprecated) + fixed problem with cartRules
+	[-] MO : #PSTEST-303 - Fixed problems using deprecated methods
+	[-] MO : #PSTEST-303 - Send email verification
+	[-] MO : #PSTEST-606 - Fix Bug with product description line of ajax cart not removed when the product is removed
+	[-] MO : themeinstallator - numerous bugfix / improvements around the new theme system
+
+	[-] PDF : Bug Fixed #PSFV-330 - Shopname not correct on invoice
+
+	[-] TR : BugFix : #PSTEST-398 : Translations added
+	[-] TR : BugFix : #PSTEST-459 : spelling correction in translation
+
+	[-] LO : FR
+
+	Deprecated methods:
+
+	[~] Deprecated : OrderHistory::getLastOrderState()
+
+
+####################################
 #   v1.5.0.3 - 11871 (2011-12-28)  #
 ####################################
 
