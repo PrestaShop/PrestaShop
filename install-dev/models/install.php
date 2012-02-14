@@ -544,6 +544,7 @@ class InstallModelInstall extends InstallAbstractModel
 				'statssearch',
 				'statsstock',
 				'statsvisits',
+				'themeinstallator',
 			);
 		}
 
