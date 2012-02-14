@@ -23,7 +23,6 @@ WHERE `name` = "order fenced" AND id_lang = 2;
 CREATE TABLE `PREFIX_category_shop` (
   `id_category` int(11) NOT NULL,
   `id_shop` int(11) NOT NULL,
-  `position` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY (`id_category`, `id_shop`),
   UNIQUE KEY `id_category_shop` (`id_category`,`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
