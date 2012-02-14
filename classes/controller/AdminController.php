@@ -1766,7 +1766,10 @@ class AdminControllerCore extends Controller
 				if ($this->tabAccess['edit'] === '1')
 				{
 					$this->action = 'save';
-					$this->display = 'edit';
+					if (Tools::getValue('submitAdd'.$this->table.'AndStay'))
+						$this->display = 'edit';
+					else
+						$this->display = 'list';
 				}
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -1777,7 +1780,10 @@ class AdminControllerCore extends Controller
 				if ($this->tabAccess['add'] === '1')
 				{
 					$this->action = 'save';
-					$this->display = 'edit';
+					if (Tools::getValue('submitAdd'.$this->table.'AndStay'))
+						$this->display = 'edit';
+					else
+						$this->display = 'list';
 				}
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to add here.');
