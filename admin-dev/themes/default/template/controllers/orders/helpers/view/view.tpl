@@ -83,11 +83,11 @@
 				<dd>{dateFormat date=$order->date_add full=true}</dd>
 			|</dl>
 			<dl>
-				<dt>{l s='Message:'}</dt>
+				<dt>{l s='Messages:'}</dt>
 				<dd>{sizeof($messages)}</dd>
 			|</dl>
 			<dl>
-				<dt>{l s='Product:'}</dt>
+				<dt>{l s='Products:'}</dt>
 				<dd id="product_number">{sizeof($products)}</dd>
 			|</dl>
 			<dl>
