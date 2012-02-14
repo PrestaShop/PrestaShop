@@ -30,15 +30,15 @@
 
 <h2>{$supplier->name}</h2>
 
-<h3>{l s='Total products:'} {count($products)}</h3>
+<h3>{l s='Number of products:'} {count($products)}</h3>
 {foreach $products AS $product}
 	<hr />
 	{if !$product->hasAttributes()}
 		<table border="0" cellpadding="0" cellspacing="0" class="table" style="">
 			<tr>
-				<th  width="150">{l s='Name:'} {$product->name}</th>
-				{if !empty($product->product_supplier_reference)}<th width="280">{l s='Supplier Reference:'} {$product->product_supplier_reference}</th>{/if}
-				{if !empty($product->product_supplier_price_te)}<th width="280">{l s='Wholesale price:'} {$product->product_supplier_price_te}</th>{/if}
+				<th  width="450">{l s='Name:'} {$product->name}</th>
+				{if !empty($product->product_supplier_reference)}<th width="190">{l s='Supplier Reference:'} {$product->product_supplier_reference}</th>{/if}
+				{if !empty($product->product_supplier_price_te)}<th width="190">{l s='Wholesale price:'} {$product->product_supplier_price_te}</th>{/if}
 				{if !empty($product->reference)}<th width="150">{l s='Reference:'} {$product->reference}</th>{/if}
 				{if !empty($product->ean13)}<th width="120">{l s='EAN13:'} {$product->ean13}</th>{/if}
 				{if !empty($product->upc)}<th width="120">{l s='UPC:'} {$product->upc}</th>{/if}
