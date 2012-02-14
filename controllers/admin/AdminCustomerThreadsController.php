@@ -61,18 +61,18 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$this->fieldsDisplay = array(
 			'id_customer_thread' => array(
 				'title' => $this->l('ID'),
-				'width' => 25
+				'width' => 25,
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
 				'width' => 100,
 				'filter_key' => 'customer',
-				'tmpTableFilter' => true
+				'tmpTableFilter' => true,
 			),
 			'email' => array(
 				'title' => $this->l('E-mail'),
 				'width' => 100,
-				'filter_key' => 'a!email'
+				'filter_key' => 'a!email',
 			),
 			'contact' => array(
 				'title' => $this->l('Type'),
@@ -80,7 +80,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'type' => 'select',
 				'list' => $contact_array,
 				'filter_key' => 'cl!id_contact',
-				'filter_type' => 'int'
+				'filter_type' => 'int',
 			),
 			'language' => array(
 				'title' => $this->l('Language'),
@@ -88,7 +88,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'type' => 'select',
 				'list' => $language_array,
 				'filter_key' => 'l!id_lang',
-				'filter_type' => 'int'
+				'filter_type' => 'int',
 			),
 			'status' => array(
 				'title' => $this->l('Status'),
@@ -98,29 +98,34 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'icon' => $images_array,
 				'align' => 'center',
 				'filter_key' => 'a!status',
-				'filter_type' => 'string'
+				'filter_type' => 'string',
 			),
 			'employee' => array(
 				'title' => $this->l('Employee'),
 				'width' => 100,
 				'filter_key' => 'employee',
-				'tmpTableFilter' => true
+				'tmpTableFilter' => true,
 			),
 			'messages' => array(
 				'title' => $this->l('Messages'),
 				'width' => 50,
 				'filter_key' => 'messages',
 				'tmpTableFilter' => true,
-				'maxlength' => 40
+				'maxlength' => 40,
 			),
 			'date_upd' => array(
 				'title' => $this->l('Last message'),
 				'width' => 90,
-				'havingFilter' => true
-			)
+				'havingFilter' => true,
+			),
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+	 	$this->bulk_actions = array(
+	 		'delete' => array(
+	 			'text' => $this->l('Delete selected'),
+	 			'confirm' => $this->l('Delete selected items?'),
+	 		),
+	 	);
 
 		$this->shopLinkType = 'shop';
 
@@ -133,33 +138,33 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						'desc' => $this->l('Url for imap server (mail.server.com)'),
 						'type' => 'text',
 						'size' => 40,
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_PORT' => array(
 						'title' => $this->l('Imap port'),
 						'desc' => $this->l('Port to use to connect imap server'),
 						'type' => 'text',
 						'defaultValue' => 143,
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_USER' => array(
 						'title' => $this->l('Imap user'),
 						'desc' => $this->l('User to use to connect imap server'),
 						'type' => 'text',
 						'size' => 40,
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_PWD' => array(
 						'title' => $this->l('Imap password'),
 						'desc' => $this->l('Password to use to connect imap server'),
 						'type' => 'text',
 						'size' => 40,
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_SSL' => array(
 						'title' => $this->l('Imap use ssl'),
 						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Deletes messages'),
@@ -169,12 +174,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						'identifier' => 'value',
 						'list' => array(
 							'0' => array('value' => 0, 'name' => $this->l('No')),
-							'1' => array('value' => 1, 'name' => $this->l('Yes'))
+							'1' => array('value' => 1, 'name' => $this->l('Yes')),
 						),
-						'visibility' => Shop::CONTEXT_ALL
+						'visibility' => Shop::CONTEXT_ALL,
 					)
 				),
-				'submit' => array('title' => $this->l('   Save   '), 'class' => 'button')
+				'submit' => array('title' => $this->l('Save'), 'class' => 'button'),
 			),
 		);
 
@@ -197,7 +202,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					AND cm2.`id_customer_thread` = a.`id_customer_thread`
 				ORDER BY cm2.`date_add` DESC LIMIT 1
 			) as employee';
- 
+
 		$this->_join = '
 			LEFT JOIN `'._DB_PREFIX_.'customer` c
 				ON c.`id_customer` = a.`id_customer`
@@ -260,7 +265,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			if (isset($_POST['id_employee_forward']))
 			{
 				$messages = Db::getInstance()->executeS('
-					SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name, 
+					SELECT ct.*, cm.*, cl.name subject, CONCAT(e.firstname, \' \', e.lastname) employee_name,
 						CONCAT(c.firstname, \' \', c.lastname) customer_name, c.firstname
 					FROM '._DB_PREFIX_.'customer_thread ct
 					LEFT JOIN '._DB_PREFIX_.'customer_message cm
@@ -401,7 +406,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			'.png' => 'image/png',
 			'.jpeg' => 'image/jpeg',
 			'.gif' => 'image/gif',
-			'.jpg' => 'image/jpeg'
+			'.jpg' => 'image/jpeg',
 		);
 
 		$extension = '';
@@ -581,6 +586,22 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$this->tpl_option_vars['use_sync'] = false;
 
 		return parent::renderOptions();
+	}
+
+	/**
+	 * AdminController::getList() override
+	 * @see AdminController::getList()
+	 */
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+	{
+		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
+
+		$nb_items = count($this->_list);
+		for ($i = 0; $i < $nb_items; ++$i)
+		{
+			if (isset($this->_list[$i]['messages']))
+				$this->_list[$i]['messages'] = Tools::htmlentitiesDecodeUTF8($this->_list[$i]['messages']);
+		}
 	}
 
 }
