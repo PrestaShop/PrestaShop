@@ -618,6 +618,8 @@
   'ThemeCore' => 'classes/Theme.php',
   'Tools' => 'override/classes/Tools.php',
   'ToolsCore' => 'classes/Tools.php',
+  'Translate' => 'override/classes/Translate.php',
+  'TranslateCore' => 'classes/Translate.php',
   'TranslatedConfiguration' => 'override/classes/TranslatedConfiguration.php',
   'TranslatedConfigurationCore' => 'classes/TranslatedConfiguration.php',
   'Upgrader' => 'override/classes/Upgrader.php',
