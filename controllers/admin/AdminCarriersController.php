@@ -460,37 +460,35 @@ class AdminCarriersControllerCore extends AdminController
 				{
 					if ($this->tabAccess['edit'] === '1')
 					{
-						$object = new $this->className($id);
-						if (Validate::isLoadedObject($object))
+						$current_carrier = new Carrier($id);
+						if (!Validate::isLoadedObject($current_carrier))
+							throw new PrestaShopException('Cannot load Carrier object');
+						// Set flag deteled to true for historization
+						$current_carrier->deleted = true;
+						$current_carrier->update();
+
+						// Create new carrier
+						$new_carrier = new Carrier();
+						// Fill the new carrier object
+						$this->copyFromPost($new_carrier, $this->table);
+						$new_carrier->position = $current_carrier->position;
+						if ($new_carrier->add())
 						{
-							Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id);
-							$object->deleted = 1;
-							$object->update();
-							$object_new = new $this->className();
-							$this->copyFromPost($object_new, $this->table);
-							$object_new->position = $object->position;
-							$result = $object_new->add();
-							$this->updateAssoShop($object->id, $object_new->id);
-							if (Validate::isLoadedObject($object_new))
-							{
-								$this->afterDelete($object_new, $object->id);
-								Hook::exec('actionCarrierUpdate', array(
-									'id_carrier' => (int)$object->id,
-									'carrier' => $object_new,
-								));
-							}
-							$this->changeGroups($object_new->id);
-							if (!$result)
-								$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
-							else if ($this->postImage($object_new->id))
-							{
-								$this->changeZones($object_new->id);
-								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4&token='.$this->token);
-							}
+							$this->updateAssoShop($current_carrier->id, $new_carrier->id);
+							$new_carrier->copyCarrierData((int)$current_carrier->id);
+							$this->changeGroups($new_carrier->id);
+							// Call of hooks
+							Hook::exec('actionCarrierUpdate', array(
+								'id_carrier' => (int)$current_carrier->id,
+								'carrier' => $new_carrier
+							));
+
+							$this->postImage($new_carrier->id);
+							$this->changeZones($new_carrier->id);
+							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
 						}
 						else
-							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.
-												$this->table.'</b> '.Tools::displayError('(cannot load object)');
+							$this->errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b>';
 					}
 					else
 						$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -501,18 +499,22 @@ class AdminCarriersControllerCore extends AdminController
 				{
 					if ($this->tabAccess['add'] === '1')
 					{
-						$object = new $this->className();
-						$this->copyFromPost($object, $this->table);
-						$object->position = Carrier::getHigherPosition() + 1;
-						if (!$object->add())
-							$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
-						else if (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
+						// Create new Carrier
+						$carrier = new Carrier();
+						$this->copyFromPost($carrier, $this->table);
+						$carrier->position = Carrier::getHigherPosition() + 1;
+						if ($carrier->add())
 						{
-							$this->changeZones($object->id);
-							$this->changeGroups($object->id);
-							$this->updateAssoShop($object->id);
-							Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3&token='.$this->token);
+							if (($_POST['id_'.$this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect)
+							{
+								$this->changeZones($carrier->id);
+								$this->changeGroups($carrier->id);
+								$this->updateAssoShop($carrier->id);
+								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$carrier->id.'&conf=3&token='.$this->token);
+							}
 						}
+						else
+							$this->errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.'</b>';
 					}
 					else
 						$this->errors[] = Tools::displayError('You do not have permission to add here.');
@@ -594,11 +596,6 @@ class AdminCarriersControllerCore extends AdminController
 		return $object->isUsed();
 	}
 
-	protected function afterDelete($object, $old_id)
-	{
-		$object->copyCarrierData((int)$old_id);
-	}
-
 	protected function changeGroups($id_carrier, $delete = true)
 	{
 		if ($delete)
@@ -611,7 +608,6 @@ class AdminCarriersControllerCore extends AdminController
 					VALUES('.(int)$group['id_group'].','.(int)$id_carrier.')
 				');
 	}
-
 
 	public function changeZones($id)
 	{

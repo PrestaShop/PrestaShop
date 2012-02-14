@@ -628,9 +628,32 @@ class CarrierCore extends ObjectModel
 	 */
 	public function addZone($id_zone)
 	{
-		return Db::getInstance()->execute('
+		if (Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'carrier_zone` (`id_carrier` , `id_zone`)
-			VALUES ('.(int)$this->id.', '.(int)$id_zone.')');
+			VALUES ('.(int)$this->id.', '.(int)$id_zone.')
+		'))
+		{
+			// Get all ranges for this carrier
+			$ranges_price = RangePrice::getRanges($this->id);
+			$ranges_weight = RangeWeight::getRanges($this->id);
+			// Create row in ps_delivery table
+			if (count($ranges_price) || count($ranges_weight))
+			{
+				$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) VALUES ';
+				if (count($ranges_price))
+					foreach ($ranges_price as $range)
+						$sql .= '('.(int)$this->id.', '.(int)$range['id_range_price'].', 0, '.(int)$id_zone.', 0),';
+
+				if (count($ranges_weight))
+					foreach ($ranges_weight as $range)
+						$sql .= '('.(int)$this->id.', 0, '.(int)$range['id_range_weight'].', '.(int)$id_zone.', 0),';
+				$sql = rtrim($sql, ',');
+
+				return Db::getInstance()->execute($sql);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -638,10 +661,18 @@ class CarrierCore extends ObjectModel
 	 */
 	public function deleteZone($id_zone)
 	{
-		return Db::getInstance()->execute('
+		if (Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'carrier_zone`
 			WHERE `id_carrier` = '.(int)$this->id.'
-			AND `id_zone` = '.(int)$id_zone.' LIMIT 1');
+			AND `id_zone` = '.(int)$id_zone.' LIMIT 1
+		'))
+		{
+			return Db::getInstance()->execute('
+				DELETE FROM `'._DB_PREFIX_.'delivery`
+				WHERE `id_carrier` = '.(int)$this->id.'
+				AND `id_zone` = '.(int)$id_zone);
+		}
+		return false;
 	}
 
 	/**
@@ -738,7 +769,7 @@ class CarrierCore extends ObjectModel
 	public function copyCarrierData($old_id)
 	{
 		if (!Validate::isUnsignedId($old_id))
-			die(Tools::displayError());
+			throw new PrestaShopException('Incorrect identifier for carrier');
 
 		if (!$this->id)
 			return false;
@@ -754,43 +785,56 @@ class CarrierCore extends ObjectModel
 		// Copy existing ranges price
 		foreach (array('range_price', 'range_weight') as $range)
 		{
-			$sql = 'SELECT id_'.$range.' id_range, delimiter1, delimiter2 FROM `'._DB_PREFIX_.$range.'`
-					WHERE id_carrier = '.(int)$old_id;
-			$res = Db::getInstance()->executeS($sql);
-			foreach ($res as $val)
-			{
-				$sql = 'INSERT INTO `'._DB_PREFIX_.$range.'` (`id_carrier`, `delimiter1`, `delimiter2`)
-						VALUES ('.$this->id.','.(float)$val['delimiter1'].','.(float)$val['delimiter2'].')';
-				Db::getInstance()->execute($sql);
-				$range_id = (int)Db::getInstance()->Insert_ID();
+			$res = Db::getInstance()->executeS('
+				SELECT `id_'.$range.'` as id_range, `delimiter1`, `delimiter2`
+				FROM `'._DB_PREFIX_.$range.'`
+				WHERE `id_carrier` = '.(int)$old_id);
+			if (count($res))
+				foreach ($res as $val)
+				{
+					Db::getInstance()->execute('
+						INSERT INTO `'._DB_PREFIX_.$range.'` (`id_carrier`, `delimiter1`, `delimiter2`)
+						VALUES ('.$this->id.','.(float)$val['delimiter1'].','.(float)$val['delimiter2'].')');
+					$range_id = (int)Db::getInstance()->Insert_ID();
 
-				$range_price_id = ($range == 'range_price') ? $range_id : 'NULL';
-				$range_weight_id = ($range == 'range_weight') ? $range_id : 'NULL';
-				$sql = 'INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
-						SELECT '.$this->id.', '.$range_price_id.', '.$range_weight_id.', id_zone, price FROM '._DB_PREFIX_.'delivery
-						WHERE id_carrier = '.(int)$old_id.' AND '.(($range == 'range_price') ? 'id_range_price' : 'id_range_weight').' = '.$val['id_range'];
+					$range_price_id = ($range == 'range_price') ? $range_id : 'NULL';
+					$range_weight_id = ($range == 'range_weight') ? $range_id : 'NULL';
 
-				Db::getInstance()->execute($sql);
-			}
+					Db::getInstance()->execute('
+						INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_shop`, `id_group_shop`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) (
+							SELECT '.(int)$this->id.', `id_shop`, `id_group_shop`, '.(int)$range_price_id.', '.(int)$range_weight_id.', `id_zone`, `price`
+							FROM `'._DB_PREFIX_.'delivery`
+							WHERE `id_carrier` = '.(int)$old_id.'
+							AND `id_'.$range.'` = '.(int)$val['id_range'].'
+						)
+					');
+				}
 		}
 
 		// Copy existing zones
-		$res = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'carrier_zone`
+		$res = Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'carrier_zone`
 			WHERE id_carrier = '.(int)$old_id);
 		foreach ($res as $val)
 			Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'carrier_zone` (`id_carrier`, `id_zone`)
-			VALUES ('.$this->id.','.(int)$val['id_zone'].')');
+				INSERT INTO `'._DB_PREFIX_.'carrier_zone` (`id_carrier`, `id_zone`)
+				VALUES ('.$this->id.','.(int)$val['id_zone'].')
+			');
 
 		//Copy default carrier
-		if ((int)Configuration::get('PS_CARRIER_DEFAULT') == $old_id)
+		if (Configuration::get('PS_CARRIER_DEFAULT') == $old_id)
 			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$this->id);
 
 		// Copy reference
-		$id_reference = Db::getInstance()->getValue('SELECT `id_reference` FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE id_carrier = '.$old_id);
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'`
-			SET `id_reference` = '.$id_reference.'
-			WHERE `id_carrier` = '.$this->id);
+		$id_reference = Db::getInstance()->getValue('
+			SELECT `id_reference`
+			FROM `'._DB_PREFIX_.$this->def['table'].'`
+			WHERE id_carrier = '.(int)$old_id);
+		Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.$this->def['table'].'`
+			SET `id_reference` = '.(int)$id_reference.'
+			WHERE `id_carrier` = '.(int)$this->id);
 	}
 
 	/**
@@ -845,7 +889,7 @@ class CarrierCore extends ObjectModel
 		$shipping_method = $this->getShippingMethod();
 		if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT)
 			return 'range_weight';
-		else if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE)
+		elseif ($shipping_method == Carrier::SHIPPING_METHOD_PRICE)
 			return 'range_price';
 		return false;
 	}
@@ -855,7 +899,7 @@ class CarrierCore extends ObjectModel
 		$shipping_method = $this->getShippingMethod();
 		if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT)
 			return new RangeWeight();
-		else if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE)
+		elseif ($shipping_method == Carrier::SHIPPING_METHOD_PRICE)
 			return new RangePrice();
 		return false;
 	}
