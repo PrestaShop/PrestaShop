@@ -287,6 +287,8 @@ class AuthControllerCore extends FrontController
 					$this->create_account = true;
 					$this->context->smarty->assign('email_create', Tools::safeOutput($email));
 					$_POST['email'] = $email;
+					if ($this->ajax)
+						$this->errors[] = Tools::displayError('Authentication failed');
 				}
 				else
 					$this->errors[] = Tools::displayError('Authentication failed');
