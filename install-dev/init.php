@@ -64,7 +64,7 @@ require_once(_PS_INSTALL_PATH_.'classes/sqlLoader.php');
 require_once(_PS_INSTALL_PATH_.'classes/xmlLoader.php');
 require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 
-@set_time_limit(300);
+@set_time_limit(0);
 
 // Try to improve memory limit if it's under 32M
 if (Tools::getMemoryLimit() < Tools::getOctets('32M'))
