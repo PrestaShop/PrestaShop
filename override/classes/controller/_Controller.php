@@ -408,6 +408,19 @@ abstract class Controller extends ControllerCore
 			}
 			echo '</div>';
 		}
+
+		// List of included files
+		echo '<div class="rte" style="text-align:left;padding:8px">
+		<h3><a name="includedFiles">Included files</a></h3>';
+		$i = 1;
+		foreach (get_included_files() as $file)
+		{
+			$file = ltrim(str_replace('\\', '/', str_replace(_PS_ROOT_DIR_, '', $file)), '/');
+			$file = '<b style="color: red">'.dirname($file).'/</b><b style="color: blue">'.basename($file).'</b>';
+			echo $i.' '.$file.'<br />';
+			$i++;
+		}
+		echo '</div>';
 	}
 }
 
