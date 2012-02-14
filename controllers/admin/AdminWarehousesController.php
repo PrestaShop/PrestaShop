@@ -275,7 +275,7 @@ class AdminWarehousesControllerCore extends AdminController
 				'type' => 'shop',
 				'label' => $this->l('Shops:'),
 				'name' => 'checkBoxShopAsso',
-				'desc' => 'Associated shops',
+				'desc' => $this->l('Associated shops'),
 				'values' => Shop::getTree()
 			);
 		}
