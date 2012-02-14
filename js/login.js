@@ -15,7 +15,13 @@ function displayLogin() {
 	$('#login').revertFlip();
 	return false;
 }
-function doAjaxLogin() {
+
+/**
+ * Check user credentials
+ *
+ * @param string redirect name of the controller to redirect to after login (or null)
+ */
+function doAjaxLogin(redirect) {
 	$('#error').hide();
 	$('#ajax-loader').fadeIn('slow', function() {
 		$.ajax({
@@ -29,7 +35,8 @@ function doAjaxLogin() {
 				controller: "AdminLogin",
 				submitLogin: "1",
 				passwd: $('#passwd').val(),
-				email: $('#email').val()
+				email: $('#email').val(),
+				redirect: redirect
 			},
 			success: function(jsonData) {
 				if (jsonData.hasErrors) {
