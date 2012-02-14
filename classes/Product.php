@@ -2366,7 +2366,7 @@ class ProductCore extends ObjectModel
 			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
-		$cache_id_2 = $id_product.'-'.$id_product_attribute;
+		$cache_id_2 = $id_product.'-'.(int)$id_product_attribute;
 		if (!isset(self::$_pricesLevel2[$cache_id_2]))
 		{
 			$sql = new DbQuery();
