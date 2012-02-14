@@ -2310,11 +2310,14 @@ class AdminControllerCore extends Controller
 		if (!$type)
 			return;
 
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
+		Db::getInstance()->execute('
+			DELETE FROM '._DB_PREFIX_.$this->table.'_'.$type.($id_object ? '
+			WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
 
 		foreach ($assos as $asso)
-			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
-											VALUES('.($new_id_object ? $new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].')');
+			Db::getInstance()->execute('
+				INSERT INTO '._DB_PREFIX_.$this->table.'_'.$type.' (`'.pSQL($this->identifier).'`, id_'.$type.')
+				VALUES('.($new_id_object ? $new_id_object : (int)$asso['id_object']).', '.(int)$asso['id_'.$type].')');
 	}
 
 	protected function validateField($value, $field)
