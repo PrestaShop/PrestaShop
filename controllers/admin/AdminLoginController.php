@@ -75,6 +75,10 @@ class AdminLoginControllerCore extends AdminController
 				'randomNb' => rand(100, 999),
 				'wrong_folder_name'	=> true)
 				);
+
+		// Redirect to admin panel
+		if (isset($_GET['redirect']) && Validate::isControllerName($_GET['redirect']))
+			$redirect = $_GET['redirect'];
 		
 		if ($nbErrors = count($this->errors))
 			$this->context->smarty->assign(
@@ -85,6 +89,8 @@ class AdminLoginControllerCore extends AdminController
 					'disableDefaultErrorOutPut' => true,
 					)
 				);
+
+		$this->context->smarty->assign(array('redirect' => isset($redirect) ? $redirect : null));
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
@@ -132,37 +138,35 @@ class AdminLoginControllerCore extends AdminController
 			
 		if (!count($this->errors))
 		{
-		 	/* Seeking for employee */
-			$employee = new Employee();
-			if (!$employee->getByemail($email, $passwd))
+		 	// Find employee
+			$this->context->employee = new Employee();
+			if (!$this->context->employee->getByemail($email, $passwd))
 			{
 				$this->errors[] = Tools::displayError('Employee does not exist or password is incorrect.');
-				$employee->logout();
+				$this->context->employee->logout();
 			}
 			else
 			{
-				$employee->remote_addr = ip2long(Tools::getRemoteAddr());
-			 	/* Creating cookie */
+				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+			 	// Update cookie
 				$cookie = Context::getContext()->cookie;
-				$cookie->id_employee = $employee->id;
-				$cookie->email = $employee->email;
-				$cookie->profile = $employee->id_profile;
-				$cookie->passwd = $employee->passwd;
-				$cookie->remote_addr = $employee->remote_addr;
+				$cookie->id_employee = $this->context->employee->id;
+				$cookie->email = $this->context->employee->email;
+				$cookie->profile = $this->context->employee->id_profile;
+				$cookie->passwd = $this->context->employee->passwd;
+				$cookie->remote_addr = $this->context->employee->remote_addr;
 				$cookie->write();
-								
-				/* Redirect to admin panel */
-				if (isset($_GET['redirect']))
-					$url = strval($_GET['redirect'].(isset($_GET['token']) ? ('&token='.$_GET['token']) : ''));
+
+				// If there is a valid controller name submitted, redirect to it
+				if (isset($_POST['redirect']) && Validate::isControllerName($_POST['redirect']))
+					$url = $this->context->link->getAdminLink($_POST['redirect']);
 				else
-					$url = 'index.php';
-				if (!Validate::isCleanHtml($url))
-					die(Tools::displayError());
-				
+					$url = $this->context->link->getAdminLink('AdminHome');
+
 				if (Tools::isSubmit('ajax'))
-					die(Tools::jsonEncode(array('hasErrors' => false, 'redirect' => $this->context->link->getAdminLink('AdminHome'))));
+					die(Tools::jsonEncode(array('hasErrors' => false, 'redirect' => $url)));
 				else
-					$this->redirect_after = $this->context->link->getAdminLink('AdminHome');
+					$this->redirect_after = $url;
 			}
 		}
 		if (Tools::isSubmit('ajax'))
