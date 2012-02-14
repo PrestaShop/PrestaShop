@@ -660,4 +660,28 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * Overrides parent to delete items from sublist
+	 *
+	 * @param $token
+	 * @return mixed
+	 */
+	public function processBulkDelete($token)
+	{
+		// If we are deleting attributes instead of attribute_groups
+		if (Tools::getIsset('attributeBox'))
+		{
+			$this->className = 'Attribute';
+			$this->table = 'attribute';
+			$this->boxes = Tools::getValue($this->table.'Box');
+		}
+
+		$result = parent::processBulkDelete($token);
+		// Restore vars
+		$this->className = 'AttributeGroup';
+		$this->table = 'attribute_group';
+
+		return $result;
+	}
+
 }

@@ -2413,6 +2413,7 @@ class AdminControllerCore extends Controller
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
 			$object = new $this->className();
+
 			if (isset($object->noZeroObject))
 			{
 				$objects_count = count(call_user_func(array($this->className, $object->noZeroObject)));
