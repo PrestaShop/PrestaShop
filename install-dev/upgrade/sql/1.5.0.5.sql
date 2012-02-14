@@ -25,3 +25,5 @@ CREATE TABLE `PREFIX_module_preference` (
   PRIMARY KEY (`id_module_preference`),
   UNIQUE KEY `employee_module` (`id_employee`, `module`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_category_shop` ADD `position` int(10) unsigned NOT NULL default 0 AFTER `id_shop`;
