@@ -119,13 +119,13 @@ function findCombination(firstTime)
 			else
 				selectedCombination['ecotax'] = default_eco_tax;
 
-            //show the large image in relation to the selected combination
-            if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-                displayImage( $('#thumb_'+combinations[combination]['image']).parent() );
+			//show the large image in relation to the selected combination
+			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+				displayImage($('#thumb_'+combinations[combination]['image']).parent(), firstTime);
 
-            //show discounts values according to the selected combination
-            if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
-                displayDiscounts(combinations[combination]['idCombination']);
+			//show discounts values according to the selected combination
+			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
+				displayDiscounts(combinations[combination]['idCombination']);
 
 			//get available_date for combination product
 			selectedCombination['available_date'] = combinations[combination]['available_date'];
@@ -406,10 +406,10 @@ function updateDisplay()
 			var productPricePretaxed = productPrice;
 		$('#pretaxe_price_display').text(formatCurrency(productPricePretaxed, currencyFormat, currencySign, currencyBlank));
 		/* Unit price */
-        productUnitPriceRatio = parseFloat(productUnitPriceRatio);
+		productUnitPriceRatio = parseFloat(productUnitPriceRatio);
 		if (productUnitPriceRatio > 0 )
 		{
-        	newUnitPrice = (productPrice / parseFloat(productUnitPriceRatio)) + selectedCombination['unit_price'];
+			newUnitPrice = (productPrice / parseFloat(productUnitPriceRatio)) + selectedCombination['unit_price'];
 			$('#unit_price_display').text(formatCurrency(newUnitPrice, currencyFormat, currencySign, currencyBlank));
 		}
 
@@ -420,39 +420,42 @@ function updateDisplay()
 }
 
 //update display of the large image
-function displayImage(domAAroundImgThumb)
+function displayImage(domAAroundImgThumb, no_animation)
 {
-    if (domAAroundImgThumb.attr('href'))
-    {
-        var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
-        if ($('#bigpic').attr('src') != newSrc)
-        {
-            $('#bigpic').fadeOut('fast', function(){
-                $(this).attr('src', newSrc).show();
-                if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
-                    $(this).attr('alt', domAAroundImgThumb.attr('href'));
-            });
-        }
-        $('#views_block li a').removeClass('shown');
-        $(domAAroundImgThumb).addClass('shown');
-    }
+	if (typeof(no_animation) == 'undefined')
+		no_animation = false;
+	
+	if (domAAroundImgThumb.attr('href'))
+	{
+		var newSrc = domAAroundImgThumb.attr('href').replace('thickbox','large');
+		if ($('#bigpic').attr('src') != newSrc)
+		{
+			$('#bigpic').fadeOut((no_animation ? 0 : 'fast'), function(){
+				$(this).attr('src', newSrc).show();
+				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+					$(this).attr('alt', domAAroundImgThumb.attr('href'));
+			});
+		}
+		$('#views_block li a').removeClass('shown');
+		$(domAAroundImgThumb).addClass('shown');
+	}
 }
 
 //update display of the discounts table
 function displayDiscounts(combination)
 {
-    $('#quantityDiscount table tbody tr').each(function() {
-        if (($(this).attr('id') != 'quantityDiscount_0') &&
-            ($(this).attr('id') != 'quantityDiscount_'+combination) &&
-            ($(this).attr('id') != 'noQuantityDiscount'))
-            $(this).fadeOut('slow');
-    });
+	$('#quantityDiscount table tbody tr').each(function() {
+		if (($(this).attr('id') != 'quantityDiscount_0') &&
+			($(this).attr('id') != 'quantityDiscount_'+combination) &&
+			($(this).attr('id') != 'noQuantityDiscount'))
+			$(this).fadeOut('slow');
+	 });
 
-    if ($('#quantityDiscount_'+combination).length != 0) {
-        $('#quantityDiscount_'+combination).show();
-        $('#noQuantityDiscount').hide();
-    } else
-        $('#noQuantityDiscount').show();
+	if ($('#quantityDiscount_'+combination).length != 0) {
+		$('#quantityDiscount_'+combination).show();
+		$('#noQuantityDiscount').hide();
+	} else
+		$('#noQuantityDiscount').show();
 }
 
 // Serialscroll exclude option bug ?
