@@ -87,10 +87,11 @@ class AdminTrackingControllerCore extends AdminController
 			'active' => array('title' => $this->l('Status'), 'type' => 'bool', 'active' => 'status', 'width' => 50)
 		));
 
-		$this->_filter = ' AND a.id_category NOT IN (
+		$this->_filter = ' AND a.`id_category` NOT IN (
 			SELECT DISTINCT(cp.id_category)
 			FROM `'._DB_PREFIX_.'category_product` cp
-		)';
+		)
+		AND a.`id_category` != '.(int)Category::getTopCategory()->id;
 
 		$this->tpl_list_vars = array('sub_title' => $this->l('List of empty categories:'));
 
