@@ -35,7 +35,8 @@
 		</td>
 	</tr>
 </table>
-<input type="hidden" name="token" value="{$token}" />
-</form>
-
+{if !$simple_header}
+	<input type="hidden" name="token" value="{$token}" />
+	</form>
+{/if}
 {block name="after"}{/block}
