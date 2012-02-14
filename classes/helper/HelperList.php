@@ -638,6 +638,7 @@ class HelperListCore extends Helper
 			'table' => $this->table,
 			'current' => $this->currentIndex,
 			'bulk_actions' => $this->bulk_actions,
+			'simple_header' => $this->simple_header
 		)));
 		return $this->footer_tpl->fetch();
 	}
