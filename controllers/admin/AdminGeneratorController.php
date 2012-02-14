@@ -167,4 +167,14 @@ class AdminGeneratorControllerCore extends AdminController
 
 		return $tab;
 	}
+
+	/**
+	 * @see AdminController::initToolbar()
+	 */
+	public function initToolbar()
+	{
+		parent::initToolbar();
+
+		unset($this->toolbar_btn['save']);
+	}
 }
