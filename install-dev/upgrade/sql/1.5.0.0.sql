@@ -105,15 +105,7 @@ CREATE TABLE `PREFIX_carrier_shop` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_carrier_shop` (id_shop, id_carrier) (SELECT 1, id_carrier FROM PREFIX_carrier);
 
-CREATE TABLE `PREFIX_cms_shop` (
-`id_cms` INT( 11 ) UNSIGNED NOT NULL,
-`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id_cms`, `id_shop`),
-	KEY `id_shop` (`id_shop`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
-INSERT INTO `PREFIX_cms_shop` (id_shop, id_cms) (SELECT 1, id_cms FROM PREFIX_cms);
-
-ALTER TABLE `PREFIX_cms_block` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_cms_block`;
+/* PHP:upgrade_cms_15(); */;
 
 CREATE TABLE `PREFIX_lang_shop` (
 `id_lang` INT( 11 ) UNSIGNED NOT NULL,
