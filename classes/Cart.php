@@ -280,11 +280,6 @@ class CartCore extends ObjectModel
 			
 		if (!Cache::isStored('Cart::getCartRules'.$this->id))
 		{
-			$total_products_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-			$total_products_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-			$shipping_ti = $this->getTotalShippingCost();
-			$shipping_te = $this->getTotalShippingCost(null, false);
-
 			$result = Db::getInstance()->executeS('
 				SELECT *
 				FROM `'._DB_PREFIX_.'cart_cart_rule` cd
@@ -2212,7 +2207,7 @@ class CartCore extends ObjectModel
 				{
 					$check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), (int)$id_zone);
 
-					$total_order = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
+					$total_order = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
 					$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $total_order, (int)$id_zone, (int)$this->id_currency);
 
 					// Get only carriers that have a range compatible with cart
@@ -2297,7 +2292,8 @@ class CartCore extends ObjectModel
 				$carrier->id,
 				$this->getOrderTotal(
 					true,
-					Cart::BOTH_WITHOUT_SHIPPING
+					Cart::BOTH_WITHOUT_SHIPPING,
+					$product_list
 				),
 				$id_zone,
 				(int)$this->id_currency
