@@ -65,7 +65,7 @@ else
 
 // need for upgrade before 1.5
 if (!defined('__PS_BASE_URI__'))
-	define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev|-new)?)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
+	define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev)?)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
 
 // need for upgrade before 1.5
 if (!defined('_THEME_NAME_'))
