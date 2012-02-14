@@ -1633,5 +1633,29 @@ abstract class ModuleCore
 	{
 		return $this->_path;
 	}
+
+	/*
+	 * Return module position for a given hook
+	 *
+	 * @param boolean $id_hook Hook ID
+	 * @return integer position
+	 */
+	public function getPosition($id_hook)
+	{
+		if (isset(Hook::$preloadModulesFromHooks))
+			if (isset(Hook::$preloadModulesFromHooks[$id_hook]))
+				if (isset(Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id]))
+					return Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id];
+				else
+					return 0;
+		$result = Db::getInstance()->getRow('
+			SELECT `position`
+			FROM `'._DB_PREFIX_.'hook_module`
+			WHERE `id_hook` = '.(int)($id_hook).'
+			AND `id_module` = '.(int)($this->id).'
+			AND `id_shop` = '.(int)Context::getContext()->shop->getId(true));
+		
+		return $result['position'];
+	}
 }
 
