@@ -346,6 +346,16 @@ class OrderHistoryCore extends ObjectModel
 				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname']);
 		}
 
+		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
+
+		return true;
+	}
+
+	public function add($autodate = true, $null_values = false)
+	{
+		if (!parent::add($autodate))
+			return false;
+		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
 		return true;
 	}
 
