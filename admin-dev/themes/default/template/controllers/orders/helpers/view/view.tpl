@@ -69,7 +69,7 @@
 			<img src="../img/admin/charged_ko.gif" alt="{l s='No invoice'}" /> {l s='No invoice'}
 			{/if}
 			 |
-			{if ($currentState->delivery || $order->delivery_number)}
+			{if (($currentState && $currentState->delivery) || $order->delivery_number)}
 			<a class="button"  href="pdf.php?id_order={$order->id}&delivery" target="_blank"><img src="../img/admin/delivery.gif" alt="{l s='View delivery slip'}" /> {l s='View delivery slip'}</a>
 			{else}
 			<img src="../img/admin/delivery_ko.gif" alt="{l s='No delivery slip'}" /> {l s='No delivery slip'}
