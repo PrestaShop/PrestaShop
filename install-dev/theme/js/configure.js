@@ -17,7 +17,7 @@ $(document).ready(function()
 			success: function(json)
 			{
 				if (json.success)
-					$('#infosTimezone').val(json.message);
+					$('#infosTimezone').val(json.message).trigger("liszt:updated");
 			}
 		});
 	});

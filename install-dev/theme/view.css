@@ -799,6 +799,11 @@ ul#optional_update {list-style-type:none;}
 	display: none;
 }
 
+#sheets ul.chzn-results{
+    margin-left: 5px;
+    padding: 0px;
+}
+
 /* ****************************************************************************
       xxxxx
 **************************************************************************** */
