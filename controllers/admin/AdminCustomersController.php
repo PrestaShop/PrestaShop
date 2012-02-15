@@ -413,20 +413,6 @@ class AdminCustomersControllerCore extends AdminController
 					array_splice($this->fields_form['input'], $k, 1);
 		}
 
-		if (Shop::isFeatureActive())
-		{
-			$this->fields_form['input'][] = array(
-				'type' => 'select',
-				'label' => $this->l('Shop:'),
-				'name' => 'id_shop',
-				'options' => array(
-					'query' => Shop::getShops(),
-					'id' => 'id_shop',
-					'name' => 'name'
-				),
-			);
-		}
-
 		if (Configuration::get('PS_B2B_ENABLE'))
 		{
 			$risks = Risk::getRisks();
@@ -502,7 +488,6 @@ class AdminCustomersControllerCore extends AdminController
 			'years' => $this->getFieldValue($obj, 'birthday') ? $birthday[0] : 0,
 			'months' => $this->getFieldValue($obj, 'birthday') ? $birthday[1] : 0,
 			'days' => $this->getFieldValue($obj, 'birthday') ? $birthday[2] : 0,
-			'id_shop' => (int)Configuration::get('PS_SHOP_DEFAULT')
 		);
 
 		// Added values of object Group
@@ -524,6 +509,11 @@ class AdminCustomersControllerCore extends AdminController
 				Tools::getValue('groupBox_'.$group['id_group'], in_array($group['id_group'], $customer_groups_ids));
 
 		return parent::renderForm();
+	}
+
+	public function beforeAdd($customer)
+	{
+		$customer->id_shop = $this->context->shop->getID(true);
 	}
 
 	public function renderView()
