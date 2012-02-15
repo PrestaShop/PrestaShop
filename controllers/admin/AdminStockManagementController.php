@@ -36,6 +36,7 @@ class AdminStockManagementControllerCore extends AdminController
 		$this->table = 'product';
 		$this->className = 'Product';
 		$this->lang = true;
+		$this->display_multishop_toolbar = false;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(

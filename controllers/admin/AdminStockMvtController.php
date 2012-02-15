@@ -37,6 +37,7 @@ class AdminStockMvtControllerCore extends AdminController
 	 	$this->className = 'StockMvt';
 	 	$this->identifier = 'id_stock_mvt';
 	 	$this->lang = false;
+	 	$this->display_multishop_toolbar = false;
 
 		$this->list_no_link = true;
 		$this->displayInformation($this->l('This interface allows you to display the stock movements for a selected warehouse.').'<br />');
