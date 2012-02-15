@@ -472,4 +472,4 @@ ul.listForm li {padding-bottom:3px;}
 .view-modules li.favorites-view   {border-bottom-left-radius: 0;border-left: 1px solid #fff; border-top-left-radius: 0;}
 .view-modules li.normal-view  {border-bottom-right-radius: 0;border-right: 1px solid #ccc; border-top-right-radius: 0;}
 
-.margin-form select{width: 300px;}
+.margin-form select.chosen{width: 200px;}
