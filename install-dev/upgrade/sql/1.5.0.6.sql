@@ -7,4 +7,4 @@ SET o.`current_state` = (
 	WHERE oh.`id_order` = o.`id_order`
 	ORDER BY oh.`date_add` DESC
 	LIMIT 1
-)
+);
