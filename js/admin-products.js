@@ -344,6 +344,30 @@ function enableProductName()
 	$('.copy2friendlyUrl').removeAttr('disabled');
 }
 
+function toggleSpecificPrice()
+{
+	$('#show_specific_price').click(function()
+	{
+		$('#add_specific_price').slideToggle();
+
+		$('#add_specific_price').append('<input type="hidden" name="submitPriceAddition"/>');
+
+		$('#hide_specific_price').show();
+		$('#show_specific_price').hide();
+		return false;
+	});
+
+	$('#hide_specific_price').click(function()
+	{
+		$('#add_specific_price').slideToggle();
+		$('#add_specific_price').find('input[name=submitPriceAddition]').remove();
+
+		$('#hide_specific_price').hide();
+		$('#show_specific_price').show();
+		return false;
+	});
+}
+
 /**
  * Execute a callback function when a specific tab has finished loading or right now if the tab is already loaded
  *
@@ -377,4 +401,6 @@ $(document).ready(function() {
 
 	// Enable writing of the product name when the friendly url field in tab SEO is loaded
 	onTabLoad('Seo', enableProductName);
+
+	onTabLoad('Prices', toggleSpecificPrice);
 });

@@ -694,6 +694,11 @@ class AdminProductsControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Product must be created before adding features.');
 	}
 
+	/**
+	 * This function is never called at the moment (specific prices cannot be edited)
+	 *
+	 * @param $token
+	 */
 	public function processPricesModification($token)
 	{
 		$id_specific_prices = Tools::getValue('spm_id_specific_price');
@@ -734,6 +739,10 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processPriceAddition($token)
 	{
+		// Check if a specific price has been submitted
+		if (!Tools::getIsset('submitPriceAddition'))
+			return;
+
 		$id_product = Tools::getValue('id_product');
 		$id_product_attribute = Tools::getValue('sp_id_product_attribute');
 		$id_shop = Tools::getValue('sp_id_shop');
@@ -765,8 +774,6 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice->to = !$to ? '0000-00-00 00:00:00' : $to;
 			if (!$specificPrice->add())
 				$this->errors = Tools::displayError('An error occurred while updating the specific price.');
-			else
-				$this->redirect_after = self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.$id_product.'&add'.$this->table.'&action=Prices&conf=3&token='.($token ? $token : $this->token);
 		}
 	}
 
@@ -800,8 +807,6 @@ class AdminProductsControllerCore extends AdminController
 		}
 		elseif (!SpecificPrice::setSpecificPriority((int)$obj->id, $priorities))
 			$this->errors[] = Tools::displayError('An error occurred while setting priorities.');
-		else
-			$this->confirmations[] = $this->l('Price priorities successfully updated');
 	}
 
 	public function processCustomizationConfiguration($token)
@@ -927,18 +932,11 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit here.');
 		}
-		// Product specific prices management
+		// Product specific prices management NEVER USED
 		elseif (Tools::isSubmit('submitPricesModification'))
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'pricesModification';
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add here.');
-		}
-		elseif (Tools::isSubmit('submitPriceAddition'))
-		{
-			if ($this->tabAccess['add'] === '1')
-				$this->action = 'priceAddition';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to add here.');
 		}
@@ -1480,6 +1478,8 @@ class AdminProductsControllerCore extends AdminController
 					$this->processWarehouses($token);
 					$this->processFeatures($token);
 					$this->processProductAttribute($token);
+					$this->processPriceAddition($token);
+					$this->processSpecificPricePriorities($token);
 
 					if (!$this->updatePackItems($object))
 						$this->errors[] = Tools::displayError('An error occurred while adding products to the pack.');
@@ -2847,7 +2847,9 @@ class AdminProductsControllerCore extends AdminController
 		// Not use id_customer
 		if ($specific_price_priorities[0] == 'id_customer')
 			unset($specific_price_priorities[0]);
-		sort($specific_price_priorities);
+		// Reindex array starting from 0
+		$specific_price_priorities = array_values($specific_price_priorities);
+
 		$content .= '
 		<div class="separation"></div>
 		<h4>'.$this->l('Priorities management').'</h4>
@@ -2888,10 +2890,6 @@ class AdminProductsControllerCore extends AdminController
 
 		<div class="margin-form">
 			<input type="checkbox" name="specificPricePriorityToAll" id="specificPricePriorityToAll" /> <label class="t" for="specificPricePriorityToAll">'.$this->l('Apply to all products').'</label>
-		</div>
-
-		<div class="margin-form">
-			<input class="button" type="submit" name="submitSpecificPricePriorities" value="'.$this->l('Apply').'" />
 		</div>
 		';
 		return $content;
