@@ -228,7 +228,7 @@
 					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
 				</tr>
 
-				{if $order_invoice->getRestPaid()}
+				{if $order_invoice->getRestPaid() > 0}
 				<tr style="line-height:5px;color:red;">
 					<td style="text-align: right; font-weight: bold">{l s='Total rest paid' pdf='true'}</td>
 					<td style="width: 15%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->getRestPaid()}</td>
