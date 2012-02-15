@@ -25,13 +25,15 @@
 */
 
 $(document).ready(function() {
-initTableDnD();
-})
+    initTableDnD();
+});
 
 function initTableDnD(table)
 {
-	if (typeof(table) == 'undefined')
+	if (typeof(table) == 'undefined') {
 		table = 'table.tableDnD';
+    }
+
 	$(table).tableDnD({
 		onDragStart: function(table, row) {
 			originalOrder = $.tableDnD.serialize();
@@ -64,15 +66,31 @@ function initTableDnD(table)
 						way: way,
 						token: token
 					};
-				if (table.id == 'cms')
-					params = {
-						ajaxCMSPositions: true,
-						id_cms_category: ids[1],
-						id_cms: ids[2],
-						way: way,
-						token: token
-					};
-				if (come_from == 'AdminModulesPositions')
+                if (table.id == 'cms')
+                    params = {
+                        ajaxCMSPositions: true,
+                        id_cms_category: ids[1],
+                        id_cms: ids[2],
+                        way: way,
+                        token: token
+                    };
+                if (table.id == 'cms_block_0')
+                    params = {
+                        ajaxCMSBlockPositions: true,
+                        id_cms_block: ids[1],
+                        position: ids[2],
+                        way: way,
+                        token: token
+                    };
+                if (table.id == 'cms_block_1')
+                    params = {
+                        ajaxCMSBlockPositions: true,
+                        id_cms_block: ids[1],
+                        position: ids[2],
+                        way: way,
+                        token: token
+                    };
+                if (come_from == 'AdminModulesPositions')
 					params = {
 						ajaxModulesPositions: true,
 						id_hook: ids[0],
@@ -133,7 +151,7 @@ function initTableDnD(table)
 						token: token
 					}
 				}
-				
+
 				$.ajax({
 					type: 'POST',
 					async: false,
@@ -195,7 +213,8 @@ function initTableDnD(table)
 							tableDrag.children('tbody').children('tr:not(".nodrag"):odd').addClass('alt_row');
 							tableDrag.children('tbody').children('tr:not(".nodrag"):even').addClass('not_alt_row');
 							tableDrag.children('tbody').children('tr').children('td.dragHandle').children('a:hidden').show();
-							if (alternate) {
+
+                            if (alternate) {
 								tableDrag.children('tbody').children('tr').children('td.dragHandle:first').children('a:odd').hide();
 								tableDrag.children('tbody').children('tr').children('td.dragHandle:last').children('a:even').hide();
 							}

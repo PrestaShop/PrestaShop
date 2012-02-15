@@ -43,6 +43,11 @@ class HelperCore
 	public $context;
 	public $toolbar_fix = false;
 
+	/**
+	 * @var Module
+	 */
+	public $module;
+
 	/** @var string Helper tpl folder */
 	public $base_folder;
 
@@ -83,9 +88,13 @@ class HelperCore
 		{
 			if ($this->context->controller instanceof ModuleAdminController)
 				$override_tpl_path = $this->context->controller->getTemplatePath().$this->override_folder.$this->base_folder.$tpl_name;
+			else if ($this->module)
+				$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->override_folder.$this->base_folder.$tpl_name;
 			else
 				$override_tpl_path = $this->context->smarty->getTemplateDir(0).'controllers/'.$this->override_folder.$this->base_folder.$tpl_name;
 		}
+		else if ($this->module)
+			$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->base_folder.$tpl_name;
 
 		if (isset($override_tpl_path) && file_exists($override_tpl_path))
 			return $this->context->smarty->createTemplate($override_tpl_path, $this->context->smarty);
