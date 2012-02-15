@@ -38,6 +38,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		$this->table = 'stock';
 		$this->className = 'Stock';
 		$this->lang = false;
+		$this->display_multishop_toolbar = false;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(

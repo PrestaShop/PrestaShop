@@ -40,6 +40,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$this->className = 'Product';
 		$this->lang = true;
 		$this->colorOnBackground = true;
+		$this->display_multishop_toolbar = false;
 
 		$this->fieldsDisplay = array(
 			'reference' => array(
