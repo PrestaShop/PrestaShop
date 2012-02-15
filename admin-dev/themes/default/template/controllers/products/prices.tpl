@@ -226,7 +226,8 @@ jQuery(document).ready(Customer.init);
 		{l s='You can set specific prices for clients belonging to different groups, different countries...'}
 	</div>
 	<br />
-	<a class="button bt-icon" href="#" onclick="$('#add_specific_price').slideToggle();return false;"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>
+	<a class="button bt-icon" href="#" id="show_specific_price"><img src="../img/admin/add.gif" alt="" /><span>{l s='Add a new specific price'}</span></a>
+	<a class="button bt-icon" href="#" id="hide_specific_price" style="display:none"><img src="../img/admin/cross.png" alt=""/><span>{l s='Cancel new specific price'}</span></a>
 	<br/>
 	<script type="text/javascript">
 	var product_prices = new Array();
@@ -347,10 +348,6 @@ jQuery(document).ready(Customer.init);
 				<option value="percentage">{l s='Percentage'}</option>
 			</select>
 			{l s='(if set to "amount", the tax is included)'}
-		</div>
-
-		<div class="margin-form">
-			<input type="submit" name="submitPriceAddition" value="{l s='Add'}" class="button" />
 		</div>
 	</div>
 
