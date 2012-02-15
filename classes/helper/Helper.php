@@ -334,6 +334,26 @@ class HelperCore
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$assos[$row['id_'.$type]] = $row['id_'.$type];
 		}
+		else
+		{
+			switch (Context::shop())
+			{
+				case Shop::CONTEXT_SHOP :
+					$assos[$this->context->shop->id] = $this->context->shop->id;
+				break;
+
+				case Shop::CONTEXT_GROUP :
+					foreach (Shop::getShops(false, $this->context->shop->getGroupID(), true) as $id_shop)
+						$assos[$id_shop] = $id_shop;
+				break;
+
+				default :
+					foreach (Shop::getShops(false, null, true) as $id_shop)
+						$assos[$id_shop] = $id_shop;
+				break;
+			}
+		}
+
 		$tpl = $this->createTemplate('helpers/assoshop.tpl');
 		$tpl->assign(array(
 			'input' => array(
