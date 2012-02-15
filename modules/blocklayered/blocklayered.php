@@ -63,7 +63,7 @@ class BlockLayered extends Module
 		&& $this->registerHook('afterDeleteFeatureValue') && $this->registerHook('afterSaveFeatureValue') && $this->registerHook('attributeForm')
 		&& $this->registerHook('postProcessAttribute') && $this->registerHook('afterDeleteAttribute') && $this->registerHook('afterSaveAttribute'))
 		{
-			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 0);
+			Configuration::updateValue('PS_LAYERED_HIDE_0_VALUES', 1);
 			Configuration::updateValue('PS_LAYERED_SHOW_QTIES', 1);
 			Configuration::updateValue('PS_LAYERED_FULL_TREE', 1);
 			Configuration::updateValue('PS_LAYERED_FILTER_PRICE_USETAX', 1);
@@ -2169,12 +2169,11 @@ class BlockLayered extends Module
 						break;
 					if (version_compare(_PS_VERSION_,'1.5','>'))
 					{
-						$queryFiltersWhere .= ' AND sa.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0 ';
+						$queryFiltersWhere .= ' AND sa.quantity '.(!$selectedFilters['quantity'][0] ? '<=' : '>').' 0 ';
 						$queryFiltersFrom .= 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sa ON (sa.id_product = p.id_product AND sa.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
 					}
 					else
-						$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0 ';
-						//$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '>=' : '>').' 0';
+						$queryFiltersWhere .= ' AND p.quantity '.(!$selectedFilters['quantity'][0] ? '<=' : '>').' 0 ';
 				break;
 
 				case 'manufacturer':
@@ -3159,11 +3158,11 @@ class BlockLayered extends Module
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 		{
-			$queryFilters = ' AND sav.quantity '.(!$filterValue[0] ? '>=' : '>').' 0 ';
+			$queryFilters = ' AND sav.quantity '.(!$filterValue[0] ? '<=' : '>').' 0 ';
 			$queryFiltersJoin = 'LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.id_product = p.id_product AND sav.id_shop = '.(int)Context::getContext()->shop->getID(true).') ';
 		}
 		else
-			$queryFilters = ' AND p.quantity '.(!$filterValue[0] ? '>=' : '>').' 0 ';
+			$queryFilters = ' AND p.quantity '.(!$filterValue[0] ? '<=' : '>').' 0 ';
 			
 		return array('where' => $queryFilters, 'join' => $queryFiltersJoin);
 	}
