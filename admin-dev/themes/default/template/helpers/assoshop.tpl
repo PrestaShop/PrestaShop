@@ -82,7 +82,7 @@ function check_all_shop() {
 			</td>
 		</tr>
 		{foreach $input.values as $groupID => $groupData}
-			{if ($input.type == 'group_shop' && (isset($fields_value.shop[$groupID]) || !$form_id))}
+			{if ($input.type == 'group_shop' && isset($fields_value.shop[$groupID]))}
 				{assign var=groupChecked value=true}
 			{else}
 				{assign var=groupChecked value=false}
@@ -104,7 +104,7 @@ function check_all_shop() {
 			{if $input.type == 'shop'}
 				{assign var=j value=0}
 				{foreach $groupData['shops'] as $shopID => $shopData}
-					{if (isset($fields_value.shop[$shopID]) || !$form_id)}
+					{if (isset($fields_value.shop[$shopID]))}
 						{assign var=checked value=true}
 					{else}
 						{assign var=checked value=false}
