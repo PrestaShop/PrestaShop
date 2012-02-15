@@ -410,7 +410,7 @@ function generateShopList()
 
 	// Generate HTML
 	$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
-	$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
+	$html = '<select class="shopList chosen" onchange="location.href = \''.$url.'\'+$(this).val();">';
 
 	if ($context->employee->id_profile == _PS_ADMIN_PROFILE_ ||
 					$context->shop->getTotalShopsWhoExists() == Employee::getTotalEmployeeShopById($context->employee->id))
@@ -419,7 +419,7 @@ function generateShopList()
 	foreach ($tree as $gID => $group_data)
 	{
 		$disabled = ($group_data['totalShops'] != count($group_data['shops'])) ? 'disabled="disabled"' : '';
-		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.htmlspecialchars($group_data['name']).'</option>';
+		$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.$disabled.'>'.translate('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 		foreach ($group_data['shops'] as $sID => $shopData)
 			if ($shopData['active'])
 				$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID || $context->shop->id == $sID) ? 'selected="selected"' : '').'>&raquo; '.$shopData['name'].'</option>';
