@@ -141,7 +141,7 @@
 									{$input.required = false}
 									{$input.desc = null}
 								{else}
-									<select name="{$input.name}" class="chosen"
+									<select name="{$input.name}" class=""
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 											{if isset($input.multiple)}multiple="multiple" {/if}
 											{if isset($input.size)}size="{$input.size}"{/if}
@@ -260,7 +260,7 @@
 										{if isset($input.autocomplete) && !$input.autocomplete}autocomplete="off"{/if} />
 							{elseif $input.type == 'birthday'}
 								{foreach $input.options as $key => $select}
-									<select name="{$key}" class="chosen">
+									<select name="{$key}" class="">
 										<option value="">-</option>
 										{if $key == 'months'}
                                                 {*
