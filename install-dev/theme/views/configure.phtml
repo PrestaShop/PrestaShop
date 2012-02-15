@@ -128,7 +128,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 	<div class="field clearfix">
 		<label for="infosPassword" class="aligned"><?php echo $this->l('Shop password:') ?> </label>
 		<div class="contentinput">
-			<input autocomplete="off" type="password" class="text required" id="infosPassword" name="admin_password" />
+			<input autocomplete="off" type="password" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password) ?>" />
 			<sup class="required">*</sup>
 		</div>
 		<?php echo $this->displayError('admin_password') ?>
@@ -138,7 +138,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 	<div class="field clearfix">
 		<label class="aligned" for="infosPasswordRepeat"><?php echo $this->l('Re-type to confirm:') ?> </label>
 		<div class="contentinput">
-			<input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat" name="admin_password_confirm" />
+			<input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat" name="admin_password_confirm" value="<?php echo htmlspecialchars($this->session->admin_password_confirm) ?>" />
 			<sup class="required">*</sup>
 		</div>
 		<?php echo $this->displayError('admin_password_confirm') ?>
