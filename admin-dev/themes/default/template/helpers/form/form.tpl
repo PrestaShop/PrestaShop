@@ -344,6 +344,9 @@
 					{if isset($name_controller)}
 						{capture name=hookName assign=hookName}display{$name_controller|ucfirst}Form{/capture}
 						{hook h=$hookName}
+					{elseif isset($smarty.get.controller)}
+						{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}Form{/capture}
+						{hook h=$hookName}
 					{/if}
 				{elseif $key == 'submit'}
 					<div class="margin-form">
