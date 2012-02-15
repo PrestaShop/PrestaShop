@@ -29,6 +29,8 @@ class AdminHomeControllerCore extends AdminController
 {
 	const TIPS_TIMEOUT = 5;
 
+	public $display_multishop_toolbar = false;
+
 	protected function _displayOptimizationTips()
 	{
 		$link = $this->context->link;
@@ -166,7 +168,7 @@ class AdminHomeControllerCore extends AdminController
 		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
 			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
 			$this->l('This one is different from the main shop domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
-			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
+			<a href="index.php?controller=AdminShopUrl&token='.Tools::getAdminTokenLite('AdminShopUrl').'">'.
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
 

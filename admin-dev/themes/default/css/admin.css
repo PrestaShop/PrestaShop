@@ -63,8 +63,6 @@ input.button[disabled=disabled]:hover{background-color:#FFF6D3}
 #header #header_search #bo_search_submit { background: transparent url('../img/icon-search.png') no-repeat scroll center; border:none; width:27px; height:27px; float:left; font-weight:normal; margin:0; padding:0;  cursor:pointer; text-indent:-9999em; position:absolute; right:0; display:block; /*hacking ie7*/ font-size:0 !ie7; color: transparent !ie;}
 #header #header_quick{float:right; display:block; margin-top:15px;}
 #header #header_quick #quick_select{ font-size:13px; margin:0 10px 0 0; padding:3px 0 4px; vertical-align:middle;width:140px; height:27px;}
-#header #header_shoplist{ background-image:none; clear:both; float: right; color:#fff; margin-top:10px; margin-right:15px;}
-#header #header_shoplist span { float:left; padding:3px;}
 #header #header_myaccount{background:url('../img/bg-lang.png') no-repeat;display:block;float:right;height:16px;margin:8px 1px 0 0;width:16px}
 
 
@@ -167,6 +165,16 @@ a.module_toggle_all{color: #268CCD;}
 
 /*TABLE STATUS COMMANDE*/
 .table td span.color_field { font-size:11px; padding:2px 5px; border-radius:3px; text-transform:uppercase; color:#fff; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}
+
+/*multishop toolbar*/
+.multishop_toolbar { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px; font-size: 18px;}
+.multishop_toolbar span.text_multishop {vertical-align: 7px; padding-right: 5px; }
+.multishop_toolbar select.shopList { width: 300px; }
+.multishop_toolbar a.chzn-single { background: url('../img/icon-multishop.png') no-repeat 5px 5px; padding: 1px 2px 2px 25px; font-weight: bold; }
+
+.multishop_toolbar .chzn-container .first{font-weight: bold;background-color: #408BD5;color: #ffffff;}
+.multishop_toolbar .chzn-container .group{font-weight: bold;font-style: italic;padding-left: 15px;background-color: #C6DEFC;}
+.multishop_toolbar .chzn-container .shop{padding-left: 30px;background-color: #EAF2FC;}
 
 /*toolbarBox*/
 .toolbarBox { background-color: #F8F8F8; border: 1px solid #CCCCCC; margin-bottom:10px; padding: 10px 0; border-radius:3px; -moz-border-radius:3px; -webkit-border-radius:3px;}

@@ -28,6 +28,8 @@
 
 class AdminShopControllerCore extends AdminController
 {
+	public $display_multishop_toolbar = false;
+
 	public function __construct()
 	{
 		$this->context = Context::getContext();

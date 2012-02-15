@@ -963,7 +963,10 @@ function showErrorMessage(msg, delay)
 		.html("<div class=\"error\">"+msg+"</div>").show().delay(delay).fadeOut("slow");
 }
 
-$(document).ready(function(){
+$(document).ready(function()
+{
+	$('select.chosen').chosen();
+
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
 	$('.isInvisible label.conf_title').addClass('isDisabled');
 
