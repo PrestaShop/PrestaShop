@@ -4,9 +4,13 @@
 /* Block CMS links */
 .informations_block_left li {border-bottom:1px dotted #eee}
 .informations_block_left li.last {border:none;}
-	.informations_block_left li a {
-		display:block;
-		padding:7px 11px 5px 22px;
-		color:#333;
-		background:url(img/arrow_right_2.png) no-repeat 10px 10px transparent;
-	}
+.informations_block_left li a {
+    display:block;
+    padding:7px 11px 5px 22px;
+    color:#333;
+    background:url(img/arrow_right_2.png) no-repeat 10px 10px transparent;
+}
+    
+tr.subitem > td:first-child + td {
+    padding-left: 10px;
+}
