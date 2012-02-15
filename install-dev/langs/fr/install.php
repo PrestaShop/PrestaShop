@@ -30,7 +30,7 @@ return array(
 		'Image type is not supported' => 'Ce type d\'image n\'est pas supporté',
 		'Image folder %s is not writable' => 'Le dossier d\'images %s ne possède pas les droits d\'écriture',
 		'Cannot upload the file' => 'Impossible d\'uploader le fichier',
-		'Lingerie and Adult' => 'Adulte et lingerie',
+		'Lingerie and Adult' => 'Lingerie et adulte',
 		'Animals and Pets' => 'Animaux',
 		'Art and Culture' => 'Culture et divertissements',
 		'Babies' => 'Articles pour bébé',
