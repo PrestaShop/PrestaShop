@@ -255,6 +255,11 @@ class AdminControllerCore extends Controller
 	 */
 	public $controller_name;
 
+	/**
+	 * @var bool Display or not the multishop toolbar for this controller
+	 */
+	public $display_multishop_toolbar = true;
+
 	public function __construct()
 	{
 		$this->controller_name = get_class($this);
@@ -1319,6 +1324,7 @@ class AdminControllerCore extends Controller
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
 			'is_multishop' => $is_multishop,
+			'display_multishop_toolbar' => $this->display_multishop_toolbar,
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
 			'controller_name' => Tools::getValue('controller'),
 		));
@@ -1571,7 +1577,7 @@ class AdminControllerCore extends Controller
 			$this->addCSS(_THEME_CSS_DIR_.'rtl.css');
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo', 'alerts'));
+		$this->addjQueryPlugin(array('cluetip', 'hoverIntent', 'scrollTo', 'alerts', 'chosen'));
 
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',

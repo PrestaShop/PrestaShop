@@ -188,9 +188,6 @@
 		</select>
 	</div>
 
-	{if $multi_shop}
-		<div id="header_shoplist"><span>{l s='Select your shop:'}</span>{$shop_list}</div>
-	{/if}
 	{hook h="displayBackOfficeTop"}
 	</div>
 	<ul id="menu">
@@ -221,12 +218,9 @@
 			</div>
 		{/if}
 
-		{if $display_header && $is_multishop && $shop_context != 'all'}
-			<div class="multishop_info">
-				{if $shop_context == 'group'}
-					{l s='You are configuring your store for group shop '} <b>{$group_shop->name}</b>
-				{elseif $shop_context == 'shop'}
-					{l s='You are configuring your store for shop '} <b>{$shop->name}</b>
-				{/if}
+		{if $display_header && $is_multishop && $display_multishop_toolbar}
+			<div class="multishop_toolbar">
+				<span class="text_multishop">{l s='Multishop configuration for'}</span>
+				{$shop_list}
 			</div>
 		{/if}

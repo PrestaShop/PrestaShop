@@ -27,6 +27,8 @@
 
 class AdminShopUrlControllerCore extends AdminController
 {
+	public $display_multishop_toolbar = false;
+
 	public function __construct()
 	{
 	 	$this->table = 'shop_url';
