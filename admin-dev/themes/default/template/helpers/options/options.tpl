@@ -86,7 +86,7 @@
 				{/block}
 				{if $field['type'] == 'select'}
 					{if $field['list']}
-						<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}">
+						<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" class="chosen">
 							{foreach $field['list'] AS $k => $option}
 								<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
 							{/foreach}
@@ -145,7 +145,7 @@
 					{elseif $field['type'] == 'selectLang'}
 						{foreach $languages as $language}
 						<div id="{$key}_{$language.id_lang}" style="margin-bottom:8px; display: {if $language.id_lang == $current_id_lang}block{else}none{/if}; float: left; vertical-align: top;">
-							<select name="{$key}_{$language.iso_code|upper}">
+							<select name="{$key}_{$language.iso_code|upper}" class="chosen">
 								{foreach $field['list'] AS $k => $v}
 									<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]}{else}{$v[$field.identifier]}{/if}"
 										{if $field['value'][$language.id_lang] == $v['name']} selected="selected"{/if}>
