@@ -12,4 +12,6 @@ $(document).ready(function()
 		$(this).fadeOut('slow');
 		$(this).children('div').fadeOut('slow');
 	});
+
+	$('select.chosen').chosen();
 });
