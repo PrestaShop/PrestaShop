@@ -965,7 +965,11 @@ function showErrorMessage(msg, delay)
 
 $(document).ready(function()
 {
-	$('select.chosen').chosen();
+	$('select.chosen').each(function(k, item){
+		$(item).chosen();
+		if ($(item).hasClass('no-search'))
+			$(item).next().find('.chzn-search').hide();
+	});
 
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
 	$('.isInvisible label.conf_title').addClass('isDisabled');

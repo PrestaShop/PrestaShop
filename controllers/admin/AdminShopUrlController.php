@@ -115,18 +115,21 @@ class AdminShopUrlControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Domain:'),
-					'name' => 'domain'
+					'name' => 'domain',
+					'size' => 50,
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Domain SSL:'),
-					'name' => 'domain_ssl'
+					'name' => 'domain_ssl',
+					'size' => 50,
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Physical URI:'),
 					'name' => 'physical_uri',
-					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path. E.g. if your store is available from www.my-prestashop.com/my-store/, you have to set my-store/ in this field.')
+					'desc' => $this->l('Physical folder of your store on your server. Leave this field empty if your store is installed on root path. E.g. if your store is available from www.my-prestashop.com/my-store/, you have to set my-store/ in this field.'),
+					'size' => 50,
 				),
 				array(
 					'type' => 'text',
@@ -135,7 +138,8 @@ class AdminShopUrlControllerCore extends AdminController
 					'desc' => array(
 						$this->l('You can use this option if you want to create a store with an URI that doesn\'t exist on your server. E.g. if you want your store to be available with url www.my-prestashop.com/my-store/shoes/, you have to set shoes/ in this field (we considere that my-store/ is your physical URI).'),
 						'<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
-					)
+					),
+					'size' => 50,
 				),
 				array(
 					'type' => 'text',
