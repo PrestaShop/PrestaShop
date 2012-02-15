@@ -613,7 +613,7 @@ class OrderCore extends ObjectModel
 				FROM '._DB_PREFIX_.'product_attribute_image
 				WHERE id_product_attribute = '.(int)$product['product_attribute_id']);
 
-		if (!isset($image['id_image']) || !$image['id_image'])
+		if (!isset($id_image) || !$id_image)
 			$id_image = Db::getInstance()->getValue('
 				SELECT id_image
 				FROM '._DB_PREFIX_.'image
