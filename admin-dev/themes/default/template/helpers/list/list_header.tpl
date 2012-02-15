@@ -78,6 +78,17 @@
 
 {block name="override_header"}{/block}
 
+
+{hook h='displayAdminListBefore'}
+{if isset($name_controller)}
+	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListBefore{/capture}
+	{hook h=$hookName}
+{elseif isset($smarty.get.controller)}
+	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}ListBefore{/capture}
+	{hook h=$hookName}
+{/if}
+
+
 {if !$simple_header}
 <form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
