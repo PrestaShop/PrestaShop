@@ -2,8 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_7a440d0f6b9589d01f1313214221c16d'] = 'Mon bloc compte sur le footer';
-$_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_0b9bc7f3bb601ef8959509352aea493b'] = 'Affiche un bloc avec des liens relatifs à votre compte utilisateur.';
+$_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_7a440d0f6b9589d01f1313214221c16d'] = 'Bloc Mon compte dans le pied de page';
+$_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_0b9bc7f3bb601ef8959509352aea493b'] = 'Affiche un bloc avec des liens relatifs au compte du client.';
 $_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_d95cf4ab2cbf1dfb63f066b50558b07d'] = 'Mon compte';
 $_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_74ecd9234b2a42ca13e775193f391833'] = 'Mes commandes';
 $_MODULE['<{blockmyaccountfooter}prestashop>blockmyaccountfooter_89080f0eedbd5491a93157930f1e45fc'] = 'Mes retours de marchandise';
