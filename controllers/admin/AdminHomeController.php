@@ -165,9 +165,13 @@ class AdminHomeControllerCore extends AdminController
 
 	protected function warnDomainName()
 	{
-		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
+		if (Shop::isFeatureActive())
+			return;
+
+		$shop = Context::getContext()->shop;
+		if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl)
 			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This one is different from the main shop domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
+			$this->l('This one is different from the main shop domain name set in shop tab:').' <span style="color: #CC0000;">'.$shop->domain.'</span><br />
 			<a href="index.php?controller=AdminShopUrl&token='.Tools::getAdminTokenLite('AdminShopUrl').'">'.
 			$this->l('Click here if you want to modify the main shop domain name').'</a>');
 	}
