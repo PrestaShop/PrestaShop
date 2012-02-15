@@ -239,6 +239,8 @@ class AdminCategoriesControllerCore extends AdminController
 				'desc' => $this->l('Add new')
 			);
 		parent::initToolbar();
+		if ($this->_category->id == Category::getTopCategory()->id && isset($this->toolbar_btn['new']))
+			unset($this->toolbar_btn['new']);
 	}
 
 	public function initProcess()
