@@ -24,7 +24,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<label for="infosActivity" class="aligned"><?php echo $this->l('Main activity:') ?></label>
 		<div class="contentinput">
 			<select id="infosActivity" name="shop_activity" class="chosen">
-				<option value="0" <?php if (!$this->session->shop_activity): ?>selected="selected"<?php endif; ?>>-- <?php echo $this->l('Please choose your main activity') ?> --</option>
+				<option value="0" style="font-weight: bold" <?php if (!$this->session->shop_activity): ?>selected="selected"<?php endif; ?>><?php echo $this->l('Please choose your main activity') ?></option>
 				<?php foreach ($this->list_activities as $i => $activity): ?>
 					<option value="<?php echo $activity ?>" <?php if ($this->session->shop_activity == $activity): ?>selected="selected"<?php endif; ?>><?php echo $activity ?></option>
 				<?php endforeach; ?>
@@ -55,7 +55,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<label for="infosCountry" class="aligned"><?php echo $this->l('Default country:') ?></label>
 		<div class="contentinput">
 			<select name="shop_country" id="infosCountry" class="chosen">
-				<option value="0">-- <?php echo $this->l('Select your country') ?> --</option>
+				<option value="0" style="font-weight: bold"><?php echo $this->l('Select your country') ?></option>
 				<?php foreach ($this->list_countries as $country): ?>
 					<option value="<?php echo (isset($country['iso'])) ? $country['iso'] : '' ?>" <?php if ($this->session->shop_country && isset($country['iso']) && $this->session->shop_country === $country['iso']): ?>selected="selected"<?php endif; ?>><?php echo $country['name'] ?></option>
 				<?php endforeach; ?>
@@ -70,7 +70,7 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		<label for="infosTimezone" class="aligned"><?php echo $this->l('Shop timezone:') ?></label>
 		<div class="contentinput">
 			<select name="shop_timezone" id="infosTimezone" class="chosen">
-				<option value="0">-- <?php echo $this->l('Select your timezone') ?> --</option>
+				<option value="0" style="font-weight: bold"><?php echo $this->l('Select your timezone') ?></option>
 				<?php foreach ($this->getTimezones() as $timezone): ?>
 					<option value="<?php echo $timezone ?>" <?php if ($this->session->shop_timezone == $timezone): ?>selected="selected"<?php endif; ?>><?php echo $timezone ?></option>
 				<?php endforeach; ?>
