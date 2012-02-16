@@ -369,6 +369,36 @@ function toggleSpecificPrice()
 }
 
 /**
+ * Ajax call to delete a specific price
+ *
+ * @param ids
+ * @param token
+ * @param parent
+ */
+function deleteSpecificPrice(url, parent)
+{
+	$.ajax({
+		url: url,
+		data: {
+			ajax: true
+		},
+		context: document.body,
+		dataType: 'json',
+		context: this,
+		async: false,
+		success: function(data) {
+			if (data.status == 'ok')
+			{
+				showSuccessMessage(data.message);
+				parent.remove();
+			}
+			else
+				showErrorMessage(data.message);
+		}
+	});
+}
+
+/**
  * Execute a callback function when a specific tab has finished loading or right now if the tab is already loaded
  *
  * @param tab_name name of the tab that is checked for loading
@@ -402,5 +432,14 @@ $(document).ready(function() {
 	// Enable writing of the product name when the friendly url field in tab SEO is loaded
 	onTabLoad('Seo', enableProductName);
 
+	// Bind to show/hide new specific price form
 	onTabLoad('Prices', toggleSpecificPrice);
+
+	// Bind to delete specific price link
+	onTabLoad('Prices', function(){
+		$('#specific_prices_list').delegate('a[name="delete_link"]', 'click', function(){
+			deleteSpecificPrice(this.href, $(this).parents('tr'));
+			return false;
+		})
+	});
 });

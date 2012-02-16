@@ -351,7 +351,7 @@ jQuery(document).ready(Customer.init);
 		</div>
 	</div>
 
-	<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0">
+	<table style="text-align: center;width:100%" class="table" cellpadding="0" cellspacing="0" id="specific_prices_list">
 		<thead>
 			<tr>
 				<th class="cell border" style="width: 12%;">{l s='Rule'}</th>
