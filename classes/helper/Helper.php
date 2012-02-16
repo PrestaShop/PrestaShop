@@ -310,66 +310,6 @@ class HelperCore
 	}
 
 	/**
-	 * Render an area to determinate shop association
-	 *
-	 * @param string $type 'shop' or 'group_shop'
-	 *
-	 * @return string
-	 */
-	public function renderAssoShop($type = 'shop')
-	{
-		if (!Shop::isFeatureActive())
-			return;
-
-		if ($type != 'shop' && $type != 'group_shop')
-			$type = 'shop';
-
-		$assos = array();
-		if ((int)$this->id)
-		{
-			$sql = 'SELECT `id_'.$type.'`, `'.bqSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.bqSQL($this->table).'_'.$type.'`
-					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
-
-			foreach (Db::getInstance()->executeS($sql) as $row)
-				$assos[$row['id_'.$type]] = $row['id_'.$type];
-		}
-		else
-		{
-			switch (Context::shop())
-			{
-				case Shop::CONTEXT_SHOP :
-					$assos[$this->context->shop->id] = $this->context->shop->id;
-				break;
-
-				case Shop::CONTEXT_GROUP :
-					foreach (Shop::getShops(false, $this->context->shop->getGroupID(), true) as $id_shop)
-						$assos[$id_shop] = $id_shop;
-				break;
-
-				default :
-					foreach (Shop::getShops(false, null, true) as $id_shop)
-						$assos[$id_shop] = $id_shop;
-				break;
-			}
-		}
-
-		$tpl = $this->createTemplate('helpers/assoshop.tpl');
-		$tpl->assign(array(
-			'input' => array(
-				'type' => $type,
-				'values' => Shop::getTree(),
-			),
-			'fields_value' => array(
-				'shop' => $assos
-			),
-			'form_id' => $this->id,
-			'table' => $this->table
-		));
-		return $tpl->fetch();
-	}
-
-	/**
 	 * Render a form with potentials required fields
 	 *
 	 * @param string $class_name

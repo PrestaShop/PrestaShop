@@ -46,7 +46,7 @@ $().ready(function() {
 	});
 
 	// Initialize checkbox
-	$('.input_shop').each(function(k, v) {
+	$('.input_group_shop').each(function(k, v) {
 		check_group_shop_status($(v).val());
 		check_all_shop();
 	});

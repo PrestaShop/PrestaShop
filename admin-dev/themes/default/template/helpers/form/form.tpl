@@ -291,7 +291,7 @@
 								{assign var=groups value=$input.values}
 								{include file='helpers/form/form_group.tpl'}
 							{elseif $input.type == 'shop' OR $input.type == 'group_shop'}
-								{include file='helpers/assoshop.tpl' input=$input fields_value=$fields_value}
+								{$input.html}
 							{elseif $input.type == 'categories'}
 								{include file='helpers/form/form_category.tpl' categories=$input.values}
 							{elseif $input.type == 'categories_select'}
