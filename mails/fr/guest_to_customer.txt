@@ -10,4 +10,4 @@ Vous pouvez accéder à votre compte sur notre site Internet :
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

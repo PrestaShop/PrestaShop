@@ -1,11 +1,11 @@
 Bonjour,
 		
-Nouveau message d'alerte enregistré
+Nouveau message d'alerte enregistré.
 	
-Malheuresement, un message d'alerte a été enregistré
+Malheureusement, un message d'alerte a été enregistré.
 
-Vous pouvez voir ce message dans votre Panneau d'administration > Outils > Log
+Vous pouvez voir ce message dans votre Panneau d'administration > Outils > Log.
 		
 {shop_name} - {shop_url}
 
-{shop_url} propulsé par PrestaShop™
+{shop_url} propulsé avec PrestaShop™

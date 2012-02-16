@@ -12,11 +12,11 @@ Pour rappel, vous avez sélectionné le mode de paiement par virement bancaire e
 Le montant total est de {total_paid}
 
 Vous pouvez accéder à tout moment au suivi de votre commande et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site {shop_url}
-Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse: {shop_url}guest-tracking.php
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse : {shop_url}guest-tracking.php
 
 Merci et à bientôt sur {shop_name}.
 
 {shop_name} - {shop_url}
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

@@ -11,4 +11,4 @@ Si vous avez un compte invité, vous pouvez suivre votre commande à cette adres
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

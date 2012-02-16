@@ -7,4 +7,4 @@ Vous pouvez à tout moment consulter vos anciens messages dans votre suivi de co
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™
