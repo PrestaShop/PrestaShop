@@ -226,7 +226,7 @@ $(function(){ldelim}
 		</p>
 		<p class="required text" id="adress_alias">
 			<label for="alias">{l s='Assign an address title for future reference'} <sup>*</sup></label>
-			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else}{if isset($address->alias)}{$address->alias|escape:'htmlall':'UTF-8'}{/if}{if isset($select_address)}{l s='My address'}{/if}{/if}" />
+			<input type="text" id="alias" name="alias" value="{if isset($smarty.post.alias)}{$smarty.post.alias}{else if isset($address->alias)}{$address->alias|escape:'htmlall':'UTF-8'}{else if isset($select_address)}{l s='My address'}{/if}" />
 		</p>
 	</fieldset>
 	<p class="submit2">
