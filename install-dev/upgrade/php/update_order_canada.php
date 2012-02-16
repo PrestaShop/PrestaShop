@@ -116,9 +116,9 @@ function update_order_canada_ps_round($val){
 
 	switch ($ps_price_round_mode)
 	{
-		case PS_ROUND_UP:
+		case 0:
 			return ceil($val * 100)/100;
-		case PS_ROUND_DOWN:
+		case 1:
 			return floor($val * 100)/100;
 		default:
 			return round($val, 2);
