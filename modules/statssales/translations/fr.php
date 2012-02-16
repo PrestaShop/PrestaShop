@@ -21,4 +21,4 @@ $_MODULE['<{statssales}prestashop>statssales_bb7ad89807bf69ddca986c142311f936'] 
 $_MODULE['<{statssales}prestashop>statssales_7442e29d7d53e549b78d93c46b8cdcfc'] = 'Commandes';
 $_MODULE['<{statssales}prestashop>statssales_068f80c7519d0528fb08e82137a72131'] = 'Produits';
 $_MODULE['<{statssales}prestashop>statssales_14f1c54626d722168ee62dff05ed811e'] = 'Chiffre d\'affaires en';
-$_MODULE['<{statssales}prestashop>statssales_33eee7690a8cd62490ed9eeadd47d163'] = 'Pourcentage de commandes par statut';
+$_MODULE['<{statssales}prestashop>statssales_33eee7690a8cd62490ed9eeadd47d163'] = 'Pourcentage de commandes par état';
