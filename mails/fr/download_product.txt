@@ -7,6 +7,6 @@ Voici les liens directs vers ceux-ci :
 
 
 Vous pouvez accéder au suivi de votre commande et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site.
-Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse: {shop_url}guest-tracking.php?id_order={id_order}
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse : {shop_url}guest-tracking.php?id_order={id_order}
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™
