@@ -505,7 +505,8 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->fields_value = array(
 			'name' => Manufacturer::getNameById($address->id_manufacturer),
-			'alias' => 'manufacturer'
+			'alias' => 'manufacturer',
+			'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
 		);
 
 		$this->initToolbar();

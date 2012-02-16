@@ -230,7 +230,10 @@ class AdminSuppliersControllerCore extends AdminController
 			);
 		}
 		else
-			$this->fields_value['id_address'] = 0;
+			$this->fields_value = array(
+				'id_address' => 0,
+				'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
+			);
 
 
 		if (Shop::isFeatureActive())

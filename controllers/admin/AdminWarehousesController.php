@@ -370,20 +370,14 @@ class AdminWarehousesControllerCore extends AdminController
 				'id_state' => $address->id_state,
 			);
 		else
-			$this->fields_value['id_address'] = 0;
+			$this->fields_value = array(
+				'id_address' => 0,
+				'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
+			);
 		$this->fields_value['ids_shops[]'] = $ids_shop;
 		$this->fields_value['ids_carriers[]'] = $carriers;
 
 		return parent::renderForm();
-	}
-
-	/**
-	 * AdminController::postProcess() override
-	 * @see AdminController::postProcess()
-	 */
-	public function postProcess()
-	{
-		return parent::postProcess();
 	}
 
 	/**
