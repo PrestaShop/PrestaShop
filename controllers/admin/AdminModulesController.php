@@ -143,7 +143,11 @@ class AdminModulesControllerCore extends AdminController
 	public function isFresh($file, $timeout = 604800000)
 	{
 		if (file_exists(_PS_ROOT_DIR_.$file))
+		{
+			if (filesize(_PS_ROOT_DIR_.$file) < 1)
+				return false;
 			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
+		}
 		else
 			return false;
 	}
