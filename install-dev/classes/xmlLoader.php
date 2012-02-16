@@ -683,7 +683,7 @@ class InstallXmlLoader
 		if (!isset($columns[$table]))
 		{
 			$columns[$table] = array();
-			$sql = 'SHOW COLUMNS FROM `'.bqSQL(_DB_PREFIX_.$table).'`';
+			$sql = 'SHOW COLUMNS FROM `'._DB_PREFIX_.bqSQL($table).'`';
 			foreach (Db::getInstance()->executeS($sql) as $row)
 				$columns[$table][$row['Field']] = $this->checkIfTypeIsText($row['Type']);
 		}
