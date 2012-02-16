@@ -257,7 +257,8 @@ class AdminAddressesControllerCore extends AdminController
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id),
 						'id' => 'id_country',
-						'name' => 'name'
+						'name' => 'name',
+						'preselect_country' => true,
 					)
 				);
 				$temp_fields[] = array(

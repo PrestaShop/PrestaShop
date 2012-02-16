@@ -137,12 +137,6 @@ class AdminWarehousesControllerCore extends AdminController
 		$query->where('active = 1');
 		$employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-		// sets countries
-		$countries = Country::getCountries($this->context->language->id, false);
-		$id_default_country = Configuration::get('PS_SHOP_COUNTRY_ID');
-		if (isset($countries[$id_default_country]))
-			$countries = array($id_default_country => $countries[$id_default_country]) + $countries;
-
 		// sets the title of the toolbar
 		$this->toolbar_title = $this->l('Stock : Warehouse management');
 
@@ -222,9 +216,10 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'id_country',
 					'required' => true,
 					'options' => array(
-						'query' => $countries,
+						'query' => Country::getCountries($this->context->language->id, false),
 						'id' => 'id_country',
-						'name' => 'name'
+						'name' => 'name',
+						'preselect_country' => true,
 					),
 					'desc' => $this->l('Country where the state, region or city is located')
 				),

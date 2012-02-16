@@ -29,19 +29,19 @@ class AdminSuppliersControllerCore extends AdminController
 {
 	public function __construct()
 	{
-	 	$this->table = 'supplier';
-	 	$this->className = 'Supplier';
+		$this->table = 'supplier';
+		$this->className = 'Supplier';
 
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		$this->_select = 'COUNT(ps.`id_product`) AS products';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
 		$this->_group = 'GROUP BY a.`id_supplier`';
 
- 		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
+		$this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
 
 		$this->fieldsDisplay = array(
 			'id_supplier' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
@@ -141,7 +141,8 @@ class AdminSuppliersControllerCore extends AdminController
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id, false),
 						'id' => 'id_country',
-						'name' => 'name'
+						'name' => 'name',
+						'preselect_country' => true,
 					),
 					'desc' => $this->l('Country where the state, region or city is located')
 				),
@@ -292,8 +293,8 @@ class AdminSuppliersControllerCore extends AdminController
 			else
 			{
 				$product_infos = Supplier::getProductInformationsBySupplier($this->object->id,
-																		 	$products[$i]->id,
-																		 	0);
+																			$products[$i]->id,
+																			0);
 				$products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
 				$products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($product_infos['id_currency']));
 			}
