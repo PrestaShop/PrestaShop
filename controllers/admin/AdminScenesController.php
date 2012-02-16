@@ -193,8 +193,7 @@ class AdminScenesControllerCore extends AdminController
 				.(Tools::getMaxUploadSize() / 1024).''.$this->l('KB max.').' '
 				.$this->l('If larger than the image size setting, the image will be reduced to ')
 				.' '.$large_scene_image_type['width'].'x'.$large_scene_image_type['height'].'px '
-				.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the 
-					correct image size.').'.<br />'.
+				.$this->l('(width x height). If smaller than the image-size setting, a white background will be added in order to achieve the correct image size.').'<br />'.
 				$this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).');
 		if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-large_scene.jpg'))
 		{
