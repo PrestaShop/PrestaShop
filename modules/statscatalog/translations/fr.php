@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{statscatalog}prestashop>statscatalog_cf3aa21c6a2147ddbd86f34091daeccd'] = 'Statistiques catalogue';
+$_MODULE['<{statscatalog}prestashop>statscatalog_cf3aa21c6a2147ddbd86f34091daeccd'] = 'Statistiques du catalogue';
 $_MODULE['<{statscatalog}prestashop>statscatalog_226ed1224c5b2db3d3e0716bb4f74da5'] = 'Statistiques générales sur le catalogue';
 $_MODULE['<{statscatalog}prestashop>statscatalog_85dbdb21fe502c4d7a1e81bca0aa396d'] = 'achat';
 $_MODULE['<{statscatalog}prestashop>statscatalog_233d48e63da77b092da350559d2f8382'] = 'visites';
@@ -23,4 +23,4 @@ $_MODULE['<{statscatalog}prestashop>statscatalog_64de80ec5f50aefd6ab2b9260a1f405
 $_MODULE['<{statscatalog}prestashop>statscatalog_58a714d3e9bb2902a5b688c99bd4d8e6'] = 'Produits jamais achetés';
 $_MODULE['<{statscatalog}prestashop>statscatalog_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{statscatalog}prestashop>statscatalog_49ee3087348e8d44e1feda1917443987'] = 'Nom';
-$_MODULE['<{statscatalog}prestashop>statscatalog_8e7c9a35104a5a68199678bd6bc5d187'] = 'Editer / Voir';
+$_MODULE['<{statscatalog}prestashop>statscatalog_8e7c9a35104a5a68199678bd6bc5d187'] = 'Modifier / Voir';
