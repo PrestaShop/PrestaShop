@@ -131,8 +131,8 @@ class InstallModelInstall extends InstallAbstractModel
 		foreach (Db::getInstance()->executeS('SHOW TABLES') as $row)
 		{
 			$table = current($row);
-			if (preg_match('#^'._DB_PREFIX_.'#i', $table))
-				Db::getInstance()->execute((($truncate) ? 'TRUNCATE' : 'DROP TABLE').' '.$table);
+			if (!_DB_PREFIX_ || preg_match('#^'._DB_PREFIX_.'#i', $table))
+				Db::getInstance()->execute((($truncate) ? 'TRUNCATE' : 'DROP TABLE').' `'.$table.'`');
 		}
 	}
 
