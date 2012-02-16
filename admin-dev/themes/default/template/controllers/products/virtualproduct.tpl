@@ -40,29 +40,16 @@
 			nextText: '',
 			dateFormat: 'yy-mm-dd'
 		});
-	});
 
-	if ($('#is_virtual_good').attr('checked'))
-	{
-		$('#virtual_good').show();
-		$('#virtual_good_more').show();
-	}
+		if ($('#is_virtual_good').attr('checked'))
+		{
+			$('#virtual_good').show();
+			$('#virtual_good_more').show();
+		}
 
-	$('.is_virtual_good').hide();
+		$('.is_virtual_good').hide();
 
-	if ( $('input[name=is_virtual_file]:checked').val() == 1)
-	{
-		$('#virtual_good_more').show();
-		$('#is_virtual_file_product').show();
-	}
-	else
-	{
-		$('#virtual_good_more').hide();
-		$('#is_virtual_file_product').hide();
-	}
-
-	$('input[name=is_virtual_file]').live('change', function() {
-		if($(this).val() == '1')
+		if ( $('input[name=is_virtual_file]:checked').val() == 1)
 		{
 			$('#virtual_good_more').show();
 			$('#is_virtual_file_product').show();
@@ -72,6 +59,19 @@
 			$('#virtual_good_more').hide();
 			$('#is_virtual_file_product').hide();
 		}
+
+		$('input[name=is_virtual_file]').live('change', function() {
+			if($(this).val() == '1')
+			{
+				$('#virtual_good_more').show();
+				$('#is_virtual_file_product').show();
+			}
+			else
+			{
+				$('#virtual_good_more').hide();
+				$('#is_virtual_file_product').hide();
+			}
+		});
 	});
 
 	function uploadFile()
