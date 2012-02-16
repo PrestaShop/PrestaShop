@@ -219,13 +219,23 @@ a.module_toggle_all{color: #268CCD;}
 div.fix-toolbar {border-bottom: 1px solid #E0E0E0;position:fixed;top:0;opacity:0.9;z-index:1;}
 
 /*button upload files*/
-.qq-upload-button {
-		background: #e4e4e4 url('../img/bg-button-degrade.png') repeat-x scroll left top;
-		background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
-		background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
-		color:#333; width:180px; font-weight:bold; text-shadow: 0 1px 0 #fff;
-	border-color: #CCCCCC #BBBBBB #A0A0A0;border-left: 1px solid #BBBBBB;border-radius: 3px 3px 3px 3px;border-right: 1px solid #BBBBBB;border-style: solid;border-width: 1px;color: #000000;}
-.qq-upload-button:hover { border:1px solid #939393;}
+#content .qq-upload-button {
+	background: #e4e4e4 url('../img/bg-button-degrade.png') repeat-x scroll left top;
+	background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+	background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
+	color:#333;
+	width:180px;
+	font-weight:bold;
+	text-shadow: 0 1px 0 #fff;
+	border-color: #CCCCCC #BBBBBB #A0A0A0;
+	border-left: 1px solid #BBBBBB;
+	border-radius: 3px 3px 3px 3px;
+	border-right: 1px solid #BBBBBB;
+	border-style: solid;
+	border-width: 1px;
+	color: #000000;
+}
+#content .qq-upload-button:hover { border:1px solid #939393;}
 
 /*leadin*/
 .leadin {}
