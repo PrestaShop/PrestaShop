@@ -74,8 +74,8 @@ class MenuTopLinks
 
   public static function remove($id_linksmenutop, $id_shop)
   {
-    Db::getInstance()->delete(_DB_PREFIX_.'linksmenutop', 'id_linksmenutop = '.(int)$id_linksmenutop.' AND id_shop = '.(int)$id_shop);
-    Db::getInstance()->delete(_DB_PREFIX_.'linksmenutop_lang', 'id_linksmenutop = '.(int)$id_linksmenutop);
+    Db::getInstance()->delete('linksmenutop', 'id_linksmenutop = '.(int)$id_linksmenutop.' AND id_shop = '.(int)$id_shop);
+    Db::getInstance()->delete('linksmenutop_lang', 'id_linksmenutop = '.(int)$id_linksmenutop);
   }
 }
 ?>

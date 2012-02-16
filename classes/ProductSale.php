@@ -198,7 +198,7 @@ class ProductSaleCore
 				WHERE `id_product` = '.(int)$id_product
 			);
 		elseif ($total_sales == 1)
-			return Db::getInstance()->delete(_DB_PREFIX_.'product_sale', 'id_product = '.(int)$id_product);
+			return Db::getInstance()->delete('product_sale', 'id_product = '.(int)$id_product);
 		return true;
 	}
 }

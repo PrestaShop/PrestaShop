@@ -171,10 +171,10 @@ class ShopCore extends ObjectModel
 		}
 
 		// removes stock available
-		$res &= Db::getInstance()->delete(_DB_PREFIX_.'stock_available', 'id_shop = '.(int)$this->id);
+		$res &= Db::getInstance()->delete('stock_available', 'id_shop = '.(int)$this->id);
 
 		// Remove urls
-		$res &= Db::getInstance()->delete(_DB_PREFIX_.'shop_url', 'id_shop = '.(int)$this->id);
+		$res &= Db::getInstance()->delete('shop_url', 'id_shop = '.(int)$this->id);
 
 		Shop::cacheShops(true);
 

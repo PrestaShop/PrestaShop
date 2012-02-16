@@ -145,7 +145,7 @@ class ProductDownloadCore extends ObjectModel
 			return false;
 
 		return unlink(_PS_DOWNLOAD_DIR_.$this->filename)
-			&& Db::getInstance()->delete(_DB_PREFIX_.'product_download', 'id_product_download = '.(int)$id_product_download);
+			&& Db::getInstance()->delete('product_download', 'id_product_download = '.(int)$id_product_download);
 	}
 
 	/**

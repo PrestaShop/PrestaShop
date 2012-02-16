@@ -171,7 +171,6 @@ class InstallModelInstall extends InstallAbstractModel
 	 */
 	public function populateDatabase($entity = null)
 	{
-		Db::getInstance()->delete(_DB_PREFIX_.'timezone');
 		$languages = array();
 		foreach (Language::getLanguages(false) as $lang)
 			$languages[$lang['id_lang']] = $lang['iso_code'];

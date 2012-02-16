@@ -527,21 +527,21 @@ abstract class ObjectModelCore
 		$this->clearCache();
 
 		// Database deletion
-		$result = Db::getInstance()->delete(_DB_PREFIX_.$this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+		$result = Db::getInstance()->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 		if (!$result)
 			return false;
 
 		// Database deletion for multilingual fields related to the object
 		if (isset($this->def['multilang']) && $this->def['multilang'])
-			Db::getInstance()->delete(_DB_PREFIX_.$this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			Db::getInstance()->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		$assos = Shop::getAssoTables();
 		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'shop')
-			Db::getInstance()->delete(_DB_PREFIX_.$this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
+			Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
 		$assos = GroupShop::getAssoTables();
 		if (isset($assos[$this->def['table']]) && $assos[$this->def['table']]['type'] == 'group_shop')
-			Db::getInstance()->delete(_DB_PREFIX_.$this->def['table'].'_group_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
+			Db::getInstance()->delete($this->def['table'].'_group_shop', '`'.$this->def['primary'].'`='.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
 		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
