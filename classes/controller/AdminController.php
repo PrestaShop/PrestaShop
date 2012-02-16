@@ -714,6 +714,7 @@ class AdminControllerCore extends Controller
 						// Save and back to parent
 						if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
 							$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token;
+
 						// Default behavior (save and back)
 						if (empty($this->redirect_after))
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token;
@@ -2275,7 +2276,7 @@ class AdminControllerCore extends Controller
 	 * @param string $table
 	 * @param int $id_object
 	 */
-	protected static function getAssoShop($table, $id_object = false)
+	protected function getAssoShop($table, $id_object = false)
 	{
 		$shop_asso = Shop::getAssoTables();
 		$group_shop_asso = GroupShop::getAssoTables();
