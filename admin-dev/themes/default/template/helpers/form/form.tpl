@@ -171,20 +171,44 @@
 													<option value="{$option->$input.options.id}"
 														{if isset($input.multiple)}
 															{foreach $fields_value[$input.name] as $field_value}
-																{if $field_value == $option->$input.options.id}selected="selected"{/if}
+																{if $field_value == $option->$input.options.id
+																	|| empty($field_value) 
+																	&& isset($input.options.preselect_country)
+																	&& isset($input.options.preselect_country)
+																	&& $option->$input.options.id == $default_country}
+																	selected="selected"
+																{/if}
 															{/foreach}
 														{else}
-															{if $fields_value[$input.name] == $option->$input.options.id}selected="selected"{/if}
+															{if $fields_value[$input.name] == $option->$input.options.id
+																|| empty($fields_value[$input.name]) 
+																&& isset($input.options.preselect_country)
+																&& isset($input.options.preselect_country)
+																&& $option->$input.options.id == $default_country}}
+																selected="selected"
+															{/if}
 														{/if}
 													>{$option->$input.options.name}</option>
 												{else}
 													<option value="{$option[$input.options.id]}"
 														{if isset($input.multiple)}
 															{foreach $fields_value[$input.name] as $field_value}
-																{if $field_value == $option[$input.options.id]}selected="selected"{/if}
+																{if $field_value == $option[$input.options.id]
+																	|| empty($field_value)
+																	&& isset($input.options.preselect_country)
+																	&& isset($input.options.preselect_country)
+																	&& $option[$input.options.id] == $default_country}}
+																	selected="selected"
+																{/if}
 															{/foreach}
 														{else}
-															{if $fields_value[$input.name] == $option[$input.options.id]}selected="selected"{/if}
+															{if $fields_value[$input.name] == $option[$input.options.id]
+																|| empty($fields_value[$input.name])
+																&& isset($input.options.preselect_country)
+																&& isset($input.options.preselect_country)
+																&& $option[$input.options.id] == $default_country}}
+																selected="selected"
+															{/if}
 														{/if}
 													>{$option[$input.options.name]}</option>
 
