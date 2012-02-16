@@ -421,11 +421,10 @@ class AdminCategoriesControllerCore extends AdminController
 			)
 		);
 		if (Shop::isFeatureActive())
-			$this->fields_form['input'][] = array(
+			$this->fields_form['form'][] = array(
 				'type' => 'shop',
 				'label' => $this->l('Shop association:'),
 				'name' => 'checkBoxShopAsso',
-				'values' => Shop::getTree()
 			);
 		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
 		if ($this->_category->id_parent == Category::getTopCategory()->id && Tools::isSubmit('updatecategory'))

@@ -2503,7 +2503,7 @@ class AdminProductsControllerCore extends AdminController
 
 		// Multishop block
 		$data->assign('feature_shop_active', Shop::isFeatureActive());
-		$helper = new Helper();
+		$helper = new HelperForm();
 		if ($this->object && $this->object->id)
 			$helper->id = $this->object->id;
 		else

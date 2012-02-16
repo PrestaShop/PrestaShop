@@ -1636,7 +1636,7 @@ class BlockLayered extends Module
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 		{
-			$helper = new Helper();
+			$helper = new HelperForm();
 			$helper->id = null;
 			$helper->table = 'layered_filter';
 			$helper->identifier = 'id_layered_filter';
@@ -3528,7 +3528,7 @@ class BlockLayered extends Module
 		{
 			if (Shop::isFeatureActive() && $this->context->shop->getContextType() != Shop::CONTEXT_ALL)
 			{
-				$helper = new Helper();
+				$helper = new HelperForm();
 				$helper->id = (int)$id_layered_filter;
 				$helper->table = 'layered_filter';
 				$helper->identifier = 'id_layered_filter';
