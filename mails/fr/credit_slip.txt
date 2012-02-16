@@ -9,4 +9,4 @@ Merci et à bientôt sur {shop_name}.
 {shop_name} - {shop_url}
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™
