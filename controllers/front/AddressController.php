@@ -182,7 +182,10 @@ class AddressControllerCore extends FrontController
 			&& Db::getInstance()->getValue('
 				SELECT count(*)
 				FROM '._DB_PREFIX_.'address
-				WHERE `alias` = \''.pSql($_POST['alias']).'\' AND id_customer = '.(int)$this->context->customer->id) > 0)
+				WHERE `alias` = \''.pSql($_POST['alias']).'\'
+				AND id_address != '.(int)Tools::getValue('id_address').'
+				AND id_customer = '.(int)$this->context->customer->id.'
+				AND deleted = 0') > 0)
 			$this->errors[] = sprintf(Tools::displayError('The alias "%s" is already used, please chose an other one.'), Tools::safeOutput($_POST['alias']));
 
 		// Don't continue this process if we have errors !
