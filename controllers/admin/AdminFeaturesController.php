@@ -217,9 +217,9 @@ class AdminFeaturesControllerCore extends AdminController
 				if (empty($back))
 					$back = self::$currentIndex.'&token='.$this->token;
 
-				$this->toolbar_btn['cancel'] = array(
+				$this->toolbar_btn['back'] = array(
 					'href' => $back,
-					'desc' => $this->l('Cancel')
+					'desc' => $this->l('Back to list')
 				);
 			break;
 
