@@ -27,7 +27,15 @@
 
 class ProductControllerCore extends FrontController
 {
+	/**
+	 * @var Product
+	 */
 	protected $product;
+
+	/**
+	 * @var Category
+	 */
+	protected $category;
 
 	public function setMedia()
 	{
@@ -94,6 +102,27 @@ class ProductControllerCore extends FrontController
 			}
 			else if (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
 				$this->errors[] = Tools::displayError('You do not have access to this product.');
+
+			// Load category
+			if (isset($_SERVER['HTTP_REFERER'])
+				&& !strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
+				&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
+			{
+				// If the previous page was a category and is a parent category of the product use this category as parent category
+				if (isset($regs[2]) && is_numeric($regs[2]))
+				{
+					if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
+						$this->category = new Category($regs[2], (int)$this->context->cookie->id_lang);
+				}
+				else if (isset($regs[5]) && is_numeric($regs[5]))
+				{
+					if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
+						$this->category = new Category($regs[5], (int)$this->context->cookie->id_lang);
+				}
+			}
+			else
+				// Set default product category
+				$this->category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
 		}
 	}
 
@@ -163,8 +192,8 @@ class ProductControllerCore extends FrontController
 			$this->context->smarty->assign('packItems', $pack_items);
 			$this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
-			if (isset($category->id) && $category->id)
-				$return_link = Tools::safeOutput($this->context->link->getCategoryLink($category));
+			if (isset($this->category->id) && $this->category->id)
+				$return_link = Tools::safeOutput($this->context->link->getCategoryLink($this->category));
 			else
 				$return_link = 'javascript: history.back();';
 			$this->context->smarty->assign(array(
@@ -400,44 +429,25 @@ class ProductControllerCore extends FrontController
 	 */
 	protected function assignCategory()
 	{
-		$category = false;
-		if (isset($_SERVER['HTTP_REFERER'])
-		&& !strstr($_SERVER['HTTP_REFERER'], Tools::getHttpHost()) // Assure us the previous page was one of the shop
-		&& preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs))
-		{
-			// If the previous page was a category and is a parent category of the product use this category as parent category
-			if (isset($regs[2]) && is_numeric($regs[2]))
-			{
-				if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[2]))))
-					$category = new Category($regs[2], (int)$this->context->cookie->id_lang);
-			}
-			else if (isset($regs[5]) && is_numeric($regs[5]))
-			{
-				if (Product::idIsOnCategoryId((int)$this->product->id, array('0' => array('id_category' => (int)$regs[5]))))
-					$category = new Category($regs[5], (int)$this->context->cookie->id_lang);
-			}
-		}
-		else
-			// Set default product category
-			$category = new Category($this->product->id_category_default, (int)$this->context->cookie->id_lang);
+
 
 		// Assign category to the template
-		if ($category !== false && Validate::isLoadedObject($category))
+		if ($this->category !== false && Validate::isLoadedObject($this->category))
 		{
 			$this->context->smarty->assign(array(
-				'path' => Tools::getPath($category->id, $this->product->name, true),
-				'category' => $category,
-				'subCategories' => $category->getSubCategories($this->context->language->id, true),
-				'id_category_current' => (int)$category->id,
-				'id_category_parent' => (int)$category->id_parent,
-				'return_category_name' => Tools::safeOutput($category->name)
+				'path' => Tools::getPath($this->category->id, $this->product->name, true),
+				'category' => $this->category,
+				'subCategories' => $this->category->getSubCategories($this->context->language->id, true),
+				'id_category_current' => (int)$this->category->id,
+				'id_category_parent' => (int)$this->category->id_parent,
+				'return_category_name' => Tools::safeOutput($this->category->name)
 			));
 		}
 		else
 			$this->context->smarty->assign('path', Tools::getPath((int)$this->product->id_category_default, $this->product->name));
 
 		$this->context->smarty->assign('categories', Category::getHomeCategories($this->context->language->id));
-		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $category))));
+		$this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
 	}
 
 	public function transformDescriptionWithImg($desc)
