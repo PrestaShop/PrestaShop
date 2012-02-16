@@ -86,10 +86,11 @@ class AdminSuppliersControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Description:'),
 					'name' => 'description',
-					'size' => 33,
+					'cols' => 60,
+					'rows' => 10,
 					'lang' => true,
 					'hint' => $this->l('Invalid characters:').' <>;=#{}',
 					'desc' => $this->l('Will appear in supplier list')
