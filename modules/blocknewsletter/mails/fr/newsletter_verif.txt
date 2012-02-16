@@ -1,6 +1,6 @@
 Bonjour,
 
-Vous avez fait une demande d'inscription à notre newsletter, pour confirmer cette demande veuillez cliquer sur le lien ci-dessous:
+Vous avez fait une demande d'inscription à notre newsletter, pour confirmer cette demande veuillez cliquer sur le lien ci-dessous :
 {verif_url}
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

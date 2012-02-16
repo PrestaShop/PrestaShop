@@ -6,4 +6,4 @@ Suite à votre inscription à notre newsletter, nous avons le plaisir de vous of
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

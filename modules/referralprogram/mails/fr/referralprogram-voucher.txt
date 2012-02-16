@@ -7,4 +7,4 @@ Copiez-collez ce code dans le panier de votre prochain achat avant de régler la
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

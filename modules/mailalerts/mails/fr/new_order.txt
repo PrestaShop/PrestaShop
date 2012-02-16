@@ -9,7 +9,7 @@ Mode de paiement : {payment}
 Bons d'achat et réductions : {total_discounts}
 Frais d'expédition : {total_shipping}
 Total produits : {total_products}
-Emballage cadeau: {total_wrapping}
+Emballage cadeau : {total_wrapping}
 Total TTC : {total_paid}
 
 Adresse de livraison :
@@ -22,4 +22,4 @@ Message client :
 
 {message}
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™
