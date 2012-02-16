@@ -16,4 +16,4 @@ $_MODULE['<{statsstock}prestashop>statsstock_689202409e48743b914713f96d93947c'] 
 $_MODULE['<{statsstock}prestashop>statsstock_347cbf03d737b02a70a96ff204c22fbc'] = 'Total des quantités';
 $_MODULE['<{statsstock}prestashop>statsstock_4364f8c09d7bf97996a20840900e7b30'] = 'Prix moyen';
 $_MODULE['<{statsstock}prestashop>statsstock_62668f75fc6977f3d09df632d1585d07'] = 'Valeur total';
-$_MODULE['<{statsstock}prestashop>statsstock_40cfe6142794ce67fbee8431434905e2'] = 'Correspond au prix de vente par défaut du fournisseur par défaut du produit. Un prix moyen est utilisé quand le produit possède des attributs.';
+$_MODULE['<{statsstock}prestashop>statsstock_40cfe6142794ce67fbee8431434905e2'] = 'Correspond au prix de vente par défaut selon le fournisseur par défaut du produit. Un prix moyen est utilisé quand le produit possède des déclinaisons.';
