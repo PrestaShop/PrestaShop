@@ -377,7 +377,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($this->display == 'add')
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 			else
-				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&'.$this->identifier.'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.(int)Tools::getValue($this->identifier).'&conf=3&update'.$this->table.'&token='.$token;
 		}
 	}
 
@@ -394,7 +394,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($this->display == 'add')
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$token;
 			else
-				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$token;
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.(int)Tools::getValue($this->identifier).'&conf=4&update'.$this->table.'&token='.$token;
 		}
 	}
 
@@ -516,6 +516,20 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->toolbar_title = $bread;
 	}
 
+	public function initProcess()
+	{
+		if (Tools::getValue('id_attribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute'))
+		{
+			$this->table = 'attribute';
+			$this->className = 'Attribute';
+			$this->identifier = 'id_attribute';
+		}
+
+		parent::initProcess();
+		if ($this->table == 'attribute')
+			$this->display = 'editAttributes';
+	}
+
 	/**
 	 * Call the right method for creating or updating object
 	 *
@@ -526,11 +540,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if ($this->display == 'add' || $this->display == 'edit')
 			$this->identifier = 'id_attribute_group';
-		else
-			$this->identifier = 'id_attribute';
 
-		if ((int)Tools::getValue('id_attribute_group') >= 0 && ($this->display == 'add' || $this->display == 'editAttributes')
-			|| (int)Tools::getValue('id_attribute_group') == 0 && $this->display != 'add')
+		if (!$this->id_object)
 			return $this->processAdd($token);
 		else
 			return $this->processUpdate($token);
