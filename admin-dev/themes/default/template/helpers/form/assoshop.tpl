@@ -54,11 +54,15 @@ $().ready(function() {
 
 function check_group_shop_status(id_group) {
 	var groupChecked = true;
+	var total = 0;
 	$('.input_shop[value='+id_group+']').each(function(k, v) {
+		total++;
 		if (!$(v).attr('checked'))
 			groupChecked = false;
 	});
-	$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
+
+	if (total > 0)
+		$('.input_group_shop[value='+id_group+']').attr('checked', groupChecked);
 }
 
 function check_all_shop() {
@@ -93,7 +97,7 @@ function check_all_shop() {
 					<label class="t">
 						<input class="input_group_shop"
 							type="checkbox"
-							name="checkBoxGroupShopAsso_{$table}[{$form_id}|intval][{$groupID|intval}]"
+							name="checkBoxGroupShopAsso_{$table}[{$form_id}][{$groupID}]"
 							value="{$groupID}"
 							{if $groupChecked} checked="checked"{/if} />
 						{$groupData['name']}
@@ -116,7 +120,7 @@ function check_all_shop() {
 								<input class="input_shop"
 									type="checkbox"
 									value="{$groupID}"
-									name="checkBoxShopAsso_{$table}[{$form_id|intval}][{$shopID|intval}]"
+									name="checkBoxShopAsso_{$table}[{$form_id}][{$shopID}]"
 									id="checkedBox_{$shopID}"
 									{if $checked} checked="checked"{/if} />
 								{$shopData['name']}
