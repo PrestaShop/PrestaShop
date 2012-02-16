@@ -59,7 +59,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			)
 		);
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+	 	$this->bulk_actions = array('delete_tax_rule' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
 	}
@@ -76,8 +76,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	{
 	 	$this->table = 'tax_rule';
 	 	$this->identifier = 'id_tax_rule';
+        $this->className = 'TaxRule';
 	 	$this->lang = false;
-		$this->list_simple_header = true;
+		$this->list_simple_header = false;
 		$this->toolbar_btn = null;
 		$this->list_no_link = true;
 
@@ -348,6 +349,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('deletetax_rule'))
 			$this->processDeleteTaxRule();
+        else if (Tools::isSubmit('submitBulkdelete_tax_rule'))
+            $this->processBulkDeleteTaxRules();
 		else if (Tools::getValue('action') == 'create_rule')
 			$this->processCreateRule();
 		else
@@ -397,17 +400,30 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
 	}
 
-	protected function processDeleteTaxRule()
-	{
-		$id_rule = (int)Tools::getValue('id_tax_rule');
-		$tax_rule = new TaxRule($id_rule);
+    protected function processBulkDeleteTaxRules()
+    {
+        $this->deleteTaxRule(Tools::getValue('tax_ruleBox'));
+    }
 
-		if (Validate::isLoadedObject($tax_rule))
-		{
-			$tax_rule->delete();
-			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
-		}
-	}
+    protected function processDeleteTaxRule()
+    {
+        $this->deleteTaxRule(array(Tools::getValue('id_tax_rule')));
+    }
+
+    protected function deleteTaxRule(array $id_tax_rule_list)
+    {
+        $result = true;
+
+        foreach ($id_tax_rule_list as $id_tax_rule)
+        {
+            $tax_rule = new TaxRule((int)$id_tax_rule);
+            if (Validate::isLoadedObject($tax_rule))
+                $result &= $tax_rule->delete();
+        }
+        
+        Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+    }
+
 
 	/**
 	* check if the tax rule could be added in the database
