@@ -155,7 +155,7 @@
 			</span>
 			<div id="header_search">
 			<form method="post" action="index.php?controller=AdminSearch&token={getAdminToken tab='AdminSearch'}">
-			<select name="bo_search_type" id="bo_search_type" class="chosen">
+			<select name="bo_search_type" id="bo_search_type" class="chosen no-search">
 					<option value="0">{l s='everywhere'}</option>
 					<option value="1" {if {$search_type} == 1} selected="selected" {/if}>{l s='catalog'}</option>
 					<optgroup label="{l s='customers'}:">
@@ -180,7 +180,7 @@
 				else location.href = eltVal;
 			}
 		</script>
-		<select onchange="quickSelect(this);" id="quick_select" class="chosen">
+		<select onchange="quickSelect(this);" id="quick_select" class="chosen no-search">
 			<option value="0">{l s='Quick Access'}</option>
 			{foreach $quick_access as $quick}
 				<option value="{$quick.link}{if $quick.new_window}_blank{/if}">&raquo; {$quick.name}</option>
