@@ -320,7 +320,7 @@ class BlockLink extends Module
 				<div class="margin-form"><input type="checkbox" name="newWindow" id="newWindow" '.((isset($links) && $links['new_window']) ? 'checked="checked"' : '').' /></div>';
 				if (Shop::isFeatureActive())
 				{
-					$helper = new Helper();
+					$helper = new HelperForm();
 					$helper->id = (int)Tools::getValue('id_link');
 					$helper->table = 'blocklink';
 					$helper->identifier = 'id_blocklink';

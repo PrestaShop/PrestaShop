@@ -72,21 +72,15 @@ class HelperFormCore extends Helper
 		if ($this->submit_action == '')
 			$this->submit_action = 'submitAdd'.$this->table;
 
-		if (isset($this->fields_form[0]['form']['asso_shop']) && Shop::isFeatureActive())
-			if ($this->fields_form[0]['asso_shop'] == 'group')
-				$asso_shop = $this->renderAssoShop('group_shop');
-			else if ($this->fields_form[0]['form']['asso_shop'] == 'shop')
-				$asso_shop = $this->renderAssoShop();
-
 		$this->context->controller->addJS(_PS_JS_DIR_.'form.js');
 
 		$categories = true;
 		$color = true;
 		$date = true;
 		$tinymce = true;
-		foreach ($this->fields_form as $fieldset_key => $fieldset)
+		foreach ($this->fields_form as $fieldset_key => &$fieldset)
 			if (isset($fieldset['form']['input']))
-				foreach ($fieldset['form']['input'] as $key => $params)
+				foreach ($fieldset['form']['input'] as $key => &$params)
 				{
 					// If the condition is not met, the field will not be displayed
 					if (isset($params['condition']) && !$params['condition'])
@@ -108,7 +102,8 @@ class HelperFormCore extends Helper
 									$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 								$categories = false;
 							}
-							break;
+						break;
+
 						case 'color':
 							if ($color)
 							{
@@ -116,14 +111,16 @@ class HelperFormCore extends Helper
 								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
 								$color = false;
 							}
-							break;
+						break;
+
 						case 'date':
 							if ($date)
 							{
 								$this->context->controller->addJqueryUI('ui.datepicker');
 								$date = false;
 							}
-							break;
+						break;
+
 						case 'textarea':
 							if ($tinymce)
 							{
@@ -137,7 +134,12 @@ class HelperFormCore extends Helper
 								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
 								$tinymce = false;
 							}
-							break;
+						break;
+
+						case 'shop' :
+						case 'group_shop' :
+							$params['html'] = $this->renderAssoShop($params['type']);
+						break;
 					}
 				}
 
@@ -162,7 +164,6 @@ class HelperFormCore extends Helper
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
-			'asso_shop' => isset($asso_shop) ? $asso_shop : null
 		));
 		return parent::generate();
 	}
@@ -179,5 +180,65 @@ class HelperFormCore extends Helper
 						return true;
 
 		return false;
+	}
+
+	/**
+	 * Render an area to determinate shop association
+	 *
+	 * @param string $type 'shop' or 'group_shop'
+	 *
+	 * @return string
+	 */
+	public function renderAssoShop($type = 'shop')
+	{
+		if (!Shop::isFeatureActive())
+			return;
+
+		if ($type != 'shop' && $type != 'group_shop')
+			$type = 'shop';
+
+		$assos = array();
+		if ((int)$this->id)
+		{
+			$sql = 'SELECT `id_'.$type.'`, `'.bqSQL($this->identifier).'`
+					FROM `'._DB_PREFIX_.bqSQL($this->table).'_'.$type.'`
+					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
+
+			foreach (Db::getInstance()->executeS($sql) as $row)
+				$assos[$row['id_'.$type]] = $row['id_'.$type];
+		}
+		else
+		{
+			switch (Context::shop())
+			{
+				case Shop::CONTEXT_SHOP :
+					$assos[$this->context->shop->id] = $this->context->shop->id;
+					break;
+
+				case Shop::CONTEXT_GROUP :
+					foreach (Shop::getShops(false, $this->context->shop->getGroupID(), true) as $id_shop)
+						$assos[$id_shop] = $id_shop;
+					break;
+
+				default :
+					foreach (Shop::getShops(false, null, true) as $id_shop)
+						$assos[$id_shop] = $id_shop;
+					break;
+			}
+		}
+
+		$tpl = $this->createTemplate('assoshop.tpl');
+		$tpl->assign(array(
+				'input' => array(
+					'type' => $type,
+					'values' => Shop::getTree(),
+				),
+				'fields_value' => array(
+					'shop' => $assos
+				),
+				'form_id' => $this->id,
+				'table' => $this->table
+			));
+		return $tpl->fetch();
 	}
 }
