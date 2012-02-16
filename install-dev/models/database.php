@@ -53,7 +53,7 @@ class InstallModelDatabase extends InstallAbstractModel
 		if (!$login)
 			$errors[] = $this->language->l('You must enter a database login');
 
-		if (!$prefix || !Validate::isTablePrefix($prefix))
+		if ($prefix && !Validate::isTablePrefix($prefix))
 			$errors[] = $this->language->l('Tables prefix is invalid');
 
 		if (!Validate::isMySQLEngine($engine))
