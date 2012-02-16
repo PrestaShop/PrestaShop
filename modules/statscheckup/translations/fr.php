@@ -2,8 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{statscheckup}prestashop>statscheckup_e7a908d79d3758c911692ba791da9c70'] = 'Evaluation du catalogue';
-$_MODULE['<{statscheckup}prestashop>statscheckup_24f870376156be0e8e22cfb94d29df6d'] = 'Qualité de votre catalogue en un clin d\'oeil';
+$_MODULE['<{statscheckup}prestashop>statscheckup_e7a908d79d3758c911692ba791da9c70'] = 'Évaluation du catalogue';
+$_MODULE['<{statscheckup}prestashop>statscheckup_24f870376156be0e8e22cfb94d29df6d'] = 'Voir la qualité de votre catalogue en un clin d\'oeil.';
 $_MODULE['<{statscheckup}prestashop>statscheckup_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuration mise à jour';
 $_MODULE['<{statscheckup}prestashop>statscheckup_bae60998ffe4923b131e3d6e4c19993e'] = 'mauvais';
 $_MODULE['<{statscheckup}prestashop>statscheckup_6927a3a7218a3195858411433ec20a21'] = 'moyen';
@@ -21,7 +21,7 @@ $_MODULE['<{statscheckup}prestashop>statscheckup_dc270bcf468689b19074a5eef7581b5
 $_MODULE['<{statscheckup}prestashop>statscheckup_f4abc77d498c89880f67331609406774'] = 'Parfait';
 $_MODULE['<{statscheckup}prestashop>statscheckup_eb37cbc42e2338eec3de04db470d689a'] = 'inférieur à';
 $_MODULE['<{statscheckup}prestashop>statscheckup_bde3207d6920ce65500670d7eaf77af9'] = 'supérieur à';
-$_MODULE['<{statscheckup}prestashop>statscheckup_38fb7d24e0d60a048f540ecb18e13376'] = 'Sauvegarder';
+$_MODULE['<{statscheckup}prestashop>statscheckup_38fb7d24e0d60a048f540ecb18e13376'] = 'Enregistrer';
 $_MODULE['<{statscheckup}prestashop>statscheckup_01fda57aa6c7e9f07f5aa36b108e95cb'] = 'Trier par';
 $_MODULE['<{statscheckup}prestashop>statscheckup_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{statscheckup}prestashop>statscheckup_49ee3087348e8d44e1feda1917443987'] = 'Nom';
