@@ -710,7 +710,7 @@ class CarrierCore extends ObjectModel
 		else
 			$where .= 'AND id_shop = '.$shop_id;
 
-		return Db::getInstance()->delete(_DB_PREFIX_.'delivery', $where);
+		return Db::getInstance()->delete('delivery', $where);
 	}
 
 	/**

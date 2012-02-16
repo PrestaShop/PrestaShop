@@ -69,13 +69,13 @@ class GroupReductionCore extends ObjectModel
 			$ids[] = $row['id_product'];
 
 		if ($ids)
-			Db::getInstance()->delete(_DB_PREFIX_.'product_group_reduction_cache', 'id_product IN ('.implode(', ', $ids).')');
+			Db::getInstance()->delete('product_group_reduction_cache', 'id_product IN ('.implode(', ', $ids).')');
 		return (parent::delete());
 	}
 
 	protected function _clearCache()
 	{
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id_group);
+		return Db::getInstance()->delete('product_group_reduction_cache', 'id_group = '.(int)$this->id_group);
 	}
 
 	protected function _setCache()
