@@ -291,7 +291,8 @@ class AdminStoresControllerCore extends AdminController
 			'image' => $image ? $image : false,
 			'size' => $image ? filesize(_PS_STORE_IMG_DIR_.'/'.$obj->id.'.jpg') / 1000 : false,
 			'days' => $days,
-			'hours' => isset($hours_unserialized) ? $hours_unserialized : false
+			'hours' => isset($hours_unserialized) ? $hours_unserialized : false,
+			'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
 		);
 
 		return parent::renderForm();
