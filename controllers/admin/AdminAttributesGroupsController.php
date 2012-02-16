@@ -557,13 +557,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else if (!$object = new Attribute((int)Tools::getValue($this->identifier)))
 				$this->errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
-			if (Tools::getValue('position') && Tools::getValue('id_attribute'))
+			if (Tools::getValue('position') !== false && Tools::getValue('id_attribute'))
 			{
 				$_POST['id_attribute_group'] = $object->id_attribute_group;
 				if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
 					$this->errors[] = Tools::displayError('Failed to update the position.');
 				else
-					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminAttributesGroups'));
+					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminAttributesGroups').'#details_details_'.$object->id_attribute_group);
 			}
 			else if (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
 			{
