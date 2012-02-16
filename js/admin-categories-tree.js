@@ -74,7 +74,7 @@ function buildTreeView()
 		needUncheckAll = true;
 		uncheckAllCategories();
 		return false;
-	});	
+	});
 }
 
 function callbackToggle(element)
