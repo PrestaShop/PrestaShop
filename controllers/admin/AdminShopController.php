@@ -177,8 +177,12 @@ class AdminShopControllerCore extends AdminController
 				'id_category' => $root_category->id_category,
 				'name' => $root_category->name[$this->context->language->id]
 			);
+			$selected_cat = array($root_category['id_category']);
+			$children = Category::getChildren($root_category['id_category'], $this->context->language->id);
+			foreach ($children as $child)
+				$selected_cat[] = $child['id_category'];
 			$helper = new Helper();
-			$this->content = $helper->renderCategoryTree($root_category, array($root_category['id_category']));
+			$this->content = $helper->renderCategoryTree($root_category, $selected_cat);
 		}
 		parent::displayAjax();
 	}
@@ -503,8 +507,14 @@ class AdminShopControllerCore extends AdminController
 		$shop = new Shop($id_shop);
 		$selected_cat = Shop::getCategories($id_shop);
 		if (empty($selected_cat))
-			$selected_cat = array(Category::getRootCategory()->id);
-
+		{
+			// get first category root and preselect all these children
+			$root_category = Category::getRootCategories();
+			$children = Category::getChildren($root_category[0]['id_category'], $this->context->language->id);
+			$selected_cat[] = $root_category[0]['id_category'];
+			foreach ($children as $child)
+				$selected_cat[] = $child['id_category'];
+		}
 		if ($this->context->shop() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);
 		else
