@@ -777,19 +777,35 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
-	public function processDeleteSpecificPrice($token)
+	public function ajaxProcessDeleteSpecificPrice()
 	{
-		if (!($obj = $this->loadObject()))
-			return;
-		$id_specific_price = (int)Tools::getValue('id_specific_price');
-		if (!$id_specific_price || !Validate::isUnsignedId($id_specific_price))
-			$this->errors[] = Tools::displayError('Invalid specific price ID');
-		else
+		if ($this->tabAccess['delete'] === '1')
 		{
-			$specificPrice = new SpecificPrice((int)$id_specific_price);
-			if (!$specificPrice->delete())
-				$this->errors[] = Tools::displayError('An error occurred while deleting the specific price');
+			$id_specific_price = (int)Tools::getValue('id_specific_price');
+			if (!$id_specific_price || !Validate::isUnsignedId($id_specific_price))
+				$error = Tools::displayError('Invalid specific price ID');
+			else
+			{
+				$specificPrice = new SpecificPrice((int)$id_specific_price);
+				if (!$specificPrice->delete())
+					$error = Tools::displayError('An error occurred while deleting the specific price');
+			}
 		}
+		else
+			$error = Tools::displayError('You do not have permission to delete here.');
+
+		if (isset($error))
+			$json = array(
+				'status' => 'error',
+				'message'=> $error
+			);
+		else
+			$json = array(
+				'status' => 'ok',
+				'message'=> $this->_conf[1]
+			);
+
+		die(Tools::jsonEncode($json));
 	}
 
 	public function processSpecificPricePriorities($token)
@@ -2815,7 +2831,7 @@ class AdminProductsControllerCore extends AdminController
 					<td class="cell border">'.$period.'</td>
 					<td class="cell border">'.$specific_price['from_quantity'].'</th>
 					<td class="cell border"><b>'.Tools::displayPrice(Tools::ps_round((float)($this->_getFinalPrice($specific_price, (float)($obj->price), $taxRate)), 2), $current_specific_currency).'</b></td>
-					<td class="cell border">'.(!$rule->id ? '<a href="'.self::$currentIndex.(Tools::getValue('id_category') ? '&id_category='.Tools::getValue('id_category') : '').'&id_product='.(int)(Tools::getValue('id_product')).'&updateproduct&deleteSpecificPrice&action=Prices&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
+					<td class="cell border">'.(!$rule->id ? '<a name="delete_link" href="'.self::$currentIndex.'&id_product='.(int)(Tools::getValue('id_product')).'&action=deleteSpecificPrice&id_specific_price='.(int)($specific_price['id_specific_price']).'&token='.Tools::getValue('token').'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a>': '').'</td>
 				</tr>';
 				$i++;
 				unset($customer_full_name);
