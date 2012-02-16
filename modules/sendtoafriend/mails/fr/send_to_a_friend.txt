@@ -1,7 +1,7 @@
 Bonjour {name},
 
 
-{customer} vous envoie un lien vers un produit qui pourrait vous intéresser.</h1>
+{customer} vous envoie un lien vers un produit qui pourrait vous intéresser.
 
 Il s'agit de {product} : {product_link}
 
@@ -10,4 +10,4 @@ Il s'agit de {product} : {product_link}
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

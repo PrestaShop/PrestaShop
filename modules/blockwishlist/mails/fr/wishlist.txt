@@ -5,4 +5,4 @@ Bonjour,
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™

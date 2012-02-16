@@ -11,3 +11,8 @@ A titre exceptionnel, nous vous accordons également une remise de {amount}% sur
 Voici votre bon de réduction: {voucher_num}
 
 Saisissez ce code dans votre panier afin d'obtenir votre réduction.
+
+
+
+
+{shop_url} réalisé avec PrestaShop™

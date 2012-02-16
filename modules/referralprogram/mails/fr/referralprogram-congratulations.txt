@@ -6,4 +6,4 @@ Nous avons le plaisir de vous offrir un bon d'achat de {discount_display} (bon d
 
 
 
-{shop_url} réalisé par PrestaShop™
+{shop_url} réalisé avec PrestaShop™
