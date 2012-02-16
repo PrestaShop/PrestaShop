@@ -26,7 +26,7 @@ $_MODULE['<{statsforecast}prestashop>statsforecast_9b945efebb006547a94415eadaa12
 $_MODULE['<{statsforecast}prestashop>statsforecast_fc26e55e0993a75e892175deb02aae15'] = 'Paniers';
 $_MODULE['<{statsforecast}prestashop>statsforecast_87cac5a0b60008003ccf46dc1d49e0c3'] = 'Paniers complets';
 $_MODULE['<{statsforecast}prestashop>statsforecast_5a9e532b24379dca2ab0e973172a78e1'] = 'Visiteurs inscrits';
-$_MODULE['<{statsforecast}prestashop>statsforecast_b4aec469184819e8369588e5d84b38fb'] = 'Monétisation des visiteurs';
+$_MODULE['<{statsforecast}prestashop>statsforecast_b4aec469184819e8369588e5d84b38fb'] = 'Monétisation des visiteurs :';
 $_MODULE['<{statsforecast}prestashop>statsforecast_38f2d5f34a773b7c0668f03e6b8eb6dc'] = 'Chaque visiteur rapporte en moyenne';
 $_MODULE['<{statsforecast}prestashop>statsforecast_8ca76c564cccfd5a2ff4d2e08f46db5a'] = 'Chaque visiteur inscrit rapporte en moyenne';
 $_MODULE['<{statsforecast}prestashop>statsforecast_0faa470ff0741ece6c8346b66e0e459c'] = 'Répartition par modes de paiement';
@@ -45,7 +45,7 @@ $_MODULE['<{statsforecast}prestashop>statsforecast_88183b946cc5f0e8c96b2e66e1c74
 $_MODULE['<{statsforecast}prestashop>statsforecast_f1dd68fb6a00d3e4d7f751deacde995d'] = 'Répartition par langues';
 $_MODULE['<{statsforecast}prestashop>statsforecast_e6d0e1c8fc6a4fcf47869df87e04cd88'] = 'Clients';
 $_MODULE['<{statsforecast}prestashop>statsforecast_0bcef9c45bd8a48eda1b26eb0c61c869'] = '%';
-$_MODULE['<{statsforecast}prestashop>statsforecast_699aed86dada6ca01ef74013a4464066'] = 'Evolution';
+$_MODULE['<{statsforecast}prestashop>statsforecast_699aed86dada6ca01ef74013a4464066'] = 'Évolution';
 $_MODULE['<{statsforecast}prestashop>statsforecast_07aa83862ec591697b4325b66d36a78b'] = 'Répartition par zones';
 $_MODULE['<{statsforecast}prestashop>statsforecast_b3ff996fe5c77610359114835baf9b38'] = 'Zone';
 $_MODULE['<{statsforecast}prestashop>statsforecast_ec0fc0100c4fc1ce4eea230c3dc10360'] = 'Indéfini';
