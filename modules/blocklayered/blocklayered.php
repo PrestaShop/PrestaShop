@@ -3198,8 +3198,6 @@ class BlockLayered extends Module
 	{
 		global $cookie;
 		
-		$categoryBox = array();
-		
 		if (!empty($id_layered_filter))
 		{
 			$layeredFilter = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT * FROM '._DB_PREFIX_.'layered_filter WHERE id_layered_filter = '.(int)$id_layered_filter);
