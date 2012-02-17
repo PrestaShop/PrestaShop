@@ -165,7 +165,7 @@ class AdminOrdersControllerCore extends AdminController
 		$order = new Order($id_order);
 		$order_state = $order->getCurrentOrderState();
 		if (!Validate::isLoadedObject($order_state) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('Invalid objects'));
+			throw new PrestaShopException(sprintf('unable to load order id %s and/or its state', $id_order));
 
 		$this->context->smarty->assign(array(
 			'order' => $order,

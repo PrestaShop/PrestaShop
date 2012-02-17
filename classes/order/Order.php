@@ -291,7 +291,7 @@ class OrderCore extends ObjectModel
 		if ($this->hasBeenDelivered())
 		{
 			if (!Configuration::get('PS_ORDER_RETURN'))
-				die(Tools::displayError());
+				throw new PrestaShopException('PS_ORDER_RETURN is not defined in table configuration');
 			$orderDetail->product_quantity_return += (int)($quantity);
 			return $orderDetail->update();
 		}
@@ -1120,7 +1120,7 @@ class OrderCore extends ObjectModel
 		$order = new Order($id_order);
 		$orderState = $order->getCurrentOrderState();
 		if (!Validate::isLoadedObject($orderState) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('Invalid objects'));
+			throw new PrestaShopException(sprintf('unable to load order id %s and/or its state', $id_order));
 		echo '<span style="width:20px; margin-right:5px;">';
 		if (($orderState->invoice && $order->invoice_number) && (int)($tr['product_number']))
 			echo '<a target="_blank" href="pdf.php?id_order='.(int)$order->id.'&pdf"><img src="../img/admin/tab-invoice.gif" alt="invoice" /></a>';
