@@ -13,7 +13,7 @@ Ricorda che hai scelto di pagare con bonifico bancario. Invia il pagamento a:
 Importo totale dell'ordine {total_paid}
 
 Puoi rivedere l'ordine e scaricare la fattura dalla sezione "Cronologia ordini" del tuo account cliccando su "Il mio account" nel nostro sito web.
-Se hai un account ospite, puoi seguire il tuo ordine in questa pagina: {shop_url}guest-tracking.php
+Se hai un account ospite, puoi seguire il tuo ordine in questa pagina: {shop_url}?controller=guest-tracking
 
 Grazie di aver acquistato con {shop_name}.
 
