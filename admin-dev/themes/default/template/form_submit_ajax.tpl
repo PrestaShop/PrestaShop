@@ -39,7 +39,7 @@
 				form_datas[this.name] = this.value;
 			});
 			$.each(form_selects, function() {
-				form_datas[this.name] = this.options.selectedIndex;
+				form_datas[this.name] = this[this.options.selectedIndex].value;
 			});
 			$.ajax({
 				type: this.method,
@@ -49,7 +49,7 @@
 				data : form_datas,
 				success : function(res)
 				{
-					$('#fancybox-content').html(res);
+					$('html').html(res);
 				}
 			});
 		});
