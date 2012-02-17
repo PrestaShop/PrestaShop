@@ -4,7 +4,7 @@ Tu pedido acaba de ser enviado.
 Pronto recibirás una URL para realizar el seguimiento de tu pedido.
 
 Puedes revisar este pedido y descargar tu factura en la sección "Historial" dentro de tu cuenta en nuestra web.
-If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+If you have guest account, you can follow your order at this page: {shop_url}?controller=guest-tracking
 
 Gracias por comprar en {shop_name}!
 
