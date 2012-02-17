@@ -1185,36 +1185,6 @@ class AdminControllerCore extends Controller
 	 */
 	public function initHeader()
 	{
-		// Shop context
-		if (Shop::isFeatureActive())
-		{
-			if (Context::shop() == Shop::CONTEXT_ALL)
-			{
-				$shop_context = 'all';
-				$shop_name = '';
-			}
-			else if (Context::shop() == Shop::CONTEXT_GROUP)
-			{
-				$shop_context = 'group';
-				$shop_name = $this->context->shop->getGroup()->name;
-			}
-			else
-			{
-				$shop_context = 'shop';
-				$shop_name = $this->context->shop->name;
-			}
-
-			$this->context->smarty->assign(array(
-				'shop_name' => $shop_name,
-				'shop_context' => $shop_context,
-			));
-
-			$you_edit_field_for = sprintf(
-				$this->l('A modification of this field will be applied for the shop %s'),
-				'<b>'.Context::getContext()->shop->name.'</b>'
-			);
-		}
-
 		// Multishop
 		$is_multishop = Shop::isFeatureActive();
 
@@ -1301,7 +1271,6 @@ class AdminControllerCore extends Controller
 			'help_box' => Configuration::get('PS_HELPBOX'),
 			'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
 			'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
-			'edit_field' => isset($you_edit_field_for) ? $you_edit_field_for : '\'\'',
 			'lang_iso' => $this->context->language->iso_code,
 			'link' => $this->context->link,
 			'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
@@ -1329,6 +1298,31 @@ class AdminControllerCore extends Controller
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
 			'controller_name' => Tools::getValue('controller'),
 		));
+
+		// Shop context
+		if ($is_multishop)
+		{
+			if (Context::shop() == Shop::CONTEXT_ALL)
+			{
+				$shop_context = 'all';
+				$shop_name = '';
+			}
+			else if (Context::shop() == Shop::CONTEXT_GROUP)
+			{
+				$shop_context = 'group';
+				$shop_name = $this->context->shop->getGroup()->name;
+			}
+			else
+			{
+				$shop_context = 'shop';
+				$shop_name = $this->context->shop->name;
+			}
+
+			$this->context->smarty->assign(array(
+					'shop_name' => $shop_name,
+					'shop_context' => $shop_context,
+				));
+		}
 	}
 
 	/**
