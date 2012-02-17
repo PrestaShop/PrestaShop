@@ -170,8 +170,6 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 		$this->context->smarty->assign(array(
 			'orders' => $orders,
 			'displayorders' => $displayorders,
-			'this' => $this,
-			'pagination_link' => $this->context->link->getModuleLink('loyalty', 'default'),
 			'totalPoints' => (int)$customerPoints,
 			'voucher' => LoyaltyModule::getVoucherValue($customerPoints, (int)($this->context->cookie->id_currency)),
 			'validation_id' => LoyaltyStateModule::getValidationId(),
