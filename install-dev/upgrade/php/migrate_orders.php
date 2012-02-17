@@ -27,6 +27,7 @@
 
 function migrate_orders()
 {
+	$res = true;
 	if (!defined('PS_TAX_EXC'))
 		 define('PS_TAX_EXC', 1);
 
@@ -34,15 +35,32 @@ function migrate_orders()
 		 define('PS_TAX_INC', 0);
 
 	$values_order_detail = array();
+	// init insert order detail query
 	$insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2`
-	(`id_order_detail`, `id_order`, `id_order_invoice`, `id_warehouse`, `product_id`, `product_attribute_id`, `product_name`, `product_quantity`, `product_quantity_in_stock`, `product_quantity_refunded`, `product_quantity_return`, `product_quantity_reinjected`, `product_price`, `reduction_percent`, `reduction_amount`, `reduction_amount_tax_incl`, `reduction_amount_tax_excl`, `group_reduction`, `product_quantity_discount`, `product_ean13`, `product_upc`, `product_reference`, `product_supplier_reference`, `product_weight`, `tax_computation_method`, `tax_name`, `tax_rate`, `ecotax`, `ecotax_tax_rate`, `discount_quantity_applied`, `download_hash`, `download_nb`, `download_deadline`, `total_price_tax_incl`, `total_price_tax_excl`, `unit_price_tax_incl`, `unit_price_tax_excl`, `total_shipping_price_tax_incl`, `total_shipping_price_tax_excl`, `purchase_supplier_price`, `original_product_price`)
-	VALUES ';
+	(`id_order_detail`, `id_order`, `id_order_invoice`, `id_warehouse`, `product_id`, `product_attribute_id`, 
+		`product_name`, `product_quantity`, `product_quantity_in_stock`, `product_quantity_refunded`, `product_quantity_return`, 
+		`product_quantity_reinjected`, `product_price`, `reduction_percent`, `reduction_amount`, `reduction_amount_tax_incl`, 
+		`reduction_amount_tax_excl`, `group_reduction`, `product_quantity_discount`, `product_ean13`, `product_upc`, `product_reference`, 
+		`product_supplier_reference`, `product_weight`, `tax_computation_method`, `tax_name`, `tax_rate`, `ecotax`, 
+		`ecotax_tax_rate`, `discount_quantity_applied`, `download_hash`, `download_nb`, `download_deadline`, 
+		`total_price_tax_incl`, `total_price_tax_excl`, `unit_price_tax_incl`, `unit_price_tax_excl`, 
+		`total_shipping_price_tax_incl`, `total_shipping_price_tax_excl`, `purchase_supplier_price`, 
+		`original_product_price`)	VALUES ';
 
 	$values_order = array();
-	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`id_order`, `reference`, `id_group_shop`, `id_shop`, `id_carrier`, `id_lang`, `id_customer`, `id_cart`, `id_currency`, `id_address_delivery`, `id_address_invoice`, `secure_key`, `payment`, `conversion_rate`, `module`, `recyclable`, `gift`, `gift_message`, `shipping_number`, `total_discounts`, `total_discounts_tax_incl`, `total_discounts_tax_excl`, `total_paid`, `total_paid_tax_incl`, `total_paid_tax_excl`, `total_paid_real`, `total_products`, `total_products_wt`, `total_shipping`, `total_shipping_tax_incl`, `total_shipping_tax_excl`, `carrier_tax_rate`, `total_wrapping`, `total_wrapping_tax_incl`, `total_wrapping_tax_excl`, `invoice_number`, `delivery_number`, `invoice_date`, `delivery_date`, `valid`, `date_add`, `date_upd`) VALUES ';
+	// init insert order query
+	$insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`id_order`, `reference`, `id_group_shop`, `id_shop`, `id_carrier`,
+	`id_lang`, `id_customer`, `id_cart`, `id_currency`, `id_address_delivery`, `id_address_invoice`, `secure_key`, `payment`, 
+	`conversion_rate`, `module`, `recyclable`, `gift`, `gift_message`, `shipping_number`, `total_discounts`, 
+	`total_discounts_tax_incl`, `total_discounts_tax_excl`, `total_paid`, `total_paid_tax_incl`, `total_paid_tax_excl`,
+	`total_paid_real`, `total_products`, `total_products_wt`, `total_shipping`, `total_shipping_tax_incl`, `total_shipping_tax_excl`,
+	`carrier_tax_rate`, `total_wrapping`, `total_wrapping_tax_incl`, `total_wrapping_tax_excl`, `invoice_number`, `delivery_number`,
+	`invoice_date`, `delivery_date`, `valid`, `date_add`, `date_upd`) VALUES ';
 
 	// create temporary tables
-	mo_duplicateTables();
+	$res = mo_duplicateTables();
+	if (!$res)
+		return array('error' => true, 'msg' => 'unable to duplicate tables orders and order_detail');
 
 	$order_res = Db::getInstance()->query(
 			'SELECT *
@@ -89,9 +107,9 @@ function migrate_orders()
 		     $average_tax_used +=  ($sum_tax_amount / $sum_total_products) * 0.01;
 
 		 // this was done like that previously
-		  $wrapping_tax_rate = 1 + (float)Db::getInstance()->getValue('SELECT value 
-			FROM `'._DB_PREFIX_.'configuration`
-			WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100;
+		  $wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value 
+				FROM `'._DB_PREFIX_.'configuration`
+				WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 		 $carrier_tax_rate = 1 + ((float)$order['carrier_tax_rate'] / 100);
 
 		 $total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
@@ -112,8 +130,10 @@ function migrate_orders()
 		if ($cpt >= $flush_limit)
 		{
 			$cpt = 0;
-			Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
-			Db::getInstance()->execute($insert_order. implode(',', $values_order));
+			$res &= Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
+			$res &= Db::getInstance()->execute($insert_order. implode(',', $values_order));
+			if (!$res)
+				return array('error' => true, 'msg' => 'error on insertion in temporary table order_detail / orders ');
 			$values_order = array();
 			$values_order_detail = array();
 		}
@@ -121,11 +141,16 @@ function migrate_orders()
 
 	if ($cpt> 0)
 	{
-		Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
-		Db::getInstance()->execute($insert_order. implode(',', $values_order));
+		$res &= Db::getInstance()->execute($insert_order_detail. implode(',', $values_order_detail));
+		$res &= Db::getInstance()->execute($insert_order. implode(',', $values_order));
+		if (!$res)
+			return array('error' => true, 'msg' => 'error on last insertion in temporary table order_detail / orders ');
 	}
 
-	mo_renameTables();
+	$res &= mo_renameTables();
+	if (!$res)
+		return array('error' => true, 'msg' => 'unable to rename tables orders_2 and order_detail_2 to orders_2 and order_detail');
+
 }
 
 
@@ -137,7 +162,8 @@ function migrate_orders()
  * @param mixed $val 
  * @return void
  */
-function mo_ps_round($val){
+function mo_ps_round($val)
+{
 	static $ps_price_round_mode;
 	if (empty($ps_price_round_mode))
 	{
@@ -159,17 +185,23 @@ function mo_ps_round($val){
 
 function mo_duplicateTables()
 {
-	Db::getInstance()->execute('CREATE TABLE `'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
-	Db::getInstance()->execute('CREATE TABLE `'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+	$res = true;
+	$res &= Db::getInstance()->execute('CREATE TABLE 
+		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
+	$res &= Db::getInstance()->execute('CREATE TABLE 
+		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+	return $res;
 }
 
 function mo_renameTables()
 {
-	Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'orders`');
-	Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'order_detail`');
+	$res = true;
+	$res &= Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'orders`');
+	$res &= Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'order_detail`');
 
-	Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'orders_2` TO `'._DB_PREFIX_.'orders`');
-	Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'order_detail_2` TO `'._DB_PREFIX_.'order_detail`');
+	$res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'orders_2` TO `'._DB_PREFIX_.'orders`');
+	$res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'order_detail_2` TO `'._DB_PREFIX_.'order_detail`');
+	return $res;
 }
 
 function mo_getCustomerDefaultGroup($id_customer)
