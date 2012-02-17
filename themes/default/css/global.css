@@ -1485,6 +1485,28 @@ ul#manufacturers_list li .description {
 }
 ul#manufacturers_list li .right_side {float:right;}
 
+.description_box {
+	border: 1px solid #CCCCCC;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 1px 1px #E2E2E2;
+	padding: 5px;
+	margin-bottom: 20px;
+	font-size: 12px;
+	line-height: 18px;
+}
+.description_box p {
+	margin: 0;
+	padding: 0 10px 5px;
+}
+.description_box .hide_desc {
+	display: none;
+}
+.description_box .lnk_more {
+	background: url("../img/arrow_right_1.png") no-repeat scroll 100% 4px transparent;
+	color: #0088CC;
+	padding: 0 10px;
+}
+
 
 /* ************************************************************************************************
       PAGE SUPPLIER
