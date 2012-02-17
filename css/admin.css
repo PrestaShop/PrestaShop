@@ -1792,7 +1792,7 @@ font-family:Georgia, Arial, 'sans-serif';
 }
 
 p.preference_description{
-	font-family:Arial, 'sans-serif';
+	font-family:Georgia, Arial, 'sans-serif';
 	font-style:italic;
     clear: both;
     text-align: left;
@@ -1832,8 +1832,6 @@ p.preference_description .light-warning {
 }
 
 .isDisabled{
-	color: #3F3F3F;
-	font-style: italic;
 }
 
 input.disable_me[disabled=disabled]{
