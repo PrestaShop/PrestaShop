@@ -1655,6 +1655,13 @@ class CartCore extends ObjectModel
 			$best_price_carriers = array();
 			$best_grade_carriers = array();
 			$carriers_instance = array();
+			
+			if ($id_address)
+			{
+				$address = new Address($id_address);
+				$country = new Country($address->id_country);
+			} else
+				$country = $default_country;
 
 			foreach ($packages as $id_package => $package)
 			{
@@ -1678,8 +1685,8 @@ class CartCore extends ObjectModel
 				{
 					if (!isset($carriers_instance[$id_carrier]))
 						$carriers_instance[$id_carrier] = new Carrier($id_carrier);
-					$price_with_tax = $this->getPackageShippingCost($id_carrier, true, $default_country, $package['product_list']);
-					$price_without_tax = $this->getPackageShippingCost($id_carrier, false, $default_country, $package['product_list']);
+					$price_with_tax = $this->getPackageShippingCost($id_carrier, true, $country, $package['product_list']);
+					$price_without_tax = $this->getPackageShippingCost($id_carrier, false, $country, $package['product_list']);
 					if (is_null($best_price) || $price_with_tax < $best_price)
 					{
 						$best_price = $price_with_tax;
@@ -1936,12 +1943,18 @@ class CartCore extends ObjectModel
 	 */
 	public function isMultiAddressDelivery()
 	{
-		$sql = new DbQuery();
-		$sql->select('count(distinct id_address_delivery)');
-		$sql->from('cart_product', 'cp');
-		$sql->where('id_cart = '.(int)$this->id);
+		static $cache = null;
 
-		return Db::getInstance()->getValue($sql) > 1;
+		if (is_null($cache))
+		{
+			$sql = new DbQuery();
+			$sql->select('count(distinct id_address_delivery)');
+			$sql->from('cart_product', 'cp');
+			$sql->where('id_cart = '.(int)$this->id);
+	
+			$cache = Db::getInstance()->getValue($sql) > 1;
+		}
+		return $cache;
 	}
 
 	/**
@@ -2154,7 +2167,8 @@ class CartCore extends ObjectModel
 			return $shipping_cost;
 
 		// Get id zone
-		if (isset($this->id_address_delivery)
+		if (!$this->isMultiAddressDelivery()
+			&& isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
 			&& $this->id_address_delivery
 			&& Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
 		))
