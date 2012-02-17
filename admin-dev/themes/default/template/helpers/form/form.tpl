@@ -184,7 +184,7 @@
 																|| empty($fields_value[$input.name]) 
 																&& isset($input.options.preselect_country)
 																&& isset($input.options.preselect_country)
-																&& $option->$input.options.id == $default_country}}
+																&& $option->$input.options.id == $default_country}
 																selected="selected"
 															{/if}
 														{/if}
@@ -197,7 +197,7 @@
 																	|| empty($field_value)
 																	&& isset($input.options.preselect_country)
 																	&& isset($input.options.preselect_country)
-																	&& $option[$input.options.id] == $default_country}}
+																	&& $option[$input.options.id] == $default_country}
 																	selected="selected"
 																{/if}
 															{/foreach}
@@ -206,7 +206,7 @@
 																|| empty($fields_value[$input.name])
 																&& isset($input.options.preselect_country)
 																&& isset($input.options.preselect_country)
-																&& $option[$input.options.id] == $default_country}}
+																&& $option[$input.options.id] == $default_country}
 																selected="selected"
 															{/if}
 														{/if}
