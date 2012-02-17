@@ -345,17 +345,17 @@ function updateDisplay()
 		var taxExclPrice = (display_specific_price ? (specific_currency ? display_specific_price : display_specific_price * currencyRate) : priceTaxExclWithoutGroupReduction) + selectedCombination['price'] * currencyRate;
 
 		if (display_specific_price)
-			var productPriceWithoutReduction = priceTaxExclWithoutGroupReduction + selectedCombination['price'] * currencyRate;
+			productPriceWithoutReduction = priceTaxExclWithoutGroupReduction + selectedCombination['price'] * currencyRate; // Need to be global => no var
 
 		if (!displayPrice && !noTaxForThisProduct)
 		{
-			var productPrice = taxExclPrice * tax;
+			productPrice = taxExclPrice * tax; // Need to be global => no var
 			if (display_specific_price)
 				productPriceWithoutReduction = ps_round(productPriceWithoutReduction * tax, 2);
 		}
 		else
 		{
-			var productPrice = ps_round(taxExclPrice, 2);
+			productPrice = ps_round(taxExclPrice, 2); // Need to be global => no var
 			if (display_specific_price)
 				productPriceWithoutReduction = ps_round(productPriceWithoutReduction, 2);
 		}
@@ -393,6 +393,7 @@ function updateDisplay()
 			$('#our_price_display').text(formatCurrency(productPrice, currencyFormat, currencySign, currencyBlank));
 		else
 			$('#our_price_display').text(formatCurrency(0, currencyFormat, currencySign, currencyBlank));
+		
 
 		$('#old_price_display').text(formatCurrency(productPriceWithoutReduction, currencyFormat, currencySign, currencyBlank));
 		if (productPriceWithoutReduction > productPrice)

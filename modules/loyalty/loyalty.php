@@ -449,7 +449,7 @@ class Loyalty extends Module
 					$points = 0;
 					$this->smarty->assign('no_pts_discounted', 1);
 				}
-				else			
+				else
 					$points = (int)(LoyaltyModule::getNbPointsByPrice($product->getPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? false : true, (int)($product->getIdProductAttributeMostExpensive()))));
 				$pointsAfter = $points;
 				$pointsBefore = 0;
@@ -460,7 +460,8 @@ class Loyalty extends Module
 				'point_rate' => Configuration::get('PS_LOYALTY_POINT_RATE'),
 				'point_value' => Configuration::get('PS_LOYALTY_POINT_VALUE'),
 				'points_in_cart' => (int)$pointsBefore,
-				'voucher' => LoyaltyModule::getVoucherValue((int)$pointsAfter)));
+				'voucher' => LoyaltyModule::getVoucherValue((int)$pointsAfter),
+				'none_award' => Configuration::get('PS_LOYALTY_NONE_AWARD')));
 
 			return $this->display(__FILE__, 'product.tpl');
 		}

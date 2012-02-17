@@ -1718,7 +1718,8 @@ ul#suppliers_list li .right_side {float:right;}
 #product p#loyalty {
 	padding:10px 0 0 20px;
 	border-top:1px solid #ccc;
-	background:url(../img/icon/info.png) no-repeat 0 8px
+	background:url(../img/icon/info.png) no-repeat 0 8px;
+	margin-top: 10px;
 }
 
 #footer .myaccount li.loyalty img {display:none}
