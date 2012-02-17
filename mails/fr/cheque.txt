@@ -12,7 +12,7 @@ Pour rappel, vous avez choisi de régler votre commande par chèque, merci de no
 - à {cheque_address}
 
 Vous pouvez accéder à tout moment au suivi de votre commande et télécharger votre facture dans "Historique des commandes" de la rubrique "Mon compte" sur notre site {shop_url}
-Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse : {shop_url}guest-tracking.php
+Si vous avez un compte invité, vous pouvez suivre votre commande à cette adresse : {shop_url}?controller=guest-tracking
 
 {shop_name} - {shop_url}
 

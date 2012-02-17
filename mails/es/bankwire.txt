@@ -10,7 +10,7 @@ Por favor, recuerda que has seleccionado transferencia bancaria. Envíala a:
 Total Pedido: {total_paid}
 
 Puedes revisar tu pedido y descargar la factura desde tu cuenta de nuestra web en (sección "Historial de Pedidos").
-If you have guest account, you can follow your order at this page: {shop_url}guest-tracking.php
+If you have guest account, you can follow your order at this page: {shop_url}?controller=guest-tracking
 
 Muchas gracias por comprar en {shop_name}.
 

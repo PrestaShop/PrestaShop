@@ -8,7 +8,7 @@ You can track your package using the following link: {followup}
 
 You can review your order and download your invoice from the "Order history" section of your customer account by clicking "My account" on our shop.
 
-If you have guest account, you can follow your order using this link: {shop_url}guest-tracking.php
+If you have guest account, you can follow your order using this link: {shop_url}?controller=guest-tracking
 
 {shop_name} - {shop_url}
 
