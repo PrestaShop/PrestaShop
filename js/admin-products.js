@@ -184,7 +184,7 @@ function editProductAttribute(url, parent)
 				$("#attribute_wholesale_price_full").hide();
 				$("#attribute_wholesale_price_blank").show();
 			}
-			fillCombinaison(
+			fillCombination(
 				wholesale_price,
 				price,
 				weight,

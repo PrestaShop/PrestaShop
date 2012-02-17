@@ -559,7 +559,7 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if (!Tools::getIsset('attribute_price') || Tools::getIsset('attribute_price') == null)
 				$this->errors[] = Tools::displayError('Attribute price required.');
-			if (!Tools::getIsset('attribute_combinaison_list') || Tools::isEmpty(Tools::getValue('attribute_combinaison_list')))
+			if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list')))
 				$this->errors[] = Tools::displayError('You must add at least one attribute.');
 
 			if (!count($this->errors))
@@ -575,7 +575,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if ($this->tabAccess['edit'] === '1')
 					{
-						if ($product->productAttributeExists(Tools::getValue('attribute_combinaison_list'), (int)$id_product_attribute))
+						if ($product->productAttributeExists(Tools::getValue('attribute_combination_list'), (int)$id_product_attribute))
 							$this->errors[] = Tools::displayError('This attribute already exists.');
 						else
 						{
@@ -611,7 +611,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if ($this->tabAccess['add'] === '1')
 					{
-						if ($product->productAttributeExists(Tools::getValue('attribute_combinaison_list')))
+						if ($product->productAttributeExists(Tools::getValue('attribute_combination_list')))
 							$this->errors[] = Tools::displayError('This combination already exists.');
 						else
 							$id_product_attribute = $product->addCombinationEntity(
@@ -636,7 +636,7 @@ class AdminProductsControllerCore extends AdminController
 				if (!count($this->errors))
 				{
 					$combination = new Combination((int)$id_product_attribute);
-					$combination->setAttributes(Tools::getValue('attribute_combinaison_list'));
+					$combination->setAttributes(Tools::getValue('attribute_combination_list'));
 					$product->checkDefaultAttributes();
 				}
 				if (!count($this->errors))
@@ -3307,7 +3307,6 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$price = Tools::displayPrice($combination['price'], $currency);
 
-					$comb_array[$combination['id_product_attribute']]['id_combinaison_attribute'] = $product->id.'||'.$combination['id_product_attribute'];
 					$comb_array[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
 					$comb_array[$combination['id_product_attribute']]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
 					$comb_array[$combination['id_product_attribute']]['wholesale_price'] = $combination['wholesale_price'];
