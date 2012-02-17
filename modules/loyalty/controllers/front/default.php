@@ -38,6 +38,9 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 
 		include_once($this->module->getLocalPath().'LoyaltyModule.php');
 		include_once($this->module->getLocalPath().'LoyaltyStateModule.php');
+		
+		// Declare smarty function to render pagination link
+		smartyRegisterFunction($this->context->smarty, 'function', 'summarypaginationlink', array('LoyaltyDefaultModuleFrontController', 'getSummaryPaginationLink'));
 	}
 
 	/**
@@ -128,6 +131,35 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 	}
 	
 	/**
+	 * Render pagination link for summary
+	 *
+	 * @param (array) $params Array with to parameters p (for page number) and n (for nb of items per page)
+	 * @return string link
+	 */
+	public static function getSummaryPaginationLink($params, &$smarty)
+	{
+		if (!isset($params['p']))
+			$p = 1;
+		else
+			$p = $params['p'];
+			
+		if (!isset($params['n']))
+			$n = 10;
+		else
+			$n = $params['n'];
+		
+		return Context::getContext()->link->getModuleLink(
+			'loyalty',
+			'default',
+			array(
+				'process' => 'summary',
+				'p' => $p,
+				'n' => $n,
+			)
+		);
+	}
+	
+	/**
 	 * Assign summary template
 	 */
 	public function assignSummaryExecution()
@@ -138,6 +170,7 @@ class LoyaltyDefaultModuleFrontController extends ModuleFrontController
 		$this->context->smarty->assign(array(
 			'orders' => $orders,
 			'displayorders' => $displayorders,
+			'this' => $this,
 			'pagination_link' => $this->context->link->getModuleLink('loyalty', 'default'),
 			'totalPoints' => (int)$customerPoints,
 			'voucher' => LoyaltyModule::getVoucherValue($customerPoints, (int)($this->context->cookie->id_currency)),
