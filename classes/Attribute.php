@@ -159,10 +159,10 @@ class AttributeCore extends ObjectModel
 	}
 
 	/**
-	 * Get quantity for a given attribute combinaison
+	 * Get quantity for a given attribute combination
 	 * Check if quantity is enough to deserve customer
 	 *
-	 * @param integer $id_product_attribute Product attribute combinaison id
+	 * @param integer $id_product_attribute Product attribute combination id
 	 * @param integer $qty Quantity needed
 	 * @return boolean Quantity is available or not
 	 */

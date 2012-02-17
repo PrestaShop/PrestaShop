@@ -371,9 +371,9 @@ class StatsProduct extends ModuleGraph
 
 			$combArray = array();
 			$assocNames = array();
-			$combinaisons = $product->getAttributeCombinations((int)$this->getLang());
-			foreach ($combinaisons as $k => $combinaison)
-				$combArray[$combinaison['id_product_attribute']][] = array('group' => $combinaison['group_name'], 'attr' => $combinaison['attribute_name']);
+			$combinations = $product->getAttributeCombinations((int)$this->getLang());
+			foreach ($combinations as $k => $combination)
+				$combArray[$combination['id_product_attribute']][] = array('group' => $combination['group_name'], 'attr' => $combination['attribute_name']);
 			foreach ($combArray as $id_product_attribute => $product_attribute)
 			{
 				$list = '';

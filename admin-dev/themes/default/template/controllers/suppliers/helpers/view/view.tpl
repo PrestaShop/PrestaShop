@@ -66,7 +66,7 @@
 				<th>{l s='UPC'}</th>
 				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right">{l s='Available Quantity'}</th>{/if}
 			</tr>
-			{foreach $product->combinaison AS $id_product_attribute => $product_attribute}
+			{foreach $product->combination AS $id_product_attribute => $product_attribute}
 				<tr {if $id_product_attribute %2}class="alt_row"{/if} >
 					<td>{$product_attribute.attributes}</td>
 					<td>{$product_attribute.product_supplier_reference}</td>
