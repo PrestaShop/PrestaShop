@@ -262,23 +262,23 @@ class AdminSuppliersControllerCore extends AdminController
 		for ($i = 0; $i < $total_product; $i++)
 		{
 			$products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
-			// Build attributes combinaisons
-			$combinaisons = $products[$i]->getAttributeCombinations($this->context->language->id);
-			foreach ($combinaisons as $k => $combinaison)
+			// Build attributes combinations
+			$combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
+			foreach ($combinations as $k => $combination)
 			{
 				$comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,
 																		 $products[$i]->id,
-																		 $combinaison['id_product_attribute']);
-				$comb_array[$combinaison['id_product_attribute']]['product_supplier_reference'] = $comb_infos['product_supplier_reference'];
-				$comb_array[$combinaison['id_product_attribute']]['product_supplier_price_te'] = Tools::displayPrice($comb_infos['product_supplier_price_te'], new Currency($comb_infos['id_currency']));
-				$comb_array[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
-				$comb_array[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
-				$comb_array[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
-				$comb_array[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
-				$comb_array[$combinaison['id_product_attribute']]['attributes'][] = array(
-					$combinaison['group_name'],
-					$combinaison['attribute_name'],
-					$combinaison['id_attribute']
+																		 $combination['id_product_attribute']);
+				$comb_array[$combination['id_product_attribute']]['product_supplier_reference'] = $comb_infos['product_supplier_reference'];
+				$comb_array[$combination['id_product_attribute']]['product_supplier_price_te'] = Tools::displayPrice($comb_infos['product_supplier_price_te'], new Currency($comb_infos['id_currency']));
+				$comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
+				$comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
+				$comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
+				$comb_array[$combination['id_product_attribute']]['quantity'] = $combination['quantity'];
+				$comb_array[$combination['id_product_attribute']]['attributes'][] = array(
+					$combination['group_name'],
+					$combination['attribute_name'],
+					$combination['id_attribute']
 				);
 			}
 
@@ -291,7 +291,7 @@ class AdminSuppliersControllerCore extends AdminController
 						$list .= $attribute[0].' - '.$attribute[1].', ';
 					$comb_array[$key]['attributes'] = rtrim($list, ', ');
 				}
-				isset($comb_array) ? $products[$i]->combinaison = $comb_array : '';
+				isset($comb_array) ? $products[$i]->combination = $comb_array : '';
 				unset($comb_array);
 			}
 			else

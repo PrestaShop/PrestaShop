@@ -1500,7 +1500,7 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Delete a product attributes combinaison
+	* Delete a product attributes combination
 	*
 	* @param integer $id_product_attribute Product attribute id
 	* @return array Deletion result
@@ -1568,7 +1568,7 @@ class ProductCore extends ObjectModel
 	* Get all available product attributes resume
 	*
 	* @param integer $id_lang Language id
-	* @return array Product attributes combinaisons
+	* @return array Product attributes combinations
 	*/
 	public function getAttributesResume($id_lang, $attribute_value_separator = ' - ', $attribute_separator = ', ')
 	{
@@ -1606,10 +1606,10 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get all available product attributes combinaisons
+	* Get all available product attributes combinations
 	*
 	* @param integer $id_lang Language id
-	* @return array Product attributes combinaisons
+	* @return array Product attributes combinations
 	*/
 	public function getAttributeCombinations($id_lang)
 	{
@@ -1647,11 +1647,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get product attribute combinaison by id_product_attribute
+	* Get product attribute combination by id_product_attribute
 	*
 	* @param integer $id_product_attribute
 	* @param integer $id_lang Language id
-	* @return array Product attribute combinaison by id_product_attribute
+	* @return array Product attribute combination by id_product_attribute
 	*/
 	public function getAttributeCombinationsById($id_product_attribute, $id_lang)
 	{
@@ -1727,9 +1727,9 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Check if product has attributes combinaisons
+	* Check if product has attributes combinations
 	*
-	* @return integer Attributes combinaisons number
+	* @return integer Attributes combinations number
 	*/
 	public function hasAttributes()
 	{
