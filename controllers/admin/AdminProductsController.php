@@ -3348,7 +3348,7 @@ class AdminProductsControllerCore extends AdminController
 					$comb_array[$id_product_attribute]['attributes'] = $list;
 					if ($product_attribute['default_on'])
 					{
-						$this->list_skip_actions['default'][] = $product_attribute['id_combinaison_attribute'];
+						$this->list_skip_actions['default'][] = $product_attribute['id_product_attribute'];
 						$comb_array[$id_product_attribute]['color'] = $color_by_default;
 					}
 
@@ -3395,7 +3395,7 @@ class AdminProductsControllerCore extends AdminController
 		}
 
 		$helper = new HelperList();
-		$helper->identifier = 'id_combinaison_attribute';
+		$helper->identifier = 'id_product_attribute';
 		$helper->token = $this->token;
 		$helper->currentIndex = self::$currentIndex;
 		$helper->no_link = true;

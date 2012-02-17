@@ -529,17 +529,6 @@ class HelperListCore extends Helper
 		);
 
 		$this->is_dnd_identifier = array_key_exists($this->identifier, $this->identifiersDnd);
-/*
-		if ($is_dnd_identifier)
-		{
-			' id="'.
-			if(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1)))
-				substr($this->identifier,3,strlen($this->identifier)))
-		}
-		.' class="table'.(
-		if ($is_dnd_identifier AND ($this->orderBy != 'position 'AND $this->orderWay != 'DESC'))
-			' tableDnD'
-		.'" cellpadding="0" cellspacing="0">*/
 
 		// Cleaning links
 		if (Tools::getValue($this->table.'Orderby') && Tools::getValue($this->table.'Orderway'))

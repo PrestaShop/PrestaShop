@@ -483,3 +483,5 @@ ul.listForm li {padding-bottom:3px;}
 .view-modules li.normal-view  {border-bottom-right-radius: 0;border-right: 1px solid #ccc; border-top-right-radius: 0;}
 
 .margin-form select.chosen{width: 200px;}
+
+.selected-line {background:#fff1b5;}

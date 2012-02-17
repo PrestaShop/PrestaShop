@@ -93,7 +93,7 @@
 <form method="post" action="{$action}" class="form">
 	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
 {/if}
-	<table class="table_grid">
+	<table class="table_grid" name="list_table">
 		{if !$simple_header}
 			<tr>
 				<td style="vertical-align: bottom;">
