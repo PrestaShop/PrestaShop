@@ -65,6 +65,7 @@ class CurrencyCore extends ObjectModel
 	public static $definition = array(
 		'table' => 'currency',
 		'primary' => 'id_currency',
+        'multishop' => true,
 		'fields' => array(
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'iso_code' => 		array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
@@ -123,12 +124,12 @@ class CurrencyCore extends ObjectModel
 	 * @param int|string $iso_code int for iso code number string for iso code
 	 * @return boolean
 	 */
-	public static function exists($iso_code)
+	public static function exists($iso_code, $iso_code_num, $id_shop = 0)
 	{
 		if (is_int($iso_code))
-			$id_currency_exists = Currency::getIdByIsoCodeNum($iso_code);
+			$id_currency_exists = Currency::getIdByIsoCodeNum((int)$iso_code_num, (int)$id_shop);
 		else
-			$id_currency_exists = Currency::getIdByIsoCode($iso_code);
+			$id_currency_exists = Currency::getIdByIsoCode($iso_code, (int)$id_shop);
 
 		if ($id_currency_exists)
 			return true;
@@ -261,25 +262,57 @@ class CurrencyCore extends ObjectModel
 		AND `id_currency` = '.(int)($id_currency));
 	}
 
-	public static function getIdByIsoCode($iso_code)
+    /**
+     * @static
+     * @param $iso_code
+     * @param int $id_shop
+     * @return int
+     */
+	public static function getIdByIsoCode($iso_code, $id_shop = 0)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_currency`
-		FROM `'._DB_PREFIX_.'currency`
-		WHERE `deleted` = 0
-		AND `iso_code` = \''.pSQL($iso_code).'\'');
-		return $result['id_currency'];
-	}
+        $query = Currency::getIdByQuery($id_shop);
+        $query->where('iso_code = \''.pSQL($iso_code).'\'');
 
-	public static function getIdByIsoCodeNum($iso_code)
-	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_currency`
-		FROM `'._DB_PREFIX_.'currency`
-		WHERE `deleted` = 0
-		AND `iso_code_num` = \''.pSQL($iso_code).'\'');
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
 		return (int)$result['id_currency'];
 	}
+
+    /**
+     * @static
+     * @param $iso_code
+     * @param int $id_shop
+     * @return int
+     */
+	public static function getIdByIsoCodeNum($iso_code_num, $id_shop = 0)
+	{
+        $query = Currency::getIdByQuery($id_shop);
+        $query->where('iso_code_num = \''.pSQL($iso_code_num).'\'');
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+		return (int)$result['id_currency'];
+	}
+
+    /**
+     * @static
+     * @param int $id_shop
+     * @return DbQuery
+     */
+    public static function getIdByQuery($id_shop = 0)
+    {
+        $query = new DbQuery();
+        $query->select('c.id_currency');
+        $query->from('currency', 'c');
+        $query->where('deleted = 0');
+
+        if (Shop::isFeatureActive() && $id_shop > 0)
+        {
+            $query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');
+            $query->where('id_shop = '.(int)$id_shop);
+        }
+        return $query;
+    }
 
 	/**
 	 * Refresh the currency conversion rate
