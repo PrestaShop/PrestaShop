@@ -210,7 +210,11 @@
 
 	function resetBind()
 	{
-		$('.fancybox').fancybox();
+		$('.fancybox').fancybox({
+			'type': 'iframe',
+			'width': '50%',
+			'height': '100%'
+		});
 		/*$("#new_address").fancybox({
 			onClosed: useCart(id_cart)
 		});*/

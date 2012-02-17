@@ -71,7 +71,7 @@ class AdminTabsControllerCore extends AdminController
 			'position' => array(
 				'title' => $this->l('Position'),
 				'width' => 40,
-				'filter_key' => 'cp!position',
+				'filter_key' => 'a!position',
 				'position' => 'position'
 			)
 		);
