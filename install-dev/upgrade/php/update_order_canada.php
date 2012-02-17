@@ -75,7 +75,8 @@ function update_order_canada()
 				if (!array_key_exists($product['tax_name'], $amount))
 					$amount[$product['tax_name']] = array('amount' => 0, 'rate' => $product['tax_rate']);
 
-				if ($tax_calculation_method == PS_TAX_EXC)
+				// PS_TAX_EXC = 1, PS_TAX_INC = 0
+				if ($tax_calculation_method == 1)
 				{
 					$total_product = $product['product_price'] * $product['product_quantity'];
 					$amount_tmp = update_order_canada_ps_round($total_product * ($product['tax_rate'] / 100), 2);
