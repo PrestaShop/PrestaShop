@@ -55,16 +55,12 @@ function addButtonCombination(item)
 	posC = true;
 }
 
-function deleteProductAttribute(ids, token, parent)
+function deleteProductAttribute(url, parent)
 {
-	var id = ids.split('||');
 	$.ajax({
-		url: 'index.php',
+		url: url,
 		data: {
-			id_product: id[0],
-			id_product_attribute: id[1],
-			controller: 'AdminProducts',
-			token: token,
+			id_product: id_product,
 			action: 'deleteProductAttribute',
 			ajax: true
 		},
@@ -76,7 +72,7 @@ function deleteProductAttribute(ids, token, parent)
 			if (data.status == 'ok')
 			{
 				showSuccessMessage(data.message);
-				parent.hide();
+				parent.remove();
 			}
 			else
 				showErrorMessage(data.message);
@@ -84,16 +80,12 @@ function deleteProductAttribute(ids, token, parent)
 	});
 }
 
-function defaultProductAttribute(ids, token, parent)
+function defaultProductAttribute(url, parent)
 {
-	var id = ids.split('||');
 	$.ajax({
-		url: 'index.php',
+		url: url,
 		data: {
-			id_product: id[0],
-			id_product_attribute: id[1],
-			controller: 'AdminProducts',
-			token: token,
+			id_product: id_product,
 			action: 'defaultProductAttribute',
 			ajax: true
 		},
@@ -448,6 +440,16 @@ $(document).ready(function() {
 		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
 			editProductAttribute(this.href, $(this).closest('tr'));
+		});
+
+		$('table[name=list_table]').delegate('a.delete', 'click', function(e){
+			e.preventDefault();
+			deleteProductAttribute(this.href, $(this).closest('tr'));
+		});
+
+		$('table[name=list_table]').delegate('a.default', 'click', function(e){
+			e.preventDefault();
+			defaultProductAttribute(this.href, $(this).closest('tr'));
 		});
 	});
 });
