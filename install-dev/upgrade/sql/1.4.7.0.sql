@@ -1,8 +1,6 @@
 SET NAMES 'utf8';
 
-ALTER TABLE `PREFIX_category_product` DROP INDEX `category_product_index`;
-ALTER TABLE `PREFIX_category_product` ADD UNIQUE `category_product_index` (`id_category`,`id_product`);
-
+/* PHP:category_product_index_unique(); */;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_order_tax` (
   `id_order` int(11) NOT NULL,
