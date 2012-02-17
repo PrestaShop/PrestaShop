@@ -1469,9 +1469,11 @@ class ProductCore extends ObjectModel
 	* @param integer $id_product_attribute Product attribute id
 	* @param array $attributes Attributes to forge combinaison
 	* @return array Insertion result
+	* @deprecated since 1.5.0.7
 	*/
 	public function addAttributeCombinaison($id_product_attribute, $attributes)
 	{
+		Tools::displayAsDeprecated();
 		if (!is_array($attributes))
 			die(Tools::displayError());
 		if (!count($attributes))
