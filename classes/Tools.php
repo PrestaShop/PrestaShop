@@ -107,10 +107,7 @@ class ToolsCore
 				header($header);
 		}
 
-		if (isset($_SERVER['HTTP_REFERER']) && $url == $_SERVER['HTTP_REFERER'])
-			header('Location: '.$_SERVER['HTTP_REFERER']);
-		else
-			header('Location: '.$url);
+		header('Location: '.$url);
 		exit;
 	}
 
