@@ -637,7 +637,11 @@ class AdminControllerCore extends Controller
 
 		$this->errors = array_unique($this->errors);
 		if (count($this->errors) > 0)
-			return;
+		{
+			// if we have errors, we stay on the form instead of moving to the list
+			$this->display = 'edit';
+			return false;
+		}
 
 		return $object;
 	}
