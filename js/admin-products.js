@@ -124,24 +124,24 @@ function defaultProductAttribute(ids, token, parent)
 	});
 }
 
-function editProductAttribute(ids, token)
+function editProductAttribute(url, parent)
 {
-	var id = ids.split('||');
 	$.ajax({
-		url: 'index.php',
+		url: url,
 		data: {
-			id_product: id[0],
-			id_product_attribute: id[1],
-			controller: 'AdminProducts',
-			token: token,
-			action: 'editProductAttribute',
-			ajax: true
+			id_product: id_product,
+			ajax: true,
+			action: 'editProductAttribute'
 		},
 		context: document.body,
 		dataType: 'json',
 		context: this,
 		async: false,
 		success: function(data) {
+			// color the selected line
+			parent.siblings().removeClass('selected-line');
+			parent.addClass('selected-line');
+
 			$('#add_new_combination').show();
 			$('#attribute_quantity').show();
 			$('#product_att_list').html('');
@@ -441,5 +441,13 @@ $(document).ready(function() {
 			deleteSpecificPrice(this.href, $(this).parents('tr'));
 			return false;
 		})
+	});
+
+	// Bind action edition on attribute list
+	onTabLoad('Combinations', function(){
+		$('table[name=list_table]').delegate('a.edit', 'click', function(e){
+			e.preventDefault();
+			editProductAttribute(this.href, $(this).closest('tr'));
+		});
 	});
 });
