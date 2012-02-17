@@ -44,7 +44,7 @@
 		<p class="success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in on this'} <a href="{$link->getPageLink('authentication', true)}">{l s='page'}</a></p>
 	{else}
 		<form method="post" action="{$action|escape:'htmlall':'UTF-8'}#guestToCustomer" class="std">
-			<fieldset>
+			<fieldset class="description_box">
 				<p class="bold">{l s='Transform your guest account to a customer account and enjoy :'}</p>
 				<ul class="bullet">
 					<li>{l s='Personalized and secure access'}</li>
@@ -69,7 +69,7 @@
 		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account.php', true)}">{l s='Click here to log-in to your customer account'}</a><br /><br /></p>
 	{/if}
 	<form method="post" action="{$action|escape:'htmlall':'UTF-8'}" class="std">
-		<fieldset>
+		<fieldset class="description_box">
 			<p>{l s='To track your order, please enter the following information:'}</p>
 			<p class="text">
 				<label>{l s='Order ID:'} <b>#</b></label>
