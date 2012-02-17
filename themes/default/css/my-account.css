@@ -1,20 +1,20 @@
-#myaccount  #left_column {display:none}
-#myaccount #center_column {width:757px}
-#myaccount #center_column h1 {margin-bottom:20px}
+#my-account  #left_column {display:none}
+#my-account #center_column {width:757px}
+#my-account #center_column h1 {margin-bottom:20px}
 
-#myaccount #center_column h4 {
+#my-account #center_column h4 {
 	font-weight:normal;
 	font-size:12px;
 	color:#666
 }
 
-#myaccount .myaccount_lnk_list {list-style-type:none}
-#myaccount .myaccount_lnk_list li {
+#my-account .myaccount_lnk_list {list-style-type:none}
+#my-account .myaccount_lnk_list li {
 	font-size:13px;
 	line-height:36px
 }
-#myaccount .myaccount_lnk_list img.icon,
-#myaccount p img.icon {
+#my-account .myaccount_lnk_list img.icon,
+#my-account p img.icon {
 	position:relative;
 	top:6px;
 	left:0
