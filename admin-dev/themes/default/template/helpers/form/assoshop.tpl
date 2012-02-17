@@ -82,7 +82,7 @@ function check_all_shop() {
 		</tr>
 		<tr {if $input.type == 'group_shop'}class="alt_row"{/if}>
 			<td>
-				<label class="t"><input class="input_all_shop" type="checkbox" /> {if $input.type == 'group_shop'}{l s='All group shops'}{else}{l s='All shops'}{/if}</label>
+				<label class="t"><input class="input_all_shop" type="checkbox" /> <b>{if $input.type == 'group_shop'}{l s='All group shops'}{else}{l s='All shops'}{/if}</b></label>
 			</td>
 		</tr>
 		{foreach $input.values as $groupID => $groupData}
@@ -100,7 +100,7 @@ function check_all_shop() {
 							name="checkBoxGroupShopAsso_{$table}[{$form_id}][{$groupID}]"
 							value="{$groupID}"
 							{if $groupChecked} checked="checked"{/if} />
-						{$groupData['name']}
+						<b>{l s='Group:'} {$groupData['name']}</b>
 					</label>
 				</td>
 			</tr>

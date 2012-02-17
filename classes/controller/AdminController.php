@@ -1934,18 +1934,18 @@ class AdminControllerCore extends Controller
 			$where_shop = $this->context->shop->addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
-		$assos = Shop::getAssoTables();
-		if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
+		if ($this->display_multishop_toolbar)
 		{
-			$filter_key = $assos[$this->table]['type'];
-			$idenfier_shop = $this->context->shop->getListOfID();
-		}
-		else if (Context::shop() == Shop::CONTEXT_GROUP)
-		{
-			$assos = GroupShop::getAssoTables();
-			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'group_shop')
+			$assos = Shop::getAssoTables();
+			$assos_group = GroupShop::getAssoTables();
+			if (isset($assos[$this->table]) && $assos[$this->table]['type'] == 'shop')
 			{
 				$filter_key = $assos[$this->table]['type'];
+				$idenfier_shop = $this->context->shop->getListOfID();
+			}
+			else if (isset($assos_group[$this->table]) && $assos_group[$this->table]['type'] == 'group_shop')
+			{
+				$filter_key = $assos_group[$this->table]['type'];
 				$idenfier_shop = array($this->context->shop->getGroupID());
 			}
 		}
