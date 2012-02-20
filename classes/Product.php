@@ -3960,11 +3960,15 @@ class ProductCore extends ObjectModel
 	 */
 	public function addStockMvt($quantity, $id_reason, $id_product_attribute = null, $id_order = null, $id_employee = null)
 	{
-		if (!$this->id)
-			return;
+		if (!$this->id || !$id_reason)
+			return false;
 
 		if ($id_product_attribute == null)
 			$id_product_attribute = 0;
+
+		$reason = new StockMvtReason((int)$id_reason);
+		if (!Validate::isLoadedObject($reason))
+			return false;
 
 		$quantity = abs((int)$quantity) * $reason->sign;
 
