@@ -243,7 +243,7 @@ class LocalizationPackCore
 			foreach ($xml->currencies->currency as $data)
 			{
 				$attributes = $data->attributes();
-				if (Currency::exists($attributes['iso_code']))
+				if (Currency::exists($attributes['iso_code'], (int)$attributes['iso_code_num']))
 					continue;
 				$currency = new Currency();
 				$currency->name = (string)$attributes['name'];
@@ -260,7 +260,7 @@ class LocalizationPackCore
 					$this->_errors[] = Tools::displayError('Invalid currency properties.');
 					return false;
 				}
-				if (!Currency::exists($currency->iso_code))
+				if (!Currency::exists($currency->iso_code, $currency->iso_code_num))
 				{
 					if (!$currency->add())
 					{
