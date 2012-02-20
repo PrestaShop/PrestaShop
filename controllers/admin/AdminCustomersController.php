@@ -28,7 +28,7 @@
 class AdminCustomersControllerCore extends AdminController
 {
 	protected $delete_mode;
-	
+
 	protected $_defaultOrderBy = 'date_add';
 	protected $_defaultOrderWay = 'DESC';
 
@@ -50,8 +50,8 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->default_form_language = $this->context->language->id;
 
-		$genders_icon = array('default' => 'unknown.gif');
-		$genders = array(0 => $this->l('?'));
+		$genders_icon = array();
+		$genders = array();
 		foreach (Gender::getGenders() as $gender)
 		{
 			$gender_file = 'genders/'.$gender->id.'.jpg';
@@ -380,7 +380,7 @@ class AdminCustomersControllerCore extends AdminController
 					unset($groups[$key]);
 		}
 
-		$this->fields_form['input'] = array_merge($this->fields_form['input'], 
+		$this->fields_form['input'] = array_merge($this->fields_form['input'],
 				array(
 					array(
 								'type' => 'group',
@@ -873,11 +873,11 @@ class AdminCustomersControllerCore extends AdminController
 
 		return $tpl->fetch();
 	}
-	
+
 	/**
-	 * add to $this->content the result of Customer::SearchByName 
+	 * add to $this->content the result of Customer::SearchByName
 	 * (encoded in json)
-	 * 
+	 *
 	 * @return void
 	 */
 	public function ajaxProcessSearchCustomers()
