@@ -28,7 +28,7 @@
 	</div>
 </div>
 <div id="apply_discount_amount_div">
-	<label>{l s='Value'}</label>
+	<label>{l s='Amount'}</label>
 	<div class="margin-form">
 		<input type="text" id="reduction_amount" name="reduction_amount" value="{$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval}" />
 		<select name="reduction_currency">
@@ -73,13 +73,29 @@
 	<input type="radio" name="free_gift" id="free_gift_on" value="1" {if $currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
 	<label class="t" for="free_gift_on"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled'}" title="{l s='Enabled'}" style="cursor:pointer" /></label>
 	&nbsp;&nbsp;
-	<input type="radio" name="free_gift" id="free_gift_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
+	<input type="radio" name="free_gift" id="free_gift_off" value="0" {if !$currentTab->getFieldValue($currentObject, 'gift_product')|intval}checked="checked"{/if} />
 	<label class="t" for="free_gift_off"> <img src="../img/admin/disabled.gif" alt="{l s='Disabled'}" title="{l s='Disabled'}" style="cursor:pointer" /></label>
 </div>
 <div id="free_gift_div">
-	<label>{l s='Product'}</label>
+	<label>{l s='Search a product'}</label>
 	<div class="margin-form">
-		<input type="hidden" id="gift_product" name="gift_product" value="{$currentTab->getFieldValue($currentObject, 'gift_product')|intval}" />
-		<input type="text" id="giftProductFilter" name="giftProductFilter" value="{$giftProductFilter|htmlentities}" style="width:400px" />
+		<input type="text" id="giftProductFilter" value="{$giftProductFilter}" style="width:400px" />
 	</div>
+	<div id="gift_products_found" {if $gift_product_select == ''}style="display:none"{/if}>
+		<div id="gift_product_list">
+			<label>{l s='Matching products'}</label>
+			<select name="gift_product" id="gift_product" onclick="displayProductAttributes();">
+				{$gift_product_select}
+			</select>
+		</div>
+		<div class="clear">&nbsp;</div>
+		<div id="gift_attributes_list" {if $gift_product_attribute_select == ''}style="display:none"{/if}>
+			<label>{l s='Available combinations'}</label>
+			<div id="gift_attributes_list_select">
+				{$gift_product_attribute_select}
+			</div>
+		</div>
+		<div class="clear">&nbsp;</div>
+	</div>
+	<div id="gift_products_err" class="warn" style="display:none"></div>
 </div>

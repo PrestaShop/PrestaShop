@@ -57,6 +57,10 @@ class AdminCartRulesControllerCore extends AdminController
 			foreach (array('country', 'carrier', 'group', 'cart_rule', 'product', 'shop') as $type)
 				if (!Tools::getValue($type.'_restriction'))
 					$_POST[$type.'_restriction'] = 0;
+			
+			// Retrieve the product attribute id of the gift (if available)
+			if ($id_product = (int)Tools::getValue('gift_product'))
+				$_POST['gift_product_attribute'] = (int)Tools::getValue('ipa_'.$id_product);
 
 			// Idiot-proof control
 			if (strtotime(Tools::getValue('date_from')) > strtotime(Tools::getValue('date_to')))
@@ -330,6 +334,51 @@ class AdminCartRulesControllerCore extends AdminController
 			die(Tools::jsonEncode($products));
 		}
 	}
+	
+	protected function searchProducts($search)
+	{
+		if ($products = Product::searchByName((int)$this->context->language->id, $search))
+		{
+			foreach ($products as &$product)
+			{
+				// Formatted price
+				$combinations = array();
+				$productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
+				$attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
+				$product['formatted_price'] = Tools::displayPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency);
+
+				foreach ($attributes as $attribute)
+				{
+					if (!isset($combinations[$attribute['id_product_attribute']]['attributes']))
+						$combinations[$attribute['id_product_attribute']]['attributes'] = '';
+					$combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
+					$combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
+					$combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
+					if (!isset($combinations[$attribute['id_product_attribute']]['price']))
+					{
+						$price_tax_incl = Product::getPriceStatic((int)$product['id_product'], true, $attribute['id_product_attribute']);
+						$combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency);
+					}
+				}
+
+				foreach ($combinations as &$combination)
+					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
+				$product['combinations'] = $combinations;
+			}
+			return array(
+				'products' => $products,
+				'found' => true
+			);
+		}
+		else
+			return array('found' => false, 'notfound' => Tools::displayError('No product found'));
+	}
+	
+	public function ajaxProcessSearchProducts()
+	{
+		$array = $this->searchProducts(Tools::getValue('product_search'));
+		$this->content = trim(Tools::jsonEncode($array));
+	}
 
 	public function renderForm()
 	{
@@ -343,6 +392,7 @@ class AdminCartRulesControllerCore extends AdminController
 		);
 
 		// Todo: change for "Media" version
+		$this->addJs(_PS_JS_DIR_.'jquery/plugins/jquery.typewatch.js');
 		$this->addJs(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.js');
 		$this->addJs(_PS_JS_DIR_.'jquery/plugins/autocomplete/jquery.autocomplete.js');
 		$this->addCss(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.css');
@@ -359,19 +409,19 @@ class AdminCartRulesControllerCore extends AdminController
 
 		$gift_product_filter = '';
 		if (Validate::isUnsignedId($current_object->gift_product) &&
-			($product = new Product($current_object->gift_product, false, Context::getContext()->language->id)) &&
+			($product = new Product($current_object->gift_product, false, $this->context->language->id)) &&
 			Validate::isLoadedObject($product))
 			$gift_product_filter = trim($product->reference.' '.$product->name);
 
 		$reduction_product_filter = '';
 		if (Validate::isUnsignedId($current_object->reduction_product) &&
-			($product = new Product($current_object->reduction_product, false, Context::getContext()->language->id)) &&
+			($product = new Product($current_object->reduction_product, false, $this->context->language->id)) &&
 			Validate::isLoadedObject($product))
 			$reduction_product_filter = trim($product->reference.' '.$product->name);
 
 		$product_rule_groups = $this->getProductRuleGroupsDisplay($current_object);
 		
-		$attribute_groups = AttributeGroup::getAttributesGroups(Context::getContext()->language->id);
+		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$currencies = Currency::getCurrencies();
 		$languages = Language::getLanguages();
 		$countries = $current_object->getAssociatedRestrictions('country', true, true);
@@ -384,8 +434,35 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($carrier as $field => &$value)
 					if ($field == 'name' && $value == '0')
 						$value = Configuration::get('PS_SHOP_NAME');
+		
+		$gift_product_select = '';
+		$gift_product_attribute_select = '';
+		if ((int)$current_object->gift_product)
+		{
+			$search_products = $this->searchProducts($gift_product_filter);
+			foreach ($search_products['products'] as $product)
+			{
+				$gift_product_select .= '
+				<option value="'.$product['id_product'].'" '.($product['id_product'] == $current_object->gift_product ? 'selected="selected"' : '').'>
+					'.$product['name'].(count($product['combinations']) == 0 ? ' - '.$product['formatted_price'] : '').'
+				</option>';
+				
+				if (count($product['combinations']))
+				{
+					$gift_product_attribute_select .= '<select class="id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
+					foreach ($product['combinations'] as $combination)
+					{
+						$gift_product_attribute_select .= '
+						<option '.($combination['id_product_attribute'] == $current_object->gift_product_attribute ? 'selected="selected"' : '').' value="'.$combination['id_product_attribute'].'">
+							'.$combination['attributes'].' - '.$combination['formatted_price'].'
+						</option>';
+					}
+					$gift_product_attribute_select .= '</select>';
+				}
+			}
+		}
 
-		Context::getContext()->smarty->assign(
+		$this->context->smarty->assign(
 			array(
 				'show_toolbar' => true,
 				'toolbar_btn' => $this->toolbar_btn,
@@ -395,6 +472,8 @@ class AdminCartRulesControllerCore extends AdminController
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
 				'customerFilter' => $customer_filter,
 				'giftProductFilter' => $gift_product_filter,
+				'gift_product_select' => $gift_product_select,
+				'gift_product_attribute_select' => $gift_product_attribute_select,
 				'reductionProductFilter' => $reduction_product_filter,
 				'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
 				'defaultLanguage' => Configuration::get('PS_LANG_DEFAULT'),
@@ -424,7 +503,7 @@ class AdminCartRulesControllerCore extends AdminController
 	public function displayAjaxSearchCartRuleVouchers()
 	{
 		$found = false;
-		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)Context::getContext()->cookie->id_lang))
+		if ($vouchers = CartRule::getCartsRuleByCode(Tools::getValue('q'), (int)$this->context->language->id))
 			$found = true;
 		echo Tools::jsonEncode(array('found' => $found, 'vouchers' => $vouchers));
 	}

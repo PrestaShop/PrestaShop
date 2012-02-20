@@ -55,6 +55,7 @@ class CartRuleCore extends ObjectModel
 	public $reduction_currency;
 	public $reduction_product;
 	public $gift_product;
+	public $gift_product_attribute;
 	public $active = 1;
 	public $date_add;
 	public $date_upd;
@@ -93,6 +94,7 @@ class CartRuleCore extends ObjectModel
 			'reduction_currency' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'reduction_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'gift_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'gift_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
@@ -463,24 +465,31 @@ class CartRuleCore extends ObjectModel
 			// If a product is given for free in this rule and already in the cart, the price is subtracted
 			if ($this->gift_product)
 			{
-				$in_cart = (bool)Db::getInstance()->getValue('SELECT id_product FROM '._DB_PREFIX_.'cart_product WHERE id_product = '.(int)$this->gift_product.' AND id_cart = '.(int)$context->cart->id);
+				$in_cart = (bool)Db::getInstance()->getValue('
+				SELECT id_product
+				FROM '._DB_PREFIX_.'cart_product
+				WHERE id_product = '.(int)$this->gift_product.'
+				AND id_product_attribute = '.(int)$this->gift_product_attribute.'
+				AND id_cart = '.(int)$context->cart->id);
 				if ($in_cart)
 				{
 					$ref = false;
 					$product_price = Product::getPriceStatic(
 						$this->gift_product,
 						$this->minimum_amount_tax,
-						null, null, null, null, null, null, null,
+						$this->gift_product_attribute,
+						null, null, null, null, null, null,
 						$context->cart->id_customer ? $context->cart->id_customer : null,
 						$context->cart->id,
 						(int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} ? (int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} : null,
 						$ref, null, null,
 						$context, null
 					);
+
 					$cartTotal -= $product_price;
 				}
 			}
-				
+
 			if ($cartTotal < $minimum_amount)
 				return Tools::displayError('You do not reach the minimum amount required to use this voucher');
 		}
@@ -762,10 +771,10 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Free gift
-		if ($this->gift_product)
+		if ((int)$this->gift_product)
 		{
 			foreach ($context->cart->getProducts() as $product)
-				if ($product['id_product'] == $this->gift_product)
+				if ($product['id_product'] == $this->gift_product && $product['id_product_attribute'] == $this->gift_product_attribute)
 					$reduction_value += ($useTax ? $product['price_wt'] : $product['price']);
 		}
 
