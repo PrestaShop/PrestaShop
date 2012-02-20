@@ -103,23 +103,25 @@ class CombinationCore extends ObjectModel
 			return false;
 		return true;
 	}
-	
+
 	public function setAttributes($ids_attribute)
 	{
 		if ($this->deleteAssociations())
 		{
-			$sqlValues = array();
+			$sql_values = array();
 			foreach ($ids_attribute as $value)
-				$sqlValues[] = '('.(int)$value.', '.(int)$this->id.')';
+				$sql_values[] = '('.(int)$value.', '.(int)$this->id.')';
+
 			$result = Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
-				VALUES '.implode(',', $sqlValues)
+				VALUES '.implode(',', $sql_values)
 			);
+
 			return $result;
 		}
 		return false;
 	}
-	
+
 	public function setWsProductOptionValues($values)
 	{
 		$ids_attributes = array();
@@ -130,33 +132,38 @@ class CombinationCore extends ObjectModel
 
 	public function getWsProductOptionValues()
 	{
-		$result = Db::getInstance()->executeS('SELECT id_attribute AS id from `'._DB_PREFIX_.'product_attribute_combination` WHERE id_product_attribute = '.(int)$this->id);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT id_attribute AS id
+			FROM `'._DB_PREFIX_.'product_attribute_combination`
+			WHERE id_product_attribute = '.(int)$this->id);
+
 		return $result;
 	}
 
 	public function getWsImages()
 	{
-		return Db::getInstance()->executeS('
-		SELECT `id_image` as id
-		FROM `'._DB_PREFIX_.'product_attribute_image`
-		WHERE `id_product_attribute` = '.(int)($this->id).'
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT `id_image` as id
+			FROM `'._DB_PREFIX_.'product_attribute_image`
+			WHERE `id_product_attribute` = '.(int)$this->id.'
 		');
 	}
-	
+
 	public function setImages($ids_image)
 	{
 		if (Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
-			WHERE `id_product_attribute` = '.(int)($this->id)) === false)
+			WHERE `id_product_attribute` = '.(int)$this->id) === false)
 		return false;
-		$sqlValues = array();
+
+		$sql_values = array();
 
 		foreach ($ids_image as $value)
-			$sqlValues[] = '('.(int)$this->id.', '.(int)$value.')';
+			$sql_values[] = '('.(int)$this->id.', '.(int)$value.')';
 
 		Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
-			VALUES '.implode(',', $sqlValues)
+			VALUES '.implode(',', $sql_values)
 		);
 		return true;
 	}
@@ -165,13 +172,14 @@ class CombinationCore extends ObjectModel
 	{
 		return $this->setImages($values);
 	}
-	
+
 	public function getAttributesName($id_lang)
 	{
-		return Db::getInstance()->executeS('SELECT al.*
-														FROM '._DB_PREFIX_.'product_attribute_combination pac
-														JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
-														WHERE pac.id_product_attribute='.(int)$this->id);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT al.*
+			FROM '._DB_PREFIX_.'product_attribute_combination pac
+			JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
+			WHERE pac.id_product_attribute='.(int)$this->id);
 	}
 
 	/**
@@ -194,5 +202,16 @@ class CombinationCore extends ObjectModel
 	public static function isCurrentlyUsed($table = null, $has_active_column = false)
 	{
 		return parent::isCurrentlyUsed('product_attribute');
+	}
+
+	public static function getIdByReference($id_product, $reference)
+	{
+		$query = new DbQuery();
+		$query->select('pa.id_product_attribute');
+		$query->from('product_attribute', 'pa');
+		$query->where('pa.reference LIKE \'%'.pSQL($reference).'%\'');
+		$query->where('pa.id_product = '.(int)$id_product);
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }

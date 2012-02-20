@@ -1320,19 +1320,43 @@ class AdminImportControllerCore extends AdminController
 					);
 			}
 
-			$id_product_attribute = $product->addAttribute(
-				(float)$info['price'],
-				(float)$info['weight'],
-				0,
-				(float)$info['ecotax'],
-				$id_image,
-				strval($info['reference']),
-				strval($info['ean13']),
-				(int)$info['default_on'],
-				0,
-				strval($info['upc']),
-				(int)$info['quantity']
-			);
+			$id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+
+			if ($id_product_attribute > 0)
+			{
+				$product->updateAttribute(
+					$id_product_attribute,
+					(float)$info['wholesale_price'],
+					(float)$info['price'],
+					(float)$info['weight'],
+					0,
+					(float)$info['ecotax'],
+					$id_image,
+					strval($info['reference']),
+					strval($info['ean13']),
+					(int)$info['default_on'],
+					0,
+					strval($info['upc']),
+					(int)$info['quantity'],
+					0
+				);
+			}
+			else
+			{
+				$id_product_attribute = $product->addAttribute(
+					(float)$info['price'],
+					(float)$info['weight'],
+					0,
+					(float)$info['ecotax'],
+					$id_image,
+					strval($info['reference']),
+					strval($info['ean13']),
+					(int)$info['default_on'],
+					0,
+					strval($info['upc']),
+					(int)$info['quantity']
+				);
+			}
 
 			$id_attribute_group = 0;
 			$group = '';
@@ -1395,9 +1419,9 @@ class AdminImportControllerCore extends AdminController
 
 				if (isset($groups_attributes[$key]))
 				{
+					$group = $groups_attributes[$key]['group'];
 					if (!isset($attributes[$group.'_'.$attribute]) && count($groups_attributes[$key]) == 2)
 					{
-						$group = $groups_attributes[$key]['group'];
 						$id_attribute_group = $groups_attributes[$key]['id'];
 						$obj = new Attribute();
 						// sets the proper id (corresponding to the right key)
@@ -1413,12 +1437,11 @@ class AdminImportControllerCore extends AdminController
 						else
 							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
 
+						Db::getInstance()->execute('
+							INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+							VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
+						');
 					}
-
-					Db::getInstance()->execute('
-						INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-						VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
-					');
 
 					// after insertion, we clean attribute position and group attribute position
 					$obj = new Attribute();
