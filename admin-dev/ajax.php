@@ -646,7 +646,7 @@ if (Tools::isSubmit('syncImapMail'))
 	if (!function_exists('imap_open'))
 		die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
 
-	$mbox = @imap_open('{'.$url.':'.$port.(Configuration::get('PS_SAV_IMAP_SSL') ? '/ssl' : '').'}', $user, $password);
+	$mbox = @imap_open('{'.$url.':'.$port.(Configuration::get('PS_SAV_IMAP_OPT') ? Configuration::get('PS_SAV_IMAP_OPT') : '').'}', $user, $password);
 
 	//checks if there is no error when connecting imap server
 	$errors = imap_errors();
