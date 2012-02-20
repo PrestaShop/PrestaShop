@@ -267,6 +267,7 @@ $_ERRORS['eedef2c356c6598d1c1c35c30459ba3c'] = 'Le bon de réduction ne peut ter
 $_ERRORS['9eafdd415e82973f24b7af6580ff15de'] = 'Le montant minimum ne peut être inférieur à 0';
 $_ERRORS['ed6f33d6a5ac4b1e0f37e9ccd6e6a96e'] = 'Le pourcentage de réduction doit être entre 0% et 100%';
 $_ERRORS['8c9b12ce6c7cf8bc520d01e89b358c60'] = 'Le montant de la réduction ne peut être inférieur à 0';
+$_ERRORS['44fb451a35a1c382da79166dc8c78e43'] = 'Aucun produit trouvé';
 $_ERRORS['c1a4c1b929c4f5c81f80ece2d7b196aa'] = 'Produit non valable';
 $_ERRORS['e5b55dc69d10c8673f9d5db587591526'] = 'Combinaison invalide';
 $_ERRORS['b59e4337db2c711a88aa5756f86c682e'] = 'Une commande a déjà été passée avec ce panier';

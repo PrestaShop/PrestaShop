@@ -224,6 +224,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`reduction_currency` int(10) unsigned NOT NULL default 0,
 	`reduction_product` int(10) NOT NULL default 0,
 	`gift_product` int(10) unsigned NOT NULL default 0,
+	`gift_product_attribute` int(10) unsigned NOT NULL default 0,
 	`active` tinyint(1) unsigned NOT NULL default 0,
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
