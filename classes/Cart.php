@@ -705,7 +705,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules'.$this->id);
 	
 		if ((int)$cartRule->gift_product)
-			return $this->updateQty(1, $cartRule->gift_product);
+			$this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute);
 
 		return true;
 	}
@@ -751,8 +751,8 @@ class CartCore extends ObjectModel
 		{
 			if ($id_address_delivery == 0) // The $id_address_delivery is null, get the default customer address
 				$id_address_delivery = (int)Address::getFirstCustomerAddressId((int)Context::getContext()->customer->id);
-			else if (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) // The $id_address_delivery must be linked with customer
-					$id_address_delivery = 0;
+			elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) // The $id_address_delivery must be linked with customer
+				$id_address_delivery = 0;
 		}
 
 		$quantity = (int)$quantity;
@@ -1019,11 +1019,18 @@ class CartCore extends ObjectModel
 	public function removeCartRule($id_cart_rule)
 	{
 		Cache::clean('Cart::getCartRules'.$this->id);
-		return Db::getInstance()->Execute(
-			'DELETE FROM `'._DB_PREFIX_.'cart_cart_rule`
-			WHERE `id_cart_rule` = '.(int)$id_cart_rule.'
-			AND `id_cart` = '.(int)$this->id.' LIMIT 1'
-		);
+
+		$result = Db::getInstance()->Execute('
+		DELETE FROM `'._DB_PREFIX_.'cart_cart_rule`
+		WHERE `id_cart_rule` = '.(int)$id_cart_rule.'
+		AND `id_cart` = '.(int)$this->id.'
+		LIMIT 1');
+		
+		$cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
+		if ((int)$cart_rule->gift_product)
+			$this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, null, 'down');
+		
+		return $result;
 	}
 
 	/**
@@ -1051,14 +1058,13 @@ class CartCore extends ObjectModel
 				AND `id_product_attribute` = '.(int)$id_product_attribute
 			);
 
-			$customization_quantity = (int)Db::getInstance()->getValue(
-				'SELECT `quantity`
-				FROM `'._DB_PREFIX_.'customization`
-				WHERE `id_cart` = '.(int)$this->id.'
-				AND `id_product` = '.(int)$id_product.'
-				AND `id_product_attribute` = '.(int)$id_product_attribute.'
-				AND `id_address_delivery` = '.(int)$id_address_delivery
-			);
+			$customization_quantity = (int)Db::getInstance()->getValue('
+			SELECT `quantity`
+			FROM `'._DB_PREFIX_.'customization`
+			WHERE `id_cart` = '.(int)$this->id.'
+			AND `id_product` = '.(int)$id_product.'
+			AND `id_product_attribute` = '.(int)$id_product_attribute.'
+			'.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
 			if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute))
 				return false;
@@ -1091,13 +1097,12 @@ class CartCore extends ObjectModel
 			);
 
 		/* Product deletion */
-		$result = Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'cart_product`
-			WHERE `id_product` = '.(int)$id_product.
-			(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-			AND `id_cart` = '.(int)$this->id.'
-			AND `id_address_delivery` = '.(int)$id_address_delivery
-		);
+		$result = Db::getInstance()->execute('
+		DELETE FROM `'._DB_PREFIX_.'cart_product`
+		WHERE `id_product` = '.(int)$id_product.'
+		'.(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+		AND `id_cart` = '.(int)$this->id.'
+		'.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
 		if ($result)
 		{
