@@ -35,26 +35,26 @@
 		{if $upgrade}
 		<div id="blockNewVersionCheck">
 		{if $upgrade->need_upgrade}
-			<div class="warning warn" style="margin-bottom:10px;"><h3>{l s ='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s ='Download'} {$upgrade->version_name}</a> !</h3></div>
+			<div class="warning warn" style="margin-bottom:10px;"><h3>{l s='New PrestaShop version available'} : <a style="text-decoration: underline;" href="{$upgrade->link}" target="_blank">{l s='Download'} {$upgrade->version_name}</a> !</h3></div>
 		{/if}
 		</div>
 	{else}
-		<p>{l s ='Update notification unavailable'}</p>
+		<p>{l s='Update notification unavailable'}</p>
 		<p>&nbsp;</p>
-		<p>{l s ='To receive PrestaShop update warnings, you need to activate '} <b>allow_url_fopen</b> [<a href="http://www.php.net/manual/{$isoUser}/ref.filesystem.php">{l s ='more info on php.net'}</a>]</p>
-		<p>{l s ='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
+		<p>{l s='To receive PrestaShop update warnings, you need to activate '} <b>allow_url_fopen</b> [<a href="http://www.php.net/manual/{$isoUser}/ref.filesystem.php">{l s='more info on php.net'}</a>]</p>
+		<p>{l s='If you don\'t know how to do that, please contact your host administrator !'}</p><br />
 	{/if}
 {if $employee->bo_show_screencast}
 <div id="adminpresentation" style="display:block;">
-<h2>{l s ='Video'}</h2>
+<h2>{l s='Video'}</h2>
 		<div id="video">
 			<a href="{$protocol}://screencasts.prestashop.com/v1.5/screencast.php?iso_lang={$isoUser}" id="screencast_fancybox"><img height="128" width="220" src="../img/admin/preview_fr.jpg" /><span class="mask-player"></span></a>
 		</div>
 			<div id="video-content">
-			<p>{l s ='Start now with PrestaShop and all new features to help you sell more and simplify management of your shop'}</p>
+			<p>{l s='Start now with PrestaShop and all new features to help you sell more and simplify management of your shop'}</p>
 			</div>
 	<div id="footer_iframe_home">
-		<!--<a href="#">{l s ='View more video tutorials'}</a>-->
+		<!--<a href="#">{l s='View more video tutorials'}</a>-->
 		<input type="checkbox" id="screencast_dont_show_again">
 		<label for="screencast_dont_show_again">{l s='don\'t show again'}</label>
 	</div>
