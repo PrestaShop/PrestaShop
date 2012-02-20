@@ -8,3 +8,5 @@ SET o.`current_state` = (
 	ORDER BY oh.`date_add` DESC
 	LIMIT 1
 );
+
+UPDATE `PREFIX_product` set is_virtual = 1 WHERE id_product IN (SELECT id_product FROM `PREFIX_product_download` WHERE active = 1);
