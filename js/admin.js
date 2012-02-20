@@ -407,7 +407,7 @@ function helpboxParser(current)
 	return -1;
 }
 
-if (helpboxes)
+if (typeof helpboxes != 'undefined' && helpboxes)
 {
 	$(function()
 	{
