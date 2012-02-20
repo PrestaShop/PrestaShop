@@ -2,9 +2,10 @@
 
 global $_LANGPDF;
 $_LANGPDF = array();
-$_LANGPDF['submitTranslationsPdf'] = '1';
+$_LANGPDF['submitTranslationsPdf'] = 'Enregistrer les modifications';
 $_LANGPDF['PDF065ab3a28ca4f16f55f103adc7d0226f'] = 'Livraison';
 $_LANGPDF['PDF6c2fbe34c186a6b5725d212ad8cd2432'] = 'Facture';
+$_LANGPDF['PDFc7d76074f459eaa296d3eb71efc23eba'] = 'Bon #';
 $_LANGPDF['PDFf771e4a4df40bf061607fdb8e3f140dc'] = 'Bon de commande';
 $_LANGPDF['PDF3a80d6ec5285dd5d3930db30d04e2b9e'] = 'HR : hors remise';
 $_LANGPDF['PDFa58b1c9575ab07c5be819243c96d9c0e'] = 'RC : remise comprise';
@@ -15,7 +16,7 @@ $_LANGPDF['PDFd8b2145d049378e78bd41e65b31213f0'] = 'Num. commande :';
 $_LANGPDF['PDF8a5a12ba783d8cbb761974430d0a4d6a'] = 'Date commande :';
 $_LANGPDF['PDFd36a6948b01d3a75ed99858e2bfea939'] = 'Méthode de paiement :';
 $_LANGPDF['PDFe40007b408ac5f66d2c2e6c54f787c99'] = 'Aucun paiement';
-$_LANGPDF['PDF24488494b2a9126a5ef1dfdaea5913da'] = 'Produits à retourner';
+$_LANGPDF['PDFf6244b08d5e0715572f9d4631b425eae'] = 'Articles à livrer';
 $_LANGPDF['PDFdcd320d017d7f3c317bc8b234287bc9f'] = 'Réference';
 $_LANGPDF['PDFe36ba4b339b83cbb3c807bd0eb5610bc'] = 'Qté';
 $_LANGPDF['PDFff5db4935fb0fbf583796b50f05e25bc'] = 'Une version electronique de ce document est disponible dans votre compte. Pour y accèder connectez vous sur notre site internet en utilisant votre adresse email et mot de passe (Crée lors de votre première commande).		';
@@ -50,6 +51,7 @@ $_LANGPDF['PDFdd0b8feb4eb6c389c284518f5683017c'] = 'Votre paquet doit nous être
 $_LANGPDF['PDFea62a2e28a800c367509773730120a67'] = 'jours après réception de votre commande.';
 $_LANGPDF['PDF752ab8bad7c2e2d894ffa7f2b4f59919'] = 'Numéro de retour:';
 $_LANGPDF['PDF0d8d58008ef5dd7afce337373ef73993'] = 'Date :';
+$_LANGPDF['PDF24488494b2a9126a5ef1dfdaea5913da'] = 'Produits à retourner';
 $_LANGPDF['PDF3796bba38e4bc7dbc3ec97d73be42328'] = 'Si les conditions suivantes ne sont pas respectées, nous nous réservons le droit de refuser votre paquet et/ou votre remboursement:';
 $_LANGPDF['PDF9e023503a19456d31f0760015d035e36'] = 'Merci d\'inscrire votre numéro de retour sur votre retour colis:';
 $_LANGPDF['PDF67606e3dd25c5effeb991c704b96d19c'] = 'Tous les produits doivent être retournés dans leur emballage d\'origine sans être altéré ou porté.';
