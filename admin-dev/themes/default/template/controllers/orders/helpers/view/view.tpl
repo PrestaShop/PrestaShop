@@ -675,6 +675,7 @@
 			<div id="message_m" style="display: {if Tools::getValue('message')}none{else}block{/if}; overflow: auto; width: 400px;">
 				<a href="#" onclick="$('#message').slideToggle();$('#message_m').slideToggle();return false"><b>{l s='Click here'}</b> {l s='to add a comment or send a message to the customer'}</a>
 			</div>
+			<a href="{$link->getAdminLink('AdminCustomerThreads')}"><b>{l s='Click here'}</b> {l s='to see all messages'}</a><br>
 			<div id="message" style="display: {if Tools::getValue('message')}block{else}none{/if}">
 						<select name="order_message" id="order_message" onchange="orderOverwriteMessage(this, '{l s='Do you want to overwrite your existing message?'}')">
 							<option value="0" selected="selected">-- {l s='Choose a standard message'} --</option>
