@@ -103,7 +103,8 @@
 			}
 		});
 		// show / hide save buttons
-		handleSaveForPack();
+		// if product has a name
+		handleSaveButtons();
 	}
 
 	function delPackItem(id)
@@ -143,7 +144,7 @@
 		});
 
 		// if no item left in the pack, disable save buttons
-		handleSaveForPack();
+		handleSaveButtons();
 	}
 
 	function getSelectedIds()
