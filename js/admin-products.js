@@ -310,25 +310,79 @@ function disableSave()
  */
 function enableSave()
 {
-		// if no item left in the pack, disable save buttons
-		if ($("#disablePackMessage").length)
-			$("#disablePackMessage").remove();
-
 		$('#desc-product-save').show();
 		$('#desc-product-save-and-stay').show();
 }
 
-function handleSaveForPack()
+function handleSaveButtons(e)
 {
-	// if no item left in the pack, disable save buttons
-	$("#disablePackMessage").remove();
-	if ($("#inputPackItems").val() == "")
+	msg = [];
+	var i = 0;
+	// relative to type of product
+	if (product_type == product_type_pack)
+		msg[i++] = handleSaveButtonsForPack();
+	else if (product_type == product_type_pack)
+		msg[i++] = handleSaveButtonsForVirtual();
+	else
+		msg[i++] = handleSaveButtonsForSimple();
+	
+	// common for all products
+	// name[defaultlangid]
+	$("#disableSaveMessage").remove();
+	if ($("#name_"+defaultLanguage.id_lang).val() == "")
 	{
-		disableSave();
-		$(".leadin").append('<div id="disablePackMessage" class="warn">' + empty_pack_msg + '</div>');
+		msg[i++] = empty_name_msg;
+	}
+	// friendly_url_[defaultlangid]
+	if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "")
+		msg[i++] = empty_link_rewrite_msg;
+
+	if (msg.length == 0)
+	{
+		$("#disableSaveMessage").remove();
+		enableSave()
 	}
 	else
-		enableSave();
+	{
+		$("#disableSaveMessage").remove();
+		do_not_save = false;
+		for (var key in msg)
+		{
+			if (msg != "")
+			{
+				if (do_not_save == false)
+				{
+					$(".leadin").append('<div id="disableSaveMessage" class="warn"></div>');
+					warnDiv = $("#disableSaveMessage");
+					do_not_save = true;
+				}
+				warnDiv.append('<p id="'+key+'">'+msg[key]+'</p>');
+			}
+		}
+		if (do_not_save)
+			disableSave();
+		else
+			enableSave();
+	}
+}
+
+function handleSaveButtonsForSimple()
+{
+	return "";
+}
+
+function handleSaveButtonsForVirtual()
+{
+	return "";
+}
+
+function handleSaveButtonsForPack()
+{
+	// if no item left in the pack, disable save buttons
+	if ($("#inputPackItems").val() == "")
+		return empty_pack_msg;
+	else
+		return "";
 }
 
 function enableProductName()
@@ -412,6 +466,20 @@ urlToCall = null;
 
 $(document).ready(function() {
 	updateCurrentText();
+	$("#name_"+defaultLanguage.id_lang+",#link_rewrite_"+defaultLanguage.id_lang)
+		.live("change", function(e)
+		{
+			if(typeof e == KeyboardEvent)
+				if(isArrowKey(e))
+					return;
+			$(this).trigger("handleSaveButtons");
+		});
+	// bind that custom event
+	$("#name_"+defaultLanguage.id_lang+",#link_rewrite_"+defaultLanguage.id_lang)
+		.live("handleSaveButtons", function(e)
+		{
+			handleSaveButtons()
+		});
 	updateFriendlyURL();
 
 	// Pressing enter in an input field should not submit the form

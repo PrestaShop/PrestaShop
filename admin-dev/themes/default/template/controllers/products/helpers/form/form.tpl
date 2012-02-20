@@ -79,11 +79,19 @@
 	<script type="text/javascript">
 		var token = '{$token}';
 		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
+
+		var product_type_pack = {Product::PTYPE_PACK};
+		var product_type_virtual = {Product::PTYPE_VIRTUAL};
+		var product_type_simple = {Product::PTYPE_SIMPLE};
+
 		var toload = new Array();
 		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}';
+		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save it.'}';
+		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly url at least for the default language before you can save it.'}';
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
 
+		var product_type;
 		$(document).ready(function()
 		{
 			$('#product-tab-content-wait').show();
@@ -102,8 +110,8 @@
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
 			{/if}
 
-			$('input[name="type_product"]').click(function() {
-
+			$('input[name="type_product"]').click(function()
+			{
 				// Reset settings
 				$('li.tab-row a[id*="Pack"]').hide();
 				$('li.tab-row a[id*="VirtualProduct"]').hide();
@@ -112,8 +120,9 @@
 				$('div.is_virtual_good').hide();
 				$('#is_virtual').val(0);
 				$("#virtual_good_attributes").hide();
-
-				var product_type = $(this).val();
+				
+				// product_type is now global
+				product_type = $(this).val();
 
 				// until a product is added in the pack
 				// if product is PTYPE_PACK, save buttons will be disabled 
@@ -137,12 +146,9 @@
 					$('#condition option[value=new]').removeAttr('selected');
 					$('.stockForVirtualProduct').show();
 					// if pack is enabled, if you choose pack, automatically switch to pack page
-					if ($("#link-Pack:visible").length)
-						handleSaveForPack();
 				}
 				else if (product_type == {Product::PTYPE_VIRTUAL})
 				{
-					enableSave();
 					$('li.tab-row a[id*="VirtualProduct"]').show();
 					$('#is_virtual_good').attr('checked', true);
 					$('#virtual_good').show();
@@ -166,12 +172,13 @@
 				else
 				{
 					// 3rd case : product_type is PTYPE_SIMPLE (0)
-					enableSave();
 					$('li.tab-row a[id*="Shipping"]').show();
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
 					$('.stockForVirtualProduct').show();
 				}
+				// this handle the save button displays and warnings
+				handleSaveButtons();
 
 			});
 
@@ -217,16 +224,13 @@
 				}
 				else if (btn_name == "Attachments")
 				{
-					disableSave();
+					handleSaveButtons();
 				}
 				else
 				{
 					$('#desc-product-newCombination').hide();
 					// if pack is enabled, save button are visible only if pack is valid
-					if ($("#link-Pack:visible").length)
-						handleSaveForPack();
-					else
-						enableSave();
+					handleSaveButtons();
 				}
 			});
 
@@ -238,7 +242,7 @@
 
 			$('#product-tab-content-Associations').bind('loaded', function()
 			{
-				enableSave();
+				handleSaveButtons();
 			});
 
 			$('.confirm_leave').live('click', function(){

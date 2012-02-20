@@ -107,6 +107,8 @@ function copy2friendlyURL()
 	$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8'));
 	if ($('#friendly-url'))
 		$('#friendly-url').html($('#link_rewrite_' + id_language).val());
+	// trigger onchange event to use anything binded there
+	$('#link_rewrite_' + id_language).change(); 
 	return;
 }
 
