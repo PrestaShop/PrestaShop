@@ -161,21 +161,26 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						'size' => 40,
 						'visibility' => Shop::CONTEXT_ALL,
 					),
-					'PS_SAV_IMAP_SSL' => array(
-						'title' => $this->l('Imap use ssl'),
-						'type' => 'bool',
+					'PS_SAV_IMAP_OPT' => array(
+						'title' => $this->l('Imap option'),
+						'type' => 'select',
+						'select_multiple' => true,
+						'size' => 6,
 						'visibility' => Shop::CONTEXT_ALL,
+						'identifier' => 'value',
+						'list' => array(
+							'0' => array('value' => '/norsh', 'name' => $this->l('Do not use rsh or ssh to establish a preauthenticated IMAP session').' /norsh'),
+							'1' => array('value' => '/ssl', 'name' => $this->l('Use the Secure Socket Layer to encrypt the session').' /ssl '),
+							'2' => array('value' => '/validate-cert', 'name' => $this->l('Validate certificates from TLS/SSL server').' /validate-cert'),
+							'3' => array('value' => '/novalidate-cert', 'name' => $this->l('Do not validate certificates from TLS/SSL server, needed if server uses self-signed certificates').' /novalidate-cert'),
+							'4' => array('value' => '/tls', 'name' => $this->l('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it').' /tls'),
+							'5' => array('value' => '/notls', 'name' => $this->l('do not do start-TLS to encrypt the session, even with servers that support it').' /notls')
+						),
 					),
 					'PS_SAV_IMAP_DELETE_MSG' => array(
 						'title' => $this->l('Deletes messages'),
 						'desc' => $this->l('Deletes message after sync. If you do not active this option, the sync will be longer'),
-						'cast' => 'intval',
-						'type' => 'select',
-						'identifier' => 'value',
-						'list' => array(
-							'0' => array('value' => 0, 'name' => $this->l('No')),
-							'1' => array('value' => 1, 'name' => $this->l('Yes')),
-						),
+						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
 					)
 				),
@@ -380,6 +385,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('An error occurred, your message was not sent.  Please contact your system administrator.');
 			}
 		}
+		
+		/*
+if (Tools::isSubmit('submitGeneral'.$this->table))
+		{
+			p($_POST);
+			
+			die('toto');
+			//PS_SAV_IMAP_OPT
+		}
+*/
 
 		return parent::postProcess();
 	}
@@ -602,6 +617,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			if (isset($this->_list[$i]['messages']))
 				$this->_list[$i]['messages'] = Tools::htmlentitiesDecodeUTF8($this->_list[$i]['messages']);
 		}
+	}
+
+	public function updateOptionPsSavImapOpt($value)
+	{
+		if (!$this->errors && $value)
+			Configuration::updateValue('PS_SAV_IMAP_OPT', implode('', $value));
 	}
 
 }
