@@ -144,6 +144,7 @@ class CartCore extends ObjectModel
 	const ONLY_SHIPPING = 5;
 	const ONLY_WRAPPING = 6;
 	const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+	const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
 	public function __construct($id = null, $id_lang = null)
 	{
@@ -1187,6 +1188,7 @@ class CartCore extends ObjectModel
 	* Cart::ONLY_SHIPPING
 	* Cart::ONLY_WRAPPING
 	* Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
+	* Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
 	*
 	* @param boolean $withTaxes With or without taxes
 	* @param integer $type Total type
@@ -1205,7 +1207,8 @@ class CartCore extends ObjectModel
 			Cart::BOTH_WITHOUT_SHIPPING,
 			Cart::ONLY_SHIPPING,
 			Cart::ONLY_WRAPPING,
-			Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
+			Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING,
+			Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
 		);
 		
 		// Define virtual context to prevent case where the cart is not the in the global context
@@ -1227,7 +1230,7 @@ class CartCore extends ObjectModel
 		if ($virtual && $type == Cart::BOTH)
 			$type = Cart::BOTH_WITHOUT_SHIPPING;
 
-		if ($type != Cart::BOTH_WITHOUT_SHIPPING && $type != Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING)
+		if (!in_array($type, array(Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING, Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING)))
 		{
 			if (is_null($products) && is_null($id_carrier))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
@@ -1242,6 +1245,14 @@ class CartCore extends ObjectModel
 
 		if (is_null($products))
 			$products = $this->getProducts();
+	
+		if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING)
+		{
+			foreach ($products as $key => $product)
+				if ($product['is_virtual'])
+					unset($products[$key]);
+			$type = Cart::ONLY_PRODUCTS;
+		}
 
 		$order_total = 0;
 		if (Tax::excludeTaxeOption())
@@ -2152,7 +2163,7 @@ class CartCore extends ObjectModel
 			$products = $product_list;
 
 		// Order total in default currency without fees
-		$order_total = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING, $product_list);
+		$order_total = $this->getOrderTotal(true, Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING, $product_list);
 
 		// Start with shipping cost at 0
 		$shipping_cost = 0;
