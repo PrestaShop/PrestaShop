@@ -6,7 +6,8 @@
 				<div class="translatable">
 				{foreach from=$languages item=language}
 					<div class="lang_{$language.id_lang}" style="display:{if $language.id_lang == $defaultLanguage}block{else}none{/if};float:left">
-						<input type="text" id="name_{$language.id_lang}" name="name_{$language.id_lang}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang)}" />
+						<input type="text" id="name_{$language.id_lang}" name="name_{$language.id_lang}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang)}" style="width:400px" />
+						<sup>*</sup>
 					</div>
 				{/foreach}
 				</div>
