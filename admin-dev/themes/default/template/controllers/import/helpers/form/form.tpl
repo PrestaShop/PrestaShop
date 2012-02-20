@@ -67,7 +67,7 @@
 			{
 				if (confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
 				{
-					this.submit();
+					return true;
 				}
 				else
 				{
