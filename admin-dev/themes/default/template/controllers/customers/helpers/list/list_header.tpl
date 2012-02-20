@@ -25,7 +25,15 @@
 *}
 
 {extends file="helpers/list/list_header.tpl"}
-
+{block name='override_header'}
+{if $submit_form_ajax}
+	<script type="text/javascript">
+		$('#customer', window.parent.document).val('{$new_customer_email}');
+		parent.setupCustomer({$new_customer->id|intval});
+		parent.$.fancybox.close();
+	</script>
+{/if}
+{/block}
 {block name=leadin}
 	{if isset($delete_customer) && $delete_customer}
 		<form action="{$REQUEST_URI}" method="post">

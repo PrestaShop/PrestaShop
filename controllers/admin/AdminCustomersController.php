@@ -719,6 +719,8 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function processAdd($token)
 	{
+		if (Tools::getValue('submitFormAjax'))
+			$this->redirect_after = false;
 		// Check that the new email is not already in use
 		$customer_email = strval(Tools::getValue('email'));
 		$customer = new Customer();
@@ -727,7 +729,15 @@ class AdminCustomersControllerCore extends AdminController
 		if ($customer->id)
 			$this->errors[] = Tools::displayError('An account already exists for this e-mail address:').' '.$customer_email;
 		else
-			return parent::processAdd($token);
+		{	
+			if ($customer = parent::processAdd($token))
+			{
+				$this->context->smarty->assign('new_customer', $customer);
+				return true;
+			}
+			else
+				return false;
+		}
 
 	}
 

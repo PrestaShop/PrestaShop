@@ -212,7 +212,7 @@
 	{
 		$('.fancybox').fancybox({
 			'type': 'iframe',
-			'width': '50%',
+			'width': '60%',
 			'height': '100%'
 		});
 		/*$("#new_address").fancybox({
@@ -304,7 +304,12 @@
 			}
 		});
 	}
-
+	
+	function getSummary()
+	{
+		useCart(id_cart);
+	}
+	
 	function deleteVoucher(id_cart_rule)
 	{
 		$.ajax({
