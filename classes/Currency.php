@@ -115,7 +115,7 @@ class CurrencyCore extends ObjectModel
 	 */
 	public function add($autodate = true, $nullValues = false)
 	{
-		return Currency::exists($this->iso_code) ? false : parent::add();
+		return Currency::exists($this->iso_code, $this->iso_code_num) ? false : parent::add();
 	}
 
 	/**
