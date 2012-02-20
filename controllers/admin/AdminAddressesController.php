@@ -359,6 +359,9 @@ class AdminAddressesControllerCore extends AdminController
 
 		if (empty($this->errors))
 			parent::processSave($token);
+		else
+			// if we have errors, we stay on the form instead of going back to the list
+			$this->display = 'edit';
 
 		/* Reassignation of the order's new (invoice or delivery) address */
 		$address_type = ((int)Tools::getValue('address_type') == 2 ? 'invoice' : ((int)Tools::getValue('address_type') == 1 ? 'delivery' : ''));
@@ -375,6 +378,7 @@ class AdminAddressesControllerCore extends AdminController
 	{
 		if (Tools::getValue('submitFormAjax'))
 			$this->redirect_after = false;
+
 		return parent::processAdd($token);
 	}
 
