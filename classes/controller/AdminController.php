@@ -636,9 +636,9 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->errors = array_unique($this->errors);
-		if (count($this->errors) > 0)
+		if (!empty($this->errors))
 		{
-			// if we have errors, we stay on the form instead of moving to the list
+			// if we have errors, we stay on the form instead of going back to the list
 			$this->display = 'edit';
 			return false;
 		}
@@ -731,7 +731,12 @@ class AdminControllerCore extends Controller
 		}
 		$this->errors = array_unique($this->errors);
 		if (!empty($this->errors))
-			return;
+		{
+			// if we have errors, we stay on the form instead of going back to the list
+			$this->display = 'edit';
+			return false;
+		}
+
 		if (isset($object))
 			return $object;
 		return;
