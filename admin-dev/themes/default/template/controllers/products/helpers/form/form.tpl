@@ -79,21 +79,23 @@
 	<script type="text/javascript">
 		var token = '{$token}';
 		var id_product = {if isset($product->id)}{$product->id}{else}0{/if};
+		var defaultLanguage = {$defaultLanguage};
 
 		var product_type_pack = {Product::PTYPE_PACK};
 		var product_type_virtual = {Product::PTYPE_VIRTUAL};
 		var product_type_simple = {Product::PTYPE_SIMPLE};
 
 		var toload = new Array();
-		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.'}';
-		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save it.'}';
-		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly url at least for the default language before you can save it.'}';
+		var empty_pack_msg = '{l s='Pack is empty. You need to add at least one product to the pack before you can save it.' slashes=1}';
+		var empty_name_msg = '{l s='Product name is empty. You need to enter a name at least for the default language before you can save it.' slashes=1}';
+		var empty_link_rewrite_msg = '{l s='Friendly URL is empty. You need to enter a friendly url at least for the default language before you can save it.' slashes=1}';
 		$('#product-tab-content-wait').show();
 		var post_data = {$post_data};
 
 		var product_type;
 		$(document).ready(function()
 		{
+			product_type = $("input[name=type_product]:checked").val();
 			$('#product-tab-content-wait').show();
 			{if $is_pack}
 				$('#pack_product').attr('checked', 'checked');

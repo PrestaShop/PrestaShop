@@ -316,6 +316,7 @@ function enableSave()
 
 function handleSaveButtons(e)
 {
+	product_type = $("input[name=type_product]:checked").val();
 	msg = [];
 	var i = 0;
 	// relative to type of product
@@ -333,8 +334,8 @@ function handleSaveButtons(e)
 	{
 		msg[i++] = empty_name_msg;
 	}
-	// friendly_url_[defaultlangid]
-	if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "")
+	// check friendly_url_[defaultlangid] only if name is ok
+	else if ($("#link_rewrite_"+defaultLanguage.id_lang).val() == "")
 		msg[i++] = empty_link_rewrite_msg;
 
 	if (msg.length == 0)

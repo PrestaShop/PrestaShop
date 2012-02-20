@@ -2101,6 +2101,7 @@ class AdminProductsControllerCore extends AdminController
 		$this->getLanguages();
 		$languages = $this->_languages;
 		$default_language = (int)Configuration::get('PS_LANG_DEFAULT');
+		$this->tpl_form_vars['defaultLanguage'] = Language::getLanguage($default_language);
 
 		$this->tpl_form_vars['currentIndex'] = self::$currentIndex;
 		$this->fields_form = array('');
