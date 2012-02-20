@@ -65,7 +65,7 @@
 		$('#preview_import').submit(function() {
 			if ($('#truncate').get(0).checked)
 			{
-				if (confirm('{l s='Are you sure you want to delete'}' + ' ' + $('#entity > option:selected').text().toLowerCase() + '{l s='?'}'))
+				if (confirm('{l s='Are you sure you want to delete' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '{l s='?' js=1}'))
 				{
 					this.submit();
 				}
