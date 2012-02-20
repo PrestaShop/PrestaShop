@@ -150,9 +150,10 @@ class AdminGroupsControllerCore extends AdminController
 		$customer_list = $group->getCustomers(false);
 
 		$helper = new HelperList();
-		$helper->currentIndex = self::$currentIndex;
-		$helper->token = $this->token;
+		$helper->currentIndex = Context::getContext()->link->getAdminLink('AdminCustomers', false);
+		$helper->token = Tools::getAdminTokenLite('AdminCustomers');
 		$helper->shopLinkType = '';
+		$helper->table = 'customer';
 		$helper->identifier = 'id_customer';
 		$helper->actions = array('edit', 'view');
 		$helper->show_toolbar = false;
