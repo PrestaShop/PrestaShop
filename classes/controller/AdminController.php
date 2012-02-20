@@ -624,13 +624,13 @@ class AdminControllerCore extends Controller
 				$this->afterAdd($object);
 				$this->updateAssoShop($object->id);
 				// Save and stay on same form
-				if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+				if (empty($this->redirect_after) && $this->redirect_after !== false && Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
 					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token;
 				// Save and back to parent
-				if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+				if (empty($this->redirect_after) && $this->redirect_after !== false && Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
 					$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token;
 				// Default behavior (save and back)
-				if (empty($this->redirect_after))
+				if (empty($this->redirect_after) && $this->redirect_after !== false)
 					$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token;
 			}
 		}
@@ -1693,6 +1693,8 @@ class AdminControllerCore extends Controller
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 		));
+		
+		$this->context->smarty->assign('submit_form_ajax', (int)Tools::getValue('submitFormAjax'));
 
 		$this->initProcess();
 	}
