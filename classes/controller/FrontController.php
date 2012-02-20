@@ -159,7 +159,7 @@ class FrontControllerCore extends Controller
 
 		/* Theme is missing or maintenance */
 		if (!is_dir(_PS_THEME_DIR_))
-			die(Tools::displayError('Current theme unavailable. Please check your theme directory name and permissions.'));
+			die(sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\'))));
 		elseif (basename($_SERVER['PHP_SELF']) != 'disabled.php' && !(int)(Configuration::get('PS_SHOP_ENABLE')))
 			$this->maintenance = true;
 		elseif (Configuration::get('PS_GEOLOCATION_ENABLED'))
