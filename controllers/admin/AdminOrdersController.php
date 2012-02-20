@@ -429,7 +429,7 @@ class AdminOrdersControllerCore extends AdminController
 						foreach ($customizationList as $key => $id_order_detail)
 						{
 							$full_product_list[$id_order_detail] = $id_order_detail;
-							$full_quantity_list[$id_order_detail] = $customizationQtyList[$key];
+							$full_quantity_list[$id_order_detail] += $customizationQtyList[$key];
 						}
 
 					if ($productList || $customizationList)
@@ -975,7 +975,7 @@ class AdminOrdersControllerCore extends AdminController
 						else
 							break;
 					}
-					
+
 					if ($res)
 					{
 						foreach ($cart_rules as $id_order_invoice => $cart_rule)
