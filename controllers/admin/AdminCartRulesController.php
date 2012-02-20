@@ -370,6 +370,20 @@ class AdminCartRulesControllerCore extends AdminController
 			$reduction_product_filter = trim($product->reference.' '.$product->name);
 
 		$product_rule_groups = $this->getProductRuleGroupsDisplay($current_object);
+		
+		$attribute_groups = AttributeGroup::getAttributesGroups(Context::getContext()->language->id);
+		$currencies = Currency::getCurrencies();
+		$languages = Language::getLanguages();
+		$countries = $current_object->getAssociatedRestrictions('country', true, true);
+		$groups = $current_object->getAssociatedRestrictions('group', false, true);
+		$shops = $current_object->getAssociatedRestrictions('shop', false, false);
+		$cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true);
+		$carriers = $current_object->getAssociatedRestrictions('carrier', true, false);
+		foreach ($carriers as &$carriers2)
+			foreach ($carriers2 as &$carrier)
+				foreach ($carrier as $field => &$value)
+					if ($field == 'name' && $value == '0')
+						$value = Configuration::get('PS_SHOP_NAME');
 
 		Context::getContext()->smarty->assign(
 			array(
@@ -377,7 +391,6 @@ class AdminCartRulesControllerCore extends AdminController
 				'toolbar_btn' => $this->toolbar_btn,
 				'toolbar_fix' => $this->toolbar_fix,
 				'title' => $this->l('Payment : Cart Rules '),
-				'languages' => Language::getLanguages(),
 				'defaultDateFrom' => date('Y-m-d H:00:00'),
 				'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
 				'customerFilter' => $customer_filter,
@@ -385,15 +398,16 @@ class AdminCartRulesControllerCore extends AdminController
 				'reductionProductFilter' => $reduction_product_filter,
 				'defaultCurrency' => Configuration::get('PS_CURRENCY_DEFAULT'),
 				'defaultLanguage' => Configuration::get('PS_LANG_DEFAULT'),
-				'currencies' => Currency::getCurrencies(),
-				'countries' => $current_object->getAssociatedRestrictions('country', true, true),
-				'carriers' => $current_object->getAssociatedRestrictions('carrier', true, true),
-				'groups' => $current_object->getAssociatedRestrictions('group', false, true),
-				'shops' => $current_object->getAssociatedRestrictions('shop', false, false),
-				'cart_rules' => $current_object->getAssociatedRestrictions('cart_rule', false, true),
+				'languages' => $languages,
+				'currencies' => $currencies,
+				'countries' => $countries,
+				'carriers' => $carriers,
+				'groups' => $groups,
+				'shops' => $shops,
+				'cart_rules' => $cart_rules,
 				'product_rule_groups' => $product_rule_groups,
 				'product_rule_groups_counter' => count($product_rule_groups),
-				'attribute_groups' => AttributeGroup::getAttributesGroups(Context::getContext()->language->id),
+				'attribute_groups' => $attribute_groups,
 				'currentIndex' => self::$currentIndex,
 				'currentToken' => $this->token,
 				'currentObject' => $current_object,
