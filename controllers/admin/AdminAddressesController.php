@@ -370,6 +370,13 @@ class AdminAddressesControllerCore extends AdminController
 				Tools::redirectAdmin(Tools::getValue('back').'&conf=4');
 		}
 	}
+	
+	public function processAdd($token)
+	{
+		if (Tools::getValue('submitFormAjax'))
+			$this->redirect_after = false;
+		return parent::processAdd($token);
+	}
 
 	/**
 	 * Get Address formats used by the country where the address id retrieved from POST/GET is.

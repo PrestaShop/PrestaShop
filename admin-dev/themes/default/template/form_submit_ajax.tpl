@@ -30,6 +30,7 @@
 			e.preventDefault();
 			var form_datas = new Object;
 			form_datas['liteDisplaying'] = 1;
+			form_datas['submitFormAjax'] = 1;
 			var form_inputs = $('#{$table}_form input, #{$table}_form textarea, #{$table}_form button');
 			var form_selects = $('#{$table}_form select');
 			$.each(form_inputs, function() {
@@ -39,7 +40,8 @@
 				form_datas[this.name] = this.value;
 			});
 			$.each(form_selects, function() {
-				form_datas[this.name] = this[this.options.selectedIndex].value;
+				if	(this.options != undefined && this.options.selectedIndex != undefined && this[this.options.selectedIndex] != undefined)
+					form_datas[this.name] = this[this.options.selectedIndex].value;
 			});
 			$.ajax({
 				type: this.method,
