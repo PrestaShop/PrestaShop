@@ -35,8 +35,7 @@
 		<fieldset>
 			<p>
 				<label for="search">{l s='Search our product catalog:'}</label>
-				<input id="search_query" name="search_query" type="text" />
-				<input type="submit" name="Submit" value="OK" class="button_small" />
+				<input id="search_query" name="search_query" type="text" /><input type="submit" name="Submit" value="OK" class="button_small" />
 			</p>
 		</fieldset>
 	</form>
