@@ -86,13 +86,7 @@
 				{/block}
 				{if $field['type'] == 'select'}
 					{if $field['list']}
-						{if isset($field['select_multiple']) && $field['select_multiple']}
-							{assign var="select_name" value="{$key}[]"}
-						{else}
-							{assign var="select_name" value="[$key]"}
-						{/if}
-						
-						<select name="{$select_name}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if $field['select_multiple']} multiple="multiple"{/if} {if $field['size']} size="{$field['size']}"{/if}>
+						<select name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if $field['size']} size="{$field['size']}"{/if}>
 							{foreach $field['list'] AS $k => $option}
 								<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
 							{/foreach}
