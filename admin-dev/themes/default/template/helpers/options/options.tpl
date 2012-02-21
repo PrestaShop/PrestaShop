@@ -86,7 +86,7 @@
 				{/block}
 				{if $field['type'] == 'select'}
 					{if $field['list']}
-						{if $field['select_multiple']}
+						{if isset($field['select_multiple']) && $field['select_multiple']}
 							{assign var="select_name" value="{$key}[]"}
 						{else}
 							{assign var="select_name" value="[$key]"}
