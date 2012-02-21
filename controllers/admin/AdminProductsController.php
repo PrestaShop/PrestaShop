@@ -371,11 +371,20 @@ class AdminProductsControllerCore extends AdminController
 				if (Tools::strlen($attachment->file_name) > 128)
 					$this->errors[] = Tools::displayError('File name too long');
 				if (empty($this->errors))
-					$attachment->add();
+				{
+					$res = $attachment->add();
+					if (!$res)
+						$this->errors[] = Tools::displayError('Unable to add this attachment in the database');
+					else
+					{
+						$id_product = (int)Tools::getValue($this->identifier);
+						$res = $attachment->attachProduct($id_product);
+						if (!$res)
+							$this->errors[] = Tools::displayErrors('Unable to associate this attachment to product');
+					}
+				}
 				else
 					$this->errors[] = Tools::displayError('Invalid file');
-				if (Validate::isLoadedObject($attachment))
-					$this->redirect_after = self::$currentIndex.'&id_product='.Tools::getValue('id_product').(isset($_POST['id_category']) ? '&id_category='.(int)$_POST['id_category'] : '').'&conf=4&add'.$this->table.'&action=Attachments&token='.($token ? $token : $this->token);
 			}
 		}
 	}
@@ -902,6 +911,7 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$this->action = 'addAttachments';
 				$this->tab_display = 'attachments';
+				$this->display = 'edit';
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to add here.');
@@ -3005,8 +3015,8 @@ class AdminProductsControllerCore extends AdminController
 			$attachment_description = array();
 			foreach ($languages as $language)
 			{
-				$attachment_name[$language['id_lang']] = $this->getFieldValue($obj, 'attachment_name', (int)$language['id_lang']);
-				$attachment_description[$language['id_lang']] = $this->getFieldValue($obj, 'attachment_description', (int)$language['id_lang']);
+				$attachment_name[$language['id_lang']] = '';
+				$attachment_description[$language['id_lang']] = '';
 			}
 
 			$data->assign(array(
