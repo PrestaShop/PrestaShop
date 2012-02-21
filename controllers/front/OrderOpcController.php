@@ -376,7 +376,7 @@ class OrderOpcControllerCore extends ParentOrderController
 					'carriers' => $carriers,
 					'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 					'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
-					'delivery_option' => $this->context->cart->getDeliveryOption()
+					'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
 				))
 			));
 		}
@@ -411,7 +411,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			else
 				return '<p class="warning">'.Tools::displayError('Error: There are no carriers available that deliver to this address').'</p>';
 		}
-		if (!$this->context->cart->getDeliveryOption() && !$this->context->cart->isVirtualCart())
+		if (!$this->context->cart->getDeliveryOption(null, true) && !$this->context->cart->isVirtualCart())
 			return '<p class="warning">'.Tools::displayError('Error: please choose a carrier').'</p>';
 		if (!$this->context->cart->id_currency)
 			return '<p class="warning">'.Tools::displayError('Error: no currency has been selected').'</p>';
@@ -464,13 +464,13 @@ class OrderOpcControllerCore extends ParentOrderController
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 			'carriers' => $carriers,
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
-			'delivery_option' => $this->context->cart->getDeliveryOption(),
+			'delivery_option' => $this->context->cart->getDeliveryOption(null, true),
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'opc' => true,
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
-				'delivery_option' => $this->context->cart->getDeliveryOption()
+				'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
 			))
 		);
 		
@@ -488,7 +488,7 @@ class OrderOpcControllerCore extends ParentOrderController
 				'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 					'carriers' => $carriers,
 					'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
-					'delivery_option' => $this->context->cart->getDeliveryOption()
+					'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
 				)),
 				'carrier_block' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-carrier.tpl')
 			);

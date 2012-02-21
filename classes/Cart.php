@@ -2038,7 +2038,7 @@ class CartCore extends ObjectModel
 	* Get the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
 	* @return array delivery option
 	*/
-	public function getDeliveryOption($default_country = null)
+	public function getDeliveryOption($default_country = null, $dontAutoSeletectOptions = false)
 	{
 		$delivery_option_list = $this->getDeliveryOptionList($default_country);
 
@@ -2057,6 +2057,9 @@ class CartCore extends ObjectModel
 			if ($validated)
 				return $delivery_option;
 		}
+		
+		if ($dontAutoSeletectOptions)
+			return false;
 
 		// No delivery option selected or delivery option selected is not valid, get the better for all options
 		$delivery_option = array();
