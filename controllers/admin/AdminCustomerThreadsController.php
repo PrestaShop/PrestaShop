@@ -405,17 +405,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('An error occurred, your message was not sent.  Please contact your system administrator.');
 			}
 		}
-		
-		/*
-if (Tools::isSubmit('submitGeneral'.$this->table))
-		{
-			p($_POST);
-			
-			die('toto');
-			//PS_SAV_IMAP_OPT
-		}
-*/
-
 		return parent::postProcess();
 	}
 
