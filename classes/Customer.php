@@ -143,6 +143,9 @@ class CustomerCore extends ObjectModel
 			'deleted' => array(),
 			'passwd' => array('setter' => 'setWsPasswd'),
 		),
+		'associations' => array(
+				'groups' => array('resource' => 'group'),
+		)
 	);
 
 	/**
@@ -746,5 +749,23 @@ class CustomerCore extends ObjectModel
 		$total_rest = (float)Db::getInstance()->getValue($query->build());
 
 		return $total_paid - $total_rest;
+	}
+
+	public function getWsGroups()
+	{
+		return Db::getInstance()->ExecuteS('
+				SELECT cg.`id_group` as id
+				FROM '._DB_PREFIX_.'customer_group cg
+				WHERE cg.`id_customer` = '.(int)$this->id);
+	}
+	
+	public function setWsGroups($result)
+	{
+		$groups = array();
+		foreach ($result as $row)
+			$groups[] = $row['id'];
+		$this->cleanGroups();
+		$this->addGroups($groups);
+		return true;
 	}
 }
