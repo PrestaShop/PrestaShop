@@ -112,12 +112,14 @@ class FrontControllerCore extends Controller
 		if ($this->ssl && !Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
+			header('Cache-Control: no-cache');
 			header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
 		else if (Configuration::get('PS_SSL_ENABLED') && Tools::usingSecureMode() && !($this->ssl))
 		{
 			header('HTTP/1.1 301 Moved Permanently');
+			header('Cache-Control: no-cache');
 			header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
 			exit();
 		}
@@ -567,6 +569,7 @@ class FrontControllerCore extends Controller
 				$strParams = ((strpos($canonicalURL, '?') === false) ? '?' : '&').implode('&', $params);
 
 			header('HTTP/1.0 301 Moved');
+			header('Cache-Control: no-cache');
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__)
 				die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$canonicalURL.Tools::safeOutput($strParams).'">'.$canonicalURL.Tools::safeOutput($strParams).'</a>');
 			Tools::redirectLink($canonicalURL.$strParams);
@@ -582,7 +585,7 @@ class FrontControllerCore extends Controller
 			{
 				if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
-          			include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
+					include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 					include_once(_PS_GEOIP_DIR_.'geoipregionvars.php');
 
 					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
