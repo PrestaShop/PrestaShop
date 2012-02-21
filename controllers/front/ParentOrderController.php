@@ -409,7 +409,7 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option_list' => $delivery_option_list,
 			'carriers' => $carriers,
 			'checked' => $checked,
-			'delivery_option' => $this->context->cart->getDeliveryOption()
+			'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
 		));
 		
 		$vars = array(
@@ -417,7 +417,7 @@ class ParentOrderControllerCore extends FrontController
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
-				'delivery_option' => $this->context->cart->getDeliveryOption()
+				'delivery_option' => $this->context->cart->getDeliveryOption(null, true)
 			))
 		);
 		
@@ -453,7 +453,7 @@ class ParentOrderControllerCore extends FrontController
 			'carriers' => $this->context->cart->simulateCarriersOutput(),
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
 			'address_collection' => $this->context->cart->getAddressCollection(),
-			'delivery_option' => $this->context->cart->getDeliveryOption(),
+			'delivery_option' => $this->context->cart->getDeliveryOption(null, true),
 			'gift_wrapping_price' => (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE')),
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));
