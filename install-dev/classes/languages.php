@@ -178,12 +178,4 @@ class InstallLanguages
 
 		return $countries;
 	}
-
-	public function getFixtureTranslation($iso, $key)
-	{
-		$translation = $this->getLanguage($iso)->getFixtureTranslation($key);
-		if (is_null($translation))
-			$translation = $this->getLanguage(self::DEFAULT_ISO)->getFixtureTranslation($key);
-		return $translation;
-	}
 }

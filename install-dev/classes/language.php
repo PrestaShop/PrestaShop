@@ -97,14 +97,6 @@ class InstallLanguage
 		return isset($this->data[$type][$key]) ? $this->data[$type][$key] : null;
 	}
 
-	public function getFixtureTranslation($key)
-	{
-		if (!is_array($this->fixtures_data))
-			$this->fixtures_data = file_exists(_PS_INSTALL_FIXTURES_PATH_.'apple/langs/'.$this->iso.'/fixtures.php') ? include(_PS_INSTALL_FIXTURES_PATH_.'apple/langs/'.$this->iso.'/fixtures.php') : array();
-
-		return isset($this->fixtures_data[$key]) ? $this->fixtures_data[$key] : null;
-	}
-
 	public function getCountries()
 	{
 		if (!is_array($this->countries))
