@@ -234,6 +234,17 @@ class ValidateCore
 	}
 
 	/**
+	* Check for price validity (including negative price)
+	*
+	* @param string $price Price to validate
+	* @return boolean Validity is ok or not
+	*/
+	public static function isNegativePrice($price)
+	{
+		return preg_match('/^[-]?[0-9]{1,10}(\.[0-9]{1,9})?$/', $price);
+	}
+
+	/**
 	 * Check for language code (ISO) validity
 	 *
 	 * @param string $iso_code Language code (ISO) to validate
