@@ -758,7 +758,7 @@ class CustomerCore extends ObjectModel
 				FROM '._DB_PREFIX_.'customer_group cg
 				WHERE cg.`id_customer` = '.(int)$this->id);
 	}
-	
+
 	public function setWsGroups($result)
 	{
 		$groups = array();
