@@ -2,7 +2,7 @@
 <module>
 	<name>blocklayered</name>
 	<displayName><![CDATA[Layered navigation block]]></displayName>
-	<version><![CDATA[1.8]]></version>
+	<version><![CDATA[1.8.1]]></version>
 	<description><![CDATA[Displays a block with layered navigation filters.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

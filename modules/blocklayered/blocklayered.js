@@ -356,6 +356,9 @@ function reloadContent(params_plus)
 				$('#product_list').html('');
 
 			$('#product_list').css('opacity', '1');
+			if ($.browser.msie) // Fix bug with IE8 and aliasing
+				$('#product_list').css('filter', '');
+			
 			$('div#pagination').html(result.pagination);
 			paginationButton();
 			ajaxLoaderOn = 0;
