@@ -197,11 +197,12 @@ class OrderDetailCore extends ObjectModel
 			'download_hash' => array(),
 			'download_deadline' => array()
 		),
+		'hidden_fields' => array('tax_rate', 'tax_name'),
 		'associations' => array(
 				'taxes'  => array('resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
-						'fields' => array('id' =>  array()),
+						'fields' => array('id' =>  array(), ),
 						),
-				));
+		));
 
 	/** @var bool */
 	protected $outOfStock = false;
