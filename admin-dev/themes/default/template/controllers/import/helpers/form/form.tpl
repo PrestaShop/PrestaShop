@@ -105,7 +105,7 @@
 			{l s='Note that our samples our available, below.'}
 			<div class="clear">&nbsp;</div>
 			<ul id="sample_files_import">
-				<li><a href="../docs/csv_import/categories_import.csfav">{l s='Categories sample file'}</a></li>
+				<li><a href="../docs/csv_import/categories_import.csv">{l s='Categories sample file'}</a></li>
 				<li><a href="../docs/csv_import/products_import.csv">{l s='Products sample file'}</a></li>
 				<li><a href="../docs/csv_import/combinations_import.csv">{l s='Combinations sample file'}</a></li>
 				<li><a href="../docs/csv_import/customers_import.csv">{l s='Customers sample file'}</a></li>
