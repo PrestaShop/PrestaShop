@@ -345,17 +345,34 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		return $helper->generateForm($this->fields_form);
 	}
 
-	public function postProcess()
-	{
-		if (Tools::isSubmit('deletetax_rule'))
-			$this->processDeleteTaxRule();
+
+    public function initProcess()
+    {
+        if (Tools::isSubmit('deletetax_rule'))
+        {
+            if ($this->tabAccess['delete'] === '1')
+                $this->action = 'delete_tax_rule';
+            else
+                $this->errors[] = Tools::displayError('You do not have permission to delete here.');
+        }
         else if (Tools::isSubmit('submitBulkdelete_tax_rule'))
-            $this->processBulkDeleteTaxRules();
-		else if (Tools::getValue('action') == 'create_rule')
-			$this->processCreateRule();
-		else
-			parent::postProcess();
-	}
+        {
+            if ($this->tabAccess['delete'] === '1')
+                $this->action = 'bulk_delete_tax_rule';
+            else
+                $this->errors[] = Tools::displayError('You do not have permission to delete here.');
+        }
+        else if (Tools::getValue('action') == 'create_rule')
+        {
+            if ($this->tabAccess['add'] === '1')
+                $this->action = 'create_rule';
+            else
+                $this->errors[] = Tools::displayError('You do not have permission to add here.');
+        }
+        else
+            parent::initProcess();
+
+    }
 
 	protected function processCreateRule()
 	{
@@ -387,8 +404,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				$tr->description = Tools::getValue('description');
 				$this->tax_rule = $tr;
 				$_POST['id_state'] = $tr->id_state;
-				$this->_errors_tax_rule = $this->validateTaxRule($tr);
-				if (count($this->_errors_tax_rule) == 0)
+                $this->errors = $this->validateTaxRule($tr);
+
+				if (count($this->errors) == 0)
 					if (!$tr->save())
 						$this->errors[] = Tools::displayError('An error has occured: Can\'t save the current tax rule');
 				else
@@ -396,8 +414,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			}
 		}
 
-		if (count($this->_errors_tax_rule) == 0)
+		if (count($this->errors) == 0)
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$tr->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token);
+        else
+            $this->display = 'edit';
 	}
 
     protected function processBulkDeleteTaxRules()
