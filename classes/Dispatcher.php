@@ -247,6 +247,8 @@ class DispatcherCore
 					$controllers['authentication'] = $controllers['auth'];
 				if (isset($controllers['compare']))
 					$controllers['productscomparison'] = $controllers['compare'];
+                if (isset($controllers['contact']))
+                    $controllers['contactform'] = $controllers['contact'];
 
 				if (!isset($controllers[$this->controller]))
 					$this->controller = 'pagenotfound';
