@@ -581,7 +581,7 @@ class OrderDetailCore extends ObjectModel
         $this->total_shipping_price_tax_incl = (float)($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
         $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, 2);
     }
-    
+
     public function getWsTaxes()
     {
     	$query = new DbQuery();
