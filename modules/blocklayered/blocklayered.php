@@ -39,7 +39,7 @@ class BlockLayered extends Module
 	{
 		$this->name = 'blocklayered';
 		$this->tab = 'front_office_features';
-		$this->version = '1.8';
+		$this->version = '1.8.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -70,7 +70,11 @@ class BlockLayered extends Module
 			Configuration::updateValue('PS_LAYERED_FILTER_CATEGORY_DEPTH', 1);
 			
 			$this->rebuildLayeredStructure();
-			$this->rebuildLayeredCache();
+			
+			$products_count = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'product`');
+			
+			if ($products_count < 10000) // Lock price indexation if too many products
+				$this->rebuildLayeredCache();
 			self::installPriceIndexTable();
 			$this->installFriendlyUrlTable();
 			$this->installIndexableAttributeTable();
@@ -79,7 +83,7 @@ class BlockLayered extends Module
 			$this->indexUrl();
 			$this->indexAttribute();
 			
-			if (Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'product`') < 10000) // Lock price indexation if too many products
+			if ($products_count < 10000) // Lock price indexation if too many products
 				self::fullPricesIndexProcess();
 			
 			return true;
@@ -1144,24 +1148,29 @@ class BlockLayered extends Module
 
 		// Generate meta title and meta description
 		$title = '';
+		$keywords = '';
 		if (is_array($filterBlock['title_values']))
 			foreach ($filterBlock['title_values'] as $key => $val)
-				$title .= $key.' '.implode('/', $val).' – ';
-		$title = rtrim($title, ' – ');
+			{
+				$title .= $key.' '.implode('/', $val).' ';
+				$keywords .= $key.' '.implode('/', $val).', ';
+			}
+		$title = strtolower(rtrim($title));
+		
 		$categoryMetas = Tools::getMetaTags($idLang, '', $title);
 		$categoryTitle = (empty($category->meta_title[$idLang]) ? $category->name[$idLang] : $category->meta_title[$idLang]);
 		
 		if (!empty($title))
 		{
-			$smarty->assign('meta_title', $categoryTitle.$categoryMetas['meta_title']); 
-			$smarty->assign('meta_description', $categoryTitle.' '.$title.' '.$categoryMetas['meta_description']);
+			$smarty->assign('meta_title', $categoryTitle.substr($categoryMetas['meta_title'], 2)); 
+			$smarty->assign('meta_description', $categoryTitle.' '.$title.'. '.$categoryMetas['meta_description']);
 		}
 		else
 			$smarty->assign('meta_title', $categoryMetas['meta_title']);
 		
-		$metaKeyWordsComplement = substr(str_replace(' – ', ', ', strtolower($title)), 0, 1000);
-		if (!empty($metaKeyWordsComplement))
-			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$metaKeyWordsComplement.', '.$categoryMetas['meta_keywords'], ', '));
+		$keywords = substr(strtolower($keywords), 0, 1000);
+		if (!empty($keywords))
+			$smarty->assign('meta_keywords', rtrim($categoryTitle.', '.$keywords.', '.$categoryMetas['meta_keywords'], ', '));
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 		{
@@ -1178,6 +1187,48 @@ class BlockLayered extends Module
 			Tools::addCSS(_PS_CSS_DIR_.'jquery-ui-1.8.10.custom.css', 'all');
 			Tools::addCSS(($this->_path).'blocklayered.css', 'all');
 			Tools::addJS(_PS_JS_DIR_.'jquery/jquery.scrollTo-1.4.2-min.js');
+		}
+		
+		$filters = $this->getSelectedFilters();
+		
+		// Get non indexable attributes
+		$attribute_group_list = Db::getInstance()->executeS('SELECT id_attribute_group FROM '._DB_PREFIX_.'layered_indexable_attribute_group WHERE indexable = 0');
+		// Get non indexable features
+		$feature_list = Db::getInstance()->executeS('SELECT id_feature FROM '._DB_PREFIX_.'layered_indexable_feature WHERE indexable = 0');
+
+		$attributes = array();
+		$features = array();
+		
+		foreach ($filters as $type => $val)
+		{
+			switch($type)
+			{
+				case 'price':
+				case 'weight':
+					return '<meta name="robots" content="noindex,nofollow"/>';
+				case 'id_attribute_group':
+					foreach ($val as $attr)
+					{
+						$attr_id = preg_replace('/_\d+$/', '', $attr);
+						if (in_array($attr_id, $attributes) || in_array(array('id_attribute_group' => $attr_id), $attribute_group_list))
+							return '<meta name="robots" content="noindex,nofollow"/>';
+						$attributes[] = $attr_id;
+					}
+					break;
+				case 'id_feature':
+					foreach ($val as $feat)
+					{
+						$feat_id = preg_replace('/_\d+$/', '', $feat);
+						if (in_array($feat_id, $features) || in_array(array('id_feature' => $feat_id), $feature_list))
+							return '<meta name="robots" content="noindex,nofollow"/>';
+						$features[] = $feat_id;
+					}
+					break;
+				default:
+					if (count($val) > 1)
+						return '<meta name="robots" content="noindex,nofollow"/>';
+					break;
+			}
 		}
 	}
 	
@@ -2962,11 +3013,11 @@ class BlockLayered extends Module
 					$nofollow = false;
 					$optionCheckedCloneArray = $optionCheckedArray;
 					
-					//if not filters checked, add parameter
+					// If not filters checked, add parameter
 					$valueName = !empty($values['url_name']) ? $values['url_name'] : $values['name'];
 					if (!in_array(Tools::link_rewrite($valueName), $paramGroupSelectedArray[Tools::link_rewrite($filterName)]))
 					{
-						//update parameter filter checked before
+						// Update parameter filter checked before
 						if (array_key_exists(Tools::link_rewrite($filterName), $optionCheckedArray))
 						{
 							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = $optionCheckedCloneArray[Tools::link_rewrite($filterName)].'-'.str_replace('-', '_', Tools::link_rewrite($valueName));
@@ -2990,7 +3041,7 @@ class BlockLayered extends Module
 					foreach ($nonIndexable as $value)
 						if (strpos($parameters, '/'.$value) !== false)
 							$nofollow = true;
-					//write link by mode rewriting
+					// Write link by mode rewriting
 					if (!Configuration::get('PS_REWRITING_SETTINGS'))
 						$typeFilter['values'][$key]['link'] = $linkBase.'&selected_filters='.$parameters;
 					else
