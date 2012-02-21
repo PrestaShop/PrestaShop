@@ -762,7 +762,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->table = 'supply_order_detail';
 		$this->identifier = 'id_supply_order_detail';
 	 	$this->className = 'SupplyOrderDetail';
-	 	$this->list_simple_header = true;
+	 	$this->list_simple_header = false;
 	 	$this->list_no_link = true;
 	 	$this->colorOnBackground = true;
 	 	$this->row_hover = false;
@@ -1164,7 +1164,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 
 		// updates receipt
-		if (Tools::isSubmit('submitBulkUpdatesupply_order_detail') && Tools::isSubmit('id_supply_order'))
+		if (Tools::isSubmit('submitFiltersupply_order_detail') && Tools::isSubmit('submitBulkUpdate') && Tools::isSubmit('id_supply_order'))
 			$this->postProcessUpdateReceipt();
 
 		// use template to create a supply order
@@ -1958,6 +1958,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	protected function afterAdd($object)
 	{
+		if (Tools::getValue('load_products') && Validate::isInt(Tools::getValue('load_products')))
+			$this->loadProducts((int)Tools::getValue('load_products'));
+
 		$this->object = $object;
 		return true;
 	}
