@@ -198,7 +198,7 @@ class OrderDetailCore extends ObjectModel
 			'download_deadline' => array()
 		),
 		'associations' => array(
-				'taxes'  => array('resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false, 'virtual_entity' => true,
+				'taxes'  => array('resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
 						'fields' => array('id' =>  array()),
 						),
 				));
