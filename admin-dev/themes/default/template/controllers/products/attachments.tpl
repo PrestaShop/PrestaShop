@@ -94,9 +94,7 @@
 	
 	
 	<script type="text/javascript">
-		//displayFlags(languages, id_language, allowEmployeeFormLang);
-		$(document).ready(function() {
-
+		$(document).ready(function(){
 			$("#addAttachment").live('click', function() {
 				$("#selectAttachment2 option:selected").each(function(){
 					var val = $('#arrayAttachments').val();
