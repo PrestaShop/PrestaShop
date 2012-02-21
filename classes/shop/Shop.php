@@ -268,6 +268,7 @@ class ShopCore extends ObjectModel
 						// If an URL was found but is not current URL, redirect to main URL
 						$request_uri = substr($_SERVER['REQUEST_URI'], strlen($found_uri));
 						header('HTTP/1.1 301 Moved Permanently');
+						header('Cache-Control: no-cache');
 						header('location: http://'.$row['domain'].$row['uri'].$request_uri);
 						exit;
 					}
