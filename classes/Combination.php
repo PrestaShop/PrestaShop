@@ -65,7 +65,7 @@ class CombinationCore extends ObjectModel
 			'ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
 			'wholesale_price' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 27),
-			'price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 20),
+			'price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'size' => 20),
 			'ecotax' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'size' => 20),
 			'quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
 			'weight' => 			array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
