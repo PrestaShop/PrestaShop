@@ -88,8 +88,10 @@ class AttachmentCore extends ObjectModel
 	}
 
 	/**
+	 * deassociate $id_product from the current object
+	 *
 	 * @static
-	 * @param $id_product
+	 * @param $id_product int
 	 * @return bool
 	 */
 	public static function deleteProductAttachments($id_product)
@@ -100,6 +102,23 @@ class AttachmentCore extends ObjectModel
 	}
 
 	/**
+	 * associate $id_product to the current object.
+	 * 
+	 * @param int $id_product id of the product to associate
+	 * @return boolean true if succed
+	 */
+	public function attachProduct($id_product)
+	{
+		return Db::getInstance()->execute('
+			INSERT INTO '._DB_PREFIX_.'product_attachment 
+				(id_attachment, id_product) VALUES
+				('.(int)$this->id.', '.(int)$id_product.')');
+	}
+
+	/**
+	 * associate an array of id_attachment $array to the product $id_product
+	 * and remove eventual previous association
+	 *
 	 * @static
 	 * @param $id_product
 	 * @param $array
