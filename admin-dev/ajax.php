@@ -637,16 +637,35 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 
 if (Tools::isSubmit('syncImapMail'))
 {
-	if (!$url = Configuration::get('PS_SAV_IMAP_URL')
-	|| !$port = Configuration::get('PS_SAV_IMAP_PORT')
-	|| !$user = Configuration::get('PS_SAV_IMAP_USER')
-	|| !$password = Configuration::get('PS_SAV_IMAP_PWD'))
+	if (!($url = Configuration::get('PS_SAV_IMAP_URL'))
+	|| !($port = Configuration::get('PS_SAV_IMAP_PORT'))
+	|| !($user = Configuration::get('PS_SAV_IMAP_USER'))
+	|| !($password = Configuration::get('PS_SAV_IMAP_PWD')))
 	die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
+
+	$conf = Configuration::getMultiple(array(
+		'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
+		'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
+		'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
+	
+	$conf_str = '';
+	if ($conf['PS_SAV_IMAP_OPT_NORSH'])
+		$conf_str .= '/norsh';
+	if ($conf['PS_SAV_IMAP_OPT_SSL'])
+		$conf_str .= '/ssl';
+	if ($conf['PS_SAV_IMAP_OPT_VALIDATE-CERT'])
+		$conf_str .= '/validate-cert';
+	if ($conf['PS_SAV_IMAP_OPT_NOVALIDATE-CERT'])
+		$conf_str .= '/novalidate-cert';
+	if ($conf['PS_SAV_IMAP_OPT_TLS'])
+		$conf_str .= '/tls';
+	if ($conf['PS_SAV_IMAP_OPT_NOTLS'])
+		$conf_str .= '/notls';
 
 	if (!function_exists('imap_open'))
 		die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
 
-	$mbox = @imap_open('{'.$url.':'.$port.(Configuration::get('PS_SAV_IMAP_OPT') ? Configuration::get('PS_SAV_IMAP_OPT') : '').'}', $user, $password);
+	$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
 
 	//checks if there is no error when connecting imap server
 	$errors = imap_errors();
@@ -666,7 +685,7 @@ if (Tools::isSubmit('syncImapMail'))
 
 	//Returns information about the current mailbox. Returns FALSE on failure.
 	$check = imap_check($mbox);
-	if ($check)
+	if (!$check)
 		die('{"hasError" : true, "errors" : ["Fail to get information about the current mailbox"]}');
 
 	if ($check->Nmsgs == 0)
@@ -717,7 +736,7 @@ if (Tools::isSubmit('syncImapMail'))
 	}
 	imap_expunge($mbox);
 	imap_close($mbox);
-	die('{"hasError" : false, "errors" : '.$str_errors.$str_errors_delete.'"]}');
+	die('{"hasError" : false, "errors" : ["'.$str_errors.$str_error_delete.'"]}');
 }
 
 /* Modify attribute position */
