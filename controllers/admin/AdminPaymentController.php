@@ -126,7 +126,17 @@ class AdminPaymentControllerCore extends AdminController
 	}
 
 	public function renderView()
-	{	
+	{
+		$this->toolbar_title = $this->l('Paiement');
+		unset($this->toolbar_btn['back']);
+		
+		$shop_context = (!Shop::isFeatureActive() || $this->context->shop->getContextType() == Shop::CONTEXT_SHOP);
+		if (!$shop_context)
+		{
+			$this->tpl_view_vars = array('shop_context' => $shop_context);
+			return parent::renderView();
+		}
+	
 		// link to modules page
 		if (isset($this->payment_modules[0]))
 			$token_modules = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id);
@@ -188,7 +198,6 @@ class AdminPaymentControllerCore extends AdminController
 			$lists[$key_list] = $list;
 		}
 
-		$shop_context = (!Shop::isFeatureActive() || $this->context->shop->getContextType() == Shop::CONTEXT_SHOP);
 		$this->tpl_view_vars = array(
 			'url_modules' => isset($token_modules) ? 'index.php?tab=AdminModules&token='.$token_modules.'&&filterCategory=payments_gateways' : null,
 			'display_restrictions' => $display_restrictions,
@@ -199,8 +208,6 @@ class AdminPaymentControllerCore extends AdminController
 			'shop_context' => $shop_context
 		);
 
-		$this->toolbar_title = $this->l('Paiement');
-		unset($this->toolbar_btn['back']);
 		return parent::renderView();
 	}
 }
