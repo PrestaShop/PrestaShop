@@ -65,24 +65,42 @@ class TranslateCore
 				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class);
 			}
 		}
-		$key = md5(str_replace('\'', '\\\'', $string));
-		// retrocomp : if value is not set, try with "AdminTab" as prefix.
-		// @todo : change AdminTab to Helper
 
+		$key = md5(str_replace('\'', '\\\'', $string));
 		if (isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
-		else if (isset($_LANGADM['AdminController'.$key]))
-			$str = $_LANGADM['AdminController'.$key];
-		else if (isset($_LANGADM['Helper'.$key]))
-			$str = $_LANGADM['Helper'.$key];
-		else if (isset($_LANGADM['AdminTab'.$key]))
-			$str = $_LANGADM['AdminTab'.$key];
+		else
+			$str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
+
+		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
+		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
+	}
+
+	/**
+	 * Return the translation for a string if it exists for the base AdminController or for helpers
+	 *
+	 * @static
+	 * @param $string string to translate
+	 * @param null $key md5 key if already calculated (optional)
+	 * @param $lang_array global array of admin translations
+	 * @return string translation
+	 */
+	public static function getGenericAdminTranslation($string, $key = null, $lang_array)
+	{
+		if (is_null($key))
+			$key = md5(str_replace('\'', '\\\'', $string));
+
+		if (isset($lang_array['AdminController'.$key]))
+			$str = $lang_array['AdminController'.$key];
+		else if (isset($lang_array['Helper'.$key]))
+			$str = $lang_array['Helper'.$key];
+		else if (isset($lang_array['AdminTab'.$key]))
+			$str = $lang_array['AdminTab'.$key];
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
 			$str = $string;
 
-		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
-		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
+		return $str;
 	}
 
 	/**
@@ -95,7 +113,7 @@ class TranslateCore
 	 */
 	public static function getModuleTranslation($module, $string, $source)
 	{
-		global $_MODULES, $_MODULE;
+		global $_MODULES, $_MODULE, $_LANGADM;
 		static $lang_cache = array();
 
 		if ($module instanceof Module)
@@ -139,6 +157,9 @@ class TranslateCore
 				$ret = stripslashes($_MODULES[$defaultKey]);
 			elseif (isset($_MODULES[Tools::strtolower($defaultKey)]))
 				$ret = stripslashes($_MODULES[Tools::strtolower($defaultKey)]);
+			// if translation was not found in module, look for it in AdminController or Helpers
+			elseif (!empty($_LANGADM))
+				$ret = Translate::getGenericAdminTranslation($string, null, $_LANGADM);
 			else
 				$ret = stripslashes($string);
 
