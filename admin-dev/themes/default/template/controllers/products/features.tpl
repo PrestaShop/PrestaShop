@@ -100,7 +100,9 @@
 	</div>
 	
 	<script type="text/javascript">
+	$(document).ready(function(){
 		displayFlags(languages, id_language, allowEmployeeFormLang);
+	});
 	</script>
 
 {/if}
