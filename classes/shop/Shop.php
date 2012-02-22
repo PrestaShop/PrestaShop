@@ -792,7 +792,7 @@ class ShopCore extends ObjectModel
 		if (!isset($asso_tables[$table]) || $asso_tables[$table]['type'] != 'shop')
 			return;
 
-		$sql = (($inner_join) ? ' INNER' : ' LEFT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
+		$sql = (($inner_join) ? ' INNER' : ' RIGHT').' JOIN '._DB_PREFIX_.$table.'_shop '.$table_alias.'
 					ON '.$table_alias.'.id_'.$table.' = '.$alias.'.id_'.$table.'
 					AND '.$table_alias.'.id_shop IN('.implode(', ', $this->getListOfID()).') ';
 		return $sql;
