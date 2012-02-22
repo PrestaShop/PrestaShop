@@ -27,8 +27,6 @@
 
 class AdminGroupShopControllerCore extends AdminController
 {
-	public $display_multishop_toolbar = false;
-
 	public function __construct()
 	{
 		$this->table = 'group_shop';
@@ -69,6 +67,8 @@ class AdminGroupShopControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
+		$this->multishop_context = null;
 	}
 
 	public function renderForm()

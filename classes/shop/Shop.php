@@ -110,7 +110,7 @@ class ShopCore extends ObjectModel
 	 */
 	const CONTEXT_SHOP = 1;
 	const CONTEXT_GROUP = 2;
-	const CONTEXT_ALL = 3;
+	const CONTEXT_ALL = 4;
 
 	/**
 	 * Some data can be shared between shops, like customers or orders
