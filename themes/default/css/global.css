@@ -704,7 +704,7 @@ table#cart_summary  .cart_quantity {width:130px}
 .cart_quantity .cart_quantity_button {
 	float:left;
 	position: relative;
-   top: -5px
+	top: -5px
 }
 table#cart_summary .cart_total {width:120px}
 table#cart_summary .cart_delete {
@@ -729,11 +729,15 @@ a.price_discount_delete {
 	border-right:none;
 }
 
-
 table#cart_summary .cart_total_price td.cart_voucher {
 	border-bottom:1px solid #999;
 	vertical-align:middle
 }
+
+table#cart_summary #total_price_container {
+	border-bottom:1px solid #999;
+}
+
 .cart_voucher h4,
 .cart_voucher p {float:left;}
 .cart_voucher h4 {
