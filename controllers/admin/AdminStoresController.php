@@ -180,11 +180,11 @@ class AdminStoresControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'id_country',
 					'required' => true,
+					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id),
 						'id' => 'id_country',
 						'name' => 'name',
-						'preselect_country' => true,
 					)
 				),
 				array(

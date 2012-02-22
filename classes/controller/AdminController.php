@@ -2068,9 +2068,24 @@ class AdminControllerCore extends Controller
 						}
 						else if (isset($input['lang']) && $input['lang'])
 							foreach ($this->_languages as $language)
-								$this->fields_value[$input['name']][$language['id_lang']] = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
+							{
+								$fieldValue = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
+								if (empty($fieldValue))
+								{
+									if (is_array($input['default_value']) && isset($input['default_value'][$language['id_lang']]))
+										$fieldValue = $input['default_value'][$language['id_lang']];
+									else 
+										$fieldValue = $input['default_value'];
+								}
+								$this->fields_value[$input['name']][$language['id_lang']] = $fieldValue;
+							}
 						else
-							$this->fields_value[$input['name']] = $this->getFieldValue($obj, $input['name']);
+						{
+							$fieldValue = $this->getFieldValue($obj, $input['name']);
+							if (empty($fieldValue) && isset($input['default_value']))
+								$fieldValue = $input['default_value'];
+							$this->fields_value[$input['name']] = $fieldValue;
+						}
 
 		return $this->fields_value;
 	}
