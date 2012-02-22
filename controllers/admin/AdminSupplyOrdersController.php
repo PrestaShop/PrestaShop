@@ -535,25 +535,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		// overrides parent::initContent();
 		$this->initToolbar();
 
-		// given the current state, loads available states
-		$states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
+		$states = SupplyOrderState::getStates();
+		$allowed_states = SupplyOrderState::getSupplyOrderStates($supply_order->id_supply_order_state);
 
-		// gets the state that are not allowed
-		$allowed_states = array();
 		foreach ($states as &$state)
 		{
-			$allowed_states[] = $state['id_supply_order_state'];
-			$state['allowed'] = 1;
-		}
-		$not_allowed_states = SupplyOrderState::getStates($allowed_states);
-
-		// generates the final list of states
-		$index = count($allowed_states);
-		foreach ($not_allowed_states as &$not_allowed_state)
-		{
-			$not_allowed_state['allowed'] = 0;
-			$states[$index] = $not_allowed_state;
-			++$index;
+			$state['allowed'] = 0;
+			foreach ($allowed_states as $allowed_state)
+			{
+				if ($state['id_supply_order_state'] == $allowed_state['id_supply_order_state'])
+					$state['allowed'] = 1;
+			}
 		}
 
 		// loads languages
@@ -807,6 +799,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$helper->toolbar_btn = $this->toolbar_btn;
 
 		$helper->currentIndex = self::$currentIndex.$action;
+
+		$helper->ajax_params = array(
+			'display_product_history' => 1,
+		);
 
 		// display these global order informations
 		$this->displayInformation($this->l('This interface allows you to update the quantities of this on-going order.').'<br />');
@@ -1452,7 +1448,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	public function ajaxProcess()
 	{
 		// tests if an id is submit
-		if (Tools::isSubmit('id'))
+		if (Tools::isSubmit('id') && !Tools::isSubmit('display_product_history'))
 		{
 			// overrides attributes
 			$this->identifier = 'id_supply_order_history';
@@ -1525,14 +1521,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			echo Tools::jsonEncode(array('use_parent_structure' => false, 'data' => $content));
 		}
-		else if (Tools::isSubmit('id_supply_order_detail'))
+		else if (Tools::isSubmit('id') && Tools::isSubmit('display_product_history'))
 		{
 			$this->identifier = 'id_supply_order_receipt_history';
 			$this->table = 'supply_order_receipt_history';
 			$this->display = 'list';
 			$this->lang = false;
 			$lang_id = (int)$this->context->language->id;
-			$id_supply_order_detail = (int)Tools::getValue('id_supply_order_detail');
+			$id_supply_order_detail = (int)Tools::getValue('id');
 
 			unset($this->fieldsDisplay);
 			$this->fieldsDisplay = array(
