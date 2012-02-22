@@ -3468,7 +3468,7 @@ class AdminProductsControllerCore extends AdminController
 			else
 			{
 				// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
-				if ($group_shop->share_stock)
+				if ($group_shop->share_stock && $group_shop->getTotalShops() > 1)
 					$show_quantities = false;
 			}
 
@@ -3830,7 +3830,7 @@ class AdminProductsControllerCore extends AdminController
 	{
  		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
 		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
-	}	
+	}
 
 
 
