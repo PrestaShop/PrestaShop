@@ -160,7 +160,6 @@ class HelperFormCore extends Helper
 			'form_id' => $this->id,
 			'fields' => $this->fields_form,
 			'fields_value' => $this->fields_value,
-			'default_country' => (int)$this->context->country->id,
 			'required_fields' => $this->getFieldsRequired(),
 			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
