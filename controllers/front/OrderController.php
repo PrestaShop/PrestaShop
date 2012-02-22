@@ -98,6 +98,7 @@ class OrderControllerCore extends ParentOrderController
 			$delivery_option = $this->context->cart->getDeliveryOption();
 			$delivery_option[(int)Tools::getValue('id_address')] = Tools::getValue('id_delivery_option');
 			$this->context->cart->setDeliveryOption($delivery_option);
+			$this->context->cart->save();
 			$return = array(
 				'content' => Hook::exec(
 					'displayCarrierList',
@@ -141,10 +142,17 @@ class OrderControllerCore extends ParentOrderController
 			break;
 
 			case 3:
-				// Test that the conditions (so active) were accepted by the customer
+				// Check that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv');
 				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
 					Tools::redirect('index.php?controller=order&step=2');
+
+				// Check the delivery option is setted
+				if (!Tools::getValue('delivery_option'))
+					Tools::redirect('index.php?controller=order&step=2');
+				foreach (Tools::getValue('delivery_option') as $delivery_option)
+					if (empty($delivery_option))
+						Tools::redirect('index.php?controller=order&step=2');
 
 				$this->autoStep();
 
