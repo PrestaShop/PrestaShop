@@ -36,17 +36,38 @@
 	var txtProducts = "{l s='products'}";
 	var orderUrl = '{$link->getPageLink("order", true)}';
 
-	var msg = "{l s='You must agree to the terms of service before continuing.' js=1}";
+	var msgCgv = "{l s='You must agree to the terms of service before continuing.' js=1}";
+	var msgCarrier = "{l s='You must select a delivery option before continuing.' js=1}";
+	var msgCarriers = "{l s='You must select deliveries options before continuing.' js=1}";
+	
 	{literal}
-	function acceptCGV()
+	function validateCarriers()
 	{
 		if ($('#cgv').length && !$('input#cgv:checked').length)
 		{
-			alert(msg);
+			alert(msgCgv);
 			return false;
 		}
-		else
-			return true;
+
+		var delivery_option = {};
+		$('.delivery_option_radio').each(function () {
+			if (typeof(delivery_option[$(this).attr('name')]) == 'undefined')
+				delivery_option[$(this).attr('name')] = false;
+			if ($(this).is(':checked'))
+				delivery_option[$(this).attr('name')] = true;
+		});
+
+		$.each(delivery_option, function(i, val) {
+			if (!val) {
+				if (delivery_option.length > 1)
+					alert(msgCarriers);
+				else
+					alert(msgCarrier);
+				return false;
+			}
+		});
+		
+		return true;
 	}
 	{/literal}
 	//]]>
@@ -83,7 +104,7 @@
 
 {include file="$tpl_dir./errors.tpl"}
 
-<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return acceptCGV();">
+<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")}" method="post" onsubmit="return validateCarriers();">
 {else}
 <div id="opc_delivery_methods" class="opc-main-block">
 	<div id="opc_delivery_methods-overlay" class="opc-overlay" style="display: none;"></div>
