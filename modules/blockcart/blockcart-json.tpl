@@ -37,6 +37,7 @@
 		"priceByLine":   "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
 		"name":          "{$product.name|html_entity_decode:2:'UTF-8'|escape|truncate:15:'...':true}",
 		"price":         "{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total}{else}{displayWtPrice|html_entity_decode:2:'UTF-8' p=$product.total_wt}{/if}",
+		"price_float":   "{$product.total}",
 		"idCombination": {if isset($product.attributes_small)}{$productAttributeId}{else}0{/if},
 		"idAddressDelivery": {if isset($product.id_address_delivery)}{$product.id_address_delivery}{else}0{/if},
 {if isset($product.attributes_small)}
@@ -88,13 +89,15 @@
 		"description":     "{$discount.description|addslashes|replace:'\\\'':'\''}",
 		"nameDescription": "{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|addslashes|replace:'\\\'':'\''}",
 		"link":            "{$link->getPageLink('order', true, NULL, "deleteDiscount={$discount.id_discount}")}",
-		"price":           "-{if $discount.value_real != '!'}{if $priceDisplay == 1}{convertPrice|html_entity_decode:2:'UTF-8' price=$discount.value_tax_exc}{else}{convertPrice|html_entity_decode:2:'UTF-8' price=$discount.value_real}{/if}{/if}"
+		"price":           "{if $priceDisplay == 1}{convertPrice|html_entity_decode:2:'UTF-8' price=$discount.value_tax_exc}{else}{convertPrice|html_entity_decode:2:'UTF-8' price=$discount.value_real}{/if}",
+		"price_float":     "{if $priceDisplay == 1}{$discount.value_tax_exc}{else}{$discount.value_real}{/if}"
 	{rdelim}
 	{if !$smarty.foreach.discounts.last},{/if}
 {/foreach}{/if}
 ],
 
 "shippingCost": "{$shipping_cost|html_entity_decode:2:'UTF-8'}",
+"shippingCostFloat": "{$shipping_cost_float|html_entity_decode:2:'UTF-8'}",
 {if isset($tax_cost)}
 "taxCost": "{$tax_cost|html_entity_decode:2:'UTF-8'}",
 {/if}
