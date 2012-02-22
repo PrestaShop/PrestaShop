@@ -2171,7 +2171,7 @@ div#scrollTop a:hover{
 .container-command-top-spacing {margin-top: 25px;}
 .bloc-command {background-color:#EBEDF4; border:1px solid #CCCED7; margin-bottom:10px;}
 .button-command {float:right; padding:10px;}
-
+.button-command-prev-next {float:right;margin-bottom: 10px; margin-right: 10px}
 /*history status*/
 .history-status { border-radius:0;}
 .history-status tr th {
