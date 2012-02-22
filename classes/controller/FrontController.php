@@ -743,6 +743,12 @@ class FrontControllerCore extends Controller
 		$this->n = abs((int)(Tools::getValue('n', ((isset($this->context->cookie->nb_item_per_page) && $this->context->cookie->nb_item_per_page >= 10) ? $this->context->cookie->nb_item_per_page : (int)(Configuration::get('PS_PRODUCTS_PER_PAGE'))))));
 		$this->p = abs((int)(Tools::getValue('p', 1)));
 
+		if (!is_numeric(Tools::getValue('p', 1)) || Tools::getValue('p', 1) < 0)
+		{
+			$this->redirect_after = '404';
+			$this->redirect();
+		}
+
 		$current_url = tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']);
 		//delete parameter page
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', $current_url);
@@ -755,8 +761,12 @@ class FrontControllerCore extends Controller
 		if (isset($this->context->cookie->nb_item_per_page) && $this->n != $this->context->cookie->nb_item_per_page && in_array($this->n, $nArray))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
-		if ($this->p > ($nbProducts / $this->n))
-			$this->p = ceil($nbProducts / $this->n);
+		if ($this->p > (($nbProducts / $this->n) + 1))
+		{
+			$this->redirect_after = preg_replace('/[&?]p=\d+/', '', $_SERVER['REQUEST_URI']);
+			$this->redirect();
+		}
+
 		$pages_nb = ceil($nbProducts / (int)($this->n));
 
 		$start = (int)($this->p - $range);
