@@ -85,12 +85,12 @@
 															$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
 															$({/literal}'#{$table}{literal}_form').submit( function() {
 																$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
-														    });
+															});
 														});
 													</script>
 													{/literal}
 												{/if}
-                                                {assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
+												{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
 												<input type="text"
 														name="{$input.name}_{$language.id_lang}"
 														id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
@@ -115,12 +115,12 @@
 												$('#'+input_id).tagify({addTagPrompt: '{/literal}{l s='Add tag'}{literal}'});
 												$({/literal}'#{$table}{literal}_form').submit( function() {
 													$(this).find('#'+input_id).val($('#'+input_id).tagify('serialize'));
-											    });
+												});
 											});
 										</script>
 										{/literal}
 									{/if}
-                                    {assign var='value_text' value=$fields_value[$input.name]}
+									{assign var='value_text' value=$fields_value[$input.name]}
 									<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
@@ -171,20 +171,12 @@
 													<option value="{$option->$input.options.id}"
 														{if isset($input.multiple)}
 															{foreach $fields_value[$input.name] as $field_value}
-																{if $field_value == $option->$input.options.id
-																	|| empty($field_value) 
-																	&& isset($input.options.preselect_country)
-																	&& isset($input.options.preselect_country)
-																	&& $option->$input.options.id == $default_country}
+																{if $field_value == $option->$input.options.id}
 																	selected="selected"
 																{/if}
 															{/foreach}
 														{else}
-															{if $fields_value[$input.name] == $option->$input.options.id
-																|| empty($fields_value[$input.name]) 
-																&& isset($input.options.preselect_country)
-																&& isset($input.options.preselect_country)
-																&& $option->$input.options.id == $default_country}
+															{if $fields_value[$input.name] == $option->$input.options.id}
 																selected="selected"
 															{/if}
 														{/if}
@@ -193,25 +185,16 @@
 													<option value="{$option[$input.options.id]}"
 														{if isset($input.multiple)}
 															{foreach $fields_value[$input.name] as $field_value}
-																{if $field_value == $option[$input.options.id]
-																	|| empty($field_value)
-																	&& isset($input.options.preselect_country)
-																	&& isset($input.options.preselect_country)
-																	&& $option[$input.options.id] == $default_country}
+																{if $field_value == $option[$input.options.id]}
 																	selected="selected"
 																{/if}
 															{/foreach}
 														{else}
-															{if $fields_value[$input.name] == $option[$input.options.id]
-																|| empty($fields_value[$input.name])
-																&& isset($input.options.preselect_country)
-																&& isset($input.options.preselect_country)
-																&& $option[$input.options.id] == $default_country}
+															{if $fields_value[$input.name] == $option[$input.options.id]}
 																selected="selected"
 															{/if}
 														{/if}
 													>{$option[$input.options.name]}</option>
-
 												{/if}
 											{/foreach}
 										{/if}
@@ -227,15 +210,15 @@
 											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 									<label {if isset($input.class)}class="{$input.class}"{/if} for="{$value.id}">
-									 {if isset($input.is_bool) && $input.is_bool == true}
-									 	{if $value.value == 1}
-									 		<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
-									 	{else}
-									 		<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
-									 	{/if}
-									 {else}
-									 	{$value.label}
-									 {/if}
+									{if isset($input.is_bool) && $input.is_bool == true}
+										{if $value.value == 1}
+											<img src="../img/admin/enabled.gif" alt="{$value.label}" title="{$value.label}" />
+										{else}
+											<img src="../img/admin/disabled.gif" alt="{$value.label}" title="{$value.label}" />
+										{/if}
+									{else}
+										{$value.label}
+									{/if}
 									</label>
 									{if isset($input.br) && $input.br}<br />{/if}
 									{if isset($value.p) && $value.p}<p>{$value.p}</p>{/if}
@@ -287,20 +270,20 @@
 									<select name="{$key}" class="">
 										<option value="">-</option>
 										{if $key == 'months'}
-                                                {*
-                                                  {l s='January'}
-                                                  {l s='February'}
-                                                  {l s='March'}
-                                                  {l s='April'}
-                                                  {l s='May'}
-                                                  {l s='June'}
-                                                  {l s='July'}
-                                                  {l s='August'}
-                                                  {l s='September'}
-                                                  {l s='October'}
-                                                  {l s='November'}
-                                                  {l s='December'}
-                                              *}
+											{*
+												{l s='January'}
+												{l s='February'}
+												{l s='March'}
+												{l s='April'}
+												{l s='May'}
+												{l s='June'}
+												{l s='July'}
+												{l s='August'}
+												{l s='September'}
+												{l s='October'}
+												{l s='November'}
+												{l s='December'}
+											*}
 											{foreach $select as $k => $v}
 												<option value="{$k}" {if $k == $fields_value[$key]}selected="selected"{/if}>{l s=$v}</option>
 											{/foreach}

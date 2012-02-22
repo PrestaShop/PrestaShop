@@ -124,11 +124,11 @@ class AdminStatesControllerCore extends AdminController
 					'label' => $this->l('Country:'),
 					'name' => 'id_country',
 					'required' => false,
+					'default_value' => (int)$this->context->country->id,
 					'options' => array(
 						'query' => Country::getCountries($this->context->language->id, false, true),
 						'id' => 'id_country',
 						'name' => 'name',
-						'preselect_country' => true,
 					),
 					'desc' => $this->l('Country where state, region or city is located')
 				),
