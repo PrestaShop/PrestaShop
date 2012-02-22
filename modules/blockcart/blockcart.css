@@ -101,3 +101,11 @@
 #cart_block table#vouchers tr td{
 	padding: 2px;
 }
+#cart_block table#vouchers tr td.quantity{
+	margin-right:5px;
+	min-width:18px
+}
+#cart_block table#vouchers tr td.delete{
+	text-align: right;
+}
+

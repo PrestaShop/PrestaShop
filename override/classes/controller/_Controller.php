@@ -304,6 +304,9 @@ abstract class Controller extends ControllerCore
 					$globalSize[$key] = round($size / 1024, 1);
 			}
 		arsort($globalSize);
+		
+		$cache = Cache::retrieveAll();
+		$totalCacheSize = $this->sizeofvar($cache);
 
 		echo '<br /><br />
 		<div class="rte" style="text-align:left;padding:8px;float:left">
@@ -326,7 +329,7 @@ abstract class Controller extends ControllerCore
 		echo '</ul>
 		</div>
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Memory peak usage</b>: '.$this->displayMemoryColor(memory_get_peak_usage()).'';
+			<b>Memory peak usage</b>: '.$this->displayMemoryColor(memory_get_peak_usage());
 		if (self::$_footer)
 		{
 			echo '<ul>';
@@ -338,7 +341,9 @@ abstract class Controller extends ControllerCore
 			}
 			echo '</ul>';
 		}
-		echo '</div>';
+		echo '<br /><br />
+		<b>Total cache size (in Cache class)</b>: '.$this->displayMemoryColor($totalCacheSize).'
+		</div>';
 
 		echo '
 		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">

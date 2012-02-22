@@ -307,6 +307,11 @@ abstract class CacheCore
 		return isset(Cache::$local[$key]) ? Cache::$local[$key] : null;
 	}
 
+	public static function retrieveAll()
+	{
+		return Cache::$local;
+	}
+
 	public static function isStored($key)
 	{
 		return isset(Cache::$local[$key]);
