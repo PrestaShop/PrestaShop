@@ -255,10 +255,7 @@ class AdminControllerCore extends Controller
 	 */
 	public $controller_name;
 
-	/**
-	 * @var bool Display or not the multishop toolbar for this controller
-	 */
-	public $display_multishop_toolbar = true;
+	public $multishop_context;
 
 	public function __construct()
 	{
@@ -267,6 +264,8 @@ class AdminControllerCore extends Controller
 			$this->controller_name = substr($this->controller_name, 0, -10);
 
 		parent::__construct();
+
+		$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
 		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
 		$this->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template');
@@ -1303,7 +1302,7 @@ class AdminControllerCore extends Controller
 			'tabs' => $tabs,
 			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
 			'is_multishop' => $is_multishop,
-			'display_multishop_toolbar' => $this->display_multishop_toolbar,
+			'multishop_context' => $this->multishop_context,
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
 			'controller_name' => Tools::getValue('controller'),
 		));
@@ -1939,7 +1938,7 @@ class AdminControllerCore extends Controller
 			$where_shop = $this->context->shop->addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
 		}
 
-		if ($this->display_multishop_toolbar)
+		if ($this->multishop_context)
 		{
 			$assos = Shop::getAssoTables();
 			$assos_group = GroupShop::getAssoTables();

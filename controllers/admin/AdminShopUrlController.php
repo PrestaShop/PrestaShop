@@ -27,8 +27,6 @@
 
 class AdminShopUrlControllerCore extends AdminController
 {
-	public $display_multishop_toolbar = false;
-
 	public function __construct()
 	{
 	 	$this->table = 'shop_url';
@@ -90,6 +88,8 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
 		parent::__construct();
+
+		$this->multishop_context = null;
 	}
 
 	public function renderList()
