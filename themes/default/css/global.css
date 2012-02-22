@@ -630,8 +630,8 @@ ul.idTabs li {
 ************************************************************************************************ */
 
 /* nav bottom ********************************************************************************** */
-#order #left_column {display:none}
-#order #center_column{width:757px}
+#order #left_column , #order-confirmation #left_column {display:none}
+#order #center_column, #order-confirmation #center_column{width:757px}
 
 .cart_navigation {margin:20px 0}
 .cart_navigation .exclusive,
