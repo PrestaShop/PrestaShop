@@ -671,14 +671,14 @@ if (Tools::isSubmit('syncImapMail'))
 	$errors = imap_errors();
 	$str_errors = '';
 	$str_error_delete = '';
-	if (sizeof($errors))
+	if (sizeof($errors) && is_array($errors))
 	{
-		$str_errors = '["';
+		var_dump($errors);
+		$str_errors = '';
 		foreach($errors as $error)
 			$str_errors .= '"'.$error.'",';
 		$str_errors = rtrim($str_errors, ',').'';
 	}
-
 	//checks if imap connexion is active
 	if (!$mbox)
 		die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox"]}');
