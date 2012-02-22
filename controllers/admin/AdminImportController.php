@@ -1320,44 +1320,6 @@ class AdminImportControllerCore extends AdminController
 					);
 			}
 
-			$id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
-
-			if ($id_product_attribute > 0)
-			{
-				$product->updateAttribute(
-					$id_product_attribute,
-					(float)$info['wholesale_price'],
-					(float)$info['price'],
-					(float)$info['weight'],
-					0,
-					(float)$info['ecotax'],
-					$id_image,
-					strval($info['reference']),
-					strval($info['ean13']),
-					(int)$info['default_on'],
-					0,
-					strval($info['upc']),
-					(int)$info['quantity'],
-					0
-				);
-			}
-			else
-			{
-				$id_product_attribute = $product->addAttribute(
-					(float)$info['price'],
-					(float)$info['weight'],
-					0,
-					(float)$info['ecotax'],
-					$id_image,
-					strval($info['reference']),
-					strval($info['ean13']),
-					(int)$info['default_on'],
-					0,
-					strval($info['upc']),
-					(int)$info['quantity']
-				);
-			}
-
 			$id_attribute_group = 0;
 			$group = '';
 			// groups
@@ -1436,11 +1398,82 @@ class AdminImportControllerCore extends AdminController
 						}
 						else
 							$this->errors[] = ($field_error !== true ? $field_error : '').($lang_field_error !== true ? $lang_field_error : '');
+					}
+
+					$id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+					$attribute_combinations = $product->getAttributeCombinations($default_language);
+
+					if (!count($attribute_combinations))
+					{
+						$id_product_attribute = $product->addAttribute(
+								(float)$info['price'],
+								(float)$info['weight'],
+								0,
+								(float)$info['ecotax'],
+								$id_image,
+								strval($info['reference']),
+								strval($info['ean13']),
+								(int)$info['default_on'],
+								0,
+								strval($info['upc']),
+								(int)$info['quantity']
+							);
 
 						Db::getInstance()->execute('
-							INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-							VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
-						');
+								INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+								VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
+							');
+					}
+
+					foreach ($attribute_combinations as $attribute_combination)
+					{
+						if (in_array($id_product_attribute, $attribute_combination))
+						{
+							$product->updateAttribute(
+								$id_product_attribute,
+								(float)$info['wholesale_price'],
+								(float)$info['price'],
+								(float)$info['weight'],
+								0,
+								(float)$info['ecotax'],
+								$id_image,
+								strval($info['reference']),
+								strval($info['ean13']),
+								(int)$info['default_on'],
+								0,
+								strval($info['upc']),
+								(int)$info['quantity'],
+								0
+							);
+							// update
+							Db::getInstance()->execute('
+								UPDATE '._DB_PREFIX_.'product_attribute_combination
+								SET id_attribute = '.(int)$attributes[$group.'_'.$attribute].'
+								WHERE id_product_attribute = '.(int)$id_product_attribute);
+
+						}
+						else
+						{
+							// insert
+							$id_product_attribute = $product->addAttribute(
+								(float)$info['price'],
+								(float)$info['weight'],
+								0,
+								(float)$info['ecotax'],
+								$id_image,
+								strval($info['reference']),
+								strval($info['ean13']),
+								(int)$info['default_on'],
+								0,
+								strval($info['upc']),
+								(int)$info['quantity']
+							);
+
+							Db::getInstance()->execute('
+								INSERT INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+								VALUES ('.(int)$attributes[$group.'_'.$attribute].','.(int)$id_product_attribute.')
+							');
+						}
 					}
 
 					// after insertion, we clean attribute position and group attribute position
