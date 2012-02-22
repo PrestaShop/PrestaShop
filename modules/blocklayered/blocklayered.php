@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 12553 $
+*  @version  Release: $Revision: 13512 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -477,7 +477,7 @@ class BlockLayered extends Module
 		$smarty->assign('categoryNameComplement', $title);
 		$this->getProducts($selectedFilters, $params['catProducts'], $params['nbProducts'], $p, $n, $pages_nb, $start, $stop, $range);
 		// Need a nofollow on the pagination links?
-		$smarty->assign('no_follow', $filterBlock['nofollow']);
+		//$smarty->assign('no_follow', $filterBlock['nofollow']);
 	}
 	
 	public function hookAfterSaveProduct($params)
@@ -2930,29 +2930,6 @@ class BlockLayered extends Module
 				
 			}
 		}
-		
-		// All non indexable attribute and feature
-		$nonIndexable = array();
-		
-		// Get all non indexable attribute groups
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT public_name
-		FROM `'._DB_PREFIX_.'attribute_group_lang` agl
-		LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_group` liag
-		ON liag.id_attribute_group = agl.id_attribute_group
-		WHERE indexable IS NULL OR indexable = 0
-		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
-			$nonIndexable[] = Tools::link_rewrite($attribute['public_name']);
-		
-		// Get all non indexable features
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT name
-		FROM `'._DB_PREFIX_.'feature_lang` fl
-		LEFT JOIN  `'._DB_PREFIX_.'layered_indexable_feature` lif
-		ON lif.id_feature = fl.id_feature
-		WHERE indexable IS NULL OR indexable = 0
-		AND id_lang = '.(int)$cookie->id_lang) as $attribute)
-			$nonIndexable[] = Tools::link_rewrite($attribute['name']);
 
 		//generate SEO link
 		$paramSelected = '';
@@ -3001,7 +2978,6 @@ class BlockLayered extends Module
 			$paramSelected .= '/page-'.$this->page;
 
 		$blackList = array('weight','price');
-		$nofollow = false;
 		foreach ($filterBlocks as &$typeFilter)
 		{
 			$filterName = (!empty($typeFilter['url_name']) ? $typeFilter['url_name'] : $typeFilter['name']);
@@ -3010,7 +2986,6 @@ class BlockLayered extends Module
 			{
 				foreach ($typeFilter['values'] as $key => $values)
 				{
-					$nofollow = false;
 					$optionCheckedCloneArray = $optionCheckedArray;
 					
 					// If not filters checked, add parameter
@@ -3019,17 +2994,13 @@ class BlockLayered extends Module
 					{
 						// Update parameter filter checked before
 						if (array_key_exists(Tools::link_rewrite($filterName), $optionCheckedArray))
-						{
 							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = $optionCheckedCloneArray[Tools::link_rewrite($filterName)].'-'.str_replace('-', '_', Tools::link_rewrite($valueName));
-							$nofollow = true;
-						}
 						else
 							$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = '-'.str_replace('-', '_', Tools::link_rewrite($valueName));
 					}
 					else
 					{
 						// Remove selected parameters
-						$optionCheckedCloneArray[Tools::link_rewrite($filterName)] = str_replace('-'.str_replace('-', '_', Tools::link_rewrite($valueName)), '', $optionCheckedCloneArray[Tools::link_rewrite($filterName)]);
 						if (empty($optionCheckedCloneArray[Tools::link_rewrite($filterName)]))
 							unset($optionCheckedCloneArray[Tools::link_rewrite($filterName)]);
 					}
@@ -3038,16 +3009,11 @@ class BlockLayered extends Module
 						$parameters .= '/'.str_replace('-', '_', $keyGroup).$valueGroup;
 					
 					// Check if there is an non indexable attribute or feature in the url
-					foreach ($nonIndexable as $value)
-						if (strpos($parameters, '/'.$value) !== false)
-							$nofollow = true;
 					// Write link by mode rewriting
 					if (!Configuration::get('PS_REWRITING_SETTINGS'))
 						$typeFilter['values'][$key]['link'] = $linkBase.'&selected_filters='.$parameters;
 					else
 						$typeFilter['values'][$key]['link'] = $linkBase.$parameters;
-						
-					$typeFilter['values'][$key]['rel'] = ($nofollow) ? 'nofollow' : '';
 				}
 			}
 		}
@@ -3073,7 +3039,7 @@ class BlockLayered extends Module
 			'title_values' => $titleValues,
 			'current_friendly_url' => htmlentities($paramSelected),
 			'param_product_url' => htmlentities($param_product_url),
-			'nofollow' => !empty($paramSelected) || $nofollow
+			//'nofollow' => !empty($paramSelected) || $nofollow
 		);
 		
 		return $cache;
