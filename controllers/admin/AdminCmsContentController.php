@@ -112,7 +112,7 @@ class AdminCmsContentControllerCore extends AdminController
 			|| isset($_GET['updatecms_category'])
 			|| isset($_GET['addcms_category']))
 			$this->display = 'edit_category';
-		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->adminCMS->errors))
+		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->adminCMS->errors))
 			|| isset($_GET['updatecms'])
 			|| isset($_GET['addcms']))
 			$this->display = 'edit_page';
@@ -127,9 +127,12 @@ class AdminCmsContentControllerCore extends AdminController
 			|| Tools::isSubmit('submitAddcms')
 			|| isset($_GET['deletecms'])
 			|| Tools::isSubmit('viewcms')
-			|| (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position') && !Tools::isSubmit('id_cms_category_to_move')))
-			$this->adminCMS->postProcess();
-		elseif (Tools::isSubmit('submitDelcms_category')
+            || (Tools::isSubmit('statuscms') && Tools::isSubmit('id_cms'))
+            || (Tools::isSubmit('way') && Tools::isSubmit('id_cms')) && (Tools::isSubmit('position')))
+        {
+		    $this->adminCMS->postProcess();
+        }
+        else if (Tools::isSubmit('submitDelcms_category')
 			|| Tools::isSubmit('submitAddcms_categoryAndBackToParent')
 			|| Tools::isSubmit('submitAddcms_category')
 			|| isset($_GET['deletecms_category'])

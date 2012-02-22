@@ -227,7 +227,7 @@ class BlockCms extends Module
 						'query' => array(
 							array(
 								'id' => 'on',
-								'name' => $this->l('Display the Footer\'s various links'),
+								'name' => $this->l('Display the Footer\'s informations'),
 								'val' => '1'
 							),
 						),
@@ -457,7 +457,7 @@ class BlockCms extends Module
 
 	protected function _postValidation()
 	{
-		$this->errors = array();
+		$this->_errors = array();
 
 		if (Tools::isSubmit('submitBlockCMS'))
 		{
@@ -465,24 +465,24 @@ class BlockCms extends Module
 			$cmsBoxes = Tools::getValue('cmsBox');
 
 			if (!Validate::isInt(Tools::getValue('display_stores')) || (Tools::getValue('display_stores') != 0 && Tools::getValue('display_stores') != 1))
-				$this->errors[] = Tools::displayError('Invalid store display value');
+				$this->_errors[] = Tools::displayError('Invalid store display value');
 			if (!Validate::isInt(Tools::getValue('block_location')) || (Tools::getValue('block_location') != BlockCMSModel::LEFT_COLUMN && Tools::getValue('block_location') != BlockCMSModel::RIGHT_COLUMN))
-				$this->errors[] = Tools::displayError('Invalid block location');
+				$this->_errors[] = Tools::displayError('Invalid block location');
 			if (!is_array($cmsBoxes))
-				$this->errors[] = Tools::displayError('You must choose at least one page or subcategory to create a CMS block.');
+				$this->_errors[] = Tools::displayError('You must choose at least one page or subcategory to create a CMS block.');
 			else
 			{
 				foreach ($cmsBoxes as $cmsBox)
 					if (!preg_match('#^[01]_[0-9]+$#', $cmsBox))
-						$this->errors[] = Tools::displayError('Invalid CMS page or category');
+						$this->_errors[] = Tools::displayError('Invalid CMS page or category');
 				foreach ($this->context->controller->_languages as $language)
 					if (strlen(Tools::getValue('block_name_'.$language['id_lang'])) > 40)
-						$this->errors[] = Tools::displayError('Block name is too long');
+						$this->_errors[] = Tools::displayError('Block name is too long');
 			}
 		}
 		else if (Tools::isSubmit('deleteBlockCMS') && !Validate::isInt(Tools::getValue('id_cms_block')))
 		{
-			$this->errors[] = Tools::displayError('Invalid id_cms_block');
+			$this->_errors[] = Tools::displayError('Invalid id_cms_block');
 		}
 		else if (Tools::isSubmit('submitFooterCMS'))
 		{
@@ -490,7 +490,7 @@ class BlockCms extends Module
 			{
 				foreach (Tools::getValue('footerBox') as $cmsBox)
 					if (!preg_match('#^[01]_[0-9]+$#', $cmsBox))
-						$this->errors[] = Tools::displayError('Invalid CMS page or category');
+						$this->_errors[] = Tools::displayError('Invalid CMS page or category');
 			}
 
 			$empty_footer_text = true;
@@ -513,7 +513,7 @@ class BlockCms extends Module
 			}
 
 			if (!$empty_footer_text && empty($footer_text[(int)Configuration::get('PS_LANG_DEFAULT')]))
-				$this->errors[] = Tools::displayError('Please provide a footer text for the default language');
+				$this->_errors[] = Tools::displayError('Please provide a footer text for the default language');
 			else
 			{
 				foreach ($this->context->controller->_languages as $language)
@@ -521,11 +521,11 @@ class BlockCms extends Module
 			}
 
 			if ((Tools::getValue('cms_footer_on') != 0) && (Tools::getValue('cms_footer_on') != 1))
-				$this->errors[] = Tools::displayError('Invalid activation footer');
+				$this->_errors[] = Tools::displayError('Invalid activation footer');
 		}
-		if (count($this->errors))
+		if (count($this->_errors))
 		{
-			foreach ($this->errors as $err)
+			foreach ($this->_errors as $err)
 				$this->_html .= '<div class="alert error">'.$err.'</div>';
 
 			return false;
@@ -538,6 +538,7 @@ class BlockCms extends Module
 		if ($this->_postValidation() == false)
 			return false;
 
+        $this->_errors = array();
 		if (Tools::isSubmit('submitBlockCMS'))
 		{
 			$this->context->controller->getLanguages();
@@ -550,10 +551,15 @@ class BlockCms extends Module
 			{
 				$id_cms_block = BlockCMSModel::insertCMSBlock($id_cms_category, $location, $position, $display_store);
 
-				foreach ($this->context->controller->_languages as $language)
-					BlockCMSModel::insertCMSBlockLang($id_cms_block, $language['id_lang']);
+                if ($id_cms_block !== false)
+                {
+                    foreach ($this->context->controller->_languages as $language)
+                        BlockCMSModel::insertCMSBlockLang($id_cms_block, $language['id_lang']);
 
-				BlockCMSModel::insertCMSBlockShop($id_cms_block, Context::getContext()->shop->id);
+                    BlockCMSModel::insertCMSBlockShop($id_cms_block, $this->context->shop->getGroupID(), $this->context->shop->getID());
+                }
+
+                $this->_errors[] = $this->l('New block cannot be created !');
 			}
 			else if (Tools::isSubmit('editBlockCMS'))
 			{
@@ -614,12 +620,13 @@ class BlockCms extends Module
 		{
 			$powered_by = Tools::getValue('cms_footer_powered_by_on') ? 1 : 0;
 			$footer_boxes = Tools::getValue('footerBox') ? implode('|', Tools::getValue('footerBox')) : '';
+            $block_activation = (Tools::getValue('cms_footer_on') == 1) ? 1 : 0;
 
 			Configuration::updateValue('FOOTER_CMS', rtrim($footer_boxes, '|'), false, $this->context->shop->getGroupID(), $this->context->shop->getID());
 			Configuration::updateValue('FOOTER_POWEREDBY', $powered_by, false, $this->context->shop->getGroupID(), $this->context->shop->getID());
-			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', Tools::getValue('cms_footer_on'), false, $this->context->shop->getGroupID(), $this->context->shop->getID());
+			Configuration::updateValue('FOOTER_BLOCK_ACTIVATION', $block_activation, false, $this->context->shop->getGroupID(), $this->context->shop->getID());
 
-			$this->_html .= $this->displayConfirmation($this->l('Footer\'s CMS updated'));
+			$this->_html .= $this->displayConfirmation($this->l('Footer\'s informations updated'));
 		}
 		else if (Tools::isSubmit('addBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Block CMS added'));
@@ -628,7 +635,13 @@ class BlockCms extends Module
 		else if (Tools::isSubmit('deleteBlockCMSConfirmation'))
 			$this->_html .= $this->displayConfirmation($this->l('Deletion successful'));
 		else if (Tools::isSubmit('id_cms_block') && Tools::isSubmit('way') && Tools::isSubmit('position') && Tools::isSubmit('location'))
-			$this->changePosition();
+			$this->changePosition()
+            ;
+        if (count($this->_errors))
+        {
+            foreach ($this->_errors as $err)
+                $this->_html .= '<div class="alert error">'.$err.'</div>';
+        }
 	}
 
 	public function getContent()
