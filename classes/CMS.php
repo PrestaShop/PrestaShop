@@ -160,11 +160,13 @@ class CMSCore extends ObjectModel
 
 	public static function cleanPositions($id_category)
 	{
-		$result = Db::getInstance()->executeS('
-		SELECT `id_cms`
-		FROM `'._DB_PREFIX_.'cms`
-		WHERE `id_cms_category` = '.(int)$id_category.'
-		ORDER BY `position`');
+        $sql = 'SELECT `id_cms`
+                FROM `'._DB_PREFIX_.'cms`
+                WHERE `id_cms_category` = '.(int)$id_category.'
+                ORDER BY `position`';
+
+		$result = Db::getInstance()->executeS($sql);
+
 		for ($i = 0, $total = count($result); $i < $total; ++$i)
 		{
 			$sql = 'UPDATE `'._DB_PREFIX_.'cms`
@@ -173,12 +175,17 @@ class CMSCore extends ObjectModel
 						AND `id_cms` = '.(int)$result[$i]['id_cms'];
 			Db::getInstance()->execute($sql);
 		}
+
 		return true;
 	}
 
 	public static function getLastPosition($id_category)
 	{
-		return (Db::getInstance()->getValue('SELECT MAX(position)+1 FROM `'._DB_PREFIX_.'cms` WHERE `id_cms_category` = '.(int)$id_category));
+        $sql = 'SELECT MAX(position) + 1
+                FROM `'._DB_PREFIX_.'cms`
+                WHERE `id_cms_category` = '.(int)$id_category;
+
+		return (Db::getInstance()->getValue($sql));
 	}
 
 	public static function getCMSPages($id_lang = null, $id_cms_category = null, $active = true)
@@ -207,6 +214,7 @@ class CMSCore extends ObjectModel
 				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
 				WHERE c.`id_cms` = '.(int)$id_cms.'
 				AND l.`active` = 1';
+
 		return Db::getInstance()->executeS($sql);
 	}
 }
