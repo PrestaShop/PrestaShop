@@ -1697,7 +1697,7 @@ class AdminControllerCore extends Controller
 			'current' => self::$currentIndex,
 			'token' => $this->token,
 		));
-		
+
 		$this->context->smarty->assign('submit_form_ajax', (int)Tools::getValue('submitFormAjax'));
 
 		$this->initProcess();
@@ -2072,9 +2072,9 @@ class AdminControllerCore extends Controller
 								$fieldValue = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
 								if (empty($fieldValue))
 								{
-									if (is_array($input['default_value']) && isset($input['default_value'][$language['id_lang']]))
+									if (isset($input['default_value']) && is_array($input['default_value']) && isset($input['default_value'][$language['id_lang']]))
 										$fieldValue = $input['default_value'][$language['id_lang']];
-									else 
+									else if (isset($input['default_value']))
 										$fieldValue = $input['default_value'];
 								}
 								$this->fields_value[$input['name']][$language['id_lang']] = $fieldValue;
