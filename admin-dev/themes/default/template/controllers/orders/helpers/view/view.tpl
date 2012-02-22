@@ -570,7 +570,7 @@
 						{l s='tax included.'}
 					{/if}
 
-					{if Configuration::get('PS_ORDER_RETURN')}
+					{if !Configuration::get('PS_ORDER_RETURN')}
 						<br /><br />{l s='Merchandise returns are disabled'}
 					{/if}
 				</div>
