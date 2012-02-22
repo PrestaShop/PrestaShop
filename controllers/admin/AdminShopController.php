@@ -28,8 +28,6 @@
 
 class AdminShopControllerCore extends AdminController
 {
-	public $display_multishop_toolbar = false;
-
 	public function __construct()
 	{
 		$this->context = Context::getContext();
@@ -92,7 +90,10 @@ class AdminShopControllerCore extends AdminController
 				'submit' => array()
 			)
 		);
+
 		parent::__construct();
+
+		$this->multishop_context ^= Shop::CONTEXT_SHOP;
 	}
 
 	public function initToolbar()

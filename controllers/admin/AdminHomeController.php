@@ -29,7 +29,11 @@ class AdminHomeControllerCore extends AdminController
 {
 	const TIPS_TIMEOUT = 5;
 
-	public $display_multishop_toolbar = false;
+	public function __construct()
+	{
+		parent::__construct();
+		$this->multishop_context = null;
+	}
 
 	protected function _displayOptimizationTips()
 	{
