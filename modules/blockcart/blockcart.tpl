@@ -32,6 +32,8 @@
 var CUSTOMIZE_TEXTFIELD = {$CUSTOMIZE_TEXTFIELD};
 var customizationIdMessage = '{l s='Customization #' mod='blockcart' js=1}';
 var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' js=1}';
+var freeShippingTranslation = '<b>{l s='Free shipping!' mod='blockcart' js=1}</b>';
+var freeProductTranslation = '<b>{l s='Free!' mod='blockcart' js=1}</b>';
 </script>
 {/if}
 
@@ -65,7 +67,13 @@ var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' 
 				<a class="cart_block_product_name" href="{$link->getProductLink($product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)}" title="{$product.name|escape:html:'UTF-8'}">
 				{$product.name|truncate:13:'...'|escape:html:'UTF-8'}</a>
 				<span class="remove_link">{if !isset($customizedDatas.$productId.$productAttributeId)}<a rel="nofollow" class="ajax_cart_block_remove_link" href="{$link->getPageLink('cart', true, NULL, "delete&amp;id_product={$product.id_product}&amp;ipa={$product.id_product_attribute}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$static_token}")}" title="{l s='remove this product from my cart' mod='blockcart'}">&nbsp;</a>{/if}</span>
-				<span class="price">{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}</span>
+				<span class="price">{$product.total}
+					{if $product.total > 0}
+						{if $priceDisplay == $smarty.const.PS_TAX_EXC}{displayWtPrice p="`$product.total`"}{else}{displayWtPrice p="`$product.total_wt`"}{/if}
+					{else}
+						<b>{l s='Free!' mod='blockcart'}</b>
+					{/if}
+				</span>
 			</dt>
 			{if isset($product.attributes_small)}
 			<dd id="cart_block_combination_of_{$product.id_product}{if $product.id_product_attribute}_{$product.id_product_attribute}{/if}_{$product.id_address_delivery|intval}" class="{if $smarty.foreach.myLoop.first}first_item{elseif $smarty.foreach.myLoop.last}last_item{else}item{/if}">
@@ -100,11 +108,14 @@ var removingLinkText = '{l s='remove this product from my cart' mod='blockcart' 
 		{if $discounts|@count > 0}<table id="vouchers">
 			<tbody>
 			{foreach from=$discounts item=discount}
+				{if $discount.value_real > 0}
 				<tr class="bloc_cart_voucher" id="bloc_cart_voucher_{$discount.id_discount}">
+					<td class="quantity">1x</td>
 					<td class="name" title="{$discount.description}">{$discount.name|cat:' : '|cat:$discount.description|truncate:18:'...'|escape:'htmlall':'UTF-8'}</td>
-					<td class="price">-{if $discount.value_real != '!'}{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}{/if}</td>
+					<td class="price">-{if $priceDisplay == 1}{convertPrice price=$discount.value_tax_exc}{else}{convertPrice price=$discount.value_real}{/if}</td>
 					<td class="delete"><a href="{$link->getPageLink('$order_process.php', true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete'}"><img src="{$img_dir}icon/delete.gif" alt="{l s='Delete'}" class="icon" /></a></td>
 				</tr>
+				{/if}
 			{/foreach}
 			</tbody>
 		</table>

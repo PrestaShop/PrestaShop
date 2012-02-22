@@ -375,7 +375,7 @@ var ajaxCart = {
 				var toDelete = true;
 				for (i=0;i<jsonData.discounts.length;i++)
 				{
-					if (jsonData.discounts[i].id == idElmt)
+					if (jsonData.discounts[i].id == idElmt && parseFloat(jsonData.discounts[i].price_float) > 0)
 					{
 						$('#bloc_cart_voucher_' + idElmt + ' td.price').text(jsonData.discounts[i].price);
 						toDelete = false;
@@ -429,7 +429,7 @@ var ajaxCart = {
 				var domIdProduct = this.id + '_' + (this.idCombination ? this.idCombination : '0') + '_' + (this.idAddressDelivery ? this.idAddressDelivery : '0');
 
 				var domIdProductAttribute = this.id + '_' + (this.idCombination ? this.idCombination : '0');
-				if($('#cart_block dt#cart_block_product_'+ domIdProduct ).length == 0)
+				if ($('#cart_block dt#cart_block_product_'+ domIdProduct ).length == 0)
 				{
 					var productId = parseInt(this.id);
 					var productAttributeId = (this.hasAttributes ? parseInt(this.attributes) : 0);
@@ -438,7 +438,7 @@ var ajaxCart = {
 						 var name = (this.name.length > 12 ? this.name.substring(0, 10) + '...' : this.name);
 						  content += '<a href="' + this.link + '" title="' + this.name + '">' + name + '</a>';
 						  content += '<span class="remove_link"><a rel="nofollow" class="ajax_cart_block_remove_link" href="' + baseDir + 'index.php?controller=cart&amp;delete&amp;id_product=' + productId + '&amp;token=' + static_token + (this.hasAttributes ? '&amp;ipa=' + parseInt(this.idCombination) : '') + '"> </a></span>';
-						  content += '<span class="price">' + this.priceByLine + '</span>';
+						  content += '<span class="price">' + (parseFloat(this.price_float) > 0 ? this.priceByLine : freeProductTranslation) + '</span>';
 						  content += '</dt>';
 					if (this.hasAttributes)
 						  content += '<dd id="cart_block_combination_of_' + domIdProduct + '" class="hidden"><a href="' + this.link + '" title="' + this.name + '">' + this.attributes + '</a>';
@@ -449,12 +449,16 @@ var ajaxCart = {
 					$('#cart_block dl.products').append(content);
 				}
 				//else update the product's line
-				else{
+				else
+				{
 					var jsonProduct = this;
 					if($('dt#cart_block_product_' + domIdProduct + ' .quantity').text() != jsonProduct.quantity || $('dt#cart_block_product_' + domIdProduct + ' .price').text() != jsonProduct.priceByLine)
 					{
 						// Usual product
-						$('dt#cart_block_product_' + domIdProduct + ' .price').text(jsonProduct.priceByLine);
+						if (parseFloat(this.price_float) > 0)
+							$('dt#cart_block_product_' + domIdProduct + ' .price').text(jsonProduct.priceByLine);
+						else
+							$('dt#cart_block_product_' + domIdProduct + ' .price').html(freeProductTranslation);
 						ajaxCart.updateProductQuantity(jsonProduct, jsonProduct.quantity);
 
 						// Customized product
@@ -577,7 +581,11 @@ var ajaxCart = {
 	//update general cart informations everywhere in the page
 	updateCartEverywhere : function(jsonData) {
 		$('.ajax_cart_total').text(jsonData.productTotal);
-		$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
+		
+		if (parseFloat(jsonData.shippingCostFloat) > 0)
+			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
+		else
+			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
 		$('.ajax_cart_tax_cost').text(jsonData.taxCost);
 		$('.cart_block_wrapping_cost').text(jsonData.wrappingCost);
 		$('.ajax_block_cart_total').text(jsonData.total);
