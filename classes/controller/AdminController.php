@@ -962,8 +962,8 @@ class AdminControllerCore extends Controller
 					}
 				}
 			}
-			if (count($this->errors) <= 0)
-				$this->redirect_after = self::$currentIndex.'&conf=6&token='.$token;
+			if (empty($this->errors))
+				$this->confirmations[] = $this->_conf[6];
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -1834,7 +1834,10 @@ class AdminControllerCore extends Controller
 			$this->action = 'reset_filters';
 		/* Submit options list */
 		else if (Tools::getValue('submitOptions'.$this->table) || Tools::getValue('submitOptions'))
+		{
 			$this->action = 'update_options';
+			$this->display = 'options';
+		}
 		else if (Tools::isSubmit('submitFields') && $this->required_database && $this->tabAccess['add'] === '1' && $this->tabAccess['delete'] === '1')
 			$this->action = 'update_fields';
 		else if (is_array($this->bulk_actions))
